@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Längeneinheiten üben</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Bebas+Neue&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0d1117;
+      --card: #161b22;
+      --border: #30363d;
+      --border2: #21262d;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --accent: #58a6ff;
+      --green: #3fb950;
+      --red: #f85149;
+      --yellow: #d29922;
+    }
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 20px;
+      position: relative; overflow-x: hidden;
+    }
+    body::before {
+      content: ''; position: fixed; inset: 0; z-index: 0;
+      background-image:
+        linear-gradient(rgba(88,166,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(88,166,255,0.025) 1px, transparent 1px);
+      background-size: 40px 40px; pointer-events: none;
+    }
+    #app { position: relative; z-index: 2; width: 100%; max-width: 600px; }
+
+    /* Header */
+    .header { text-align: center; margin-bottom: 24px; }
+    .title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2rem, 6vw, 3.4rem);
+      letter-spacing: 0.1em; color: var(--accent);
+      text-shadow: 0 0 20px rgba(88,166,255,0.5), 0 0 60px rgba(88,166,255,0.15);
+      line-height: 1;
+    }
+    .subtitle { font-size: 0.68rem; color: var(--muted); letter-spacing: 0.25em; margin-top: 4px; }
+    .stats-badge {
+      display: none; margin-top: 10px;
+      padding: 4px 14px; border-radius: 4px;
+      background: rgba(88,166,255,0.08); border: 1px solid rgba(88,166,255,0.25);
+      font-size: 0.7rem; color: var(--accent); letter-spacing: 0.1em;
+    }
+
+    /* Card */
+    .card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+      padding: clamp(22px, 5vw, 42px);
+      box-shadow: 0 0 0 1px var(--border2), 0 24px 48px rgba(0,0,0,0.5);
+    }
+
+    /* Buttons */
+    .btn { cursor: pointer; border: none; font-family: 'JetBrains Mono', monospace; transition: all 0.15s; }
+    .btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
+    .btn:active { transform: translateY(1px); }
+
+    .btn-primary {
+      width: 100%; padding: 15px; border-radius: 8px;
+      font-size: 0.88rem; font-weight: 800; letter-spacing: 0.15em;
+      background: var(--accent); color: var(--bg);
+      box-shadow: 0 0 20px rgba(88,166,255,0.35);
+    }
+    .btn-next {
+      flex: 1; padding: 13px; border-radius: 8px;
+      font-size: 0.82rem; font-weight: 800; letter-spacing: 0.12em;
+      background: var(--accent); color: var(--bg);
+      box-shadow: 0 0 16px rgba(88,166,255,0.35);
+    }
+    .btn-ghost {
+      padding: 13px 18px; border-radius: 8px;
+      font-size: 0.82rem; font-weight: 600;
+      background: transparent; color: var(--muted);
+      border: 1px solid var(--border); letter-spacing: 0.05em;
+    }
+    .btn-confirm {
+      padding: 13px 20px; border-radius: 8px;
+      font-size: 1rem; font-weight: 800;
+      background: var(--border2); color: var(--accent);
+      border: 1px solid var(--border);
+    }
+
+    /* Level buttons */
+    .level-btn {
+      flex: 1; padding: 12px 8px; border-radius: 8px;
+      font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em;
+      cursor: pointer; border: none; transition: all 0.15s;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .level-btn.active {
+      background: var(--accent); color: var(--bg);
+      box-shadow: 0 0 14px rgba(88,166,255,0.4);
+    }
+    .level-btn:not(.active) {
+      background: var(--border2); color: var(--muted);
+      border: 1px solid var(--border);
+    }
+    .level-btn:hover:not(.active) { filter: brightness(1.15); transform: translateY(-1px); }
+
+    /* Start screen */
+    .level-row { display: flex; gap: 8px; margin: 18px 0 10px; }
+    .level-desc {
+      text-align: center; font-size: 0.74rem; color: var(--muted);
+      min-height: 2.5em; line-height: 1.6; margin-bottom: 18px;
+    }
+    .info-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 20px; }
+    .info-tile {
+      padding: 10px 8px; border-radius: 8px; text-align: center;
+      background: var(--bg); border: 1px solid var(--border2); font-size: 0.7rem;
+    }
+    .info-tile-icon { font-size: 1.3rem; margin-bottom: 4px; }
+    .info-tile-label { color: var(--muted); }
+
+    /* Playing screen */
+    .meta-row {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 10px; font-size: 0.7rem; color: var(--muted); letter-spacing: 0.08em;
+    }
+    .meta-num { color: var(--accent); }
+    .progress-track { height: 3px; background: var(--border2); border-radius: 2px; margin-bottom: 28px; overflow: hidden; }
+    .progress-fill {
+      height: 100%; border-radius: 2px;
+      background: linear-gradient(90deg, var(--accent), #79c0ff);
+      box-shadow: 0 0 8px rgba(88,166,255,0.7);
+      transition: width 0.4s ease;
+    }
+
+    /* Task type badge */
+    .type-badge {
+      display: inline-block; margin-bottom: 14px;
+      padding: 3px 12px; border-radius: 4px; font-size: 0.65rem;
+      letter-spacing: 0.15em; font-weight: 700;
+    }
+    .type-badge.convert { background: rgba(210,153,34,0.15); color: var(--yellow); border: 1px solid rgba(210,153,34,0.3); }
+    .type-badge.add     { background: rgba(63,185,80,0.12);  color: var(--green);  border: 1px solid rgba(63,185,80,0.3); }
+    .type-badge.sub     { background: rgba(248,81,73,0.12);  color: var(--red);    border: 1px solid rgba(248,81,73,0.3); }
+    .type-badge.compare { background: rgba(88,166,255,0.1);  color: var(--accent); border: 1px solid rgba(88,166,255,0.25); }
+
+    .question-box {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(1.8rem, 6vw, 3rem);
+      letter-spacing: 0.05em; line-height: 1.25;
+      margin-bottom: 10px; text-align: center;
+      transition: color 0.2s, text-shadow 0.2s;
+      word-break: break-word;
+    }
+    .question-box.correct { color: var(--green); text-shadow: 0 0 24px rgba(63,185,80,0.7); }
+    .question-box.wrong   { color: var(--red);   text-shadow: 0 0 24px rgba(248,81,73,0.7); }
+
+    .hint-text { text-align: center; font-size: 0.72rem; color: var(--muted); margin-bottom: 18px; min-height: 1.2em; }
+
+    .feedback-line {
+      height: 22px; margin-bottom: 16px; text-align: center;
+      font-size: 0.76rem; letter-spacing: 0.1em; font-weight: 700;
+    }
+    .feedback-line.correct { color: var(--green); }
+    .feedback-line.wrong   { color: var(--red); }
+
+    /* Input area */
+    .input-area { display: flex; gap: 10px; justify-content: center; align-items: center; flex-wrap: wrap; }
+    .answer-input {
+      padding: 13px 16px; font-size: 1.3rem; text-align: center;
+      font-family: 'JetBrains Mono', monospace; font-weight: 800;
+      background: var(--bg); border: 2px solid var(--border);
+      border-radius: 8px; color: var(--text); outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      -moz-appearance: textfield;
+    }
+    .answer-input::-webkit-inner-spin-button,
+    .answer-input::-webkit-outer-spin-button { -webkit-appearance: none; }
+    .answer-input.correct { border-color: var(--green); box-shadow: 0 0 14px rgba(63,185,80,0.3); }
+    .answer-input.wrong   { border-color: var(--red);   box-shadow: 0 0 14px rgba(248,81,73,0.3); }
+    .unit-label { font-size: 1rem; color: var(--muted); font-weight: 700; white-space: nowrap; }
+
+    /* Compare buttons */
+    .compare-row { display: flex; gap: 10px; justify-content: center; }
+    .cmp-btn {
+      padding: 14px 28px; border-radius: 8px; font-size: 1.4rem; font-weight: 800;
+      background: var(--border2); color: var(--text); border: 1px solid var(--border);
+      cursor: pointer; font-family: 'JetBrains Mono', monospace; transition: all 0.15s;
+    }
+    .cmp-btn:hover { background: var(--accent); color: var(--bg); transform: translateY(-2px); }
+    .cmp-btn.selected-correct { background: var(--green); color: var(--bg); border-color: var(--green); }
+    .cmp-btn.selected-wrong   { background: var(--red);   color: #fff;      border-color: var(--red); }
+
+    /* Result */
+    .score-big {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 5rem; line-height: 1; text-align: center;
+    }
+    .score-label { text-align: center; font-weight: 800; font-size: 0.82rem; letter-spacing: 0.15em; margin-top: 4px; color: var(--muted); }
+    .score-meta  { text-align: center; font-size: 0.7rem; color: var(--muted); margin-top: 6px; letter-spacing: 0.1em; margin-bottom: 22px; }
+    .result-list { max-height: 240px; overflow-y: auto; margin-bottom: 18px; }
+    .result-list::-webkit-scrollbar { width: 4px; }
+    .result-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+    .result-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 7px 12px; margin-bottom: 4px; border-radius: 6px; font-size: 0.75rem;
+    }
+    .result-row.correct { background: rgba(63,185,80,0.07);  border: 1px solid rgba(63,185,80,0.2); }
+    .result-row.wrong   { background: rgba(248,81,73,0.07);  border: 1px solid rgba(248,81,73,0.2); }
+    .result-num { color: var(--muted); margin-right: 8px; }
+    .result-eq  { flex: 1; }
+    .result-check.correct { color: var(--green); font-weight: 700; }
+    .result-check.wrong   { color: var(--red);   font-weight: 700; }
+    .btn-row { display: flex; gap: 10px; }
+
+    /* Ruler decoration */
+    .ruler {
+      display: flex; justify-content: center; align-items: center;
+      gap: 0; margin-bottom: 16px; overflow: hidden; border-radius: 4px;
+      height: 18px; font-size: 0;
+    }
+
+    /* Footer */
+    .footer { text-align: center; margin-top: 14px; font-size: 0.62rem; color: #484f58; letter-spacing: 0.2em; }
+
+    /* Animations */
+    @keyframes fadeUp { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-10px)} 60%{transform:translateX(10px)} }
+    @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.03)} }
+    .fade-up { animation: fadeUp 0.28s ease both; }
+    .shake   { animation: shake 0.35s ease; }
+    .pulse   { animation: pulse 0.28s ease; }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div class="header">
+    <div class="title">LÄNGENEINHEITEN</div>
+    <div class="subtitle">UMRECHNEN · RECHNEN · VERGLEICHEN</div>
+    <div id="stats-badge" class="stats-badge"></div>
+  </div>
+  <div class="card" id="card"></div>
+  <div class="footer">ENTER-TASTE ZUM BESTÄTIGEN</div>
+</div>
+
+<script>
+// ─── Unit system ─────────────────────────────────────────────
+// All values stored in mm internally
+const UNITS = ['km','m','dm','cm','mm'];
+const TO_MM = { km: 1_000_000, m: 1_000, dm: 100, cm: 10, mm: 1 };
+const UNIT_NAMES = { km: 'Kilometer', m: 'Meter', dm: 'Dezimeter', cm: 'Zentimeter', mm: 'Millimeter' };
+
+// Level configs
+const LEVELS = {
+  easy: {
+    label: 'LEICHT',
+    desc: 'Umrechnen benachbarter Einheiten (z.B. m → cm)\nKeine gemischten Terme',
+    units: ['m','dm','cm'],
+    taskTypes: ['convert'],
+    factors: [1,2,3,4,5,6,7,8,9,10],
+  },
+  medium: {
+    label: 'MITTEL',
+    desc: 'Gemischte Addition & Subtraktion (z.B. 5m + 40cm)\nUmrechnen mit km und mm',
+    units: ['km','m','cm','mm'],
+    taskTypes: ['convert','add','sub'],
+    factors: [1,2,3,4,5,6,7,8,9,10,15,20,25,50],
+  },
+  hard: {
+    label: 'SCHWER',
+    desc: 'Dreifach gemischte Terme · Alle Einheiten\nVergleichen & komplexes Umrechnen',
+    units: ['km','m','dm','cm','mm'],
+    taskTypes: ['convert','add','sub','compare'],
+    factors: [1,2,3,4,5,6,7,8,9,10,12,15,20,25,50,100,250,500],
+  }
+};
+
+const ROUND_SIZE = 10;
+const state = {
+  phase: 'start',
+  level: 'easy',
+  questions: [], current: 0, results: [],
+  feedback: null, timer: 0, roundTime: 0,
+  totalRounds: 0, totalCorrect: 0, totalQ: 0,
+  timerInterval: null, feedbackTimeout: null,
+};
+
+// ─── Helpers ─────────────────────────────────────────────────
+function rand(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+function randInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+function fmtTime(s) { return `${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`; }
+
+function formatLength(mm, unit) {
+  const val = mm / TO_MM[unit];
+  return Number.isInteger(val) ? `${val} ${unit}` : null;
+}
+
+function niceValue(unit, factors) {
+  // pick a factor and a base
+  const f = rand(factors);
+  return f * TO_MM[unit]; // in mm
+}
+
+// ─── Question generators ──────────────────────────────────────
+function makeConvert(cfg) {
+  const units = cfg.units;
+  let fromUnit = rand(units);
+  let toUnit = rand(units.filter(u => u !== fromUnit));
+  // Ensure integer result
+  let attempts = 0;
+  let valMM, fromStr, toVal;
+  do {
+    valMM = niceValue(fromUnit, cfg.factors);
+    fromStr = valMM / TO_MM[fromUnit];
+    toVal = valMM / TO_MM[toUnit];
+    attempts++;
+  } while (!Number.isInteger(toVal) && attempts < 30);
+  if (!Number.isInteger(toVal)) { return makeConvert(cfg); }
+
+  return {
+    type: 'convert',
+    question: `${fromStr} ${fromUnit} = ___ ${toUnit}`,
+    hint: `1 ${fromUnit} = ${TO_MM[fromUnit] / TO_MM[toUnit] > 0 ? (TO_MM[fromUnit] / TO_MM[toUnit]) : ''} ${toUnit}`,
+    answer: toVal,
+    answerUnit: toUnit,
+    display: `${fromStr} ${fromUnit} = ___ ${toUnit}`,
+  };
+}
+
+function makeAddSub(cfg, type) {
+  const units = cfg.units;
+  // Pick 2 (or 3 for hard) different units
+  const count = (cfg === LEVELS.hard) ? (Math.random() < 0.4 ? 3 : 2) : 2;
+  let pickedUnits = [];
+  let copy = [...units];
+  for (let i = 0; i < count; i++) {
+    if (!copy.length) break;
+    const u = rand(copy);
+    pickedUnits.push(u);
+    copy = copy.filter(x => x !== u);
+  }
+  // Generate values
+  let values = pickedUnits.map(u => {
+    const f = rand(cfg.factors);
+    return { unit: u, val: f, mm: f * TO_MM[u] };
+  });
+
+  let totalMM = values.reduce((s, v) => s + v.mm, 0);
+
+  if (type === 'sub') {
+    // Make sure result is positive: take largest term as minuend
+    values.sort((a,b) => b.mm - a.mm);
+    totalMM = values[0].mm - values.slice(1).reduce((s,v)=>s+v.mm,0);
+    if (totalMM <= 0) return makeAddSub(cfg, type);
+  }
+
+  // Pick a result unit that gives integer answer
+  const resultCandidates = units.filter(u => Number.isInteger(totalMM / TO_MM[u]));
+  if (!resultCandidates.length) return makeAddSub(cfg, type);
+  const resultUnit = rand(resultCandidates);
+  const answer = totalMM / TO_MM[resultUnit];
+
+  const terms = values.map(v => `${v.val} ${v.unit}`);
+  const op = type === 'add' ? '+' : '−';
+  const questionStr = terms.join(` ${op} `) + ` = ___ ${resultUnit}`;
+
+  return {
+    type,
+    question: questionStr,
+    hint: `Alles in ${resultUnit} umrechnen, dann ${type === 'add' ? 'addieren' : 'subtrahieren'}`,
+    answer,
+    answerUnit: resultUnit,
+    display: questionStr,
+  };
+}
+
+function makeCompare(cfg) {
+  const units = cfg.units;
+  let u1 = rand(units), u2 = rand(units.filter(u=>u!==u1));
+  const f1 = rand(cfg.factors), f2 = rand(cfg.factors);
+  const mm1 = f1 * TO_MM[u1], mm2 = f2 * TO_MM[u2];
+  let correctSymbol;
+  if (mm1 > mm2) correctSymbol = '>';
+  else if (mm1 < mm2) correctSymbol = '<';
+  else correctSymbol = '=';
+
+  return {
+    type: 'compare',
+    question: `${f1} ${u1}  ___  ${f2} ${u2}`,
+    hint: `${f1} ${u1} = ${mm1/TO_MM[u2]} ${u2}`,
+    answer: correctSymbol,
+    answerUnit: '',
+    display: `${f1} ${u1}  ○  ${f2} ${u2}`,
+  };
+}
+
+function generateQuestion(levelKey) {
+  const cfg = LEVELS[levelKey];
+  const type = rand(cfg.taskTypes);
+  if (type === 'convert') return makeConvert(cfg);
+  if (type === 'add')     return makeAddSub(cfg, 'add');
+  if (type === 'sub')     return makeAddSub(cfg, 'sub');
+  if (type === 'compare') return makeCompare(cfg);
+}
+
+// ─── State transitions ────────────────────────────────────────
+function startRound() {
+  clearInterval(state.timerInterval);
+  clearTimeout(state.feedbackTimeout);
+  state.questions = Array.from({length: ROUND_SIZE}, () => generateQuestion(state.level));
+  state.current = 0; state.results = [];
+  state.feedback = null; state.timer = 0;
+  state.phase = 'playing';
+  render();
+  state.timerInterval = setInterval(() => {
+    state.timer++;
+    const el = document.getElementById('timer-el');
+    if (el) el.textContent = '⏱ ' + fmtTime(state.timer);
+  }, 1000);
+  setTimeout(() => document.querySelector('.answer-input')?.focus(), 60);
+}
+
+function submitAnswer(given) {
+  if (state.feedback) return;
+  const q = state.questions[state.current];
+  let correct;
+  if (q.type === 'compare') {
+    correct = given === q.answer;
+  } else {
+    const num = parseFloat(String(given).replace(',','.'));
+    correct = !isNaN(num) && Math.abs(num - q.answer) < 0.001;
+  }
+  state.feedback = correct ? 'correct' : 'wrong';
+  state.results.push({...q, given, correct});
+  applyFeedbackUI(correct, q);
+
+  state.feedbackTimeout = setTimeout(() => {
+    state.feedback = null;
+    if (state.current + 1 >= ROUND_SIZE) {
+      clearInterval(state.timerInterval);
+      const rc = state.results.filter(r=>r.correct).length;
+      state.totalRounds++; state.totalCorrect += rc; state.totalQ += ROUND_SIZE;
+      state.roundTime = state.timer;
+      state.phase = 'result';
+      updateBadge(); render();
+    } else {
+      state.current++;
+      render();
+      setTimeout(() => document.querySelector('.answer-input')?.focus(), 60);
+    }
+  }, correct ? 380 : 1000);
+}
+
+function applyFeedbackUI(correct, q) {
+  const qEl = document.getElementById('q-display');
+  const fbEl = document.getElementById('feedback-line');
+  if (!qEl) return;
+  qEl.className = 'question-box ' + (correct ? 'correct' : 'wrong');
+  qEl.classList.add(correct ? 'pulse' : 'shake');
+  if (fbEl) {
+    fbEl.className = 'feedback-line ' + (correct ? 'correct' : 'wrong');
+    fbEl.textContent = correct
+      ? '✓ RICHTIG!'
+      : `✗ FALSCH — RICHTIG: ${q.answer} ${q.answerUnit}`;
+  }
+  // style compare buttons
+  if (q.type === 'compare') {
+    ['<','=','>'].forEach(sym => {
+      const btn = document.getElementById('cmp-' + sym.replace('<','lt').replace('>','gt').replace('=','eq'));
+      if (!btn) return;
+      if (sym === q.answer) btn.className = 'cmp-btn selected-correct';
+      else if (sym === state.results[state.results.length-1]?.given && !correct) btn.className = 'cmp-btn selected-wrong';
+    });
+  }
+  // style input
+  const inp = document.querySelector('.answer-input');
+  if (inp) inp.className = 'answer-input ' + (correct ? 'correct' : 'wrong');
+}
+
+function updateBadge() {
+  const b = document.getElementById('stats-badge');
+  if (state.totalRounds > 0) {
+    b.style.display = 'inline-block';
+    b.textContent = `GESAMT ${state.totalCorrect}/${state.totalQ} · ${state.totalRounds} RUNDEN`;
+  }
+}
+
+function resetAll() {
+  clearInterval(state.timerInterval);
+  state.totalRounds = 0; state.totalCorrect = 0; state.totalQ = 0;
+  state.phase = 'start';
+  updateBadge(); render();
+}
+
+function setLevel(l) { state.level = l; render(); }
+
+// ─── Render ───────────────────────────────────────────────────
+function render() {
+  const card = document.getElementById('card');
+  card.className = 'card fade-up';
+  void card.offsetWidth;
+  if (state.phase === 'start')   renderStart(card);
+  if (state.phase === 'playing') renderPlaying(card);
+  if (state.phase === 'result')  renderResult(card);
+}
+
+function levelBtns() {
+  return ['easy','medium','hard'].map(l => {
+    const active = state.level === l;
+    return `<button class="level-btn ${active?'active':''}" onclick="setLevel('${l}')">${LEVELS[l].label}</button>`;
+  }).join('');
+}
+
+function renderStart(card) {
+  const cfg = LEVELS[state.level];
+  const descLines = cfg.desc.split('\n').join('<br>');
+  card.innerHTML = `
+    <div style="text-align:center;font-size:2.8rem;margin-bottom:10px;">📏</div>
+    <div style="text-align:center;font-weight:800;font-size:0.95rem;letter-spacing:0.08em;margin-bottom:14px;">SCHWIERIGKEITSGRAD</div>
+    <div class="level-row">${levelBtns()}</div>
+    <div class="level-desc">${descLines}</div>
+    <div class="info-grid">
+      <div class="info-tile"><div class="info-tile-icon">🔄</div><div>Umrechnen</div><div class="info-tile-label">z.B. 3m=?cm</div></div>
+      <div class="info-tile"><div class="info-tile-icon">➕➖</div><div>Rechnen</div><div class="info-tile-label">gem. Einheiten</div></div>
+      <div class="info-tile"><div class="info-tile-icon">⚖️</div><div>Vergleichen</div><div class="info-tile-label">< = ></div></div>
+    </div>
+    <div style="text-align:center;font-size:0.68rem;color:var(--muted);margin-bottom:16px;letter-spacing:0.08em;">
+      Einheiten: km · m · dm · cm · mm &nbsp;|&nbsp; ${ROUND_SIZE} Aufgaben pro Runde
+    </div>
+    <button class="btn btn-primary" onclick="startRound()">STARTEN →</button>
+  `;
+}
+
+const TYPE_LABELS = {
+  convert: ['UMRECHNEN','convert'],
+  add:     ['ADDITION','add'],
+  sub:     ['SUBTRAKTION','sub'],
+  compare: ['VERGLEICHEN','compare'],
+};
+
+function renderPlaying(card) {
+  const q = state.questions[state.current];
+  const pct = (state.current / ROUND_SIZE) * 100;
+  const [typeLabel, typeCls] = TYPE_LABELS[q.type];
+
+  let inputHTML;
+  if (q.type === 'compare') {
+    inputHTML = `
+      <div class="compare-row">
+        <button class="cmp-btn" id="cmp-lt" onclick="submitAnswer('<')"><</button>
+        <button class="cmp-btn" id="cmp-eq" onclick="submitAnswer('=')">=</button>
+        <button class="cmp-btn" id="cmp-gt" onclick="submitAnswer('>')">></button>
+      </div>`;
+  } else {
+    inputHTML = `
+      <div class="input-area">
+        <input class="answer-input" type="number" id="main-input" placeholder="___" style="width:140px" autocomplete="off"/>
+        <span class="unit-label">${q.answerUnit}</span>
+        <button class="btn btn-confirm" onclick="doSubmitNum()">↵</button>
+      </div>`;
+  }
+
+  card.innerHTML = `
+    <div class="meta-row">
+      <span><span class="meta-num">${state.current+1}</span>/${ROUND_SIZE}</span>
+      <span id="timer-el">⏱ ${fmtTime(state.timer)}</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+    <div style="text-align:center;margin-bottom:10px;">
+      <span class="type-badge ${typeCls}">${typeLabel}</span>
+    </div>
+    <div class="question-box" id="q-display">${q.display}</div>
+    <div class="hint-text" id="hint-el"></div>
+    <div class="feedback-line" id="feedback-line"></div>
+    ${inputHTML}
+    <div style="text-align:center;margin-top:14px;">
+      <button class="btn" onclick="toggleHint()" style="font-size:0.65rem;color:var(--muted);background:none;border:none;cursor:pointer;letter-spacing:0.1em;text-decoration:underline;font-family:'JetBrains Mono',monospace;">💡 TIPP ANZEIGEN</button>
+    </div>
+  `;
+
+  if (q.type !== 'compare') {
+    document.getElementById('main-input')?.addEventListener('keydown', e => {
+      if (e.key === 'Enter') doSubmitNum();
+    });
+    setTimeout(() => document.getElementById('main-input')?.focus(), 30);
+  }
+}
+
+function doSubmitNum() {
+  const inp = document.getElementById('main-input');
+  if (!inp || inp.value === '') return;
+  submitAnswer(inp.value);
+}
+
+function toggleHint() {
+  const q = state.questions[state.current];
+  const el = document.getElementById('hint-el');
+  if (!el) return;
+  el.textContent = el.textContent ? '' : q.hint;
+}
+
+function renderResult(card) {
+  const rc = state.results.filter(r=>r.correct).length;
+  const pct = Math.round(rc / ROUND_SIZE * 100);
+  const color = pct===100 ? 'var(--green)' : pct>=70 ? 'var(--accent)' : pct>=50 ? 'var(--yellow)' : 'var(--red)';
+  const emoji = pct===100?'🏆':pct>=80?'🎯':pct>=60?'💪':'📚';
+  const label = pct===100?'PERFEKT!':pct>=80?'SEHR GUT':pct>=60?'GUT GEMACHT':'WEITER ÜBEN';
+
+  const rows = state.results.map((r,i) => `
+    <div class="result-row ${r.correct?'correct':'wrong'}">
+      <span class="result-num">${String(i+1).padStart(2,'0')}.</span>
+      <span class="result-eq">${r.display} <strong>${r.answer}${r.answerUnit?' '+r.answerUnit:''}</strong></span>
+      <span class="result-check ${r.correct?'correct':'wrong'}">${r.correct ? '✓' : `✗ (${r.given})`}</span>
+    </div>`).join('');
+
+  card.innerHTML = `
+    <div class="score-big" style="color:${color};text-shadow:0 0 40px ${color}">${rc}/${ROUND_SIZE}</div>
+    <div class="score-label">${emoji} ${label}</div>
+    <div class="score-meta">ZEIT: ${fmtTime(state.roundTime)} · ${pct}% KORREKT · ${LEVELS[state.level].label}</div>
+    <div class="result-list">${rows}</div>
+    <div class="btn-row">
+      <button class="btn btn-next" onclick="startRound()">NÄCHSTE RUNDE →</button>
+      <button class="btn btn-ghost" onclick="resetAll()">↺</button>
+    </div>
+  `;
+}
+
+// Init
+render();
+</script>
+</body>
+</html>
