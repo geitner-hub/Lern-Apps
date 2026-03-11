@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Lern-Apps</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f0f4ff;
+      --card-bg: #ffffff;
+      --header-bg: #1a1f5e;
+      --accent: #4f6ef7;
+      --accent2: #f7c948;
+      --text: #1e2235;
+      --muted: #6b7280;
+      --radius: 18px;
+      --shadow: 0 4px 24px rgba(79,110,247,0.10);
+    }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--header-bg);
+      color: #fff;
+      padding: 2.5rem 2rem 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 70% 50%, #3a47c5 0%, transparent 70%),
+                  radial-gradient(ellipse at 20% 80%, #6c3fc5 0%, transparent 60%);
+      opacity: .6;
+    }
+    header h1 {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      letter-spacing: .5px;
+      position: relative;
+    }
+    header p {
+      margin-top: .5rem;
+      font-size: 1.05rem;
+      opacity: .75;
+      position: relative;
+    }
+    .dot {
+      display: inline-block;
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--accent2);
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+
+    /* ── MAIN ── */
+    main {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 4rem;
+    }
+
+    /* ── CATEGORY ── */
+    .category {
+      margin-bottom: 3rem;
+    }
+    .category-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 1.4rem;
+    }
+    .category-icon {
+      font-size: 1.8rem;
+      background: var(--header-bg);
+      color: var(--accent2);
+      width: 52px; height: 52px;
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 3px 10px rgba(26,31,94,.2);
+    }
+    .category-title {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.6rem;
+      color: var(--header-bg);
+    }
+    .category-count {
+      margin-left: auto;
+      font-size: .85rem;
+      background: var(--accent);
+      color: #fff;
+      padding: 3px 12px;
+      border-radius: 99px;
+      font-weight: 700;
+    }
+
+    /* ── GRID ── */
+    .apps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1.2rem;
+    }
+
+    /* ── APP CARD ── */
+    .app-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 1.5rem 1.3rem 1.3rem;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      gap: .6rem;
+      border: 2px solid transparent;
+      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .app-card::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--cat-color, var(--accent)), var(--cat-color2, #a78bfa));
+      border-radius: 99px 99px 0 0;
+    }
+    .app-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 36px rgba(79,110,247,.18);
+      border-color: var(--accent);
+    }
+    .app-emoji {
+      font-size: 2rem;
+    }
+    .app-name {
+      font-weight: 800;
+      font-size: 1.05rem;
+      line-height: 1.3;
+    }
+    .app-desc {
+      font-size: .85rem;
+      color: var(--muted);
+      line-height: 1.4;
+      flex: 1;
+    }
+    .app-arrow {
+      align-self: flex-end;
+      font-size: 1.1rem;
+      color: var(--accent);
+      font-weight: 800;
+      transition: transform .15s ease;
+    }
+    .app-card:hover .app-arrow { transform: translateX(4px); }
+
+    /* ── EMPTY SLOT ── */
+    .app-card.placeholder {
+      border: 2px dashed #cbd5e1;
+      background: transparent;
+      box-shadow: none;
+      align-items: center;
+      justify-content: center;
+      color: #94a3b8;
+      font-size: .9rem;
+      font-weight: 600;
+      cursor: default;
+      min-height: 130px;
+    }
+    .app-card.placeholder::after { display: none; }
+    .app-card.placeholder:hover { transform: none; border-color: #cbd5e1; }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      font-size: .8rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1><span class="dot"></span>Lern-Apps</h1>
+  <p>Klick auf eine App und leg los!</p>
+</header>
+
+<main>
+
+  <!-- ═══════════════════════════════════════════
+       KATEGORIE: MATHE
+       Neue App hinzufügen: <a class="app-card" ...> kopieren & anpassen
+       ═══════════════════════════════════════════ -->
+  <section class="category" style="--cat-color:#4f6ef7; --cat-color2:#818cf8;">
+    <div class="category-header">
+      <div class="category-icon">➕</div>
+      <span class="category-title">Mathematik</span>
+      <span class="category-count" id="count-mathe"></span>
+    </div>
+    <div class="apps-grid" id="grid-mathe">
+
+      <!-- APP 1 – Beispiel, Dateiname anpassen! -->
+      <!-- <a class="app-card" href="mathe-quiz.html">
+        <span class="app-emoji">🧮</span>
+        <span class="app-name">Mathe-Quiz</span>
+        <span class="app-desc">Teste dein Wissen in Grundrechenarten</span>
+        <span class="app-arrow">→</span>
+      </a> -->
+
+      <!-- PLATZHALTER – wird ausgeblendet sobald echte Apps vorhanden sind -->
+      <div class="app-card placeholder">+ App kommt bald</div>
+
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════
+       NEUE KATEGORIE HINZUFÜGEN – Vorlage:
+       1. Diesen Block kopieren
+       2. id="grid-XXX" und id="count-XXX" anpassen
+       3. Icon, Farben und Titel ändern
+       ═══════════════════════════════════════════
+
+  <section class="category" style="--cat-color:#10b981; --cat-color2:#34d399;">
+    <div class="category-header">
+      <div class="category-icon">📖</div>
+      <span class="category-title">Deutsch</span>
+      <span class="category-count" id="count-deutsch"></span>
+    </div>
+    <div class="apps-grid" id="grid-deutsch">
+      <a class="app-card" href="deutsch-app.html">
+        <span class="app-emoji">✏️</span>
+        <span class="app-name">Rechtschreibung</span>
+        <span class="app-desc">Übe schwierige Wörter</span>
+        <span class="app-arrow">→</span>
+      </a>
+    </div>
+  </section>
+
+  -->
+
+</main>
+
+<footer>Lern-Apps · geitner-hub.github.io</footer>
+
+<script>
+  // Zählt automatisch die Apps pro Kategorie (Platzhalter werden ignoriert)
+  document.querySelectorAll('.category').forEach(cat => {
+    const grid = cat.querySelector('.apps-grid');
+    const countEl = cat.querySelector('[id^="count-"]');
+    if (!grid || !countEl) return;
+    const realApps = [...grid.querySelectorAll('.app-card:not(.placeholder)')].length;
+    countEl.textContent = realApps + (realApps === 1 ? ' App' : ' Apps');
+    // Platzhalter ausblenden wenn echte Apps vorhanden
+    if (realApps > 0) {
+      grid.querySelectorAll('.placeholder').forEach(p => p.remove());
+    }
+  });
+</script>
+
+</body>
+</html>
