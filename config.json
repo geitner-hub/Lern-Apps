@@ -74,7 +74,9 @@
       "emoji": "3",
       "beschreibung": "Lerne und wiederhole mit dieser App die Vokabeln aus Unit 3",
       "hidden": false,
-      "klassen": [],
+      "klassen": [
+        5
+      ],
       "customTags": [],
       "aod": false
     }
