@@ -8,87 +8,183 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --bg: #f0f4ff; --card-bg: #ffffff; --header-bg: #1a1f5e;
-      --accent: #4f6ef7; --accent2: #f7c948; --text: #1e2235;
-      --muted: #6b7280; --radius: 18px; --shadow: 0 4px 24px rgba(79,110,247,0.10);
+      --bg: #f2f5ff;
+      --card-bg: #ffffff;
+      --header-bg: #1a1f5e;
+      --accent: #4f6ef7;
+      --accent2: #f7c948;
+      --text: #1e2235;
+      --muted: #6b7280;
+      --radius: 18px;
+      --shadow: 0 2px 16px rgba(79,110,247,0.09);
+      --shadow-hover: 0 10px 32px rgba(79,110,247,0.18);
     }
     body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    /* ── HEADER ─────────────────────────────────── */
     header {
-      background: var(--header-bg); color: #fff; padding: 2.5rem 2rem 2rem;
+      background: var(--header-bg); color: #fff;
+      padding: 2.8rem 2rem 2.3rem;
       text-align: center; position: relative; overflow: hidden;
     }
     header::before {
       content: ''; position: absolute; inset: 0;
-      background: radial-gradient(ellipse at 70% 50%, #3a47c5 0%, transparent 70%),
-                  radial-gradient(ellipse at 20% 80%, #6c3fc5 0%, transparent 60%);
-      opacity: .6;
+      background:
+        radial-gradient(ellipse at 80% 20%, #5b6ef0 0%, transparent 55%),
+        radial-gradient(ellipse at 15% 80%, #7c3fc5 0%, transparent 55%),
+        radial-gradient(ellipse at 50% 120%, #2563eb 0%, transparent 50%);
+      opacity: .75;
+    }
+    header::after {
+      content: ''; position: absolute; inset: 0; pointer-events: none;
+      background-image:
+        radial-gradient(circle at 8% 30%, rgba(255,255,255,.055) 0%, rgba(255,255,255,.055) 38px, transparent 38px),
+        radial-gradient(circle at 93% 65%, rgba(255,255,255,.04) 0%, rgba(255,255,255,.04) 55px, transparent 55px),
+        radial-gradient(circle at 50% -5%, rgba(247,201,72,.07) 0%, rgba(247,201,72,.07) 70px, transparent 70px);
     }
     header h1 {
-      font-family: 'Fredoka One', cursive; font-size: clamp(2rem, 5vw, 3.2rem);
+      font-family: 'Fredoka One', cursive; font-size: clamp(2.2rem, 5vw, 3.4rem);
       letter-spacing: .5px; position: relative; cursor: default; user-select: none;
+      text-shadow: 0 2px 14px rgba(0,0,0,.2);
     }
-    header p { margin-top: .5rem; font-size: 1.05rem; opacity: .75; position: relative; }
+    header p { margin-top: .5rem; font-size: 1.05rem; opacity: .68; position: relative; }
     .dot {
-      display: inline-block; width: 10px; height: 10px; border-radius: 50%;
-      background: var(--accent2); margin-right: 6px; vertical-align: middle;
+      display: inline-block; width: 11px; height: 11px; border-radius: 50%;
+      background: var(--accent2); margin-right: 7px; vertical-align: middle;
+      box-shadow: 0 0 12px rgba(247,201,72,.55);
     }
-    main { max-width: 960px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+
+    /* ── FILTER BAR ─────────────────────────────── */
+    .filter-bar {
+      background: #fff; border-bottom: 2px solid #e4eaf8;
+      padding: .9rem 1.5rem; position: sticky; top: 0; z-index: 100;
+      box-shadow: 0 3px 18px rgba(79,110,247,0.07);
+    }
+    .filter-inner { max-width: 980px; margin: 0 auto; }
+    .filter-search {
+      width: 100%; padding: .58rem 1rem .58rem 2.5rem;
+      border: 2px solid #e2e8f0; border-radius: 12px;
+      font-size: .92rem; font-family: 'Nunito', sans-serif;
+      outline: none; transition: border-color .2s;
+      background: #f8faff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23b0b8cc' stroke-width='2.5'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E") no-repeat .75rem center;
+      color: var(--text);
+    }
+    .filter-search:focus { border-color: var(--accent); background-color: #fff; }
+    .filter-search::placeholder { color: #b0b8cc; }
+    .filter-rows { margin-top: .65rem; display: flex; flex-direction: column; gap: .4rem; }
+    .filter-row { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; }
+    .filter-label {
+      font-size: .7rem; font-weight: 800; text-transform: uppercase;
+      letter-spacing: .09em; color: var(--muted); min-width: 55px;
+    }
+    .filter-chips { display: flex; flex-wrap: wrap; gap: .32rem; }
+    .chip {
+      padding: .27rem .75rem; border-radius: 99px; font-size: .79rem; font-weight: 700;
+      border: 2px solid #e2e8f0; background: #f8faff; color: var(--muted);
+      cursor: pointer; transition: all .14s ease; user-select: none;
+    }
+    .chip:hover { border-color: var(--accent); color: var(--accent); background: #eef2ff; }
+    .chip.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .chip.chip-all.active { background: var(--header-bg); border-color: var(--header-bg); }
+    .chip-tag.active { background: #9333ea; border-color: #9333ea; color: #fff; }
+    #filter-result-info { font-size: .79rem; color: var(--muted); margin-top: .35rem; min-height: 1rem; }
+
+    /* ── MAIN ───────────────────────────────────── */
+    main { max-width: 980px; margin: 0 auto; padding: 2.5rem 1.5rem 5rem; }
+
     .category { margin-bottom: 3rem; }
-    .category-header { display: flex; align-items: center; gap: 12px; margin-bottom: 1.4rem; }
+    .category-header {
+      display: flex; align-items: center; gap: 13px;
+      margin-bottom: 1.3rem; padding-bottom: .75rem;
+      border-bottom: 2px solid rgba(0,0,0,.055);
+    }
     .category-icon {
-      font-size: 1.8rem; background: var(--header-bg); color: var(--accent2);
-      width: 52px; height: 52px; border-radius: 14px;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0; box-shadow: 0 3px 10px rgba(26,31,94,.2);
+      font-size: 1.65rem; width: 50px; height: 50px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+      background: linear-gradient(140deg, var(--cat-color, #4f6ef7), var(--cat-color2, #818cf8));
+      box-shadow: 0 4px 14px color-mix(in srgb, var(--cat-color, #4f6ef7) 30%, transparent);
     }
-    .category-title { font-family: 'Fredoka One', cursive; font-size: 1.6rem; color: var(--header-bg); }
+    .category-title { font-family: 'Fredoka One', cursive; font-size: 1.5rem; color: var(--header-bg); }
     .category-count {
-      margin-left: auto; font-size: .85rem; background: var(--accent);
-      color: #fff; padding: 3px 12px; border-radius: 99px; font-weight: 700;
+      margin-left: auto; font-size: .8rem; font-weight: 800;
+      background: color-mix(in srgb, var(--cat-color, #4f6ef7) 11%, white);
+      color: var(--cat-color, #4f6ef7);
+      border: 1.5px solid color-mix(in srgb, var(--cat-color, #4f6ef7) 18%, white);
+      padding: 3px 13px; border-radius: 99px;
     }
-    .apps-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.2rem; }
+    .apps-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 1.1rem; }
+
+    /* ── APP CARDS ──────────────────────────────── */
     .app-card {
-      background: var(--card-bg); border-radius: var(--radius); box-shadow: var(--shadow);
-      padding: 1.5rem 1.3rem 1.3rem; text-decoration: none; color: inherit;
-      display: flex; flex-direction: column; gap: .6rem; border: 2px solid transparent;
+      background: var(--card-bg); border-radius: var(--radius);
+      box-shadow: var(--shadow); padding: 1.4rem 1.25rem 1.15rem;
+      text-decoration: none; color: inherit;
+      display: flex; flex-direction: column; gap: .45rem;
+      border: 2px solid transparent;
       transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
       position: relative; overflow: hidden;
     }
-    .app-card::after {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
-      background: linear-gradient(90deg, var(--cat-color, var(--accent)), var(--cat-color2, #a78bfa));
-      border-radius: 99px 99px 0 0;
+    .app-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px;
+      background: linear-gradient(90deg, var(--cat-color, #4f6ef7), var(--cat-color2, #a78bfa));
     }
-    .app-card:hover { transform: translateY(-5px); box-shadow: 0 12px 36px rgba(79,110,247,.18); border-color: var(--accent); }
-    .app-emoji { font-size: 2rem; }
-    .app-name { font-weight: 800; font-size: 1.05rem; line-height: 1.3; }
-    .app-desc { font-size: .85rem; color: var(--muted); line-height: 1.4; flex: 1; }
-    .app-arrow { align-self: flex-end; font-size: 1.1rem; color: var(--accent); font-weight: 800; transition: transform .15s ease; }
+    .app-card::after {
+      content: ''; position: absolute; top: 5px; left: 0; right: 0; height: 55px;
+      background: linear-gradient(180deg, color-mix(in srgb, var(--cat-color, #4f6ef7) 5%, transparent), transparent);
+      pointer-events: none;
+    }
+    .app-card:hover {
+      transform: translateY(-5px); box-shadow: var(--shadow-hover);
+      border-color: color-mix(in srgb, var(--cat-color, #4f6ef7) 35%, transparent);
+    }
+    .app-emoji { font-size: 2rem; position: relative; }
+    .app-name { font-weight: 800; font-size: 1.02rem; line-height: 1.3; position: relative; }
+    .app-desc { font-size: .82rem; color: var(--muted); line-height: 1.45; flex: 1; position: relative; }
+    .app-meta { display: flex; flex-wrap: wrap; gap: .28rem; margin-top: .12rem; position: relative; }
+    .app-tag {
+      font-size: .67rem; font-weight: 800; padding: .16rem .52rem;
+      border-radius: 99px; background: #eef2ff; color: #4f6ef7; border: 1px solid #dde5ff;
+    }
+    .app-tag.tag-klasse {
+      background: color-mix(in srgb, var(--cat-color, #4f6ef7) 10%, white);
+      color: var(--cat-color, #4f6ef7);
+      border-color: color-mix(in srgb, var(--cat-color, #4f6ef7) 18%, white);
+    }
+    .app-tag.tag-custom { background: #fdf4ff; color: #9333ea; border-color: #f0d6ff; }
+    .app-arrow {
+      align-self: flex-end; font-size: 1.1rem;
+      color: var(--cat-color, var(--accent)); font-weight: 800;
+      transition: transform .15s ease; position: relative;
+    }
     .app-card:hover .app-arrow { transform: translateX(4px); }
     .app-card.placeholder {
-      border: 2px dashed #cbd5e1; background: transparent; box-shadow: none;
-      align-items: center; justify-content: center; color: #94a3b8;
-      font-size: .9rem; font-weight: 600; cursor: default; min-height: 130px;
+      border: 2px dashed #d1d9f0; background: transparent; box-shadow: none;
+      align-items: center; justify-content: center; color: #b0bcd4;
+      font-size: .88rem; font-weight: 700; cursor: default; min-height: 120px;
     }
-    .app-card.placeholder::after { display: none; }
-    .app-card.placeholder:hover { transform: none; border-color: #cbd5e1; }
-    .app-hidden { display: none !important; }
-    footer { text-align: center; padding: 1.5rem; font-size: .8rem; color: var(--muted); }
+    .app-card.placeholder::before, .app-card.placeholder::after { display: none; }
+    .app-card.placeholder:hover { transform: none; border-color: #d1d9f0; }
+    .app-card.app-hidden { display: none !important; }
+    .category.cat-hidden { display: none !important; }
+    .app-card.filter-hidden { display: none !important; }
+    #no-results { text-align: center; padding: 4rem 1rem; color: var(--muted); font-size: 1rem; display: none; }
+    #no-results .no-icon { font-size: 3rem; display: block; margin-bottom: .6rem; }
+    footer { text-align: center; padding: 1.5rem; font-size: .8rem; color: var(--muted); border-top: 1px solid #e4eaf8; }
 
-    /* PASSWORT OVERLAY */
+    /* ── PASSWORT OVERLAY ───────────────────────── */
     #pw-overlay {
-      display: none; position: fixed; inset: 0; background: rgba(26,31,94,.6);
-      backdrop-filter: blur(6px); z-index: 1000; align-items: center; justify-content: center;
+      display: none; position: fixed; inset: 0; background: rgba(26,31,94,.55);
+      backdrop-filter: blur(8px); z-index: 1000; align-items: center; justify-content: center;
     }
     #pw-overlay.visible { display: flex; }
     #pw-box {
-      background: #fff; border-radius: 20px; padding: 2rem 2rem 1.5rem;
-      width: 300px; box-shadow: 0 20px 60px rgba(0,0,0,.25); text-align: center;
+      background: #fff; border-radius: 22px; padding: 2.2rem 2rem 1.8rem;
+      width: 310px; box-shadow: 0 24px 60px rgba(0,0,0,.22); text-align: center;
     }
-    #pw-box h2 { font-family: 'Fredoka One', cursive; color: var(--header-bg); margin-bottom: .3rem; font-size: 1.4rem; }
-    #pw-box p { font-size: .85rem; color: var(--muted); margin-bottom: 1.2rem; }
+    #pw-box h2 { font-family: 'Fredoka One', cursive; color: var(--header-bg); margin-bottom: .3rem; font-size: 1.5rem; }
+    #pw-box p { font-size: .86rem; color: var(--muted); margin-bottom: 1.2rem; }
     #pw-input {
-      width: 100%; padding: .7rem 1rem; border: 2px solid #e2e8f0; border-radius: 12px;
+      width: 100%; padding: .75rem 1rem; border: 2px solid #e2e8f0; border-radius: 12px;
       font-size: 1rem; font-family: 'Nunito', sans-serif; outline: none;
       transition: border-color .2s; text-align: center; letter-spacing: 3px;
     }
@@ -97,46 +193,110 @@
     #pw-cancel { margin-top: .8rem; background: none; border: none; color: var(--muted); font-size: .85rem; cursor: pointer; font-family: 'Nunito', sans-serif; }
     #pw-cancel:hover { color: var(--text); }
 
-    /* ADMIN PANEL */
+    /* ── ADMIN PANEL ────────────────────────────── */
     #admin-panel {
       display: none; position: fixed; bottom: 0; left: 0; right: 0;
-      background: var(--header-bg); color: #fff; padding: 1.2rem 1.5rem 1.5rem;
-      z-index: 999; box-shadow: 0 -4px 30px rgba(0,0,0,.3);
-      max-height: 60vh; overflow-y: auto;
+      background: #111827; color: #fff; padding: 0; z-index: 999;
+      box-shadow: 0 -6px 36px rgba(0,0,0,.4); max-height: 78vh; flex-direction: column;
+      border-top: 2px solid rgba(255,255,255,.07);
     }
-    #admin-panel.visible { display: block; }
-    #admin-panel h3 { font-family: 'Fredoka One', cursive; font-size: 1.1rem; margin-bottom: .8rem; color: var(--accent2); }
+    #admin-panel.visible { display: flex; }
+    .admin-tabs { display: flex; border-bottom: 1px solid rgba(255,255,255,.1); flex-shrink: 0; background: rgba(255,255,255,.02); }
+    .admin-tab {
+      padding: .8rem 1.4rem; font-family: 'Nunito', sans-serif; font-weight: 800;
+      font-size: .88rem; color: rgba(255,255,255,.42); background: none; border: none;
+      cursor: pointer; border-bottom: 3px solid transparent; transition: all .15s; margin-bottom: -1px;
+    }
+    .admin-tab:hover { color: rgba(255,255,255,.8); }
+    .admin-tab.active { color: var(--accent2); border-bottom-color: var(--accent2); }
+    .admin-content { overflow-y: auto; padding: 1.2rem 1.5rem 1.8rem; flex: 1; }
+    .admin-tab-panel { display: none; }
+    .admin-tab-panel.active { display: block; }
+    .admin-section-title { font-family: 'Fredoka One', cursive; font-size: 1rem; margin-bottom: .9rem; color: var(--accent2); }
     .admin-category-block { margin-bottom: .8rem; }
-    .admin-app-row { display: flex; flex-wrap: wrap; gap: .5rem; padding-left: 1rem; margin-top: .4rem; margin-bottom: .5rem; }
-    .admin-divider { border: none; border-top: 1px solid rgba(255,255,255,.1); margin: .5rem 0 .8rem; }
+    .admin-app-row { display: flex; flex-wrap: wrap; gap: .45rem; padding-left: 1rem; margin-top: .4rem; margin-bottom: .5rem; }
+    .admin-divider { border: none; border-top: 1px solid rgba(255,255,255,.07); margin: .5rem 0 .9rem; }
     .admin-toggle {
       display: flex; align-items: center; gap: .5rem;
-      background: rgba(255,255,255,.1); border: 1.5px solid rgba(255,255,255,.2);
-      border-radius: 10px; padding: .45rem .9rem; cursor: pointer;
-      font-family: 'Nunito', sans-serif; font-size: .85rem; color: #fff;
-      font-weight: 700; transition: background .15s; user-select: none;
+      background: rgba(255,255,255,.08); border: 1.5px solid rgba(255,255,255,.14);
+      border-radius: 10px; padding: .42rem .9rem; cursor: pointer;
+      font-family: 'Nunito', sans-serif; font-size: .84rem; color: rgba(255,255,255,.88);
+      font-weight: 700; transition: background .14s; user-select: none;
     }
-    .admin-toggle:hover { background: rgba(255,255,255,.2); }
-    .admin-toggle.is-hidden { background: rgba(239,68,68,.2); border-color: #f87171; color: #fca5a5; }
-    .admin-toggle.cat-toggle { font-size: .95rem; }
-    .admin-toggle.cat-toggle.is-hidden { background: rgba(239,68,68,.3); }
-    .admin-toggle.app-toggle.cat-locked { opacity: .4; cursor: not-allowed; }
-    .toggle-dot { width: 9px; height: 9px; border-radius: 50%; background: #4ade80; flex-shrink: 0; }
+    .admin-toggle:hover { background: rgba(255,255,255,.15); }
+    .admin-toggle.is-hidden { background: rgba(239,68,68,.18); border-color: #f87171; color: #fca5a5; }
+    .admin-toggle.cat-toggle { font-size: .92rem; }
+    .admin-toggle.app-toggle.cat-locked { opacity: .33; cursor: not-allowed; }
+    .toggle-dot { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; flex-shrink: 0; }
     .admin-toggle.is-hidden .toggle-dot { background: #f87171; }
     #admin-close {
-      background: rgba(255,255,255,.15); border: none; color: #fff;
-      padding: .5rem 1.2rem; border-radius: 10px; cursor: pointer;
-      font-family: 'Nunito', sans-serif; font-weight: 700; font-size: .85rem; margin-top: .5rem;
+      background: rgba(255,255,255,.1); border: 1.5px solid rgba(255,255,255,.18);
+      color: #fff; padding: .5rem 1.4rem; border-radius: 10px; cursor: pointer;
+      font-family: 'Nunito', sans-serif; font-weight: 700; font-size: .85rem;
+      margin-top: 1rem; display: inline-block; transition: background .14s;
     }
-    #admin-close:hover { background: rgba(255,255,255,.25); }
+    #admin-close:hover { background: rgba(255,255,255,.2); }
+
+    /* ── TAG EDITOR ─────────────────────────────── */
+    .custom-tag-manager {
+      background: rgba(147,51,234,.12); border-radius: 14px; padding: .9rem 1rem;
+      border: 1px solid rgba(147,51,234,.3); margin-bottom: 1.1rem;
+    }
+    .custom-tag-manager h4 { font-size: .8rem; font-weight: 800; color: #d8b4fe; text-transform: uppercase; letter-spacing: .07em; margin-bottom: .7rem; }
+    .custom-tag-list { display: flex; flex-wrap: wrap; gap: .38rem; margin-bottom: .65rem; min-height: 24px; }
+    .custom-tag-pill {
+      display: flex; align-items: center; gap: .28rem; padding: .22rem .65rem;
+      border-radius: 99px; font-size: .77rem; font-weight: 700;
+      background: rgba(147,51,234,.22); border: 1.5px solid rgba(147,51,234,.45); color: #d8b4fe;
+    }
+    .pill-del {
+      cursor: pointer; font-size: 1rem; color: rgba(216,180,254,.45); line-height: 1;
+      transition: color .1s; background: none; border: none; font-family: inherit; padding: 0;
+    }
+    .pill-del:hover { color: #f87171; }
+    .custom-tag-add { display: flex; gap: .5rem; }
+    .custom-tag-input {
+      flex: 1; background: rgba(255,255,255,.08); border: 1.5px solid rgba(255,255,255,.16);
+      border-radius: 9px; color: #fff; font-family: 'Nunito', sans-serif;
+      font-size: .83rem; font-weight: 700; padding: .38rem .8rem; outline: none; transition: border-color .15s;
+    }
+    .custom-tag-input::placeholder { color: rgba(255,255,255,.28); }
+    .custom-tag-input:focus { border-color: #9333ea; }
+    .custom-tag-btn {
+      background: #7e22ce; border: none; color: #fff; border-radius: 9px;
+      padding: .38rem 1rem; cursor: pointer; font-family: 'Nunito', sans-serif;
+      font-weight: 800; font-size: .83rem; transition: background .14s;
+    }
+    .custom-tag-btn:hover { background: #6b21a8; }
+    .tag-editor-list { display: flex; flex-direction: column; gap: .7rem; }
+    .tag-editor-row {
+      background: rgba(255,255,255,.06); border-radius: 14px; padding: .85rem 1rem;
+      border: 1px solid rgba(255,255,255,.09);
+    }
+    .tag-editor-name { font-weight: 800; font-size: .9rem; margin-bottom: .55rem; display: flex; align-items: center; gap: .5rem; }
+    .te-emoji { font-size: 1.15rem; }
+    .tag-editor-fields { display: flex; flex-wrap: wrap; gap: .38rem; align-items: center; }
+    .te-label { font-size: .69rem; font-weight: 800; color: rgba(255,255,255,.38); text-transform: uppercase; letter-spacing: .07em; width: 100%; margin-top: .32rem; }
+    .te-label:first-child { margin-top: 0; }
+    .te-chip {
+      padding: .25rem .7rem; border-radius: 99px; font-size: .76rem; font-weight: 700;
+      border: 1.5px solid rgba(255,255,255,.18); background: rgba(255,255,255,.07);
+      color: rgba(255,255,255,.58); cursor: pointer; transition: all .12s; user-select: none;
+    }
+    .te-chip:hover { background: rgba(255,255,255,.15); color: #fff; }
+    .te-chip.sel-klasse { background: #4f6ef7; border-color: #4f6ef7; color: #fff; }
+    .te-chip.sel-custom { background: #7e22ce; border-color: #7e22ce; color: #fff; }
+    .te-save-note { font-size: .7rem; color: #4ade80; margin-top: .32rem; display: none; }
+    .te-save-note.show { display: block; }
   </style>
 </head>
 <body>
 
+<!-- PASSWORT OVERLAY -->
 <div id="pw-overlay">
   <div id="pw-box">
     <h2>🔒 Admin-Zugang</h2>
-    <p>Passwort eingeben um Apps<br>ein- und auszuschalten</p>
+    <p>Passwort eingeben um das<br>Admin-Panel zu öffnen</p>
     <input type="password" id="pw-input" placeholder="••••••••" autocomplete="off" />
     <div id="pw-error"></div>
     <br>
@@ -144,229 +304,434 @@
   </div>
 </div>
 
+<!-- ADMIN PANEL -->
 <div id="admin-panel">
-  <h3>⚙️ Admin – Kategorien &amp; Apps ein/ausschalten</h3>
-  <div id="admin-app-list"></div>
-  <button id="admin-close">Panel schließen</button>
+  <div class="admin-tabs">
+    <button class="admin-tab active" data-tab="visibility">👁 Sichtbarkeit</button>
+    <button class="admin-tab" data-tab="tags">🏷 Tags</button>
+  </div>
+  <div class="admin-content">
+    <div class="admin-tab-panel active" id="tab-visibility">
+      <div class="admin-section-title">Apps &amp; Kategorien ein/ausschalten</div>
+      <div id="admin-app-list"></div>
+    </div>
+    <div class="admin-tab-panel" id="tab-tags">
+      <div class="admin-section-title">Tags verwalten &amp; zuweisen</div>
+      <div class="custom-tag-manager">
+        <h4>✨ Eigene Tags erstellen</h4>
+        <div class="custom-tag-list" id="global-tag-list"></div>
+        <div class="custom-tag-add">
+          <input class="custom-tag-input" id="new-tag-input" placeholder="z.B. Wiederholung, Test, Hausaufgabe …" maxlength="28" />
+          <button class="custom-tag-btn" id="add-tag-btn">+ Hinzufügen</button>
+        </div>
+      </div>
+      <div class="tag-editor-list" id="tag-editor-list"></div>
+    </div>
+    <button id="admin-close">Panel schließen</button>
+  </div>
 </div>
 
+<!-- HEADER -->
 <header>
   <h1 id="title-click"><span class="dot"></span>Lern-Apps</h1>
   <p>Klick auf eine App und leg los!</p>
 </header>
 
-<main>
+<!-- FILTER BAR -->
+<div class="filter-bar">
+  <div class="filter-inner">
+    <input type="search" class="filter-search" id="search-input" placeholder="App suchen …" autocomplete="off" />
+    <div class="filter-rows">
+      <div class="filter-row">
+        <span class="filter-label">Klasse</span>
+        <div class="filter-chips" id="chips-klasse">
+          <span class="chip chip-all active" data-group="klasse" data-value="all">Alle</span>
+          <span class="chip" data-group="klasse" data-value="5">Klasse 5</span>
+          <span class="chip" data-group="klasse" data-value="6">Klasse 6</span>
+          <span class="chip" data-group="klasse" data-value="7">Klasse 7</span>
+          <span class="chip" data-group="klasse" data-value="8">Klasse 8</span>
+          <span class="chip" data-group="klasse" data-value="9">Klasse 9</span>
+        </div>
+      </div>
+      <div class="filter-row" id="filter-row-tags" style="display:none;">
+        <span class="filter-label">Tags</span>
+        <div class="filter-chips" id="chips-tags">
+          <span class="chip chip-all active" data-group="tag" data-value="all">Alle</span>
+        </div>
+      </div>
+    </div>
+    <div id="filter-result-info"></div>
+  </div>
+</div>
 
-  <!-- ═══════════════════════════════════════════
-       KATEGORIE: MATHE
-       Neue App: data-name="Name" nicht vergessen!
-       ═══════════════════════════════════════════ -->
-  <section class="category" data-category="Mathematik" style="--cat-color:#4f6ef7; --cat-color2:#818cf8;">
-    <div class="category-header">
-      <div class="category-icon">➕</div>
-      <span class="category-title">Mathematik</span>
-      <span class="category-count" id="count-mathe"></span>
-    </div>
-    <div class="apps-grid" id="grid-mathe">
-      <a class="app-card" href="kopfrechnen.html" data-name="Kopfrechnen">
-        <span class="app-emoji">🔢</span>
-        <span class="app-name">Kopfrechnen</span>
-        <span class="app-desc">Übe deine Kopfrechenkünste am Anfang der Stunde</span>
-        <span class="app-arrow">→</span>
-      </a>
-      <a class="app-card" href="laengeneinheiten.html" data-name="Längeneinheiten">
-        <span class="app-emoji">📐</span>
-        <span class="app-name">Längeneinheiten</span>
-        <span class="app-desc">Teste dein Wissen zu den Längeneinheiten</span>
-        <span class="app-arrow">→</span>
-      </a>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════
-       KATEGORIE: ENGLISCH
-       ═══════════════════════════════════════════ -->
-  <section class="category" data-category="Englisch" style="--cat-color:#ef4444; --cat-color2:#f87171;">
-    <div class="category-header">
-      <div class="category-icon">🇬🇧</div>
-      <span class="category-title">Englisch</span>
-      <span class="category-count" id="count-englisch"></span>
-    </div>
-    <div class="apps-grid" id="grid-englisch">
-      <a class="app-card" href="vokabeltrainer.html" data-name="Vokabeln-Test">
-        <span class="app-emoji">🗣️</span>
-        <span class="app-name">Vokabeln-Test</span>
-        <span class="app-desc">Wiederhole Vokabeln</span>
-        <span class="app-arrow">→</span>
-      </a>
-      <a class="app-card" href="satzglieder-erkennen.html" data-name="Satzglieder ordnen">
-        <span class="app-emoji">🔤</span>
-        <span class="app-name">Satzglieder ordnen</span>
-        <span class="app-desc">Put the words in the right order</span>
-        <span class="app-arrow">→</span>
-      </a>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════
-       NEUE KATEGORIE HINZUFÜGEN – Vorlage:
-       1. data-category="Name" setzen
-       2. id="grid-XXX" und id="count-XXX" anpassen
-       3. Icon, Farben und Titel ändern
-       4. Bei jeder App: data-name="App-Name" setzen
-       ═══════════════════════════════════════════
-
-  <section class="category" data-category="Deutsch" style="--cat-color:#10b981; --cat-color2:#34d399;">
-    <div class="category-header">
-      <div class="category-icon">📖</div>
-      <span class="category-title">Deutsch</span>
-      <span class="category-count" id="count-deutsch"></span>
-    </div>
-    <div class="apps-grid" id="grid-deutsch">
-      <a class="app-card" href="deutsch-app.html" data-name="Rechtschreibung">
-        <span class="app-emoji">✏️</span>
-        <span class="app-name">Rechtschreibung</span>
-        <span class="app-desc">Übe schwierige Wörter</span>
-        <span class="app-arrow">→</span>
-      </a>
-    </div>
-  </section>
-  -->
-
+<main id="main-content">
+  <div id="no-results">
+    <span class="no-icon">🔍</span>
+    Keine Apps für diese Auswahl gefunden.<br>
+    <small>Versuche einen anderen Filter oder eine andere Suche.</small>
+  </div>
 </main>
 
 <footer>Lern-Apps · geitner-hub.github.io</footer>
 
 <script>
-  // ── PASSWORT HIER ÄNDERN ─────────────────────
-  const ADMIN_PASSWORD = 'lehrer123';
-  // ────────────────────────────────────────────
+// ════════════════════════════════════════════════════════
+//  APPS – neue App = neuer Eintrag hier
+// ════════════════════════════════════════════════════════
+const APPS = [
+  { name:"Kopfrechnen",       datei:"kopfrechnen.html",          emoji:"🔢", beschreibung:"Übe deine Kopfrechenkünste am Anfang der Stunde", fach:"Mathematik" },
+  { name:"Längeneinheiten",   datei:"laengeneinheiten.html",     emoji:"📐", beschreibung:"Teste dein Wissen zu den Längeneinheiten",          fach:"Mathematik" },
+  { name:"Vokabeln-Test",     datei:"vokabeltrainer.html",       emoji:"🗣️", beschreibung:"Wiederhole Vokabeln",                               fach:"Englisch"   },
+  { name:"Satzglieder ordnen",datei:"satzglieder-erkennen.html", emoji:"🔤", beschreibung:"Put the words in the right order",                  fach:"Englisch"   }
+  // ← Komma nach letztem Eintrag nicht vergessen!
+];
 
-  const SK_APPS = 'lern-apps-hidden';
-  const SK_CATS = 'lern-apps-hidden-cats';
+// ════════════════════════════════════════════════════════
+//  KATEGORIEN – Icon & Farbe pro Fach
+// ════════════════════════════════════════════════════════
+const KATEGORIEN = {
+  "Mathematik": { icon:"➕", color:"#4f6ef7", color2:"#818cf8" },
+  "Englisch":   { icon:"🇬🇧", color:"#ef4444", color2:"#f87171" },
+  "Deutsch":    { icon:"📖", color:"#10b981", color2:"#34d399"  },
+  "Sachkunde":  { icon:"🌍", color:"#f59e0b", color2:"#fbbf24"  },
+  "Sport":      { icon:"⚽", color:"#8b5cf6", color2:"#a78bfa"  }
+};
 
-  function loadHidden()    { try { return JSON.parse(localStorage.getItem(SK_APPS)) || []; } catch { return []; } }
-  function saveHidden(l)   { localStorage.setItem(SK_APPS, JSON.stringify(l)); }
-  function loadHiddenCats(){ try { return JSON.parse(localStorage.getItem(SK_CATS)) || []; } catch { return []; } }
-  function saveHiddenCats(l){ localStorage.setItem(SK_CATS, JSON.stringify(l)); }
+const ADMIN_PASSWORD = 'lehrer123'; // ← HIER ÄNDERN
 
-  function applyVisibility() {
-    const hidden = loadHidden();
-    const hiddenCats = loadHiddenCats();
-    document.querySelectorAll('.category').forEach(cat => {
-      const catName = cat.getAttribute('data-category');
-      cat.style.display = hiddenCats.includes(catName) ? 'none' : '';
-    });
-    document.querySelectorAll('.app-card:not(.placeholder)').forEach(card => {
-      card.classList.toggle('app-hidden', hidden.includes(card.getAttribute('data-name')));
-    });
-    updateCounts();
-  }
+// ════════════════════════════════════════════════════════
+//  STORAGE HELPERS
+// ════════════════════════════════════════════════════════
+const SK_HIDDEN      = 'la-hidden';
+const SK_HIDDEN_CATS = 'la-hidden-cats';
+const SK_TAGS        = 'la-tags';
+const SK_CUSTOM_TAGS = 'la-custom-tags';
+const loadJSON = (k,d) => { try { return JSON.parse(localStorage.getItem(k)) || d; } catch { return d; } };
+const saveJSON = (k,v) => localStorage.setItem(k, JSON.stringify(v));
+const loadHidden     = () => loadJSON(SK_HIDDEN, []);
+const loadHiddenCats = () => loadJSON(SK_HIDDEN_CATS, []);
+const loadTags       = () => loadJSON(SK_TAGS, {});
+const loadCustomTags = () => loadJSON(SK_CUSTOM_TAGS, []);
 
-  function updateCounts() {
-    document.querySelectorAll('.category').forEach(cat => {
-      const grid = cat.querySelector('.apps-grid');
-      const countEl = cat.querySelector('[id^="count-"]');
-      if (!grid || !countEl) return;
-      const visible = [...grid.querySelectorAll('.app-card:not(.placeholder):not(.app-hidden)')].length;
-      countEl.textContent = visible + (visible === 1 ? ' App' : ' Apps');
-      let ph = grid.querySelector('.placeholder');
-      if (!ph) { ph = document.createElement('div'); ph.className = 'app-card placeholder'; ph.textContent = '+ App kommt bald'; grid.appendChild(ph); }
-      ph.style.display = visible === 0 ? 'flex' : 'none';
-    });
-  }
+function getAppTags(name) {
+  const s = loadTags();
+  if (s[name]) return s[name];
+  const a = APPS.find(x => x.name === name);
+  return { klassen: a?.klassen||[], customTags: a?.customTags||[] };
+}
 
-  // 3x Titel klicken
-  let clickCount = 0, clickTimer;
-  document.getElementById('title-click').addEventListener('click', () => {
-    clickCount++;
-    clearTimeout(clickTimer);
-    clickTimer = setTimeout(() => { clickCount = 0; }, 1000);
-    if (clickCount >= 3) { clickCount = 0; document.getElementById('pw-overlay').classList.add('visible'); setTimeout(() => document.getElementById('pw-input').focus(), 100); }
-  });
+// ════════════════════════════════════════════════════════
+//  SEITE AUFBAUEN
+// ════════════════════════════════════════════════════════
+function buildPage() {
+  const main = document.getElementById('main-content');
+  main.querySelectorAll('.category').forEach(el => el.remove());
+  const noR = document.getElementById('no-results');
+  const faecher = [...new Set(APPS.map(a => a.fach))];
 
-  document.getElementById('pw-input').addEventListener('keydown', e => { if (e.key === 'Enter') checkPassword(); });
-  document.getElementById('pw-cancel').addEventListener('click', closeOverlay);
+  faecher.forEach(fach => {
+    const kat = KATEGORIEN[fach] || { icon:"📚", color:"#4f6ef7", color2:"#818cf8" };
+    const section = document.createElement('section');
+    section.className = 'category';
+    section.dataset.category = fach;
+    section.style.cssText = `--cat-color:${kat.color};--cat-color2:${kat.color2}`;
+    const cid = 'c-' + fach.toLowerCase().replace(/[^a-z0-9]/g,'');
+    section.innerHTML = `
+      <div class="category-header">
+        <div class="category-icon">${kat.icon}</div>
+        <span class="category-title">${fach}</span>
+        <span class="category-count" id="${cid}"></span>
+      </div>
+      <div class="apps-grid" id="g-${cid}"></div>`;
+    const grid = section.querySelector('.apps-grid');
 
-  function checkPassword() {
-    if (document.getElementById('pw-input').value === ADMIN_PASSWORD) { closeOverlay(); openAdminPanel(); }
-    else { document.getElementById('pw-error').textContent = '❌ Falsches Passwort'; document.getElementById('pw-input').value = ''; }
-  }
-  function closeOverlay() {
-    document.getElementById('pw-overlay').classList.remove('visible');
-    document.getElementById('pw-input').value = '';
-    document.getElementById('pw-error').textContent = '';
-  }
-
-  function openAdminPanel() {
-    const list = document.getElementById('admin-app-list');
-    list.innerHTML = '';
-
-    document.querySelectorAll('.category').forEach((cat, i) => {
-      const catName = cat.getAttribute('data-category');
-      const icon = cat.querySelector('.category-icon')?.textContent?.trim() || '📁';
-      const hiddenCats = loadHiddenCats();
-      const isCatHidden = hiddenCats.includes(catName);
-
-      const block = document.createElement('div');
-      block.className = 'admin-category-block';
-
-      // Kategorie-Schalter
-      const catBtn = document.createElement('button');
-      catBtn.className = 'admin-toggle cat-toggle' + (isCatHidden ? ' is-hidden' : '');
-      catBtn.innerHTML = `<span class="toggle-dot"></span>${icon} ${catName}`;
-      catBtn.addEventListener('click', () => {
-        const hc = loadHiddenCats();
-        const idx = hc.indexOf(catName);
-        if (idx === -1) hc.push(catName); else hc.splice(idx, 1);
-        saveHiddenCats(hc);
-        catBtn.classList.toggle('is-hidden');
-        const locked = hc.includes(catName);
-        appRow.querySelectorAll('.app-toggle').forEach(b => b.classList.toggle('cat-locked', locked));
-        applyVisibility();
-      });
-      block.appendChild(catBtn);
-
-      // App-Schalter-Reihe
-      const appRow = document.createElement('div');
-      appRow.className = 'admin-app-row';
-
-      cat.querySelectorAll('.app-card:not(.placeholder)').forEach(card => {
-        const name = card.getAttribute('data-name');
-        if (!name) return;
-        const isAppHidden = loadHidden().includes(name);
-        const btn = document.createElement('button');
-        btn.className = 'admin-toggle app-toggle' + (isAppHidden ? ' is-hidden' : '') + (isCatHidden ? ' cat-locked' : '');
-        btn.innerHTML = `<span class="toggle-dot"></span>${name}`;
-        btn.addEventListener('click', () => {
-          if (loadHiddenCats().includes(catName)) return;
-          const h = loadHidden();
-          const idx = h.indexOf(name);
-          if (idx === -1) h.push(name); else h.splice(idx, 1);
-          saveHidden(h);
-          btn.classList.toggle('is-hidden');
-          applyVisibility();
-        });
-        appRow.appendChild(btn);
-      });
-
-      block.appendChild(appRow);
-      if (i < document.querySelectorAll('.category').length - 1) {
-        const hr = document.createElement('hr');
-        hr.className = 'admin-divider';
-        block.appendChild(hr);
-      }
-      list.appendChild(block);
+    APPS.filter(a => a.fach === fach).forEach(app => {
+      const t = getAppTags(app.name);
+      const kl = t.klassen||[], ct = t.customTags||[];
+      const card = document.createElement('a');
+      card.className = 'app-card';
+      card.href = app.datei;
+      card.dataset.name = app.name;
+      card.dataset.fach = fach;
+      card.dataset.klassen = kl.join(',');
+      card.dataset.customtags = ct.join(',');
+      card.innerHTML = `
+        <span class="app-emoji">${app.emoji}</span>
+        <span class="app-name">${app.name}</span>
+        <span class="app-desc">${app.beschreibung}</span>
+        <div class="app-meta">
+          ${kl.map(k=>`<span class="app-tag tag-klasse">Kl. ${k}</span>`).join('')}
+          ${ct.map(t=>`<span class="app-tag tag-custom">${t}</span>`).join('')}
+        </div>
+        <span class="app-arrow">→</span>`;
+      grid.appendChild(card);
     });
 
-    document.getElementById('admin-panel').classList.add('visible');
-  }
-
-  document.getElementById('admin-close').addEventListener('click', () => {
-    document.getElementById('admin-panel').classList.remove('visible');
+    const ph = document.createElement('div');
+    ph.className = 'app-card placeholder';
+    ph.textContent = '+ App kommt bald';
+    ph.style.display = 'none';
+    grid.appendChild(ph);
+    main.insertBefore(section, noR);
   });
 
   applyVisibility();
+  refreshTagChips();
+  applyFilters();
+}
+
+// ════════════════════════════════════════════════════════
+//  SICHTBARKEIT
+// ════════════════════════════════════════════════════════
+function applyVisibility() {
+  const h = loadHidden(), hc = loadHiddenCats();
+  document.querySelectorAll('.category').forEach(c => c.classList.toggle('cat-hidden', hc.includes(c.dataset.category)));
+  document.querySelectorAll('.app-card:not(.placeholder)').forEach(c => c.classList.toggle('app-hidden', h.includes(c.dataset.name)));
+  updateCounts();
+}
+
+function updateCounts() {
+  document.querySelectorAll('.category:not(.cat-hidden)').forEach(cat => {
+    const grid = cat.querySelector('.apps-grid');
+    const el   = cat.querySelector('[id^="c-"]');
+    if (!grid || !el) return;
+    const n = [...grid.querySelectorAll('.app-card:not(.placeholder):not(.app-hidden):not(.filter-hidden)')].length;
+    el.textContent = n + (n===1?' App':' Apps');
+    const ph = grid.querySelector('.placeholder');
+    if (ph) ph.style.display = n===0 ? 'flex' : 'none';
+  });
+}
+
+// ════════════════════════════════════════════════════════
+//  FILTER
+// ════════════════════════════════════════════════════════
+let activeKlasse='all', activeTag='all', searchQuery='';
+
+function refreshTagChips() {
+  const tags = loadCustomTags();
+  const row  = document.getElementById('filter-row-tags');
+  const wrap = document.getElementById('chips-tags');
+  wrap.innerHTML = `<span class="chip chip-all ${activeTag==='all'?'active':''}" data-group="tag" data-value="all">Alle</span>`;
+  tags.forEach(tag => {
+    const c = document.createElement('span');
+    c.className = 'chip chip-tag' + (activeTag===tag?' active':'');
+    c.dataset.group = 'tag'; c.dataset.value = tag; c.textContent = tag;
+    wrap.appendChild(c);
+  });
+  row.style.display = tags.length > 0 ? '' : 'none';
+  wrap.querySelectorAll('.chip').forEach(ch => ch.addEventListener('click', () => {
+    wrap.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+    ch.classList.add('active'); activeTag = ch.dataset.value; applyFilters();
+  }));
+}
+
+function applyFilters() {
+  let total = 0;
+  document.querySelectorAll('.app-card:not(.placeholder)').forEach(card => {
+    if (card.classList.contains('app-hidden')) { card.classList.add('filter-hidden'); return; }
+    const name = (card.dataset.name||'').toLowerCase();
+    const desc = card.querySelector('.app-desc')?.textContent.toLowerCase()||'';
+    const fach = (card.dataset.fach||'').toLowerCase();
+    const kl   = card.dataset.klassen ? card.dataset.klassen.split(',').map(k=>k.trim()) : [];
+    const ct   = card.dataset.customtags ? card.dataset.customtags.split(',').map(t=>t.trim().toLowerCase()) : [];
+    const ok = (!searchQuery || name.includes(searchQuery)||desc.includes(searchQuery)||fach.includes(searchQuery))
+            && (activeKlasse==='all' || kl.includes(activeKlasse))
+            && (activeTag==='all'    || ct.includes(activeTag.toLowerCase()));
+    card.classList.toggle('filter-hidden', !ok);
+    if (ok) total++;
+  });
+  document.querySelectorAll('.category:not(.cat-hidden)').forEach(cat => {
+    const any = [...cat.querySelectorAll('.app-card:not(.placeholder):not(.app-hidden):not(.filter-hidden)')].length>0;
+    cat.style.display = any ? '' : 'none';
+  });
+  const info = document.getElementById('filter-result-info');
+  info.textContent = (activeKlasse!=='all'||activeTag!=='all'||searchQuery)
+    ? `${total} App${total!==1?'s':''} gefunden` : '';
+  document.getElementById('no-results').style.display = total===0 ? 'block' : 'none';
+  updateCounts();
+}
+
+document.getElementById('chips-klasse').addEventListener('click', e => {
+  const ch = e.target.closest('.chip'); if (!ch) return;
+  document.querySelectorAll('#chips-klasse .chip').forEach(c=>c.classList.remove('active'));
+  ch.classList.add('active'); activeKlasse = ch.dataset.value; applyFilters();
+});
+document.getElementById('search-input').addEventListener('input', e => {
+  searchQuery = e.target.value.trim().toLowerCase(); applyFilters();
+});
+
+// ════════════════════════════════════════════════════════
+//  PASSWORT
+// ════════════════════════════════════════════════════════
+let cc=0, ct2;
+document.getElementById('title-click').addEventListener('click', () => {
+  cc++; clearTimeout(ct2); ct2=setTimeout(()=>cc=0,1000);
+  if (cc>=3) { cc=0; document.getElementById('pw-overlay').classList.add('visible'); setTimeout(()=>document.getElementById('pw-input').focus(),100); }
+});
+document.getElementById('pw-input').addEventListener('keydown', e => { if (e.key==='Enter') checkPW(); });
+document.getElementById('pw-cancel').addEventListener('click', closeOverlay);
+function checkPW() {
+  if (document.getElementById('pw-input').value===ADMIN_PASSWORD) { closeOverlay(); openAdmin(); }
+  else { document.getElementById('pw-error').textContent='❌ Falsches Passwort'; document.getElementById('pw-input').value=''; }
+}
+function closeOverlay() {
+  document.getElementById('pw-overlay').classList.remove('visible');
+  document.getElementById('pw-input').value=''; document.getElementById('pw-error').textContent='';
+}
+
+// ════════════════════════════════════════════════════════
+//  ADMIN TABS
+// ════════════════════════════════════════════════════════
+document.querySelectorAll('.admin-tab').forEach(tab => tab.addEventListener('click', () => {
+  document.querySelectorAll('.admin-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.admin-tab-panel').forEach(p=>p.classList.remove('active'));
+  tab.classList.add('active');
+  document.getElementById('tab-'+tab.dataset.tab).classList.add('active');
+}));
+
+// ════════════════════════════════════════════════════════
+//  SICHTBARKEIT-TAB
+// ════════════════════════════════════════════════════════
+function buildVisTab() {
+  const list = document.getElementById('admin-app-list');
+  list.innerHTML='';
+  document.querySelectorAll('.category').forEach((cat,i,all) => {
+    const catName = cat.dataset.category;
+    const icon = cat.querySelector('.category-icon')?.textContent?.trim()||'📁';
+    const isCH  = loadHiddenCats().includes(catName);
+    const block = document.createElement('div'); block.className='admin-category-block';
+    const catBtn = document.createElement('button');
+    catBtn.className='admin-toggle cat-toggle'+(isCH?' is-hidden':'');
+    catBtn.innerHTML=`<span class="toggle-dot"></span>${icon} ${catName}`;
+    catBtn.addEventListener('click',()=>{
+      const hc=loadHiddenCats(), idx=hc.indexOf(catName);
+      if(idx===-1) hc.push(catName); else hc.splice(idx,1);
+      saveJSON(SK_HIDDEN_CATS,hc); catBtn.classList.toggle('is-hidden');
+      appRow.querySelectorAll('.app-toggle').forEach(b=>b.classList.toggle('cat-locked',hc.includes(catName)));
+      applyVisibility(); applyFilters();
+    });
+    block.appendChild(catBtn);
+    const appRow=document.createElement('div'); appRow.className='admin-app-row';
+    cat.querySelectorAll('.app-card:not(.placeholder)').forEach(card=>{
+      const name=card.dataset.name; if(!name) return;
+      const isH=loadHidden().includes(name);
+      const btn=document.createElement('button');
+      btn.className='admin-toggle app-toggle'+(isH?' is-hidden':'')+(isCH?' cat-locked':'');
+      btn.innerHTML=`<span class="toggle-dot"></span>${name}`;
+      btn.addEventListener('click',()=>{
+        if(loadHiddenCats().includes(catName)) return;
+        const h=loadHidden(), idx=h.indexOf(name);
+        if(idx===-1) h.push(name); else h.splice(idx,1);
+        saveJSON(SK_HIDDEN,h); btn.classList.toggle('is-hidden');
+        applyVisibility(); applyFilters();
+      });
+      appRow.appendChild(btn);
+    });
+    block.appendChild(appRow);
+    if(i<all.length-1){const hr=document.createElement('hr');hr.className='admin-divider';block.appendChild(hr);}
+    list.appendChild(block);
+  });
+}
+
+// ════════════════════════════════════════════════════════
+//  CUSTOM TAGS
+// ════════════════════════════════════════════════════════
+function buildGlobalTagList() {
+  const list=document.getElementById('global-tag-list');
+  const tags=loadCustomTags(); list.innerHTML='';
+  if(!tags.length){list.innerHTML='<span style="font-size:.76rem;color:rgba(255,255,255,.28);">Noch keine Tags erstellt.</span>';return;}
+  tags.forEach(tag=>{
+    const pill=document.createElement('div'); pill.className='custom-tag-pill';
+    pill.innerHTML=`${tag} <button class="pill-del">×</button>`;
+    pill.querySelector('.pill-del').addEventListener('click',()=>{
+      saveJSON(SK_CUSTOM_TAGS,loadCustomTags().filter(t=>t!==tag));
+      const at=loadTags();
+      Object.keys(at).forEach(n=>{if(at[n].customTags) at[n].customTags=at[n].customTags.filter(t=>t!==tag);});
+      saveJSON(SK_TAGS,at);
+      if(activeTag===tag) activeTag='all';
+      buildPage(); buildTagEditor(); buildGlobalTagList();
+    });
+    list.appendChild(pill);
+  });
+}
+
+document.getElementById('add-tag-btn').addEventListener('click',addTag);
+document.getElementById('new-tag-input').addEventListener('keydown',e=>{if(e.key==='Enter')addTag();});
+function addTag(){
+  const inp=document.getElementById('new-tag-input');
+  const v=inp.value.trim(); if(!v) return;
+  const tags=loadCustomTags(); if(tags.includes(v)){inp.value='';return;}
+  tags.push(v); saveJSON(SK_CUSTOM_TAGS,tags); inp.value='';
+  buildGlobalTagList(); buildTagEditor(); buildPage();
+}
+
+// ════════════════════════════════════════════════════════
+//  TAG-EDITOR
+// ════════════════════════════════════════════════════════
+const KLASSEN_OPTS=[5,6,7,8,9];
+
+function buildTagEditor(){
+  buildGlobalTagList();
+  const container=document.getElementById('tag-editor-list');
+  container.innerHTML='';
+  const customTags=loadCustomTags();
+
+  APPS.forEach(app=>{
+    const t=getAppTags(app.name);
+    const ck=t.klassen||[], cct=t.customTags||[];
+    const row=document.createElement('div'); row.className='tag-editor-row';
+
+    const kChips=KLASSEN_OPTS.map(k=>
+      `<span class="te-chip${ck.includes(k)?' sel-klasse':''}" data-app="${app.name}" data-type="klasse" data-val="${k}">Klasse ${k}</span>`
+    ).join('');
+    const tChips=customTags.length
+      ? customTags.map(tg=>`<span class="te-chip${cct.includes(tg)?' sel-custom':''}" data-app="${app.name}" data-type="custom" data-val="${tg}">${tg}</span>`).join('')
+      : '<span style="font-size:.74rem;color:rgba(255,255,255,.27);">Noch keine Tags erstellt.</span>';
+
+    row.innerHTML=`
+      <div class="tag-editor-name"><span class="te-emoji">${app.emoji}</span>${app.name}<small style="opacity:.38;font-weight:600;font-size:.72rem;">${app.fach}</small></div>
+      <div class="tag-editor-fields">
+        <span class="te-label">Klassenstufe</span>${kChips}
+        <span class="te-label">Tags</span>${tChips}
+      </div>
+      <div class="te-save-note" id="sv-${app.name.replace(/[^a-zA-Z0-9]/g,'_')}">✓ Gespeichert</div>`;
+    container.appendChild(row);
+  });
+
+  container.addEventListener('click', e=>{
+    const chip=e.target.closest('.te-chip'); if(!chip) return;
+    const appName=chip.dataset.app, type=chip.dataset.type, val=chip.dataset.val;
+    const at=loadTags();
+    if(!at[appName]){const ex=getAppTags(appName);at[appName]={klassen:[...(ex.klassen||[])],customTags:[...(ex.customTags||[])]};}
+    if(type==='klasse'){
+      const idx=at[appName].klassen.indexOf(Number(val));
+      idx===-1?at[appName].klassen.push(Number(val)):at[appName].klassen.splice(idx,1);
+      chip.classList.toggle('sel-klasse');
+    } else if(type==='custom'){
+      if(!at[appName].customTags) at[appName].customTags=[];
+      const idx=at[appName].customTags.indexOf(val);
+      idx===-1?at[appName].customTags.push(val):at[appName].customTags.splice(idx,1);
+      chip.classList.toggle('sel-custom');
+    }
+    saveJSON(SK_TAGS,at);
+    buildPage(); buildVisTab();
+    const note=document.getElementById('sv-'+appName.replace(/[^a-zA-Z0-9]/g,'_'));
+    if(note){note.classList.add('show');setTimeout(()=>note.classList.remove('show'),1500);}
+  });
+}
+
+function openAdmin(){
+  buildVisTab(); buildTagEditor();
+  document.getElementById('admin-panel').classList.add('visible');
+}
+document.getElementById('admin-close').addEventListener('click',()=>{
+  document.getElementById('admin-panel').classList.remove('visible');
+});
+
+// ════════════════════════════════════════════════════════
+//  INIT
+// ════════════════════════════════════════════════════════
+buildPage();
 </script>
 </body>
 </html>
