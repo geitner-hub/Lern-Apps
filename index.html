@@ -52,13 +52,13 @@
     /* ── SYNC STATUS ─────────────────────────────── */
     #sync-bar {
       background: #1e293b; color: #94a3b8; font-size: .75rem; font-weight: 700;
-      text-align: center; padding: .3rem 1rem; letter-spacing: .03em;
+      text-align: center; padding: .3rem 1rem;
       display: flex; align-items: center; justify-content: center; gap: .5rem;
       min-height: 28px;
     }
-    #sync-bar.syncing  { color: #f7c948; }
-    #sync-bar.ok       { color: #4ade80; }
-    #sync-bar.error    { color: #f87171; }
+    #sync-bar.syncing { color: #f7c948; }
+    #sync-bar.ok      { color: #4ade80; }
+    #sync-bar.error   { color: #f87171; }
     .sync-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
 
     /* ── FILTER BAR ─────────────────────────────── */
@@ -146,11 +146,7 @@
     .app-tag.tag-custom { background: #fdf4ff; color: #9333ea; border-color: #f0d6ff; }
     .app-arrow { align-self: flex-end; font-size: 1.1rem; color: var(--cat-color, var(--accent)); font-weight: 800; transition: transform .15s ease; position: relative; }
     .app-card:hover .app-arrow { transform: translateX(4px); }
-    .app-card.placeholder {
-      border: 2px dashed #d1d9f0; background: transparent; box-shadow: none;
-      align-items: center; justify-content: center; color: #b0bcd4;
-      font-size: .88rem; font-weight: 700; cursor: default; min-height: 120px;
-    }
+    .app-card.placeholder { border: 2px dashed #d1d9f0; background: transparent; box-shadow: none; align-items: center; justify-content: center; color: #b0bcd4; font-size: .88rem; font-weight: 700; cursor: default; min-height: 120px; }
     .app-card.placeholder::before, .app-card.placeholder::after { display: none; }
     .app-card.placeholder:hover { transform: none; border-color: #d1d9f0; }
     .app-card.app-hidden { display: none !important; }
@@ -222,10 +218,6 @@
     .te-chip.sel-custom { background: #7e22ce; border-color: #7e22ce; color: #fff; }
     .te-save-note { font-size: .7rem; color: #4ade80; margin-top: .32rem; display: none; }
     .te-save-note.show { display: block; }
-
-    /* saving spinner */
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .saving-spinner { display: inline-block; width: 10px; height: 10px; border: 2px solid rgba(255,255,255,.3); border-top-color: #fff; border-radius: 50%; animation: spin .6s linear infinite; }
   </style>
 </head>
 <body>
@@ -320,9 +312,9 @@
 
 <script>
 // ════════════════════════════════════════════════════════
-//  GITHUB CONFIG – hier deine Daten eintragen
+//  CLOUDFLARE WORKER URL – kein Token mehr nötig!
 // ════════════════════════════════════════════════════════
-
+const WORKER_URL = 'https://lern-apps-config.bennigeitner.workers.dev';
 
 // ════════════════════════════════════════════════════════
 //  APPS – neue App = neuer Eintrag hier
@@ -332,7 +324,6 @@ const APPS = [
   { name:"Längeneinheiten",    datei:"laengeneinheiten.html",     emoji:"📐", beschreibung:"Teste dein Wissen zu den Längeneinheiten",          fach:"Mathematik" },
   { name:"Vokabeln-Test",      datei:"vokabeltrainer.html",       emoji:"🗣️", beschreibung:"Wiederhole Vokabeln",                               fach:"Englisch"   },
   { name:"Satzglieder ordnen", datei:"satzglieder-erkennen.html", emoji:"🔤", beschreibung:"Put the words in the right order",                  fach:"Englisch"   }
-  // ← Komma nach letztem Eintrag nicht vergessen!
 ];
 
 // ════════════════════════════════════════════════════════
@@ -349,58 +340,58 @@ const KATEGORIEN = {
 const ADMIN_PASSWORD = 'lehrer123'; // ← HIER ÄNDERN
 
 // ════════════════════════════════════════════════════════
-//  GLOBALER CONFIG-STATE (wird von GitHub geladen/gespeichert)
+//  CONFIG STATE
 // ════════════════════════════════════════════════════════
-let CONFIG = JSON.parse(localStorage.getItem("lernapps-config")) || { hidden: [], hiddenCats: [], tags: {}, customTags: [] }; // SHA wird für Updates benötigt
+let CONFIG = { hidden: [], hiddenCats: [], tags: {}, customTags: [] };
+let ghFileSha = '';
 
-// ── Sync-Statusanzeige ───────────────────────────────
 function setSyncStatus(state, msg) {
   const bar = document.getElementById('sync-bar');
-  const txt = document.getElementById('sync-msg');
-  bar.className = state; // '', 'syncing', 'ok', 'error'
-  txt.textContent = msg;
+  bar.className = state;
+  document.getElementById('sync-msg').textContent = msg;
 }
 
-// ── Config von GitHub laden ───────────────────────────
+// ── Config laden ──────────────────────────────────────
 async function loadConfig() {
-
-  const saved = localStorage.getItem("lernapps-config");
-
-  if (saved) {
-    CONFIG = JSON.parse(saved);
-    setSyncStatus('ok','✓ Einstellungen geladen');
-  } else {
-    setSyncStatus('','');
+  setSyncStatus('syncing', 'Einstellungen werden geladen …');
+  try {
+    const res = await fetch(WORKER_URL);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    ghFileSha = data.sha;
+    const decoded = JSON.parse(atob(data.content.replace(/\n/g, '')));
+    CONFIG = { hidden:[], hiddenCats:[], tags:{}, customTags:[], ...decoded };
+    setSyncStatus('ok', '✓ Einstellungen geladen');
+    setTimeout(() => setSyncStatus('', ''), 2500);
+  } catch(e) {
+    setSyncStatus('error', '⚠ Einstellungen konnten nicht geladen werden');
+    console.error('Load error:', e);
   }
-
   buildPage();
 }
 
-// ── Config auf GitHub speichern ───────────────────────
+// ── Config speichern ──────────────────────────────────
 async function saveConfig() {
-
+  setSyncStatus('syncing', 'Wird gespeichert …');
+  const content = btoa(unescape(encodeURIComponent(JSON.stringify(CONFIG, null, 2))));
   try {
-
-    localStorage.setItem(
-      "lernapps-config",
-      JSON.stringify(CONFIG)
-    );
-
-    setSyncStatus('ok','✓ Lokal gespeichert');
-
-    setTimeout(()=>{
-      setSyncStatus('','');
-    },2000);
-
+    const body = { message: 'Admin: Einstellungen aktualisiert', content, branch: 'main', sha: ghFileSha };
+    const res = await fetch(WORKER_URL, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    ghFileSha = data.content.sha;
+    setSyncStatus('ok', '✓ Gespeichert – für alle sichtbar');
+    setTimeout(() => setSyncStatus('', ''), 3000);
   } catch(e) {
-
-    setSyncStatus('error','⚠ Speichern fehlgeschlagen');
-    console.error(e);
-
+    setSyncStatus('error', '⚠ Speichern fehlgeschlagen');
+    console.error('Save error:', e);
   }
 }
 
-// ── Hilfsfunktionen ───────────────────────────────────
 function getAppTags(name) {
   if (CONFIG.tags[name]) return CONFIG.tags[name];
   const a = APPS.find(x => x.name === name);
@@ -726,7 +717,7 @@ document.getElementById('admin-close').addEventListener('click',()=>{
 });
 
 // ════════════════════════════════════════════════════════
-//  INIT – Config laden, dann Seite aufbauen
+//  INIT
 // ════════════════════════════════════════════════════════
 loadConfig();
 </script>
