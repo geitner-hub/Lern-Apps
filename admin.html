@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin – Lern-Apps</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#0f172a;--surface:#1e293b;--surface2:#273449;--border:rgba(255,255,255,.08);
+      --accent:#4f6ef7;--accent2:#f7c948;--green:#4ade80;--red:#f87171;--purple:#a78bfa;
+      --text:#e2e8f0;--muted:#64748b;--r:14px;
+    }
+    body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+    /* ── LOGIN ─────────────────────────────────────── */
+    #login-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:999}
+    .login-box{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:2.5rem 2rem;width:320px;text-align:center}
+    .login-box h1{font-family:'Fredoka One',cursive;font-size:1.8rem;margin-bottom:.3rem}
+    .login-box p{font-size:.85rem;color:var(--muted);margin-bottom:1.5rem}
+    .login-box input{width:100%;padding:.75rem 1rem;background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;color:var(--text);font-family:'Nunito',sans-serif;font-size:1rem;outline:none;text-align:center;letter-spacing:3px;transition:border-color .2s}
+    .login-box input:focus{border-color:var(--accent)}
+    .login-box .err{color:var(--red);font-size:.8rem;margin-top:.5rem;min-height:1.1rem}
+    .btn-primary{background:var(--accent);border:none;color:#fff;padding:.7rem 1.5rem;border-radius:10px;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:800;font-size:.9rem;transition:background .15s;width:100%;margin-top:.8rem}
+    .btn-primary:hover{background:#3b5ce6}
+
+    /* ── LAYOUT ────────────────────────────────────── */
+    #app{display:none}
+    .topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:.9rem 1.5rem;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:100}
+    .topbar h1{font-family:'Fredoka One',cursive;font-size:1.3rem;color:var(--accent2)}
+    .topbar-actions{margin-left:auto;display:flex;gap:.6rem;align-items:center}
+    #sync-status{font-size:.75rem;font-weight:700;padding:.3rem .8rem;border-radius:99px;background:var(--surface2)}
+    #sync-status.ok{color:var(--green)}
+    #sync-status.saving{color:var(--accent2)}
+    #sync-status.error{color:var(--red)}
+    .btn{padding:.45rem 1rem;border-radius:9px;font-family:'Nunito',sans-serif;font-weight:800;font-size:.82rem;cursor:pointer;border:1.5px solid var(--border);background:var(--surface2);color:var(--text);transition:all .15s}
+    .btn:hover{background:var(--surface);border-color:rgba(255,255,255,.2)}
+    .btn.accent{background:var(--accent);border-color:var(--accent);color:#fff}
+    .btn.accent:hover{background:#3b5ce6}
+    .btn.danger{background:rgba(248,113,113,.15);border-color:var(--red);color:var(--red)}
+    .btn.danger:hover{background:rgba(248,113,113,.25)}
+    .btn.green{background:rgba(74,222,128,.15);border-color:var(--green);color:var(--green)}
+    .btn.green:hover{background:rgba(74,222,128,.25)}
+
+    .content{max-width:1100px;margin:0 auto;padding:2rem 1.5rem}
+
+    /* ── TABS ──────────────────────────────────────── */
+    .tabs{display:flex;gap:.3rem;margin-bottom:1.5rem;background:var(--surface);border-radius:12px;padding:.4rem}
+    .tab{padding:.5rem 1.2rem;border-radius:9px;font-weight:800;font-size:.88rem;cursor:pointer;color:var(--muted);border:none;background:none;font-family:'Nunito',sans-serif;transition:all .15s}
+    .tab:hover{color:var(--text)}
+    .tab.active{background:var(--surface2);color:var(--accent2)}
+    .tab-panel{display:none}
+    .tab-panel.active{display:block}
+
+    /* ── SECTION HEADERS ───────────────────────────── */
+    .sec-header{display:flex;align-items:center;gap:.8rem;margin-bottom:1rem}
+    .sec-title{font-family:'Fredoka One',cursive;font-size:1.1rem;color:var(--accent2)}
+
+    /* ── ADD APP FORM ──────────────────────────────── */
+    .form-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+    @media(max-width:600px){.form-grid{grid-template-columns:1fr}}
+    .form-group{display:flex;flex-direction:column;gap:.4rem}
+    .form-group.full{grid-column:1/-1}
+    label{font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+    input[type=text],select,textarea{background:var(--surface2);border:1.5px solid var(--border);border-radius:9px;color:var(--text);font-family:'Nunito',sans-serif;font-size:.9rem;padding:.55rem .8rem;outline:none;transition:border-color .2s;width:100%}
+    input[type=text]:focus,select:focus,textarea:focus{border-color:var(--accent)}
+    select option{background:var(--surface2)}
+    textarea{resize:vertical;min-height:70px}
+    .emoji-preview{font-size:2rem;min-width:44px;text-align:center}
+    .form-row{display:flex;gap:.8rem;align-items:flex-end}
+
+    /* ── APP LIST ──────────────────────────────────── */
+    .app-list{display:flex;flex-direction:column;gap:.6rem}
+    .app-row{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:.9rem 1rem;display:flex;align-items:center;gap:.8rem;cursor:grab;transition:background .15s,box-shadow .15s;user-select:none}
+    .app-row:active{cursor:grabbing}
+    .app-row.dragging{opacity:.5;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+    .app-row.drag-over{border-color:var(--accent);background:rgba(79,110,247,.1)}
+    .app-row.is-hidden{opacity:.5}
+    .drag-handle{color:var(--muted);font-size:1.1rem;flex-shrink:0;cursor:grab}
+    .row-emoji{font-size:1.6rem;flex-shrink:0}
+    .row-info{flex:1;min-width:0}
+    .row-name{font-weight:800;font-size:.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .row-meta{font-size:.75rem;color:var(--muted);margin-top:.15rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .row-tags{display:flex;flex-wrap:wrap;gap:.25rem;margin-top:.3rem}
+    .rtag{font-size:.65rem;font-weight:800;padding:.12rem .45rem;border-radius:99px;background:rgba(79,110,247,.15);color:#818cf8;border:1px solid rgba(79,110,247,.25)}
+    .rtag.kt{background:rgba(79,110,247,.1);color:#93c5fd}
+    .rtag.ct{background:rgba(167,139,250,.15);color:#c4b5fd;border-color:rgba(167,139,250,.25)}
+    .row-actions{display:flex;gap:.4rem;flex-shrink:0}
+    .icon-btn{background:none;border:1.5px solid var(--border);border-radius:8px;color:var(--muted);font-size:.85rem;padding:.35rem .6rem;cursor:pointer;transition:all .15s;font-family:'Nunito',sans-serif}
+    .icon-btn:hover{background:var(--surface2);color:var(--text)}
+    .icon-btn.active{background:rgba(74,222,128,.15);border-color:var(--green);color:var(--green)}
+    .icon-btn.hidden-btn{background:rgba(248,113,113,.1);border-color:var(--red);color:var(--red)}
+    .icon-btn.aod-btn.on{background:rgba(247,201,72,.15);border-color:var(--accent2);color:var(--accent2)}
+
+    /* ── TAG MANAGER ───────────────────────────────── */
+    .tag-manager{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.2rem}
+    .tag-pills{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.8rem;min-height:28px}
+    .tag-pill{display:flex;align-items:center;gap:.3rem;padding:.25rem .7rem;border-radius:99px;font-size:.8rem;font-weight:700;background:rgba(167,139,250,.18);border:1.5px solid rgba(167,139,250,.4);color:#c4b5fd}
+    .tag-pill .del{cursor:pointer;font-size:.9rem;color:rgba(196,181,253,.4);background:none;border:none;font-family:inherit;padding:0;line-height:1;transition:color .1s}
+    .tag-pill .del:hover{color:var(--red)}
+    .add-tag-row{display:flex;gap:.5rem}
+    .add-tag-row input{flex:1}
+
+    /* ── INLINE TAG EDITOR (in modal) ───────────────── */
+    .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);z-index:500;align-items:center;justify-content:center}
+    .modal-bg.open{display:flex}
+    .modal{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:1.8rem;width:min(500px,95vw);max-height:85vh;overflow-y:auto}
+    .modal h2{font-family:'Fredoka One',cursive;font-size:1.3rem;margin-bottom:1.2rem;color:var(--accent2)}
+    .modal-section{margin-bottom:1.2rem}
+    .modal-label{font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:.5rem}
+    .chip-group{display:flex;flex-wrap:wrap;gap:.35rem}
+    .m-chip{padding:.28rem .75rem;border-radius:99px;font-size:.8rem;font-weight:700;border:1.5px solid var(--border);background:var(--surface2);color:var(--muted);cursor:pointer;transition:all .12s}
+    .m-chip:hover{color:var(--text);border-color:rgba(255,255,255,.25)}
+    .m-chip.sel-k{background:var(--accent);border-color:var(--accent);color:#fff}
+    .m-chip.sel-c{background:#7e22ce;border-color:#7e22ce;color:#fff}
+    .modal-actions{display:flex;justify-content:flex-end;gap:.6rem;margin-top:1.2rem}
+
+    /* ── VISIBILITY TAB ────────────────────────────── */
+    .vis-cat-block{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);margin-bottom:.8rem;overflow:hidden}
+    .vis-cat-header{display:flex;align-items:center;gap:.8rem;padding:.8rem 1rem;background:var(--surface2);cursor:pointer}
+    .vis-cat-name{font-weight:800;font-size:.95rem;flex:1}
+    .vis-toggle{padding:.3rem .8rem;border-radius:8px;font-size:.78rem;font-weight:800;border:1.5px solid;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .15s}
+    .vis-toggle.on{background:rgba(74,222,128,.1);border-color:var(--green);color:var(--green)}
+    .vis-toggle.off{background:rgba(248,113,113,.1);border-color:var(--red);color:var(--red)}
+    .vis-app-list{padding:.6rem 1rem .8rem}
+    .vis-app-row{display:flex;align-items:center;gap:.7rem;padding:.4rem 0;border-bottom:1px solid var(--border)}
+    .vis-app-row:last-child{border-bottom:none}
+    .vis-app-name{flex:1;font-size:.88rem;font-weight:700}
+    .vis-app-emoji{font-size:1.1rem;flex-shrink:0}
+
+    /* ── TOAST ─────────────────────────────────────── */
+    #toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--surface);border:1px solid var(--green);color:var(--green);padding:.6rem 1.2rem;border-radius:10px;font-size:.85rem;font-weight:700;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999}
+    #toast.show{opacity:1}
+  </style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <h2>🔒 Admin</h2>
+    <p>Lern-Apps Verwaltung</p>
+    <input type="password" id="pw" placeholder="Passwort" autocomplete="off"/>
+    <div class="err" id="pw-err"></div>
+    <button class="btn-primary" onclick="checkLogin()">Anmelden</button>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app">
+  <div class="topbar">
+    <h1>⚙ Lern-Apps Admin</h1>
+    <div class="topbar-actions">
+      <span id="sync-status">–</span>
+      <a href="index.html" class="btn">← Zur Seite</a>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="tabs">
+      <button class="tab active" data-t="apps">📱 Apps</button>
+      <button class="tab" data-t="visibility">👁 Sichtbarkeit</button>
+      <button class="tab" data-t="tags">🏷 Tags</button>
+    </div>
+
+    <!-- ── TAB: APPS ──────────────────────────────── -->
+    <div class="tab-panel active" id="panel-apps">
+
+      <!-- Neue App -->
+      <div class="sec-header">
+        <span class="sec-title">➕ Neue App hinzufügen</span>
+      </div>
+      <div class="form-card" style="margin-bottom:2rem">
+        <div class="form-row" style="margin-bottom:1rem;align-items:center">
+          <span class="emoji-preview" id="emoji-preview">📱</span>
+          <div class="form-group" style="flex:1">
+            <label>Emoji</label>
+            <input type="text" id="f-emoji" placeholder="z.B. 🔢" maxlength="4" oninput="document.getElementById('emoji-preview').textContent=this.value||'📱'"/>
+          </div>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Name *</label>
+            <input type="text" id="f-name" placeholder="z.B. Kopfrechnen"/>
+          </div>
+          <div class="form-group">
+            <label>Datei / Link *</label>
+            <input type="text" id="f-datei" placeholder="z.B. kopfrechnen.html"/>
+          </div>
+          <div class="form-group">
+            <label>Fach *</label>
+            <select id="f-fach">
+              <option value="">– Fach wählen –</option>
+              <option>Mathematik</option>
+              <option>Englisch</option>
+              <option>Deutsch</option>
+              <option>Sachkunde</option>
+              <option>Sport</option>
+              <option>Informatik</option>
+              <option>Geschichte</option>
+            </select>
+          </div>
+          <div class="form-group full">
+            <label>Beschreibung</label>
+            <input type="text" id="f-desc" placeholder="Kurze Beschreibung für Schüler"/>
+          </div>
+        </div>
+        <div style="margin-top:1rem;display:flex;gap:.6rem;justify-content:flex-end">
+          <button class="btn accent" onclick="addApp()">App hinzufügen</button>
+        </div>
+      </div>
+
+      <!-- App-Liste -->
+      <div class="sec-header">
+        <span class="sec-title">📋 Alle Apps</span>
+        <span id="app-count" style="font-size:.8rem;color:var(--muted)"></span>
+      </div>
+      <div class="app-list" id="app-list"></div>
+    </div>
+
+    <!-- ── TAB: VISIBILITY ────────────────────────── -->
+    <div class="tab-panel" id="panel-visibility">
+      <div class="sec-header"><span class="sec-title">👁 Apps &amp; Kategorien ein/ausblenden</span></div>
+      <div id="vis-list"></div>
+    </div>
+
+    <!-- ── TAB: TAGS ──────────────────────────────── -->
+    <div class="tab-panel" id="panel-tags">
+      <div class="sec-header"><span class="sec-title">🏷 Eigene Tags verwalten</span></div>
+      <div class="tag-manager" style="margin-bottom:1.5rem">
+        <div class="tag-pills" id="tag-pills"></div>
+        <div class="add-tag-row">
+          <input type="text" id="new-tag" placeholder="Neuer Tag, z.B. Wiederholung …" maxlength="28"/>
+          <button class="btn accent" onclick="addTag()">+ Hinzufügen</button>
+        </div>
+      </div>
+      <div class="sec-header"><span class="sec-title">Tags pro App zuweisen</span></div>
+      <div class="app-list" id="tag-assign-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- TAG MODAL -->
+<div class="modal-bg" id="tag-modal">
+  <div class="modal">
+    <h2 id="modal-title">Tags bearbeiten</h2>
+    <div class="modal-section">
+      <div class="modal-label">Klassenstufe</div>
+      <div class="chip-group" id="modal-klassen"></div>
+    </div>
+    <div class="modal-section">
+      <div class="modal-label">Tags</div>
+      <div class="chip-group" id="modal-tags"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal()">Fertig</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast">✓ Gespeichert</div>
+
+<script>
+const WORKER_URL = 'https://lern-apps-config.bennigeitner.workers.dev';
+const ADMIN_PASSWORD = 'lehrer123'; // ← HIER ÄNDERN
+const KLASSEN = [5,6,7,8,9];
+
+let CONFIG = {apps:[], customTags:[], hiddenCats:[]};
+let ghSha = '';
+let saveTimer=null, isSaving=false, pendingSave=false;
+let modalAppName = '';
+
+// ════════════════════════════════════════════════════════
+//  LOGIN
+// ════════════════════════════════════════════════════════
+document.getElementById('pw').addEventListener('keydown', e=>{ if(e.key==='Enter') checkLogin(); });
+function checkLogin(){
+  if(document.getElementById('pw').value === ADMIN_PASSWORD){
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('app').style.display='block';
+    loadConfig();
+  } else {
+    document.getElementById('pw-err').textContent='❌ Falsches Passwort';
+    document.getElementById('pw').value='';
+  }
+}
+
+// ════════════════════════════════════════════════════════
+//  CONFIG LADEN / SPEICHERN
+// ════════════════════════════════════════════════════════
+function setSync(s,m){
+  const el=document.getElementById('sync-status');
+  el.className=s; el.textContent=m;
+}
+
+async function loadConfig(){
+  setSync('saving','Lädt …');
+  try{
+    const r=await fetch(WORKER_URL);
+    if(!r.ok) throw new Error(r.status);
+    const d=await r.json();
+    ghSha=d.sha;
+    CONFIG={apps:[],customTags:[],hiddenCats:[],...JSON.parse(atob(d.content.replace(/\n/g,'')))};
+    setSync('ok','✓ Geladen');
+    setTimeout(()=>setSync('','–'),2000);
+  }catch(e){
+    setSync('error','⚠ Fehler beim Laden');
+    console.error(e);
+  }
+  buildAll();
+}
+
+function saveConfig(){
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(()=>_doSave(),600);
+}
+
+async function _doSave(){
+  if(isSaving){pendingSave=true;return;}
+  isSaving=true;
+  setSync('saving','Speichert …');
+  const content=btoa(unescape(encodeURIComponent(JSON.stringify(CONFIG,null,2))));
+  try{
+    const r=await fetch(WORKER_URL,{
+      method:'PUT',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({message:'Admin: Einstellungen aktualisiert',content,branch:'main',sha:ghSha})
+    });
+    if(!r.ok) throw new Error(r.status);
+    const d=await r.json();
+    ghSha=d.content.sha;
+    setSync('ok','✓ Gespeichert');
+    showToast('✓ Gespeichert');
+    setTimeout(()=>setSync('','–'),3000);
+  }catch(e){
+    setSync('error','⚠ Fehler beim Speichern');
+    console.error(e);
+  }
+  isSaving=false;
+  if(pendingSave){pendingSave=false;_doSave();}
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2000);
+}
+
+// ════════════════════════════════════════════════════════
+//  TABS
+// ════════════════════════════════════════════════════════
+document.querySelectorAll('.tab').forEach(tab=>tab.addEventListener('click',()=>{
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  tab.classList.add('active');
+  document.getElementById('panel-'+tab.dataset.t).classList.add('active');
+}));
+
+// ════════════════════════════════════════════════════════
+//  BUILD ALL
+// ════════════════════════════════════════════════════════
+function buildAll(){
+  buildAppList();
+  buildVisibility();
+  buildTagManager();
+  buildTagAssignList();
+}
+
+// ════════════════════════════════════════════════════════
+//  APP HINZUFÜGEN
+// ════════════════════════════════════════════════════════
+function addApp(){
+  const name=document.getElementById('f-name').value.trim();
+  const datei=document.getElementById('f-datei').value.trim();
+  const fach=document.getElementById('f-fach').value;
+  const emoji=document.getElementById('f-emoji').value.trim()||'📱';
+  const desc=document.getElementById('f-desc').value.trim();
+  if(!name||!datei||!fach){alert('Bitte Name, Datei und Fach ausfüllen.');return;}
+  if(CONFIG.apps.find(a=>a.name===name)){alert('Eine App mit diesem Namen existiert bereits.');return;}
+  CONFIG.apps.push({name,datei,fach,emoji,beschreibung:desc,hidden:false,klassen:[],customTags:[],aod:false});
+  // Felder leeren
+  ['f-name','f-datei','f-desc','f-emoji'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f-fach').value='';
+  document.getElementById('emoji-preview').textContent='📱';
+  saveConfig();
+  buildAll();
+}
+
+// ════════════════════════════════════════════════════════
+//  APP-LISTE (mit Drag & Drop)
+// ════════════════════════════════════════════════════════
+let dragSrc=null;
+
+function buildAppList(){
+  const list=document.getElementById('app-list');
+  list.innerHTML='';
+  document.getElementById('app-count').textContent=CONFIG.apps.length+' Apps';
+
+  CONFIG.apps.forEach((app,i)=>{
+    const row=document.createElement('div');
+    row.className='app-row'+(app.hidden?' is-hidden':'');
+    row.draggable=true;
+    row.dataset.i=i;
+
+    const klTags=((app.klassen||[]).map(k=>`<span class="rtag kt">Kl.${k}</span>`)).join('');
+    const ctTags=((app.customTags||[]).map(t=>`<span class="rtag ct">${t}</span>`)).join('');
+
+    row.innerHTML=`
+      <span class="drag-handle">⠿</span>
+      <span class="row-emoji">${app.emoji||'📱'}</span>
+      <div class="row-info">
+        <div class="row-name">${app.name}</div>
+        <div class="row-meta">${app.fach} · ${app.datei}</div>
+        <div class="row-tags">${klTags}${ctTags}</div>
+      </div>
+      <div class="row-actions">
+        <button class="icon-btn aod-btn${app.aod?' on':''}" title="App des Tages" onclick="toggleAod('${app.name}')">⭐</button>
+        <button class="icon-btn${app.hidden?' hidden-btn':''}" title="Ein/Ausblenden" onclick="toggleHidden('${app.name}')">${app.hidden?'🚫':'✅'}</button>
+        <button class="icon-btn" title="Tags bearbeiten" onclick="openModal('${app.name}')">🏷</button>
+        <button class="icon-btn" title="Löschen" onclick="deleteApp('${app.name}')">🗑</button>
+      </div>`;
+
+    // Drag & Drop
+    row.addEventListener('dragstart',e=>{dragSrc=row;row.classList.add('dragging');e.dataTransfer.effectAllowed='move';});
+    row.addEventListener('dragend',  ()=>{row.classList.remove('dragging');document.querySelectorAll('.app-row').forEach(r=>r.classList.remove('drag-over'));});
+    row.addEventListener('dragover', e=>{e.preventDefault();row.classList.add('drag-over');});
+    row.addEventListener('dragleave',()=>row.classList.remove('drag-over'));
+    row.addEventListener('drop',     e=>{
+      e.preventDefault();
+      if(!dragSrc||dragSrc===row) return;
+      const from=parseInt(dragSrc.dataset.i);
+      const to=parseInt(row.dataset.i);
+      const moved=CONFIG.apps.splice(from,1)[0];
+      CONFIG.apps.splice(to,0,moved);
+      saveConfig();
+      buildAll();
+    });
+
+    list.appendChild(row);
+  });
+}
+
+function toggleHidden(name){
+  const app=CONFIG.apps.find(a=>a.name===name);
+  if(app) app.hidden=!app.hidden;
+  saveConfig(); buildAll();
+}
+
+function toggleAod(name){
+  // Nur eine App kann App des Tages sein
+  CONFIG.apps.forEach(a=>a.aod=false);
+  const app=CONFIG.apps.find(a=>a.name===name);
+  if(app) app.aod=true;
+  saveConfig(); buildAll();
+}
+
+function deleteApp(name){
+  if(!confirm(`App "${name}" wirklich löschen?`)) return;
+  CONFIG.apps=CONFIG.apps.filter(a=>a.name!==name);
+  saveConfig(); buildAll();
+}
+
+// ════════════════════════════════════════════════════════
+//  SICHTBARKEIT-TAB
+// ════════════════════════════════════════════════════════
+function buildVisibility(){
+  const list=document.getElementById('vis-list');
+  list.innerHTML='';
+  const faecher=[...new Set(CONFIG.apps.map(a=>a.fach).filter(Boolean))];
+
+  faecher.forEach(fach=>{
+    const catHidden=CONFIG.hiddenCats.includes(fach);
+    const appsInFach=CONFIG.apps.filter(a=>a.fach===fach);
+    const block=document.createElement('div');
+    block.className='vis-cat-block';
+    block.innerHTML=`
+      <div class="vis-cat-header">
+        <span class="vis-app-emoji">${getCatIcon(fach)}</span>
+        <span class="vis-cat-name">${fach} (${appsInFach.length})</span>
+        <button class="vis-toggle ${catHidden?'off':'on'}" onclick="toggleCat('${fach}')">${catHidden?'Ausgeblendet':'Sichtbar'}</button>
+      </div>
+      <div class="vis-app-list">
+        ${appsInFach.map(app=>`
+          <div class="vis-app-row">
+            <span class="vis-app-emoji">${app.emoji||'📱'}</span>
+            <span class="vis-app-name" style="${app.hidden?'opacity:.4':''}">${app.name}</span>
+            <button class="vis-toggle ${app.hidden?'off':'on'}" onclick="toggleHidden('${app.name}')">${app.hidden?'Ausgeblendet':'Sichtbar'}</button>
+          </div>`).join('')}
+      </div>`;
+    list.appendChild(block);
+  });
+}
+
+function toggleCat(fach){
+  const idx=CONFIG.hiddenCats.indexOf(fach);
+  if(idx===-1) CONFIG.hiddenCats.push(fach); else CONFIG.hiddenCats.splice(idx,1);
+  saveConfig(); buildAll();
+}
+
+function getCatIcon(fach){
+  const icons={Mathematik:'➕',Englisch:'🇬🇧',Deutsch:'📖',Sachkunde:'🌍',Sport:'⚽',Informatik:'💻',Geschichte:'🏛'};
+  return icons[fach]||'📚';
+}
+
+// ════════════════════════════════════════════════════════
+//  TAG MANAGER
+// ════════════════════════════════════════════════════════
+function buildTagManager(){
+  const pills=document.getElementById('tag-pills');
+  pills.innerHTML='';
+  if(!CONFIG.customTags.length){
+    pills.innerHTML='<span style="font-size:.78rem;color:var(--muted)">Noch keine Tags erstellt.</span>';
+    return;
+  }
+  CONFIG.customTags.forEach(tag=>{
+    const p=document.createElement('div');
+    p.className='tag-pill';
+    p.innerHTML=`${tag} <button class="del">×</button>`;
+    p.querySelector('.del').addEventListener('click',()=>{
+      if(!confirm(`Tag "${tag}" löschen? Er wird von allen Apps entfernt.`)) return;
+      CONFIG.customTags=CONFIG.customTags.filter(t=>t!==tag);
+      CONFIG.apps.forEach(a=>{if(a.customTags)a.customTags=a.customTags.filter(t=>t!==tag);});
+      saveConfig(); buildAll();
+    });
+    pills.appendChild(p);
+  });
+}
+
+document.getElementById('new-tag').addEventListener('keydown',e=>{if(e.key==='Enter')addTag();});
+function addTag(){
+  const inp=document.getElementById('new-tag');
+  const v=inp.value.trim(); if(!v) return;
+  if(CONFIG.customTags.includes(v)){inp.value='';return;}
+  CONFIG.customTags.push(v);
+  inp.value='';
+  saveConfig(); buildAll();
+}
+
+// ════════════════════════════════════════════════════════
+//  TAG-ZUWEISUNG (kompakte Liste)
+// ════════════════════════════════════════════════════════
+function buildTagAssignList(){
+  const list=document.getElementById('tag-assign-list');
+  list.innerHTML='';
+  CONFIG.apps.forEach(app=>{
+    const kl=(app.klassen||[]);
+    const ct=(app.customTags||[]);
+    const row=document.createElement('div');
+    row.className='app-row';
+    row.style.cursor='default';
+    row.innerHTML=`
+      <span class="row-emoji">${app.emoji||'📱'}</span>
+      <div class="row-info">
+        <div class="row-name">${app.name}</div>
+        <div class="row-tags">
+          ${kl.map(k=>`<span class="rtag kt">Kl.${k}</span>`).join('')}
+          ${ct.map(t=>`<span class="rtag ct">${t}</span>`).join('')}
+          ${!kl.length&&!ct.length?'<span style="font-size:.72rem;color:var(--muted)">Keine Tags</span>':''}
+        </div>
+      </div>
+      <div class="row-actions">
+        <button class="icon-btn" onclick="openModal('${app.name}')">🏷 Bearbeiten</button>
+      </div>`;
+    list.appendChild(row);
+  });
+}
+
+// ════════════════════════════════════════════════════════
+//  TAG MODAL
+// ════════════════════════════════════════════════════════
+function openModal(name){
+  modalAppName=name;
+  const app=CONFIG.apps.find(a=>a.name===name);
+  if(!app) return;
+  document.getElementById('modal-title').textContent='🏷 '+name;
+
+  // Klassen
+  const kWrap=document.getElementById('modal-klassen');
+  kWrap.innerHTML='';
+  KLASSEN.forEach(k=>{
+    const c=document.createElement('span');
+    c.className='m-chip'+(app.klassen?.includes(k)?' sel-k':'');
+    c.textContent='Klasse '+k;
+    c.addEventListener('click',()=>{
+      if(!app.klassen) app.klassen=[];
+      const idx=app.klassen.indexOf(k);
+      if(idx===-1) app.klassen.push(k); else app.klassen.splice(idx,1);
+      c.classList.toggle('sel-k');
+      saveConfig(); buildAll();
+    });
+    kWrap.appendChild(c);
+  });
+
+  // Custom Tags
+  const tWrap=document.getElementById('modal-tags');
+  tWrap.innerHTML='';
+  if(!CONFIG.customTags.length){
+    tWrap.innerHTML='<span style="font-size:.78rem;color:var(--muted)">Erst Tags im Reiter "Tags" erstellen.</span>';
+  } else {
+    CONFIG.customTags.forEach(tag=>{
+      const c=document.createElement('span');
+      c.className='m-chip'+(app.customTags?.includes(tag)?' sel-c':'');
+      c.textContent=tag;
+      c.addEventListener('click',()=>{
+        if(!app.customTags) app.customTags=[];
+        const idx=app.customTags.indexOf(tag);
+        if(idx===-1) app.customTags.push(tag); else app.customTags.splice(idx,1);
+        c.classList.toggle('sel-c');
+        saveConfig(); buildAll();
+      });
+      tWrap.appendChild(c);
+    });
+  }
+
+  document.getElementById('tag-modal').classList.add('open');
+}
+
+function closeModal(){
+  document.getElementById('tag-modal').classList.remove('open');
+  modalAppName='';
+}
+
+document.getElementById('tag-modal').addEventListener('click',e=>{
+  if(e.target===document.getElementById('tag-modal')) closeModal();
+});
+</script>
+</body>
+</html>
