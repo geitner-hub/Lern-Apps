@@ -53,6 +53,17 @@
       ],
       "customTags": [],
       "aod": false
+    },
+    {
+      "name": "Sachaufgaben Länge",
+      "datei": "sachaufgaben_laengen.html",
+      "fach": "Mathematik",
+      "emoji": "123",
+      "beschreibung": "",
+      "hidden": false,
+      "klassen": [],
+      "customTags": [],
+      "aod": false
     }
   ],
   "customTags": [],
