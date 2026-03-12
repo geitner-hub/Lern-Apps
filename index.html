@@ -7,305 +7,132 @@
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --bg: #f0f4ff;
-      --card-bg: #ffffff;
-      --header-bg: #1a1f5e;
-      --accent: #4f6ef7;
-      --accent2: #f7c948;
-      --text: #1e2235;
-      --muted: #6b7280;
-      --radius: 18px;
-      --shadow: 0 4px 24px rgba(79,110,247,0.10);
+      --bg: #f0f4ff; --card-bg: #ffffff; --header-bg: #1a1f5e;
+      --accent: #4f6ef7; --accent2: #f7c948; --text: #1e2235;
+      --muted: #6b7280; --radius: 18px; --shadow: 0 4px 24px rgba(79,110,247,0.10);
     }
-
-    body {
-      font-family: 'Nunito', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-    }
-
-    /* ── HEADER ── */
+    body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
     header {
-      background: var(--header-bg);
-      color: #fff;
-      padding: 2.5rem 2rem 2rem;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
+      background: var(--header-bg); color: #fff; padding: 2.5rem 2rem 2rem;
+      text-align: center; position: relative; overflow: hidden;
     }
     header::before {
-      content: '';
-      position: absolute;
-      inset: 0;
+      content: ''; position: absolute; inset: 0;
       background: radial-gradient(ellipse at 70% 50%, #3a47c5 0%, transparent 70%),
                   radial-gradient(ellipse at 20% 80%, #6c3fc5 0%, transparent 60%);
       opacity: .6;
     }
     header h1 {
-      font-family: 'Fredoka One', cursive;
-      font-size: clamp(2rem, 5vw, 3.2rem);
-      letter-spacing: .5px;
-      position: relative;
-      cursor: default;
-      user-select: none;
+      font-family: 'Fredoka One', cursive; font-size: clamp(2rem, 5vw, 3.2rem);
+      letter-spacing: .5px; position: relative; cursor: default; user-select: none;
     }
-    header p {
-      margin-top: .5rem;
-      font-size: 1.05rem;
-      opacity: .75;
-      position: relative;
-    }
+    header p { margin-top: .5rem; font-size: 1.05rem; opacity: .75; position: relative; }
     .dot {
-      display: inline-block;
-      width: 10px; height: 10px;
-      border-radius: 50%;
-      background: var(--accent2);
-      margin-right: 6px;
-      vertical-align: middle;
+      display: inline-block; width: 10px; height: 10px; border-radius: 50%;
+      background: var(--accent2); margin-right: 6px; vertical-align: middle;
     }
-
-    /* ── MAIN ── */
-    main {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 2.5rem 1.5rem 4rem;
-    }
-
-    /* ── CATEGORY ── */
-    .category {
-      margin-bottom: 3rem;
-    }
-    .category-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 1.4rem;
-    }
+    main { max-width: 960px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+    .category { margin-bottom: 3rem; }
+    .category-header { display: flex; align-items: center; gap: 12px; margin-bottom: 1.4rem; }
     .category-icon {
-      font-size: 1.8rem;
-      background: var(--header-bg);
-      color: var(--accent2);
-      width: 52px; height: 52px;
-      border-radius: 14px;
+      font-size: 1.8rem; background: var(--header-bg); color: var(--accent2);
+      width: 52px; height: 52px; border-radius: 14px;
       display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-      box-shadow: 0 3px 10px rgba(26,31,94,.2);
+      flex-shrink: 0; box-shadow: 0 3px 10px rgba(26,31,94,.2);
     }
-    .category-title {
-      font-family: 'Fredoka One', cursive;
-      font-size: 1.6rem;
-      color: var(--header-bg);
-    }
+    .category-title { font-family: 'Fredoka One', cursive; font-size: 1.6rem; color: var(--header-bg); }
     .category-count {
-      margin-left: auto;
-      font-size: .85rem;
-      background: var(--accent);
-      color: #fff;
-      padding: 3px 12px;
-      border-radius: 99px;
-      font-weight: 700;
+      margin-left: auto; font-size: .85rem; background: var(--accent);
+      color: #fff; padding: 3px 12px; border-radius: 99px; font-weight: 700;
     }
-
-    /* ── GRID ── */
-    .apps-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 1.2rem;
-    }
-
-    /* ── APP CARD ── */
+    .apps-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.2rem; }
     .app-card {
-      background: var(--card-bg);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 1.5rem 1.3rem 1.3rem;
-      text-decoration: none;
-      color: inherit;
-      display: flex;
-      flex-direction: column;
-      gap: .6rem;
-      border: 2px solid transparent;
+      background: var(--card-bg); border-radius: var(--radius); box-shadow: var(--shadow);
+      padding: 1.5rem 1.3rem 1.3rem; text-decoration: none; color: inherit;
+      display: flex; flex-direction: column; gap: .6rem; border: 2px solid transparent;
       transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
-      position: relative;
-      overflow: hidden;
+      position: relative; overflow: hidden;
     }
     .app-card::after {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 4px;
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
       background: linear-gradient(90deg, var(--cat-color, var(--accent)), var(--cat-color2, #a78bfa));
       border-radius: 99px 99px 0 0;
     }
-    .app-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 12px 36px rgba(79,110,247,.18);
-      border-color: var(--accent);
-    }
+    .app-card:hover { transform: translateY(-5px); box-shadow: 0 12px 36px rgba(79,110,247,.18); border-color: var(--accent); }
     .app-emoji { font-size: 2rem; }
     .app-name { font-weight: 800; font-size: 1.05rem; line-height: 1.3; }
     .app-desc { font-size: .85rem; color: var(--muted); line-height: 1.4; flex: 1; }
-    .app-arrow {
-      align-self: flex-end;
-      font-size: 1.1rem;
-      color: var(--accent);
-      font-weight: 800;
-      transition: transform .15s ease;
-    }
+    .app-arrow { align-self: flex-end; font-size: 1.1rem; color: var(--accent); font-weight: 800; transition: transform .15s ease; }
     .app-card:hover .app-arrow { transform: translateX(4px); }
-
-    /* ── PLACEHOLDER ── */
     .app-card.placeholder {
-      border: 2px dashed #cbd5e1;
-      background: transparent;
-      box-shadow: none;
-      align-items: center;
-      justify-content: center;
-      color: #94a3b8;
-      font-size: .9rem;
-      font-weight: 600;
-      cursor: default;
-      min-height: 130px;
+      border: 2px dashed #cbd5e1; background: transparent; box-shadow: none;
+      align-items: center; justify-content: center; color: #94a3b8;
+      font-size: .9rem; font-weight: 600; cursor: default; min-height: 130px;
     }
     .app-card.placeholder::after { display: none; }
     .app-card.placeholder:hover { transform: none; border-color: #cbd5e1; }
-
-    /* ── AUSGEBLENDET ── */
     .app-hidden { display: none !important; }
+    footer { text-align: center; padding: 1.5rem; font-size: .8rem; color: var(--muted); }
 
-    /* ── FOOTER ── */
-    footer {
-      text-align: center;
-      padding: 1.5rem;
-      font-size: .8rem;
-      color: var(--muted);
-    }
-
-    /* ── PASSWORT OVERLAY ── */
+    /* PASSWORT OVERLAY */
     #pw-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(26,31,94,.6);
-      backdrop-filter: blur(6px);
-      z-index: 1000;
-      align-items: center;
-      justify-content: center;
+      display: none; position: fixed; inset: 0; background: rgba(26,31,94,.6);
+      backdrop-filter: blur(6px); z-index: 1000; align-items: center; justify-content: center;
     }
     #pw-overlay.visible { display: flex; }
     #pw-box {
-      background: #fff;
-      border-radius: 20px;
-      padding: 2rem 2rem 1.5rem;
-      width: 300px;
-      box-shadow: 0 20px 60px rgba(0,0,0,.25);
-      text-align: center;
+      background: #fff; border-radius: 20px; padding: 2rem 2rem 1.5rem;
+      width: 300px; box-shadow: 0 20px 60px rgba(0,0,0,.25); text-align: center;
     }
-    #pw-box h2 {
-      font-family: 'Fredoka One', cursive;
-      color: var(--header-bg);
-      margin-bottom: .3rem;
-      font-size: 1.4rem;
-    }
+    #pw-box h2 { font-family: 'Fredoka One', cursive; color: var(--header-bg); margin-bottom: .3rem; font-size: 1.4rem; }
     #pw-box p { font-size: .85rem; color: var(--muted); margin-bottom: 1.2rem; }
     #pw-input {
-      width: 100%;
-      padding: .7rem 1rem;
-      border: 2px solid #e2e8f0;
-      border-radius: 12px;
-      font-size: 1rem;
-      font-family: 'Nunito', sans-serif;
-      outline: none;
-      transition: border-color .2s;
-      text-align: center;
-      letter-spacing: 3px;
+      width: 100%; padding: .7rem 1rem; border: 2px solid #e2e8f0; border-radius: 12px;
+      font-size: 1rem; font-family: 'Nunito', sans-serif; outline: none;
+      transition: border-color .2s; text-align: center; letter-spacing: 3px;
     }
     #pw-input:focus { border-color: var(--accent); }
     #pw-error { color: #ef4444; font-size: .8rem; margin-top: .5rem; min-height: 1.1rem; }
-    #pw-cancel {
-      margin-top: .8rem;
-      background: none;
-      border: none;
-      color: var(--muted);
-      font-size: .85rem;
-      cursor: pointer;
-      font-family: 'Nunito', sans-serif;
-    }
+    #pw-cancel { margin-top: .8rem; background: none; border: none; color: var(--muted); font-size: .85rem; cursor: pointer; font-family: 'Nunito', sans-serif; }
     #pw-cancel:hover { color: var(--text); }
 
-    /* ── ADMIN PANEL ── */
+    /* ADMIN PANEL */
     #admin-panel {
-      display: none;
-      position: fixed;
-      bottom: 0; left: 0; right: 0;
-      background: var(--header-bg);
-      color: #fff;
-      padding: 1.2rem 1.5rem 1.5rem;
-      z-index: 999;
-      box-shadow: 0 -4px 30px rgba(0,0,0,.3);
+      display: none; position: fixed; bottom: 0; left: 0; right: 0;
+      background: var(--header-bg); color: #fff; padding: 1.2rem 1.5rem 1.5rem;
+      z-index: 999; box-shadow: 0 -4px 30px rgba(0,0,0,.3);
+      max-height: 60vh; overflow-y: auto;
     }
     #admin-panel.visible { display: block; }
-    #admin-panel h3 {
-      font-family: 'Fredoka One', cursive;
-      font-size: 1.1rem;
-      margin-bottom: .8rem;
-      color: var(--accent2);
-    }
-    .admin-app-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: .6rem;
-      margin-bottom: 1rem;
-    }
+    #admin-panel h3 { font-family: 'Fredoka One', cursive; font-size: 1.1rem; margin-bottom: .8rem; color: var(--accent2); }
+    .admin-category-block { margin-bottom: .8rem; }
+    .admin-app-row { display: flex; flex-wrap: wrap; gap: .5rem; padding-left: 1rem; margin-top: .4rem; margin-bottom: .5rem; }
+    .admin-divider { border: none; border-top: 1px solid rgba(255,255,255,.1); margin: .5rem 0 .8rem; }
     .admin-toggle {
-      display: flex;
-      align-items: center;
-      gap: .5rem;
-      background: rgba(255,255,255,.1);
-      border: 1.5px solid rgba(255,255,255,.2);
-      border-radius: 10px;
-      padding: .45rem .9rem;
-      cursor: pointer;
-      font-family: 'Nunito', sans-serif;
-      font-size: .85rem;
-      color: #fff;
-      font-weight: 700;
-      transition: background .15s;
-      user-select: none;
+      display: flex; align-items: center; gap: .5rem;
+      background: rgba(255,255,255,.1); border: 1.5px solid rgba(255,255,255,.2);
+      border-radius: 10px; padding: .45rem .9rem; cursor: pointer;
+      font-family: 'Nunito', sans-serif; font-size: .85rem; color: #fff;
+      font-weight: 700; transition: background .15s; user-select: none;
     }
     .admin-toggle:hover { background: rgba(255,255,255,.2); }
-    .admin-toggle.is-hidden {
-      background: rgba(239,68,68,.2);
-      border-color: #f87171;
-      color: #fca5a5;
-    }
-    .toggle-dot {
-      width: 9px; height: 9px;
-      border-radius: 50%;
-      background: #4ade80;
-      flex-shrink: 0;
-    }
+    .admin-toggle.is-hidden { background: rgba(239,68,68,.2); border-color: #f87171; color: #fca5a5; }
+    .admin-toggle.cat-toggle { font-size: .95rem; }
+    .admin-toggle.cat-toggle.is-hidden { background: rgba(239,68,68,.3); }
+    .admin-toggle.app-toggle.cat-locked { opacity: .4; cursor: not-allowed; }
+    .toggle-dot { width: 9px; height: 9px; border-radius: 50%; background: #4ade80; flex-shrink: 0; }
     .admin-toggle.is-hidden .toggle-dot { background: #f87171; }
     #admin-close {
-      background: rgba(255,255,255,.15);
-      border: none;
-      color: #fff;
-      padding: .5rem 1.2rem;
-      border-radius: 10px;
-      cursor: pointer;
-      font-family: 'Nunito', sans-serif;
-      font-weight: 700;
-      font-size: .85rem;
+      background: rgba(255,255,255,.15); border: none; color: #fff;
+      padding: .5rem 1.2rem; border-radius: 10px; cursor: pointer;
+      font-family: 'Nunito', sans-serif; font-weight: 700; font-size: .85rem; margin-top: .5rem;
     }
     #admin-close:hover { background: rgba(255,255,255,.25); }
   </style>
 </head>
 <body>
 
-<!-- PASSWORT OVERLAY -->
 <div id="pw-overlay">
   <div id="pw-box">
     <h2>🔒 Admin-Zugang</h2>
@@ -317,10 +144,9 @@
   </div>
 </div>
 
-<!-- ADMIN PANEL -->
 <div id="admin-panel">
-  <h3>⚙️ Admin – Apps ein/ausschalten</h3>
-  <div class="admin-app-list" id="admin-app-list"></div>
+  <h3>⚙️ Admin – Kategorien &amp; Apps ein/ausschalten</h3>
+  <div id="admin-app-list"></div>
   <button id="admin-close">Panel schließen</button>
 </div>
 
@@ -335,68 +161,62 @@
        KATEGORIE: MATHE
        Neue App: data-name="Name" nicht vergessen!
        ═══════════════════════════════════════════ -->
-  <section class="category" style="--cat-color:#4f6ef7; --cat-color2:#818cf8;">
+  <section class="category" data-category="Mathematik" style="--cat-color:#4f6ef7; --cat-color2:#818cf8;">
     <div class="category-header">
       <div class="category-icon">➕</div>
       <span class="category-title">Mathematik</span>
       <span class="category-count" id="count-mathe"></span>
     </div>
     <div class="apps-grid" id="grid-mathe">
-
       <a class="app-card" href="kopfrechnen.html" data-name="Kopfrechnen">
         <span class="app-emoji">🔢</span>
         <span class="app-name">Kopfrechnen</span>
         <span class="app-desc">Übe deine Kopfrechenkünste am Anfang der Stunde</span>
         <span class="app-arrow">→</span>
       </a>
-
       <a class="app-card" href="laengeneinheiten.html" data-name="Längeneinheiten">
         <span class="app-emoji">📐</span>
         <span class="app-name">Längeneinheiten</span>
         <span class="app-desc">Teste dein Wissen zu den Längeneinheiten</span>
         <span class="app-arrow">→</span>
       </a>
-
     </div>
   </section>
 
   <!-- ═══════════════════════════════════════════
        KATEGORIE: ENGLISCH
        ═══════════════════════════════════════════ -->
-  <section class="category" style="--cat-color:#ef4444; --cat-color2:#f87171;">
+  <section class="category" data-category="Englisch" style="--cat-color:#ef4444; --cat-color2:#f87171;">
     <div class="category-header">
       <div class="category-icon">🇬🇧</div>
       <span class="category-title">Englisch</span>
       <span class="category-count" id="count-englisch"></span>
     </div>
     <div class="apps-grid" id="grid-englisch">
-
       <a class="app-card" href="vokabeltrainer.html" data-name="Vokabeln-Test">
         <span class="app-emoji">🗣️</span>
         <span class="app-name">Vokabeln-Test</span>
         <span class="app-desc">Wiederhole Vokabeln</span>
         <span class="app-arrow">→</span>
       </a>
-
       <a class="app-card" href="satzglieder-erkennen.html" data-name="Satzglieder ordnen">
         <span class="app-emoji">🔤</span>
         <span class="app-name">Satzglieder ordnen</span>
         <span class="app-desc">Put the words in the right order</span>
         <span class="app-arrow">→</span>
       </a>
-
     </div>
   </section>
 
   <!-- ═══════════════════════════════════════════
        NEUE KATEGORIE HINZUFÜGEN – Vorlage:
-       1. Diesen Block kopieren
+       1. data-category="Name" setzen
        2. id="grid-XXX" und id="count-XXX" anpassen
        3. Icon, Farben und Titel ändern
        4. Bei jeder App: data-name="App-Name" setzen
        ═══════════════════════════════════════════
 
-  <section class="category" style="--cat-color:#10b981; --cat-color2:#34d399;">
+  <section class="category" data-category="Deutsch" style="--cat-color:#10b981; --cat-color2:#34d399;">
     <div class="category-header">
       <div class="category-icon">📖</div>
       <span class="category-title">Deutsch</span>
@@ -422,21 +242,23 @@
   const ADMIN_PASSWORD = 'lehrer123';
   // ────────────────────────────────────────────
 
-  const STORAGE_KEY = 'lern-apps-hidden';
+  const SK_APPS = 'lern-apps-hidden';
+  const SK_CATS = 'lern-apps-hidden-cats';
 
-  function loadHidden() {
-    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
-    catch { return []; }
-  }
-  function saveHidden(list) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
-  }
+  function loadHidden()    { try { return JSON.parse(localStorage.getItem(SK_APPS)) || []; } catch { return []; } }
+  function saveHidden(l)   { localStorage.setItem(SK_APPS, JSON.stringify(l)); }
+  function loadHiddenCats(){ try { return JSON.parse(localStorage.getItem(SK_CATS)) || []; } catch { return []; } }
+  function saveHiddenCats(l){ localStorage.setItem(SK_CATS, JSON.stringify(l)); }
 
   function applyVisibility() {
     const hidden = loadHidden();
+    const hiddenCats = loadHiddenCats();
+    document.querySelectorAll('.category').forEach(cat => {
+      const catName = cat.getAttribute('data-category');
+      cat.style.display = hiddenCats.includes(catName) ? 'none' : '';
+    });
     document.querySelectorAll('.app-card:not(.placeholder)').forEach(card => {
-      const name = card.getAttribute('data-name');
-      card.classList.toggle('app-hidden', hidden.includes(name));
+      card.classList.toggle('app-hidden', hidden.includes(card.getAttribute('data-name')));
     });
     updateCounts();
   }
@@ -449,44 +271,27 @@
       const visible = [...grid.querySelectorAll('.app-card:not(.placeholder):not(.app-hidden)')].length;
       countEl.textContent = visible + (visible === 1 ? ' App' : ' Apps');
       let ph = grid.querySelector('.placeholder');
-      if (!ph) {
-        ph = document.createElement('div');
-        ph.className = 'app-card placeholder';
-        ph.textContent = '+ App kommt bald';
-        grid.appendChild(ph);
-      }
+      if (!ph) { ph = document.createElement('div'); ph.className = 'app-card placeholder'; ph.textContent = '+ App kommt bald'; grid.appendChild(ph); }
       ph.style.display = visible === 0 ? 'flex' : 'none';
     });
   }
 
-  // 3x auf Titel klicken → Passwort-Dialog
+  // 3x Titel klicken
   let clickCount = 0, clickTimer;
   document.getElementById('title-click').addEventListener('click', () => {
     clickCount++;
     clearTimeout(clickTimer);
     clickTimer = setTimeout(() => { clickCount = 0; }, 1000);
-    if (clickCount >= 3) {
-      clickCount = 0;
-      document.getElementById('pw-overlay').classList.add('visible');
-      setTimeout(() => document.getElementById('pw-input').focus(), 100);
-    }
+    if (clickCount >= 3) { clickCount = 0; document.getElementById('pw-overlay').classList.add('visible'); setTimeout(() => document.getElementById('pw-input').focus(), 100); }
   });
 
-  document.getElementById('pw-input').addEventListener('keydown', e => {
-    if (e.key === 'Enter') checkPassword();
-  });
+  document.getElementById('pw-input').addEventListener('keydown', e => { if (e.key === 'Enter') checkPassword(); });
   document.getElementById('pw-cancel').addEventListener('click', closeOverlay);
 
   function checkPassword() {
-    if (document.getElementById('pw-input').value === ADMIN_PASSWORD) {
-      closeOverlay();
-      openAdminPanel();
-    } else {
-      document.getElementById('pw-error').textContent = '❌ Falsches Passwort';
-      document.getElementById('pw-input').value = '';
-    }
+    if (document.getElementById('pw-input').value === ADMIN_PASSWORD) { closeOverlay(); openAdminPanel(); }
+    else { document.getElementById('pw-error').textContent = '❌ Falsches Passwort'; document.getElementById('pw-input').value = ''; }
   }
-
   function closeOverlay() {
     document.getElementById('pw-overlay').classList.remove('visible');
     document.getElementById('pw-input').value = '';
@@ -494,27 +299,64 @@
   }
 
   function openAdminPanel() {
-    const hidden = loadHidden();
     const list = document.getElementById('admin-app-list');
     list.innerHTML = '';
 
-    document.querySelectorAll('.app-card:not(.placeholder)').forEach(card => {
-      const name = card.getAttribute('data-name');
-      if (!name) return;
-      const isHidden = hidden.includes(name);
-      const btn = document.createElement('button');
-      btn.className = 'admin-toggle' + (isHidden ? ' is-hidden' : '');
-      btn.innerHTML = `<span class="toggle-dot"></span>${name}`;
-      btn.addEventListener('click', () => {
-        const h = loadHidden();
-        const idx = h.indexOf(name);
-        if (idx === -1) h.push(name);
-        else h.splice(idx, 1);
-        saveHidden(h);
-        btn.classList.toggle('is-hidden');
+    document.querySelectorAll('.category').forEach((cat, i) => {
+      const catName = cat.getAttribute('data-category');
+      const icon = cat.querySelector('.category-icon')?.textContent?.trim() || '📁';
+      const hiddenCats = loadHiddenCats();
+      const isCatHidden = hiddenCats.includes(catName);
+
+      const block = document.createElement('div');
+      block.className = 'admin-category-block';
+
+      // Kategorie-Schalter
+      const catBtn = document.createElement('button');
+      catBtn.className = 'admin-toggle cat-toggle' + (isCatHidden ? ' is-hidden' : '');
+      catBtn.innerHTML = `<span class="toggle-dot"></span>${icon} ${catName}`;
+      catBtn.addEventListener('click', () => {
+        const hc = loadHiddenCats();
+        const idx = hc.indexOf(catName);
+        if (idx === -1) hc.push(catName); else hc.splice(idx, 1);
+        saveHiddenCats(hc);
+        catBtn.classList.toggle('is-hidden');
+        const locked = hc.includes(catName);
+        appRow.querySelectorAll('.app-toggle').forEach(b => b.classList.toggle('cat-locked', locked));
         applyVisibility();
       });
-      list.appendChild(btn);
+      block.appendChild(catBtn);
+
+      // App-Schalter-Reihe
+      const appRow = document.createElement('div');
+      appRow.className = 'admin-app-row';
+
+      cat.querySelectorAll('.app-card:not(.placeholder)').forEach(card => {
+        const name = card.getAttribute('data-name');
+        if (!name) return;
+        const isAppHidden = loadHidden().includes(name);
+        const btn = document.createElement('button');
+        btn.className = 'admin-toggle app-toggle' + (isAppHidden ? ' is-hidden' : '') + (isCatHidden ? ' cat-locked' : '');
+        btn.innerHTML = `<span class="toggle-dot"></span>${name}`;
+        btn.addEventListener('click', () => {
+          if (loadHiddenCats().includes(catName)) return;
+          const h = loadHidden();
+          const idx = h.indexOf(name);
+          if (idx === -1) h.push(name); else h.splice(idx, 1);
+          saveHidden(h);
+          btn.classList.toggle('is-hidden');
+          applyVisibility();
+        });
+        appRow.appendChild(btn);
+      });
+
+      block.appendChild(appRow);
+      if (i < document.querySelectorAll('.category').length - 1) {
+        const hr = document.createElement('hr');
+        hr.className = 'admin-divider';
+        block.appendChild(hr);
+      }
+      list.appendChild(block);
     });
 
     document.getElementById('admin-panel').classList.add('visible');
@@ -526,6 +368,5 @@
 
   applyVisibility();
 </script>
-
 </body>
 </html>
