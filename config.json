@@ -61,7 +61,9 @@
       "emoji": "5",
       "beschreibung": "",
       "hidden": false,
-      "klassen": [],
+      "klassen": [
+        5
+      ],
       "customTags": [],
       "aod": false
     }
