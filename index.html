@@ -49,6 +49,8 @@
       font-size: clamp(2rem, 5vw, 3.2rem);
       letter-spacing: .5px;
       position: relative;
+      cursor: default;
+      user-select: none;
     }
     header p {
       margin-top: .5rem;
@@ -143,20 +145,9 @@
       box-shadow: 0 12px 36px rgba(79,110,247,.18);
       border-color: var(--accent);
     }
-    .app-emoji {
-      font-size: 2rem;
-    }
-    .app-name {
-      font-weight: 800;
-      font-size: 1.05rem;
-      line-height: 1.3;
-    }
-    .app-desc {
-      font-size: .85rem;
-      color: var(--muted);
-      line-height: 1.4;
-      flex: 1;
-    }
+    .app-emoji { font-size: 2rem; }
+    .app-name { font-weight: 800; font-size: 1.05rem; line-height: 1.3; }
+    .app-desc { font-size: .85rem; color: var(--muted); line-height: 1.4; flex: 1; }
     .app-arrow {
       align-self: flex-end;
       font-size: 1.1rem;
@@ -166,7 +157,7 @@
     }
     .app-card:hover .app-arrow { transform: translateX(4px); }
 
-    /* ── EMPTY SLOT ── */
+    /* ── PLACEHOLDER ── */
     .app-card.placeholder {
       border: 2px dashed #cbd5e1;
       background: transparent;
@@ -182,6 +173,9 @@
     .app-card.placeholder::after { display: none; }
     .app-card.placeholder:hover { transform: none; border-color: #cbd5e1; }
 
+    /* ── AUSGEBLENDET ── */
+    .app-hidden { display: none !important; }
+
     /* ── FOOTER ── */
     footer {
       text-align: center;
@@ -189,12 +183,149 @@
       font-size: .8rem;
       color: var(--muted);
     }
+
+    /* ── PASSWORT OVERLAY ── */
+    #pw-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(26,31,94,.6);
+      backdrop-filter: blur(6px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    #pw-overlay.visible { display: flex; }
+    #pw-box {
+      background: #fff;
+      border-radius: 20px;
+      padding: 2rem 2rem 1.5rem;
+      width: 300px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.25);
+      text-align: center;
+    }
+    #pw-box h2 {
+      font-family: 'Fredoka One', cursive;
+      color: var(--header-bg);
+      margin-bottom: .3rem;
+      font-size: 1.4rem;
+    }
+    #pw-box p { font-size: .85rem; color: var(--muted); margin-bottom: 1.2rem; }
+    #pw-input {
+      width: 100%;
+      padding: .7rem 1rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-family: 'Nunito', sans-serif;
+      outline: none;
+      transition: border-color .2s;
+      text-align: center;
+      letter-spacing: 3px;
+    }
+    #pw-input:focus { border-color: var(--accent); }
+    #pw-error { color: #ef4444; font-size: .8rem; margin-top: .5rem; min-height: 1.1rem; }
+    #pw-cancel {
+      margin-top: .8rem;
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: .85rem;
+      cursor: pointer;
+      font-family: 'Nunito', sans-serif;
+    }
+    #pw-cancel:hover { color: var(--text); }
+
+    /* ── ADMIN PANEL ── */
+    #admin-panel {
+      display: none;
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: var(--header-bg);
+      color: #fff;
+      padding: 1.2rem 1.5rem 1.5rem;
+      z-index: 999;
+      box-shadow: 0 -4px 30px rgba(0,0,0,.3);
+    }
+    #admin-panel.visible { display: block; }
+    #admin-panel h3 {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.1rem;
+      margin-bottom: .8rem;
+      color: var(--accent2);
+    }
+    .admin-app-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .6rem;
+      margin-bottom: 1rem;
+    }
+    .admin-toggle {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      background: rgba(255,255,255,.1);
+      border: 1.5px solid rgba(255,255,255,.2);
+      border-radius: 10px;
+      padding: .45rem .9rem;
+      cursor: pointer;
+      font-family: 'Nunito', sans-serif;
+      font-size: .85rem;
+      color: #fff;
+      font-weight: 700;
+      transition: background .15s;
+      user-select: none;
+    }
+    .admin-toggle:hover { background: rgba(255,255,255,.2); }
+    .admin-toggle.is-hidden {
+      background: rgba(239,68,68,.2);
+      border-color: #f87171;
+      color: #fca5a5;
+    }
+    .toggle-dot {
+      width: 9px; height: 9px;
+      border-radius: 50%;
+      background: #4ade80;
+      flex-shrink: 0;
+    }
+    .admin-toggle.is-hidden .toggle-dot { background: #f87171; }
+    #admin-close {
+      background: rgba(255,255,255,.15);
+      border: none;
+      color: #fff;
+      padding: .5rem 1.2rem;
+      border-radius: 10px;
+      cursor: pointer;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      font-size: .85rem;
+    }
+    #admin-close:hover { background: rgba(255,255,255,.25); }
   </style>
 </head>
 <body>
 
+<!-- PASSWORT OVERLAY -->
+<div id="pw-overlay">
+  <div id="pw-box">
+    <h2>🔒 Admin-Zugang</h2>
+    <p>Passwort eingeben um Apps<br>ein- und auszuschalten</p>
+    <input type="password" id="pw-input" placeholder="••••••••" autocomplete="off" />
+    <div id="pw-error"></div>
+    <br>
+    <button id="pw-cancel">Abbrechen</button>
+  </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div id="admin-panel">
+  <h3>⚙️ Admin – Apps ein/ausschalten</h3>
+  <div class="admin-app-list" id="admin-app-list"></div>
+  <button id="admin-close">Panel schließen</button>
+</div>
+
 <header>
-  <h1><span class="dot"></span>Lern-Apps</h1>
+  <h1 id="title-click"><span class="dot"></span>Lern-Apps</h1>
   <p>Klick auf eine App und leg los!</p>
 </header>
 
@@ -202,7 +333,7 @@
 
   <!-- ═══════════════════════════════════════════
        KATEGORIE: MATHE
-       Neue App hinzufügen: <a class="app-card" ...> kopieren & anpassen
+       Neue App: data-name="Name" nicht vergessen!
        ═══════════════════════════════════════════ -->
   <section class="category" style="--cat-color:#4f6ef7; --cat-color2:#818cf8;">
     <div class="category-header">
@@ -212,32 +343,26 @@
     </div>
     <div class="apps-grid" id="grid-mathe">
 
-      <!-- APP 1 – Beispiel, Dateiname anpassen! -->
-      <!-- <a class="app-card" href="mathe-quiz.html">
-        <span class="app-emoji">🧮</span>
-        <span class="app-name">Mathe-Quiz</span>
-        <span class="app-desc">Teste dein Wissen in Grundrechenarten</span>
+      <a class="app-card" href="kopfrechnen.html" data-name="Kopfrechnen">
+        <span class="app-emoji">🔢</span>
+        <span class="app-name">Kopfrechnen</span>
+        <span class="app-desc">Übe deine Kopfrechenkünste am Anfang der Stunde</span>
         <span class="app-arrow">→</span>
-      </a> -->
+      </a>
 
-      <!-- PLATZHALTER – wird ausgeblendet sobald echte Apps vorhanden sind -->
-<a class="app-card" href="kopfrechnen.html">
-  <span class="app-emoji">🔢</span>
-  <span class="app-name">Kopfrechnen</span>
-  <span class="app-desc">Übe deine Kopfrechenkünste am Anfang der Stunde</span>
-  <span class="app-arrow">→</span>
-</a>
-
-<a class="app-card" href="laengeneinheiten.html">
-  <span class="app-emoji">📐</span>
-  <span class="app-name">Längeneinheiten</span>
-  <span class="app-desc">Teste dein Wissen zu den Längeneinheiten</span>
-  <span class="app-arrow">→</span>
-</a>
+      <a class="app-card" href="laengeneinheiten.html" data-name="Längeneinheiten">
+        <span class="app-emoji">📐</span>
+        <span class="app-name">Längeneinheiten</span>
+        <span class="app-desc">Teste dein Wissen zu den Längeneinheiten</span>
+        <span class="app-arrow">→</span>
+      </a>
 
     </div>
   </section>
 
+  <!-- ═══════════════════════════════════════════
+       KATEGORIE: ENGLISCH
+       ═══════════════════════════════════════════ -->
   <section class="category" style="--cat-color:#ef4444; --cat-color2:#f87171;">
     <div class="category-header">
       <div class="category-icon">🇬🇧</div>
@@ -246,30 +371,29 @@
     </div>
     <div class="apps-grid" id="grid-englisch">
 
-<a class="app-card" href="vokabeltrainer.html">
-  <span class="app-emoji">🗣️</span>
-  <span class="app-name">Vokabeln-Test</span>
-  <span class="app-desc">Wiederhole Vokabeln</span>
-  <span class="app-arrow">→</span>
-</a>
+      <a class="app-card" href="vokabeltrainer.html" data-name="Vokabeln-Test">
+        <span class="app-emoji">🗣️</span>
+        <span class="app-name">Vokabeln-Test</span>
+        <span class="app-desc">Wiederhole Vokabeln</span>
+        <span class="app-arrow">→</span>
+      </a>
 
-      <a class="app-card" href="satzglieder-erkennen.html">
+      <a class="app-card" href="satzglieder-erkennen.html" data-name="Satzglieder ordnen">
         <span class="app-emoji">🔤</span>
         <span class="app-name">Satzglieder ordnen</span>
         <span class="app-desc">Put the words in the right order</span>
         <span class="app-arrow">→</span>
-      </a>   
-      
-    </div>     
+      </a>
+
+    </div>
   </section>
-
-
 
   <!-- ═══════════════════════════════════════════
        NEUE KATEGORIE HINZUFÜGEN – Vorlage:
        1. Diesen Block kopieren
        2. id="grid-XXX" und id="count-XXX" anpassen
        3. Icon, Farben und Titel ändern
+       4. Bei jeder App: data-name="App-Name" setzen
        ═══════════════════════════════════════════
 
   <section class="category" style="--cat-color:#10b981; --cat-color2:#34d399;">
@@ -279,7 +403,7 @@
       <span class="category-count" id="count-deutsch"></span>
     </div>
     <div class="apps-grid" id="grid-deutsch">
-      <a class="app-card" href="deutsch-app.html">
+      <a class="app-card" href="deutsch-app.html" data-name="Rechtschreibung">
         <span class="app-emoji">✏️</span>
         <span class="app-name">Rechtschreibung</span>
         <span class="app-desc">Übe schwierige Wörter</span>
@@ -287,25 +411,120 @@
       </a>
     </div>
   </section>
--->
+  -->
 
 </main>
 
 <footer>Lern-Apps · geitner-hub.github.io</footer>
 
 <script>
-  // Zählt automatisch die Apps pro Kategorie (Platzhalter werden ignoriert)
-  document.querySelectorAll('.category').forEach(cat => {
-    const grid = cat.querySelector('.apps-grid');
-    const countEl = cat.querySelector('[id^="count-"]');
-    if (!grid || !countEl) return;
-    const realApps = [...grid.querySelectorAll('.app-card:not(.placeholder)')].length;
-    countEl.textContent = realApps + (realApps === 1 ? ' App' : ' Apps');
-    // Platzhalter ausblenden wenn echte Apps vorhanden
-    if (realApps > 0) {
-      grid.querySelectorAll('.placeholder').forEach(p => p.remove());
+  // ── PASSWORT HIER ÄNDERN ─────────────────────
+  const ADMIN_PASSWORD = 'lehrer123';
+  // ────────────────────────────────────────────
+
+  const STORAGE_KEY = 'lern-apps-hidden';
+
+  function loadHidden() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+    catch { return []; }
+  }
+  function saveHidden(list) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+  }
+
+  function applyVisibility() {
+    const hidden = loadHidden();
+    document.querySelectorAll('.app-card:not(.placeholder)').forEach(card => {
+      const name = card.getAttribute('data-name');
+      card.classList.toggle('app-hidden', hidden.includes(name));
+    });
+    updateCounts();
+  }
+
+  function updateCounts() {
+    document.querySelectorAll('.category').forEach(cat => {
+      const grid = cat.querySelector('.apps-grid');
+      const countEl = cat.querySelector('[id^="count-"]');
+      if (!grid || !countEl) return;
+      const visible = [...grid.querySelectorAll('.app-card:not(.placeholder):not(.app-hidden)')].length;
+      countEl.textContent = visible + (visible === 1 ? ' App' : ' Apps');
+      let ph = grid.querySelector('.placeholder');
+      if (!ph) {
+        ph = document.createElement('div');
+        ph.className = 'app-card placeholder';
+        ph.textContent = '+ App kommt bald';
+        grid.appendChild(ph);
+      }
+      ph.style.display = visible === 0 ? 'flex' : 'none';
+    });
+  }
+
+  // 3x auf Titel klicken → Passwort-Dialog
+  let clickCount = 0, clickTimer;
+  document.getElementById('title-click').addEventListener('click', () => {
+    clickCount++;
+    clearTimeout(clickTimer);
+    clickTimer = setTimeout(() => { clickCount = 0; }, 1000);
+    if (clickCount >= 3) {
+      clickCount = 0;
+      document.getElementById('pw-overlay').classList.add('visible');
+      setTimeout(() => document.getElementById('pw-input').focus(), 100);
     }
   });
+
+  document.getElementById('pw-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') checkPassword();
+  });
+  document.getElementById('pw-cancel').addEventListener('click', closeOverlay);
+
+  function checkPassword() {
+    if (document.getElementById('pw-input').value === ADMIN_PASSWORD) {
+      closeOverlay();
+      openAdminPanel();
+    } else {
+      document.getElementById('pw-error').textContent = '❌ Falsches Passwort';
+      document.getElementById('pw-input').value = '';
+    }
+  }
+
+  function closeOverlay() {
+    document.getElementById('pw-overlay').classList.remove('visible');
+    document.getElementById('pw-input').value = '';
+    document.getElementById('pw-error').textContent = '';
+  }
+
+  function openAdminPanel() {
+    const hidden = loadHidden();
+    const list = document.getElementById('admin-app-list');
+    list.innerHTML = '';
+
+    document.querySelectorAll('.app-card:not(.placeholder)').forEach(card => {
+      const name = card.getAttribute('data-name');
+      if (!name) return;
+      const isHidden = hidden.includes(name);
+      const btn = document.createElement('button');
+      btn.className = 'admin-toggle' + (isHidden ? ' is-hidden' : '');
+      btn.innerHTML = `<span class="toggle-dot"></span>${name}`;
+      btn.addEventListener('click', () => {
+        const h = loadHidden();
+        const idx = h.indexOf(name);
+        if (idx === -1) h.push(name);
+        else h.splice(idx, 1);
+        saveHidden(h);
+        btn.classList.toggle('is-hidden');
+        applyVisibility();
+      });
+      list.appendChild(btn);
+    });
+
+    document.getElementById('admin-panel').classList.add('visible');
+  }
+
+  document.getElementById('admin-close').addEventListener('click', () => {
+    document.getElementById('admin-panel').classList.remove('visible');
+  });
+
+  applyVisibility();
 </script>
 
 </body>
