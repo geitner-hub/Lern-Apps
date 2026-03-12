@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+<title>Sachaufgaben – Längeneinheiten</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#fef9f0;
+  --card:#ffffff;
+  --p1:#f4631e;
+  --p1d:#c94d14;
+  --p2:#2e86ab;
+  --p3:#44b39a;
+  --text:#1a1a2e;
+  --muted:#7a7a9a;
+  --border:#e8e0d5;
+  --easy:#44b39a;
+  --medium:#f4a021;
+  --hard:#e63b5a;
+  --correct:#44b39a;
+  --wrong:#e63b5a;
+}
+html,body{min-height:100vh;background:var(--bg);font-family:'Nunito',sans-serif;color:var(--text);}
+body{display:flex;flex-direction:column;align-items:center;padding:16px;}
+#app{width:100%;max-width:680px;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@keyframes pop{0%{transform:scale(1)}45%{transform:scale(1.06)}100%{transform:scale(1)}}
+@keyframes confetti{0%{transform:translateY(0) rotate(0);opacity:1;}100%{transform:translateY(220px) rotate(540deg);opacity:0;}}
+.fade-up{animation:fadeUp 0.3s ease both;}
+.shake{animation:shake 0.35s ease;}
+.pop{animation:pop 0.3s ease;}
+
+/* ── Header ── */
+.header{
+  background:linear-gradient(135deg,var(--p1),#e84393 150%);
+  border-radius:20px;padding:16px 20px;margin-bottom:14px;
+  display:flex;align-items:center;justify-content:space-between;
+  box-shadow:0 6px 24px rgba(244,99,30,0.25);
+}
+.header-left h1{font-family:'Fredoka One',cursive;font-size:1.5rem;color:#fff;line-height:1;}
+.header-left p{font-size:0.75rem;color:rgba(255,255,255,0.8);margin-top:3px;font-weight:700;letter-spacing:0.05em;}
+.header-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;}
+.xp-wrap{display:flex;align-items:center;gap:8px;}
+.xp-stars{font-size:0.85rem;color:#fde68a;font-weight:800;}
+.xp-bar{width:100px;height:10px;background:rgba(0,0,0,0.2);border-radius:6px;overflow:hidden;}
+.xp-fill{height:100%;background:#fde68a;border-radius:6px;transition:width 0.5s ease;}
+.streak{font-size:0.72rem;color:rgba(255,255,255,0.85);font-weight:700;}
+
+/* ── Level tabs ── */
+.level-tabs{display:flex;gap:8px;margin-bottom:14px;}
+.level-tab{
+  flex:1;padding:10px 6px;border-radius:14px;border:none;
+  font-family:'Nunito',sans-serif;font-weight:800;font-size:0.78rem;
+  cursor:pointer;transition:all 0.18s;letter-spacing:0.04em;
+  background:var(--card);color:var(--muted);border:2px solid var(--border);
+}
+.level-tab:hover:not(.active){transform:translateY(-2px);}
+.level-tab.active.easy{background:var(--easy);color:#fff;border-color:var(--easy);box-shadow:0 4px 14px rgba(68,179,154,0.35);}
+.level-tab.active.medium{background:var(--medium);color:#fff;border-color:var(--medium);box-shadow:0 4px 14px rgba(244,160,33,0.35);}
+.level-tab.active.hard{background:var(--hard);color:#fff;border-color:var(--hard);box-shadow:0 4px 14px rgba(230,59,90,0.35);}
+
+/* ── Card ── */
+.card{
+  background:var(--card);border-radius:20px;
+  padding:clamp(18px,4vw,32px);
+  box-shadow:0 4px 24px rgba(0,0,0,0.07);
+  border:2px solid var(--border);
+  margin-bottom:12px;
+}
+
+/* ── Story header ── */
+.story-header{
+  display:flex;align-items:center;gap:14px;margin-bottom:16px;
+}
+.story-icon{
+  font-size:3rem;width:64px;height:64px;
+  display:flex;align-items:center;justify-content:center;
+  border-radius:16px;flex-shrink:0;
+}
+.story-meta{flex:1;}
+.story-theme{
+  font-size:0.65rem;font-weight:800;letter-spacing:0.15em;
+  text-transform:uppercase;margin-bottom:3px;
+}
+.story-title{font-family:'Fredoka One',cursive;font-size:1.15rem;line-height:1.2;}
+
+/* ── Task text ── */
+.task-text{
+  background:linear-gradient(135deg,#fff8f0,#fff3e8);
+  border-radius:14px;padding:16px 18px;margin-bottom:16px;
+  border-left:4px solid var(--p1);
+  font-size:0.95rem;line-height:1.7;font-weight:600;
+}
+.task-text strong{color:var(--p1);}
+
+/* ── Hint box ── */
+.hint-box{
+  background:#fffbeb;border:2px solid #fde68a;border-radius:12px;
+  padding:10px 14px;margin-bottom:14px;
+  font-size:0.78rem;color:#78350f;line-height:1.5;
+  display:none;
+}
+.hint-box.show{display:block;}
+.hint-toggle{
+  background:none;border:none;cursor:pointer;
+  font-family:'Nunito',sans-serif;font-size:0.72rem;
+  color:var(--muted);text-decoration:underline;
+  display:block;margin-bottom:10px;
+}
+
+/* ── Steps ── */
+.steps{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
+.step{
+  background:#f8f8fc;border-radius:12px;padding:12px 14px;
+  border:2px solid var(--border);
+}
+.step-label{font-size:0.72rem;font-weight:800;color:var(--muted);letter-spacing:0.08em;margin-bottom:6px;}
+.step-question{font-size:0.88rem;font-weight:700;margin-bottom:8px;line-height:1.4;}
+.step-input-row{display:flex;gap:8px;align-items:center;}
+.step-input{
+  width:110px;padding:9px 12px;font-size:1rem;text-align:center;
+  font-family:'Nunito',sans-serif;font-weight:800;
+  border:2px solid var(--border);border-radius:10px;
+  outline:none;transition:border-color 0.2s;
+  -moz-appearance:textfield;background:#fff;
+}
+.step-input::-webkit-inner-spin-button,.step-input::-webkit-outer-spin-button{-webkit-appearance:none;}
+.step-input:focus{border-color:var(--p2);}
+.step-input.correct{border-color:var(--correct);background:#f0fdf4;}
+.step-input.wrong{border-color:var(--wrong);background:#fff1f2;}
+.step-unit{font-size:0.88rem;font-weight:800;color:var(--muted);}
+.step-feedback{font-size:0.75rem;font-weight:700;margin-top:6px;min-height:1.1em;}
+.step-feedback.correct{color:var(--correct);}
+.step-feedback.wrong{color:var(--wrong);}
+
+/* ── Progress bar ── */
+.progress-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:0.72rem;color:var(--muted);font-weight:700;}
+.progress-track{height:8px;background:var(--border);border-radius:6px;margin-bottom:18px;overflow:hidden;}
+.progress-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--p1),#e84393);transition:width 0.4s ease;}
+
+/* ── Buttons ── */
+.btn-row{display:flex;gap:10px;margin-top:4px;}
+.btn{
+  flex:1;padding:13px;border-radius:14px;border:none;
+  font-family:'Nunito',sans-serif;font-weight:800;font-size:0.88rem;
+  cursor:pointer;transition:all 0.18s;letter-spacing:0.03em;
+}
+.btn:hover{transform:translateY(-2px);}
+.btn:active{transform:translateY(0);}
+.btn-check{background:var(--p1);color:#fff;box-shadow:0 4px 14px rgba(244,99,30,0.3);}
+.btn-next{background:var(--p2);color:#fff;box-shadow:0 4px 14px rgba(46,134,171,0.3);display:none;}
+.btn-hint{background:var(--bg);color:var(--muted);border:2px solid var(--border);}
+.btn.show{display:block;}
+
+/* ── Result screen ── */
+.result-screen{text-align:center;padding:16px 0;}
+.result-icon{font-size:4.5rem;margin-bottom:10px;}
+.result-title{font-family:'Fredoka One',cursive;font-size:2rem;color:var(--p1);margin-bottom:6px;}
+.result-sub{color:var(--muted);font-size:0.88rem;margin-bottom:20px;line-height:1.6;}
+.result-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:20px;}
+.result-stat{
+  background:var(--bg);border-radius:14px;padding:14px 8px;
+  border:2px solid var(--border);
+}
+.result-stat-num{font-family:'Fredoka One',cursive;font-size:1.8rem;color:var(--p1);}
+.result-stat-label{font-size:0.68rem;color:var(--muted);font-weight:700;letter-spacing:0.05em;margin-top:2px;}
+.restart-btn{
+  padding:14px 32px;border-radius:14px;border:none;
+  background:var(--p1);color:#fff;
+  font-family:'Nunito',sans-serif;font-weight:800;font-size:0.95rem;
+  cursor:pointer;box-shadow:0 4px 16px rgba(244,99,30,0.3);
+  transition:all 0.18s;
+}
+.restart-btn:hover{transform:translateY(-2px);}
+
+/* ── Start screen ── */
+.start-screen{
+  display:flex;flex-direction:column;align-items:center;
+  gap:20px;padding:20px 0;text-align:center;
+}
+.start-icon{font-size:4rem;}
+.start-title{font-family:'Fredoka One',cursive;font-size:2.2rem;color:var(--p1);}
+.start-desc{color:var(--muted);font-size:0.88rem;line-height:1.6;max-width:380px;}
+.start-topics{
+  display:flex;gap:8px;flex-wrap:wrap;justify-content:center;
+  margin:4px 0;
+}
+.topic-chip{
+  padding:6px 14px;border-radius:20px;
+  font-size:0.75rem;font-weight:800;letter-spacing:0.05em;
+}
+.start-btn{
+  padding:15px 48px;border-radius:16px;border:none;
+  background:var(--p1);color:#fff;
+  font-family:'Nunito',sans-serif;font-weight:900;font-size:1rem;
+  cursor:pointer;box-shadow:0 6px 20px rgba(244,99,30,0.35);
+  transition:all 0.18s;letter-spacing:0.05em;
+}
+.start-btn:hover{transform:translateY(-3px);}
+
+.confetti-piece{position:fixed;border-radius:2px;pointer-events:none;z-index:999;animation:confetti 1.6s ease-out forwards;}
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// AUFGABEN-DATENBANK
+// ═══════════════════════════════════════════════════════
+const TASKS = {
+  easy: [
+    {
+      theme:'🏫 Schule',themeColor:'#dbeafe',themeText:'#1d4ed8',
+      title:'Der lange Schulflur',
+      icon:'🚶',iconBg:'#dbeafe',
+      text:'Der Schulflur ist <strong>15 m</strong> lang. Anna misst ihn in Zentimetern nach.',
+      hint:'Merke: 1 m = 100 cm. Einfach mit 100 multiplizieren!',
+      steps:[
+        {q:'Wie viele Zentimeter sind 15 m?',answer:1500,unit:'cm',fb:'15 × 100 = 1 500 cm ✓'},
+      ],
+    },
+    {
+      theme:'🌿 Natur',themeColor:'#dcfce7',themeText:'#166534',
+      title:'Der Regenwurm',
+      icon:'🐛',iconBg:'#dcfce7',
+      text:'Ein Regenwurm ist <strong>12 cm</strong> lang. Ein zweiter ist <strong>8 cm</strong> lang. Wie lang sind sie zusammen?',
+      hint:'Einfach beide Längen addieren – gleiche Einheit, kein Umrechnen nötig!',
+      steps:[
+        {q:'Wie lang sind beide Regenwürmer zusammen?',answer:20,unit:'cm',fb:'12 cm + 8 cm = 20 cm ✓'},
+      ],
+    },
+    {
+      theme:'⚽ Sport',themeColor:'#fef9c3',themeText:'#713f12',
+      title:'Weitsprung',
+      icon:'🏃',iconBg:'#fef9c3',
+      text:'Lena springt <strong>2 m</strong> weit. Die Schulrekord liegt bei <strong>250 cm</strong>. Wie viel cm fehlen Lena noch?',
+      hint:'Erst Lenas Sprung in cm umrechnen, dann subtrahieren!',
+      steps:[
+        {q:'Wie viele cm sind 2 m?',answer:200,unit:'cm',fb:'2 × 100 = 200 cm ✓'},
+        {q:'Wie viele cm fehlen noch zum Rekord?',answer:50,unit:'cm',fb:'250 cm − 200 cm = 50 cm ✓'},
+      ],
+    },
+    {
+      theme:'🐘 Tiere',themeColor:'#f3e8ff',themeText:'#6b21a8',
+      title:'Elefantenrüssel',
+      icon:'🐘',iconBg:'#f3e8ff',
+      text:'Ein Elefantenrüssel ist <strong>2 m</strong> lang. Ein Giraffen-Hals ist <strong>180 cm</strong> lang. Was ist länger?',
+      hint:'Rechne zuerst alles in die gleiche Einheit um!',
+      steps:[
+        {q:'Wie viele cm sind 2 m?',answer:200,unit:'cm',fb:'2 × 100 = 200 cm ✓'},
+        {q:'Um wie viele cm ist der Rüssel länger?',answer:20,unit:'cm',fb:'200 cm − 180 cm = 20 cm ✓'},
+      ],
+    },
+    {
+      theme:'🏠 Zuhause',themeColor:'#ffedd5',themeText:'#9a3412',
+      title:'Das Bücherregal',
+      icon:'📚',iconBg:'#ffedd5',
+      text:'Ein Bücherregal ist <strong>90 cm</strong> breit. Ein Buch ist <strong>3 cm</strong> dick. Wie viele Bücher passen in eine Reihe?',
+      hint:'Teile die Gesamtbreite durch die Dicke eines Buches!',
+      steps:[
+        {q:'Wie viele Bücher passen in eine Reihe?',answer:30,unit:'Bücher',fb:'90 cm ÷ 3 cm = 30 Bücher ✓'},
+      ],
+    },
+    {
+      theme:'🌊 Abenteuer',themeColor:'#cffafe',themeText:'#164e63',
+      title:'Der Fluss',
+      icon:'🚣',iconBg:'#cffafe',
+      text:'Kapitän Karl paddelt <strong>500 m</strong> flussaufwärts und dann <strong>300 m</strong> flussabwärts. Wie weit ist er vom Start entfernt?',
+      hint:'Flussaufwärts = vorwärts, flussabwärts = zurück. Also subtrahieren!',
+      steps:[
+        {q:'Wie weit ist Karl vom Start entfernt?',answer:200,unit:'m',fb:'500 m − 300 m = 200 m ✓'},
+      ],
+    },
+  ],
+  medium: [
+    {
+      theme:'⚽ Sport',themeColor:'#fef9c3',themeText:'#713f12',
+      title:'Der Marathon-Trainingsplan',
+      icon:'🏅',iconBg:'#fef9c3',
+      text:'Tim läuft montags <strong>3 km</strong>, mittwochs <strong>450 m</strong> und freitags <strong>2 km 300 m</strong>. Wie weit läuft er insgesamt pro Woche?',
+      hint:'Rechne zuerst alles in Meter um: 1 km = 1 000 m',
+      steps:[
+        {q:'Wie viele Meter sind 3 km?',answer:3000,unit:'m',fb:'3 × 1 000 = 3 000 m ✓'},
+        {q:'Wie viele Meter sind 2 km 300 m?',answer:2300,unit:'m',fb:'2 × 1 000 + 300 = 2 300 m ✓'},
+        {q:'Wie viele Meter läuft Tim insgesamt?',answer:5750,unit:'m',fb:'3 000 + 450 + 2 300 = 5 750 m ✓'},
+      ],
+    },
+    {
+      theme:'🦁 Tiere',themeColor:'#dcfce7',themeText:'#166534',
+      title:'Auf Safari',
+      icon:'🦒',iconBg:'#dcfce7',
+      text:'Eine Giraffe ist <strong>5 m 40 cm</strong> groß. Ein Nashorn ist <strong>180 cm</strong> groß. Um wie viel cm ist die Giraffe größer?',
+      hint:'Erst Giraffe in cm umrechnen: 5 m 40 cm = ? cm',
+      steps:[
+        {q:'Wie viele cm ist die Giraffe groß?',answer:540,unit:'cm',fb:'5 × 100 + 40 = 540 cm ✓'},
+        {q:'Um wie viele cm ist die Giraffe größer?',answer:360,unit:'cm',fb:'540 − 180 = 360 cm ✓'},
+      ],
+    },
+    {
+      theme:'🏕️ Abenteuer',themeColor:'#cffafe',themeText:'#164e63',
+      title:'Die Schatzsuche',
+      icon:'🗺️',iconBg:'#cffafe',
+      text:'Die Schatzkarte zeigt: <strong>2 km</strong> nach Norden, dann <strong>750 m</strong> nach Osten, dann <strong>1 km 200 m</strong> nach Süden. Wie weit bist du nach Nord-Süd noch vom Start entfernt?',
+      hint:'Nord und Süd sind entgegengesetzt. Norden = vorwärts, Süden = zurück!',
+      steps:[
+        {q:'Wie viele Meter nach Norden? (2 km in m)',answer:2000,unit:'m',fb:'2 × 1 000 = 2 000 m ✓'},
+        {q:'Wie viele Meter nach Süden? (1 km 200 m in m)',answer:1200,unit:'m',fb:'1 × 1 000 + 200 = 1 200 m ✓'},
+        {q:'Wie weit bist du nach Nord-Süd noch vom Start entfernt?',answer:800,unit:'m',fb:'2 000 − 1 200 = 800 m ✓'},
+      ],
+    },
+    {
+      theme:'🏫 Schule',themeColor:'#dbeafe',themeText:'#1d4ed8',
+      title:'Das Klassenzimmer',
+      icon:'📐',iconBg:'#dbeafe',
+      text:'Das Klassenzimmer ist <strong>8 m</strong> lang und <strong>6 m 50 cm</strong> breit. Jannis läuft einmal längs und einmal quer durch. Wie weit läuft er insgesamt?',
+      hint:'Einmal längs + einmal quer = Länge + Breite',
+      steps:[
+        {q:'Wie viele cm ist das Zimmer breit? (6 m 50 cm)',answer:650,unit:'cm',fb:'6 × 100 + 50 = 650 cm ✓'},
+        {q:'Wie viele cm ist das Zimmer lang? (8 m)',answer:800,unit:'cm',fb:'8 × 100 = 800 cm ✓'},
+        {q:'Wie weit läuft Jannis insgesamt? (in cm)',answer:1450,unit:'cm',fb:'800 + 650 = 1 450 cm ✓'},
+      ],
+    },
+    {
+      theme:'🐝 Natur',themeColor:'#fef9c3',themeText:'#713f12',
+      title:'Der Bienenflug',
+      icon:'🐝',iconBg:'#fef9c3',
+      text:'Eine Biene fliegt von der Blume zur Blume: <strong>3 m 20 cm</strong>, dann <strong>85 cm</strong>, dann <strong>2 m</strong>. Wie weit fliegt sie insgesamt?',
+      hint:'Alles in cm umrechnen, dann addieren!',
+      steps:[
+        {q:'Wie viele cm sind 3 m 20 cm?',answer:320,unit:'cm',fb:'3 × 100 + 20 = 320 cm ✓'},
+        {q:'Wie viele cm fliegt die Biene insgesamt?',answer:605,unit:'cm',fb:'320 + 85 + 200 = 605 cm ✓'},
+      ],
+    },
+    {
+      theme:'🎪 Abenteuer',themeColor:'#f3e8ff',themeText:'#6b21a8',
+      title:'Der Zirkus',
+      icon:'🎡',iconBg:'#f3e8ff',
+      text:'Das Zirkuszelt hat einen Durchmesser von <strong>25 m</strong>. Das kleinere Zelt daneben ist <strong>1 200 cm</strong> breit. Wie viel breiter ist das große Zelt?',
+      hint:'Erst in gleiche Einheit umrechnen: 25 m = ? cm',
+      steps:[
+        {q:'Wie viele cm sind 25 m?',answer:2500,unit:'cm',fb:'25 × 100 = 2 500 cm ✓'},
+        {q:'Um wie viel cm ist das große Zelt breiter?',answer:1300,unit:'cm',fb:'2 500 − 1 200 = 1 300 cm ✓'},
+      ],
+    },
+  ],
+  hard: [
+    {
+      theme:'🏕️ Abenteuer',themeColor:'#cffafe',themeText:'#164e63',
+      title:'Die Bergwanderung',
+      icon:'⛰️',iconBg:'#cffafe',
+      text:'Der Wanderweg ist <strong>4 km 800 m</strong> lang. Emma hat schon <strong>2 350 m</strong> zurückgelegt. Wie viele Kilometer und Meter muss sie noch gehen?',
+      hint:'Erst Gesamtstrecke in m, dann subtrahieren, dann zurück in km und m umrechnen!',
+      steps:[
+        {q:'Gesamtstrecke in Meter: 4 km 800 m = ? m',answer:4800,unit:'m',fb:'4 × 1 000 + 800 = 4 800 m ✓'},
+        {q:'Verbleibende Strecke in Meter?',answer:2450,unit:'m',fb:'4 800 − 2 350 = 2 450 m ✓'},
+        {q:'Wie viele km stecken in 2 450 m? (nur die ganzen km)',answer:2,unit:'km',fb:'2 450 m = 2 km + 450 m → 2 km ✓'},
+        {q:'Wie viele Meter bleiben übrig?',answer:450,unit:'m',fb:'2 450 − 2 000 = 450 m ✓'},
+      ],
+    },
+    {
+      theme:'🦋 Natur',themeColor:'#dcfce7',themeText:'#166534',
+      title:'Tierrekorde',
+      icon:'🐆',iconBg:'#dcfce7',
+      text:'Ein Gepard kann <strong>1 km</strong> in einer Minute laufen. Ein Strauß schafft <strong>750 m</strong> in derselben Zeit. Ein Mensch läuft <strong>250 m</strong> in einer Minute. Wie viel weiter ist der Gepard als Strauß und Mensch zusammen?',
+      hint:'Erst Strauß + Mensch zusammenrechnen, dann vom Gepard abziehen!',
+      steps:[
+        {q:'Gepard in Meter: 1 km = ? m',answer:1000,unit:'m',fb:'1 × 1 000 = 1 000 m ✓'},
+        {q:'Strauß + Mensch zusammen in Meter?',answer:1000,unit:'m',fb:'750 + 250 = 1 000 m ✓'},
+        {q:'Wie viel weiter ist der Gepard?',answer:0,unit:'m',fb:'1 000 − 1 000 = 0 m – sie sind gleich weit! 🤯'},
+      ],
+    },
+    {
+      theme:'🏫 Schule',themeColor:'#dbeafe',themeText:'#1d4ed8',
+      title:'Der Schulgarten',
+      icon:'🌱',iconBg:'#dbeafe',
+      text:'Der Schulgarten hat drei Beete. Beet A ist <strong>3 m 50 cm</strong> lang, Beet B ist <strong>275 cm</strong> lang und Beet C ist <strong>4 m</strong> lang. Wie lang sind alle Beete zusammen in Metern und Zentimetern?',
+      hint:'Alles in cm umrechnen, addieren, dann in m und cm zurückrechnen!',
+      steps:[
+        {q:'Beet A in cm: 3 m 50 cm = ? cm',answer:350,unit:'cm',fb:'3 × 100 + 50 = 350 cm ✓'},
+        {q:'Beet C in cm: 4 m = ? cm',answer:400,unit:'cm',fb:'4 × 100 = 400 cm ✓'},
+        {q:'Alle drei Beete zusammen in cm?',answer:1025,unit:'cm',fb:'350 + 275 + 400 = 1 025 cm ✓'},
+        {q:'Wie viele ganze Meter sind das?',answer:10,unit:'m',fb:'1 025 cm = 10 m + 25 cm → 10 m ✓'},
+        {q:'Wie viele Zentimeter bleiben übrig?',answer:25,unit:'cm',fb:'1 025 − 1 000 = 25 cm ✓'},
+      ],
+    },
+    {
+      theme:'🚀 Abenteuer',themeColor:'#f3e8ff',themeText:'#6b21a8',
+      title:'Die Weltraumstation',
+      icon:'🚀',iconBg:'#f3e8ff',
+      text:'Astronautin Mia fährt mit dem Raumschiff: <strong>2 km 400 m</strong> zur Station, dort dreht sie 3 Runden à <strong>850 m</strong>, dann fährt sie <strong>1 km 750 m</strong> zurück. Wie weit ist sie insgesamt geflogen?',
+      hint:'Hinweg + 3 Runden + Rückweg. Alle Strecken in m umrechnen und addieren!',
+      steps:[
+        {q:'Hinweg in m: 2 km 400 m = ? m',answer:2400,unit:'m',fb:'2 × 1 000 + 400 = 2 400 m ✓'},
+        {q:'3 Runden in m: 3 × 850 m = ? m',answer:2550,unit:'m',fb:'3 × 850 = 2 550 m ✓'},
+        {q:'Rückweg in m: 1 km 750 m = ? m',answer:1750,unit:'m',fb:'1 × 1 000 + 750 = 1 750 m ✓'},
+        {q:'Gesamtstrecke in m?',answer:6700,unit:'m',fb:'2 400 + 2 550 + 1 750 = 6 700 m ✓'},
+        {q:'Gesamtstrecke in km: wie viele ganze km?',answer:6,unit:'km',fb:'6 700 m = 6 km + 700 m → 6 km ✓'},
+      ],
+    },
+    {
+      theme:'🐬 Natur',themeColor:'#e0f2fe',themeText:'#0c4a6e',
+      title:'Der Delfin-Forscher',
+      icon:'🐬',iconBg:'#e0f2fe',
+      text:'Forscher Ben beobachtet Delfine. Delfin A schwimmt <strong>1 km 200 m</strong>, Delfin B schwimmt <strong>850 m</strong> weniger als A. Wie weit schwimmen beide zusammen?',
+      hint:'Erst Delfin B berechnen (A minus 850 m), dann beide addieren!',
+      steps:[
+        {q:'Delfin A in Meter: 1 km 200 m = ? m',answer:1200,unit:'m',fb:'1 × 1 000 + 200 = 1 200 m ✓'},
+        {q:'Delfin B in Meter: A − 850 m = ? m',answer:350,unit:'m',fb:'1 200 − 850 = 350 m ✓'},
+        {q:'Beide zusammen in Meter?',answer:1550,unit:'m',fb:'1 200 + 350 = 1 550 m ✓'},
+      ],
+    },
+  ],
+};
+
+// ═══════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════
+const G = {
+  phase: 'start',   // start | game | result
+  level: 'easy',
+  taskIdx: 0,
+  stepIdx: 0,
+  stars: 0,
+  streak: 0,
+  correct: 0,
+  total: 0,
+  taskOrder: [],
+  stepsDone: [],   // per task: array of booleans
+  hintShown: false,
+};
+
+function tasks() { return TASKS[G.level]; }
+function task()  { return tasks()[G.taskOrder[G.taskIdx]]; }
+
+function shuffle(arr) {
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+
+// ═══════════════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════════════
+function render() {
+  const app = document.getElementById('app');
+  app.innerHTML = '';
+  if (G.phase==='start') renderStart(app);
+  else if (G.phase==='game') renderGame(app);
+  else if (G.phase==='result') renderResult(app);
+}
+
+// ── START ──
+function renderStart(app) {
+  const div = document.createElement('div');
+  div.className='card fade-up';
+  div.innerHTML=`
+    <div class="start-screen">
+      <div class="start-icon">📏</div>
+      <div class="start-title">Sachaufgaben</div>
+      <div class="start-desc">Übe Längeneinheiten, Umrechnen, Addition und Subtraktion – mit spannenden Geschichten!</div>
+      <div class="start-topics">
+        <span class="topic-chip" style="background:#dbeafe;color:#1d4ed8;">🏫 Schule</span>
+        <span class="topic-chip" style="background:#fef9c3;color:#713f12;">⚽ Sport</span>
+        <span class="topic-chip" style="background:#dcfce7;color:#166534;">🌿 Natur</span>
+        <span class="topic-chip" style="background:#cffafe;color:#164e63;">🗺️ Abenteuer</span>
+      </div>
+      <div style="font-size:0.78rem;color:var(--muted);font-weight:700;letter-spacing:0.05em;">SCHWIERIGKEITSGRAD WÄHLEN</div>
+      <div style="display:flex;gap:10px;width:100%;max-width:360px;">
+        <button onclick="startGame('easy')" style="flex:1;padding:14px;border-radius:14px;border:none;background:var(--easy);color:#fff;font-family:'Nunito',sans-serif;font-weight:900;font-size:0.85rem;cursor:pointer;box-shadow:0 4px 14px rgba(68,179,154,0.3);">🟢 Leicht</button>
+        <button onclick="startGame('medium')" style="flex:1;padding:14px;border-radius:14px;border:none;background:var(--medium);color:#fff;font-family:'Nunito',sans-serif;font-weight:900;font-size:0.85rem;cursor:pointer;box-shadow:0 4px 14px rgba(244,160,33,0.3);">🟡 Mittel</button>
+        <button onclick="startGame('hard')" style="flex:1;padding:14px;border-radius:14px;border:none;background:var(--hard);color:#fff;font-family:'Nunito',sans-serif;font-weight:900;font-size:0.85rem;cursor:pointer;box-shadow:0 4px 14px rgba(230,59,90,0.3);">🔴 Schwer</button>
+      </div>
+    </div>
+  `;
+  app.appendChild(div);
+}
+
+// ── GAME ──
+function renderGame(app) {
+  const t = task();
+  const levelTasks = tasks();
+  const pct = Math.round((G.taskIdx / levelTasks.length) * 100);
+  const maxStars = tasks().reduce((s,t)=>s+t.steps.length,0)*3;
+  const xpPct = Math.min(100,Math.round(G.stars/maxStars*100));
+  const levelColor = {easy:'var(--easy)',medium:'var(--medium)',hard:'var(--hard)'}[G.level];
+  const levelLabel = {easy:'🟢 Leicht',medium:'🟡 Mittel',hard:'🔴 Schwer'}[G.level];
+
+  // header
+  const header = document.createElement('div');
+  header.className='header';
+  header.innerHTML=`
+    <div class="header-left">
+      <h1>📏 Sachaufgaben</h1>
+      <p>KLASSE 5 · LÄNGENEINHEITEN</p>
+    </div>
+    <div class="header-right">
+      <div class="xp-wrap">
+        <span class="xp-stars">⭐ ${G.stars}</span>
+        <div class="xp-bar"><div class="xp-fill" style="width:${xpPct}%"></div></div>
+      </div>
+      <div class="streak">${G.streak>1?'🔥 '+G.streak+'er Serie!':levelLabel}</div>
+    </div>
+  `;
+  app.appendChild(header);
+
+  // level tabs
+  const tabs = document.createElement('div');
+  tabs.className='level-tabs';
+  ['easy','medium','hard'].forEach(l=>{
+    const btn=document.createElement('button');
+    btn.className=`level-tab ${l}${G.level===l?' active':''}`;
+    btn.textContent={easy:'🟢 Leicht',medium:'🟡 Mittel',hard:'🔴 Schwer'}[l];
+    btn.onclick=()=>{ G.level=l; startGame(l); };
+    tabs.appendChild(btn);
+  });
+  app.appendChild(tabs);
+
+  // card
+  const card = document.createElement('div');
+  card.className='card fade-up';
+
+  // progress
+  card.innerHTML+=`
+    <div class="progress-row">
+      <span>Aufgabe ${G.taskIdx+1} von ${levelTasks.length}</span>
+      <span style="color:${levelColor};">${pct}% geschafft</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+  `;
+
+  // story header
+  card.innerHTML+=`
+    <div class="story-header">
+      <div class="story-icon" style="background:${t.iconBg};">${t.icon}</div>
+      <div class="story-meta">
+        <div class="story-theme" style="color:${t.themeText};">${t.theme}</div>
+        <div class="story-title">${t.title}</div>
+      </div>
+    </div>
+  `;
+
+  // task text
+  card.innerHTML+=`<div class="task-text">${t.text}</div>`;
+
+  // hint toggle
+  card.innerHTML+=`
+    <button class="hint-toggle" onclick="toggleHint()">💡 Tipp anzeigen</button>
+    <div class="hint-box${G.hintShown?' show':''}" id="hint-box">💡 ${t.hint}</div>
+  `;
+
+  // steps
+  const stepsDiv = document.createElement('div');
+  stepsDiv.className='steps';
+  t.steps.forEach((step,i)=>{
+    const done = G.stepsDone[G.taskIdx] && G.stepsDone[G.taskIdx][i] !== undefined;
+    const wasCorrect = done && G.stepsDone[G.taskIdx][i];
+    const stepDiv = document.createElement('div');
+    stepDiv.className='step';
+    stepDiv.id='step-'+i;
+    stepDiv.innerHTML=`
+      <div class="step-label">TEILAUFGABE ${i+1}</div>
+      <div class="step-question">${step.q}</div>
+      <div class="step-input-row">
+        <input class="step-input${done?(wasCorrect?' correct':' wrong'):''}"
+          type="number" id="inp-${i}"
+          placeholder="?"
+          value="${done?(wasCorrect?step.answer:(G.stepsDone[G.taskIdx]?.given?.[i]??'')):''}",
+          ${done?'disabled':''}
+          step="any"
+        />
+        <span class="step-unit">${step.unit}</span>
+      </div>
+      <div class="step-feedback${done?(wasCorrect?' correct':' wrong'):''}" id="fb-${i}">
+        ${done?(wasCorrect?'✅ '+step.fb:'❌ Falsch – Richtig: '+step.answer+' '+step.unit):''}
+      </div>
+    `;
+    stepsDiv.appendChild(stepDiv);
+  });
+  card.appendChild(stepsDiv);
+
+  // buttons
+  const allDone = G.stepsDone[G.taskIdx] &&
+    Object.keys(G.stepsDone[G.taskIdx]).filter(k=>k!=='given'&&k!=='undefined').length === t.steps.length;
+  const btnRow = document.createElement('div');
+  btnRow.className='btn-row';
+  btnRow.innerHTML=`
+    <button class="btn btn-check" id="btn-check" onclick="checkAnswers()" ${allDone?'style="display:none"':''}>✅ Prüfen</button>
+    <button class="btn btn-next show" id="btn-next" onclick="nextTask()" style="${allDone?'':'display:none'}">
+      ${G.taskIdx+1<levelTasks.length?'Nächste Aufgabe →':'🏁 Auswertung'}
+    </button>
+  `;
+  card.appendChild(btnRow);
+  app.appendChild(card);
+
+  // focus first empty input
+  setTimeout(()=>{
+    const first = document.querySelector('.step-input:not([disabled])');
+    first?.focus();
+  },60);
+}
+
+// ── RESULT ──
+function renderResult(app) {
+  const total = G.total;
+  const correct = G.correct;
+  const pct = total>0?Math.round(correct/total*100):0;
+  const emoji = pct===100?'🏆':pct>=80?'🎯':pct>=60?'💪':'📚';
+  const msg = pct===100?'Perfekt! Alle Aufgaben richtig!':pct>=80?'Super gemacht!':pct>=60?'Gut! Übe weiter!':'Nochmal versuchen!';
+
+  const header = document.createElement('div');
+  header.className='header';
+  header.innerHTML=`<div class="header-left"><h1>📏 Sachaufgaben</h1><p>AUSWERTUNG</p></div>`;
+  app.appendChild(header);
+
+  const card = document.createElement('div');
+  card.className='card fade-up';
+  card.innerHTML=`
+    <div class="result-screen">
+      <div class="result-icon">${emoji}</div>
+      <div class="result-title">${msg}</div>
+      <div class="result-sub">
+        Du hast alle ${tasks().length} Aufgaben bearbeitet.<br>
+        Schwierigkeit: ${{easy:'🟢 Leicht',medium:'🟡 Mittel',hard:'🔴 Schwer'}[G.level]}
+      </div>
+      <div class="result-grid">
+        <div class="result-stat">
+          <div class="result-stat-num">${correct}</div>
+          <div class="result-stat-label">RICHTIG</div>
+        </div>
+        <div class="result-stat">
+          <div class="result-stat-num" style="color:var(--wrong);">${total-correct}</div>
+          <div class="result-stat-label">FALSCH</div>
+        </div>
+        <div class="result-stat">
+          <div class="result-stat-num">${G.stars}⭐</div>
+          <div class="result-stat-label">STERNE</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+        <button class="restart-btn" onclick="startGame('${G.level}')">🔄 Nochmal (${({easy:'Leicht',medium:'Mittel',hard:'Schwer'})[G.level]})</button>
+        <button class="restart-btn" style="background:var(--p2);" onclick="G.phase='start';render();">← Zurück</button>
+      </div>
+    </div>
+  `;
+  app.appendChild(card);
+  spawnConfetti();
+}
+
+// ═══════════════════════════════════════════════════════
+// LOGIC
+// ═══════════════════════════════════════════════════════
+function startGame(level) {
+  G.level = level;
+  G.taskIdx = 0;
+  G.stars = 0;
+  G.streak = 0;
+  G.correct = 0;
+  G.total = 0;
+  G.hintShown = false;
+  G.taskOrder = shuffle(tasks().map((_,i)=>i));
+  G.stepsDone = tasks().map(()=>({}));
+  G.phase = 'game';
+  render();
+}
+
+function checkAnswers() {
+  const t = task();
+  if (!G.stepsDone[G.taskIdx]) G.stepsDone[G.taskIdx]={};
+  let anyWrong = false;
+
+  t.steps.forEach((step,i)=>{
+    if (G.stepsDone[G.taskIdx][i] !== undefined) return; // already checked
+    const inp = document.getElementById('inp-'+i);
+    if (!inp || inp.value==='') return;
+    const val = parseFloat(inp.value.replace(',','.'));
+    const correct = Math.abs(val - step.answer) < 0.001;
+    G.stepsDone[G.taskIdx][i] = correct;
+    if (!G.stepsDone[G.taskIdx].given) G.stepsDone[G.taskIdx].given={};
+    G.stepsDone[G.taskIdx].given[i] = val;
+    G.total++;
+    if (correct) { G.correct++; G.stars+=3; G.streak++; }
+    else { G.stars=Math.max(0,G.stars); G.streak=0; anyWrong=true; }
+
+    // update UI
+    inp.disabled=true;
+    inp.className='step-input '+(correct?'correct':'wrong');
+    const fb=document.getElementById('fb-'+i);
+    if(fb){
+      fb.className='step-feedback '+(correct?'correct':'wrong');
+      fb.textContent=correct?'✅ '+step.fb:'❌ Falsch – Richtig: '+step.answer+' '+step.unit;
+    }
+    const stepEl=document.getElementById('step-'+i);
+    if(stepEl) stepEl.classList.add(correct?'pop':'shake');
+  });
+
+  // check if all done
+  const filled = Object.keys(G.stepsDone[G.taskIdx]).filter(k=>k!=='given'&&k!=='undefined').length;
+  if (filled >= t.steps.length) {
+    document.getElementById('btn-check').style.display='none';
+    const nb=document.getElementById('btn-next');
+    if(nb){ nb.style.display='block'; nb.textContent=G.taskIdx+1<tasks().length?'Nächste Aufgabe →':'🏁 Auswertung'; }
+    if(!anyWrong) spawnStars();
+  }
+}
+
+function nextTask() {
+  G.taskIdx++;
+  G.hintShown=false;
+  if (G.taskIdx >= tasks().length) {
+    G.phase='result';
+  }
+  render();
+}
+
+function toggleHint() {
+  G.hintShown=!G.hintShown;
+  const hb=document.getElementById('hint-box');
+  const btn=document.querySelector('.hint-toggle');
+  if(hb) hb.className='hint-box'+(G.hintShown?' show':'');
+  if(btn) btn.textContent=G.hintShown?'💡 Tipp ausblenden':'💡 Tipp anzeigen';
+}
+
+// ═══════════════════════════════════════════════════════
+// EFFECTS
+// ═══════════════════════════════════════════════════════
+function spawnStars() {
+  for(let i=0;i<8;i++){
+    const s=document.createElement('div');
+    s.textContent='⭐';
+    s.style.cssText=`position:fixed;font-size:1.4rem;pointer-events:none;z-index:999;
+      left:${20+Math.random()*60}vw;top:${20+Math.random()*40}vh;
+      animation:confetti 1.2s ease-out ${i*0.08}s forwards;`;
+    document.body.appendChild(s);
+    setTimeout(()=>s.remove(),1500);
+  }
+}
+
+function spawnConfetti() {
+  const colors=['#f4631e','#2e86ab','#44b39a','#f4a021','#e63b5a','#fde68a'];
+  for(let i=0;i<35;i++){
+    const c=document.createElement('div');
+    c.className='confetti-piece';
+    c.style.cssText=`left:${Math.random()*100}vw;top:-10px;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      width:${7+Math.random()*9}px;height:${7+Math.random()*9}px;
+      animation-delay:${Math.random()*0.8}s;
+      animation-duration:${1.3+Math.random()*0.9}s;
+      transform:rotate(${Math.random()*360}deg);`;
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),2500);
+  }
+}
+
+// Enter key support
+document.addEventListener('keydown',e=>{
+  if(e.key==='Enter'&&G.phase==='game') checkAnswers();
+});
+
+// ── Init ──
+render();
+</script>
+</body>
+</html>
