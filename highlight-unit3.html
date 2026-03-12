@@ -476,7 +476,7 @@
     <div class="match-col" id="matchRight"></div>
   </div>
   <div class="match-score" id="matchScore"></div>
-  <div style="text-align:center; margin-top:16px;" id="matchDoneBtn" style="display:none">
+  <div style="text-align:center; margin-top:16px; display:none" id="matchDoneBtn">
     <button class="btn btn-primary" onclick="startMode('match')">Play again</button>
     <button class="btn btn-muted" onclick="showModes()">Back</button>
   </div>
@@ -488,8 +488,8 @@
   <div class="fill-sentence" id="fillSentence"></div>
   <div class="fill-options" id="fillOptions"></div>
   <div class="quiz-feedback" id="fillFeedback"></div>
-  <div style="text-align:center; margin-top:12px;">
-    <button class="btn btn-primary" id="fillNextBtn" onclick="nextFill()" style="display:none">Next →</button>
+  <div id="fillNextWrap" style="text-align:center; margin-top:12px; display:none">
+    <button class="btn btn-primary" onclick="nextFill()">Next →</button>
   </div>
   <div class="quiz-score" id="fillScore" style="display:none">
     <div class="big" id="fillScoreNum"></div>
@@ -502,6 +502,12 @@
 </div>
 
 <script>
+// ═══════════════════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════════════════
+function shuffle(arr) { return [...arr].sort(() => Math.random() - .5); }
+function $(id) { return document.getElementById(id); }
+
 // ═══════════════════════════════════════════════════════
 // VOCABULARY DATA
 // ═══════════════════════════════════════════════════════
@@ -606,19 +612,6 @@ const allWords = chapters.reduce((acc, ch) => acc.concat(ch.words), []);
 const allChapter = { name: "All Words – Unit 3", words: allWords };
 const allChapters = [...chapters, allChapter];
 
-// Fill-in-blank sentences
-const sentences = [
-  { template: "I sometimes go ___ on Saturdays.", blank: "shopping", opts: ["shopping","swimming","bowling","home"] },
-  { template: "She is never ___.", blank: "early", opts: ["early","there","first","home"] },
-  { template: "The red trainers are too ___.", blank: "expensive", opts: ["expensive","terrible","much","free"] },
-  { template: "We usually ___ in the evening.", blank: "stay", opts: ["stay","fall","meet","cost"] },
-  { template: "Let's go to the swimming ___!", blank: "pool", opts: ["pool","shop","market","zoo"] },
-  { template: "He wants to go ___ on his birthday.", blank: "bowling", opts: ["bowling","swimming","shopping","home"] },
-  { template: "My birthday is in ___.", blank: "August", opts: ["August","Monday","morning","hospital"] },
-  { template: "She fell down the ___ and hurt her leg.", blank: "hill", opts: ["hill","beach","market","zoo"] },
-  { template: "They went to the ___ after he broke his leg.", blank: "hospital", opts: ["hospital","zoo","garage","shop"] },
-  { template: "How ___ does this hoodie cost?", blank: "much", opts: ["much","many","often","always"] },
-];
 
 // ═══════════════════════════════════════════════════════
 // STATE
@@ -717,62 +710,62 @@ function fcNav(dir) {
 // ═══════════════════════════════════════════════════════
 // QUIZ
 // ═══════════════════════════════════════════════════════
-function shuffle(arr) { return [...arr].sort(() => Math.random() - .5); }
-
 function startQuiz() {
   quizIndex = 0; quizScore = 0;
   quizQuestions = shuffle(currentWords).slice(0, Math.min(10, currentWords.length));
-  document.getElementById('quizScore').style.display = 'none';
-  document.getElementById('quizContainer').style.display = '';
+  $('quizScore').style.display = 'none';
+  $('quizContainer').style.display = '';
   renderQuizQ();
   showScreen('screenQuiz');
 }
 
 function renderQuizQ() {
   const q = quizQuestions[quizIndex];
-  // Randomly decide: show English → German, or German → English
-  const direction = Math.random() > .5;
-  document.getElementById('quizQuestion').textContent = direction ? q.en : q.de;
-  document.getElementById('quizSub').textContent = direction ? 'What is the German translation?' : 'What is the English word?';
-  document.getElementById('quizFeedback').textContent = '';
-  document.getElementById('quizNextBtn').style.display = 'none';
+  const direction = Math.random() > .5; // true = show EN, guess DE
+  $('quizQuestion').textContent = direction ? q.en : q.de;
+  $('quizSub').textContent = direction ? 'What is the German translation?' : 'What is the English word?';
+  $('quizFeedback').textContent = '';
+  $('quizNextBtn').style.display = 'none';
 
-  // Get 3 wrong options
-  const wrong = shuffle(currentWords.filter(w => w.en !== q.en)).slice(0,3);
+  const wrong = shuffle(currentWords.filter(w => w.en !== q.en)).slice(0, 3);
   const options = shuffle([q, ...wrong]);
-  const cont = document.getElementById('quizOptions');
-  cont.innerHTML = options.map(opt => {
+  const cont = $('quizOptions');
+  cont.innerHTML = '';
+  options.forEach(opt => {
     const label = direction ? opt.de : opt.en;
     const isCorrect = opt.en === q.en;
-    return `<button class="quiz-opt" onclick="checkQuiz(this, ${isCorrect}, '${direction ? q.de.replace(/'/g,"\\'") : q.en.replace(/'/g,"\\'")}' )">${label}</button>`;
-  }).join('');
+    const btn = document.createElement('button');
+    btn.className = 'quiz-opt';
+    btn.textContent = label;
+    btn.addEventListener('click', () => checkQuiz(btn, isCorrect, direction ? q.de : q.en, cont));
+    cont.appendChild(btn);
+  });
 }
 
-function checkQuiz(btn, isCorrect, correctAnswer) {
-  document.querySelectorAll('.quiz-opt').forEach(b => b.disabled = true);
+function checkQuiz(btn, isCorrect, correctAnswer, cont) {
+  cont.querySelectorAll('.quiz-opt').forEach(b => b.disabled = true);
   if (isCorrect) {
     btn.classList.add('correct');
-    document.getElementById('quizFeedback').innerHTML = `<span style="color:var(--green)">✅ Correct!</span>`;
+    $('quizFeedback').innerHTML = `<span style="color:var(--green)">✅ Correct!</span>`;
     quizScore++;
   } else {
     btn.classList.add('wrong');
-    document.getElementById('quizFeedback').innerHTML = `<span style="color:var(--pink)">❌ The answer is: <strong>${correctAnswer}</strong></span>`;
-    // highlight correct
-    document.querySelectorAll('.quiz-opt').forEach(b => {
+    $('quizFeedback').innerHTML = `<span style="color:var(--pink)">❌ The answer is: <strong>${correctAnswer}</strong></span>`;
+    cont.querySelectorAll('.quiz-opt').forEach(b => {
       if (b.textContent.trim() === correctAnswer) b.classList.add('correct');
     });
   }
-  document.getElementById('quizNextBtn').style.display = 'inline-block';
+  $('quizNextBtn').style.display = 'inline-block';
 }
 
 function nextQuizQ() {
   quizIndex++;
   if (quizIndex >= quizQuestions.length) {
-    document.getElementById('quizContainer').style.display = 'none';
+    $('quizContainer').style.display = 'none';
     const pct = Math.round(quizScore / quizQuestions.length * 100);
-    document.getElementById('quizScoreNum').textContent = `${quizScore}/${quizQuestions.length}`;
-    document.getElementById('quizScoreMsg').textContent = pct >= 80 ? '🎉 Excellent work!' : pct >= 50 ? '👍 Good job! Keep practising!' : '💪 Keep going, you can do it!';
-    document.getElementById('quizScore').style.display = '';
+    $('quizScoreNum').textContent = `${quizScore}/${quizQuestions.length}`;
+    $('quizScoreMsg').textContent = pct >= 80 ? '🎉 Excellent work!' : pct >= 50 ? '👍 Good job! Keep practising!' : '💪 Keep going, you can do it!';
+    $('quizScore').style.display = '';
   } else {
     renderQuizQ();
   }
@@ -785,20 +778,28 @@ function startMatch() {
   matchSelected = null; matchDone = 0;
   const pool = shuffle(currentWords).slice(0, Math.min(8, currentWords.length));
   matchPairs = pool;
-  document.getElementById('matchScore').textContent = '';
-  document.getElementById('matchLabel').textContent = 'Match English ↔ German!';
+  $('matchScore').textContent = '';
+  $('matchLabel').textContent = 'Match English ↔ German!';
+  $('matchDoneBtn').style.display = 'none';
 
-  const leftWords = shuffle(pool.map(w => ({id: w.en, label: w.en, type:'en'})));
-  const rightWords = shuffle(pool.map(w => ({id: w.en, label: w.de, type:'de'})));
+  const leftItems  = shuffle(pool.map(w => ({id: w.en, label: w.en, type:'en'})));
+  const rightItems = shuffle(pool.map(w => ({id: w.en, label: w.de, type:'de'})));
 
-  document.getElementById('matchLeft').innerHTML = leftWords.map(w =>
-    `<div class="match-item" id="en-${CSS.escape(w.id)}" onclick="matchClick('en','${w.id.replace(/'/g,"\\'")}',this)">${w.label}</div>`
-  ).join('');
-  document.getElementById('matchRight').innerHTML = rightWords.map(w =>
-    `<div class="match-item" id="de-${CSS.escape(w.id)}" onclick="matchClick('de','${w.id.replace(/'/g,"\\'")}',this)">${w.label}</div>`
-  ).join('');
-
-  document.getElementById('matchDoneBtn').style.display = 'none';
+  function renderMatchCol(colId, items) {
+    const col = $(colId);
+    col.innerHTML = '';
+    items.forEach(item => {
+      const el = document.createElement('div');
+      el.className = 'match-item';
+      el.textContent = item.label;
+      el.dataset.id = item.id;
+      el.dataset.type = item.type;
+      el.addEventListener('click', () => matchClick(item.type, item.id, el));
+      col.appendChild(el);
+    });
+  }
+  renderMatchCol('matchLeft', leftItems);
+  renderMatchCol('matchRight', rightItems);
   showScreen('screenMatch');
 }
 
@@ -817,11 +818,11 @@ function matchClick(type, id, el) {
     const same = matchSelected.id === id;
     [matchSelected.el, el].forEach(e => e.classList.remove('selected'));
     if (same) {
-      [matchSelected.el, el].forEach(e => { e.classList.add('matched'); });
+      [matchSelected.el, el].forEach(e => e.classList.add('matched'));
       matchDone++;
       if (matchDone === matchPairs.length) {
-        document.getElementById('matchScore').textContent = '🎉 All matched! Great job!';
-        document.getElementById('matchDoneBtn').style.display = '';
+        $('matchScore').textContent = '🎉 All matched! Great job!';
+        $('matchDoneBtn').style.display = '';
       }
     } else {
       [matchSelected.el, el].forEach(e => {
@@ -834,61 +835,91 @@ function matchClick(type, id, el) {
 }
 
 // ═══════════════════════════════════════════════════════
-// FILL IN THE BLANK
+// FILL IN THE BLANK — dynamically generated from vocab
 // ═══════════════════════════════════════════════════════
+function buildFillQuestions(words) {
+  // Generate questions from the actual chapter words
+  const pool = shuffle(words);
+  const questions = [];
+  pool.forEach(w => {
+    // Simple template: "The English word for [DE] is ___."
+    const wrongPool = shuffle(words.filter(x => x.en !== w.en)).slice(0, 3).map(x => x.en);
+    if (wrongPool.length < 3) return; // skip if not enough distractors
+    questions.push({
+      template: `The English word for "${w.de}" is ___.`,
+      blank: w.en,
+      opts: shuffle([w.en, ...wrongPool])
+    });
+  });
+  return questions.slice(0, 8);
+}
+
 function startFill() {
   fillIndex = 0; fillScore = 0;
-  fillQuestions = shuffle(sentences).slice(0, Math.min(6, sentences.length));
-  document.getElementById('fillScore').style.display = 'none';
-  document.getElementById('fillSentence').style.display = '';
-  document.getElementById('fillOptions').style.display = '';
-  document.getElementById('fillProgress').style.display = '';
+  fillQuestions = buildFillQuestions(currentWords);
+  if (fillQuestions.length === 0) {
+    alert('Not enough words in this chapter for Fill in the Blank. Please choose a bigger chapter!');
+    return;
+  }
+  $('fillScore').style.display = 'none';
+  $('fillSentence').style.display = '';
+  $('fillOptions').style.display = '';
+  $('fillProgress').style.display = '';
+  $('fillNextWrap').style.display = 'none';
   renderFill();
   showScreen('screenFill');
 }
 
 function renderFill() {
   const q = fillQuestions[fillIndex];
-  document.getElementById('fillProgress').textContent = `Question ${fillIndex+1} of ${fillQuestions.length}`;
-  const sentence = q.template.replace(q.blank, `<span class="fill-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>`);
-  document.getElementById('fillSentence').innerHTML = sentence;
-  document.getElementById('fillFeedback').textContent = '';
-  document.getElementById('fillNextBtn').style.display = 'none';
-  document.getElementById('fillOptions').innerHTML = shuffle(q.opts).map(opt =>
-    `<button class="fill-opt" onclick="checkFill(this,'${opt}','${q.blank}')">${opt}</button>`
-  ).join('');
+  $('fillProgress').textContent = `Question ${fillIndex + 1} of ${fillQuestions.length}`;
+  $('fillSentence').innerHTML = q.template.replace('___', '<span class="fill-blank" id="fillBlank">_______</span>');
+  $('fillFeedback').textContent = '';
+  $('fillNextWrap').style.display = 'none';
+
+  const optsCont = $('fillOptions');
+  optsCont.innerHTML = '';
+  q.opts.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'fill-opt';
+    btn.textContent = opt;
+    btn.addEventListener('click', () => checkFill(btn, opt, q.blank, optsCont));
+    optsCont.appendChild(btn);
+  });
 }
 
-function checkFill(btn, chosen, correct) {
-  document.querySelectorAll('.fill-opt').forEach(b => b.disabled = true);
+function checkFill(btn, chosen, correct, optsCont) {
+  optsCont.querySelectorAll('.fill-opt').forEach(b => b.disabled = true);
+  const blankEl = $('fillBlank');
   if (chosen === correct) {
     btn.classList.add('correct-pick');
-    document.getElementById('fillFeedback').innerHTML = `<span style="color:var(--green)">✅ Correct!</span>`;
+    $('fillFeedback').innerHTML = `<span style="color:var(--green)">✅ Correct!</span>`;
     fillScore++;
-    // fill the blank
-    document.querySelector('.fill-blank').textContent = correct;
-    document.querySelector('.fill-blank').style.color = 'var(--green)';
+    if (blankEl) { blankEl.textContent = correct; blankEl.style.color = 'var(--green)'; }
   } else {
     btn.classList.add('wrong-pick');
-    document.getElementById('fillFeedback').innerHTML = `<span style="color:var(--pink)">❌ The answer is: <strong>${correct}</strong></span>`;
-    document.querySelector('.fill-blank').textContent = correct;
-    document.querySelector('.fill-blank').style.color = 'var(--pink)';
+    $('fillFeedback').innerHTML = `<span style="color:var(--pink)">❌ The answer is: <strong>${correct}</strong></span>`;
+    if (blankEl) { blankEl.textContent = correct; blankEl.style.color = 'var(--pink)'; }
+    // highlight correct button
+    optsCont.querySelectorAll('.fill-opt').forEach(b => {
+      if (b.textContent === correct) b.classList.add('correct-pick');
+    });
   }
-  document.getElementById('fillNextBtn').style.display = 'inline-block';
+  $('fillNextWrap').style.display = '';
 }
 
 function nextFill() {
   fillIndex++;
   if (fillIndex >= fillQuestions.length) {
-    document.getElementById('fillSentence').style.display = 'none';
-    document.getElementById('fillOptions').style.display = 'none';
-    document.getElementById('fillProgress').style.display = 'none';
-    document.getElementById('fillNextBtn').style.display = 'none';
-    document.getElementById('fillFeedback').textContent = '';
+    $('fillSentence').style.display = 'none';
+    $('fillOptions').style.display = 'none';
+    $('fillProgress').style.display = 'none';
+    $('fillNextWrap').style.display = 'none';
+    $('fillFeedback').textContent = '';
     const pct = Math.round(fillScore / fillQuestions.length * 100);
-    document.getElementById('fillScoreNum').textContent = `${fillScore}/${fillQuestions.length}`;
-    document.getElementById('fillScoreMsg').textContent = pct >= 80 ? '🎉 Excellent!' : pct >= 50 ? '👍 Well done!' : '💪 Keep practising!';
-    document.getElementById('fillScore').style.display = '';
+    $('fillScoreNum').textContent = `${fillScore}/${fillQuestions.length}`;
+    $('fillScoreMsg').textContent = pct >= 80 ? '🎉 Excellent!' : pct >= 50 ? '👍 Well done!' : '💪 Keep practising!';
+    $('fillScore').style.display = '';
   } else {
     renderFill();
   }
