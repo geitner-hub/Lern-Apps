@@ -4,7 +4,10 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Admin – Lern-Apps</title>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet"></noscript>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
@@ -12,29 +15,29 @@
       --accent:#4f6ef7;--accent2:#f7c948;--green:#4ade80;--red:#f87171;--purple:#a78bfa;
       --text:#e2e8f0;--muted:#64748b;--r:14px;
     }
-    body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+    body{font-family:'Nunito','Varela Round','Trebuchet MS','Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
 
     /* ── LOGIN ─────────────────────────────────────── */
     #login-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:999}
     .login-box{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:2.5rem 2rem;width:320px;text-align:center}
-    .login-box h1{font-family:'Fredoka One',cursive;font-size:1.8rem;margin-bottom:.3rem}
+    .login-box h1{font-family:'Fredoka One','Trebuchet MS','Comic Sans MS',cursive;font-size:1.8rem;margin-bottom:.3rem}
     .login-box p{font-size:.85rem;color:var(--muted);margin-bottom:1.5rem}
-    .login-box input{width:100%;padding:.75rem 1rem;background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;color:var(--text);font-family:'Nunito',sans-serif;font-size:1rem;outline:none;text-align:center;letter-spacing:3px;transition:border-color .2s}
+    .login-box input{width:100%;padding:.75rem 1rem;background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;color:var(--text);font-family:'Nunito','Varela Round','Trebuchet MS','Segoe UI',system-ui,sans-serif;font-size:1rem;outline:none;text-align:center;letter-spacing:3px;transition:border-color .2s}
     .login-box input:focus{border-color:var(--accent)}
     .login-box .err{color:var(--red);font-size:.8rem;margin-top:.5rem;min-height:1.1rem}
-    .btn-primary{background:var(--accent);border:none;color:#fff;padding:.7rem 1.5rem;border-radius:10px;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:800;font-size:.9rem;transition:background .15s;width:100%;margin-top:.8rem}
+    .btn-primary{background:var(--accent);border:none;color:#fff;padding:.7rem 1.5rem;border-radius:10px;cursor:pointer;font-family:'Nunito','Varela Round','Trebuchet MS','Segoe UI',system-ui,sans-serif;font-weight:800;font-size:.9rem;transition:background .15s;width:100%;margin-top:.8rem}
     .btn-primary:hover{background:#3b5ce6}
 
     /* ── LAYOUT ────────────────────────────────────── */
     #app{display:none}
     .topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:.9rem 1.5rem;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:100}
-    .topbar h1{font-family:'Fredoka One',cursive;font-size:1.3rem;color:var(--accent2)}
+    .topbar h1{font-family:'Fredoka One','Trebuchet MS','Comic Sans MS',cursive;font-size:1.3rem;color:var(--accent2)}
     .topbar-actions{margin-left:auto;display:flex;gap:.6rem;align-items:center}
     #sync-status{font-size:.75rem;font-weight:700;padding:.3rem .8rem;border-radius:99px;background:var(--surface2)}
     #sync-status.ok{color:var(--green)}
     #sync-status.saving{color:var(--accent2)}
     #sync-status.error{color:var(--red)}
-    .btn{padding:.45rem 1rem;border-radius:9px;font-family:'Nunito',sans-serif;font-weight:800;font-size:.82rem;cursor:pointer;border:1.5px solid var(--border);background:var(--surface2);color:var(--text);transition:all .15s}
+    .btn{padding:.45rem 1rem;border-radius:9px;font-family:'Nunito','Varela Round','Trebuchet MS','Segoe UI',system-ui,sans-serif;font-weight:800;font-size:.82rem;cursor:pointer;border:1.5px solid var(--border);background:var(--surface2);color:var(--text);transition:all .15s}
     .btn:hover{background:var(--surface);border-color:rgba(255,255,255,.2)}
     .btn.accent{background:var(--accent);border-color:var(--accent);color:#fff}
     .btn.accent:hover{background:#3b5ce6}
@@ -47,7 +50,7 @@
 
     /* ── TABS ──────────────────────────────────────── */
     .tabs{display:flex;gap:.3rem;margin-bottom:1.5rem;background:var(--surface);border-radius:12px;padding:.4rem}
-    .tab{padding:.5rem 1.2rem;border-radius:9px;font-weight:800;font-size:.88rem;cursor:pointer;color:var(--muted);border:none;background:none;font-family:'Nunito',sans-serif;transition:all .15s}
+    .tab{padding:.5rem 1.2rem;border-radius:9px;font-weight:800;font-size:.88rem;cursor:pointer;color:var(--muted);border:none;background:none;font-family:'Nunito','Varela Round','Trebuchet MS','Segoe UI',system-ui,sans-serif;transition:all .15s}
     .tab:hover{color:var(--text)}
     .tab.active{background:var(--surface2);color:var(--accent2)}
     .tab-panel{display:none}
@@ -55,7 +58,7 @@
 
     /* ── SECTION HEADERS ───────────────────────────── */
     .sec-header{display:flex;align-items:center;gap:.8rem;margin-bottom:1rem}
-    .sec-title{font-family:'Fredoka One',cursive;font-size:1.1rem;color:var(--accent2)}
+    .sec-title{font-family:'Fredoka One','Trebuchet MS','Comic Sans MS',cursive;font-size:1.1rem;color:var(--accent2)}
 
     /* ── ADD APP FORM ──────────────────────────────── */
     .form-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem}
@@ -64,7 +67,7 @@
     .form-group{display:flex;flex-direction:column;gap:.4rem}
     .form-group.full{grid-column:1/-1}
     label{font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
-    input[type=text],select,textarea{background:var(--surface2);border:1.5px solid var(--border);border-radius:9px;color:var(--text);font-family:'Nunito',sans-serif;font-size:.9rem;padding:.55rem .8rem;outline:none;transition:border-color .2s;width:100%}
+    input[type=text],select,textarea{background:var(--surface2);border:1.5px solid var(--border);border-radius:9px;color:var(--text);font-family:'Nunito','Varela Round','Trebuchet MS','Segoe UI',system-ui,sans-serif;font-size:.9rem;padding:.55rem .8rem;outline:none;transition:border-color .2s;width:100%}
     input[type=text]:focus,select:focus,textarea:focus{border-color:var(--accent)}
     select option{background:var(--surface2)}
     textarea{resize:vertical;min-height:70px}
@@ -88,7 +91,7 @@
     .rtag.kt{background:rgba(79,110,247,.1);color:#93c5fd}
     .rtag.ct{background:rgba(167,139,250,.15);color:#c4b5fd;border-color:rgba(167,139,250,.25)}
     .row-actions{display:flex;gap:.4rem;flex-shrink:0}
-    .icon-btn{background:none;border:1.5px solid var(--border);border-radius:8px;color:var(--muted);font-size:.85rem;padding:.35rem .6rem;cursor:pointer;transition:all .15s;font-family:'Nunito',sans-serif}
+    .icon-btn{background:none;border:1.5px solid var(--border);border-radius:8px;color:var(--muted);font-size:.85rem;padding:.35rem .6rem;cursor:pointer;transition:all .15s;font-family:'Nunito','Varela Round','Trebuchet MS','Segoe UI',system-ui,sans-serif}
     .icon-btn:hover{background:var(--surface2);color:var(--text)}
     .icon-btn.active{background:rgba(74,222,128,.15);border-color:var(--green);color:var(--green)}
     .icon-btn.hidden-btn{background:rgba(248,113,113,.1);border-color:var(--red);color:var(--red)}
@@ -107,7 +110,7 @@
     .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);z-index:500;align-items:center;justify-content:center}
     .modal-bg.open{display:flex}
     .modal{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:1.8rem;width:min(500px,95vw);max-height:85vh;overflow-y:auto}
-    .modal h2{font-family:'Fredoka One',cursive;font-size:1.3rem;margin-bottom:1.2rem;color:var(--accent2)}
+    .modal h2{font-family:'Fredoka One','Trebuchet MS','Comic Sans MS',cursive;font-size:1.3rem;margin-bottom:1.2rem;color:var(--accent2)}
     .modal-section{margin-bottom:1.2rem}
     .modal-label{font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:.5rem}
     .chip-group{display:flex;flex-wrap:wrap;gap:.35rem}
@@ -121,7 +124,7 @@
     .vis-cat-block{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);margin-bottom:.8rem;overflow:hidden}
     .vis-cat-header{display:flex;align-items:center;gap:.8rem;padding:.8rem 1rem;background:var(--surface2);cursor:pointer}
     .vis-cat-name{font-weight:800;font-size:.95rem;flex:1}
-    .vis-toggle{padding:.3rem .8rem;border-radius:8px;font-size:.78rem;font-weight:800;border:1.5px solid;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .15s}
+    .vis-toggle{padding:.3rem .8rem;border-radius:8px;font-size:.78rem;font-weight:800;border:1.5px solid;cursor:pointer;font-family:'Nunito','Varela Round','Trebuchet MS','Segoe UI',system-ui,sans-serif;transition:all .15s}
     .vis-toggle.on{background:rgba(74,222,128,.1);border-color:var(--green);color:var(--green)}
     .vis-toggle.off{background:rgba(248,113,113,.1);border-color:var(--red);color:var(--red)}
     .vis-app-list{padding:.6rem 1rem .8rem}
@@ -130,9 +133,32 @@
     .vis-app-name{flex:1;font-size:.88rem;font-weight:700}
     .vis-app-emoji{font-size:1.1rem;flex-shrink:0}
 
+    /* ── QR MODAL ──────────────────────────────────── */
+    #qr-modal .modal{text-align:center}
+    #qr-canvas-wrap{background:#fff;border-radius:16px;padding:1.2rem;display:inline-block;margin:1rem 0}
+    #qr-canvas-wrap canvas{display:block}
+    .qr-url{font-size:.75rem;color:var(--muted);word-break:break-all;margin-bottom:.8rem;background:var(--surface2);padding:.5rem .8rem;border-radius:8px}
+    .qr-app-name{font-family:'Fredoka One','Trebuchet MS',cursive;font-size:1.2rem;margin-bottom:.2rem}
+
     /* ── TOAST ─────────────────────────────────────── */
     #toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--surface);border:1px solid var(--green);color:var(--green);padding:.6rem 1.2rem;border-radius:10px;font-size:.85rem;font-weight:700;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999}
     #toast.show{opacity:1}
+
+    /* QR MODAL */
+    #qr-modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);z-index:600;align-items:center;justify-content:center}
+    #qr-modal-bg.open{display:flex}
+    #qr-modal{background:#fff;border-radius:20px;padding:2rem;width:min(360px,95vw);text-align:center;color:#1e2235}
+    #qr-modal h2{font-family:'Fredoka One','Trebuchet MS',cursive;font-size:1.2rem;margin-bottom:.25rem;color:#1a1f5e}
+    #qr-modal .qr-app-name{font-weight:800;font-size:1rem;margin-bottom:.2rem}
+    #qr-modal .qr-url{font-size:.68rem;color:#6b7280;margin-bottom:1rem;word-break:break-all}
+    #qr-canvas-wrap{display:inline-block;margin-bottom:1rem}
+    #qr-canvas-wrap canvas{display:block}
+    .qr-actions{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap}
+    .qr-btn{padding:.5rem 1.1rem;border-radius:10px;font-weight:800;font-size:.85rem;cursor:pointer;border:none;font-family:'Nunito',system-ui,sans-serif;transition:transform .15s}
+    .qr-btn:hover{transform:translateY(-2px)}
+    .qr-btn-print{background:#1a1f5e;color:#fff}
+    .qr-btn-close{background:#f1f5f9;color:#1e2235}
+    .qr-hint{font-size:.7rem;color:#9ca3af;margin-top:.8rem}
   </style>
 </head>
 <body>
@@ -260,7 +286,37 @@
   </div>
 </div>
 
+<!-- QR MODAL -->
+<div class="modal-bg" id="qr-modal">
+  <div class="modal" style="max-width:380px">
+    <h2 id="qr-modal-title">QR-Code</h2>
+    <div class="qr-app-name" id="qr-app-name"></div>
+    <div id="qr-canvas-wrap"><canvas id="qr-canvas"></canvas></div>
+    <div class="qr-url" id="qr-url"></div>
+    <div class="modal-actions" style="justify-content:space-between">
+      <button class="btn green" onclick="downloadQR()">⬇ Bild speichern</button>
+      <button class="btn" onclick="closeQR()">Schließen</button>
+    </div>
+  </div>
+</div>
+
 <div id="toast">✓ Gespeichert</div>
+
+<!-- QR MODAL -->
+<div id="qr-modal-bg">
+  <div id="qr-modal">
+    <h2>QR-Code</h2>
+    <div class="qr-app-name" id="qr-app-name"></div>
+    <div class="qr-url" id="qr-url-text"></div>
+    <div id="qr-canvas-wrap"></div>
+    <div class="qr-actions">
+      <button class="qr-btn qr-btn-print" onclick="printQR()">🖨 Drucken</button>
+      <button class="qr-btn qr-btn-close" onclick="closeQR()">Schliessen</button>
+    </div>
+    <div class="qr-hint">QR-Code per Beamer zeigen oder ausdrucken</div>
+  </div>
+</div>
+
 
 <script>
 const WORKER_URL = 'https://lern-apps-config.bennigeitner.workers.dev';
@@ -419,6 +475,7 @@ function buildAppList(){
         <button class="icon-btn aod-btn${app.aod?' on':''}" title="App des Tages" onclick="toggleAod('${app.name}')">⭐</button>
         <button class="icon-btn${app.hidden?' hidden-btn':''}" title="Ein/Ausblenden" onclick="toggleHidden('${app.name}')">${app.hidden?'🚫':'✅'}</button>
         <button class="icon-btn" title="Tags bearbeiten" onclick="openModal('${app.name}')">🏷</button>
+        <button class="icon-btn" title="QR-Code" onclick="showQR('${app.name}','${app.datei}')">📲</button>
         <button class="icon-btn" title="Löschen" onclick="deleteApp('${app.name}')">🗑</button>
       </div>`;
 
@@ -625,6 +682,68 @@ function closeModal(){
 document.getElementById('tag-modal').addEventListener('click',e=>{
   if(e.target===document.getElementById('tag-modal')) closeModal();
 });
+
+// ════════════════════════════════════════════════════════
+//  QR CODE
+// ════════════════════════════════════════════════════════
+const BASE_URL = 'https://geitner-hub.github.io/Lern-Apps/';
+
+function showQR(name, datei) {
+  const url = BASE_URL + datei;
+  document.getElementById('qr-modal-title').textContent = '📲 QR-Code';
+  document.getElementById('qr-app-name').textContent = name;
+  document.getElementById('qr-url').textContent = url;
+  const wrap = document.getElementById('qr-canvas-wrap');
+  wrap.innerHTML = '';
+
+  const loadAndRender = () => {
+    // QR via Google Charts API – kein externes JS nötig
+    const size = 220;
+    const img = document.createElement('img');
+    img.src = `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(url)}&color=1a1f5e&bgcolor=ffffff&qzone=1`;
+    img.width = size;
+    img.height = size;
+    img.style.borderRadius = '8px';
+    img.style.display = 'block';
+    wrap.appendChild(img);
+  };
+  loadAndRender();
+  document.getElementById('qr-modal').classList.add('open');
+}
+
+function downloadQR() {
+  const name = document.getElementById('qr-app-name').textContent;
+  const img  = document.querySelector('#qr-canvas-wrap img');
+  if (!img) return;
+  // Bild über Canvas herunterladen (CORS-safe)
+  const canvas = document.createElement('canvas');
+  canvas.width = 220; canvas.height = 220;
+  const ctx = canvas.getContext('2d');
+  const i = new Image();
+  i.crossOrigin = 'anonymous';
+  i.src = img.src;
+  i.onload = () => {
+    ctx.drawImage(i, 0, 0);
+    const a = document.createElement('a');
+    a.download = `QR-${name.replace(/[^a-zA-Z0-9]/g,'-')}.png`;
+    a.href = canvas.toDataURL('image/png');
+    a.click();
+  };
+  i.onerror = () => {
+    // Fallback: direkt verlinken
+    const a = document.createElement('a');
+    a.href = img.src; a.target = '_blank'; a.click();
+  };
+}
+
+function closeQR() {
+  document.getElementById('qr-modal').classList.remove('open');
+}
+
+document.getElementById('qr-modal').addEventListener('click', e => {
+  if (e.target === document.getElementById('qr-modal')) closeQR();
+});
+
 </script>
 </body>
 </html>
