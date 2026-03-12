@@ -47,7 +47,10 @@
       "beschreibung": "Put the words in the right order",
       "fach": "Englisch",
       "hidden": false,
-      "klassen": [],
+      "klassen": [
+        5,
+        6
+      ],
       "customTags": [],
       "aod": false
     }
