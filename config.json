@@ -20,7 +20,10 @@
       "beschreibung": "Teste dein Wissen zu den LÃ¤ngeneinheiten",
       "fach": "Mathematik",
       "hidden": false,
-      "klassen": [],
+      "klassen": [
+        5,
+        6
+      ],
       "customTags": [],
       "aod": false
     },
