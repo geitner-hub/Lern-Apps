@@ -370,8 +370,20 @@ async function loadConfig() {
   buildPage();
 }
 
-// ── Config speichern ──────────────────────────────────
-async function saveConfig() {
+// ── Config speichern (mit Debounce & Warteschlange) ───
+let saveTimer = null;
+let isSaving  = false;
+let pendingSave = false;
+
+function saveConfig() {
+  // Debounce: warte 600ms nach der letzten Änderung
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => _doSave(), 600);
+}
+
+async function _doSave() {
+  if (isSaving) { pendingSave = true; return; }
+  isSaving = true;
   setSyncStatus('syncing', 'Wird gespeichert …');
   const content = btoa(unescape(encodeURIComponent(JSON.stringify(CONFIG, null, 2))));
   try {
@@ -390,6 +402,9 @@ async function saveConfig() {
     setSyncStatus('error', '⚠ Speichern fehlgeschlagen');
     console.error('Save error:', e);
   }
+  isSaving = false;
+  // Falls während dem Speichern weitere Änderungen kamen, nochmal speichern
+  if (pendingSave) { pendingSave = false; _doSave(); }
 }
 
 function getAppTags(name) {
@@ -589,7 +604,7 @@ function buildVisTab() {
       const locked = CONFIG.hiddenCats.includes(catName);
       appRow.querySelectorAll('.app-toggle').forEach(b=>b.classList.toggle('cat-locked',locked));
       applyVisibility(); applyFilters();
-      await saveConfig();
+      saveConfig();
     });
     block.appendChild(catBtn);
     const appRow=document.createElement('div'); appRow.className='admin-app-row';
@@ -605,7 +620,7 @@ function buildVisTab() {
         if(idx===-1) CONFIG.hidden.push(name); else CONFIG.hidden.splice(idx,1);
         btn.classList.toggle('is-hidden');
         applyVisibility(); applyFilters();
-        await saveConfig();
+        saveConfig();
       });
       appRow.appendChild(btn);
     });
@@ -634,7 +649,7 @@ function buildGlobalTagList() {
         if(CONFIG.tags[n].customTags) CONFIG.tags[n].customTags=CONFIG.tags[n].customTags.filter(t=>t!==tag);
       });
       if(activeTag===tag) activeTag='all';
-      await saveConfig();
+      saveConfig();
       buildPage(); buildTagEditor(); buildGlobalTagList();
     });
     list.appendChild(pill);
@@ -649,7 +664,7 @@ async function addTag(){
   if(CONFIG.customTags.includes(v)){inp.value='';return;}
   CONFIG.customTags.push(v);
   inp.value='';
-  await saveConfig();
+  saveConfig();
   buildGlobalTagList(); buildTagEditor(); buildPage();
 }
 
@@ -702,7 +717,7 @@ function buildTagEditor(){
       chip.classList.toggle('sel-custom');
     }
     buildPage(); buildVisTab();
-    await saveConfig();
+    saveConfig();
     const note=document.getElementById('sv-'+appName.replace(/[^a-zA-Z0-9]/g,'_'));
     if(note){note.classList.add('show');setTimeout(()=>note.classList.remove('show'),2000);}
   });
