@@ -1,52 +1,50 @@
 {
-  "hidden": [],
-  "hiddenCats": [],
-  "tags": {
-    "Kopfrechnen": {
-      "klassen": [
-        5
-      ],
-      "customTags": []
+  "apps": [
+    {
+      "name": "Kopfrechnen",
+      "datei": "kopfrechnen.html",
+      "emoji": "🔢",
+      "beschreibung": "Übe deine Kopfrechenkünste am Anfang der Stunde",
+      "fach": "Mathematik",
+      "hidden": false,
+      "klassen": [],
+      "customTags": [],
+      "aod": false
     },
-    "LÃÂÃÂÃÂÃÂ¤ngeneinheiten": {
-      "klassen": [
-        5,
-        6
-      ],
-      "customTags": []
+    {
+      "name": "Längeneinheiten",
+      "datei": "laengeneinheiten.html",
+      "emoji": "📐",
+      "beschreibung": "Teste dein Wissen zu den Längeneinheiten",
+      "fach": "Mathematik",
+      "hidden": false,
+      "klassen": [],
+      "customTags": [],
+      "aod": false
     },
-    "Vokabeln-Test": {
-      "klassen": [
-        5
-      ],
-      "customTags": []
+    {
+      "name": "Vokabeln-Test",
+      "datei": "vokabeltrainer.html",
+      "emoji": "🗣️",
+      "beschreibung": "Wiederhole Vokabeln",
+      "fach": "Englisch",
+      "hidden": false,
+      "klassen": [],
+      "customTags": [],
+      "aod": false
     },
-    "Satzglieder ordnen": {
-      "klassen": [
-        5
-      ],
-      "customTags": []
-    },
-    "LÃÂÃÂ¤ngeneinheiten": {
-      "klassen": [
-        5
-      ],
-      "customTags": []
-    },
-    "LÃÂ¤ngeneinheiten": {
-      "klassen": [
-        6,
-        5
-      ],
-      "customTags": []
-    },
-    "Längeneinheiten": {
-      "klassen": [
-        5,
-        6
-      ],
-      "customTags": []
+    {
+      "name": "Satzglieder ordnen",
+      "datei": "satzglieder-erkennen.html",
+      "emoji": "🔤",
+      "beschreibung": "Put the words in the right order",
+      "fach": "Englisch",
+      "hidden": false,
+      "klassen": [],
+      "customTags": [],
+      "aod": false
     }
-  },
-  "customTags": []
+  ],
+  "customTags": [],
+  "hiddenCats": []
 }
