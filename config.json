@@ -66,6 +66,17 @@
       ],
       "customTags": [],
       "aod": false
+    },
+    {
+      "name": "Unit 3 Vokabeln",
+      "datei": "highlight-unit3.html",
+      "fach": "Englisch",
+      "emoji": "3",
+      "beschreibung": "Lerne und wiederhole mit dieser App die Vokabeln aus Unit 3",
+      "hidden": false,
+      "klassen": [],
+      "customTags": [],
+      "aod": false
     }
   ],
   "customTags": [],
