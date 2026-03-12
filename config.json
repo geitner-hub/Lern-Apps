@@ -16,7 +16,7 @@
     {
       "name": "Längeneinheiten",
       "datei": "laengeneinheiten.html",
-      "emoji": "2",
+      "emoji": "",
       "beschreibung": "Teste dein Wissen zu den Längeneinheiten",
       "fach": "Mathematik",
       "hidden": false,
@@ -30,7 +30,7 @@
     {
       "name": "Vokabeln-Test",
       "datei": "vokabeltrainer.html",
-      "emoji": "3",
+      "emoji": "",
       "beschreibung": "Wiederhole Vokabeln",
       "fach": "Englisch",
       "hidden": false,
@@ -43,7 +43,7 @@
     {
       "name": "Satzglieder ordnen",
       "datei": "satzglieder-erkennen.html",
-      "emoji": "4",
+      "emoji": "",
       "beschreibung": "Put the words in the right order",
       "fach": "Englisch",
       "hidden": false,
@@ -58,7 +58,7 @@
       "name": "Sachaufgaben Länge",
       "datei": "sachaufgaben_laengen.html",
       "fach": "Mathematik",
-      "emoji": "5",
+      "emoji": "",
       "beschreibung": "",
       "hidden": false,
       "klassen": [
