@@ -1,8 +1,6 @@
 {
   "hidden": [],
-  "hiddenCats": [
-    "Englisch"
-  ],
+  "hiddenCats": [],
   "tags": {
     "Kopfrechnen": {
       "klassen": [
@@ -10,7 +8,7 @@
       ],
       "customTags": []
     },
-    "LÃÂÃÂ¤ngeneinheiten": {
+    "LÃÂÃÂÃÂÃÂ¤ngeneinheiten": {
       "klassen": [
         5,
         6
@@ -29,13 +27,13 @@
       ],
       "customTags": []
     },
-    "LÃÂ¤ngeneinheiten": {
+    "LÃÂÃÂ¤ngeneinheiten": {
       "klassen": [
         5
       ],
       "customTags": []
     },
-    "LÃ¤ngeneinheiten": {
+    "LÃÂ¤ngeneinheiten": {
       "klassen": [
         6,
         5
