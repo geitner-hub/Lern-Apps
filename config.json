@@ -1,6 +1,13 @@
 {
   "hidden": [],
   "hiddenCats": [],
-  "tags": {},
+  "tags": {
+    "Kopfrechnen": {
+      "klassen": [
+        5
+      ],
+      "customTags": []
+    }
+  },
   "customTags": []
 }
