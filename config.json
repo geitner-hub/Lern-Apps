@@ -10,7 +10,8 @@
     },
     "Längeneinheiten": {
       "klassen": [
-        5
+        5,
+        6
       ],
       "customTags": []
     }
