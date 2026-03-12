@@ -4,7 +4,7 @@
       "name": "Kopfrechnen",
       "datei": "kopfrechnen.html",
       "emoji": "1",
-      "beschreibung": "Ãbe deine KopfrechenkÃ¼nste am Anfang der Stunde",
+      "beschreibung": "ÃÂbe deine KopfrechenkÃÂ¼nste am Anfang der Stunde",
       "fach": "Mathematik",
       "hidden": false,
       "klassen": [
@@ -14,10 +14,10 @@
       "aod": false
     },
     {
-      "name": "LÃ¤ngeneinheiten",
+      "name": "LÃÂ¤ngeneinheiten",
       "datei": "laengeneinheiten.html",
       "emoji": "2",
-      "beschreibung": "Teste dein Wissen zu den LÃ¤ngeneinheiten",
+      "beschreibung": "Teste dein Wissen zu den LÃÂ¤ngeneinheiten",
       "fach": "Mathematik",
       "hidden": false,
       "klassen": [
@@ -51,17 +51,6 @@
         5,
         6
       ],
-      "customTags": [],
-      "aod": false
-    },
-    {
-      "name": "Sachaufgabe",
-      "datei": "sachaufgaben_laengen.html",
-      "fach": "Mathematik",
-      "emoji": "💡",
-      "beschreibung": "Beantworte Sachaufgaben zum Thema Längen",
-      "hidden": false,
-      "klassen": [],
       "customTags": [],
       "aod": false
     }
