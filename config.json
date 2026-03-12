@@ -34,7 +34,9 @@
       "beschreibung": "Wiederhole Vokabeln",
       "fach": "Englisch",
       "hidden": false,
-      "klassen": [],
+      "klassen": [
+        5
+      ],
       "customTags": [],
       "aod": false
     },
