@@ -35,7 +35,8 @@
     },
     "Längeneinheiten": {
       "klassen": [
-        6
+        6,
+        5
       ],
       "customTags": []
     }
