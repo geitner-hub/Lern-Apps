@@ -3,19 +3,21 @@
     {
       "name": "Kopfrechnen",
       "datei": "kopfrechnen.html",
-      "emoji": "🔢",
-      "beschreibung": "Übe deine Kopfrechenkünste am Anfang der Stunde",
+      "emoji": "ð¢",
+      "beschreibung": "Ãbe deine KopfrechenkÃ¼nste am Anfang der Stunde",
       "fach": "Mathematik",
       "hidden": false,
-      "klassen": [],
+      "klassen": [
+        5
+      ],
       "customTags": [],
       "aod": false
     },
     {
-      "name": "Längeneinheiten",
+      "name": "LÃ¤ngeneinheiten",
       "datei": "laengeneinheiten.html",
-      "emoji": "📐",
-      "beschreibung": "Teste dein Wissen zu den Längeneinheiten",
+      "emoji": "ð",
+      "beschreibung": "Teste dein Wissen zu den LÃ¤ngeneinheiten",
       "fach": "Mathematik",
       "hidden": false,
       "klassen": [],
@@ -25,7 +27,7 @@
     {
       "name": "Vokabeln-Test",
       "datei": "vokabeltrainer.html",
-      "emoji": "🗣️",
+      "emoji": "ð£ï¸",
       "beschreibung": "Wiederhole Vokabeln",
       "fach": "Englisch",
       "hidden": false,
@@ -36,7 +38,7 @@
     {
       "name": "Satzglieder ordnen",
       "datei": "satzglieder-erkennen.html",
-      "emoji": "🔤",
+      "emoji": "ð¤",
       "beschreibung": "Put the words in the right order",
       "fach": "Englisch",
       "hidden": false,
