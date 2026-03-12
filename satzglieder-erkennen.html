@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Satzglieder erkennen</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #fff8f0;
+    --primary: #ff6b35;
+    --secondary: #4ecdc4;
+    --accent: #ffe66d;
+    --purple: #a855f7;
+    --green: #22c55e;
+    --red: #ef4444;
+    --S: #ff6b35;
+    --V: #4ecdc4;
+    --O: #a855f7;
+    --T: #22c55e;
+    --P: #f59e0b;
+    --card: #ffffff;
+    --shadow: 0 4px 20px rgba(0,0,0,0.08);
+    --radius: 16px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    background-image: 
+      radial-gradient(circle at 10% 20%, rgba(255,107,53,0.08) 0%, transparent 50%),
+      radial-gradient(circle at 90% 80%, rgba(78,205,196,0.08) 0%, transparent 50%);
+  }
+
+  header {
+    background: var(--primary);
+    color: white;
+    padding: 0;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header-inner {
+    padding: 20px 20px 16px;
+    position: relative;
+    z-index: 1;
+  }
+
+  header h1 {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2.2rem;
+    letter-spacing: 1px;
+    text-shadow: 2px 3px 0px rgba(0,0,0,0.15);
+  }
+
+  header p { font-size: 0.95rem; opacity: 0.9; margin-top: 4px; }
+
+  .wave {
+    display: block;
+    width: 100%;
+    height: 40px;
+    background: var(--bg);
+    clip-path: ellipse(55% 100% at 50% 100%);
+    margin-top: -1px;
+  }
+
+  /* LEVEL SELECTOR */
+  .level-selector {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    padding: 16px 20px 0;
+    flex-wrap: wrap;
+  }
+
+  .level-btn {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    padding: 10px 28px;
+    border: 3px solid transparent;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: white;
+    color: #555;
+    box-shadow: var(--shadow);
+  }
+
+  .level-btn.active-anfaenger {
+    background: var(--primary);
+    color: white;
+    border-color: #c74a1b;
+    transform: scale(1.05);
+  }
+
+  .level-btn.active-fortgeschrittene {
+    background: var(--purple);
+    color: white;
+    border-color: #7e22ce;
+    transform: scale(1.05);
+  }
+
+  /* LEGEND */
+  .legend {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 14px 20px 0;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    background: white;
+    padding: 5px 12px;
+    border-radius: 50px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+
+  .legend-dot {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 20px 16px 60px;
+  }
+
+  /* SCORE BAR */
+  .score-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    border-radius: var(--radius);
+    padding: 12px 20px;
+    margin-bottom: 18px;
+    box-shadow: var(--shadow);
+  }
+
+  .score-item {
+    text-align: center;
+  }
+
+  .score-label {
+    font-size: 0.7rem;
+    color: #888;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .score-value {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.6rem;
+    color: var(--primary);
+  }
+
+  .score-value.green { color: var(--green); }
+  .score-value.purple { color: var(--purple); }
+
+  /* EXERCISE CARD */
+  .exercise-card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow);
+    margin-bottom: 16px;
+    animation: slideIn 0.3s ease;
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .exercise-type {
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #aaa;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .type-badge {
+    background: var(--accent);
+    color: #333;
+    padding: 2px 10px;
+    border-radius: 50px;
+    font-size: 0.7rem;
+  }
+
+  .question-text {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #222;
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+
+  /* DRAG & DROP */
+  .drag-area {
+    min-height: 60px;
+    border: 2.5px dashed #e0e0e0;
+    border-radius: 12px;
+    padding: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 16px;
+    background: #fafafa;
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .drag-area.dragover {
+    border-color: var(--secondary);
+    background: rgba(78,205,196,0.05);
+  }
+
+  .drag-area-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #bbb;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+
+  .word-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 14px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: grab;
+    user-select: none;
+    transition: transform 0.15s, box-shadow 0.15s;
+    border: 2px solid transparent;
+    white-space: nowrap;
+  }
+
+  .word-chip:active { cursor: grabbing; transform: scale(1.05); }
+  .word-chip.dragging { opacity: 0.4; }
+
+  .word-chip.neutral {
+    background: #f3f4f6;
+    color: #374151;
+    border-color: #e5e7eb;
+  }
+
+  .word-chip.S { background: rgba(255,107,53,0.12); color: #c23a00; border-color: rgba(255,107,53,0.3); }
+  .word-chip.V { background: rgba(78,205,196,0.15); color: #0e7a74; border-color: rgba(78,205,196,0.35); }
+  .word-chip.O { background: rgba(168,85,247,0.12); color: #6b21a8; border-color: rgba(168,85,247,0.3); }
+  .word-chip.T { background: rgba(34,197,94,0.12); color: #166534; border-color: rgba(34,197,94,0.3); }
+  .word-chip.P { background: rgba(245,158,11,0.12); color: #92400e; border-color: rgba(245,158,11,0.3); }
+
+  /* ANSWER SLOTS for order exercise */
+  .answer-slots {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .slot {
+    min-width: 80px;
+    min-height: 44px;
+    border: 2.5px dashed #d1d5db;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 8px;
+    transition: all 0.2s;
+    background: #f9fafb;
+  }
+
+  .slot.filled { border-style: solid; border-color: var(--secondary); background: white; }
+  .slot.dragover { border-color: var(--primary); background: rgba(255,107,53,0.05); }
+
+  /* CLASSIFY exercise */
+  .classify-sentence {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 16px;
+    background: #f9fafb;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    line-height: 2;
+  }
+
+  .classify-word {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 8px;
+    transition: all 0.2s;
+    position: relative;
+  }
+
+  .classify-word:hover { background: rgba(255,107,53,0.06); }
+
+  .classify-word .word-text {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #222;
+  }
+
+  .classify-word .word-role {
+    font-size: 0.68rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    min-height: 14px;
+    color: transparent;
+    background: transparent;
+    padding: 1px 6px;
+    border-radius: 20px;
+    transition: all 0.2s;
+  }
+
+  .classify-word.selected-S .word-role { background: var(--S); color: white; }
+  .classify-word.selected-V .word-role { background: var(--V); color: white; }
+  .classify-word.selected-O .word-role { background: var(--O); color: white; }
+  .classify-word.selected-T .word-role { background: var(--T); color: white; }
+  .classify-word.selected-P .word-role { background: var(--P); color: white; }
+
+  .classify-word.selected-S { background: rgba(255,107,53,0.1); }
+  .classify-word.selected-V { background: rgba(78,205,196,0.1); }
+  .classify-word.selected-O { background: rgba(168,85,247,0.1); }
+  .classify-word.selected-T { background: rgba(34,197,94,0.1); }
+  .classify-word.selected-P { background: rgba(245,158,11,0.1); }
+
+  /* ROLE PICKER */
+  .role-picker {
+    display: none;
+    position: fixed;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    padding: 10px;
+    z-index: 1000;
+    gap: 8px;
+    flex-wrap: wrap;
+    max-width: 260px;
+  }
+
+  .role-picker.show { display: flex; }
+
+  .role-pick-btn {
+    padding: 8px 14px;
+    border: none;
+    border-radius: 50px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: transform 0.15s;
+    color: white;
+  }
+
+  .role-pick-btn:hover { transform: scale(1.07); }
+  .role-pick-btn.S { background: var(--S); }
+  .role-pick-btn.V { background: var(--V); }
+  .role-pick-btn.O { background: var(--O); }
+  .role-pick-btn.T { background: var(--T); }
+  .role-pick-btn.P { background: var(--P); }
+  .role-pick-btn.clear { background: #e5e7eb; color: #555; }
+
+  /* BUTTONS */
+  .btn-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+  }
+
+  .btn {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    padding: 11px 28px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .btn-primary {
+    background: var(--primary);
+    color: white;
+    box-shadow: 0 4px 0 #c74a1b;
+  }
+
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 0 #c74a1b; }
+  .btn-primary:active { transform: translateY(1px); box-shadow: 0 2px 0 #c74a1b; }
+
+  .btn-secondary {
+    background: #f3f4f6;
+    color: #555;
+  }
+
+  .btn-secondary:hover { background: #e5e7eb; }
+
+  /* FEEDBACK */
+  .feedback {
+    margin-top: 14px;
+    padding: 14px 18px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    display: none;
+    animation: popIn 0.3s ease;
+  }
+
+  @keyframes popIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  .feedback.correct {
+    display: block;
+    background: rgba(34,197,94,0.12);
+    border: 2px solid var(--green);
+    color: #166534;
+  }
+
+  .feedback.wrong {
+    display: block;
+    background: rgba(239,68,68,0.1);
+    border: 2px solid var(--red);
+    color: #991b1b;
+  }
+
+  .feedback .solution {
+    margin-top: 8px;
+    font-weight: 600;
+    font-size: 0.88rem;
+    opacity: 0.9;
+  }
+
+  /* NEXT BUTTON */
+  .btn-next {
+    background: var(--secondary);
+    color: white;
+    box-shadow: 0 4px 0 #2a9d96;
+    display: none;
+  }
+
+  .btn-next.show { display: flex; }
+  .btn-next:hover { transform: translateY(-2px); box-shadow: 0 6px 0 #2a9d96; }
+
+  /* PROGRESS */
+  .progress-bar-wrap {
+    background: #e5e7eb;
+    border-radius: 50px;
+    height: 8px;
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    border-radius: 50px;
+    transition: width 0.4s ease;
+  }
+
+  /* CELEBRATION */
+  .celebration {
+    display: none;
+    text-align: center;
+    padding: 40px 20px;
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+  }
+
+  .celebration.show { display: block; animation: slideIn 0.4s ease; }
+  .celebration .big-emoji { font-size: 4rem; margin-bottom: 12px; }
+  .celebration h2 { font-family: 'Fredoka One', cursive; font-size: 2rem; color: var(--primary); margin-bottom: 8px; }
+  .celebration p { font-size: 1.05rem; color: #555; margin-bottom: 20px; }
+
+  /* TOOLTIP for classify */
+  .hint-text {
+    font-size: 0.82rem;
+    color: #aaa;
+    font-weight: 600;
+    margin-bottom: 10px;
+    font-style: italic;
+  }
+
+  /* MULTIPLE CHOICE */
+  .mc-options {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @media (max-width: 480px) {
+    .mc-options { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.7rem; }
+  }
+
+  .mc-btn {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 0.92rem;
+    padding: 12px 16px;
+    border: 2.5px solid #e5e7eb;
+    border-radius: 12px;
+    background: white;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s;
+    color: #333;
+  }
+
+  .mc-btn:hover:not(:disabled) { border-color: var(--primary); background: rgba(255,107,53,0.05); }
+  .mc-btn.correct-answer { border-color: var(--green); background: rgba(34,197,94,0.1); color: #166534; }
+  .mc-btn.wrong-answer { border-color: var(--red); background: rgba(239,68,68,0.08); color: #991b1b; }
+  .mc-btn:disabled { cursor: not-allowed; }
+
+  .sentence-display {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #222;
+    padding: 14px 18px;
+    background: #f9fafb;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    border-left: 4px solid var(--primary);
+    font-style: italic;
+  }
+
+  .highlighted-word {
+    color: var(--primary);
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    text-decoration-color: var(--primary);
+  }
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <h1>🔤 Satzglieder erkennen</h1>
+    <p>Learn English sentence structure – Subject, Verb, Object</p>
+  </div>
+  <span class="wave"></span>
+</header>
+
+<!-- LEVEL -->
+<div class="level-selector">
+  <button class="level-btn active-anfaenger" id="btn-anfaenger" onclick="setLevel('anfaenger')">⭐ Anfänger</button>
+  <button class="level-btn" id="btn-fortgeschrittene" onclick="setLevel('fortgeschrittene')">🚀 Fortgeschrittene</button>
+</div>
+
+<!-- LEGEND -->
+<div class="legend" id="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:var(--S)"></div> S = Subject</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--V)"></div> V = Verb</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--O)"></div> O = Object</div>
+</div>
+
+<main>
+  <div class="score-bar">
+    <div class="score-item">
+      <div class="score-label">Punkte</div>
+      <div class="score-value" id="score-display">0</div>
+    </div>
+    <div class="score-item">
+      <div class="score-label">Richtig</div>
+      <div class="score-value green" id="correct-display">0</div>
+    </div>
+    <div class="score-item">
+      <div class="score-label">Aufgaben</div>
+      <div class="score-value purple" id="total-display">0 / 10</div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+  </div>
+
+  <div id="exercise-container"></div>
+  <div class="celebration" id="celebration">
+    <div class="big-emoji" id="cel-emoji">🎉</div>
+    <h2 id="cel-title">Super gemacht!</h2>
+    <p id="cel-msg">Du hast alle 10 Aufgaben abgeschlossen!</p>
+    <button class="btn btn-primary" onclick="restartGame()">🔄 Nochmal spielen</button>
+  </div>
+</main>
+
+<!-- Role Picker Popup -->
+<div class="role-picker" id="role-picker">
+  <button class="role-pick-btn S" onclick="assignRole('S')">S – Subject</button>
+  <button class="role-pick-btn V" onclick="assignRole('V')">V – Verb</button>
+  <button class="role-pick-btn O" onclick="assignRole('O')">O – Object</button>
+  <button class="role-pick-btn T" id="picker-T" onclick="assignRole('T')">T – Time</button>
+  <button class="role-pick-btn P" id="picker-P" onclick="assignRole('P')">P – Place</button>
+  <button class="role-pick-btn clear" onclick="assignRole(null)">✕ Clear</button>
+</div>
+
+<script>
+// ===================
+// DATA
+// ===================
+
+const ANFAENGER_DATA = [
+  // TYPE: order – drag words into correct SVO order
+  { type: 'order', words: ['Tom', 'eats', 'pizza'], roles: ['S','V','O'], sentence: 'Tom eats pizza.' },
+  { type: 'order', words: ['She', 'reads', 'a book'], roles: ['S','V','O'], sentence: 'She reads a book.' },
+  { type: 'order', words: ['They', 'play', 'football'], roles: ['S','V','O'], sentence: 'They play football.' },
+  { type: 'order', words: ['The cat', 'drinks', 'milk'], roles: ['S','V','O'], sentence: 'The cat drinks milk.' },
+  { type: 'order', words: ['My sister', 'likes', 'music'], roles: ['S','V','O'], sentence: 'My sister likes music.' },
+  // TYPE: classify – click words and assign S/V/O
+  { type: 'classify', words: ['The dog', 'bites', 'the ball'], roles: ['S','V','O'] },
+  { type: 'classify', words: ['Anna', 'loves', 'ice cream'], roles: ['S','V','O'] },
+  { type: 'classify', words: ['He', 'kicks', 'the door'], roles: ['S','V','O'] },
+  // TYPE: multiple choice – identify the role of highlighted word
+  { type: 'mc', sentence: 'My friend writes a letter.', highlight: 'My friend', answer: 'Subject (S)', options: ['Subject (S)', 'Verb (V)', 'Object (O)'] },
+  { type: 'mc', sentence: 'Lisa drinks orange juice.', highlight: 'drinks', answer: 'Verb (V)', options: ['Subject (S)', 'Verb (V)', 'Object (O)'] },
+  { type: 'mc', sentence: 'We watch a film.', highlight: 'a film', answer: 'Object (O)', options: ['Subject (S)', 'Verb (V)', 'Object (O)'] },
+  { type: 'mc', sentence: 'The children eat sandwiches.', highlight: 'sandwiches', answer: 'Object (O)', options: ['Subject (S)', 'Verb (V)', 'Object (O)'] },
+  { type: 'mc', sentence: 'Peter has a new bike.', highlight: 'Peter', answer: 'Subject (S)', options: ['Subject (S)', 'Verb (V)', 'Object (O)'] },
+];
+
+const FORTGESCHRITTENE_DATA = [
+  // TYPE: order-ext – drag into correct S/V/O/T/P order
+  { type: 'order-ext', words: ['She', 'buys', 'apples', 'every morning', 'at the market'], roles: ['S','V','O','T','P'], sentence: 'She buys apples every morning at the market.' },
+  { type: 'order-ext', words: ['My dad', 'reads', 'the newspaper', 'in the morning', 'in the kitchen'], roles: ['S','V','O','T','P'], sentence: 'My dad reads the newspaper in the morning in the kitchen.' },
+  { type: 'order-ext', words: ['Tom', 'plays', 'basketball', 'on Saturdays', 'in the park'], roles: ['S','V','O','T','P'], sentence: 'Tom plays basketball on Saturdays in the park.' },
+  // TYPE: classify-ext
+  { type: 'classify-ext', words: ['The teacher', 'explains', 'the lesson', 'every day', 'in the classroom'], roles: ['S','V','O','T','P'] },
+  { type: 'classify-ext', words: ['Lisa', 'feeds', 'the cat', 'in the evening', 'in the garden'], roles: ['S','V','O','T','P'] },
+  { type: 'classify-ext', words: ['The children', 'swim', 'in the pool', 'in summer', 'near the hotel'], roles: ['S','V','O','P','T'] },
+  // TYPE: mc-ext
+  { type: 'mc', sentence: 'She walks her dog in the park every evening.', highlight: 'in the park', answer: 'Place (P)', options: ['Subject (S)', 'Verb (V)', 'Object (O)', 'Time (T)', 'Place (P)'] },
+  { type: 'mc', sentence: 'We eat dinner at home every Sunday.', highlight: 'every Sunday', answer: 'Time (T)', options: ['Subject (S)', 'Verb (V)', 'Object (O)', 'Time (T)', 'Place (P)'] },
+  { type: 'mc', sentence: 'My brother plays the guitar in his room.', highlight: 'plays', answer: 'Verb (V)', options: ['Subject (S)', 'Verb (V)', 'Object (O)', 'Time (T)', 'Place (P)'] },
+  { type: 'mc', sentence: 'Our friends meet at the sports centre on Fridays.', highlight: 'Our friends', answer: 'Subject (S)', options: ['Subject (S)', 'Verb (V)', 'Object (O)', 'Time (T)', 'Place (P)'] },
+  { type: 'mc', sentence: 'The family eats lunch in the garden on weekends.', highlight: 'lunch', answer: 'Object (O)', options: ['Subject (S)', 'Verb (V)', 'Object (O)', 'Time (T)', 'Place (P)'] },
+  // TYPE: order-ext more
+  { type: 'order-ext', words: ['The family', 'visits', 'grandma', 'on Sundays', 'in the village'], roles: ['S','V','O','T','P'], sentence: 'The family visits grandma on Sundays in the village.' },
+];
+
+// ===================
+// STATE
+// ===================
+let currentLevel = 'anfaenger';
+let exerciseQueue = [];
+let currentIndex = 0;
+let score = 0;
+let correctCount = 0;
+let totalAnswered = 0;
+const TOTAL = 10;
+let answered = false;
+
+// Drag state
+let draggedEl = null;
+let draggedFromSlot = null;
+
+// Classify state
+let currentPickerWord = null;
+let classifyState = {};
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function setLevel(level) {
+  currentLevel = level;
+  document.getElementById('btn-anfaenger').className = 'level-btn' + (level === 'anfaenger' ? ' active-anfaenger' : '');
+  document.getElementById('btn-fortgeschrittene').className = 'level-btn' + (level === 'fortgeschrittene' ? ' active-fortgeschrittene' : '');
+  // Update legend
+  const legendEl = document.getElementById('legend');
+  if (level === 'fortgeschrittene') {
+    legendEl.innerHTML = `
+      <div class="legend-item"><div class="legend-dot" style="background:var(--S)"></div> S = Subject</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--V)"></div> V = Verb</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--O)"></div> O = Object</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--T)"></div> T = Time</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--P)"></div> P = Place</div>`;
+  } else {
+    legendEl.innerHTML = `
+      <div class="legend-item"><div class="legend-dot" style="background:var(--S)"></div> S = Subject</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--V)"></div> V = Verb</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--O)"></div> O = Object</div>`;
+  }
+  restartGame();
+}
+
+function restartGame() {
+  score = 0; correctCount = 0; totalAnswered = 0; currentIndex = 0; answered = false;
+  updateScore();
+  document.getElementById('celebration').classList.remove('show');
+  document.getElementById('exercise-container').style.display = '';
+
+  const pool = currentLevel === 'anfaenger' ? ANFAENGER_DATA : FORTGESCHRITTENE_DATA;
+  exerciseQueue = shuffle(pool).slice(0, TOTAL);
+  // If not enough unique, repeat
+  while (exerciseQueue.length < TOTAL) {
+    exerciseQueue = [...exerciseQueue, ...shuffle(pool)];
+  }
+  exerciseQueue = exerciseQueue.slice(0, TOTAL);
+  showExercise();
+}
+
+function updateScore() {
+  document.getElementById('score-display').textContent = score;
+  document.getElementById('correct-display').textContent = correctCount;
+  document.getElementById('total-display').textContent = totalAnswered + ' / ' + TOTAL;
+  const pct = (totalAnswered / TOTAL) * 100;
+  document.getElementById('progress-fill').style.width = pct + '%';
+}
+
+// ===================
+// RENDER EXERCISE
+// ===================
+function showExercise() {
+  if (currentIndex >= TOTAL) {
+    showCelebration();
+    return;
+  }
+  answered = false;
+  const ex = exerciseQueue[currentIndex];
+  const container = document.getElementById('exercise-container');
+
+  if (ex.type === 'order' || ex.type === 'order-ext') {
+    container.innerHTML = renderOrder(ex);
+    initOrder(ex);
+  } else if (ex.type === 'classify' || ex.type === 'classify-ext') {
+    container.innerHTML = renderClassify(ex);
+    initClassify(ex);
+  } else if (ex.type === 'mc') {
+    container.innerHTML = renderMC(ex);
+  }
+}
+
+// ===================
+// ORDER EXERCISE
+// ===================
+function renderOrder(ex) {
+  const shuffled = shuffle(ex.words.map((w, i) => ({ word: w, role: ex.roles[i] })));
+  const rolesInOrder = ex.roles;
+  const slotLabels = rolesInOrder.map(r => `<div class="slot" data-role="${r}"><span style="color:#ccc;font-size:0.75rem;font-weight:700;">${r}</span></div>`).join('');
+  const chips = shuffled.map(item =>
+    `<div class="word-chip neutral" draggable="true" data-word="${item.word}" data-role="${item.role}">${item.word}</div>`
+  ).join('');
+
+  return `
+    <div class="exercise-card" id="ex-card">
+      <div class="exercise-type">Aufgabe ${currentIndex + 1} / ${TOTAL} <span class="type-badge">Reihenfolge</span></div>
+      <div class="question-text">Bring the words into the correct order!<br><small style="font-weight:600;color:#aaa;">Drag the words into the coloured boxes.</small></div>
+      <div class="drag-area-label">Answer:</div>
+      <div class="answer-slots" id="answer-slots">${slotLabels}</div>
+      <div class="drag-area-label">Word Bank:</div>
+      <div class="drag-area" id="word-bank">${chips}</div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkOrder()">✅ Check</button>
+        <button class="btn btn-next show" id="btn-next" onclick="nextExercise()" style="display:none">➡️ Next</button>
+      </div>
+      <div class="feedback" id="feedback"></div>
+    </div>`;
+}
+
+function initOrder(ex) {
+  const chips = document.querySelectorAll('.word-chip');
+  const wordBank = document.getElementById('word-bank');
+  const slots = document.querySelectorAll('.slot');
+
+  chips.forEach(chip => {
+    chip.addEventListener('dragstart', e => {
+      draggedEl = chip;
+      draggedFromSlot = chip.closest('.slot') || null;
+      setTimeout(() => chip.classList.add('dragging'), 0);
+    });
+    chip.addEventListener('dragend', () => chip.classList.remove('dragging'));
+  });
+
+  slots.forEach(slot => {
+    slot.addEventListener('dragover', e => { e.preventDefault(); slot.classList.add('dragover'); });
+    slot.addEventListener('dragleave', () => slot.classList.remove('dragover'));
+    slot.addEventListener('drop', e => {
+      e.preventDefault();
+      slot.classList.remove('dragover');
+      if (!draggedEl) return;
+      const existingChip = slot.querySelector('.word-chip');
+      if (existingChip) {
+        // Swap back to bank or previous slot
+        if (draggedFromSlot) draggedFromSlot.appendChild(existingChip);
+        else wordBank.appendChild(existingChip);
+      }
+      slot.appendChild(draggedEl);
+      slot.classList.add('filled');
+      draggedEl = null;
+    });
+  });
+
+  wordBank.addEventListener('dragover', e => { e.preventDefault(); wordBank.classList.add('dragover'); });
+  wordBank.addEventListener('dragleave', () => wordBank.classList.remove('dragover'));
+  wordBank.addEventListener('drop', e => {
+    e.preventDefault();
+    wordBank.classList.remove('dragover');
+    if (draggedEl) { wordBank.appendChild(draggedEl); draggedEl = null; }
+  });
+
+  // Touch support
+  chips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      // Simple click-to-place for mobile
+      const slots = Array.from(document.querySelectorAll('.slot'));
+      const emptySlot = slots.find(s => !s.querySelector('.word-chip'));
+      if (emptySlot && chip.closest('#word-bank')) {
+        emptySlot.appendChild(chip);
+        emptySlot.classList.add('filled');
+      } else if (chip.closest('.slot')) {
+        wordBank.appendChild(chip);
+      }
+    });
+  });
+}
+
+function checkOrder() {
+  if (answered) return;
+  const ex = exerciseQueue[currentIndex];
+  const slots = document.querySelectorAll('.slot');
+  let correct = true;
+
+  slots.forEach((slot, i) => {
+    const chip = slot.querySelector('.word-chip');
+    if (!chip || chip.dataset.role !== slot.dataset.role) correct = false;
+  });
+
+  // Check all slots filled
+  const allFilled = Array.from(slots).every(s => s.querySelector('.word-chip'));
+  if (!allFilled) {
+    showFeedback('wrong', '⚠️ Please fill all boxes first!', '');
+    return;
+  }
+
+  answered = true;
+  totalAnswered++;
+  if (correct) {
+    score += 10;
+    correctCount++;
+    // Color chips
+    slots.forEach(slot => {
+      const chip = slot.querySelector('.word-chip');
+      if (chip) chip.className = 'word-chip ' + slot.dataset.role;
+    });
+    showFeedback('correct', '🎉 Perfect! Great job!', 'Correct sentence: ' + ex.sentence);
+  } else {
+    slots.forEach(slot => {
+      const chip = slot.querySelector('.word-chip');
+      if (chip && chip.dataset.role !== slot.dataset.role) {
+        chip.style.outline = '2px solid var(--red)';
+      }
+    });
+    showFeedback('wrong', '❌ Not quite right. Try again next time!', 'Correct sentence: ' + ex.sentence);
+  }
+  updateScore();
+  showNextBtn();
+}
+
+// ===================
+// CLASSIFY EXERCISE
+// ===================
+function renderClassify(ex) {
+  const isExt = ex.type === 'classify-ext';
+  const wordItems = ex.words.map((w, i) =>
+    `<div class="classify-word" id="cword-${i}" onclick="openPicker(${i}, event)" data-idx="${i}">
+       <span class="word-text">${w}</span>
+       <span class="word-role" id="crole-${i}">?</span>
+     </div>`
+  ).join('');
+
+  return `
+    <div class="exercise-card" id="ex-card">
+      <div class="exercise-type">Aufgabe ${currentIndex + 1} / ${TOTAL} <span class="type-badge">Einordnen</span></div>
+      <div class="question-text">Click on each word and choose its role in the sentence!</div>
+      <p class="hint-text">👆 Tap a word to label it</p>
+      <div class="classify-sentence" id="classify-area">${wordItems}</div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkClassify()">✅ Check</button>
+        <button class="btn btn-next" id="btn-next" onclick="nextExercise()" style="display:none">➡️ Next</button>
+      </div>
+      <div class="feedback" id="feedback"></div>
+    </div>`;
+}
+
+function initClassify(ex) {
+  classifyState = {};
+  ex.words.forEach((_, i) => { classifyState[i] = null; });
+
+  // Show/hide T and P in picker based on level
+  const isExt = ex.type === 'classify-ext';
+  document.getElementById('picker-T').style.display = isExt ? '' : 'none';
+  document.getElementById('picker-P').style.display = isExt ? '' : 'none';
+}
+
+function openPicker(idx, event) {
+  if (answered) return;
+  currentPickerWord = idx;
+  const picker = document.getElementById('role-picker');
+  picker.classList.add('show');
+
+  const ex = exerciseQueue[currentIndex];
+  const isExt = ex.type === 'classify-ext';
+  document.getElementById('picker-T').style.display = isExt ? '' : 'none';
+  document.getElementById('picker-P').style.display = isExt ? '' : 'none';
+
+  // Position near click
+  const x = Math.min(event.clientX, window.innerWidth - 280);
+  const y = Math.min(event.clientY + 10, window.innerHeight - 160);
+  picker.style.left = x + 'px';
+  picker.style.top = y + 'px';
+
+  event.stopPropagation();
+}
+
+document.addEventListener('click', () => {
+  document.getElementById('role-picker').classList.remove('show');
+  currentPickerWord = null;
+});
+
+document.getElementById('role-picker').addEventListener('click', e => e.stopPropagation());
+
+function assignRole(role) {
+  if (currentPickerWord === null) return;
+  const idx = currentPickerWord;
+  classifyState[idx] = role;
+
+  const wordEl = document.getElementById('cword-' + idx);
+  const roleEl = document.getElementById('crole-' + idx);
+
+  wordEl.className = 'classify-word' + (role ? ' selected-' + role : '');
+  roleEl.textContent = role ? role : '?';
+
+  document.getElementById('role-picker').classList.remove('show');
+  currentPickerWord = null;
+}
+
+function checkClassify() {
+  if (answered) return;
+  const ex = exerciseQueue[currentIndex];
+  const allLabeled = Object.values(classifyState).every(v => v !== null);
+  if (!allLabeled) {
+    showFeedback('wrong', '⚠️ Please label all words first!', '');
+    return;
+  }
+
+  let correct = true;
+  ex.words.forEach((w, i) => {
+    if (classifyState[i] !== ex.roles[i]) correct = false;
+  });
+
+  answered = true;
+  totalAnswered++;
+  if (correct) {
+    score += 10;
+    correctCount++;
+    showFeedback('correct', '🎉 Excellent! All correct!', '');
+  } else {
+    // Show correct labels
+    const correctStr = ex.words.map((w, i) => `${w} (${ex.roles[i]})`).join(' – ');
+    ex.words.forEach((w, i) => {
+      const wordEl = document.getElementById('cword-' + i);
+      const roleEl = document.getElementById('crole-' + i);
+      wordEl.className = 'classify-word selected-' + ex.roles[i];
+      roleEl.textContent = ex.roles[i];
+    });
+    showFeedback('wrong', '❌ Not quite! See the correct labels above.', 'Solution: ' + correctStr);
+  }
+  updateScore();
+  showNextBtn();
+}
+
+// ===================
+// MULTIPLE CHOICE
+// ===================
+function renderMC(ex) {
+  const sentenceHTML = ex.sentence.replace(ex.highlight, `<span class="highlighted-word">${ex.highlight}</span>`);
+  const opts = shuffle(ex.options).map((opt, i) =>
+    `<button class="mc-btn" data-opt="${i}" onclick="checkMC(this)">${opt}</button>`
+  ).join('');
+
+  return `
+    <div class="exercise-card" id="ex-card">
+      <div class="exercise-type">Aufgabe ${currentIndex + 1} / ${TOTAL} <span class="type-badge">Multiple Choice</span></div>
+      <div class="question-text">What is the role of the highlighted word?</div>
+      <div class="sentence-display">${sentenceHTML}</div>
+      <div class="mc-options" id="mc-options">${opts}</div>
+      <div class="btn-row" style="margin-top:14px">
+        <button class="btn btn-next" id="btn-next" onclick="nextExercise()" style="display:none">➡️ Next</button>
+      </div>
+      <div class="feedback" id="feedback"></div>
+    </div>`;
+}
+
+function checkMC(btn) {
+  if (answered) return;
+  const ex = exerciseQueue[currentIndex];
+  const selected = btn.textContent.trim();
+  const answer = ex.answer;
+
+  answered = true;
+  totalAnswered++;
+  const allBtns = document.querySelectorAll('.mc-btn');
+  allBtns.forEach(b => b.disabled = true);
+
+  if (selected === answer) {
+    score += 10;
+    correctCount++;
+    btn.classList.add('correct-answer');
+    showFeedback('correct', '🎉 Correct! Well done!', '');
+  } else {
+    btn.classList.add('wrong-answer');
+    allBtns.forEach(b => { if (b.textContent.trim() === answer) b.classList.add('correct-answer'); });
+    showFeedback('wrong', '❌ Not right. The correct answer is: ' + answer, '');
+  }
+  updateScore();
+  showNextBtn();
+}
+
+// ===================
+// HELPERS
+// ===================
+function showFeedback(type, msg, solution) {
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback ' + type;
+  fb.innerHTML = msg + (solution ? `<div class="solution">💡 ${solution}</div>` : '');
+}
+
+function showNextBtn() {
+  const btn = document.getElementById('btn-next');
+  if (btn) btn.style.display = 'flex';
+}
+
+function nextExercise() {
+  currentIndex++;
+  if (currentIndex >= TOTAL) {
+    showCelebration();
+  } else {
+    showExercise();
+  }
+}
+
+function showCelebration() {
+  document.getElementById('exercise-container').style.display = 'none';
+  const cel = document.getElementById('celebration');
+  cel.classList.add('show');
+  updateScore();
+
+  const pct = (correctCount / TOTAL) * 100;
+  let emoji = '🎉', title = 'Super gemacht!', msg;
+  if (pct === 100) { emoji = '🏆'; title = 'Perfect Score!'; msg = `You got all ${TOTAL} exercises right! You are a grammar star! ⭐`; }
+  else if (pct >= 70) { emoji = '😊'; title = 'Great job!'; msg = `You got ${correctCount} out of ${TOTAL} right! Keep practising!`; }
+  else { emoji = '💪'; title = 'Keep going!'; msg = `You got ${correctCount} out of ${TOTAL}. Practice makes perfect!`; }
+
+  document.getElementById('cel-emoji').textContent = emoji;
+  document.getElementById('cel-title').textContent = title;
+  document.getElementById('cel-msg').textContent = msg;
+  document.getElementById('progress-fill').style.width = '100%';
+}
+
+// ===================
+// INIT
+// ===================
+restartGame();
+</script>
+</body>
+</html>
