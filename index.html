@@ -8,14 +8,9 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --bg: #f2f5ff;
-      --card-bg: #ffffff;
-      --header-bg: #1a1f5e;
-      --accent: #4f6ef7;
-      --accent2: #f7c948;
-      --text: #1e2235;
-      --muted: #6b7280;
-      --radius: 18px;
+      --bg: #f2f5ff; --card-bg: #ffffff; --header-bg: #1a1f5e;
+      --accent: #4f6ef7; --accent2: #f7c948; --text: #1e2235;
+      --muted: #6b7280; --radius: 18px;
       --shadow: 0 2px 16px rgba(79,110,247,0.09);
       --shadow-hover: 0 10px 32px rgba(79,110,247,0.18);
     }
@@ -54,6 +49,18 @@
       box-shadow: 0 0 12px rgba(247,201,72,.55);
     }
 
+    /* ── SYNC STATUS ─────────────────────────────── */
+    #sync-bar {
+      background: #1e293b; color: #94a3b8; font-size: .75rem; font-weight: 700;
+      text-align: center; padding: .3rem 1rem; letter-spacing: .03em;
+      display: flex; align-items: center; justify-content: center; gap: .5rem;
+      min-height: 28px;
+    }
+    #sync-bar.syncing  { color: #f7c948; }
+    #sync-bar.ok       { color: #4ade80; }
+    #sync-bar.error    { color: #f87171; }
+    .sync-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+
     /* ── FILTER BAR ─────────────────────────────── */
     .filter-bar {
       background: #fff; border-bottom: 2px solid #e4eaf8;
@@ -73,10 +80,7 @@
     .filter-search::placeholder { color: #b0b8cc; }
     .filter-rows { margin-top: .65rem; display: flex; flex-direction: column; gap: .4rem; }
     .filter-row { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; }
-    .filter-label {
-      font-size: .7rem; font-weight: 800; text-transform: uppercase;
-      letter-spacing: .09em; color: var(--muted); min-width: 55px;
-    }
+    .filter-label { font-size: .7rem; font-weight: 800; text-transform: uppercase; letter-spacing: .09em; color: var(--muted); min-width: 55px; }
     .filter-chips { display: flex; flex-wrap: wrap; gap: .32rem; }
     .chip {
       padding: .27rem .75rem; border-radius: 99px; font-size: .79rem; font-weight: 700;
@@ -91,7 +95,6 @@
 
     /* ── MAIN ───────────────────────────────────── */
     main { max-width: 980px; margin: 0 auto; padding: 2.5rem 1.5rem 5rem; }
-
     .category { margin-bottom: 3rem; }
     .category-header {
       display: flex; align-items: center; gap: 13px;
@@ -133,29 +136,15 @@
       background: linear-gradient(180deg, color-mix(in srgb, var(--cat-color, #4f6ef7) 5%, transparent), transparent);
       pointer-events: none;
     }
-    .app-card:hover {
-      transform: translateY(-5px); box-shadow: var(--shadow-hover);
-      border-color: color-mix(in srgb, var(--cat-color, #4f6ef7) 35%, transparent);
-    }
+    .app-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); border-color: color-mix(in srgb, var(--cat-color, #4f6ef7) 35%, transparent); }
     .app-emoji { font-size: 2rem; position: relative; }
     .app-name { font-weight: 800; font-size: 1.02rem; line-height: 1.3; position: relative; }
     .app-desc { font-size: .82rem; color: var(--muted); line-height: 1.45; flex: 1; position: relative; }
     .app-meta { display: flex; flex-wrap: wrap; gap: .28rem; margin-top: .12rem; position: relative; }
-    .app-tag {
-      font-size: .67rem; font-weight: 800; padding: .16rem .52rem;
-      border-radius: 99px; background: #eef2ff; color: #4f6ef7; border: 1px solid #dde5ff;
-    }
-    .app-tag.tag-klasse {
-      background: color-mix(in srgb, var(--cat-color, #4f6ef7) 10%, white);
-      color: var(--cat-color, #4f6ef7);
-      border-color: color-mix(in srgb, var(--cat-color, #4f6ef7) 18%, white);
-    }
+    .app-tag { font-size: .67rem; font-weight: 800; padding: .16rem .52rem; border-radius: 99px; background: #eef2ff; color: #4f6ef7; border: 1px solid #dde5ff; }
+    .app-tag.tag-klasse { background: color-mix(in srgb, var(--cat-color, #4f6ef7) 10%, white); color: var(--cat-color, #4f6ef7); border-color: color-mix(in srgb, var(--cat-color, #4f6ef7) 18%, white); }
     .app-tag.tag-custom { background: #fdf4ff; color: #9333ea; border-color: #f0d6ff; }
-    .app-arrow {
-      align-self: flex-end; font-size: 1.1rem;
-      color: var(--cat-color, var(--accent)); font-weight: 800;
-      transition: transform .15s ease; position: relative;
-    }
+    .app-arrow { align-self: flex-end; font-size: 1.1rem; color: var(--cat-color, var(--accent)); font-weight: 800; transition: transform .15s ease; position: relative; }
     .app-card:hover .app-arrow { transform: translateX(4px); }
     .app-card.placeholder {
       border: 2px dashed #d1d9f0; background: transparent; box-shadow: none;
@@ -172,41 +161,22 @@
     footer { text-align: center; padding: 1.5rem; font-size: .8rem; color: var(--muted); border-top: 1px solid #e4eaf8; }
 
     /* ── PASSWORT OVERLAY ───────────────────────── */
-    #pw-overlay {
-      display: none; position: fixed; inset: 0; background: rgba(26,31,94,.55);
-      backdrop-filter: blur(8px); z-index: 1000; align-items: center; justify-content: center;
-    }
+    #pw-overlay { display: none; position: fixed; inset: 0; background: rgba(26,31,94,.55); backdrop-filter: blur(8px); z-index: 1000; align-items: center; justify-content: center; }
     #pw-overlay.visible { display: flex; }
-    #pw-box {
-      background: #fff; border-radius: 22px; padding: 2.2rem 2rem 1.8rem;
-      width: 310px; box-shadow: 0 24px 60px rgba(0,0,0,.22); text-align: center;
-    }
+    #pw-box { background: #fff; border-radius: 22px; padding: 2.2rem 2rem 1.8rem; width: 310px; box-shadow: 0 24px 60px rgba(0,0,0,.22); text-align: center; }
     #pw-box h2 { font-family: 'Fredoka One', cursive; color: var(--header-bg); margin-bottom: .3rem; font-size: 1.5rem; }
     #pw-box p { font-size: .86rem; color: var(--muted); margin-bottom: 1.2rem; }
-    #pw-input {
-      width: 100%; padding: .75rem 1rem; border: 2px solid #e2e8f0; border-radius: 12px;
-      font-size: 1rem; font-family: 'Nunito', sans-serif; outline: none;
-      transition: border-color .2s; text-align: center; letter-spacing: 3px;
-    }
+    #pw-input { width: 100%; padding: .75rem 1rem; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 1rem; font-family: 'Nunito', sans-serif; outline: none; transition: border-color .2s; text-align: center; letter-spacing: 3px; }
     #pw-input:focus { border-color: var(--accent); }
     #pw-error { color: #ef4444; font-size: .8rem; margin-top: .5rem; min-height: 1.1rem; }
     #pw-cancel { margin-top: .8rem; background: none; border: none; color: var(--muted); font-size: .85rem; cursor: pointer; font-family: 'Nunito', sans-serif; }
     #pw-cancel:hover { color: var(--text); }
 
     /* ── ADMIN PANEL ────────────────────────────── */
-    #admin-panel {
-      display: none; position: fixed; bottom: 0; left: 0; right: 0;
-      background: #111827; color: #fff; padding: 0; z-index: 999;
-      box-shadow: 0 -6px 36px rgba(0,0,0,.4); max-height: 78vh; flex-direction: column;
-      border-top: 2px solid rgba(255,255,255,.07);
-    }
+    #admin-panel { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: #111827; color: #fff; padding: 0; z-index: 999; box-shadow: 0 -6px 36px rgba(0,0,0,.4); max-height: 78vh; flex-direction: column; border-top: 2px solid rgba(255,255,255,.07); }
     #admin-panel.visible { display: flex; }
     .admin-tabs { display: flex; border-bottom: 1px solid rgba(255,255,255,.1); flex-shrink: 0; background: rgba(255,255,255,.02); }
-    .admin-tab {
-      padding: .8rem 1.4rem; font-family: 'Nunito', sans-serif; font-weight: 800;
-      font-size: .88rem; color: rgba(255,255,255,.42); background: none; border: none;
-      cursor: pointer; border-bottom: 3px solid transparent; transition: all .15s; margin-bottom: -1px;
-    }
+    .admin-tab { padding: .8rem 1.4rem; font-family: 'Nunito', sans-serif; font-weight: 800; font-size: .88rem; color: rgba(255,255,255,.42); background: none; border: none; cursor: pointer; border-bottom: 3px solid transparent; transition: all .15s; margin-bottom: -1px; }
     .admin-tab:hover { color: rgba(255,255,255,.8); }
     .admin-tab.active { color: var(--accent2); border-bottom-color: var(--accent2); }
     .admin-content { overflow-y: auto; padding: 1.2rem 1.5rem 1.8rem; flex: 1; }
@@ -216,78 +186,46 @@
     .admin-category-block { margin-bottom: .8rem; }
     .admin-app-row { display: flex; flex-wrap: wrap; gap: .45rem; padding-left: 1rem; margin-top: .4rem; margin-bottom: .5rem; }
     .admin-divider { border: none; border-top: 1px solid rgba(255,255,255,.07); margin: .5rem 0 .9rem; }
-    .admin-toggle {
-      display: flex; align-items: center; gap: .5rem;
-      background: rgba(255,255,255,.08); border: 1.5px solid rgba(255,255,255,.14);
-      border-radius: 10px; padding: .42rem .9rem; cursor: pointer;
-      font-family: 'Nunito', sans-serif; font-size: .84rem; color: rgba(255,255,255,.88);
-      font-weight: 700; transition: background .14s; user-select: none;
-    }
+    .admin-toggle { display: flex; align-items: center; gap: .5rem; background: rgba(255,255,255,.08); border: 1.5px solid rgba(255,255,255,.14); border-radius: 10px; padding: .42rem .9rem; cursor: pointer; font-family: 'Nunito', sans-serif; font-size: .84rem; color: rgba(255,255,255,.88); font-weight: 700; transition: background .14s; user-select: none; }
     .admin-toggle:hover { background: rgba(255,255,255,.15); }
     .admin-toggle.is-hidden { background: rgba(239,68,68,.18); border-color: #f87171; color: #fca5a5; }
     .admin-toggle.cat-toggle { font-size: .92rem; }
     .admin-toggle.app-toggle.cat-locked { opacity: .33; cursor: not-allowed; }
     .toggle-dot { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; flex-shrink: 0; }
     .admin-toggle.is-hidden .toggle-dot { background: #f87171; }
-    #admin-close {
-      background: rgba(255,255,255,.1); border: 1.5px solid rgba(255,255,255,.18);
-      color: #fff; padding: .5rem 1.4rem; border-radius: 10px; cursor: pointer;
-      font-family: 'Nunito', sans-serif; font-weight: 700; font-size: .85rem;
-      margin-top: 1rem; display: inline-block; transition: background .14s;
-    }
+    #admin-close { background: rgba(255,255,255,.1); border: 1.5px solid rgba(255,255,255,.18); color: #fff; padding: .5rem 1.4rem; border-radius: 10px; cursor: pointer; font-family: 'Nunito', sans-serif; font-weight: 700; font-size: .85rem; margin-top: 1rem; display: inline-block; transition: background .14s; }
     #admin-close:hover { background: rgba(255,255,255,.2); }
 
     /* ── TAG EDITOR ─────────────────────────────── */
-    .custom-tag-manager {
-      background: rgba(147,51,234,.12); border-radius: 14px; padding: .9rem 1rem;
-      border: 1px solid rgba(147,51,234,.3); margin-bottom: 1.1rem;
-    }
+    .custom-tag-manager { background: rgba(147,51,234,.12); border-radius: 14px; padding: .9rem 1rem; border: 1px solid rgba(147,51,234,.3); margin-bottom: 1.1rem; }
     .custom-tag-manager h4 { font-size: .8rem; font-weight: 800; color: #d8b4fe; text-transform: uppercase; letter-spacing: .07em; margin-bottom: .7rem; }
     .custom-tag-list { display: flex; flex-wrap: wrap; gap: .38rem; margin-bottom: .65rem; min-height: 24px; }
-    .custom-tag-pill {
-      display: flex; align-items: center; gap: .28rem; padding: .22rem .65rem;
-      border-radius: 99px; font-size: .77rem; font-weight: 700;
-      background: rgba(147,51,234,.22); border: 1.5px solid rgba(147,51,234,.45); color: #d8b4fe;
-    }
-    .pill-del {
-      cursor: pointer; font-size: 1rem; color: rgba(216,180,254,.45); line-height: 1;
-      transition: color .1s; background: none; border: none; font-family: inherit; padding: 0;
-    }
+    .custom-tag-pill { display: flex; align-items: center; gap: .28rem; padding: .22rem .65rem; border-radius: 99px; font-size: .77rem; font-weight: 700; background: rgba(147,51,234,.22); border: 1.5px solid rgba(147,51,234,.45); color: #d8b4fe; }
+    .pill-del { cursor: pointer; font-size: 1rem; color: rgba(216,180,254,.45); line-height: 1; transition: color .1s; background: none; border: none; font-family: inherit; padding: 0; }
     .pill-del:hover { color: #f87171; }
     .custom-tag-add { display: flex; gap: .5rem; }
-    .custom-tag-input {
-      flex: 1; background: rgba(255,255,255,.08); border: 1.5px solid rgba(255,255,255,.16);
-      border-radius: 9px; color: #fff; font-family: 'Nunito', sans-serif;
-      font-size: .83rem; font-weight: 700; padding: .38rem .8rem; outline: none; transition: border-color .15s;
-    }
+    .custom-tag-input { flex: 1; background: rgba(255,255,255,.08); border: 1.5px solid rgba(255,255,255,.16); border-radius: 9px; color: #fff; font-family: 'Nunito', sans-serif; font-size: .83rem; font-weight: 700; padding: .38rem .8rem; outline: none; transition: border-color .15s; }
     .custom-tag-input::placeholder { color: rgba(255,255,255,.28); }
     .custom-tag-input:focus { border-color: #9333ea; }
-    .custom-tag-btn {
-      background: #7e22ce; border: none; color: #fff; border-radius: 9px;
-      padding: .38rem 1rem; cursor: pointer; font-family: 'Nunito', sans-serif;
-      font-weight: 800; font-size: .83rem; transition: background .14s;
-    }
+    .custom-tag-btn { background: #7e22ce; border: none; color: #fff; border-radius: 9px; padding: .38rem 1rem; cursor: pointer; font-family: 'Nunito', sans-serif; font-weight: 800; font-size: .83rem; transition: background .14s; }
     .custom-tag-btn:hover { background: #6b21a8; }
     .tag-editor-list { display: flex; flex-direction: column; gap: .7rem; }
-    .tag-editor-row {
-      background: rgba(255,255,255,.06); border-radius: 14px; padding: .85rem 1rem;
-      border: 1px solid rgba(255,255,255,.09);
-    }
+    .tag-editor-row { background: rgba(255,255,255,.06); border-radius: 14px; padding: .85rem 1rem; border: 1px solid rgba(255,255,255,.09); }
     .tag-editor-name { font-weight: 800; font-size: .9rem; margin-bottom: .55rem; display: flex; align-items: center; gap: .5rem; }
     .te-emoji { font-size: 1.15rem; }
     .tag-editor-fields { display: flex; flex-wrap: wrap; gap: .38rem; align-items: center; }
     .te-label { font-size: .69rem; font-weight: 800; color: rgba(255,255,255,.38); text-transform: uppercase; letter-spacing: .07em; width: 100%; margin-top: .32rem; }
     .te-label:first-child { margin-top: 0; }
-    .te-chip {
-      padding: .25rem .7rem; border-radius: 99px; font-size: .76rem; font-weight: 700;
-      border: 1.5px solid rgba(255,255,255,.18); background: rgba(255,255,255,.07);
-      color: rgba(255,255,255,.58); cursor: pointer; transition: all .12s; user-select: none;
-    }
+    .te-chip { padding: .25rem .7rem; border-radius: 99px; font-size: .76rem; font-weight: 700; border: 1.5px solid rgba(255,255,255,.18); background: rgba(255,255,255,.07); color: rgba(255,255,255,.58); cursor: pointer; transition: all .12s; user-select: none; }
     .te-chip:hover { background: rgba(255,255,255,.15); color: #fff; }
     .te-chip.sel-klasse { background: #4f6ef7; border-color: #4f6ef7; color: #fff; }
     .te-chip.sel-custom { background: #7e22ce; border-color: #7e22ce; color: #fff; }
     .te-save-note { font-size: .7rem; color: #4ade80; margin-top: .32rem; display: none; }
     .te-save-note.show { display: block; }
+
+    /* saving spinner */
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .saving-spinner { display: inline-block; width: 10px; height: 10px; border: 2px solid rgba(255,255,255,.3); border-top-color: #fff; border-radius: 50%; animation: spin .6s linear infinite; }
   </style>
 </head>
 <body>
@@ -337,6 +275,12 @@
   <p>Klick auf eine App und leg los!</p>
 </header>
 
+<!-- SYNC STATUS BAR -->
+<div id="sync-bar">
+  <span class="sync-dot"></span>
+  <span id="sync-msg">Einstellungen werden geladen …</span>
+</div>
+
 <!-- FILTER BAR -->
 <div class="filter-bar">
   <div class="filter-inner">
@@ -376,18 +320,29 @@
 
 <script>
 // ════════════════════════════════════════════════════════
+//  GITHUB CONFIG – hier deine Daten eintragen
+// ════════════════════════════════════════════════════════
+const GH_USER   = 'geitner-hub';
+const GH_REPO   = 'Lern-Apps';
+const GH_FILE   = 'config.json';
+const GH_TOKEN  = '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';
+const GH_BRANCH = 'main'; // oder 'master' – je nach Repository
+
+const GH_API = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${GH_FILE}`;
+
+// ════════════════════════════════════════════════════════
 //  APPS – neue App = neuer Eintrag hier
 // ════════════════════════════════════════════════════════
 const APPS = [
-  { name:"Kopfrechnen",       datei:"kopfrechnen.html",          emoji:"🔢", beschreibung:"Übe deine Kopfrechenkünste am Anfang der Stunde", fach:"Mathematik" },
-  { name:"Längeneinheiten",   datei:"laengeneinheiten.html",     emoji:"📐", beschreibung:"Teste dein Wissen zu den Längeneinheiten",          fach:"Mathematik" },
-  { name:"Vokabeln-Test",     datei:"vokabeltrainer.html",       emoji:"🗣️", beschreibung:"Wiederhole Vokabeln",                               fach:"Englisch"   },
-  { name:"Satzglieder ordnen",datei:"satzglieder-erkennen.html", emoji:"🔤", beschreibung:"Put the words in the right order",                  fach:"Englisch"   }
+  { name:"Kopfrechnen",        datei:"kopfrechnen.html",          emoji:"🔢", beschreibung:"Übe deine Kopfrechenkünste am Anfang der Stunde", fach:"Mathematik" },
+  { name:"Längeneinheiten",    datei:"laengeneinheiten.html",     emoji:"📐", beschreibung:"Teste dein Wissen zu den Längeneinheiten",          fach:"Mathematik" },
+  { name:"Vokabeln-Test",      datei:"vokabeltrainer.html",       emoji:"🗣️", beschreibung:"Wiederhole Vokabeln",                               fach:"Englisch"   },
+  { name:"Satzglieder ordnen", datei:"satzglieder-erkennen.html", emoji:"🔤", beschreibung:"Put the words in the right order",                  fach:"Englisch"   }
   // ← Komma nach letztem Eintrag nicht vergessen!
 ];
 
 // ════════════════════════════════════════════════════════
-//  KATEGORIEN – Icon & Farbe pro Fach
+//  KATEGORIEN
 // ════════════════════════════════════════════════════════
 const KATEGORIEN = {
   "Mathematik": { icon:"➕", color:"#4f6ef7", color2:"#818cf8" },
@@ -400,22 +355,70 @@ const KATEGORIEN = {
 const ADMIN_PASSWORD = 'lehrer123'; // ← HIER ÄNDERN
 
 // ════════════════════════════════════════════════════════
-//  STORAGE HELPERS
+//  GLOBALER CONFIG-STATE (wird von GitHub geladen/gespeichert)
 // ════════════════════════════════════════════════════════
-const SK_HIDDEN      = 'la-hidden';
-const SK_HIDDEN_CATS = 'la-hidden-cats';
-const SK_TAGS        = 'la-tags';
-const SK_CUSTOM_TAGS = 'la-custom-tags';
-const loadJSON = (k,d) => { try { return JSON.parse(localStorage.getItem(k)) || d; } catch { return d; } };
-const saveJSON = (k,v) => localStorage.setItem(k, JSON.stringify(v));
-const loadHidden     = () => loadJSON(SK_HIDDEN, []);
-const loadHiddenCats = () => loadJSON(SK_HIDDEN_CATS, []);
-const loadTags       = () => loadJSON(SK_TAGS, {});
-const loadCustomTags = () => loadJSON(SK_CUSTOM_TAGS, []);
+let CONFIG = { hidden: [], hiddenCats: [], tags: {}, customTags: [] };
+let ghFileSha = ''; // SHA wird für Updates benötigt
 
+// ── Sync-Statusanzeige ───────────────────────────────
+function setSyncStatus(state, msg) {
+  const bar = document.getElementById('sync-bar');
+  const txt = document.getElementById('sync-msg');
+  bar.className = state; // '', 'syncing', 'ok', 'error'
+  txt.textContent = msg;
+}
+
+// ── Config von GitHub laden ───────────────────────────
+async function loadConfig() {
+  setSyncStatus('syncing', 'Einstellungen werden geladen …');
+  try {
+    const res = await fetch(GH_API + '?ref=' + GH_BRANCH, {
+      headers: { Authorization: 'token ' + GH_TOKEN, Accept: 'application/vnd.github.v3+json' }
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    ghFileSha = data.sha;
+    const decoded = JSON.parse(atob(data.content.replace(/\n/g, '')));
+    CONFIG = { hidden:[], hiddenCats:[], tags:{}, customTags:[], ...decoded };
+    setSyncStatus('ok', '✓ Einstellungen geladen');
+    setTimeout(() => setSyncStatus('', ''), 2500);
+  } catch(e) {
+    setSyncStatus('error', '⚠ Einstellungen konnten nicht geladen werden – lokaler Modus');
+    console.error('GitHub load error:', e);
+  }
+  buildPage();
+}
+
+// ── Config auf GitHub speichern ───────────────────────
+async function saveConfig() {
+  setSyncStatus('syncing', 'Wird gespeichert …');
+  const content = btoa(unescape(encodeURIComponent(JSON.stringify(CONFIG, null, 2))));
+  try {
+    const body = { message: 'Admin: Einstellungen aktualisiert', content, branch: GH_BRANCH };
+    if (ghFileSha) body.sha = ghFileSha;
+    const res = await fetch(GH_API, {
+      method: 'PUT',
+      headers: {
+        Authorization: 'token ' + GH_TOKEN,
+        Accept: 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    ghFileSha = data.content.sha;
+    setSyncStatus('ok', '✓ Gespeichert – für alle sichtbar');
+    setTimeout(() => setSyncStatus('', ''), 3000);
+  } catch(e) {
+    setSyncStatus('error', '⚠ Speichern fehlgeschlagen – prüfe Token & Verbindung');
+    console.error('GitHub save error:', e);
+  }
+}
+
+// ── Hilfsfunktionen ───────────────────────────────────
 function getAppTags(name) {
-  const s = loadTags();
-  if (s[name]) return s[name];
+  if (CONFIG.tags[name]) return CONFIG.tags[name];
   const a = APPS.find(x => x.name === name);
   return { klassen: a?.klassen||[], customTags: a?.customTags||[] };
 }
@@ -484,9 +487,10 @@ function buildPage() {
 //  SICHTBARKEIT
 // ════════════════════════════════════════════════════════
 function applyVisibility() {
-  const h = loadHidden(), hc = loadHiddenCats();
-  document.querySelectorAll('.category').forEach(c => c.classList.toggle('cat-hidden', hc.includes(c.dataset.category)));
-  document.querySelectorAll('.app-card:not(.placeholder)').forEach(c => c.classList.toggle('app-hidden', h.includes(c.dataset.name)));
+  document.querySelectorAll('.category').forEach(c =>
+    c.classList.toggle('cat-hidden', CONFIG.hiddenCats.includes(c.dataset.category)));
+  document.querySelectorAll('.app-card:not(.placeholder)').forEach(c =>
+    c.classList.toggle('app-hidden', CONFIG.hidden.includes(c.dataset.name)));
   updateCounts();
 }
 
@@ -508,7 +512,7 @@ function updateCounts() {
 let activeKlasse='all', activeTag='all', searchQuery='';
 
 function refreshTagChips() {
-  const tags = loadCustomTags();
+  const tags = CONFIG.customTags;
   const row  = document.getElementById('filter-row-tags');
   const wrap = document.getElementById('chips-tags');
   wrap.innerHTML = `<span class="chip chip-all ${activeTag==='all'?'active':''}" data-group="tag" data-value="all">Alle</span>`;
@@ -598,32 +602,35 @@ function buildVisTab() {
   document.querySelectorAll('.category').forEach((cat,i,all) => {
     const catName = cat.dataset.category;
     const icon = cat.querySelector('.category-icon')?.textContent?.trim()||'📁';
-    const isCH  = loadHiddenCats().includes(catName);
+    const isCH  = CONFIG.hiddenCats.includes(catName);
     const block = document.createElement('div'); block.className='admin-category-block';
     const catBtn = document.createElement('button');
     catBtn.className='admin-toggle cat-toggle'+(isCH?' is-hidden':'');
     catBtn.innerHTML=`<span class="toggle-dot"></span>${icon} ${catName}`;
-    catBtn.addEventListener('click',()=>{
-      const hc=loadHiddenCats(), idx=hc.indexOf(catName);
-      if(idx===-1) hc.push(catName); else hc.splice(idx,1);
-      saveJSON(SK_HIDDEN_CATS,hc); catBtn.classList.toggle('is-hidden');
-      appRow.querySelectorAll('.app-toggle').forEach(b=>b.classList.toggle('cat-locked',hc.includes(catName)));
+    catBtn.addEventListener('click', async () => {
+      const idx = CONFIG.hiddenCats.indexOf(catName);
+      if (idx===-1) CONFIG.hiddenCats.push(catName); else CONFIG.hiddenCats.splice(idx,1);
+      catBtn.classList.toggle('is-hidden');
+      const locked = CONFIG.hiddenCats.includes(catName);
+      appRow.querySelectorAll('.app-toggle').forEach(b=>b.classList.toggle('cat-locked',locked));
       applyVisibility(); applyFilters();
+      await saveConfig();
     });
     block.appendChild(catBtn);
     const appRow=document.createElement('div'); appRow.className='admin-app-row';
     cat.querySelectorAll('.app-card:not(.placeholder)').forEach(card=>{
       const name=card.dataset.name; if(!name) return;
-      const isH=loadHidden().includes(name);
+      const isH=CONFIG.hidden.includes(name);
       const btn=document.createElement('button');
       btn.className='admin-toggle app-toggle'+(isH?' is-hidden':'')+(isCH?' cat-locked':'');
       btn.innerHTML=`<span class="toggle-dot"></span>${name}`;
-      btn.addEventListener('click',()=>{
-        if(loadHiddenCats().includes(catName)) return;
-        const h=loadHidden(), idx=h.indexOf(name);
-        if(idx===-1) h.push(name); else h.splice(idx,1);
-        saveJSON(SK_HIDDEN,h); btn.classList.toggle('is-hidden');
+      btn.addEventListener('click', async () => {
+        if(CONFIG.hiddenCats.includes(catName)) return;
+        const idx=CONFIG.hidden.indexOf(name);
+        if(idx===-1) CONFIG.hidden.push(name); else CONFIG.hidden.splice(idx,1);
+        btn.classList.toggle('is-hidden');
         applyVisibility(); applyFilters();
+        await saveConfig();
       });
       appRow.appendChild(btn);
     });
@@ -638,30 +645,36 @@ function buildVisTab() {
 // ════════════════════════════════════════════════════════
 function buildGlobalTagList() {
   const list=document.getElementById('global-tag-list');
-  const tags=loadCustomTags(); list.innerHTML='';
-  if(!tags.length){list.innerHTML='<span style="font-size:.76rem;color:rgba(255,255,255,.28);">Noch keine Tags erstellt.</span>';return;}
-  tags.forEach(tag=>{
+  list.innerHTML='';
+  if(!CONFIG.customTags.length){
+    list.innerHTML='<span style="font-size:.76rem;color:rgba(255,255,255,.28);">Noch keine Tags erstellt.</span>';
+    return;
+  }
+  CONFIG.customTags.forEach(tag=>{
     const pill=document.createElement('div'); pill.className='custom-tag-pill';
     pill.innerHTML=`${tag} <button class="pill-del">×</button>`;
-    pill.querySelector('.pill-del').addEventListener('click',()=>{
-      saveJSON(SK_CUSTOM_TAGS,loadCustomTags().filter(t=>t!==tag));
-      const at=loadTags();
-      Object.keys(at).forEach(n=>{if(at[n].customTags) at[n].customTags=at[n].customTags.filter(t=>t!==tag);});
-      saveJSON(SK_TAGS,at);
+    pill.querySelector('.pill-del').addEventListener('click', async () => {
+      CONFIG.customTags = CONFIG.customTags.filter(t=>t!==tag);
+      Object.keys(CONFIG.tags).forEach(n=>{
+        if(CONFIG.tags[n].customTags) CONFIG.tags[n].customTags=CONFIG.tags[n].customTags.filter(t=>t!==tag);
+      });
       if(activeTag===tag) activeTag='all';
+      await saveConfig();
       buildPage(); buildTagEditor(); buildGlobalTagList();
     });
     list.appendChild(pill);
   });
 }
 
-document.getElementById('add-tag-btn').addEventListener('click',addTag);
-document.getElementById('new-tag-input').addEventListener('keydown',e=>{if(e.key==='Enter')addTag();});
-function addTag(){
+document.getElementById('add-tag-btn').addEventListener('click', addTag);
+document.getElementById('new-tag-input').addEventListener('keydown', e=>{ if(e.key==='Enter') addTag(); });
+async function addTag(){
   const inp=document.getElementById('new-tag-input');
   const v=inp.value.trim(); if(!v) return;
-  const tags=loadCustomTags(); if(tags.includes(v)){inp.value='';return;}
-  tags.push(v); saveJSON(SK_CUSTOM_TAGS,tags); inp.value='';
+  if(CONFIG.customTags.includes(v)){inp.value='';return;}
+  CONFIG.customTags.push(v);
+  inp.value='';
+  await saveConfig();
   buildGlobalTagList(); buildTagEditor(); buildPage();
 }
 
@@ -674,18 +687,16 @@ function buildTagEditor(){
   buildGlobalTagList();
   const container=document.getElementById('tag-editor-list');
   container.innerHTML='';
-  const customTags=loadCustomTags();
 
   APPS.forEach(app=>{
     const t=getAppTags(app.name);
     const ck=t.klassen||[], cct=t.customTags||[];
     const row=document.createElement('div'); row.className='tag-editor-row';
-
     const kChips=KLASSEN_OPTS.map(k=>
       `<span class="te-chip${ck.includes(k)?' sel-klasse':''}" data-app="${app.name}" data-type="klasse" data-val="${k}">Klasse ${k}</span>`
     ).join('');
-    const tChips=customTags.length
-      ? customTags.map(tg=>`<span class="te-chip${cct.includes(tg)?' sel-custom':''}" data-app="${app.name}" data-type="custom" data-val="${tg}">${tg}</span>`).join('')
+    const tChips=CONFIG.customTags.length
+      ? CONFIG.customTags.map(tg=>`<span class="te-chip${cct.includes(tg)?' sel-custom':''}" data-app="${app.name}" data-type="custom" data-val="${tg}">${tg}</span>`).join('')
       : '<span style="font-size:.74rem;color:rgba(255,255,255,.27);">Noch keine Tags erstellt.</span>';
 
     row.innerHTML=`
@@ -698,25 +709,27 @@ function buildTagEditor(){
     container.appendChild(row);
   });
 
-  container.addEventListener('click', e=>{
+  container.addEventListener('click', async e=>{
     const chip=e.target.closest('.te-chip'); if(!chip) return;
     const appName=chip.dataset.app, type=chip.dataset.type, val=chip.dataset.val;
-    const at=loadTags();
-    if(!at[appName]){const ex=getAppTags(appName);at[appName]={klassen:[...(ex.klassen||[])],customTags:[...(ex.customTags||[])]};}
+    if(!CONFIG.tags[appName]){
+      const ex=getAppTags(appName);
+      CONFIG.tags[appName]={klassen:[...(ex.klassen||[])],customTags:[...(ex.customTags||[])]};
+    }
     if(type==='klasse'){
-      const idx=at[appName].klassen.indexOf(Number(val));
-      idx===-1?at[appName].klassen.push(Number(val)):at[appName].klassen.splice(idx,1);
+      const idx=CONFIG.tags[appName].klassen.indexOf(Number(val));
+      idx===-1?CONFIG.tags[appName].klassen.push(Number(val)):CONFIG.tags[appName].klassen.splice(idx,1);
       chip.classList.toggle('sel-klasse');
     } else if(type==='custom'){
-      if(!at[appName].customTags) at[appName].customTags=[];
-      const idx=at[appName].customTags.indexOf(val);
-      idx===-1?at[appName].customTags.push(val):at[appName].customTags.splice(idx,1);
+      if(!CONFIG.tags[appName].customTags) CONFIG.tags[appName].customTags=[];
+      const idx=CONFIG.tags[appName].customTags.indexOf(val);
+      idx===-1?CONFIG.tags[appName].customTags.push(val):CONFIG.tags[appName].customTags.splice(idx,1);
       chip.classList.toggle('sel-custom');
     }
-    saveJSON(SK_TAGS,at);
     buildPage(); buildVisTab();
+    await saveConfig();
     const note=document.getElementById('sv-'+appName.replace(/[^a-zA-Z0-9]/g,'_'));
-    if(note){note.classList.add('show');setTimeout(()=>note.classList.remove('show'),1500);}
+    if(note){note.classList.add('show');setTimeout(()=>note.classList.remove('show'),2000);}
   });
 }
 
@@ -729,9 +742,9 @@ document.getElementById('admin-close').addEventListener('click',()=>{
 });
 
 // ════════════════════════════════════════════════════════
-//  INIT
+//  INIT – Config laden, dann Seite aufbauen
 // ════════════════════════════════════════════════════════
-buildPage();
+loadConfig();
 </script>
 </body>
 </html>
