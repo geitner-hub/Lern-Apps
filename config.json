@@ -96,17 +96,6 @@
         "Vokabeln"
       ],
       "aod": false
-    },
-    {
-      "name": "sicherung",
-      "datei": "app.js",
-      "fach": "Deutsch",
-      "emoji": "123",
-      "beschreibung": "",
-      "hidden": false,
-      "klassen": [],
-      "customTags": [],
-      "aod": false
     }
   ],
   "customTags": [
