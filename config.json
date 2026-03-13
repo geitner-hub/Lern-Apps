@@ -81,6 +81,17 @@
         "Vokabeln"
       ],
       "aod": false
+    },
+    {
+      "name": "Unit 4 Vokabeln",
+      "datei": "highlight-unit4.html",
+      "fach": "Englisch",
+      "emoji": "4",
+      "beschreibung": "Lerne und wiederhole die Vokabeln aus Unit 4",
+      "hidden": false,
+      "klassen": [],
+      "customTags": [],
+      "aod": false
     }
   ],
   "customTags": [
