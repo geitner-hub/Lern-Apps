@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Highlight Unit 4</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal:        #0d9488;
+    --teal-light:  #ccfbf1;
+    --amber:       #d97706;
+    --amber-light: #fef3c7;
+    --rose:        #e11d48;
+    --rose-light:  #ffe4e6;
+    --indigo:      #4f46e5;
+    --indigo-light:#e0e7ff;
+    --lime:        #65a30d;
+    --lime-light:  #ecfccb;
+    --sky:         #0284c7;
+    --sky-light:   #e0f2fe;
+    --bg:          #f8fafc;
+    --card:        #ffffff;
+    --text:        #0f172a;
+    --muted:       #64748b;
+    --radius:      16px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Quicksand', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(135deg, #0d9488 0%, #0284c7 100%);
+    color: white;
+    padding: 28px 24px 22px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::after {
+    content: '🐾🌿🐴🦆🐷🐔🦈';
+    position: absolute;
+    bottom: -6px; left: 0; right: 0;
+    font-size: 1.4rem;
+    letter-spacing: 8px;
+    opacity: .18;
+    pointer-events: none;
+  }
+  header h1 {
+    font-family: 'Baloo 2', cursive;
+    font-size: clamp(1.8rem, 6vw, 2.8rem);
+    letter-spacing: 1px;
+    position: relative;
+  }
+  header p {
+    font-size: 1rem;
+    opacity: .88;
+    margin-top: 4px;
+    position: relative;
+    font-weight: 600;
+  }
+  .back-btn {
+    position: absolute; top: 18px; left: 14px;
+    background: rgba(255,255,255,.22);
+    border: none; color: white;
+    border-radius: 50px; padding: 7px 15px;
+    font-family: 'Quicksand', sans-serif;
+    font-size: .88rem; font-weight: 700;
+    cursor: pointer; transition: background .2s;
+    display: none; z-index: 2;
+  }
+  .back-btn:hover { background: rgba(255,255,255,.38); }
+  .back-btn.visible { display: inline-block; }
+
+  /* ── SCREENS ── */
+  .screen { display: none; padding: 22px 14px 48px; max-width: 740px; margin: 0 auto; }
+  .screen.active { display: block; }
+
+  /* ── CHAPTER GRID ── */
+  .chapter-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+    gap: 14px;
+    margin-top: 6px;
+  }
+  .chapter-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 20px 18px;
+    cursor: pointer;
+    box-shadow: 0 3px 12px rgba(0,0,0,.07);
+    border-left: 5px solid transparent;
+    transition: transform .18s, box-shadow .18s;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .chapter-card:hover { transform: translateY(-4px); box-shadow: 0 8px 22px rgba(0,0,0,.13); }
+  .chapter-icon {
+    font-size: 2.2rem; width: 52px; height: 52px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .chapter-info h2 { font-size: 1rem; font-weight: 700; }
+  .chapter-info p  { font-size: .8rem; color: var(--muted); margin-top: 3px; }
+  .c1 { border-color: var(--teal);   } .c1 .chapter-icon { background: var(--teal-light); }
+  .c2 { border-color: var(--amber);  } .c2 .chapter-icon { background: var(--amber-light); }
+  .c3 { border-color: var(--rose);   } .c3 .chapter-icon { background: var(--rose-light); }
+  .c4 { border-color: var(--indigo); } .c4 .chapter-icon { background: var(--indigo-light); }
+  .c5 { border-color: var(--lime);   } .c5 .chapter-icon { background: var(--lime-light); }
+  .c6 { border-color: var(--sky);    } .c6 .chapter-icon { background: var(--sky-light); }
+
+  /* ── MODE SELECTION ── */
+  .mode-title {
+    font-family: 'Baloo 2', cursive;
+    font-size: 1.4rem; text-align: center; margin-bottom: 18px;
+    color: var(--teal);
+  }
+  .mode-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: 12px;
+  }
+  .mode-btn {
+    background: var(--card);
+    border: 2px solid #e2e8f0;
+    border-radius: var(--radius);
+    padding: 20px 14px;
+    cursor: pointer; text-align: center;
+    box-shadow: 0 3px 10px rgba(0,0,0,.06);
+    transition: transform .18s, box-shadow .18s, border-color .18s;
+    font-family: 'Quicksand', sans-serif;
+  }
+  .mode-btn:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0,0,0,.12);
+    border-color: var(--teal);
+  }
+  .mode-btn .mode-icon { font-size: 2.1rem; }
+  .mode-btn .mode-name { font-size: .97rem; font-weight: 700; margin-top: 8px; color: var(--text); }
+  .mode-btn .mode-desc { font-size: .76rem; color: var(--muted); margin-top: 3px; }
+
+  /* ── BUTTONS ── */
+  .btn {
+    border: none; border-radius: 50px; padding: 10px 22px;
+    font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: .92rem;
+    cursor: pointer; transition: transform .14s, opacity .14s;
+  }
+  .btn:hover { transform: scale(1.04); }
+  .btn-primary { background: var(--teal);   color: white; }
+  .btn-success { background: var(--lime);   color: white; }
+  .btn-muted   { background: #e2e8f0;       color: var(--text); }
+
+  /* ── WORD LIST ── */
+  .section-label {
+    font-family: 'Baloo 2', cursive;
+    font-size: 1.05rem; color: var(--muted); margin-bottom: 12px;
+  }
+  .wordlist { display: flex; flex-direction: column; gap: 5px; }
+  .word-row {
+    display: flex; align-items: center;
+    background: var(--card); border-radius: 12px;
+    padding: 10px 14px; gap: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,.05);
+    animation: fadeUp .3s ease forwards; opacity: 0;
+  }
+  @keyframes fadeUp { to { opacity:1; transform:none; } from { opacity:0; transform:translateY(6px); } }
+  .word-en   { font-weight: 700; flex: 1.2; font-size: .9rem; }
+  .word-pron { font-size: .75rem; color: var(--muted); flex: 1; }
+  .word-de   { color: var(--teal); font-weight: 700; flex: 1.2; text-align: right; font-size: .88rem; }
+
+  /* ── FLASHCARDS ── */
+  .fc-area { display: flex; flex-direction: column; align-items: center; gap: 18px; }
+  .fc-progress { font-size: .88rem; color: var(--muted); font-weight: 700; }
+  .fc-card {
+    width: 100%; max-width: 460px; height: 210px;
+    perspective: 1000px; cursor: pointer;
+  }
+  .fc-inner {
+    width: 100%; height: 100%;
+    position: relative; transform-style: preserve-3d;
+    transition: transform .5s;
+  }
+  .fc-card.flipped .fc-inner { transform: rotateY(180deg); }
+  .fc-front, .fc-back {
+    position: absolute; inset: 0;
+    border-radius: var(--radius);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    backface-visibility: hidden; padding: 22px;
+    box-shadow: 0 6px 18px rgba(0,0,0,.11);
+  }
+  .fc-front { background: linear-gradient(135deg, #0d9488, #0284c7); color: white; }
+  .fc-back  { background: var(--card); transform: rotateY(180deg); border: 3px solid #e2e8f0; }
+  .fc-word  { font-family: 'Baloo 2', cursive; font-size: 1.9rem; text-align: center; }
+  .fc-pron  { font-size: .85rem; opacity: .8; margin-top: 4px; }
+  .fc-hint  { font-size: .78rem; opacity: .6; margin-top: 10px; }
+  .fc-translation { font-family: 'Baloo 2', cursive; font-size: 1.7rem; color: var(--teal); text-align: center; }
+  .fc-en    { font-size: .9rem; color: var(--muted); margin-top: 6px; text-align: center; }
+  .fc-nav   { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+
+  /* ── QUIZ ── */
+  .quiz-q {
+    background: linear-gradient(135deg, #0d9488, #0284c7);
+    color: white; border-radius: var(--radius);
+    padding: 26px 22px; text-align: center;
+    font-family: 'Baloo 2', cursive; font-size: 1.7rem;
+    margin-bottom: 18px;
+    box-shadow: 0 6px 18px rgba(13,148,136,.3);
+  }
+  .quiz-sub { font-family: 'Quicksand', sans-serif; font-size: .88rem; opacity: .85; margin-top: 4px; font-weight: 600; }
+  .quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .quiz-opt {
+    background: var(--card);
+    border: 2px solid #e2e8f0;
+    border-radius: 12px; padding: 14px 10px;
+    font-family: 'Quicksand', sans-serif; font-weight: 700;
+    font-size: .92rem; cursor: pointer;
+    transition: border-color .14s, background .14s, transform .12s;
+    text-align: center;
+  }
+  .quiz-opt:hover:not(:disabled) { border-color: var(--teal); background: var(--teal-light); transform: scale(1.02); }
+  .quiz-opt.correct { border-color: var(--lime);  background: var(--lime-light); color: var(--lime); }
+  .quiz-opt.wrong   { border-color: var(--rose);  background: var(--rose-light); color: var(--rose); }
+  .quiz-opt:disabled { cursor: default; }
+  .quiz-feedback {
+    text-align: center; font-weight: 700; font-size: 1rem;
+    min-height: 30px; margin-top: 10px;
+  }
+  .score-box {
+    text-align: center; padding: 28px 20px;
+    background: var(--card); border-radius: var(--radius);
+    box-shadow: 0 4px 14px rgba(0,0,0,.08);
+  }
+  .score-box .big { font-family: 'Baloo 2', cursive; font-size: 4rem; color: var(--teal); }
+  .score-box p { color: var(--muted); margin-top: 6px; font-weight: 600; }
+
+  /* ── MATCHING ── */
+  .match-area { display: flex; gap: 12px; }
+  .match-col  { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+  .match-item {
+    background: var(--card); border: 2px solid #e2e8f0;
+    border-radius: 10px; padding: 10px 12px;
+    font-weight: 700; font-size: .85rem;
+    cursor: pointer; transition: border-color .14s, background .14s;
+    text-align: center;
+  }
+  .match-item:hover:not(.matched):not(.wrong-match) { border-color: var(--teal); background: var(--teal-light); }
+  .match-item.selected    { border-color: var(--amber); background: var(--amber-light); }
+  .match-item.matched     { border-color: var(--lime);  background: var(--lime-light); color: var(--lime); cursor: default; }
+  .match-item.wrong-match { border-color: var(--rose);  background: var(--rose-light); }
+  .match-score { text-align: center; margin-top: 14px; font-weight: 700; color: var(--muted); }
+
+  /* ── FILL IN THE BLANK ── */
+  .fill-sentence {
+    background: var(--card); border-radius: var(--radius);
+    padding: 22px; box-shadow: 0 4px 12px rgba(0,0,0,.07);
+    font-size: 1.15rem; font-weight: 700;
+    margin-bottom: 14px; text-align: center;
+    min-height: 76px; display: flex; align-items: center; justify-content: center;
+  }
+  .fill-blank {
+    display: inline-block;
+    border-bottom: 3px solid var(--teal);
+    min-width: 90px; padding: 2px 6px; color: var(--teal);
+  }
+  .fill-options { display: flex; flex-wrap: wrap; gap: 9px; justify-content: center; margin-bottom: 14px; }
+  .fill-opt {
+    background: var(--teal-light);
+    border: none; border-radius: 50px;
+    padding: 8px 16px; font-family: 'Quicksand', sans-serif;
+    font-weight: 700; cursor: pointer; font-size: .9rem;
+    transition: background .14s, transform .12s;
+  }
+  .fill-opt:hover:not(:disabled) { background: var(--teal); color: white; transform: scale(1.04); }
+  .fill-opt.correct-pick { background: var(--lime);  color: white; }
+  .fill-opt.wrong-pick   { background: var(--rose);  color: white; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 480px) {
+    .quiz-options { grid-template-columns: 1fr; }
+    .match-area   { flex-direction: column; }
+    .fc-word      { font-size: 1.4rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <button class="back-btn" id="backBtn" onclick="goBack()">← Back</button>
+  <h1>🌿 Highlight Unit 4</h1>
+  <p id="headerSub">Berry's World – Choose a chapter!</p>
+</header>
+
+<!-- SCREEN 1: Chapter Selection -->
+<div class="screen active" id="screenChapters">
+  <div class="chapter-grid">
+    <div class="chapter-card c1" onclick="selectChapter(0)">
+      <div class="chapter-icon">🐾</div>
+      <div class="chapter-info">
+        <h2>Unit 4: Berry's world</h2>
+        <p>6 words · p.72–73</p>
+      </div>
+    </div>
+    <div class="chapter-card c2" onclick="selectChapter(1)">
+      <div class="chapter-icon">⏰</div>
+      <div class="chapter-info">
+        <h2>Theme 1 – Daily Life</h2>
+        <p>12 words · p.74–75</p>
+      </div>
+    </div>
+    <div class="chapter-card c3" onclick="selectChapter(2)">
+      <div class="chapter-icon">😊</div>
+      <div class="chapter-info">
+        <h2>Theme 2 – Feelings & Life</h2>
+        <p>8 words · p.76–77</p>
+      </div>
+    </div>
+    <div class="chapter-card c4" onclick="selectChapter(3)">
+      <div class="chapter-icon">🚌</div>
+      <div class="chapter-info">
+        <h2>Story – p.78–79</h2>
+        <p>19 words · on the bus & country</p>
+      </div>
+    </div>
+    <div class="chapter-card c5" onclick="selectChapter(4)">
+      <div class="chapter-icon">🦈</div>
+      <div class="chapter-info">
+        <h2>Focus on Language</h2>
+        <p>11 words · p.80–82</p>
+      </div>
+    </div>
+    <div class="chapter-card c6" onclick="selectChapter(5)">
+      <div class="chapter-icon">🚏</div>
+      <div class="chapter-info">
+        <h2>Skills Training + p.85–86</h2>
+        <p>16 words · p.84–86</p>
+      </div>
+    </div>
+    <div class="chapter-card" style="border-left-color:#f59e0b" onclick="selectChapter(6)">
+      <div class="chapter-icon" style="background:#fef9c3">⭐</div>
+      <div class="chapter-info">
+        <h2>All Words – Unit 4</h2>
+        <p>All chapters combined</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN 2: Mode Selection -->
+<div class="screen" id="screenModes">
+  <p class="mode-title" id="modeTitleText">Choose a learning mode</p>
+  <div class="mode-grid">
+    <button class="mode-btn" onclick="startMode('wordlist')">
+      <div class="mode-icon">📋</div>
+      <div class="mode-name">Word List</div>
+      <div class="mode-desc">All words at a glance</div>
+    </button>
+    <button class="mode-btn" onclick="startMode('flashcards')">
+      <div class="mode-icon">🃏</div>
+      <div class="mode-name">Flashcards</div>
+      <div class="mode-desc">Flip & learn</div>
+    </button>
+    <button class="mode-btn" onclick="startMode('quiz')">
+      <div class="mode-icon">🧠</div>
+      <div class="mode-name">Quiz</div>
+      <div class="mode-desc">4 choices – pick the right one</div>
+    </button>
+    <button class="mode-btn" onclick="startMode('match')">
+      <div class="mode-icon">🔗</div>
+      <div class="mode-name">Matching</div>
+      <div class="mode-desc">Connect English & German</div>
+    </button>
+    <button class="mode-btn" onclick="startMode('fill')">
+      <div class="mode-icon">✏️</div>
+      <div class="mode-name">Fill in the Blank</div>
+      <div class="mode-desc">Complete the sentence</div>
+    </button>
+  </div>
+</div>
+
+<!-- SCREEN 3: Word List -->
+<div class="screen" id="screenWordlist">
+  <p class="section-label" id="wlLabel"></p>
+  <div class="wordlist" id="wordlistContent"></div>
+  <div style="margin-top:18px; text-align:center;">
+    <button class="btn btn-primary" onclick="showModes()">← Back to modes</button>
+  </div>
+</div>
+
+<!-- SCREEN 4: Flashcards -->
+<div class="screen" id="screenFlashcards">
+  <div class="fc-area">
+    <div class="fc-progress" id="fcProgress">Card 1 of …</div>
+    <div class="fc-card" id="fcCard" onclick="flipCard()">
+      <div class="fc-inner">
+        <div class="fc-front">
+          <div class="fc-word" id="fcWord"></div>
+          <div class="fc-pron" id="fcPron"></div>
+          <div class="fc-hint">👆 Tap to see translation</div>
+        </div>
+        <div class="fc-back">
+          <div class="fc-translation" id="fcTranslation"></div>
+          <div class="fc-en" id="fcBackWord"></div>
+        </div>
+      </div>
+    </div>
+    <div class="fc-nav">
+      <button class="btn btn-muted" onclick="fcNav(-1)">← Prev</button>
+      <button class="btn btn-success" onclick="fcNav(1)">Next →</button>
+    </div>
+    <button class="btn btn-primary" onclick="showModes()">← Back to modes</button>
+  </div>
+</div>
+
+<!-- SCREEN 5: Quiz -->
+<div class="screen" id="screenQuiz">
+  <div id="quizContainer">
+    <div class="quiz-q">
+      <div id="quizQuestion"></div>
+      <div class="quiz-sub" id="quizSub"></div>
+    </div>
+    <div class="quiz-options" id="quizOptions"></div>
+    <div class="quiz-feedback" id="quizFeedback"></div>
+    <div style="text-align:center; margin-top:14px;">
+      <button class="btn btn-primary" id="quizNextBtn" onclick="nextQuizQ()" style="display:none">Next →</button>
+    </div>
+  </div>
+  <div class="score-box" id="quizScore" style="display:none">
+    <div class="big" id="quizScoreNum"></div>
+    <p id="quizScoreMsg"></p>
+    <div style="margin-top:18px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+      <button class="btn btn-primary" onclick="startMode('quiz')">Play again</button>
+      <button class="btn btn-muted"   onclick="showModes()">← Back</button>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN 6: Matching -->
+<div class="screen" id="screenMatch">
+  <p class="section-label" style="text-align:center" id="matchLabel">Match English ↔ German!</p>
+  <div class="match-area">
+    <div class="match-col" id="matchLeft"></div>
+    <div class="match-col" id="matchRight"></div>
+  </div>
+  <div class="match-score" id="matchScore"></div>
+  <div style="text-align:center; margin-top:14px; display:none" id="matchDoneBtn">
+    <button class="btn btn-primary" onclick="startMode('match')">Play again</button>
+    <button class="btn btn-muted"   onclick="showModes()">← Back</button>
+  </div>
+</div>
+
+<!-- SCREEN 7: Fill in the Blank -->
+<div class="screen" id="screenFill">
+  <div id="fillProgress" style="text-align:center; margin-bottom:14px; font-weight:700; color:var(--muted)"></div>
+  <div class="fill-sentence" id="fillSentence"></div>
+  <div class="fill-options"  id="fillOptions"></div>
+  <div class="quiz-feedback" id="fillFeedback"></div>
+  <div id="fillNextWrap" style="text-align:center; margin-top:12px; display:none">
+    <button class="btn btn-primary" onclick="nextFill()">Next →</button>
+  </div>
+  <div class="score-box" id="fillScore" style="display:none; margin-top:16px">
+    <div class="big" id="fillScoreNum"></div>
+    <p id="fillScoreMsg"></p>
+    <div style="margin-top:18px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+      <button class="btn btn-primary" onclick="startMode('fill')">Play again</button>
+      <button class="btn btn-muted"   onclick="showModes()">← Back</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════════
+function shuffle(arr) { return [...arr].sort(() => Math.random() - .5); }
+function $(id)        { return document.getElementById(id); }
+
+// ═══════════════════════════════════════════════
+// VOCABULARY DATA  — Unit 4: Berry's World
+// ═══════════════════════════════════════════════
+const chapters = [
+
+  // ── 0 ── Unit 4 intro
+  {
+    name: "Unit 4: Berry's world",
+    words: [
+      { en: "lots of / a lot of",        pron: "['lɒts əv / ə 'lɒt əv]", de: "viel …, viele …" },
+      { en: "visitor",                   pron: "['vɪzɪtə]",               de: "Besucher/in, Gast" },
+      { en: "pet",                       pron: "[pet]",                   de: "Haustier" },
+      { en: "child / children",          pron: "['tʃaɪld / 'tʃɪldrən]",  de: "Kind / Kinder" },
+      { en: "(to) ride a pony",          pron: "[raɪd]",                  de: "auf einem Pony reiten" },
+      { en: "can't / cannot",            pron: "['kɑːnt / 'kænɒt]",       de: "nicht können" },
+    ]
+  },
+
+  // ── 1 ── Theme 1
+  {
+    name: "Theme 1 – Daily Life",
+    words: [
+      { en: "donkey",                    pron: "['dɒŋki]",                de: "Esel" },
+      { en: "(to) feed",                 pron: "[fiːd]",                  de: "füttern" },
+      { en: "duck",                      pron: "[dʌk]",                   de: "Ente" },
+      { en: "cow",                       pron: "[kaʊ]",                   de: "Kuh" },
+      { en: "pig",                       pron: "[pɪg]",                   de: "Schwein" },
+      { en: "chicken",                   pron: "['tʃɪkɪn]",               de: "Huhn; (Brat-)Hähnchen" },
+      { en: "from Monday to Friday",     pron: "",                        de: "von Montag bis Freitag" },
+      { en: "(to) wake",                 pron: "[weɪk]",                  de: "wecken" },
+      { en: "other",                     pron: "['ʌðə]",                  de: "andere(r, s)" },
+      { en: "outside",                   pron: "[aʊt'saɪd]",              de: "draußen; nach draußen" },
+      { en: "about",                     pron: "[ə'baʊt]",                de: "ungefähr" },
+      { en: "(to) look after",           pron: "[lʊk 'ɑːftə]",            de: "sich kümmern um; aufpassen auf" },
+    ]
+  },
+
+  // ── 2 ── Theme 2
+  {
+    name: "Theme 2 – Feelings & Life",
+    words: [
+      { en: "(to) sit",                  pron: "[sɪt]",                   de: "sitzen; sich (hin)setzen" },
+      { en: "What's the time?",          pron: "",                        de: "Wie spät ist es?" },
+      { en: "You're welcome.",           pron: "",                        de: "Bitte, gern geschehen." },
+      { en: "late",                      pron: "[leɪt]",                  de: "(zu) spät" },
+      { en: "(to) feel",                 pron: "[fiːl]",                  de: "sich fühlen; fühlen" },
+      { en: "(to) feel fed up",          pron: "[fed 'ʌp]",               de: "genervt sein, sauer sein; die Nase voll haben" },
+      { en: "(to) do sport",             pron: "",                        de: "Sport treiben" },
+      { en: "my bus is late",            pron: "",                        de: "mein Bus hat Verspätung" },
+    ]
+  },
+
+  // ── 3 ── Story p.77–79
+  {
+    name: "Story – On the Bus & Country",
+    words: [
+      { en: "by Berry Donovan",          pron: "[baɪ]",                   de: "(geschrieben) von Berry Donovan" },
+      { en: "a bit",                     pron: "[bɪt]",                   de: "ein bisschen" },
+      { en: "because",                   pron: "[bɪ'kɒz]",                de: "weil" },
+      { en: "the only student",          pron: "['əʊnli]",                de: "der/die einzige Schüler/in" },
+      { en: "wheelchair",                pron: "['wiːltʃeə]",             de: "Rollstuhl" },
+      { en: "normal",                    pron: "['nɔːml]",                de: "normal" },
+      { en: "on the bus",                pron: "",                        de: "im Bus" },
+      { en: "at night",                  pron: "[naɪt]",                  de: "nachts, in der Nacht" },
+      { en: "to the country",            pron: "['kʌntri]",               de: "aufs Land" },
+      { en: "scene",                     pron: "[siːn]",                  de: "Szene" },
+      { en: "email",                     pron: "['iːmeɪl]",               de: "E-Mail" },
+      { en: "sleepover",                 pron: "['sliːpəʊvə]",            de: "Übernachtungsparty" },
+      { en: "there's / there are",       pron: "['ðeəz / 'ðeər ɑː]",     de: "es ist … / es gibt … / es sind …" },
+      { en: "excited",                   pron: "[ɪk'saɪtɪd]",            de: "aufgeregt, gespannt" },
+      { en: "so cute",                   pron: "[kjuːt]",                 de: "so niedlich" },
+      { en: "shoulder",                  pron: "['ʃəʊldə]",               de: "Schulter" },
+      { en: "wet",                       pron: "[wet]",                   de: "nass" },
+      { en: "everybody",                 pron: "['evrɪbɒdi]",             de: "jeder; alle" },
+      { en: "(to) laugh",                pron: "[lɑːf]",                  de: "lachen" },
+    ]
+  },
+
+  // ── 4 ── Focus on Language p.80–82
+  {
+    name: "Focus on Language",
+    words: [
+      { en: "We don't have any pets.",   pron: "['eni]",                  de: "Wir haben keine (Haus-)Tiere." },
+      { en: "wild",                      pron: "[waɪld]",                 de: "wild; wild lebend" },
+      { en: "thank you",                 pron: "['θæŋk juː]",             de: "danke (schön)" },
+      { en: "them",                      pron: "[ðem, ðəm]",              de: "sie, ihnen (Plural)" },
+      { en: "why?",                      pron: "[waɪ]",                   de: "warum?" },
+      { en: "cage",                      pron: "[keɪdʒ]",                 de: "Käfig" },
+      { en: "fruit",                     pron: "[fruːt]",                 de: "Früchte, Obst; Frucht" },
+      { en: "many",                      pron: "['mæni]",                 de: "viele" },
+      { en: "dangerous",                 pron: "['deɪndʒərəs]",           de: "gefährlich" },
+      { en: "(to) hear",                 pron: "[hɪə]",                   de: "hören" },
+      { en: "noise",                     pron: "[nɔɪz]",                  de: "Geräusch; Lärm" },
+    ]
+  },
+
+  // ── 5 ── Skills Training + p.85–86
+  {
+    name: "Skills Training & Vocabulary",
+    words: [
+      { en: "sign",                      pron: "[saɪn]",                  de: "Schild; Zeichen" },
+      { en: "(to) get on a bus",         pron: "",                        de: "einsteigen in einen Bus" },
+      { en: "(to) get off a bus",        pron: "",                        de: "aussteigen aus einem Bus" },
+      { en: "cafe",                      pron: "['kæfeɪ]",                de: "Café" },
+      { en: "left",                      pron: "[left]",                  de: "links; nach links" },
+      { en: "right",                     pron: "[raɪt]",                  de: "rechts; nach rechts" },
+      { en: "she thinks that …",         pron: "",                        de: "sie denkt, dass …" },
+      { en: "time to go home",           pron: "",                        de: "Zeit, nach Hause zu gehen" },
+      { en: "invitation (to)",           pron: "[ɪnvɪ'teɪʃn]",           de: "Einladung (zu, nach)" },
+      { en: "(to) bring",                pron: "[brɪŋ]",                  de: "bringen, mitbringen" },
+      { en: "11 am / 6 pm",             pron: "",                        de: "11 Uhr morgens / 6 Uhr abends" },
+      { en: "Dear … / food",             pron: "[dɪə / fuːd]",            de: "Liebe … / Essen, Lebensmittel" },
+      { en: "(to) drink",                pron: "[drɪŋk]",                 de: "trinken" },
+      { en: "(to) hope",                 pron: "[həʊp]",                  de: "hoffen" },
+      { en: "Best wishes",               pron: "[best 'wɪʃɪz]",           de: "Viele Grüße, … (Briefschluss)" },
+      { en: "(to) invite",               pron: "[ɪn'vaɪt]",               de: "einladen" },
+    ]
+  },
+];
+
+// All words combined
+const allWords   = chapters.reduce((acc, ch) => acc.concat(ch.words), []);
+const allChapter = { name: "All Words – Unit 4", words: allWords };
+const allChapters = [...chapters, allChapter];
+
+// ═══════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════
+let currentChapterIdx = 0;
+let currentWords      = [];
+let currentMode       = '';
+let fcIndex           = 0;
+let quizIndex = 0, quizScore = 0, quizQuestions = [];
+let matchSelected = null, matchPairs = [], matchDone = 0;
+let fillIndex = 0, fillScore = 0, fillQuestions = [];
+
+// ═══════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  $(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function selectChapter(idx) {
+  currentChapterIdx = idx;
+  currentWords = allChapters[idx].words;
+  $('modeTitleText').textContent = allChapters[idx].name;
+  $('headerSub').textContent     = allChapters[idx].name;
+  $('backBtn').classList.add('visible');
+  showScreen('screenModes');
+}
+
+function showModes() {
+  currentMode = '';
+  $('headerSub').textContent = allChapters[currentChapterIdx].name;
+  showScreen('screenModes');
+}
+
+function goBack() {
+  if (currentMode) { showModes(); return; }
+  $('backBtn').classList.remove('visible');
+  $('headerSub').textContent = "Berry's World – Choose a chapter!";
+  showScreen('screenChapters');
+}
+
+function startMode(mode) {
+  currentMode = mode;
+  if (mode === 'wordlist')   startWordlist();
+  if (mode === 'flashcards') startFlashcards();
+  if (mode === 'quiz')       startQuiz();
+  if (mode === 'match')      startMatch();
+  if (mode === 'fill')       startFill();
+}
+
+// ═══════════════════════════════════════════════
+// WORD LIST
+// ═══════════════════════════════════════════════
+function startWordlist() {
+  $('wlLabel').textContent = allChapters[currentChapterIdx].name + ' – ' + currentWords.length + ' words';
+  $('wordlistContent').innerHTML = currentWords.map((w, i) =>
+    `<div class="word-row" style="animation-delay:${i * 0.04}s">
+      <span class="word-en">${w.en}</span>
+      <span class="word-pron">${w.pron}</span>
+      <span class="word-de">${w.de}</span>
+    </div>`
+  ).join('');
+  showScreen('screenWordlist');
+}
+
+// ═══════════════════════════════════════════════
+// FLASHCARDS
+// ═══════════════════════════════════════════════
+function startFlashcards() {
+  fcIndex = 0;
+  renderCard();
+  showScreen('screenFlashcards');
+}
+
+function renderCard() {
+  const w = currentWords[fcIndex];
+  $('fcProgress').textContent    = `Card ${fcIndex + 1} of ${currentWords.length}`;
+  $('fcWord').textContent        = w.en;
+  $('fcPron').textContent        = w.pron;
+  $('fcTranslation').textContent = w.de;
+  $('fcBackWord').textContent    = w.en;
+  $('fcCard').classList.remove('flipped');
+}
+
+function flipCard() { $('fcCard').classList.toggle('flipped'); }
+
+function fcNav(dir) {
+  fcIndex = (fcIndex + dir + currentWords.length) % currentWords.length;
+  renderCard();
+}
+
+// ═══════════════════════════════════════════════
+// QUIZ
+// ═══════════════════════════════════════════════
+function startQuiz() {
+  quizIndex = 0; quizScore = 0;
+  quizQuestions = shuffle(currentWords).slice(0, Math.min(10, currentWords.length));
+  $('quizScore').style.display     = 'none';
+  $('quizContainer').style.display = '';
+  renderQuizQ();
+  showScreen('screenQuiz');
+}
+
+function renderQuizQ() {
+  const q         = quizQuestions[quizIndex];
+  const showEn    = Math.random() > .5; // true → show EN, pick DE
+  $('quizQuestion').textContent = showEn ? q.en : q.de;
+  $('quizSub').textContent      = showEn ? 'What is the German translation?' : 'What is the English word?';
+  $('quizFeedback').textContent = '';
+  $('quizNextBtn').style.display = 'none';
+
+  // Build 4 options
+  const wrong   = shuffle(currentWords.filter(w => w.en !== q.en)).slice(0, 3);
+  const options = shuffle([q, ...wrong]);
+  const cont    = $('quizOptions');
+  cont.innerHTML = '';
+  options.forEach(opt => {
+    const label     = showEn ? opt.de : opt.en;
+    const isCorrect = opt.en === q.en;
+    const btn       = document.createElement('button');
+    btn.className   = 'quiz-opt';
+    btn.textContent = label;
+    btn.addEventListener('click', () => checkQuiz(btn, isCorrect, showEn ? q.de : q.en, cont));
+    cont.appendChild(btn);
+  });
+}
+
+function checkQuiz(btn, isCorrect, correctAnswer, cont) {
+  cont.querySelectorAll('.quiz-opt').forEach(b => b.disabled = true);
+  if (isCorrect) {
+    btn.classList.add('correct');
+    $('quizFeedback').innerHTML = `<span style="color:var(--lime)">✅ Correct!</span>`;
+    quizScore++;
+  } else {
+    btn.classList.add('wrong');
+    $('quizFeedback').innerHTML = `<span style="color:var(--rose)">❌ The answer is: <strong>${correctAnswer}</strong></span>`;
+    cont.querySelectorAll('.quiz-opt').forEach(b => {
+      if (b.textContent.trim() === correctAnswer) b.classList.add('correct');
+    });
+  }
+  $('quizNextBtn').style.display = 'inline-block';
+}
+
+function nextQuizQ() {
+  quizIndex++;
+  if (quizIndex >= quizQuestions.length) {
+    $('quizContainer').style.display = 'none';
+    const pct = Math.round(quizScore / quizQuestions.length * 100);
+    $('quizScoreNum').textContent = `${quizScore}/${quizQuestions.length}`;
+    $('quizScoreMsg').textContent = pct >= 80 ? '🎉 Excellent work!' : pct >= 50 ? '👍 Good job! Keep practising!' : '💪 Keep going, you can do it!';
+    $('quizScore').style.display  = '';
+  } else {
+    renderQuizQ();
+  }
+}
+
+// ═══════════════════════════════════════════════
+// MATCHING
+// ═══════════════════════════════════════════════
+function startMatch() {
+  matchSelected = null; matchDone = 0;
+  const pool = shuffle(currentWords).slice(0, Math.min(8, currentWords.length));
+  matchPairs   = pool;
+  $('matchScore').textContent      = '';
+  $('matchDoneBtn').style.display  = 'none';
+
+  const leftItems  = shuffle(pool.map(w => ({ id: w.en, label: w.en, type: 'en' })));
+  const rightItems = shuffle(pool.map(w => ({ id: w.en, label: w.de, type: 'de' })));
+
+  function renderCol(colId, items) {
+    const col = $(colId);
+    col.innerHTML = '';
+    items.forEach(item => {
+      const el       = document.createElement('div');
+      el.className   = 'match-item';
+      el.textContent = item.label;
+      el.addEventListener('click', () => matchClick(item.type, item.id, el));
+      col.appendChild(el);
+    });
+  }
+  renderCol('matchLeft',  leftItems);
+  renderCol('matchRight', rightItems);
+  showScreen('screenMatch');
+}
+
+function matchClick(type, id, el) {
+  if (el.classList.contains('matched')) return;
+  if (!matchSelected) {
+    matchSelected = { type, id, el };
+    el.classList.add('selected');
+  } else {
+    if (matchSelected.type === type) {
+      matchSelected.el.classList.remove('selected');
+      matchSelected = { type, id, el };
+      el.classList.add('selected');
+      return;
+    }
+    const same = matchSelected.id === id;
+    [matchSelected.el, el].forEach(e => e.classList.remove('selected'));
+    if (same) {
+      [matchSelected.el, el].forEach(e => e.classList.add('matched'));
+      matchDone++;
+      if (matchDone === matchPairs.length) {
+        $('matchScore').textContent     = '🎉 All matched! Fantastic!';
+        $('matchDoneBtn').style.display = '';
+      }
+    } else {
+      [matchSelected.el, el].forEach(e => {
+        e.classList.add('wrong-match');
+        setTimeout(() => e.classList.remove('wrong-match'), 700);
+      });
+    }
+    matchSelected = null;
+  }
+}
+
+// ═══════════════════════════════════════════════
+// FILL IN THE BLANK  — dynamically generated
+// ═══════════════════════════════════════════════
+function buildFillQuestions(words) {
+  const pool = shuffle(words);
+  const questions = [];
+  pool.forEach(w => {
+    const wrong = shuffle(words.filter(x => x.en !== w.en)).slice(0, 3).map(x => x.en);
+    if (wrong.length < 3) return;
+    questions.push({
+      template: `The English word for "${w.de}" is ___.`,
+      blank:    w.en,
+      opts:     shuffle([w.en, ...wrong])
+    });
+  });
+  return questions.slice(0, 8);
+}
+
+function startFill() {
+  fillIndex = 0; fillScore = 0;
+  fillQuestions = buildFillQuestions(currentWords);
+  if (fillQuestions.length === 0) {
+    alert('Not enough words in this chapter for Fill in the Blank. Please choose a bigger chapter!');
+    return;
+  }
+  $('fillScore').style.display    = 'none';
+  $('fillSentence').style.display = '';
+  $('fillOptions').style.display  = '';
+  $('fillProgress').style.display = '';
+  $('fillNextWrap').style.display = 'none';
+  $('fillFeedback').textContent   = '';
+  renderFill();
+  showScreen('screenFill');
+}
+
+function renderFill() {
+  const q = fillQuestions[fillIndex];
+  $('fillProgress').textContent = `Question ${fillIndex + 1} of ${fillQuestions.length}`;
+  $('fillSentence').innerHTML   = q.template.replace('___', '<span class="fill-blank" id="fillBlank">_______</span>');
+  $('fillFeedback').textContent  = '';
+  $('fillNextWrap').style.display = 'none';
+
+  const optsCont = $('fillOptions');
+  optsCont.innerHTML = '';
+  q.opts.forEach(opt => {
+    const btn       = document.createElement('button');
+    btn.className   = 'fill-opt';
+    btn.textContent = opt;
+    btn.addEventListener('click', () => checkFill(btn, opt, q.blank, optsCont));
+    optsCont.appendChild(btn);
+  });
+}
+
+function checkFill(btn, chosen, correct, optsCont) {
+  optsCont.querySelectorAll('.fill-opt').forEach(b => b.disabled = true);
+  const blankEl = $('fillBlank');
+  if (chosen === correct) {
+    btn.classList.add('correct-pick');
+    $('fillFeedback').innerHTML = `<span style="color:var(--lime)">✅ Correct!</span>`;
+    fillScore++;
+    if (blankEl) { blankEl.textContent = correct; blankEl.style.color = 'var(--lime)'; }
+  } else {
+    btn.classList.add('wrong-pick');
+    $('fillFeedback').innerHTML = `<span style="color:var(--rose)">❌ The answer is: <strong>${correct}</strong></span>`;
+    optsCont.querySelectorAll('.fill-opt').forEach(b => {
+      if (b.textContent === correct) b.classList.add('correct-pick');
+    });
+    if (blankEl) { blankEl.textContent = correct; blankEl.style.color = 'var(--rose)'; }
+  }
+  $('fillNextWrap').style.display = '';  // show Next button
+}
+
+function nextFill() {
+  fillIndex++;
+  if (fillIndex >= fillQuestions.length) {
+    $('fillSentence').style.display = 'none';
+    $('fillOptions').style.display  = 'none';
+    $('fillProgress').style.display = 'none';
+    $('fillNextWrap').style.display = 'none';
+    $('fillFeedback').textContent   = '';
+    const pct = Math.round(fillScore / fillQuestions.length * 100);
+    $('fillScoreNum').textContent   = `${fillScore}/${fillQuestions.length}`;
+    $('fillScoreMsg').textContent   = pct >= 80 ? '🎉 Excellent!' : pct >= 50 ? '👍 Well done!' : '💪 Keep practising!';
+    $('fillScore').style.display    = '';
+  } else {
+    renderFill();
+  }
+}
+</script>
+</body>
+</html>
