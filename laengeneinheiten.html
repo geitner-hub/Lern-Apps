@@ -611,6 +611,8 @@ function renderResult(card) {
   const emoji = pct===100?'🏆':pct>=80?'🎯':pct>=60?'💪':'📚';
   const label = pct===100?'PERFEKT!':pct>=80?'SEHR GUT':pct>=60?'GUT GEMACHT':'WEITER ÜBEN';
 
+  LernApps.saveResult({ score: rc, max: ROUND_SIZE, label: rc + ' / ' + ROUND_SIZE + ' · ' + label });
+
   const rows = state.results.map((r,i) => `
     <div class="result-row ${r.correct?'correct':'wrong'}">
       <span class="result-num">${String(i+1).padStart(2,'0')}.</span>
@@ -633,6 +635,5 @@ function renderResult(card) {
 // Init
 render();
 </script>
-  <script src="navbar.js"></script>
 </body>
 </html>
