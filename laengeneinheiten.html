@@ -19,6 +19,7 @@
       --red: #f85149;
       --yellow: #d29922;
     }
+    html { overflow-x: hidden; }
     body {
       min-height: 100vh;
       background: var(--bg);
@@ -27,7 +28,7 @@
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
       padding: 20px;
-      position: relative; overflow-x: hidden;
+      position: relative;
     }
     body::before {
       content: ''; position: fixed; inset: 0; z-index: 0;
