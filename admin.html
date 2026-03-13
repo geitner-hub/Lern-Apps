@@ -513,10 +513,70 @@ function toggleAod(name){
   saveConfig(); buildAll();
 }
 
+// ── Soft-Delete mit Undo (8 Sekunden) ────────────────
+let undoTimer = null;
+let undoApp   = null;
+let undoIndex = null;
+
 function deleteApp(name){
-  if(!confirm(`App "${name}" wirklich löschen?`)) return;
-  CONFIG.apps=CONFIG.apps.filter(a=>a.name!==name);
-  saveConfig(); buildAll();
+  const idx = CONFIG.apps.findIndex(a=>a.name===name);
+  if(idx===-1) return;
+  undoApp   = CONFIG.apps[idx];
+  undoIndex = idx;
+  CONFIG.apps.splice(idx,1);
+  buildAll();
+  showUndo(name);
+  // Nach 8s endgültig speichern
+  clearTimeout(undoTimer);
+  undoTimer = setTimeout(()=>{
+    undoApp=null; undoIndex=null;
+    saveConfig();
+    hideUndo();
+  }, 8000);
+}
+
+function undoDelete(){
+  if(!undoApp) return;
+  clearTimeout(undoTimer);
+  CONFIG.apps.splice(undoIndex,0,undoApp);
+  undoApp=null; undoIndex=null;
+  hideUndo();
+  buildAll();
+}
+
+function showUndo(name){
+  let bar = document.getElementById('undo-bar');
+  if(!bar){
+    bar=document.createElement('div');
+    bar.id='undo-bar';
+    bar.style.cssText=`position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);
+      background:#1e293b;border:1.5px solid #f87171;border-radius:12px;
+      padding:.65rem 1.2rem;display:flex;align-items:center;gap:1rem;
+      font-size:.88rem;font-weight:700;z-index:9999;
+      box-shadow:0 8px 24px rgba(0,0,0,.4);white-space:nowrap`;
+    document.body.appendChild(bar);
+  }
+  bar.innerHTML=`
+    <span>🗑 <strong>${name}</strong> gelöscht</span>
+    <button onclick="undoDelete()" style="background:#f87171;border:none;color:#fff;
+      padding:.3rem .9rem;border-radius:8px;cursor:pointer;font-family:inherit;
+      font-weight:800;font-size:.82rem">↩ Rückgängig</button>
+    <span id="undo-countdown" style="color:#64748b;font-size:.78rem">8s</span>`;
+  bar.style.display='flex';
+  // Countdown
+  let sec=8;
+  clearInterval(bar._interval);
+  bar._interval=setInterval(()=>{
+    sec--;
+    const cd=document.getElementById('undo-countdown');
+    if(cd) cd.textContent=sec+'s';
+    if(sec<=0) clearInterval(bar._interval);
+  },1000);
+}
+
+function hideUndo(){
+  const bar=document.getElementById('undo-bar');
+  if(bar){ clearInterval(bar._interval); bar.style.display='none'; }
 }
 
 // ════════════════════════════════════════════════════════

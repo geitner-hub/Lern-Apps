@@ -4,7 +4,10 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Lern-Apps</title>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet"></noscript>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
@@ -12,13 +15,13 @@
       --accent:#4f6ef7;--accent2:#f7c948;--text:#1e2235;--muted:#6b7280;
       --r:18px;--sh:0 2px 16px rgba(79,110,247,.09);--sh2:0 10px 32px rgba(79,110,247,.18);
     }
-    body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+    body{font-family:'Nunito','Varela Round','Trebuchet MS','Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
 
     /* HEADER */
     header{background:var(--hbg);color:#fff;padding:2.8rem 2rem 2.3rem;text-align:center;position:relative;overflow:hidden}
     header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 80% 20%,#5b6ef0 0%,transparent 55%),radial-gradient(ellipse at 15% 80%,#7c3fc5 0%,transparent 55%),radial-gradient(ellipse at 50% 120%,#2563eb 0%,transparent 50%);opacity:.75}
     header::after{content:'';position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(circle at 8% 30%,rgba(255,255,255,.055) 0%,rgba(255,255,255,.055) 38px,transparent 38px),radial-gradient(circle at 93% 65%,rgba(255,255,255,.04) 0%,rgba(255,255,255,.04) 55px,transparent 55px)}
-    header h1{font-family:'Fredoka One',cursive;font-size:clamp(2.2rem,5vw,3.4rem);position:relative;cursor:default;user-select:none;text-shadow:0 2px 14px rgba(0,0,0,.2)}
+    header h1{font-family:'Fredoka One','Trebuchet MS','Comic Sans MS',cursive;font-size:clamp(2.2rem,5vw,3.4rem);position:relative;cursor:default;user-select:none;text-shadow:0 2px 14px rgba(0,0,0,.2)}
     header p{margin-top:.5rem;font-size:1.05rem;opacity:.68;position:relative}
     .dot{display:inline-block;width:11px;height:11px;border-radius:50%;background:var(--accent2);margin-right:7px;vertical-align:middle;box-shadow:0 0 12px rgba(247,201,72,.55)}
 
@@ -79,6 +82,11 @@
     .app-tag{font-size:.67rem;font-weight:800;padding:.16rem .52rem;border-radius:99px;background:#eef2ff;color:#4f6ef7;border:1px solid #dde5ff}
     .app-tag.tk{background:color-mix(in srgb,var(--cat-color,#4f6ef7) 10%,white);color:var(--cat-color,#4f6ef7);border-color:color-mix(in srgb,var(--cat-color,#4f6ef7) 18%,white)}
     .app-tag.tc{background:#fdf4ff;color:#9333ea;border-color:#f0d6ff}
+    /* Ergebnis-Badge auf Karte */
+    .app-result{position:absolute;top:.7rem;right:.75rem;font-size:.68rem;font-weight:800;padding:.15rem .5rem;border-radius:99px;border:1.5px solid;z-index:1}
+    .app-result.high{background:rgba(74,222,128,.12);color:#16a34a;border-color:rgba(74,222,128,.3)}
+    .app-result.mid{background:rgba(247,201,72,.12);color:#b45309;border-color:rgba(247,201,72,.3)}
+    .app-result.low{background:rgba(248,113,113,.12);color:#dc2626;border-color:rgba(248,113,113,.3)}
     .app-arrow{align-self:flex-end;font-size:1.1rem;color:var(--cat-color,var(--accent));font-weight:800;transition:transform .15s;position:relative}
     .app-card:hover .app-arrow{transform:translateX(4px)}
     .app-card.placeholder{border:2px dashed #d1d9f0;background:transparent;box-shadow:none;align-items:center;justify-content:center;color:#b0bcd4;font-size:.88rem;font-weight:700;cursor:default;min-height:120px}
@@ -91,6 +99,13 @@
     footer{text-align:center;padding:1.5rem;font-size:.8rem;color:var(--muted);border-top:1px solid #e4eaf8}
     .admin-link{display:inline-block;margin-top:.5rem;font-size:.75rem;color:rgba(255,255,255,.35);text-decoration:none;position:relative}
     .admin-link:hover{color:rgba(255,255,255,.65)}
+    /* Ergebnis-Badge auf Karten */
+    .result-badge{display:flex;align-items:center;gap:.3rem;margin-top:.3rem;font-size:.72rem;font-weight:800;color:var(--muted);position:relative}
+    .result-bar{flex:1;height:5px;background:#e4eaf8;border-radius:99px;overflow:hidden}
+    .result-bar-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#4f6ef7,#818cf8);transition:width .4s ease}
+    .result-bar-fill.good{background:linear-gradient(90deg,#10b981,#34d399)}
+    .result-bar-fill.mid{background:linear-gradient(90deg,#f59e0b,#fbbf24)}
+    .result-pct{font-size:.68rem;font-weight:800;color:var(--muted);flex-shrink:0}
   </style>
 </head>
 <body>
@@ -220,6 +235,22 @@ function buildPage(){
     // Apps in ihrer gespeicherten Reihenfolge
     CONFIG.apps.filter(a=>a.fach===fach).forEach(app=>{
       const kl=app.klassen||[], ct=app.customTags||[];
+      // Ergebnis aus localStorage lesen
+      const appKey=app.datei?app.datei.replace('.html',''):'';
+      let resultHTML='';
+      try{
+        const raw=localStorage.getItem('lern_result_'+appKey);
+        if(raw){
+          const r=JSON.parse(raw);
+          const pct=r.max>0?Math.round((r.score/r.max)*100):0;
+          const cls=pct>=80?'good':pct>=50?'mid':'';
+          resultHTML=`<div class="result-badge">
+            <span style="font-size:.65rem">Zuletzt: ${r.label}</span>
+            <div class="result-bar"><div class="result-bar-fill ${cls}" style="width:${pct}%"></div></div>
+            <span class="result-pct">${pct}%</span>
+          </div>`;
+        }
+      }catch(e){}
       const card=document.createElement('a');
       card.className='app-card'+(app.hidden?' hidden-app':'');
       card.href=app.datei||'#';
@@ -227,7 +258,21 @@ function buildPage(){
       card.dataset.fach=fach;
       card.dataset.kl=kl.join(',');
       card.dataset.ct=ct.join(',');
+
+      // Vorheriges Ergebnis aus localStorage
+      const STORE_KEY = 'lern-apps-results';
+      let resultBadge = '';
+      try {
+        const stored = JSON.parse(localStorage.getItem(STORE_KEY)||'{}');
+        const r = stored[app.datei];
+        if (r) {
+          const cls = r.percent>=70?'high':r.percent>=40?'mid':'low';
+          resultBadge = `<span class="app-result ${cls}">🏆 ${r.label}</span>`;
+        }
+      } catch(e){}
+
       card.innerHTML=`
+        ${resultBadge}
         <span class="app-emoji">${app.emoji||'📱'}</span>
         <span class="app-name">${app.name}</span>
         <span class="app-desc">${app.beschreibung||''}</span>
@@ -235,6 +280,7 @@ function buildPage(){
           ${kl.map(k=>`<span class="app-tag tk">Kl.${k}</span>`).join('')}
           ${ct.map(t=>`<span class="app-tag tc">${t}</span>`).join('')}
         </div>
+        ${resultHTML}
         <span class="app-arrow">→</span>`;
       grid.appendChild(card);
     });
