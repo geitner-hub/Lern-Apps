@@ -552,6 +552,7 @@
     const emoji = pct === 100 ? '🏆' : pct >= 80 ? '🎯' : pct >= 60 ? '💪' : '📚';
     const label = pct === 100 ? 'PERFEKT!' : pct >= 80 ? 'SEHR GUT' : pct >= 60 ? 'GUT GEMACHT' : 'WEITER ÜBEN';
     const lvl = state.level;
+    LernApps.saveResult({ score: 8, max: 10 });
 
     const rows = state.results.map((r, i) => `
       <div class="result-row ${r.correct ? 'correct' : 'wrong'}">
