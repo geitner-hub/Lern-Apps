@@ -92,7 +92,9 @@
       "klassen": [
         5
       ],
-      "customTags": [],
+      "customTags": [
+        "Vokabeln"
+      ],
       "aod": false
     }
   ],
