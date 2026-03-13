@@ -89,7 +89,9 @@
       "emoji": "4",
       "beschreibung": "Lerne und wiederhole die Vokabeln aus Unit 4",
       "hidden": false,
-      "klassen": [],
+      "klassen": [
+        5
+      ],
       "customTags": [],
       "aod": false
     }
