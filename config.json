@@ -126,7 +126,9 @@
       "emoji": "📱",
       "beschreibung": "",
       "hidden": false,
-      "klassen": [],
+      "klassen": [
+        5
+      ],
       "customTags": [
         "Grammatik"
       ],
