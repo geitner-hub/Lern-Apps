@@ -115,7 +115,9 @@
       "emoji": "📱",
       "beschreibung": "Wie gut kennst du dich mit Vierecken aus? Teste!",
       "hidden": false,
-      "klassen": [],
+      "klassen": [
+        5
+      ],
       "customTags": [],
       "aod": false
     },
