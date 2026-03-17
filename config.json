@@ -127,7 +127,9 @@
       "beschreibung": "",
       "hidden": false,
       "klassen": [],
-      "customTags": [],
+      "customTags": [
+        "Grammatik"
+      ],
       "aod": false
     }
   ],
