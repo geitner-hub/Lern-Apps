@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rechteck-Werkstatt</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #2ecc71; --green-d: #27ae60;
+    --yellow: #f1c40f; --yellow-d: #f39c12;
+    --red: #e74c3c; --red-d: #c0392b;
+    --blue: #3498db; --blue-d: #2980b9;
+    --purple: #9b59b6;
+    --bg: #f0f4ff;
+    --card: #ffffff;
+    --text: #2c3e50;
+    --radius: 18px;
+    --shadow: 0 4px 20px rgba(0,0,0,0.1);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px 24px 16px;
+    display: flex; align-items: center; gap: 16px;
+    box-shadow: 0 4px 16px rgba(102,126,234,0.4);
+  }
+  header h1 { font-family: 'Fredoka One', cursive; font-size: 1.8rem; letter-spacing: 1px; }
+  header p { font-size: 0.9rem; opacity: 0.9; margin-top: 2px; }
+  .logo { font-size: 2.2rem; }
+
+  /* ── LEVEL SELECTOR ── */
+  .level-bar {
+    display: flex; gap: 10px; padding: 16px 24px;
+    background: white; border-bottom: 2px solid #e8eaf6;
+    flex-wrap: wrap;
+  }
+  .level-btn {
+    padding: 8px 22px; border: none; border-radius: 30px;
+    font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.9rem;
+    cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 8px;
+  }
+  .level-btn.green  { background: #d5f5e3; color: var(--green-d); }
+  .level-btn.yellow { background: #fef9e7; color: var(--yellow-d); }
+  .level-btn.red    { background: #fdedec; color: var(--red-d); }
+  .level-btn.active.green  { background: var(--green);  color: white; box-shadow: 0 4px 12px rgba(46,204,113,0.4); }
+  .level-btn.active.yellow { background: var(--yellow); color: white; box-shadow: 0 4px 12px rgba(241,196,15,0.4); }
+  .level-btn.active.red    { background: var(--red);    color: white; box-shadow: 0 4px 12px rgba(231,76,60,0.4); }
+  .level-btn:hover { transform: translateY(-2px); }
+
+  /* ── MODULE TABS ── */
+  .module-bar {
+    display: flex; gap: 6px; padding: 12px 24px;
+    overflow-x: auto; background: #f8f9ff;
+    border-bottom: 2px solid #e8eaf6;
+  }
+  .mod-btn {
+    padding: 7px 16px; border: 2px solid #e0e0f0; border-radius: 12px;
+    background: white; cursor: pointer; font-family: 'Nunito', sans-serif;
+    font-weight: 700; font-size: 0.82rem; white-space: nowrap;
+    transition: all 0.2s; color: #555;
+  }
+  .mod-btn:hover { border-color: #667eea; color: #667eea; }
+  .mod-btn.active { background: #667eea; color: white; border-color: #667eea; }
+
+  /* ── MAIN ── */
+  main { padding: 24px; max-width: 900px; margin: 0 auto; }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--card); border-radius: var(--radius);
+    box-shadow: var(--shadow); padding: 28px; margin-bottom: 24px;
+  }
+  .card h2 { font-family: 'Fredoka One', cursive; font-size: 1.3rem; margin-bottom: 6px; color: #667eea; }
+  .card .subtitle { font-size: 0.88rem; color: #888; margin-bottom: 20px; }
+
+  /* ── RECTANGLE CANVAS ── */
+  canvas { border-radius: 12px; display: block; }
+  .canvas-wrap { display: flex; justify-content: center; margin: 16px 0; }
+
+  /* ── SLIDERS ── */
+  .slider-row { display: flex; align-items: center; gap: 14px; margin: 10px 0; }
+  .slider-row label { font-weight: 700; min-width: 90px; font-size: 0.9rem; }
+  input[type=range] { flex: 1; accent-color: #667eea; height: 6px; }
+  .val-badge {
+    background: #667eea; color: white; border-radius: 8px;
+    padding: 3px 12px; font-weight: 800; min-width: 50px; text-align: center; font-size: 0.9rem;
+  }
+
+  /* ── BUTTONS ── */
+  .btn {
+    padding: 11px 26px; border: none; border-radius: 12px;
+    font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.95rem;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .btn-primary { background: #667eea; color: white; }
+  .btn-primary:hover { background: #5a6fd6; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(102,126,234,0.4); }
+  .btn-success { background: var(--green); color: white; }
+  .btn-success:hover { background: var(--green-d); transform: translateY(-2px); }
+  .btn-warn { background: var(--yellow); color: #7d6608; }
+  .btn-warn:hover { background: var(--yellow-d); transform: translateY(-2px); }
+  .btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+
+  /* ── FEEDBACK ── */
+  .feedback {
+    margin-top: 14px; padding: 12px 18px; border-radius: 12px;
+    font-weight: 700; font-size: 0.95rem; display: none;
+  }
+  .feedback.show { display: block; }
+  .feedback.ok  { background: #d5f5e3; color: #1e8449; border-left: 4px solid var(--green); }
+  .feedback.err { background: #fdedec; color: #a93226; border-left: 4px solid var(--red); }
+  .feedback.hint{ background: #fef9e7; color: #7d6608; border-left: 4px solid var(--yellow); }
+
+  /* ── QUIZ ── */
+  .quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+  .quiz-opt {
+    padding: 12px 16px; border: 2px solid #e0e0f0; border-radius: 12px;
+    cursor: pointer; font-weight: 700; text-align: center; background: white;
+    transition: all 0.18s; font-size: 0.92rem;
+  }
+  .quiz-opt:hover { border-color: #667eea; background: #f0f4ff; }
+  .quiz-opt.correct { background: #d5f5e3; border-color: var(--green); color: #1e8449; }
+  .quiz-opt.wrong   { background: #fdedec; border-color: var(--red);   color: #a93226; }
+
+  /* ── GRID CANVAS ── */
+  .grid-info { display: flex; gap: 20px; flex-wrap: wrap; margin: 12px 0; }
+  .info-chip {
+    background: #f0f4ff; border-radius: 10px; padding: 8px 16px;
+    font-weight: 700; font-size: 0.88rem; color: #667eea;
+  }
+
+  /* ── TABLE ── */
+  table { width: 100%; border-collapse: collapse; margin: 14px 0; }
+  th { background: #667eea; color: white; padding: 10px 14px; font-family: 'Fredoka One', cursive; font-size: 0.95rem; }
+  td { padding: 9px 14px; border-bottom: 1px solid #eee; text-align: center; font-weight: 600; }
+  tr:nth-child(even) td { background: #f8f9ff; }
+  td input[type=number] {
+    width: 70px; padding: 5px 8px; border: 2px solid #e0e0f0; border-radius: 8px;
+    font-family: 'Nunito', sans-serif; font-weight: 700; text-align: center; font-size: 0.9rem;
+  }
+  td input[type=number]:focus { border-color: #667eea; outline: none; }
+
+  /* ── SCORE ── */
+  .score-bar {
+    display: flex; align-items: center; gap: 14px;
+    background: #f0f4ff; border-radius: 12px; padding: 12px 18px; margin-bottom: 20px;
+  }
+  .score-num { font-family: 'Fredoka One', cursive; font-size: 1.6rem; color: #667eea; }
+  .score-label { font-size: 0.85rem; color: #888; font-weight: 600; }
+  .stars { font-size: 1.4rem; letter-spacing: 2px; }
+
+  /* ── HIDDEN ── */
+  .hidden { display: none !important; }
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* ── SORT GAME ── */
+  .shape-grid { display: flex; gap: 12px; flex-wrap: wrap; margin: 14px 0; }
+  .shape-card {
+    width: 90px; height: 90px; border: 3px solid #ddd; border-radius: 12px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    background: white; transition: all 0.2s; position: relative;
+  }
+  .shape-card:hover { border-color: #667eea; transform: scale(1.05); }
+  .shape-card.selected-rect { border-color: var(--green); background: #d5f5e3; }
+  .shape-card.selected-no   { border-color: var(--red);   background: #fdedec; }
+
+  /* ── MEASURE TASK ── */
+  .measure-task { background: #f8f9ff; border-radius: 12px; padding: 18px; margin: 10px 0; }
+  .measure-task p { font-weight: 700; margin-bottom: 10px; }
+  .measure-task input {
+    padding: 8px 14px; border: 2px solid #e0e0f0; border-radius: 10px; width: 80px;
+    font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 1rem; text-align: center;
+  }
+  .measure-task input:focus { border-color: #667eea; outline: none; }
+
+  /* ── LEVEL INDICATOR ── */
+  .level-indicator {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 0.8rem; font-weight: 800; padding: 4px 12px;
+    border-radius: 20px; margin-bottom: 14px;
+  }
+  .level-indicator.green  { background: #d5f5e3; color: var(--green-d); }
+  .level-indicator.yellow { background: #fef9e7; color: var(--yellow-d); }
+  .level-indicator.red    { background: #fdedec; color: var(--red-d); }
+
+  /* ── DRAWING TASK ── */
+  #drawCanvas { cursor: crosshair; border: 3px dashed #667eea; border-radius: 12px; }
+
+  /* ── PROPORTION EXPLORER ── */
+  .prop-labels { display: flex; justify-content: space-around; font-weight: 700; font-size: 0.85rem; color: #888; margin-top: 8px; }
+
+  /* Ratio display */
+  .ratio-display {
+    font-family: 'Fredoka One', cursive; font-size: 1.4rem; color: #764ba2;
+    text-align: center; margin: 10px 0;
+  }
+
+  @media (max-width: 600px) {
+    main { padding: 14px; }
+    .card { padding: 18px; }
+    .quiz-options { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.3rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">📐</div>
+  <div>
+    <h1>Rechteck-Werkstatt</h1>
+    <p>Entdecke, verstehe und übe Rechtecke</p>
+  </div>
+</header>
+
+<!-- LEVEL BAR -->
+<div class="level-bar">
+  <span style="font-weight:800;color:#888;align-self:center;font-size:0.9rem;">Stufe:</span>
+  <button class="level-btn green active" onclick="setLevel('green')">🌱 Einsteiger</button>
+  <button class="level-btn yellow" onclick="setLevel('yellow')">⭐ Fortgeschritten</button>
+  <button class="level-btn red" onclick="setLevel('red')">🚀 Experte</button>
+</div>
+
+<!-- MODULE BAR -->
+<div class="module-bar">
+  <button class="mod-btn active" onclick="setModule('erkunden')">🔍 Erkunden</button>
+  <button class="mod-btn" onclick="setModule('sortieren')">🗂️ Sortieren</button>
+  <button class="mod-btn" onclick="setModule('messen')">📏 Messen</button>
+  <button class="mod-btn" onclick="setModule('verhaeltnis')">↔️ Seitenverhältnis</button>
+  <button class="mod-btn" onclick="setModule('tabelle')">📊 Tabelle</button>
+  <button class="mod-btn" onclick="setModule('quiz')">❓ Quiz</button>
+  <button class="mod-btn" onclick="setModule('zeichnen')">✏️ Zeichnen</button>
+</div>
+
+<main>
+  <!-- SCORE -->
+  <div class="score-bar">
+    <div>
+      <div class="score-num" id="scoreNum">0</div>
+      <div class="score-label">Punkte</div>
+    </div>
+    <div class="stars" id="starDisplay">☆☆☆☆☆</div>
+    <div style="margin-left:auto;font-size:0.85rem;color:#aaa;" id="levelLabel">Stufe: 🌱 Einsteiger</div>
+  </div>
+
+  <!-- ═══════════════ ERKUNDEN ═══════════════ -->
+  <div id="sec-erkunden" class="section active">
+    <div class="card">
+      <div class="level-indicator green" id="erkundLevel">🌱 Einsteiger</div>
+      <h2>Rechteck erkunden</h2>
+      <p class="subtitle">Verändere die Seiten und beobachte, was passiert.</p>
+
+      <div class="slider-row">
+        <label>Länge (a):</label>
+        <input type="range" id="slA" min="2" max="12" value="6" oninput="updateExplorer()">
+        <span class="val-badge" id="valA">6 cm</span>
+      </div>
+      <div class="slider-row">
+        <label>Breite (b):</label>
+        <input type="range" id="slB" min="2" max="10" value="4" oninput="updateExplorer()">
+        <span class="val-badge" id="valB">4 cm</span>
+      </div>
+
+      <div class="canvas-wrap">
+        <canvas id="explorerCanvas" width="480" height="280"></canvas>
+      </div>
+
+      <div class="grid-info">
+        <div class="info-chip" id="infoA">Länge a = 6 cm</div>
+        <div class="info-chip" id="infoB">Breite b = 4 cm</div>
+        <div class="info-chip" id="infoGl">Gegenüberliegende Seiten: gleich ✓</div>
+        <div class="info-chip" id="infoSq" style="display:none">Quadrat! (a = b) ✓</div>
+      </div>
+
+      <!-- Level-spezifische Hinweise -->
+      <div id="exploreHintGreen" class="feedback hint show">
+        💡 <strong>Tipp:</strong> Schau genau hin: Die langen Seiten sind immer gleich lang – und die kurzen auch!
+      </div>
+      <div id="exploreHintYellow" class="feedback hint hidden">
+        💡 Kannst du die Schieberegler so einstellen, dass ein Quadrat entsteht? Was fällt dir auf?
+      </div>
+      <div id="exploreHintRed" class="feedback hint hidden">
+        🔬 Beobachtungsauftrag: Wie verändert sich das Verhältnis a:b, wenn du a verdoppelst? Notiere deine Entdeckungen.
+      </div>
+
+      <div id="ratioInfo" class="ratio-display hidden"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ SORTIEREN ═══════════════ -->
+  <div id="sec-sortieren" class="section">
+    <div class="card">
+      <div class="level-indicator green" id="sortLevel">🌱 Einsteiger</div>
+      <h2>Rechteck oder nicht?</h2>
+      <p class="subtitle" id="sortSubtitle">Klicke alle Rechtecke an! Nicht-Rechtecke nicht anklicken.</p>
+
+      <div class="shape-grid" id="shapeGrid"></div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkSort()">✅ Prüfen</button>
+        <button class="btn btn-warn" onclick="generateSort()">🔄 Neue Aufgabe</button>
+      </div>
+      <div class="feedback" id="sortFeedback"></div>
+    </div>
+
+    <!-- Level 2+: Fehler finden -->
+    <div class="card" id="sortErrorCard" style="display:none">
+      <h2>🔍 Fehler finden</h2>
+      <p class="subtitle">Welche Seite ist falsch beschriftet?</p>
+      <div class="canvas-wrap">
+        <canvas id="errorCanvas" width="380" height="220"></canvas>
+      </div>
+      <div class="quiz-options" id="errorOptions"></div>
+      <div class="feedback" id="errorFeedback"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ MESSEN ═══════════════ -->
+  <div id="sec-messen" class="section">
+    <div class="card">
+      <div class="level-indicator green" id="messLevel">🌱 Einsteiger</div>
+      <h2>Seiten bestimmen</h2>
+      <p class="subtitle" id="messSubtitle">Lies die Seiten des Rechtecks ab.</p>
+
+      <div class="canvas-wrap">
+        <canvas id="messCanvas" width="480" height="280"></canvas>
+      </div>
+
+      <div id="messInputsGreen">
+        <div class="measure-task">
+          <p>Wie lang ist die lange Seite (Länge a)?</p>
+          <input type="number" id="messA" placeholder="?" min="0" max="20"> cm
+        </div>
+        <div class="measure-task">
+          <p>Wie lang ist die kurze Seite (Breite b)?</p>
+          <input type="number" id="messB" placeholder="?" min="0" max="20"> cm
+        </div>
+      </div>
+
+      <div id="messInputsYellow" class="hidden">
+        <div class="measure-task">
+          <p>Länge a = <input type="number" id="messAY" placeholder="?" min="0" max="20"> cm &nbsp;|&nbsp; Breite b = <input type="number" id="messBY" placeholder="?" min="0" max="20"> cm</p>
+          <p style="margin-top:8px">Wie viele gleiche Seitenpaare gibt es? <input type="number" id="messPairs" placeholder="?" min="0" max="4" style="width:50px"> Paare</p>
+        </div>
+      </div>
+
+      <div id="messInputsRed" class="hidden">
+        <div class="measure-task">
+          <p>Gib alle 4 Seiten an: 
+            a₁ = <input type="number" id="messR1" placeholder="?" style="width:55px"> cm,
+            a₂ = <input type="number" id="messR2" placeholder="?" style="width:55px"> cm,
+            b₁ = <input type="number" id="messR3" placeholder="?" style="width:55px"> cm,
+            b₂ = <input type="number" id="messR4" placeholder="?" style="width:55px"> cm
+          </p>
+          <p style="margin-top:8px">Welche Bedingung muss gelten? <input type="text" id="messCondition" placeholder="a₁ = ?" style="width:130px"></p>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkMess()">✅ Prüfen</button>
+        <button class="btn btn-warn" onclick="generateMess()">🔄 Neues Rechteck</button>
+      </div>
+      <div class="feedback" id="messFeedback"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ VERHÄLTNIS ═══════════════ -->
+  <div id="sec-verhaeltnis" class="section">
+    <div class="card">
+      <div class="level-indicator green" id="verhLevel">🌱 Einsteiger</div>
+      <h2>Seitenverhältnis entdecken</h2>
+      <p class="subtitle" id="verhSubtitle">Gleicher Umfang – verschiedene Formen!</p>
+
+      <div id="verhGreen">
+        <p style="margin-bottom:12px;font-weight:600">Stelle die Seiten ein und beobachte die Form:</p>
+        <div class="slider-row">
+          <label>Länge (a):</label>
+          <input type="range" id="verhA" min="1" max="10" value="5" oninput="updateVerh()">
+          <span class="val-badge" id="verhValA">5</span>
+        </div>
+        <div class="slider-row">
+          <label>Breite (b):</label>
+          <input type="range" id="verhB" min="1" max="10" value="3" oninput="updateVerh()">
+          <span class="val-badge" id="verhValB">3</span>
+        </div>
+        <div class="canvas-wrap">
+          <canvas id="verhCanvas" width="480" height="240"></canvas>
+        </div>
+        <div id="verhInfoBox" class="grid-info"></div>
+      </div>
+
+      <div id="verhYellow" class="hidden">
+        <p style="font-weight:700;margin-bottom:10px">Gleicher Umfang (20 cm) – verschiedene Rechtecke:</p>
+        <div class="canvas-wrap">
+          <canvas id="verhCanvasY" width="480" height="280"></canvas>
+        </div>
+        <div class="quiz-options" id="verhQuizY" style="grid-template-columns:1fr;gap:8px;margin-top:10px"></div>
+        <div class="feedback" id="verhFeedbackY"></div>
+      </div>
+
+      <div id="verhRed" class="hidden">
+        <p style="font-weight:700;margin-bottom:10px">📐 DIN-Format-Entdecker: A4 hat das Seitenverhältnis 1:√2 ≈ 1:1,41</p>
+        <div class="canvas-wrap">
+          <canvas id="verhCanvasR" width="480" height="260"></canvas>
+        </div>
+        <div class="slider-row">
+          <label>Verhältnis 1:</label>
+          <input type="range" id="verhRatio" min="10" max="25" value="14" oninput="updateVerhRed()">
+          <span class="val-badge" id="verhRatioVal">1.4</span>
+        </div>
+        <div class="feedback hint show" id="verhHintR">🎯 Stelle das Verhältnis auf 1:1,41 ein – dann hast du das DIN-A-Format!</div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-warn" onclick="refreshVerh()">🔄 Neue Aufgabe</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ TABELLE ═══════════════ -->
+  <div id="sec-tabelle" class="section">
+    <div class="card">
+      <div class="level-indicator green" id="tabLevel">🌱 Einsteiger</div>
+      <h2>Tabelle ausfüllen</h2>
+      <p class="subtitle" id="tabSubtitle">Ergänze die fehlenden Werte.</p>
+
+      <div id="tabGreen">
+        <table id="tableGreen">
+          <thead><tr><th>Länge a (cm)</th><th>Breite b (cm)</th><th>Seite a ist … mal so lang wie b</th></tr></thead>
+          <tbody id="tableGreenBody"></tbody>
+        </table>
+      </div>
+
+      <div id="tabYellow" class="hidden">
+        <table>
+          <thead><tr><th>Länge a</th><th>Breite b</th><th>Verhältnis a:b</th><th>Gleiche Seiten?</th></tr></thead>
+          <tbody id="tableYellowBody"></tbody>
+        </table>
+      </div>
+
+      <div id="tabRed" class="hidden">
+        <p style="font-weight:700;margin-bottom:10px">Finde alle Rechtecke mit Umfang 24 cm (nur ganze Zahlen):</p>
+        <table>
+          <thead><tr><th>Länge a</th><th>Breite b</th><th>a + b = ?</th><th>Verhältnis a:b</th></tr></thead>
+          <tbody id="tableRedBody"></tbody>
+        </table>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkTable()">✅ Prüfen</button>
+        <button class="btn btn-warn" onclick="generateTable()">🔄 Neue Tabelle</button>
+      </div>
+      <div class="feedback" id="tableFeedback"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ QUIZ ═══════════════ -->
+  <div id="sec-quiz" class="section">
+    <div class="card">
+      <div class="level-indicator green" id="quizLevel">🌱 Einsteiger</div>
+      <h2 id="quizTitle">Quiz: Rechtecke</h2>
+      <p class="subtitle" id="quizProgress">Frage 1 von 5</p>
+
+      <div id="quizQuestion" style="font-size:1.05rem;font-weight:700;margin:14px 0;min-height:60px;line-height:1.5"></div>
+      <div class="canvas-wrap" id="quizCanvasWrap" style="display:none">
+        <canvas id="quizCanvas" width="380" height="200"></canvas>
+      </div>
+      <div class="quiz-options" id="quizOptions"></div>
+      <div class="feedback" id="quizFeedback"></div>
+      <div class="btn-row">
+        <button class="btn btn-primary hidden" id="quizNextBtn" onclick="nextQuestion()">Weiter →</button>
+        <button class="btn btn-warn hidden" id="quizRestartBtn" onclick="startQuiz()">🔄 Nochmal</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ ZEICHNEN ═══════════════ -->
+  <div id="sec-zeichnen" class="section">
+    <div class="card">
+      <div class="level-indicator green" id="zeichLevel">🌱 Einsteiger</div>
+      <h2>Rechteck zeichnen</h2>
+      <p class="subtitle" id="zeichSubtitle">Zeichne das vorgegebene Rechteck auf dem Karopapier.</p>
+
+      <div id="zeichTask" style="background:#f0f4ff;border-radius:12px;padding:14px;margin-bottom:14px;font-weight:700;font-size:1rem;"></div>
+
+      <div class="canvas-wrap">
+        <canvas id="drawCanvas" width="480" height="320"></canvas>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkDraw()">✅ Prüfen</button>
+        <button class="btn btn-warn" onclick="clearDraw()">🗑️ Löschen</button>
+        <button class="btn btn-success" onclick="newDrawTask()">🔄 Neue Aufgabe</button>
+      </div>
+      <div class="feedback" id="zeichFeedback"></div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+// ══════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════
+let currentLevel = 'green';
+let currentModule = 'erkunden';
+let score = 0;
+let quizQuestions = [];
+let quizIndex = 0;
+
+// Messen state
+let messRect = { a: 6, b: 4 };
+
+// Zeichnen state
+let drawTask = { a: 4, b: 3 };
+let drawStart = null, drawEnd = null, isDrawing = false;
+
+// ══════════════════════════════════════
+//  LEVEL + MODULE
+// ══════════════════════════════════════
+function setLevel(l) {
+  currentLevel = l;
+  document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('.level-btn.' + l).classList.add('active');
+  const names = { green: '🌱 Einsteiger', yellow: '⭐ Fortgeschritten', red: '🚀 Experte' };
+  document.getElementById('levelLabel').textContent = 'Stufe: ' + names[l];
+  updateAllLevelUI();
+  refreshCurrentModule();
+}
+
+function setModule(m) {
+  currentModule = m;
+  document.querySelectorAll('.mod-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById('sec-' + m).classList.add('active');
+  refreshCurrentModule();
+}
+
+function refreshCurrentModule() {
+  const m = currentModule;
+  if (m === 'erkunden') updateExplorer();
+  if (m === 'sortieren') generateSort();
+  if (m === 'messen') generateMess();
+  if (m === 'verhaeltnis') updateVerh();
+  if (m === 'tabelle') generateTable();
+  if (m === 'quiz') startQuiz();
+  if (m === 'zeichnen') newDrawTask();
+}
+
+function updateAllLevelUI() {
+  const l = currentLevel;
+  const names = { green: '🌱 Einsteiger', yellow: '⭐ Fortgeschritten', red: '🚀 Experte' };
+  ['erkund','sort','mess','verh','tab','quiz','zeich'].forEach(id => {
+    const el = document.getElementById(id + 'Level');
+    if (el) { el.textContent = names[l]; el.className = 'level-indicator ' + l; }
+  });
+  // explorer hints
+  ['Green','Yellow','Red'].forEach(x => {
+    const el = document.getElementById('exploreHint' + x);
+    if (el) el.classList.add('hidden');
+  });
+  const hint = document.getElementById('exploreHint' + capitalize(l));
+  if (hint) hint.classList.remove('hidden');
+  // ratio info
+  document.getElementById('ratioInfo').classList.toggle('hidden', l === 'green');
+  // sort error card
+  document.getElementById('sortErrorCard').style.display = (l !== 'green') ? 'block' : 'none';
+  if (l !== 'green') generateErrorTask();
+  // messen inputs
+  showOnly(['messInputsGreen','messInputsYellow','messInputsRed'], 'messInputs' + capitalize(l));
+  // verhältnis sections
+  showOnly(['verhGreen','verhYellow','verhRed'], 'verh' + capitalize(l));
+  // tabelle sections
+  showOnly(['tabGreen','tabYellow','tabRed'], 'tab' + capitalize(l));
+  // zeichnen subtitle
+  const zsubs = {
+    green: 'Zeichne das vorgegebene Rechteck auf dem Karopapier.',
+    yellow: 'Zeichne das Rechteck und beschrifte alle vier Seiten.',
+    red: 'Zeichne das Rechteck und ein ähnliches im Verhältnis 1:2.'
+  };
+  document.getElementById('zeichSubtitle').textContent = zsubs[l];
+  // verh subtitle
+  const vsubs = {
+    green: 'Gleicher Umfang – verschiedene Formen!',
+    yellow: 'Erkenne Rechtecke mit gleichem Umfang.',
+    red: 'Entdecke das DIN-A Seitenverhältnis.'
+  };
+  document.getElementById('verhSubtitle').textContent = vsubs[l];
+}
+
+function showOnly(all, show) {
+  all.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('hidden', id !== show);
+  });
+}
+
+function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+// ══════════════════════════════════════
+//  SCORE
+// ══════════════════════════════════════
+function addScore(pts) {
+  score += pts;
+  document.getElementById('scoreNum').textContent = score;
+  const stars = Math.min(5, Math.floor(score / 3));
+  document.getElementById('starDisplay').textContent = '★'.repeat(stars) + '☆'.repeat(5 - stars);
+}
+
+// ══════════════════════════════════════
+//  CANVAS HELPERS
+// ══════════════════════════════════════
+function drawRect(ctx, x, y, w, h, opts = {}) {
+  const {
+    fillColor = '#e8f4fd', strokeColor = '#2980b9', lineWidth = 3,
+    labels = true, a = null, b = null, gridSize = 0
+  } = opts;
+
+  // grid
+  if (gridSize > 0) {
+    ctx.strokeStyle = '#e0e8ff'; ctx.lineWidth = 0.8;
+    for (let gx = x; gx <= x + w; gx += gridSize) {
+      ctx.beginPath(); ctx.moveTo(gx, y); ctx.lineTo(gx, y + h); ctx.stroke();
+    }
+    for (let gy = y; gy <= y + h; gy += gridSize) {
+      ctx.beginPath(); ctx.moveTo(x, gy); ctx.lineTo(x + w, gy); ctx.stroke();
+    }
+  }
+
+  ctx.fillStyle = fillColor;
+  ctx.beginPath();
+  ctx.roundRect ? ctx.roundRect(x, y, w, h, 6) : ctx.rect(x, y, w, h);
+  ctx.fill();
+  ctx.strokeStyle = strokeColor; ctx.lineWidth = lineWidth;
+  ctx.stroke();
+
+  // right angle markers
+  const m = 10;
+  ctx.strokeStyle = strokeColor; ctx.lineWidth = 1.5;
+  [[x,y,1,1],[x+w,y,-1,1],[x,y+h,1,-1],[x+w,y+h,-1,-1]].forEach(([cx,cy,sx,sy]) => {
+    ctx.beginPath();
+    ctx.moveTo(cx + sx*m, cy);
+    ctx.lineTo(cx + sx*m, cy + sy*m);
+    ctx.lineTo(cx, cy + sy*m);
+    ctx.stroke();
+  });
+
+  if (labels) {
+    ctx.fillStyle = '#2c3e50'; ctx.font = 'bold 14px Nunito';
+    ctx.textAlign = 'center';
+    const aLabel = a !== null ? `a = ${a} cm` : `a`;
+    const bLabel = b !== null ? `b = ${b} cm` : `b`;
+    ctx.fillText(aLabel, x + w/2, y - 8);
+    ctx.save(); ctx.translate(x - 12, y + h/2); ctx.rotate(-Math.PI/2);
+    ctx.fillText(bLabel, 0, 0); ctx.restore();
+    // repeat on other sides (smaller, grey)
+    ctx.fillStyle = '#aaa'; ctx.font = '12px Nunito';
+    ctx.fillText(aLabel, x + w/2, y + h + 16);
+    ctx.save(); ctx.translate(x + w + 16, y + h/2); ctx.rotate(-Math.PI/2);
+    ctx.fillText(bLabel, 0, 0); ctx.restore();
+  }
+}
+
+function clearCanvas(canvas) {
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  return ctx;
+}
+
+function drawGridBackground(ctx, w, h, gs = 24) {
+  ctx.fillStyle = '#f8faff';
+  ctx.fillRect(0, 0, w, h);
+  ctx.strokeStyle = '#dce3ff'; ctx.lineWidth = 0.8;
+  for (let x = 0; x <= w; x += gs) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,h); ctx.stroke(); }
+  for (let y = 0; y <= h; y += gs) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w,y); ctx.stroke(); }
+}
+
+// ══════════════════════════════════════
+//  ERKUNDEN
+// ══════════════════════════════════════
+function updateExplorer() {
+  const a = parseInt(document.getElementById('slA').value);
+  const b = parseInt(document.getElementById('slB').value);
+  document.getElementById('valA').textContent = a + ' cm';
+  document.getElementById('valB').textContent = b + ' cm';
+  document.getElementById('infoA').textContent = 'Länge a = ' + a + ' cm';
+  document.getElementById('infoB').textContent = 'Breite b = ' + b + ' cm';
+  const isSq = a === b;
+  document.getElementById('infoGl').style.display = isSq ? 'none' : 'flex';
+  document.getElementById('infoSq').style.display = isSq ? 'flex' : 'none';
+
+  if (currentLevel !== 'green') {
+    const r = document.getElementById('ratioInfo');
+    const gcd = (x,y) => y===0?x:gcd(y,x%y);
+    const g = gcd(a,b);
+    r.textContent = `Verhältnis a:b = ${a/g} : ${b/g}`;
+    r.classList.remove('hidden');
+  }
+
+  const canvas = document.getElementById('explorerCanvas');
+  const ctx = clearCanvas(canvas);
+  const gs = 24;
+  drawGridBackground(ctx, canvas.width, canvas.height, gs);
+  const scale = gs;
+  const W = a * scale, H = b * scale;
+  const ox = (canvas.width - W) / 2, oy = (canvas.height - H) / 2;
+  const colors = isSq
+    ? { fill: '#fef9e7', stroke: '#f39c12' }
+    : { fill: '#e8f4fd', stroke: '#2980b9' };
+  drawRect(ctx, ox, oy, W, H, { fillColor: colors.fill, strokeColor: colors.stroke, a, b });
+}
+
+// ══════════════════════════════════════
+//  SORTIEREN
+// ══════════════════════════════════════
+const SHAPES = [
+  { type: 'rect', label: 'Rechteck', isRect: true, draw: (ctx,x,y,w,h) => { ctx.beginPath(); ctx.rect(x,y,w,h); ctx.fill(); ctx.stroke(); } },
+  { type: 'square', label: 'Quadrat', isRect: true, draw: (ctx,x,y,w,h) => { const s=Math.min(w,h); ctx.beginPath(); ctx.rect(x+(w-s)/2,y+(h-s)/2,s,s); ctx.fill(); ctx.stroke(); } },
+  { type: 'trapez', label: 'Trapez', isRect: false, draw: (ctx,x,y,w,h) => { ctx.beginPath(); ctx.moveTo(x+10,y+5); ctx.lineTo(x+w-10,y+5); ctx.lineTo(x+w,y+h-5); ctx.lineTo(x,y+h-5); ctx.closePath(); ctx.fill(); ctx.stroke(); } },
+  { type: 'rhombus', label: 'Raute', isRect: false, draw: (ctx,x,y,w,h) => { ctx.beginPath(); ctx.moveTo(x+w/2,y+2); ctx.lineTo(x+w-2,y+h/2); ctx.lineTo(x+w/2,y+h-2); ctx.lineTo(x+2,y+h/2); ctx.closePath(); ctx.fill(); ctx.stroke(); } },
+  { type: 'parallelogram', label: 'Parallelogramm', isRect: false, draw: (ctx,x,y,w,h) => { ctx.beginPath(); ctx.moveTo(x+15,y+3); ctx.lineTo(x+w-3,y+3); ctx.lineTo(x+w-15,y+h-3); ctx.lineTo(x+3,y+h-3); ctx.closePath(); ctx.fill(); ctx.stroke(); } },
+  { type: 'triangle', label: 'Dreieck', isRect: false, draw: (ctx,x,y,w,h) => { ctx.beginPath(); ctx.moveTo(x+w/2,y+3); ctx.lineTo(x+w-3,y+h-3); ctx.lineTo(x+3,y+h-3); ctx.closePath(); ctx.fill(); ctx.stroke(); } },
+];
+
+let sortCorrect = [];
+
+function generateSort() {
+  const l = currentLevel;
+  const count = l === 'green' ? 4 : l === 'yellow' ? 6 : 8;
+  const pool = [...SHAPES];
+  const chosen = [];
+  while (chosen.length < count) {
+    const s = pool[Math.floor(Math.random() * pool.length)];
+    if (!chosen.find(c => c.type === s.type)) chosen.push(s);
+  }
+  sortCorrect = chosen;
+  const container = document.getElementById('shapeGrid');
+  container.innerHTML = '';
+  chosen.forEach((shape, i) => {
+    const card = document.createElement('div');
+    card.className = 'shape-card';
+    card.dataset.index = i;
+    const canvas = document.createElement('canvas');
+    canvas.width = 80; canvas.height = 70;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#e8f4fd'; ctx.strokeStyle = '#2980b9'; ctx.lineWidth = 2.5;
+    shape.draw(ctx, 5, 5, 70, 60);
+    card.appendChild(canvas);
+    if (l !== 'green') {
+      const lbl = document.createElement('div');
+      lbl.style.cssText = 'font-size:0.7rem;font-weight:700;color:#888;text-align:center;margin-top:2px';
+      lbl.textContent = shape.label;
+      card.appendChild(lbl);
+    }
+    card.onclick = () => card.classList.toggle('selected-rect');
+    container.appendChild(card);
+  });
+  showFeedback('sortFeedback', '', '');
+}
+
+function checkSort() {
+  const cards = document.querySelectorAll('#shapeGrid .shape-card');
+  let ok = 0, total = sortCorrect.length;
+  cards.forEach((card, i) => {
+    const sel = card.classList.contains('selected-rect');
+    const should = sortCorrect[i].isRect;
+    if (sel === should) ok++;
+    card.classList.remove('selected-rect','selected-no');
+    card.classList.add(should ? 'selected-rect' : 'selected-no');
+  });
+  if (ok === total) {
+    showFeedback('sortFeedback', '🎉 Super! Alle ' + total + ' Figuren richtig erkannt!', 'ok');
+    addScore(currentLevel === 'green' ? 1 : currentLevel === 'yellow' ? 2 : 3);
+  } else {
+    showFeedback('sortFeedback', `${ok} von ${total} richtig. Die Farben zeigen die Lösung.`, 'err');
+  }
+}
+
+// Error task
+let errorTask = null;
+function generateErrorTask() {
+  const a = rnd(3,8), b = rnd(2,5);
+  const wrongSide = Math.random() < 0.5 ? 'a2' : 'b2';
+  const wrongVal = (wrongSide === 'a2') ? a + rnd(1,3) : b + rnd(1,3);
+  errorTask = { a, b, wrongSide, wrongVal };
+  const canvas = document.getElementById('errorCanvas');
+  if (!canvas) return;
+  const ctx = clearCanvas(canvas);
+  drawGridBackground(ctx, canvas.width, canvas.height);
+  const gs = 22, W = a*gs, H = b*gs;
+  const ox = (canvas.width-W)/2, oy = (canvas.height-H)/2;
+  // draw manually with wrong label
+  ctx.fillStyle = '#fdebd0'; ctx.strokeStyle = '#e67e22'; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.rect(ox,oy,W,H); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = '#2c3e50'; ctx.font = 'bold 13px Nunito'; ctx.textAlign = 'center';
+  ctx.fillText(`a = ${a} cm`, ox+W/2, oy-8);
+  ctx.fillText(`a = ${wrongSide==='a2'?wrongVal:a} cm`, ox+W/2, oy+H+16);
+  ctx.save(); ctx.translate(ox-12,oy+H/2); ctx.rotate(-Math.PI/2);
+  ctx.fillText(`b = ${b} cm`, 0, 0); ctx.restore();
+  ctx.save(); ctx.translate(ox+W+16,oy+H/2); ctx.rotate(-Math.PI/2);
+  ctx.fillText(`b = ${wrongSide==='b2'?wrongVal:b} cm`, 0, 0); ctx.restore();
+
+  const opts = document.getElementById('errorOptions');
+  opts.innerHTML = '';
+  const options = [
+    { text: `Die gegenüberliegende Länge muss auch a = ${a} cm sein`, correct: wrongSide==='a2' },
+    { text: `Die gegenüberliegende Breite muss auch b = ${b} cm sein`, correct: wrongSide==='b2' },
+    { text: 'Alle Seiten sind korrekt', correct: false },
+    { text: 'Ein Rechteck hat keine gleichen Seiten', correct: false }
+  ].sort(() => Math.random()-0.5);
+  options.forEach(opt => {
+    const btn = document.createElement('div');
+    btn.className = 'quiz-opt';
+    btn.textContent = opt.text;
+    btn.onclick = () => {
+      document.querySelectorAll('#errorOptions .quiz-opt').forEach(b => b.style.pointerEvents='none');
+      btn.classList.add(opt.correct ? 'correct' : 'wrong');
+      if (!opt.correct) options.forEach(o => { if(o.correct) {} });
+      showFeedback('errorFeedback', opt.correct ? '✅ Richtig! Gegenüberliegende Seiten sind immer gleich lang.' : '❌ Nicht ganz. Denk daran: beim Rechteck sind gegenüberliegende Seiten gleich!', opt.correct ? 'ok' : 'err');
+      if (opt.correct) addScore(2);
+    };
+    opts.appendChild(btn);
+  });
+  showFeedback('errorFeedback','','');
+}
+
+// ══════════════════════════════════════
+//  MESSEN
+// ══════════════════════════════════════
+function generateMess() {
+  messRect.a = rnd(3, 10);
+  messRect.b = rnd(2, messRect.a - 1);
+  ['messA','messB','messAY','messBY','messPairs','messR1','messR2','messR3','messR4','messCondition'].forEach(id => {
+    const el = document.getElementById(id); if(el) el.value = '';
+  });
+  const canvas = document.getElementById('messCanvas');
+  const ctx = clearCanvas(canvas);
+  drawGridBackground(ctx, canvas.width, canvas.height);
+  const gs = 26, W = messRect.a*gs, H = messRect.b*gs;
+  const ox = (canvas.width-W)/2, oy = (canvas.height-H)/2;
+  drawRect(ctx, ox, oy, W, H, { labels: false });
+  // draw tick marks
+  ctx.strokeStyle = '#e74c3c'; ctx.lineWidth = 2;
+  const tickLen = 8;
+  // top
+  for (let i = 0; i <= messRect.a; i++) {
+    ctx.beginPath(); ctx.moveTo(ox+i*gs, oy-tickLen/2); ctx.lineTo(ox+i*gs, oy+tickLen/2); ctx.stroke();
+  }
+  // left
+  for (let i = 0; i <= messRect.b; i++) {
+    ctx.beginPath(); ctx.moveTo(ox-tickLen/2, oy+i*gs); ctx.lineTo(ox+tickLen/2, oy+i*gs); ctx.stroke();
+  }
+  ctx.fillStyle = '#2c3e50'; ctx.font = 'bold 13px Nunito'; ctx.textAlign = 'center';
+  ctx.fillText('? cm', canvas.width/2, oy - 20);
+  ctx.save(); ctx.translate(ox - 25, canvas.height/2); ctx.rotate(-Math.PI/2);
+  ctx.fillText('? cm', 0, 0); ctx.restore();
+  showFeedback('messFeedback','','');
+}
+
+function checkMess() {
+  const l = currentLevel;
+  let ok = false, msg = '';
+  if (l === 'green') {
+    const a = parseFloat(document.getElementById('messA').value);
+    const b = parseFloat(document.getElementById('messB').value);
+    ok = (a === messRect.a && b === messRect.b);
+    msg = ok ? `✅ Richtig! Länge a = ${messRect.a} cm, Breite b = ${messRect.b} cm` : `❌ Nicht ganz. Die Länge ist ${messRect.a} cm, die Breite ${messRect.b} cm.`;
+  } else if (l === 'yellow') {
+    const a = parseFloat(document.getElementById('messAY').value);
+    const b = parseFloat(document.getElementById('messBY').value);
+    const pairs = parseInt(document.getElementById('messPairs').value);
+    ok = (a === messRect.a && b === messRect.b && pairs === 2);
+    msg = ok ? `✅ Super! a=${messRect.a}, b=${messRect.b}, 2 Seitenpaare` : `❌ Prüfe nochmal: a=${messRect.a} cm, b=${messRect.b} cm, 2 gleichlange Paare.`;
+  } else {
+    const r1 = parseFloat(document.getElementById('messR1').value);
+    const r2 = parseFloat(document.getElementById('messR2').value);
+    const r3 = parseFloat(document.getElementById('messR3').value);
+    const r4 = parseFloat(document.getElementById('messR4').value);
+    const cond = document.getElementById('messCondition').value.replace(/\s/g,'');
+    ok = (r1===messRect.a && r2===messRect.a && r3===messRect.b && r4===messRect.b);
+    msg = ok ? `✅ Perfekt! a₁=a₂=${messRect.a} und b₁=b₂=${messRect.b}` : `❌ a₁=a₂=${messRect.a} cm und b₁=b₂=${messRect.b} cm`;
+  }
+  showFeedback('messFeedback', msg, ok ? 'ok' : 'err');
+  if (ok) addScore(l === 'green' ? 1 : l === 'yellow' ? 2 : 3);
+}
+
+// ══════════════════════════════════════
+//  VERHÄLTNIS
+// ══════════════════════════════════════
+function updateVerh() {
+  const l = currentLevel;
+  if (l === 'green') {
+    const a = parseInt(document.getElementById('verhA').value);
+    const b = parseInt(document.getElementById('verhB').value);
+    document.getElementById('verhValA').textContent = a;
+    document.getElementById('verhValB').textContent = b;
+    const canvas = document.getElementById('verhCanvas');
+    const ctx = clearCanvas(canvas);
+    drawGridBackground(ctx, canvas.width, canvas.height);
+    const gs = 28, W = a*gs, H = b*gs;
+    const ox = (canvas.width-W)/2, oy = (canvas.height-H)/2;
+    drawRect(ctx, ox, oy, W, H, { a, b, fillColor: '#e8f4fd', strokeColor: '#2980b9' });
+    const gcd = (x,y) => y===0?x:gcd(y,x%y);
+    const g = gcd(a,b);
+    const box = document.getElementById('verhInfoBox');
+    const isSquare = a===b;
+    box.innerHTML = `
+      <div class="info-chip">a = ${a} cm</div>
+      <div class="info-chip">b = ${b} cm</div>
+      <div class="info-chip">Verhältnis ${a/g}:${b/g}</div>
+      ${isSquare ? '<div class="info-chip" style="background:#fef9e7;color:#7d6608">🟡 Das ist ein Quadrat!</div>' : ''}
+    `;
+  } else if (l === 'yellow') {
+    drawVerhYellow();
+  } else {
+    updateVerhRed();
+  }
+}
+
+function drawVerhYellow() {
+  const canvas = document.getElementById('verhCanvasY');
+  if (!canvas) return;
+  const ctx = clearCanvas(canvas);
+  drawGridBackground(ctx, canvas.width, canvas.height);
+  // Show 3 rectangles with same perimeter = 20cm
+  const rects = [{a:8,b:2},{a:6,b:4},{a:5,b:5}];
+  const colors = ['#e8f4fd','#d5f5e3','#fef9e7'];
+  const strokes = ['#2980b9','#27ae60','#f39c12'];
+  const gs = 18;
+  rects.forEach((r,i) => {
+    const W = r.a*gs, H = r.b*gs;
+    const ox = 20 + i*155, oy = (canvas.height-H)/2;
+    drawRect(ctx, ox, oy, W, H, { fillColor: colors[i], strokeColor: strokes[i], a: r.a, b: r.b });
+  });
+  // Quiz
+  const quiz = document.getElementById('verhQuizY');
+  if (!quiz.children.length) {
+    quiz.innerHTML = '';
+    const q = 'Alle drei Rechtecke haben denselben Umfang (20 cm). Welches ist ein Quadrat?';
+    const qdiv = document.createElement('p');
+    qdiv.style.fontWeight = '700'; qdiv.textContent = q;
+    quiz.before(qdiv);
+    [
+      { text: 'Das linke (8×2)', correct: false },
+      { text: 'Das mittlere (6×4)', correct: false },
+      { text: 'Das rechte (5×5)', correct: true },
+      { text: 'Keines', correct: false }
+    ].forEach(opt => {
+      const btn = document.createElement('div');
+      btn.className = 'quiz-opt'; btn.textContent = opt.text;
+      btn.onclick = () => {
+        document.querySelectorAll('#verhQuizY .quiz-opt').forEach(b => b.style.pointerEvents='none');
+        btn.classList.add(opt.correct ? 'correct' : 'wrong');
+        showFeedback('verhFeedbackY', opt.correct ? '✅ Richtig! 5×5 ist das Quadrat (a=b).' : '❌ Nicht ganz. Bei 5×5 sind Länge und Breite gleich – das ist das Quadrat!', opt.correct ? 'ok' : 'err');
+        if (opt.correct) addScore(2);
+      };
+      quiz.appendChild(btn);
+    });
+  }
+}
+
+function updateVerhRed() {
+  const ratio = parseInt(document.getElementById('verhRatio').value) / 10;
+  document.getElementById('verhRatioVal').textContent = ratio.toFixed(1);
+  const canvas = document.getElementById('verhCanvasR');
+  if (!canvas) return;
+  const ctx = clearCanvas(canvas);
+  drawGridBackground(ctx, canvas.width, canvas.height);
+  const b = 100, a = Math.round(b * ratio);
+  const ox = (canvas.width-a)/2, oy = (canvas.height-b)/2;
+  const isDIN = Math.abs(ratio - 1.41) < 0.05;
+  drawRect(ctx, ox, oy, a, b, {
+    fillColor: isDIN ? '#d5f5e3' : '#e8f4fd',
+    strokeColor: isDIN ? '#27ae60' : '#2980b9',
+    labels: false
+  });
+  ctx.fillStyle = '#2c3e50'; ctx.font = 'bold 14px Nunito'; ctx.textAlign = 'center';
+  ctx.fillText(`1 : ${ratio.toFixed(2)}`, canvas.width/2, oy - 14);
+  if (isDIN) {
+    ctx.fillStyle = '#27ae60'; ctx.font = 'bold 15px Nunito';
+    ctx.fillText('✓ DIN A-Format!', canvas.width/2, oy + b + 22);
+  }
+}
+
+function refreshVerh() {
+  if (currentLevel === 'green') {
+    document.getElementById('verhA').value = rnd(3,8);
+    document.getElementById('verhB').value = rnd(2,6);
+  }
+  updateVerh();
+}
+
+// ══════════════════════════════════════
+//  TABELLE
+// ══════════════════════════════════════
+let tableData = [];
+
+function generateTable() {
+  const l = currentLevel;
+  if (l === 'green') {
+    tableData = [[6,3,null],[4,2,null],[8,4,null],[5,5,null],[10,2,null]].sort(()=>Math.random()-.5).slice(0,4);
+    const body = document.getElementById('tableGreenBody');
+    body.innerHTML = '';
+    tableData.forEach((row,i) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${row[0]}</td><td>${row[1]}</td><td><input type="number" id="tgr${i}" min="1" max="20" placeholder="?"></td>`;
+      body.appendChild(tr);
+    });
+  } else if (l === 'yellow') {
+    const base = [[6,3],[4,4],[8,2],[5,5],[9,3],[6,2]];
+    tableData = base.sort(()=>Math.random()-.5).slice(0,4);
+    const body = document.getElementById('tableYellowBody');
+    body.innerHTML = '';
+    tableData.forEach((row,i) => {
+      const gcd = (a,b)=>b===0?a:gcd(b,a%b);
+      const g = gcd(row[0],row[1]);
+      tr = document.createElement('tr');
+      tr.innerHTML = `<td>${row[0]}</td><td>${row[1]}</td><td><input type="number" id="tya${i}" placeholder="?a" style="width:40px"> : <input type="number" id="tyb${i}" placeholder="?b" style="width:40px"></td><td>${row[0]===row[1]?'Quadrat ✓':'Ja'}</td>`;
+      body.appendChild(tr);
+    });
+  } else {
+    // U=24: all pairs where a+b=12
+    const pairs = [];
+    for (let a=1;a<=11;a++) { if(a>=12-a) pairs.push([a,12-a]); }
+    const body = document.getElementById('tableRedBody');
+    body.innerHTML = '';
+    pairs.forEach((row,i) => {
+      const gcd = (a,b)=>b===0?a:gcd(b,a%b);
+      const g = gcd(row[0],row[1]);
+      const blank = Math.random()<0.5 ? 0 : 1;
+      tr = document.createElement('tr');
+      tr.innerHTML = `<td>${blank===0?`<input type="number" id="tra${i}" placeholder="?" style="width:50px">`:row[0]}</td><td>${blank===1?`<input type="number" id="trb${i}" placeholder="?" style="width:50px">`:row[1]}</td><td>${row[0]+row[1]}</td><td>${row[0]/g}:${row[1]/g}</td>`;
+      body.appendChild(tr);
+    });
+    tableData = pairs;
+  }
+  showFeedback('tableFeedback','','');
+}
+
+function checkTable() {
+  const l = currentLevel;
+  let ok = 0, total = tableData.length;
+  if (l === 'green') {
+    tableData.forEach((row,i) => {
+      const val = parseFloat(document.getElementById('tgr'+i)?.value);
+      const expected = row[0]/row[1];
+      if (Math.abs(val - expected) < 0.01) { ok++; document.getElementById('tgr'+i).style.borderColor='#27ae60'; }
+      else { document.getElementById('tgr'+i).style.borderColor='#e74c3c'; }
+    });
+  } else if (l === 'yellow') {
+    tableData.forEach((row,i) => {
+      const gcd = (a,b)=>b===0?a:gcd(b,a%b);
+      const g = gcd(row[0],row[1]);
+      const va = parseInt(document.getElementById('tya'+i)?.value);
+      const vb = parseInt(document.getElementById('tyb'+i)?.value);
+      if (va===row[0]/g && vb===row[1]/g) ok++;
+    });
+  } else {
+    tableData.forEach((row,i) => {
+      const va = document.getElementById('tra'+i), vb = document.getElementById('trb'+i);
+      if (va && parseInt(va.value)===row[0]) { ok++; va.style.borderColor='#27ae60'; }
+      else if (va) va.style.borderColor='#e74c3c';
+      if (vb && parseInt(vb.value)===row[1]) { ok++; vb.style.borderColor='#27ae60'; }
+      else if (vb) vb.style.borderColor='#e74c3c';
+    });
+    total = tableData.filter((_,i)=>document.getElementById('tra'+i)||document.getElementById('trb'+i)).length;
+  }
+  const pts = l==='green'?1:l==='yellow'?2:3;
+  if (ok===total) { showFeedback('tableFeedback','🎉 Alle Werte richtig!','ok'); addScore(pts); }
+  else showFeedback('tableFeedback',`${ok} von ${total} richtig. Versuche es nochmal!`,'err');
+}
+
+// ══════════════════════════════════════
+//  QUIZ
+// ══════════════════════════════════════
+const QUIZ_BANK = {
+  green: [
+    { q: 'Wie viele Seiten hat ein Rechteck?', opts: ['2','3','4','6'], correct: 2, explain: 'Ein Rechteck hat genau 4 Seiten.' },
+    { q: 'Was gilt für die gegenüberliegenden Seiten eines Rechtecks?', opts: ['Sie sind verschieden lang','Sie sind gleich lang','Eine ist doppelt so lang','Das kommt drauf an'], correct: 1, explain: 'Beim Rechteck sind gegenüberliegende Seiten immer gleich lang!' },
+    { q: 'Ein Rechteck hat Länge a = 5 cm und Breite b = 3 cm. Wie lang ist die andere lange Seite?', opts: ['3 cm','8 cm','5 cm','10 cm'], correct: 2, explain: 'Die gegenüberliegende Seite ist genauso lang: 5 cm.' },
+    { q: 'Was ist ein Quadrat?', opts: ['Ein Rechteck mit einer sehr langen Seite','Ein Rechteck mit gleichen Seiten','Ein Dreieck mit 4 Ecken','Eine Raute'], correct: 1, explain: 'Ein Quadrat ist ein Rechteck, bei dem alle Seiten gleich lang sind!' },
+    { q: 'Wie viele rechte Winkel hat ein Rechteck?', opts: ['1','2','3','4'], correct: 3, explain: 'Ein Rechteck hat genau 4 rechte Winkel (90°).' },
+  ],
+  yellow: [
+    { q: 'Ein Rechteck hat a = 6 cm und b = 3 cm. Was ist das Verhältnis a:b in gekürzter Form?', opts: ['6:3','3:1','2:1','1:2'], correct: 2, explain: '6:3 = 2:1 (durch 3 geteilt)' },
+    { q: 'Zwei Rechtecke haben das Verhältnis 2:1. Welches Paar passt?', opts: ['4 cm und 4 cm','8 cm und 4 cm','6 cm und 2 cm','10 cm und 3 cm'], correct: 1, explain: '8:4 = 2:1 ✓' },
+    { q: 'Welche zwei Rechtecke haben das gleiche Seitenverhältnis?', opts: ['3×6 und 4×8','3×6 und 6×9','4×8 und 5×10','2×6 und 3×9'], correct: 2, explain: '4:8=1:2 und 5:10=1:2 – beide haben dasselbe Verhältnis!' },
+    { q: 'Ein Quadrat ist ein Sonderfall des Rechtecks. Welches Verhältnis hat es?', opts: ['2:1','1:2','1:1','3:1'], correct: 2, explain: 'Beim Quadrat sind alle Seiten gleich – also 1:1.' },
+    { q: 'Welche Figur ist KEIN Rechteck?', opts: ['Quadrat','Parallelogramm (schräg)','Rechteck mit a=b','Sehr langes schmales Rechteck'], correct: 1, explain: 'Ein schräges Parallelogramm hat keine rechten Winkel – kein Rechteck!' },
+  ],
+  red: [
+    { q: 'Ein Rechteck hat a = 7 cm und b = 4 cm. Welches Rechteck hat das gleiche Verhältnis?', opts: ['14 cm × 8 cm','21 cm × 12 cm','7 cm × 7 cm','14 cm × 6 cm'], correct: 0, explain: '14:8 = 7:4 ✓ (verdoppelt)' },
+    { q: 'Das DIN-A4-Format hat das Verhältnis 1:√2 ≈ 1:1,41. Welche Maße passen am besten?', opts: ['10 × 10 cm','10 × 14,1 cm','10 × 20 cm','14 × 14 cm'], correct: 1, explain: '10 × 14,1 ≈ 1:1,41 – das DIN-Verhältnis!' },
+    { q: 'Wenn ich die Länge a eines Rechtecks verdopple, wie ändert sich das Verhältnis a:b?', opts: ['Bleibt gleich','Wird doppelt so groß','Halbiert sich','Wird viermal so groß'], correct: 1, explain: 'Beispiel: 3:2 → 6:2 = 3:1 – das Verhältnis verdoppelt sich.' },
+    { q: 'Welche Eigenschaft gilt NUR für Quadrate, nicht für alle Rechtecke?', opts: ['4 Ecken','4 rechte Winkel','Alle Seiten gleich lang','Gegenüberliegende Seiten gleich'], correct: 2, explain: 'Alle Seiten gleich lang – das ist das Besondere am Quadrat!' },
+    { q: 'Zwei ähnliche Rechtecke haben das Verhältnis 3:2. Das kleinere ist 6×4. Wie groß ist das doppelt so große?', opts: ['12×8','9×6','6×8','18×12'], correct: 0, explain: '6×2=12 und 4×2=8 – also 12×8 ✓' },
+  ],
+};
+
+function startQuiz() {
+  quizQuestions = [...QUIZ_BANK[currentLevel]].sort(() => Math.random() - 0.5);
+  quizIndex = 0;
+  document.getElementById('quizNextBtn').classList.add('hidden');
+  document.getElementById('quizRestartBtn').classList.add('hidden');
+  showQuestion();
+}
+
+function showQuestion() {
+  const q = quizQuestions[quizIndex];
+  document.getElementById('quizProgress').textContent = `Frage ${quizIndex+1} von ${quizQuestions.length}`;
+  document.getElementById('quizQuestion').textContent = q.q;
+  document.getElementById('quizCanvasWrap').style.display = 'none';
+  const opts = document.getElementById('quizOptions');
+  opts.innerHTML = '';
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('div');
+    btn.className = 'quiz-opt'; btn.textContent = opt;
+    btn.onclick = () => {
+      document.querySelectorAll('#quizOptions .quiz-opt').forEach(b => b.style.pointerEvents='none');
+      btn.classList.add(i === q.correct ? 'correct' : 'wrong');
+      if (i !== q.correct) {
+        document.querySelectorAll('#quizOptions .quiz-opt')[q.correct].classList.add('correct');
+      }
+      showFeedback('quizFeedback', (i===q.correct?'✅ ':'❌ ') + q.explain, i===q.correct?'ok':'err');
+      if (i===q.correct) addScore(currentLevel==='green'?1:currentLevel==='yellow'?2:3);
+      if (quizIndex < quizQuestions.length - 1) {
+        document.getElementById('quizNextBtn').classList.remove('hidden');
+      } else {
+        document.getElementById('quizRestartBtn').classList.remove('hidden');
+        document.getElementById('quizNextBtn').classList.add('hidden');
+      }
+    };
+    opts.appendChild(btn);
+  });
+  showFeedback('quizFeedback','','');
+}
+
+function nextQuestion() {
+  quizIndex++;
+  document.getElementById('quizNextBtn').classList.add('hidden');
+  showQuestion();
+}
+
+// ══════════════════════════════════════
+//  ZEICHNEN
+// ══════════════════════════════════════
+const GS = 24; // grid size px
+
+function newDrawTask() {
+  const l = currentLevel;
+  if (l === 'green') {
+    drawTask = { a: rnd(3,7), b: rnd(2,5) };
+    document.getElementById('zeichTask').innerHTML = `📝 Zeichne ein Rechteck mit <strong>Länge a = ${drawTask.a} cm</strong> und <strong>Breite b = ${drawTask.b} cm</strong> (1 Kästchen = 1 cm)`;
+  } else if (l === 'yellow') {
+    drawTask = { a: rnd(4,8), b: rnd(2,5) };
+    document.getElementById('zeichTask').innerHTML = `📝 Zeichne und beschrifte: <strong>a = ${drawTask.a} cm</strong>, <strong>b = ${drawTask.b} cm</strong>. Was gilt für die gegenüberliegenden Seiten?`;
+  } else {
+    drawTask = { a: rnd(3,5), b: rnd(2,4) };
+    document.getElementById('zeichTask').innerHTML = `📝 Zeichne ein Rechteck mit <strong>a = ${drawTask.a} cm</strong>, <strong>b = ${drawTask.b} cm</strong>. Zeichne daneben ein ähnliches Rechteck doppelter Größe (<strong>a = ${drawTask.a*2}</strong>, <strong>b = ${drawTask.b*2}</strong>).`;
+  }
+  drawStart = null; drawEnd = null;
+  initDrawCanvas();
+  showFeedback('zeichFeedback','','');
+}
+
+function initDrawCanvas() {
+  const canvas = document.getElementById('drawCanvas');
+  const ctx = clearCanvas(canvas);
+  drawGridBackground(ctx, canvas.width, canvas.height, GS);
+  // show target faint
+  ctx.strokeStyle = '#ccc'; ctx.lineWidth = 1; ctx.setLineDash([4,4]);
+  const W = drawTask.a * GS, H = drawTask.b * GS;
+  const ox = Math.round((canvas.width/2 - W/2) / GS) * GS;
+  const oy = Math.round((canvas.height/2 - H/2) / GS) * GS;
+  ctx.strokeRect(ox, oy, W, H);
+  ctx.setLineDash([]);
+  canvas._drawOx = ox; canvas._drawOy = oy;
+}
+
+const drawCanvas = document.getElementById('drawCanvas');
+
+drawCanvas.addEventListener('mousedown', e => {
+  const r = drawCanvas.getBoundingClientRect();
+  drawStart = snap(e.clientX - r.left, e.clientY - r.top);
+  isDrawing = true;
+});
+drawCanvas.addEventListener('mousemove', e => {
+  if (!isDrawing) return;
+  const r = drawCanvas.getBoundingClientRect();
+  drawEnd = snap(e.clientX - r.left, e.clientY - r.top);
+  renderDraw();
+});
+drawCanvas.addEventListener('mouseup', e => {
+  isDrawing = false;
+  if (drawStart && drawEnd) renderDraw();
+});
+drawCanvas.addEventListener('touchstart', e => {
+  e.preventDefault();
+  const t = e.touches[0], r = drawCanvas.getBoundingClientRect();
+  drawStart = snap(t.clientX - r.left, t.clientY - r.top);
+  isDrawing = true;
+}, {passive:false});
+drawCanvas.addEventListener('touchmove', e => {
+  e.preventDefault();
+  if (!isDrawing) return;
+  const t = e.touches[0], r = drawCanvas.getBoundingClientRect();
+  drawEnd = snap(t.clientX - r.left, t.clientY - r.top);
+  renderDraw();
+}, {passive:false});
+drawCanvas.addEventListener('touchend', () => { isDrawing = false; });
+
+function snap(x, y) {
+  return { x: Math.round(x/GS)*GS, y: Math.round(y/GS)*GS };
+}
+
+function renderDraw() {
+  initDrawCanvas();
+  if (!drawStart || !drawEnd) return;
+  const ctx = drawCanvas.getContext('2d');
+  const x = Math.min(drawStart.x, drawEnd.x);
+  const y = Math.min(drawStart.y, drawEnd.y);
+  const w = Math.abs(drawEnd.x - drawStart.x);
+  const h = Math.abs(drawEnd.y - drawStart.y);
+  if (w < GS || h < GS) return;
+  drawRect(ctx, x, y, w, h, { fillColor: 'rgba(102,126,234,0.15)', strokeColor: '#667eea', lineWidth: 3 });
+  ctx.fillStyle = '#667eea'; ctx.font = 'bold 13px Nunito'; ctx.textAlign = 'center';
+  ctx.fillText(`${w/GS} cm`, x+w/2, y-8);
+  ctx.save(); ctx.translate(x-14, y+h/2); ctx.rotate(-Math.PI/2);
+  ctx.fillText(`${h/GS} cm`, 0, 0); ctx.restore();
+}
+
+function checkDraw() {
+  if (!drawStart || !drawEnd) {
+    showFeedback('zeichFeedback', '✏️ Zeichne zuerst ein Rechteck!', 'hint');
+    return;
+  }
+  const w = Math.abs(drawEnd.x - drawStart.x) / GS;
+  const h = Math.abs(drawEnd.y - drawStart.y) / GS;
+  const aOk = (w===drawTask.a && h===drawTask.b) || (w===drawTask.b && h===drawTask.a);
+  if (aOk) {
+    showFeedback('zeichFeedback', `🎉 Richtig! Du hast ein ${drawTask.a}×${drawTask.b} Rechteck gezeichnet.`, 'ok');
+    addScore(currentLevel==='green'?1:currentLevel==='yellow'?2:3);
+  } else {
+    showFeedback('zeichFeedback', `❌ Dein Rechteck ist ${w}×${h} – es sollte ${drawTask.a}×${drawTask.b} sein. Versuche es nochmal!`, 'err');
+  }
+}
+
+function clearDraw() {
+  drawStart = null; drawEnd = null;
+  initDrawCanvas();
+  showFeedback('zeichFeedback','','');
+}
+
+// ══════════════════════════════════════
+//  UTILS
+// ══════════════════════════════════════
+function rnd(min, max) { return Math.floor(Math.random()*(max-min+1))+min; }
+
+function showFeedback(id, msg, type) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = msg;
+  el.className = 'feedback';
+  if (msg) { el.classList.add('show'); if(type) el.classList.add(type); }
+}
+
+// ══════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════
+updateAllLevelUI();
+updateExplorer();
+generateSort();
+generateMess();
+updateVerh();
+generateTable();
+startQuiz();
+newDrawTask();
+</script>
+</body>
+</html>

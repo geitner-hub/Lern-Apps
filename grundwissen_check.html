@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Grundwissen-Check</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#f0f4ff;
+  --card:#ffffff;
+  --primary:#4f6ef7;
+  --primary-dark:#3a55d4;
+  --secondary:#ff6b9d;
+  --green:#22c55e;
+  --red:#ef4444;
+  --yellow:#f59e0b;
+  --purple:#a855f7;
+  --text:#1e293b;
+  --muted:#64748b;
+  --border:#e2e8f0;
+  --shadow:0 4px 24px rgba(79,110,247,0.10);
+}
+body{
+  min-height:100vh;
+  background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+  font-family:'Nunito',sans-serif;
+  color:var(--text);
+  display:flex;flex-direction:column;align-items:center;
+  padding:16px;
+}
+#app{width:100%;max-width:640px;}
+
+/* ── Animations ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.15)}100%{transform:scale(1)}}
+@keyframes starSpin{0%{transform:rotate(0) scale(0);opacity:0;}60%{transform:rotate(360deg) scale(1.3);opacity:1;}100%{transform:rotate(360deg) scale(1);opacity:1;}}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes confetti{0%{transform:translateY(0) rotate(0);opacity:1;}100%{transform:translateY(200px) rotate(720deg);opacity:0;}}
+.fade-up{animation:fadeUp 0.35s ease both;}
+.shake{animation:shake 0.35s ease;}
+.pop{animation:pop 0.3s ease;}
+
+/* ── Card ── */
+.card{
+  background:var(--card);border-radius:24px;
+  padding:clamp(20px,5vw,36px);
+  box-shadow:0 8px 40px rgba(0,0,0,0.18);
+  margin-bottom:16px;
+}
+
+/* ── Header ── */
+.app-header{text-align:center;margin-bottom:20px;padding:16px 0 8px;}
+.app-title{
+  font-family:'Fredoka One',cursive;
+  font-size:clamp(1.6rem,5vw,2.4rem);
+  color:#fff;
+  text-shadow:0 2px 12px rgba(0,0,0,0.25);
+  letter-spacing:0.02em;
+}
+.app-sub{color:rgba(255,255,255,0.8);font-size:0.85rem;margin-top:4px;}
+
+/* ── Stars / XP bar ── */
+.xp-bar-wrap{
+  background:rgba(255,255,255,0.15);border-radius:12px;padding:10px 16px;
+  display:flex;align-items:center;gap:12px;margin-bottom:14px;
+}
+.xp-label{color:#fff;font-weight:800;font-size:0.85rem;white-space:nowrap;}
+.xp-track{flex:1;height:14px;background:rgba(0,0,0,0.2);border-radius:8px;overflow:hidden;}
+.xp-fill{height:100%;border-radius:8px;background:linear-gradient(90deg,#fbbf24,#f59e0b);transition:width 0.5s ease;box-shadow:0 0 8px rgba(251,191,36,0.6);}
+.stars-display{color:#fbbf24;font-size:1rem;font-weight:800;}
+
+/* ── Topic overview ── */
+.topics-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
+.topic-tile{
+  border-radius:16px;padding:14px;cursor:pointer;
+  border:3px solid transparent;transition:all 0.2s;
+  position:relative;overflow:hidden;
+}
+.topic-tile:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,0.12);}
+.topic-tile.locked{opacity:0.5;cursor:not-allowed;filter:grayscale(0.4);}
+.topic-tile.done{border-color:var(--green);}
+.topic-tile.active{border-color:var(--primary);box-shadow:0 0 0 4px rgba(79,110,247,0.2);}
+.topic-icon{font-size:2rem;margin-bottom:6px;}
+.topic-name{font-weight:800;font-size:0.88rem;margin-bottom:4px;}
+.topic-desc{font-size:0.72rem;color:var(--muted);}
+.topic-progress{margin-top:8px;height:6px;background:#e2e8f0;border-radius:4px;overflow:hidden;}
+.topic-progress-fill{height:100%;border-radius:4px;transition:width 0.4s;}
+.topic-badge{
+  position:absolute;top:8px;right:8px;
+  font-size:1rem;
+}
+
+/* Topic colors */
+.t-blue{background:linear-gradient(135deg,#dbeafe,#bfdbfe);}
+.t-green{background:linear-gradient(135deg,#dcfce7,#bbf7d0);}
+.t-orange{background:linear-gradient(135deg,#ffedd5,#fed7aa);}
+.t-purple{background:linear-gradient(135deg,#f3e8ff,#e9d5ff);}
+
+/* ── Question area ── */
+.topic-header{
+  display:flex;align-items:center;gap:12px;margin-bottom:18px;
+}
+.topic-header-icon{font-size:2rem;}
+.topic-header-info h2{font-size:1.1rem;font-weight:900;}
+.topic-header-info p{font-size:0.75rem;color:var(--muted);}
+
+.q-progress-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:0.75rem;color:var(--muted);}
+.q-track{height:8px;background:#e2e8f0;border-radius:6px;margin-bottom:20px;overflow:hidden;}
+.q-fill{height:100%;border-radius:6px;transition:width 0.4s ease;}
+
+.question-card{
+  background:linear-gradient(135deg,#f8faff,#eef2ff);
+  border-radius:16px;padding:20px;margin-bottom:16px;
+  border:2px solid #e0e7ff;text-align:center;
+}
+.question-text{
+  font-size:clamp(1.2rem,4vw,1.7rem);font-weight:800;
+  line-height:1.4;margin-bottom:8px;
+}
+.question-hint{font-size:0.78rem;color:var(--muted);font-style:italic;}
+
+/* figure canvas */
+.fig-wrap{display:flex;justify-content:center;margin:12px 0;}
+canvas.fig{border-radius:8px;}
+
+/* Answer options */
+.options-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.opt-btn{
+  padding:14px 10px;border-radius:14px;
+  border:3px solid var(--border);background:#fff;
+  font-family:'Nunito',sans-serif;font-weight:800;font-size:1rem;
+  cursor:pointer;transition:all 0.18s;text-align:center;
+}
+.opt-btn:hover:not(:disabled){border-color:var(--primary);background:#eef2ff;transform:translateY(-2px);}
+.opt-btn.correct{border-color:var(--green);background:#dcfce7;color:#15803d;}
+.opt-btn.wrong{border-color:var(--red);background:#fee2e2;color:#b91c1c;}
+.opt-btn:disabled{cursor:default;}
+
+/* Number input */
+.num-input-row{display:flex;gap:10px;justify-content:center;margin-bottom:14px;}
+.num-input{
+  width:130px;padding:13px;font-size:1.3rem;text-align:center;
+  font-family:'Nunito',sans-serif;font-weight:800;
+  border:3px solid var(--border);border-radius:14px;
+  outline:none;transition:border-color 0.2s;
+  -moz-appearance:textfield;
+}
+.num-input::-webkit-inner-spin-button,.num-input::-webkit-outer-spin-button{-webkit-appearance:none;}
+.num-input:focus{border-color:var(--primary);}
+.num-input.correct{border-color:var(--green);background:#dcfce7;}
+.num-input.wrong{border-color:var(--red);background:#fee2e2;}
+.num-unit{font-size:1.1rem;font-weight:800;color:var(--muted);align-self:center;}
+.confirm-btn{
+  padding:13px 20px;border-radius:14px;border:none;
+  background:var(--primary);color:#fff;
+  font-family:'Nunito',sans-serif;font-weight:800;font-size:1rem;
+  cursor:pointer;transition:all 0.18s;
+}
+.confirm-btn:hover{background:var(--primary-dark);transform:translateY(-2px);}
+
+/* Feedback */
+.feedback-box{
+  border-radius:14px;padding:14px 16px;margin-bottom:14px;
+  font-weight:700;font-size:0.9rem;line-height:1.5;
+  display:none;
+}
+.feedback-box.correct{background:#dcfce7;border:2px solid #86efac;color:#15803d;}
+.feedback-box.wrong{background:#fee2e2;border:2px solid #fca5a5;color:#b91c1c;}
+.feedback-box.show{display:block;}
+
+.next-btn{
+  width:100%;padding:15px;border-radius:14px;border:none;
+  background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+  color:#fff;font-family:'Nunito',sans-serif;font-weight:900;font-size:1rem;
+  cursor:pointer;transition:all 0.18s;letter-spacing:0.04em;
+  display:none;box-shadow:0 4px 16px rgba(79,110,247,0.35);
+}
+.next-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(79,110,247,0.45);}
+.next-btn.show{display:block;}
+
+/* ── Badges ── */
+.badges-section{margin-top:16px;}
+.badges-title{font-weight:900;font-size:0.85rem;color:rgba(255,255,255,0.8);margin-bottom:10px;letter-spacing:0.05em;}
+.badges-row{display:flex;gap:10px;flex-wrap:wrap;}
+.badge-item{
+  background:rgba(255,255,255,0.15);border-radius:12px;
+  padding:8px 14px;display:flex;align-items:center;gap:8px;
+  font-size:0.78rem;color:#fff;font-weight:700;
+  border:2px solid rgba(255,255,255,0.2);
+  transition:all 0.3s;
+}
+.badge-item.earned{
+  background:rgba(251,191,36,0.25);border-color:#fbbf24;
+  box-shadow:0 0 14px rgba(251,191,36,0.3);
+}
+.badge-item.locked-b{opacity:0.4;}
+.badge-icon{font-size:1.3rem;}
+
+/* ── Topic complete ── */
+.complete-card{text-align:center;padding:10px 0;}
+.complete-icon{font-size:4rem;margin-bottom:12px;animation:bounce 1s ease infinite;}
+.complete-title{font-family:'Fredoka One',cursive;font-size:2rem;color:var(--primary);margin-bottom:8px;}
+.complete-sub{color:var(--muted);font-size:0.9rem;margin-bottom:20px;}
+.stars-earned{display:flex;justify-content:center;gap:8px;font-size:2.5rem;margin:16px 0;}
+.star-anim{animation:starSpin 0.6s ease both;}
+.star-anim:nth-child(2){animation-delay:0.15s;}
+.star-anim:nth-child(3){animation-delay:0.3s;}
+
+/* ── Final screen ── */
+.final-screen{text-align:center;padding:10px 0;}
+.final-icon{font-size:5rem;margin-bottom:12px;}
+.final-title{font-family:'Fredoka One',cursive;font-size:2.2rem;color:var(--primary);margin-bottom:6px;}
+.final-sub{color:var(--muted);margin-bottom:20px;font-size:0.9rem;}
+.topic-results{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px;text-align:left;}
+.tr-item{
+  padding:10px 14px;border-radius:12px;
+  background:linear-gradient(135deg,#f0f9ff,#e0f2fe);
+  border:2px solid #bae6fd;font-size:0.8rem;
+}
+.tr-item-name{font-weight:800;margin-bottom:2px;}
+.tr-item-score{color:var(--muted);}
+.restart-btn{
+  padding:15px 40px;border-radius:14px;border:none;
+  background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+  color:#fff;font-family:'Nunito',sans-serif;font-weight:900;font-size:1rem;
+  cursor:pointer;box-shadow:0 4px 16px rgba(79,110,247,0.35);
+  transition:all 0.18s;
+}
+.restart-btn:hover{transform:translateY(-2px);}
+
+/* confetti */
+.confetti-piece{
+  position:fixed;width:10px;height:10px;border-radius:2px;
+  pointer-events:none;z-index:999;
+  animation:confetti 1.5s ease-out forwards;
+}
+
+/* ── Tooltip / explain box ── */
+.explain-box{
+  background:linear-gradient(135deg,#fef9c3,#fef08a);
+  border:2px solid #fde047;border-radius:14px;
+  padding:12px 16px;margin-bottom:14px;font-size:0.82rem;
+  color:#78350f;line-height:1.6;display:none;
+}
+.explain-box.show{display:block;}
+.explain-toggle{
+  background:none;border:none;cursor:pointer;
+  font-family:'Nunito',sans-serif;font-size:0.75rem;
+  color:var(--muted);text-decoration:underline;
+  margin-bottom:10px;display:block;
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════════════════
+
+const TOPICS = [
+  {
+    id: 'rechteck',
+    name: 'Rechteck & Quadrat',
+    icon: '🔷',
+    color: 't-blue',
+    fillColor: '#3b82f6',
+    desc: 'Eigenschaften kennen',
+    questions: [
+      {
+        type: 'mc',
+        text: 'Was ist ein Rechteck?',
+        hint: 'Denk an die Winkel und Seiten!',
+        options: [
+          'Eine Figur mit 4 gleich langen Seiten',
+          'Eine Figur mit 4 rechten Winkeln und je 2 gleich langen gegenüberliegenden Seiten',
+          'Eine Figur mit 3 Seiten',
+          'Eine Figur mit nur 2 rechten Winkeln'
+        ],
+        answer: 1,
+        explain: 'Ein Rechteck hat immer 4 rechte Winkel (90°). Die gegenüberliegenden Seiten sind gleich lang. Wenn alle 4 Seiten gleich lang sind, ist es ein Quadrat!',
+      },
+      {
+        type: 'mc',
+        text: 'Was gilt für ein Quadrat?',
+        hint: 'Das Quadrat ist ein besonderes Rechteck!',
+        options: [
+          'Es hat nur 2 rechte Winkel',
+          'Es hat 4 verschiedene Seitenlängen',
+          'Es ist ein Rechteck mit 4 gleich langen Seiten',
+          'Es hat 5 Ecken'
+        ],
+        answer: 2,
+        explain: 'Das Quadrat ist ein Sonderfall des Rechtecks. Es hat alle Eigenschaften eines Rechtecks (4 rechte Winkel), aber zusätzlich sind alle 4 Seiten gleich lang.',
+      },
+      {
+        type: 'mc',
+        text: 'Welche Aussage über das Rechteck ist FALSCH?',
+        hint: 'Was unterscheidet das Rechteck vom Quadrat?',
+        options: [
+          'Es hat 4 Ecken',
+          'Alle 4 Seiten sind gleich lang',
+          'Gegenüberliegende Seiten sind gleich lang',
+          'Es hat 4 rechte Winkel'
+        ],
+        answer: 1,
+        explain: 'Beim Rechteck müssen NICHT alle 4 Seiten gleich lang sein. Nur gegenüberliegende Seiten sind gleich lang. Das ist beim Quadrat anders!',
+      },
+      {
+        type: 'mc',
+        text: 'Wie nennt man die beiden Seitenlängen eines Rechtecks?',
+        hint: 'Diese Begriffe kennst du aus dem Sachunterricht!',
+        options: [
+          'Höhe und Basis',
+          'Länge (a) und Breite (b)',
+          'Radius und Durchmesser',
+          'Kathete und Hypotenuse'
+        ],
+        answer: 1,
+        explain: 'Die längere Seite eines Rechtecks nennt man Länge (a), die kürzere Breite (b). Beim Quadrat ist a = b, also nennt man sie einfach Seite (a).',
+      },
+      {
+        type: 'mc',
+        text: 'Welche Figur ist ein Rechteck, aber KEIN Quadrat?',
+        hint: 'Beim Quadrat sind alle Seiten gleich lang!',
+        options: [
+          'Figur A: 4 cm × 4 cm',
+          'Figur B: 6 cm × 3 cm',
+          'Figur C: 5 cm × 5 cm',
+          'Figur D: 2 cm × 2 cm'
+        ],
+        answer: 1,
+        explain: 'Figur B ist ein Rechteck, weil Länge (6 cm) und Breite (3 cm) verschieden sind. Bei A, C und D sind alle Seiten gleich – das sind Quadrate!',
+      }
+    ]
+  },
+  {
+    id: 'messen',
+    name: 'Messen & Einheiten',
+    icon: '📏',
+    color: 't-orange',
+    fillColor: '#f97316',
+    desc: 'cm, mm, m umrechnen',
+    questions: [
+      {
+        type: 'num',
+        text: '1 m = ___ cm',
+        hint: 'Kilo = 1000, aber hier geht es um Meter!',
+        answer: 100,
+        unit: 'cm',
+        explain: '1 Meter hat 100 Zentimeter. Merkhilfe: „Centi" kommt vom lateinischen centum = 100.',
+      },
+      {
+        type: 'num',
+        text: '1 cm = ___ mm',
+        hint: 'Milli kommt von lat. mille = tausend (aber nur für cm→mm: ×10)',
+        answer: 10,
+        unit: 'mm',
+        explain: '1 Zentimeter = 10 Millimeter. Von cm zu mm multiplizierst du mit 10.',
+      },
+      {
+        type: 'num',
+        text: '5 m = ___ cm',
+        hint: '1 m = 100 cm, also 5 m = 5 × ?',
+        answer: 500,
+        unit: 'cm',
+        explain: '5 m × 100 = 500 cm. Beim Umrechnen von m in cm immer mit 100 multiplizieren!',
+      },
+      {
+        type: 'num',
+        text: '300 cm = ___ m',
+        hint: 'Umgekehrt: durch 100 teilen!',
+        answer: 3,
+        unit: 'm',
+        explain: '300 cm ÷ 100 = 3 m. Von cm in m immer durch 100 teilen.',
+      },
+      {
+        type: 'num',
+        text: '45 mm = ___ cm',
+        hint: 'Von mm in cm: durch 10 teilen',
+        answer: 4.5,
+        unit: 'cm',
+        explain: '45 mm ÷ 10 = 4,5 cm. Von mm in cm immer durch 10 teilen. Ergibt manchmal Kommazahlen!',
+      },
+      {
+        type: 'mc',
+        text: 'Was ist größer: 2 m oder 150 cm?',
+        hint: 'Rechne erst um, dann vergleiche!',
+        options: ['150 cm', '2 m', 'Beide sind gleich groß', 'Kann man nicht sagen'],
+        answer: 1,
+        explain: '2 m = 200 cm. Da 200 cm > 150 cm, ist 2 m größer. Immer erst auf die gleiche Einheit umrechnen!',
+      }
+    ]
+  },
+  {
+    id: 'rechnen',
+    name: 'Grundrechenarten',
+    icon: '🔢',
+    color: 't-purple',
+    fillColor: '#a855f7',
+    desc: 'Addition & Multiplikation',
+    questions: [
+      {
+        type: 'num',
+        text: 'Berechne: 8 + 12 + 8 + 12 = ?',
+        hint: 'Das ist der Umfang eines Rechtecks! Addiere alle Seiten.',
+        answer: 40,
+        unit: '',
+        explain: '8 + 12 + 8 + 12 = 40. Tipp: Fasse zusammen: 2 × 8 + 2 × 12 = 16 + 24 = 40. Das ist der Umfang eines Rechtecks mit a=12 und b=8!',
+      },
+      {
+        type: 'num',
+        text: 'Berechne: 2 × 15 + 2 × 9 = ?',
+        hint: 'Erst multiplizieren, dann addieren!',
+        answer: 48,
+        unit: '',
+        explain: '2 × 15 = 30 und 2 × 9 = 18. Also 30 + 18 = 48. Diese Rechnung steckt in der Umfangsformel des Rechtecks!',
+      },
+      {
+        type: 'num',
+        text: 'Ein Rechteck hat die Länge 13 cm und die Breite 7 cm.\nAddiere alle 4 Seiten.',
+        hint: '13 + 7 + 13 + 7 = ?',
+        answer: 40,
+        unit: 'cm',
+        explain: '13 + 7 + 13 + 7 = 40 cm. Oder: 2 × 13 + 2 × 7 = 26 + 14 = 40 cm. Beide Wege führen zum selben Ergebnis!',
+      },
+      {
+        type: 'num',
+        text: 'Berechne: 2 × (6 + 4) = ?',
+        hint: 'Erst Klammer ausrechnen, dann multiplizieren!',
+        answer: 20,
+        unit: '',
+        explain: '2 × (6 + 4) = 2 × 10 = 20. Das Ausklammern macht die Umfangsformel kürzer: statt 2×6 + 2×4 kannst du auch 2×(6+4) schreiben!',
+      },
+      {
+        type: 'mc',
+        text: 'Welche Rechnung ergibt 2 × 8 + 2 × 5 = ?',
+        hint: 'Erst multiplizieren, dann addieren!',
+        options: ['26', '30', '34', '20'],
+        answer: 1,
+        explain: '2 × 8 = 16 und 2 × 5 = 10. Also 16 + 10 = 26. Oder: 2 × (8+5) = 2 × 13 = 26.',
+      },
+      {
+        type: 'num',
+        text: 'Berechne: 3,5 + 2,5 + 3,5 + 2,5 = ?',
+        hint: 'Auch mit Kommazahlen funktioniert die Addition!',
+        answer: 12,
+        unit: '',
+        explain: '3,5 + 2,5 + 3,5 + 2,5 = 12. Oder: 2 × 3,5 + 2 × 2,5 = 7 + 5 = 12.',
+      }
+    ]
+  }
+];
+
+const BADGES = [
+  {id:'starter',   icon:'🚀', name:'Durchstarter',  desc:'Erstes Thema abgeschlossen',   condition: s => s.topicsDone >= 1},
+  {id:'half',      icon:'⚡', name:'Halbzeit',       desc:'2 Themen abgeschlossen',        condition: s => s.topicsDone >= 2},
+  {id:'expert',    icon:'🏆', name:'Grundwissensprofi',desc:'Alle Themen abgeschlossen',   condition: s => s.topicsDone >= 3},
+  {id:'perfect',   icon:'⭐', name:'Perfektionist',  desc:'Ein Thema fehlerfrei',          condition: s => s.perfectTopics >= 1},
+  {id:'superstar', icon:'🌟', name:'Superstar',      desc:'Alle Themen fehlerfrei',        condition: s => s.perfectTopics >= 3},
+];
+
+// ═══════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════
+const state = {
+  phase: 'overview',      // overview | question | topicDone | final
+  currentTopic: null,
+  currentQ: 0,
+  feedback: null,
+  topicResults: {},       // topicId -> {correct, total}
+  stars: 0,
+  maxStars: 0,
+  earnedBadges: [],
+  showExplain: false,
+};
+
+// compute maxStars
+TOPICS.forEach(t => { state.maxStars += t.questions.length * 3; });
+TOPICS.forEach(t => { state.topicResults[t.id] = null; });
+
+function topicsDone() { return Object.values(state.topicResults).filter(r=>r!==null).length; }
+function perfectTopics() { return Object.values(state.topicResults).filter(r=>r&&r.correct===r.total).length; }
+
+function checkBadges() {
+  const s = {topicsDone: topicsDone(), perfectTopics: perfectTopics()};
+  BADGES.forEach(b => {
+    if (!state.earnedBadges.includes(b.id) && b.condition(s)) {
+      state.earnedBadges.push(b.id);
+    }
+  });
+}
+
+function starsForTopic(topicId) {
+  const r = state.topicResults[topicId];
+  if (!r) return 0;
+  const pct = r.correct / r.total;
+  if (pct === 1) return 3;
+  if (pct >= 0.6) return 2;
+  if (pct > 0) return 1;
+  return 0;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════════════════════
+function render() {
+  const app = document.getElementById('app');
+  app.innerHTML = '';
+
+  // Header
+  const header = document.createElement('div');
+  header.className = 'app-header';
+  header.innerHTML = `
+    <div class="app-title">📐 Grundwissen-Check</div>
+    <div class="app-sub">Klasse 5 · Mathematik</div>
+  `;
+  app.appendChild(header);
+
+  // XP bar
+  const totalStars = TOPICS.reduce((s,t)=>s+starsForTopic(t.id)*3,0);
+  const maxS = TOPICS.length * 9;
+  const xpPct = Math.min(100, Math.round(totalStars/maxS*100));
+  const starCount = TOPICS.reduce((s,t)=>s+starsForTopic(t.id),0);
+  const xpWrap = document.createElement('div');
+  xpWrap.className = 'xp-bar-wrap';
+  xpWrap.innerHTML = `
+    <div class="xp-label">⭐ ${starCount}/${TOPICS.length*3}</div>
+    <div class="xp-track"><div class="xp-fill" style="width:${xpPct}%"></div></div>
+    <div class="stars-display">${xpPct}%</div>
+  `;
+  app.appendChild(xpWrap);
+
+  // Main card
+  const card = document.createElement('div');
+  card.className = 'card fade-up';
+  app.appendChild(card);
+
+  if (state.phase === 'overview') renderOverview(card);
+  else if (state.phase === 'question') renderQuestion(card);
+  else if (state.phase === 'topicDone') renderTopicDone(card);
+  else if (state.phase === 'final') renderFinal(card);
+
+  // Badges
+  renderBadges(app);
+}
+
+// ─── Overview ────────────────────────────────────────────────
+function renderOverview(card) {
+  card.innerHTML = `
+    <div style="font-family:'Fredoka One',cursive;font-size:1.4rem;color:var(--primary);margin-bottom:6px;">Deine Themen</div>
+    <div style="font-size:0.82rem;color:var(--muted);margin-bottom:18px;">Klicke auf ein Thema und teste dein Wissen! 🎯</div>
+    <div class="topics-grid" id="topics-grid"></div>
+  `;
+  const grid = card.querySelector('#topics-grid');
+  TOPICS.forEach((t, i) => {
+    const done = state.topicResults[t.id] !== null;
+    const stars = starsForTopic(t.id);
+    const r = state.topicResults[t.id];
+    const pct = r ? Math.round(r.correct/r.total*100) : 0;
+    const starsHtml = done ? ['⭐','⭐','⭐'].map((s,j)=>j<stars?s:'☆').join('') : '';
+
+    const tile = document.createElement('div');
+    tile.className = `topic-tile ${t.color} ${done?'done':''}`;
+    tile.innerHTML = `
+      <div class="topic-badge">${starsHtml}</div>
+      <div class="topic-icon">${t.icon}</div>
+      <div class="topic-name">${t.name}</div>
+      <div class="topic-desc">${t.desc}</div>
+      <div class="topic-progress">
+        <div class="topic-progress-fill" style="width:${pct}%;background:${t.fillColor}"></div>
+      </div>
+      ${done ? `<div style="font-size:0.72rem;color:var(--muted);margin-top:4px;">${r.correct}/${r.total} richtig</div>` : ''}
+    `;
+    tile.onclick = () => startTopic(t.id);
+    grid.appendChild(tile);
+  });
+
+  const allDone = topicsDone() === TOPICS.length;
+  if (allDone) {
+    const fin = document.createElement('button');
+    fin.className = 'next-btn show';
+    fin.style.marginTop = '12px';
+    fin.textContent = '🏁 Ergebnis anzeigen →';
+    fin.onclick = () => { state.phase = 'final'; render(); };
+    card.appendChild(fin);
+  } else {
+    const hint = document.createElement('div');
+    hint.style.cssText = 'text-align:center;font-size:0.78rem;color:var(--muted);margin-top:12px;';
+    hint.textContent = `Noch ${TOPICS.length - topicsDone()} Thema(en) zu erledigen`;
+    card.appendChild(hint);
+  }
+}
+
+// ─── Start topic ─────────────────────────────────────────────
+function startTopic(topicId) {
+  state.currentTopic = topicId;
+  state.currentQ = 0;
+  state.feedback = null;
+  state.showExplain = false;
+  state.tempResults = {correct:0, total:0};
+  state.phase = 'question';
+  render();
+}
+
+// ─── Question ────────────────────────────────────────────────
+function renderQuestion(card) {
+  const topic = TOPICS.find(t=>t.id===state.currentTopic);
+  const q = topic.questions[state.currentQ];
+  const pct = (state.currentQ / topic.questions.length) * 100;
+
+  card.innerHTML = `
+    <div class="topic-header">
+      <div class="topic-header-icon">${topic.icon}</div>
+      <div class="topic-header-info">
+        <h2>${topic.name}</h2>
+        <p>${topic.desc}</p>
+      </div>
+    </div>
+    <div class="q-progress-row">
+      <span>Frage ${state.currentQ+1} von ${topic.questions.length}</span>
+      <span id="q-score">✅ ${state.tempResults.correct} richtig</span>
+    </div>
+    <div class="q-track">
+      <div class="q-fill" style="width:${pct}%;background:${topic.fillColor}"></div>
+    </div>
+    <div class="question-card" id="q-card">
+      <div class="question-text" id="q-text">${q.text.replace(/\n/g,'<br>')}</div>
+      <div class="question-hint">${q.hint}</div>
+      ${q.type==='figure'?'<div class="fig-wrap" id="fig-wrap"></div>':''}
+    </div>
+    <button class="explain-toggle" onclick="toggleExplain()">💡 Erklärung anzeigen</button>
+    <div class="explain-box ${state.showExplain?'show':''}" id="explain-box">${q.explain}</div>
+    <div id="answer-area"></div>
+    <div class="feedback-box" id="feedback-box"></div>
+    <button class="next-btn" id="next-btn" onclick="nextQuestion()">
+      ${state.currentQ+1 < topic.questions.length ? 'Nächste Frage →' : 'Thema abschließen 🎉'}
+    </button>
+  `;
+
+  // render answer input
+  renderAnswerArea(q, card);
+
+  if (state.feedback) applyFeedbackDisplay(q, card);
+}
+
+function renderAnswerArea(q, card) {
+  const area = card.querySelector('#answer-area');
+  if (q.type === 'mc') {
+    const grid = document.createElement('div');
+    grid.className = 'options-grid';
+    q.options.forEach((opt,i) => {
+      const btn = document.createElement('button');
+      btn.className = 'opt-btn';
+      btn.textContent = opt;
+      btn.id = 'opt-'+i;
+      btn.onclick = () => submitMC(i, q, card);
+      grid.appendChild(btn);
+    });
+    area.appendChild(grid);
+  } else if (q.type === 'num') {
+    const row = document.createElement('div');
+    row.className = 'num-input-row';
+    row.innerHTML = `
+      <input class="num-input" id="num-inp" type="number" placeholder="?" step="0.1" autocomplete="off"/>
+      ${q.unit ? `<span class="num-unit">${q.unit}</span>` : ''}
+      <button class="confirm-btn" onclick="submitNum(${JSON.stringify(q).replace(/"/g,'&quot;')})">✓</button>
+    `;
+    area.appendChild(row);
+    setTimeout(()=>{ card.querySelector('#num-inp')?.focus(); },60);
+    card.querySelector('#num-inp').addEventListener('keydown', e => {
+      if (e.key==='Enter') submitNum(q);
+    });
+  }
+}
+
+function submitMC(chosen, q, card) {
+  if (state.feedback) return;
+  const correct = chosen === q.answer;
+  state.feedback = correct ? 'correct' : 'wrong';
+  if (correct) state.tempResults.correct++;
+  state.tempResults.total++;
+  // style buttons
+  ['opt-0','opt-1','opt-2','opt-3'].forEach((id,i) => {
+    const btn = card.querySelector('#'+id);
+    if (!btn) return;
+    btn.disabled = true;
+    if (i === q.answer) btn.className = 'opt-btn correct';
+    else if (i === chosen && !correct) btn.className = 'opt-btn wrong';
+  });
+  showFeedback(correct, q, card);
+}
+
+function submitNum(q) {
+  if (state.feedback) return;
+  const inp = document.querySelector('#num-inp');
+  if (!inp || inp.value==='') return;
+  const val = parseFloat(inp.value.replace(',','.'));
+  const correct = Math.abs(val - q.answer) < 0.01;
+  state.feedback = correct ? 'correct' : 'wrong';
+  if (correct) state.tempResults.correct++;
+  state.tempResults.total++;
+  inp.disabled = true;
+  inp.className = 'num-input ' + (correct?'correct':'wrong');
+  showFeedback(correct, q, document.querySelector('.card'));
+}
+
+function showFeedback(correct, q, card) {
+  const fb = card.querySelector('#feedback-box');
+  const nb = card.querySelector('#next-btn');
+  const qCard = card.querySelector('#q-card');
+  if (correct) {
+    fb.className = 'feedback-box correct show';
+    fb.innerHTML = '✅ Richtig! ' + (q.explain || '');
+    qCard.style.borderColor = '#86efac';
+    qCard.classList.add('pop');
+    spawnStars(qCard);
+  } else {
+    fb.className = 'feedback-box wrong show';
+    fb.innerHTML = `❌ Nicht ganz. Richtig wäre: <strong>${q.answer}${q.unit?' '+q.unit:''}</strong><br><br>${q.explain||''}`;
+    qCard.style.borderColor = '#fca5a5';
+    qCard.classList.add('shake');
+  }
+  nb.className = 'next-btn show';
+  // show explain
+  const eb = card.querySelector('#explain-box');
+  if (eb) { eb.className='explain-box show'; }
+}
+
+function applyFeedbackDisplay(q, card) {
+  // re-apply after re-render (not needed since we re-render fresh)
+}
+
+function toggleExplain() {
+  state.showExplain = !state.showExplain;
+  const eb = document.querySelector('#explain-box');
+  const btn = document.querySelector('.explain-toggle');
+  if (eb) eb.className = 'explain-box ' + (state.showExplain?'show':'');
+  if (btn) btn.textContent = state.showExplain ? '💡 Erklärung ausblenden' : '💡 Erklärung anzeigen';
+}
+
+function nextQuestion() {
+  const topic = TOPICS.find(t=>t.id===state.currentTopic);
+  state.currentQ++;
+  state.feedback = null;
+  state.showExplain = false;
+  if (state.currentQ >= topic.questions.length) {
+    // topic done
+    state.topicResults[state.currentTopic] = {...state.tempResults};
+    checkBadges();
+    state.phase = 'topicDone';
+  } else {
+    state.phase = 'question';
+  }
+  render();
+}
+
+// ─── Topic Done ───────────────────────────────────────────────
+function renderTopicDone(card) {
+  const topic = TOPICS.find(t=>t.id===state.currentTopic);
+  const r = state.topicResults[state.currentTopic];
+  const stars = starsForTopic(topic.id);
+  const pct = Math.round(r.correct/r.total*100);
+  const msgs = ['Übe weiter, du schaffst das! 💪','Gut gemacht, weiter so! 👍','Super, fast perfekt! 🎯','Perfekt! Du bist bereit! 🏆'];
+  const msg = stars===3?msgs[3]:stars===2?msgs[2]:stars===1?msgs[1]:msgs[0];
+
+  card.innerHTML = `
+    <div class="complete-card">
+      <div class="complete-icon">${topic.icon}</div>
+      <div class="complete-title">${topic.name} geschafft!</div>
+      <div class="complete-sub">${r.correct} von ${r.total} Fragen richtig (${pct}%)</div>
+      <div class="stars-earned">
+        ${[0,1,2].map(i=>`<span class="${i<stars?'star-anim':''}">${i<stars?'⭐':'☆'}</span>`).join('')}
+      </div>
+      <div style="font-size:0.9rem;color:var(--muted);margin-bottom:20px;">${msg}</div>
+      ${state.earnedBadges.length>0 ? renderNewBadges() : ''}
+      <button class="next-btn show" onclick="goOverview()">← Zur Übersicht</button>
+    </div>
+  `;
+  spawnConfetti();
+}
+
+function renderNewBadges() {
+  const last = BADGES.filter(b=>state.earnedBadges.includes(b.id)).slice(-1)[0];
+  if (!last) return '';
+  return `<div style="background:#fef9c3;border:2px solid #fde047;border-radius:12px;padding:10px 16px;margin-bottom:16px;font-size:0.82rem;">
+    🏅 Neues Abzeichen freigeschaltet: <strong>${last.icon} ${last.name}</strong>
+  </div>`;
+}
+
+function goOverview() {
+  state.phase = 'overview';
+  state.currentTopic = null;
+  render();
+}
+
+// ─── Final ────────────────────────────────────────────────────
+function renderFinal(card) {
+  const totalC = Object.values(state.topicResults).reduce((s,r)=>s+(r?r.correct:0),0);
+  const totalT = Object.values(state.topicResults).reduce((s,r)=>s+(r?r.total:0),0);
+  const pct = Math.round(totalC/totalT*100);
+  const stars = TOPICS.reduce((s,t)=>s+starsForTopic(t.id),0);
+
+  card.innerHTML = `
+    <div class="final-screen">
+      <div class="final-icon">${pct>=90?'🏆':pct>=70?'🎯':'💪'}</div>
+      <div class="final-title">Grundwissen gecheckt!</div>
+      <div class="final-sub">${totalC} von ${totalT} Fragen richtig · ${pct}% · ${stars}/${TOPICS.length*3} Sterne</div>
+      <div class="topic-results">
+        ${TOPICS.map(t=>{
+          const r=state.topicResults[t.id];
+          const s=starsForTopic(t.id);
+          return `<div class="tr-item">
+            <div class="tr-item-name">${t.icon} ${t.name}</div>
+            <div class="tr-item-score">${r?r.correct+'/'+r.total:'–'} richtig · ${'⭐'.repeat(s)}${'☆'.repeat(3-s)}</div>
+          </div>`;
+        }).join('')}
+      </div>
+      <div style="font-size:0.82rem;color:var(--muted);margin-bottom:16px;">
+        ${pct>=90?'Hervorragend! Du hast alle Themen super gemeistert! 🚀':
+          pct>=70?'Sehr gut! Schau dir die Themen mit weniger Sternen nochmal an.':
+          'Übe die schwächeren Bereiche nochmal – dann bist du fit!'}
+      </div>
+      <button class="restart-btn" onclick="restartAll()">🔄 Nochmal von vorne</button>
+    </div>
+  `;
+  spawnConfetti();
+}
+
+// ─── Badges ───────────────────────────────────────────────────
+function renderBadges(app) {
+  const sec = document.createElement('div');
+  sec.className = 'badges-section';
+  sec.innerHTML = '<div class="badges-title">🏅 ABZEICHEN</div>';
+  const row = document.createElement('div');
+  row.className = 'badges-row';
+  BADGES.forEach(b => {
+    const earned = state.earnedBadges.includes(b.id);
+    const item = document.createElement('div');
+    item.className = 'badge-item ' + (earned?'earned':'locked-b');
+    item.title = b.desc;
+    item.innerHTML = `<span class="badge-icon">${b.icon}</span><span>${b.name}</span>`;
+    row.appendChild(item);
+  });
+  sec.appendChild(row);
+  app.appendChild(sec);
+}
+
+// ─── Effects ─────────────────────────────────────────────────
+function spawnStars(el) {
+  for (let i=0;i<5;i++) {
+    const s = document.createElement('div');
+    s.textContent='⭐';
+    s.style.cssText=`position:fixed;font-size:1.5rem;pointer-events:none;z-index:999;
+      left:${el.getBoundingClientRect().left + Math.random()*el.offsetWidth}px;
+      top:${el.getBoundingClientRect().top}px;
+      animation:confetti 1s ease-out ${i*0.1}s forwards;`;
+    document.body.appendChild(s);
+    setTimeout(()=>s.remove(),1200);
+  }
+}
+
+function spawnConfetti() {
+  const colors=['#4f6ef7','#ff6b9d','#22c55e','#f59e0b','#a855f7','#06b6d4'];
+  for (let i=0;i<30;i++) {
+    const c=document.createElement('div');
+    c.className='confetti-piece';
+    c.style.cssText=`
+      left:${Math.random()*100}vw;top:-10px;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      animation-delay:${Math.random()*0.8}s;
+      animation-duration:${1.2+Math.random()*0.8}s;
+      transform:rotate(${Math.random()*360}deg);
+      width:${6+Math.random()*10}px;height:${6+Math.random()*10}px;
+    `;
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),2500);
+  }
+}
+
+function restartAll() {
+  TOPICS.forEach(t=>{ state.topicResults[t.id]=null; });
+  state.earnedBadges=[];
+  state.phase='overview';
+  state.currentTopic=null;
+  render();
+}
+
+// ─── Init ─────────────────────────────────────────────────────
+render();
+</script>
+</body>
+</html>
