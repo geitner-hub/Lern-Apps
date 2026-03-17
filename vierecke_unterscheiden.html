@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vierecke entdecken – Klasse 5</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f2f5ff; --card: #fff; --hbg: #1a1f5e;
+      --accent: #4f6ef7; --accent2: #f7c948; --text: #1e2235; --muted: #6b7280;
+      --green: #10b981; --red: #ef4444; --orange: #f59e0b;
+      --r: 16px; --sh: 0 2px 16px rgba(79,110,247,.09); --sh2: 0 8px 28px rgba(79,110,247,.18);
+    }
+    body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    /* HEADER */
+    header { background: var(--hbg); color: #fff; padding: 2rem 2rem 1.6rem; text-align: center; position: relative; overflow: hidden; }
+    header::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 75% 20%, #5b6ef0, transparent 55%), radial-gradient(ellipse at 20% 80%, #7c3fc5, transparent 55%); opacity: .7; }
+    .back-btn { position: absolute; top: 1.1rem; left: 1.1rem; background: rgba(255,255,255,.12); border: none; color: #fff; font-family: 'Nunito', sans-serif; font-size: .85rem; font-weight: 700; padding: .4rem .9rem; border-radius: 99px; cursor: pointer; text-decoration: none; display: flex; align-items: center; gap: .35rem; transition: background .15s; z-index: 2; }
+    .back-btn:hover { background: rgba(255,255,255,.22); }
+    header h1 { font-family: 'Fredoka One', cursive; font-size: clamp(1.7rem, 4vw, 2.4rem); position: relative; }
+    header p { margin-top: .3rem; font-size: .9rem; opacity: .65; position: relative; }
+    .header-tags { display: flex; gap: .4rem; justify-content: center; margin-top: .6rem; position: relative; flex-wrap: wrap; }
+    .htag { background: rgba(255,255,255,.14); border-radius: 99px; font-size: .7rem; font-weight: 800; padding: .18rem .6rem; }
+
+    /* PROGRESS NAV */
+    .progress-nav { background: #fff; border-bottom: 2px solid #e4eaf8; padding: .8rem 1rem; position: sticky; top: 0; z-index: 100; box-shadow: 0 3px 14px rgba(79,110,247,.07); }
+    .pn-inner { max-width: 720px; margin: 0 auto; display: flex; gap: .5rem; align-items: center; }
+    .pn-step { flex: 1; display: flex; flex-direction: column; align-items: center; gap: .2rem; cursor: pointer; padding: .3rem .2rem; border-radius: 10px; transition: background .15s; border: none; background: none; font-family: 'Nunito', sans-serif; }
+    .pn-step:hover { background: #f0f4ff; }
+    .pn-dot { width: 30px; height: 30px; border-radius: 50%; background: #e4eaf8; display: flex; align-items: center; justify-content: center; font-size: .8rem; font-weight: 900; color: var(--muted); transition: all .2s; position: relative; }
+    .pn-dot.done { background: var(--green); color: #fff; }
+    .pn-dot.done::after { content: '✓'; position: absolute; font-size: .75rem; }
+    .pn-dot.active { background: var(--accent); color: #fff; box-shadow: 0 0 0 3px rgba(79,110,247,.2); }
+    .pn-label { font-size: .65rem; font-weight: 800; color: var(--muted); text-align: center; line-height: 1.2; }
+    .pn-label.active { color: var(--accent); }
+    .pn-line { flex: 0 0 16px; height: 2px; background: #e4eaf8; border-radius: 99px; margin-bottom: 1rem; }
+    .pn-line.done { background: var(--green); }
+
+    /* SCREENS */
+    .screen { display: none; max-width: 720px; margin: 0 auto; padding: 1.8rem 1.2rem 5rem; animation: fadeUp .3s ease; }
+    .screen.active { display: block; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    .screen-title { font-family: 'Fredoka One', cursive; font-size: 1.4rem; color: var(--hbg); margin-bottom: .35rem; display: flex; align-items: center; gap: .5rem; }
+    .screen-sub { font-size: .88rem; color: var(--muted); margin-bottom: 1.5rem; line-height: 1.5; }
+
+    /* CARDS */
+    .card { background: var(--card); border-radius: var(--r); box-shadow: var(--sh); padding: 1.4rem; margin-bottom: 1rem; border: 2px solid transparent; }
+    .card.correct { border-color: var(--green); background: rgba(16,185,129,.04); }
+    .card.wrong { border-color: var(--red); background: rgba(239,68,68,.04); }
+
+    /* ── MODULE 1: BESCHRIFTEN ── */
+    .label-scene { display: flex; flex-direction: column; align-items: center; gap: 1.5rem; }
+    .svg-wrap { position: relative; width: 100%; max-width: 380px; }
+    .svg-wrap svg { width: 100%; height: auto; display: block; }
+    .label-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: .65rem; width: 100%; max-width: 380px; }
+    .label-inp-group { display: flex; flex-direction: column; gap: .25rem; }
+    .label-inp-group label { font-size: .72rem; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+    .label-inp { padding: .5rem .8rem; border: 2px solid #d1d9f0; border-radius: 10px; font-family: 'Nunito', sans-serif; font-size: .95rem; font-weight: 800; color: var(--text); outline: none; transition: border-color .2s; text-align: center; }
+    .label-inp:focus { border-color: var(--accent); }
+    .label-inp.ok { border-color: var(--green); background: rgba(16,185,129,.06); }
+    .label-inp.err { border-color: var(--red); background: rgba(239,68,68,.06); }
+    .side-label { font-size: 13px; font-weight: 800; fill: var(--accent); font-family: 'Nunito', sans-serif; }
+    .corner-label { font-size: 11px; font-weight: 700; fill: var(--orange); font-family: 'Nunito', sans-serif; }
+
+    /* ── MODULE 2: EIGENSCHAFTEN ── */
+    .prop-figure { display: flex; align-items: flex-start; gap: 1.2rem; flex-wrap: wrap; }
+    .prop-svg { flex: 0 0 160px; }
+    .prop-svg svg { width: 160px; height: 120px; }
+    .prop-checks { flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: .5rem; }
+    .prop-item { display: flex; align-items: center; gap: .7rem; padding: .55rem .8rem; border-radius: 10px; background: #f8faff; border: 2px solid #e8eeff; cursor: pointer; transition: all .15s; user-select: none; }
+    .prop-item:hover { border-color: var(--accent); }
+    .prop-item input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--accent); flex-shrink: 0; cursor: pointer; }
+    .prop-item label { font-size: .87rem; font-weight: 700; cursor: pointer; line-height: 1.3; }
+    .prop-item.correct-check { border-color: var(--green); background: rgba(16,185,129,.06); }
+    .prop-item.wrong-check { border-color: var(--red); background: rgba(239,68,68,.06); }
+    .fig-name { font-family: 'Fredoka One', cursive; font-size: 1rem; color: var(--hbg); margin-bottom: .6rem; }
+
+    /* ── MODULE 3: RECHTECK ERKENNEN ── */
+    .recognize-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: .8rem; }
+    .rec-item { background: var(--card); border-radius: 12px; box-shadow: var(--sh); padding: .9rem; text-align: center; cursor: pointer; border: 3px solid transparent; transition: all .18s; position: relative; }
+    .rec-item:hover { border-color: #c7d3ff; transform: translateY(-2px); }
+    .rec-item.selected-yes { border-color: var(--accent); background: #eef2ff; }
+    .rec-item.selected-no { border-color: #d1d9f0; background: #f8faff; opacity: .6; }
+    .rec-item.reveal-correct { border-color: var(--green) !important; background: rgba(16,185,129,.07) !important; opacity: 1 !important; }
+    .rec-item.reveal-wrong { border-color: var(--red) !important; background: rgba(239,68,68,.07) !important; opacity: 1 !important; }
+    .rec-item svg { width: 80px; height: 60px; display: block; margin: 0 auto .5rem; }
+    .rec-label { font-size: .75rem; font-weight: 800; color: var(--muted); }
+    .rec-badge { position: absolute; top: .4rem; right: .45rem; font-size: .8rem; display: none; }
+    .rec-item.reveal-correct .rec-badge { display: block; }
+    .rec-item.reveal-wrong .rec-badge { display: block; }
+    .rec-question { font-size: .95rem; font-weight: 800; color: var(--hbg); margin-bottom: 1rem; background: #eef2ff; border-radius: 10px; padding: .7rem 1rem; border-left: 4px solid var(--accent); }
+
+    /* ── MODULE 4: SORTIEREN ── */
+    .sort-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .sort-col { background: #f8faff; border-radius: 14px; border: 2px dashed #c7d3ff; padding: .9rem; min-height: 140px; }
+    .sort-col-title { font-family: 'Fredoka One', cursive; font-size: .95rem; color: var(--hbg); text-align: center; margin-bottom: .7rem; padding-bottom: .5rem; border-bottom: 2px solid #e4eaf8; }
+    .sort-col.drag-over { border-color: var(--accent); background: #eef2ff; }
+    .sort-col.correct-col { border-color: var(--green); border-style: solid; background: rgba(16,185,129,.04); }
+    .sort-col.wrong-col { border-color: var(--red); border-style: solid; background: rgba(239,68,68,.04); }
+    .sort-pool { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1.2rem; padding: .8rem; background: #fff; border-radius: 12px; border: 2px solid #e4eaf8; min-height: 60px; }
+    .sort-card { background: var(--card); border: 2px solid #d1d9f0; border-radius: 10px; padding: .5rem .75rem; font-size: .82rem; font-weight: 800; cursor: grab; transition: all .15s; display: flex; align-items: center; gap: .4rem; box-shadow: var(--sh); user-select: none; }
+    .sort-card:hover { border-color: var(--accent); transform: translateY(-1px); box-shadow: var(--sh2); }
+    .sort-card.dragging { opacity: .4; cursor: grabbing; }
+    .sort-card svg { width: 32px; height: 24px; flex-shrink: 0; }
+    .sort-card.correct-card { border-color: var(--green); background: rgba(16,185,129,.06); }
+    .sort-card.wrong-card { border-color: var(--red); background: rgba(239,68,68,.06); }
+    .drop-zone-cards { display: flex; flex-wrap: wrap; gap: .5rem; min-height: 44px; }
+
+    /* FEEDBACK / BUTTONS */
+    .feedback { font-size: .88rem; font-weight: 800; padding: .6rem 1rem; border-radius: 10px; margin-top: .8rem; display: none; }
+    .feedback.ok { background: rgba(16,185,129,.1); color: #059669; border: 1.5px solid rgba(16,185,129,.25); }
+    .feedback.err { background: rgba(239,68,68,.08); color: #dc2626; border: 1.5px solid rgba(239,68,68,.2); }
+    .feedback.info { background: rgba(79,110,247,.08); color: var(--accent); border: 1.5px solid rgba(79,110,247,.18); }
+
+    .btn { padding: .65rem 1.3rem; border-radius: 12px; font-family: 'Nunito', sans-serif; font-size: .9rem; font-weight: 800; cursor: pointer; transition: all .15s; border: 2px solid; }
+    .btn-primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .btn-primary:hover { background: #3a5ce0; }
+    .btn-secondary { background: #f8faff; border-color: #d1d9f0; color: var(--text); }
+    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+    .btn-next { background: linear-gradient(135deg, var(--accent), #7c3fc5); border: none; color: #fff; padding: .75rem 2rem; border-radius: 12px; font-family: 'Fredoka One', cursive; font-size: 1.05rem; cursor: pointer; box-shadow: 0 4px 16px rgba(79,110,247,.3); transition: all .2s; display: block; margin: 1.4rem auto 0; }
+    .btn-next:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(79,110,247,.4); }
+    .btn-row { display: flex; gap: .65rem; margin-top: 1rem; flex-wrap: wrap; }
+
+    /* SCORE / FINAL */
+    .score-display { background: linear-gradient(135deg, var(--hbg), #312e7a); border-radius: 18px; padding: 1.5rem; color: #fff; text-align: center; margin: 1rem 0; }
+    .score-big { font-family: 'Fredoka One', cursive; font-size: 3rem; display: block; }
+    .score-stars { font-size: 2rem; letter-spacing: .2rem; margin: .3rem 0; display: block; }
+    .score-msg { font-size: .95rem; opacity: .8; }
+
+    /* TOOLTIP / HINT */
+    .hint-box { background: #fffbeb; border: 2px solid #fde68a; border-radius: 10px; padding: .65rem .9rem; font-size: .82rem; color: #92400e; font-weight: 700; margin-top: .6rem; display: flex; gap: .5rem; align-items: flex-start; }
+    .hint-box::before { content: '💡'; flex-shrink: 0; }
+
+    footer { text-align: center; padding: 1.5rem; font-size: .8rem; color: var(--muted); border-top: 1px solid #e4eaf8; }
+
+    /* PROGRESS BAR */
+    .mini-progress { display: flex; gap: .3rem; margin-bottom: 1.2rem; }
+    .mp-dot { flex: 1; height: 5px; border-radius: 99px; background: #e4eaf8; transition: background .3s; }
+    .mp-dot.done { background: var(--green); }
+    .mp-dot.active { background: var(--accent); }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="back-btn">← Zurück</a>
+  <h1>📐 Vierecke entdecken</h1>
+  <p>Eigenschaften von Rechtecken und Vierecken</p>
+  <div class="header-tags">
+    <span class="htag">Klasse 5</span>
+    <span class="htag">Geometrie</span>
+    <span class="htag">4 Module</span>
+  </div>
+</header>
+
+<!-- PROGRESS NAV -->
+<nav class="progress-nav">
+  <div class="pn-inner">
+    <button class="pn-step" onclick="goTo(0)">
+      <div class="pn-dot active" id="dot0">1</div>
+      <span class="pn-label active" id="lbl0">Beschriften</span>
+    </button>
+    <div class="pn-line" id="line0"></div>
+    <button class="pn-step" onclick="goTo(1)">
+      <div class="pn-dot" id="dot1">2</div>
+      <span class="pn-label" id="lbl1">Eigenschaften</span>
+    </button>
+    <div class="pn-line" id="line1"></div>
+    <button class="pn-step" onclick="goTo(2)">
+      <div class="pn-dot" id="dot2">3</div>
+      <span class="pn-label" id="lbl2">Erkennen</span>
+    </button>
+    <div class="pn-line" id="line2"></div>
+    <button class="pn-step" onclick="goTo(3)">
+      <div class="pn-dot" id="dot3">4</div>
+      <span class="pn-label" id="lbl3">Sortieren</span>
+    </button>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════
+     SCREEN 0 – SEITEN BESCHRIFTEN
+══════════════════════════════════════ -->
+<div class="screen active" id="screen0">
+  <div class="screen-title">✏️ Seiten beschriften</div>
+  <p class="screen-sub">Jede Seite eines Vierecks bekommt einen Buchstaben. Trage die richtigen Buchstaben in die Felder ein.</p>
+
+  <!-- Aufgabe 1: Rechteck beschriften -->
+  <div class="card" id="m1q1">
+    <div class="fig-name">📦 Das Rechteck</div>
+    <div class="hint-box">Ein Rechteck hat 4 Seiten. Die gegenüberliegenden Seiten heißen gleich – sie werden mit denselben Buchstaben beschriftet.</div>
+    <div class="label-scene" style="margin-top:1rem">
+      <div class="svg-wrap">
+        <svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg">
+          <!-- Rechteck -->
+          <rect x="40" y="30" width="240" height="120" rx="0" fill="#eef2ff" stroke="#4f6ef7" stroke-width="3"/>
+          <!-- Eckpunkte -->
+          <circle cx="40" cy="30" r="5" fill="#1a1f5e"/>
+          <circle cx="280" cy="30" r="5" fill="#1a1f5e"/>
+          <circle cx="280" cy="150" r="5" fill="#1a1f5e"/>
+          <circle cx="40" cy="150" r="5" fill="#1a1f5e"/>
+          <!-- Eckenbezeichnungen -->
+          <text x="22" y="26" class="corner-label">A</text>
+          <text x="284" y="26" class="corner-label">B</text>
+          <text x="284" y="162" class="corner-label">C</text>
+          <text x="22" y="162" class="corner-label">D</text>
+          <!-- Fragebeschriftungen an den Seiten -->
+          <text x="155" y="22" text-anchor="middle" class="side-label" id="sv-top">?</text>
+          <text x="295" y="96" text-anchor="start" class="side-label" id="sv-right">?</text>
+          <text x="155" y="172" text-anchor="middle" class="side-label" id="sv-bottom">?</text>
+          <text x="10" y="96" text-anchor="start" class="side-label" id="sv-left">?</text>
+          <!-- Längenpfeile -->
+          <line x1="40" y1="14" x2="280" y2="14" stroke="#4f6ef7" stroke-width="1.5" stroke-dasharray="4"/>
+          <line x1="294" y1="30" x2="294" y2="150" stroke="#4f6ef7" stroke-width="1.5" stroke-dasharray="4"/>
+        </svg>
+      </div>
+      <div class="label-inputs">
+        <div class="label-inp-group">
+          <label>Seite oben (A→B)</label>
+          <input class="label-inp" id="inp-top" maxlength="2" placeholder="?" autocomplete="off" autocorrect="off" spellcheck="false"/>
+        </div>
+        <div class="label-inp-group">
+          <label>Seite rechts (B→C)</label>
+          <input class="label-inp" id="inp-right" maxlength="2" placeholder="?" autocomplete="off" autocorrect="off" spellcheck="false"/>
+        </div>
+        <div class="label-inp-group">
+          <label>Seite unten (D→C)</label>
+          <input class="label-inp" id="inp-bottom" maxlength="2" placeholder="?" autocomplete="off" autocorrect="off" spellcheck="false"/>
+        </div>
+        <div class="label-inp-group">
+          <label>Seite links (A→D)</label>
+          <input class="label-inp" id="inp-left" maxlength="2" placeholder="?" autocomplete="off" autocorrect="off" spellcheck="false"/>
+        </div>
+      </div>
+    </div>
+    <div class="hint-box" style="margin-top:1rem">Die zwei langen Seiten heißen <strong>a</strong>, die zwei kurzen heißen <strong>b</strong>.</div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="checkLabels()">✓ Überprüfen</button>
+      <button class="btn btn-secondary" onclick="showLabelHint()">💡 Tipp</button>
+    </div>
+    <div class="feedback" id="fb-labels"></div>
+  </div>
+
+  <!-- Aufgabe 2: Welche Seiten sind gleich lang -->
+  <div class="card" id="m1q2" style="margin-top:1.2rem">
+    <div class="fig-name">🔍 Gleich lange Seiten</div>
+    <p style="font-size:.88rem;color:var(--muted);margin-bottom:.9rem">Welche Aussagen über die Seiten des Rechtecks stimmen? Wähle alle richtigen aus.</p>
+    <div style="display:flex;flex-direction:column;gap:.5rem" id="sameLength">
+      <label class="prop-item"><input type="checkbox" id="sl1"> <span>Seite <strong>a</strong> (oben) und Seite <strong>a</strong> (unten) sind gleich lang.</span></label>
+      <label class="prop-item"><input type="checkbox" id="sl2"> <span>Seite <strong>a</strong> und Seite <strong>b</strong> sind gleich lang.</span></label>
+      <label class="prop-item"><input type="checkbox" id="sl3"> <span>Seite <strong>b</strong> (links) und Seite <strong>b</strong> (rechts) sind gleich lang.</span></label>
+      <label class="prop-item"><input type="checkbox" id="sl4"> <span>Alle vier Seiten sind gleich lang.</span></label>
+    </div>
+    <div class="btn-row" style="margin-top:.9rem">
+      <button class="btn btn-primary" onclick="checkSameLength()">✓ Überprüfen</button>
+    </div>
+    <div class="feedback" id="fb-same"></div>
+  </div>
+
+  <button class="btn-next" onclick="finishModule(0)">Weiter zu Modul 2 →</button>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     SCREEN 1 – EIGENSCHAFTEN
+══════════════════════════════════════ -->
+<div class="screen" id="screen1">
+  <div class="screen-title">🔎 Eigenschaften erkennen</div>
+  <p class="screen-sub">Schau dir die Figuren an und entscheide, welche Eigenschaften sie haben.</p>
+
+  <div id="propQuestions"></div>
+  <div class="feedback" id="fb-props"></div>
+  <div class="btn-row" style="margin-top:1rem">
+    <button class="btn btn-primary" onclick="checkProps()">✓ Alle überprüfen</button>
+    <button class="btn btn-secondary" onclick="resetProps()">↺ Zurücksetzen</button>
+  </div>
+  <button class="btn-next" onclick="finishModule(1)">Weiter zu Modul 3 →</button>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     SCREEN 2 – RECHTECK ERKENNEN
+══════════════════════════════════════ -->
+<div class="screen" id="screen2">
+  <div class="screen-title">✅ Rechtecke erkennen</div>
+  <p class="screen-sub">Klicke auf alle Figuren, die <strong>Rechtecke</strong> sind. Denk daran: Ein Rechteck hat 4 rechte Winkel und gegenüberliegende Seiten sind gleich lang.</p>
+
+  <div class="rec-question">Welche dieser Figuren sind Rechtecke? Klicke sie an!</div>
+  <div class="recognize-grid" id="recognizeGrid"></div>
+  <div class="feedback" id="fb-rec"></div>
+  <div class="btn-row" style="margin-top:1rem">
+    <button class="btn btn-primary" onclick="checkRecognize()">✓ Überprüfen</button>
+    <button class="btn btn-secondary" onclick="resetRecognize()">↺ Zurücksetzen</button>
+  </div>
+  <button class="btn-next" onclick="finishModule(2)">Weiter zu Modul 4 →</button>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     SCREEN 3 – SORTIEREN
+══════════════════════════════════════ -->
+<div class="screen" id="screen3">
+  <div class="screen-title">🗂️ Figuren sortieren</div>
+  <p class="screen-sub">Ziehe die Figuren in die richtige Gruppe. Du kannst auch auf eine Figur klicken, um sie zuzuordnen.</p>
+
+  <div class="sort-pool" id="sortPool"></div>
+  <div class="sort-cols">
+    <div class="sort-col" id="col-rect" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event,'Rechteck')">
+      <div class="sort-col-title">📦 Rechteck</div>
+      <div class="drop-zone-cards" id="zone-Rechteck"></div>
+    </div>
+    <div class="sort-col" id="col-other" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event,'Anderes Viereck')">
+      <div class="sort-col-title">🔷 Anderes Viereck</div>
+      <div class="drop-zone-cards" id="zone-Anderes Viereck"></div>
+    </div>
+  </div>
+  <div class="feedback" id="fb-sort"></div>
+  <div class="btn-row" style="margin-top:1rem">
+    <button class="btn btn-primary" onclick="checkSort()">✓ Überprüfen</button>
+    <button class="btn btn-secondary" onclick="resetSort()">↺ Zurücksetzen</button>
+  </div>
+  <button class="btn-next" onclick="finishAll()">🏁 Auswertung →</button>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     SCREEN 4 – AUSWERTUNG
+══════════════════════════════════════ -->
+<div class="screen" id="screen4">
+  <div class="screen-title">🏆 Geschafft!</div>
+  <div class="score-display">
+    <span class="score-big" id="finalScore">–</span>
+    <span class="score-stars" id="finalStars">⭐</span>
+    <span class="score-msg" id="finalMsg">Du hast alle Module abgeschlossen!</span>
+  </div>
+  <div style="background:var(--card);border-radius:14px;padding:1.2rem;box-shadow:var(--sh);margin-top:1rem">
+    <div style="font-family:'Fredoka One',cursive;font-size:1rem;color:var(--hbg);margin-bottom:.7rem">📋 Was du gelernt hast:</div>
+    <ul style="list-style:none;display:flex;flex-direction:column;gap:.45rem">
+      <li style="font-size:.88rem;font-weight:700;color:var(--text)">✏️ Seiten eines Rechtecks heißen <strong>a</strong> (lange Seiten) und <strong>b</strong> (kurze Seiten)</li>
+      <li style="font-size:.88rem;font-weight:700;color:var(--text)">📐 Gegenüberliegende Seiten sind immer gleich lang</li>
+      <li style="font-size:.88rem;font-weight:700;color:var(--text)">🔲 Ein Rechteck hat 4 rechte Winkel (90°)</li>
+      <li style="font-size:.88rem;font-weight:700;color:var(--text)">🔷 Quadrate sind besondere Rechtecke: alle vier Seiten gleich lang</li>
+      <li style="font-size:.88rem;font-weight:700;color:var(--text)">🔸 Parallelogramme und Rauten sind keine Rechtecke (keine rechten Winkel)</li>
+    </ul>
+  </div>
+  <div class="btn-row" style="margin-top:1.3rem">
+    <button class="btn btn-primary" onclick="goTo(0);resetAll()">↺ Nochmal üben</button>
+    <a href="index.html" class="btn btn-secondary" style="text-decoration:none;display:inline-flex;align-items:center;gap:.3rem">🏠 Zur Startseite</a>
+  </div>
+</div>
+
+<footer>Lern-Apps · geitner-hub.github.io</footer>
+
+<script>
+// ─────────────────────────────────────────────────
+// NAV
+// ─────────────────────────────────────────────────
+let currentScreen = 0;
+const moduleScores = [0, 0, 0, 0]; // points per module
+const moduleMax    = [2, 2, 1, 1];
+
+function goTo(n) {
+  document.querySelectorAll('.screen').forEach((s,i) => s.classList.toggle('active', i===n));
+  currentScreen = n;
+  updateNav();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function updateNav() {
+  for (let i = 0; i < 4; i++) {
+    const dot = document.getElementById('dot'+i);
+    const lbl = document.getElementById('lbl'+i);
+    dot.className = 'pn-dot' + (i < currentScreen ? ' done' : i === currentScreen ? ' active' : '');
+    dot.textContent = i < currentScreen ? '' : (i+1);
+    lbl.className = 'pn-label' + (i === currentScreen ? ' active' : '');
+    if (i < 3) {
+      const line = document.getElementById('line'+i);
+      line.className = 'pn-line' + (i < currentScreen ? ' done' : '');
+    }
+  }
+}
+
+function finishModule(n) {
+  goTo(n + 1);
+}
+
+function finishAll() {
+  const total = moduleScores.reduce((a,b)=>a+b,0);
+  const max   = moduleMax.reduce((a,b)=>a+b,0);
+  const pct   = Math.round((total/max)*100);
+  document.getElementById('finalScore').textContent = total + ' / ' + max + ' Punkte';
+  document.getElementById('finalStars').textContent = pct>=80?'⭐⭐⭐':pct>=50?'⭐⭐':'⭐';
+  document.getElementById('finalMsg').textContent = pct>=80?'Ausgezeichnet! Du kennst dich super mit Vierecken aus!':pct>=50?'Gut gemacht! Üb noch ein bisschen weiter.':'Nicht schlimm – versuch es nochmal!';
+  saveResult(total, max, pct);
+  goTo(4);
+}
+
+// ─────────────────────────────────────────────────
+// MODULE 1 – BESCHRIFTEN
+// ─────────────────────────────────────────────────
+function checkLabels() {
+  const vals = {
+    top:    document.getElementById('inp-top').value.trim().toLowerCase(),
+    right:  document.getElementById('inp-right').value.trim().toLowerCase(),
+    bottom: document.getElementById('inp-bottom').value.trim().toLowerCase(),
+    left:   document.getElementById('inp-left').value.trim().toLowerCase(),
+  };
+  const correct = { top:'a', right:'b', bottom:'a', left:'b' };
+  let ok = true;
+  Object.keys(vals).forEach(k => {
+    const inp = document.getElementById('inp-'+k);
+    const isOk = vals[k] === correct[k];
+    inp.classList.toggle('ok', isOk);
+    inp.classList.toggle('err', !isOk);
+    // Update SVG labels
+    const svgEl = document.getElementById('sv-'+k);
+    if (svgEl) svgEl.textContent = vals[k] || '?';
+    if (!isOk) ok = false;
+  });
+  const fb = document.getElementById('fb-labels');
+  fb.style.display = 'block';
+  if (ok) {
+    fb.className = 'feedback ok';
+    fb.textContent = '✅ Perfekt! Die langen Seiten heißen a, die kurzen b.';
+    moduleScores[0] = Math.max(moduleScores[0], 1);
+  } else {
+    fb.className = 'feedback err';
+    fb.textContent = '❌ Noch nicht ganz. Tipp: Die beiden langen Seiten heißen a, die kurzen heißen b.';
+  }
+}
+
+function showLabelHint() {
+  const fb = document.getElementById('fb-labels');
+  fb.style.display = 'block';
+  fb.className = 'feedback info';
+  fb.textContent = '💡 Schau dir die gestrichelten Linien an: Die obere und untere Seite sind gleich lang → beide heißen a. Die linke und rechte Seite sind kürzer → beide heißen b.';
+}
+
+function checkSameLength() {
+  const answers = [
+    { id: 'sl1', correct: true },
+    { id: 'sl2', correct: false },
+    { id: 'sl3', correct: true },
+    { id: 'sl4', correct: false },
+  ];
+  let allOk = true;
+  answers.forEach(a => {
+    const inp = document.getElementById(a.id);
+    const item = inp.closest('.prop-item');
+    const userChecked = inp.checked;
+    const isOk = userChecked === a.correct;
+    item.classList.toggle('correct-check', isOk);
+    item.classList.toggle('wrong-check', !isOk);
+    if (!isOk) allOk = false;
+  });
+  const fb = document.getElementById('fb-same');
+  fb.style.display = 'block';
+  if (allOk) {
+    fb.className = 'feedback ok';
+    fb.textContent = '✅ Richtig! Gegenüberliegende Seiten sind immer gleich lang.';
+    moduleScores[0] = Math.max(moduleScores[0], 2);
+  } else {
+    fb.className = 'feedback err';
+    fb.textContent = '❌ Überprüfe deine Auswahl. Welche Seiten tragen denselben Buchstaben?';
+  }
+}
+
+// ─────────────────────────────────────────────────
+// MODULE 2 – EIGENSCHAFTEN
+// ─────────────────────────────────────────────────
+const FIGURES = [
+  {
+    name: 'Rechteck',
+    svg: `<svg viewBox="0 0 160 100"><rect x="10" y="15" width="140" height="70" fill="#eef2ff" stroke="#4f6ef7" stroke-width="2.5"/>
+      <rect x="10" y="15" width="10" height="10" fill="none" stroke="#f59e0b" stroke-width="1.8"/>
+      <rect x="140" y="15" width="10" height="10" fill="none" stroke="#f59e0b" stroke-width="1.8"/>
+      <rect x="10" y="75" width="10" height="10" fill="none" stroke="#f59e0b" stroke-width="1.8"/>
+      <rect x="140" y="75" width="10" height="10" fill="none" stroke="#f59e0b" stroke-width="1.8"/></svg>`,
+    props: [
+      { text: '4 rechte Winkel (90°)', correct: true },
+      { text: 'Alle Seiten gleich lang', correct: false },
+      { text: 'Gegenüberliegende Seiten gleich lang', correct: true },
+      { text: 'Nur 2 rechte Winkel', correct: false },
+    ]
+  },
+  {
+    name: 'Quadrat',
+    svg: `<svg viewBox="0 0 160 100"><rect x="30" y="10" width="100" height="80" fill="#fef3c7" stroke="#f59e0b" stroke-width="2.5"/>
+      <rect x="30" y="10" width="10" height="10" fill="none" stroke="#4f6ef7" stroke-width="1.8"/>
+      <rect x="120" y="10" width="10" height="10" fill="none" stroke="#4f6ef7" stroke-width="1.8"/>
+      <rect x="30" y="80" width="10" height="10" fill="none" stroke="#4f6ef7" stroke-width="1.8"/>
+      <rect x="120" y="80" width="10" height="10" fill="none" stroke="#4f6ef7" stroke-width="1.8"/>
+      <text x="80" y="95" text-anchor="middle" font-size="9" fill="#92400e" font-family="Nunito" font-weight="800">alle Seiten gleich lang</text></svg>`,
+    props: [
+      { text: '4 rechte Winkel (90°)', correct: true },
+      { text: 'Alle 4 Seiten gleich lang', correct: true },
+      { text: 'Gegenüberliegende Seiten gleich lang', correct: true },
+      { text: 'Keine rechten Winkel', correct: false },
+    ]
+  }
+];
+
+function buildProps() {
+  const container = document.getElementById('propQuestions');
+  container.innerHTML = '';
+  FIGURES.forEach((fig, fi) => {
+    const div = document.createElement('div');
+    div.className = 'card';
+    div.style.marginBottom = '1rem';
+    const checks = fig.props.map((p, pi) =>
+      `<label class="prop-item" id="pi-${fi}-${pi}">
+        <input type="checkbox" id="pc-${fi}-${pi}">
+        <span>${p.text}</span>
+      </label>`
+    ).join('');
+    div.innerHTML = `
+      <div class="fig-name">${fig.name}</div>
+      <div class="prop-figure">
+        <div class="prop-svg">${fig.svg}</div>
+        <div class="prop-checks">${checks}</div>
+      </div>`;
+    container.appendChild(div);
+  });
+}
+
+function checkProps() {
+  let allOk = true;
+  FIGURES.forEach((fig, fi) => {
+    fig.props.forEach((p, pi) => {
+      const inp = document.getElementById(`pc-${fi}-${pi}`);
+      const item = document.getElementById(`pi-${fi}-${pi}`);
+      const isOk = inp.checked === p.correct;
+      item.classList.toggle('correct-check', isOk);
+      item.classList.toggle('wrong-check', !isOk);
+      if (!isOk) allOk = false;
+    });
+  });
+  const fb = document.getElementById('fb-props');
+  fb.style.display = 'block';
+  if (allOk) {
+    fb.className = 'feedback ok';
+    fb.textContent = '✅ Ausgezeichnet! Du hast alle Eigenschaften richtig erkannt.';
+    moduleScores[1] = 2;
+  } else {
+    fb.className = 'feedback err';
+    fb.textContent = '❌ Noch nicht ganz. Schau dir die orangefarbenen Winkelmarkierungen genau an.';
+    moduleScores[1] = Math.max(moduleScores[1], 1);
+  }
+}
+
+function resetProps() {
+  FIGURES.forEach((fig, fi) => {
+    fig.props.forEach((_, pi) => {
+      const inp = document.getElementById(`pc-${fi}-${pi}`);
+      const item = document.getElementById(`pi-${fi}-${pi}`);
+      inp.checked = false;
+      item.classList.remove('correct-check','wrong-check');
+    });
+  });
+  const fb = document.getElementById('fb-props');
+  fb.style.display = 'none';
+}
+
+// ─────────────────────────────────────────────────
+// MODULE 3 – RECHTECK ERKENNEN
+// ─────────────────────────────────────────────────
+const SHAPES = [
+  { name: 'Rechteck', isRect: true,
+    svg: `<svg viewBox="0 0 80 60"><rect x="5" y="10" width="70" height="40" fill="#eef2ff" stroke="#4f6ef7" stroke-width="2"/>
+      <rect x="5" y="10" width="7" height="7" fill="none" stroke="#f59e0b" stroke-width="1.5"/>
+      <rect x="68" y="10" width="7" height="7" fill="none" stroke="#f59e0b" stroke-width="1.5"/>
+      <rect x="5" y="43" width="7" height="7" fill="none" stroke="#f59e0b" stroke-width="1.5"/>
+      <rect x="68" y="43" width="7" height="7" fill="none" stroke="#f59e0b" stroke-width="1.5"/></svg>` },
+  { name: 'Quadrat', isRect: true,
+    svg: `<svg viewBox="0 0 80 60"><rect x="15" y="5" width="50" height="50" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+      <rect x="15" y="5" width="7" height="7" fill="none" stroke="#4f6ef7" stroke-width="1.5"/>
+      <rect x="58" y="5" width="7" height="7" fill="none" stroke="#4f6ef7" stroke-width="1.5"/>
+      <rect x="15" y="48" width="7" height="7" fill="none" stroke="#4f6ef7" stroke-width="1.5"/>
+      <rect x="58" y="48" width="7" height="7" fill="none" stroke="#4f6ef7" stroke-width="1.5"/></svg>` },
+  { name: 'Parallelogramm', isRect: false,
+    svg: `<svg viewBox="0 0 80 60"><polygon points="20,50 70,50 60,10 10,10" fill="#fce7f3" stroke="#ec4899" stroke-width="2"/></svg>` },
+  { name: 'Raute', isRect: false,
+    svg: `<svg viewBox="0 0 80 60"><polygon points="40,4 75,30 40,56 5,30" fill="#f3e8ff" stroke="#9333ea" stroke-width="2"/></svg>` },
+  { name: 'Trapez', isRect: false,
+    svg: `<svg viewBox="0 0 80 60"><polygon points="10,50 70,50 55,10 25,10" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/></svg>` },
+  { name: 'Rechteck (schmal)', isRect: true,
+    svg: `<svg viewBox="0 0 80 60"><rect x="5" y="20" width="70" height="20" fill="#eef2ff" stroke="#4f6ef7" stroke-width="2"/>
+      <rect x="5" y="20" width="7" height="7" fill="none" stroke="#f59e0b" stroke-width="1.5"/>
+      <rect x="68" y="20" width="7" height="7" fill="none" stroke="#f59e0b" stroke-width="1.5"/>
+      <rect x="5" y="33" width="7" height="7" fill="none" stroke="#f59e0b" stroke-width="1.5"/>
+      <rect x="68" y="33" width="7" height="7" fill="none" stroke="#f59e0b" stroke-width="1.5"/></svg>` },
+];
+
+let recSelected = new Set();
+
+function buildRecognize() {
+  const grid = document.getElementById('recognizeGrid');
+  grid.innerHTML = '';
+  SHAPES.forEach((s, i) => {
+    const div = document.createElement('div');
+    div.className = 'rec-item';
+    div.dataset.idx = i;
+    div.innerHTML = `${s.svg}<div class="rec-label">${s.name}</div><span class="rec-badge" id="rbadge-${i}"></span>`;
+    div.addEventListener('click', () => toggleRec(div, i));
+    grid.appendChild(div);
+  });
+}
+
+function toggleRec(el, i) {
+  if (el.classList.contains('reveal-correct') || el.classList.contains('reveal-wrong')) return;
+  if (recSelected.has(i)) {
+    recSelected.delete(i);
+    el.classList.remove('selected-yes');
+    el.classList.add('selected-no');
+  } else {
+    recSelected.add(i);
+    el.classList.remove('selected-no');
+    el.classList.add('selected-yes');
+  }
+}
+
+function checkRecognize() {
+  let allOk = true;
+  SHAPES.forEach((s, i) => {
+    const el = document.querySelector(`.rec-item[data-idx="${i}"]`);
+    const badge = document.getElementById('rbadge-'+i);
+    const userSel = recSelected.has(i);
+    const isOk = userSel === s.isRect;
+    el.classList.remove('selected-yes','selected-no');
+    el.classList.add(isOk ? 'reveal-correct' : 'reveal-wrong');
+    badge.textContent = isOk ? '✅' : '❌';
+    if (!isOk) allOk = false;
+  });
+  const fb = document.getElementById('fb-rec');
+  fb.style.display = 'block';
+  if (allOk) {
+    fb.className = 'feedback ok';
+    fb.textContent = '✅ Sehr gut! Du erkennst Rechtecke sicher an ihren rechten Winkeln.';
+    moduleScores[2] = 1;
+  } else {
+    fb.className = 'feedback err';
+    fb.textContent = '❌ Schau genauer hin: Rechtecke haben an allen 4 Ecken rechte Winkel (kleine Quadrate). Auch Quadrate sind Rechtecke!';
+  }
+}
+
+function resetRecognize() {
+  recSelected.clear();
+  document.querySelectorAll('.rec-item').forEach(el => {
+    el.classList.remove('selected-yes','selected-no','reveal-correct','reveal-wrong');
+  });
+  document.querySelectorAll('.rec-badge').forEach(b => b.textContent='');
+  document.getElementById('fb-rec').style.display = 'none';
+}
+
+// ─────────────────────────────────────────────────
+// MODULE 4 – SORTIEREN (Drag & Drop + Click)
+// ─────────────────────────────────────────────────
+const SORT_ITEMS = [
+  { id:'s1', name:'Rechteck', cat:'Rechteck',
+    svg:`<svg viewBox="0 0 32 24"><rect x="1" y="3" width="30" height="18" fill="#eef2ff" stroke="#4f6ef7" stroke-width="1.5"/></svg>` },
+  { id:'s2', name:'Quadrat', cat:'Rechteck',
+    svg:`<svg viewBox="0 0 32 24"><rect x="6" y="1" width="20" height="22" fill="#fef3c7" stroke="#f59e0b" stroke-width="1.5"/></svg>` },
+  { id:'s3', name:'Parallelogramm', cat:'Anderes Viereck',
+    svg:`<svg viewBox="0 0 32 24"><polygon points="8,22 30,22 24,2 2,2" fill="#fce7f3" stroke="#ec4899" stroke-width="1.5"/></svg>` },
+  { id:'s4', name:'Raute', cat:'Anderes Viereck',
+    svg:`<svg viewBox="0 0 32 24"><polygon points="16,1 31,12 16,23 1,12" fill="#f3e8ff" stroke="#9333ea" stroke-width="1.5"/></svg>` },
+  { id:'s5', name:'Schmales Rechteck', cat:'Rechteck',
+    svg:`<svg viewBox="0 0 32 24"><rect x="1" y="8" width="30" height="8" fill="#eef2ff" stroke="#4f6ef7" stroke-width="1.5"/></svg>` },
+  { id:'s6', name:'Trapez', cat:'Anderes Viereck',
+    svg:`<svg viewBox="0 0 32 24"><polygon points="4,22 28,22 22,2 10,2" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/></svg>` },
+];
+let sortState = {}; // id -> category or 'pool'
+let draggedId = null;
+
+function buildSort() {
+  SORT_ITEMS.forEach(s => sortState[s.id] = 'pool');
+  renderSort();
+}
+
+function renderSort() {
+  const pool = document.getElementById('sortPool');
+  const zoneRect = document.getElementById('zone-Rechteck');
+  const zoneOther = document.getElementById('zone-Anderes Viereck');
+  pool.innerHTML = '';
+  zoneRect.innerHTML = '';
+  zoneOther.innerHTML = '';
+  SORT_ITEMS.forEach(s => {
+    const card = createSortCard(s);
+    if (sortState[s.id] === 'pool') pool.appendChild(card);
+    else if (sortState[s.id] === 'Rechteck') zoneRect.appendChild(card);
+    else zoneOther.appendChild(card);
+  });
+}
+
+function createSortCard(s) {
+  const div = document.createElement('div');
+  div.className = 'sort-card';
+  div.draggable = true;
+  div.dataset.id = s.id;
+  div.innerHTML = s.svg + `<span>${s.name}</span>`;
+  div.addEventListener('dragstart', e => { draggedId = s.id; div.classList.add('dragging'); });
+  div.addEventListener('dragend', () => div.classList.remove('dragging'));
+  div.addEventListener('click', () => cycleSortCard(s.id));
+  return div;
+}
+
+function cycleSortCard(id) {
+  const cats = ['pool', 'Rechteck', 'Anderes Viereck'];
+  const cur = sortState[id];
+  const next = cats[(cats.indexOf(cur)+1) % cats.length];
+  sortState[id] = next;
+  renderSort();
+  document.getElementById('fb-sort').style.display = 'none';
+}
+
+function dragOver(e) { e.preventDefault(); e.currentTarget.classList.add('drag-over'); }
+function dragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
+function drop(e, cat) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  if (draggedId) { sortState[draggedId] = cat; draggedId = null; renderSort(); }
+}
+
+function checkSort() {
+  let allOk = true;
+  SORT_ITEMS.forEach(s => {
+    if (sortState[s.id] === 'pool') { allOk = false; return; }
+    const isOk = sortState[s.id] === s.cat;
+    if (!isOk) allOk = false;
+    // Visual feedback per card
+    const card = document.querySelector(`.sort-card[data-id="${s.id}"]`);
+    if (card) { card.classList.toggle('correct-card', isOk); card.classList.toggle('wrong-card', !isOk); }
+  });
+  const fb = document.getElementById('fb-sort');
+  fb.style.display = 'block';
+  if (SORT_ITEMS.some(s => sortState[s.id] === 'pool')) {
+    fb.className = 'feedback info';
+    fb.textContent = '💡 Ordne zuerst alle Figuren einer Gruppe zu, dann überprüfen!';
+    return;
+  }
+  if (allOk) {
+    fb.className = 'feedback ok';
+    fb.textContent = '✅ Perfekt sortiert! Denk daran: Auch das Quadrat ist ein Rechteck!';
+    moduleScores[3] = 1;
+  } else {
+    fb.className = 'feedback err';
+    fb.textContent = '❌ Noch nicht ganz. Tipp: Rechtecke haben immer 4 rechte Winkel. Schau genau hin!';
+  }
+}
+
+function resetSort() {
+  SORT_ITEMS.forEach(s => sortState[s.id] = 'pool');
+  renderSort();
+  document.getElementById('fb-sort').style.display = 'none';
+  document.querySelectorAll('.sort-col').forEach(c => c.classList.remove('correct-col','wrong-col'));
+}
+
+// ─────────────────────────────────────────────────
+// SAVE & RESET
+// ─────────────────────────────────────────────────
+function saveResult(score, max, pct) {
+  try {
+    const stored = JSON.parse(localStorage.getItem('lern-apps-results') || '{}');
+    const label = pct>=80?'🏆 Super!':pct>=50?'👍 Gut':'💪 Üben';
+    stored['vierecke-vorentlastung-kl5.html'] = { score, max, percent:pct, label };
+    localStorage.setItem('lern-apps-results', JSON.stringify(stored));
+  } catch(e){}
+}
+
+function resetAll() {
+  moduleScores.fill(0);
+  // Labels
+  ['top','right','bottom','left'].forEach(k=>{
+    const inp=document.getElementById('inp-'+k);
+    inp.value=''; inp.classList.remove('ok','err');
+    const sv=document.getElementById('sv-'+k); if(sv) sv.textContent='?';
+  });
+  ['sl1','sl2','sl3','sl4'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.checked=false;
+    const pi=el&&el.closest('.prop-item'); if(pi) pi.classList.remove('correct-check','wrong-check');
+  });
+  document.getElementById('fb-labels').style.display='none';
+  document.getElementById('fb-same').style.display='none';
+  resetProps();
+  resetRecognize();
+  resetSort();
+  updateNav();
+}
+
+// ─────────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────────
+buildProps();
+buildRecognize();
+buildSort();
+</script>
+</body>
+</html>
