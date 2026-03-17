@@ -107,6 +107,17 @@
       "klassen": [],
       "customTags": [],
       "aod": false
+    },
+    {
+      "name": "Vierecke unterscheiden",
+      "datei": "vierecke_unterscheiden.html",
+      "fach": "Mathematik",
+      "emoji": "📱",
+      "beschreibung": "Wie gut kennst du dich mit Vierecken aus? Teste!",
+      "hidden": false,
+      "klassen": [],
+      "customTags": [],
+      "aod": false
     }
   ],
   "customTags": [
