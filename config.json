@@ -96,6 +96,17 @@
         "Vokabeln"
       ],
       "aod": false
+    },
+    {
+      "name": "Grundwissen Rechteck",
+      "datei": "grundwissen_check.html",
+      "fach": "Mathematik",
+      "emoji": "📱",
+      "beschreibung": "Überprüfe dein Grundwissen zum Rechteck",
+      "hidden": false,
+      "klassen": [],
+      "customTags": [],
+      "aod": false
     }
   ],
   "customTags": [
