@@ -15,7 +15,15 @@
       --accent:#4f6ef7;--accent2:#f7c948;--text:#1e2235;--muted:#6b7280;
       --r:18px;--sh:0 2px 16px rgba(79,110,247,.09);--sh2:0 10px 32px rgba(79,110,247,.18);
     }
-    body{font-family:'Nunito','Varela Round','Trebuchet MS','Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+    /* ── #7 HINTERGRUND-PUNKTMUSTER ── */
+    body{
+      font-family:'Nunito','Varela Round','Trebuchet MS','Segoe UI',system-ui,sans-serif;
+      background-color:var(--bg);
+      background-image:radial-gradient(circle,rgba(79,110,247,.13) 1.5px,transparent 1.5px);
+      background-size:28px 28px;
+      color:var(--text);min-height:100vh
+    }
 
     /* HEADER */
     header{background:var(--hbg);color:#fff;padding:2.8rem 2rem 2.3rem;text-align:center;position:relative;overflow:hidden}
@@ -25,19 +33,34 @@
     header p{margin-top:.5rem;font-size:1.05rem;opacity:.68;position:relative}
     .dot{display:inline-block;width:11px;height:11px;border-radius:50%;background:var(--accent2);margin-right:7px;vertical-align:middle;box-shadow:0 0 12px rgba(247,201,72,.55)}
 
-    /* SYNC BAR */
+    /* ── #4 SYNC-DOT PULSE-ANIMATION ── */
     #sync-bar{background:#1e293b;color:#94a3b8;font-size:.75rem;font-weight:700;text-align:center;padding:.3rem 1rem;display:flex;align-items:center;justify-content:center;gap:.5rem;min-height:28px}
     #sync-bar.syncing{color:#f7c948}
     #sync-bar.ok{color:#4ade80}
     #sync-bar.error{color:#f87171}
     .sync-dot{width:7px;height:7px;border-radius:50%;background:currentColor;flex-shrink:0}
+    #sync-bar.syncing .sync-dot{
+      animation:syncPulse 1.1s ease-in-out infinite;
+    }
+    #sync-bar.ok .sync-dot{
+      animation:syncPop .4s ease-out forwards;
+    }
+    @keyframes syncPulse{
+      0%,100%{transform:scale(1);opacity:1}
+      50%{transform:scale(1.7);opacity:.5}
+    }
+    @keyframes syncPop{
+      0%{transform:scale(1)}
+      50%{transform:scale(1.8)}
+      100%{transform:scale(1)}
+    }
 
     /* FILTER BAR */
     .filter-bar{background:#fff;border-bottom:2px solid #e4eaf8;padding:.9rem 1.5rem;position:sticky;top:0;z-index:100;box-shadow:0 3px 18px rgba(79,110,247,.07)}
     .fi{max-width:980px;margin:0 auto}
     .filter-search{width:100%;padding:.58rem 1rem .58rem 2.5rem;border:2px solid #e2e8f0;border-radius:12px;font-size:.92rem;font-family:'Nunito',sans-serif;outline:none;transition:border-color .2s;background:#f8faff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23b0b8cc' stroke-width='2.5'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E") no-repeat .75rem center;color:var(--text)}
     .filter-search:focus{border-color:var(--accent);background-color:#fff}
-    .filter-search::placeholder{color:#b0b8cc}
+    .filter-search::placeholder{color:#b0bcd4}
     .filter-rows{margin-top:.65rem;display:flex;flex-direction:column;gap:.4rem}
     .filter-row{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}
     .filter-label{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);min-width:55px}
@@ -47,6 +70,15 @@
     .chip.active{background:var(--accent);border-color:var(--accent);color:#fff}
     .chip.all.active{background:var(--hbg);border-color:var(--hbg)}
     .chip.ctag.active{background:#9333ea;border-color:#9333ea;color:#fff}
+
+    /* ── #9 ANSICHT-TOGGLE ── */
+    .filter-top-row{display:flex;align-items:center;gap:.6rem}
+    .filter-top-row .filter-search{flex:1}
+    .view-toggle{display:flex;background:#f0f4ff;border-radius:10px;padding:3px;gap:2px;flex-shrink:0}
+    .view-btn{width:32px;height:32px;border:none;border-radius:7px;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted);transition:all .15s;font-size:.95rem}
+    .view-btn.active{background:#fff;color:var(--accent);box-shadow:0 1px 6px rgba(79,110,247,.15)}
+    .view-btn:hover:not(.active){color:var(--accent)}
+
     #filter-info{font-size:.79rem;color:var(--muted);margin-top:.35rem;min-height:1rem}
 
     /* APP OF DAY */
@@ -64,8 +96,16 @@
     /* MAIN */
     main{max-width:980px;margin:0 auto;padding:2rem 1.5rem 5rem}
     .category{margin-bottom:3rem}
-    .cat-header{display:flex;align-items:center;gap:13px;margin-bottom:1.3rem;padding-bottom:.75rem;border-bottom:2px solid rgba(0,0,0,.055)}
-    .cat-icon{font-size:1.65rem;width:50px;height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:linear-gradient(140deg,var(--cat-color,#4f6ef7),var(--cat-color2,#818cf8));box-shadow:0 4px 14px color-mix(in srgb,var(--cat-color,#4f6ef7) 30%,transparent)}
+
+    /* ── #3 KATEGORIE-HEADER MIT FARBIGER UNTERLINIE ── */
+    .cat-header{display:flex;align-items:center;gap:13px;margin-bottom:1.3rem;padding-bottom:.75rem;border-bottom:2.5px solid var(--cat-color,rgba(79,110,247,.35))}
+    .cat-icon{
+      font-size:1.65rem;width:50px;height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+      background:linear-gradient(140deg,var(--cat-color,#4f6ef7),var(--cat-color2,#818cf8));
+      box-shadow:0 4px 14px color-mix(in srgb,var(--cat-color,#4f6ef7) 30%,transparent);
+      transition:transform .2s;
+    }
+    .cat-icon:hover{transform:scale(1.08)}
     .cat-title{font-family:'Fredoka One',cursive;font-size:1.5rem;color:var(--hbg)}
     .cat-count{margin-left:auto;font-size:.8rem;font-weight:800;background:color-mix(in srgb,var(--cat-color,#4f6ef7) 11%,white);color:var(--cat-color,#4f6ef7);border:1.5px solid color-mix(in srgb,var(--cat-color,#4f6ef7) 18%,white);padding:3px 13px;border-radius:99px}
     .apps-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:1.1rem}
@@ -74,7 +114,14 @@
     .app-card{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);padding:1.4rem 1.25rem 1.15rem;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:.45rem;border:2px solid transparent;transition:transform .18s,box-shadow .18s,border-color .18s;position:relative;overflow:hidden}
     .app-card::before{content:'';position:absolute;top:0;left:0;right:0;height:5px;background:linear-gradient(90deg,var(--cat-color,#4f6ef7),var(--cat-color2,#a78bfa))}
     .app-card::after{content:'';position:absolute;top:5px;left:0;right:0;height:55px;background:linear-gradient(180deg,color-mix(in srgb,var(--cat-color,#4f6ef7) 5%,transparent),transparent);pointer-events:none}
-    .app-card:hover{transform:translateY(-5px);box-shadow:var(--sh2);border-color:color-mix(in srgb,var(--cat-color,#4f6ef7) 35%,transparent)}
+
+    /* ── #2 HOVER-GLOW MIT KATEGORIEFARBE ── */
+    .app-card:hover{
+      transform:translateY(-5px);
+      box-shadow:var(--sh2), 0 0 0 3px color-mix(in srgb,var(--cat-color,#4f6ef7) 18%,transparent), 0 8px 24px color-mix(in srgb,var(--cat-color,#4f6ef7) 22%,transparent);
+      border-color:color-mix(in srgb,var(--cat-color,#4f6ef7) 35%,transparent)
+    }
+
     .app-emoji{font-size:2rem;position:relative}
     .app-name{font-weight:800;font-size:1.02rem;line-height:1.3;position:relative}
     .app-desc{font-size:.82rem;color:var(--muted);line-height:1.45;flex:1;position:relative}
@@ -82,7 +129,6 @@
     .app-tag{font-size:.67rem;font-weight:800;padding:.16rem .52rem;border-radius:99px;background:#eef2ff;color:#4f6ef7;border:1px solid #dde5ff}
     .app-tag.tk{background:color-mix(in srgb,var(--cat-color,#4f6ef7) 10%,white);color:var(--cat-color,#4f6ef7);border-color:color-mix(in srgb,var(--cat-color,#4f6ef7) 18%,white)}
     .app-tag.tc{background:#fdf4ff;color:#9333ea;border-color:#f0d6ff}
-    /* Ergebnis-Badge auf Karte */
     .app-result{position:absolute;top:.7rem;right:.75rem;font-size:.68rem;font-weight:800;padding:.15rem .5rem;border-radius:99px;border:1.5px solid;z-index:1}
     .app-result.high{background:rgba(74,222,128,.12);color:#16a34a;border-color:rgba(74,222,128,.3)}
     .app-result.mid{background:rgba(247,201,72,.12);color:#b45309;border-color:rgba(247,201,72,.3)}
@@ -91,15 +137,38 @@
     .app-card:hover .app-arrow{transform:translateX(4px)}
     .app-card.placeholder{border:2px dashed #d1d9f0;background:transparent;box-shadow:none;align-items:center;justify-content:center;color:#b0bcd4;font-size:.88rem;font-weight:700;cursor:default;min-height:120px}
     .app-card.placeholder::before,.app-card.placeholder::after{display:none}
-    .app-card.placeholder:hover{transform:none;border-color:#d1d9f0}
+    .app-card.placeholder:hover{transform:none;border-color:#d1d9f0;box-shadow:none}
     .app-card.hidden-app,.category.hidden-cat{display:none!important}
     .app-card.fhide{display:none!important}
+
+    /* ── #9 LISTENANSICHT ── */
+    body.list-view .apps-grid{
+      grid-template-columns:1fr;
+      gap:.55rem;
+    }
+    body.list-view .app-card:not(.placeholder){
+      flex-direction:row;
+      align-items:center;
+      padding:.85rem 1.1rem;
+      gap:.85rem;
+    }
+    body.list-view .app-card::before{
+      top:0;left:0;bottom:0;right:auto;
+      width:4px;height:100%;
+    }
+    body.list-view .app-card::after{display:none}
+    body.list-view .app-emoji{font-size:1.55rem;flex-shrink:0}
+    body.list-view .app-name{font-size:.95rem}
+    body.list-view .app-desc{font-size:.78rem;flex:1}
+    body.list-view .app-arrow{margin-left:auto;align-self:center;flex-shrink:0}
+    body.list-view .result-badge{display:none}
+    body.list-view .app-card.placeholder{min-height:52px}
+
     #no-results{text-align:center;padding:4rem 1rem;color:var(--muted);font-size:1rem;display:none}
     #no-results .ni{font-size:3rem;display:block;margin-bottom:.6rem}
     footer{text-align:center;padding:1.5rem;font-size:.8rem;color:var(--muted);border-top:1px solid #e4eaf8}
     .admin-link{display:inline-block;margin-top:.5rem;font-size:.75rem;color:rgba(255,255,255,.35);text-decoration:none;position:relative}
     .admin-link:hover{color:rgba(255,255,255,.65)}
-    /* Ergebnis-Badge auf Karten */
     .result-badge{display:flex;align-items:center;gap:.3rem;margin-top:.3rem;font-size:.72rem;font-weight:800;color:var(--muted);position:relative}
     .result-bar{flex:1;height:5px;background:#e4eaf8;border-radius:99px;overflow:hidden}
     .result-bar-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#4f6ef7,#818cf8);transition:width .4s ease}
@@ -120,7 +189,18 @@
 
 <div class="filter-bar">
   <div class="fi">
-    <input type="search" class="filter-search" id="search" placeholder="App suchen …" autocomplete="off"/>
+    <!-- #9: Suchfeld + View-Toggle in einer Zeile -->
+    <div class="filter-top-row">
+      <input type="search" class="filter-search" id="search" placeholder="App suchen …" autocomplete="off"/>
+      <div class="view-toggle">
+        <button class="view-btn active" id="btn-grid" title="Kachelansicht" onclick="setView('grid')">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1.5" fill="currentColor"/><rect x="9" y="1" width="6" height="6" rx="1.5" fill="currentColor"/><rect x="1" y="9" width="6" height="6" rx="1.5" fill="currentColor"/><rect x="9" y="9" width="6" height="6" rx="1.5" fill="currentColor"/></svg>
+        </button>
+        <button class="view-btn" id="btn-list" title="Listenansicht" onclick="setView('list')">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="2" width="14" height="2.5" rx="1.2" fill="currentColor"/><rect x="1" y="6.75" width="14" height="2.5" rx="1.2" fill="currentColor"/><rect x="1" y="11.5" width="14" height="2.5" rx="1.2" fill="currentColor"/></svg>
+        </button>
+      </div>
+    </div>
     <div class="filter-rows">
       <div class="filter-row">
         <span class="filter-label">Klasse</span>
@@ -213,7 +293,6 @@ function buildPage(){
   main.querySelectorAll('.category').forEach(e=>e.remove());
   const noR=document.getElementById('no-results');
 
-  // Fächer in Reihenfolge der Apps
   const faecher=[...new Set(CONFIG.apps.map(a=>a.fach).filter(Boolean))];
 
   faecher.forEach(fach=>{
@@ -232,10 +311,9 @@ function buildPage(){
       <div class="apps-grid" id="g${cid}"></div>`;
     const grid=sec.querySelector('.apps-grid');
 
-    // Apps in ihrer gespeicherten Reihenfolge
     CONFIG.apps.filter(a=>a.fach===fach).forEach(app=>{
       const kl=app.klassen||[], ct=app.customTags||[];
-      // Ergebnis aus localStorage lesen
+
       const appKey=app.datei?app.datei.replace('.html',''):'';
       let resultHTML='';
       try{
@@ -251,6 +329,7 @@ function buildPage(){
           </div>`;
         }
       }catch(e){}
+
       const card=document.createElement('a');
       card.className='app-card'+(app.hidden?' hidden-app':'');
       card.href=app.datei||'#';
@@ -259,7 +338,6 @@ function buildPage(){
       card.dataset.kl=kl.join(',');
       card.dataset.ct=ct.join(',');
 
-      // Vorheriges Ergebnis aus localStorage
       const STORE_KEY = 'lern-apps-results';
       let resultBadge = '';
       try {
@@ -334,7 +412,6 @@ function applyFilters(){
   });
   document.getElementById('filter-info').textContent=(fKl!=='all'||fTag!=='all'||fQ)?`${n} App${n!==1?'s':''} gefunden`:'';
   document.getElementById('no-results').style.display=n===0?'block':'none';
-  // Counts
   document.querySelectorAll('.category:not(.hidden-cat)').forEach(cat=>{
     const grid=cat.querySelector('.apps-grid');
     const el=cat.querySelector('[id^="c"]');
@@ -352,6 +429,20 @@ document.getElementById('chips-k').addEventListener('click',e=>{
   c.classList.add('active');fKl=c.dataset.v;applyFilters();
 });
 document.getElementById('search').addEventListener('input',e=>{fQ=e.target.value.trim().toLowerCase();applyFilters();});
+
+// ── #9 View Toggle ──────────────────────────────────
+function setView(v){
+  const isGrid = v === 'grid';
+  document.body.classList.toggle('list-view', !isGrid);
+  document.getElementById('btn-grid').classList.toggle('active', isGrid);
+  document.getElementById('btn-list').classList.toggle('active', !isGrid);
+  try { localStorage.setItem('lern-apps-view', v); } catch(e){}
+}
+// Gespeicherte Ansicht wiederherstellen
+try {
+  const saved = localStorage.getItem('lern-apps-view');
+  if (saved === 'list') setView('list');
+} catch(e){}
 
 load();
 </script>
