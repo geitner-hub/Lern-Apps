@@ -28,19 +28,6 @@
       "aod": false
     },
     {
-      "name": "Vokabeln-Test",
-      "datei": "vokabeltrainer.html",
-      "emoji": "",
-      "beschreibung": "Wiederhole Vokabeln",
-      "fach": "Englisch",
-      "hidden": false,
-      "klassen": [
-        5
-      ],
-      "customTags": [],
-      "aod": false
-    },
-    {
       "name": "Satzglieder ordnen",
       "datei": "satzglieder-erkennen.html",
       "emoji": "",
