@@ -367,6 +367,20 @@ const CAT_STYLES = {
 
 let CONFIG = {apps:[], customTags:[], hiddenCats:[]};
 
+// Tag helpers (kompatibel mit String- und Objekt-Tags)
+const TAG_COLORS=[
+  {bg:'rgba(167,139,250,.16)',border:'rgba(167,139,250,.35)',text:'#c4b5fd'},
+  {bg:'rgba(99,102,241,.15)', border:'rgba(99,102,241,.32)', text:'#818cf8'},
+  {bg:'rgba(230,168,23,.14)', border:'rgba(230,168,23,.32)', text:'#e6a817'},
+  {bg:'rgba(74,222,128,.13)', border:'rgba(74,222,128,.3)',  text:'#4ade80'},
+  {bg:'rgba(248,113,113,.13)',border:'rgba(248,113,113,.3)', text:'#f87171'},
+  {bg:'rgba(45,212,191,.13)', border:'rgba(45,212,191,.3)',  text:'#2dd4bf'},
+  {bg:'rgba(244,114,182,.13)',border:'rgba(244,114,182,.3)', text:'#f472b6'},
+  {bg:'rgba(251,191,36,.13)', border:'rgba(251,191,36,.3)',  text:'#fbbf24'},
+];
+function tagName(t){return typeof t==='object'?t.name:String(t);}
+function tagColor(t){return TAG_COLORS[(typeof t==='object'?t.color:0)]||TAG_COLORS[0];}
+
 function syncStatus(s,m){
   const b=document.getElementById('sync-bar');
   b.className=s; document.getElementById('sync-msg').textContent=m;
@@ -464,7 +478,7 @@ function buildPage(){
       card.dataset.name=app.name;
       card.dataset.fach=fach;
       card.dataset.kl=kl.join(',');
-      card.dataset.ct=ct.join(',');
+      card.dataset.ct=ct.map(t=>tagName(t)).join(',');
 
       const STORE_KEY='lern-apps-results';
       let resultBadge='';
@@ -484,7 +498,7 @@ function buildPage(){
         <span class="app-desc">${app.beschreibung||''}</span>
         <div class="app-meta">
           ${kl.map(k=>`<span class="app-tag tk">Kl.${k}</span>`).join('')}
-          ${ct.map(t=>`<span class="app-tag tc">${t}</span>`).join('')}
+          ${ct.map(t=>{const col=tagColor(t);return `<span class="app-tag tc" style="background:${col.bg};border-color:${col.border};color:${col.text};">${tagName(t)}</span>`;}).join('')}
         </div>
         ${resultHTML}
         <span class="app-arrow">→</span>`;
@@ -507,14 +521,28 @@ function refreshTagChips(){
   const row=document.getElementById('tag-row');
   wrap.innerHTML=`<span class="chip all${fTag==='all'?' active':''}" data-v="all">Alle</span>`;
   tags.forEach(t=>{
+    const nm=tagName(t); const col=tagColor(t);
     const c=document.createElement('span');
-    c.className='chip ctag'+(fTag===t?' active':'');
-    c.dataset.v=t; c.textContent=t; wrap.appendChild(c);
+    const isActive=fTag===nm;
+    c.className='chip ctag'+(isActive?' active':'');
+    if(isActive){ c.style.cssText=`background:${col.bg};border-color:${col.border};color:${col.text};`; }
+    c.dataset.v=nm;
+    c.dataset.bg=col.bg; c.dataset.border=col.border; c.dataset.color=col.text;
+    c.textContent=nm;
+    wrap.appendChild(c);
   });
   row.style.display=tags.length?'':'none';
   wrap.querySelectorAll('.chip').forEach(c=>c.addEventListener('click',()=>{
-    wrap.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));
-    c.classList.add('active'); fTag=c.dataset.v; applyFilters();
+    wrap.querySelectorAll('.chip').forEach(x=>{
+      x.classList.remove('active');
+      x.style.cssText='';
+    });
+    c.classList.add('active');
+    fTag=c.dataset.v;
+    if(fTag!=='all' && c.dataset.bg){
+      c.style.cssText=`background:${c.dataset.bg};border-color:${c.dataset.border};color:${c.dataset.color};`;
+    }
+    applyFilters();
   }));
 }
 

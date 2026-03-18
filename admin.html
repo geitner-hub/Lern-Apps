@@ -152,9 +152,15 @@
     /* ── TAG MANAGER ── */
     .tag-manager{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.1rem;}
     .tag-pills{display:flex;flex-wrap:wrap;gap:.38rem;margin-bottom:.75rem;min-height:26px;}
-    .tag-pill{display:flex;align-items:center;gap:.28rem;padding:.22rem .65rem;border-radius:99px;font-size:.78rem;font-weight:700;background:rgba(167,139,250,.16);border:1px solid rgba(167,139,250,.35);color:#c4b5fd;}
-    .tag-pill .del{cursor:pointer;font-size:.88rem;color:rgba(196,181,253,.35);background:none;border:none;padding:0;line-height:1;transition:color .1s;}
-    .tag-pill .del:hover{color:var(--red);}
+    .tag-pill{display:flex;align-items:center;gap:.28rem;padding:.22rem .65rem;border-radius:99px;font-size:.78rem;font-weight:700;}
+    .tag-pill .del{cursor:pointer;font-size:.88rem;opacity:.4;background:none;border:none;padding:0;line-height:1;transition:opacity .1s;color:inherit;}
+    .tag-pill .del:hover{opacity:1;}
+    /* Tag-Farbwahl */
+    .tag-color-row{display:flex;gap:.35rem;align-items:center;flex-wrap:wrap;margin-top:.5rem;}
+    .tag-color-dot{width:22px;height:22px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all .14s;flex-shrink:0;}
+    .tag-color-dot.sel{border-color:#fff;transform:scale(1.2);}
+    .tag-color-dot:hover{transform:scale(1.15);}
+    .tag-color-label{font-size:.68rem;color:var(--muted);font-weight:700;margin-left:.1rem;}
     .add-tag-row{display:flex;gap:.45rem;}
     .add-tag-row input{flex:1;}
 
@@ -353,6 +359,10 @@
           <input type="text" id="new-tag" placeholder="Neuer Tag, z.B. Wiederholung …" maxlength="28"/>
           <button class="btn accent" onclick="addTag()">+ Hinzufügen</button>
         </div>
+        <div style="margin-top:.65rem;">
+          <div class="tag-color-label">Farbe wählen:</div>
+          <div class="tag-color-row" id="new-tag-colors"></div>
+        </div>
       </div>
       <div class="sec-header"><span class="sec-title">Tags pro App zuweisen</span></div>
       <div class="app-list" id="tag-assign-list"></div>
@@ -450,6 +460,26 @@ const BASE_URL     = 'https://geitner-hub.github.io/Lern-Apps/';
 const ADMIN_PW     = 'lehrer123'; // ← HIER ÄNDERN
 const KLASSEN      = [5,6,7,8,9];
 const CAT_ICONS    = {Mathematik:'➕',Englisch:'🇬🇧',Deutsch:'📖',Sachkunde:'🌍',Sport:'⚽',Informatik:'💻',Geschichte:'🏛'};
+
+// Tag-Farbpalette – bg, border, text (für dark theme)
+const TAG_COLORS = [
+  {bg:'rgba(167,139,250,.16)', border:'rgba(167,139,250,.35)', text:'#c4b5fd', dot:'#a78bfa', label:'Violett'},
+  {bg:'rgba(99,102,241,.15)',  border:'rgba(99,102,241,.32)',  text:'#818cf8', dot:'#6366f1', label:'Indigo'},
+  {bg:'rgba(230,168,23,.14)',  border:'rgba(230,168,23,.32)',  text:'#e6a817', dot:'#e6a817', label:'Gold'},
+  {bg:'rgba(74,222,128,.13)',  border:'rgba(74,222,128,.3)',   text:'#4ade80', dot:'#22c55e', label:'Grün'},
+  {bg:'rgba(248,113,113,.13)', border:'rgba(248,113,113,.3)',  text:'#f87171', dot:'#ef4444', label:'Rot'},
+  {bg:'rgba(45,212,191,.13)',  border:'rgba(45,212,191,.3)',   text:'#2dd4bf', dot:'#14b8a6', label:'Teal'},
+  {bg:'rgba(244,114,182,.13)', border:'rgba(244,114,182,.3)',  text:'#f472b6', dot:'#ec4899', label:'Pink'},
+  {bg:'rgba(251,191,36,.13)',  border:'rgba(251,191,36,.3)',   text:'#fbbf24', dot:'#f59e0b', label:'Gelb'},
+];
+
+// Hilfsfunktion: Tag-Objekt oder String → normalisiert
+function tagObj(t){ return typeof t==='object'?t:{name:String(t),color:0}; }
+function tagName(t){ return tagObj(t).name; }
+function tagColor(t){ return TAG_COLORS[tagObj(t).color]||TAG_COLORS[0]; }
+
+let selectedNewTagColor = 0;
+
 const ANN_COLORS   = [
   {bg:'rgba(230,168,23,.18)',text:'#e6a817',label:'Gold'},
   {bg:'rgba(99,102,241,.18)',text:'#818cf8',label:'Indigo'},
@@ -495,6 +525,8 @@ async function loadConfig(){
     ghSha=d.sha;
     const parsed=JSON.parse(decodeURIComponent(atob(d.content.replace(/\n/g,'')).split('').map(c=>'%'+('00'+c.charCodeAt(0).toString(16)).slice(-2)).join('')));
     CONFIG={apps:[],customTags:[],hiddenCats:[],announcement:{active:false,text:'',emoji:'📢',color:0},...parsed};
+    // Migrate old string tags → objects
+    CONFIG.customTags=CONFIG.customTags.map(t=>typeof t==='string'?{name:t,color:0}:t);
     setSync('ok','✓ Geladen');
     setTimeout(()=>setSync('','–'),2000);
   }catch(e){
@@ -631,7 +663,10 @@ function buildAppList(){
     row.dataset.i=i;
 
     const klTags=(app.klassen||[]).map(k=>`<span class="rtag">Kl.${k}</span>`).join('');
-    const ctTags=(app.customTags||[]).map(t=>`<span class="rtag ct">${t}</span>`).join('');
+    const ctTags=(app.customTags||[]).map(t=>{
+      const col=tagColor(t);
+      return `<span class="rtag ct" style="background:${col.bg};border-color:${col.border};color:${col.text};">${escHtml(tagName(t))}</span>`;
+    }).join('');
 
     row.innerHTML=`
       <span class="drag-handle">⠿</span>
@@ -863,20 +898,30 @@ function buildTagManager(){
   if(!CONFIG.customTags.length){
     pills.innerHTML='<span style="font-size:.78rem;color:var(--muted);">Noch keine Tags erstellt.</span>';
   } else {
-    CONFIG.customTags.forEach(tag=>{
+    CONFIG.customTags.forEach((tag,ti)=>{
+      const t=tagObj(tag); const col=tagColor(tag);
       const p=document.createElement('div');
       p.className='tag-pill';
-      p.innerHTML=`${escHtml(tag)} <button class="del">×</button>`;
-      p.querySelector('.del').addEventListener('click',()=>{
-        if(!confirm(`Tag "${tag}" löschen?`)) return;
-        CONFIG.customTags=CONFIG.customTags.filter(t=>t!==tag);
-        CONFIG.apps.forEach(a=>{ if(a.customTags) a.customTags=a.customTags.filter(t=>t!==tag); });
-        logChange(`🏷 Tag "${tag}" gelöscht`);
+      p.style.cssText=`background:${col.bg};border:1px solid ${col.border};color:${col.text};`;
+      p.innerHTML=`${escHtml(t.name)}
+        <button class="del" title="Löschen">×</button>
+        <button class="del" title="Farbe" style="opacity:.55;font-size:.7rem;margin-left:1px;">🎨</button>`;
+      const [delBtn, colorBtn]=p.querySelectorAll('.del');
+      delBtn.addEventListener('click',()=>{
+        if(!confirm(`Tag "${t.name}" löschen?`)) return;
+        const nm=t.name;
+        CONFIG.customTags.splice(ti,1);
+        CONFIG.apps.forEach(a=>{
+          if(a.customTags) a.customTags=a.customTags.filter(x=>tagName(x)!==nm);
+        });
+        logChange(`🏷 Tag "${nm}" gelöscht`);
         saveConfig(); buildAll();
       });
+      colorBtn.addEventListener('click',()=>openTagColorPicker(ti));
       pills.appendChild(p);
     });
   }
+  buildNewTagColorDots();
 }
 
 document.getElementById('new-tag').addEventListener('keydown',e=>{ if(e.key==='Enter') addTag(); });
@@ -884,11 +929,67 @@ function addTag(){
   const inp=document.getElementById('new-tag');
   const v=inp.value.trim();
   if(!v) return;
-  if(CONFIG.customTags.includes(v)){ inp.value=''; return; }
-  CONFIG.customTags.push(v);
+  if(CONFIG.customTags.find(t=>tagName(t)===v)){ inp.value=''; return; }
+  CONFIG.customTags.push({name:v, color:selectedNewTagColor});
   inp.value='';
   logChange(`🏷 Tag "${v}" erstellt`);
   saveConfig(); buildAll();
+}
+
+function buildNewTagColorDots(){
+  const wrap=document.getElementById('new-tag-colors');
+  if(!wrap) return;
+  wrap.innerHTML='';
+  TAG_COLORS.forEach((col,i)=>{
+    const d=document.createElement('div');
+    d.className='tag-color-dot'+(i===selectedNewTagColor?' sel':'');
+    d.style.background=col.dot;
+    d.title=col.label;
+    d.addEventListener('click',()=>{
+      selectedNewTagColor=i;
+      wrap.querySelectorAll('.tag-color-dot').forEach((el,j)=>el.classList.toggle('sel',j===i));
+    });
+    wrap.appendChild(d);
+  });
+}
+
+function openTagColorPicker(ti){
+  const tag=tagObj(CONFIG.customTags[ti]);
+  // simple inline mini-picker via a small overlay div
+  const existing=document.getElementById('tag-cp-overlay');
+  if(existing) existing.remove();
+  const overlay=document.createElement('div');
+  overlay.id='tag-cp-overlay';
+  overlay.style.cssText=`position:fixed;inset:0;z-index:9000;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.6);backdrop-filter:blur(3px);`;
+  overlay.innerHTML=`
+    <div style="background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:1.4rem 1.6rem;min-width:280px;box-shadow:0 20px 60px rgba(0,0,0,.5);">
+      <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:var(--accent);margin-bottom:.9rem;">🎨 Farbe für „${escHtml(tag.name)}"</div>
+      <div style="display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.1rem;" id="tag-cp-dots"></div>
+      <div style="display:flex;justify-content:flex-end;gap:.5rem;">
+        <button class="btn" onclick="document.getElementById('tag-cp-overlay').remove()">Abbrechen</button>
+        <button class="btn accent" id="tag-cp-save">Speichern</button>
+      </div>
+    </div>`;
+  let picked=tag.color||0;
+  document.body.appendChild(overlay);
+  const dotsWrap=document.getElementById('tag-cp-dots');
+  TAG_COLORS.forEach((col,i)=>{
+    const d=document.createElement('div');
+    d.style.cssText=`width:32px;height:32px;border-radius:50%;background:${col.dot};cursor:pointer;border:3px solid ${i===picked?'#fff':'transparent'};transition:all .14s;`;
+    d.title=col.label;
+    d.addEventListener('click',()=>{
+      picked=i;
+      dotsWrap.querySelectorAll('div').forEach((el,j)=>el.style.borderColor=j===i?'#fff':'transparent');
+    });
+    dotsWrap.appendChild(d);
+  });
+  document.getElementById('tag-cp-save').addEventListener('click',()=>{
+    CONFIG.customTags[ti]={...tag, color:picked};
+    logChange(`🎨 Tag-Farbe für "${tag.name}" geändert`);
+    saveConfig(); buildAll();
+    overlay.remove();
+  });
+  overlay.addEventListener('click',e=>{ if(e.target===overlay) overlay.remove(); });
 }
 
 function buildTagAssignList(){
@@ -905,7 +1006,7 @@ function buildTagAssignList(){
         <div class="row-name">${escHtml(app.name)}</div>
         <div class="row-tags">
           ${kl.map(k=>`<span class="rtag">Kl.${k}</span>`).join('')}
-          ${ct.map(t=>`<span class="rtag ct">${escHtml(t)}</span>`).join('')}
+          ${ct.map(t=>{const col=tagColor(t);return `<span class="rtag ct" style="background:${col.bg};border-color:${col.border};color:${col.text};">${escHtml(tagName(t))}</span>`;}).join('')}
           ${!kl.length&&!ct.length?'<span style="font-size:.7rem;color:var(--muted)">Keine Tags</span>':''}
         </div>
       </div>
@@ -943,14 +1044,24 @@ function openModal(name){
     tWrap.innerHTML='<span style="font-size:.78rem;color:var(--muted)">Erst Tags im Reiter "Tags" erstellen.</span>';
   } else {
     CONFIG.customTags.forEach(tag=>{
+      const nm=tagName(tag); const col=tagColor(tag);
       const c=document.createElement('span');
-      c.className='m-chip'+(app.customTags?.includes(tag)?' sel-c':'');
-      c.textContent=tag;
+      const isSelected=app.customTags?.find(x=>tagName(x)===nm);
+      c.className='m-chip'+(isSelected?' sel-c':'');
+      if(isSelected){ c.style.cssText=`background:${col.bg};border-color:${col.border};color:${col.text};`; }
+      c.textContent=nm;
       c.addEventListener('click',()=>{
         if(!app.customTags) app.customTags=[];
-        const idx=app.customTags.indexOf(tag);
-        if(idx===-1) app.customTags.push(tag); else app.customTags.splice(idx,1);
-        c.classList.toggle('sel-c');
+        const idx=app.customTags.findIndex(x=>tagName(x)===nm);
+        if(idx===-1){
+          app.customTags.push(tag);
+          c.classList.add('sel-c');
+          c.style.cssText=`background:${col.bg};border-color:${col.border};color:${col.text};`;
+        } else {
+          app.customTags.splice(idx,1);
+          c.classList.remove('sel-c');
+          c.style.cssText='';
+        }
         saveConfig(); buildAll();
       });
       tWrap.appendChild(c);
