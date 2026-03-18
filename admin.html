@@ -11,173 +11,245 @@
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
-      --bg:#0f172a;--surface:#1e293b;--surface2:#273449;--border:rgba(255,255,255,.08);
-      --accent:#4f6ef7;--accent2:#f7c948;--green:#4ade80;--red:#f87171;--purple:#a78bfa;
-      --text:#e2e8f0;--muted:#64748b;--r:14px;
+      --bg:#0f0e1a;
+      --surface:#1b1929;
+      --surface2:#221f35;
+      --surface3:#2a2740;
+      --border:rgba(255,255,255,.07);
+      --border2:rgba(255,255,255,.13);
+      --accent:#e6a817;
+      --accent-dim:rgba(230,168,23,.15);
+      --indigo:#6366f1;
+      --indigo2:#818cf8;
+      --green:#4ade80;
+      --green-dim:rgba(74,222,128,.15);
+      --red:#f87171;
+      --red-dim:rgba(248,113,113,.12);
+      --purple:#a78bfa;
+      --text:#f1f0fb;
+      --text2:rgba(241,240,251,.65);
+      --muted:rgba(241,240,251,.35);
+      --r:12px;
     }
-    body{font-family:'Nunito','Varela Round','Trebuchet MS','Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+    body{font-family:'Nunito',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
 
-    /* ── LOGIN ─────────────────────────────────────── */
-    #login-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:999}
-    .login-box{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:2.5rem 2rem;width:320px;text-align:center}
-    .login-box h1{font-family:'Fredoka One','Trebuchet MS','Comic Sans MS',cursive;font-size:1.8rem;margin-bottom:.3rem}
-    .login-box p{font-size:.85rem;color:var(--muted);margin-bottom:1.5rem}
-    .login-box input{width:100%;padding:.75rem 1rem;background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;color:var(--text);font-family:'Nunito','Varela Round','Trebuchet MS','Segoe UI',system-ui,sans-serif;font-size:1rem;outline:none;text-align:center;letter-spacing:3px;transition:border-color .2s}
-    .login-box input:focus{border-color:var(--accent)}
-    .login-box .err{color:var(--red);font-size:.8rem;margin-top:.5rem;min-height:1.1rem}
-    .btn-primary{background:var(--accent);border:none;color:#fff;padding:.7rem 1.5rem;border-radius:10px;cursor:pointer;font-family:'Nunito','Varela Round','Trebuchet MS','Segoe UI',system-ui,sans-serif;font-weight:800;font-size:.9rem;transition:background .15s;width:100%;margin-top:.8rem}
-    .btn-primary:hover{background:#3b5ce6}
+    /* ── LOGIN ── */
+    #login-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:999;background-image:radial-gradient(circle,rgba(99,102,241,.08) 1.5px,transparent 1.5px);background-size:28px 28px;}
+    .login-box{background:var(--surface);border:1px solid var(--border2);border-radius:20px;padding:2.5rem 2rem;width:320px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.5);}
+    .login-box h2{font-family:'Fredoka One',cursive;font-size:1.9rem;margin-bottom:.25rem;color:#fff;}
+    .login-box h2 span{color:var(--accent);}
+    .login-box p{font-size:.85rem;color:var(--muted);margin-bottom:1.5rem;}
+    .login-box input{width:100%;padding:.75rem 1rem;background:var(--surface2);border:1px solid var(--border2);border-radius:10px;color:var(--text);font-family:'Nunito',sans-serif;font-size:1rem;outline:none;text-align:center;letter-spacing:3px;transition:border-color .2s;}
+    .login-box input:focus{border-color:var(--accent);}
+    .login-err{color:var(--red);font-size:.8rem;margin-top:.5rem;min-height:1.1rem;}
+    .btn-login{background:linear-gradient(135deg,var(--indigo),#7c3fc5);border:none;color:#fff;padding:.75rem 1.5rem;border-radius:10px;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:800;font-size:.95rem;width:100%;margin-top:.8rem;transition:opacity .15s;}
+    .btn-login:hover{opacity:.88;}
 
-    /* ── LAYOUT ────────────────────────────────────── */
-    #app{display:none}
-    .topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:.9rem 1.5rem;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:100}
-    .topbar h1{font-family:'Fredoka One','Trebuchet MS','Comic Sans MS',cursive;font-size:1.3rem;color:var(--accent2)}
-    .topbar-actions{margin-left:auto;display:flex;gap:.6rem;align-items:center}
-    #sync-status{font-size:.75rem;font-weight:700;padding:.3rem .8rem;border-radius:99px;background:var(--surface2)}
-    #sync-status.ok{color:var(--green)}
-    #sync-status.saving{color:var(--accent2)}
-    #sync-status.error{color:var(--red)}
-    .btn{padding:.45rem 1rem;border-radius:9px;font-family:'Nunito','Varela Round','Trebuchet MS','Segoe UI',system-ui,sans-serif;font-weight:800;font-size:.82rem;cursor:pointer;border:1.5px solid var(--border);background:var(--surface2);color:var(--text);transition:all .15s}
-    .btn:hover{background:var(--surface);border-color:rgba(255,255,255,.2)}
-    .btn.accent{background:var(--accent);border-color:var(--accent);color:#fff}
-    .btn.accent:hover{background:#3b5ce6}
-    .btn.danger{background:rgba(248,113,113,.15);border-color:var(--red);color:var(--red)}
-    .btn.danger:hover{background:rgba(248,113,113,.25)}
-    .btn.green{background:rgba(74,222,128,.15);border-color:var(--green);color:var(--green)}
-    .btn.green:hover{background:rgba(74,222,128,.25)}
+    /* ── TOPBAR ── */
+    #app{display:none;}
+    .topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:.85rem 1.5rem;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:100;box-shadow:0 4px 20px rgba(0,0,0,.4);}
+    .topbar-wordmark{font-family:'Fredoka One',cursive;font-size:1.25rem;color:#fff;display:flex;align-items:center;gap:.4rem;}
+    .topbar-wordmark em{color:var(--accent);font-style:normal;}
+    .topbar-actions{margin-left:auto;display:flex;gap:.55rem;align-items:center;}
+    #sync-status{font-size:.72rem;font-weight:700;padding:.28rem .75rem;border-radius:99px;background:var(--surface2);color:var(--muted);}
+    #sync-status.ok{color:var(--green);}
+    #sync-status.saving{color:var(--accent);}
+    #sync-status.error{color:var(--red);}
 
-    .content{max-width:1100px;margin:0 auto;padding:2rem 1.5rem}
+    /* ── BUTTONS ── */
+    .btn{padding:.42rem .95rem;border-radius:9px;font-family:'Nunito',sans-serif;font-weight:800;font-size:.8rem;cursor:pointer;border:1px solid var(--border2);background:var(--surface2);color:var(--text);transition:all .14s;}
+    .btn:hover{background:var(--surface3);border-color:rgba(255,255,255,.2);}
+    .btn.accent{background:var(--accent);border-color:var(--accent);color:#0f0e1a;}
+    .btn.accent:hover{opacity:.88;}
+    .btn.indigo{background:rgba(99,102,241,.2);border-color:rgba(99,102,241,.4);color:var(--indigo2);}
+    .btn.indigo:hover{background:rgba(99,102,241,.3);}
+    .btn.danger{background:var(--red-dim);border-color:var(--red);color:var(--red);}
+    .btn.danger:hover{background:rgba(248,113,113,.22);}
+    .btn.green{background:var(--green-dim);border-color:var(--green);color:var(--green);}
+    .btn.green:hover{background:rgba(74,222,128,.25);}
+    .btn.sm{padding:.3rem .7rem;font-size:.75rem;}
 
-    /* ── TABS ──────────────────────────────────────── */
-    .tabs{display:flex;gap:.3rem;margin-bottom:1.5rem;background:var(--surface);border-radius:12px;padding:.4rem}
-    .tab{padding:.5rem 1.2rem;border-radius:9px;font-weight:800;font-size:.88rem;cursor:pointer;color:var(--muted);border:none;background:none;font-family:'Nunito','Varela Round','Trebuchet MS','Segoe UI',system-ui,sans-serif;transition:all .15s}
-    .tab:hover{color:var(--text)}
-    .tab.active{background:var(--surface2);color:var(--accent2)}
-    .tab-panel{display:none}
-    .tab-panel.active{display:block}
+    /* ── LAYOUT ── */
+    .content{max-width:1100px;margin:0 auto;padding:1.8rem 1.5rem;}
 
-    /* ── SECTION HEADERS ───────────────────────────── */
-    .sec-header{display:flex;align-items:center;gap:.8rem;margin-bottom:1rem}
-    .sec-title{font-family:'Fredoka One','Trebuchet MS','Comic Sans MS',cursive;font-size:1.1rem;color:var(--accent2)}
+    /* ── TABS ── */
+    .tabs{display:flex;gap:.25rem;margin-bottom:1.5rem;background:var(--surface);border-radius:12px;padding:.35rem;border:1px solid var(--border);}
+    .tab{padding:.48rem 1.1rem;border-radius:9px;font-weight:800;font-size:.85rem;cursor:pointer;color:var(--muted);border:none;background:none;font-family:'Nunito',sans-serif;transition:all .14s;white-space:nowrap;}
+    .tab:hover{color:var(--text2);}
+    .tab.active{background:var(--surface2);color:var(--accent);}
+    .tab-panel{display:none;}
+    .tab-panel.active{display:block;}
 
-    /* ── ADD APP FORM ──────────────────────────────── */
-    .form-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem}
-    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-    @media(max-width:600px){.form-grid{grid-template-columns:1fr}}
-    .form-group{display:flex;flex-direction:column;gap:.4rem}
-    .form-group.full{grid-column:1/-1}
-    label{font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
-    input[type=text],select,textarea{background:var(--surface2);border:1.5px solid var(--border);border-radius:9px;color:var(--text);font-family:'Nunito','Varela Round','Trebuchet MS','Segoe UI',system-ui,sans-serif;font-size:.9rem;padding:.55rem .8rem;outline:none;transition:border-color .2s;width:100%}
-    input[type=text]:focus,select:focus,textarea:focus{border-color:var(--accent)}
-    select option{background:var(--surface2)}
-    textarea{resize:vertical;min-height:70px}
-    .emoji-preview{font-size:2rem;min-width:44px;text-align:center}
-    .form-row{display:flex;gap:.8rem;align-items:flex-end}
+    /* ── SECTION HEADERS ── */
+    .sec-header{display:flex;align-items:center;gap:.75rem;margin-bottom:.9rem;}
+    .sec-title{font-family:'Fredoka One',cursive;font-size:1.05rem;color:var(--accent);}
 
-    /* ── APP LIST ──────────────────────────────────── */
-    .app-list{display:flex;flex-direction:column;gap:.6rem}
-    .app-row{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:.9rem 1rem;display:flex;align-items:center;gap:.8rem;cursor:grab;transition:background .15s,box-shadow .15s;user-select:none}
-    .app-row:active{cursor:grabbing}
-    .app-row.dragging{opacity:.5;box-shadow:0 8px 24px rgba(0,0,0,.4)}
-    .app-row.drag-over{border-color:var(--accent);background:rgba(79,110,247,.1)}
-    .app-row.is-hidden{opacity:.5}
-    .drag-handle{color:var(--muted);font-size:1.1rem;flex-shrink:0;cursor:grab}
-    .row-emoji{font-size:1.6rem;flex-shrink:0}
-    .row-info{flex:1;min-width:0}
-    .row-name{font-weight:800;font-size:.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .row-meta{font-size:.75rem;color:var(--muted);margin-top:.15rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .row-tags{display:flex;flex-wrap:wrap;gap:.25rem;margin-top:.3rem}
-    .rtag{font-size:.65rem;font-weight:800;padding:.12rem .45rem;border-radius:99px;background:rgba(79,110,247,.15);color:#818cf8;border:1px solid rgba(79,110,247,.25)}
-    .rtag.kt{background:rgba(79,110,247,.1);color:#93c5fd}
-    .rtag.ct{background:rgba(167,139,250,.15);color:#c4b5fd;border-color:rgba(167,139,250,.25)}
-    .row-actions{display:flex;gap:.4rem;flex-shrink:0}
-    .icon-btn{background:none;border:1.5px solid var(--border);border-radius:8px;color:var(--muted);font-size:.85rem;padding:.35rem .6rem;cursor:pointer;transition:all .15s;font-family:'Nunito','Varela Round','Trebuchet MS','Segoe UI',system-ui,sans-serif}
-    .icon-btn:hover{background:var(--surface2);color:var(--text)}
-    .icon-btn.active{background:rgba(74,222,128,.15);border-color:var(--green);color:var(--green)}
-    .icon-btn.hidden-btn{background:rgba(248,113,113,.1);border-color:var(--red);color:var(--red)}
-    .icon-btn.aod-btn.on{background:rgba(247,201,72,.15);border-color:var(--accent2);color:var(--accent2)}
+    /* ── FORM CARD ── */
+    .form-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.4rem;}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;}
+    @media(max-width:600px){.form-grid{grid-template-columns:1fr;}}
+    .form-group{display:flex;flex-direction:column;gap:.35rem;}
+    .form-group.full{grid-column:1/-1;}
+    label{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);}
+    input[type=text],select,textarea{background:var(--surface2);border:1px solid var(--border2);border-radius:9px;color:var(--text);font-family:'Nunito',sans-serif;font-size:.88rem;padding:.5rem .75rem;outline:none;transition:border-color .2s;width:100%;}
+    input[type=text]:focus,select:focus,textarea:focus{border-color:var(--accent);}
+    select option{background:var(--surface2);}
+    textarea{resize:vertical;min-height:65px;}
+    .emoji-preview{font-size:2rem;min-width:42px;text-align:center;}
+    .form-row{display:flex;gap:.75rem;align-items:flex-end;}
 
-    /* ── TAG MANAGER ───────────────────────────────── */
-    .tag-manager{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.2rem}
-    .tag-pills{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.8rem;min-height:28px}
-    .tag-pill{display:flex;align-items:center;gap:.3rem;padding:.25rem .7rem;border-radius:99px;font-size:.8rem;font-weight:700;background:rgba(167,139,250,.18);border:1.5px solid rgba(167,139,250,.4);color:#c4b5fd}
-    .tag-pill .del{cursor:pointer;font-size:.9rem;color:rgba(196,181,253,.4);background:none;border:none;font-family:inherit;padding:0;line-height:1;transition:color .1s}
-    .tag-pill .del:hover{color:var(--red)}
-    .add-tag-row{display:flex;gap:.5rem}
-    .add-tag-row input{flex:1}
+    /* ── FILTER ROW ── */
+    .filter-row-admin{display:flex;gap:.6rem;align-items:center;margin-bottom:1rem;flex-wrap:wrap;}
+    .admin-search{flex:1;min-width:160px;padding:.45rem .75rem .45rem 2.2rem;border:1px solid var(--border2);border-radius:9px;font-size:.85rem;font-family:'Nunito',sans-serif;outline:none;background:var(--surface2) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='rgba(241,240,251,.25)' stroke-width='2.5'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E") no-repeat .6rem center;color:var(--text);transition:border-color .2s;}
+    .admin-search:focus{border-color:var(--accent);}
+    .admin-search::placeholder{color:var(--muted);}
+    .fach-filter{padding:.45rem .7rem;border:1px solid var(--border2);border-radius:9px;font-size:.82rem;font-family:'Nunito',sans-serif;background:var(--surface2);color:var(--text);outline:none;cursor:pointer;}
+    .fach-filter:focus{border-color:var(--accent);}
 
-    /* ── INLINE TAG EDITOR (in modal) ───────────────── */
-    .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);z-index:500;align-items:center;justify-content:center}
-    .modal-bg.open{display:flex}
-    .modal{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:1.8rem;width:min(500px,95vw);max-height:85vh;overflow-y:auto}
-    .modal h2{font-family:'Fredoka One','Trebuchet MS','Comic Sans MS',cursive;font-size:1.3rem;margin-bottom:1.2rem;color:var(--accent2)}
-    .modal-section{margin-bottom:1.2rem}
-    .modal-label{font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:.5rem}
-    .chip-group{display:flex;flex-wrap:wrap;gap:.35rem}
-    .m-chip{padding:.28rem .75rem;border-radius:99px;font-size:.8rem;font-weight:700;border:1.5px solid var(--border);background:var(--surface2);color:var(--muted);cursor:pointer;transition:all .12s}
-    .m-chip:hover{color:var(--text);border-color:rgba(255,255,255,.25)}
-    .m-chip.sel-k{background:var(--accent);border-color:var(--accent);color:#fff}
-    .m-chip.sel-c{background:#7e22ce;border-color:#7e22ce;color:#fff}
-    .modal-actions{display:flex;justify-content:flex-end;gap:.6rem;margin-top:1.2rem}
+    /* ── APP LIST ── */
+    .app-list{display:flex;flex-direction:column;gap:.5rem;}
+    .app-row{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:.85rem 1rem;display:flex;align-items:center;gap:.75rem;transition:background .14s,box-shadow .14s;position:relative;}
+    .app-row.is-dragging{opacity:.4;box-shadow:0 8px 24px rgba(0,0,0,.5);}
+    .app-row.drag-over{border-color:var(--indigo);background:rgba(99,102,241,.08);}
+    .app-row.is-hidden{opacity:.45;}
+    .app-row.editing{background:var(--surface2);border-color:rgba(230,168,23,.3);}
+    .drag-handle{color:var(--muted);font-size:1rem;flex-shrink:0;cursor:grab;padding:0 2px;}
+    .drag-handle:active{cursor:grabbing;}
+    .row-emoji{font-size:1.55rem;flex-shrink:0;}
+    .row-info{flex:1;min-width:0;}
+    .row-name{font-weight:800;font-size:.92rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text);}
+    .row-meta{font-size:.72rem;color:var(--muted);margin-top:.12rem;}
+    .row-tags{display:flex;flex-wrap:wrap;gap:.22rem;margin-top:.28rem;}
+    .rtag{font-size:.62rem;font-weight:800;padding:.1rem .42rem;border-radius:99px;background:rgba(99,102,241,.14);color:var(--indigo2);border:1px solid rgba(99,102,241,.22);}
+    .rtag.ct{background:rgba(167,139,250,.12);color:#c4b5fd;border-color:rgba(167,139,250,.22);}
+    .row-actions{display:flex;gap:.32rem;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end;}
+    .icon-btn{background:none;border:1px solid var(--border2);border-radius:8px;color:var(--muted);font-size:.8rem;padding:.3rem .55rem;cursor:pointer;transition:all .14s;font-family:'Nunito',sans-serif;white-space:nowrap;}
+    .icon-btn:hover{background:var(--surface2);color:var(--text);}
+    .icon-btn.on-green{background:var(--green-dim);border-color:var(--green);color:var(--green);}
+    .icon-btn.on-red{background:var(--red-dim);border-color:var(--red);color:var(--red);}
+    .icon-btn.on-gold{background:var(--accent-dim);border-color:var(--accent);color:var(--accent);}
+    .icon-btn.on-indigo{background:rgba(99,102,241,.18);border-color:var(--indigo);color:var(--indigo2);}
 
-    /* ── VISIBILITY TAB ────────────────────────────── */
-    .vis-cat-block{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);margin-bottom:.8rem;overflow:hidden}
-    .vis-cat-header{display:flex;align-items:center;gap:.8rem;padding:.8rem 1rem;background:var(--surface2);cursor:pointer}
-    .vis-cat-name{font-weight:800;font-size:.95rem;flex:1}
-    .vis-toggle{padding:.3rem .8rem;border-radius:8px;font-size:.78rem;font-weight:800;border:1.5px solid;cursor:pointer;font-family:'Nunito','Varela Round','Trebuchet MS','Segoe UI',system-ui,sans-serif;transition:all .15s}
-    .vis-toggle.on{background:rgba(74,222,128,.1);border-color:var(--green);color:var(--green)}
-    .vis-toggle.off{background:rgba(248,113,113,.1);border-color:var(--red);color:var(--red)}
-    .vis-app-list{padding:.6rem 1rem .8rem}
-    .vis-app-row{display:flex;align-items:center;gap:.7rem;padding:.4rem 0;border-bottom:1px solid var(--border)}
-    .vis-app-row:last-child{border-bottom:none}
-    .vis-app-name{flex:1;font-size:.88rem;font-weight:700}
-    .vis-app-emoji{font-size:1.1rem;flex-shrink:0}
+    /* ── INLINE EDIT FORM ── */
+    .inline-edit{display:none;margin-top:.9rem;padding-top:.9rem;border-top:1px solid var(--border);grid-template-columns:1fr 1fr;gap:.7rem;}
+    .inline-edit.open{display:grid;}
+    @media(max-width:580px){.inline-edit{grid-template-columns:1fr;}}
+    .inline-edit input,.inline-edit select,.inline-edit textarea{font-size:.83rem;padding:.42rem .68rem;}
+    .inline-edit-actions{grid-column:1/-1;display:flex;gap:.5rem;justify-content:flex-end;}
 
-    /* ── QR MODAL ──────────────────────────────────── */
-    #qr-modal .modal{text-align:center}
-    #qr-canvas-wrap{background:#fff;border-radius:16px;padding:1.2rem;display:inline-block;margin:1rem 0}
-    #qr-canvas-wrap canvas{display:block}
-    .qr-url{font-size:.75rem;color:var(--muted);word-break:break-all;margin-bottom:.8rem;background:var(--surface2);padding:.5rem .8rem;border-radius:8px}
-    .qr-app-name{font-family:'Fredoka One','Trebuchet MS',cursive;font-size:1.2rem;margin-bottom:.2rem}
+    /* ── VISIBILITY ── */
+    .vis-cat-block{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);margin-bottom:.7rem;overflow:hidden;}
+    .vis-cat-header{display:flex;align-items:center;gap:.75rem;padding:.75rem 1rem;background:var(--surface2);}
+    .vis-cat-name{font-weight:800;font-size:.9rem;flex:1;}
+    .vis-toggle{padding:.28rem .75rem;border-radius:8px;font-size:.75rem;font-weight:800;border:1px solid;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .14s;}
+    .vis-toggle.on{background:var(--green-dim);border-color:var(--green);color:var(--green);}
+    .vis-toggle.off{background:var(--red-dim);border-color:var(--red);color:var(--red);}
+    .vis-app-list{padding:.5rem 1rem .7rem;}
+    .vis-app-row{display:flex;align-items:center;gap:.65rem;padding:.35rem 0;border-bottom:1px solid var(--border);}
+    .vis-app-row:last-child{border-bottom:none;}
+    .vis-app-name{flex:1;font-size:.85rem;font-weight:700;}
 
-    /* ── TOAST ─────────────────────────────────────── */
-    #toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--surface);border:1px solid var(--green);color:var(--green);padding:.6rem 1.2rem;border-radius:10px;font-size:.85rem;font-weight:700;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999}
-    #toast.show{opacity:1}
+    /* ── TAG MANAGER ── */
+    .tag-manager{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.1rem;}
+    .tag-pills{display:flex;flex-wrap:wrap;gap:.38rem;margin-bottom:.75rem;min-height:26px;}
+    .tag-pill{display:flex;align-items:center;gap:.28rem;padding:.22rem .65rem;border-radius:99px;font-size:.78rem;font-weight:700;background:rgba(167,139,250,.16);border:1px solid rgba(167,139,250,.35);color:#c4b5fd;}
+    .tag-pill .del{cursor:pointer;font-size:.88rem;color:rgba(196,181,253,.35);background:none;border:none;padding:0;line-height:1;transition:color .1s;}
+    .tag-pill .del:hover{color:var(--red);}
+    .add-tag-row{display:flex;gap:.45rem;}
+    .add-tag-row input{flex:1;}
 
-    /* QR MODAL */
-    #qr-modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);z-index:600;align-items:center;justify-content:center}
-    #qr-modal-bg.open{display:flex}
-    #qr-modal{background:#fff;border-radius:20px;padding:2rem;width:min(360px,95vw);text-align:center;color:#1e2235}
-    #qr-modal h2{font-family:'Fredoka One','Trebuchet MS',cursive;font-size:1.2rem;margin-bottom:.25rem;color:#1a1f5e}
-    #qr-modal .qr-app-name{font-weight:800;font-size:1rem;margin-bottom:.2rem}
-    #qr-modal .qr-url{font-size:.68rem;color:#6b7280;margin-bottom:1rem;word-break:break-all}
-    #qr-canvas-wrap{display:inline-block;margin-bottom:1rem}
-    #qr-canvas-wrap canvas{display:block}
-    .qr-actions{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap}
-    .qr-btn{padding:.5rem 1.1rem;border-radius:10px;font-weight:800;font-size:.85rem;cursor:pointer;border:none;font-family:'Nunito',system-ui,sans-serif;transition:transform .15s}
-    .qr-btn:hover{transform:translateY(-2px)}
-    .qr-btn-print{background:#1a1f5e;color:#fff}
-    .qr-btn-close{background:#f1f5f9;color:#1e2235}
-    .qr-hint{font-size:.7rem;color:#9ca3af;margin-top:.8rem}
+    /* ── MODAL ── */
+    .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(4px);z-index:500;align-items:center;justify-content:center;}
+    .modal-bg.open{display:flex;}
+    .modal{background:var(--surface);border:1px solid var(--border2);border-radius:18px;padding:1.7rem;width:min(480px,95vw);max-height:85vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.5);}
+    .modal h2{font-family:'Fredoka One',cursive;font-size:1.25rem;margin-bottom:1.1rem;color:var(--accent);}
+    .modal-section{margin-bottom:1.1rem;}
+    .modal-label{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:.45rem;}
+    .chip-group{display:flex;flex-wrap:wrap;gap:.32rem;}
+    .m-chip{padding:.26rem .72rem;border-radius:99px;font-size:.78rem;font-weight:700;border:1px solid var(--border2);background:var(--surface2);color:var(--muted);cursor:pointer;transition:all .12s;}
+    .m-chip:hover{color:var(--text);border-color:var(--border2);}
+    .m-chip.sel-k{background:var(--indigo);border-color:var(--indigo);color:#fff;}
+    .m-chip.sel-c{background:#7e22ce;border-color:#7e22ce;color:#fff;}
+    .modal-actions{display:flex;justify-content:flex-end;gap:.55rem;margin-top:1.1rem;}
+
+    /* ── QR MODAL ── */
+    #qr-modal-wrap .modal{text-align:center;}
+    #qr-canvas-wrap{background:#fff;border-radius:14px;padding:1.1rem;display:inline-block;margin:.8rem 0;}
+    .qr-url{font-size:.72rem;color:var(--muted);word-break:break-all;margin-bottom:.7rem;background:var(--surface2);padding:.45rem .75rem;border-radius:8px;}
+    .qr-app-name-display{font-family:'Fredoka One',cursive;font-size:1.15rem;margin-bottom:.2rem;color:#fff;}
+
+    /* ── DASHBOARD ── */
+    .dash-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.9rem;margin-bottom:1.5rem;}
+    .dash-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.1rem 1.2rem;}
+    .dash-card-label{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:.35rem;}
+    .dash-card-value{font-family:'Fredoka One',cursive;font-size:2rem;color:#fff;line-height:1;}
+    .dash-card-sub{font-size:.75rem;color:var(--muted);margin-top:.25rem;}
+    .dash-card.accent-card{border-color:rgba(230,168,23,.3);background:linear-gradient(135deg,var(--surface),rgba(230,168,23,.06));}
+    .dash-card.accent-card .dash-card-value{color:var(--accent);}
+    .dash-card.green-card{border-color:rgba(74,222,128,.25);background:rgba(74,222,128,.04);}
+    .dash-card.green-card .dash-card-value{color:var(--green);}
+    .dash-card.red-card{border-color:rgba(248,113,113,.25);background:rgba(248,113,113,.04);}
+    .dash-card.red-card .dash-card-value{color:var(--red);}
+
+    /* ── ANNOUNCEMENT ── */
+    .ann-preview{border-radius:10px;padding:.7rem 1.1rem;font-size:.9rem;font-weight:700;margin-bottom:.8rem;display:flex;align-items:center;gap:.6rem;}
+    .ann-preview.hidden-preview{display:none;}
+    .color-chips{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.4rem;}
+    .color-chip{width:26px;height:26px;border-radius:6px;cursor:pointer;border:2px solid transparent;transition:all .15s;flex-shrink:0;}
+    .color-chip.selected{border-color:#fff;transform:scale(1.15);}
+    .ann-form{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.3rem;}
+
+    /* ── BROKEN LINK CHECKER ── */
+    .checker-result{display:flex;flex-direction:column;gap:.45rem;margin-top:1rem;}
+    .check-item{display:flex;align-items:center;gap:.7rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.7rem 1rem;}
+    .check-item.ok{border-color:rgba(74,222,128,.25);}
+    .check-item.fail{border-color:rgba(248,113,113,.3);background:rgba(248,113,113,.04);}
+    .check-item.checking{opacity:.5;}
+    .check-status{font-size:.8rem;font-weight:800;flex-shrink:0;min-width:24px;text-align:center;}
+    .check-name{font-weight:800;font-size:.88rem;flex:1;}
+    .check-url{font-size:.72rem;color:var(--muted);}
+    .check-badge{font-size:.68rem;padding:.12rem .45rem;border-radius:99px;font-weight:800;flex-shrink:0;}
+    .check-badge.ok{background:var(--green-dim);color:var(--green);border:1px solid rgba(74,222,128,.25);}
+    .check-badge.fail{background:var(--red-dim);color:var(--red);border:1px solid rgba(248,113,113,.25);}
+    .check-badge.skip{background:rgba(255,255,255,.06);color:var(--muted);border:1px solid var(--border);}
+    .checker-summary{background:var(--surface2);border-radius:10px;padding:.8rem 1rem;font-size:.85rem;font-weight:700;margin-top:.8rem;display:none;}
+    .checker-summary.visible{display:block;}
+    .checker-progress{height:4px;background:rgba(255,255,255,.07);border-radius:99px;overflow:hidden;margin-top:.6rem;display:none;}
+    .checker-progress.visible{display:block;}
+    .checker-progress-fill{height:100%;background:linear-gradient(90deg,var(--indigo),var(--accent));border-radius:99px;transition:width .3s;}
+
+    /* ── TOAST ── */
+    #toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--surface);border:1px solid var(--green);color:var(--green);padding:.55rem 1.1rem;border-radius:10px;font-size:.83rem;font-weight:700;opacity:0;transition:opacity .3s;pointer-events:none;z-index:9999;}
+    #toast.show{opacity:1;}
+    #toast.toast-error{border-color:var(--red);color:var(--red);}
+
+    /* ── UNDO BAR ── */
+    #undo-bar{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--red);border-radius:12px;padding:.6rem 1.1rem;display:none;align-items:center;gap:1rem;font-size:.85rem;font-weight:700;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,.5);white-space:nowrap;}
+
+    /* misc */
+    .divider{height:1px;background:var(--border);margin:1.5rem 0;}
+    .empty-msg{text-align:center;padding:2.5rem 1rem;color:var(--muted);font-size:.9rem;}
+    .app-count-badge{font-size:.78rem;color:var(--muted);font-weight:700;}
+    .aod-indicator{font-size:.65rem;font-weight:800;background:var(--accent-dim);color:var(--accent);border:1px solid rgba(230,168,23,.3);padding:.1rem .45rem;border-radius:99px;margin-left:.4rem;}
   </style>
 </head>
 <body>
 
-<!-- LOGIN -->
+<!-- ══ LOGIN ══════════════════════════════════════════ -->
 <div id="login-screen">
   <div class="login-box">
-    <h2>🔒 Admin</h2>
-    <p>Lernwelt Verwaltung</p>
+    <h2>🧭 Lern<span>welt</span></h2>
+    <p>Admin-Bereich</p>
     <input type="password" id="pw" placeholder="Passwort" autocomplete="off"/>
-    <div class="err" id="pw-err"></div>
-    <button class="btn-primary" onclick="checkLogin()">Anmelden</button>
+    <div class="login-err" id="pw-err"></div>
+    <button class="btn-login" onclick="checkLogin()">Anmelden</button>
   </div>
 </div>
 
-<!-- MAIN APP -->
+<!-- ══ APP ════════════════════════════════════════════ -->
 <div id="app">
   <div class="topbar">
-    <h1>⚙ Lernwelt Admin</h1>
+    <div class="topbar-wordmark">🧭 Lern<em>welt</em> <span style="font-size:.7rem;color:var(--muted);font-family:'Nunito',sans-serif;font-weight:700;margin-left:.2rem">Admin</span></div>
     <div class="topbar-actions">
       <span id="sync-status">–</span>
       <a href="index.html" class="btn">← Zur Seite</a>
@@ -186,22 +258,34 @@
 
   <div class="content">
     <div class="tabs">
-      <button class="tab active" data-t="apps">📱 Apps</button>
+      <button class="tab active" data-t="dashboard">📊 Dashboard</button>
+      <button class="tab" data-t="apps">📱 Apps</button>
       <button class="tab" data-t="visibility">👁 Sichtbarkeit</button>
       <button class="tab" data-t="tags">🏷 Tags</button>
+      <button class="tab" data-t="announcement">📢 Banner</button>
+      <button class="tab" data-t="checker">🔗 Link-Check</button>
     </div>
 
-    <!-- ── TAB: APPS ──────────────────────────────── -->
-    <div class="tab-panel active" id="panel-apps">
+    <!-- ══ TAB: DASHBOARD ═══════════════════════════ -->
+    <div class="tab-panel active" id="panel-dashboard">
+      <div class="dash-grid" id="dash-stats"></div>
+
+      <div class="sec-header"><span class="sec-title">⭐ App des Tages</span></div>
+      <div class="form-card" id="aod-info" style="margin-bottom:1.5rem;font-size:.88rem;color:var(--text2);">–</div>
+
+      <div class="sec-header"><span class="sec-title">📋 Letzte Aktionen</span></div>
+      <div id="changelog-list" style="display:flex;flex-direction:column;gap:.4rem;"></div>
+    </div>
+
+    <!-- ══ TAB: APPS ════════════════════════════════ -->
+    <div class="tab-panel" id="panel-apps">
 
       <!-- Neue App -->
-      <div class="sec-header">
-        <span class="sec-title">➕ Neue App hinzufügen</span>
-      </div>
-      <div class="form-card" style="margin-bottom:2rem">
-        <div class="form-row" style="margin-bottom:1rem;align-items:center">
+      <div class="sec-header"><span class="sec-title">➕ Neue App</span></div>
+      <div class="form-card" style="margin-bottom:1.8rem;">
+        <div class="form-row" style="margin-bottom:.9rem;align-items:center;">
           <span class="emoji-preview" id="emoji-preview">📱</span>
-          <div class="form-group" style="flex:1">
+          <div class="form-group" style="flex:1;">
             <label>Emoji</label>
             <input type="text" id="f-emoji" placeholder="z.B. 🔢" maxlength="4" oninput="document.getElementById('emoji-preview').textContent=this.value||'📱'"/>
           </div>
@@ -219,43 +303,51 @@
             <label>Fach *</label>
             <select id="f-fach">
               <option value="">– Fach wählen –</option>
-              <option>Mathematik</option>
-              <option>Englisch</option>
-              <option>Deutsch</option>
-              <option>Sachkunde</option>
-              <option>Sport</option>
-              <option>Informatik</option>
-              <option>Geschichte</option>
+              <option>Mathematik</option><option>Englisch</option><option>Deutsch</option>
+              <option>Sachkunde</option><option>Sport</option><option>Informatik</option><option>Geschichte</option>
             </select>
           </div>
-          <div class="form-group full">
+          <div class="form-group">
             <label>Beschreibung</label>
             <input type="text" id="f-desc" placeholder="Kurze Beschreibung für Schüler"/>
           </div>
         </div>
-        <div style="margin-top:1rem;display:flex;gap:.6rem;justify-content:flex-end">
+        <div style="margin-top:.9rem;display:flex;gap:.55rem;justify-content:flex-end;">
           <button class="btn accent" onclick="addApp()">App hinzufügen</button>
         </div>
       </div>
 
-      <!-- App-Liste -->
+      <!-- Filter -->
       <div class="sec-header">
         <span class="sec-title">📋 Alle Apps</span>
-        <span id="app-count" style="font-size:.8rem;color:var(--muted)"></span>
+        <span class="app-count-badge" id="app-count"></span>
+      </div>
+      <div class="filter-row-admin">
+        <input type="search" class="admin-search" id="app-search" placeholder="App suchen …" oninput="filterAppList()" autocomplete="off"/>
+        <select class="fach-filter" id="fach-filter" onchange="filterAppList()">
+          <option value="">Alle Fächer</option>
+          <option>Mathematik</option><option>Englisch</option><option>Deutsch</option>
+          <option>Sachkunde</option><option>Sport</option><option>Informatik</option><option>Geschichte</option>
+        </select>
+        <select class="fach-filter" id="status-filter" onchange="filterAppList()">
+          <option value="">Alle Status</option>
+          <option value="visible">Sichtbar</option>
+          <option value="hidden">Versteckt</option>
+        </select>
       </div>
       <div class="app-list" id="app-list"></div>
     </div>
 
-    <!-- ── TAB: VISIBILITY ────────────────────────── -->
+    <!-- ══ TAB: VISIBILITY ══════════════════════════ -->
     <div class="tab-panel" id="panel-visibility">
       <div class="sec-header"><span class="sec-title">👁 Apps &amp; Kategorien ein/ausblenden</span></div>
       <div id="vis-list"></div>
     </div>
 
-    <!-- ── TAB: TAGS ──────────────────────────────── -->
+    <!-- ══ TAB: TAGS ════════════════════════════════ -->
     <div class="tab-panel" id="panel-tags">
       <div class="sec-header"><span class="sec-title">🏷 Eigene Tags verwalten</span></div>
-      <div class="tag-manager" style="margin-bottom:1.5rem">
+      <div class="tag-manager" style="margin-bottom:1.5rem;">
         <div class="tag-pills" id="tag-pills"></div>
         <div class="add-tag-row">
           <input type="text" id="new-tag" placeholder="Neuer Tag, z.B. Wiederholung …" maxlength="28"/>
@@ -265,10 +357,58 @@
       <div class="sec-header"><span class="sec-title">Tags pro App zuweisen</span></div>
       <div class="app-list" id="tag-assign-list"></div>
     </div>
-  </div>
-</div>
 
-<!-- TAG MODAL -->
+    <!-- ══ TAB: ANNOUNCEMENT ════════════════════════ -->
+    <div class="tab-panel" id="panel-announcement">
+      <div class="sec-header"><span class="sec-title">📢 Ankündigungs-Banner</span></div>
+      <p style="font-size:.84rem;color:var(--muted);margin-bottom:1.2rem;">Erscheint oben auf der Startseite zwischen Header und Filterleiste. Kann jederzeit ein- und ausgeblendet werden.</p>
+
+      <div class="ann-preview" id="ann-preview">
+        <span id="ann-preview-emoji">📢</span>
+        <span id="ann-preview-text">Hier steht deine Ankündigung …</span>
+      </div>
+
+      <div class="ann-form">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Emoji</label>
+            <input type="text" id="ann-emoji" placeholder="📢" maxlength="4" value="📢" oninput="updateAnnPreview()"/>
+          </div>
+          <div class="form-group full">
+            <label>Text</label>
+            <input type="text" id="ann-text" placeholder="z.B. Diese Woche: Mathe-Woche! Viel Spaß 🎉" oninput="updateAnnPreview()"/>
+          </div>
+          <div class="form-group full">
+            <label>Hintergrundfarbe</label>
+            <div class="color-chips" id="color-chips"></div>
+          </div>
+        </div>
+        <div style="margin-top:1.1rem;display:flex;gap:.55rem;align-items:center;flex-wrap:wrap;">
+          <button class="btn accent" onclick="saveAnnouncement()">💾 Speichern &amp; aktivieren</button>
+          <button class="btn danger" onclick="hideAnnouncement()">🚫 Banner ausblenden</button>
+          <span id="ann-status" style="font-size:.78rem;color:var(--muted);"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ TAB: LINK CHECKER ════════════════════════ -->
+    <div class="tab-panel" id="panel-checker">
+      <div class="sec-header"><span class="sec-title">🔗 Broken-Link-Checker</span></div>
+      <p style="font-size:.84rem;color:var(--muted);margin-bottom:1.2rem;">Prüft ob alle App-Dateien auf GitHub erreichbar sind. Externe Links (http/https) werden als „Extern" markiert.</p>
+      <div style="display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;margin-bottom:1rem;">
+        <button class="btn accent" id="check-btn" onclick="runChecker()">🔍 Alle Links prüfen</button>
+        <span id="checker-info" style="font-size:.78rem;color:var(--muted);"></span>
+      </div>
+      <div class="checker-progress" id="checker-progress"><div class="checker-progress-fill" id="checker-fill" style="width:0%"></div></div>
+      <div class="checker-result" id="checker-result"></div>
+      <div class="checker-summary" id="checker-summary"></div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /app -->
+
+<!-- ══ MODALS ═════════════════════════════════════════ -->
+<!-- Tag Modal -->
 <div class="modal-bg" id="tag-modal">
   <div class="modal">
     <h2 id="modal-title">Tags bearbeiten</h2>
@@ -286,54 +426,51 @@
   </div>
 </div>
 
-<!-- QR MODAL -->
-<div class="modal-bg" id="qr-modal">
-  <div class="modal" style="max-width:380px">
-    <h2 id="qr-modal-title">QR-Code</h2>
-    <div class="qr-app-name" id="qr-app-name"></div>
-    <div id="qr-canvas-wrap"><canvas id="qr-canvas"></canvas></div>
+<!-- QR Modal -->
+<div class="modal-bg" id="qr-modal-wrap">
+  <div class="modal" style="max-width:360px;text-align:center;">
+    <h2>📲 QR-Code</h2>
+    <div class="qr-app-name-display" id="qr-app-name"></div>
+    <div id="qr-canvas-wrap"></div>
     <div class="qr-url" id="qr-url"></div>
-    <div class="modal-actions" style="justify-content:space-between">
-      <button class="btn green" onclick="downloadQR()">⬇ Bild speichern</button>
+    <div class="modal-actions" style="justify-content:space-between;">
+      <button class="btn green" onclick="downloadQR()">⬇ Speichern</button>
       <button class="btn" onclick="closeQR()">Schließen</button>
     </div>
   </div>
 </div>
 
+<!-- Toast & Undo -->
 <div id="toast">✓ Gespeichert</div>
-
-<!-- QR MODAL -->
-<div id="qr-modal-bg">
-  <div id="qr-modal">
-    <h2>QR-Code</h2>
-    <div class="qr-app-name" id="qr-app-name"></div>
-    <div class="qr-url" id="qr-url-text"></div>
-    <div id="qr-canvas-wrap"></div>
-    <div class="qr-actions">
-      <button class="qr-btn qr-btn-print" onclick="printQR()">🖨 Drucken</button>
-      <button class="qr-btn qr-btn-close" onclick="closeQR()">Schliessen</button>
-    </div>
-    <div class="qr-hint">QR-Code per Beamer zeigen oder ausdrucken</div>
-  </div>
-</div>
-
+<div id="undo-bar"></div>
 
 <script>
-const WORKER_URL = 'https://lern-apps-config.bennigeitner.workers.dev';
-const ADMIN_PASSWORD = 'lehrer123'; // ← HIER ÄNDERN
-const KLASSEN = [5,6,7,8,9];
+const WORKER_URL   = 'https://lern-apps-config.bennigeitner.workers.dev';
+const BASE_URL     = 'https://geitner-hub.github.io/Lern-Apps/';
+const ADMIN_PW     = 'lehrer123'; // ← HIER ÄNDERN
+const KLASSEN      = [5,6,7,8,9];
+const CAT_ICONS    = {Mathematik:'➕',Englisch:'🇬🇧',Deutsch:'📖',Sachkunde:'🌍',Sport:'⚽',Informatik:'💻',Geschichte:'🏛'};
+const ANN_COLORS   = [
+  {bg:'rgba(230,168,23,.18)',text:'#e6a817',label:'Gold'},
+  {bg:'rgba(99,102,241,.18)',text:'#818cf8',label:'Indigo'},
+  {bg:'rgba(74,222,128,.15)',text:'#4ade80',label:'Grün'},
+  {bg:'rgba(248,113,113,.14)',text:'#f87171',label:'Rot'},
+  {bg:'rgba(45,212,191,.15)',text:'#2dd4bf',label:'Teal'},
+  {bg:'rgba(244,114,182,.15)',text:'#f472b6',label:'Pink'},
+];
 
-let CONFIG = {apps:[], customTags:[], hiddenCats:[]};
-let ghSha = '';
-let saveTimer=null, isSaving=false, pendingSave=false;
+let CONFIG     = {apps:[], customTags:[], hiddenCats:[], announcement:{active:false,text:'',emoji:'📢',color:0}};
+let ghSha      = '';
+let saveTimer  = null, isSaving = false, pendingSave = false;
 let modalAppName = '';
+let dragSrc    = null;
+let changelog  = [];
+let selectedAnnColor = 0;
 
-// ════════════════════════════════════════════════════════
-//  LOGIN
-// ════════════════════════════════════════════════════════
+// ══ LOGIN ══════════════════════════════════════════════
 document.getElementById('pw').addEventListener('keydown', e=>{ if(e.key==='Enter') checkLogin(); });
 function checkLogin(){
-  if(document.getElementById('pw').value === ADMIN_PASSWORD){
+  if(document.getElementById('pw').value === ADMIN_PW){
     document.getElementById('login-screen').style.display='none';
     document.getElementById('app').style.display='block';
     loadConfig();
@@ -343,9 +480,7 @@ function checkLogin(){
   }
 }
 
-// ════════════════════════════════════════════════════════
-//  CONFIG LADEN / SPEICHERN
-// ════════════════════════════════════════════════════════
+// ══ SYNC ═══════════════════════════════════════════════
 function setSync(s,m){
   const el=document.getElementById('sync-status');
   el.className=s; el.textContent=m;
@@ -358,7 +493,8 @@ async function loadConfig(){
     if(!r.ok) throw new Error(r.status);
     const d=await r.json();
     ghSha=d.sha;
-    CONFIG={apps:[],customTags:[],hiddenCats:[],...JSON.parse(decodeURIComponent(atob(d.content.replace(/\n/g,'')).split('').map(c=>'%'+('00'+c.charCodeAt(0).toString(16)).slice(-2)).join('')))};
+    const parsed=JSON.parse(decodeURIComponent(atob(d.content.replace(/\n/g,'')).split('').map(c=>'%'+('00'+c.charCodeAt(0).toString(16)).slice(-2)).join('')));
+    CONFIG={apps:[],customTags:[],hiddenCats:[],announcement:{active:false,text:'',emoji:'📢',color:0},...parsed};
     setSync('ok','✓ Geladen');
     setTimeout(()=>setSync('','–'),2000);
   }catch(e){
@@ -366,6 +502,7 @@ async function loadConfig(){
     console.error(e);
   }
   buildAll();
+  loadAnnForm();
 }
 
 function saveConfig(){
@@ -391,22 +528,22 @@ async function _doSave(){
     showToast('✓ Gespeichert');
     setTimeout(()=>setSync('','–'),3000);
   }catch(e){
-    setSync('error','⚠ Fehler beim Speichern');
+    setSync('error','⚠ Fehler');
+    showToast('⚠ Fehler beim Speichern',true);
     console.error(e);
   }
   isSaving=false;
   if(pendingSave){pendingSave=false;_doSave();}
 }
 
-function showToast(msg){
+function showToast(msg,err=false){
   const t=document.getElementById('toast');
-  t.textContent=msg; t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2000);
+  t.textContent=msg;
+  t.className=err?'show toast-error':'show';
+  setTimeout(()=>t.className='',2200);
 }
 
-// ════════════════════════════════════════════════════════
-//  TABS
-// ════════════════════════════════════════════════════════
+// ══ TABS ═══════════════════════════════════════════════
 document.querySelectorAll('.tab').forEach(tab=>tab.addEventListener('click',()=>{
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
@@ -414,41 +551,74 @@ document.querySelectorAll('.tab').forEach(tab=>tab.addEventListener('click',()=>
   document.getElementById('panel-'+tab.dataset.t).classList.add('active');
 }));
 
-// ════════════════════════════════════════════════════════
-//  BUILD ALL
-// ════════════════════════════════════════════════════════
+// ══ BUILD ALL ══════════════════════════════════════════
 function buildAll(){
+  buildDashboard();
   buildAppList();
   buildVisibility();
   buildTagManager();
   buildTagAssignList();
 }
 
-// ════════════════════════════════════════════════════════
-//  APP HINZUFÜGEN
-// ════════════════════════════════════════════════════════
-function addApp(){
-  const name=document.getElementById('f-name').value.trim();
-  const datei=document.getElementById('f-datei').value.trim();
-  const fach=document.getElementById('f-fach').value;
-  const emoji=document.getElementById('f-emoji').value.trim()||'📱';
-  const desc=document.getElementById('f-desc').value.trim();
-  if(!name||!datei||!fach){alert('Bitte Name, Datei und Fach ausfüllen.');return;}
-  if(CONFIG.apps.find(a=>a.name===name)){alert('Eine App mit diesem Namen existiert bereits.');return;}
-  CONFIG.apps.push({name,datei,fach,emoji,beschreibung:desc,hidden:false,klassen:[],customTags:[],aod:false});
-  // Felder leeren
-  ['f-name','f-datei','f-desc','f-emoji'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('f-fach').value='';
-  document.getElementById('emoji-preview').textContent='📱';
-  saveConfig();
-  buildAll();
+// ══ DASHBOARD ══════════════════════════════════════════
+function buildDashboard(){
+  const total     = CONFIG.apps.length;
+  const visible   = CONFIG.apps.filter(a=>!a.hidden).length;
+  const hidden    = CONFIG.apps.filter(a=>a.hidden).length;
+  const aodApp    = CONFIG.apps.find(a=>a.aod && !a.hidden);
+  const faecher   = [...new Set(CONFIG.apps.map(a=>a.fach).filter(Boolean))].length;
+
+  document.getElementById('dash-stats').innerHTML=`
+    <div class="dash-card accent-card">
+      <div class="dash-card-label">Gesamt Apps</div>
+      <div class="dash-card-value">${total}</div>
+      <div class="dash-card-sub">${faecher} Fächer</div>
+    </div>
+    <div class="dash-card green-card">
+      <div class="dash-card-label">Sichtbar</div>
+      <div class="dash-card-value">${visible}</div>
+      <div class="dash-card-sub">für Schüler</div>
+    </div>
+    <div class="dash-card red-card">
+      <div class="dash-card-label">Versteckt</div>
+      <div class="dash-card-value">${hidden}</div>
+      <div class="dash-card-sub">nicht sichtbar</div>
+    </div>
+    <div class="dash-card">
+      <div class="dash-card-label">Custom Tags</div>
+      <div class="dash-card-value">${CONFIG.customTags.length}</div>
+      <div class="dash-card-sub">angelegt</div>
+    </div>
+    <div class="dash-card">
+      <div class="dash-card-label">Banner</div>
+      <div class="dash-card-value" style="font-size:1.3rem;">${CONFIG.announcement?.active?'🟢 AN':'⚪ AUS'}</div>
+      <div class="dash-card-sub">${CONFIG.announcement?.active?'aktiv':'inaktiv'}</div>
+    </div>`;
+
+  document.getElementById('aod-info').innerHTML = aodApp
+    ? `<span style="font-size:1.5rem;">${aodApp.emoji||'📱'}</span> <strong style="color:#fff;">${aodApp.name}</strong> <span style="color:var(--muted);">· ${aodApp.fach}</span>`
+    : `<span style="color:var(--muted);font-size:.85rem;">Keine App des Tages gesetzt.</span>`;
+
+  // Changelog
+  const cl=document.getElementById('changelog-list');
+  if(!changelog.length){
+    cl.innerHTML='<div class="empty-msg">Noch keine Änderungen in dieser Sitzung.</div>';
+  } else {
+    cl.innerHTML=changelog.slice().reverse().map(e=>`
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:.6rem .9rem;font-size:.83rem;display:flex;align-items:center;gap:.7rem;">
+        <span style="color:var(--muted);font-size:.7rem;flex-shrink:0;">${e.time}</span>
+        <span style="flex:1;">${e.msg}</span>
+      </div>`).join('');
+  }
 }
 
-// ════════════════════════════════════════════════════════
-//  APP-LISTE (mit Drag & Drop)
-// ════════════════════════════════════════════════════════
-let dragSrc=null;
+function logChange(msg){
+  const now=new Date();
+  changelog.push({time:now.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'}),msg});
+  if(changelog.length>20) changelog.shift();
+}
 
+// ══ APP LIST ═══════════════════════════════════════════
 function buildAppList(){
   const list=document.getElementById('app-list');
   list.innerHTML='';
@@ -460,150 +630,219 @@ function buildAppList(){
     row.draggable=true;
     row.dataset.i=i;
 
-    const klTags=((app.klassen||[]).map(k=>`<span class="rtag kt">Kl.${k}</span>`)).join('');
-    const ctTags=((app.customTags||[]).map(t=>`<span class="rtag ct">${t}</span>`)).join('');
+    const klTags=(app.klassen||[]).map(k=>`<span class="rtag">Kl.${k}</span>`).join('');
+    const ctTags=(app.customTags||[]).map(t=>`<span class="rtag ct">${t}</span>`).join('');
 
     row.innerHTML=`
       <span class="drag-handle">⠿</span>
       <span class="row-emoji">${app.emoji||'📱'}</span>
-      <div class="row-info">
-        <div class="row-name">${app.name}</div>
-        <div class="row-meta">${app.fach} · ${app.datei}</div>
-        <div class="row-tags">${klTags}${ctTags}</div>
+      <div class="row-info" style="flex:1;min-width:0;">
+        <div class="row-name">${app.name}${app.aod?'<span class="aod-indicator">⭐ Heute</span>':''}</div>
+        <div class="row-meta">${app.fach||'–'} · ${app.datei||'–'}</div>
+        <div class="row-tags">${klTags}${ctTags}${!klTags&&!ctTags?'<span style="font-size:.68rem;color:var(--muted)">Keine Tags</span>':''}</div>
+        <!-- INLINE EDIT -->
+        <div class="inline-edit" id="edit-${i}">
+          <div class="form-group">
+            <label>Name</label>
+            <input type="text" id="ei-name-${i}" value="${escHtml(app.name)}"/>
+          </div>
+          <div class="form-group">
+            <label>Datei</label>
+            <input type="text" id="ei-datei-${i}" value="${escHtml(app.datei||'')}"/>
+          </div>
+          <div class="form-group">
+            <label>Emoji</label>
+            <input type="text" id="ei-emoji-${i}" value="${escHtml(app.emoji||'📱')}" maxlength="4"/>
+          </div>
+          <div class="form-group">
+            <label>Fach</label>
+            <select id="ei-fach-${i}">
+              ${['Mathematik','Englisch','Deutsch','Sachkunde','Sport','Informatik','Geschichte'].map(f=>`<option${app.fach===f?' selected':''}>${f}</option>`).join('')}
+            </select>
+          </div>
+          <div class="form-group full">
+            <label>Beschreibung</label>
+            <input type="text" id="ei-desc-${i}" value="${escHtml(app.beschreibung||'')}"/>
+          </div>
+          <div class="inline-edit-actions">
+            <button class="btn sm" onclick="cancelEdit(${i})">Abbrechen</button>
+            <button class="btn accent sm" onclick="saveEdit(${i})">💾 Speichern</button>
+          </div>
+        </div>
       </div>
       <div class="row-actions">
-        <button class="icon-btn aod-btn${app.aod?' on':''}" title="App des Tages" onclick="toggleAod('${app.name}')">⭐</button>
-        <button class="icon-btn${app.hidden?' hidden-btn':''}" title="Ein/Ausblenden" onclick="toggleHidden('${app.name}')">${app.hidden?'🚫':'✅'}</button>
-        <button class="icon-btn" title="Tags bearbeiten" onclick="openModal('${app.name}')">🏷</button>
-        <button class="icon-btn" title="QR-Code" onclick="showQR('${app.name}','${app.datei}')">📲</button>
-        <button class="icon-btn" title="Löschen" onclick="deleteApp('${app.name}')">🗑</button>
+        <button class="icon-btn" onclick="toggleEdit(${i})" title="Bearbeiten">✏️</button>
+        <button class="icon-btn ${app.aod?'on-gold':''}" onclick="toggleAod('${escHtml(app.name)}')" title="App des Tages">⭐</button>
+        <button class="icon-btn ${app.hidden?'on-red':'on-green'}" onclick="toggleHidden('${escHtml(app.name)}')" title="Ein/Ausblenden">${app.hidden?'🚫':'✅'}</button>
+        <button class="icon-btn" onclick="openModal('${escHtml(app.name)}')" title="Tags">🏷</button>
+        <button class="icon-btn" onclick="showQR('${escHtml(app.name)}','${escHtml(app.datei||'')}')" title="QR">📲</button>
+        <button class="icon-btn on-red" onclick="deleteApp('${escHtml(app.name)}')" title="Löschen">🗑</button>
       </div>`;
 
     // Drag & Drop
-    row.addEventListener('dragstart',e=>{dragSrc=row;row.classList.add('dragging');e.dataTransfer.effectAllowed='move';});
-    row.addEventListener('dragend',  ()=>{row.classList.remove('dragging');document.querySelectorAll('.app-row').forEach(r=>r.classList.remove('drag-over'));});
-    row.addEventListener('dragover', e=>{e.preventDefault();row.classList.add('drag-over');});
-    row.addEventListener('dragleave',()=>row.classList.remove('drag-over'));
-    row.addEventListener('drop',     e=>{
+    row.addEventListener('dragstart', e=>{ dragSrc=row; row.classList.add('is-dragging'); e.dataTransfer.effectAllowed='move'; });
+    row.addEventListener('dragend',   ()=>{ row.classList.remove('is-dragging'); document.querySelectorAll('.app-row').forEach(r=>r.classList.remove('drag-over')); });
+    row.addEventListener('dragover',  e=>{ e.preventDefault(); row.classList.add('drag-over'); });
+    row.addEventListener('dragleave', ()=>row.classList.remove('drag-over'));
+    row.addEventListener('drop',      e=>{
       e.preventDefault();
       if(!dragSrc||dragSrc===row) return;
-      const from=parseInt(dragSrc.dataset.i);
-      const to=parseInt(row.dataset.i);
+      const from=parseInt(dragSrc.dataset.i), to=parseInt(row.dataset.i);
       const moved=CONFIG.apps.splice(from,1)[0];
       CONFIG.apps.splice(to,0,moved);
-      saveConfig();
-      buildAll();
+      logChange(`🔀 "${moved.name}" verschoben`);
+      saveConfig(); buildAll();
     });
 
     list.appendChild(row);
   });
+
+  filterAppList();
 }
 
+// ── Inline Edit ─────────────────────────────────────
+function toggleEdit(i){
+  const editEl=document.getElementById('edit-'+i);
+  const row=editEl.closest('.app-row');
+  const isOpen=editEl.classList.contains('open');
+  // close all others
+  document.querySelectorAll('.inline-edit.open').forEach(el=>{
+    el.classList.remove('open');
+    el.closest('.app-row')?.classList.remove('editing');
+  });
+  if(!isOpen){ editEl.classList.add('open'); row.classList.add('editing'); }
+}
+
+function cancelEdit(i){
+  document.getElementById('edit-'+i).classList.remove('open');
+  document.getElementById('edit-'+i).closest('.app-row').classList.remove('editing');
+}
+
+function saveEdit(i){
+  const app=CONFIG.apps[i];
+  if(!app) return;
+  const newName=document.getElementById(`ei-name-${i}`).value.trim();
+  const newDatei=document.getElementById(`ei-datei-${i}`).value.trim();
+  const newEmoji=document.getElementById(`ei-emoji-${i}`).value.trim()||'📱';
+  const newFach=document.getElementById(`ei-fach-${i}`).value;
+  const newDesc=document.getElementById(`ei-desc-${i}`).value.trim();
+  if(!newName||!newDatei){ showToast('⚠ Name und Datei sind Pflichtfelder',true); return; }
+  const oldName=app.name;
+  app.name=newName; app.datei=newDatei; app.emoji=newEmoji; app.fach=newFach; app.beschreibung=newDesc;
+  logChange(`✏️ "${oldName}" bearbeitet`);
+  saveConfig(); buildAll();
+  showToast('✓ App aktualisiert');
+}
+
+// ── Filter ──────────────────────────────────────────
+function filterAppList(){
+  const q=(document.getElementById('app-search').value||'').toLowerCase();
+  const fach=document.getElementById('fach-filter').value;
+  const status=document.getElementById('status-filter').value;
+  let shown=0;
+  document.querySelectorAll('#app-list .app-row').forEach(row=>{
+    const name=(row.querySelector('.row-name')?.textContent||'').toLowerCase();
+    const meta=(row.querySelector('.row-meta')?.textContent||'').toLowerCase();
+    const matchQ=!q||name.includes(q)||meta.includes(q);
+    const matchF=!fach||meta.includes(fach.toLowerCase());
+    const isHidden=row.classList.contains('is-hidden');
+    const matchS=!status||(status==='hidden'&&isHidden)||(status==='visible'&&!isHidden);
+    const show=matchQ&&matchF&&matchS;
+    row.style.display=show?'':'none';
+    if(show) shown++;
+  });
+  document.getElementById('app-count').textContent=shown+' / '+CONFIG.apps.length+' Apps';
+}
+
+// ── Toggle Hidden / AOD ────────────────────────────
 function toggleHidden(name){
   const app=CONFIG.apps.find(a=>a.name===name);
-  if(app) app.hidden=!app.hidden;
+  if(!app) return;
+  app.hidden=!app.hidden;
+  logChange(`${app.hidden?'🚫':'✅'} "${name}" ${app.hidden?'versteckt':'eingeblendet'}`);
   saveConfig(); buildAll();
 }
 
 function toggleAod(name){
-  // Nur eine App kann App des Tages sein
   CONFIG.apps.forEach(a=>a.aod=false);
   const app=CONFIG.apps.find(a=>a.name===name);
-  if(app) app.aod=true;
+  if(app){ app.aod=true; logChange(`⭐ "${name}" als App des Tages gesetzt`); }
   saveConfig(); buildAll();
 }
 
-// ── Soft-Delete mit Undo (8 Sekunden) ────────────────
-let undoTimer = null;
-let undoApp   = null;
-let undoIndex = null;
+// ── Add / Delete ───────────────────────────────────
+function addApp(){
+  const name=document.getElementById('f-name').value.trim();
+  const datei=document.getElementById('f-datei').value.trim();
+  const fach=document.getElementById('f-fach').value;
+  const emoji=document.getElementById('f-emoji').value.trim()||'📱';
+  const desc=document.getElementById('f-desc').value.trim();
+  if(!name||!datei||!fach){ showToast('⚠ Name, Datei und Fach ausfüllen',true); return; }
+  if(CONFIG.apps.find(a=>a.name===name)){ showToast('⚠ Name bereits vergeben',true); return; }
+  CONFIG.apps.push({name,datei,fach,emoji,beschreibung:desc,hidden:false,klassen:[],customTags:[],aod:false});
+  ['f-name','f-datei','f-desc','f-emoji'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f-fach').value='';
+  document.getElementById('emoji-preview').textContent='📱';
+  logChange(`➕ "${name}" hinzugefügt`);
+  saveConfig(); buildAll();
+}
 
+let undoTimer=null, undoApp=null, undoIdx=null;
 function deleteApp(name){
-  const idx = CONFIG.apps.findIndex(a=>a.name===name);
+  const idx=CONFIG.apps.findIndex(a=>a.name===name);
   if(idx===-1) return;
-  undoApp   = CONFIG.apps[idx];
-  undoIndex = idx;
+  undoApp=CONFIG.apps[idx]; undoIdx=idx;
   CONFIG.apps.splice(idx,1);
-  buildAll();
-  showUndo(name);
-  // Nach 8s endgültig speichern
+  logChange(`🗑 "${name}" gelöscht`);
+  buildAll(); showUndo(name);
   clearTimeout(undoTimer);
-  undoTimer = setTimeout(()=>{
-    undoApp=null; undoIndex=null;
-    saveConfig();
-    hideUndo();
-  }, 8000);
+  undoTimer=setTimeout(()=>{ undoApp=null; undoIdx=null; saveConfig(); hideUndo(); },8000);
 }
 
 function undoDelete(){
   if(!undoApp) return;
   clearTimeout(undoTimer);
-  CONFIG.apps.splice(undoIndex,0,undoApp);
-  undoApp=null; undoIndex=null;
-  hideUndo();
-  buildAll();
+  CONFIG.apps.splice(undoIdx,0,undoApp);
+  logChange(`↩ "${undoApp.name}" wiederhergestellt`);
+  undoApp=null; undoIdx=null;
+  hideUndo(); buildAll();
 }
 
 function showUndo(name){
-  let bar = document.getElementById('undo-bar');
-  if(!bar){
-    bar=document.createElement('div');
-    bar.id='undo-bar';
-    bar.style.cssText=`position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);
-      background:#1e293b;border:1.5px solid #f87171;border-radius:12px;
-      padding:.65rem 1.2rem;display:flex;align-items:center;gap:1rem;
-      font-size:.88rem;font-weight:700;z-index:9999;
-      box-shadow:0 8px 24px rgba(0,0,0,.4);white-space:nowrap`;
-    document.body.appendChild(bar);
-  }
-  bar.innerHTML=`
-    <span>🗑 <strong>${name}</strong> gelöscht</span>
-    <button onclick="undoDelete()" style="background:#f87171;border:none;color:#fff;
-      padding:.3rem .9rem;border-radius:8px;cursor:pointer;font-family:inherit;
-      font-weight:800;font-size:.82rem">↩ Rückgängig</button>
-    <span id="undo-countdown" style="color:#64748b;font-size:.78rem">8s</span>`;
-  bar.style.display='flex';
-  // Countdown
-  let sec=8;
-  clearInterval(bar._interval);
-  bar._interval=setInterval(()=>{
-    sec--;
-    const cd=document.getElementById('undo-countdown');
-    if(cd) cd.textContent=sec+'s';
-    if(sec<=0) clearInterval(bar._interval);
-  },1000);
-}
-
-function hideUndo(){
   const bar=document.getElementById('undo-bar');
-  if(bar){ clearInterval(bar._interval); bar.style.display='none'; }
+  bar.innerHTML=`<span>🗑 <strong>${name}</strong> gelöscht</span>
+    <button onclick="undoDelete()" style="background:var(--red);border:none;color:#fff;padding:.3rem .9rem;border-radius:8px;cursor:pointer;font-family:inherit;font-weight:800;font-size:.8rem;">↩ Rückgängig</button>
+    <span id="undo-cd" style="color:var(--muted);font-size:.75rem;">8s</span>`;
+  bar.style.display='flex';
+  let sec=8;
+  clearInterval(bar._iv);
+  bar._iv=setInterval(()=>{ sec--; const cd=document.getElementById('undo-cd'); if(cd) cd.textContent=sec+'s'; if(sec<=0) clearInterval(bar._iv); },1000);
 }
+function hideUndo(){ const b=document.getElementById('undo-bar'); if(b){ clearInterval(b._iv); b.style.display='none'; } }
 
-// ════════════════════════════════════════════════════════
-//  SICHTBARKEIT-TAB
-// ════════════════════════════════════════════════════════
+// ══ VISIBILITY ═════════════════════════════════════════
 function buildVisibility(){
   const list=document.getElementById('vis-list');
   list.innerHTML='';
   const faecher=[...new Set(CONFIG.apps.map(a=>a.fach).filter(Boolean))];
-
+  if(!faecher.length){ list.innerHTML='<div class="empty-msg">Noch keine Apps vorhanden.</div>'; return; }
   faecher.forEach(fach=>{
     const catHidden=CONFIG.hiddenCats.includes(fach);
-    const appsInFach=CONFIG.apps.filter(a=>a.fach===fach);
+    const apps=CONFIG.apps.filter(a=>a.fach===fach);
     const block=document.createElement('div');
     block.className='vis-cat-block';
     block.innerHTML=`
       <div class="vis-cat-header">
-        <span class="vis-app-emoji">${getCatIcon(fach)}</span>
-        <span class="vis-cat-name">${fach} (${appsInFach.length})</span>
+        <span style="font-size:1.2rem;">${CAT_ICONS[fach]||'📚'}</span>
+        <span class="vis-cat-name">${fach} (${apps.length})</span>
         <button class="vis-toggle ${catHidden?'off':'on'}" onclick="toggleCat('${fach}')">${catHidden?'Ausgeblendet':'Sichtbar'}</button>
       </div>
       <div class="vis-app-list">
-        ${appsInFach.map(app=>`
+        ${apps.map(app=>`
           <div class="vis-app-row">
-            <span class="vis-app-emoji">${app.emoji||'📱'}</span>
-            <span class="vis-app-name" style="${app.hidden?'opacity:.4':''}">${app.name}</span>
-            <button class="vis-toggle ${app.hidden?'off':'on'}" onclick="toggleHidden('${app.name}')">${app.hidden?'Ausgeblendet':'Sichtbar'}</button>
+            <span style="font-size:1.1rem;">${app.emoji||'📱'}</span>
+            <span class="vis-app-name" style="${app.hidden?'opacity:.38':''}">${app.name}</span>
+            <button class="vis-toggle ${app.hidden?'off':'on'}" onclick="toggleHidden('${escHtml(app.name)}')">${app.hidden?'Ausgeblendet':'Sichtbar'}</button>
           </div>`).join('')}
       </div>`;
     list.appendChild(block);
@@ -613,87 +852,76 @@ function buildVisibility(){
 function toggleCat(fach){
   const idx=CONFIG.hiddenCats.indexOf(fach);
   if(idx===-1) CONFIG.hiddenCats.push(fach); else CONFIG.hiddenCats.splice(idx,1);
+  logChange(`${CONFIG.hiddenCats.includes(fach)?'🚫':'✅'} Kategorie "${fach}" umgeschaltet`);
   saveConfig(); buildAll();
 }
 
-function getCatIcon(fach){
-  const icons={Mathematik:'➕',Englisch:'🇬🇧',Deutsch:'📖',Sachkunde:'🌍',Sport:'⚽',Informatik:'💻',Geschichte:'🏛'};
-  return icons[fach]||'📚';
-}
-
-// ════════════════════════════════════════════════════════
-//  TAG MANAGER
-// ════════════════════════════════════════════════════════
+// ══ TAGS ═══════════════════════════════════════════════
 function buildTagManager(){
   const pills=document.getElementById('tag-pills');
   pills.innerHTML='';
   if(!CONFIG.customTags.length){
-    pills.innerHTML='<span style="font-size:.78rem;color:var(--muted)">Noch keine Tags erstellt.</span>';
-    return;
-  }
-  CONFIG.customTags.forEach(tag=>{
-    const p=document.createElement('div');
-    p.className='tag-pill';
-    p.innerHTML=`${tag} <button class="del">×</button>`;
-    p.querySelector('.del').addEventListener('click',()=>{
-      if(!confirm(`Tag "${tag}" löschen? Er wird von allen Apps entfernt.`)) return;
-      CONFIG.customTags=CONFIG.customTags.filter(t=>t!==tag);
-      CONFIG.apps.forEach(a=>{if(a.customTags)a.customTags=a.customTags.filter(t=>t!==tag);});
-      saveConfig(); buildAll();
+    pills.innerHTML='<span style="font-size:.78rem;color:var(--muted);">Noch keine Tags erstellt.</span>';
+  } else {
+    CONFIG.customTags.forEach(tag=>{
+      const p=document.createElement('div');
+      p.className='tag-pill';
+      p.innerHTML=`${escHtml(tag)} <button class="del">×</button>`;
+      p.querySelector('.del').addEventListener('click',()=>{
+        if(!confirm(`Tag "${tag}" löschen?`)) return;
+        CONFIG.customTags=CONFIG.customTags.filter(t=>t!==tag);
+        CONFIG.apps.forEach(a=>{ if(a.customTags) a.customTags=a.customTags.filter(t=>t!==tag); });
+        logChange(`🏷 Tag "${tag}" gelöscht`);
+        saveConfig(); buildAll();
+      });
+      pills.appendChild(p);
     });
-    pills.appendChild(p);
-  });
+  }
 }
 
-document.getElementById('new-tag').addEventListener('keydown',e=>{if(e.key==='Enter')addTag();});
+document.getElementById('new-tag').addEventListener('keydown',e=>{ if(e.key==='Enter') addTag(); });
 function addTag(){
   const inp=document.getElementById('new-tag');
-  const v=inp.value.trim(); if(!v) return;
-  if(CONFIG.customTags.includes(v)){inp.value='';return;}
+  const v=inp.value.trim();
+  if(!v) return;
+  if(CONFIG.customTags.includes(v)){ inp.value=''; return; }
   CONFIG.customTags.push(v);
   inp.value='';
+  logChange(`🏷 Tag "${v}" erstellt`);
   saveConfig(); buildAll();
 }
 
-// ════════════════════════════════════════════════════════
-//  TAG-ZUWEISUNG (kompakte Liste)
-// ════════════════════════════════════════════════════════
 function buildTagAssignList(){
   const list=document.getElementById('tag-assign-list');
   list.innerHTML='';
   CONFIG.apps.forEach(app=>{
-    const kl=(app.klassen||[]);
-    const ct=(app.customTags||[]);
+    const kl=app.klassen||[], ct=app.customTags||[];
     const row=document.createElement('div');
     row.className='app-row';
     row.style.cursor='default';
     row.innerHTML=`
       <span class="row-emoji">${app.emoji||'📱'}</span>
       <div class="row-info">
-        <div class="row-name">${app.name}</div>
+        <div class="row-name">${escHtml(app.name)}</div>
         <div class="row-tags">
-          ${kl.map(k=>`<span class="rtag kt">Kl.${k}</span>`).join('')}
-          ${ct.map(t=>`<span class="rtag ct">${t}</span>`).join('')}
-          ${!kl.length&&!ct.length?'<span style="font-size:.72rem;color:var(--muted)">Keine Tags</span>':''}
+          ${kl.map(k=>`<span class="rtag">Kl.${k}</span>`).join('')}
+          ${ct.map(t=>`<span class="rtag ct">${escHtml(t)}</span>`).join('')}
+          ${!kl.length&&!ct.length?'<span style="font-size:.7rem;color:var(--muted)">Keine Tags</span>':''}
         </div>
       </div>
       <div class="row-actions">
-        <button class="icon-btn" onclick="openModal('${app.name}')">🏷 Bearbeiten</button>
+        <button class="icon-btn" onclick="openModal('${escHtml(app.name)}')">🏷 Bearbeiten</button>
       </div>`;
     list.appendChild(row);
   });
 }
 
-// ════════════════════════════════════════════════════════
-//  TAG MODAL
-// ════════════════════════════════════════════════════════
+// ══ TAG MODAL ══════════════════════════════════════════
 function openModal(name){
   modalAppName=name;
   const app=CONFIG.apps.find(a=>a.name===name);
   if(!app) return;
   document.getElementById('modal-title').textContent='🏷 '+name;
-
-  // Klassen
   const kWrap=document.getElementById('modal-klassen');
   kWrap.innerHTML='';
   KLASSEN.forEach(k=>{
@@ -709,8 +937,6 @@ function openModal(name){
     });
     kWrap.appendChild(c);
   });
-
-  // Custom Tags
   const tWrap=document.getElementById('modal-tags');
   tWrap.innerHTML='';
   if(!CONFIG.customTags.length){
@@ -730,7 +956,6 @@ function openModal(name){
       tWrap.appendChild(c);
     });
   }
-
   document.getElementById('tag-modal').classList.add('open');
 }
 
@@ -738,72 +963,190 @@ function closeModal(){
   document.getElementById('tag-modal').classList.remove('open');
   modalAppName='';
 }
+document.getElementById('tag-modal').addEventListener('click',e=>{ if(e.target===document.getElementById('tag-modal')) closeModal(); });
 
-document.getElementById('tag-modal').addEventListener('click',e=>{
-  if(e.target===document.getElementById('tag-modal')) closeModal();
-});
-
-// ════════════════════════════════════════════════════════
-//  QR CODE
-// ════════════════════════════════════════════════════════
-const BASE_URL = 'https://geitner-hub.github.io/Lern-Apps/';
-
-function showQR(name, datei) {
-  const url = BASE_URL + datei;
-  document.getElementById('qr-modal-title').textContent = '📲 QR-Code';
-  document.getElementById('qr-app-name').textContent = name;
-  document.getElementById('qr-url').textContent = url;
-  const wrap = document.getElementById('qr-canvas-wrap');
-  wrap.innerHTML = '';
-
-  const loadAndRender = () => {
-    // QR via Google Charts API – kein externes JS nötig
-    const size = 220;
-    const img = document.createElement('img');
-    img.src = `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(url)}&color=1a1f5e&bgcolor=ffffff&qzone=1`;
-    img.width = size;
-    img.height = size;
-    img.style.borderRadius = '8px';
-    img.style.display = 'block';
-    wrap.appendChild(img);
-  };
-  loadAndRender();
-  document.getElementById('qr-modal').classList.add('open');
+// ══ QR ═════════════════════════════════════════════════
+function showQR(name, datei){
+  const url=BASE_URL+datei;
+  document.getElementById('qr-app-name').textContent=name;
+  document.getElementById('qr-url').textContent=url;
+  const wrap=document.getElementById('qr-canvas-wrap');
+  wrap.innerHTML='';
+  const img=document.createElement('img');
+  img.src=`https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(url)}&color=0f0e1a&bgcolor=ffffff&qzone=1`;
+  img.width=220; img.height=220;
+  img.style.cssText='border-radius:8px;display:block;';
+  wrap.appendChild(img);
+  document.getElementById('qr-modal-wrap').classList.add('open');
 }
 
-function downloadQR() {
-  const name = document.getElementById('qr-app-name').textContent;
-  const img  = document.querySelector('#qr-canvas-wrap img');
-  if (!img) return;
-  // Bild über Canvas herunterladen (CORS-safe)
-  const canvas = document.createElement('canvas');
-  canvas.width = 220; canvas.height = 220;
-  const ctx = canvas.getContext('2d');
-  const i = new Image();
-  i.crossOrigin = 'anonymous';
-  i.src = img.src;
-  i.onload = () => {
-    ctx.drawImage(i, 0, 0);
-    const a = document.createElement('a');
-    a.download = `QR-${name.replace(/[^a-zA-Z0-9]/g,'-')}.png`;
-    a.href = canvas.toDataURL('image/png');
-    a.click();
-  };
-  i.onerror = () => {
-    // Fallback: direkt verlinken
-    const a = document.createElement('a');
-    a.href = img.src; a.target = '_blank'; a.click();
-  };
+function downloadQR(){
+  const name=document.getElementById('qr-app-name').textContent;
+  const img=document.querySelector('#qr-canvas-wrap img');
+  if(!img) return;
+  const canvas=document.createElement('canvas');
+  canvas.width=220; canvas.height=220;
+  const ctx=canvas.getContext('2d');
+  const i=new Image(); i.crossOrigin='anonymous'; i.src=img.src;
+  i.onload=()=>{ ctx.drawImage(i,0,0); const a=document.createElement('a'); a.download=`QR-${name.replace(/[^a-zA-Z0-9]/g,'-')}.png`; a.href=canvas.toDataURL('image/png'); a.click(); };
+  i.onerror=()=>{ const a=document.createElement('a'); a.href=img.src; a.target='_blank'; a.click(); };
 }
 
-function closeQR() {
-  document.getElementById('qr-modal').classList.remove('open');
+function closeQR(){ document.getElementById('qr-modal-wrap').classList.remove('open'); }
+document.getElementById('qr-modal-wrap').addEventListener('click',e=>{ if(e.target===document.getElementById('qr-modal-wrap')) closeQR(); });
+
+// ══ ANNOUNCEMENT ═══════════════════════════════════════
+function buildColorChips(){
+  const wrap=document.getElementById('color-chips');
+  wrap.innerHTML='';
+  ANN_COLORS.forEach((c,i)=>{
+    const chip=document.createElement('div');
+    chip.className='color-chip'+(i===selectedAnnColor?' selected':'');
+    chip.style.background=c.bg;
+    chip.style.border=`2px solid ${c.text}`;
+    chip.title=c.label;
+    chip.addEventListener('click',()=>{
+      selectedAnnColor=i;
+      document.querySelectorAll('.color-chip').forEach((ch,j)=>ch.classList.toggle('selected',j===i));
+      updateAnnPreview();
+    });
+    wrap.appendChild(chip);
+  });
 }
 
-document.getElementById('qr-modal').addEventListener('click', e => {
-  if (e.target === document.getElementById('qr-modal')) closeQR();
-});
+function loadAnnForm(){
+  buildColorChips();
+  const ann=CONFIG.announcement||{};
+  document.getElementById('ann-text').value=ann.text||'';
+  document.getElementById('ann-emoji').value=ann.emoji||'📢';
+  selectedAnnColor=ann.color||0;
+  buildColorChips();
+  updateAnnPreview();
+  document.getElementById('ann-status').textContent=ann.active?'✅ Banner ist aktiv':'⚪ Banner ist ausgeblendet';
+}
 
+function updateAnnPreview(){
+  const text=document.getElementById('ann-text').value||'Hier steht deine Ankündigung …';
+  const emoji=document.getElementById('ann-emoji').value||'📢';
+  const col=ANN_COLORS[selectedAnnColor]||ANN_COLORS[0];
+  const prev=document.getElementById('ann-preview');
+  prev.style.background=col.bg;
+  prev.style.color=col.text;
+  prev.style.border=`1px solid ${col.text}44`;
+  document.getElementById('ann-preview-emoji').textContent=emoji;
+  document.getElementById('ann-preview-text').textContent=text;
+}
+
+function saveAnnouncement(){
+  const text=document.getElementById('ann-text').value.trim();
+  if(!text){ showToast('⚠ Bitte Text eingeben',true); return; }
+  CONFIG.announcement={
+    active:true,
+    text,
+    emoji:document.getElementById('ann-emoji').value||'📢',
+    color:selectedAnnColor,
+    bg:ANN_COLORS[selectedAnnColor].bg,
+    textColor:ANN_COLORS[selectedAnnColor].text,
+  };
+  logChange(`📢 Banner aktiviert: "${text.substring(0,30)}…"`);
+  saveConfig();
+  document.getElementById('ann-status').textContent='✅ Banner ist aktiv';
+  buildDashboard();
+  showToast('✓ Banner gespeichert & aktiv');
+}
+
+function hideAnnouncement(){
+  if(!CONFIG.announcement) CONFIG.announcement={};
+  CONFIG.announcement.active=false;
+  logChange('🚫 Banner ausgeblendet');
+  saveConfig();
+  document.getElementById('ann-status').textContent='⚪ Banner ist ausgeblendet';
+  buildDashboard();
+  showToast('Banner ausgeblendet');
+}
+
+// ══ BROKEN LINK CHECKER ════════════════════════════════
+const GH_RAW = 'https://geitner-hub.github.io/Lern-Apps/';
+
+async function runChecker(){
+  const apps=CONFIG.apps.filter(a=>a.datei);
+  if(!apps.length){ document.getElementById('checker-info').textContent='Keine Apps mit Dateiangabe.'; return; }
+
+  const btn=document.getElementById('check-btn');
+  btn.disabled=true; btn.textContent='⏳ Prüfe …';
+
+  const resultDiv=document.getElementById('checker-result');
+  const summary=document.getElementById('checker-summary');
+  const progress=document.getElementById('checker-progress');
+  const fill=document.getElementById('checker-fill');
+  resultDiv.innerHTML=''; summary.className='checker-summary'; progress.className='checker-progress visible';
+
+  let ok=0, fail=0;
+
+  // Build placeholder rows
+  apps.forEach(app=>{
+    const isExternal=app.datei.startsWith('http');
+    const item=document.createElement('div');
+    item.className='check-item checking';
+    item.id='ci-'+app.datei.replace(/[^a-z0-9]/gi,'_');
+    item.innerHTML=`
+      <span class="check-status">⏳</span>
+      <div style="flex:1;min-width:0;">
+        <div class="check-name">${app.emoji||'📱'} ${escHtml(app.name)}</div>
+        <div class="check-url">${isExternal?app.datei:GH_RAW+app.datei}</div>
+      </div>
+      <span class="check-badge skip">${isExternal?'Extern':'Prüft …'}</span>`;
+    resultDiv.appendChild(item);
+  });
+
+  for(let i=0; i<apps.length; i++){
+    const app=apps[i];
+    const id='ci-'+app.datei.replace(/[^a-z0-9]/gi,'_');
+    const item=document.getElementById(id);
+    const isExternal=app.datei.startsWith('http');
+
+    if(isExternal){
+      item.className='check-item';
+      item.querySelector('.check-status').textContent='🔗';
+      item.querySelector('.check-badge').textContent='Extern';
+      item.querySelector('.check-badge').className='check-badge skip';
+    } else {
+      try{
+        const url=GH_RAW+app.datei;
+        const r=await fetch(url,{method:'HEAD',cache:'no-store'});
+        const isOk=r.ok;
+        item.className='check-item '+(isOk?'ok':'fail');
+        item.classList.remove('checking');
+        item.querySelector('.check-status').textContent=isOk?'✅':'❌';
+        item.querySelector('.check-badge').textContent=isOk?'200 OK':r.status+' Fehler';
+        item.querySelector('.check-badge').className='check-badge '+(isOk?'ok':'fail');
+        if(isOk) ok++; else fail++;
+      }catch(e){
+        item.className='check-item fail';
+        item.classList.remove('checking');
+        item.querySelector('.check-status').textContent='❌';
+        item.querySelector('.check-badge').textContent='Nicht erreichbar';
+        item.querySelector('.check-badge').className='check-badge fail';
+        fail++;
+      }
+    }
+    fill.style.width=Math.round(((i+1)/apps.length)*100)+'%';
+    document.getElementById('checker-info').textContent=`${i+1} / ${apps.length}`;
+  }
+
+  btn.disabled=false; btn.textContent='🔍 Alle Links prüfen';
+  progress.className='checker-progress';
+  summary.className='checker-summary visible';
+  summary.style.color=fail>0?'var(--red)':'var(--green)';
+  summary.style.borderLeft=`3px solid ${fail>0?'var(--red)':'var(--green)'}`;
+  summary.textContent=fail===0
+    ? `✅ Alle ${ok} Links erreichbar!`
+    : `⚠ ${fail} Link${fail>1?'s':''} nicht erreichbar · ${ok} OK`;
+  logChange(`🔗 Link-Check: ${ok} OK, ${fail} fehlerhaft`);
+}
+
+// ══ UTILS ══════════════════════════════════════════════
+function escHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 </script>
 </body>
 </html>
