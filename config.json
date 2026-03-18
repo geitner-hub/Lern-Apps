@@ -127,8 +127,14 @@
     }
   ],
   "customTags": [
-    "Vokabeln",
-    "Grammatik"
+    {
+      "name": "Vokabeln",
+      "color": 4
+    },
+    {
+      "name": "Grammatik",
+      "color": 0
+    }
   ],
   "hiddenCats": [],
   "announcement": {
