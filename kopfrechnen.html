@@ -20,6 +20,7 @@
       --muted: #8b949e;
       --leicht: #00e5a0;
       --mittel: #ffb347;
+      --schwer: #ff6b9d;
     }
 
     body {
@@ -183,6 +184,7 @@
     .start-btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
     .start-btn.leicht { background: var(--leicht); color: var(--bg); box-shadow: 0 0 24px rgba(0,229,160,0.4); }
     .start-btn.mittel { background: var(--mittel); color: var(--bg); box-shadow: 0 0 24px rgba(255,179,71,0.4); }
+    .start-btn.schwer { background: var(--schwer); color: var(--bg); box-shadow: 0 0 24px rgba(255,107,157,0.4); }
 
     /* ── Playing screen ── */
     .meta-row {
@@ -196,6 +198,7 @@
     }
     .meta-level-badge.leicht { background: rgba(0,229,160,0.15); color: var(--leicht); }
     .meta-level-badge.mittel { background: rgba(255,179,71,0.15); color: var(--mittel); }
+    .meta-level-badge.schwer { background: rgba(255,107,157,0.15); color: var(--schwer); }
 
     .progress-track {
       height: 3px; background: var(--border2);
@@ -208,6 +211,7 @@
     }
     .progress-fill.leicht { background: linear-gradient(90deg, var(--leicht), #00c97e); }
     .progress-fill.mittel { background: linear-gradient(90deg, var(--mittel), #ff9500); }
+    .progress-fill.schwer { background: linear-gradient(90deg, var(--schwer), #e0005e); }
 
     .question-display {
       font-family: 'Bebas Neue', sans-serif;
@@ -241,7 +245,31 @@
     .answer-input.correct { border-color: var(--accent); box-shadow: 0 0 16px rgba(0,229,160,0.3); }
     .answer-input.wrong   { border-color: var(--bad);    box-shadow: 0 0 16px rgba(255,107,107,0.3); }
 
-    /* ── Result screen ── */
+    .level-btn.schwer.active {
+      background: var(--schwer); color: var(--bg);
+      border-color: var(--schwer);
+      box-shadow: 0 0 20px rgba(255,107,157,0.4);
+    }
+
+    /* ── Tipp box ── */
+    .tipp-box {
+      margin: 8px 0 12px 0;
+      padding: 10px 14px;
+      border-radius: 8px;
+      background: rgba(255,179,71,0.08);
+      border: 1px solid rgba(255,179,71,0.3);
+      font-size: 0.75rem;
+      color: var(--accent-warm);
+      letter-spacing: 0.06em;
+      line-height: 1.6;
+      text-align: center;
+      animation: fadeUp 0.3s ease both;
+    }
+    .tipp-label {
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      margin-bottom: 3px;
+    }
     .score-display {
       font-family: 'Bebas Neue', sans-serif;
       font-size: 5rem; line-height: 1; text-align: center;
@@ -295,11 +323,13 @@
 
   const state = {
     phase: 'start',   // start | playing | result
-    level: 'leicht',  // leicht | mittel
+    level: 'leicht',  // leicht | mittel | schwer
     questions: [],
     current: 0,
     results: [],
     feedback: null,
+    tippVisible: false,
+    tippUsed: false,
     timer: 0,
     roundTime: 0,
     totalRounds: 0,
@@ -347,33 +377,60 @@
         } else {
           b = rand(2, 9); answer = rand(1, 9); a = b * answer;
         }
-      } else {
-        // mittel
+      } else if (level === 'mittel') {
         if (op === '+') {
           a = rand(10, 49); b = rand(10, 49); answer = a + b;
         } else if (op === '-') {
           a = rand(20, 99); b = rand(10, 49);
           answer = a - b;
         } else if (op === '×') {
-          // bis 10×12 oder 12×10
           a = rand(2, 10); b = rand(2, 12); answer = a * b;
-          // sicherstellen a ≤ 10, b ≤ 12; zufällig tauschen
           if (Math.random() < 0.5) { const t = a; a = b; b = t; }
         } else {
           b = rand(2, 12); answer = rand(2, 9); a = b * answer;
         }
+      } else {
+        // schwer: dreistellige Summen/Differenzen erlaubt, Einmaleins bis 12×12, alles positiv
+        if (op === '+') {
+          a = rand(20, 199); b = rand(20, 199); answer = a + b;
+        } else if (op === '-') {
+          a = rand(50, 299); b = rand(10, 150);
+          answer = a - b;
+        } else if (op === '×') {
+          a = rand(2, 12); b = rand(2, 12); answer = a * b;
+          if (Math.random() < 0.5) { const t = a; a = b; b = t; }
+        } else {
+          b = rand(2, 12); answer = rand(2, 12); a = b * answer;
+        }
       }
     } while (
       attempts < 50 && (
-        answer > 99 ||
-        answer < 0 ||
-        a > 99 || b > 99 ||
+        answer < 1 ||
         a < 1  || b < 1  ||
         (op === '-' && answer <= 0)
       )
     );
 
     return { question: `${a} ${op} ${b}`, answer };
+  }
+
+  function getTipp(q) {
+    const parts = q.question.split(' ');
+    const a = parseInt(parts[0]);
+    const op = parts[1];
+    const b = parseInt(parts[2]);
+    if (op === '+') {
+      const helper = Math.ceil(b / 10) * 10;
+      if (helper !== b) return `Tipp: Runde ${b} auf ${helper} → ${a} + ${helper} = ${a + helper}, dann ${helper - b} abziehen`;
+      return `Tipp: Zähle von ${a} um ${b} weiter`;
+    } else if (op === '-') {
+      return `Tipp: Was muss ich zu ${b} addieren, um ${a} zu erhalten?`;
+    } else if (op === '×') {
+      if (a <= b) return `Tipp: ${a}-mal die ${b} zusammenzählen: ${Array.from({length:Math.min(a,5)},(_,i)=>b*(i+1)).join(', ')}${a>5?', …':''}`;
+      return `Tipp: ${b}-mal die ${a} zusammenzählen: ${Array.from({length:Math.min(b,5)},(_,i)=>a*(i+1)).join(', ')}${b>5?', …':''}`;
+    } else {
+      return `Tipp: ${b} × ? = ${a} — welche Zahl passt ins Einmaleins?`;
+    }
   }
 
   function formatTime(s) {
@@ -406,7 +463,9 @@
     document.getElementById('subtitle').textContent =
       state.level === 'leicht'
         ? 'NIVEAU: LEICHT · + − × ÷'
-        : 'NIVEAU: MITTEL · + − × ÷';
+        : state.level === 'mittel'
+        ? 'NIVEAU: MITTEL · + − × ÷'
+        : 'NIVEAU: SCHWER · + − × ÷';
 
     render();
     state.timerInterval = setInterval(() => {
@@ -417,6 +476,16 @@
     setTimeout(() => document.getElementById('answer-input')?.focus(), 50);
   }
 
+  function showTipp() {
+    state.tippVisible = true;
+    state.tippUsed = true;
+    const q = state.questions[state.current];
+    const tippEl = document.getElementById('tipp-area');
+    if (tippEl) {
+      tippEl.innerHTML = `<div class="tipp-box"><div class="tipp-label">💡 TIPP</div>${getTipp(q)}</div>`;
+    }
+  }
+
   function submitAnswer() {
     if (state.feedback) return;
     const input = document.getElementById('answer-input');
@@ -424,11 +493,13 @@
     const given = parseInt(input.value);
     const correct = given === state.questions[state.current].answer;
     state.feedback = correct ? 'correct' : 'wrong';
-    state.results.push({ ...state.questions[state.current], given, correct });
+    state.results.push({ ...state.questions[state.current], given, correct, tippUsed: state.tippUsed });
     applyFeedbackUI(correct);
 
     state.feedbackTimeout = setTimeout(() => {
       state.feedback = null;
+      state.tippVisible = false;
+      state.tippUsed = false;
       if (state.current + 1 >= ROUND_SIZE) {
         clearInterval(state.timerInterval);
         const roundCorrect = state.results.filter(r => r.correct).length;
@@ -477,7 +548,9 @@
     const lvl = state.level;
     const descText = lvl === 'leicht'
       ? 'Zahlen 1–50 · Kleines Einmaleins bis 9×9\nErgebnisse immer einstellig oder zweistellig'
-      : 'Zahlen 10–99 · Kleines Einmaleins bis 10×12\nErgebnisse immer zweistellig';
+      : lvl === 'mittel'
+      ? 'Zahlen 10–99 · Kleines Einmaleins bis 10×12\nErgebnisse immer zweistellig'
+      : 'Zahlen bis 300 · Einmaleins bis 12×12\nAlle Ergebnisse positiv';
 
     card.innerHTML = `
       <div class="big-sigma">∑</div>
@@ -487,6 +560,7 @@
       <div class="level-row">
         <button class="level-btn leicht ${lvl==='leicht'?'active':''}" onclick="selectLevel('leicht')">🟢 LEICHT</button>
         <button class="level-btn mittel ${lvl==='mittel'?'active':''}" onclick="selectLevel('mittel')">🟡 MITTEL</button>
+        <button class="level-btn schwer ${lvl==='schwer'?'active':''}" onclick="selectLevel('schwer')">🔴 SCHWER</button>
       </div>
 
       <div class="level-desc" id="level-desc">${descText.replace(/\n/g,'<br>')}</div>
@@ -494,19 +568,19 @@
       <div class="op-grid">
         <div class="op-card">
           <div class="op-card-label">➕ <strong>Addition</strong></div>
-          <div class="op-card-sub">${lvl==='leicht'?'Zahlen 1–9':'Zahlen 10–49'}</div>
+          <div class="op-card-sub">${lvl==='leicht'?'Zahlen 1–9':lvl==='mittel'?'Zahlen 10–49':'Zahlen 20–199'}</div>
         </div>
         <div class="op-card">
           <div class="op-card-label">➖ <strong>Subtraktion</strong></div>
-          <div class="op-card-sub">${lvl==='leicht'?'Ergebnis 1–49':'Ergebnis 1–89'}</div>
+          <div class="op-card-sub">${lvl==='leicht'?'Ergebnis 1–49':lvl==='mittel'?'Ergebnis 1–89':'Ergebnis immer positiv'}</div>
         </div>
         <div class="op-card">
           <div class="op-card-label">✖️ <strong>Multiplikation</strong></div>
-          <div class="op-card-sub">${lvl==='leicht'?'1×1 bis 9×9':'1×1 bis 10×12'}</div>
+          <div class="op-card-sub">${lvl==='leicht'?'1×1 bis 9×9':lvl==='mittel'?'1×1 bis 10×12':'1×1 bis 12×12'}</div>
         </div>
         <div class="op-card">
           <div class="op-card-label">➗ <strong>Division</strong></div>
-          <div class="op-card-sub">${lvl==='leicht'?'Divisor 2–9':'Divisor 2–12'}</div>
+          <div class="op-card-sub">${lvl==='leicht'?'Divisor 2–9':lvl==='mittel'?'Divisor 2–12':'Divisor 2–12'}</div>
         </div>
       </div>
 
@@ -523,11 +597,12 @@
     const q = state.questions[state.current];
     const pct = (state.current / ROUND_SIZE) * 100;
     const lvl = state.level;
+    const lvlLabel = lvl === 'leicht' ? '🟢 LEICHT' : lvl === 'mittel' ? '🟡 MITTEL' : '🔴 SCHWER';
 
     card.innerHTML = `
       <div class="meta-row">
         <span><span class="meta-count">${state.current + 1}</span>/${ROUND_SIZE}</span>
-        <span class="meta-level-badge ${lvl}">${lvl === 'leicht' ? '🟢 LEICHT' : '🟡 MITTEL'}</span>
+        <span class="meta-level-badge ${lvl}">${lvlLabel}</span>
         <span id="timer-display">⏱ ${formatTime(state.timer)}</span>
       </div>
       <div class="progress-track">
@@ -535,10 +610,12 @@
       </div>
       <div class="question-display" id="question-display">${q.question} =</div>
       <div class="feedback-line" id="feedback-line"></div>
+      <div id="tipp-area">${state.tippVisible ? `<div class="tipp-box"><div class="tipp-label">💡 TIPP</div>${getTipp(q)}</div>` : ''}</div>
       <div class="input-row">
         <input id="answer-input" class="answer-input" type="number" placeholder="___" autocomplete="off"/>
         <button class="btn btn-confirm" onclick="submitAnswer()">↵</button>
       </div>
+      ${!state.tippVisible && !state.feedback ? `<div style="text-align:center;margin-top:14px"><button onclick="showTipp()" style="background:none;border:none;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:0.7rem;letter-spacing:0.1em;cursor:pointer;text-decoration:underline;">💡 TIPP ANZEIGEN</button></div>` : ''}
     `;
     document.getElementById('answer-input').addEventListener('keydown', e => {
       if (e.key === 'Enter') submitAnswer();
@@ -552,12 +629,13 @@
     const emoji = pct === 100 ? '🏆' : pct >= 80 ? '🎯' : pct >= 60 ? '💪' : '📚';
     const label = pct === 100 ? 'PERFEKT!' : pct >= 80 ? 'SEHR GUT' : pct >= 60 ? 'GUT GEMACHT' : 'WEITER ÜBEN';
     const lvl = state.level;
+    const lvlLabel = lvl === 'leicht' ? '🟢 LEICHT' : lvl === 'mittel' ? '🟡 MITTEL' : '🔴 SCHWER';
     LernApps.saveResult({ score: correctCount, max: ROUND_SIZE, label: correctCount + ' / ' + ROUND_SIZE + ' · ' + label });
 
     const rows = state.results.map((r, i) => `
       <div class="result-row ${r.correct ? 'correct' : 'wrong'}">
         <span class="result-num">${String(i + 1).padStart(2, '0')}.</span>
-        <span class="result-eq">${r.question} = <strong>${r.answer}</strong></span>
+        <span class="result-eq">${r.question} = <strong>${r.answer}</strong>${r.tippUsed ? ' <span style="color:var(--accent-warm);font-size:0.65rem">💡</span>' : ''}</span>
         <span class="result-check ${r.correct ? 'correct' : 'wrong'}">${r.correct ? '✓' : `✗ (${r.given})`}</span>
       </div>
     `).join('');
@@ -567,7 +645,7 @@
         ${correctCount}/${ROUND_SIZE}
       </div>
       <div class="score-label">${emoji} ${label}</div>
-      <div class="score-meta">ZEIT: ${formatTime(state.roundTime)} · ${pct}% · ${lvl === 'leicht' ? '🟢 LEICHT' : '🟡 MITTEL'}</div>
+      <div class="score-meta">ZEIT: ${formatTime(state.roundTime)} · ${pct}% · ${lvlLabel}</div>
       <div class="result-list">${rows}</div>
       <div class="btn-row">
         <button class="btn btn-next" onclick="startRound()">NÄCHSTE RUNDE →</button>
