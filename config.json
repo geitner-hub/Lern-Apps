@@ -62,7 +62,12 @@
       "klassen": [
         5
       ],
-      "customTags": [],
+      "customTags": [
+        {
+          "name": "Vokabeln",
+          "color": 4
+        }
+      ],
       "aod": false
     }
   ],
