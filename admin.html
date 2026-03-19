@@ -270,6 +270,7 @@
       <button class="tab" data-t="tags">🏷 Tags</button>
       <button class="tab" data-t="announcement">📢 Banner</button>
       <button class="tab" data-t="checker">🔗 Link-Check</button>
+      <button class="tab" data-t="vokabeln">📚 Vokabeln</button>
     </div>
 
     <!-- ══ TAB: DASHBOARD ═══════════════════════════ -->
@@ -412,6 +413,32 @@
       <div class="checker-progress" id="checker-progress"><div class="checker-progress-fill" id="checker-fill" style="width:0%"></div></div>
       <div class="checker-result" id="checker-result"></div>
       <div class="checker-summary" id="checker-summary"></div>
+    </div>
+
+    <!-- ══ TAB: VOKABELN ══════════════════════════════ -->
+    <div class="tab-panel" id="panel-vokabeln">
+
+      <div class="sec-header">
+        <span class="sec-title">📚 Vokabeln – config.json</span>
+      </div>
+
+      <!-- Stats -->
+      <div class="dash-grid" id="vok-stats" style="margin-bottom:1.5rem;"></div>
+
+      <!-- Search -->
+      <div class="filter-row-admin" style="margin-bottom:1rem;">
+        <input type="search" class="admin-search" id="vok-search" placeholder="Englisch oder Deutsch suchen …" oninput="vokSearch(this.value)" autocomplete="off"/>
+      </div>
+      <div id="vok-search-results" style="display:none;margin-bottom:1.2rem;"></div>
+
+      <!-- Special lists -->
+      <div class="sec-header"><span class="sec-title">⭐ Sonderlisten</span></div>
+      <div id="vok-special" style="margin-bottom:1.5rem;"></div>
+
+      <!-- Units -->
+      <div class="sec-header"><span class="sec-title">📖 Units & Themen</span></div>
+      <div id="vok-units"></div>
+
     </div>
 
   </div><!-- /content -->
@@ -1256,7 +1283,150 @@ async function runChecker(){
   logChange(`🔗 Link-Check: ${ok} OK, ${fail} fehlerhaft`);
 }
 
-// ══ UTILS ══════════════════════════════════════════════
+
+// ══ VOKABELN TAB ═══════════════════════════════════════
+let VOK_CONFIG = null;
+let vokIndex   = [];
+
+async function loadVokabeln(){
+  if(VOK_CONFIG) return; // already loaded
+  try{
+    const r = await fetch('config.json');
+    VOK_CONFIG = await r.json();
+    buildVokIndex();
+    buildVokStats();
+    buildVokSpecial();
+    buildVokUnits();
+  }catch(e){
+    document.getElementById('vok-units').innerHTML='<div class="empty-msg">⚠ config.json konnte nicht geladen werden.</div>';
+  }
+}
+
+function buildVokIndex(){
+  vokIndex=[];
+  Object.entries(VOK_CONFIG.specialLists).forEach(([k,sl])=>
+    sl.words.forEach(w=>vokIndex.push({en:w.en,de:w.de,loc:sl.label})));
+  Object.entries(VOK_CONFIG.units).forEach(([uk,unit])=>
+    Object.entries(unit.themes).forEach(([tk,theme])=>
+      theme.words.forEach(w=>vokIndex.push({en:w.en,de:w.de,loc:`${unit.label} – ${theme.label}`}))));
+}
+
+function buildVokStats(){
+  const total = vokIndex.length;
+  const units = Object.keys(VOK_CONFIG.units).length;
+  const special = Object.keys(VOK_CONFIG.specialLists).length;
+  let themes = 0;
+  Object.values(VOK_CONFIG.units).forEach(u=>themes+=Object.keys(u.themes).length);
+  document.getElementById('vok-stats').innerHTML=`
+    <div class="dash-card accent-card"><div class="dash-card-label">Vokabeln gesamt</div><div class="dash-card-value">${total}</div></div>
+    <div class="dash-card"><div class="dash-card-label">Units</div><div class="dash-card-value">${units}</div></div>
+    <div class="dash-card"><div class="dash-card-label">Themen</div><div class="dash-card-value">${themes}</div></div>
+    <div class="dash-card green-card"><div class="dash-card-label">Sonderlisten</div><div class="dash-card-value">${special}</div></div>`;
+}
+
+function buildVokSpecial(){
+  const wrap = document.getElementById('vok-special');
+  wrap.innerHTML='';
+  Object.entries(VOK_CONFIG.specialLists).forEach(([key,sl])=>{
+    const block=document.createElement('div');
+    block.className='vis-cat-block';
+    block.style.marginBottom='.5rem';
+    block.innerHTML=`
+      <div class="vis-cat-header" style="cursor:pointer" onclick="vokToggle('vst-${key}',this)">
+        <span class="vis-cat-name" style="color:var(--accent)">⭐ ${escHtml(sl.label)}</span>
+        <span style="font-size:.72rem;color:var(--muted);margin-right:.5rem">${sl.words.length} Wörter</span>
+        <span style="color:var(--muted)">›</span>
+      </div>
+      <table id="vst-${key}" style="display:none;width:100%;border-collapse:collapse">
+        <tr style="background:var(--surface2)">
+          <th style="padding:.45rem 1rem;text-align:left;font-size:.7rem;font-weight:800;color:var(--muted);text-transform:uppercase">Englisch</th>
+          <th style="padding:.45rem 1rem;text-align:left;font-size:.7rem;font-weight:800;color:var(--muted);text-transform:uppercase">Deutsch</th>
+        </tr>
+        ${sl.words.map((w,i)=>`<tr style="border-top:1px solid var(--border);background:${i%2?'var(--surface2)':'transparent'}">
+          <td style="padding:.4rem 1rem;font-size:.83rem;font-weight:700">${escHtml(w.en)}</td>
+          <td style="padding:.4rem 1rem;font-size:.83rem;color:var(--text2)">${escHtml(w.de)}</td>
+        </tr>`).join('')}
+      </table>`;
+    wrap.appendChild(block);
+  });
+}
+
+function buildVokUnits(){
+  const wrap = document.getElementById('vok-units');
+  wrap.innerHTML='';
+  Object.entries(VOK_CONFIG.units).forEach(([uk,unit])=>{
+    const total=Object.values(unit.themes).reduce((s,t)=>s+t.words.length,0);
+    const block=document.createElement('div');
+    block.className='vis-cat-block';
+    block.style.marginBottom='.7rem';
+    const themesHTML=Object.entries(unit.themes).map(([tk,theme])=>`
+      <div style="border-top:1px solid var(--border)">
+        <div class="vis-cat-header" style="cursor:pointer;background:transparent;padding:.6rem 1rem .6rem 1.5rem" onclick="vokToggle('vut-${uk}-${tk}',this)">
+          <span class="vis-cat-name" style="font-size:.83rem">${escHtml(theme.label)}</span>
+          <span style="font-size:.7rem;color:var(--muted);margin-right:.5rem">${theme.words.length} Wörter</span>
+          <span style="color:var(--muted)">›</span>
+        </div>
+        <table id="vut-${uk}-${tk}" style="display:none;width:100%;border-collapse:collapse">
+          <tr style="background:var(--surface2)">
+            <th style="padding:.4rem 1rem .4rem 1.5rem;text-align:left;font-size:.68rem;font-weight:800;color:var(--muted);text-transform:uppercase">Englisch</th>
+            <th style="padding:.4rem 1rem;text-align:left;font-size:.68rem;font-weight:800;color:var(--muted);text-transform:uppercase">Deutsch</th>
+          </tr>
+          ${theme.words.map((w,i)=>`<tr style="border-top:1px solid var(--border);background:${i%2?'var(--surface2)':'transparent'}">
+            <td style="padding:.38rem 1rem .38rem 1.5rem;font-size:.82rem;font-weight:700">${escHtml(w.en)}</td>
+            <td style="padding:.38rem 1rem;font-size:.82rem;color:var(--text2)">${escHtml(w.de)}</td>
+          </tr>`).join('')}
+        </table>
+      </div>`).join('');
+    block.innerHTML=`
+      <div class="vis-cat-header" style="cursor:pointer" onclick="vokToggleUnit('vub-${uk}',this)">
+        <span class="vis-cat-name">${escHtml(unit.label)}</span>
+        <span style="font-size:.72rem;color:var(--muted);margin-right:.5rem">${total} Wörter</span>
+        <span style="color:var(--muted)">›</span>
+      </div>
+      <div id="vub-${uk}" style="display:none">${themesHTML}</div>`;
+    wrap.appendChild(block);
+  });
+}
+
+function vokToggle(id, hdr){
+  const el=document.getElementById(id);
+  const arrow=hdr.querySelector('span:last-child');
+  const open=el.style.display!=='none';
+  el.style.display=open?'none':'table';
+  if(arrow) arrow.textContent=open?'›':'↓';
+}
+
+function vokToggleUnit(id, hdr){
+  const el=document.getElementById(id);
+  const arrow=hdr.querySelector('span:last-child');
+  const open=el.style.display!=='none';
+  el.style.display=open?'none':'block';
+  if(arrow) arrow.textContent=open?'›':'↓';
+}
+
+function vokSearch(q){
+  const box=document.getElementById('vok-search-results');
+  q=q.trim().toLowerCase();
+  if(q.length<2){box.style.display='none';return;}
+  const results=vokIndex.filter(w=>w.en.toLowerCase().includes(q)||w.de.toLowerCase().includes(q)).slice(0,25);
+  if(!results.length){
+    box.innerHTML='<div class="empty-msg" style="padding:1rem">Keine Ergebnisse.</div>';
+  }else{
+    box.innerHTML=`<div style="font-size:.72rem;color:var(--muted);margin-bottom:.5rem;padding:.3rem .5rem">${results.length} Treffer</div>`+
+      results.map(r=>`<div style="display:flex;gap:1rem;padding:.38rem .5rem;border-bottom:1px solid var(--border);font-size:.83rem">
+        <span style="font-weight:700;min-width:160px">${escHtml(r.en)}</span>
+        <span style="color:var(--text2);flex:1">${escHtml(r.de)}</span>
+        <span style="font-size:.68rem;color:var(--purple)">${escHtml(r.loc)}</span>
+      </div>`).join('');
+  }
+  box.style.display='block';
+}
+
+// Hook into tab click to lazy-load vokabeln
+document.querySelectorAll('.tab').forEach(tab=>tab.addEventListener('click',()=>{
+  if(tab.dataset.t==='vokabeln') loadVokabeln();
+}));
+
 function escHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 </script>
 </body>
