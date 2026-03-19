@@ -1,146 +1,892 @@
 {
-  "apps": [
-    {
-      "name": "Kopfrechnen",
-      "datei": "kopfrechnen.html",
-      "emoji": "",
-      "beschreibung": "Übe deine Kopfrechenkünste am Anfang der Stunde",
-      "fach": "Mathematik",
-      "hidden": false,
-      "klassen": [
-        5
-      ],
-      "customTags": [],
-      "aod": true
+  "meta": {
+    "title": "Lern-Apps Vokabeln",
+    "klasse": "5",
+    "buch": "English G Access 1"
+  },
+  "specialLists": {
+    "numbers_1_14": {
+      "label": "Zahlen 1–14",
+      "unit": "intro",
+      "type": "random_numbers",
+      "words": [
+        {"en": "one", "de": "eins"},
+        {"en": "two", "de": "zwei"},
+        {"en": "three", "de": "drei"},
+        {"en": "four", "de": "vier"},
+        {"en": "five", "de": "fünf"},
+        {"en": "six", "de": "sechs"},
+        {"en": "seven", "de": "sieben"},
+        {"en": "eight", "de": "acht"},
+        {"en": "nine", "de": "neun"},
+        {"en": "ten", "de": "zehn"},
+        {"en": "eleven", "de": "elf"},
+        {"en": "twelve", "de": "zwölf"},
+        {"en": "thirteen", "de": "dreizehn"},
+        {"en": "fourteen", "de": "vierzehn"}
+      ]
     },
-    {
-      "name": "Längeneinheiten",
-      "datei": "laengeneinheiten.html",
-      "emoji": "",
-      "beschreibung": "Teste dein Wissen zu den Längeneinheiten",
-      "fach": "Mathematik",
-      "hidden": false,
-      "klassen": [
-        5,
-        6
-      ],
-      "customTags": [],
-      "aod": false
+    "colors": {
+      "label": "Farben",
+      "unit": "intro",
+      "words": [
+        {"en": "red", "de": "rot"},
+        {"en": "blue", "de": "blau"},
+        {"en": "yellow", "de": "gelb"},
+        {"en": "green", "de": "grün"},
+        {"en": "brown", "de": "braun"},
+        {"en": "orange", "de": "orange"},
+        {"en": "pink", "de": "rosa"},
+        {"en": "black", "de": "schwarz"},
+        {"en": "white", "de": "weiß"}
+      ]
     },
-    {
-      "name": "Satzglieder ordnen",
-      "datei": "satzglieder-erkennen.html",
-      "emoji": "",
-      "beschreibung": "Put the words in the right order",
-      "fach": "Englisch",
-      "hidden": false,
-      "klassen": [
-        5,
-        6
-      ],
-      "customTags": [],
-      "aod": false
+    "weekdays": {
+      "label": "Wochentage",
+      "unit": "unit1",
+      "words": [
+        {"en": "Monday", "de": "Montag"},
+        {"en": "Tuesday", "de": "Dienstag"},
+        {"en": "Wednesday", "de": "Mittwoch"},
+        {"en": "Thursday", "de": "Donnerstag"},
+        {"en": "Friday", "de": "Freitag"},
+        {"en": "Saturday", "de": "Samstag"},
+        {"en": "Sunday", "de": "Sonntag"}
+      ]
     },
-    {
-      "name": "Sachaufgaben Länge",
-      "datei": "sachaufgaben_laengen.html",
-      "fach": "Mathematik",
-      "emoji": "",
-      "beschreibung": "",
-      "hidden": false,
-      "klassen": [
-        5
-      ],
-      "customTags": [],
-      "aod": false
+    "numbers_15_39": {
+      "label": "Zahlen 15–39",
+      "unit": "unit1",
+      "type": "random_numbers",
+      "words": [
+        {"en": "fifteen", "de": "fünfzehn"},
+        {"en": "sixteen", "de": "sechzehn"},
+        {"en": "seventeen", "de": "siebzehn"},
+        {"en": "eighteen", "de": "achtzehn"},
+        {"en": "nineteen", "de": "neunzehn"},
+        {"en": "twenty", "de": "zwanzig"},
+        {"en": "twenty-one", "de": "einundzwanzig"},
+        {"en": "twenty-two", "de": "zweiundzwanzig"},
+        {"en": "thirty", "de": "dreißig"},
+        {"en": "thirty-one", "de": "einunddreißig"},
+        {"en": "thirty-two", "de": "zweiunddreißig"}
+      ]
     },
-    {
-      "name": "Unit 3 Vokabeln",
-      "datei": "highlight-unit3.html",
-      "fach": "Englisch",
-      "emoji": "3",
-      "beschreibung": "Lerne und wiederhole mit dieser App die Vokabeln aus Unit 3",
-      "hidden": false,
-      "klassen": [
-        5
-      ],
-      "customTags": [
-        "Vokabeln"
-      ],
-      "aod": false
+    "numbers_40_100": {
+      "label": "Zahlen 40–100",
+      "unit": "unit3",
+      "type": "random_numbers",
+      "words": [
+        {"en": "forty", "de": "vierzig"},
+        {"en": "fifty", "de": "fünfzig"},
+        {"en": "sixty", "de": "sechzig"},
+        {"en": "seventy", "de": "siebzig"},
+        {"en": "eighty", "de": "achtzig"},
+        {"en": "ninety", "de": "neunzig"},
+        {"en": "a hundred", "de": "hundert"}
+      ]
     },
-    {
-      "name": "Unit 4 Vokabeln",
-      "datei": "highlight-unit4.html",
-      "fach": "Englisch",
-      "emoji": "4",
-      "beschreibung": "Lerne und wiederhole die Vokabeln aus Unit 4",
-      "hidden": false,
-      "klassen": [
-        5
-      ],
-      "customTags": [
-        "Vokabeln"
-      ],
-      "aod": false
+    "months": {
+      "label": "Monate",
+      "unit": "unit3",
+      "words": [
+        {"en": "January", "de": "Januar"},
+        {"en": "February", "de": "Februar"},
+        {"en": "March", "de": "März"},
+        {"en": "April", "de": "April"},
+        {"en": "May", "de": "Mai"},
+        {"en": "June", "de": "Juni"},
+        {"en": "July", "de": "Juli"},
+        {"en": "August", "de": "August"},
+        {"en": "September", "de": "September"},
+        {"en": "October", "de": "Oktober"},
+        {"en": "November", "de": "November"},
+        {"en": "December", "de": "Dezember"}
+      ]
     },
-    {
-      "name": "Grundwissen Rechteck",
-      "datei": "grundwissen_check.html",
-      "fach": "Mathematik",
-      "emoji": "📱",
-      "beschreibung": "Überprüfe dein Grundwissen zum Rechteck",
-      "hidden": false,
-      "klassen": [
-        5
-      ],
-      "customTags": [],
-      "aod": false
+    "ordinals": {
+      "label": "Ordinalzahlen",
+      "unit": "unit3",
+      "type": "random_numbers",
+      "words": [
+        {"en": "first", "de": "erste/r/s"},
+        {"en": "second", "de": "zweite/r/s"},
+        {"en": "third", "de": "dritte/r/s"},
+        {"en": "fourth", "de": "vierte/r/s"},
+        {"en": "fifth", "de": "fünfte/r/s"},
+        {"en": "sixth", "de": "sechste/r/s"},
+        {"en": "seventh", "de": "siebte/r/s"},
+        {"en": "eighth", "de": "achte/r/s"},
+        {"en": "ninth", "de": "neunte/r/s"},
+        {"en": "tenth", "de": "zehnte/r/s"},
+        {"en": "eleventh", "de": "elfte/r/s"},
+        {"en": "twelfth", "de": "zwölfte/r/s"},
+        {"en": "thirteenth", "de": "dreizehnte/r/s"},
+        {"en": "twentieth", "de": "zwanzigste/r/s"},
+        {"en": "twenty-first", "de": "einundzwanzigste/r/s"},
+        {"en": "twenty-second", "de": "zweiundzwanzigste/r/s"},
+        {"en": "twenty-third", "de": "dreiundzwanzigste/r/s"},
+        {"en": "thirtieth", "de": "dreißigste/r/s"},
+        {"en": "thirty-first", "de": "einunddreißigste/r/s"}
+      ]
     },
-    {
-      "name": "Vierecke unterscheiden",
-      "datei": "vierecke_unterscheiden.html",
-      "fach": "Mathematik",
-      "emoji": "📱",
-      "beschreibung": "Wie gut kennst du dich mit Vierecken aus? Teste!",
-      "hidden": false,
-      "klassen": [
-        5
-      ],
-      "customTags": [],
-      "aod": false
-    },
-    {
-      "name": "Practice: simple present",
-      "datei": "practice_simple_present.html",
-      "fach": "Englisch",
-      "emoji": "📱",
-      "beschreibung": "",
-      "hidden": false,
-      "klassen": [
-        5
-      ],
-      "customTags": [
-        "Grammatik"
-      ],
-      "aod": false
+    "question_words": {
+      "label": "Fragewörter",
+      "unit": "unit4",
+      "words": [
+        {"en": "what", "de": "was"},
+        {"en": "who", "de": "wer"},
+        {"en": "why", "de": "warum"},
+        {"en": "where", "de": "wo / wohin"},
+        {"en": "when", "de": "wann"},
+        {"en": "how", "de": "wie"}
+      ]
     }
-  ],
-  "customTags": [
-    {
-      "name": "Vokabeln",
-      "color": 4
+  },
+  "units": {
+    "intro": {
+      "label": "Hi! What's your name?",
+      "themes": {
+        "intro": {
+          "label": "Einführung",
+          "words": [
+            {"en": "hi", "de": "hallo"},
+            {"en": "What's your name?", "de": "Wie heißt du?"},
+            {"en": "I'm", "de": "ich bin"},
+            {"en": "the crab", "de": "der Krebs"},
+            {"en": "from Plymouth", "de": "aus Plymouth"},
+            {"en": "in England", "de": "in England"},
+            {"en": "What about you?", "de": "Und du?"},
+            {"en": "too", "de": "auch"},
+            {"en": "How old are you?", "de": "Wie alt bist du?"},
+            {"en": "you're", "de": "du bist"},
+            {"en": "and", "de": "und"},
+            {"en": "Germany", "de": "Deutschland"},
+            {"en": "class", "de": "Klasse"},
+            {"en": "game", "de": "Spiel"},
+            {"en": "I can see", "de": "ich kann sehen"},
+            {"en": "a girl", "de": "ein Mädchen"},
+            {"en": "song", "de": "Lied"},
+            {"en": "colour", "de": "Farbe"},
+            {"en": "say", "de": "sagen"},
+            {"en": "to like", "de": "mögen"},
+            {"en": "sweets", "de": "Bonbons, Süßigkeiten"},
+            {"en": "sport", "de": "Sport"},
+            {"en": "playing football", "de": "Fußballspielen"},
+            {"en": "watching TV", "de": "Fernsehen"},
+            {"en": "swimming", "de": "Schwimmen"},
+            {"en": "dancing", "de": "Tanzen"},
+            {"en": "reading", "de": "Lesen"},
+            {"en": "cycling", "de": "Radfahren"},
+            {"en": "animal", "de": "Tier"},
+            {"en": "to have", "de": "haben"},
+            {"en": "pony", "de": "Pony"},
+            {"en": "to love", "de": "lieben, sehr mögen"},
+            {"en": "cat", "de": "Katze"},
+            {"en": "hamster", "de": "Hamster"},
+            {"en": "rabbit", "de": "Kaninchen"},
+            {"en": "rat", "de": "Ratte"},
+            {"en": "dog", "de": "Hund"},
+            {"en": "sheep", "de": "Schaf"},
+            {"en": "bear", "de": "Bär"},
+            {"en": "tiger", "de": "Tiger"},
+            {"en": "snake", "de": "Schlange"},
+            {"en": "bird", "de": "Vogel"},
+            {"en": "elephant", "de": "Elefant"},
+            {"en": "fish", "de": "Fisch"},
+            {"en": "monkey", "de": "Affe"},
+            {"en": "my", "de": "mein/e"},
+            {"en": "favourite thing", "de": "Lieblingssache"},
+            {"en": "bike", "de": "Fahrrad"},
+            {"en": "great", "de": "großartig, toll"},
+            {"en": "small", "de": "klein"},
+            {"en": "but", "de": "aber"},
+            {"en": "guitar", "de": "Gitarre"},
+            {"en": "mobile phone", "de": "Handy"},
+            {"en": "new", "de": "neu"},
+            {"en": "big", "de": "groß"},
+            {"en": "the last day", "de": "der letzte Tag"},
+            {"en": "holiday(s)", "de": "Urlaub; Ferien"},
+            {"en": "story", "de": "Geschichte"},
+            {"en": "Hello", "de": "Hallo"},
+            {"en": "no", "de": "nein"},
+            {"en": "yes", "de": "ja"},
+            {"en": "to go away", "de": "weggehen"},
+            {"en": "stupid", "de": "dumm, blöd"},
+            {"en": "This is...", "de": "Dies ist... / Das ist..."},
+            {"en": "help", "de": "Hilfe"},
+            {"en": "Goodbye", "de": "Auf Wiedersehen"}
+          ]
+        }
+      }
     },
-    {
-      "name": "Grammatik",
-      "color": 1
+    "unit1": {
+      "label": "Unit 1: Welcome to our school",
+      "themes": {
+        "intro": {
+          "label": "Einführung",
+          "words": [
+            {"en": "our", "de": "unser/e"},
+            {"en": "at school", "de": "in der Schule"},
+            {"en": "boy", "de": "Junge, Bub"},
+            {"en": "teacher", "de": "Lehrer/in"},
+            {"en": "car", "de": "Auto"},
+            {"en": "first", "de": "erste/r/s"},
+            {"en": "How are you?", "de": "Wie geht's?"},
+            {"en": "I'm OK. / I'm fine.", "de": "Es geht mir gut."},
+            {"en": "thanks", "de": "danke"},
+            {"en": "Bye", "de": "Tschüs / Servus"},
+            {"en": "Have a good day.", "de": "Schönen Tag noch."},
+            {"en": "See you.", "de": "Bis dann. / Tschüs."}
+          ]
+        },
+        "theme1": {
+          "label": "Theme 1",
+          "words": [
+            {"en": "Good morning.", "de": "Guten Morgen."},
+            {"en": "Ms Lee", "de": "Frau Lee"},
+            {"en": "English", "de": "Englisch; englisch"},
+            {"en": "Who are you?", "de": "Wer bist du?"},
+            {"en": "no", "de": "kein, keine"},
+            {"en": "brother", "de": "Bruder"},
+            {"en": "sister", "de": "Schwester"},
+            {"en": "we're", "de": "wir sind"},
+            {"en": "best friends", "de": "beste Freunde/Freundinnen"},
+            {"en": "they're / they aren't", "de": "sie sind / sie sind nicht"},
+            {"en": "he's / he isn't", "de": "er ist / er ist nicht"},
+            {"en": "she's", "de": "sie ist"},
+            {"en": "Mr Lee", "de": "Herr Lee"},
+            {"en": "Mrs Lee", "de": "Frau Lee"},
+            {"en": "number", "de": "Zahl, Nummer"},
+            {"en": "maths", "de": "Mathematik"},
+            {"en": "people", "de": "Leute, Menschen"},
+            {"en": "on page", "de": "auf Seite"}
+          ]
+        },
+        "theme2": {
+          "label": "Theme 2",
+          "words": [
+            {"en": "a tour of the school", "de": "ein Rundgang durch die Schule"},
+            {"en": "geography", "de": "Geografie, Erdkunde"},
+            {"en": "here", "de": "hier; hierher"},
+            {"en": "science", "de": "Naturwissenschaft"},
+            {"en": "room", "de": "Raum, Zimmer"},
+            {"en": "ICT", "de": "Informations- und Kommunikationstechnologie"},
+            {"en": "art", "de": "Kunst"},
+            {"en": "PE", "de": "Schulsport"},
+            {"en": "where?", "de": "wo? / wohin?"},
+            {"en": "lesson", "de": "Unterrichtsstunde"},
+            {"en": "now", "de": "nun, jetzt"},
+            {"en": "timetable", "de": "Stundenplan"},
+            {"en": "time", "de": "Zeit; Uhrzeit"},
+            {"en": "Monday", "de": "Montag"},
+            {"en": "Tuesday", "de": "Dienstag"},
+            {"en": "Wednesday", "de": "Mittwoch"},
+            {"en": "Thursday", "de": "Donnerstag"},
+            {"en": "Friday", "de": "Freitag"},
+            {"en": "Saturday", "de": "Samstag"},
+            {"en": "Sunday", "de": "Sonntag"},
+            {"en": "break", "de": "Pause"},
+            {"en": "lunch", "de": "Mittagessen"},
+            {"en": "French", "de": "Französisch"},
+            {"en": "music", "de": "Musik"},
+            {"en": "history", "de": "Geschichte"},
+            {"en": "drama", "de": "Schauspiel, darstellende Kunst"},
+            {"en": "technology", "de": "Technik, Technologie"},
+            {"en": "right", "de": "richtig"},
+            {"en": "wrong", "de": "falsch"},
+            {"en": "on Monday", "de": "am Montag"}
+          ]
+        },
+        "story": {
+          "label": "Story",
+          "words": [
+            {"en": "before you read", "de": "bevor du liest"},
+            {"en": "shirt", "de": "Hemd"},
+            {"en": "jacket", "de": "Jacke, Jackett"},
+            {"en": "tie", "de": "Krawatte"},
+            {"en": "trousers", "de": "Hose"},
+            {"en": "principal", "de": "Schulleiter/in"},
+            {"en": "please", "de": "bitte"},
+            {"en": "to remember", "de": "daran denken, nicht vergessen"},
+            {"en": "uniform", "de": "Schuluniform"},
+            {"en": "important", "de": "wichtig"},
+            {"en": "before the lesson", "de": "vor der Unterrichtsstunde"},
+            {"en": "Sorry.", "de": "Tut mir leid. / Entschuldigung."},
+            {"en": "at home", "de": "zu Hause"},
+            {"en": "That isn't good.", "de": "Das ist nicht gut."},
+            {"en": "to know", "de": "wissen; kennen"},
+            {"en": "to do", "de": "machen, tun"},
+            {"en": "or", "de": "oder"}
+          ]
+        },
+        "focus": {
+          "label": "Focus on language",
+          "words": [
+            {"en": "classroom", "de": "Klassenzimmer"},
+            {"en": "to start", "de": "anfangen"},
+            {"en": "with", "de": "mit"},
+            {"en": "not", "de": "nicht; kein/e"},
+            {"en": "student", "de": "Schüler/in; Student/in"},
+            {"en": "card", "de": "Karte"},
+            {"en": "to look at", "de": "anschauen"},
+            {"en": "bad", "de": "schlecht; schlimm"},
+            {"en": "idea", "de": "Idee"},
+            {"en": "canteen", "de": "Schulmensa, Kantine"},
+            {"en": "that's right", "de": "das stimmt, das ist richtig"},
+            {"en": "word", "de": "Wort"},
+            {"en": "What do you think?", "de": "Was meinst du?"},
+            {"en": "to speak (to)", "de": "sprechen (mit)"},
+            {"en": "question", "de": "Frage"},
+            {"en": "clothes", "de": "Kleidung"},
+            {"en": "problem", "de": "Problem"}
+          ]
+        },
+        "skills": {
+          "label": "Skills training",
+          "words": [
+            {"en": "brochure", "de": "Broschüre, Prospekt"},
+            {"en": "to buy", "de": "kaufen"},
+            {"en": "for", "de": "für"},
+            {"en": "pound", "de": "Pfund"},
+            {"en": "pencil sharpener", "de": "Bleistiftanspitzer"},
+            {"en": "rubber", "de": "Radiergummi"},
+            {"en": "ruler", "de": "Lineal"},
+            {"en": "to give", "de": "geben"},
+            {"en": "to send", "de": "schicken, senden"},
+            {"en": "pen", "de": "Kugelschreiber, Stift; Füller"},
+            {"en": "pencil", "de": "Bleistift"},
+            {"en": "pencil case", "de": "Federmäppchen"},
+            {"en": "calculator", "de": "Taschenrechner"},
+            {"en": "exercise book", "de": "Schulheft, Übungsheft"},
+            {"en": "weekend", "de": "Wochenende"},
+            {"en": "phrase", "de": "Ausdruck, Redewendung"},
+            {"en": "box", "de": "Box, Kasten"},
+            {"en": "in English", "de": "auf Englisch"},
+            {"en": "to borrow", "de": "ausleihen, sich borgen"},
+            {"en": "sure", "de": "sicher"},
+            {"en": "Here you are.", "de": "Bitte schön. / Hier, bitte."},
+            {"en": "next", "de": "nächste/r/s"},
+            {"en": "German", "de": "Deutsch; deutsch"},
+            {"en": "to walk around", "de": "umhergehen"}
+          ]
+        }
+      }
+    },
+    "unit2": {
+      "label": "Unit 2: At home with Ellie",
+      "themes": {
+        "intro": {
+          "label": "Einführung",
+          "words": [
+            {"en": "house", "de": "Haus"},
+            {"en": "kitchen", "de": "Küche"},
+            {"en": "living room", "de": "Wohnzimmer"},
+            {"en": "garden", "de": "Garten"},
+            {"en": "road", "de": "Straße"},
+            {"en": "flat", "de": "Wohnung"},
+            {"en": "street", "de": "Straße (in Ortschaften)"},
+            {"en": "bedroom", "de": "Schlafzimmer"},
+            {"en": "bathroom", "de": "Badezimmer"},
+            {"en": "toilet", "de": "Toilette"},
+            {"en": "in the photo", "de": "auf dem Foto"},
+            {"en": "nice", "de": "nett, schön"},
+            {"en": "mum", "de": "Mama, Mutti"},
+            {"en": "to live", "de": "leben, wohnen"},
+            {"en": "her dad", "de": "ihr Vater"}
+          ]
+        },
+        "theme1": {
+          "label": "Theme 1",
+          "words": [
+            {"en": "family", "de": "Familie"},
+            {"en": "at Ellie's house", "de": "bei Ellie daheim"},
+            {"en": "upstairs", "de": "oben; nach oben"},
+            {"en": "stepdad", "de": "Stiefvater"},
+            {"en": "to miss", "de": "vermissen"},
+            {"en": "real", "de": "echt, wirklich"},
+            {"en": "his partner", "de": "sein Partner, seine Partnerin"},
+            {"en": "cute", "de": "niedlich, süß"},
+            {"en": "I'd like", "de": "ich hätte gern, ich möchte"},
+            {"en": "you're lucky", "de": "du hast Glück"},
+            {"en": "mother", "de": "Mutter"},
+            {"en": "father", "de": "Vater"},
+            {"en": "family tree", "de": "Familienstammbaum"},
+            {"en": "grandma", "de": "Oma"}
+          ]
+        },
+        "theme2": {
+          "label": "Theme 2",
+          "words": [
+            {"en": "pullover", "de": "Pullover"},
+            {"en": "shoe", "de": "Schuh"},
+            {"en": "messy", "de": "unordentlich"},
+            {"en": "bossy", "de": "herrisch"},
+            {"en": "too small", "de": "zu klein"},
+            {"en": "table", "de": "Tisch"},
+            {"en": "I do my homework", "de": "ich mache meine Hausaufgaben"},
+            {"en": "place", "de": "Ort, Platz, Stelle"},
+            {"en": "noisy", "de": "laut, voller Lärm"},
+            {"en": "happy", "de": "glücklich, froh"},
+            {"en": "unhappy", "de": "unglücklich"},
+            {"en": "cushion", "de": "Kissen"},
+            {"en": "lamp", "de": "Lampe"},
+            {"en": "chair", "de": "Stuhl"},
+            {"en": "bed", "de": "Bett"},
+            {"en": "wardrobe", "de": "Kleiderschrank"},
+            {"en": "to find", "de": "finden"},
+            {"en": "different", "de": "unterschiedlich, verschieden"}
+          ]
+        },
+        "story": {
+          "label": "Story",
+          "words": [
+            {"en": "again", "de": "wieder, noch einmal"},
+            {"en": "news", "de": "Nachrichten; Neuigkeiten"},
+            {"en": "tomorrow", "de": "morgen"},
+            {"en": "after school", "de": "nach der Schule"},
+            {"en": "desk", "de": "Schreibtisch"},
+            {"en": "really", "de": "wirklich"},
+            {"en": "at the cinema", "de": "im Kino"},
+            {"en": "me", "de": "mir; mich"},
+            {"en": "programme", "de": "Fernsehsendung"},
+            {"en": "in town", "de": "in der Stadt"},
+            {"en": "tired", "de": "müde"},
+            {"en": "to sleep", "de": "schlafen"},
+            {"en": "It's her birthday.", "de": "Sie hat Geburtstag."},
+            {"en": "their", "de": "ihr/e (Plural)"},
+            {"en": "at a restaurant", "de": "in einem Restaurant"},
+            {"en": "text (message)", "de": "SMS"},
+            {"en": "a text from mum", "de": "eine SMS von Mama"},
+            {"en": "week", "de": "Woche"}
+          ]
+        },
+        "focus": {
+          "label": "Focus on language",
+          "words": [
+            {"en": "love", "de": "Liebling, Schatz"},
+            {"en": "surprise", "de": "Überraschung"},
+            {"en": "often", "de": "oft"},
+            {"en": "all", "de": "alle(s)"},
+            {"en": "Well,...", "de": "Nun,... / Also,..."},
+            {"en": "Don't be silly.", "de": "Sei nicht albern/dumm/blöd."},
+            {"en": "I'm home", "de": "ich bin zu Hause"},
+            {"en": "answer", "de": "Antwort"},
+            {"en": "when", "de": "wenn"},
+            {"en": "book", "de": "Buch"},
+            {"en": "they're fun", "de": "es macht Spaß, mit ihnen zusammenzusein"},
+            {"en": "sofa", "de": "Sofa"},
+            {"en": "only", "de": "nur, bloß; erst"},
+            {"en": "parents", "de": "Eltern"},
+            {"en": "soon", "de": "bald"}
+          ]
+        },
+        "skills": {
+          "label": "Skills training",
+          "words": [
+            {"en": "to write about", "de": "schreiben über"},
+            {"en": "to work", "de": "arbeiten; funktionieren"},
+            {"en": "to listen (to)", "de": "zuhören; anhören"},
+            {"en": "picture", "de": "Bild"},
+            {"en": "banana", "de": "Banane"},
+            {"en": "back", "de": "zurück"},
+            {"en": "address", "de": "Adresse"},
+            {"en": "phone number", "de": "Telefonnummer"},
+            {"en": "to spell", "de": "buchstabieren"},
+            {"en": "to talk (to)", "de": "sprechen (mit)"}
+          ]
+        }
+      }
+    },
+    "unit3": {
+      "label": "Unit 3: Luca's birthday",
+      "themes": {
+        "intro": {
+          "label": "Einführung",
+          "words": [
+            {"en": "shop", "de": "Geschäft, Laden"},
+            {"en": "sometimes", "de": "manchmal"},
+            {"en": "to go shopping", "de": "einkaufen gehen"},
+            {"en": "to go swimming", "de": "schwimmen gehen"},
+            {"en": "to ride a bike", "de": "Rad fahren"},
+            {"en": "on his birthday", "de": "an seinem Geburtstag"},
+            {"en": "swimming pool", "de": "Schwimmbad"}
+          ]
+        },
+        "theme1": {
+          "label": "Theme 1",
+          "words": [
+            {"en": "market", "de": "Markt"},
+            {"en": "vegetables", "de": "Gemüse"},
+            {"en": "always", "de": "immer"},
+            {"en": "in the morning", "de": "am Morgen"},
+            {"en": "in the afternoon", "de": "am Nachmittag"},
+            {"en": "in the evening", "de": "am Abend"},
+            {"en": "to meet", "de": "kennenlernen; sich treffen"},
+            {"en": "...is fun.", "de": "...macht Spaß."},
+            {"en": "to shop for sth.", "de": "etwas kaufen gehen"},
+            {"en": "sports shop", "de": "Sportgeschäft"},
+            {"en": "trainers", "de": "Sportschuhe"},
+            {"en": "expensive", "de": "teuer"},
+            {"en": "hoodie", "de": "Kapuzenpullover"},
+            {"en": "then", "de": "dann"},
+            {"en": "terrible", "de": "schrecklich"},
+            {"en": "to cost", "de": "kosten"}
+          ]
+        },
+        "theme2": {
+          "label": "Theme 2",
+          "words": [
+            {"en": "never", "de": "nie, niemals"},
+            {"en": "to go bowling", "de": "Bowling spielen gehen"},
+            {"en": "to stay", "de": "bleiben"},
+            {"en": "usually", "de": "meistens, normalerweise"},
+            {"en": "to have a party", "de": "eine Party feiern"},
+            {"en": "beach", "de": "Strand"},
+            {"en": "to have a picnic", "de": "ein Picknick machen"},
+            {"en": "when?", "de": "wann?"},
+            {"en": "When's your birthday?", "de": "Wann hast du Geburtstag?"},
+            {"en": "date", "de": "Datum"},
+            {"en": "second", "de": "zweite/r/s"},
+            {"en": "calendar", "de": "Kalender"}
+          ]
+        },
+        "story": {
+          "label": "Story",
+          "words": [
+            {"en": "to want to do", "de": "tun/machen wollen"},
+            {"en": "something", "de": "etwas"},
+            {"en": "concert", "de": "Konzert"},
+            {"en": "present", "de": "Geschenk"},
+            {"en": "Happy birthday!", "de": "Herzlichen Glückwunsch zum Geburtstag!"},
+            {"en": "zoo", "de": "Zoo"},
+            {"en": "at work", "de": "bei der Arbeit"},
+            {"en": "there", "de": "da, dort; dahin, dorthin"},
+            {"en": "Let's...", "de": "Lass uns... / Lasst uns..."},
+            {"en": "down the hill", "de": "den Hügel hinunter"},
+            {"en": "to fall", "de": "fallen; hinfallen"},
+            {"en": "leg", "de": "Bein"},
+            {"en": "hospital", "de": "Krankenhaus"},
+            {"en": "end", "de": "Ende, Schluss"},
+            {"en": "to come", "de": "kommen"}
+          ]
+        },
+        "focus": {
+          "label": "Focus on language",
+          "words": [
+            {"en": "home", "de": "nach Hause / Heim, Zuhause"},
+            {"en": "to get up", "de": "aufstehen"},
+            {"en": "early", "de": "früh"},
+            {"en": "to go by bus", "de": "mit dem Bus fahren"},
+            {"en": "to walk", "de": "zu Fuß gehen, wandern"},
+            {"en": "to have lunch", "de": "zu Mittag essen"},
+            {"en": "to make", "de": "machen, herstellen"},
+            {"en": "breakfast", "de": "Frühstück"},
+            {"en": "firefighter", "de": "Feuerwehrmann, Feuerwehrfrau"},
+            {"en": "dinner", "de": "Abendessen"},
+            {"en": "sea", "de": "Meer"},
+            {"en": "year", "de": "Jahr(gang)"}
+          ]
+        },
+        "skills": {
+          "label": "Skills training",
+          "words": [
+            {"en": "money", "de": "Geld"},
+            {"en": "garage", "de": "Garage"},
+            {"en": "British", "de": "britisch"},
+            {"en": "How much is / are ...?", "de": "Was kostet / kosten ...?"},
+            {"en": "much", "de": "viel"},
+            {"en": "to ask", "de": "fragen"},
+            {"en": "Sounds fun.", "de": "Klingt, als ob es Spaß macht."},
+            {"en": "Are you free at one o'clock?", "de": "Hast du um ein Uhr Zeit?"}
+          ]
+        }
+      }
+    },
+    "unit4": {
+      "label": "Unit 4: Berry's world",
+      "themes": {
+        "intro": {
+          "label": "Einführung",
+          "words": [
+            {"en": "lots of / a lot of", "de": "viel..., viele..."},
+            {"en": "visitor", "de": "Besucher/in, Gast"},
+            {"en": "pet", "de": "Haustier"},
+            {"en": "child / children", "de": "Kind / Kinder"},
+            {"en": "to ride a pony", "de": "auf einem Pony reiten"},
+            {"en": "can't / cannot", "de": "nicht können"},
+            {"en": "donkey", "de": "Esel"},
+            {"en": "to feed", "de": "füttern"},
+            {"en": "duck", "de": "Ente"},
+            {"en": "cow", "de": "Kuh"},
+            {"en": "pig", "de": "Schwein"},
+            {"en": "chicken", "de": "Huhn; Hähnchen"}
+          ]
+        },
+        "theme1": {
+          "label": "Theme 1",
+          "words": [
+            {"en": "from Monday to Friday", "de": "von Montag bis Freitag"},
+            {"en": "to wake", "de": "wecken"},
+            {"en": "other", "de": "andere/r/s"},
+            {"en": "outside", "de": "draußen; nach draußen"},
+            {"en": "about", "de": "ungefähr"},
+            {"en": "to look after", "de": "sich kümmern um; aufpassen auf"},
+            {"en": "to sit", "de": "sitzen; sich hinsetzen"},
+            {"en": "What's the time?", "de": "Wie spät ist es?"},
+            {"en": "You're welcome.", "de": "Bitte, gern geschehen."},
+            {"en": "late", "de": "zu spät"}
+          ]
+        },
+        "theme2": {
+          "label": "Theme 2",
+          "words": [
+            {"en": "to feel", "de": "sich fühlen; fühlen"},
+            {"en": "to feel fed up", "de": "genervt sein, sauer sein"},
+            {"en": "to do sport", "de": "Sport treiben"},
+            {"en": "my bus is late", "de": "mein Bus hat Verspätung"},
+            {"en": "a bit", "de": "ein bisschen"},
+            {"en": "because", "de": "weil"},
+            {"en": "the only student", "de": "der/die einzige Schüler/in"},
+            {"en": "wheelchair", "de": "Rollstuhl"},
+            {"en": "normal", "de": "normal"}
+          ]
+        },
+        "story": {
+          "label": "Story",
+          "words": [
+            {"en": "on the bus", "de": "im Bus"},
+            {"en": "at night", "de": "nachts, in der Nacht"},
+            {"en": "to the country", "de": "aufs Land"},
+            {"en": "scene", "de": "Szene"},
+            {"en": "email", "de": "E-Mail"},
+            {"en": "sleepover", "de": "Übernachtungsparty"},
+            {"en": "there's / there are", "de": "es ist / es sind"},
+            {"en": "excited", "de": "aufgeregt, gespannt"},
+            {"en": "so cute", "de": "so niedlich"},
+            {"en": "shoulder", "de": "Schulter"},
+            {"en": "wet", "de": "nass"},
+            {"en": "everybody", "de": "jeder; alle"},
+            {"en": "to laugh", "de": "lachen"},
+            {"en": "to eat", "de": "essen; fressen"},
+            {"en": "village", "de": "Dorf"},
+            {"en": "through", "de": "durch"},
+            {"en": "field", "de": "Feld; Weide"},
+            {"en": "to get", "de": "bekommen, kriegen"},
+            {"en": "she thinks that...", "de": "sie denkt, dass..."}
+          ]
+        },
+        "focus": {
+          "label": "Focus on language",
+          "words": [
+            {"en": "we don't have any pets", "de": "wir haben keine Haustiere"},
+            {"en": "wild", "de": "wild; wild lebend"},
+            {"en": "thank you", "de": "danke schön"},
+            {"en": "why?", "de": "warum?"},
+            {"en": "cage", "de": "Käfig"},
+            {"en": "fruit", "de": "Früchte, Obst; Frucht"},
+            {"en": "many", "de": "viele"}
+          ]
+        },
+        "skills": {
+          "label": "Skills training",
+          "words": [
+            {"en": "sign", "de": "Schild; Zeichen"},
+            {"en": "to get on a bus", "de": "einsteigen in einen Bus"},
+            {"en": "to get off a bus", "de": "aussteigen aus einem Bus"},
+            {"en": "café", "de": "Café"},
+            {"en": "left", "de": "links; nach links"},
+            {"en": "right", "de": "rechts; nach rechts"},
+            {"en": "dangerous", "de": "gefährlich"},
+            {"en": "to hear", "de": "hören"},
+            {"en": "noise", "de": "Geräusch; Lärm"},
+            {"en": "time to go home", "de": "Zeit, nach Hause zu gehen"},
+            {"en": "invitation", "de": "Einladung"},
+            {"en": "to bring", "de": "bringen, mitbringen"},
+            {"en": "food", "de": "Essen, Lebensmittel; Futter"},
+            {"en": "to drink", "de": "trinken"},
+            {"en": "to hope", "de": "hoffen"},
+            {"en": "some", "de": "einige, ein paar; etwas"},
+            {"en": "Best wishes", "de": "Viele Grüße"},
+            {"en": "to invite", "de": "einladen"},
+            {"en": "example", "de": "Beispiel"},
+            {"en": "together", "de": "zusammen"},
+            {"en": "funny", "de": "lustig; seltsam"},
+            {"en": "to use", "de": "benutzen"},
+            {"en": "dictionary", "de": "Wörterbuch"}
+          ]
+        }
+      }
+    },
+    "unit5": {
+      "label": "Unit 5: All about Adam",
+      "themes": {
+        "intro": {
+          "label": "Einführung",
+          "words": [
+            {"en": "boat", "de": "Boot; Schiff"},
+            {"en": "ferry", "de": "Fähre"},
+            {"en": "harbour", "de": "Hafen"},
+            {"en": "man / men", "de": "Mann / Männer"},
+            {"en": "woman / women", "de": "Frau / Frauen"}
+          ]
+        },
+        "theme1": {
+          "label": "Theme 1",
+          "words": [
+            {"en": "yesterday", "de": "gestern"},
+            {"en": "to clean", "de": "sauber machen, putzen"},
+            {"en": "to cook", "de": "kochen"},
+            {"en": "to wash up", "de": "abwaschen"},
+            {"en": "hard", "de": "schwer; schwierig; hart"},
+            {"en": "letter", "de": "Brief"},
+            {"en": "he wasn't", "de": "er war nicht"},
+            {"en": "to do / he did", "de": "tun/machen; er tat/machte"},
+            {"en": "to tell", "de": "erzählen, sagen"},
+            {"en": "to phone", "de": "anrufen"},
+            {"en": "so", "de": "also"},
+            {"en": "her", "de": "sie; ihr"}
+          ]
+        },
+        "theme2": {
+          "label": "Theme 2",
+          "words": [
+            {"en": "boring", "de": "langweilig"},
+            {"en": "must", "de": "müssen"},
+            {"en": "to dive", "de": "einen Kopfsprung machen"},
+            {"en": "they were at the harbour", "de": "sie waren am Hafen"},
+            {"en": "to need", "de": "brauchen"},
+            {"en": "club", "de": "Klub, Verein"},
+            {"en": "to sing", "de": "singen"}
+          ]
+        },
+        "story": {
+          "label": "Story",
+          "words": [
+            {"en": "to take", "de": "nehmen, mitnehmen"},
+            {"en": "nothing", "de": "nichts"},
+            {"en": "minute", "de": "Minute"},
+            {"en": "to arrive", "de": "ankommen"},
+            {"en": "angry", "de": "wütend, ärgerlich"},
+            {"en": "mean", "de": "gemein, fies"},
+            {"en": "life / lives", "de": "das Leben / die Leben"},
+            {"en": "trouble", "de": "Ärger, Schwierigkeit(en)"},
+            {"en": "nervous", "de": "nervös, aufgeregt"},
+            {"en": "to shout", "de": "rufen"},
+            {"en": "prize", "de": "Preis (Gewinn)"},
+            {"en": "Well done.", "de": "Gut gemacht!"},
+            {"en": "proud of", "de": "stolz auf"},
+            {"en": "to make a difference", "de": "etwas bewirken"},
+            {"en": "difference", "de": "Unterschied"}
+          ]
+        },
+        "focus": {
+          "label": "Focus on language",
+          "words": [
+            {"en": "brilliant", "de": "genial"},
+            {"en": "to have a great time", "de": "viel Spaß haben"},
+            {"en": "him", "de": "ihn; ihm"},
+            {"en": "open", "de": "offen, geöffnet"},
+            {"en": "winner", "de": "Gewinner/in"},
+            {"en": "every", "de": "jede/r/s"},
+            {"en": "to swim", "de": "schwimmen"},
+            {"en": "cake", "de": "Kuchen"}
+          ]
+        },
+        "skills": {
+          "label": "Skills training",
+          "words": [
+            {"en": "customer", "de": "Kunde, Kundin"},
+            {"en": "cheese", "de": "Käse"},
+            {"en": "chips", "de": "Pommes frites"},
+            {"en": "soup", "de": "Suppe"},
+            {"en": "scone", "de": "Milchbrötchen, leicht süß"},
+            {"en": "jam", "de": "Marmelade"},
+            {"en": "cream", "de": "Sahne"},
+            {"en": "salad", "de": "Salat"},
+            {"en": "tea", "de": "Tee"},
+            {"en": "water", "de": "Wasser"},
+            {"en": "juice", "de": "Saft"},
+            {"en": "coffee", "de": "Kaffee"},
+            {"en": "orange", "de": "Orange"},
+            {"en": "Anything else?", "de": "Sonst noch etwas?"},
+            {"en": "a bottle of...", "de": "eine Flasche..."},
+            {"en": "who?", "de": "wem?; wen?"},
+            {"en": "we could / we couldn't", "de": "wir könnten / wir könnten nicht"},
+            {"en": "in front of", "de": "vor"},
+            {"en": "under", "de": "unter"},
+            {"en": "bag", "de": "Tasche"},
+            {"en": "behind", "de": "hinter"},
+            {"en": "next to", "de": "neben"},
+            {"en": "on the left", "de": "links, auf der linken Seite"},
+            {"en": "in the middle", "de": "in der Mitte"},
+            {"en": "on the right", "de": "rechts, auf der rechten Seite"},
+            {"en": "ball", "de": "Ball"}
+          ]
+        }
+      }
+    },
+    "unit6": {
+      "label": "Unit 6: School is over",
+      "themes": {
+        "intro": {
+          "label": "Einführung",
+          "words": [
+            {"en": "over", "de": "vorbei"},
+            {"en": "summer", "de": "Sommer"},
+            {"en": "trip", "de": "Fahrt, Ausflug"},
+            {"en": "to pick", "de": "auswählen, aussuchen"},
+            {"en": "canoe", "de": "Kanu, Paddelboot"},
+            {"en": "to fall off sth.", "de": "herunterfallen von etwas"}
+          ]
+        },
+        "themes": {
+          "label": "Themes",
+          "words": [
+            {"en": "to plan", "de": "planen"},
+            {"en": "to chat with", "de": "plaudern mit; chatten mit"},
+            {"en": "like", "de": "wie"},
+            {"en": "swimsuit", "de": "Badeanzug"},
+            {"en": "swimming trunks", "de": "Badehose"},
+            {"en": "towel", "de": "Handtuch"},
+            {"en": "sunglasses", "de": "Sonnenbrille"},
+            {"en": "hat", "de": "Hut, Mütze"},
+            {"en": "suncream", "de": "Sonnencreme"},
+            {"en": "to stop", "de": "anhalten; aufhören"},
+            {"en": "That's a pity.", "de": "Das ist schade."},
+            {"en": "apple", "de": "Apfel"},
+            {"en": "crisps", "de": "Kartoffelchips"},
+            {"en": "chocolate", "de": "Schokolade; Praline"},
+            {"en": "sausage", "de": "Wurst, Würstchen"}
+          ]
+        },
+        "story_focus": {
+          "label": "Story / Focus on language / Skills training",
+          "words": [
+            {"en": "cool", "de": "kühl"},
+            {"en": "smuggler", "de": "Schmuggler/in"},
+            {"en": "outside", "de": "außerhalb (von), vor"},
+            {"en": "map", "de": "Landkarte, Stadtplan"},
+            {"en": "Come on!", "de": "Na los! / Komm(t) schon!"},
+            {"en": "another", "de": "ein/e andere/r/s; noch ein/e"},
+            {"en": "quick", "de": "schnell"},
+            {"en": "milk", "de": "Milch"},
+            {"en": "to look for", "de": "suchen"},
+            {"en": "ice cream", "de": "Speiseeis"},
+            {"en": "to get to", "de": "kommen, gelangen nach"},
+            {"en": "exciting", "de": "aufregend"},
+            {"en": "Are you hungry?", "de": "Hast du Hunger?"},
+            {"en": "over there", "de": "da drüben; da hinüber"},
+            {"en": "to be out", "de": "unterwegs sein"},
+            {"en": "campsite", "de": "Campingplatz, Zeltplatz"},
+            {"en": "tent", "de": "Zelt"},
+            {"en": "cold", "de": "kalt"},
+            {"en": "not...at all", "de": "überhaupt nicht"},
+            {"en": "ship", "de": "Schiff"},
+            {"en": "today", "de": "heute"}
+          ]
+        }
+      }
     }
-  ],
-  "hiddenCats": [],
-  "announcement": {
-    "active": false,
-    "text": "",
-    "emoji": "📢",
-    "color": 0
   }
 }

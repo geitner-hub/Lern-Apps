@@ -1,1263 +1,260 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Admin – Lernwelt</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-  <noscript><link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet"></noscript>
-  <style>
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    :root{
-      --bg:#0f0e1a;
-      --surface:#1b1929;
-      --surface2:#221f35;
-      --surface3:#2a2740;
-      --border:rgba(255,255,255,.07);
-      --border2:rgba(255,255,255,.13);
-      --accent:#e6a817;
-      --accent-dim:rgba(230,168,23,.15);
-      --indigo:#6366f1;
-      --indigo2:#818cf8;
-      --green:#4ade80;
-      --green-dim:rgba(74,222,128,.15);
-      --red:#f87171;
-      --red-dim:rgba(248,113,113,.12);
-      --purple:#a78bfa;
-      --text:#f1f0fb;
-      --text2:rgba(241,240,251,.65);
-      --muted:rgba(241,240,251,.35);
-      --r:12px;
-    }
-    body{font-family:'Nunito',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⚙️ Admin – Lern-Apps</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Nunito', sans-serif; min-height: 100vh; background: #f8fafc; padding-bottom: 48px; }
 
-    /* ── LOGIN ── */
-    #login-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:999;background-image:radial-gradient(circle,rgba(99,102,241,.08) 1.5px,transparent 1.5px);background-size:28px 28px;}
-    .login-box{background:var(--surface);border:1px solid var(--border2);border-radius:20px;padding:2.5rem 2rem;width:320px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.5);}
-    .login-box h2{font-family:'Fredoka One',cursive;font-size:1.9rem;margin-bottom:.25rem;color:#fff;}
-    .login-box h2 span{color:var(--accent);}
-    .login-box p{font-size:.85rem;color:var(--muted);margin-bottom:1.5rem;}
-    .login-box input{width:100%;padding:.75rem 1rem;background:var(--surface2);border:1px solid var(--border2);border-radius:10px;color:var(--text);font-family:'Nunito',sans-serif;font-size:1rem;outline:none;text-align:center;letter-spacing:3px;transition:border-color .2s;}
-    .login-box input:focus{border-color:var(--accent);}
-    .login-err{color:var(--red);font-size:.8rem;margin-top:.5rem;min-height:1.1rem;}
-    .btn-login{background:linear-gradient(135deg,var(--indigo),#7c3fc5);border:none;color:#fff;padding:.75rem 1.5rem;border-radius:10px;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:800;font-size:.95rem;width:100%;margin-top:.8rem;transition:opacity .15s;}
-    .btn-login:hover{opacity:.88;}
+header { background: linear-gradient(90deg, #1e293b, #334155); padding: 18px 24px; display: flex; align-items: center; justify-content: space-between; }
+header h1 { font-size: 20px; font-weight: 900; color: #fff; }
+header p { font-size: 11px; color: rgba(255,255,255,0.6); margin-top: 2px; }
+.btn-home { background: rgba(255,255,255,0.15); border: none; color: #fff; font-weight: 700; border-radius: 8px; padding: 8px 14px; cursor: pointer; font-family: 'Nunito', sans-serif; font-size: 13px; text-decoration: none; display: inline-block; }
 
-    /* ── TOPBAR ── */
-    #app{display:none;}
-    .topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:.85rem 1.5rem;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:100;box-shadow:0 4px 20px rgba(0,0,0,.4);}
-    .topbar-wordmark{font-family:'Fredoka One',cursive;font-size:1.25rem;color:#fff;display:flex;align-items:center;gap:.4rem;}
-    .topbar-wordmark em{color:var(--accent);font-style:normal;}
-    .topbar-actions{margin-left:auto;display:flex;gap:.55rem;align-items:center;}
-    #sync-status{font-size:.72rem;font-weight:700;padding:.28rem .75rem;border-radius:99px;background:var(--surface2);color:var(--muted);}
-    #sync-status.ok{color:var(--green);}
-    #sync-status.saving{color:var(--accent);}
-    #sync-status.error{color:var(--red);}
+.container { max-width: 900px; margin: 0 auto; padding: 24px 16px; }
 
-    /* ── BUTTONS ── */
-    .btn{padding:.42rem .95rem;border-radius:9px;font-family:'Nunito',sans-serif;font-weight:800;font-size:.8rem;cursor:pointer;border:1px solid var(--border2);background:var(--surface2);color:var(--text);transition:all .14s;}
-    .btn:hover{background:var(--surface3);border-color:rgba(255,255,255,.2);}
-    .btn.accent{background:var(--accent);border-color:var(--accent);color:#0f0e1a;}
-    .btn.accent:hover{opacity:.88;}
-    .btn.indigo{background:rgba(99,102,241,.2);border-color:rgba(99,102,241,.4);color:var(--indigo2);}
-    .btn.indigo:hover{background:rgba(99,102,241,.3);}
-    .btn.danger{background:var(--red-dim);border-color:var(--red);color:var(--red);}
-    .btn.danger:hover{background:rgba(248,113,113,.22);}
-    .btn.green{background:var(--green-dim);border-color:var(--green);color:var(--green);}
-    .btn.green:hover{background:rgba(74,222,128,.25);}
-    .btn.sm{padding:.3rem .7rem;font-size:.75rem;}
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 28px; }
+.stat-card { background: #fff; border-radius: 14px; padding: 16px; text-align: center; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+.stat-card .val { font-size: 32px; font-weight: 900; color: #7c6af7; }
+.stat-card .lbl { font-size: 12px; color: #6b7280; font-weight: 600; margin-top: 4px; }
 
-    /* ── LAYOUT ── */
-    .content{max-width:1100px;margin:0 auto;padding:1.8rem 1.5rem;}
+.section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.section-title { font-weight: 800; color: #1e293b; font-size: 16px; }
+.badge { background: #f3f0ff; color: #7c6af7; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
 
-    /* ── TABS ── */
-    .tabs{display:flex;gap:.25rem;margin-bottom:1.5rem;background:var(--surface);border-radius:12px;padding:.35rem;border:1px solid var(--border);}
-    .tab{padding:.48rem 1.1rem;border-radius:9px;font-weight:800;font-size:.85rem;cursor:pointer;color:var(--muted);border:none;background:none;font-family:'Nunito',sans-serif;transition:all .14s;white-space:nowrap;}
-    .tab:hover{color:var(--text2);}
-    .tab.active{background:var(--surface2);color:var(--accent);}
-    .tab-panel{display:none;}
-    .tab-panel.active{display:block;}
+.unit-block { background: #fff; border-radius: 16px; margin-bottom: 16px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); overflow: hidden; }
+.unit-header { padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; border-bottom: 1px solid #f1f5f9; }
+.unit-header:hover { background: #f8fafc; }
+.unit-header h3 { font-size: 15px; font-weight: 800; color: #1e293b; }
+.unit-header .meta { display: flex; align-items: center; gap: 10px; }
+.unit-header .toggle { font-size: 18px; color: #9ca3af; transition: transform .2s; }
+.unit-header.open .toggle { transform: rotate(90deg); }
 
-    /* ── SECTION HEADERS ── */
-    .sec-header{display:flex;align-items:center;gap:.75rem;margin-bottom:.9rem;}
-    .sec-title{font-family:'Fredoka One',cursive;font-size:1.05rem;color:var(--accent);}
+.theme-block { border-bottom: 1px solid #f1f5f9; }
+.theme-block:last-child { border-bottom: none; }
+.theme-header { padding: 12px 20px 12px 32px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; background: #fafafa; }
+.theme-header:hover { background: #f3f0ff; }
+.theme-header h4 { font-size: 13px; font-weight: 700; color: #374151; }
 
-    /* ── FORM CARD ── */
-    .form-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.4rem;}
-    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;}
-    @media(max-width:600px){.form-grid{grid-template-columns:1fr;}}
-    .form-group{display:flex;flex-direction:column;gap:.35rem;}
-    .form-group.full{grid-column:1/-1;}
-    label{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);}
-    input[type=text],select,textarea{background:var(--surface2);border:1px solid var(--border2);border-radius:9px;color:var(--text);font-family:'Nunito',sans-serif;font-size:.88rem;padding:.5rem .75rem;outline:none;transition:border-color .2s;width:100%;}
-    input[type=text]:focus,select:focus,textarea:focus{border-color:var(--accent);}
-    select option{background:var(--surface2);}
-    textarea{resize:vertical;min-height:65px;}
-    .emoji-preview{font-size:2rem;min-width:42px;text-align:center;}
-    .form-row{display:flex;gap:.75rem;align-items:flex-end;}
+.word-table { width: 100%; border-collapse: collapse; display: none; }
+.word-table.visible { display: table; }
+.word-table th { background: #f8fafc; padding: 8px 16px 8px 32px; text-align: left; font-size: 11px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: .5px; }
+.word-table td { padding: 8px 16px 8px 32px; font-size: 13px; border-top: 1px solid #f1f5f9; }
+.word-table tr:hover td { background: #fafafa; }
+.word-table td:first-child { font-weight: 700; color: #374151; }
+.word-table td:last-child { color: #6b7280; }
 
-    /* ── FILTER ROW ── */
-    .filter-row-admin{display:flex;gap:.6rem;align-items:center;margin-bottom:1rem;flex-wrap:wrap;}
-    .admin-search{flex:1;min-width:160px;padding:.45rem .75rem .45rem 2.2rem;border:1px solid var(--border2);border-radius:9px;font-size:.85rem;font-family:'Nunito',sans-serif;outline:none;background:var(--surface2) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='rgba(241,240,251,.25)' stroke-width='2.5'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E") no-repeat .6rem center;color:var(--text);transition:border-color .2s;}
-    .admin-search:focus{border-color:var(--accent);}
-    .admin-search::placeholder{color:var(--muted);}
-    .fach-filter{padding:.45rem .7rem;border:1px solid var(--border2);border-radius:9px;font-size:.82rem;font-family:'Nunito',sans-serif;background:var(--surface2);color:var(--text);outline:none;cursor:pointer;}
-    .fach-filter:focus{border-color:var(--accent);}
+.special-block { background: #fff7ed; border: 2px solid #fed7aa; border-radius: 14px; margin-bottom: 16px; overflow: hidden; }
+.special-header { padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
+.special-header h3 { font-size: 14px; font-weight: 800; color: #f97316; }
+.special-table { width: 100%; border-collapse: collapse; display: none; }
+.special-table.visible { display: table; }
+.special-table th { background: #fff7ed; padding: 8px 20px; text-align: left; font-size: 11px; font-weight: 700; color: #f97316; text-transform: uppercase; }
+.special-table td { padding: 8px 20px; font-size: 13px; border-top: 1px solid #fed7aa; }
+.special-table td:first-child { font-weight: 700; }
 
-    /* ── APP LIST ── */
-    .app-list{display:flex;flex-direction:column;gap:.5rem;}
-    .app-row{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:.85rem 1rem;display:flex;align-items:center;gap:.75rem;transition:background .14s,box-shadow .14s;position:relative;}
-    .app-row.is-dragging{opacity:.4;box-shadow:0 8px 24px rgba(0,0,0,.5);}
-    .app-row.drag-over{border-color:var(--indigo);background:rgba(99,102,241,.08);}
-    .app-row.is-hidden{opacity:.45;}
-    .app-row.editing{background:var(--surface2);border-color:rgba(230,168,23,.3);}
-    .drag-handle{color:var(--muted);font-size:1rem;flex-shrink:0;cursor:grab;padding:0 2px;}
-    .drag-handle:active{cursor:grabbing;}
-    .row-emoji{font-size:1.55rem;flex-shrink:0;}
-    .row-info{flex:1;min-width:0;}
-    .row-name{font-weight:800;font-size:.92rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text);}
-    .row-meta{font-size:.72rem;color:var(--muted);margin-top:.12rem;}
-    .row-tags{display:flex;flex-wrap:wrap;gap:.22rem;margin-top:.28rem;}
-    .rtag{font-size:.62rem;font-weight:800;padding:.1rem .42rem;border-radius:99px;background:rgba(99,102,241,.14);color:var(--indigo2);border:1px solid rgba(99,102,241,.22);}
-    .rtag.ct{background:rgba(167,139,250,.12);color:#c4b5fd;border-color:rgba(167,139,250,.22);}
-    .row-actions{display:flex;gap:.32rem;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end;}
-    .icon-btn{background:none;border:1px solid var(--border2);border-radius:8px;color:var(--muted);font-size:.8rem;padding:.3rem .55rem;cursor:pointer;transition:all .14s;font-family:'Nunito',sans-serif;white-space:nowrap;}
-    .icon-btn:hover{background:var(--surface2);color:var(--text);}
-    .icon-btn.on-green{background:var(--green-dim);border-color:var(--green);color:var(--green);}
-    .icon-btn.on-red{background:var(--red-dim);border-color:var(--red);color:var(--red);}
-    .icon-btn.on-gold{background:var(--accent-dim);border-color:var(--accent);color:var(--accent);}
-    .icon-btn.on-indigo{background:rgba(99,102,241,.18);border-color:var(--indigo);color:var(--indigo2);}
+.search-bar { width: 100%; padding: 12px 18px; border: 2px solid #e5e7eb; border-radius: 12px; font-family: 'Nunito', sans-serif; font-size: 15px; outline: none; margin-bottom: 20px; }
+.search-bar:focus { border-color: #7c6af7; }
+.search-results { background: #fff; border-radius: 14px; padding: 16px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); display: none; margin-bottom: 20px; }
+.search-results.visible { display: block; }
+.search-result-item { padding: 8px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px; display: flex; gap: 12px; }
+.search-result-item:last-child { border-bottom: none; }
+.search-result-item .en { font-weight: 700; color: #374151; min-width: 160px; }
+.search-result-item .de { color: #6b7280; }
+.search-result-item .loc { font-size: 11px; color: #a78bfa; margin-left: auto; }
 
-    /* ── INLINE EDIT FORM ── */
-    .inline-edit{display:none;margin-top:.9rem;padding-top:.9rem;border-top:1px solid var(--border);grid-template-columns:1fr 1fr;gap:.7rem;}
-    .inline-edit.open{display:grid;}
-    @media(max-width:580px){.inline-edit{grid-template-columns:1fr;}}
-    .inline-edit input,.inline-edit select,.inline-edit textarea{font-size:.83rem;padding:.42rem .68rem;}
-    .inline-edit-actions{grid-column:1/-1;display:flex;gap:.5rem;justify-content:flex-end;}
-
-    /* ── VISIBILITY ── */
-    .vis-cat-block{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);margin-bottom:.7rem;overflow:hidden;}
-    .vis-cat-header{display:flex;align-items:center;gap:.75rem;padding:.75rem 1rem;background:var(--surface2);}
-    .vis-cat-name{font-weight:800;font-size:.9rem;flex:1;}
-    .vis-toggle{padding:.28rem .75rem;border-radius:8px;font-size:.75rem;font-weight:800;border:1px solid;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .14s;}
-    .vis-toggle.on{background:var(--green-dim);border-color:var(--green);color:var(--green);}
-    .vis-toggle.off{background:var(--red-dim);border-color:var(--red);color:var(--red);}
-    .vis-app-list{padding:.5rem 1rem .7rem;}
-    .vis-app-row{display:flex;align-items:center;gap:.65rem;padding:.35rem 0;border-bottom:1px solid var(--border);}
-    .vis-app-row:last-child{border-bottom:none;}
-    .vis-app-name{flex:1;font-size:.85rem;font-weight:700;}
-
-    /* ── TAG MANAGER ── */
-    .tag-manager{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.1rem;}
-    .tag-pills{display:flex;flex-wrap:wrap;gap:.38rem;margin-bottom:.75rem;min-height:26px;}
-    .tag-pill{display:flex;align-items:center;gap:.28rem;padding:.22rem .65rem;border-radius:99px;font-size:.78rem;font-weight:700;}
-    .tag-pill .del{cursor:pointer;font-size:.88rem;opacity:.4;background:none;border:none;padding:0;line-height:1;transition:opacity .1s;color:inherit;}
-    .tag-pill .del:hover{opacity:1;}
-    /* Tag-Farbwahl */
-    .tag-color-row{display:flex;gap:.35rem;align-items:center;flex-wrap:wrap;margin-top:.5rem;}
-    .tag-color-dot{width:22px;height:22px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all .14s;flex-shrink:0;}
-    .tag-color-dot.sel{border-color:#fff;transform:scale(1.2);}
-    .tag-color-dot:hover{transform:scale(1.15);}
-    .tag-color-label{font-size:.68rem;color:var(--muted);font-weight:700;margin-left:.1rem;}
-    .add-tag-row{display:flex;gap:.45rem;}
-    .add-tag-row input{flex:1;}
-
-    /* ── MODAL ── */
-    .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(4px);z-index:500;align-items:center;justify-content:center;}
-    .modal-bg.open{display:flex;}
-    .modal{background:var(--surface);border:1px solid var(--border2);border-radius:18px;padding:1.7rem;width:min(480px,95vw);max-height:85vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.5);}
-    .modal h2{font-family:'Fredoka One',cursive;font-size:1.25rem;margin-bottom:1.1rem;color:var(--accent);}
-    .modal-section{margin-bottom:1.1rem;}
-    .modal-label{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:.45rem;}
-    .chip-group{display:flex;flex-wrap:wrap;gap:.32rem;}
-    .m-chip{padding:.26rem .72rem;border-radius:99px;font-size:.78rem;font-weight:700;border:1px solid var(--border2);background:var(--surface2);color:var(--muted);cursor:pointer;transition:all .12s;}
-    .m-chip:hover{color:var(--text);border-color:var(--border2);}
-    .m-chip.sel-k{background:var(--indigo);border-color:var(--indigo);color:#fff;}
-    .m-chip.sel-c{background:#7e22ce;border-color:#7e22ce;color:#fff;}
-    .modal-actions{display:flex;justify-content:flex-end;gap:.55rem;margin-top:1.1rem;}
-
-    /* ── QR MODAL ── */
-    #qr-modal-wrap .modal{text-align:center;}
-    #qr-canvas-wrap{background:#fff;border-radius:14px;padding:1.1rem;display:inline-block;margin:.8rem 0;}
-    .qr-url{font-size:.72rem;color:var(--muted);word-break:break-all;margin-bottom:.7rem;background:var(--surface2);padding:.45rem .75rem;border-radius:8px;}
-    .qr-app-name-display{font-family:'Fredoka One',cursive;font-size:1.15rem;margin-bottom:.2rem;color:#fff;}
-
-    /* ── DASHBOARD ── */
-    .dash-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.9rem;margin-bottom:1.5rem;}
-    .dash-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.1rem 1.2rem;}
-    .dash-card-label{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:.35rem;}
-    .dash-card-value{font-family:'Fredoka One',cursive;font-size:2rem;color:#fff;line-height:1;}
-    .dash-card-sub{font-size:.75rem;color:var(--muted);margin-top:.25rem;}
-    .dash-card.accent-card{border-color:rgba(230,168,23,.3);background:linear-gradient(135deg,var(--surface),rgba(230,168,23,.06));}
-    .dash-card.accent-card .dash-card-value{color:var(--accent);}
-    .dash-card.green-card{border-color:rgba(74,222,128,.25);background:rgba(74,222,128,.04);}
-    .dash-card.green-card .dash-card-value{color:var(--green);}
-    .dash-card.red-card{border-color:rgba(248,113,113,.25);background:rgba(248,113,113,.04);}
-    .dash-card.red-card .dash-card-value{color:var(--red);}
-
-    /* ── ANNOUNCEMENT ── */
-    .ann-preview{border-radius:10px;padding:.7rem 1.1rem;font-size:.9rem;font-weight:700;margin-bottom:.8rem;display:flex;align-items:center;gap:.6rem;}
-    .ann-preview.hidden-preview{display:none;}
-    .color-chips{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.4rem;}
-    .color-chip{width:26px;height:26px;border-radius:6px;cursor:pointer;border:2px solid transparent;transition:all .15s;flex-shrink:0;}
-    .color-chip.selected{border-color:#fff;transform:scale(1.15);}
-    .ann-form{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.3rem;}
-
-    /* ── BROKEN LINK CHECKER ── */
-    .checker-result{display:flex;flex-direction:column;gap:.45rem;margin-top:1rem;}
-    .check-item{display:flex;align-items:center;gap:.7rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.7rem 1rem;}
-    .check-item.ok{border-color:rgba(74,222,128,.25);}
-    .check-item.fail{border-color:rgba(248,113,113,.3);background:rgba(248,113,113,.04);}
-    .check-item.checking{opacity:.5;}
-    .check-status{font-size:.8rem;font-weight:800;flex-shrink:0;min-width:24px;text-align:center;}
-    .check-name{font-weight:800;font-size:.88rem;flex:1;}
-    .check-url{font-size:.72rem;color:var(--muted);}
-    .check-badge{font-size:.68rem;padding:.12rem .45rem;border-radius:99px;font-weight:800;flex-shrink:0;}
-    .check-badge.ok{background:var(--green-dim);color:var(--green);border:1px solid rgba(74,222,128,.25);}
-    .check-badge.fail{background:var(--red-dim);color:var(--red);border:1px solid rgba(248,113,113,.25);}
-    .check-badge.skip{background:rgba(255,255,255,.06);color:var(--muted);border:1px solid var(--border);}
-    .checker-summary{background:var(--surface2);border-radius:10px;padding:.8rem 1rem;font-size:.85rem;font-weight:700;margin-top:.8rem;display:none;}
-    .checker-summary.visible{display:block;}
-    .checker-progress{height:4px;background:rgba(255,255,255,.07);border-radius:99px;overflow:hidden;margin-top:.6rem;display:none;}
-    .checker-progress.visible{display:block;}
-    .checker-progress-fill{height:100%;background:linear-gradient(90deg,var(--indigo),var(--accent));border-radius:99px;transition:width .3s;}
-
-    /* ── TOAST ── */
-    #toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--surface);border:1px solid var(--green);color:var(--green);padding:.55rem 1.1rem;border-radius:10px;font-size:.83rem;font-weight:700;opacity:0;transition:opacity .3s;pointer-events:none;z-index:9999;}
-    #toast.show{opacity:1;}
-    #toast.toast-error{border-color:var(--red);color:var(--red);}
-
-    /* ── UNDO BAR ── */
-    #undo-bar{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--red);border-radius:12px;padding:.6rem 1.1rem;display:none;align-items:center;gap:1rem;font-size:.85rem;font-weight:700;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,.5);white-space:nowrap;}
-
-    /* misc */
-    .divider{height:1px;background:var(--border);margin:1.5rem 0;}
-    .empty-msg{text-align:center;padding:2.5rem 1rem;color:var(--muted);font-size:.9rem;}
-    .app-count-badge{font-size:.78rem;color:var(--muted);font-weight:700;}
-    .aod-indicator{font-size:.65rem;font-weight:800;background:var(--accent-dim);color:var(--accent);border:1px solid rgba(230,168,23,.3);padding:.1rem .45rem;border-radius:99px;margin-left:.4rem;}
-  </style>
+#loading { text-align: center; padding: 60px; color: #7c6af7; font-weight: 700; }
+</style>
 </head>
 <body>
+<header>
+  <div>
+    <h1>⚙️ Admin – Vokabelverwaltung</h1>
+    <p>Klasse 5 · Lern-Apps</p>
+  </div>
+  <a href="index.html" class="btn-home">← Zur Plattform</a>
+</header>
 
-<!-- ══ LOGIN ══════════════════════════════════════════ -->
-<div id="login-screen">
-  <div class="login-box">
-    <h2>🧭 Lern<span>welt</span></h2>
-    <p>Admin-Bereich</p>
-    <input type="password" id="pw" placeholder="Passwort" autocomplete="off"/>
-    <div class="login-err" id="pw-err"></div>
-    <button class="btn-login" onclick="checkLogin()">Anmelden</button>
+<div class="container">
+  <div id="loading">Vokabeln werden geladen... ⏳</div>
+  <div id="content" style="display:none">
+
+    <!-- Stats -->
+    <div class="stats-grid" id="stats-grid"></div>
+
+    <!-- Search -->
+    <div class="section-header"><div class="section-title">🔍 Vokabel suchen</div></div>
+    <input type="text" class="search-bar" id="search-bar" placeholder="Englisch oder Deutsch eingeben..." oninput="doSearch(this.value)">
+    <div class="search-results" id="search-results"></div>
+
+    <!-- Special lists -->
+    <div class="section-header">
+      <div class="section-title">⭐ Sonderlisten</div>
+      <span class="badge" id="special-count"></span>
+    </div>
+    <div id="special-lists"></div>
+
+    <!-- Units -->
+    <div class="section-header" style="margin-top:24px">
+      <div class="section-title">📚 Units & Themen</div>
+      <span class="badge" id="unit-count"></span>
+    </div>
+    <div id="unit-blocks"></div>
+
   </div>
 </div>
 
-<!-- ══ APP ════════════════════════════════════════════ -->
-<div id="app">
-  <div class="topbar">
-    <div class="topbar-wordmark">🧭 Lern<em>welt</em> <span style="font-size:.7rem;color:var(--muted);font-family:'Nunito',sans-serif;font-weight:700;margin-left:.2rem">Admin</span></div>
-    <div class="topbar-actions">
-      <span id="sync-status">–</span>
-      <a href="index.html" class="btn">← Zur Seite</a>
-    </div>
-  </div>
-
-  <div class="content">
-    <div class="tabs">
-      <button class="tab active" data-t="dashboard">📊 Dashboard</button>
-      <button class="tab" data-t="apps">📱 Apps</button>
-      <button class="tab" data-t="visibility">👁 Sichtbarkeit</button>
-      <button class="tab" data-t="tags">🏷 Tags</button>
-      <button class="tab" data-t="announcement">📢 Banner</button>
-      <button class="tab" data-t="checker">🔗 Link-Check</button>
-    </div>
-
-    <!-- ══ TAB: DASHBOARD ═══════════════════════════ -->
-    <div class="tab-panel active" id="panel-dashboard">
-      <div class="dash-grid" id="dash-stats"></div>
-
-      <div class="sec-header"><span class="sec-title">⭐ App des Tages</span></div>
-      <div class="form-card" id="aod-info" style="margin-bottom:1.5rem;font-size:.88rem;color:var(--text2);">–</div>
-
-      <div class="sec-header"><span class="sec-title">📋 Letzte Aktionen</span></div>
-      <div id="changelog-list" style="display:flex;flex-direction:column;gap:.4rem;"></div>
-    </div>
-
-    <!-- ══ TAB: APPS ════════════════════════════════ -->
-    <div class="tab-panel" id="panel-apps">
-
-      <!-- Neue App -->
-      <div class="sec-header"><span class="sec-title">➕ Neue App</span></div>
-      <div class="form-card" style="margin-bottom:1.8rem;">
-        <div class="form-row" style="margin-bottom:.9rem;align-items:center;">
-          <span class="emoji-preview" id="emoji-preview">📱</span>
-          <div class="form-group" style="flex:1;">
-            <label>Emoji</label>
-            <input type="text" id="f-emoji" placeholder="z.B. 🔢" maxlength="4" oninput="document.getElementById('emoji-preview').textContent=this.value||'📱'"/>
-          </div>
-        </div>
-        <div class="form-grid">
-          <div class="form-group">
-            <label>Name *</label>
-            <input type="text" id="f-name" placeholder="z.B. Kopfrechnen"/>
-          </div>
-          <div class="form-group">
-            <label>Datei / Link *</label>
-            <input type="text" id="f-datei" placeholder="z.B. kopfrechnen.html"/>
-          </div>
-          <div class="form-group">
-            <label>Fach *</label>
-            <select id="f-fach">
-              <option value="">– Fach wählen –</option>
-              <option>Mathematik</option><option>Englisch</option><option>Deutsch</option>
-              <option>Sachkunde</option><option>Sport</option><option>Informatik</option><option>Geschichte</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Beschreibung</label>
-            <input type="text" id="f-desc" placeholder="Kurze Beschreibung für Schüler"/>
-          </div>
-        </div>
-        <div style="margin-top:.9rem;display:flex;gap:.55rem;justify-content:flex-end;">
-          <button class="btn accent" onclick="addApp()">App hinzufügen</button>
-        </div>
-      </div>
-
-      <!-- Filter -->
-      <div class="sec-header">
-        <span class="sec-title">📋 Alle Apps</span>
-        <span class="app-count-badge" id="app-count"></span>
-      </div>
-      <div class="filter-row-admin">
-        <input type="search" class="admin-search" id="app-search" placeholder="App suchen …" oninput="filterAppList()" autocomplete="off"/>
-        <select class="fach-filter" id="fach-filter" onchange="filterAppList()">
-          <option value="">Alle Fächer</option>
-          <option>Mathematik</option><option>Englisch</option><option>Deutsch</option>
-          <option>Sachkunde</option><option>Sport</option><option>Informatik</option><option>Geschichte</option>
-        </select>
-        <select class="fach-filter" id="status-filter" onchange="filterAppList()">
-          <option value="">Alle Status</option>
-          <option value="visible">Sichtbar</option>
-          <option value="hidden">Versteckt</option>
-        </select>
-      </div>
-      <div class="app-list" id="app-list"></div>
-    </div>
-
-    <!-- ══ TAB: VISIBILITY ══════════════════════════ -->
-    <div class="tab-panel" id="panel-visibility">
-      <div class="sec-header"><span class="sec-title">👁 Apps &amp; Kategorien ein/ausblenden</span></div>
-      <div id="vis-list"></div>
-    </div>
-
-    <!-- ══ TAB: TAGS ════════════════════════════════ -->
-    <div class="tab-panel" id="panel-tags">
-      <div class="sec-header"><span class="sec-title">🏷 Eigene Tags verwalten</span></div>
-      <div class="tag-manager" style="margin-bottom:1.5rem;">
-        <div class="tag-pills" id="tag-pills"></div>
-        <div class="add-tag-row">
-          <input type="text" id="new-tag" placeholder="Neuer Tag, z.B. Wiederholung …" maxlength="28"/>
-          <button class="btn accent" onclick="addTag()">+ Hinzufügen</button>
-        </div>
-        <div style="margin-top:.65rem;">
-          <div class="tag-color-label">Farbe wählen:</div>
-          <div class="tag-color-row" id="new-tag-colors"></div>
-        </div>
-      </div>
-      <div class="sec-header"><span class="sec-title">Tags pro App zuweisen</span></div>
-      <div class="app-list" id="tag-assign-list"></div>
-    </div>
-
-    <!-- ══ TAB: ANNOUNCEMENT ════════════════════════ -->
-    <div class="tab-panel" id="panel-announcement">
-      <div class="sec-header"><span class="sec-title">📢 Ankündigungs-Banner</span></div>
-      <p style="font-size:.84rem;color:var(--muted);margin-bottom:1.2rem;">Erscheint oben auf der Startseite zwischen Header und Filterleiste. Kann jederzeit ein- und ausgeblendet werden.</p>
-
-      <div class="ann-preview" id="ann-preview">
-        <span id="ann-preview-emoji">📢</span>
-        <span id="ann-preview-text">Hier steht deine Ankündigung …</span>
-      </div>
-
-      <div class="ann-form">
-        <div class="form-grid">
-          <div class="form-group">
-            <label>Emoji</label>
-            <input type="text" id="ann-emoji" placeholder="📢" maxlength="4" value="📢" oninput="updateAnnPreview()"/>
-          </div>
-          <div class="form-group full">
-            <label>Text</label>
-            <input type="text" id="ann-text" placeholder="z.B. Diese Woche: Mathe-Woche! Viel Spaß 🎉" oninput="updateAnnPreview()"/>
-          </div>
-          <div class="form-group full">
-            <label>Hintergrundfarbe</label>
-            <div class="color-chips" id="color-chips"></div>
-          </div>
-        </div>
-        <div style="margin-top:1.1rem;display:flex;gap:.55rem;align-items:center;flex-wrap:wrap;">
-          <button class="btn accent" onclick="saveAnnouncement()">💾 Speichern &amp; aktivieren</button>
-          <button class="btn danger" onclick="hideAnnouncement()">🚫 Banner ausblenden</button>
-          <span id="ann-status" style="font-size:.78rem;color:var(--muted);"></span>
-        </div>
-      </div>
-    </div>
-
-    <!-- ══ TAB: LINK CHECKER ════════════════════════ -->
-    <div class="tab-panel" id="panel-checker">
-      <div class="sec-header"><span class="sec-title">🔗 Broken-Link-Checker</span></div>
-      <p style="font-size:.84rem;color:var(--muted);margin-bottom:1.2rem;">Prüft ob alle App-Dateien auf GitHub erreichbar sind. Externe Links (http/https) werden als „Extern" markiert.</p>
-      <div style="display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;margin-bottom:1rem;">
-        <button class="btn accent" id="check-btn" onclick="runChecker()">🔍 Alle Links prüfen</button>
-        <span id="checker-info" style="font-size:.78rem;color:var(--muted);"></span>
-      </div>
-      <div class="checker-progress" id="checker-progress"><div class="checker-progress-fill" id="checker-fill" style="width:0%"></div></div>
-      <div class="checker-result" id="checker-result"></div>
-      <div class="checker-summary" id="checker-summary"></div>
-    </div>
-
-  </div><!-- /content -->
-</div><!-- /app -->
-
-<!-- ══ MODALS ═════════════════════════════════════════ -->
-<!-- Tag Modal -->
-<div class="modal-bg" id="tag-modal">
-  <div class="modal">
-    <h2 id="modal-title">Tags bearbeiten</h2>
-    <div class="modal-section">
-      <div class="modal-label">Klassenstufe</div>
-      <div class="chip-group" id="modal-klassen"></div>
-    </div>
-    <div class="modal-section">
-      <div class="modal-label">Tags</div>
-      <div class="chip-group" id="modal-tags"></div>
-    </div>
-    <div class="modal-actions">
-      <button class="btn" onclick="closeModal()">Fertig</button>
-    </div>
-  </div>
-</div>
-
-<!-- QR Modal -->
-<div class="modal-bg" id="qr-modal-wrap">
-  <div class="modal" style="max-width:360px;text-align:center;">
-    <h2>📲 QR-Code</h2>
-    <div class="qr-app-name-display" id="qr-app-name"></div>
-    <div id="qr-canvas-wrap"></div>
-    <div class="qr-url" id="qr-url"></div>
-    <div class="modal-actions" style="justify-content:space-between;">
-      <button class="btn green" onclick="downloadQR()">⬇ Speichern</button>
-      <button class="btn" onclick="closeQR()">Schließen</button>
-    </div>
-  </div>
-</div>
-
-<!-- Toast & Undo -->
-<div id="toast">✓ Gespeichert</div>
-<div id="undo-bar"></div>
-
+<script src="navbar.js" onerror="console.log('navbar not found')"></script>
 <script>
-const WORKER_URL   = 'https://lern-apps-config.bennigeitner.workers.dev';
-const BASE_URL     = 'https://geitner-hub.github.io/Lern-Apps/';
-const ADMIN_PW     = 'lehrer123'; // ← HIER ÄNDERN
-const KLASSEN      = [5,6,7,8,9];
-const CAT_ICONS    = {Mathematik:'➕',Englisch:'🇬🇧',Deutsch:'📖',Sachkunde:'🌍',Sport:'⚽',Informatik:'💻',Geschichte:'🏛'};
+let CONFIG = null;
+let allWordIndex = []; // {en, de, location}
 
-// Tag-Farbpalette – bg, border, text (für dark theme)
-const TAG_COLORS = [
-  {bg:'rgba(167,139,250,.16)', border:'rgba(167,139,250,.35)', text:'#c4b5fd', dot:'#a78bfa', label:'Violett'},
-  {bg:'rgba(99,102,241,.15)',  border:'rgba(99,102,241,.32)',  text:'#818cf8', dot:'#6366f1', label:'Indigo'},
-  {bg:'rgba(230,168,23,.14)',  border:'rgba(230,168,23,.32)',  text:'#e6a817', dot:'#e6a817', label:'Gold'},
-  {bg:'rgba(74,222,128,.13)',  border:'rgba(74,222,128,.3)',   text:'#4ade80', dot:'#22c55e', label:'Grün'},
-  {bg:'rgba(248,113,113,.13)', border:'rgba(248,113,113,.3)',  text:'#f87171', dot:'#ef4444', label:'Rot'},
-  {bg:'rgba(45,212,191,.13)',  border:'rgba(45,212,191,.3)',   text:'#2dd4bf', dot:'#14b8a6', label:'Teal'},
-  {bg:'rgba(244,114,182,.13)', border:'rgba(244,114,182,.3)',  text:'#f472b6', dot:'#ec4899', label:'Pink'},
-  {bg:'rgba(251,191,36,.13)',  border:'rgba(251,191,36,.3)',   text:'#fbbf24', dot:'#f59e0b', label:'Gelb'},
-];
-
-// Hilfsfunktion: Tag-Objekt oder String → normalisiert
-function tagObj(t){ return typeof t==='object'?t:{name:String(t),color:0}; }
-function tagName(t){ return tagObj(t).name; }
-function tagColor(t){ return TAG_COLORS[tagObj(t).color]||TAG_COLORS[0]; }
-
-let selectedNewTagColor = 0;
-
-const ANN_COLORS   = [
-  {bg:'rgba(230,168,23,.18)',text:'#e6a817',label:'Gold'},
-  {bg:'rgba(99,102,241,.18)',text:'#818cf8',label:'Indigo'},
-  {bg:'rgba(74,222,128,.15)',text:'#4ade80',label:'Grün'},
-  {bg:'rgba(248,113,113,.14)',text:'#f87171',label:'Rot'},
-  {bg:'rgba(45,212,191,.15)',text:'#2dd4bf',label:'Teal'},
-  {bg:'rgba(244,114,182,.15)',text:'#f472b6',label:'Pink'},
-];
-
-let CONFIG     = {apps:[], customTags:[], hiddenCats:[], announcement:{active:false,text:'',emoji:'📢',color:0}};
-let ghSha      = '';
-let saveTimer  = null, isSaving = false, pendingSave = false;
-let modalAppName = '';
-let dragSrc    = null;
-let changelog  = [];
-let selectedAnnColor = 0;
-
-// ══ LOGIN ══════════════════════════════════════════════
-document.getElementById('pw').addEventListener('keydown', e=>{ if(e.key==='Enter') checkLogin(); });
-function checkLogin(){
-  if(document.getElementById('pw').value === ADMIN_PW){
-    document.getElementById('login-screen').style.display='none';
-    document.getElementById('app').style.display='block';
-    loadConfig();
-  } else {
-    document.getElementById('pw-err').textContent='❌ Falsches Passwort';
-    document.getElementById('pw').value='';
+async function loadConfig() {
+  try {
+    const res = await fetch('config.json');
+    CONFIG = await res.json();
+    buildIndex();
+    renderStats();
+    renderSpecialLists();
+    renderUnits();
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('content').style.display = 'block';
+  } catch(e) {
+    document.getElementById('loading').textContent = '⚠️ Fehler beim Laden der config.json';
   }
 }
 
-// ══ SYNC ═══════════════════════════════════════════════
-function setSync(s,m){
-  const el=document.getElementById('sync-status');
-  el.className=s; el.textContent=m;
-}
-
-async function loadConfig(){
-  setSync('saving','Lädt …');
-  try{
-    const r=await fetch(WORKER_URL);
-    if(!r.ok) throw new Error(r.status);
-    const d=await r.json();
-    ghSha=d.sha;
-    const parsed=JSON.parse(decodeURIComponent(atob(d.content.replace(/\n/g,'')).split('').map(c=>'%'+('00'+c.charCodeAt(0).toString(16)).slice(-2)).join('')));
-    CONFIG={apps:[],customTags:[],hiddenCats:[],announcement:{active:false,text:'',emoji:'📢',color:0},...parsed};
-    // Migrate old string tags → objects
-    CONFIG.customTags=CONFIG.customTags.map(t=>typeof t==='string'?{name:t,color:0}:t);
-    setSync('ok','✓ Geladen');
-    setTimeout(()=>setSync('','–'),2000);
-  }catch(e){
-    setSync('error','⚠ Fehler beim Laden');
-    console.error(e);
-  }
-  buildAll();
-  loadAnnForm();
-}
-
-function saveConfig(){
-  clearTimeout(saveTimer);
-  saveTimer=setTimeout(()=>_doSave(),600);
-}
-
-async function _doSave(){
-  if(isSaving){pendingSave=true;return;}
-  isSaving=true;
-  setSync('saving','Speichert …');
-  const content=btoa(unescape(encodeURIComponent(JSON.stringify(CONFIG,null,2))));
-  try{
-    const r=await fetch(WORKER_URL,{
-      method:'PUT',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({message:'Admin: Einstellungen aktualisiert',content,branch:'main',sha:ghSha})
+function buildIndex() {
+  // Special lists
+  Object.entries(CONFIG.specialLists).forEach(([key, sl]) => {
+    sl.words.forEach(w => allWordIndex.push({en: w.en, de: w.de, location: sl.label}));
+  });
+  // Units
+  Object.entries(CONFIG.units).forEach(([uKey, unit]) => {
+    Object.entries(unit.themes).forEach(([tKey, theme]) => {
+      theme.words.forEach(w => allWordIndex.push({en: w.en, de: w.de, location: `${unit.label} – ${theme.label}`}));
     });
-    if(!r.ok) throw new Error(r.status);
-    const d=await r.json();
-    ghSha=d.content.sha;
-    setSync('ok','✓ Gespeichert');
-    showToast('✓ Gespeichert');
-    setTimeout(()=>setSync('','–'),3000);
-  }catch(e){
-    setSync('error','⚠ Fehler');
-    showToast('⚠ Fehler beim Speichern',true);
-    console.error(e);
-  }
-  isSaving=false;
-  if(pendingSave){pendingSave=false;_doSave();}
+  });
 }
 
-function showToast(msg,err=false){
-  const t=document.getElementById('toast');
-  t.textContent=msg;
-  t.className=err?'show toast-error':'show';
-  setTimeout(()=>t.className='',2200);
+function renderStats() {
+  const totalWords = allWordIndex.length;
+  const unitCount = Object.keys(CONFIG.units).length;
+  const specialCount = Object.keys(CONFIG.specialLists).length;
+  let themeCount = 0;
+  Object.values(CONFIG.units).forEach(u => themeCount += Object.keys(u.themes).length);
+
+  document.getElementById('stats-grid').innerHTML = `
+    <div class="stat-card"><div class="val">${totalWords}</div><div class="lbl">Vokabeln gesamt</div></div>
+    <div class="stat-card"><div class="val">${unitCount}</div><div class="lbl">Units</div></div>
+    <div class="stat-card"><div class="val">${themeCount}</div><div class="lbl">Themen</div></div>
+    <div class="stat-card"><div class="val">${specialCount}</div><div class="lbl">Sonderlisten</div></div>
+  `;
 }
 
-// ══ TABS ═══════════════════════════════════════════════
-document.querySelectorAll('.tab').forEach(tab=>tab.addEventListener('click',()=>{
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-  tab.classList.add('active');
-  document.getElementById('panel-'+tab.dataset.t).classList.add('active');
-}));
+function renderSpecialLists() {
+  const container = document.getElementById('special-lists');
+  const count = Object.keys(CONFIG.specialLists).length;
+  document.getElementById('special-count').textContent = count + ' Listen';
 
-// ══ BUILD ALL ══════════════════════════════════════════
-function buildAll(){
-  buildDashboard();
-  buildAppList();
-  buildVisibility();
-  buildTagManager();
-  buildTagAssignList();
+  Object.entries(CONFIG.specialLists).forEach(([key, sl]) => {
+    const block = document.createElement('div');
+    block.className = 'special-block';
+    block.innerHTML = `
+      <div class="special-header" onclick="toggleTable('st-${key}', this)">
+        <h3>${sl.label}</h3>
+        <span class="badge">${sl.words.length} Wörter</span>
+      </div>
+      <table class="special-table" id="st-${key}">
+        <tr><th>Englisch</th><th>Deutsch</th></tr>
+        ${sl.words.map(w => `<tr><td>${w.en}</td><td>${w.de}</td></tr>`).join('')}
+      </table>
+    `;
+    container.appendChild(block);
+  });
 }
 
-// ══ DASHBOARD ══════════════════════════════════════════
-function buildDashboard(){
-  const total     = CONFIG.apps.length;
-  const visible   = CONFIG.apps.filter(a=>!a.hidden).length;
-  const hidden    = CONFIG.apps.filter(a=>a.hidden).length;
-  const aodApp    = CONFIG.apps.find(a=>a.aod && !a.hidden);
-  const faecher   = [...new Set(CONFIG.apps.map(a=>a.fach).filter(Boolean))].length;
+function renderUnits() {
+  const container = document.getElementById('unit-blocks');
+  let totalUnits = Object.keys(CONFIG.units).length;
+  document.getElementById('unit-count').textContent = totalUnits + ' Units';
 
-  document.getElementById('dash-stats').innerHTML=`
-    <div class="dash-card accent-card">
-      <div class="dash-card-label">Gesamt Apps</div>
-      <div class="dash-card-value">${total}</div>
-      <div class="dash-card-sub">${faecher} Fächer</div>
-    </div>
-    <div class="dash-card green-card">
-      <div class="dash-card-label">Sichtbar</div>
-      <div class="dash-card-value">${visible}</div>
-      <div class="dash-card-sub">für Schüler</div>
-    </div>
-    <div class="dash-card red-card">
-      <div class="dash-card-label">Versteckt</div>
-      <div class="dash-card-value">${hidden}</div>
-      <div class="dash-card-sub">nicht sichtbar</div>
-    </div>
-    <div class="dash-card">
-      <div class="dash-card-label">Custom Tags</div>
-      <div class="dash-card-value">${CONFIG.customTags.length}</div>
-      <div class="dash-card-sub">angelegt</div>
-    </div>
-    <div class="dash-card">
-      <div class="dash-card-label">Banner</div>
-      <div class="dash-card-value" style="font-size:1.3rem;">${CONFIG.announcement?.active?'🟢 AN':'⚪ AUS'}</div>
-      <div class="dash-card-sub">${CONFIG.announcement?.active?'aktiv':'inaktiv'}</div>
-    </div>`;
+  Object.entries(CONFIG.units).forEach(([uKey, unit]) => {
+    const totalWords = Object.values(unit.themes).reduce((s, t) => s + t.words.length, 0);
+    const block = document.createElement('div');
+    block.className = 'unit-block';
 
-  document.getElementById('aod-info').innerHTML = aodApp
-    ? `<span style="font-size:1.5rem;">${aodApp.emoji||'📱'}</span> <strong style="color:#fff;">${aodApp.name}</strong> <span style="color:var(--muted);">· ${aodApp.fach}</span>`
-    : `<span style="color:var(--muted);font-size:.85rem;">Keine App des Tages gesetzt.</span>`;
+    const themesHTML = Object.entries(unit.themes).map(([tKey, theme]) => `
+      <div class="theme-block">
+        <div class="theme-header" onclick="toggleTable('tt-${uKey}-${tKey}', this)">
+          <h4>${theme.label}</h4>
+          <span class="badge">${theme.words.length} Wörter</span>
+        </div>
+        <table class="word-table" id="tt-${uKey}-${tKey}">
+          <tr><th>Englisch</th><th>Deutsch</th></tr>
+          ${theme.words.map(w => `<tr><td>${escHtml(w.en)}</td><td>${escHtml(w.de)}</td></tr>`).join('')}
+        </table>
+      </div>
+    `).join('');
 
-  // Changelog
-  const cl=document.getElementById('changelog-list');
-  if(!changelog.length){
-    cl.innerHTML='<div class="empty-msg">Noch keine Änderungen in dieser Sitzung.</div>';
-  } else {
-    cl.innerHTML=changelog.slice().reverse().map(e=>`
-      <div style="background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:.6rem .9rem;font-size:.83rem;display:flex;align-items:center;gap:.7rem;">
-        <span style="color:var(--muted);font-size:.7rem;flex-shrink:0;">${e.time}</span>
-        <span style="flex:1;">${e.msg}</span>
-      </div>`).join('');
-  }
-}
-
-function logChange(msg){
-  const now=new Date();
-  changelog.push({time:now.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'}),msg});
-  if(changelog.length>20) changelog.shift();
-}
-
-// ══ APP LIST ═══════════════════════════════════════════
-function buildAppList(){
-  const list=document.getElementById('app-list');
-  list.innerHTML='';
-  document.getElementById('app-count').textContent=CONFIG.apps.length+' Apps';
-
-  CONFIG.apps.forEach((app,i)=>{
-    const row=document.createElement('div');
-    row.className='app-row'+(app.hidden?' is-hidden':'');
-    row.draggable=true;
-    row.dataset.i=i;
-
-    const klTags=(app.klassen||[]).map(k=>`<span class="rtag">Kl.${k}</span>`).join('');
-    const ctTags=(app.customTags||[]).map(t=>{
-      const col=tagColor(t);
-      return `<span class="rtag ct" style="background:${col.bg};border-color:${col.border};color:${col.text};">${escHtml(tagName(t))}</span>`;
-    }).join('');
-
-    row.innerHTML=`
-      <span class="drag-handle">⠿</span>
-      <span class="row-emoji">${app.emoji||'📱'}</span>
-      <div class="row-info" style="flex:1;min-width:0;">
-        <div class="row-name">${app.name}${app.aod?'<span class="aod-indicator">⭐ Heute</span>':''}</div>
-        <div class="row-meta">${app.fach||'–'} · ${app.datei||'–'}</div>
-        <div class="row-tags">${klTags}${ctTags}${!klTags&&!ctTags?'<span style="font-size:.68rem;color:var(--muted)">Keine Tags</span>':''}</div>
-        <!-- INLINE EDIT -->
-        <div class="inline-edit" id="edit-${i}">
-          <div class="form-group">
-            <label>Name</label>
-            <input type="text" id="ei-name-${i}" value="${escHtml(app.name)}"/>
-          </div>
-          <div class="form-group">
-            <label>Datei</label>
-            <input type="text" id="ei-datei-${i}" value="${escHtml(app.datei||'')}"/>
-          </div>
-          <div class="form-group">
-            <label>Emoji</label>
-            <input type="text" id="ei-emoji-${i}" value="${escHtml(app.emoji||'📱')}" maxlength="4"/>
-          </div>
-          <div class="form-group">
-            <label>Fach</label>
-            <select id="ei-fach-${i}">
-              ${['Mathematik','Englisch','Deutsch','Sachkunde','Sport','Informatik','Geschichte'].map(f=>`<option${app.fach===f?' selected':''}>${f}</option>`).join('')}
-            </select>
-          </div>
-          <div class="form-group full">
-            <label>Beschreibung</label>
-            <input type="text" id="ei-desc-${i}" value="${escHtml(app.beschreibung||'')}"/>
-          </div>
-          <div class="inline-edit-actions">
-            <button class="btn sm" onclick="cancelEdit(${i})">Abbrechen</button>
-            <button class="btn accent sm" onclick="saveEdit(${i})">💾 Speichern</button>
-          </div>
+    block.innerHTML = `
+      <div class="unit-header" onclick="toggleUnit(this, '${uKey}')">
+        <h3>${unit.label}</h3>
+        <div class="meta">
+          <span class="badge">${totalWords} Wörter</span>
+          <span class="toggle">›</span>
         </div>
       </div>
-      <div class="row-actions">
-        <button class="icon-btn" onclick="toggleEdit(${i})" title="Bearbeiten">✏️</button>
-        <button class="icon-btn ${app.aod?'on-gold':''}" onclick="toggleAod('${escHtml(app.name)}')" title="App des Tages">⭐</button>
-        <button class="icon-btn ${app.hidden?'on-red':'on-green'}" onclick="toggleHidden('${escHtml(app.name)}')" title="Ein/Ausblenden">${app.hidden?'🚫':'✅'}</button>
-        <button class="icon-btn" onclick="openModal('${escHtml(app.name)}')" title="Tags">🏷</button>
-        <button class="icon-btn" onclick="showQR('${escHtml(app.name)}','${escHtml(app.datei||'')}')" title="QR">📲</button>
-        <button class="icon-btn on-red" onclick="deleteApp('${escHtml(app.name)}')" title="Löschen">🗑</button>
-      </div>`;
-
-    // Drag & Drop
-    row.addEventListener('dragstart', e=>{ dragSrc=row; row.classList.add('is-dragging'); e.dataTransfer.effectAllowed='move'; });
-    row.addEventListener('dragend',   ()=>{ row.classList.remove('is-dragging'); document.querySelectorAll('.app-row').forEach(r=>r.classList.remove('drag-over')); });
-    row.addEventListener('dragover',  e=>{ e.preventDefault(); row.classList.add('drag-over'); });
-    row.addEventListener('dragleave', ()=>row.classList.remove('drag-over'));
-    row.addEventListener('drop',      e=>{
-      e.preventDefault();
-      if(!dragSrc||dragSrc===row) return;
-      const from=parseInt(dragSrc.dataset.i), to=parseInt(row.dataset.i);
-      const moved=CONFIG.apps.splice(from,1)[0];
-      CONFIG.apps.splice(to,0,moved);
-      logChange(`🔀 "${moved.name}" verschoben`);
-      saveConfig(); buildAll();
-    });
-
-    list.appendChild(row);
-  });
-
-  filterAppList();
-}
-
-// ── Inline Edit ─────────────────────────────────────
-function toggleEdit(i){
-  const editEl=document.getElementById('edit-'+i);
-  const row=editEl.closest('.app-row');
-  const isOpen=editEl.classList.contains('open');
-  // close all others
-  document.querySelectorAll('.inline-edit.open').forEach(el=>{
-    el.classList.remove('open');
-    el.closest('.app-row')?.classList.remove('editing');
-  });
-  if(!isOpen){ editEl.classList.add('open'); row.classList.add('editing'); }
-}
-
-function cancelEdit(i){
-  document.getElementById('edit-'+i).classList.remove('open');
-  document.getElementById('edit-'+i).closest('.app-row').classList.remove('editing');
-}
-
-function saveEdit(i){
-  const app=CONFIG.apps[i];
-  if(!app) return;
-  const newName=document.getElementById(`ei-name-${i}`).value.trim();
-  const newDatei=document.getElementById(`ei-datei-${i}`).value.trim();
-  const newEmoji=document.getElementById(`ei-emoji-${i}`).value.trim()||'📱';
-  const newFach=document.getElementById(`ei-fach-${i}`).value;
-  const newDesc=document.getElementById(`ei-desc-${i}`).value.trim();
-  if(!newName||!newDatei){ showToast('⚠ Name und Datei sind Pflichtfelder',true); return; }
-  const oldName=app.name;
-  app.name=newName; app.datei=newDatei; app.emoji=newEmoji; app.fach=newFach; app.beschreibung=newDesc;
-  logChange(`✏️ "${oldName}" bearbeitet`);
-  saveConfig(); buildAll();
-  showToast('✓ App aktualisiert');
-}
-
-// ── Filter ──────────────────────────────────────────
-function filterAppList(){
-  const q=(document.getElementById('app-search').value||'').toLowerCase();
-  const fach=document.getElementById('fach-filter').value;
-  const status=document.getElementById('status-filter').value;
-  let shown=0;
-  document.querySelectorAll('#app-list .app-row').forEach(row=>{
-    const name=(row.querySelector('.row-name')?.textContent||'').toLowerCase();
-    const meta=(row.querySelector('.row-meta')?.textContent||'').toLowerCase();
-    const matchQ=!q||name.includes(q)||meta.includes(q);
-    const matchF=!fach||meta.includes(fach.toLowerCase());
-    const isHidden=row.classList.contains('is-hidden');
-    const matchS=!status||(status==='hidden'&&isHidden)||(status==='visible'&&!isHidden);
-    const show=matchQ&&matchF&&matchS;
-    row.style.display=show?'':'none';
-    if(show) shown++;
-  });
-  document.getElementById('app-count').textContent=shown+' / '+CONFIG.apps.length+' Apps';
-}
-
-// ── Toggle Hidden / AOD ────────────────────────────
-function toggleHidden(name){
-  const app=CONFIG.apps.find(a=>a.name===name);
-  if(!app) return;
-  app.hidden=!app.hidden;
-  logChange(`${app.hidden?'🚫':'✅'} "${name}" ${app.hidden?'versteckt':'eingeblendet'}`);
-  saveConfig(); buildAll();
-}
-
-function toggleAod(name){
-  CONFIG.apps.forEach(a=>a.aod=false);
-  const app=CONFIG.apps.find(a=>a.name===name);
-  if(app){ app.aod=true; logChange(`⭐ "${name}" als App des Tages gesetzt`); }
-  saveConfig(); buildAll();
-}
-
-// ── Add / Delete ───────────────────────────────────
-function addApp(){
-  const name=document.getElementById('f-name').value.trim();
-  const datei=document.getElementById('f-datei').value.trim();
-  const fach=document.getElementById('f-fach').value;
-  const emoji=document.getElementById('f-emoji').value.trim()||'📱';
-  const desc=document.getElementById('f-desc').value.trim();
-  if(!name||!datei||!fach){ showToast('⚠ Name, Datei und Fach ausfüllen',true); return; }
-  if(CONFIG.apps.find(a=>a.name===name)){ showToast('⚠ Name bereits vergeben',true); return; }
-  CONFIG.apps.push({name,datei,fach,emoji,beschreibung:desc,hidden:false,klassen:[],customTags:[],aod:false});
-  ['f-name','f-datei','f-desc','f-emoji'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('f-fach').value='';
-  document.getElementById('emoji-preview').textContent='📱';
-  logChange(`➕ "${name}" hinzugefügt`);
-  saveConfig(); buildAll();
-}
-
-let undoTimer=null, undoApp=null, undoIdx=null;
-function deleteApp(name){
-  const idx=CONFIG.apps.findIndex(a=>a.name===name);
-  if(idx===-1) return;
-  undoApp=CONFIG.apps[idx]; undoIdx=idx;
-  CONFIG.apps.splice(idx,1);
-  logChange(`🗑 "${name}" gelöscht`);
-  buildAll(); showUndo(name);
-  clearTimeout(undoTimer);
-  undoTimer=setTimeout(()=>{ undoApp=null; undoIdx=null; saveConfig(); hideUndo(); },8000);
-}
-
-function undoDelete(){
-  if(!undoApp) return;
-  clearTimeout(undoTimer);
-  CONFIG.apps.splice(undoIdx,0,undoApp);
-  logChange(`↩ "${undoApp.name}" wiederhergestellt`);
-  undoApp=null; undoIdx=null;
-  hideUndo(); buildAll();
-}
-
-function showUndo(name){
-  const bar=document.getElementById('undo-bar');
-  bar.innerHTML=`<span>🗑 <strong>${name}</strong> gelöscht</span>
-    <button onclick="undoDelete()" style="background:var(--red);border:none;color:#fff;padding:.3rem .9rem;border-radius:8px;cursor:pointer;font-family:inherit;font-weight:800;font-size:.8rem;">↩ Rückgängig</button>
-    <span id="undo-cd" style="color:var(--muted);font-size:.75rem;">8s</span>`;
-  bar.style.display='flex';
-  let sec=8;
-  clearInterval(bar._iv);
-  bar._iv=setInterval(()=>{ sec--; const cd=document.getElementById('undo-cd'); if(cd) cd.textContent=sec+'s'; if(sec<=0) clearInterval(bar._iv); },1000);
-}
-function hideUndo(){ const b=document.getElementById('undo-bar'); if(b){ clearInterval(b._iv); b.style.display='none'; } }
-
-// ══ VISIBILITY ═════════════════════════════════════════
-function buildVisibility(){
-  const list=document.getElementById('vis-list');
-  list.innerHTML='';
-  const faecher=[...new Set(CONFIG.apps.map(a=>a.fach).filter(Boolean))];
-  if(!faecher.length){ list.innerHTML='<div class="empty-msg">Noch keine Apps vorhanden.</div>'; return; }
-  faecher.forEach(fach=>{
-    const catHidden=CONFIG.hiddenCats.includes(fach);
-    const apps=CONFIG.apps.filter(a=>a.fach===fach);
-    const block=document.createElement('div');
-    block.className='vis-cat-block';
-    block.innerHTML=`
-      <div class="vis-cat-header">
-        <span style="font-size:1.2rem;">${CAT_ICONS[fach]||'📚'}</span>
-        <span class="vis-cat-name">${fach} (${apps.length})</span>
-        <button class="vis-toggle ${catHidden?'off':'on'}" onclick="toggleCat('${fach}')">${catHidden?'Ausgeblendet':'Sichtbar'}</button>
-      </div>
-      <div class="vis-app-list">
-        ${apps.map(app=>`
-          <div class="vis-app-row">
-            <span style="font-size:1.1rem;">${app.emoji||'📱'}</span>
-            <span class="vis-app-name" style="${app.hidden?'opacity:.38':''}">${app.name}</span>
-            <button class="vis-toggle ${app.hidden?'off':'on'}" onclick="toggleHidden('${escHtml(app.name)}')">${app.hidden?'Ausgeblendet':'Sichtbar'}</button>
-          </div>`).join('')}
-      </div>`;
-    list.appendChild(block);
+      <div class="unit-body" id="ub-${uKey}" style="display:none">${themesHTML}</div>
+    `;
+    container.appendChild(block);
   });
 }
 
-function toggleCat(fach){
-  const idx=CONFIG.hiddenCats.indexOf(fach);
-  if(idx===-1) CONFIG.hiddenCats.push(fach); else CONFIG.hiddenCats.splice(idx,1);
-  logChange(`${CONFIG.hiddenCats.includes(fach)?'🚫':'✅'} Kategorie "${fach}" umgeschaltet`);
-  saveConfig(); buildAll();
+function toggleUnit(headerEl, unitKey) {
+  const body = document.getElementById('ub-' + unitKey);
+  const isOpen = body.style.display !== 'none';
+  body.style.display = isOpen ? 'none' : 'block';
+  headerEl.classList.toggle('open', !isOpen);
 }
 
-// ══ TAGS ═══════════════════════════════════════════════
-function buildTagManager(){
-  const pills=document.getElementById('tag-pills');
-  pills.innerHTML='';
-  if(!CONFIG.customTags.length){
-    pills.innerHTML='<span style="font-size:.78rem;color:var(--muted);">Noch keine Tags erstellt.</span>';
+function toggleTable(id, headerEl) {
+  const table = document.getElementById(id);
+  table.classList.toggle('visible');
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function doSearch(query) {
+  const q = query.trim().toLowerCase();
+  const box = document.getElementById('search-results');
+  if (q.length < 2) { box.classList.remove('visible'); return; }
+
+  const results = allWordIndex.filter(w =>
+    w.en.toLowerCase().includes(q) || w.de.toLowerCase().includes(q)
+  ).slice(0, 30);
+
+  if (results.length === 0) {
+    box.innerHTML = '<div style="color:#9ca3af;font-size:13px">Keine Ergebnisse gefunden.</div>';
   } else {
-    CONFIG.customTags.forEach((tag,ti)=>{
-      const t=tagObj(tag); const col=tagColor(tag);
-      const p=document.createElement('div');
-      p.className='tag-pill';
-      p.style.cssText=`background:${col.bg};border:1px solid ${col.border};color:${col.text};`;
-      p.innerHTML=`${escHtml(t.name)}
-        <button class="del" title="Löschen">×</button>
-        <button class="del" title="Farbe" style="opacity:.55;font-size:.7rem;margin-left:1px;">🎨</button>`;
-      const [delBtn, colorBtn]=p.querySelectorAll('.del');
-      delBtn.addEventListener('click',()=>{
-        if(!confirm(`Tag "${t.name}" löschen?`)) return;
-        const nm=t.name;
-        CONFIG.customTags.splice(ti,1);
-        CONFIG.apps.forEach(a=>{
-          if(a.customTags) a.customTags=a.customTags.filter(x=>tagName(x)!==nm);
-        });
-        logChange(`🏷 Tag "${nm}" gelöscht`);
-        saveConfig(); buildAll();
-      });
-      colorBtn.addEventListener('click',()=>openTagColorPicker(ti));
-      pills.appendChild(p);
-    });
-  }
-  buildNewTagColorDots();
-}
-
-document.getElementById('new-tag').addEventListener('keydown',e=>{ if(e.key==='Enter') addTag(); });
-function addTag(){
-  const inp=document.getElementById('new-tag');
-  const v=inp.value.trim();
-  if(!v) return;
-  if(CONFIG.customTags.find(t=>tagName(t)===v)){ inp.value=''; return; }
-  CONFIG.customTags.push({name:v, color:selectedNewTagColor});
-  inp.value='';
-  logChange(`🏷 Tag "${v}" erstellt`);
-  saveConfig(); buildAll();
-}
-
-function buildNewTagColorDots(){
-  const wrap=document.getElementById('new-tag-colors');
-  if(!wrap) return;
-  wrap.innerHTML='';
-  TAG_COLORS.forEach((col,i)=>{
-    const d=document.createElement('div');
-    d.className='tag-color-dot'+(i===selectedNewTagColor?' sel':'');
-    d.style.background=col.dot;
-    d.title=col.label;
-    d.addEventListener('click',()=>{
-      selectedNewTagColor=i;
-      wrap.querySelectorAll('.tag-color-dot').forEach((el,j)=>el.classList.toggle('sel',j===i));
-    });
-    wrap.appendChild(d);
-  });
-}
-
-function openTagColorPicker(ti){
-  const tag=tagObj(CONFIG.customTags[ti]);
-  // simple inline mini-picker via a small overlay div
-  const existing=document.getElementById('tag-cp-overlay');
-  if(existing) existing.remove();
-  const overlay=document.createElement('div');
-  overlay.id='tag-cp-overlay';
-  overlay.style.cssText=`position:fixed;inset:0;z-index:9000;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.6);backdrop-filter:blur(3px);`;
-  overlay.innerHTML=`
-    <div style="background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:1.4rem 1.6rem;min-width:280px;box-shadow:0 20px 60px rgba(0,0,0,.5);">
-      <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:var(--accent);margin-bottom:.9rem;">🎨 Farbe für „${escHtml(tag.name)}"</div>
-      <div style="display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.1rem;" id="tag-cp-dots"></div>
-      <div style="display:flex;justify-content:flex-end;gap:.5rem;">
-        <button class="btn" onclick="document.getElementById('tag-cp-overlay').remove()">Abbrechen</button>
-        <button class="btn accent" id="tag-cp-save">Speichern</button>
-      </div>
-    </div>`;
-  let picked=tag.color||0;
-  document.body.appendChild(overlay);
-  const dotsWrap=document.getElementById('tag-cp-dots');
-  TAG_COLORS.forEach((col,i)=>{
-    const d=document.createElement('div');
-    d.style.cssText=`width:32px;height:32px;border-radius:50%;background:${col.dot};cursor:pointer;border:3px solid ${i===picked?'#fff':'transparent'};transition:all .14s;`;
-    d.title=col.label;
-    d.addEventListener('click',()=>{
-      picked=i;
-      dotsWrap.querySelectorAll('div').forEach((el,j)=>el.style.borderColor=j===i?'#fff':'transparent');
-    });
-    dotsWrap.appendChild(d);
-  });
-  document.getElementById('tag-cp-save').addEventListener('click',()=>{
-    CONFIG.customTags[ti]={...tag, color:picked};
-    logChange(`🎨 Tag-Farbe für "${tag.name}" geändert`);
-    saveConfig(); buildAll();
-    overlay.remove();
-  });
-  overlay.addEventListener('click',e=>{ if(e.target===overlay) overlay.remove(); });
-}
-
-function buildTagAssignList(){
-  const list=document.getElementById('tag-assign-list');
-  list.innerHTML='';
-  CONFIG.apps.forEach(app=>{
-    const kl=app.klassen||[], ct=app.customTags||[];
-    const row=document.createElement('div');
-    row.className='app-row';
-    row.style.cursor='default';
-    row.innerHTML=`
-      <span class="row-emoji">${app.emoji||'📱'}</span>
-      <div class="row-info">
-        <div class="row-name">${escHtml(app.name)}</div>
-        <div class="row-tags">
-          ${kl.map(k=>`<span class="rtag">Kl.${k}</span>`).join('')}
-          ${ct.map(t=>{const col=tagColor(t);return `<span class="rtag ct" style="background:${col.bg};border-color:${col.border};color:${col.text};">${escHtml(tagName(t))}</span>`;}).join('')}
-          ${!kl.length&&!ct.length?'<span style="font-size:.7rem;color:var(--muted)">Keine Tags</span>':''}
+    box.innerHTML = `<div style="font-size:12px;color:#9ca3af;margin-bottom:8px">${results.length} Ergebnisse</div>` +
+      results.map(r => `
+        <div class="search-result-item">
+          <span class="en">${escHtml(r.en)}</span>
+          <span class="de">${escHtml(r.de)}</span>
+          <span class="loc">${escHtml(r.location)}</span>
         </div>
-      </div>
-      <div class="row-actions">
-        <button class="icon-btn" onclick="openModal('${escHtml(app.name)}')">🏷 Bearbeiten</button>
-      </div>`;
-    list.appendChild(row);
-  });
-}
-
-// ══ TAG MODAL ══════════════════════════════════════════
-function openModal(name){
-  modalAppName=name;
-  const app=CONFIG.apps.find(a=>a.name===name);
-  if(!app) return;
-  document.getElementById('modal-title').textContent='🏷 '+name;
-  const kWrap=document.getElementById('modal-klassen');
-  kWrap.innerHTML='';
-  KLASSEN.forEach(k=>{
-    const c=document.createElement('span');
-    c.className='m-chip'+(app.klassen?.includes(k)?' sel-k':'');
-    c.textContent='Klasse '+k;
-    c.addEventListener('click',()=>{
-      if(!app.klassen) app.klassen=[];
-      const idx=app.klassen.indexOf(k);
-      if(idx===-1) app.klassen.push(k); else app.klassen.splice(idx,1);
-      c.classList.toggle('sel-k');
-      saveConfig(); buildAll();
-    });
-    kWrap.appendChild(c);
-  });
-  const tWrap=document.getElementById('modal-tags');
-  tWrap.innerHTML='';
-  if(!CONFIG.customTags.length){
-    tWrap.innerHTML='<span style="font-size:.78rem;color:var(--muted)">Erst Tags im Reiter "Tags" erstellen.</span>';
-  } else {
-    CONFIG.customTags.forEach(tag=>{
-      const nm=tagName(tag); const col=tagColor(tag);
-      const c=document.createElement('span');
-      const isSelected=app.customTags?.find(x=>tagName(x)===nm);
-      c.className='m-chip'+(isSelected?' sel-c':'');
-      if(isSelected){ c.style.cssText=`background:${col.bg};border-color:${col.border};color:${col.text};`; }
-      c.textContent=nm;
-      c.addEventListener('click',()=>{
-        if(!app.customTags) app.customTags=[];
-        const idx=app.customTags.findIndex(x=>tagName(x)===nm);
-        if(idx===-1){
-          app.customTags.push(tag);
-          c.classList.add('sel-c');
-          c.style.cssText=`background:${col.bg};border-color:${col.border};color:${col.text};`;
-        } else {
-          app.customTags.splice(idx,1);
-          c.classList.remove('sel-c');
-          c.style.cssText='';
-        }
-        saveConfig(); buildAll();
-      });
-      tWrap.appendChild(c);
-    });
+      `).join('');
   }
-  document.getElementById('tag-modal').classList.add('open');
+  box.classList.add('visible');
 }
 
-function closeModal(){
-  document.getElementById('tag-modal').classList.remove('open');
-  modalAppName='';
-}
-document.getElementById('tag-modal').addEventListener('click',e=>{ if(e.target===document.getElementById('tag-modal')) closeModal(); });
-
-// ══ QR ═════════════════════════════════════════════════
-function showQR(name, datei){
-  const url=BASE_URL+datei;
-  document.getElementById('qr-app-name').textContent=name;
-  document.getElementById('qr-url').textContent=url;
-  const wrap=document.getElementById('qr-canvas-wrap');
-  wrap.innerHTML='';
-  const img=document.createElement('img');
-  img.src=`https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(url)}&color=0f0e1a&bgcolor=ffffff&qzone=1`;
-  img.width=220; img.height=220;
-  img.style.cssText='border-radius:8px;display:block;';
-  wrap.appendChild(img);
-  document.getElementById('qr-modal-wrap').classList.add('open');
-}
-
-function downloadQR(){
-  const name=document.getElementById('qr-app-name').textContent;
-  const img=document.querySelector('#qr-canvas-wrap img');
-  if(!img) return;
-  const canvas=document.createElement('canvas');
-  canvas.width=220; canvas.height=220;
-  const ctx=canvas.getContext('2d');
-  const i=new Image(); i.crossOrigin='anonymous'; i.src=img.src;
-  i.onload=()=>{ ctx.drawImage(i,0,0); const a=document.createElement('a'); a.download=`QR-${name.replace(/[^a-zA-Z0-9]/g,'-')}.png`; a.href=canvas.toDataURL('image/png'); a.click(); };
-  i.onerror=()=>{ const a=document.createElement('a'); a.href=img.src; a.target='_blank'; a.click(); };
-}
-
-function closeQR(){ document.getElementById('qr-modal-wrap').classList.remove('open'); }
-document.getElementById('qr-modal-wrap').addEventListener('click',e=>{ if(e.target===document.getElementById('qr-modal-wrap')) closeQR(); });
-
-// ══ ANNOUNCEMENT ═══════════════════════════════════════
-function buildColorChips(){
-  const wrap=document.getElementById('color-chips');
-  wrap.innerHTML='';
-  ANN_COLORS.forEach((c,i)=>{
-    const chip=document.createElement('div');
-    chip.className='color-chip'+(i===selectedAnnColor?' selected':'');
-    chip.style.background=c.bg;
-    chip.style.border=`2px solid ${c.text}`;
-    chip.title=c.label;
-    chip.addEventListener('click',()=>{
-      selectedAnnColor=i;
-      document.querySelectorAll('.color-chip').forEach((ch,j)=>ch.classList.toggle('selected',j===i));
-      updateAnnPreview();
-    });
-    wrap.appendChild(chip);
-  });
-}
-
-function loadAnnForm(){
-  buildColorChips();
-  const ann=CONFIG.announcement||{};
-  document.getElementById('ann-text').value=ann.text||'';
-  document.getElementById('ann-emoji').value=ann.emoji||'📢';
-  selectedAnnColor=ann.color||0;
-  buildColorChips();
-  updateAnnPreview();
-  document.getElementById('ann-status').textContent=ann.active?'✅ Banner ist aktiv':'⚪ Banner ist ausgeblendet';
-}
-
-function updateAnnPreview(){
-  const text=document.getElementById('ann-text').value||'Hier steht deine Ankündigung …';
-  const emoji=document.getElementById('ann-emoji').value||'📢';
-  const col=ANN_COLORS[selectedAnnColor]||ANN_COLORS[0];
-  const prev=document.getElementById('ann-preview');
-  prev.style.background=col.bg;
-  prev.style.color=col.text;
-  prev.style.border=`1px solid ${col.text}44`;
-  document.getElementById('ann-preview-emoji').textContent=emoji;
-  document.getElementById('ann-preview-text').textContent=text;
-}
-
-function saveAnnouncement(){
-  const text=document.getElementById('ann-text').value.trim();
-  if(!text){ showToast('⚠ Bitte Text eingeben',true); return; }
-  CONFIG.announcement={
-    active:true,
-    text,
-    emoji:document.getElementById('ann-emoji').value||'📢',
-    color:selectedAnnColor,
-    bg:ANN_COLORS[selectedAnnColor].bg,
-    textColor:ANN_COLORS[selectedAnnColor].text,
-  };
-  logChange(`📢 Banner aktiviert: "${text.substring(0,30)}…"`);
-  saveConfig();
-  document.getElementById('ann-status').textContent='✅ Banner ist aktiv';
-  buildDashboard();
-  showToast('✓ Banner gespeichert & aktiv');
-}
-
-function hideAnnouncement(){
-  if(!CONFIG.announcement) CONFIG.announcement={};
-  CONFIG.announcement.active=false;
-  logChange('🚫 Banner ausgeblendet');
-  saveConfig();
-  document.getElementById('ann-status').textContent='⚪ Banner ist ausgeblendet';
-  buildDashboard();
-  showToast('Banner ausgeblendet');
-}
-
-// ══ BROKEN LINK CHECKER ════════════════════════════════
-const GH_RAW = 'https://geitner-hub.github.io/Lern-Apps/';
-
-async function runChecker(){
-  const apps=CONFIG.apps.filter(a=>a.datei);
-  if(!apps.length){ document.getElementById('checker-info').textContent='Keine Apps mit Dateiangabe.'; return; }
-
-  const btn=document.getElementById('check-btn');
-  btn.disabled=true; btn.textContent='⏳ Prüfe …';
-
-  const resultDiv=document.getElementById('checker-result');
-  const summary=document.getElementById('checker-summary');
-  const progress=document.getElementById('checker-progress');
-  const fill=document.getElementById('checker-fill');
-  resultDiv.innerHTML=''; summary.className='checker-summary'; progress.className='checker-progress visible';
-
-  let ok=0, fail=0;
-
-  // Build placeholder rows
-  apps.forEach(app=>{
-    const isExternal=app.datei.startsWith('http');
-    const item=document.createElement('div');
-    item.className='check-item checking';
-    item.id='ci-'+app.datei.replace(/[^a-z0-9]/gi,'_');
-    item.innerHTML=`
-      <span class="check-status">⏳</span>
-      <div style="flex:1;min-width:0;">
-        <div class="check-name">${app.emoji||'📱'} ${escHtml(app.name)}</div>
-        <div class="check-url">${isExternal?app.datei:GH_RAW+app.datei}</div>
-      </div>
-      <span class="check-badge skip">${isExternal?'Extern':'Prüft …'}</span>`;
-    resultDiv.appendChild(item);
-  });
-
-  for(let i=0; i<apps.length; i++){
-    const app=apps[i];
-    const id='ci-'+app.datei.replace(/[^a-z0-9]/gi,'_');
-    const item=document.getElementById(id);
-    const isExternal=app.datei.startsWith('http');
-
-    if(isExternal){
-      item.className='check-item';
-      item.querySelector('.check-status').textContent='🔗';
-      item.querySelector('.check-badge').textContent='Extern';
-      item.querySelector('.check-badge').className='check-badge skip';
-    } else {
-      try{
-        const url=GH_RAW+app.datei;
-        const r=await fetch(url,{method:'HEAD',cache:'no-store'});
-        const isOk=r.ok;
-        item.className='check-item '+(isOk?'ok':'fail');
-        item.classList.remove('checking');
-        item.querySelector('.check-status').textContent=isOk?'✅':'❌';
-        item.querySelector('.check-badge').textContent=isOk?'200 OK':r.status+' Fehler';
-        item.querySelector('.check-badge').className='check-badge '+(isOk?'ok':'fail');
-        if(isOk) ok++; else fail++;
-      }catch(e){
-        item.className='check-item fail';
-        item.classList.remove('checking');
-        item.querySelector('.check-status').textContent='❌';
-        item.querySelector('.check-badge').textContent='Nicht erreichbar';
-        item.querySelector('.check-badge').className='check-badge fail';
-        fail++;
-      }
-    }
-    fill.style.width=Math.round(((i+1)/apps.length)*100)+'%';
-    document.getElementById('checker-info').textContent=`${i+1} / ${apps.length}`;
-  }
-
-  btn.disabled=false; btn.textContent='🔍 Alle Links prüfen';
-  progress.className='checker-progress';
-  summary.className='checker-summary visible';
-  summary.style.color=fail>0?'var(--red)':'var(--green)';
-  summary.style.borderLeft=`3px solid ${fail>0?'var(--red)':'var(--green)'}`;
-  summary.textContent=fail===0
-    ? `✅ Alle ${ok} Links erreichbar!`
-    : `⚠ ${fail} Link${fail>1?'s':''} nicht erreichbar · ${ok} OK`;
-  logChange(`🔗 Link-Check: ${ok} OK, ${fail} fehlerhaft`);
-}
-
-// ══ UTILS ══════════════════════════════════════════════
-function escHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+loadConfig();
 </script>
 </body>
 </html>

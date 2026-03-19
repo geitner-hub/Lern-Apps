@@ -6,186 +6,170 @@
 <title>🇬🇧 VocabTrainer – Klasse 5</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: 'Nunito', sans-serif;
-    min-height: 100vh;
-    background: linear-gradient(160deg, #f5f3ff 0%, #fff7ed 100%);
-    padding-bottom: 48px;
-  }
-  header {
-    background: linear-gradient(90deg, #7c6af7, #a78bfa);
-    padding: 18px 24px;
-    display: flex; align-items: center; justify-content: space-between;
-    box-shadow: 0 4px 24px rgba(124,106,247,0.25);
-  }
-  header .logo { cursor: pointer; }
-  header .logo h1 { font-size: 22px; font-weight: 900; color: #fff; letter-spacing: -0.5px; }
-  header .logo p  { font-size: 11px; color: rgba(255,255,255,0.75); }
-  #btn-home {
-    background: rgba(255,255,255,0.2); border: none; color: #fff;
-    font-weight: 700; border-radius: 10px; padding: 8px 16px; cursor: pointer;
-    font-family: 'Nunito', sans-serif; font-size: 14px; display: none;
-  }
-  .container { max-width: 480px; margin: 0 auto; padding: 24px 16px; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Nunito', sans-serif; min-height: 100vh; background: linear-gradient(160deg, #f5f3ff 0%, #fff7ed 100%); padding-bottom: 48px; }
 
-  /* ── HOME ─────────────────────────────────── */
-  .section-title {
-    font-weight: 700; color: #4b5563; margin-bottom: 10px;
-    font-size: 13px; text-transform: uppercase; letter-spacing: 1px;
-  }
-  .topic-bar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 6px; }
-  .topic-btn {
-    padding: 8px 14px; border-radius: 20px; border: 2px solid #e5e7eb;
-    background: #fff; color: #374151; font-weight: 600; font-size: 13px;
-    cursor: pointer; font-family: 'Nunito', sans-serif; transition: all .15s;
-  }
-  .topic-btn.active { background: #7c6af7; border-color: #7c6af7; color: #fff; }
-  #word-count { font-size: 12px; color: #9ca3af; margin-bottom: 24px; margin-top: 4px; }
-  .mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-  .mode-card {
-    background: #fff; border-radius: 20px; padding: 20px 16px;
-    text-align: center; cursor: pointer;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.07);
-    border: 2px solid #f3f4f6; transition: transform .15s, box-shadow .15s;
-  }
-  .mode-card:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(124,106,247,0.18); }
-  .mode-card .icon  { font-size: 40px; }
-  .mode-card h3 { font-weight: 800; color: #1f2937; margin-top: 8px; }
-  .mode-card p  { font-size: 12px; color: #9ca3af; margin-top: 4px; }
+header { background: linear-gradient(90deg, #7c6af7, #a78bfa); padding: 18px 24px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 24px rgba(124,106,247,0.25); }
+header .logo { cursor: pointer; }
+header .logo h1 { font-size: 22px; font-weight: 900; color: #fff; letter-spacing: -0.5px; }
+header .logo p { font-size: 11px; color: rgba(255,255,255,0.75); }
+.header-btns { display: flex; gap: 8px; }
+.btn-header { background: rgba(255,255,255,0.2); border: none; color: #fff; font-weight: 700; border-radius: 10px; padding: 8px 16px; cursor: pointer; font-family: 'Nunito', sans-serif; font-size: 14px; display: none; }
 
-  /* ── PANEL ────────────────────────────────── */
-  .panel {
-    background: #fff; border-radius: 24px; padding: 24px;
-    box-shadow: 0 8px 40px rgba(0,0,0,0.08);
-    display: flex; flex-direction: column; align-items: center; gap: 20px;
-  }
-  .counter { color: #7c6af7; font-weight: 700; }
+.container { max-width: 520px; margin: 0 auto; padding: 24px 16px; }
 
-  /* ── CARD FLIP ────────────────────────────── */
-  .flip-scene { width: 320px; height: 180px; cursor: pointer; perspective: 700px; }
-  .flip-inner {
-    width: 100%; height: 100%; position: relative;
-    transform-style: preserve-3d; transition: transform .5s;
-  }
-  .flip-inner.flipped { transform: rotateY(180deg); }
-  .flip-front, .flip-back {
-    position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
-    border-radius: 20px; display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-  }
-  .flip-front { background: linear-gradient(135deg,#7c6af7,#a78bfa); box-shadow: 0 8px 32px rgba(124,106,247,0.3); }
-  .flip-back  { background: linear-gradient(135deg,#f97316,#fb923c); box-shadow: 0 8px 32px rgba(249,115,22,0.3); transform: rotateY(180deg); }
-  .flip-lang { font-size: 13px; color: rgba(255,255,255,.7); margin-bottom: 8px; }
-  .flip-word { font-size: 42px; font-weight: 800; color: #fff; letter-spacing: -1px; }
-  .flip-hint { font-size: 12px; color: rgba(255,255,255,.6); margin-top: 12px; }
-  .answer-btns { display: flex; gap: 16px; }
-  .btn-wrong { padding: 12px 28px; border-radius: 12px; border: none; background: #fecaca; color: #dc2626; font-weight: 700; font-size: 18px; cursor: pointer; font-family:'Nunito',sans-serif; }
-  .btn-right { padding: 12px 28px; border-radius: 12px; border: none; background: #bbf7d0; color: #16a34a; font-weight: 700; font-size: 18px; cursor: pointer; font-family:'Nunito',sans-serif; }
-  .score-tally { display: flex; gap: 20px; font-size: 14px; }
-  .tally-right { color: #16a34a; } .tally-wrong { color: #dc2626; }
+/* LOADING */
+#screen-loading { text-align: center; padding: 60px 20px; color: #7c6af7; font-weight: 700; font-size: 18px; }
 
-  /* ── QUIZ ─────────────────────────────────── */
-  .q-card {
-    background: linear-gradient(135deg,#7c6af7,#a78bfa); border-radius: 20px;
-    padding: 28px 40px; text-align: center; color: #fff;
-    box-shadow: 0 8px 32px rgba(124,106,247,0.25); width: 100%;
-  }
-  .q-card .qlang { font-size: 12px; opacity: .8; margin-bottom: 8px; }
-  .q-card .qword { font-size: 44px; font-weight: 800; }
-  .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; }
-  .opt-btn {
-    padding: 14px 12px; border-radius: 14px; border: 2px solid #e5e7eb;
-    background: #f3f0ff; font-weight: 600; font-size: 18px; cursor: pointer;
-    transition: all .2s; font-family:'Nunito',sans-serif;
-  }
-  .opt-btn.correct { background: #bbf7d0; border-color: #16a34a; }
-  .opt-btn.wrong   { background: #fecaca; border-color: #dc2626; }
+/* SELECTION */
+.section-title { font-weight: 700; color: #4b5563; margin-bottom: 10px; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; }
 
-  /* ── MEMORY ───────────────────────────────── */
-  .memory-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; width: 100%; }
-  .mem-card {
-    height: 72px; border-radius: 12px; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    font-weight: 700; font-size: 13px; text-align: center; padding: 4px;
-    background: linear-gradient(135deg,#7c6af7,#a78bfa);
-    color: transparent; border: 2px solid transparent;
-    box-shadow: 0 4px 12px rgba(124,106,247,0.3); transition: all .2s;
-    user-select: none;
-  }
-  .mem-card.face-up { color: #1f2937; background: #e0d9ff; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-  .mem-card.face-up.de { background: #fed7aa; }
-  .mem-card.matched   { color: #1f2937; background: #bbf7d0; border-color: #16a34a; box-shadow: none; cursor: default; }
+.unit-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+.unit-btn { background: #fff; border: 2px solid #e5e7eb; border-radius: 14px; padding: 14px 18px; text-align: left; cursor: pointer; font-family: 'Nunito', sans-serif; font-size: 15px; font-weight: 700; color: #374151; transition: all .15s; display: flex; justify-content: space-between; align-items: center; }
+.unit-btn:hover { border-color: #7c6af7; color: #7c6af7; }
+.unit-btn .arrow { font-size: 18px; color: #9ca3af; }
 
-  /* ── FILL IN ──────────────────────────────── */
-  .fill-card {
-    background: linear-gradient(135deg,#f97316,#fb923c); border-radius: 20px;
-    padding: 24px 40px; text-align: center;
-    box-shadow: 0 8px 32px rgba(249,115,22,0.25); width: 100%;
-  }
-  .fill-card .flang { font-size: 12px; color: rgba(255,255,255,.8); margin-bottom: 8px; }
-  .fill-card .fword { font-size: 44px; font-weight: 800; color: #fff; }
-  #fill-input {
-    width: 100%; padding: 14px 18px; border-radius: 14px; font-size: 20px;
-    font-weight: 600; border: 2px solid #d1d5db; text-align: center;
-    font-family: 'Nunito',sans-serif; outline: none; transition: border-color .2s;
-  }
-  #fill-input:focus { border-color: #7c6af7; }
-  #fill-input.correct { border-color: #16a34a; background: #f0fdf4; }
-  #fill-input.wrong   { border-color: #dc2626; background: #fef2f2; }
-  .fill-feedback { font-weight: 700; font-size: 18px; }
-  .fill-feedback.correct { color: #16a34a; }
-  .fill-feedback.wrong   { color: #dc2626; }
+.theme-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+.theme-btn { background: #fff; border: 2px solid #e5e7eb; border-radius: 12px; padding: 12px 16px; text-align: left; cursor: pointer; font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 600; color: #374151; transition: all .15s; display: flex; justify-content: space-between; align-items: center; }
+.theme-btn:hover { border-color: #7c6af7; color: #7c6af7; }
+.theme-btn.special { border-color: #f97316; color: #f97316; }
+.theme-btn.special:hover { background: #fff7ed; }
+.theme-btn .word-count { font-size: 12px; color: #9ca3af; font-weight: 600; }
 
-  /* ── SHARED BUTTONS ───────────────────────── */
-  .btn-primary {
-    padding: 12px 32px; border-radius: 12px; background: #7c6af7; color: #fff;
-    font-weight: 700; font-size: 16px; border: none; cursor: pointer;
-    font-family: 'Nunito',sans-serif; transition: opacity .15s;
-  }
-  .btn-primary:disabled { opacity: .45; cursor: default; }
+.btn-all { width: 100%; padding: 14px; border-radius: 12px; background: linear-gradient(90deg, #7c6af7, #a78bfa); color: #fff; font-weight: 800; font-size: 15px; border: none; cursor: pointer; font-family: 'Nunito', sans-serif; margin-bottom: 12px; }
 
-  /* ── RESULT ───────────────────────────────── */
-  .result { text-align: center; padding: 20px 0; }
-  .result .r-emoji { font-size: 72px; }
-  .result .r-pct   { font-size: 32px; font-weight: 800; color: #7c6af7; margin-top: 8px; }
-  .result .r-sub   { font-size: 16px; color: #6b7280; margin-top: 4px; }
+/* MODE */
+.word-info { background: #f3f0ff; border-radius: 12px; padding: 12px 16px; margin-bottom: 20px; font-size: 13px; color: #7c6af7; font-weight: 700; }
+.mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.mode-card { background: #fff; border-radius: 20px; padding: 20px 16px; text-align: center; cursor: pointer; box-shadow: 0 4px 20px rgba(0,0,0,0.07); border: 2px solid #f3f4f6; transition: transform .15s, box-shadow .15s; }
+.mode-card:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(124,106,247,0.18); }
+.mode-card .icon { font-size: 40px; }
+.mode-card h3 { font-weight: 800; color: #1f2937; margin-top: 8px; }
+.mode-card p { font-size: 12px; color: #9ca3af; margin-top: 4px; }
 
-  /* ── HIDDEN ───────────────────────────────── */
-  .hidden { display: none !important; }
+/* PANEL */
+.panel { background: #fff; border-radius: 24px; padding: 24px; box-shadow: 0 8px 40px rgba(0,0,0,0.08); display: flex; flex-direction: column; align-items: center; gap: 20px; }
+.counter { color: #7c6af7; font-weight: 700; }
+
+/* FLASHCARD */
+.flip-scene { width: 320px; height: 180px; cursor: pointer; perspective: 700px; }
+.flip-inner { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform .5s; }
+.flip-inner.flipped { transform: rotateY(180deg); }
+.flip-front, .flip-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+.flip-front { background: linear-gradient(135deg,#7c6af7,#a78bfa); box-shadow: 0 8px 32px rgba(124,106,247,0.3); }
+.flip-back { background: linear-gradient(135deg,#f97316,#fb923c); box-shadow: 0 8px 32px rgba(249,115,22,0.3); transform: rotateY(180deg); }
+.flip-lang { font-size: 13px; color: rgba(255,255,255,.7); margin-bottom: 8px; }
+.flip-word { font-size: 34px; font-weight: 800; color: #fff; letter-spacing: -1px; text-align: center; }
+.flip-hint { font-size: 12px; color: rgba(255,255,255,.6); margin-top: 12px; }
+.answer-btns { display: flex; gap: 16px; }
+.btn-wrong { padding: 12px 28px; border-radius: 12px; border: none; background: #fecaca; color: #dc2626; font-weight: 700; font-size: 18px; cursor: pointer; font-family:'Nunito',sans-serif; }
+.btn-right { padding: 12px 28px; border-radius: 12px; border: none; background: #bbf7d0; color: #16a34a; font-weight: 700; font-size: 18px; cursor: pointer; font-family:'Nunito',sans-serif; }
+.score-tally { display: flex; gap: 20px; font-size: 14px; }
+.tally-right { color: #16a34a; } .tally-wrong { color: #dc2626; }
+
+/* QUIZ */
+.q-card { background: linear-gradient(135deg,#7c6af7,#a78bfa); border-radius: 20px; padding: 28px 40px; text-align: center; color: #fff; box-shadow: 0 8px 32px rgba(124,106,247,0.25); width: 100%; }
+.q-card .qlang { font-size: 12px; opacity: .8; margin-bottom: 8px; }
+.q-card .qword { font-size: 38px; font-weight: 800; }
+.options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; }
+.opt-btn { padding: 14px 12px; border-radius: 14px; border: 2px solid #e5e7eb; background: #f3f0ff; font-weight: 600; font-size: 16px; cursor: pointer; transition: all .2s; font-family:'Nunito',sans-serif; }
+.opt-btn.correct { background: #bbf7d0; border-color: #16a34a; }
+.opt-btn.wrong { background: #fecaca; border-color: #dc2626; }
+
+/* MEMORY */
+.memory-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; width: 100%; }
+.mem-card { height: 72px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; text-align: center; padding: 4px; background: linear-gradient(135deg,#7c6af7,#a78bfa); color: transparent; border: 2px solid transparent; box-shadow: 0 4px 12px rgba(124,106,247,0.3); transition: all .2s; user-select: none; }
+.mem-card.face-up { color: #1f2937; background: #e0d9ff; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+.mem-card.face-up.de { background: #fed7aa; }
+.mem-card.matched { color: #1f2937; background: #bbf7d0; border-color: #16a34a; box-shadow: none; cursor: default; }
+
+/* FILL IN */
+.fill-card { background: linear-gradient(135deg,#f97316,#fb923c); border-radius: 20px; padding: 24px 40px; text-align: center; box-shadow: 0 8px 32px rgba(249,115,22,0.25); width: 100%; }
+.fill-card .flang { font-size: 12px; color: rgba(255,255,255,.8); margin-bottom: 8px; }
+.fill-card .fword { font-size: 38px; font-weight: 800; color: #fff; }
+#fill-input { width: 100%; padding: 14px 18px; border-radius: 14px; font-size: 20px; font-weight: 600; border: 2px solid #d1d5db; text-align: center; font-family: 'Nunito', sans-serif; outline: none; transition: border-color .2s; }
+#fill-input:focus { border-color: #7c6af7; }
+#fill-input.correct { border-color: #16a34a; background: #f0fdf4; }
+#fill-input.wrong { border-color: #dc2626; background: #fef2f2; }
+.fill-feedback { font-weight: 700; font-size: 18px; }
+.fill-feedback.correct { color: #16a34a; }
+.fill-feedback.wrong { color: #dc2626; }
+
+/* SCRAMBLE */
+.scramble-card { background: linear-gradient(135deg,#06b6d4,#22d3ee); border-radius: 20px; padding: 24px 32px; text-align: center; box-shadow: 0 8px 32px rgba(6,182,212,0.25); width: 100%; }
+.scramble-card .slang { font-size: 12px; color: rgba(255,255,255,.8); margin-bottom: 8px; }
+.scramble-card .sscrambled { font-size: 30px; font-weight: 800; color: #fff; letter-spacing: 4px; }
+.letters-row { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; width: 100%; }
+.letter-btn { width: 44px; height: 44px; border-radius: 10px; border: 2px solid #7c6af7; background: #f3f0ff; font-weight: 800; font-size: 18px; cursor: pointer; font-family:'Nunito',sans-serif; color: #7c6af7; transition: all .15s; }
+.letter-btn:disabled { opacity: .3; cursor: default; }
+.letter-btn.used { background: #e0d9ff; color: #a78bfa; }
+.answer-display { font-size: 26px; font-weight: 800; color: #374151; letter-spacing: 4px; min-height: 40px; border-bottom: 3px solid #e5e7eb; padding-bottom: 4px; min-width: 200px; text-align: center; }
+.scramble-actions { display: flex; gap: 12px; }
+
+/* SPEED */
+.speed-card { background: linear-gradient(135deg,#ec4899,#f472b6); border-radius: 20px; padding: 24px 32px; text-align: center; box-shadow: 0 8px 32px rgba(236,72,153,0.25); width: 100%; }
+.speed-card .slang { font-size: 12px; color: rgba(255,255,255,.8); margin-bottom: 8px; }
+.speed-card .sword { font-size: 38px; font-weight: 800; color: #fff; }
+.speed-timer { font-size: 48px; font-weight: 900; color: #ec4899; }
+.speed-timer.urgent { color: #dc2626; animation: pulse .5s infinite; }
+@keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.1)} }
+
+/* SHARED */
+.btn-primary { padding: 12px 32px; border-radius: 12px; background: #7c6af7; color: #fff; font-weight: 700; font-size: 16px; border: none; cursor: pointer; font-family: 'Nunito', sans-serif; transition: opacity .15s; }
+.btn-primary:disabled { opacity: .45; cursor: default; }
+.btn-secondary { padding: 10px 24px; border-radius: 12px; background: #f3f4f6; color: #374151; font-weight: 700; font-size: 15px; border: none; cursor: pointer; font-family: 'Nunito', sans-serif; }
+
+/* RESULT */
+.result { text-align: center; padding: 20px 0; }
+.result .r-emoji { font-size: 72px; }
+.result .r-pct { font-size: 32px; font-weight: 800; color: #7c6af7; margin-top: 8px; }
+.result .r-sub { font-size: 16px; color: #6b7280; margin-top: 4px; }
+.result-btns { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 20px; }
+
+.hidden { display: none !important; }
 </style>
 </head>
 <body>
-
 <header>
   <div class="logo" onclick="goHome()">
     <h1>🇬🇧 VocabTrainer</h1>
-    <p>Klasse 5 · A1 English</p>
+    <p id="header-sub">Klasse 5 · A1 English</p>
   </div>
-  <button id="btn-home" onclick="goHome()">← Home</button>
+  <div class="header-btns">
+    <button class="btn-header" id="btn-back" onclick="goBack()">← Zurück</button>
+    <button class="btn-header" id="btn-home" onclick="goHome()">🏠 Home</button>
+  </div>
 </header>
 
 <div class="container">
 
-  <!-- HOME -->
-  <div id="screen-home">
-    <div class="section-title">Topic</div>
-    <div class="topic-bar" id="topic-bar"></div>
-    <div id="word-count"></div>
-    <div class="section-title">Choose mode</div>
+  <!-- LOADING -->
+  <div id="screen-loading">Vokabeln werden geladen... ⏳</div>
+
+  <!-- UNIT SELECTION -->
+  <div id="screen-units" class="hidden">
+    <div class="section-title">Einheit wählen</div>
+    <div class="unit-list" id="unit-list"></div>
+  </div>
+
+  <!-- THEME SELECTION -->
+  <div id="screen-themes" class="hidden">
+    <div class="section-title" id="theme-unit-title"></div>
+    <button class="btn-all" id="btn-all-unit" onclick="selectAllUnit()">⭐ Alle Vokabeln dieser Einheit</button>
+    <div class="theme-list" id="theme-list"></div>
+  </div>
+
+  <!-- MODE SELECTION -->
+  <div id="screen-mode" class="hidden">
+    <div class="word-info" id="word-info"></div>
+    <div class="section-title">Spielmodus wählen</div>
     <div class="mode-grid">
-      <div class="mode-card" onclick="startMode('flashcard')">
-        <div class="icon">🃏</div><h3>Flashcards</h3><p>Flip &amp; learn</p>
-      </div>
-      <div class="mode-card" onclick="startMode('quiz')">
-        <div class="icon">🧠</div><h3>Quiz</h3><p>Multiple choice</p>
-      </div>
-      <div class="mode-card" onclick="startMode('memory')">
-        <div class="icon">🎴</div><h3>Memory</h3><p>Match pairs</p>
-      </div>
-      <div class="mode-card" onclick="startMode('fill')">
-        <div class="icon">✏️</div><h3>Fill in</h3><p>Type the word</p>
-      </div>
+      <div class="mode-card" onclick="startMode('flashcard')"><div class="icon">🃏</div><h3>Flashcards</h3><p>Flip &amp; learn</p></div>
+      <div class="mode-card" onclick="startMode('quiz')"><div class="icon">🧠</div><h3>Quiz</h3><p>Multiple choice</p></div>
+      <div class="mode-card" onclick="startMode('memory')"><div class="icon">🎴</div><h3>Memory</h3><p>Paare finden</p></div>
+      <div class="mode-card" onclick="startMode('fill')"><div class="icon">✏️</div><h3>Fill in</h3><p>Wort eingeben</p></div>
+      <div class="mode-card" onclick="startMode('scramble')"><div class="icon">🔀</div><h3>Scramble</h3><p>Buchstaben sortieren</p></div>
+      <div class="mode-card" onclick="startMode('speed')"><div class="icon">⚡</div><h3>Speed</h3><p>60 Sekunden</p></div>
     </div>
   </div>
 
@@ -197,7 +181,7 @@
         <div class="flip-front">
           <div class="flip-lang">🇬🇧 English</div>
           <div class="flip-word" id="fc-en"></div>
-          <div class="flip-hint">Tap to reveal</div>
+          <div class="flip-hint">Tippen zum Umdrehen</div>
         </div>
         <div class="flip-back">
           <div class="flip-lang">🇩🇪 Deutsch</div>
@@ -207,7 +191,7 @@
     </div>
     <div class="answer-btns hidden" id="fc-btns">
       <button class="btn-wrong" onclick="fcAnswer(false)">✗ Nope</button>
-      <button class="btn-right" onclick="fcAnswer(true)">✓ Knew it!</button>
+      <button class="btn-right" onclick="fcAnswer(true)">✓ Gewusst!</button>
     </div>
     <div class="score-tally">
       <span class="tally-right" id="fc-right">✓ 0</span>
@@ -219,11 +203,11 @@
   <div id="screen-quiz" class="panel hidden">
     <div class="counter" id="qz-counter"></div>
     <div class="q-card">
-      <div class="qlang">🇬🇧 What does this mean?</div>
+      <div class="qlang">🇬🇧 Was bedeutet dieses Wort?</div>
       <div class="qword" id="qz-word"></div>
     </div>
     <div class="options-grid" id="qz-options"></div>
-    <button class="btn-primary hidden" id="qz-next" onclick="qzNext()">Next →</button>
+    <button class="btn-primary hidden" id="qz-next" onclick="qzNext()">Weiter →</button>
   </div>
 
   <!-- MEMORY -->
@@ -236,366 +220,583 @@
   <div id="screen-fill" class="panel hidden">
     <div class="counter" id="fi-counter"></div>
     <div class="fill-card">
-      <div class="flang">🇩🇪 Translate to English:</div>
+      <div class="flang">🇩🇪 Auf Englisch:</div>
       <div class="fword" id="fi-word"></div>
     </div>
-    <input type="text" id="fill-input" placeholder="Type in English..." autocomplete="off">
+    <input type="text" id="fill-input" placeholder="Englisches Wort eingeben..." autocomplete="off">
     <div class="fill-feedback hidden" id="fi-feedback"></div>
-    <button class="btn-primary" id="fi-check" onclick="fiCheck()">Check ✓</button>
-    <button class="btn-primary hidden" id="fi-next" onclick="fiNext()">Next →</button>
+    <button class="btn-primary" id="fi-check" onclick="fiCheck()">Prüfen ✓</button>
+    <button class="btn-primary hidden" id="fi-next" onclick="fiNext()">Weiter →</button>
+  </div>
+
+  <!-- SCRAMBLE -->
+  <div id="screen-scramble" class="panel hidden">
+    <div class="counter" id="sc-counter"></div>
+    <div class="scramble-card">
+      <div class="slang">🇩🇪 Auf Englisch:</div>
+      <div class="sscrambled" id="sc-german"></div>
+    </div>
+    <div class="answer-display" id="sc-answer"></div>
+    <div class="letters-row" id="sc-letters"></div>
+    <div class="scramble-actions">
+      <button class="btn-secondary" onclick="scClear()">✗ Löschen</button>
+      <button class="btn-primary" id="sc-check" onclick="scCheck()">Prüfen ✓</button>
+      <button class="btn-primary hidden" id="sc-next" onclick="scNext()">Weiter →</button>
+    </div>
+    <div class="fill-feedback hidden" id="sc-feedback"></div>
+  </div>
+
+  <!-- SPEED -->
+  <div id="screen-speed" class="panel hidden">
+    <div class="speed-timer" id="sp-timer">60</div>
+    <div class="counter" id="sp-score">Punkte: 0</div>
+    <div class="speed-card">
+      <div class="slang">🇬🇧 Was bedeutet:</div>
+      <div class="sword" id="sp-word"></div>
+    </div>
+    <div class="options-grid" id="sp-options"></div>
   </div>
 
   <!-- RESULT -->
   <div id="screen-result" class="panel hidden">
     <div class="result">
       <div class="r-emoji" id="res-emoji"></div>
-      <div class="r-pct"  id="res-pct"></div>
-      <div class="r-sub"  id="res-sub"></div>
-      <button class="btn-primary" style="margin-top:20px" onclick="retryMode()">Try again 🔄</button>
+      <div class="r-pct" id="res-pct"></div>
+      <div class="r-sub" id="res-sub"></div>
+      <div class="result-btns">
+        <button class="btn-primary" onclick="retryMode()">Nochmal 🔄</button>
+        <button class="btn-secondary" onclick="goBack()">Anderen Modus</button>
+        <button class="btn-secondary" onclick="goHome()">🏠 Home</button>
+      </div>
     </div>
   </div>
 
 </div>
 
+<script src="navbar.js" onerror="console.log('navbar not found')"></script>
 <script>
-// ── DATA ─────────────────────────────────────────────────────────
-const VOCAB = [
-  {en:"one",    de:"eins",    topic:"Numbers"},
-  {en:"two",    de:"zwei",    topic:"Numbers"},
-  {en:"three",  de:"drei",    topic:"Numbers"},
-  {en:"four",   de:"vier",    topic:"Numbers"},
-  {en:"five",   de:"fünf",    topic:"Numbers"},
-  {en:"six",    de:"sechs",   topic:"Numbers"},
-  {en:"seven",  de:"sieben",  topic:"Numbers"},
-  {en:"eight",  de:"acht",    topic:"Numbers"},
-  {en:"nine",   de:"neun",    topic:"Numbers"},
-  {en:"ten",    de:"zehn",    topic:"Numbers"},
-  {en:"twenty", de:"zwanzig", topic:"Numbers"},
-  {en:"hundred",de:"hundert", topic:"Numbers"},
-
-  {en:"red",    de:"rot",     topic:"Colors"},
-  {en:"blue",   de:"blau",    topic:"Colors"},
-  {en:"green",  de:"grün",    topic:"Colors"},
-  {en:"yellow", de:"gelb",    topic:"Colors"},
-  {en:"orange", de:"orange",  topic:"Colors"},
-  {en:"purple", de:"lila",    topic:"Colors"},
-  {en:"black",  de:"schwarz", topic:"Colors"},
-  {en:"white",  de:"weiß",    topic:"Colors"},
-  {en:"brown",  de:"braun",   topic:"Colors"},
-  {en:"pink",   de:"rosa",    topic:"Colors"},
-
-  {en:"mother",      de:"Mutter",    topic:"Family"},
-  {en:"father",      de:"Vater",     topic:"Family"},
-  {en:"sister",      de:"Schwester", topic:"Family"},
-  {en:"brother",     de:"Bruder",    topic:"Family"},
-  {en:"grandmother", de:"Oma",       topic:"Family"},
-  {en:"grandfather", de:"Opa",       topic:"Family"},
-  {en:"friend",      de:"Freund/in", topic:"Family"},
-  {en:"baby",        de:"Baby",      topic:"Family"},
-
-  {en:"pen",        de:"Stift",          topic:"School"},
-  {en:"pencil",     de:"Bleistift",      topic:"School"},
-  {en:"book",       de:"Buch",           topic:"School"},
-  {en:"ruler",      de:"Lineal",         topic:"School"},
-  {en:"bag",        de:"Tasche",         topic:"School"},
-  {en:"teacher",    de:"Lehrer/in",      topic:"School"},
-  {en:"classroom",  de:"Klassenzimmer",  topic:"School"},
-  {en:"homework",   de:"Hausaufgaben",   topic:"School"},
-  {en:"desk",       de:"Schreibtisch",   topic:"School"},
-  {en:"board",      de:"Tafel",          topic:"School"},
-
-  {en:"cat",      de:"Katze",    topic:"Animals"},
-  {en:"dog",      de:"Hund",     topic:"Animals"},
-  {en:"bird",     de:"Vogel",    topic:"Animals"},
-  {en:"fish",     de:"Fisch",    topic:"Animals"},
-  {en:"horse",    de:"Pferd",    topic:"Animals"},
-  {en:"rabbit",   de:"Hase",     topic:"Animals"},
-  {en:"lion",     de:"Löwe",     topic:"Animals"},
-  {en:"elephant", de:"Elefant",  topic:"Animals"},
-  {en:"snake",    de:"Schlange", topic:"Animals"},
-  {en:"mouse",    de:"Maus",     topic:"Animals"},
-
-  {en:"house",   de:"Haus",     topic:"Everyday"},
-  {en:"food",    de:"Essen",    topic:"Everyday"},
-  {en:"water",   de:"Wasser",   topic:"Everyday"},
-  {en:"ball",    de:"Ball",     topic:"Everyday"},
-  {en:"phone",   de:"Telefon",  topic:"Everyday"},
-  {en:"car",     de:"Auto",     topic:"Everyday"},
-  {en:"door",    de:"Tür",      topic:"Everyday"},
-  {en:"window",  de:"Fenster",  topic:"Everyday"},
-  {en:"chair",   de:"Stuhl",    topic:"Everyday"},
-  {en:"table",   de:"Tisch",    topic:"Everyday"},
-];
-
-const TOPIC_EMOJI = {Numbers:"🔢",Colors:"🎨",Family:"👨‍👩‍👧",School:"🏫",Animals:"🐾",Everyday:"🏠"};
-const TOPICS = ["All", ...Object.keys(TOPIC_EMOJI)];
-
 // ── STATE ────────────────────────────────────────────────────────
-let currentTopic = "All";
-let currentMode  = null;
-let words        = [];
+let CONFIG = null;
+let currentUnit = null;
+let currentTheme = null;
+let currentWords = [];
+let currentMode = null;
+let currentLabel = '';
 
-// per-mode state
+// per-mode
 let fcIdx, fcFlipped, fcRight, fcWrong;
-let qzIdx, qzWords, qzScore, qzOpts, qzAnswered;
+let qzIdx, qzWords, qzScore, qzAnswered;
 let memPairs, memCards, memFlipped, memMatched, memMoves;
 let fiIdx, fiWords, fiScore, fiAnswered;
+let scIdx, scWords, scScore, scAnswered, scSelected, scLetterPool;
+let spTimer, spInterval, spScore, spWords, spIdx, spAnswered;
+
+// ── LOAD CONFIG ──────────────────────────────────────────────────
+async function loadConfig() {
+  try {
+    const res = await fetch('config.json');
+    CONFIG = await res.json();
+    showOnly('units');
+    renderUnitList();
+  } catch(e) {
+    document.getElementById('screen-loading').textContent = '⚠️ Fehler beim Laden der Vokabeln. Bitte Seite neu laden.';
+  }
+}
 
 // ── HELPERS ──────────────────────────────────────────────────────
-function shuffle(arr){ return [...arr].sort(()=>Math.random()-.5); }
-function pick(arr,n) { return shuffle(arr).slice(0,n); }
-function getWords()  { return currentTopic==="All" ? VOCAB : VOCAB.filter(v=>v.topic===currentTopic); }
-function show(id)    { document.getElementById(id).classList.remove('hidden'); }
-function hide(id)    { document.getElementById(id).classList.add('hidden'); }
-function screens()   { return ['home','flashcard','quiz','memory','fill','result']; }
-function showOnly(id){ screens().forEach(s=>{ const el=document.getElementById('screen-'+s); el ? el.classList.add('hidden') : null; }); show('screen-'+id); }
+function shuffle(arr) { return [...arr].sort(() => Math.random() - .5); }
+function pick(arr, n) { return shuffle(arr).slice(0, n); }
+function showOnly(id) {
+  ['loading','units','themes','mode','flashcard','quiz','memory','fill','scramble','speed','result'].forEach(s => {
+    const el = document.getElementById('screen-' + s);
+    if (el) el.classList.add('hidden');
+  });
+  document.getElementById('screen-' + id).classList.remove('hidden');
+}
+function setHeaderBtns(back, home) {
+  document.getElementById('btn-back').style.display = back ? 'block' : 'none';
+  document.getElementById('btn-home').style.display = home ? 'block' : 'none';
+}
 
-// ── INIT ─────────────────────────────────────────────────────────
-function init(){
-  const bar = document.getElementById('topic-bar');
-  TOPICS.forEach(t=>{
+// Flatten all words from a unit
+function getUnitWords(unitKey) {
+  const unit = CONFIG.units[unitKey];
+  let words = [];
+  Object.values(unit.themes).forEach(theme => words = words.concat(theme.words));
+  return words;
+}
+
+// Get words for a special list
+function getSpecialWords(listKey) {
+  return CONFIG.specialLists[listKey].words;
+}
+
+// ── UNIT LIST ────────────────────────────────────────────────────
+function renderUnitList() {
+  const list = document.getElementById('unit-list');
+  list.innerHTML = '';
+
+  // Special lists first
+  const specialBtn = document.createElement('button');
+  specialBtn.className = 'unit-btn';
+  specialBtn.style.borderColor = '#f97316';
+  specialBtn.style.color = '#f97316';
+  specialBtn.innerHTML = `<span>⭐ Sonderlisten (Zahlen, Farben, Monate...)</span><span class="arrow">›</span>`;
+  specialBtn.onclick = () => showSpecialLists();
+  list.appendChild(specialBtn);
+
+  // Units
+  Object.entries(CONFIG.units).forEach(([key, unit]) => {
     const btn = document.createElement('button');
-    btn.className = 'topic-btn' + (t==='All' ? ' active' : '');
-    btn.textContent = t==='All' ? '🌟 All' : `${TOPIC_EMOJI[t]} ${t}`;
-    btn.onclick = () => selectTopic(t);
-    bar.appendChild(btn);
+    btn.className = 'unit-btn';
+    const total = getUnitWords(key).length;
+    btn.innerHTML = `<span>${unit.label}</span><span style="display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:#9ca3af;font-weight:600">${total} Wörter</span><span class="arrow">›</span></span>`;
+    btn.onclick = () => showThemes(key);
+    list.appendChild(btn);
   });
-  updateWordCount();
+
+  setHeaderBtns(false, false);
 }
 
-function selectTopic(t){
-  currentTopic = t;
-  document.querySelectorAll('.topic-btn').forEach((btn,i)=>{
-    btn.classList.toggle('active', TOPICS[i]===t);
+// ── SPECIAL LISTS ────────────────────────────────────────────────
+function showSpecialLists() {
+  const list = document.getElementById('theme-list');
+  list.innerHTML = '';
+  document.getElementById('theme-unit-title').textContent = '⭐ Sonderlisten';
+  document.getElementById('btn-all-unit').classList.add('hidden');
+
+  Object.entries(CONFIG.specialLists).forEach(([key, sl]) => {
+    const btn = document.createElement('button');
+    btn.className = 'theme-btn special';
+    btn.innerHTML = `<span>${sl.label}</span><span class="word-count">${sl.words.length} Wörter</span>`;
+    btn.onclick = () => {
+      currentUnit = null;
+      currentTheme = key;
+      currentWords = sl.words;
+      currentLabel = sl.label;
+      showModeSelection();
+    };
+    list.appendChild(btn);
   });
-  updateWordCount();
+
+  currentUnit = 'special';
+  showOnly('themes');
+  setHeaderBtns(true, false);
 }
 
-function updateWordCount(){
-  document.getElementById('word-count').textContent = getWords().length + ' words selected';
+// ── THEME LIST ────────────────────────────────────────────────────
+function showThemes(unitKey) {
+  currentUnit = unitKey;
+  const unit = CONFIG.units[unitKey];
+  document.getElementById('theme-unit-title').textContent = unit.label;
+  document.getElementById('btn-all-unit').classList.remove('hidden');
+
+  const list = document.getElementById('theme-list');
+  list.innerHTML = '';
+
+  Object.entries(unit.themes).forEach(([key, theme]) => {
+    const btn = document.createElement('button');
+    btn.className = 'theme-btn';
+    btn.innerHTML = `<span>${theme.label}</span><span class="word-count">${theme.words.length} Wörter</span>`;
+    btn.onclick = () => {
+      currentTheme = key;
+      currentWords = theme.words;
+      currentLabel = `${unit.label} – ${theme.label}`;
+      showModeSelection();
+    };
+    list.appendChild(btn);
+  });
+
+  showOnly('themes');
+  setHeaderBtns(true, false);
 }
 
-function goHome(){
+function selectAllUnit() {
+  currentTheme = 'all';
+  currentWords = getUnitWords(currentUnit);
+  currentLabel = CONFIG.units[currentUnit].label + ' – Alle';
+  showModeSelection();
+}
+
+// ── MODE SELECTION ───────────────────────────────────────────────
+function showModeSelection() {
+  document.getElementById('word-info').textContent = `📚 ${currentLabel} · ${currentWords.length} Vokabeln`;
+  showOnly('mode');
+  setHeaderBtns(true, true);
+}
+
+function goBack() {
+  if (currentUnit === null || currentUnit === 'special') {
+    renderUnitList();
+    showOnly('units');
+    setHeaderBtns(false, false);
+  } else if (currentTheme !== null) {
+    currentTheme = null;
+    currentWords = [];
+    showThemes(currentUnit);
+  } else {
+    renderUnitList();
+    showOnly('units');
+    setHeaderBtns(false, false);
+  }
+}
+
+function goHome() {
+  currentUnit = null;
+  currentTheme = null;
+  currentWords = [];
   currentMode = null;
-  hide('btn-home');
-  showOnly('home');
+  if (spInterval) clearInterval(spInterval);
+  renderUnitList();
+  showOnly('units');
+  setHeaderBtns(false, false);
 }
 
-function startMode(mode){
+// ── START MODE ───────────────────────────────────────────────────
+function startMode(mode) {
   currentMode = mode;
-  words = shuffle(getWords());
-  show('btn-home');
-  if (mode==='flashcard') initFlashcard();
-  if (mode==='quiz')      initQuiz();
-  if (mode==='memory')    initMemory();
-  if (mode==='fill')      initFill();
+  if (spInterval) clearInterval(spInterval);
+  const words = shuffle(currentWords);
+  if (mode === 'flashcard') initFlashcard(words);
+  if (mode === 'quiz') initQuiz(words);
+  if (mode === 'memory') initMemory(words);
+  if (mode === 'fill') initFill(words);
+  if (mode === 'scramble') initScramble(words);
+  if (mode === 'speed') initSpeed(words);
+  setHeaderBtns(true, true);
 }
 
-function retryMode(){ startMode(currentMode); }
+function retryMode() { startMode(currentMode); }
 
-function showResult(right, wrong, total){
+function showResult(right, wrong, total, label) {
+  if (spInterval) clearInterval(spInterval);
   showOnly('result');
-  const pct = Math.round(right/total*100);
-  document.getElementById('res-emoji').textContent = pct>=80?'🏆':pct>=60?'👍':'💪';
-  document.getElementById('res-pct').textContent   = pct + '%';
-  document.getElementById('res-sub').textContent   = `${right} richtig, ${wrong} falsch von ${total}`;
+  const pct = Math.round(right / total * 100);
+  document.getElementById('res-emoji').textContent = pct >= 80 ? '🏆' : pct >= 60 ? '👍' : '💪';
+  document.getElementById('res-pct').textContent = label || pct + '%';
+  document.getElementById('res-sub').textContent = `${right} richtig, ${wrong} falsch von ${total}`;
 }
 
 // ── FLASHCARD ────────────────────────────────────────────────────
-function initFlashcard(){
-  fcIdx=0; fcFlipped=false; fcRight=0; fcWrong=0;
+function initFlashcard(words) {
+  fcIdx = 0; fcFlipped = false; fcRight = 0; fcWrong = 0;
+  currentWords = words;
   showOnly('flashcard');
   renderFlashcard();
 }
 
-function renderFlashcard(){
-  const w = words[fcIdx];
-  document.getElementById('fc-en').textContent    = w.en;
-  document.getElementById('fc-de').textContent    = w.de;
-  document.getElementById('fc-counter').textContent = `${fcIdx+1} / ${words.length}`;
+function renderFlashcard() {
+  const w = currentWords[fcIdx];
+  document.getElementById('fc-en').textContent = w.en;
+  document.getElementById('fc-de').textContent = w.de;
+  document.getElementById('fc-counter').textContent = `${fcIdx + 1} / ${currentWords.length}`;
   document.getElementById('flip-inner').classList.remove('flipped');
-  hide('fc-btns');
+  document.getElementById('fc-btns').classList.add('hidden');
   fcFlipped = false;
-  updateFcTally();
-}
-
-function flipCard(){
-  if(fcFlipped) return;
-  fcFlipped = true;
-  document.getElementById('flip-inner').classList.add('flipped');
-  show('fc-btns');
-}
-
-function fcAnswer(correct){
-  if(correct) fcRight++; else fcWrong++;
-  fcIdx++;
-  if(fcIdx >= words.length){ showResult(fcRight, fcWrong, words.length); return; }
-  renderFlashcard();
-}
-
-function updateFcTally(){
   document.getElementById('fc-right').textContent = '✓ ' + fcRight;
   document.getElementById('fc-wrong').textContent = '✗ ' + fcWrong;
 }
 
+function flipCard() {
+  if (fcFlipped) return;
+  fcFlipped = true;
+  document.getElementById('flip-inner').classList.add('flipped');
+  document.getElementById('fc-btns').classList.remove('hidden');
+}
+
+function fcAnswer(correct) {
+  if (correct) fcRight++; else fcWrong++;
+  fcIdx++;
+  if (fcIdx >= currentWords.length) { showResult(fcRight, fcWrong, currentWords.length); return; }
+  renderFlashcard();
+}
+
 // ── QUIZ ─────────────────────────────────────────────────────────
-function initQuiz(){
-  qzIdx=0; qzScore=0; qzAnswered=false;
+function initQuiz(words) {
+  qzIdx = 0; qzScore = 0; qzAnswered = false;
   qzWords = pick(words, Math.min(12, words.length));
   showOnly('quiz');
   renderQuiz();
 }
 
-function renderQuiz(){
+function renderQuiz() {
   const q = qzWords[qzIdx];
-  document.getElementById('qz-counter').textContent = `${qzIdx+1} / ${qzWords.length} · Score: ${qzScore}`;
-  document.getElementById('qz-word').textContent    = q.en;
-  hide('qz-next');
+  document.getElementById('qz-counter').textContent = `${qzIdx + 1} / ${qzWords.length} · Punkte: ${qzScore}`;
+  document.getElementById('qz-word').textContent = q.en;
+  document.getElementById('qz-next').classList.add('hidden');
   qzAnswered = false;
 
-  const wrong3 = pick(VOCAB.filter(v=>v.de!==q.de), 3);
-  qzOpts = shuffle([q, ...wrong3]);
+  // Build wrong options from all config words
+  const allWords = getAllWords();
+  const wrong3 = pick(allWords.filter(v => v.de !== q.de), 3);
+  const opts = shuffle([q, ...wrong3]);
 
   const grid = document.getElementById('qz-options');
   grid.innerHTML = '';
-  qzOpts.forEach(opt=>{
+  opts.forEach(opt => {
     const btn = document.createElement('button');
     btn.className = 'opt-btn';
     btn.textContent = opt.de;
-    btn.onclick = () => qzChoose(opt, q, btn);
+    btn.onclick = () => qzChoose(opt, q, btn, opts);
     grid.appendChild(btn);
   });
 }
 
-function qzChoose(opt, correct, btn){
-  if(qzAnswered) return;
-  qzAnswered = true;
-  if(opt.de===correct.de){ qzScore++; }
-  document.querySelectorAll('.opt-btn').forEach(b=>{
-    const isCorrect = qzOpts[Array.from(document.querySelectorAll('.opt-btn')).indexOf(b)].de===correct.de;
-    if(isCorrect) b.classList.add('correct');
-    else if(b===btn) b.classList.add('wrong');
-  });
-  show('qz-next');
+function getAllWords() {
+  let all = [];
+  Object.values(CONFIG.units).forEach(unit => Object.values(unit.themes).forEach(t => all = all.concat(t.words)));
+  Object.values(CONFIG.specialLists).forEach(sl => all = all.concat(sl.words));
+  return all;
 }
 
-function qzNext(){
+function qzChoose(opt, correct, btn, opts) {
+  if (qzAnswered) return;
+  qzAnswered = true;
+  if (opt.de === correct.de) qzScore++;
+  const btns = document.querySelectorAll('.opt-btn');
+  btns.forEach((b, i) => {
+    if (opts[i].de === correct.de) b.classList.add('correct');
+    else if (b === btn) b.classList.add('wrong');
+  });
+  document.getElementById('qz-next').classList.remove('hidden');
+}
+
+function qzNext() {
   qzIdx++;
-  if(qzIdx>=qzWords.length){ showResult(qzScore, qzWords.length-qzScore, qzWords.length); return; }
+  if (qzIdx >= qzWords.length) { showResult(qzScore, qzWords.length - qzScore, qzWords.length); return; }
   renderQuiz();
 }
 
 // ── MEMORY ───────────────────────────────────────────────────────
-function initMemory(){
-  memPairs   = pick(words, 8);
-  memMatched = [];
-  memFlipped = [];
-  memMoves   = 0;
-  memCards   = shuffle([
-    ...memPairs.map((w,i)=>({id:i*2,  text:w.en, pairId:i, lang:'en'})),
-    ...memPairs.map((w,i)=>({id:i*2+1,text:w.de, pairId:i, lang:'de'})),
+function initMemory(words) {
+  memPairs = pick(words, 8);
+  memMatched = []; memFlipped = []; memMoves = 0;
+  memCards = shuffle([
+    ...memPairs.map((w, i) => ({id: i * 2, text: w.en, pairId: i, lang: 'en'})),
+    ...memPairs.map((w, i) => ({id: i * 2 + 1, text: w.de, pairId: i, lang: 'de'}))
   ]);
   showOnly('memory');
   renderMemory();
 }
 
-function renderMemory(){
-  document.getElementById('mem-counter').textContent =
-    `Züge: ${memMoves} · Gefunden: ${memMatched.length}/${memPairs.length}`;
+function renderMemory() {
+  document.getElementById('mem-counter').textContent = `Züge: ${memMoves} · Gefunden: ${memMatched.length}/${memPairs.length}`;
   const grid = document.getElementById('mem-grid');
   grid.innerHTML = '';
-  memCards.forEach(card=>{
+  memCards.forEach(card => {
     const el = document.createElement('div');
     el.className = 'mem-card';
-    const isMatched  = memMatched.includes(card.pairId);
-    const isFaceUp   = memFlipped.find(c=>c.id===card.id);
-    if(isMatched){ el.classList.add('matched'); el.textContent = card.text; }
-    else if(isFaceUp){ el.classList.add('face-up'); if(card.lang==='de') el.classList.add('de'); el.textContent = card.text; }
-    else { el.textContent = '?'; el.onclick = ()=>memFlip(card); }
+    const isMatched = memMatched.includes(card.pairId);
+    const isFaceUp = memFlipped.find(c => c.id === card.id);
+    if (isMatched) { el.classList.add('matched'); el.textContent = card.text; }
+    else if (isFaceUp) { el.classList.add('face-up'); if (card.lang === 'de') el.classList.add('de'); el.textContent = card.text; }
+    else { el.textContent = '?'; el.onclick = () => memFlip(card); }
     grid.appendChild(el);
   });
 }
 
-function memFlip(card){
-  if(memFlipped.length===2) return;
-  if(memFlipped.find(c=>c.id===card.id)) return;
-  if(memMatched.includes(card.pairId)) return;
-
+function memFlip(card) {
+  if (memFlipped.length === 2) return;
+  if (memFlipped.find(c => c.id === card.id)) return;
+  if (memMatched.includes(card.pairId)) return;
   memFlipped = [...memFlipped, card];
   renderMemory();
-
-  if(memFlipped.length===2){
+  if (memFlipped.length === 2) {
     memMoves++;
-    if(memFlipped[0].pairId===memFlipped[1].pairId){
+    if (memFlipped[0].pairId === memFlipped[1].pairId) {
       memMatched = [...memMatched, memFlipped[0].pairId];
       memFlipped = [];
       renderMemory();
-      if(memMatched.length===memPairs.length){
-        setTimeout(()=>showResult(memPairs.length,0,memPairs.length),400);
-      }
+      if (memMatched.length === memPairs.length) setTimeout(() => showResult(memPairs.length, 0, memPairs.length), 400);
     } else {
-      setTimeout(()=>{ memFlipped=[]; renderMemory(); }, 900);
+      setTimeout(() => { memFlipped = []; renderMemory(); }, 900);
     }
   }
 }
 
 // ── FILL IN ──────────────────────────────────────────────────────
-function initFill(){
-  fiIdx=0; fiScore=0; fiAnswered=false;
+function initFill(words) {
+  fiIdx = 0; fiScore = 0; fiAnswered = false;
   fiWords = pick(words, Math.min(10, words.length));
   showOnly('fill');
   renderFill();
-  const inp = document.getElementById('fill-input');
-  inp.onkeydown = e => { if(e.key==='Enter' && !fiAnswered) fiCheck(); };
+  document.getElementById('fill-input').onkeydown = e => { if (e.key === 'Enter' && !fiAnswered) fiCheck(); };
 }
 
-function renderFill(){
+function renderFill() {
   const w = fiWords[fiIdx];
-  document.getElementById('fi-counter').textContent = `${fiIdx+1} / ${fiWords.length} · Score: ${fiScore}`;
-  document.getElementById('fi-word').textContent    = w.de;
+  document.getElementById('fi-counter').textContent = `${fiIdx + 1} / ${fiWords.length} · Punkte: ${fiScore}`;
+  document.getElementById('fi-word').textContent = w.de;
   const inp = document.getElementById('fill-input');
-  inp.value = ''; inp.disabled = false;
-  inp.className = ''; inp.focus();
-  hide('fi-feedback');
-  hide('fi-next');
-  show('fi-check');
+  inp.value = ''; inp.disabled = false; inp.className = ''; inp.focus();
+  document.getElementById('fi-feedback').classList.add('hidden');
+  document.getElementById('fi-next').classList.add('hidden');
+  document.getElementById('fi-check').classList.remove('hidden');
   document.getElementById('fi-check').disabled = false;
   fiAnswered = false;
 }
 
-function fiCheck(){
-  if(fiAnswered) return;
+function fiCheck() {
+  if (fiAnswered) return;
   const inp = document.getElementById('fill-input');
   const answer = inp.value.trim().toLowerCase();
   const correct = fiWords[fiIdx].en.toLowerCase();
   fiAnswered = true;
   inp.disabled = true;
   const fb = document.getElementById('fi-feedback');
-  fb.classList.remove('hidden','correct','wrong');
-  if(answer===correct){
+  fb.classList.remove('hidden', 'correct', 'wrong');
+  if (answer === correct) {
     fiScore++;
     inp.classList.add('correct');
-    fb.textContent = '✓ Correct! 🎉';
-    fb.classList.add('correct');
+    fb.textContent = '✓ Richtig! 🎉';
+    fb.className = 'fill-feedback correct';
   } else {
     inp.classList.add('wrong');
-    fb.textContent = `✗ Answer: ${fiWords[fiIdx].en}`;
-    fb.classList.add('wrong');
+    fb.textContent = `✗ Richtig wäre: ${fiWords[fiIdx].en}`;
+    fb.className = 'fill-feedback wrong';
   }
-  show('fi-feedback');
-  hide('fi-check');
-  show('fi-next');
+  document.getElementById('fi-feedback').classList.remove('hidden');
+  document.getElementById('fi-check').classList.add('hidden');
+  document.getElementById('fi-next').classList.remove('hidden');
 }
 
-function fiNext(){
+function fiNext() {
   fiIdx++;
-  if(fiIdx>=fiWords.length){ showResult(fiScore, fiWords.length-fiScore, fiWords.length); return; }
+  if (fiIdx >= fiWords.length) { showResult(fiScore, fiWords.length - fiScore, fiWords.length); return; }
   renderFill();
 }
 
-// ── START ─────────────────────────────────────────────────────────
-init();
+// ── SCRAMBLE ─────────────────────────────────────────────────────
+function initScramble(words) {
+  scIdx = 0; scScore = 0; scAnswered = false;
+  scWords = pick(words, Math.min(10, words.length));
+  showOnly('scramble');
+  renderScramble();
+}
+
+function renderScramble() {
+  const w = scWords[scIdx];
+  document.getElementById('sc-counter').textContent = `${scIdx + 1} / ${scWords.length} · Punkte: ${scScore}`;
+  document.getElementById('sc-german').textContent = w.de;
+  document.getElementById('sc-answer').textContent = '';
+  document.getElementById('sc-feedback').classList.add('hidden');
+  document.getElementById('sc-next').classList.add('hidden');
+  document.getElementById('sc-check').classList.remove('hidden');
+  scAnswered = false;
+  scSelected = [];
+  // Scramble the letters
+  scLetterPool = shuffle(w.en.split(''));
+  renderLetters();
+}
+
+function renderLetters() {
+  const row = document.getElementById('sc-letters');
+  row.innerHTML = '';
+  scLetterPool.forEach((letter, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'letter-btn' + (scSelected.includes(i) ? ' used' : '');
+    btn.textContent = letter;
+    btn.disabled = scSelected.includes(i);
+    if (!scSelected.includes(i)) btn.onclick = () => scPickLetter(i);
+    row.appendChild(btn);
+  });
+  document.getElementById('sc-answer').textContent = scSelected.map(i => scLetterPool[i]).join('');
+}
+
+function scPickLetter(i) {
+  if (scAnswered) return;
+  scSelected.push(i);
+  renderLetters();
+}
+
+function scClear() {
+  scSelected = [];
+  renderLetters();
+}
+
+function scCheck() {
+  if (scAnswered || scSelected.length === 0) return;
+  const answer = scSelected.map(i => scLetterPool[i]).join('').toLowerCase();
+  const correct = scWords[scIdx].en.toLowerCase();
+  scAnswered = true;
+  const fb = document.getElementById('sc-feedback');
+  fb.classList.remove('hidden', 'correct', 'wrong');
+  if (answer === correct) {
+    scScore++;
+    fb.textContent = '✓ Richtig! 🎉';
+    fb.className = 'fill-feedback correct';
+  } else {
+    fb.textContent = `✗ Richtig wäre: ${scWords[scIdx].en}`;
+    fb.className = 'fill-feedback wrong';
+  }
+  document.getElementById('sc-check').classList.add('hidden');
+  document.getElementById('sc-next').classList.remove('hidden');
+}
+
+function scNext() {
+  scIdx++;
+  if (scIdx >= scWords.length) { showResult(scScore, scWords.length - scScore, scWords.length); return; }
+  renderScramble();
+}
+
+// ── SPEED ────────────────────────────────────────────────────────
+function initSpeed(words) {
+  spScore = 0; spAnswered = false; spTimer = 60;
+  spWords = shuffle(words);
+  spIdx = 0;
+  showOnly('speed');
+  renderSpeedQuestion();
+  document.getElementById('sp-timer').textContent = '60';
+  document.getElementById('sp-timer').classList.remove('urgent');
+  spInterval = setInterval(() => {
+    spTimer--;
+    document.getElementById('sp-timer').textContent = spTimer;
+    if (spTimer <= 10) document.getElementById('sp-timer').classList.add('urgent');
+    if (spTimer <= 0) {
+      clearInterval(spInterval);
+      showResult(spScore, '–', spScore, `${spScore} Punkte in 60 Sekunden! ⚡`);
+    }
+  }, 1000);
+}
+
+function renderSpeedQuestion() {
+  if (spIdx >= spWords.length) spIdx = 0;
+  const q = spWords[spIdx];
+  document.getElementById('sp-score').textContent = `Punkte: ${spScore}`;
+  document.getElementById('sp-word').textContent = q.en;
+  spAnswered = false;
+
+  const allWords = getAllWords();
+  const wrong3 = pick(allWords.filter(v => v.de !== q.de), 3);
+  const opts = shuffle([q, ...wrong3]);
+  const grid = document.getElementById('sp-options');
+  grid.innerHTML = '';
+  opts.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'opt-btn';
+    btn.textContent = opt.de;
+    btn.onclick = () => spChoose(opt, q, btn, opts);
+    grid.appendChild(btn);
+  });
+}
+
+function spChoose(opt, correct, btn, opts) {
+  if (spAnswered || spTimer <= 0) return;
+  spAnswered = true;
+  const btns = document.querySelectorAll('#sp-options .opt-btn');
+  btns.forEach((b, i) => {
+    if (opts[i].de === correct.de) b.classList.add('correct');
+    else if (b === btn) b.classList.add('wrong');
+  });
+  if (opt.de === correct.de) spScore++;
+  spIdx++;
+  setTimeout(() => {
+    if (spTimer > 0) renderSpeedQuestion();
+  }, 500);
+}
+
+// ── INIT ─────────────────────────────────────────────────────────
+loadConfig();
 </script>
 </body>
- <script src="navbar.js"></script>
 </html>
