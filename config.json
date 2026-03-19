@@ -7,7 +7,9 @@
       "emoji": "📱",
       "beschreibung": "Übe deine Kopfrechenkünste am Anfang der Stunde!",
       "hidden": false,
-      "klassen": [],
+      "klassen": [
+        5
+      ],
       "customTags": [],
       "aod": false
     }
