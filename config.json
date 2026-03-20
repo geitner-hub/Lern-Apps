@@ -82,6 +82,17 @@
       ],
       "customTags": [],
       "aod": false
+    },
+    {
+      "name": "Regeln in unserer Gesellschaft",
+      "datei": "regeln-sortierer-gpg.html",
+      "fach": "GPG",
+      "emoji": "📱",
+      "beschreibung": "Welche Regeln gibt es bei uns? Ordne zu!",
+      "hidden": false,
+      "klassen": [],
+      "customTags": [],
+      "aod": false
     }
   ],
   "customTags": [
