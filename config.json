@@ -69,6 +69,17 @@
         }
       ],
       "aod": false
+    },
+    {
+      "name": "Längeneinheiten umrechnen",
+      "datei": "laengeneinheiten.html",
+      "fach": "Mathematik",
+      "emoji": "📱",
+      "beschreibung": "",
+      "hidden": false,
+      "klassen": [],
+      "customTags": [],
+      "aod": false
     }
   ],
   "customTags": [
