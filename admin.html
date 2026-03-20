@@ -492,7 +492,7 @@ const ConfigAPI=(()=>{
     try{
       const body={message:'Admin: Einstellungen aktualisiert',content:encode(toSave),branch:'main'};
       if(sha)body.sha=sha;
-      const r=await fetch(WORKER_URL,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+      const r=await fetch(WORKER_URL,{method:'PUT',headers:{'Content-Type':'application/json','X-Admin-Token':ADMIN_SECRET},body:JSON.stringify(body)});
       if(!r.ok){if(r.status===409)throw new Error('CONFLICT');throw new Error('HTTP '+r.status);}
       const d=await r.json();
       writeCache(toSave);
@@ -505,9 +505,10 @@ const ConfigAPI=(()=>{
 <script>
 'use strict';
 
-const BASE_URL   = 'https://geitner-hub.github.io/Lern-Apps/';
-const ADMIN_PW   = 'lehrer123'; // ← Passwort hier ändern
-const KLASSEN    = [5, 6, 7, 8, 9];
+const BASE_URL     = 'https://geitner-hub.github.io/Lern-Apps/';
+const ADMIN_PW     = 'lehrer123';        // ← Login-Passwort hier ändern
+const ADMIN_SECRET = 'HIER_DEIN_SECRET'; // ← muss mit Cloudflare ADMIN_SECRET übereinstimmen
+const KLASSEN      = [5, 6, 7, 8, 9];
 
 const ANN_COLORS = [
   { bg: 'rgba(230,168,23,.18)',  text: '#e6a817', label: 'Gold'   },
