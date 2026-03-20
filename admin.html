@@ -311,7 +311,7 @@
             <select id="f-fach">
               <option value="">– Fach wählen –</option>
               <option>Mathematik</option><option>Englisch</option><option>Deutsch</option>
-              <option>Sachkunde</option><option>Sport</option><option>Informatik</option><option>Geschichte</option>
+              <option>WiB</option><option>Sport</option><option>Informatik</option><option>GPG</option>
             </select>
           </div>
           <div class="form-group">
@@ -334,7 +334,7 @@
         <select class="fach-filter" id="fach-filter" onchange="filterAppList()">
           <option value="">Alle Fächer</option>
           <option>Mathematik</option><option>Englisch</option><option>Deutsch</option>
-          <option>Sachkunde</option><option>Sport</option><option>Informatik</option><option>Geschichte</option>
+          <option>WiB</option><option>Sport</option><option>Informatik</option><option>GPG</option>
         </select>
         <select class="fach-filter" id="status-filter" onchange="filterAppList()">
           <option value="">Alle Status</option>
@@ -486,7 +486,7 @@ const WORKER_URL   = 'https://lern-apps-config.bennigeitner.workers.dev';
 const BASE_URL     = 'https://geitner-hub.github.io/Lern-Apps/';
 const ADMIN_PW     = 'lehrer123'; // ← HIER ÄNDERN
 const KLASSEN      = [5,6,7,8,9];
-const CAT_ICONS    = {Mathematik:'➕',Englisch:'🇬🇧',Deutsch:'📖',Sachkunde:'🌍',Sport:'⚽',Informatik:'💻',Geschichte:'🏛'};
+const CAT_ICONS    = {Mathematik:'➕',Englisch:'🇬🇧',Deutsch:'📖',WiB:'🌍',Sport:'⚽',Informatik:'💻',GPG:'🏛'};
 
 // Tag-Farbpalette – bg, border, text (für dark theme)
 const TAG_COLORS = [
@@ -719,7 +719,7 @@ function buildAppList(){
           <div class="form-group">
             <label>Fach</label>
             <select id="ei-fach-${i}">
-              ${['Mathematik','Englisch','Deutsch','Sachkunde','Sport','Informatik','Geschichte'].map(f=>`<option${app.fach===f?' selected':''}>${f}</option>`).join('')}
+              ${['Mathematik','Englisch','Deutsch','WiB','Sport','Informatik','GPG'].map(f=>`<option${app.fach===f?' selected':''}>${f}</option>`).join('')}
             </select>
           </div>
           <div class="form-group full">
