@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>App-Name – Lernwelt</title>
+  <!--
+  ═══════════════════════════════════════════════
+   LERNWELT – App-Template
+   Kopiere diese Datei für jede neue App.
+   Dateiname: meine-app.html
+   Dann im Admin-Panel eintragen.
+  ═══════════════════════════════════════════════
+  -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <style>
+    /* ── Basis-Reset & CSS-Variablen ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:      #0f0e1a;
+      --surface: #1b1929;
+      --accent:  #e6a817;
+      --indigo:  #6366f1;
+      --text:    #f1f0fb;
+      --text2:   rgba(241,240,251,.65);
+      --muted:   rgba(241,240,251,.35);
+      --green:   #4ade80;
+      --red:     #f87171;
+      --r:       14px;
+    }
+    body {
+      font-family: 'Nunito', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 2rem 1.5rem 6rem; /* Platz für Home-Button unten */
+    }
+
+    /* ── Beispiel-Styles (anpassen nach Bedarf) ── */
+    h1 {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(1.5rem, 4vw, 2.2rem);
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+    .subtitle {
+      font-size: 0.9rem;
+      color: var(--text2);
+      margin-bottom: 2rem;
+    }
+
+    /* Aufgaben-Container */
+    .app-container {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    /* Ergebnis-Anzeige (optional) */
+    .result-display {
+      background: var(--surface);
+      border-radius: var(--r);
+      padding: 1.2rem 1.5rem;
+      margin-top: 1.5rem;
+      border: 1px solid rgba(255,255,255,.07);
+      display: none; /* Einblenden wenn fertig: style.display = 'block' */
+    }
+    .result-display h2 {
+      font-family: 'Fredoka One', cursive;
+      color: var(--green);
+      font-size: 1.4rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <h1>🎯 App-Name</h1>
+  <p class="subtitle">Kurze Beschreibung was die Schüler hier machen sollen.</p>
+
+  <!-- ── Dein App-Inhalt hier ── -->
+
+
+  <!-- ── Ergebnis-Anzeige ── -->
+  <div class="result-display" id="result-box">
+    <h2 id="result-title">Ergebnis</h2>
+    <p id="result-text"></p>
+  </div>
+</div>
+
+<!-- navbar.js: Home-Button + Ergebnisspeicherung -->
+<script src="navbar.js"></script>
+<script>
+  // ═══════════════════════════════════════════════════
+  //  Dein App-Code hier.
+  //
+  //  Am Ende einer Übung Ergebnis speichern:
+  //
+  //    LernApps.saveResult({
+  //      score: 8,        // erreichte Punkte
+  //      max:   10,       // maximale Punkte
+  //      label: '8 / 10'  // Anzeigetext (optional)
+  //    });
+  //
+  //  Das speichert das Ergebnis lokal und zeigt es
+  //  auf der Startseite als Badge an.
+  // ═══════════════════════════════════════════════════
+
+  // Beispiel: Ergebnis nach Übungsende speichern
+  function beendeUebung(richtig, gesamt) {
+    // Ergebnis-Box anzeigen
+    const box = document.getElementById('result-box');
+    box.style.display = 'block';
+    document.getElementById('result-title').textContent =
+      richtig === gesamt ? '🎉 Perfekt!' : `${richtig} von ${gesamt} richtig`;
+    document.getElementById('result-text').textContent =
+      `Du hast ${richtig} von ${gesamt} Aufgaben richtig gelöst.`;
+
+    // Ergebnis speichern (für Startseite)
+    LernApps.saveResult({
+      score: richtig,
+      max:   gesamt,
+      label: `${richtig} / ${gesamt}`
+    });
+  }
+
+  // Dein eigentlicher App-Code:
+  // ...
+</script>
+</body>
+</html>

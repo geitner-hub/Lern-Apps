@@ -38,73 +38,30 @@
     }
 
     /* ── HEADER ── */
-    header{
-      background:var(--hbg);
-      padding:2.6rem 2rem 2rem;
-      text-align:center;position:relative;overflow:hidden;
-    }
-    header::before{
-      content:'';position:absolute;inset:0;
-      background:
-        radial-gradient(ellipse at 15% 60%,rgba(45,31,110,.75) 0%,transparent 52%),
-        radial-gradient(ellipse at 85% 20%,rgba(79,29,150,.55) 0%,transparent 50%),
-        radial-gradient(ellipse at 50% 110%,rgba(99,102,241,.18) 0%,transparent 50%);
-    }
-    header::after{
-      content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
-      background:linear-gradient(90deg,transparent,var(--accent),transparent);
-    }
+    header{background:var(--hbg);padding:2.6rem 2rem 2rem;text-align:center;position:relative;overflow:hidden;}
+    header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 15% 60%,rgba(45,31,110,.75) 0%,transparent 52%),radial-gradient(ellipse at 85% 20%,rgba(79,29,150,.55) 0%,transparent 50%),radial-gradient(ellipse at 50% 110%,rgba(99,102,241,.18) 0%,transparent 50%);}
+    header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--accent),transparent);}
     .header-deco{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
-    .header-deco::before{
-      content:'';position:absolute;right:-40px;top:-40px;
-      width:180px;height:180px;border-radius:50%;
-      border:30px solid rgba(99,102,241,.07);
-    }
-    .header-deco::after{
-      content:'';position:absolute;left:-20px;bottom:-60px;
-      width:140px;height:140px;border-radius:50%;
-      border:24px solid rgba(230,168,23,.06);
-    }
+    .header-deco::before{content:'';position:absolute;right:-40px;top:-40px;width:180px;height:180px;border-radius:50%;border:30px solid rgba(99,102,241,.07);}
+    .header-deco::after{content:'';position:absolute;left:-20px;bottom:-60px;width:140px;height:140px;border-radius:50%;border:24px solid rgba(230,168,23,.06);}
 
-    .wordmark{
-      font-family:'Fredoka One',cursive;
-      font-size:clamp(2rem,5vw,3rem);
-      position:relative;letter-spacing:-.5px;
-      display:inline-flex;align-items:center;gap:.4rem;color:#fff;
-    }
-    .wordmark-icon{
-      font-size:clamp(1.6rem,4vw,2.4rem);
-      filter:drop-shadow(0 0 14px rgba(230,168,23,.45));
-    }
+    .wordmark{font-family:'Fredoka One',cursive;font-size:clamp(2rem,5vw,3rem);position:relative;letter-spacing:-.5px;display:inline-flex;align-items:center;gap:.4rem;color:#fff;}
+    .wordmark-icon{font-size:clamp(1.6rem,4vw,2.4rem);filter:drop-shadow(0 0 14px rgba(230,168,23,.45));}
     .wordmark em{color:var(--accent);font-style:normal;}
     header p{margin-top:.4rem;font-size:.93rem;color:var(--muted);position:relative;}
 
-    .header-stats{
-      display:flex;gap:.5rem;justify-content:center;
-      margin-top:1rem;position:relative;flex-wrap:wrap;
-    }
-    .hstat{
-      background:rgba(255,255,255,.07);border:0.5px solid var(--border2);
-      border-radius:99px;font-size:.74rem;color:var(--text2);
-      padding:.24rem .85rem;font-weight:700;
-    }
+    .header-stats{display:flex;gap:.5rem;justify-content:center;margin-top:1rem;position:relative;flex-wrap:wrap;}
+    .hstat{background:rgba(255,255,255,.07);border:0.5px solid var(--border2);border-radius:99px;font-size:.74rem;color:var(--text2);padding:.24rem .85rem;font-weight:700;}
     .hstat strong{color:var(--accent);}
-    .admin-link{
-      display:inline-block;margin-top:.7rem;font-size:.7rem;
-      color:rgba(255,255,255,.18);text-decoration:none;position:relative;
-    }
+    .admin-link{display:inline-block;margin-top:.7rem;font-size:.7rem;color:rgba(255,255,255,.18);text-decoration:none;position:relative;}
     .admin-link:hover{color:rgba(255,255,255,.45);}
 
     /* ── SYNC BAR ── */
-    #sync-bar{
-      background:#0a0914;color:#4a4868;font-size:.71rem;font-weight:700;
-      text-align:center;padding:.27rem 1rem;
-      display:flex;align-items:center;justify-content:center;gap:.5rem;
-      min-height:25px;border-bottom:1px solid rgba(255,255,255,.04);
-    }
+    #sync-bar{background:#0a0914;color:#4a4868;font-size:.71rem;font-weight:700;text-align:center;padding:.27rem 1rem;display:flex;align-items:center;justify-content:center;gap:.5rem;min-height:25px;border-bottom:1px solid rgba(255,255,255,.04);}
     #sync-bar.syncing{color:var(--accent);}
     #sync-bar.ok{color:#4ade80;}
     #sync-bar.error{color:#f87171;}
+    #sync-bar.cached{color:#818cf8;}
     .sync-dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0;}
     #sync-bar.syncing .sync-dot{animation:syncPulse 1.1s ease-in-out infinite;}
     #sync-bar.ok .sync-dot{animation:syncPop .4s ease-out forwards;}
@@ -112,35 +69,15 @@
     @keyframes syncPop{0%{transform:scale(1)}50%{transform:scale(2.2)}100%{transform:scale(1)}}
 
     /* ── FILTER BAR ── */
-    .filter-bar{
-      background:var(--bg2);border-bottom:1px solid var(--border);
-      padding:.85rem 1.4rem;position:sticky;top:0;z-index:100;
-      box-shadow:0 4px 28px rgba(0,0,0,.45);
-    }
+    .filter-bar{background:var(--bg2);border-bottom:1px solid var(--border);padding:.85rem 1.4rem;position:sticky;top:0;z-index:100;box-shadow:0 4px 28px rgba(0,0,0,.45);}
     .fi{max-width:980px;margin:0 auto;}
     .filter-top-row{display:flex;align-items:center;gap:.6rem;}
-    .filter-search{
-      flex:1;padding:.53rem 1rem .53rem 2.35rem;
-      border:1px solid var(--border2);border-radius:10px;
-      font-size:.88rem;font-family:'Nunito',sans-serif;
-      outline:none;transition:border-color .2s,background .2s;
-      background:var(--bg3) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='15' height='15' viewBox='0 0 24 24' fill='none' stroke='rgba(241,240,251,.22)' stroke-width='2.5'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E") no-repeat .72rem center;
-      color:var(--text);
-    }
+    .filter-search{flex:1;padding:.53rem 1rem .53rem 2.35rem;border:1px solid var(--border2);border-radius:10px;font-size:.88rem;font-family:'Nunito',sans-serif;outline:none;transition:border-color .2s,background .2s;background:var(--bg3) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='15' height='15' viewBox='0 0 24 24' fill='none' stroke='rgba(241,240,251,.22)' stroke-width='2.5'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E") no-repeat .72rem center;color:var(--text);}
     .filter-search:focus{border-color:rgba(230,168,23,.4);background:rgba(15,14,26,.8);}
     .filter-search::placeholder{color:var(--muted);}
 
-    .view-toggle{
-      display:flex;background:rgba(255,255,255,.05);
-      border-radius:9px;padding:3px;gap:2px;flex-shrink:0;
-      border:1px solid var(--border);
-    }
-    .view-btn{
-      width:30px;height:30px;border:none;border-radius:6px;
-      background:transparent;cursor:pointer;
-      display:flex;align-items:center;justify-content:center;
-      color:var(--muted);transition:all .15s;
-    }
+    .view-toggle{display:flex;background:rgba(255,255,255,.05);border-radius:9px;padding:3px;gap:2px;flex-shrink:0;border:1px solid var(--border);}
+    .view-btn{width:30px;height:30px;border:none;border-radius:6px;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted);transition:all .15s;}
     .view-btn.active{background:rgba(230,168,23,.14);color:var(--accent);}
     .view-btn:hover:not(.active){color:var(--text2);}
 
@@ -148,11 +85,7 @@
     .filter-row{display:flex;align-items:center;gap:.52rem;flex-wrap:wrap;}
     .filter-label{font-size:.67rem;font-weight:800;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);min-width:52px;}
     .chips{display:flex;flex-wrap:wrap;gap:.27rem;}
-    .chip{
-      padding:.22rem .68rem;border-radius:99px;font-size:.76rem;font-weight:700;
-      border:1px solid var(--border2);background:rgba(255,255,255,.04);
-      color:var(--muted);cursor:pointer;transition:all .14s;user-select:none;
-    }
+    .chip{padding:.22rem .68rem;border-radius:99px;font-size:.76rem;font-weight:700;border:1px solid var(--border2);background:rgba(255,255,255,.04);color:var(--muted);cursor:pointer;transition:all .14s;user-select:none;}
     .chip:hover{border-color:rgba(230,168,23,.4);color:var(--accent);background:rgba(230,168,23,.06);}
     .chip.active{background:rgba(230,168,23,.14);border-color:rgba(230,168,23,.45);color:var(--accent);}
     .chip.all.active{background:rgba(99,102,241,.18);border-color:rgba(99,102,241,.38);color:var(--indigo2);}
@@ -161,22 +94,9 @@
 
     /* ── APP OF DAY ── */
     #aod-section{max-width:980px;margin:2rem auto 0;padding:0 1.4rem;display:none;}
-    .aod-card{
-      background:linear-gradient(135deg,#1e1b30,#2d1f6e);
-      border-radius:18px;padding:1.3rem 1.5rem;
-      display:flex;align-items:center;gap:1.2rem;
-      text-decoration:none;color:var(--text);
-      box-shadow:0 8px 32px rgba(0,0,0,.45),0 0 0 1px rgba(230,168,23,.14);
-      transition:transform .18s,box-shadow .18s;position:relative;overflow:hidden;
-    }
-    .aod-card::before{
-      content:'';position:absolute;inset:0;
-      background:radial-gradient(ellipse at 80% 50%,rgba(230,168,23,.11),transparent 60%);
-    }
-    .aod-card::after{
-      content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
-      background:linear-gradient(90deg,transparent,rgba(230,168,23,.28),transparent);
-    }
+    .aod-card{background:linear-gradient(135deg,#1e1b30,#2d1f6e);border-radius:18px;padding:1.3rem 1.5rem;display:flex;align-items:center;gap:1.2rem;text-decoration:none;color:var(--text);box-shadow:0 8px 32px rgba(0,0,0,.45),0 0 0 1px rgba(230,168,23,.14);transition:transform .18s,box-shadow .18s;position:relative;overflow:hidden;}
+    .aod-card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 80% 50%,rgba(230,168,23,.11),transparent 60%);}
+    .aod-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(230,168,23,.28),transparent);}
     .aod-card:hover{transform:translateY(-3px);box-shadow:0 14px 40px rgba(0,0,0,.55),0 0 0 1px rgba(230,168,23,.28);}
     .aod-badge{font-size:.67rem;font-weight:800;background:var(--accent);color:#0f0e1a;padding:.17rem .58rem;border-radius:99px;position:absolute;top:.85rem;right:1rem;}
     .aod-emoji{font-size:2.5rem;position:relative;flex-shrink:0;}
@@ -189,55 +109,19 @@
     main{max-width:980px;margin:0 auto;padding:2rem 1.4rem 5rem;}
     .category{margin-bottom:2.8rem;}
 
-    .cat-header{
-      display:flex;align-items:center;gap:12px;margin-bottom:1.2rem;
-      padding-bottom:.68rem;
-      border-bottom:1.5px solid color-mix(in srgb,var(--cat-color,#6366f1) 50%,rgba(255,255,255,.05));
-    }
-    .cat-icon{
-      font-size:1.5rem;width:46px;height:46px;border-radius:12px;
-      display:flex;align-items:center;justify-content:center;flex-shrink:0;
-      background:linear-gradient(140deg,var(--cat-color,#6366f1),var(--cat-color2,#818cf8));
-      box-shadow:0 4px 16px color-mix(in srgb,var(--cat-color,#6366f1) 35%,transparent);
-      transition:transform .2s;
-    }
+    .cat-header{display:flex;align-items:center;gap:12px;margin-bottom:1.2rem;padding-bottom:.68rem;border-bottom:1.5px solid color-mix(in srgb,var(--cat-color,#6366f1) 50%,rgba(255,255,255,.05));}
+    .cat-icon{font-size:1.5rem;width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:linear-gradient(140deg,var(--cat-color,#6366f1),var(--cat-color2,#818cf8));box-shadow:0 4px 16px color-mix(in srgb,var(--cat-color,#6366f1) 35%,transparent);transition:transform .2s;}
     .cat-icon:hover{transform:scale(1.08);}
     .cat-title{font-family:'Fredoka One',cursive;font-size:1.4rem;color:#fff;}
-    .cat-count{
-      margin-left:auto;font-size:.76rem;font-weight:800;
-      background:color-mix(in srgb,var(--cat-color,#6366f1) 14%,rgba(255,255,255,.03));
-      color:var(--cat-color,var(--indigo2));
-      border:1px solid color-mix(in srgb,var(--cat-color,#6366f1) 24%,rgba(255,255,255,.05));
-      padding:3px 13px;border-radius:99px;
-    }
+    .cat-count{margin-left:auto;font-size:.76rem;font-weight:800;background:color-mix(in srgb,var(--cat-color,#6366f1) 14%,rgba(255,255,255,.03));color:var(--cat-color,var(--indigo2));border:1px solid color-mix(in srgb,var(--cat-color,#6366f1) 24%,rgba(255,255,255,.05));padding:3px 13px;border-radius:99px;}
 
     .apps-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:1rem;}
 
     /* ── CARDS ── */
-    .app-card{
-      background:var(--card);border-radius:var(--r);box-shadow:var(--sh);
-      padding:1.3rem 1.2rem 1.1rem;text-decoration:none;color:var(--text);
-      display:flex;flex-direction:column;gap:.42rem;
-      border:1px solid var(--border);
-      transition:transform .18s,box-shadow .18s,border-color .18s;
-      position:relative;overflow:hidden;
-    }
-    .app-card::before{
-      content:'';position:absolute;top:0;left:0;right:0;height:3px;
-      background:linear-gradient(90deg,var(--cat-color,#6366f1),var(--cat-color2,#818cf8));
-    }
-    .app-card::after{
-      content:'';position:absolute;top:3px;left:0;right:0;height:52px;
-      background:linear-gradient(180deg,color-mix(in srgb,var(--cat-color,#6366f1) 8%,transparent),transparent);
-      pointer-events:none;
-    }
-    .app-card:hover{
-      transform:translateY(-5px);
-      box-shadow:var(--sh2),
-        0 0 0 1px color-mix(in srgb,var(--cat-color,#6366f1) 42%,transparent),
-        0 8px 28px color-mix(in srgb,var(--cat-color,#6366f1) 22%,transparent);
-      border-color:color-mix(in srgb,var(--cat-color,#6366f1) 48%,transparent);
-    }
+    .app-card{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);padding:1.3rem 1.2rem 1.1rem;text-decoration:none;color:var(--text);display:flex;flex-direction:column;gap:.42rem;border:1px solid var(--border);transition:transform .18s,box-shadow .18s,border-color .18s;position:relative;overflow:hidden;}
+    .app-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--cat-color,#6366f1),var(--cat-color2,#818cf8));}
+    .app-card::after{content:'';position:absolute;top:3px;left:0;right:0;height:52px;background:linear-gradient(180deg,color-mix(in srgb,var(--cat-color,#6366f1) 8%,transparent),transparent);pointer-events:none;}
+    .app-card:hover{transform:translateY(-5px);box-shadow:var(--sh2),0 0 0 1px color-mix(in srgb,var(--cat-color,#6366f1) 42%,transparent),0 8px 28px color-mix(in srgb,var(--cat-color,#6366f1) 22%,transparent);border-color:color-mix(in srgb,var(--cat-color,#6366f1) 48%,transparent);}
 
     .app-emoji{font-size:1.85rem;position:relative;}
     .app-name{font-weight:800;font-size:.97rem;line-height:1.3;position:relative;color:var(--text);}
@@ -255,11 +139,7 @@
     .app-arrow{align-self:flex-end;font-size:.95rem;color:var(--cat-color,var(--accent));font-weight:800;transition:transform .15s;position:relative;}
     .app-card:hover .app-arrow{transform:translateX(4px);}
 
-    .app-card.placeholder{
-      border:1px dashed rgba(255,255,255,.09);background:transparent;
-      box-shadow:none;align-items:center;justify-content:center;
-      color:var(--muted);font-size:.84rem;font-weight:700;cursor:default;min-height:114px;
-    }
+    .app-card.placeholder{border:1px dashed rgba(255,255,255,.09);background:transparent;box-shadow:none;align-items:center;justify-content:center;color:var(--muted);font-size:.84rem;font-weight:700;cursor:default;min-height:114px;}
     .app-card.placeholder::before,.app-card.placeholder::after{display:none;}
     .app-card.placeholder:hover{transform:none;border-color:rgba(255,255,255,.09);box-shadow:none;}
     .app-card.hidden-app,.category.hidden-cat{display:none!important;}
@@ -352,251 +232,250 @@
 
 <footer>🧭 <span>Lernwelt</span> · geitner-hub.github.io</footer>
 
+<!-- ── Gemeinsame Module ── -->
+<script src="js/shared.js"></script>
+<script src="js/config-api.js"></script>
 <script>
-const WORKER_URL = 'https://lern-apps-config.bennigeitner.workers.dev';
+'use strict';
 
-const CAT_STYLES = {
-  "Mathematik": {icon:"➕", color:"#6366f1", color2:"#818cf8"},
-  "Englisch":   {icon:"🇬🇧", color:"#f43f5e", color2:"#fb7185"},
-  "Deutsch":    {icon:"📖", color:"#10b981", color2:"#34d399"},
-  "WiB":  {icon:"🌍", color:"#e6a817", color2:"#fbbf24"},
-  "Sport":      {icon:"⚽", color:"#8b5cf6", color2:"#a78bfa"},
-  "Informatik": {icon:"💻", color:"#06b6d4", color2:"#22d3ee"},
-  "GPG": {icon:"🏛", color:"#f97316", color2:"#fb923c"},
-};
+const STORE_KEY = 'lern-apps-results';
+let CONFIG = { apps: [], customTags: [], hiddenCats: [] };
+let fKl = 'all', fTag = 'all', fQ = '';
 
-let CONFIG = {apps:[], customTags:[], hiddenCats:[]};
-
-// Tag helpers (kompatibel mit String- und Objekt-Tags)
-const TAG_COLORS=[
-  {bg:'rgba(167,139,250,.16)',border:'rgba(167,139,250,.35)',text:'#c4b5fd'},
-  {bg:'rgba(99,102,241,.15)', border:'rgba(99,102,241,.32)', text:'#818cf8'},
-  {bg:'rgba(230,168,23,.14)', border:'rgba(230,168,23,.32)', text:'#e6a817'},
-  {bg:'rgba(74,222,128,.13)', border:'rgba(74,222,128,.3)',  text:'#4ade80'},
-  {bg:'rgba(248,113,113,.13)',border:'rgba(248,113,113,.3)', text:'#f87171'},
-  {bg:'rgba(45,212,191,.13)', border:'rgba(45,212,191,.3)',  text:'#2dd4bf'},
-  {bg:'rgba(244,114,182,.13)',border:'rgba(244,114,182,.3)', text:'#f472b6'},
-  {bg:'rgba(251,191,36,.13)', border:'rgba(251,191,36,.3)',  text:'#fbbf24'},
-];
-function tagName(t){return typeof t==='object'?t.name:String(t);}
-function tagColor(t){return TAG_COLORS[(typeof t==='object'?t.color:0)]||TAG_COLORS[0];}
-
-function syncStatus(s,m){
-  const b=document.getElementById('sync-bar');
-  b.className=s; document.getElementById('sync-msg').textContent=m;
+// ── Sync-Bar ─────────────────────────────────────────
+function syncStatus(s, m) {
+  const b = document.getElementById('sync-bar');
+  b.className = s;
+  document.getElementById('sync-msg').textContent = m;
 }
 
-async function load(){
-  syncStatus('syncing','Wird geladen …');
-  try{
-    const r=await fetch(WORKER_URL);
-    if(!r.ok) throw new Error(r.status);
-    const d=await r.json();
-    CONFIG={apps:[],customTags:[],hiddenCats:[],...JSON.parse(decodeURIComponent(atob(d.content.replace(/\n/g,'')).split('').map(c=>'%'+('00'+c.charCodeAt(0).toString(16)).slice(-2)).join('')))};
-    syncStatus('ok','✓ Geladen');
-    setTimeout(()=>syncStatus('',''),2500);
-  }catch(e){
-    syncStatus('error','⚠ Verbindungsfehler');
-    console.error(e);
+// ── Lade-Einstieg ────────────────────────────────────
+async function load() {
+  syncStatus('syncing', 'Wird geladen …');
+  const { config, fromCache } = await ConfigAPI.load();
+  CONFIG = config;
+  if (fromCache) {
+    syncStatus('cached', '📦 Offline-Modus (gecachte Daten)');
+    setTimeout(() => syncStatus('', ''), 4000);
+  } else {
+    syncStatus('ok', '✓ Geladen');
+    setTimeout(() => syncStatus('', ''), 2500);
   }
   buildPage();
   updateHeaderStats();
 }
 
-function updateHeaderStats(){
-  const total=CONFIG.apps.filter(a=>!a.hidden).length;
-  document.getElementById('stat-apps').innerHTML=`<strong>${total}</strong> Apps`;
-  try{
-    const stored=JSON.parse(localStorage.getItem('lern-apps-results')||'{}');
-    const played=CONFIG.apps.filter(a=>a.datei&&stored[a.datei]).length;
-    document.getElementById('stat-played').innerHTML=`<strong>${played}</strong> gespielt`;
-  }catch(e){}
+function updateHeaderStats() {
+  const total = CONFIG.apps.filter(a => !a.hidden).length;
+  document.getElementById('stat-apps').innerHTML = `<strong>${total}</strong> Apps`;
+  try {
+    const stored = JSON.parse(localStorage.getItem(STORE_KEY) || '{}');
+    const played = CONFIG.apps.filter(a => a.datei && stored[a.datei]).length;
+    document.getElementById('stat-played').innerHTML = `<strong>${played}</strong> gespielt`;
+  } catch (e) {}
 }
 
-function buildAod(){
-  const aodApp=CONFIG.apps.find(a=>a.aod&&!a.hidden);
-  const sec=document.getElementById('aod-section');
-  if(!aodApp){sec.style.display='none';return;}
-  sec.style.display='block';
-  sec.innerHTML=`
+// ── App des Tages ─────────────────────────────────────
+function buildAod() {
+  const aodApp = CONFIG.apps.find(a => a.aod && !a.hidden);
+  const sec = document.getElementById('aod-section');
+  if (!aodApp) { sec.style.display = 'none'; return; }
+  sec.style.display = 'block';
+  sec.innerHTML = `
     <a class="aod-card" href="${aodApp.datei}">
       <span class="aod-badge">⭐ App des Tages</span>
-      <span class="aod-emoji">${aodApp.emoji||'📱'}</span>
+      <span class="aod-emoji">${aodApp.emoji || '📱'}</span>
       <div class="aod-info">
         <div class="aod-label">${aodApp.fach}</div>
         <div class="aod-name">${aodApp.name}</div>
-        <div class="aod-desc">${aodApp.beschreibung||''}</div>
+        <div class="aod-desc">${aodApp.beschreibung || ''}</div>
       </div>
     </a>`;
 }
 
-function buildPage(){
+// ── Seite aufbauen ────────────────────────────────────
+function buildPage() {
   buildAod();
   refreshTagChips();
-  const main=document.getElementById('main');
-  main.querySelectorAll('.category').forEach(e=>e.remove());
-  const noR=document.getElementById('no-results');
-  const faecher=[...new Set(CONFIG.apps.map(a=>a.fach).filter(Boolean))];
+  const main = document.getElementById('main');
+  main.querySelectorAll('.category').forEach(e => e.remove());
+  const noR = document.getElementById('no-results');
+  const faecher = [...new Set(CONFIG.apps.map(a => a.fach).filter(Boolean))];
 
-  faecher.forEach(fach=>{
-    const kat=CAT_STYLES[fach]||{icon:'📚',color:'#6366f1',color2:'#818cf8'};
-    const sec=document.createElement('section');
-    sec.className='category'+(CONFIG.hiddenCats.includes(fach)?' hidden-cat':'');
-    sec.dataset.cat=fach;
-    sec.style.cssText=`--cat-color:${kat.color};--cat-color2:${kat.color2}`;
-    const cid='c'+fach.replace(/[^a-z0-9]/gi,'');
-    sec.innerHTML=`
+  faecher.forEach(fach => {
+    const kat = CAT_STYLES[fach] || { icon: '📚', color: '#6366f1', color2: '#818cf8' };
+    const sec = document.createElement('section');
+    sec.className = 'category' + (CONFIG.hiddenCats.includes(fach) ? ' hidden-cat' : '');
+    sec.dataset.cat = fach;
+    sec.style.cssText = `--cat-color:${kat.color};--cat-color2:${kat.color2}`;
+    const cid = 'c' + fach.replace(/[^a-z0-9]/gi, '');
+    sec.innerHTML = `
       <div class="cat-header">
         <div class="cat-icon">${kat.icon}</div>
         <span class="cat-title">${fach}</span>
         <span class="cat-count" id="${cid}"></span>
       </div>
       <div class="apps-grid" id="g${cid}"></div>`;
-    const grid=sec.querySelector('.apps-grid');
+    const grid = sec.querySelector('.apps-grid');
 
-    CONFIG.apps.filter(a=>a.fach===fach).forEach(app=>{
-      const kl=app.klassen||[], ct=app.customTags||[];
-      const appKey=app.datei?app.datei.replace('.html',''):'';
-      let resultHTML='';
-      try{
-        const raw=localStorage.getItem('lern_result_'+appKey);
-        if(raw){
-          const r=JSON.parse(raw);
-          const pct=r.max>0?Math.round((r.score/r.max)*100):0;
-          const cls=pct>=80?'good':pct>=50?'mid':'';
-          resultHTML=`<div class="result-badge">
+    CONFIG.apps.filter(a => a.fach === fach).forEach(app => {
+      const kl = app.klassen || [], ct = app.customTags || [];
+      const appKey = app.datei ? app.datei.replace('.html', '') : '';
+
+      // Letztes Ergebnis aus localStorage
+      let resultHTML = '';
+      try {
+        const raw = localStorage.getItem('lern_result_' + appKey);
+        if (raw) {
+          const r = JSON.parse(raw);
+          const pct = r.max > 0 ? Math.round((r.score / r.max) * 100) : 0;
+          const cls = pct >= 80 ? 'good' : pct >= 50 ? 'mid' : '';
+          resultHTML = `<div class="result-badge">
             <span style="font-size:.62rem">Zuletzt: ${r.label}</span>
             <div class="result-bar"><div class="result-bar-fill ${cls}" style="width:${pct}%"></div></div>
             <span class="result-pct">${pct}%</span>
           </div>`;
         }
-      }catch(e){}
+      } catch (e) {}
 
-      const card=document.createElement('a');
-      card.className='app-card'+(app.hidden?' hidden-app':'');
-      card.href=app.datei||'#';
-      card.dataset.name=app.name;
-      card.dataset.fach=fach;
-      card.dataset.kl=kl.join(',');
-      card.dataset.ct=ct.map(t=>tagName(t)).join(',');
-
-      const STORE_KEY='lern-apps-results';
-      let resultBadge='';
-      try{
-        const stored=JSON.parse(localStorage.getItem(STORE_KEY)||'{}');
-        const r=stored[app.datei];
-        if(r){
-          const cls=r.percent>=70?'high':r.percent>=40?'mid':'low';
-          resultBadge=`<span class="app-result ${cls}">🏆 ${r.label}</span>`;
+      // Ergebnis-Badge (neues Format)
+      let resultBadge = '';
+      try {
+        const stored = JSON.parse(localStorage.getItem(STORE_KEY) || '{}');
+        const r = stored[app.datei];
+        if (r) {
+          const cls = r.percent >= 70 ? 'high' : r.percent >= 40 ? 'mid' : 'low';
+          resultBadge = `<span class="app-result ${cls}">🏆 ${r.label}</span>`;
         }
-      }catch(e){}
+      } catch (e) {}
 
-      card.innerHTML=`
+      const card = document.createElement('a');
+      card.className = 'app-card' + (app.hidden ? ' hidden-app' : '');
+      card.href = app.datei || '#';
+      card.dataset.name = app.name;
+      card.dataset.fach = fach;
+      card.dataset.kl = kl.join(',');
+      card.dataset.ct = ct.map(t => tagName(t)).join(',');
+
+      card.innerHTML = `
         ${resultBadge}
-        <span class="app-emoji">${app.emoji||'📱'}</span>
+        <span class="app-emoji">${app.emoji || '📱'}</span>
         <span class="app-name">${app.name}</span>
-        <span class="app-desc">${app.beschreibung||''}</span>
+        <span class="app-desc">${app.beschreibung || ''}</span>
         <div class="app-meta">
-          ${kl.map(k=>`<span class="app-tag tk">Kl.${k}</span>`).join('')}
-          ${ct.map(t=>{const col=tagColor(t);return `<span class="app-tag tc" style="background:${col.bg};border-color:${col.border};color:${col.text};">${tagName(t)}</span>`;}).join('')}
+          ${kl.map(k => `<span class="app-tag tk">Kl.${k}</span>`).join('')}
+          ${ct.map(t => {
+            const col = tagColor(t);
+            return `<span class="app-tag tc" style="background:${col.bg};border-color:${col.border};color:${col.text};">${tagName(t)}</span>`;
+          }).join('')}
         </div>
         ${resultHTML}
         <span class="app-arrow">→</span>`;
       grid.appendChild(card);
     });
 
-    const ph=document.createElement('div');
-    ph.className='app-card placeholder';ph.textContent='+ App kommt bald';ph.style.display='none';
+    const ph = document.createElement('div');
+    ph.className = 'app-card placeholder';
+    ph.textContent = '+ App kommt bald';
+    ph.style.display = 'none';
     grid.appendChild(ph);
-    main.insertBefore(sec,noR);
+    main.insertBefore(sec, noR);
   });
   applyFilters();
 }
 
-let fKl='all', fTag='all', fQ='';
-
-function refreshTagChips(){
-  const tags=CONFIG.customTags||[];
-  const wrap=document.getElementById('chips-t');
-  const row=document.getElementById('tag-row');
-  wrap.innerHTML=`<span class="chip all${fTag==='all'?' active':''}" data-v="all">Alle</span>`;
-  tags.forEach(t=>{
-    const nm=tagName(t); const col=tagColor(t);
-    const c=document.createElement('span');
-    const isActive=fTag===nm;
-    c.className='chip ctag'+(isActive?' active':'');
-    if(isActive){ c.style.cssText=`background:${col.bg};border-color:${col.border};color:${col.text};`; }
-    c.dataset.v=nm;
-    c.dataset.bg=col.bg; c.dataset.border=col.border; c.dataset.color=col.text;
-    c.textContent=nm;
+// ── Tags ──────────────────────────────────────────────
+function refreshTagChips() {
+  const tags = CONFIG.customTags || [];
+  const wrap = document.getElementById('chips-t');
+  const row = document.getElementById('tag-row');
+  wrap.innerHTML = `<span class="chip all${fTag === 'all' ? ' active' : ''}" data-v="all">Alle</span>`;
+  tags.forEach(t => {
+    const nm = tagName(t), col = tagColor(t);
+    const c = document.createElement('span');
+    const isActive = fTag === nm;
+    c.className = 'chip ctag' + (isActive ? ' active' : '');
+    if (isActive) c.style.cssText = `background:${col.bg};border-color:${col.border};color:${col.text};`;
+    c.dataset.v = nm;
+    c.dataset.bg = col.bg;
+    c.dataset.border = col.border;
+    c.dataset.color = col.text;
+    c.textContent = nm;
     wrap.appendChild(c);
   });
-  row.style.display=tags.length?'':'none';
-  wrap.querySelectorAll('.chip').forEach(c=>c.addEventListener('click',()=>{
-    wrap.querySelectorAll('.chip').forEach(x=>{
-      x.classList.remove('active');
-      x.style.cssText='';
-    });
+  row.style.display = tags.length ? '' : 'none';
+  wrap.querySelectorAll('.chip').forEach(c => c.addEventListener('click', () => {
+    wrap.querySelectorAll('.chip').forEach(x => { x.classList.remove('active'); x.style.cssText = ''; });
     c.classList.add('active');
-    fTag=c.dataset.v;
-    if(fTag!=='all' && c.dataset.bg){
-      c.style.cssText=`background:${c.dataset.bg};border-color:${c.dataset.border};color:${c.dataset.color};`;
+    fTag = c.dataset.v;
+    if (fTag !== 'all' && c.dataset.bg) {
+      c.style.cssText = `background:${c.dataset.bg};border-color:${c.dataset.border};color:${c.dataset.color};`;
     }
     applyFilters();
   }));
 }
 
-function applyFilters(){
-  let n=0;
-  document.querySelectorAll('.app-card:not(.placeholder)').forEach(card=>{
-    if(card.classList.contains('hidden-app')){card.classList.add('fhide');return;}
-    const nm=(card.dataset.name||'').toLowerCase();
-    const ds=card.querySelector('.app-desc')?.textContent.toLowerCase()||'';
-    const fc=(card.dataset.fach||'').toLowerCase();
-    const kl=card.dataset.kl?card.dataset.kl.split(',').map(x=>x.trim()):[];
-    const ct=card.dataset.ct?card.dataset.ct.split(',').map(x=>x.trim().toLowerCase()):[];
-    const ok=(!fQ||nm.includes(fQ)||ds.includes(fQ)||fc.includes(fQ))
-           &&(fKl==='all'||kl.includes(fKl))
-           &&(fTag==='all'||ct.includes(fTag.toLowerCase()));
-    card.classList.toggle('fhide',!ok);
-    if(ok)n++;
+// ── Filter ────────────────────────────────────────────
+function applyFilters() {
+  let n = 0;
+  document.querySelectorAll('.app-card:not(.placeholder)').forEach(card => {
+    if (card.classList.contains('hidden-app')) { card.classList.add('fhide'); return; }
+    const nm = (card.dataset.name || '').toLowerCase();
+    const ds = card.querySelector('.app-desc')?.textContent.toLowerCase() || '';
+    const fc = (card.dataset.fach || '').toLowerCase();
+    const kl = card.dataset.kl ? card.dataset.kl.split(',').map(x => x.trim()) : [];
+    const ct = card.dataset.ct ? card.dataset.ct.split(',').map(x => x.trim().toLowerCase()) : [];
+    const ok = (!fQ || nm.includes(fQ) || ds.includes(fQ) || fc.includes(fQ))
+            && (fKl === 'all' || kl.includes(fKl))
+            && (fTag === 'all' || ct.includes(fTag.toLowerCase()));
+    card.classList.toggle('fhide', !ok);
+    if (ok) n++;
   });
-  document.querySelectorAll('.category:not(.hidden-cat)').forEach(cat=>{
-    const any=[...cat.querySelectorAll('.app-card:not(.placeholder):not(.hidden-app):not(.fhide)')].length>0;
-    cat.style.display=any?'':'none';
+  document.querySelectorAll('.category:not(.hidden-cat)').forEach(cat => {
+    const any = [...cat.querySelectorAll('.app-card:not(.placeholder):not(.hidden-app):not(.fhide)')].length > 0;
+    cat.style.display = any ? '' : 'none';
   });
-  document.getElementById('filter-info').textContent=(fKl!=='all'||fTag!=='all'||fQ)?`${n} App${n!==1?'s':''} gefunden`:'';
-  document.getElementById('no-results').style.display=n===0?'block':'none';
-  document.querySelectorAll('.category:not(.hidden-cat)').forEach(cat=>{
-    const grid=cat.querySelector('.apps-grid');
-    const el=cat.querySelector('[id^="c"]');
-    if(!grid||!el)return;
-    const v=[...grid.querySelectorAll('.app-card:not(.placeholder):not(.hidden-app):not(.fhide)')].length;
-    el.textContent=v+(v===1?' App':' Apps');
-    const ph=grid.querySelector('.placeholder');
-    if(ph)ph.style.display=v===0?'flex':'none';
+  document.getElementById('filter-info').textContent =
+    (fKl !== 'all' || fTag !== 'all' || fQ) ? `${n} App${n !== 1 ? 's' : ''} gefunden` : '';
+  document.getElementById('no-results').style.display = n === 0 ? 'block' : 'none';
+  document.querySelectorAll('.category:not(.hidden-cat)').forEach(cat => {
+    const grid = cat.querySelector('.apps-grid');
+    const el = cat.querySelector('[id^="c"]');
+    if (!grid || !el) return;
+    const v = [...grid.querySelectorAll('.app-card:not(.placeholder):not(.hidden-app):not(.fhide)')].length;
+    el.textContent = v + (v === 1 ? ' App' : ' Apps');
+    const ph = grid.querySelector('.placeholder');
+    if (ph) ph.style.display = v === 0 ? 'flex' : 'none';
   });
 }
 
-document.getElementById('chips-k').addEventListener('click',e=>{
-  const c=e.target.closest('.chip');if(!c)return;
-  document.querySelectorAll('#chips-k .chip').forEach(x=>x.classList.remove('active'));
-  c.classList.add('active');fKl=c.dataset.v;applyFilters();
+// ── Events ────────────────────────────────────────────
+document.getElementById('chips-k').addEventListener('click', e => {
+  const c = e.target.closest('.chip');
+  if (!c) return;
+  document.querySelectorAll('#chips-k .chip').forEach(x => x.classList.remove('active'));
+  c.classList.add('active');
+  fKl = c.dataset.v;
+  applyFilters();
 });
-document.getElementById('search').addEventListener('input',e=>{fQ=e.target.value.trim().toLowerCase();applyFilters();});
+document.getElementById('search').addEventListener('input', e => {
+  fQ = e.target.value.trim().toLowerCase();
+  applyFilters();
+});
 
-function setView(v){
-  const isGrid=v==='grid';
-  document.body.classList.toggle('list-view',!isGrid);
-  document.getElementById('btn-grid').classList.toggle('active',isGrid);
-  document.getElementById('btn-list').classList.toggle('active',!isGrid);
-  try{localStorage.setItem('lern-apps-view',v);}catch(e){}
+// ── Ansicht ───────────────────────────────────────────
+function setView(v) {
+  const isGrid = v === 'grid';
+  document.body.classList.toggle('list-view', !isGrid);
+  document.getElementById('btn-grid').classList.toggle('active', isGrid);
+  document.getElementById('btn-list').classList.toggle('active', !isGrid);
+  try { localStorage.setItem('lern-apps-view', v); } catch (e) {}
 }
-try{
-  const saved=localStorage.getItem('lern-apps-view');
-  if(saved==='list') setView('list');
-}catch(e){}
+try {
+  if (localStorage.getItem('lern-apps-view') === 'list') setView('list');
+} catch (e) {}
 
+// ── Start ─────────────────────────────────────────────
 load();
 </script>
 </body>

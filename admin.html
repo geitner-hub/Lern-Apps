@@ -73,7 +73,7 @@
     .content{max-width:1100px;margin:0 auto;padding:1.8rem 1.5rem;}
 
     /* ── TABS ── */
-    .tabs{display:flex;gap:.25rem;margin-bottom:1.5rem;background:var(--surface);border-radius:12px;padding:.35rem;border:1px solid var(--border);}
+    .tabs{display:flex;gap:.25rem;margin-bottom:1.5rem;background:var(--surface);border-radius:12px;padding:.35rem;border:1px solid var(--border);flex-wrap:wrap;}
     .tab{padding:.48rem 1.1rem;border-radius:9px;font-weight:800;font-size:.85rem;cursor:pointer;color:var(--muted);border:none;background:none;font-family:'Nunito',sans-serif;transition:all .14s;white-space:nowrap;}
     .tab:hover{color:var(--text2);}
     .tab.active{background:var(--surface2);color:var(--accent);}
@@ -130,7 +130,7 @@
     .icon-btn.on-gold{background:var(--accent-dim);border-color:var(--accent);color:var(--accent);}
     .icon-btn.on-indigo{background:rgba(99,102,241,.18);border-color:var(--indigo);color:var(--indigo2);}
 
-    /* ── INLINE EDIT FORM ── */
+    /* ── INLINE EDIT ── */
     .inline-edit{display:none;margin-top:.9rem;padding-top:.9rem;border-top:1px solid var(--border);grid-template-columns:1fr 1fr;gap:.7rem;}
     .inline-edit.open{display:grid;}
     @media(max-width:580px){.inline-edit{grid-template-columns:1fr;}}
@@ -155,7 +155,6 @@
     .tag-pill{display:flex;align-items:center;gap:.28rem;padding:.22rem .65rem;border-radius:99px;font-size:.78rem;font-weight:700;}
     .tag-pill .del{cursor:pointer;font-size:.88rem;opacity:.4;background:none;border:none;padding:0;line-height:1;transition:opacity .1s;color:inherit;}
     .tag-pill .del:hover{opacity:1;}
-    /* Tag-Farbwahl */
     .tag-color-row{display:flex;gap:.35rem;align-items:center;flex-wrap:wrap;margin-top:.5rem;}
     .tag-color-dot{width:22px;height:22px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all .14s;flex-shrink:0;}
     .tag-color-dot.sel{border-color:#fff;transform:scale(1.2);}
@@ -199,13 +198,12 @@
 
     /* ── ANNOUNCEMENT ── */
     .ann-preview{border-radius:10px;padding:.7rem 1.1rem;font-size:.9rem;font-weight:700;margin-bottom:.8rem;display:flex;align-items:center;gap:.6rem;}
-    .ann-preview.hidden-preview{display:none;}
     .color-chips{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.4rem;}
     .color-chip{width:26px;height:26px;border-radius:6px;cursor:pointer;border:2px solid transparent;transition:all .15s;flex-shrink:0;}
     .color-chip.selected{border-color:#fff;transform:scale(1.15);}
     .ann-form{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.3rem;}
 
-    /* ── BROKEN LINK CHECKER ── */
+    /* ── LINK CHECKER ── */
     .checker-result{display:flex;flex-direction:column;gap:.45rem;margin-top:1rem;}
     .check-item{display:flex;align-items:center;gap:.7rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.7rem 1rem;}
     .check-item.ok{border-color:rgba(74,222,128,.25);}
@@ -232,7 +230,6 @@
     /* ── UNDO BAR ── */
     #undo-bar{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--red);border-radius:12px;padding:.6rem 1.1rem;display:none;align-items:center;gap:1rem;font-size:.85rem;font-weight:700;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,.5);white-space:nowrap;}
 
-    /* misc */
     .divider{height:1px;background:var(--border);margin:1.5rem 0;}
     .empty-msg{text-align:center;padding:2.5rem 1rem;color:var(--muted);font-size:.9rem;}
     .app-count-badge{font-size:.78rem;color:var(--muted);font-weight:700;}
@@ -241,7 +238,7 @@
 </head>
 <body>
 
-<!-- ══ LOGIN ══════════════════════════════════════════ -->
+<!-- ══ LOGIN ══ -->
 <div id="login-screen">
   <div class="login-box">
     <h2>🧭 Lern<span>welt</span></h2>
@@ -252,7 +249,7 @@
   </div>
 </div>
 
-<!-- ══ APP ════════════════════════════════════════════ -->
+<!-- ══ APP ══ -->
 <div id="app">
   <div class="topbar">
     <div class="topbar-wordmark">🧭 Lern<em>welt</em> <span style="font-size:.7rem;color:var(--muted);font-family:'Nunito',sans-serif;font-weight:700;margin-left:.2rem">Admin</span></div>
@@ -273,21 +270,17 @@
       <button class="tab" data-t="vokabeln">📚 Vokabeln</button>
     </div>
 
-    <!-- ══ TAB: DASHBOARD ═══════════════════════════ -->
+    <!-- DASHBOARD -->
     <div class="tab-panel active" id="panel-dashboard">
       <div class="dash-grid" id="dash-stats"></div>
-
       <div class="sec-header"><span class="sec-title">⭐ App des Tages</span></div>
       <div class="form-card" id="aod-info" style="margin-bottom:1.5rem;font-size:.88rem;color:var(--text2);">–</div>
-
       <div class="sec-header"><span class="sec-title">📋 Letzte Aktionen</span></div>
       <div id="changelog-list" style="display:flex;flex-direction:column;gap:.4rem;"></div>
     </div>
 
-    <!-- ══ TAB: APPS ════════════════════════════════ -->
+    <!-- APPS -->
     <div class="tab-panel" id="panel-apps">
-
-      <!-- Neue App -->
       <div class="sec-header"><span class="sec-title">➕ Neue App</span></div>
       <div class="form-card" style="margin-bottom:1.8rem;">
         <div class="form-row" style="margin-bottom:.9rem;align-items:center;">
@@ -298,14 +291,8 @@
           </div>
         </div>
         <div class="form-grid">
-          <div class="form-group">
-            <label>Name *</label>
-            <input type="text" id="f-name" placeholder="z.B. Kopfrechnen"/>
-          </div>
-          <div class="form-group">
-            <label>Datei / Link *</label>
-            <input type="text" id="f-datei" placeholder="z.B. kopfrechnen.html"/>
-          </div>
+          <div class="form-group"><label>Name *</label><input type="text" id="f-name" placeholder="z.B. Kopfrechnen"/></div>
+          <div class="form-group"><label>Datei / Link *</label><input type="text" id="f-datei" placeholder="z.B. kopfrechnen.html"/></div>
           <div class="form-group">
             <label>Fach *</label>
             <select id="f-fach">
@@ -314,17 +301,12 @@
               <option>WiB</option><option>Sport</option><option>Informatik</option><option>GPG</option>
             </select>
           </div>
-          <div class="form-group">
-            <label>Beschreibung</label>
-            <input type="text" id="f-desc" placeholder="Kurze Beschreibung für Schüler"/>
-          </div>
+          <div class="form-group"><label>Beschreibung</label><input type="text" id="f-desc" placeholder="Kurze Beschreibung für Schüler"/></div>
         </div>
         <div style="margin-top:.9rem;display:flex;gap:.55rem;justify-content:flex-end;">
           <button class="btn accent" onclick="addApp()">App hinzufügen</button>
         </div>
       </div>
-
-      <!-- Filter -->
       <div class="sec-header">
         <span class="sec-title">📋 Alle Apps</span>
         <span class="app-count-badge" id="app-count"></span>
@@ -345,13 +327,13 @@
       <div class="app-list" id="app-list"></div>
     </div>
 
-    <!-- ══ TAB: VISIBILITY ══════════════════════════ -->
+    <!-- VISIBILITY -->
     <div class="tab-panel" id="panel-visibility">
       <div class="sec-header"><span class="sec-title">👁 Apps &amp; Kategorien ein/ausblenden</span></div>
       <div id="vis-list"></div>
     </div>
 
-    <!-- ══ TAB: TAGS ════════════════════════════════ -->
+    <!-- TAGS -->
     <div class="tab-panel" id="panel-tags">
       <div class="sec-header"><span class="sec-title">🏷 Eigene Tags verwalten</span></div>
       <div class="tag-manager" style="margin-bottom:1.5rem;">
@@ -369,30 +351,19 @@
       <div class="app-list" id="tag-assign-list"></div>
     </div>
 
-    <!-- ══ TAB: ANNOUNCEMENT ════════════════════════ -->
+    <!-- ANNOUNCEMENT -->
     <div class="tab-panel" id="panel-announcement">
       <div class="sec-header"><span class="sec-title">📢 Ankündigungs-Banner</span></div>
-      <p style="font-size:.84rem;color:var(--muted);margin-bottom:1.2rem;">Erscheint oben auf der Startseite zwischen Header und Filterleiste. Kann jederzeit ein- und ausgeblendet werden.</p>
-
+      <p style="font-size:.84rem;color:var(--muted);margin-bottom:1.2rem;">Erscheint oben auf der Startseite zwischen Header und Filterleiste.</p>
       <div class="ann-preview" id="ann-preview">
         <span id="ann-preview-emoji">📢</span>
         <span id="ann-preview-text">Hier steht deine Ankündigung …</span>
       </div>
-
       <div class="ann-form">
         <div class="form-grid">
-          <div class="form-group">
-            <label>Emoji</label>
-            <input type="text" id="ann-emoji" placeholder="📢" maxlength="4" value="📢" oninput="updateAnnPreview()"/>
-          </div>
-          <div class="form-group full">
-            <label>Text</label>
-            <input type="text" id="ann-text" placeholder="z.B. Diese Woche: Mathe-Woche! Viel Spaß 🎉" oninput="updateAnnPreview()"/>
-          </div>
-          <div class="form-group full">
-            <label>Hintergrundfarbe</label>
-            <div class="color-chips" id="color-chips"></div>
-          </div>
+          <div class="form-group"><label>Emoji</label><input type="text" id="ann-emoji" placeholder="📢" maxlength="4" value="📢" oninput="updateAnnPreview()"/></div>
+          <div class="form-group full"><label>Text</label><input type="text" id="ann-text" placeholder="z.B. Diese Woche: Mathe-Woche! 🎉" oninput="updateAnnPreview()"/></div>
+          <div class="form-group full"><label>Hintergrundfarbe</label><div class="color-chips" id="color-chips"></div></div>
         </div>
         <div style="margin-top:1.1rem;display:flex;gap:.55rem;align-items:center;flex-wrap:wrap;">
           <button class="btn accent" onclick="saveAnnouncement()">💾 Speichern &amp; aktivieren</button>
@@ -402,10 +373,10 @@
       </div>
     </div>
 
-    <!-- ══ TAB: LINK CHECKER ════════════════════════ -->
+    <!-- LINK CHECKER -->
     <div class="tab-panel" id="panel-checker">
       <div class="sec-header"><span class="sec-title">🔗 Broken-Link-Checker</span></div>
-      <p style="font-size:.84rem;color:var(--muted);margin-bottom:1.2rem;">Prüft ob alle App-Dateien auf GitHub erreichbar sind. Externe Links (http/https) werden als „Extern" markiert.</p>
+      <p style="font-size:.84rem;color:var(--muted);margin-bottom:1.2rem;">Prüft ob alle App-Dateien auf GitHub erreichbar sind.</p>
       <div style="display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;margin-bottom:1rem;">
         <button class="btn accent" id="check-btn" onclick="runChecker()">🔍 Alle Links prüfen</button>
         <span id="checker-info" style="font-size:.78rem;color:var(--muted);"></span>
@@ -415,37 +386,23 @@
       <div class="checker-summary" id="checker-summary"></div>
     </div>
 
-    <!-- ══ TAB: VOKABELN ══════════════════════════════ -->
+    <!-- VOKABELN -->
     <div class="tab-panel" id="panel-vokabeln">
-
-      <div class="sec-header">
-        <span class="sec-title">📚 Vokabeln – config.json</span>
-      </div>
-
-      <!-- Stats -->
+      <div class="sec-header"><span class="sec-title">📚 Vokabeln – vokabeln.json</span></div>
       <div class="dash-grid" id="vok-stats" style="margin-bottom:1.5rem;"></div>
-
-      <!-- Search -->
       <div class="filter-row-admin" style="margin-bottom:1rem;">
         <input type="search" class="admin-search" id="vok-search" placeholder="Englisch oder Deutsch suchen …" oninput="vokSearch(this.value)" autocomplete="off"/>
       </div>
       <div id="vok-search-results" style="display:none;margin-bottom:1.2rem;"></div>
-
-      <!-- Special lists -->
       <div class="sec-header"><span class="sec-title">⭐ Sonderlisten</span></div>
       <div id="vok-special" style="margin-bottom:1.5rem;"></div>
-
-      <!-- Units -->
-      <div class="sec-header"><span class="sec-title">📖 Units & Themen</span></div>
+      <div class="sec-header"><span class="sec-title">📖 Units &amp; Themen</span></div>
       <div id="vok-units"></div>
-
     </div>
+  </div>
+</div>
 
-  </div><!-- /content -->
-</div><!-- /app -->
-
-<!-- ══ MODALS ═════════════════════════════════════════ -->
-<!-- Tag Modal -->
+<!-- MODALS -->
 <div class="modal-bg" id="tag-modal">
   <div class="modal">
     <h2 id="modal-title">Tags bearbeiten</h2>
@@ -457,13 +414,10 @@
       <div class="modal-label">Tags</div>
       <div class="chip-group" id="modal-tags"></div>
     </div>
-    <div class="modal-actions">
-      <button class="btn" onclick="closeModal()">Fertig</button>
-    </div>
+    <div class="modal-actions"><button class="btn" onclick="closeModal()">Fertig</button></div>
   </div>
 </div>
 
-<!-- QR Modal -->
 <div class="modal-bg" id="qr-modal-wrap">
   <div class="modal" style="max-width:360px;text-align:center;">
     <h2>📲 QR-Code</h2>
@@ -477,141 +431,114 @@
   </div>
 </div>
 
-<!-- Toast & Undo -->
 <div id="toast">✓ Gespeichert</div>
 <div id="undo-bar"></div>
 
+<!-- ── Gemeinsame Module ── -->
+<script src="js/shared.js"></script>
+<script src="js/config-api.js"></script>
 <script>
-const WORKER_URL   = 'https://lern-apps-config.bennigeitner.workers.dev';
-const BASE_URL     = 'https://geitner-hub.github.io/Lern-Apps/';
-const ADMIN_PW     = 'lehrer123'; // ← HIER ÄNDERN
-const KLASSEN      = [5,6,7,8,9];
-const CAT_ICONS    = {Mathematik:'➕',Englisch:'🇬🇧',Deutsch:'📖',WiB:'🌍',Sport:'⚽',Informatik:'💻',GPG:'🏛'};
+'use strict';
 
-// Tag-Farbpalette – bg, border, text (für dark theme)
-const TAG_COLORS = [
-  {bg:'rgba(167,139,250,.16)', border:'rgba(167,139,250,.35)', text:'#c4b5fd', dot:'#a78bfa', label:'Violett'},
-  {bg:'rgba(99,102,241,.15)',  border:'rgba(99,102,241,.32)',  text:'#818cf8', dot:'#6366f1', label:'Indigo'},
-  {bg:'rgba(230,168,23,.14)',  border:'rgba(230,168,23,.32)',  text:'#e6a817', dot:'#e6a817', label:'Gold'},
-  {bg:'rgba(74,222,128,.13)',  border:'rgba(74,222,128,.3)',   text:'#4ade80', dot:'#22c55e', label:'Grün'},
-  {bg:'rgba(248,113,113,.13)', border:'rgba(248,113,113,.3)',  text:'#f87171', dot:'#ef4444', label:'Rot'},
-  {bg:'rgba(45,212,191,.13)',  border:'rgba(45,212,191,.3)',   text:'#2dd4bf', dot:'#14b8a6', label:'Teal'},
-  {bg:'rgba(244,114,182,.13)', border:'rgba(244,114,182,.3)',  text:'#f472b6', dot:'#ec4899', label:'Pink'},
-  {bg:'rgba(251,191,36,.13)',  border:'rgba(251,191,36,.3)',   text:'#fbbf24', dot:'#f59e0b', label:'Gelb'},
+const BASE_URL   = 'https://geitner-hub.github.io/Lern-Apps/';
+const ADMIN_PW   = 'lehrer123'; // ← Passwort hier ändern
+const KLASSEN    = [5, 6, 7, 8, 9];
+
+const ANN_COLORS = [
+  { bg: 'rgba(230,168,23,.18)',  text: '#e6a817', label: 'Gold'   },
+  { bg: 'rgba(99,102,241,.18)',  text: '#818cf8', label: 'Indigo' },
+  { bg: 'rgba(74,222,128,.15)',  text: '#4ade80', label: 'Grün'   },
+  { bg: 'rgba(248,113,113,.14)', text: '#f87171', label: 'Rot'    },
+  { bg: 'rgba(45,212,191,.15)',  text: '#2dd4bf', label: 'Teal'   },
+  { bg: 'rgba(244,114,182,.15)', text: '#f472b6', label: 'Pink'   },
 ];
 
-// Hilfsfunktion: Tag-Objekt oder String → normalisiert
-function tagObj(t){ return typeof t==='object'?t:{name:String(t),color:0}; }
-function tagName(t){ return tagObj(t).name; }
-function tagColor(t){ return TAG_COLORS[tagObj(t).color]||TAG_COLORS[0]; }
-
+let CONFIG   = { apps: [], customTags: [], hiddenCats: [], announcement: { active: false, text: '', emoji: '📢', color: 0 } };
+let ghSha    = '';
+let saveTimer = null, isSaving = false, pendingSave = false;
+let modalAppName = '';
+let dragSrc  = null;
+let changelog = [];
+let selectedAnnColor    = 0;
 let selectedNewTagColor = 0;
 
-const ANN_COLORS   = [
-  {bg:'rgba(230,168,23,.18)',text:'#e6a817',label:'Gold'},
-  {bg:'rgba(99,102,241,.18)',text:'#818cf8',label:'Indigo'},
-  {bg:'rgba(74,222,128,.15)',text:'#4ade80',label:'Grün'},
-  {bg:'rgba(248,113,113,.14)',text:'#f87171',label:'Rot'},
-  {bg:'rgba(45,212,191,.15)',text:'#2dd4bf',label:'Teal'},
-  {bg:'rgba(244,114,182,.15)',text:'#f472b6',label:'Pink'},
-];
+// ── Login ────────────────────────────────────────────
+document.getElementById('pw').addEventListener('keydown', e => { if (e.key === 'Enter') checkLogin(); });
 
-let CONFIG     = {apps:[], customTags:[], hiddenCats:[], announcement:{active:false,text:'',emoji:'📢',color:0}};
-let ghSha      = '';
-let saveTimer  = null, isSaving = false, pendingSave = false;
-let modalAppName = '';
-let dragSrc    = null;
-let changelog  = [];
-let selectedAnnColor = 0;
-
-// ══ LOGIN ══════════════════════════════════════════════
-document.getElementById('pw').addEventListener('keydown', e=>{ if(e.key==='Enter') checkLogin(); });
-function checkLogin(){
-  if(document.getElementById('pw').value === ADMIN_PW){
-    document.getElementById('login-screen').style.display='none';
-    document.getElementById('app').style.display='block';
+function checkLogin() {
+  if (document.getElementById('pw').value === ADMIN_PW) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
     loadConfig();
   } else {
-    document.getElementById('pw-err').textContent='❌ Falsches Passwort';
-    document.getElementById('pw').value='';
+    document.getElementById('pw-err').textContent = '❌ Falsches Passwort';
+    document.getElementById('pw').value = '';
   }
 }
 
-// ══ SYNC ═══════════════════════════════════════════════
-function setSync(s,m){
-  const el=document.getElementById('sync-status');
-  el.className=s; el.textContent=m;
+// ── Sync ─────────────────────────────────────────────
+function setSync(s, m) {
+  const el = document.getElementById('sync-status');
+  el.className = s;
+  el.textContent = m;
 }
 
-async function loadConfig(){
-  setSync('saving','Lädt …');
-  try{
-    const r=await fetch(WORKER_URL);
-    if(!r.ok) throw new Error(r.status);
-    const d=await r.json();
-    ghSha=d.sha;
-    const parsed=JSON.parse(decodeURIComponent(atob(d.content.replace(/\n/g,'')).split('').map(c=>'%'+('00'+c.charCodeAt(0).toString(16)).slice(-2)).join('')));
-    CONFIG={apps:[],customTags:[],hiddenCats:[],announcement:{active:false,text:'',emoji:'📢',color:0},...parsed};
-    // Migrate old string tags → objects
-    CONFIG.customTags=CONFIG.customTags.map(t=>typeof t==='string'?{name:t,color:0}:t);
-    setSync('ok','✓ Geladen');
-    setTimeout(()=>setSync('','–'),2000);
-  }catch(e){
-    setSync('error','⚠ Fehler beim Laden');
-    console.error(e);
-  }
+async function loadConfig() {
+  setSync('saving', 'Lädt …');
+  const { config, sha, fromCache } = await ConfigAPI.load();
+  CONFIG = config;
+  ghSha  = sha;
+  setSync('ok', fromCache ? '📦 Cache' : '✓ Geladen');
+  setTimeout(() => setSync('', '–'), 2000);
   buildAll();
   loadAnnForm();
 }
 
-function saveConfig(){
+function saveConfig() {
   clearTimeout(saveTimer);
-  saveTimer=setTimeout(()=>_doSave(),600);
+  saveTimer = setTimeout(() => _doSave(), 600);
 }
 
-async function _doSave(){
-  if(isSaving){pendingSave=true;return;}
-  isSaving=true;
-  setSync('saving','Speichert …');
-  const content=btoa(unescape(encodeURIComponent(JSON.stringify(CONFIG,null,2))));
-  try{
-    const r=await fetch(WORKER_URL,{
-      method:'PUT',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({message:'Admin: Einstellungen aktualisiert',content,branch:'main',sha:ghSha})
-    });
-    if(!r.ok) throw new Error(r.status);
-    const d=await r.json();
-    ghSha=d.content.sha;
-    setSync('ok','✓ Gespeichert');
+async function _doSave() {
+  if (isSaving) { pendingSave = true; return; }
+  isSaving = true;
+  setSync('saving', 'Speichert …');
+  const { ok, newSha, error } = await ConfigAPI.save(CONFIG, ghSha);
+  if (ok) {
+    ghSha = newSha;
+    setSync('ok', '✓ Gespeichert');
     showToast('✓ Gespeichert');
-    setTimeout(()=>setSync('','–'),3000);
-  }catch(e){
-    setSync('error','⚠ Fehler');
-    showToast('⚠ Fehler beim Speichern',true);
-    console.error(e);
+    setTimeout(() => setSync('', '–'), 3000);
+  } else {
+    setSync('error', '⚠ Fehler');
+    const msg = error === 'CONFLICT'
+      ? '⚠ Konflikt – bitte Seite neu laden'
+      : '⚠ Fehler beim Speichern';
+    showToast(msg, true);
+    console.error('[Admin] Speicherfehler:', error);
   }
-  isSaving=false;
-  if(pendingSave){pendingSave=false;_doSave();}
+  isSaving = false;
+  if (pendingSave) { pendingSave = false; _doSave(); }
 }
 
-function showToast(msg,err=false){
-  const t=document.getElementById('toast');
-  t.textContent=msg;
-  t.className=err?'show toast-error':'show';
-  setTimeout(()=>t.className='',2200);
+function showToast(msg, err = false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = err ? 'show toast-error' : 'show';
+  setTimeout(() => t.className = '', 2200);
 }
 
-// ══ TABS ═══════════════════════════════════════════════
-document.querySelectorAll('.tab').forEach(tab=>tab.addEventListener('click',()=>{
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+// ── Tabs ──────────────────────────────────────────────
+document.querySelectorAll('.tab').forEach(tab => tab.addEventListener('click', () => {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
   tab.classList.add('active');
-  document.getElementById('panel-'+tab.dataset.t).classList.add('active');
+  document.getElementById('panel-' + tab.dataset.t).classList.add('active');
+  if (tab.dataset.t === 'vokabeln') loadVokabeln();
 }));
 
-// ══ BUILD ALL ══════════════════════════════════════════
-function buildAll(){
+// ── Build All ─────────────────────────────────────────
+function buildAll() {
   buildDashboard();
   buildAppList();
   buildVisibility();
@@ -619,113 +546,76 @@ function buildAll(){
   buildTagAssignList();
 }
 
-// ══ DASHBOARD ══════════════════════════════════════════
-function buildDashboard(){
-  const total     = CONFIG.apps.length;
-  const visible   = CONFIG.apps.filter(a=>!a.hidden).length;
-  const hidden    = CONFIG.apps.filter(a=>a.hidden).length;
-  const aodApp    = CONFIG.apps.find(a=>a.aod && !a.hidden);
-  const faecher   = [...new Set(CONFIG.apps.map(a=>a.fach).filter(Boolean))].length;
+// ── Dashboard ─────────────────────────────────────────
+function buildDashboard() {
+  const total   = CONFIG.apps.length;
+  const visible = CONFIG.apps.filter(a => !a.hidden).length;
+  const hidden  = CONFIG.apps.filter(a => a.hidden).length;
+  const aodApp  = CONFIG.apps.find(a => a.aod && !a.hidden);
+  const faecher = [...new Set(CONFIG.apps.map(a => a.fach).filter(Boolean))].length;
 
-  document.getElementById('dash-stats').innerHTML=`
-    <div class="dash-card accent-card">
-      <div class="dash-card-label">Gesamt Apps</div>
-      <div class="dash-card-value">${total}</div>
-      <div class="dash-card-sub">${faecher} Fächer</div>
-    </div>
-    <div class="dash-card green-card">
-      <div class="dash-card-label">Sichtbar</div>
-      <div class="dash-card-value">${visible}</div>
-      <div class="dash-card-sub">für Schüler</div>
-    </div>
-    <div class="dash-card red-card">
-      <div class="dash-card-label">Versteckt</div>
-      <div class="dash-card-value">${hidden}</div>
-      <div class="dash-card-sub">nicht sichtbar</div>
-    </div>
-    <div class="dash-card">
-      <div class="dash-card-label">Custom Tags</div>
-      <div class="dash-card-value">${CONFIG.customTags.length}</div>
-      <div class="dash-card-sub">angelegt</div>
-    </div>
-    <div class="dash-card">
-      <div class="dash-card-label">Banner</div>
-      <div class="dash-card-value" style="font-size:1.3rem;">${CONFIG.announcement?.active?'🟢 AN':'⚪ AUS'}</div>
-      <div class="dash-card-sub">${CONFIG.announcement?.active?'aktiv':'inaktiv'}</div>
-    </div>`;
+  document.getElementById('dash-stats').innerHTML = `
+    <div class="dash-card accent-card"><div class="dash-card-label">Gesamt Apps</div><div class="dash-card-value">${total}</div><div class="dash-card-sub">${faecher} Fächer</div></div>
+    <div class="dash-card green-card"><div class="dash-card-label">Sichtbar</div><div class="dash-card-value">${visible}</div><div class="dash-card-sub">für Schüler</div></div>
+    <div class="dash-card red-card"><div class="dash-card-label">Versteckt</div><div class="dash-card-value">${hidden}</div><div class="dash-card-sub">nicht sichtbar</div></div>
+    <div class="dash-card"><div class="dash-card-label">Custom Tags</div><div class="dash-card-value">${CONFIG.customTags.length}</div><div class="dash-card-sub">angelegt</div></div>
+    <div class="dash-card"><div class="dash-card-label">Banner</div><div class="dash-card-value" style="font-size:1.3rem;">${CONFIG.announcement?.active ? '🟢 AN' : '⚪ AUS'}</div><div class="dash-card-sub">${CONFIG.announcement?.active ? 'aktiv' : 'inaktiv'}</div></div>`;
 
   document.getElementById('aod-info').innerHTML = aodApp
-    ? `<span style="font-size:1.5rem;">${aodApp.emoji||'📱'}</span> <strong style="color:#fff;">${aodApp.name}</strong> <span style="color:var(--muted);">· ${aodApp.fach}</span>`
+    ? `<span style="font-size:1.5rem;">${aodApp.emoji || '📱'}</span> <strong style="color:#fff;">${aodApp.name}</strong> <span style="color:var(--muted);">· ${aodApp.fach}</span>`
     : `<span style="color:var(--muted);font-size:.85rem;">Keine App des Tages gesetzt.</span>`;
 
-  // Changelog
-  const cl=document.getElementById('changelog-list');
-  if(!changelog.length){
-    cl.innerHTML='<div class="empty-msg">Noch keine Änderungen in dieser Sitzung.</div>';
-  } else {
-    cl.innerHTML=changelog.slice().reverse().map(e=>`
-      <div style="background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:.6rem .9rem;font-size:.83rem;display:flex;align-items:center;gap:.7rem;">
-        <span style="color:var(--muted);font-size:.7rem;flex-shrink:0;">${e.time}</span>
-        <span style="flex:1;">${e.msg}</span>
-      </div>`).join('');
-  }
+  const cl = document.getElementById('changelog-list');
+  cl.innerHTML = changelog.length
+    ? changelog.slice().reverse().map(e => `
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:.6rem .9rem;font-size:.83rem;display:flex;align-items:center;gap:.7rem;">
+          <span style="color:var(--muted);font-size:.7rem;flex-shrink:0;">${e.time}</span>
+          <span style="flex:1;">${e.msg}</span>
+        </div>`).join('')
+    : '<div class="empty-msg">Noch keine Änderungen in dieser Sitzung.</div>';
 }
 
-function logChange(msg){
-  const now=new Date();
-  changelog.push({time:now.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'}),msg});
-  if(changelog.length>20) changelog.shift();
+function logChange(msg) {
+  const now = new Date();
+  changelog.push({ time: now.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }), msg });
+  if (changelog.length > 20) changelog.shift();
 }
 
-// ══ APP LIST ═══════════════════════════════════════════
-function buildAppList(){
-  const list=document.getElementById('app-list');
-  list.innerHTML='';
-  document.getElementById('app-count').textContent=CONFIG.apps.length+' Apps';
+// ── App List ──────────────────────────────────────────
+function buildAppList() {
+  const list = document.getElementById('app-list');
+  list.innerHTML = '';
+  document.getElementById('app-count').textContent = CONFIG.apps.length + ' Apps';
 
-  CONFIG.apps.forEach((app,i)=>{
-    const row=document.createElement('div');
-    row.className='app-row'+(app.hidden?' is-hidden':'');
-    row.draggable=true;
-    row.dataset.i=i;
+  CONFIG.apps.forEach((app, i) => {
+    const row = document.createElement('div');
+    row.className = 'app-row' + (app.hidden ? ' is-hidden' : '');
+    row.draggable = true;
+    row.dataset.i = i;
 
-    const klTags=(app.klassen||[]).map(k=>`<span class="rtag">Kl.${k}</span>`).join('');
-    const ctTags=(app.customTags||[]).map(t=>{
-      const col=tagColor(t);
+    const klTags = (app.klassen || []).map(k => `<span class="rtag">Kl.${k}</span>`).join('');
+    const ctTags = (app.customTags || []).map(t => {
+      const col = tagColor(t);
       return `<span class="rtag ct" style="background:${col.bg};border-color:${col.border};color:${col.text};">${escHtml(tagName(t))}</span>`;
     }).join('');
 
-    row.innerHTML=`
+    row.innerHTML = `
       <span class="drag-handle">⠿</span>
-      <span class="row-emoji">${app.emoji||'📱'}</span>
+      <span class="row-emoji">${app.emoji || '📱'}</span>
       <div class="row-info" style="flex:1;min-width:0;">
-        <div class="row-name">${app.name}${app.aod?'<span class="aod-indicator">⭐ Heute</span>':''}</div>
-        <div class="row-meta">${app.fach||'–'} · ${app.datei||'–'}</div>
-        <div class="row-tags">${klTags}${ctTags}${!klTags&&!ctTags?'<span style="font-size:.68rem;color:var(--muted)">Keine Tags</span>':''}</div>
-        <!-- INLINE EDIT -->
+        <div class="row-name">${escHtml(app.name)}${app.aod ? '<span class="aod-indicator">⭐ Heute</span>' : ''}</div>
+        <div class="row-meta">${escHtml(app.fach || '–')} · ${escHtml(app.datei || '–')}</div>
+        <div class="row-tags">${klTags}${ctTags}${!klTags && !ctTags ? '<span style="font-size:.68rem;color:var(--muted)">Keine Tags</span>' : ''}</div>
         <div class="inline-edit" id="edit-${i}">
-          <div class="form-group">
-            <label>Name</label>
-            <input type="text" id="ei-name-${i}" value="${escHtml(app.name)}"/>
-          </div>
-          <div class="form-group">
-            <label>Datei</label>
-            <input type="text" id="ei-datei-${i}" value="${escHtml(app.datei||'')}"/>
-          </div>
-          <div class="form-group">
-            <label>Emoji</label>
-            <input type="text" id="ei-emoji-${i}" value="${escHtml(app.emoji||'📱')}" maxlength="4"/>
-          </div>
-          <div class="form-group">
-            <label>Fach</label>
+          <div class="form-group"><label>Name</label><input type="text" id="ei-name-${i}" value="${escHtml(app.name)}"/></div>
+          <div class="form-group"><label>Datei</label><input type="text" id="ei-datei-${i}" value="${escHtml(app.datei || '')}"/></div>
+          <div class="form-group"><label>Emoji</label><input type="text" id="ei-emoji-${i}" value="${escHtml(app.emoji || '📱')}" maxlength="4"/></div>
+          <div class="form-group"><label>Fach</label>
             <select id="ei-fach-${i}">
-              ${['Mathematik','Englisch','Deutsch','WiB','Sport','Informatik','GPG'].map(f=>`<option${app.fach===f?' selected':''}>${f}</option>`).join('')}
+              ${['Mathematik','Englisch','Deutsch','WiB','Sport','Informatik','GPG'].map(f => `<option${app.fach === f ? ' selected' : ''}>${f}</option>`).join('')}
             </select>
           </div>
-          <div class="form-group full">
-            <label>Beschreibung</label>
-            <input type="text" id="ei-desc-${i}" value="${escHtml(app.beschreibung||'')}"/>
-          </div>
+          <div class="form-group full"><label>Beschreibung</label><input type="text" id="ei-desc-${i}" value="${escHtml(app.beschreibung || '')}"/></div>
           <div class="inline-edit-actions">
             <button class="btn sm" onclick="cancelEdit(${i})">Abbrechen</button>
             <button class="btn accent sm" onclick="saveEdit(${i})">💾 Speichern</button>
@@ -734,261 +624,253 @@ function buildAppList(){
       </div>
       <div class="row-actions">
         <button class="icon-btn" onclick="toggleEdit(${i})" title="Bearbeiten">✏️</button>
-        <button class="icon-btn ${app.aod?'on-gold':''}" onclick="toggleAod('${escHtml(app.name)}')" title="App des Tages">⭐</button>
-        <button class="icon-btn ${app.hidden?'on-red':'on-green'}" onclick="toggleHidden('${escHtml(app.name)}')" title="Ein/Ausblenden">${app.hidden?'🚫':'✅'}</button>
+        <button class="icon-btn ${app.aod ? 'on-gold' : ''}" onclick="toggleAod('${escHtml(app.name)}')" title="App des Tages">⭐</button>
+        <button class="icon-btn ${app.hidden ? 'on-red' : 'on-green'}" onclick="toggleHidden('${escHtml(app.name)}')" title="Ein/Ausblenden">${app.hidden ? '🚫' : '✅'}</button>
         <button class="icon-btn" onclick="openModal('${escHtml(app.name)}')" title="Tags">🏷</button>
-        <button class="icon-btn" onclick="showQR('${escHtml(app.name)}','${escHtml(app.datei||'')}')" title="QR">📲</button>
+        <button class="icon-btn" onclick="showQR('${escHtml(app.name)}','${escHtml(app.datei || '')}')" title="QR">📲</button>
         <button class="icon-btn on-red" onclick="deleteApp('${escHtml(app.name)}')" title="Löschen">🗑</button>
       </div>`;
 
     // Drag & Drop
-    row.addEventListener('dragstart', e=>{ dragSrc=row; row.classList.add('is-dragging'); e.dataTransfer.effectAllowed='move'; });
-    row.addEventListener('dragend',   ()=>{ row.classList.remove('is-dragging'); document.querySelectorAll('.app-row').forEach(r=>r.classList.remove('drag-over')); });
-    row.addEventListener('dragover',  e=>{ e.preventDefault(); row.classList.add('drag-over'); });
-    row.addEventListener('dragleave', ()=>row.classList.remove('drag-over'));
-    row.addEventListener('drop',      e=>{
+    row.addEventListener('dragstart', e => { dragSrc = row; row.classList.add('is-dragging'); e.dataTransfer.effectAllowed = 'move'; });
+    row.addEventListener('dragend',   () => { row.classList.remove('is-dragging'); document.querySelectorAll('.app-row').forEach(r => r.classList.remove('drag-over')); });
+    row.addEventListener('dragover',  e => { e.preventDefault(); row.classList.add('drag-over'); });
+    row.addEventListener('dragleave', () => row.classList.remove('drag-over'));
+    row.addEventListener('drop', e => {
       e.preventDefault();
-      if(!dragSrc||dragSrc===row) return;
-      const from=parseInt(dragSrc.dataset.i), to=parseInt(row.dataset.i);
-      const moved=CONFIG.apps.splice(from,1)[0];
-      CONFIG.apps.splice(to,0,moved);
+      if (!dragSrc || dragSrc === row) return;
+      const from = parseInt(dragSrc.dataset.i), to = parseInt(row.dataset.i);
+      const moved = CONFIG.apps.splice(from, 1)[0];
+      CONFIG.apps.splice(to, 0, moved);
       logChange(`🔀 "${moved.name}" verschoben`);
       saveConfig(); buildAll();
     });
 
     list.appendChild(row);
   });
-
   filterAppList();
 }
 
-// ── Inline Edit ─────────────────────────────────────
-function toggleEdit(i){
-  const editEl=document.getElementById('edit-'+i);
-  const row=editEl.closest('.app-row');
-  const isOpen=editEl.classList.contains('open');
-  // close all others
-  document.querySelectorAll('.inline-edit.open').forEach(el=>{
-    el.classList.remove('open');
-    el.closest('.app-row')?.classList.remove('editing');
-  });
-  if(!isOpen){ editEl.classList.add('open'); row.classList.add('editing'); }
+function toggleEdit(i) {
+  const editEl = document.getElementById('edit-' + i);
+  const row    = editEl.closest('.app-row');
+  const isOpen = editEl.classList.contains('open');
+  document.querySelectorAll('.inline-edit.open').forEach(el => { el.classList.remove('open'); el.closest('.app-row')?.classList.remove('editing'); });
+  if (!isOpen) { editEl.classList.add('open'); row.classList.add('editing'); }
 }
 
-function cancelEdit(i){
-  document.getElementById('edit-'+i).classList.remove('open');
-  document.getElementById('edit-'+i).closest('.app-row').classList.remove('editing');
+function cancelEdit(i) {
+  document.getElementById('edit-' + i).classList.remove('open');
+  document.getElementById('edit-' + i).closest('.app-row').classList.remove('editing');
 }
 
-function saveEdit(i){
-  const app=CONFIG.apps[i];
-  if(!app) return;
-  const newName=document.getElementById(`ei-name-${i}`).value.trim();
-  const newDatei=document.getElementById(`ei-datei-${i}`).value.trim();
-  const newEmoji=document.getElementById(`ei-emoji-${i}`).value.trim()||'📱';
-  const newFach=document.getElementById(`ei-fach-${i}`).value;
-  const newDesc=document.getElementById(`ei-desc-${i}`).value.trim();
-  if(!newName||!newDatei){ showToast('⚠ Name und Datei sind Pflichtfelder',true); return; }
-  const oldName=app.name;
-  app.name=newName; app.datei=newDatei; app.emoji=newEmoji; app.fach=newFach; app.beschreibung=newDesc;
+function saveEdit(i) {
+  const app = CONFIG.apps[i];
+  if (!app) return;
+  const newName  = document.getElementById(`ei-name-${i}`).value.trim();
+  const newDatei = document.getElementById(`ei-datei-${i}`).value.trim();
+  if (!newName || !newDatei) { showToast('⚠ Name und Datei sind Pflichtfelder', true); return; }
+  const oldName = app.name;
+  app.name        = newName;
+  app.datei       = newDatei;
+  app.emoji       = document.getElementById(`ei-emoji-${i}`).value.trim() || '📱';
+  app.fach        = document.getElementById(`ei-fach-${i}`).value;
+  app.beschreibung = document.getElementById(`ei-desc-${i}`).value.trim();
   logChange(`✏️ "${oldName}" bearbeitet`);
   saveConfig(); buildAll();
   showToast('✓ App aktualisiert');
 }
 
-// ── Filter ──────────────────────────────────────────
-function filterAppList(){
-  const q=(document.getElementById('app-search').value||'').toLowerCase();
-  const fach=document.getElementById('fach-filter').value;
-  const status=document.getElementById('status-filter').value;
-  let shown=0;
-  document.querySelectorAll('#app-list .app-row').forEach(row=>{
-    const name=(row.querySelector('.row-name')?.textContent||'').toLowerCase();
-    const meta=(row.querySelector('.row-meta')?.textContent||'').toLowerCase();
-    const matchQ=!q||name.includes(q)||meta.includes(q);
-    const matchF=!fach||meta.includes(fach.toLowerCase());
-    const isHidden=row.classList.contains('is-hidden');
-    const matchS=!status||(status==='hidden'&&isHidden)||(status==='visible'&&!isHidden);
-    const show=matchQ&&matchF&&matchS;
-    row.style.display=show?'':'none';
-    if(show) shown++;
+function filterAppList() {
+  const q      = (document.getElementById('app-search').value || '').toLowerCase();
+  const fach   = document.getElementById('fach-filter').value;
+  const status = document.getElementById('status-filter').value;
+  let shown    = 0;
+  document.querySelectorAll('#app-list .app-row').forEach(row => {
+    const name     = (row.querySelector('.row-name')?.textContent || '').toLowerCase();
+    const meta     = (row.querySelector('.row-meta')?.textContent || '').toLowerCase();
+    const isHidden = row.classList.contains('is-hidden');
+    const matchQ   = !q      || name.includes(q) || meta.includes(q);
+    const matchF   = !fach   || meta.includes(fach.toLowerCase());
+    const matchS   = !status || (status === 'hidden' && isHidden) || (status === 'visible' && !isHidden);
+    const show     = matchQ && matchF && matchS;
+    row.style.display = show ? '' : 'none';
+    if (show) shown++;
   });
-  document.getElementById('app-count').textContent=shown+' / '+CONFIG.apps.length+' Apps';
+  document.getElementById('app-count').textContent = shown + ' / ' + CONFIG.apps.length + ' Apps';
 }
 
-// ── Toggle Hidden / AOD ────────────────────────────
-function toggleHidden(name){
-  const app=CONFIG.apps.find(a=>a.name===name);
-  if(!app) return;
-  app.hidden=!app.hidden;
-  logChange(`${app.hidden?'🚫':'✅'} "${name}" ${app.hidden?'versteckt':'eingeblendet'}`);
+function toggleHidden(name) {
+  const app = CONFIG.apps.find(a => a.name === name);
+  if (!app) return;
+  app.hidden = !app.hidden;
+  logChange(`${app.hidden ? '🚫' : '✅'} "${name}" ${app.hidden ? 'versteckt' : 'eingeblendet'}`);
   saveConfig(); buildAll();
 }
 
-function toggleAod(name){
-  CONFIG.apps.forEach(a=>a.aod=false);
-  const app=CONFIG.apps.find(a=>a.name===name);
-  if(app){ app.aod=true; logChange(`⭐ "${name}" als App des Tages gesetzt`); }
+function toggleAod(name) {
+  CONFIG.apps.forEach(a => a.aod = false);
+  const app = CONFIG.apps.find(a => a.name === name);
+  if (app) { app.aod = true; logChange(`⭐ "${name}" als App des Tages gesetzt`); }
   saveConfig(); buildAll();
 }
 
-// ── Add / Delete ───────────────────────────────────
-function addApp(){
-  const name=document.getElementById('f-name').value.trim();
-  const datei=document.getElementById('f-datei').value.trim();
-  const fach=document.getElementById('f-fach').value;
-  const emoji=document.getElementById('f-emoji').value.trim()||'📱';
-  const desc=document.getElementById('f-desc').value.trim();
-  if(!name||!datei||!fach){ showToast('⚠ Name, Datei und Fach ausfüllen',true); return; }
-  if(CONFIG.apps.find(a=>a.name===name)){ showToast('⚠ Name bereits vergeben',true); return; }
-  CONFIG.apps.push({name,datei,fach,emoji,beschreibung:desc,hidden:false,klassen:[],customTags:[],aod:false});
-  ['f-name','f-datei','f-desc','f-emoji'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('f-fach').value='';
-  document.getElementById('emoji-preview').textContent='📱';
+function addApp() {
+  const name  = document.getElementById('f-name').value.trim();
+  const datei = document.getElementById('f-datei').value.trim();
+  const fach  = document.getElementById('f-fach').value;
+  const emoji = document.getElementById('f-emoji').value.trim() || '📱';
+  const desc  = document.getElementById('f-desc').value.trim();
+  if (!name || !datei || !fach) { showToast('⚠ Name, Datei und Fach ausfüllen', true); return; }
+  if (CONFIG.apps.find(a => a.name === name)) { showToast('⚠ Name bereits vergeben', true); return; }
+  CONFIG.apps.push({ name, datei, fach, emoji, beschreibung: desc, hidden: false, klassen: [], customTags: [], aod: false });
+  ['f-name','f-datei','f-desc','f-emoji'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('f-fach').value = '';
+  document.getElementById('emoji-preview').textContent = '📱';
   logChange(`➕ "${name}" hinzugefügt`);
   saveConfig(); buildAll();
 }
 
-let undoTimer=null, undoApp=null, undoIdx=null;
-function deleteApp(name){
-  const idx=CONFIG.apps.findIndex(a=>a.name===name);
-  if(idx===-1) return;
-  undoApp=CONFIG.apps[idx]; undoIdx=idx;
-  CONFIG.apps.splice(idx,1);
+let undoTimer = null, undoApp = null, undoIdx = null;
+
+function deleteApp(name) {
+  const idx = CONFIG.apps.findIndex(a => a.name === name);
+  if (idx === -1) return;
+  undoApp = CONFIG.apps[idx]; undoIdx = idx;
+  CONFIG.apps.splice(idx, 1);
   logChange(`🗑 "${name}" gelöscht`);
   buildAll(); showUndo(name);
   clearTimeout(undoTimer);
-  undoTimer=setTimeout(()=>{ undoApp=null; undoIdx=null; saveConfig(); hideUndo(); },8000);
+  undoTimer = setTimeout(() => { undoApp = null; undoIdx = null; saveConfig(); hideUndo(); }, 8000);
 }
 
-function undoDelete(){
-  if(!undoApp) return;
+function undoDelete() {
+  if (!undoApp) return;
   clearTimeout(undoTimer);
-  CONFIG.apps.splice(undoIdx,0,undoApp);
+  CONFIG.apps.splice(undoIdx, 0, undoApp);
   logChange(`↩ "${undoApp.name}" wiederhergestellt`);
-  undoApp=null; undoIdx=null;
+  undoApp = null; undoIdx = null;
   hideUndo(); buildAll();
 }
 
-function showUndo(name){
-  const bar=document.getElementById('undo-bar');
-  bar.innerHTML=`<span>🗑 <strong>${name}</strong> gelöscht</span>
+function showUndo(name) {
+  const bar = document.getElementById('undo-bar');
+  bar.innerHTML = `<span>🗑 <strong>${escHtml(name)}</strong> gelöscht</span>
     <button onclick="undoDelete()" style="background:var(--red);border:none;color:#fff;padding:.3rem .9rem;border-radius:8px;cursor:pointer;font-family:inherit;font-weight:800;font-size:.8rem;">↩ Rückgängig</button>
     <span id="undo-cd" style="color:var(--muted);font-size:.75rem;">8s</span>`;
-  bar.style.display='flex';
-  let sec=8;
+  bar.style.display = 'flex';
+  let sec = 8;
   clearInterval(bar._iv);
-  bar._iv=setInterval(()=>{ sec--; const cd=document.getElementById('undo-cd'); if(cd) cd.textContent=sec+'s'; if(sec<=0) clearInterval(bar._iv); },1000);
+  bar._iv = setInterval(() => { sec--; const cd = document.getElementById('undo-cd'); if (cd) cd.textContent = sec + 's'; if (sec <= 0) clearInterval(bar._iv); }, 1000);
 }
-function hideUndo(){ const b=document.getElementById('undo-bar'); if(b){ clearInterval(b._iv); b.style.display='none'; } }
 
-// ══ VISIBILITY ═════════════════════════════════════════
-function buildVisibility(){
-  const list=document.getElementById('vis-list');
-  list.innerHTML='';
-  const faecher=[...new Set(CONFIG.apps.map(a=>a.fach).filter(Boolean))];
-  if(!faecher.length){ list.innerHTML='<div class="empty-msg">Noch keine Apps vorhanden.</div>'; return; }
-  faecher.forEach(fach=>{
-    const catHidden=CONFIG.hiddenCats.includes(fach);
-    const apps=CONFIG.apps.filter(a=>a.fach===fach);
-    const block=document.createElement('div');
-    block.className='vis-cat-block';
-    block.innerHTML=`
+function hideUndo() {
+  const b = document.getElementById('undo-bar');
+  if (b) { clearInterval(b._iv); b.style.display = 'none'; }
+}
+
+// ── Visibility ────────────────────────────────────────
+function buildVisibility() {
+  const list = document.getElementById('vis-list');
+  list.innerHTML = '';
+  const faecher = [...new Set(CONFIG.apps.map(a => a.fach).filter(Boolean))];
+  if (!faecher.length) { list.innerHTML = '<div class="empty-msg">Noch keine Apps vorhanden.</div>'; return; }
+  faecher.forEach(fach => {
+    const catHidden = CONFIG.hiddenCats.includes(fach);
+    const apps = CONFIG.apps.filter(a => a.fach === fach);
+    const block = document.createElement('div');
+    block.className = 'vis-cat-block';
+    block.innerHTML = `
       <div class="vis-cat-header">
-        <span style="font-size:1.2rem;">${CAT_ICONS[fach]||'📚'}</span>
-        <span class="vis-cat-name">${fach} (${apps.length})</span>
-        <button class="vis-toggle ${catHidden?'off':'on'}" onclick="toggleCat('${fach}')">${catHidden?'Ausgeblendet':'Sichtbar'}</button>
+        <span style="font-size:1.2rem;">${CAT_ICONS[fach] || '📚'}</span>
+        <span class="vis-cat-name">${escHtml(fach)} (${apps.length})</span>
+        <button class="vis-toggle ${catHidden ? 'off' : 'on'}" onclick="toggleCat('${escHtml(fach)}')">${catHidden ? 'Ausgeblendet' : 'Sichtbar'}</button>
       </div>
       <div class="vis-app-list">
-        ${apps.map(app=>`
+        ${apps.map(app => `
           <div class="vis-app-row">
-            <span style="font-size:1.1rem;">${app.emoji||'📱'}</span>
-            <span class="vis-app-name" style="${app.hidden?'opacity:.38':''}">${app.name}</span>
-            <button class="vis-toggle ${app.hidden?'off':'on'}" onclick="toggleHidden('${escHtml(app.name)}')">${app.hidden?'Ausgeblendet':'Sichtbar'}</button>
+            <span style="font-size:1.1rem;">${app.emoji || '📱'}</span>
+            <span class="vis-app-name" style="${app.hidden ? 'opacity:.38' : ''}">${escHtml(app.name)}</span>
+            <button class="vis-toggle ${app.hidden ? 'off' : 'on'}" onclick="toggleHidden('${escHtml(app.name)}')">${app.hidden ? 'Ausgeblendet' : 'Sichtbar'}</button>
           </div>`).join('')}
       </div>`;
     list.appendChild(block);
   });
 }
 
-function toggleCat(fach){
-  const idx=CONFIG.hiddenCats.indexOf(fach);
-  if(idx===-1) CONFIG.hiddenCats.push(fach); else CONFIG.hiddenCats.splice(idx,1);
-  logChange(`${CONFIG.hiddenCats.includes(fach)?'🚫':'✅'} Kategorie "${fach}" umgeschaltet`);
+function toggleCat(fach) {
+  const idx = CONFIG.hiddenCats.indexOf(fach);
+  if (idx === -1) CONFIG.hiddenCats.push(fach); else CONFIG.hiddenCats.splice(idx, 1);
+  logChange(`${CONFIG.hiddenCats.includes(fach) ? '🚫' : '✅'} Kategorie "${fach}" umgeschaltet`);
   saveConfig(); buildAll();
 }
 
-// ══ TAGS ═══════════════════════════════════════════════
-function buildTagManager(){
-  const pills=document.getElementById('tag-pills');
-  pills.innerHTML='';
-  if(!CONFIG.customTags.length){
-    pills.innerHTML='<span style="font-size:.78rem;color:var(--muted);">Noch keine Tags erstellt.</span>';
+// ── Tags ──────────────────────────────────────────────
+function buildTagManager() {
+  const pills = document.getElementById('tag-pills');
+  pills.innerHTML = '';
+  if (!CONFIG.customTags.length) {
+    pills.innerHTML = '<span style="font-size:.78rem;color:var(--muted);">Noch keine Tags erstellt.</span>';
   } else {
-    CONFIG.customTags.forEach((tag,ti)=>{
-      const t=tagObj(tag); const col=tagColor(tag);
-      const p=document.createElement('div');
-      p.className='tag-pill';
-      p.style.cssText=`background:${col.bg};border:1px solid ${col.border};color:${col.text};`;
-      p.innerHTML=`${escHtml(t.name)}
-        <button class="del" title="Löschen">×</button>
-        <button class="del" title="Farbe" style="opacity:.55;font-size:.7rem;margin-left:1px;">🎨</button>`;
-      const [delBtn, colorBtn]=p.querySelectorAll('.del');
-      delBtn.addEventListener('click',()=>{
-        if(!confirm(`Tag "${t.name}" löschen?`)) return;
-        const nm=t.name;
-        CONFIG.customTags.splice(ti,1);
-        CONFIG.apps.forEach(a=>{
-          if(a.customTags) a.customTags=a.customTags.filter(x=>tagName(x)!==nm);
-        });
+    CONFIG.customTags.forEach((tag, ti) => {
+      const t = tagObj(tag), col = tagColor(tag);
+      const p = document.createElement('div');
+      p.className = 'tag-pill';
+      p.style.cssText = `background:${col.bg};border:1px solid ${col.border};color:${col.text};`;
+      p.innerHTML = `${escHtml(t.name)}<button class="del" title="Löschen">×</button><button class="del" title="Farbe" style="opacity:.55;font-size:.7rem;margin-left:1px;">🎨</button>`;
+      const [delBtn, colorBtn] = p.querySelectorAll('.del');
+      delBtn.addEventListener('click', () => {
+        if (!confirm(`Tag "${t.name}" löschen?`)) return;
+        const nm = t.name;
+        CONFIG.customTags.splice(ti, 1);
+        CONFIG.apps.forEach(a => { if (a.customTags) a.customTags = a.customTags.filter(x => tagName(x) !== nm); });
         logChange(`🏷 Tag "${nm}" gelöscht`);
         saveConfig(); buildAll();
       });
-      colorBtn.addEventListener('click',()=>openTagColorPicker(ti));
+      colorBtn.addEventListener('click', () => openTagColorPicker(ti));
       pills.appendChild(p);
     });
   }
   buildNewTagColorDots();
 }
 
-document.getElementById('new-tag').addEventListener('keydown',e=>{ if(e.key==='Enter') addTag(); });
-function addTag(){
-  const inp=document.getElementById('new-tag');
-  const v=inp.value.trim();
-  if(!v) return;
-  if(CONFIG.customTags.find(t=>tagName(t)===v)){ inp.value=''; return; }
-  CONFIG.customTags.push({name:v, color:selectedNewTagColor});
-  inp.value='';
+document.getElementById('new-tag').addEventListener('keydown', e => { if (e.key === 'Enter') addTag(); });
+
+function addTag() {
+  const inp = document.getElementById('new-tag');
+  const v   = inp.value.trim();
+  if (!v || CONFIG.customTags.find(t => tagName(t) === v)) { inp.value = ''; return; }
+  CONFIG.customTags.push({ name: v, color: selectedNewTagColor });
+  inp.value = '';
   logChange(`🏷 Tag "${v}" erstellt`);
   saveConfig(); buildAll();
 }
 
-function buildNewTagColorDots(){
-  const wrap=document.getElementById('new-tag-colors');
-  if(!wrap) return;
-  wrap.innerHTML='';
-  TAG_COLORS.forEach((col,i)=>{
-    const d=document.createElement('div');
-    d.className='tag-color-dot'+(i===selectedNewTagColor?' sel':'');
-    d.style.background=col.dot;
-    d.title=col.label;
-    d.addEventListener('click',()=>{
-      selectedNewTagColor=i;
-      wrap.querySelectorAll('.tag-color-dot').forEach((el,j)=>el.classList.toggle('sel',j===i));
+function buildNewTagColorDots() {
+  const wrap = document.getElementById('new-tag-colors');
+  if (!wrap) return;
+  wrap.innerHTML = '';
+  TAG_COLORS.forEach((col, i) => {
+    const d = document.createElement('div');
+    d.className = 'tag-color-dot' + (i === selectedNewTagColor ? ' sel' : '');
+    d.style.background = col.dot;
+    d.title = col.label;
+    d.addEventListener('click', () => {
+      selectedNewTagColor = i;
+      wrap.querySelectorAll('.tag-color-dot').forEach((el, j) => el.classList.toggle('sel', j === i));
     });
     wrap.appendChild(d);
   });
 }
 
-function openTagColorPicker(ti){
-  const tag=tagObj(CONFIG.customTags[ti]);
-  // simple inline mini-picker via a small overlay div
-  const existing=document.getElementById('tag-cp-overlay');
-  if(existing) existing.remove();
-  const overlay=document.createElement('div');
-  overlay.id='tag-cp-overlay';
-  overlay.style.cssText=`position:fixed;inset:0;z-index:9000;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.6);backdrop-filter:blur(3px);`;
-  overlay.innerHTML=`
+function openTagColorPicker(ti) {
+  const tag = tagObj(CONFIG.customTags[ti]);
+  const existing = document.getElementById('tag-cp-overlay');
+  if (existing) existing.remove();
+  const overlay = document.createElement('div');
+  overlay.id = 'tag-cp-overlay';
+  overlay.style.cssText = 'position:fixed;inset:0;z-index:9000;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.6);backdrop-filter:blur(3px);';
+  overlay.innerHTML = `
     <div style="background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:1.4rem 1.6rem;min-width:280px;box-shadow:0 20px 60px rgba(0,0,0,.5);">
       <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:var(--accent);margin-bottom:.9rem;">🎨 Farbe für „${escHtml(tag.name)}"</div>
       <div style="display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.1rem;" id="tag-cp-dots"></div>
@@ -997,97 +879,92 @@ function openTagColorPicker(ti){
         <button class="btn accent" id="tag-cp-save">Speichern</button>
       </div>
     </div>`;
-  let picked=tag.color||0;
+  let picked = tag.color || 0;
   document.body.appendChild(overlay);
-  const dotsWrap=document.getElementById('tag-cp-dots');
-  TAG_COLORS.forEach((col,i)=>{
-    const d=document.createElement('div');
-    d.style.cssText=`width:32px;height:32px;border-radius:50%;background:${col.dot};cursor:pointer;border:3px solid ${i===picked?'#fff':'transparent'};transition:all .14s;`;
-    d.title=col.label;
-    d.addEventListener('click',()=>{
-      picked=i;
-      dotsWrap.querySelectorAll('div').forEach((el,j)=>el.style.borderColor=j===i?'#fff':'transparent');
-    });
+  const dotsWrap = document.getElementById('tag-cp-dots');
+  TAG_COLORS.forEach((col, i) => {
+    const d = document.createElement('div');
+    d.style.cssText = `width:32px;height:32px;border-radius:50%;background:${col.dot};cursor:pointer;border:3px solid ${i === picked ? '#fff' : 'transparent'};transition:all .14s;`;
+    d.title = col.label;
+    d.addEventListener('click', () => { picked = i; dotsWrap.querySelectorAll('div').forEach((el, j) => el.style.borderColor = j === i ? '#fff' : 'transparent'); });
     dotsWrap.appendChild(d);
   });
-  document.getElementById('tag-cp-save').addEventListener('click',()=>{
-    CONFIG.customTags[ti]={...tag, color:picked};
+  document.getElementById('tag-cp-save').addEventListener('click', () => {
+    CONFIG.customTags[ti] = { ...tag, color: picked };
     logChange(`🎨 Tag-Farbe für "${tag.name}" geändert`);
     saveConfig(); buildAll();
     overlay.remove();
   });
-  overlay.addEventListener('click',e=>{ if(e.target===overlay) overlay.remove(); });
+  overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
 }
 
-function buildTagAssignList(){
-  const list=document.getElementById('tag-assign-list');
-  list.innerHTML='';
-  CONFIG.apps.forEach(app=>{
-    const kl=app.klassen||[], ct=app.customTags||[];
-    const row=document.createElement('div');
-    row.className='app-row';
-    row.style.cursor='default';
-    row.innerHTML=`
-      <span class="row-emoji">${app.emoji||'📱'}</span>
+function buildTagAssignList() {
+  const list = document.getElementById('tag-assign-list');
+  list.innerHTML = '';
+  CONFIG.apps.forEach(app => {
+    const kl = app.klassen || [], ct = app.customTags || [];
+    const row = document.createElement('div');
+    row.className = 'app-row';
+    row.style.cursor = 'default';
+    row.innerHTML = `
+      <span class="row-emoji">${app.emoji || '📱'}</span>
       <div class="row-info">
         <div class="row-name">${escHtml(app.name)}</div>
         <div class="row-tags">
-          ${kl.map(k=>`<span class="rtag">Kl.${k}</span>`).join('')}
-          ${ct.map(t=>{const col=tagColor(t);return `<span class="rtag ct" style="background:${col.bg};border-color:${col.border};color:${col.text};">${escHtml(tagName(t))}</span>`;}).join('')}
-          ${!kl.length&&!ct.length?'<span style="font-size:.7rem;color:var(--muted)">Keine Tags</span>':''}
+          ${kl.map(k => `<span class="rtag">Kl.${k}</span>`).join('')}
+          ${ct.map(t => { const col = tagColor(t); return `<span class="rtag ct" style="background:${col.bg};border-color:${col.border};color:${col.text};">${escHtml(tagName(t))}</span>`; }).join('')}
+          ${!kl.length && !ct.length ? '<span style="font-size:.7rem;color:var(--muted)">Keine Tags</span>' : ''}
         </div>
       </div>
-      <div class="row-actions">
-        <button class="icon-btn" onclick="openModal('${escHtml(app.name)}')">🏷 Bearbeiten</button>
-      </div>`;
+      <div class="row-actions"><button class="icon-btn" onclick="openModal('${escHtml(app.name)}')">🏷 Bearbeiten</button></div>`;
     list.appendChild(row);
   });
 }
 
-// ══ TAG MODAL ══════════════════════════════════════════
-function openModal(name){
-  modalAppName=name;
-  const app=CONFIG.apps.find(a=>a.name===name);
-  if(!app) return;
-  document.getElementById('modal-title').textContent='🏷 '+name;
-  const kWrap=document.getElementById('modal-klassen');
-  kWrap.innerHTML='';
-  KLASSEN.forEach(k=>{
-    const c=document.createElement('span');
-    c.className='m-chip'+(app.klassen?.includes(k)?' sel-k':'');
-    c.textContent='Klasse '+k;
-    c.addEventListener('click',()=>{
-      if(!app.klassen) app.klassen=[];
-      const idx=app.klassen.indexOf(k);
-      if(idx===-1) app.klassen.push(k); else app.klassen.splice(idx,1);
+// ── Tag Modal ─────────────────────────────────────────
+function openModal(name) {
+  modalAppName = name;
+  const app = CONFIG.apps.find(a => a.name === name);
+  if (!app) return;
+  document.getElementById('modal-title').textContent = '🏷 ' + name;
+  const kWrap = document.getElementById('modal-klassen');
+  kWrap.innerHTML = '';
+  KLASSEN.forEach(k => {
+    const c = document.createElement('span');
+    c.className = 'm-chip' + (app.klassen?.includes(k) ? ' sel-k' : '');
+    c.textContent = 'Klasse ' + k;
+    c.addEventListener('click', () => {
+      if (!app.klassen) app.klassen = [];
+      const idx = app.klassen.indexOf(k);
+      if (idx === -1) app.klassen.push(k); else app.klassen.splice(idx, 1);
       c.classList.toggle('sel-k');
       saveConfig(); buildAll();
     });
     kWrap.appendChild(c);
   });
-  const tWrap=document.getElementById('modal-tags');
-  tWrap.innerHTML='';
-  if(!CONFIG.customTags.length){
-    tWrap.innerHTML='<span style="font-size:.78rem;color:var(--muted)">Erst Tags im Reiter "Tags" erstellen.</span>';
+  const tWrap = document.getElementById('modal-tags');
+  tWrap.innerHTML = '';
+  if (!CONFIG.customTags.length) {
+    tWrap.innerHTML = '<span style="font-size:.78rem;color:var(--muted)">Erst Tags im Reiter "Tags" erstellen.</span>';
   } else {
-    CONFIG.customTags.forEach(tag=>{
-      const nm=tagName(tag); const col=tagColor(tag);
-      const c=document.createElement('span');
-      const isSelected=app.customTags?.find(x=>tagName(x)===nm);
-      c.className='m-chip'+(isSelected?' sel-c':'');
-      if(isSelected){ c.style.cssText=`background:${col.bg};border-color:${col.border};color:${col.text};`; }
-      c.textContent=nm;
-      c.addEventListener('click',()=>{
-        if(!app.customTags) app.customTags=[];
-        const idx=app.customTags.findIndex(x=>tagName(x)===nm);
-        if(idx===-1){
+    CONFIG.customTags.forEach(tag => {
+      const nm = tagName(tag), col = tagColor(tag);
+      const c  = document.createElement('span');
+      const isSelected = app.customTags?.find(x => tagName(x) === nm);
+      c.className = 'm-chip' + (isSelected ? ' sel-c' : '');
+      if (isSelected) c.style.cssText = `background:${col.bg};border-color:${col.border};color:${col.text};`;
+      c.textContent = nm;
+      c.addEventListener('click', () => {
+        if (!app.customTags) app.customTags = [];
+        const idx = app.customTags.findIndex(x => tagName(x) === nm);
+        if (idx === -1) {
           app.customTags.push(tag);
           c.classList.add('sel-c');
-          c.style.cssText=`background:${col.bg};border-color:${col.border};color:${col.text};`;
+          c.style.cssText = `background:${col.bg};border-color:${col.border};color:${col.text};`;
         } else {
-          app.customTags.splice(idx,1);
+          app.customTags.splice(idx, 1);
           c.classList.remove('sel-c');
-          c.style.cssText='';
+          c.style.cssText = '';
         }
         saveConfig(); buildAll();
       });
@@ -1097,241 +974,232 @@ function openModal(name){
   document.getElementById('tag-modal').classList.add('open');
 }
 
-function closeModal(){
-  document.getElementById('tag-modal').classList.remove('open');
-  modalAppName='';
-}
-document.getElementById('tag-modal').addEventListener('click',e=>{ if(e.target===document.getElementById('tag-modal')) closeModal(); });
+function closeModal() { document.getElementById('tag-modal').classList.remove('open'); modalAppName = ''; }
+document.getElementById('tag-modal').addEventListener('click', e => { if (e.target === document.getElementById('tag-modal')) closeModal(); });
 
-// ══ QR ═════════════════════════════════════════════════
-function showQR(name, datei){
-  const url=BASE_URL+datei;
-  document.getElementById('qr-app-name').textContent=name;
-  document.getElementById('qr-url').textContent=url;
-  const wrap=document.getElementById('qr-canvas-wrap');
-  wrap.innerHTML='';
-  const img=document.createElement('img');
-  img.src=`https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(url)}&color=0f0e1a&bgcolor=ffffff&qzone=1`;
-  img.width=220; img.height=220;
-  img.style.cssText='border-radius:8px;display:block;';
+// ── QR ────────────────────────────────────────────────
+function showQR(name, datei) {
+  const url = BASE_URL + datei;
+  document.getElementById('qr-app-name').textContent = name;
+  document.getElementById('qr-url').textContent = url;
+  const wrap = document.getElementById('qr-canvas-wrap');
+  wrap.innerHTML = '';
+  const img = document.createElement('img');
+  img.src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(url)}&color=0f0e1a&bgcolor=ffffff&qzone=1`;
+  img.width = 220; img.height = 220;
+  img.style.cssText = 'border-radius:8px;display:block;';
   wrap.appendChild(img);
   document.getElementById('qr-modal-wrap').classList.add('open');
 }
 
-function downloadQR(){
-  const name=document.getElementById('qr-app-name').textContent;
-  const img=document.querySelector('#qr-canvas-wrap img');
-  if(!img) return;
-  const canvas=document.createElement('canvas');
-  canvas.width=220; canvas.height=220;
-  const ctx=canvas.getContext('2d');
-  const i=new Image(); i.crossOrigin='anonymous'; i.src=img.src;
-  i.onload=()=>{ ctx.drawImage(i,0,0); const a=document.createElement('a'); a.download=`QR-${name.replace(/[^a-zA-Z0-9]/g,'-')}.png`; a.href=canvas.toDataURL('image/png'); a.click(); };
-  i.onerror=()=>{ const a=document.createElement('a'); a.href=img.src; a.target='_blank'; a.click(); };
+function downloadQR() {
+  const name = document.getElementById('qr-app-name').textContent;
+  const img  = document.querySelector('#qr-canvas-wrap img');
+  if (!img) return;
+  const canvas = document.createElement('canvas');
+  canvas.width = canvas.height = 220;
+  const ctx = canvas.getContext('2d');
+  const i   = new Image(); i.crossOrigin = 'anonymous'; i.src = img.src;
+  i.onload  = () => { ctx.drawImage(i, 0, 0); const a = document.createElement('a'); a.download = `QR-${name.replace(/[^a-zA-Z0-9]/g,'-')}.png`; a.href = canvas.toDataURL('image/png'); a.click(); };
+  i.onerror = () => { const a = document.createElement('a'); a.href = img.src; a.target = '_blank'; a.click(); };
 }
 
-function closeQR(){ document.getElementById('qr-modal-wrap').classList.remove('open'); }
-document.getElementById('qr-modal-wrap').addEventListener('click',e=>{ if(e.target===document.getElementById('qr-modal-wrap')) closeQR(); });
+function closeQR() { document.getElementById('qr-modal-wrap').classList.remove('open'); }
+document.getElementById('qr-modal-wrap').addEventListener('click', e => { if (e.target === document.getElementById('qr-modal-wrap')) closeQR(); });
 
-// ══ ANNOUNCEMENT ═══════════════════════════════════════
-function buildColorChips(){
-  const wrap=document.getElementById('color-chips');
-  wrap.innerHTML='';
-  ANN_COLORS.forEach((c,i)=>{
-    const chip=document.createElement('div');
-    chip.className='color-chip'+(i===selectedAnnColor?' selected':'');
-    chip.style.background=c.bg;
-    chip.style.border=`2px solid ${c.text}`;
-    chip.title=c.label;
-    chip.addEventListener('click',()=>{
-      selectedAnnColor=i;
-      document.querySelectorAll('.color-chip').forEach((ch,j)=>ch.classList.toggle('selected',j===i));
+// ── Announcement ──────────────────────────────────────
+function buildColorChips() {
+  const wrap = document.getElementById('color-chips');
+  wrap.innerHTML = '';
+  ANN_COLORS.forEach((c, i) => {
+    const chip = document.createElement('div');
+    chip.className = 'color-chip' + (i === selectedAnnColor ? ' selected' : '');
+    chip.style.background = c.bg;
+    chip.style.border = `2px solid ${c.text}`;
+    chip.title = c.label;
+    chip.addEventListener('click', () => {
+      selectedAnnColor = i;
+      document.querySelectorAll('.color-chip').forEach((ch, j) => ch.classList.toggle('selected', j === i));
       updateAnnPreview();
     });
     wrap.appendChild(chip);
   });
 }
 
-function loadAnnForm(){
+function loadAnnForm() {
   buildColorChips();
-  const ann=CONFIG.announcement||{};
-  document.getElementById('ann-text').value=ann.text||'';
-  document.getElementById('ann-emoji').value=ann.emoji||'📢';
-  selectedAnnColor=ann.color||0;
+  const ann = CONFIG.announcement || {};
+  document.getElementById('ann-text').value  = ann.text  || '';
+  document.getElementById('ann-emoji').value = ann.emoji || '📢';
+  selectedAnnColor = ann.color || 0;
   buildColorChips();
   updateAnnPreview();
-  document.getElementById('ann-status').textContent=ann.active?'✅ Banner ist aktiv':'⚪ Banner ist ausgeblendet';
+  document.getElementById('ann-status').textContent = ann.active ? '✅ Banner ist aktiv' : '⚪ Banner ist ausgeblendet';
 }
 
-function updateAnnPreview(){
-  const text=document.getElementById('ann-text').value||'Hier steht deine Ankündigung …';
-  const emoji=document.getElementById('ann-emoji').value||'📢';
-  const col=ANN_COLORS[selectedAnnColor]||ANN_COLORS[0];
-  const prev=document.getElementById('ann-preview');
-  prev.style.background=col.bg;
-  prev.style.color=col.text;
-  prev.style.border=`1px solid ${col.text}44`;
-  document.getElementById('ann-preview-emoji').textContent=emoji;
-  document.getElementById('ann-preview-text').textContent=text;
+function updateAnnPreview() {
+  const text  = document.getElementById('ann-text').value  || 'Hier steht deine Ankündigung …';
+  const emoji = document.getElementById('ann-emoji').value || '📢';
+  const col   = ANN_COLORS[selectedAnnColor] || ANN_COLORS[0];
+  const prev  = document.getElementById('ann-preview');
+  prev.style.background = col.bg;
+  prev.style.color      = col.text;
+  prev.style.border     = `1px solid ${col.text}44`;
+  document.getElementById('ann-preview-emoji').textContent = emoji;
+  document.getElementById('ann-preview-text').textContent  = text;
 }
 
-function saveAnnouncement(){
-  const text=document.getElementById('ann-text').value.trim();
-  if(!text){ showToast('⚠ Bitte Text eingeben',true); return; }
-  CONFIG.announcement={
-    active:true,
+function saveAnnouncement() {
+  const text = document.getElementById('ann-text').value.trim();
+  if (!text) { showToast('⚠ Bitte Text eingeben', true); return; }
+  CONFIG.announcement = {
+    active:    true,
     text,
-    emoji:document.getElementById('ann-emoji').value||'📢',
-    color:selectedAnnColor,
-    bg:ANN_COLORS[selectedAnnColor].bg,
-    textColor:ANN_COLORS[selectedAnnColor].text,
+    emoji:     document.getElementById('ann-emoji').value || '📢',
+    color:     selectedAnnColor,
+    bg:        ANN_COLORS[selectedAnnColor].bg,
+    textColor: ANN_COLORS[selectedAnnColor].text,
   };
-  logChange(`📢 Banner aktiviert: "${text.substring(0,30)}…"`);
+  logChange(`📢 Banner aktiviert: "${text.substring(0, 30)}…"`);
   saveConfig();
-  document.getElementById('ann-status').textContent='✅ Banner ist aktiv';
+  document.getElementById('ann-status').textContent = '✅ Banner ist aktiv';
   buildDashboard();
   showToast('✓ Banner gespeichert & aktiv');
 }
 
-function hideAnnouncement(){
-  if(!CONFIG.announcement) CONFIG.announcement={};
-  CONFIG.announcement.active=false;
+function hideAnnouncement() {
+  if (!CONFIG.announcement) CONFIG.announcement = {};
+  CONFIG.announcement.active = false;
   logChange('🚫 Banner ausgeblendet');
   saveConfig();
-  document.getElementById('ann-status').textContent='⚪ Banner ist ausgeblendet';
+  document.getElementById('ann-status').textContent = '⚪ Banner ist ausgeblendet';
   buildDashboard();
   showToast('Banner ausgeblendet');
 }
 
-// ══ BROKEN LINK CHECKER ════════════════════════════════
+// ── Link Checker ──────────────────────────────────────
 const GH_RAW = 'https://geitner-hub.github.io/Lern-Apps/';
 
-async function runChecker(){
-  const apps=CONFIG.apps.filter(a=>a.datei);
-  if(!apps.length){ document.getElementById('checker-info').textContent='Keine Apps mit Dateiangabe.'; return; }
+async function runChecker() {
+  const apps = CONFIG.apps.filter(a => a.datei);
+  if (!apps.length) { document.getElementById('checker-info').textContent = 'Keine Apps mit Dateiangabe.'; return; }
+  const btn      = document.getElementById('check-btn');
+  const resultDiv = document.getElementById('checker-result');
+  const summary  = document.getElementById('checker-summary');
+  const progress = document.getElementById('checker-progress');
+  const fill     = document.getElementById('checker-fill');
+  btn.disabled   = true; btn.textContent = '⏳ Prüfe …';
+  resultDiv.innerHTML = ''; summary.className = 'checker-summary'; progress.className = 'checker-progress visible';
+  let ok = 0, fail = 0;
 
-  const btn=document.getElementById('check-btn');
-  btn.disabled=true; btn.textContent='⏳ Prüfe …';
-
-  const resultDiv=document.getElementById('checker-result');
-  const summary=document.getElementById('checker-summary');
-  const progress=document.getElementById('checker-progress');
-  const fill=document.getElementById('checker-fill');
-  resultDiv.innerHTML=''; summary.className='checker-summary'; progress.className='checker-progress visible';
-
-  let ok=0, fail=0;
-
-  // Build placeholder rows
-  apps.forEach(app=>{
-    const isExternal=app.datei.startsWith('http');
-    const item=document.createElement('div');
-    item.className='check-item checking';
-    item.id='ci-'+app.datei.replace(/[^a-z0-9]/gi,'_');
-    item.innerHTML=`
+  apps.forEach(app => {
+    const isExternal = app.datei.startsWith('http');
+    const item = document.createElement('div');
+    item.className = 'check-item checking';
+    item.id = 'ci-' + app.datei.replace(/[^a-z0-9]/gi, '_');
+    item.innerHTML = `
       <span class="check-status">⏳</span>
       <div style="flex:1;min-width:0;">
-        <div class="check-name">${app.emoji||'📱'} ${escHtml(app.name)}</div>
-        <div class="check-url">${isExternal?app.datei:GH_RAW+app.datei}</div>
+        <div class="check-name">${app.emoji || '📱'} ${escHtml(app.name)}</div>
+        <div class="check-url">${isExternal ? escHtml(app.datei) : GH_RAW + escHtml(app.datei)}</div>
       </div>
-      <span class="check-badge skip">${isExternal?'Extern':'Prüft …'}</span>`;
+      <span class="check-badge skip">${isExternal ? 'Extern' : 'Prüft …'}</span>`;
     resultDiv.appendChild(item);
   });
 
-  for(let i=0; i<apps.length; i++){
-    const app=apps[i];
-    const id='ci-'+app.datei.replace(/[^a-z0-9]/gi,'_');
-    const item=document.getElementById(id);
-    const isExternal=app.datei.startsWith('http');
-
-    if(isExternal){
-      item.className='check-item';
-      item.querySelector('.check-status').textContent='🔗';
-      item.querySelector('.check-badge').textContent='Extern';
-      item.querySelector('.check-badge').className='check-badge skip';
+  for (let i = 0; i < apps.length; i++) {
+    const app        = apps[i];
+    const id         = 'ci-' + app.datei.replace(/[^a-z0-9]/gi, '_');
+    const item       = document.getElementById(id);
+    const isExternal = app.datei.startsWith('http');
+    if (isExternal) {
+      item.className = 'check-item';
+      item.querySelector('.check-status').textContent = '🔗';
+      item.querySelector('.check-badge').textContent  = 'Extern';
+      item.querySelector('.check-badge').className    = 'check-badge skip';
     } else {
-      try{
-        const url=GH_RAW+app.datei;
-        const r=await fetch(url,{method:'HEAD',cache:'no-store'});
-        const isOk=r.ok;
-        item.className='check-item '+(isOk?'ok':'fail');
+      try {
+        const r    = await fetch(GH_RAW + app.datei, { method: 'HEAD', cache: 'no-store' });
+        const isOk = r.ok;
+        item.className = 'check-item ' + (isOk ? 'ok' : 'fail');
         item.classList.remove('checking');
-        item.querySelector('.check-status').textContent=isOk?'✅':'❌';
-        item.querySelector('.check-badge').textContent=isOk?'200 OK':r.status+' Fehler';
-        item.querySelector('.check-badge').className='check-badge '+(isOk?'ok':'fail');
-        if(isOk) ok++; else fail++;
-      }catch(e){
-        item.className='check-item fail';
+        item.querySelector('.check-status').textContent = isOk ? '✅' : '❌';
+        item.querySelector('.check-badge').textContent  = isOk ? '200 OK' : r.status + ' Fehler';
+        item.querySelector('.check-badge').className    = 'check-badge ' + (isOk ? 'ok' : 'fail');
+        if (isOk) ok++; else fail++;
+      } catch (e) {
+        item.className = 'check-item fail';
         item.classList.remove('checking');
-        item.querySelector('.check-status').textContent='❌';
-        item.querySelector('.check-badge').textContent='Nicht erreichbar';
-        item.querySelector('.check-badge').className='check-badge fail';
+        item.querySelector('.check-status').textContent = '❌';
+        item.querySelector('.check-badge').textContent  = 'Nicht erreichbar';
+        item.querySelector('.check-badge').className    = 'check-badge fail';
         fail++;
       }
     }
-    fill.style.width=Math.round(((i+1)/apps.length)*100)+'%';
-    document.getElementById('checker-info').textContent=`${i+1} / ${apps.length}`;
+    fill.style.width = Math.round(((i + 1) / apps.length) * 100) + '%';
+    document.getElementById('checker-info').textContent = `${i + 1} / ${apps.length}`;
   }
 
-  btn.disabled=false; btn.textContent='🔍 Alle Links prüfen';
-  progress.className='checker-progress';
-  summary.className='checker-summary visible';
-  summary.style.color=fail>0?'var(--red)':'var(--green)';
-  summary.style.borderLeft=`3px solid ${fail>0?'var(--red)':'var(--green)'}`;
-  summary.textContent=fail===0
+  btn.disabled = false; btn.textContent = '🔍 Alle Links prüfen';
+  progress.className = 'checker-progress';
+  summary.className  = 'checker-summary visible';
+  summary.style.color      = fail > 0 ? 'var(--red)' : 'var(--green)';
+  summary.style.borderLeft = `3px solid ${fail > 0 ? 'var(--red)' : 'var(--green)'}`;
+  summary.textContent = fail === 0
     ? `✅ Alle ${ok} Links erreichbar!`
-    : `⚠ ${fail} Link${fail>1?'s':''} nicht erreichbar · ${ok} OK`;
+    : `⚠ ${fail} Link${fail > 1 ? 's' : ''} nicht erreichbar · ${ok} OK`;
   logChange(`🔗 Link-Check: ${ok} OK, ${fail} fehlerhaft`);
 }
 
-
-// ══ VOKABELN TAB ═══════════════════════════════════════
+// ── Vokabeln (lazy load aus vokabeln.json) ────────────
 let VOK_CONFIG = null;
 let vokIndex   = [];
 
-async function loadVokabeln(){
-  if(VOK_CONFIG) return; // already loaded
-  try{
-    const r = await fetch('config.json');
+async function loadVokabeln() {
+  if (VOK_CONFIG) return;
+  try {
+    const r = await fetch('vokabeln.json');
+    if (!r.ok) throw new Error('HTTP ' + r.status);
     VOK_CONFIG = await r.json();
     buildVokIndex();
     buildVokStats();
     buildVokSpecial();
     buildVokUnits();
-  }catch(e){
-    document.getElementById('vok-units').innerHTML='<div class="empty-msg">⚠ config.json konnte nicht geladen werden.</div>';
+  } catch (e) {
+    document.getElementById('vok-units').innerHTML = '<div class="empty-msg">⚠ vokabeln.json konnte nicht geladen werden.</div>';
   }
 }
 
-function buildVokIndex(){
-  vokIndex=[];
-  Object.entries(VOK_CONFIG.specialLists).forEach(([k,sl])=>
-    sl.words.forEach(w=>vokIndex.push({en:w.en,de:w.de,loc:sl.label})));
-  Object.entries(VOK_CONFIG.units).forEach(([uk,unit])=>
-    Object.entries(unit.themes).forEach(([tk,theme])=>
-      theme.words.forEach(w=>vokIndex.push({en:w.en,de:w.de,loc:`${unit.label} – ${theme.label}`}))));
+function buildVokIndex() {
+  vokIndex = [];
+  Object.entries(VOK_CONFIG.specialLists || {}).forEach(([, sl]) =>
+    sl.words.forEach(w => vokIndex.push({ en: w.en, de: w.de, loc: sl.label })));
+  Object.entries(VOK_CONFIG.units || {}).forEach(([, unit]) =>
+    Object.entries(unit.themes).forEach(([, theme]) =>
+      theme.words.forEach(w => vokIndex.push({ en: w.en, de: w.de, loc: `${unit.label} – ${theme.label}` }))));
 }
 
-function buildVokStats(){
-  const total = vokIndex.length;
-  const units = Object.keys(VOK_CONFIG.units).length;
-  const special = Object.keys(VOK_CONFIG.specialLists).length;
-  let themes = 0;
-  Object.values(VOK_CONFIG.units).forEach(u=>themes+=Object.keys(u.themes).length);
-  document.getElementById('vok-stats').innerHTML=`
+function buildVokStats() {
+  const total   = vokIndex.length;
+  const units   = Object.keys(VOK_CONFIG.units || {}).length;
+  const special = Object.keys(VOK_CONFIG.specialLists || {}).length;
+  let themes    = 0;
+  Object.values(VOK_CONFIG.units || {}).forEach(u => themes += Object.keys(u.themes).length);
+  document.getElementById('vok-stats').innerHTML = `
     <div class="dash-card accent-card"><div class="dash-card-label">Vokabeln gesamt</div><div class="dash-card-value">${total}</div></div>
     <div class="dash-card"><div class="dash-card-label">Units</div><div class="dash-card-value">${units}</div></div>
     <div class="dash-card"><div class="dash-card-label">Themen</div><div class="dash-card-value">${themes}</div></div>
     <div class="dash-card green-card"><div class="dash-card-label">Sonderlisten</div><div class="dash-card-value">${special}</div></div>`;
 }
 
-function buildVokSpecial(){
+function buildVokSpecial() {
   const wrap = document.getElementById('vok-special');
-  wrap.innerHTML='';
-  Object.entries(VOK_CONFIG.specialLists).forEach(([key,sl])=>{
-    const block=document.createElement('div');
-    block.className='vis-cat-block';
-    block.style.marginBottom='.5rem';
-    block.innerHTML=`
+  wrap.innerHTML = '';
+  Object.entries(VOK_CONFIG.specialLists || {}).forEach(([key, sl]) => {
+    const block = document.createElement('div');
+    block.className = 'vis-cat-block';
+    block.style.marginBottom = '.5rem';
+    block.innerHTML = `
       <div class="vis-cat-header" style="cursor:pointer" onclick="vokToggle('vst-${key}',this)">
         <span class="vis-cat-name" style="color:var(--accent)">⭐ ${escHtml(sl.label)}</span>
         <span style="font-size:.72rem;color:var(--muted);margin-right:.5rem">${sl.words.length} Wörter</span>
@@ -1342,7 +1210,7 @@ function buildVokSpecial(){
           <th style="padding:.45rem 1rem;text-align:left;font-size:.7rem;font-weight:800;color:var(--muted);text-transform:uppercase">Englisch</th>
           <th style="padding:.45rem 1rem;text-align:left;font-size:.7rem;font-weight:800;color:var(--muted);text-transform:uppercase">Deutsch</th>
         </tr>
-        ${sl.words.map((w,i)=>`<tr style="border-top:1px solid var(--border);background:${i%2?'var(--surface2)':'transparent'}">
+        ${sl.words.map((w, i) => `<tr style="border-top:1px solid var(--border);background:${i % 2 ? 'var(--surface2)' : 'transparent'}">
           <td style="padding:.4rem 1rem;font-size:.83rem;font-weight:700">${escHtml(w.en)}</td>
           <td style="padding:.4rem 1rem;font-size:.83rem;color:var(--text2)">${escHtml(w.de)}</td>
         </tr>`).join('')}
@@ -1351,15 +1219,15 @@ function buildVokSpecial(){
   });
 }
 
-function buildVokUnits(){
+function buildVokUnits() {
   const wrap = document.getElementById('vok-units');
-  wrap.innerHTML='';
-  Object.entries(VOK_CONFIG.units).forEach(([uk,unit])=>{
-    const total=Object.values(unit.themes).reduce((s,t)=>s+t.words.length,0);
-    const block=document.createElement('div');
-    block.className='vis-cat-block';
-    block.style.marginBottom='.7rem';
-    const themesHTML=Object.entries(unit.themes).map(([tk,theme])=>`
+  wrap.innerHTML = '';
+  Object.entries(VOK_CONFIG.units || {}).forEach(([uk, unit]) => {
+    const total = Object.values(unit.themes).reduce((s, t) => s + t.words.length, 0);
+    const block = document.createElement('div');
+    block.className = 'vis-cat-block';
+    block.style.marginBottom = '.7rem';
+    const themesHTML = Object.entries(unit.themes).map(([tk, theme]) => `
       <div style="border-top:1px solid var(--border)">
         <div class="vis-cat-header" style="cursor:pointer;background:transparent;padding:.6rem 1rem .6rem 1.5rem" onclick="vokToggle('vut-${uk}-${tk}',this)">
           <span class="vis-cat-name" style="font-size:.83rem">${escHtml(theme.label)}</span>
@@ -1371,13 +1239,13 @@ function buildVokUnits(){
             <th style="padding:.4rem 1rem .4rem 1.5rem;text-align:left;font-size:.68rem;font-weight:800;color:var(--muted);text-transform:uppercase">Englisch</th>
             <th style="padding:.4rem 1rem;text-align:left;font-size:.68rem;font-weight:800;color:var(--muted);text-transform:uppercase">Deutsch</th>
           </tr>
-          ${theme.words.map((w,i)=>`<tr style="border-top:1px solid var(--border);background:${i%2?'var(--surface2)':'transparent'}">
+          ${theme.words.map((w, i) => `<tr style="border-top:1px solid var(--border);background:${i % 2 ? 'var(--surface2)' : 'transparent'}">
             <td style="padding:.38rem 1rem .38rem 1.5rem;font-size:.82rem;font-weight:700">${escHtml(w.en)}</td>
             <td style="padding:.38rem 1rem;font-size:.82rem;color:var(--text2)">${escHtml(w.de)}</td>
           </tr>`).join('')}
         </table>
       </div>`).join('');
-    block.innerHTML=`
+    block.innerHTML = `
       <div class="vis-cat-header" style="cursor:pointer" onclick="vokToggleUnit('vub-${uk}',this)">
         <span class="vis-cat-name">${escHtml(unit.label)}</span>
         <span style="font-size:.72rem;color:var(--muted);margin-right:.5rem">${total} Wörter</span>
@@ -1388,46 +1256,37 @@ function buildVokUnits(){
   });
 }
 
-function vokToggle(id, hdr){
-  const el=document.getElementById(id);
-  const arrow=hdr.querySelector('span:last-child');
-  const open=el.style.display!=='none';
-  el.style.display=open?'none':'table';
-  if(arrow) arrow.textContent=open?'›':'↓';
+function vokToggle(id, hdr) {
+  const el = document.getElementById(id);
+  const arrow = hdr.querySelector('span:last-child');
+  const open  = el.style.display !== 'none';
+  el.style.display = open ? 'none' : 'table';
+  if (arrow) arrow.textContent = open ? '›' : '↓';
 }
 
-function vokToggleUnit(id, hdr){
-  const el=document.getElementById(id);
-  const arrow=hdr.querySelector('span:last-child');
-  const open=el.style.display!=='none';
-  el.style.display=open?'none':'block';
-  if(arrow) arrow.textContent=open?'›':'↓';
+function vokToggleUnit(id, hdr) {
+  const el = document.getElementById(id);
+  const arrow = hdr.querySelector('span:last-child');
+  const open  = el.style.display !== 'none';
+  el.style.display = open ? 'none' : 'block';
+  if (arrow) arrow.textContent = open ? '›' : '↓';
 }
 
-function vokSearch(q){
-  const box=document.getElementById('vok-search-results');
-  q=q.trim().toLowerCase();
-  if(q.length<2){box.style.display='none';return;}
-  const results=vokIndex.filter(w=>w.en.toLowerCase().includes(q)||w.de.toLowerCase().includes(q)).slice(0,25);
-  if(!results.length){
-    box.innerHTML='<div class="empty-msg" style="padding:1rem">Keine Ergebnisse.</div>';
-  }else{
-    box.innerHTML=`<div style="font-size:.72rem;color:var(--muted);margin-bottom:.5rem;padding:.3rem .5rem">${results.length} Treffer</div>`+
-      results.map(r=>`<div style="display:flex;gap:1rem;padding:.38rem .5rem;border-bottom:1px solid var(--border);font-size:.83rem">
+function vokSearch(q) {
+  const box = document.getElementById('vok-search-results');
+  q = q.trim().toLowerCase();
+  if (q.length < 2) { box.style.display = 'none'; return; }
+  const results = vokIndex.filter(w => w.en.toLowerCase().includes(q) || w.de.toLowerCase().includes(q)).slice(0, 25);
+  box.innerHTML = results.length
+    ? `<div style="font-size:.72rem;color:var(--muted);margin-bottom:.5rem;padding:.3rem .5rem">${results.length} Treffer</div>` +
+      results.map(r => `<div style="display:flex;gap:1rem;padding:.38rem .5rem;border-bottom:1px solid var(--border);font-size:.83rem">
         <span style="font-weight:700;min-width:160px">${escHtml(r.en)}</span>
         <span style="color:var(--text2);flex:1">${escHtml(r.de)}</span>
         <span style="font-size:.68rem;color:var(--purple)">${escHtml(r.loc)}</span>
-      </div>`).join('');
-  }
-  box.style.display='block';
+      </div>`).join('')
+    : '<div class="empty-msg" style="padding:1rem">Keine Ergebnisse.</div>';
+  box.style.display = 'block';
 }
-
-// Hook into tab click to lazy-load vokabeln
-document.querySelectorAll('.tab').forEach(tab=>tab.addEventListener('click',()=>{
-  if(tab.dataset.t==='vokabeln') loadVokabeln();
-}));
-
-function escHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 </script>
 </body>
 </html>
