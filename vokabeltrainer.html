@@ -294,7 +294,7 @@ let spTimer, spInterval, spScore, spWords, spIdx, spAnswered;
 // ── LOAD CONFIG ──────────────────────────────────────────────────
 async function loadConfig() {
   try {
-    const res = await fetch('config.json');
+    const res = await fetch('vokabeln.json');
     CONFIG = await res.json();
     showOnly('units');
     renderUnitList();
