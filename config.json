@@ -2,11 +2,11 @@
   "version": 1,
   "apps": [
     {
-      "name": "Kopfrechnen 5",
+      "name": "Kopfrechnen Klasse 5",
       "datei": "kopfrechnen.html",
       "fach": "Mathematik",
       "emoji": "📱",
-      "beschreibung": "Übe deine Kopfrechenkünste am Anfang der Stunde!",
+      "beschreibung": "Übe deine Kopfrechenkünste!",
       "hidden": false,
       "klassen": [
         5
