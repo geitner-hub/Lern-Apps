@@ -2,13 +2,15 @@
   "version": 1,
   "apps": [
     {
-      "name": "Kopfrechnen",
+      "name": "Kopfrechnen 5",
       "datei": "kopfrechnen.html",
       "fach": "Mathematik",
       "emoji": "📱",
       "beschreibung": "Übe deine Kopfrechenkünste am Anfang der Stunde!",
       "hidden": false,
-      "klassen": [5],
+      "klassen": [
+        5
+      ],
       "customTags": [],
       "aod": false
     },
@@ -19,7 +21,9 @@
       "emoji": "📱",
       "beschreibung": "practice simple present! he she it + -s",
       "hidden": false,
-      "klassen": [5],
+      "klassen": [
+        5
+      ],
       "customTags": [],
       "aod": false
     },
@@ -30,7 +34,9 @@
       "emoji": "📱",
       "beschreibung": "",
       "hidden": false,
-      "klassen": [5],
+      "klassen": [
+        5
+      ],
       "customTags": [],
       "aod": false
     },
@@ -41,7 +47,9 @@
       "emoji": "📱",
       "beschreibung": "",
       "hidden": false,
-      "klassen": [5],
+      "klassen": [
+        5
+      ],
       "customTags": [],
       "aod": false
     },
@@ -52,8 +60,15 @@
       "emoji": "📱",
       "beschreibung": "",
       "hidden": false,
-      "klassen": [5],
-      "customTags": [{ "name": "Vokabeln", "color": 4 }],
+      "klassen": [
+        5
+      ],
+      "customTags": [
+        {
+          "name": "Vokabeln",
+          "color": 4
+        }
+      ],
       "aod": false
     },
     {
@@ -63,7 +78,9 @@
       "emoji": "📱",
       "beschreibung": "",
       "hidden": false,
-      "klassen": [5],
+      "klassen": [
+        5
+      ],
       "customTags": [],
       "aod": false
     },
@@ -80,7 +97,10 @@
     }
   ],
   "customTags": [
-    { "name": "Vokabeln", "color": 4 }
+    {
+      "name": "Vokabeln",
+      "color": 4
+    }
   ],
   "hiddenCats": [],
   "announcement": {
