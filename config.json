@@ -105,6 +105,17 @@
       "klassen": [],
       "customTags": [],
       "aod": false
+    },
+    {
+      "name": "Kopfrechnen Klasse 2",
+      "datei": "kopfrechnen_kl2.html",
+      "fach": "Mathematik",
+      "emoji": "📱",
+      "beschreibung": "Übe deine Kopfrechenkünste!",
+      "hidden": false,
+      "klassen": [],
+      "customTags": [],
+      "aod": false
     }
   ],
   "customTags": [
