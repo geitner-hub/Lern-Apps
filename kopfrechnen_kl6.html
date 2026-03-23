@@ -144,6 +144,11 @@
       border-color: var(--mittel);
       box-shadow: 0 0 20px rgba(255,179,71,0.4);
     }
+    .level-btn.schwer.active {
+      background: var(--schwer); color: var(--bg);
+      border-color: var(--schwer);
+      box-shadow: 0 0 20px rgba(255,107,157,0.4);
+    }
 
     /* ── Start screen ── */
     .big-sigma {
@@ -215,10 +220,11 @@
 
     .question-display {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(3rem, 11vw, 5.5rem);
+      font-size: clamp(2.6rem, 10vw, 5rem);
       letter-spacing: 0.06em; line-height: 1;
       margin-bottom: 12px; text-align: center;
       transition: color 0.2s, text-shadow 0.2s;
+      word-break: break-all;
     }
     .question-display.correct { color: var(--accent); text-shadow: 0 0 30px rgba(0,229,160,0.8); }
     .question-display.wrong   { color: var(--bad);    text-shadow: 0 0 30px rgba(255,107,107,0.8); }
@@ -230,46 +236,40 @@
     .feedback-line.correct { color: var(--accent); }
     .feedback-line.wrong   { color: var(--bad); }
 
+    /* ── Input area ── */
     .input-row { display: flex; gap: 10px; justify-content: center; }
     .answer-input {
-      width: 150px; padding: 14px 16px;
-      font-size: 1.5rem; text-align: center;
+      width: 160px; padding: 14px 16px;
+      font-size: 1.4rem; text-align: center;
       font-family: 'JetBrains Mono', monospace; font-weight: 800;
       background: var(--bg); border: 2px solid var(--border);
       border-radius: 8px; color: var(--text); outline: none;
       transition: border-color 0.2s, box-shadow 0.2s;
-      -moz-appearance: textfield;
     }
-    .answer-input::-webkit-inner-spin-button,
-    .answer-input::-webkit-outer-spin-button { -webkit-appearance: none; }
+    .answer-input:focus { border-color: var(--muted); }
     .answer-input.correct { border-color: var(--accent); box-shadow: 0 0 16px rgba(0,229,160,0.3); }
     .answer-input.wrong   { border-color: var(--bad);    box-shadow: 0 0 16px rgba(255,107,107,0.3); }
 
-    .level-btn.schwer.active {
-      background: var(--schwer); color: var(--bg);
-      border-color: var(--schwer);
-      box-shadow: 0 0 20px rgba(255,107,157,0.4);
+    /* Bruch-Hinweis */
+    .frac-hint {
+      text-align: center; font-size: 0.65rem; color: var(--muted);
+      letter-spacing: 0.08em; margin-top: 8px; opacity: 0.7;
     }
+    .frac-hint.highlight { color: var(--accent-warm); opacity: 1; }
 
     /* ── Tipp box ── */
     .tipp-box {
-      margin: 8px 0 12px 0;
-      padding: 10px 14px;
+      margin: 8px 0 12px 0; padding: 10px 14px;
       border-radius: 8px;
       background: rgba(255,179,71,0.08);
       border: 1px solid rgba(255,179,71,0.3);
-      font-size: 0.75rem;
-      color: var(--accent-warm);
-      letter-spacing: 0.06em;
-      line-height: 1.6;
-      text-align: center;
+      font-size: 0.75rem; color: var(--accent-warm);
+      letter-spacing: 0.06em; line-height: 1.6; text-align: center;
       animation: fadeUp 0.3s ease both;
     }
-    .tipp-label {
-      font-weight: 800;
-      letter-spacing: 0.12em;
-      margin-bottom: 3px;
-    }
+    .tipp-label { font-weight: 800; letter-spacing: 0.12em; margin-bottom: 3px; }
+
+    /* ── Result screen ── */
     .score-display {
       font-family: 'Bebas Neue', sans-serif;
       font-size: 5rem; line-height: 1; text-align: center;
@@ -288,7 +288,7 @@
     }
     .result-row.correct { background: rgba(0,229,160,0.06);  border: 1px solid rgba(0,229,160,0.15); }
     .result-row.wrong   { background: rgba(255,107,107,0.06); border: 1px solid rgba(255,107,107,0.15); }
-    .result-num { color: var(--muted); }
+    .result-num { color: var(--muted); min-width: 28px; }
     .result-eq  { flex: 1; text-align: center; }
     .result-check.correct { color: var(--accent); font-weight: 700; }
     .result-check.wrong   { color: var(--bad);    font-weight: 700; }
@@ -311,13 +311,12 @@
 <div id="app">
   <div class="header">
     <div class="title">KOPFRECHNEN · KL. 6</div>
-    <div class="subtitle" id="subtitle">NIVEAU WÄHLEN · + − × ÷</div>
+    <div class="subtitle" id="subtitle">NIVEAU WÄHLEN · + − × ÷ · Brüche · Dezimal</div>
     <div id="stats-badge" class="stats-badge"></div>
   </div>
   <div class="card" id="card"></div>
-  <div class="footer">KLASSE 6 · ENTER ZUM BESTÄTIGEN</div>
+  <div class="footer">KLASSE 6 · ENTER ZUM BESTÄTIGEN · BRÜCHE ALS 3/4 EINGEBEN</div>
 </div>
-
 
 <script>
 // ── Eingebettete Navbar (standalone) ──────────────────
@@ -390,11 +389,13 @@
   updateBadge(getResult());
 })();
 </script>
-<script>  const ROUND_SIZE = 10;
+
+<script>
+  const ROUND_SIZE = 10;
 
   const state = {
-    phase: 'start',   // start | playing | result
-    level: 'leicht',  // leicht | mittel | schwer
+    phase: 'start',
+    level: 'leicht',
     questions: [],
     current: 0,
     results: [],
@@ -410,117 +411,234 @@
     feedbackTimeout: null,
   };
 
+  // ── Bruch-Hilfsfunktionen ─────────────────────────────────────
+  function gcd(a, b) {
+    a = Math.abs(a); b = Math.abs(b);
+    while (b) { [a, b] = [b, a % b]; }
+    return a;
+  }
+
+  function lcm(a, b) { return (a * b) / gcd(a, b); }
+
+  // Kürzt Bruch, stellt sicher: Nenner > 0, Vorzeichen im Zähler
+  function simplify(n, d) {
+    if (d === 0) return { n: 0, d: 1 };
+    if (d < 0) { n = -n; d = -d; }
+    const g = gcd(Math.abs(n), Math.abs(d));
+    return { n: n / g, d: d / g };
+  }
+
+  // Gibt Bruch als lesbaren String zurück (z.B. "3/4", "2", "-1/3")
+  function fracToStr(n, d) {
+    const s = simplify(n, d);
+    if (s.d === 1) return String(s.n);
+    return `${s.n}/${s.d}`;
+  }
+
+  // Parst Nutzereingabe als {n, d} — versteht "3/4", "2", "1.5" (Dezimal → Bruch)
+  function parseInput(raw) {
+    raw = raw.trim().replace(',', '.');
+    if (raw.includes('/')) {
+      const parts = raw.split('/');
+      if (parts.length !== 2) return null;
+      const n = parseInt(parts[0].trim(), 10);
+      const d = parseInt(parts[1].trim(), 10);
+      if (isNaN(n) || isNaN(d) || d === 0) return null;
+      return simplify(n, d);
+    }
+    const val = parseFloat(raw);
+    if (isNaN(val)) return null;
+    // Ganze Zahl
+    if (Number.isInteger(val)) return { n: val, d: 1 };
+    // Dezimalzahl → Bruch (max 2 Dezimalstellen)
+    const factor = raw.includes('.') ? Math.pow(10, (raw.split('.')[1] || '').length) : 1;
+    return simplify(Math.round(val * factor), factor);
+  }
+
+  // Vergleicht zwei {n,d}-Brüche auf Gleichheit (nach Kürzen)
+  function fracEqual(a, b) {
+    const sa = simplify(a.n, a.d);
+    const sb = simplify(b.n, b.d);
+    return sa.n === sb.n && sa.d === sb.d;
+  }
+
+  // ── Zufallszahlen ─────────────────────────────────────────────
   function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
 
-  // ── Aufgaben generieren ───────────────────────────────────────
-  // Regeln für BEIDE Niveaus:
-  //   • Alle Zahlen in der Aufgabe: max. 2-stellig (≤ 99)
-  //   • Alle Ergebnisse: max. 2-stellig (≤ 99)
-  //   • Kein Ergebnis negativ
-  //
-  // LEICHT:
-  //   + : beide Summanden 1–9, Summe ≤ 99
-  //   - : Minuend 10–50, Subtrahend 1–9, Ergebnis > 0
-  //   × : kleines Einmaleins 1×1 bis 9×9, Ergebnis ≤ 99
-  //   ÷ : Divisor 2–9, Quotient 1–9 (ganzzahlig)
-  //
-  // MITTEL:
-  //   + : beide Summanden 10–49, Summe ≤ 99
-  //   - : Minuend 20–99, Subtrahend 10–49, Ergebnis > 0 und ≤ 99
-  //   × : kleines Einmaleins bis 10×12 (und 12×10), Ergebnis ≤ 99
-  //   ÷ : Divisor 2–12, Quotient 2–9 (ganzzahlig), Dividend ≤ 99
-
-
-  function frac(n,d){return {n,d,str:`${n}/${d}`,val:n/d};}
-  function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){[a,b]=[b,a%b];}return a;}
-  function simplify(n,d){const g=gcd(Math.abs(n),Math.abs(d));return {n:n/g,d:d/g};}
-  function fracStr(n,d){const s=simplify(n,d);if(s.d===1)return String(s.n);return s.n+'/'+s.d;}
-
+  // ── Aufgabengenerator ─────────────────────────────────────────
+  // Alle Bruchergebnisse werden als {n, d} gespeichert — NIE als Dezimalzahl.
+  // Ganze-Zahlen-Ergebnisse: {n: x, d: 1}
   function generateQuestion(level) {
-    const types = level==='leicht'
-      ? ['int','frac_same','dec1','mal']
-      : level==='mittel'
-      ? ['int_neg','frac_diff','dec2','mal']
-      : ['rat','frac_mul','neg_dec','term'];
-    const type = types[Math.floor(Math.random()*types.length)];
-    let question, answer, attempts=0;
+    const types = level === 'leicht'
+      ? ['int', 'frac_same', 'dec1', 'mal']
+      : level === 'mittel'
+      ? ['int_neg', 'frac_diff', 'dec2', 'mal']
+      : ['rat', 'frac_mul', 'frac_div', 'neg_dec'];
+
+    const type = types[Math.floor(Math.random() * types.length)];
+    let question = null, answer = null, attempts = 0;
 
     do {
       attempts++;
-      if(type==='int'){
-        const a=rand(-20,50), b=rand(-20,50), op=['+','-'][rand(0,1)];
-        answer = op==='+'? a+b : a-b;
-        question = `${a} ${op} ${b}`;
-      } else if(type==='int_neg'){
-        const a=rand(-50,99), b=rand(-30,50), op=['+','-'][rand(0,1)];
-        answer = op==='+'? a+b : a-b;
-        question = `${a} ${op} (${b<0?b:b})`;
-        question = `${a} ${op} ${b}`;
-      } else if(type==='rat'){
-        const a=rand(-30,60), b=rand(-20,40), op=['+','-','×','÷'][rand(0,3)];
-        if(op==='+'){answer=a+b;question=`${a} + ${b}`;}
-        else if(op==='-'){answer=a-b;question=`${a} − ${b}`;}
-        else if(op==='×'){answer=a*b;question=`${a} × ${b}`;}
-        else { if(b===0){answer=null;}else{answer=a/b; if(!Number.isInteger(answer)){answer=null;}else{question=`${a} ÷ ${b}`;}}}
-        if(answer===null){question=`${a} + ${b}`;answer=a+b;}
-      } else if(type==='frac_same'){
-        const d=rand(2,8); const n1=rand(1,d-1); const n2=rand(1,d-1);
-        const op=['+','-'][rand(0,1)];
-        const rn = op==='+'? n1+n2 : n1-n2;
-        const s=simplify(rn,d);
-        answer=parseFloat((s.n/s.d).toFixed(4));
-        question=`${n1}/${d} ${op} ${n2}/${d}`;
-      } else if(type==='frac_diff'){
-        const d1=[2,3,4,5,6][rand(0,4)]; const d2=[2,3,4,6][rand(0,3)];
-        const n1=rand(1,d1); const n2=rand(1,d2);
-        const lcd=d1*d2/gcd(d1,d2);
-        const rn=n1*(lcd/d1)+n2*(lcd/d2);
-        const s=simplify(rn,lcd);
-        answer=parseFloat((s.n/s.d).toFixed(4));
-        question=`${n1}/${d1} + ${n2}/${d2}`;
-      } else if(type==='frac_mul'){
-        const d1=rand(2,6); const n1=rand(1,d1); const d2=rand(2,6); const n2=rand(1,d2);
-        const rn=n1*n2; const rd=d1*d2; const s=simplify(rn,rd);
-        answer=parseFloat((s.n/s.d).toFixed(4));
-        question=`${n1}/${d1} × ${n2}/${d2}`;
-      } else if(type==='dec1'){
-        const a=parseFloat((rand(0,50)+rand(0,9)/10).toFixed(1));
-        const b=parseFloat((rand(0,20)+rand(0,9)/10).toFixed(1));
-        const op=['+','-'][rand(0,1)];
-        answer=parseFloat((op==='+'?a+b:a-b).toFixed(1));
-        question=`${a.toFixed(1)} ${op} ${b.toFixed(1)}`;
-      } else if(type==='dec2'){
-        const a=parseFloat((rand(0,30)+rand(0,99)/100).toFixed(2));
-        const b=parseFloat((rand(0,20)+rand(0,99)/100).toFixed(2));
-        answer=parseFloat((a+b).toFixed(2));
-        question=`${a.toFixed(2)} + ${b.toFixed(2)}`;
-      } else if(type==='neg_dec'){
-        const a=parseFloat((rand(-20,30)+rand(0,9)/10).toFixed(1));
-        const b=parseFloat((rand(-15,20)+rand(0,9)/10).toFixed(1));
-        answer=parseFloat((a+b).toFixed(1));
-        question=`${a.toFixed(1)} + ${b.toFixed(1)}`;
-      } else if(type==='mal'){
-        const a=rand(2,10); const b=rand(2,10); answer=a*b; question=`${a} × ${b}`;
-      } else {
-        const a=rand(2,12); const b=rand(2,12); answer=a*b; question=`${a} × ${b}`;
-      }
-    } while(attempts<50 && (answer===null||answer===undefined));
+      ({ question, answer } = tryGenerate(type));
+    } while (attempts < 80 && (answer === null || question === null));
 
-    return { question, answer: typeof answer==='number'? parseFloat(answer.toFixed(4)) : answer };
+    return { question, answer, type };
   }
 
+  function tryGenerate(type) {
+    let question = null, answer = null;
+
+    if (type === 'int') {
+      // Ganze Zahlen, kein negatives Ergebnis
+      const op = ['+', '-'][rand(0, 1)];
+      const a = rand(1, 50), b = rand(1, 20);
+      if (op === '+') {
+        answer = { n: a + b, d: 1 };
+        question = `${a} + ${b}`;
+      } else {
+        if (a <= b) return { question: null, answer: null };
+        answer = { n: a - b, d: 1 };
+        question = `${a} − ${b}`;
+      }
+
+    } else if (type === 'int_neg') {
+      const op = ['+', '-'][rand(0, 1)];
+      const a = rand(-20, 50), b = rand(-20, 30);
+      const res = op === '+' ? a + b : a - b;
+      answer = { n: res, d: 1 };
+      question = op === '+' ? `${a} + ${b}` : `${a} − ${b}`;
+
+    } else if (type === 'rat') {
+      const op = ['+', '-', '×', '÷'][rand(0, 3)];
+      const a = rand(-20, 40), b = rand(-15, 30);
+      if (op === '÷') {
+        if (b === 0) return { question: null, answer: null };
+        const g = gcd(Math.abs(a), Math.abs(b));
+        // Nur wenn Ergebnis ganzzahlig oder einfacher Bruch
+        const rn = a / g, rd = b / g;
+        if (Math.abs(rd) > 12) return { question: null, answer: null };
+        answer = simplify(a, b);
+        question = `${a} ÷ ${b}`;
+      } else if (op === '×') {
+        const res = a * b;
+        if (Math.abs(res) > 200) return { question: null, answer: null };
+        answer = { n: res, d: 1 };
+        question = `${a} × ${b}`;
+      } else {
+        const res = op === '+' ? a + b : a - b;
+        answer = { n: res, d: 1 };
+        question = op === '+' ? `${a} + ${b}` : `${a} − ${b}`;
+      }
+
+    } else if (type === 'frac_same') {
+      // Gleicher Nenner, + oder −
+      const d = rand(2, 9);
+      const n1 = rand(1, d - 1);
+      const n2 = rand(1, d - 1);
+      const op = ['+', '-'][rand(0, 1)];
+      const rn = op === '+' ? n1 + n2 : n1 - n2;
+      if (rn === 0) return { question: null, answer: null };
+      answer = simplify(rn, d);
+      // Ergebnis kann echter Bruch oder ganze Zahl sein — beides OK
+      question = `${n1}/${d} ${op} ${n2}/${d}`;
+
+    } else if (type === 'frac_diff') {
+      // Verschiedene Nenner, nur Addition (Klasse 6: erweiterbar)
+      const d1 = [2, 3, 4, 5, 6, 8][rand(0, 5)];
+      const d2 = [2, 3, 4, 5, 6, 8][rand(0, 5)];
+      if (d1 === d2) return { question: null, answer: null };
+      const n1 = rand(1, d1 - 1);
+      const n2 = rand(1, d2 - 1);
+      const op = ['+', '-'][rand(0, 1)];
+      const L = lcm(d1, d2);
+      if (L > 24) return { question: null, answer: null }; // kein zu großer Nenner
+      const rn = op === '+' ? n1 * (L / d1) + n2 * (L / d2) : n1 * (L / d1) - n2 * (L / d2);
+      if (rn === 0) return { question: null, answer: null };
+      answer = simplify(rn, L);
+      question = `${n1}/${d1} ${op} ${n2}/${d2}`;
+
+    } else if (type === 'frac_mul') {
+      // Bruch × Bruch — Ergebnis immer ein Bruch oder ganze Zahl
+      const d1 = rand(2, 6), n1 = rand(1, d1 - 1);
+      const d2 = rand(2, 6), n2 = rand(1, d2 - 1);
+      answer = simplify(n1 * n2, d1 * d2);
+      question = `${n1}/${d1} × ${n2}/${d2}`;
+
+    } else if (type === 'frac_div') {
+      // Bruch ÷ Bruch — Kehrwert nehmen
+      const d1 = rand(2, 6), n1 = rand(1, d1 - 1);
+      const d2 = rand(2, 6), n2 = rand(1, d2 - 1);
+      // (n1/d1) ÷ (n2/d2) = (n1*d2) / (d1*n2)
+      answer = simplify(n1 * d2, d1 * n2);
+      if (answer.d > 20) return { question: null, answer: null };
+      question = `${n1}/${d1} ÷ ${n2}/${d2}`;
+
+    } else if (type === 'dec1') {
+      const a = parseFloat((rand(0, 50) + rand(0, 9) / 10).toFixed(1));
+      const b = parseFloat((rand(0, 20) + rand(0, 9) / 10).toFixed(1));
+      const op = ['+', '-'][rand(0, 1)];
+      const res = parseFloat((op === '+' ? a + b : a - b).toFixed(1));
+      if (res < 0) return { question: null, answer: null };
+      // Dezimalzahl als Bruch speichern (1 Stelle → /10)
+      answer = simplify(Math.round(res * 10), 10);
+      question = `${a.toFixed(1)} ${op} ${b.toFixed(1)}`;
+
+    } else if (type === 'dec2') {
+      const a = parseFloat((rand(0, 20) + rand(0, 99) / 100).toFixed(2));
+      const b = parseFloat((rand(0, 10) + rand(0, 99) / 100).toFixed(2));
+      const res = parseFloat((a + b).toFixed(2));
+      // Als Bruch /100
+      answer = simplify(Math.round(res * 100), 100);
+      question = `${a.toFixed(2)} + ${b.toFixed(2)}`;
+
+    } else if (type === 'neg_dec') {
+      const a = parseFloat((rand(-10, 20) + rand(0, 9) / 10).toFixed(1));
+      const b = parseFloat((rand(-10, 15) + rand(0, 9) / 10).toFixed(1));
+      const res = parseFloat((a + b).toFixed(1));
+      answer = simplify(Math.round(res * 10), 10);
+      question = `${a.toFixed(1)} + ${b.toFixed(1)}`;
+
+    } else {
+      // mal / Einmaleins
+      const a = rand(2, 10), b = rand(2, 10);
+      answer = { n: a * b, d: 1 };
+      question = `${a} × ${b}`;
+    }
+
+    return { question, answer };
+  }
+
+  // Gibt die richtige Antwort als lesbaren String aus (für Ergebnisanzeige)
+  function answerStr(ans) {
+    if (!ans) return '?';
+    const s = simplify(ans.n, ans.d);
+    if (s.d === 1) return String(s.n);
+    // Dezimalzahl, wenn Nenner Zehnerpotenz und Ergebnis "schön" ist
+    if ([2, 4, 5, 10, 20, 25, 50, 100].includes(s.d)) {
+      const dec = s.n / s.d;
+      const decStr = dec.toString();
+      if (decStr.length <= 6) return decStr;
+    }
+    return `${s.n}/${s.d}`;
+  }
+
+  // ── Tipps ─────────────────────────────────────────────────────
   function getTipp(q) {
     const s = q.question;
-    if(s.includes('/')) return 'Tipp: Bruch kürzen bevor du rechnest!';
-    if(s.includes('.')) return 'Tipp: Stelle das Komma richtig — dann wie ganze Zahlen rechnen.';
-    const parts=s.split(' '); const a=parseFloat(parts[0]); const op=parts[1]; const b=parseFloat(parts[2]);
-    if(op==='+'){return `Tipp: Zähle von ${a} um ${Math.abs(b)} ${b>=0?'weiter':'zurück'}`;}
-    if(op==='-'||op==='−'){return `Tipp: Was muss ich zu ${b} addieren, um ${a} zu bekommen?`;}
-    if(op==='×'){return `Tipp: ${a}×${b} = ${b}-mal die ${a} zusammenzählen`;}
+    if (s.includes('/') && s.includes('÷')) return 'Tipp: Kehrwert des zweiten Bruchs nehmen, dann multiplizieren!';
+    if (s.includes('/') && s.includes('×')) return 'Tipp: Zähler × Zähler, Nenner × Nenner — dann kürzen!';
+    if (s.includes('/')) return 'Tipp: Auf gleichen Nenner bringen, dann Zähler addieren/subtrahieren!';
+    if (s.includes('.')) return 'Tipp: Stelle das Komma richtig — dann wie ganze Zahlen rechnen.';
+    const parts = s.split(' ');
+    const a = parseFloat(parts[0]), op = parts[1], b = parseFloat(parts[2]);
+    if (op === '+') return `Tipp: Zähle von ${a} um ${Math.abs(b)} ${b >= 0 ? 'weiter' : 'zurück'}.`;
+    if (op === '-' || op === '−') return `Tipp: Was muss ich zu ${b} addieren, um ${a} zu bekommen?`;
+    if (op === '×') return `Tipp: ${a}×${b} = ${b}-mal die ${a} zusammenzählen.`;
     return `Tipp: ${b} × ? = ${a}`;
   }
 
-
+  // ── Hilfsfunktionen ───────────────────────────────────────────
   function formatTime(s) {
     return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
   }
@@ -535,6 +653,13 @@
     }
   }
 
+  // Erkennt ob die aktuelle Frage ein Bruchergebnis erwartet
+  function expectsFraction(q) {
+    if (!q || !q.answer) return false;
+    const s = simplify(q.answer.n, q.answer.d);
+    return s.d !== 1;
+  }
+
   // ── Runde starten ─────────────────────────────────────────────
   function startRound(level) {
     if (level) state.level = level;
@@ -544,15 +669,16 @@
     state.current = 0;
     state.results = [];
     state.feedback = null;
+    state.tippVisible = false;
+    state.tippUsed = false;
     state.timer = 0;
     state.phase = 'playing';
 
-    // Update subtitle
     document.getElementById('subtitle').textContent = state.level === 'leicht'
-        ? 'NIVEAU: LEICHT · + − × ÷'
-        : state.level === 'mittel'
-        ? 'NIVEAU: MITTEL · + − × ÷'
-        : 'NIVEAU: SCHWER · + − × ÷';
+      ? 'NIVEAU: LEICHT · + − × ÷'
+      : state.level === 'mittel'
+      ? 'NIVEAU: MITTEL · + − × ÷'
+      : 'NIVEAU: SCHWER · + − × ÷';
 
     render();
     state.timerInterval = setInterval(() => {
@@ -576,12 +702,16 @@
   function submitAnswer() {
     if (state.feedback) return;
     const input = document.getElementById('answer-input');
-    if (!input || input.value === '' || input.value === null) return;
-    const given = parseFloat(parseFloat(input.value).toFixed(4));
-    const correct = Math.abs(given - state.questions[state.current].answer) < 0.001;
+    if (!input || input.value.trim() === '') return;
+
+    const parsed = parseInput(input.value);
+    const q = state.questions[state.current];
+    const correct = parsed !== null && fracEqual(parsed, q.answer);
+
     state.feedback = correct ? 'correct' : 'wrong';
-    state.results.push({ ...state.questions[state.current], given, correct, tippUsed: state.tippUsed });
-    applyFeedbackUI(correct);
+    const givenStr = input.value.trim();
+    state.results.push({ ...q, givenStr, correct, tippUsed: state.tippUsed });
+    applyFeedbackUI(correct, q);
 
     state.feedbackTimeout = setTimeout(() => {
       state.feedback = null;
@@ -605,7 +735,7 @@
     }, correct ? 350 : 900);
   }
 
-  function applyFeedbackUI(correct) {
+  function applyFeedbackUI(correct, q) {
     const qEl = document.getElementById('question-display');
     const fbEl = document.getElementById('feedback-line');
     const inEl = document.getElementById('answer-input');
@@ -617,7 +747,7 @@
       fbEl.className = 'feedback-line ' + (correct ? 'correct' : 'wrong');
       fbEl.textContent = correct
         ? '✓ RICHTIG'
-        : `✗ FALSCH — RICHTIG: ${state.questions[state.current].answer % 1 === 0 ? state.questions[state.current].answer : state.questions[state.current].answer}`;
+        : `✗ FALSCH — RICHTIG: ${answerStr(q.answer)}`;
     }
   }
 
@@ -626,14 +756,18 @@
     const card = document.getElementById('card');
     card.className = 'card fade-up';
     void card.offsetWidth;
-    if (state.phase === 'start')   renderStart(card);
+    if (state.phase === 'start')        renderStart(card);
     else if (state.phase === 'playing') renderPlaying(card);
     else if (state.phase === 'result')  renderResult(card);
   }
 
   function renderStart(card) {
     const lvl = state.level;
-    const descText = lvl === 'leicht' ? 'Ganze Zahlen −20 bis +50 · Brüche gleicher Nenner · Dezimal 1 Stelle' : lvl === 'mittel' ? 'Ganze Zahlen −50 bis +99 · Brüche +−× · Dezimalzahlen 2 Stellen' : 'Rationale Zahlen alle 4 Arten · Brüche ×÷ · Negative Dezimalzahlen';
+    const descText = lvl === 'leicht'
+      ? 'Ganze Zahlen 1–50 · Brüche gleicher Nenner · Dezimal 1 Stelle'
+      : lvl === 'mittel'
+      ? 'Ganze Zahlen −20 bis +99 · Brüche versch. Nenner · Dezimal 2 Stellen'
+      : 'Rationale Zahlen · Brüche × ÷ · Negative Dezimalzahlen';
 
     card.innerHTML = `
       <div class="big-sigma">∑</div>
@@ -641,39 +775,48 @@
       <div class="start-desc">${ROUND_SIZE} Aufgaben pro Runde · Alle 4 Grundrechenarten</div>
 
       <div class="level-row">
-        <button class="level-btn leicht ${lvl==='leicht'?'active':''}" onclick="selectLevel('leicht')">🟢 LEICHT</button>
-        <button class="level-btn mittel ${lvl==='mittel'?'active':''}" onclick="selectLevel('mittel')">🟡 MITTEL</button>
-        <button class="level-btn schwer ${lvl==='schwer'?'active':''}" onclick="selectLevel('schwer')">🔴 SCHWER</button>
+        <button class="level-btn leicht ${lvl==='leicht'?'active':''}" id="btn-leicht">🟢 LEICHT</button>
+        <button class="level-btn mittel ${lvl==='mittel'?'active':''}" id="btn-mittel">🟡 MITTEL</button>
+        <button class="level-btn schwer ${lvl==='schwer'?'active':''}" id="btn-schwer">🔴 SCHWER</button>
       </div>
 
-      <div class="level-desc" id="level-desc">${descText.replace(/\n/g,'<br>')}</div>
+      <div class="level-desc">${descText}</div>
 
       <div class="op-grid">
         <div class="op-card">
           <div class="op-card-label">➕➖ <strong>${lvl==='leicht'?'Ganze Zahlen':lvl==='mittel'?'Ganze Zahlen':'Rat. Zahlen'}</strong></div>
-          <div class="op-card-sub">${lvl==='leicht'?'−20 bis +50':lvl==='mittel'?'−50 bis +99':'alle 4 Arten'}</div>
+          <div class="op-card-sub">${lvl==='leicht'?'1 bis 50':lvl==='mittel'?'−20 bis +99':'alle 4 Arten'}</div>
         </div>
         <div class="op-card">
-          <div class="op-card-label">½ <strong>${lvl==='leicht'?'Brüche gleicher N.':lvl==='mittel'?'Brüche + − ×':'Brüche × ÷'}</strong></div>
-          <div class="op-card-sub">${lvl==='leicht'?'z.B. ½ + ¼':lvl==='mittel'?'versch. Nenner':'auch negativ'}</div>
+          <div class="op-card-label">½ <strong>${lvl==='leicht'?'Brüche gleicher N.':lvl==='mittel'?'Brüche + − (versch.)':'Brüche × ÷'}</strong></div>
+          <div class="op-card-sub">${lvl==='leicht'?'z.B. 1/4 + 2/4':lvl==='mittel'?'z.B. 1/2 + 1/3':'z.B. 2/3 × 3/4'}</div>
         </div>
         <div class="op-card">
           <div class="op-card-label">🔢 <strong>${lvl==='leicht'?'Dezimalzahlen':lvl==='mittel'?'Dezimalzahlen':'Neg. Dezimalzahlen'}</strong></div>
-          <div class="op-card-sub">${lvl==='leicht'?'1 Dezimalstelle':lvl==='mittel'?'2 Dezimalstellen':'2–3 Stellen'}</div>
+          <div class="op-card-sub">${lvl==='leicht'?'1 Dezimalstelle':lvl==='mittel'?'2 Dezimalstellen':'1–2 Stellen'}</div>
         </div>
         <div class="op-card">
-          <div class="op-card-label">✖️ <strong>${lvl==='leicht'?'Einmaleins':lvl==='mittel'?'Terme':'Terme kombiniert'}</strong></div>
-          <div class="op-card-sub">${lvl==='leicht'?'bis 10×10':lvl==='mittel'?'vorteilhaft':'Klammern'}</div>
+          <div class="op-card-label">✖️ <strong>Einmaleins</strong></div>
+          <div class="op-card-sub">${lvl==='leicht'?'bis 10×10':'bis 10×10'}</div>
         </div>
       </div>
 
-      <button class="start-btn ${lvl}" onclick="startRound()">STARTEN →</button>
+      <div style="margin-bottom:12px; padding:8px 14px; border-radius:8px; background:rgba(0,229,160,0.05); border:1px solid rgba(0,229,160,0.2); font-size:0.7rem; color:var(--muted); text-align:center; letter-spacing:0.06em;">
+        💡 Brüche kannst du als <strong style="color:var(--accent)">3/4</strong> eingeben · Dezimalzahlen mit <strong style="color:var(--accent)">.</strong> oder <strong style="color:var(--accent)">,</strong>
+      </div>
+
+      <button class="start-btn ${lvl}" id="btn-start">STARTEN →</button>
     `;
+
+    document.getElementById('btn-leicht').addEventListener('click', () => selectLevel('leicht'));
+    document.getElementById('btn-mittel').addEventListener('click', () => selectLevel('mittel'));
+    document.getElementById('btn-schwer').addEventListener('click', () => selectLevel('schwer'));
+    document.getElementById('btn-start').addEventListener('click', () => startRound());
   }
 
   function selectLevel(lvl) {
     state.level = lvl;
-    render(); // re-render start screen with updated level
+    render();
   }
 
   function renderPlaying(card) {
@@ -681,6 +824,7 @@
     const pct = (state.current / ROUND_SIZE) * 100;
     const lvl = state.level;
     const lvlLabel = lvl === 'leicht' ? '🟢 LEICHT' : lvl === 'mittel' ? '🟡 MITTEL' : '🔴 SCHWER';
+    const isFrac = expectsFraction(q);
 
     card.innerHTML = `
       <div class="meta-row">
@@ -695,14 +839,23 @@
       <div class="feedback-line" id="feedback-line"></div>
       <div id="tipp-area">${state.tippVisible ? `<div class="tipp-box"><div class="tipp-label">💡 TIPP</div>${getTipp(q)}</div>` : ''}</div>
       <div class="input-row">
-        <input id="answer-input" class="answer-input" type="text" inputmode="decimal" placeholder="___" autocomplete="off"/>
-        <button class="btn btn-confirm" onclick="submitAnswer()">↵</button>
+        <input id="answer-input" class="answer-input" type="text" inputmode="decimal"
+          placeholder="${isFrac ? 'z.B. 3/4' : '___'}"
+          autocomplete="off" spellcheck="false"/>
+        <button class="btn btn-confirm" id="btn-submit">↵</button>
       </div>
-      ${!state.tippVisible && !state.feedback ? `<div style="text-align:center;margin-top:14px"><button onclick="showTipp()" style="background:none;border:none;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:0.7rem;letter-spacing:0.1em;cursor:pointer;text-decoration:underline;">💡 TIPP ANZEIGEN</button></div>` : ''}
+      <div class="frac-hint ${isFrac ? 'highlight' : ''}">
+        ${isFrac ? '½ Brucheingabe: z.B. 3/4 oder 6/8' : 'Eingabe: Zahl oder Bruch wie 3/4'}
+      </div>
+      ${!state.tippVisible && !state.feedback ? `<div style="text-align:center;margin-top:14px"><button id="btn-tipp" style="background:none;border:none;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:0.7rem;letter-spacing:0.1em;cursor:pointer;text-decoration:underline;">💡 TIPP ANZEIGEN</button></div>` : ''}
     `;
+
     document.getElementById('answer-input').addEventListener('keydown', e => {
       if (e.key === 'Enter') submitAnswer();
     });
+    document.getElementById('btn-submit').addEventListener('click', submitAnswer);
+    const tippBtn = document.getElementById('btn-tipp');
+    if (tippBtn) tippBtn.addEventListener('click', showTipp);
   }
 
   function renderResult(card) {
@@ -718,8 +871,8 @@
     const rows = state.results.map((r, i) => `
       <div class="result-row ${r.correct ? 'correct' : 'wrong'}">
         <span class="result-num">${String(i + 1).padStart(2, '0')}.</span>
-        <span class="result-eq">${r.question} = <strong>${r.answer}</strong>${r.tippUsed ? ' <span style="color:var(--accent-warm);font-size:0.65rem">💡</span>' : ''}</span>
-        <span class="result-check ${r.correct ? 'correct' : 'wrong'}">${r.correct ? '✓' : `✗ (${r.given})`}</span>
+        <span class="result-eq">${r.question} = <strong>${answerStr(r.answer)}</strong>${r.tippUsed ? ' <span style="color:var(--accent-warm);font-size:0.65rem">💡</span>' : ''}</span>
+        <span class="result-check ${r.correct ? 'correct' : 'wrong'}">${r.correct ? '✓' : `✗ (${r.givenStr})`}</span>
       </div>
     `).join('');
 
@@ -731,10 +884,13 @@
       <div class="score-meta">ZEIT: ${formatTime(state.roundTime)} · ${pct}% · ${lvlLabel}</div>
       <div class="result-list">${rows}</div>
       <div class="btn-row">
-        <button class="btn btn-next" onclick="startRound()">NÄCHSTE RUNDE →</button>
-        <button class="btn btn-reset" onclick="resetAll()">↺ MENÜ</button>
+        <button class="btn btn-next" id="btn-next">NÄCHSTE RUNDE →</button>
+        <button class="btn btn-reset" id="btn-menu">↺ MENÜ</button>
       </div>
     `;
+
+    document.getElementById('btn-next').addEventListener('click', () => startRound());
+    document.getElementById('btn-menu').addEventListener('click', resetAll);
   }
 
   function resetAll() {
