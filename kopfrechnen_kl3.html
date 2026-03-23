@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kopfrechnen Klasse 3</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Bebas+Neue&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --accent: #00e5a0;
+      --accent-warm: #ffb347;
+      --bad: #ff6b6b;
+      --bg: #0d1117;
+      --card: #161b22;
+      --border: #30363d;
+      --border2: #21262d;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --leicht: #00e5a0;
+      --mittel: #ffb347;
+      --schwer: #ff6b9d;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0;
+      background-image:
+        linear-gradient(rgba(0,229,160,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,229,160,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+    }
+
+    body::after {
+      content: '';
+      position: fixed; inset: 0; z-index: 1;
+      background: linear-gradient(transparent 50%, rgba(0,0,0,0.015) 50%);
+      background-size: 100% 4px;
+      pointer-events: none;
+    }
+
+    #app { position: relative; z-index: 2; width: 100%; max-width: 540px; }
+
+    /* ── Header ── */
+    .header { text-align: center; margin-bottom: 28px; }
+
+    .title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.2rem, 6vw, 3.8rem);
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      text-shadow: 0 0 20px rgba(0,229,160,0.6), 0 0 60px rgba(0,229,160,0.2);
+      line-height: 1;
+    }
+
+    .subtitle {
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 0.3em;
+      margin-top: 4px;
+    }
+
+    .stats-badge {
+      display: none;
+      margin-top: 12px;
+      padding: 4px 16px;
+      border-radius: 4px;
+      background: rgba(0,229,160,0.08);
+      border: 1px solid rgba(0,229,160,0.3);
+      font-size: 0.72rem;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+    }
+
+    /* ── Card ── */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: clamp(24px, 6vw, 44px);
+      box-shadow: 0 0 0 1px var(--border2), 0 24px 48px rgba(0,0,0,0.6), 0 0 80px rgba(0,229,160,0.04);
+    }
+
+    /* ── Buttons ── */
+    .btn { cursor: pointer; border: none; font-family: 'JetBrains Mono', monospace; transition: all 0.15s; }
+    .btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
+    .btn:active { transform: translateY(1px); }
+
+    .btn-confirm {
+      padding: 14px 22px; border-radius: 8px;
+      font-size: 1.1rem; font-weight: 800;
+      background: var(--border2); color: var(--accent);
+      border: 1px solid var(--border);
+    }
+
+    .btn-next {
+      flex: 1; padding: 14px; border-radius: 8px;
+      font-size: 0.85rem; font-weight: 800; letter-spacing: 0.12em;
+      background: var(--accent); color: var(--bg);
+      box-shadow: 0 0 20px rgba(0,229,160,0.4);
+    }
+
+    .btn-reset {
+      padding: 14px 18px; border-radius: 8px;
+      font-size: 0.85rem; font-weight: 600;
+      background: transparent; color: var(--muted);
+      border: 1px solid var(--border);
+    }
+
+    /* ── Level buttons ── */
+    .level-row { display: flex; gap: 10px; margin: 20px 0; }
+    .level-btn {
+      flex: 1; padding: 14px; border-radius: 8px;
+      font-size: 0.85rem; font-weight: 800; letter-spacing: 0.1em;
+      cursor: pointer; border: 2px solid var(--border);
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--border2); color: var(--muted);
+      transition: all 0.15s;
+    }
+    .level-btn:hover { filter: brightness(1.15); transform: translateY(-1px); }
+    .level-btn.leicht.active {
+      background: var(--leicht); color: var(--bg);
+      border-color: var(--leicht);
+      box-shadow: 0 0 20px rgba(0,229,160,0.4);
+    }
+    .level-btn.mittel.active {
+      background: var(--mittel); color: var(--bg);
+      border-color: var(--mittel);
+      box-shadow: 0 0 20px rgba(255,179,71,0.4);
+    }
+
+    /* ── Start screen ── */
+    .big-sigma {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 5rem; color: var(--border2);
+      line-height: 1; margin-bottom: 8px; text-align: center;
+    }
+    .start-title {
+      text-align: center; font-weight: 800; font-size: 1rem;
+      letter-spacing: 0.08em; margin-bottom: 6px;
+    }
+    .start-desc {
+      text-align: center; color: var(--muted); font-size: 0.78rem;
+      margin-bottom: 4px; line-height: 1.6;
+    }
+    .level-desc {
+      text-align: center; font-size: 0.72rem; color: var(--muted);
+      min-height: 2.4em; line-height: 1.6; margin-bottom: 18px;
+    }
+    .op-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 8px; margin-bottom: 20px;
+    }
+    .op-card {
+      padding: 10px 14px; border-radius: 8px;
+      background: var(--bg); border: 1px solid var(--border2);
+      font-size: 0.72rem;
+    }
+    .op-card-label { margin-bottom: 2px; }
+    .op-card-sub { color: var(--muted); }
+
+    .start-btn {
+      width: 100%; padding: 16px; border-radius: 8px;
+      font-size: 0.9rem; font-weight: 800; letter-spacing: 0.15em;
+      cursor: pointer; border: none; font-family: 'JetBrains Mono', monospace;
+      transition: all 0.15s;
+    }
+    .start-btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
+    .start-btn.leicht { background: var(--leicht); color: var(--bg); box-shadow: 0 0 24px rgba(0,229,160,0.4); }
+    .start-btn.mittel { background: var(--mittel); color: var(--bg); box-shadow: 0 0 24px rgba(255,179,71,0.4); }
+    .start-btn.schwer { background: var(--schwer); color: var(--bg); box-shadow: 0 0 24px rgba(255,107,157,0.4); }
+
+    /* ── Playing screen ── */
+    .meta-row {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 12px; font-size: 0.72rem; color: var(--muted); letter-spacing: 0.08em;
+    }
+    .meta-count { color: var(--accent); }
+    .meta-level-badge {
+      padding: 2px 10px; border-radius: 4px; font-size: 0.65rem;
+      font-weight: 800; letter-spacing: 0.1em;
+    }
+    .meta-level-badge.leicht { background: rgba(0,229,160,0.15); color: var(--leicht); }
+    .meta-level-badge.mittel { background: rgba(255,179,71,0.15); color: var(--mittel); }
+    .meta-level-badge.schwer { background: rgba(255,107,157,0.15); color: var(--schwer); }
+
+    .progress-track {
+      height: 3px; background: var(--border2);
+      border-radius: 2px; margin-bottom: 32px; overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%; border-radius: 2px;
+      transition: width 0.4s ease;
+      box-shadow: 0 0 8px rgba(0,229,160,0.8);
+    }
+    .progress-fill.leicht { background: linear-gradient(90deg, var(--leicht), #00c97e); }
+    .progress-fill.mittel { background: linear-gradient(90deg, var(--mittel), #ff9500); }
+    .progress-fill.schwer { background: linear-gradient(90deg, var(--schwer), #e0005e); }
+
+    .question-display {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3rem, 11vw, 5.5rem);
+      letter-spacing: 0.06em; line-height: 1;
+      margin-bottom: 12px; text-align: center;
+      transition: color 0.2s, text-shadow 0.2s;
+    }
+    .question-display.correct { color: var(--accent); text-shadow: 0 0 30px rgba(0,229,160,0.8); }
+    .question-display.wrong   { color: var(--bad);    text-shadow: 0 0 30px rgba(255,107,107,0.8); }
+
+    .feedback-line {
+      height: 22px; margin-bottom: 20px; text-align: center;
+      font-size: 0.78rem; letter-spacing: 0.1em; font-weight: 700;
+    }
+    .feedback-line.correct { color: var(--accent); }
+    .feedback-line.wrong   { color: var(--bad); }
+
+    .input-row { display: flex; gap: 10px; justify-content: center; }
+    .answer-input {
+      width: 150px; padding: 14px 16px;
+      font-size: 1.5rem; text-align: center;
+      font-family: 'JetBrains Mono', monospace; font-weight: 800;
+      background: var(--bg); border: 2px solid var(--border);
+      border-radius: 8px; color: var(--text); outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      -moz-appearance: textfield;
+    }
+    .answer-input::-webkit-inner-spin-button,
+    .answer-input::-webkit-outer-spin-button { -webkit-appearance: none; }
+    .answer-input.correct { border-color: var(--accent); box-shadow: 0 0 16px rgba(0,229,160,0.3); }
+    .answer-input.wrong   { border-color: var(--bad);    box-shadow: 0 0 16px rgba(255,107,107,0.3); }
+
+    .level-btn.schwer.active {
+      background: var(--schwer); color: var(--bg);
+      border-color: var(--schwer);
+      box-shadow: 0 0 20px rgba(255,107,157,0.4);
+    }
+
+    /* ── Tipp box ── */
+    .tipp-box {
+      margin: 8px 0 12px 0;
+      padding: 10px 14px;
+      border-radius: 8px;
+      background: rgba(255,179,71,0.08);
+      border: 1px solid rgba(255,179,71,0.3);
+      font-size: 0.75rem;
+      color: var(--accent-warm);
+      letter-spacing: 0.06em;
+      line-height: 1.6;
+      text-align: center;
+      animation: fadeUp 0.3s ease both;
+    }
+    .tipp-label {
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      margin-bottom: 3px;
+    }
+    .score-display {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 5rem; line-height: 1; text-align: center;
+    }
+    .score-label { text-align: center; font-weight: 800; font-size: 0.85rem; letter-spacing: 0.15em; margin-top: 4px; color: var(--muted); }
+    .score-meta  { text-align: center; font-size: 0.72rem; color: var(--muted); margin-top: 8px; letter-spacing: 0.1em; margin-bottom: 24px; }
+
+    .result-list { max-height: 220px; overflow-y: auto; margin-bottom: 20px; }
+    .result-list::-webkit-scrollbar { width: 4px; }
+    .result-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    .result-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 7px 12px; margin-bottom: 4px; border-radius: 6px;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;
+    }
+    .result-row.correct { background: rgba(0,229,160,0.06);  border: 1px solid rgba(0,229,160,0.15); }
+    .result-row.wrong   { background: rgba(255,107,107,0.06); border: 1px solid rgba(255,107,107,0.15); }
+    .result-num { color: var(--muted); }
+    .result-eq  { flex: 1; text-align: center; }
+    .result-check.correct { color: var(--accent); font-weight: 700; }
+    .result-check.wrong   { color: var(--bad);    font-weight: 700; }
+
+    .btn-row { display: flex; gap: 10px; }
+
+    /* ── Footer ── */
+    .footer { text-align: center; margin-top: 16px; font-size: 0.65rem; color: #484f58; letter-spacing: 0.2em; }
+
+    /* ── Animations ── */
+    @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-10px)} 60%{transform:translateX(10px)} }
+    @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.04)} }
+    .fade-up { animation: fadeUp 0.3s ease both; }
+    .shake   { animation: shake 0.35s ease; }
+    .pulse   { animation: pulse 0.3s ease; }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div class="header">
+    <div class="title">KOPFRECHNEN · KL. 3</div>
+    <div class="subtitle" id="subtitle">NIVEAU WÄHLEN · + − × ÷</div>
+    <div id="stats-badge" class="stats-badge"></div>
+  </div>
+  <div class="card" id="card"></div>
+  <div class="footer">KLASSE 3 · ENTER ZUM BESTÄTIGEN</div>
+</div>
+
+
+<script>
+// ── Eingebettete Navbar (standalone) ──────────────────
+(function () {
+  const STORE_KEY = 'lern-apps-results';
+  function getPageKey() { return 'kopfrechnen_kl3.html'; }
+  function loadResults() {
+    try { return JSON.parse(localStorage.getItem(STORE_KEY) || '{}'); }
+    catch(e) { return {}; }
+  }
+  function getResult() { return loadResults()[getPageKey()] || null; }
+
+  window.LernApps = {
+    saveResult(result) {
+      const all = loadResults();
+      all[getPageKey()] = {
+        score:     result.score,
+        max:       result.max,
+        label:     result.label || (result.score + ' / ' + result.max),
+        percent:   Math.round((result.score / result.max) * 100),
+        timestamp: Date.now()
+      };
+      localStorage.setItem(STORE_KEY, JSON.stringify(all));
+      updateBadge(all[getPageKey()]);
+    },
+    getAllResults() { return loadResults(); },
+    getResult()     { return getResult(); }
+  };
+
+  const style = document.createElement('style');
+  style.textContent = `
+    #lern-result-badge {
+      position: fixed; bottom: 1.2rem; right: 1.2rem; z-index: 9999;
+      background: #1a1f5e; color: #fff;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 800; font-size: .82rem;
+      padding: .45rem .95rem; border-radius: 99px;
+      border: 2px solid rgba(255,255,255,.12);
+      box-shadow: 0 4px 20px rgba(26,31,94,.35);
+      display: none; align-items: center; gap: .45rem;
+    }
+    #lern-result-badge.show { display: flex; }
+    #lern-result-badge .rb-bar {
+      width: 52px; height: 6px; border-radius: 99px;
+      background: rgba(255,255,255,.18); overflow: hidden;
+    }
+    #lern-result-badge .rb-fill {
+      height: 100%; border-radius: 99px;
+      background: #4ade80; transition: width .5s ease;
+    }
+    #lern-result-badge .rb-fill.mid { background: #f7c948; }
+    #lern-result-badge .rb-fill.low { background: #f87171; }
+  `;
+  document.head.appendChild(style);
+
+  const badge = document.createElement('div');
+  badge.id = 'lern-result-badge';
+  badge.innerHTML = `<span>🏆</span><span class="rb-label"></span><div class="rb-bar"><div class="rb-fill"></div></div>`;
+  document.body.appendChild(badge);
+
+  function updateBadge(result) {
+    if (!result) return;
+    const pct = result.percent || 0;
+    badge.querySelector('.rb-label').textContent = result.label;
+    const fill = badge.querySelector('.rb-fill');
+    fill.style.width = pct + '%';
+    fill.className = 'rb-fill' + (pct >= 70 ? '' : pct >= 40 ? ' mid' : ' low');
+    badge.classList.add('show');
+  }
+  updateBadge(getResult());
+})();
+</script>
+<script>  const ROUND_SIZE = 10;
+
+  const state = {
+    phase: 'start',   // start | playing | result
+    level: 'leicht',  // leicht | mittel | schwer
+    questions: [],
+    current: 0,
+    results: [],
+    feedback: null,
+    tippVisible: false,
+    tippUsed: false,
+    timer: 0,
+    roundTime: 0,
+    totalRounds: 0,
+    totalCorrect: 0,
+    totalQuestions: 0,
+    timerInterval: null,
+    feedbackTimeout: null,
+  };
+
+  function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+
+  // ── Aufgaben generieren ───────────────────────────────────────
+  // Regeln für BEIDE Niveaus:
+  //   • Alle Zahlen in der Aufgabe: max. 2-stellig (≤ 99)
+  //   • Alle Ergebnisse: max. 2-stellig (≤ 99)
+  //   • Kein Ergebnis negativ
+  //
+  // LEICHT:
+  //   + : beide Summanden 1–9, Summe ≤ 99
+  //   - : Minuend 10–50, Subtrahend 1–9, Ergebnis > 0
+  //   × : kleines Einmaleins 1×1 bis 9×9, Ergebnis ≤ 99
+  //   ÷ : Divisor 2–9, Quotient 1–9 (ganzzahlig)
+  //
+  // MITTEL:
+  //   + : beide Summanden 10–49, Summe ≤ 99
+  //   - : Minuend 20–99, Subtrahend 10–49, Ergebnis > 0 und ≤ 99
+  //   × : kleines Einmaleins bis 10×12 (und 12×10), Ergebnis ≤ 99
+  //   ÷ : Divisor 2–12, Quotient 2–9 (ganzzahlig), Dividend ≤ 99
+
+
+
+  function generateQuestion(level) {
+    let question, answer, attempts = 0;
+    do {
+      attempts++;
+      if(level==='leicht'){
+        const types=['add100','sub100','mal_bis5x10','mal6789'];
+        const t=types[rand(0,3)];
+        if(t==='add100'){const a=rand(10,70);const b=rand(5,30);if(a+b>100){answer=null;}else{answer=a+b;question=`${a} + ${b}`;}}
+        else if(t==='sub100'){const a=rand(20,99);const b=rand(5,a-5);answer=a-b;question=`${a} − ${b}`;}
+        else if(t==='mal_bis5x10'){const f=rand(2,5);const a=rand(1,10);answer=f*a;question=`${f} × ${a}`;}
+        else{const f=rand(6,9);const a=rand(1,10);answer=f*a;question=`${f} × ${a}`;}
+      } else if(level==='mittel'){
+        const types=['add1000','sub1000','einmaleins','div_umkehr','analog'];
+        const t=types[rand(0,4)];
+        if(t==='add1000'){const a=rand(1,9)*100;const b=rand(1,9)*100;if(a+b>1000){answer=null;}else{answer=a+b;question=`${a} + ${b}`;}}
+        else if(t==='sub1000'){const a=rand(2,10)*100;const b=rand(1,a/100-1)*100;answer=a-b;question=`${a} − ${b}`;}
+        else if(t==='einmaleins'){const a=rand(2,10);const b=rand(2,10);answer=a*b;question=`${a} × ${b}`;}
+        else if(t==='div_umkehr'){const a=rand(2,10);const b=rand(2,10);answer=b;question=`${a*b} ÷ ${a}`;}
+        else{const a=rand(2,9);const b=rand(2,9);answer=a*b*10;question=`${a} × ${b*10}`;}
+      } else {
+        const types=['add1000ue','sub1000ue','einmaleins_s','div_rest','term'];
+        const t=types[rand(0,4)];
+        if(t==='add1000ue'){const a=rand(100,700);const b=rand(50,400);if(a+b>1000){answer=null;}else{answer=a+b;question=`${a} + ${b}`;}}
+        else if(t==='sub1000ue'){const a=rand(200,999);const b=rand(50,200);if(b>=a){answer=null;}else{answer=a-b;question=`${a} − ${b}`;}}
+        else if(t==='einmaleins_s'){const a=rand(3,10);const b=rand(3,10);answer=a*b;question=`${a} × ${b}`;}
+        else if(t==='div_rest'){const d=rand(2,9);const q=rand(2,9);const r=rand(1,d-1);answer=q;question=`${d*q+r} ÷ ${d} (Rest?)`;}
+        else{const a=rand(2,9);const b=rand(2,9);const c=rand(1,9);answer=a*b+c;question=`${a} × ${b} + ${c}`;}
+      }
+    } while(attempts<80&&(answer===null||answer===undefined||answer<0));
+    return {question,answer};
+  }
+  function getTipp(q){
+    const s=q.question;
+    if(s.includes('Rest'))return 'Tipp: Wie oft passt der Teiler rein? Was bleibt übrig?';
+    if(s.includes('+')&&s.includes('×'))return 'Tipp: Erst multiplizieren, dann addieren (Punkt vor Strich)!';
+    const p=s.split(' ');const a=parseFloat(p[0]);const op=p[1];const b=parseFloat(p[2]);
+    if(op==='×'){if(a<=b)return `Tipp: ${a}-mal die ${b}: ${Array.from({length:Math.min(a,5)},(_,i)=>b*(i+1)).join(', ')}${a>5?', …':''}`;return `Tipp: ${b}-mal die ${a}: ${Array.from({length:Math.min(b,5)},(_,i)=>a*(i+1)).join(', ')}${b>5?', …':''}`;}
+    if(op==='÷')return `Tipp: ${b} × ? = ${a}`;
+    if(op==='+'){const h=Math.ceil(b/100)*100;if(h!==b)return `Tipp: Runde ${b} auf ${h} → ${a}+${h}=${a+h}, dann ${h-b} abziehen`;return `Tipp: Zähle von ${a} um ${b} weiter`;}
+    return `Tipp: Was muss ich zu ${b} addieren, um ${a} zu bekommen?`;
+  }
+
+
+
+  function formatTime(s) {
+    return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+  }
+
+  function updateStatsBadge() {
+    const badge = document.getElementById('stats-badge');
+    if (state.totalRounds > 0) {
+      badge.style.display = 'inline-block';
+      badge.textContent = `GESAMT ${state.totalCorrect}/${state.totalQuestions} · ${state.totalRounds} RUNDEN`;
+    } else {
+      badge.style.display = 'none';
+    }
+  }
+
+  // ── Runde starten ─────────────────────────────────────────────
+  function startRound(level) {
+    if (level) state.level = level;
+    clearInterval(state.timerInterval);
+    clearTimeout(state.feedbackTimeout);
+    state.questions = Array.from({ length: ROUND_SIZE }, () => generateQuestion(state.level));
+    state.current = 0;
+    state.results = [];
+    state.feedback = null;
+    state.timer = 0;
+    state.phase = 'playing';
+
+    // Update subtitle
+    document.getElementById('subtitle').textContent = state.level === 'leicht'
+        ? 'NIVEAU: LEICHT · + − × ÷'
+        : state.level === 'mittel'
+        ? 'NIVEAU: MITTEL · + − × ÷'
+        : 'NIVEAU: SCHWER · + − × ÷';
+
+    render();
+    state.timerInterval = setInterval(() => {
+      state.timer++;
+      const el = document.getElementById('timer-display');
+      if (el) el.textContent = '⏱ ' + formatTime(state.timer);
+    }, 1000);
+    setTimeout(() => document.getElementById('answer-input')?.focus(), 50);
+  }
+
+  function showTipp() {
+    state.tippVisible = true;
+    state.tippUsed = true;
+    const q = state.questions[state.current];
+    const tippEl = document.getElementById('tipp-area');
+    if (tippEl) {
+      tippEl.innerHTML = `<div class="tipp-box"><div class="tipp-label">💡 TIPP</div>${getTipp(q)}</div>`;
+    }
+  }
+
+  function submitAnswer() {
+    if (state.feedback) return;
+    const input = document.getElementById('answer-input');
+    if (!input || input.value === '') return;
+    const given = parseInt(input.value);
+    const correct = given === state.questions[state.current].answer;
+    state.feedback = correct ? 'correct' : 'wrong';
+    state.results.push({ ...state.questions[state.current], given, correct, tippUsed: state.tippUsed });
+    applyFeedbackUI(correct);
+
+    state.feedbackTimeout = setTimeout(() => {
+      state.feedback = null;
+      state.tippVisible = false;
+      state.tippUsed = false;
+      if (state.current + 1 >= ROUND_SIZE) {
+        clearInterval(state.timerInterval);
+        const roundCorrect = state.results.filter(r => r.correct).length;
+        state.totalRounds++;
+        state.totalCorrect += roundCorrect;
+        state.totalQuestions += ROUND_SIZE;
+        state.roundTime = state.timer;
+        state.phase = 'result';
+        updateStatsBadge();
+        render();
+      } else {
+        state.current++;
+        render();
+        setTimeout(() => document.getElementById('answer-input')?.focus(), 50);
+      }
+    }, correct ? 350 : 900);
+  }
+
+  function applyFeedbackUI(correct) {
+    const qEl = document.getElementById('question-display');
+    const fbEl = document.getElementById('feedback-line');
+    const inEl = document.getElementById('answer-input');
+    if (!qEl) return;
+    qEl.className = 'question-display ' + (correct ? 'correct' : 'wrong');
+    qEl.classList.add(correct ? 'pulse' : 'shake');
+    if (inEl) inEl.className = 'answer-input ' + (correct ? 'correct' : 'wrong');
+    if (fbEl) {
+      fbEl.className = 'feedback-line ' + (correct ? 'correct' : 'wrong');
+      fbEl.textContent = correct
+        ? '✓ RICHTIG'
+        : `✗ FALSCH — RICHTIG: ${state.questions[state.current].answer}`;
+    }
+  }
+
+  // ── Render ────────────────────────────────────────────────────
+  function render() {
+    const card = document.getElementById('card');
+    card.className = 'card fade-up';
+    void card.offsetWidth;
+    if (state.phase === 'start')   renderStart(card);
+    else if (state.phase === 'playing') renderPlaying(card);
+    else if (state.phase === 'result')  renderResult(card);
+  }
+
+  function renderStart(card) {
+    const lvl = state.level;
+    const descText = lvl === 'leicht' ? 'Plus Minus bis 100 sicher · Einmaleins bis 5×10 · × mit 6 7 8 9' : lvl === 'mittel' ? 'Plus Minus bis 1000 glatte Zahlen · Kleines Einmaleins komplett · ÷ Umkehr' : 'Plus Minus bis 1000 mit Übergang · Einmaleins sicher · ÷ mit Rest · Terme';
+
+    card.innerHTML = `
+      <div class="big-sigma">∑</div>
+      <div class="start-title">NIVEAU WÄHLEN</div>
+      <div class="start-desc">${ROUND_SIZE} Aufgaben pro Runde · Alle 4 Grundrechenarten</div>
+
+      <div class="level-row">
+        <button class="level-btn leicht ${lvl==='leicht'?'active':''}" onclick="selectLevel('leicht')">🟢 LEICHT</button>
+        <button class="level-btn mittel ${lvl==='mittel'?'active':''}" onclick="selectLevel('mittel')">🟡 MITTEL</button>
+        <button class="level-btn schwer ${lvl==='schwer'?'active':''}" onclick="selectLevel('schwer')">🔴 SCHWER</button>
+      </div>
+
+      <div class="level-desc" id="level-desc">${descText.replace(/\n/g,'<br>')}</div>
+
+      <div class="op-grid">
+        <div class="op-card">
+          <div class="op-card-label">➕➖ <strong>${lvl==='leicht'?'Plus Minus':lvl==='mittel'?'Plus Minus':'Plus Minus'}</strong></div>
+          <div class="op-card-sub">${lvl==='leicht'?'bis 100 sicher':lvl==='mittel'?'bis 1000 glatt':'bis 1000 Übergang'}</div>
+        </div>
+        <div class="op-card">
+          <div class="op-card-label">✖️ <strong>${lvl==='leicht'?'Einmaleins':lvl==='mittel'?'Einmaleins':'Einmaleins'}</strong></div>
+          <div class="op-card-sub">${lvl==='leicht'?'bis 5×10':lvl==='mittel'?'komplett 1–10':'sicher + schnell'}</div>
+        </div>
+        <div class="op-card">
+          <div class="op-card-label">✖️ <strong>${lvl==='leicht'?'Mal mit':lvl==='mittel'?'Division':'÷ mit Rest'}</strong></div>
+          <div class="op-card-sub">${lvl==='leicht'?'6, 7, 8, 9':lvl==='mittel'?'Umkehr von ×':'einfach'}</div>
+        </div>
+        <div class="op-card">
+          <div class="op-card-label">🔢 <strong>${lvl==='leicht'?'Zahlenraum':lvl==='mittel'?'Analogie':'Terme'}</strong></div>
+          <div class="op-card-sub">${lvl==='leicht'?'bis 1000 kennen':lvl==='mittel'?'6×4 → 60×4':'3×4 + 2'}</div>
+        </div>
+      </div>
+
+      <button class="start-btn ${lvl}" onclick="startRound()">STARTEN →</button>
+    `;
+  }
+
+  function selectLevel(lvl) {
+    state.level = lvl;
+    render(); // re-render start screen with updated level
+  }
+
+  function renderPlaying(card) {
+    const q = state.questions[state.current];
+    const pct = (state.current / ROUND_SIZE) * 100;
+    const lvl = state.level;
+    const lvlLabel = lvl === 'leicht' ? '🟢 LEICHT' : lvl === 'mittel' ? '🟡 MITTEL' : '🔴 SCHWER';
+
+    card.innerHTML = `
+      <div class="meta-row">
+        <span><span class="meta-count">${state.current + 1}</span>/${ROUND_SIZE}</span>
+        <span class="meta-level-badge ${lvl}">${lvlLabel}</span>
+        <span id="timer-display">⏱ ${formatTime(state.timer)}</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill ${lvl}" style="width:${pct}%"></div>
+      </div>
+      <div class="question-display" id="question-display">${q.question} =</div>
+      <div class="feedback-line" id="feedback-line"></div>
+      <div id="tipp-area">${state.tippVisible ? `<div class="tipp-box"><div class="tipp-label">💡 TIPP</div>${getTipp(q)}</div>` : ''}</div>
+      <div class="input-row">
+        <input id="answer-input" class="answer-input" type="number" placeholder="___" autocomplete="off"/>
+        <button class="btn btn-confirm" onclick="submitAnswer()">↵</button>
+      </div>
+      ${!state.tippVisible && !state.feedback ? `<div style="text-align:center;margin-top:14px"><button onclick="showTipp()" style="background:none;border:none;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:0.7rem;letter-spacing:0.1em;cursor:pointer;text-decoration:underline;">💡 TIPP ANZEIGEN</button></div>` : ''}
+    `;
+    document.getElementById('answer-input').addEventListener('keydown', e => {
+      if (e.key === 'Enter') submitAnswer();
+    });
+  }
+
+  function renderResult(card) {
+    const correctCount = state.results.filter(r => r.correct).length;
+    const pct = Math.round((correctCount / ROUND_SIZE) * 100);
+    const scoreColor = pct === 100 ? 'var(--accent)' : pct >= 70 ? 'var(--accent-warm)' : 'var(--bad)';
+    const emoji = pct === 100 ? '🏆' : pct >= 80 ? '🎯' : pct >= 60 ? '💪' : '📚';
+    const label = pct === 100 ? 'PERFEKT!' : pct >= 80 ? 'SEHR GUT' : pct >= 60 ? 'GUT GEMACHT' : 'WEITER ÜBEN';
+    const lvl = state.level;
+    const lvlLabel = lvl === 'leicht' ? '🟢 LEICHT' : lvl === 'mittel' ? '🟡 MITTEL' : '🔴 SCHWER';
+    LernApps.saveResult({ score: correctCount, max: ROUND_SIZE, label: correctCount + ' / ' + ROUND_SIZE + ' · ' + label });
+
+    const rows = state.results.map((r, i) => `
+      <div class="result-row ${r.correct ? 'correct' : 'wrong'}">
+        <span class="result-num">${String(i + 1).padStart(2, '0')}.</span>
+        <span class="result-eq">${r.question} = <strong>${r.answer}</strong>${r.tippUsed ? ' <span style="color:var(--accent-warm);font-size:0.65rem">💡</span>' : ''}</span>
+        <span class="result-check ${r.correct ? 'correct' : 'wrong'}">${r.correct ? '✓' : `✗ (${r.given})`}</span>
+      </div>
+    `).join('');
+
+    card.innerHTML = `
+      <div class="score-display" style="color:${scoreColor};text-shadow:0 0 40px ${scoreColor}">
+        ${correctCount}/${ROUND_SIZE}
+      </div>
+      <div class="score-label">${emoji} ${label}</div>
+      <div class="score-meta">ZEIT: ${formatTime(state.roundTime)} · ${pct}% · ${lvlLabel}</div>
+      <div class="result-list">${rows}</div>
+      <div class="btn-row">
+        <button class="btn btn-next" onclick="startRound()">NÄCHSTE RUNDE →</button>
+        <button class="btn btn-reset" onclick="resetAll()">↺ MENÜ</button>
+      </div>
+    `;
+  }
+
+  function resetAll() {
+    clearInterval(state.timerInterval);
+    state.totalRounds = 0; state.totalCorrect = 0; state.totalQuestions = 0;
+    state.phase = 'start';
+    document.getElementById('subtitle').textContent = 'NIVEAU WÄHLEN · + − × ÷';
+    updateStatsBadge();
+    render();
+  }
+
+  // Init
+  render();
+</script>
+</body>
+</html>
