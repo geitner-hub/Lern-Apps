@@ -83,24 +83,6 @@
       "aod": false
     },
     {
-      "name": "Kopfrechnen Klasse 5",
-      "datei": "kopfrechnen.html",
-      "fach": "Mathematik",
-      "emoji": "📱",
-      "beschreibung": "Übe deine Kopfrechenkünste!",
-      "hidden": false,
-      "klassen": [
-        5
-      ],
-      "customTags": [
-        {
-          "name": "Kopfrechnen",
-          "color": 5
-        }
-      ],
-      "aod": false
-    },
-    {
       "name": "Kopfrechnen 1",
       "datei": "kopfrechnen_kl1.html",
       "fach": "Mathematik",
@@ -156,6 +138,24 @@
       "beschreibung": "Übe deine Kopfrechenkünste!",
       "hidden": false,
       "klassen": [],
+      "customTags": [
+        {
+          "name": "Kopfrechnen",
+          "color": 5
+        }
+      ],
+      "aod": false
+    },
+    {
+      "name": "Kopfrechnen Klasse 5",
+      "datei": "kopfrechnen.html",
+      "fach": "Mathematik",
+      "emoji": "📱",
+      "beschreibung": "Übe deine Kopfrechenkünste!",
+      "hidden": false,
+      "klassen": [
+        5
+      ],
       "customTags": [
         {
           "name": "Kopfrechnen",
