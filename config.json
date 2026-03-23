@@ -127,6 +127,17 @@
       "klassen": [],
       "customTags": [],
       "aod": false
+    },
+    {
+      "name": "Kopfrechnen Klasse 4",
+      "datei": "kopfrechnen_kl4.html",
+      "fach": "Mathematik",
+      "emoji": "📱",
+      "beschreibung": "Übe deine Kopfrechenkünste!",
+      "hidden": false,
+      "klassen": [],
+      "customTags": [],
+      "aod": false
     }
   ],
   "customTags": [
