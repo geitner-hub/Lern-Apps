@@ -156,7 +156,12 @@
       "beschreibung": "Übe deine Kopfrechenkünste!",
       "hidden": false,
       "klassen": [],
-      "customTags": [],
+      "customTags": [
+        {
+          "name": "Kopfrechnen",
+          "color": 5
+        }
+      ],
       "aod": false
     },
     {
