@@ -94,6 +94,17 @@
       "klassen": [],
       "customTags": [],
       "aod": false
+    },
+    {
+      "name": "Kopfrechnen 1",
+      "datei": "kopfrechnen_kl1.html",
+      "fach": "Mathematik",
+      "emoji": "📱",
+      "beschreibung": "Übe deine Kopfrechenkünste!",
+      "hidden": false,
+      "klassen": [],
+      "customTags": [],
+      "aod": false
     }
   ],
   "customTags": [
