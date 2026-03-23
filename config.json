@@ -41,24 +41,6 @@
       "aod": false
     },
     {
-      "name": "Kopfrechnen Klasse 5",
-      "datei": "kopfrechnen.html",
-      "fach": "Mathematik",
-      "emoji": "📱",
-      "beschreibung": "Übe deine Kopfrechenkünste!",
-      "hidden": false,
-      "klassen": [
-        5
-      ],
-      "customTags": [
-        {
-          "name": "Kopfrechnen",
-          "color": 5
-        }
-      ],
-      "aod": false
-    },
-    {
       "name": "Vokabeltrainer 5. Klasse",
       "datei": "vokabeltrainer.html",
       "fach": "Englisch",
@@ -98,6 +80,24 @@
       "hidden": false,
       "klassen": [],
       "customTags": [],
+      "aod": false
+    },
+    {
+      "name": "Kopfrechnen Klasse 5",
+      "datei": "kopfrechnen.html",
+      "fach": "Mathematik",
+      "emoji": "📱",
+      "beschreibung": "Übe deine Kopfrechenkünste!",
+      "hidden": false,
+      "klassen": [
+        5
+      ],
+      "customTags": [
+        {
+          "name": "Kopfrechnen",
+          "color": 5
+        }
+      ],
       "aod": false
     },
     {
