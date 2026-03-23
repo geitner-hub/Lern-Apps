@@ -8,7 +8,9 @@
       "emoji": "📱",
       "beschreibung": "Übe deine Kopfrechenkünste!",
       "hidden": false,
-      "klassen": [],
+      "klassen": [
+        5
+      ],
       "customTags": [
         {
           "name": "Kopfrechnen",
