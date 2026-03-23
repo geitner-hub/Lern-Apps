@@ -11,7 +11,12 @@
       "klassen": [
         5
       ],
-      "customTags": [],
+      "customTags": [
+        {
+          "name": "Kopfrechnen",
+          "color": 5
+        }
+      ],
       "aod": false
     },
     {
