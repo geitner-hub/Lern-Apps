@@ -171,8 +171,15 @@
       "emoji": "📱",
       "beschreibung": "Übe deine Kopfrechenkünste!",
       "hidden": false,
-      "klassen": [],
-      "customTags": [],
+      "klassen": [
+        6
+      ],
+      "customTags": [
+        {
+          "name": "Kopfrechnen",
+          "color": 5
+        }
+      ],
       "aod": false
     }
   ],
