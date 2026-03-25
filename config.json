@@ -120,7 +120,7 @@
       "fach": "Mathematik",
       "emoji": "📱",
       "beschreibung": "Übe deine Kopfrechenkünste!",
-      "hidden": false,
+      "hidden": true,
       "klassen": [],
       "customTags": [
         {
