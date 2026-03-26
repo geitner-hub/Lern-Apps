@@ -77,7 +77,7 @@
       "fach": "GPG",
       "emoji": "📱",
       "beschreibung": "Welche Regeln gibt es bei uns? Ordne zu!",
-      "hidden": true,
+      "hidden": false,
       "klassen": [],
       "customTags": [],
       "aod": false
