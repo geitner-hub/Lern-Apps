@@ -181,6 +181,17 @@
         }
       ],
       "aod": false
+    },
+    {
+      "name": "English Dialogue",
+      "datei": "english-dialog-vorlagen.html",
+      "fach": "Englisch",
+      "emoji": "📱",
+      "beschreibung": "Choose one!",
+      "hidden": false,
+      "klassen": [],
+      "customTags": [],
+      "aod": false
     }
   ],
   "customTags": [
