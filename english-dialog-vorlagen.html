@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English Dialogue Worksheets – Class 5</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-family: 'Nunito', sans-serif; font-size: 16px; }
+
+  /* ── Print ─────────────────────────────────────── */
+  @media print {
+    .no-print { display: none !important; }
+    .tab-content { display: block !important; page-break-after: always; }
+    .tab-content:last-child { page-break-after: avoid; }
+    body { background: #fff !important; }
+    .card { box-shadow: none !important; }
+  }
+
+  body {
+    background: #f3f4f6;
+    color: #1a1a1a;
+    min-height: 100vh;
+  }
+
+  /* ── Navbar (navbar.js compatible) ─────────────── */
+  header {
+    background: #fff;
+    border-bottom: 2px solid #e5e7eb;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  header .logo { font-size: 20px; font-weight: 800; color: #374151; }
+  header .sub { font-size: 13px; color: #6b7280; margin-left: auto; }
+
+  /* ── Tab navigation ─────────────────────────────── */
+  .tabs-outer {
+    padding: 16px 16px 0;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .tab-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    transition: transform .15s, box-shadow .15s, opacity .15s;
+    opacity: .65;
+  }
+  .tab-btn.active, .tab-btn:hover { opacity: 1; transform: translateY(-2px); box-shadow: 0 4px 14px rgba(0,0,0,.22); }
+  .t1 { background: #e74c3c; } .t2 { background: #9b59b6; } .t3 { background: #27ae60; } .t4 { background: #2980b9; }
+
+  /* ── Content pages ──────────────────────────────── */
+  .tab-content { display: none; padding: 16px; }
+  .tab-content.active { display: block; }
+
+  .card {
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 16px;
+    color: #fff;
+  }
+  .card-header { font-size: 24px; font-weight: 800; }
+  .card-subtitle { font-size: 13px; opacity: .8; margin-top: 2px; }
+
+  /* ── Grid layout ────────────────────────────────── */
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 16px; }
+  @media (max-width: 640px) { .grid { grid-template-columns: 1fr; } }
+
+  .section {
+    background: rgba(255,255,255,.25);
+    border-radius: 14px;
+    padding: 14px;
+    backdrop-filter: blur(4px);
+  }
+  .section-title {
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    opacity: .7;
+    margin-bottom: 10px;
+  }
+
+  /* ── Mindmap SVG ────────────────────────────────── */
+  .mindmap-wrap svg { width: 100%; height: auto; display: block; }
+
+  /* ── Starters ───────────────────────────────────── */
+  .starters { display: flex; flex-direction: column; gap: 7px; }
+  .starter {
+    background: rgba(255,255,255,.32);
+    border-radius: 10px;
+    padding: 8px 12px;
+    font-size: 13px;
+    font-weight: 700;
+    border-left: 4px solid rgba(255,255,255,.6);
+    line-height: 1.45;
+  }
+  .starter span { font-weight: 400; opacity: .85; display: block; }
+
+  /* ── Dialogue scaffold ──────────────────────────── */
+  .scaffold { display: flex; flex-direction: column; gap: 8px; }
+  .bubble-wrap { display: flex; flex-direction: column; }
+  .bubble-wrap.right { align-items: flex-end; }
+  .speaker-lbl { font-size: 11px; font-weight: 800; opacity: .6; margin-bottom: 2px; }
+  .bubble {
+    padding: 9px 14px;
+    border-radius: 14px;
+    font-size: 13px;
+    font-weight: 600;
+    max-width: 88%;
+    line-height: 1.5;
+  }
+  .bubble.a { background: rgba(255,255,255,.45); border-bottom-left-radius: 4px; }
+  .bubble.b { background: rgba(255,255,255,.22); border-bottom-right-radius: 4px; text-align: right; }
+  .fill {
+    display: inline-block;
+    border-bottom: 2px dashed rgba(255,255,255,.7);
+    min-width: 70px;
+  }
+
+  /* ── Vocab chips ────────────────────────────────── */
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip {
+    background: rgba(255,255,255,.32);
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: default;
+    transition: background .15s, transform .1s;
+  }
+  .chip:hover { background: rgba(255,255,255,.55); transform: scale(1.05); }
+
+  /* ── Print button ───────────────────────────────── */
+  .print-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,255,255,.3);
+    border: 2px solid rgba(255,255,255,.6);
+    border-radius: 30px;
+    color: #fff;
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 8px 18px;
+    cursor: pointer;
+    transition: background .15s;
+    margin-top: 8px;
+  }
+  .print-btn:hover { background: rgba(255,255,255,.5); }
+
+  /* ── Theme colours ──────────────────────────────── */
+  .theme1 { background: linear-gradient(135deg, #ff6b6b, #ee5a24); }
+  .theme2 { background: linear-gradient(135deg, #a55eea, #7d3c98); }
+  .theme3 { background: linear-gradient(135deg, #26de81, #20bf6b); }
+  .theme4 { background: linear-gradient(135deg, #45aaf2, #2d98da); }
+
+  /* ── Footer ─────────────────────────────────────── */
+  footer {
+    text-align: center;
+    padding: 18px;
+    font-size: 12px;
+    color: #9ca3af;
+  }
+</style>
+</head>
+<body>
+
+<header class="no-print">
+  <span class="logo">🗣 English Dialogue Worksheets</span>
+  <span class="sub">Class 5 &bull; A1 Level</span>
+</header>
+
+<div class="tabs-outer no-print">
+  <button class="tab-btn t1 active" onclick="showTab(0)">🐾 Animals</button>
+  <button class="tab-btn t2" onclick="showTab(1)">🎂 Birthday Party</button>
+  <button class="tab-btn t3" onclick="showTab(2)">🏠 At Home</button>
+  <button class="tab-btn t4" onclick="showTab(3)">🏫 At School</button>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     TAB 1 – ANIMALS
+═══════════════════════════════════════════════════════════════════ -->
+<div class="tab-content active" id="tab0">
+<div class="card theme1">
+  <div class="card-header">🐾 Animals</div>
+  <div class="card-subtitle">Talk about your favourite animals!</div>
+  <button class="print-btn no-print" onclick="window.print()">🖨 Print this page</button>
+  <div class="grid">
+
+    <div class="section">
+      <div class="section-title">🌟 Vocabulary Mindmap</div>
+      <div class="mindmap-wrap">
+        <svg viewBox="0 0 300 230" xmlns="http://www.w3.org/2000/svg">
+          <defs><style>.mn{font-family:'Nunito',sans-serif;font-weight:700;font-size:10px;fill:#c0392b;text-anchor:middle}.ms{font-family:'Nunito',sans-serif;font-size:8px;fill:rgba(255,255,255,.85);text-anchor:middle}.mc{font-family:'Nunito',sans-serif;font-weight:800;font-size:12px;fill:#fff;text-anchor:middle}</style></defs>
+          <!-- lines -->
+          <g stroke="rgba(255,255,255,.55)" stroke-width="1.2" stroke-dasharray="4 3" fill="none">
+            <line x1="150" y1="98" x2="150" y2="50"/>
+            <line x1="113" y1="107" x2="55" y2="73"/>
+            <line x1="187" y1="107" x2="245" y2="73"/>
+            <line x1="113" y1="128" x2="55" y2="162"/>
+            <line x1="187" y1="128" x2="245" y2="162"/>
+            <line x1="150" y1="138" x2="150" y2="185"/>
+          </g>
+          <!-- center -->
+          <ellipse cx="150" cy="118" rx="40" ry="24" fill="rgba(255,255,255,.5)"/>
+          <text class="mc" x="150" y="123">Animals</text>
+          <!-- satellites -->
+          <ellipse cx="150" cy="40" rx="38" ry="14" fill="rgba(255,255,255,.35)" stroke="rgba(255,255,255,.4)" stroke-width=".6"/>
+          <text class="ms" x="150" y="38">pets</text>
+          <text class="mn" x="150" y="48">dog  •  cat  •  fish</text>
+
+          <ellipse cx="46" cy="65" rx="36" ry="14" fill="rgba(255,255,255,.35)" stroke="rgba(255,255,255,.4)" stroke-width=".6"/>
+          <text class="ms" x="46" y="63">size</text>
+          <text class="mn" x="46" y="73">big  •  small</text>
+
+          <ellipse cx="252" cy="65" rx="40" ry="14" fill="rgba(255,255,255,.35)" stroke="rgba(255,255,255,.4)" stroke-width=".6"/>
+          <text class="ms" x="252" y="63">actions</text>
+          <text class="mn" x="252" y="73">run  •  fly  •  swim</text>
+
+          <ellipse cx="46" cy="170" rx="38" ry="14" fill="rgba(255,255,255,.35)" stroke="rgba(255,255,255,.4)" stroke-width=".6"/>
+          <text class="ms" x="46" y="168">where?</text>
+          <text class="mn" x="46" y="178">farm  •  jungle</text>
+
+          <ellipse cx="252" cy="170" rx="42" ry="14" fill="rgba(255,255,255,.35)" stroke="rgba(255,255,255,.4)" stroke-width=".6"/>
+          <text class="ms" x="252" y="168">body parts</text>
+          <text class="mn" x="252" y="178">legs  •  wings  •  fur</text>
+
+          <ellipse cx="150" cy="196" rx="44" ry="14" fill="rgba(255,255,255,.35)" stroke="rgba(255,255,255,.4)" stroke-width=".6"/>
+          <text class="ms" x="150" y="194">adjectives</text>
+          <text class="mn" x="150" y="204">cute  •  scary  •  funny</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">💬 Sentence Starters</div>
+      <div class="starters">
+        <div class="starter">My favourite animal is <span>a _______________.</span></div>
+        <div class="starter">It is <span>big / small / cute.</span></div>
+        <div class="starter">It can <span>run / fly / swim.</span></div>
+        <div class="starter">It has <span>four legs / wings / fur.</span></div>
+        <div class="starter">Do you have a pet? <span>Yes, I have … / No, I don't.</span></div>
+        <div class="starter">I like animals because <span>they are _______________.</span></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">🎭 Your Dialogue – Fill In!</div>
+      <div class="scaffold">
+        <div class="bubble-wrap"><div class="speaker-lbl">Person A 🙋</div><div class="bubble a">What is your favourite animal?</div></div>
+        <div class="bubble-wrap right"><div class="speaker-lbl">Person B 🙋</div><div class="bubble b">My favourite animal is a <span class="fill">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>.</div></div>
+        <div class="bubble-wrap"><div class="speaker-lbl">Person A 🙋</div><div class="bubble a">Why do you like it?</div></div>
+        <div class="bubble-wrap right"><div class="speaker-lbl">Person B 🙋</div><div class="bubble b">Because it is <span class="fill">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> and it can <span class="fill">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>.</div></div>
+        <div class="bubble-wrap"><div class="speaker-lbl">Person A 🙋</div><div class="bubble a">Do you have a pet at home?</div></div>
+        <div class="bubble-wrap right"><div class="speaker-lbl">Person B 🙋</div><div class="bubble b"><span class="fill">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">📦 More Vocabulary</div>
+      <div class="chips">
+        <span class="chip">🐶 dog</span><span class="chip">🐱 cat</span><span class="chip">🐟 fish</span>
+        <span class="chip">🐰 rabbit</span><span class="chip">🐍 snake</span><span class="chip">🦜 parrot</span>
+        <span class="chip">🦁 lion</span><span class="chip">🐘 elephant</span><span class="chip">🐧 penguin</span>
+        <span class="chip">🦊 fox</span><span class="chip">🐻 bear</span><span class="chip">🐬 dolphin</span>
+        <span class="chip">fast</span><span class="chip">slow</span><span class="chip">friendly</span><span class="chip">dangerous</span>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     TAB 2 – BIRTHDAY PARTY
+═══════════════════════════════════════════════════════════════════ -->
+<div class="tab-content" id="tab1">
+<div class="card theme2">
+  <div class="card-header">🎂 Birthday Party</div>
+  <div class="card-subtitle">Plan a party and talk about it!</div>
+  <button class="print-btn no-print" onclick="window.print()">🖨 Print this page</button>
+  <div class="grid">
+
+    <div class="section">
+      <div class="section-title">🌟 Vocabulary Mindmap</div>
+      <div class="mindmap-wrap">
+        <svg viewBox="0 0 300 230" xmlns="http://www.w3.org/2000/svg">
+          <defs><style>.mn2{font-family:'Nunito',sans-serif;font-weight:700;font-size:10px;fill:#6c3483;text-anchor:middle}.ms2{font-family:'Nunito',sans-serif;font-size:8px;fill:rgba(255,255,255,.85);text-anchor:middle}.mc2{font-family:'Nunito',sans-serif;font-weight:800;font-size:11px;fill:#fff;text-anchor:middle}</style></defs>
+          <g stroke="rgba(255,255,255,.55)" stroke-width="1.2" stroke-dasharray="4 3" fill="none">
+            <line x1="150" y1="98" x2="150" y2="50"/><line x1="113" y1="107" x2="55" y2="73"/>
+            <line x1="187" y1="107" x2="245" y2="73"/><line x1="113" y1="128" x2="55" y2="162"/>
+            <line x1="187" y1="128" x2="245" y2="162"/><line x1="150" y1="138" x2="150" y2="185"/>
+          </g>
+          <ellipse cx="150" cy="118" rx="46" ry="24" fill="rgba(255,255,255,.5)"/>
+          <text class="mc2" x="150" y="115">Birthday</text>
+          <text class="mc2" x="150" y="128">Party</text>
+
+          <ellipse cx="150" cy="40" rx="40" ry="14" fill="rgba(255,255,255,.35)" stroke="rgba(255,255,255,.4)" stroke-width=".6"/>
+          <text class="ms2" x="150" y="38">food</text>
+          <text class="mn2" x="150" y="48">cake  •  candles</text>
+
+          <ellipse cx="46" cy="65" rx="38" ry="14" fill="rgba(255,255,255,.35)" stroke="rgba(255,255,255,.4)" stroke-width=".6"/>
+          <text class="ms2" x="46" y="63">gifts</text>
+          <text class="mn2" x="46" y="73">gift  •  present</text>
+
+          <ellipse cx="252" cy="65" rx="42" ry="14" fill="rgba(255,255,255,.35)" stroke="rgba(255,255,255,.4)" stroke-width=".6"/>
+          <text class="ms2" x="252" y="63">people</text>
+          <text class="mn2" x="252" y="73">friends  •  family</text>
+
+          <ellipse cx="46" cy="170" rx="42" ry="14" fill="rgba(255,255,255,.35)" stroke="rgba(255,255,255,.4)" stroke-width=".6"/>
+          <text class="ms2" x="46" y="168">fun</text>
+          <text class="mn2" x="46" y="178">music  •  dance</text>
+
+          <ellipse cx="252" cy="170" rx="44" ry="14" fill="rgba(255,255,255,.35)" stroke="rgba(255,255,255,.4)" stroke-width=".6"/>
+          <text class="ms2" x="252" y="168">decoration</text>
+          <text class="mn2" x="252" y="178">balloon  •  party</text>
+
+          <ellipse cx="150" cy="196" rx="48" ry="14" fill="rgba(255,255,255,.35)" stroke="rgba(255,255,255,.4)" stroke-width=".6"/>
+          <text class="ms2" x="150" y="194">activities</text>
+          <text class="mn2" x="150" y="204">eat  •  drink  •  sing</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">💬 Sentence Starters</div>
+      <div class="starters">
+        <div class="starter">When is your birthday? <span>My birthday is in ___________.</span></div>
+        <div class="starter">How old are you? <span>I am ___ years old.</span></div>
+        <div class="starter">What do you get as a present? <span>I get a _______________.</span></div>
+        <div class="starter">Who comes to your party? <span>My _______________ come(s).</span></div>
+        <div class="starter">What do you eat? <span>We eat cake and _______________.</span></div>
+        <div class="starter">Happy birthday! <span>Thank you!</span></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">🎭 Your Dialogue – Fill In!</div>
+      <div class="scaffold">
+        <div class="bubble-wrap"><div class="speaker-lbl">Person A 🙋</div><div class="bubble a">When is your birthday?</div></div>
+        <div class="bubble-wrap right"><div class="speaker-lbl">Person B 🙋</div><div class="bubble b">My birthday is in <span class="fill">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>.</div></div>
+        <div class="bubble-wrap"><div class="speaker-lbl">Person A 🙋</div><div class="bubble a">Do you have a birthday party?</div></div>
+        <div class="bubble-wrap right"><div class="speaker-lbl">Person B 🙋</div><div class="bubble b">Yes! I invite <span class="fill">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> friends.</div></div>
+        <div class="bubble-wrap"><div class="speaker-lbl">Person A 🙋</div><div class="bubble a">What do you wish for?</div></div>
+        <div class="bubble-wrap right"><div class="speaker-lbl">Person B 🙋</div><div class="bubble b">I want a <span class="fill">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>!</div></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">📦 More Vocabulary</div>
+      <div class="chips">
+        <span class="chip">🎂 cake</span><span class="chip">🍕 pizza</span><span class="chip">🧃 juice</span>
+        <span class="chip">🎁 present</span><span class="chip">🎈 balloon</span><span class="chip">🎉 party</span>
+        <span class="chip">January</span><span class="chip">March</span><span class="chip">July</span>
+        <span class="chip">sing 🎵</span><span class="chip">dance 💃</span><span class="chip">play 🎮</span>
+        <span class="chip">invite</span><span class="chip">celebrate</span><span class="chip">candle</span><span class="chip">wish</span>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     TAB 3 – AT HOME
+═══════════════════════════════════════════════════════════════════ -->
+<div class="tab-content" id="tab2">
+<div class="card theme3">
+  <div class="card-header">🏠 At Home</div>
+  <div class="card-subtitle">Describe your home and your daily routine!</div>
+  <button class="print-btn no-print" onclick="window.print()">🖨 Print this page</button>
+  <div class="grid">
+
+    <div class="section">
+      <div class="section-title">🌟 Vocabulary Mindmap</div>
+      <div class="mindmap-wrap">
+        <svg viewBox="0 0 300 230" xmlns="http://www.w3.org/2000/svg">
+          <defs><style>.mn3{font-family:'Nunito',sans-serif;font-weight:700;font-size:10px;fill:#1e8449;text-anchor:middle}.ms3{font-family:'Nunito',sans-serif;font-size:8px;fill:rgba(255,255,255,.85);text-anchor:middle}.mc3{font-family:'Nunito',sans-serif;font-weight:800;font-size:13px;fill:#fff;text-anchor:middle}</style></defs>
+          <g stroke="rgba(255,255,255,.55)" stroke-width="1.2" stroke-dasharray="4 3" fill="none">
+            <line x1="150" y1="98" x2="150" y2="50"/><line x1="113" y1="107" x2="55" y2="73"/>
+            <line x1="187" y1="107" x2="245" y2="73"/><line x1="113" y1="128" x2="55" y2="162"/>
+            <line x1="187" y1="128" x2="245" y2="162"/><line x1="150" y1="138" x2="150" y2="185"/>
+          </g>
+          <ellipse cx="150" cy="118" rx="40" ry="24" fill="rgba(255,255,255,.5)"/>
+          <text class="mc3" x="150" y="121">At Home 🏠</text>
+
+          <ellipse cx="150" cy="40" rx="46" ry="14" fill="rgba(255,255,255,.35)" stroke="rgba(255,255,255,.4)" stroke-width=".6"/>
+          <text class="ms3" x="150" y="38">rooms</text>
+          <text class="mn3" x="150" y="48">kitchen  •  bathroom</text>
+
+          <ellipse cx="46" cy="65" rx="42" ry="14" fill="rgba(255,255,255,.35)" stroke="rgba(255,255,255,.4)" stroke-width=".6"/>
+          <text class="ms3" x="46" y="63">furniture</text>
+          <text class="mn3" x="46" y="73">sofa  •  table  •  bed</text>
+
+          <ellipse cx="252" cy="65" rx="44" ry="14" fill="rgba(255,255,255,.35)" stroke="rgba(255,255,255,.4)" stroke-width=".6"/>
+          <text class="ms3" x="252" y="63">activities</text>
+          <text class="mn3" x="252" y="73">eat  •  sleep  •  read</text>
+
+          <ellipse cx="46" cy="170" rx="44" ry="14" fill="rgba(255,255,255,.35)" stroke="rgba(255,255,255,.4)" stroke-width=".6"/>
+          <text class="ms3" x="46" y="168">adjectives</text>
+          <text class="mn3" x="46" y="178">big  •  small  •  cosy</text>
+
+          <ellipse cx="252" cy="170" rx="46" ry="14" fill="rgba(255,255,255,.35)" stroke="rgba(255,255,255,.4)" stroke-width=".6"/>
+          <text class="ms3" x="252" y="168">family</text>
+          <text class="mn3" x="252" y="178">mum  •  dad  •  sister</text>
+
+          <ellipse cx="150" cy="196" rx="46" ry="14" fill="rgba(255,255,255,.35)" stroke="rgba(255,255,255,.4)" stroke-width=".6"/>
+          <text class="ms3" x="150" y="194">time of day</text>
+          <text class="mn3" x="150" y="204">morning  •  evening</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">💬 Sentence Starters</div>
+      <div class="starters">
+        <div class="starter">I live in a <span>house / flat.</span></div>
+        <div class="starter">My room is <span>big / small / cosy.</span></div>
+        <div class="starter">In my room I have <span>a bed, a desk and ___.</span></div>
+        <div class="starter">In the morning I <span>eat breakfast / brush my teeth.</span></div>
+        <div class="starter">After school I <span>watch TV / do my homework.</span></div>
+        <div class="starter">My favourite room is <span>the ___ because ___.</span></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">🎭 Your Dialogue – Fill In!</div>
+      <div class="scaffold">
+        <div class="bubble-wrap"><div class="speaker-lbl">Person A 🙋</div><div class="bubble a">Where do you live?</div></div>
+        <div class="bubble-wrap right"><div class="speaker-lbl">Person B 🙋</div><div class="bubble b">I live in a <span class="fill">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>.</div></div>
+        <div class="bubble-wrap"><div class="speaker-lbl">Person A 🙋</div><div class="bubble a">What is your favourite room?</div></div>
+        <div class="bubble-wrap right"><div class="speaker-lbl">Person B 🙋</div><div class="bubble b">I love the <span class="fill">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> because <span class="fill">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>.</div></div>
+        <div class="bubble-wrap"><div class="speaker-lbl">Person A 🙋</div><div class="bubble a">What do you do after school?</div></div>
+        <div class="bubble-wrap right"><div class="speaker-lbl">Person B 🙋</div><div class="bubble b">I <span class="fill">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>.</div></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">📦 More Vocabulary</div>
+      <div class="chips">
+        <span class="chip">🛋 living room</span><span class="chip">🛏 bedroom</span><span class="chip">🍳 kitchen</span>
+        <span class="chip">🚿 bathroom</span><span class="chip">🪴 garden</span><span class="chip">📚 read</span>
+        <span class="chip">🎮 play</span><span class="chip">📺 watch TV</span><span class="chip">🍽 eat dinner</span>
+        <span class="chip">upstairs</span><span class="chip">downstairs</span><span class="chip">next to</span>
+        <span class="chip">sofa</span><span class="chip">desk</span><span class="chip">window</span><span class="chip">door</span>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     TAB 4 – AT SCHOOL
+═══════════════════════════════════════════════════════════════════ -->
+<div class="tab-content" id="tab3">
+<div class="card theme4">
+  <div class="card-header">🏫 At School</div>
+  <div class="card-subtitle">Talk about your school day!</div>
+  <button class="print-btn no-print" onclick="window.print()">🖨 Print this page</button>
+  <div class="grid">
+
+    <div class="section">
+      <div class="section-title">🌟 Vocabulary Mindmap</div>
+      <div class="mindmap-wrap">
+        <svg viewBox="0 0 300 230" xmlns="http://www.w3.org/2000/svg">
+          <defs><style>.mn4{font-family:'Nunito',sans-serif;font-weight:700;font-size:10px;fill:#154360;text-anchor:middle}.ms4{font-family:'Nunito',sans-serif;font-size:8px;fill:rgba(255,255,255,.85);text-anchor:middle}.mc4{font-family:'Nunito',sans-serif;font-weight:800;font-size:12px;fill:#fff;text-anchor:middle}</style></defs>
+          <g stroke="rgba(255,255,255,.55)" stroke-width="1.2" stroke-dasharray="4 3" fill="none">
+            <line x1="150" y1="98" x2="150" y2="50"/><line x1="113" y1="107" x2="55" y2="73"/>
+            <line x1="187" y1="107" x2="245" y2="73"/><line x1="113" y1="128" x2="55" y2="162"/>
+            <line x1="187" y1="128" x2="245" y2="162"/><line x1="150" y1="138" x2="150" y2="185"/>
+          </g>
+          <ellipse cx="150" cy="118" rx="42" ry="24" fill="rgba(255,255,255,.5)"/>
+          <text class="mc4" x="150" y="115">At School</text>
+          <text class="mc4" x="150" y="128">🏫</text>
+
+          <ellipse cx="150" cy="40" rx="48" ry="14" fill="rgba(255,255,255,.35)" stroke="rgba(255,255,255,.4)" stroke-width=".6"/>
+          <text class="ms4" x="150" y="38">subjects</text>
+          <text class="mn4" x="150" y="48">Maths  •  English  •  Art</text>
+
+          <ellipse cx="46" cy="65" rx="44" ry="14" fill="rgba(255,255,255,.35)" stroke="rgba(255,255,255,.4)" stroke-width=".6"/>
+          <text class="ms4" x="46" y="63">objects</text>
+          <text class="mn4" x="46" y="73">pen  •  book  •  ruler</text>
+
+          <ellipse cx="252" cy="65" rx="46" ry="14" fill="rgba(255,255,255,.35)" stroke="rgba(255,255,255,.4)" stroke-width=".6"/>
+          <text class="ms4" x="252" y="63">opinions</text>
+          <text class="mn4" x="252" y="73">easy  •  hard  •  boring</text>
+
+          <ellipse cx="46" cy="170" rx="40" ry="14" fill="rgba(255,255,255,.35)" stroke="rgba(255,255,255,.4)" stroke-width=".6"/>
+          <text class="ms4" x="46" y="168">people</text>
+          <text class="mn4" x="46" y="178">teacher  •  friend</text>
+
+          <ellipse cx="252" cy="170" rx="46" ry="14" fill="rgba(255,255,255,.35)" stroke="rgba(255,255,255,.4)" stroke-width=".6"/>
+          <text class="ms4" x="252" y="168">actions</text>
+          <text class="mn4" x="252" y="178">write  •  read  •  listen</text>
+
+          <ellipse cx="150" cy="196" rx="50" ry="14" fill="rgba(255,255,255,.35)" stroke="rgba(255,255,255,.4)" stroke-width=".6"/>
+          <text class="ms4" x="150" y="194">school day</text>
+          <text class="mn4" x="150" y="204">lunch break  •  lesson</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">💬 Sentence Starters</div>
+      <div class="starters">
+        <div class="starter">My favourite subject is <span>_______________.</span></div>
+        <div class="starter">I like ___ because <span>it is fun / easy / interesting.</span></div>
+        <div class="starter">I don't like ___ because <span>it is difficult / boring.</span></div>
+        <div class="starter">We have ___ lessons <span>on Monday / today.</span></div>
+        <div class="starter">In my pencil case I have <span>a ___, a ___ and ___.</span></div>
+        <div class="starter">My teacher is <span>nice / strict / funny.</span></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">🎭 Your Dialogue – Fill In!</div>
+      <div class="scaffold">
+        <div class="bubble-wrap"><div class="speaker-lbl">Person A 🙋</div><div class="bubble a">What is your favourite subject?</div></div>
+        <div class="bubble-wrap right"><div class="speaker-lbl">Person B 🙋</div><div class="bubble b">I love <span class="fill">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> because it is <span class="fill">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>.</div></div>
+        <div class="bubble-wrap"><div class="speaker-lbl">Person A 🙋</div><div class="bubble a">Do you like your teacher?</div></div>
+        <div class="bubble-wrap right"><div class="speaker-lbl">Person B 🙋</div><div class="bubble b">Yes! My teacher is <span class="fill">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>.</div></div>
+        <div class="bubble-wrap"><div class="speaker-lbl">Person A 🙋</div><div class="bubble a">What do you have in your pencil case?</div></div>
+        <div class="bubble-wrap right"><div class="speaker-lbl">Person B 🙋</div><div class="bubble b">I have a <span class="fill">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>.</div></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">📦 More Vocabulary</div>
+      <div class="chips">
+        <span class="chip">✏️ pencil</span><span class="chip">📏 ruler</span><span class="chip">📖 textbook</span>
+        <span class="chip">🎒 schoolbag</span><span class="chip">🖊 pen</span><span class="chip">✂️ scissors</span>
+        <span class="chip">Maths</span><span class="chip">English</span><span class="chip">Science</span><span class="chip">PE</span><span class="chip">Art</span>
+        <span class="chip">Monday</span><span class="chip">break time</span><span class="chip">homework</span><span class="chip">classroom</span>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<footer>English Dialogue Worksheets &bull; Class 5 &bull; A1 Level &bull; geitner-hub.github.io/Lern-Apps</footer>
+
+<script>
+function showTab(i) {
+  document.querySelectorAll('.tab-btn').forEach((b, j) => b.classList.toggle('active', i === j));
+  document.querySelectorAll('.tab-content').forEach((c, j) => c.classList.toggle('active', i === j));
+}
+
+// LernApps.saveResult integration (optional – loads when navbar.js is present)
+if (typeof LernApps !== 'undefined' && LernApps.saveResult) {
+  LernApps.saveResult({ app: 'english-dialog-vorlagen', status: 'opened' });
+}
+</script>
+</body>
+</html>
