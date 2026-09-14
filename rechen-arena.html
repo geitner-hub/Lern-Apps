@@ -1,0 +1,1202 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Rechen-Arena – Lernwelt</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Bebas+Neue&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --accent: #00e5a0;
+    --accent-warm: #ffb347;
+    --bad: #ff6b6b;
+    --bg: #0d1117;
+    --card: #161b22;
+    --border: #30363d;
+    --border2: #21262d;
+    --text: #e6edf3;
+    --muted: #8b949e;
+    --leicht: #00e5a0;
+    --mittel: #ffb347;
+    --schwer: #ff6b9d;
+    /* Modus-Akzente */
+    --c-rennen: #00e5a0;
+    --c-ballon: #ffb347;
+    --c-mauer: #2dd4bf;
+    --c-huepfer: #6366f1;
+  }
+
+  body {
+    min-height: 100vh;
+    background: var(--bg);
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    padding-bottom: 90px; /* Platz für Home-Button */
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 0;
+    background-image:
+      linear-gradient(rgba(0,229,160,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,160,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+  }
+
+  #app { position: relative; z-index: 2; width: 100%; max-width: 560px; }
+
+  .hidden { display: none !important; }
+
+  /* ── Header ── */
+  .header { text-align: center; margin-bottom: 20px; position: relative; }
+  .title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2rem, 6vw, 3.4rem);
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    text-shadow: 0 0 20px rgba(0,229,160,0.6), 0 0 60px rgba(0,229,160,0.2);
+    line-height: 1;
+  }
+  .subtitle {
+    font-size: 0.68rem; color: var(--muted);
+    letter-spacing: 0.28em; margin-top: 4px;
+  }
+  .back-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    margin-bottom: 10px; padding: 6px 14px;
+    border-radius: 6px; border: 1px solid var(--border);
+    background: var(--border2); color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em;
+    cursor: pointer; transition: all .15s;
+  }
+  .back-btn:hover { color: var(--text); border-color: var(--muted); }
+
+  /* ── Card ── */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: clamp(20px, 5vw, 40px);
+    box-shadow: 0 0 0 1px var(--border2), 0 24px 48px rgba(0,0,0,0.6);
+  }
+
+  /* ── Buttons (allgemein) ── */
+  .btn { cursor: pointer; border: none; font-family: 'JetBrains Mono', monospace; transition: all 0.15s; }
+  .btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
+  .btn:active { transform: translateY(1px); }
+  .btn-confirm {
+    padding: 14px 20px; border-radius: 8px;
+    font-size: 1.1rem; font-weight: 800;
+    background: var(--border2); color: var(--accent);
+    border: 1px solid var(--border);
+  }
+  .btn-reset {
+    padding: 14px 18px; border-radius: 8px;
+    font-size: 0.85rem; font-weight: 700;
+    background: transparent; color: var(--muted);
+    border: 1px solid var(--border);
+  }
+
+  /* ── Settings (Startbildschirm) ── */
+  .big-sigma {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3.6rem; color: var(--border2);
+    line-height: 1; margin-bottom: 4px; text-align: center;
+  }
+  .start-title { text-align: center; font-weight: 800; font-size: 1rem; letter-spacing: 0.08em; margin-bottom: 6px; }
+  .start-desc { text-align: center; color: var(--muted); font-size: 0.78rem; margin-bottom: 22px; line-height: 1.6; }
+
+  .settings-label {
+    font-size: 0.68rem; color: var(--muted); letter-spacing: 0.15em;
+    font-weight: 800; margin-bottom: 8px;
+  }
+  .settings-block { margin-bottom: 24px; }
+
+  .level-row { display: flex; gap: 8px; margin-bottom: 18px; }
+  .level-btn {
+    flex: 1; padding: 12px 6px; border-radius: 8px;
+    font-size: 0.75rem; font-weight: 800; letter-spacing: 0.05em;
+    cursor: pointer; border: 2px solid var(--border);
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--border2); color: var(--muted);
+    transition: all 0.15s;
+  }
+  .level-btn:hover { filter: brightness(1.15); transform: translateY(-1px); }
+  .level-btn.active { color: var(--bg); border-color: transparent; }
+  .level-btn[data-range="klein"].active  { background: var(--leicht); box-shadow: 0 0 16px rgba(0,229,160,0.4); }
+  .level-btn[data-range="mittel"].active { background: var(--mittel); box-shadow: 0 0 16px rgba(255,179,71,0.4); }
+  .level-btn[data-range="gross"].active  { background: var(--schwer); box-shadow: 0 0 16px rgba(255,107,157,0.4); }
+
+  .op-row { display: flex; gap: 8px; }
+  .op-chip {
+    flex: 1; padding: 12px 0; border-radius: 8px;
+    font-size: 1rem; font-weight: 800;
+    cursor: pointer; border: 2px solid var(--border);
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--border2); color: var(--muted);
+    opacity: .4; transition: all .15s;
+  }
+  .op-chip.active { opacity: 1; color: var(--accent); border-color: var(--accent); box-shadow: 0 0 14px rgba(0,229,160,0.25); }
+
+  /* ── Modus-Kacheln ── */
+  .mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .mode-card {
+    text-align: left; padding: 16px 14px; border-radius: 10px;
+    background: var(--bg); border: 2px solid var(--border);
+    cursor: pointer; transition: all .15s;
+    font-family: 'JetBrains Mono', monospace; color: var(--text);
+  }
+  .mode-card:hover { transform: translateY(-3px); }
+  .mode-icon { font-size: 1.8rem; margin-bottom: 6px; }
+  .mode-name { font-weight: 800; font-size: 0.85rem; letter-spacing: 0.03em; margin-bottom: 4px; }
+  .mode-desc { font-size: 0.68rem; color: var(--muted); line-height: 1.5; }
+  .mc-rennen:hover  { border-color: var(--c-rennen);  box-shadow: 0 0 18px rgba(0,229,160,.25); }
+  .mc-ballon:hover  { border-color: var(--c-ballon);  box-shadow: 0 0 18px rgba(255,179,71,.25); }
+  .mc-mauer:hover   { border-color: var(--c-mauer);   box-shadow: 0 0 18px rgba(45,212,191,.3); }
+  .mc-huepfer:hover { border-color: var(--c-huepfer); box-shadow: 0 0 18px rgba(99,102,241,.3); }
+
+  @media (max-width: 420px) {
+    .mode-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ── Gemeinsame Spiel-HUD ── */
+  .meta-row {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 12px; font-size: 0.72rem; color: var(--muted); letter-spacing: 0.06em;
+  }
+  .meta-count { color: var(--accent); font-weight: 800; }
+  .meta-badge {
+    padding: 3px 10px; border-radius: 4px; font-size: 0.65rem;
+    font-weight: 800; letter-spacing: 0.1em;
+  }
+  .meta-badge.rennen  { background: rgba(0,229,160,.15);  color: var(--c-rennen); }
+  .meta-badge.ballon  { background: rgba(255,179,71,.15); color: var(--c-ballon); }
+  .meta-badge.mauer   { background: rgba(45,212,191,.16); color: var(--c-mauer); }
+  .meta-badge.huepfer { background: rgba(99,102,241,.18); color: var(--c-huepfer); }
+
+  .progress-track { height: 3px; background: var(--border2); border-radius: 2px; margin-bottom: 26px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 2px; transition: width .4s ease; }
+  .progress-fill.rennen { background: linear-gradient(90deg, var(--c-rennen), #00c97e); box-shadow: 0 0 8px rgba(0,229,160,.8); }
+
+  .question-display {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.4rem, 9vw, 4rem);
+    letter-spacing: 0.05em; line-height: 1;
+    margin-bottom: 10px; text-align: center;
+    transition: color .2s, text-shadow .2s;
+  }
+  .question-display.correct { color: var(--accent); text-shadow: 0 0 30px rgba(0,229,160,.8); }
+  .question-display.wrong   { color: var(--bad);    text-shadow: 0 0 30px rgba(255,107,107,.8); }
+
+  .feedback-line { min-height: 20px; margin-bottom: 14px; text-align: center; font-size: 0.75rem; letter-spacing: 0.08em; font-weight: 700; }
+  .feedback-line.correct { color: var(--accent); }
+  .feedback-line.wrong   { color: var(--bad); }
+
+  /* ── Rechenrennen: echte Rennbahn ── */
+  .runner-track {
+    position: relative; height: 56px; margin-bottom: 22px;
+    background: repeating-linear-gradient(90deg, #262b33 0 20px, #2f353f 20px 40px);
+    border: 2px solid var(--border); border-radius: 10px;
+    overflow: hidden;
+  }
+  .runner-track::before {
+    content: ''; position: absolute; top: 50%; left: 8px; right: 8px; height: 3px;
+    transform: translateY(-50%);
+    background-image: repeating-linear-gradient(90deg, rgba(255,255,255,.5) 0 12px, transparent 12px 26px);
+  }
+  .start-flag { position: absolute; left: 4px; top: 50%; transform: translateY(-50%); font-size: 1.1rem; z-index: 2; }
+  .finish-flag { position: absolute; right: 2px; top: 50%; transform: translateY(-50%); font-size: 1.4rem; z-index: 2; }
+  .runner-emoji {
+    position: absolute; top: 50%; font-size: 1.7rem; z-index: 3;
+    /* scaleX(-1) dreht den Läufer so, dass er nach rechts – in Laufrichtung – schaut */
+    transform: translate(-50%, -80%) scaleX(-1);
+    transition: left .4s ease;
+    animation: runbounce .45s ease-in-out infinite;
+  }
+  @keyframes runbounce {
+    0%, 100% { margin-top: 0; }
+    50%      { margin-top: -6px; }
+  }
+
+  .input-row { display: flex; gap: 10px; justify-content: center; }
+  .answer-input {
+    width: 150px; padding: 14px 16px;
+    font-size: 1.5rem; text-align: center;
+    font-family: 'JetBrains Mono', monospace; font-weight: 800;
+    background: var(--bg); border: 2px solid var(--border);
+    border-radius: 8px; color: var(--text); outline: none;
+    -moz-appearance: textfield;
+  }
+  .answer-input::-webkit-inner-spin-button, .answer-input::-webkit-outer-spin-button { -webkit-appearance: none; }
+
+  /* ── Rundenzeit-Leiste (Ballon-Pop / Hüpfer) ── */
+  .round-timer-track { height: 5px; background: var(--border2); border-radius: 3px; overflow: hidden; margin-bottom: 18px; }
+  .round-timer-fill { height: 100%; width: 100%; background: linear-gradient(90deg, var(--accent-warm), var(--bad)); }
+
+  /* ── Ballon-Pop ── */
+  .option-field { position: relative; height: 210px; }
+  .balloon {
+    position: absolute; transform: translateX(-50%);
+    top: 100px; width: 68px; height: 68px;
+    border: none; cursor: pointer;
+    font-family: 'JetBrains Mono', monospace; font-weight: 800; font-size: 1rem;
+    color: var(--bg); display: flex; align-items: center; justify-content: center;
+    transition: opacity .3s, transform .3s;
+    background: radial-gradient(circle at 35% 30%, #ffe1b8, var(--c-ballon));
+    box-shadow: 0 8px 18px rgba(255,179,71,.35);
+    animation: bob 2.4s ease-in-out infinite;
+    border-radius: 50% 50% 50% 50% / 58% 58% 42% 42%;
+  }
+  .balloon::after {
+    content: ''; position: absolute; bottom: -14px; left: 50%;
+    width: 2px; height: 14px; background: rgba(255,255,255,.35);
+  }
+  @keyframes bob { 0%,100% { transform: translate(-50%, 0); } 50% { transform: translate(-50%, -14px); } }
+
+  .balloon.pop-correct { background: var(--accent); box-shadow: 0 0 24px rgba(0,229,160,.7); transform: translate(-50%,-50%) scale(1.3); opacity: 0; }
+  .balloon.pop-wrong   { background: var(--bad);    box-shadow: 0 0 24px rgba(255,107,107,.7); transform: translate(-50%,-50%) scale(.5); opacity: 0; }
+
+  /* ── Zahlenmauern ── */
+  .mauer-pyramid { display: flex; flex-direction: column; align-items: center; gap: clamp(3px, 1.4vw, 7px); margin-bottom: 6px; }
+  .mauer-row { display: flex; gap: clamp(3px, 1.4vw, 7px); }
+  .mauer-brick {
+    width: clamp(32px, 11vw, 60px); height: clamp(28px, 9vw, 46px); border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace; font-weight: 800; font-size: clamp(0.62rem, 2.6vw, 0.95rem);
+    background: linear-gradient(160deg, #b5651d, #8a4513);
+    border: 2px solid #6b350f;
+    box-shadow: inset 0 -3px 0 rgba(0,0,0,.25), inset 0 3px 0 rgba(255,255,255,.1);
+    color: #fff2df;
+  }
+  .mauer-brick.blank {
+    background: linear-gradient(160deg, #4b5563, #374151);
+    border-color: #263041;
+  }
+  .mauer-brick.blank input {
+    width: 100%; height: 100%; background: transparent; border: none; border-radius: 4px;
+    color: #fff; font-family: inherit; font-weight: 800; font-size: 1rem;
+    text-align: center; outline: none; -moz-appearance: textfield;
+  }
+  .mauer-brick.blank input::-webkit-inner-spin-button,
+  .mauer-brick.blank input::-webkit-outer-spin-button { -webkit-appearance: none; }
+  .mauer-brick.correct { background: linear-gradient(160deg, #1fae7a, #0e7a54); border-color: #0a5e40; }
+  .mauer-brick.wrong   { background: linear-gradient(160deg, #e0554f, #a83a35); border-color: #7a2622; }
+
+  /* ── Zahlen-Hüpfer: Biome + Fluss ── */
+  .huepfer-scene {
+    position: relative; padding: 18px 10px 22px;
+    border-radius: 12px; border: 2px solid var(--border);
+    margin-bottom: 18px; overflow: hidden;
+    transition: background .3s ease;
+  }
+  .huepfer-scene.biome-wiese    { background: repeating-linear-gradient(135deg, #223822 0 26px, #26402a 26px 52px); }
+  .huepfer-scene.biome-wueste   { background: repeating-linear-gradient(135deg, #6b4a23 0 26px, #7c5830 26px 52px); }
+  .huepfer-scene.biome-eis      { background: repeating-linear-gradient(135deg, #234152 0 26px, #2d5266 26px 52px); }
+  .huepfer-scene.biome-lava     { background: repeating-linear-gradient(135deg, #3a1414 0 26px, #4a1a1a 26px 52px); }
+  .huepfer-scene.biome-weltraum { background: repeating-linear-gradient(135deg, #12132b 0 26px, #191b3a 26px 52px); }
+
+  .bank-label { position: absolute; top: 4px; font-size: 1.2rem; z-index: 2; }
+  .bank-label.start { left: 6px; }
+  .bank-label.end { right: 6px; }
+
+  .river-track {
+    position: relative; height: 50px; border-radius: 10px; margin-top: 22px;
+    box-shadow: inset 0 0 16px rgba(0,0,0,.35);
+    overflow: visible; transition: background .3s ease;
+  }
+  .river-track.track-wiese    { background: linear-gradient(180deg, rgba(56,124,214,.55), rgba(30,90,168,.8)); }
+  .river-track.track-wueste   { background: linear-gradient(180deg, rgba(224,168,84,.55), rgba(184,122,40,.8)); }
+  .river-track.track-eis      { background: linear-gradient(180deg, rgba(180,224,255,.6), rgba(120,180,224,.85)); }
+  .river-track.track-lava     { background: linear-gradient(180deg, rgba(255,110,60,.6), rgba(196,42,20,.85)); }
+  .river-track.track-weltraum { background: linear-gradient(180deg, rgba(110,90,200,.5), rgba(24,16,60,.9)); }
+
+  .river-fill { position: absolute; inset: 0; width: 0%; background: rgba(255,255,255,.08); border-radius: 10px 0 0 10px; transition: width .4s ease; }
+
+  .pad-dot { position: absolute; top: 50%; width: 16px; height: 16px; border-radius: 50%; transform: translate(-50%, -50%); }
+  .track-wiese    .pad-dot { background: #7fae4f; border: 2px solid #557a3d; }
+  .track-wueste   .pad-dot { background: #d9bd85; border: 2px solid #a9895a; }
+  .track-eis      .pad-dot { background: #eaf6ff; border: 2px solid #9fd1ef; }
+  .track-lava     .pad-dot { background: #3a1a12; border: 2px solid #1f0d09; }
+  .track-weltraum .pad-dot { background: #c9c9ff; border: 2px solid #8b8bd9; box-shadow: 0 0 6px rgba(201,201,255,.8); }
+
+  .frog-emoji {
+    position: absolute; top: 50%; font-size: 1.7rem; z-index: 3;
+    transform: translate(-50%, -60%);
+    left: 0%; transition: left .4s ease;
+  }
+  .frog-emoji.hop { animation: frogHop .5s ease-out; }
+  @keyframes frogHop {
+    0%   { margin-top: 0; }
+    40%  { margin-top: -30px; }
+    100% { margin-top: 0; }
+  }
+
+  .level-banner {
+    position: absolute; inset: 0; z-index: 5;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(13,17,23,.85); border-radius: 10px;
+    animation: fadeUp .3s ease both;
+  }
+  .level-banner-text {
+    font-family: 'Bebas Neue', sans-serif; font-size: 1.7rem; letter-spacing: .06em;
+    color: var(--accent); text-shadow: 0 0 20px rgba(0,229,160,.7); text-align: center; padding: 0 16px;
+  }
+
+  .lane-row { display: flex; gap: 10px; justify-content: center; }
+  .lane-btn {
+    flex: 1; max-width: 120px; padding: 18px 6px; border-radius: 10px;
+    font-size: 1.2rem; font-weight: 800;
+    background: var(--bg); border: 2px solid var(--border); color: var(--text);
+    cursor: pointer; font-family: 'JetBrains Mono', monospace; transition: all .15s;
+  }
+  .lane-btn:hover:not(:disabled) { border-color: var(--c-huepfer); transform: translateY(-2px); }
+  .lane-btn.lane-correct { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+  .lane-btn.lane-wrong   { background: var(--bad); color: var(--bg); border-color: var(--bad); }
+  .lane-btn:disabled { cursor: default; }
+
+  /* ── Ergebnis ── */
+  .result-btn-row { display: flex; gap: 10px; margin-top: 22px; }
+  .result-btn-row .btn { flex: 1; }
+  .start-btn {
+    padding: 14px; border-radius: 8px; font-size: .85rem; font-weight: 800; letter-spacing: .1em;
+    background: var(--accent); color: var(--bg); box-shadow: 0 0 20px rgba(0,229,160,.35);
+  }
+
+  @keyframes fadeUp { from { opacity:0; transform: translateY(14px); } to { opacity:1; transform: translateY(0); } }
+  .screen { animation: fadeUp .25s ease both; }
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="header">
+    <button id="back-btn" class="back-btn hidden" onclick="goToStart()">← Zurück</button>
+    <div class="title">🧮 RECHEN-ARENA</div>
+    <div class="subtitle">GRUNDRECHENARTEN · KOPFRECHNEN 5. KLASSE</div>
+  </div>
+
+  <div class="card" id="card">
+
+    <!-- ═══════════ STARTBILDSCHIRM ═══════════ -->
+    <div id="screen-start" class="screen">
+      <div class="big-sigma">∑</div>
+      <div class="start-title">WÄHLE DEINEN MODUS</div>
+      <div class="start-desc">Übe die Grundrechenarten in vier schnellen Mini-Spielen –
+        das, was du in der 4. Klasse gelernt hast!</div>
+
+      <div class="settings-block">
+        <div class="settings-label">ZAHLENRAUM</div>
+        <div class="level-row" id="range-row">
+          <button class="level-btn active" data-range="klein"  onclick="setRange('klein')">BIS 100</button>
+          <button class="level-btn" data-range="mittel" onclick="setRange('mittel')">BIS 1.000</button>
+          <button class="level-btn" data-range="gross"  onclick="setRange('gross')">BIS 10.000</button>
+        </div>
+
+        <div class="settings-label">RECHENARTEN</div>
+        <div class="op-row" id="op-row">
+          <button class="op-chip active" data-op="+">+</button>
+          <button class="op-chip active" data-op="-">−</button>
+          <button class="op-chip active" data-op="×">×</button>
+          <button class="op-chip active" data-op="÷">÷</button>
+        </div>
+      </div>
+
+      <div class="mode-grid">
+        <button class="mode-card mc-rennen" onclick="startMode('rennen')">
+          <div class="mode-icon">🏁</div>
+          <div class="mode-name">Rechenrennen</div>
+          <div class="mode-desc">Tippe so viele Ergebnisse wie möglich auf Zeit.</div>
+        </button>
+        <button class="mode-card mc-ballon" onclick="startMode('ballon')">
+          <div class="mode-icon">🎈</div>
+          <div class="mode-name">Ballon-Pop</div>
+          <div class="mode-desc">Zerplatze den Ballon mit dem richtigen Ergebnis.</div>
+        </button>
+        <button class="mode-card mc-mauer" onclick="startMode('mauer')">
+          <div class="mode-icon">🧱</div>
+          <div class="mode-name">Zahlenmauern</div>
+          <div class="mode-desc">Rechne die Mauer von unten nach oben – ganz ohne Zeitdruck.</div>
+        </button>
+        <button class="mode-card mc-huepfer" onclick="startMode('huepfer')">
+          <div class="mode-icon">🐸</div>
+          <div class="mode-name">Zahlen-Hüpfer</div>
+          <div class="mode-desc">5 Level, 5 Biome – hüpfe über Fluss, Wüste, Eis, Lava und All!</div>
+        </button>
+      </div>
+    </div>
+
+    <!-- ═══════════ RECHENRENNEN ═══════════ -->
+    <div id="screen-rennen" class="screen hidden">
+      <div class="meta-row">
+        <span>ZEIT: <span id="rennen-time" class="meta-count">90</span>s</span>
+        <span class="meta-badge rennen">RECHENRENNEN</span>
+        <span>RICHTIG: <span id="rennen-score" class="meta-count">0</span></span>
+      </div>
+      <div class="progress-track"><div class="progress-fill rennen" id="rennen-progress" style="width:0%"></div></div>
+      <div class="runner-track">
+        <span class="start-flag">🚩</span>
+        <span id="rennen-runner" class="runner-emoji" style="left:0%">🏃</span>
+        <span class="finish-flag">🏁</span>
+      </div>
+      <div class="question-display" id="rennen-question">? + ? =</div>
+      <div class="feedback-line" id="rennen-feedback"></div>
+      <div class="input-row">
+        <input type="number" id="rennen-input" class="answer-input" placeholder="?" autocomplete="off"
+               onkeydown="if(event.key==='Enter') checkRennen()" />
+        <button class="btn btn-confirm" onclick="checkRennen()">✓</button>
+      </div>
+    </div>
+
+    <!-- ═══════════ BALLON-POP ═══════════ -->
+    <div id="screen-ballon" class="screen hidden">
+      <div class="meta-row">
+        <span id="ballon-lives">❤️❤️❤️</span>
+        <span class="meta-badge ballon">BALLON-POP</span>
+        <span>PUNKTE: <span id="ballon-score" class="meta-count">0</span></span>
+      </div>
+      <div class="question-display" id="ballon-question">? + ? =</div>
+      <div class="round-timer-track"><div class="round-timer-fill" id="ballon-timer"></div></div>
+      <div class="option-field" id="ballon-field"></div>
+    </div>
+
+    <!-- ═══════════ ZAHLENMAUERN ═══════════ -->
+    <div id="screen-mauer" class="screen hidden">
+      <div class="meta-row">
+        <span>MAUER: <span id="mauer-wall" class="meta-count">1</span>/<span id="mauer-total">5</span></span>
+        <span class="meta-badge mauer">ZAHLENMAUERN</span>
+        <span>RICHTIG: <span id="mauer-score" class="meta-count">0</span></span>
+      </div>
+      <div class="mauer-pyramid" id="mauer-pyramid"></div>
+      <div class="feedback-line" id="mauer-feedback"></div>
+      <div class="input-row">
+        <button class="btn btn-confirm" id="mauer-check-btn" onclick="checkMauer()">✓ Prüfen</button>
+        <button class="btn start-btn hidden" id="mauer-next-btn" onclick="nextMauerStep()">Weiter →</button>
+      </div>
+    </div>
+
+    <!-- ═══════════ ZAHLEN-HÜPFER ═══════════ -->
+    <div id="screen-huepfer" class="screen hidden">
+      <div class="meta-row">
+        <span id="huepfer-lives">❤️❤️❤️</span>
+        <span class="meta-badge huepfer">HÜPFER · LEVEL <span id="huepfer-level">1</span>/5</span>
+        <span>SPRÜNGE: <span id="huepfer-score" class="meta-count">0</span>/50</span>
+      </div>
+      <div class="huepfer-scene biome-wiese" id="huepfer-scene">
+        <span class="bank-label start" id="huepfer-bank-start">🌳</span>
+        <span class="bank-label end" id="huepfer-bank-end">🏆</span>
+        <div class="river-track track-wiese" id="huepfer-river">
+          <div class="river-fill" id="huepfer-progress"></div>
+          <span class="frog-emoji" id="huepfer-frog">🐸</span>
+        </div>
+        <div class="level-banner hidden" id="huepfer-level-banner">
+          <div class="level-banner-text" id="huepfer-level-banner-text">LEVEL 1 GESCHAFFT!</div>
+        </div>
+      </div>
+      <div class="question-display" id="huepfer-question">? + ? =</div>
+      <div class="round-timer-track"><div class="round-timer-fill" id="huepfer-timer"></div></div>
+      <div class="lane-row">
+        <button class="lane-btn" id="lane-0"></button>
+        <button class="lane-btn" id="lane-1"></button>
+        <button class="lane-btn" id="lane-2"></button>
+      </div>
+    </div>
+
+    <!-- ═══════════ ERGEBNIS ═══════════ -->
+    <div id="screen-result" class="screen hidden">
+      <div class="big-sigma" id="result-emoji">🏆</div>
+      <div class="start-title" id="result-title">ERGEBNIS</div>
+      <div class="start-desc" id="result-text"></div>
+      <div class="result-btn-row">
+        <button class="btn start-btn" onclick="retryLastMode()">🔄 NOCHMAL</button>
+        <button class="btn btn-reset" onclick="goToStart()">◀ ANDERE MODI</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="navbar.js" onerror="console.log('navbar not found')"></script>
+<script>
+'use strict';
+
+/* ═══════════════════════════════════════════════════════
+   EINSTELLUNGEN
+   ═══════════════════════════════════════════════════════ */
+const settings = { range: 'klein', ops: ['+', '-', '×', '÷'] };
+let lastMode = null;
+
+function setRange(r) {
+  settings.range = r;
+  document.querySelectorAll('#range-row .level-btn')
+    .forEach(b => b.classList.toggle('active', b.dataset.range === r));
+}
+
+document.querySelectorAll('#op-row .op-chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    const op = chip.dataset.op;
+    const idx = settings.ops.indexOf(op);
+    if (idx >= 0) {
+      if (settings.ops.length === 1) return; // mindestens eine Rechenart muss aktiv bleiben
+      settings.ops.splice(idx, 1);
+    } else {
+      settings.ops.push(op);
+    }
+    chip.classList.toggle('active');
+  });
+});
+
+/* ═══════════════════════════════════════════════════════
+   AUFGABEN-GENERATOR
+   ═══════════════════════════════════════════════════════ */
+const RANGE_CFG = {
+  klein:  { addMin: 3,   addMax: 60,   multA: [2, 9],  multB: [2, 9]  },
+  mittel: { addMin: 15,  addMax: 500,  multA: [2, 10], multB: [2, 12] },
+  gross:  { addMin: 100, addMax: 5000, multA: [2, 10], multB: [6, 50] }
+};
+
+function randInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function generateTask(range, ops) {
+  const cfg = RANGE_CFG[range];
+  const op = ops[randInt(0, ops.length - 1)];
+  let a, b, answer, text;
+
+  if (op === '+') {
+    a = randInt(cfg.addMin, cfg.addMax);
+    b = randInt(cfg.addMin, cfg.addMax);
+    answer = a + b;
+    text = `${a} + ${b}`;
+  } else if (op === '-') {
+    a = randInt(cfg.addMin, cfg.addMax);
+    b = randInt(cfg.addMin, a);
+    answer = a - b;
+    text = `${a} − ${b}`;
+  } else if (op === '×') {
+    a = randInt(cfg.multA[0], cfg.multA[1]);
+    b = randInt(cfg.multB[0], cfg.multB[1]);
+    answer = a * b;
+    text = `${a} × ${b}`;
+  } else { // ÷
+    a = randInt(cfg.multA[0], cfg.multA[1]);       // Divisor
+    const q = randInt(cfg.multB[0], cfg.multB[1]); // Ergebnis (glatt, ohne Rest)
+    const dividend = a * q;
+    answer = q;
+    text = `${dividend} ÷ ${a}`;
+  }
+  return { text, answer };
+}
+
+function generateOptions(answer, count = 4) {
+  const opts = new Set([answer]);
+  const spread = Math.max(3, Math.round(Math.abs(answer) * 0.2));
+  let guard = 0;
+  while (opts.size < count && guard < 60) {
+    guard++;
+    const delta = randInt(-spread, spread);
+    if (delta === 0) continue;
+    const val = answer + delta;
+    if (val < 0 || opts.has(val)) continue;
+    opts.add(val);
+  }
+  while (opts.size < count) opts.add(answer + opts.size * (spread + 1));
+  return shuffle([...opts]);
+}
+
+/* ═══════════════════════════════════════════════════════
+   BILDSCHIRM-STEUERUNG
+   ═══════════════════════════════════════════════════════ */
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+  document.getElementById('screen-' + id).classList.remove('hidden');
+  document.getElementById('back-btn').classList.toggle('hidden', id === 'start');
+}
+
+function stopAllTimers() {
+  if (rennenState) { clearInterval(rennenState.timer); rennenState.active = false; }
+  if (optState) { clearTimeout(optState.roundTimer); optState.active = false; }
+  if (huepferState) { clearTimeout(huepferState.roundTimer); huepferState.active = false; }
+  if (mauerState) { mauerState.active = false; }
+}
+
+function goToStart() {
+  stopAllTimers();
+  showScreen('start');
+}
+
+function startMode(mode) {
+  lastMode = mode;
+  if (mode === 'rennen') startRennen();
+  else if (mode === 'ballon') startOptionsRound('ballon');
+  else if (mode === 'mauer') startMauer();
+  else if (mode === 'huepfer') startHuepfer();
+}
+
+function retryLastMode() { if (lastMode) startMode(lastMode); }
+
+function showResult({ emoji, title, text, saveLabel, saveScore, saveMax }) {
+  document.getElementById('result-emoji').textContent = emoji;
+  document.getElementById('result-title').textContent = title;
+  document.getElementById('result-text').textContent = text;
+  showScreen('result');
+  if (window.LernApps) {
+    LernApps.saveResult({ score: saveScore, max: saveMax, label: saveLabel });
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   MODUS 1 — RECHENRENNEN (Zeit + Tippen)
+   ═══════════════════════════════════════════════════════ */
+const RENNEN_TIME = 90;   // Sekunden gesamt
+const RENNEN_TARGET = 15; // richtige Aufgaben bis zum Ziel
+
+let rennenState = null;
+let rennenTask = null;
+
+function startRennen() {
+  showScreen('rennen');
+  rennenState = { score: 0, attempts: 0, time: RENNEN_TIME, target: RENNEN_TARGET, active: true, timer: null };
+  document.getElementById('rennen-score').textContent = 0;
+  document.getElementById('rennen-time').textContent = RENNEN_TIME;
+  document.getElementById('rennen-progress').style.width = '0%';
+  document.getElementById('rennen-runner').style.left = '0%';
+  document.getElementById('rennen-feedback').textContent = '';
+  document.getElementById('rennen-feedback').className = 'feedback-line';
+  nextRennenTask();
+  const inp = document.getElementById('rennen-input');
+  inp.value = '';
+  inp.focus();
+  rennenState.timer = setInterval(() => {
+    rennenState.time--;
+    document.getElementById('rennen-time').textContent = rennenState.time;
+    if (rennenState.time <= 0) endRennen();
+  }, 1000);
+}
+
+function nextRennenTask() {
+  rennenTask = generateTask(settings.range, settings.ops);
+  document.getElementById('rennen-question').textContent = rennenTask.text + ' =';
+  document.getElementById('rennen-input').value = '';
+}
+
+function checkRennen() {
+  if (!rennenState || !rennenState.active) return;
+  const inp = document.getElementById('rennen-input');
+  const val = parseInt(inp.value, 10);
+  const disp = document.getElementById('rennen-question');
+  const fb = document.getElementById('rennen-feedback');
+  rennenState.attempts++;
+
+  if (val === rennenTask.answer) {
+    rennenState.score++;
+    disp.className = 'question-display correct';
+    fb.textContent = '✓ Richtig!';
+    fb.className = 'feedback-line correct';
+    document.getElementById('rennen-score').textContent = rennenState.score;
+    const pct = Math.min(100, (rennenState.score / rennenState.target) * 100);
+    document.getElementById('rennen-progress').style.width = pct + '%';
+    document.getElementById('rennen-runner').style.left = Math.min(94, pct) + '%';
+    if (rennenState.score >= rennenState.target) { endRennen(); return; }
+  } else {
+    disp.className = 'question-display wrong';
+    fb.textContent = `✗ Richtig wäre: ${rennenTask.answer}`;
+    fb.className = 'feedback-line wrong';
+  }
+  setTimeout(() => {
+    if (!rennenState || !rennenState.active) return;
+    disp.className = 'question-display';
+    nextRennenTask();
+    inp.focus();
+  }, val === rennenTask.answer ? 350 : 1100);
+}
+
+function endRennen() {
+  if (!rennenState || !rennenState.active) return;
+  rennenState.active = false;
+  clearInterval(rennenState.timer);
+  const zielErreicht = rennenState.score >= rennenState.target;
+  showResult({
+    emoji: zielErreicht ? '🏆' : '🏁',
+    title: zielErreicht ? 'ZIEL ERREICHT!' : 'ZEIT ABGELAUFEN!',
+    text: `Du hast ${rennenState.score} von ${rennenState.attempts} Aufgaben richtig gelöst.`,
+    saveLabel: `Rennen: ${rennenState.score}`,
+    saveScore: rennenState.score,
+    saveMax: Math.max(rennenState.attempts, 1)
+  });
+}
+
+/* ═══════════════════════════════════════════════════════
+   MODUS 2 — BALLON-POP
+   (Aufgabe + 4 klickbare Ballons, Leben statt hartem Limit)
+   ═══════════════════════════════════════════════════════ */
+const OPT_ROUND_TIME_MS = 13000;
+
+let optState = null;
+
+function startOptionsRound(mode) {
+  showScreen(mode);
+  optState = { mode, score: 0, lives: 3, answered: 0, maxAnswers: 12, roundTimer: null, active: true };
+  updateOptHud(mode);
+  nextOptRound(mode);
+}
+
+function updateOptHud(mode) {
+  document.getElementById(mode + '-score').textContent = optState.score;
+  document.getElementById(mode + '-lives').textContent = '❤️'.repeat(Math.max(0, optState.lives));
+}
+
+function nextOptRound(mode) {
+  if (!optState || !optState.active) return;
+  if (optState.answered >= optState.maxAnswers || optState.lives <= 0) {
+    return endOptionsRound(mode);
+  }
+  const task = generateTask(settings.range, settings.ops);
+  optState.currentTask = task;
+  document.getElementById(mode + '-question').textContent = task.text + ' =';
+
+  const options = generateOptions(task.answer);
+  const field = document.getElementById(mode + '-field');
+  field.innerHTML = '';
+  const positions = shuffle([8, 32, 56, 78]);
+  options.forEach((opt, i) => {
+    const el = document.createElement('button');
+    el.className = 'balloon';
+    el.textContent = opt;
+    el.style.left = positions[i] + '%';
+    el.style.animationDelay = (i * 0.15) + 's';
+    el.onclick = () => handleOptAnswer(mode, opt === task.answer, el);
+    field.appendChild(el);
+  });
+
+  const bar = document.getElementById(mode + '-timer');
+  bar.style.transition = 'none';
+  bar.style.width = '100%';
+  requestAnimationFrame(() => {
+    bar.style.transition = `width ${OPT_ROUND_TIME_MS / 1000}s linear`;
+    bar.style.width = '0%';
+  });
+  clearTimeout(optState.roundTimer);
+  optState.roundTimer = setTimeout(() => handleOptTimeout(mode), OPT_ROUND_TIME_MS);
+}
+
+function handleOptAnswer(mode, correct, el) {
+  if (!optState || !optState.active) return;
+  clearTimeout(optState.roundTimer);
+  document.querySelectorAll(`#${mode}-field button`).forEach(b => b.disabled = true);
+  optState.answered++;
+  if (correct) {
+    optState.score++;
+    el.classList.add('pop-correct');
+  } else {
+    optState.lives--;
+    el.classList.add('pop-wrong');
+  }
+  updateOptHud(mode);
+  setTimeout(() => nextOptRound(mode), 500);
+}
+
+function handleOptTimeout(mode) {
+  if (!optState || !optState.active) return;
+  optState.answered++;
+  optState.lives--;
+  document.querySelectorAll(`#${mode}-field button`).forEach(b => b.disabled = true);
+  updateOptHud(mode);
+  setTimeout(() => nextOptRound(mode), 400);
+}
+
+function endOptionsRound(mode) {
+  if (!optState) return;
+  optState.active = false;
+  const won = optState.lives > 0;
+  showResult({
+    emoji: won ? '🎉' : '💥',
+    title: won ? 'GESCHAFFT!' : 'KEINE LEBEN MEHR!',
+    text: `Du hast ${optState.score} von ${optState.answered} Aufgaben richtig gelöst.`,
+    saveLabel: `Ballon-Pop: ${optState.score}`,
+    saveScore: optState.score,
+    saveMax: Math.max(optState.answered, 1)
+  });
+}
+
+/* ═══════════════════════════════════════════════════════
+   MODUS 3 — ZAHLENMAUERN
+   (klassische Zahlenmauer, kein Zeitdruck, Fokus Verständnis)
+   ═══════════════════════════════════════════════════════ */
+const MAUER_CFG = { klein: [1, 10], mittel: [3, 30], gross: [8, 80] };
+const MAUER_WALL_COUNT = 5;
+const MAUER_BASE = 6; // Anzahl Steine in der Grundreihe (= Anzahl Ebenen der Mauer)
+
+let mauerState = null;
+
+function startMauer() {
+  showScreen('mauer');
+  mauerState = {
+    wallIndex: 0, totalWalls: MAUER_WALL_COUNT,
+    attemptsThisWall: 0, correctFirstTry: 0,
+    startTime: Date.now(), active: true, current: null
+  };
+  document.getElementById('mauer-total').textContent = MAUER_WALL_COUNT;
+  nextMauerWall();
+}
+
+function buildZahlenmauer(range) {
+  const [lo, hi] = MAUER_CFG[range];
+
+  // Grundreihe zufällig füllen, alle weiteren Ebenen additiv daraus ableiten
+  const rows = [Array.from({ length: MAUER_BASE }, () => randInt(lo, hi))];
+  for (let r = 1; r < MAUER_BASE; r++) {
+    const prev = rows[r - 1];
+    const row = [];
+    for (let i = 0; i < prev.length - 1; i++) row.push(prev[i] + prev[i + 1]);
+    rows.push(row);
+  }
+
+  // ── Lösbarkeits-Check ──
+  // Jeder Stein oberhalb der Grundreihe erfüllt: Stein = linkes Kind + rechtes Kind.
+  // Ausgehend von den aktuell "bekannten" Steinen wird so lange weitergerechnet
+  // (addieren, wenn beide Kinder bekannt sind / subtrahieren, wenn Elternstein +
+  // ein Kind bekannt sind), bis nichts mehr dazukommt.
+  const key = (r, c) => r + '_' + c;
+  const allKeys = [];
+  rows.forEach((row, r) => row.forEach((_, c) => allKeys.push(key(r, c))));
+
+  const triples = []; // [Elternstein, linkes Kind, rechtes Kind]
+  for (let r = 1; r < MAUER_BASE; r++) {
+    for (let c = 0; c < rows[r].length; c++) {
+      triples.push([key(r, c), key(r - 1, c), key(r - 1, c + 1)]);
+    }
+  }
+
+  function propagate(knownSet) {
+    const derived = new Set(knownSet);
+    let changed = true;
+    while (changed) {
+      changed = false;
+      for (const [p, l, rr] of triples) {
+        const pK = derived.has(p), lK = derived.has(l), rK = derived.has(rr);
+        const count = (pK ? 1 : 0) + (lK ? 1 : 0) + (rK ? 1 : 0);
+        if (count === 2) {
+          if (!pK) { derived.add(p); changed = true; }
+          else if (!lK) { derived.add(l); changed = true; }
+          else if (!rK) { derived.add(rr); changed = true; }
+        }
+      }
+    }
+    return derived;
+  }
+
+  // In zufälliger Reihenfolge so viele Steine wie möglich verdecken, ohne dass die
+  // Mauer unlösbar wird -> jedes Mal eine andere Auswahl an vorgegebenen Steinen
+  // (mal die Grundreihe, mal verstreut über die ganze Mauer), immer nur so viele
+  // wie nötig plus ein paar wenige mehr, je nachdem wie der Zufall die Reihenfolge mischt.
+  let known = new Set(allKeys);
+  shuffle([...allKeys]).forEach(k => {
+    known.delete(k);
+    if (propagate(known).size < allKeys.length) known.add(k); // ohne diesen Stein nicht mehr lösbar -> zurück
+  });
+
+  const cells = [];
+  rows.forEach((row, r) => row.forEach((val, c) => {
+    cells.push({ row: r, col: c, val, blank: !known.has(key(r, c)) });
+  }));
+  return { cells };
+}
+
+function makeMauerBrick(val, isBlank) {
+  const brick = document.createElement('div');
+  brick.className = 'mauer-brick' + (isBlank ? ' blank' : '');
+  if (isBlank) {
+    brick.dataset.answer = val;
+    const input = document.createElement('input');
+    input.type = 'number';
+    input.inputMode = 'numeric';
+    input.autocomplete = 'off';
+    input.onkeydown = (e) => { if (e.key === 'Enter') checkMauer(); };
+    brick.appendChild(input);
+  } else {
+    brick.textContent = val;
+  }
+  return brick;
+}
+
+function renderMauer() {
+  const wrap = document.getElementById('mauer-pyramid');
+  wrap.innerHTML = '';
+  const { cells } = mauerState.current;
+
+  for (let r = MAUER_BASE - 1; r >= 0; r--) {
+    const rowEl = document.createElement('div');
+    rowEl.className = 'mauer-row';
+    cells.filter(c => c.row === r).sort((x, y) => x.col - y.col)
+      .forEach(c => rowEl.appendChild(makeMauerBrick(c.val, c.blank)));
+    wrap.appendChild(rowEl);
+  }
+
+  const inputs = wrap.querySelectorAll('input');
+  if (inputs.length) inputs[0].focus();
+}
+
+function nextMauerWall() {
+  if (!mauerState || !mauerState.active) return;
+  if (mauerState.wallIndex >= mauerState.totalWalls) return endMauer();
+  mauerState.attemptsThisWall = 0;
+  mauerState.current = buildZahlenmauer(settings.range);
+  renderMauer();
+  document.getElementById('mauer-wall').textContent = mauerState.wallIndex + 1;
+  document.getElementById('mauer-score').textContent = mauerState.correctFirstTry;
+  document.getElementById('mauer-feedback').textContent = '';
+  document.getElementById('mauer-feedback').className = 'feedback-line';
+  document.getElementById('mauer-check-btn').classList.remove('hidden');
+  document.getElementById('mauer-next-btn').classList.add('hidden');
+}
+
+function checkMauer() {
+  if (!mauerState || !mauerState.active) return;
+  mauerState.attemptsThisWall++;
+  let allCorrect = true;
+  document.querySelectorAll('#mauer-pyramid .mauer-brick.blank').forEach(brick => {
+    if (brick.classList.contains('correct')) return; // bereits richtig & gesperrt
+    const input = brick.querySelector('input');
+    const val = parseInt(input.value, 10);
+    const answer = parseInt(brick.dataset.answer, 10);
+    if (val === answer) {
+      brick.classList.add('correct');
+      brick.classList.remove('wrong');
+      input.disabled = true;
+    } else {
+      brick.classList.add('wrong');
+      allCorrect = false;
+    }
+  });
+
+  const fb = document.getElementById('mauer-feedback');
+  if (allCorrect) {
+    if (mauerState.attemptsThisWall === 1) mauerState.correctFirstTry++;
+    fb.textContent = '✓ Mauer komplett!';
+    fb.className = 'feedback-line correct';
+    document.getElementById('mauer-score').textContent = mauerState.correctFirstTry;
+    document.getElementById('mauer-check-btn').classList.add('hidden');
+    document.getElementById('mauer-next-btn').classList.remove('hidden');
+  } else {
+    fb.textContent = '✗ Noch nicht ganz richtig – versuch es nochmal!';
+    fb.className = 'feedback-line wrong';
+  }
+}
+
+function nextMauerStep() {
+  mauerState.wallIndex++;
+  nextMauerWall();
+}
+
+function endMauer() {
+  if (!mauerState) return;
+  mauerState.active = false;
+  const seconds = Math.round((Date.now() - mauerState.startTime) / 1000);
+  showResult({
+    emoji: '🧱',
+    title: 'ALLE MAUERN GEBAUT!',
+    text: `Du hast ${mauerState.correctFirstTry} von ${mauerState.totalWalls} Mauern direkt beim ersten Versuch richtig gelöst (${seconds} Sekunden).`,
+    saveLabel: `Zahlenmauern: ${mauerState.correctFirstTry}/${mauerState.totalWalls}`,
+    saveScore: mauerState.correctFirstTry,
+    saveMax: mauerState.totalWalls
+  });
+}
+
+/* ═══════════════════════════════════════════════════════
+   MODUS 4 — ZAHLEN-HÜPFER
+   (5 Level = 5 Biome, je 10 Sprünge, Timer wird pro Level
+   kürzer, am Ende Highscore über alle Level)
+   ═══════════════════════════════════════════════════════ */
+const HUEPFER_LEVELS = [
+  { key: 'wiese',    name: 'Wiese',    start: '🌳', end: '🏆' },
+  { key: 'wueste',   name: 'Wüste',    start: '🌵', end: '🏝️' },
+  { key: 'eis',      name: 'Eis',      start: '🧊', end: '🏔️' },
+  { key: 'lava',     name: 'Lava',     start: '🌋', end: '💎' },
+  { key: 'weltraum', name: 'Weltraum', start: '🛰️', end: '🌟' }
+];
+const HUEPFER_STEPS_PER_LEVEL = 10;
+
+// Rundenzeit pro Level (1–5), abhängig vom gewählten Zahlenraum.
+// Nur "Weltraum" (Level 5) bleibt in jedem Zahlenraum wirklich knapp.
+const HUEPFER_TIMES_MS = {
+  klein:  [11000, 10000, 9000, 8000, 5000],
+  mittel: [28000, 23000, 18000, 14000, 10000],
+  gross:  [35000, 29000, 23000, 17000, 12000]
+};
+
+function huepferRoundTime(level) {
+  return HUEPFER_TIMES_MS[settings.range][level - 1];
+}
+
+let huepferState = null;
+
+function startHuepfer() {
+  showScreen('huepfer');
+  huepferState = {
+    level: 1, maxLevel: HUEPFER_LEVELS.length,
+    step: 0, maxSteps: HUEPFER_STEPS_PER_LEVEL,
+    lives: 3, totalScore: 0, totalAnswered: 0,
+    active: true, startTime: Date.now(), roundTimer: null
+  };
+  setupHuepferLevel();
+}
+
+function applyHuepferBiome(levelIdx) {
+  const cfg = HUEPFER_LEVELS[levelIdx];
+  const scene = document.getElementById('huepfer-scene');
+  const track = document.getElementById('huepfer-river');
+  scene.className = 'huepfer-scene biome-' + cfg.key;
+  track.className = 'river-track track-' + cfg.key;
+  document.getElementById('huepfer-bank-start').textContent = cfg.start;
+  document.getElementById('huepfer-bank-end').textContent = cfg.end;
+}
+
+function setupHuepferLevel() {
+  applyHuepferBiome(huepferState.level - 1);
+  document.getElementById('huepfer-level').textContent = huepferState.level;
+  huepferState.step = 0;
+
+  const river = document.getElementById('huepfer-river');
+  river.querySelectorAll('.pad-dot').forEach(p => p.remove());
+  for (let i = 0; i <= huepferState.maxSteps; i++) {
+    const pad = document.createElement('span');
+    pad.className = 'pad-dot';
+    pad.style.left = ((i / huepferState.maxSteps) * 100) + '%';
+    river.appendChild(pad);
+  }
+
+  updateHuepferHud(false);
+  nextHuepferRound();
+}
+
+function updateHuepferHud(animateHop) {
+  document.getElementById('huepfer-lives').textContent = '❤️'.repeat(Math.max(0, huepferState.lives));
+  document.getElementById('huepfer-score').textContent = huepferState.totalScore;
+  const pct = (huepferState.step / huepferState.maxSteps) * 100;
+  document.getElementById('huepfer-progress').style.width = pct + '%';
+  const frog = document.getElementById('huepfer-frog');
+  frog.style.left = pct + '%';
+  if (animateHop) {
+    frog.classList.remove('hop');
+    void frog.offsetWidth; // Reflow erzwingen, damit die Sprung-Animation neu startet
+    frog.classList.add('hop');
+  }
+}
+
+function nextHuepferRound() {
+  if (!huepferState || !huepferState.active) return;
+  const roundTime = huepferRoundTime(huepferState.level);
+  const task = generateTask(settings.range, settings.ops);
+  huepferState.currentTask = task;
+  document.getElementById('huepfer-question').textContent = task.text + ' =';
+
+  const options = shuffle(generateOptions(task.answer, 3));
+  for (let i = 0; i < 3; i++) {
+    const btn = document.getElementById('lane-' + i);
+    btn.textContent = options[i];
+    btn.disabled = false;
+    btn.className = 'lane-btn';
+    btn.onclick = () => handleHuepferAnswer(options[i] === task.answer, btn);
+  }
+
+  const bar = document.getElementById('huepfer-timer');
+  bar.style.transition = 'none';
+  bar.style.width = '100%';
+  requestAnimationFrame(() => {
+    bar.style.transition = `width ${roundTime / 1000}s linear`;
+    bar.style.width = '0%';
+  });
+  clearTimeout(huepferState.roundTimer);
+  huepferState.roundTimer = setTimeout(() => handleHuepferAnswer(false, null), roundTime);
+}
+
+function handleHuepferAnswer(correct, btn) {
+  if (!huepferState || !huepferState.active) return;
+  clearTimeout(huepferState.roundTimer);
+  for (let i = 0; i < 3; i++) document.getElementById('lane-' + i).disabled = true;
+  huepferState.totalAnswered++;
+
+  if (correct) {
+    huepferState.step++;
+    huepferState.totalScore++;
+    if (btn) btn.classList.add('lane-correct');
+    updateHuepferHud(true);
+    if (huepferState.step >= huepferState.maxSteps) {
+      setTimeout(() => completeHuepferLevel(), 650);
+      return;
+    }
+  } else {
+    huepferState.lives--;
+    if (btn) btn.classList.add('lane-wrong');
+    updateHuepferHud(false);
+    if (huepferState.lives <= 0) {
+      setTimeout(() => endHuepfer(false), 650);
+      return;
+    }
+  }
+  setTimeout(() => nextHuepferRound(), 550);
+}
+
+function completeHuepferLevel() {
+  if (!huepferState || !huepferState.active) return;
+  if (huepferState.level >= huepferState.maxLevel) {
+    endHuepfer(true);
+    return;
+  }
+  const banner = document.getElementById('huepfer-level-banner');
+  document.getElementById('huepfer-level-banner-text').textContent =
+    `LEVEL ${huepferState.level} GESCHAFFT!`;
+  banner.classList.remove('hidden');
+  setTimeout(() => {
+    banner.classList.add('hidden');
+    if (!huepferState || !huepferState.active) return;
+    huepferState.level++;
+    setupHuepferLevel();
+  }, 1600);
+}
+
+function endHuepfer(won) {
+  if (!huepferState) return;
+  huepferState.active = false;
+  const seconds = Math.round((Date.now() - huepferState.startTime) / 1000);
+  const maxScore = huepferState.maxLevel * huepferState.maxSteps;
+  if (won) {
+    showResult({
+      emoji: '🏆',
+      title: 'GEWONNEN! ALLE 5 LEVEL GESCHAFFT!',
+      text: `Highscore: ${huepferState.totalScore}/${maxScore} Sprünge in ${seconds} Sekunden.`,
+      saveLabel: `Hüpfer: ${huepferState.totalScore}/${maxScore}`,
+      saveScore: huepferState.totalScore,
+      saveMax: maxScore
+    });
+  } else {
+    showResult({
+      emoji: '💧',
+      title: 'INS WASSER GEFALLEN!',
+      text: `Du hast Level ${huepferState.level} von ${huepferState.maxLevel} erreicht – insgesamt ${huepferState.totalScore} von ${huepferState.totalAnswered} Sprüngen richtig.`,
+      saveLabel: `Hüpfer: Level ${huepferState.level}, ${huepferState.totalScore} Sprünge`,
+      saveScore: huepferState.totalScore,
+      saveMax: maxScore
+    });
+  }
+}
+</script>
+</body>
+</html>
