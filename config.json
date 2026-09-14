@@ -200,7 +200,11 @@
       "emoji": "🧮",
       "beschreibung": "Rechen-Spiele: Knacke deinen Rekord!",
       "hidden": false,
-      "klassen": [],
+      "klassen": [
+        5,
+        6,
+        7
+      ],
       "customTags": [],
       "aod": false
     }
