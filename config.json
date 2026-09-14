@@ -192,6 +192,17 @@
       "klassen": [],
       "customTags": [],
       "aod": false
+    },
+    {
+      "name": "Rechen-Arena",
+      "datei": "rechen-arena.html",
+      "fach": "Mathematik",
+      "emoji": "🧮",
+      "beschreibung": "Rechen-Spiele: Knacke deinen Rekord!",
+      "hidden": false,
+      "klassen": [],
+      "customTags": [],
+      "aod": false
     }
   ],
   "customTags": [
