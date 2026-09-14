@@ -188,7 +188,7 @@
       "fach": "Englisch",
       "emoji": "📱",
       "beschreibung": "Choose one!",
-      "hidden": false,
+      "hidden": true,
       "klassen": [],
       "customTags": [],
       "aod": false
