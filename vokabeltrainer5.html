@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>🇬🇧 VocabTrainer – Klasse 5</title>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: 'Nunito', sans-serif; min-height: 100vh; background: linear-gradient(160deg, #f5f3ff 0%, #fff7ed 100%); padding-bottom: 48px; }
@@ -70,7 +70,7 @@ header .logo p { font-size: 11px; color: rgba(255,255,255,0.75); }
 /* QUIZ */
 .q-card { background: linear-gradient(135deg,#7c6af7,#a78bfa); border-radius: 20px; padding: 28px 40px; text-align: center; color: #fff; box-shadow: 0 8px 32px rgba(124,106,247,0.25); width: 100%; }
 .q-card .qlang { font-size: 12px; opacity: .8; margin-bottom: 8px; }
-.q-card .qword { font-size: 38px; font-weight: 800; }
+.q-card .qword { font-size: 38px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 10px; }
 .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; }
 .opt-btn { padding: 14px 12px; border-radius: 14px; border: 2px solid #e5e7eb; background: #f3f0ff; font-weight: 600; font-size: 16px; cursor: pointer; transition: all .2s; font-family:'Nunito',sans-serif; }
 .opt-btn.correct { background: #bbf7d0; border-color: #16a34a; }
@@ -109,7 +109,7 @@ header .logo p { font-size: 11px; color: rgba(255,255,255,0.75); }
 /* SPEED */
 .speed-card { background: linear-gradient(135deg,#ec4899,#f472b6); border-radius: 20px; padding: 24px 32px; text-align: center; box-shadow: 0 8px 32px rgba(236,72,153,0.25); width: 100%; }
 .speed-card .slang { font-size: 12px; color: rgba(255,255,255,.8); margin-bottom: 8px; }
-.speed-card .sword { font-size: 38px; font-weight: 800; color: #fff; }
+.speed-card .sword { font-size: 38px; font-weight: 800; color: #fff; display: flex; align-items: center; justify-content: center; gap: 10px; }
 .speed-timer { font-size: 48px; font-weight: 900; color: #ec4899; }
 .speed-timer.urgent { color: #dc2626; animation: pulse .5s infinite; }
 @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.1)} }
@@ -127,6 +127,59 @@ header .logo p { font-size: 11px; color: rgba(255,255,255,0.75); }
 .result-btns { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 20px; }
 
 .hidden { display: none !important; }
+
+/* TOOLBAR (Aussprache-Infobar / A11y / Verlauf) */
+.toolbar { display: flex; justify-content: center; gap: 8px; padding: 8px 12px; background: #fff; border-bottom: 1px solid #eee; flex-wrap: wrap; }
+.tb-btn { background: #f3f4f6; border: 2px solid transparent; border-radius: 10px; padding: 6px 12px; font-size: 16px; cursor: pointer; transition: all .15s; font-family: 'Nunito', sans-serif; }
+.tb-btn:hover { background: #e5e7eb; }
+.tb-btn.active { background: #ede9fe; border-color: #7c6af7; }
+
+/* SPEECH BUTTONS */
+.btn-speak { padding: 8px 18px; border-radius: 10px; background: #f3f0ff; color: #7c6af7; border: 2px solid #ddd6fe; font-weight: 700; font-size: 13px; cursor: pointer; font-family: 'Nunito', sans-serif; display: inline-flex; align-items: center; gap: 6px; }
+.btn-speak:hover { background: #e0d9ff; }
+.btn-speak-inline { background: rgba(255,255,255,.25); border: none; color: #fff; border-radius: 50%; width: 34px; height: 34px; font-size: 16px; cursor: pointer; flex-shrink: 0; }
+.btn-speak-inline:hover { background: rgba(255,255,255,.4); }
+.btn-speak-sm { background: none; border: none; font-size: 15px; cursor: pointer; vertical-align: middle; margin-left: 4px; }
+
+/* WRONG WORDS BOX (Ergebnis) */
+.wrong-box { background: #fef2f2; border: 2px solid #fecaca; border-radius: 14px; padding: 14px 16px; margin-top: 16px; text-align: left; }
+.wrong-title { font-weight: 800; color: #dc2626; font-size: 13px; margin-bottom: 8px; }
+.wrong-item { display: flex; align-items: center; gap: 6px; padding: 5px 0; font-size: 14px; color: #374151; border-bottom: 1px solid #fee2e2; }
+.wrong-item:last-child { border-bottom: none; }
+.wrong-sep { color: #9ca3af; }
+
+/* HISTORY SCREEN */
+.history-list { display: flex; flex-direction: column; gap: 8px; }
+.history-item { background: #fff; border-radius: 12px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,.05); }
+.history-label { font-weight: 700; color: #374151; font-size: 14px; }
+.history-meta { font-size: 12px; color: #9ca3af; margin-top: 2px; }
+.history-pct { font-weight: 800; font-size: 18px; }
+.history-empty { text-align: center; color: #9ca3af; padding: 40px 20px; font-weight: 600; }
+
+/* ACCESSIBILITY MODES */
+body.a11y-large { font-size: 17px; }
+body.a11y-large .flip-word { font-size: 44px; }
+body.a11y-large .qword, body.a11y-large .fword, body.a11y-large .sword { font-size: 44px; }
+body.a11y-large .sscrambled { font-size: 34px; }
+body.a11y-large .opt-btn { font-size: 18px; padding: 16px 14px; }
+body.a11y-large .unit-btn, body.a11y-large .theme-btn { font-size: 16px; padding: 16px 18px; }
+body.a11y-large .mode-card h3 { font-size: 18px; }
+body.a11y-large .mode-card p { font-size: 13px; }
+body.a11y-large .btn-primary, body.a11y-large .btn-secondary { font-size: 17px; padding: 14px 30px; }
+body.a11y-large #fill-input { font-size: 22px; }
+
+body.a11y-contrast { background: #0b0b0f !important; }
+body.a11y-contrast header { background: #000; box-shadow: none; border-bottom: 3px solid #ffe600; }
+body.a11y-contrast .toolbar { background: #111; border-bottom: 2px solid #ffe600; }
+body.a11y-contrast .tb-btn { background: #1f1f1f; color: #ffe600; }
+body.a11y-contrast .tb-btn.active { background: #ffe600; color: #000; }
+body.a11y-contrast .unit-btn, body.a11y-contrast .theme-btn, body.a11y-contrast .mode-card, body.a11y-contrast .panel, body.a11y-contrast .history-item { background: #151515; color: #fff; border-color: #ffe600; }
+body.a11y-contrast .section-title, body.a11y-contrast .word-count, body.a11y-contrast .history-meta { color: #ffe600; }
+body.a11y-contrast .mode-card p { color: #ddd; }
+body.a11y-contrast .btn-secondary { background: #1f1f1f; color: #ffe600; border: 2px solid #ffe600; }
+body.a11y-contrast .wrong-box { background: #1f1010; border-color: #dc2626; }
+
+body.a11y-dyslexic, body.a11y-dyslexic * { font-family: 'Atkinson Hyperlegible', Verdana, sans-serif !important; letter-spacing: 0.3px; line-height: 1.7; }
 </style>
 </head>
 <body>
@@ -140,6 +193,13 @@ header .logo p { font-size: 11px; color: rgba(255,255,255,0.75); }
     <button class="btn-header" id="btn-home" onclick="goHome()">🏠 Home</button>
   </div>
 </header>
+
+<div class="toolbar">
+  <button class="tb-btn" id="tb-large" onclick="toggleA11y('large')" title="Große Schrift">🔠 Schrift</button>
+  <button class="tb-btn" id="tb-contrast" onclick="toggleA11y('contrast')" title="Hoher Kontrast">🌓 Kontrast</button>
+  <button class="tb-btn" id="tb-dyslexic" onclick="toggleA11y('dyslexic')" title="Lesefreundliche Schrift">🔤 Lesefreundlich</button>
+  <button class="tb-btn" onclick="openHistory()" title="Verlauf ansehen">📊 Verlauf</button>
+</div>
 
 <div class="container">
 
@@ -189,6 +249,7 @@ header .logo p { font-size: 11px; color: rgba(255,255,255,0.75); }
         </div>
       </div>
     </div>
+    <button class="btn-speak" onclick="speak(currentWords[fcIdx].en)" title="Aussprache anhören">🔊 Aussprache hören</button>
     <div class="answer-btns hidden" id="fc-btns">
       <button class="btn-wrong" onclick="fcAnswer(false)">✗ Nope</button>
       <button class="btn-right" onclick="fcAnswer(true)">✓ Gewusst!</button>
@@ -204,7 +265,7 @@ header .logo p { font-size: 11px; color: rgba(255,255,255,0.75); }
     <div class="counter" id="qz-counter"></div>
     <div class="q-card">
       <div class="qlang">🇬🇧 Was bedeutet dieses Wort?</div>
-      <div class="qword" id="qz-word"></div>
+      <div class="qword"><span id="qz-word"></span><button class="btn-speak-inline" onclick="speak(qzWords[qzIdx].en)" title="Aussprache anhören">🔊</button></div>
     </div>
     <div class="options-grid" id="qz-options"></div>
     <button class="btn-primary hidden" id="qz-next" onclick="qzNext()">Weiter →</button>
@@ -252,7 +313,7 @@ header .logo p { font-size: 11px; color: rgba(255,255,255,0.75); }
     <div class="counter" id="sp-score">Punkte: 0</div>
     <div class="speed-card">
       <div class="slang">🇬🇧 Was bedeutet:</div>
-      <div class="sword" id="sp-word"></div>
+      <div class="sword"><span id="sp-word"></span><button class="btn-speak-inline" onclick="speak(spWords[spIdx].en)" title="Aussprache anhören">🔊</button></div>
     </div>
     <div class="options-grid" id="sp-options"></div>
   </div>
@@ -263,12 +324,20 @@ header .logo p { font-size: 11px; color: rgba(255,255,255,0.75); }
       <div class="r-emoji" id="res-emoji"></div>
       <div class="r-pct" id="res-pct"></div>
       <div class="r-sub" id="res-sub"></div>
+      <div id="res-wrong-box" class="wrong-box hidden"></div>
       <div class="result-btns">
         <button class="btn-primary" onclick="retryMode()">Nochmal 🔄</button>
+        <button class="btn-secondary hidden" id="res-retry-wrong-btn" onclick="retryWrongWords()">🔁 Schwierige üben</button>
         <button class="btn-secondary" onclick="goBack()">Anderen Modus</button>
         <button class="btn-secondary" onclick="goHome()">🏠 Home</button>
       </div>
     </div>
+  </div>
+
+  <!-- HISTORY -->
+  <div id="screen-history" class="hidden">
+    <div class="section-title">📊 Dein Verlauf</div>
+    <div id="history-list" class="history-list"></div>
   </div>
 
 </div>
@@ -290,6 +359,14 @@ let memPairs, memCards, memFlipped, memMatched, memMoves;
 let fiIdx, fiWords, fiScore, fiAnswered;
 let scIdx, scWords, scScore, scAnswered, scSelected, scLetterPool;
 let spTimer, spInterval, spScore, spWords, spIdx, spAnswered;
+let wrongWordsThisRound = [];
+let lastFeedbackWord = null;
+
+// ── STORAGE KEYS ─────────────────────────────────────────────────
+const HISTORY_KEY = 'vokab-history-kl5';
+const STATS_KEY = 'vokab-word-stats-kl5';
+const A11Y_KEY = 'vokab-a11y-kl5';
+const modeNames = { flashcard: '🃏 Flashcards', quiz: '🧠 Quiz', memory: '🎴 Memory', fill: '✏️ Fill in', scramble: '🔀 Scramble', speed: '⚡ Speed' };
 
 // ── LOAD CONFIG ──────────────────────────────────────────────────
 async function loadConfig() {
@@ -307,11 +384,100 @@ async function loadConfig() {
 function shuffle(arr) { return [...arr].sort(() => Math.random() - .5); }
 function pick(arr, n) { return shuffle(arr).slice(0, n); }
 function showOnly(id) {
-  ['loading','units','themes','mode','flashcard','quiz','memory','fill','scramble','speed','result'].forEach(s => {
+  ['loading','units','themes','mode','flashcard','quiz','memory','fill','scramble','speed','result','history'].forEach(s => {
     const el = document.getElementById('screen-' + s);
     if (el) el.classList.add('hidden');
   });
   document.getElementById('screen-' + id).classList.remove('hidden');
+}
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// ── SPRACHAUSGABE ────────────────────────────────────────────────
+function speak(text) {
+  if (!('speechSynthesis' in window) || !text) return;
+  try {
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-GB';
+    u.rate = 0.92;
+    window.speechSynthesis.speak(u);
+  } catch (e) { /* Sprachausgabe nicht verfügbar */ }
+}
+
+// ── BARRIEREFREIHEIT ─────────────────────────────────────────────
+function loadA11y() { try { return JSON.parse(localStorage.getItem(A11Y_KEY)) || {}; } catch(e) { return {}; } }
+function saveA11y(s) { localStorage.setItem(A11Y_KEY, JSON.stringify(s)); }
+function applyA11y() {
+  const s = loadA11y();
+  document.body.classList.toggle('a11y-large', !!s.large);
+  document.body.classList.toggle('a11y-contrast', !!s.contrast);
+  document.body.classList.toggle('a11y-dyslexic', !!s.dyslexic);
+  document.getElementById('tb-large').classList.toggle('active', !!s.large);
+  document.getElementById('tb-contrast').classList.toggle('active', !!s.contrast);
+  document.getElementById('tb-dyslexic').classList.toggle('active', !!s.dyslexic);
+}
+function toggleA11y(key) {
+  const s = loadA11y();
+  s[key] = !s[key];
+  saveA11y(s);
+  applyA11y();
+}
+
+// ── VERLAUF (ERGEBNIS-HISTORIE) ──────────────────────────────────
+function loadHistory() { try { return JSON.parse(localStorage.getItem(HISTORY_KEY)) || []; } catch(e) { return []; } }
+function saveHistoryEntry(entry) {
+  const hist = loadHistory();
+  hist.unshift({ ...entry, ts: Date.now() });
+  if (hist.length > 30) hist.length = 30;
+  localStorage.setItem(HISTORY_KEY, JSON.stringify(hist));
+}
+function openHistory() {
+  showOnly('history');
+  renderHistory();
+  setHeaderBtns(true, false);
+}
+function renderHistory() {
+  const list = document.getElementById('history-list');
+  const hist = loadHistory();
+  if (!hist.length) {
+    list.innerHTML = '<div class="history-empty">Noch keine Ergebnisse gespeichert. Leg direkt los! 🚀</div>';
+    return;
+  }
+  list.innerHTML = hist.map(h => {
+    const d = new Date(h.ts);
+    const dateStr = d.toLocaleDateString('de-DE', { day:'2-digit', month:'2-digit' }) + ' · ' + d.toLocaleTimeString('de-DE', { hour:'2-digit', minute:'2-digit' });
+    const pctColor = h.percent >= 80 ? '#16a34a' : h.percent >= 60 ? '#f97316' : '#dc2626';
+    return `<div class="history-item">
+      <div class="history-main">
+        <div class="history-label">${esc(h.label)}</div>
+        <div class="history-meta">${modeNames[h.mode] || h.mode} · ${dateStr}</div>
+      </div>
+      <div class="history-pct" style="color:${pctColor}">${h.percent}%</div>
+    </div>`;
+  }).join('');
+}
+
+// ── WORT-STATISTIK (Basis für "Schwierige Wörter") ───────────────
+function loadStats() { try { return JSON.parse(localStorage.getItem(STATS_KEY)) || {}; } catch(e) { return {}; } }
+function recordWordStat(word, correct) {
+  if (!word || !word.en) return;
+  const stats = loadStats();
+  const key = word.en;
+  if (!stats[key]) stats[key] = { right: 0, wrong: 0 };
+  if (correct) stats[key].right++; else stats[key].wrong++;
+  localStorage.setItem(STATS_KEY, JSON.stringify(stats));
+}
+function getDifficultWords(limit = 20) {
+  const stats = loadStats();
+  const allWords = getAllWords();
+  const byKey = {};
+  allWords.forEach(w => { byKey[w.en] = w; });
+  return Object.entries(stats)
+    .filter(([key, s]) => s.wrong > 0 && byKey[key])
+    .map(([key, s]) => ({ word: byKey[key], priority: s.wrong - s.right * 0.5 }))
+    .sort((a, b) => b.priority - a.priority)
+    .slice(0, limit)
+    .map(e => e.word);
 }
 function setHeaderBtns(back, home) {
   document.getElementById('btn-back').style.display = back ? 'block' : 'none';
@@ -331,6 +497,29 @@ function getSpecialWords(listKey) {
   return CONFIG.specialLists[listKey].words;
 }
 
+// Alle Wörter aus allen Units (ohne Sonderlisten) – Basis für Mix & Schwierige Wörter
+function getAllUnitsOnlyWords() {
+  let all = [];
+  Object.values(CONFIG.units).forEach(unit => Object.values(unit.themes).forEach(t => all = all.concat(t.words)));
+  return all;
+}
+
+function startMixAll() {
+  currentUnit = 'mix';
+  currentTheme = 'all';
+  currentWords = getAllUnitsOnlyWords();
+  currentLabel = '🔀 Mix – alle Einheiten';
+  showModeSelection();
+}
+
+function startDifficultWords(words) {
+  currentUnit = 'difficult';
+  currentTheme = 'difficult';
+  currentWords = words;
+  currentLabel = `🔁 Schwierige Wörter (${words.length})`;
+  showModeSelection();
+}
+
 // ── UNIT LIST ────────────────────────────────────────────────────
 function renderUnitList() {
   const list = document.getElementById('unit-list');
@@ -344,6 +533,32 @@ function renderUnitList() {
   specialBtn.innerHTML = `<span>⭐ Sonderlisten (Zahlen, Farben, Monate...)</span><span class="arrow">›</span>`;
   specialBtn.onclick = () => showSpecialLists();
   list.appendChild(specialBtn);
+
+  // Mix aus allen Einheiten
+  const mixWords = getAllUnitsOnlyWords();
+  const mixBtn = document.createElement('button');
+  mixBtn.className = 'unit-btn';
+  mixBtn.style.borderColor = '#0ea5e9';
+  mixBtn.style.color = '#0ea5e9';
+  mixBtn.innerHTML = `<span>🔀 Mix aus allen Einheiten</span><span style="display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:#9ca3af;font-weight:600">${mixWords.length} Wörter</span><span class="arrow">›</span></span>`;
+  mixBtn.onclick = () => startMixAll();
+  list.appendChild(mixBtn);
+
+  // Schwierige Wörter (leichte Spaced-Repetition-Variante)
+  const difficultWords = getDifficultWords();
+  const difficultBtn = document.createElement('button');
+  difficultBtn.className = 'unit-btn';
+  difficultBtn.style.borderColor = '#dc2626';
+  difficultBtn.style.color = '#dc2626';
+  if (difficultWords.length < 5) {
+    difficultBtn.style.opacity = '0.55';
+    difficultBtn.style.cursor = 'default';
+    difficultBtn.innerHTML = `<span>🔁 Schwierige Wörter üben</span><span style="font-size:11px;color:#9ca3af">noch zu wenig Daten</span>`;
+  } else {
+    difficultBtn.innerHTML = `<span>🔁 Schwierige Wörter üben</span><span style="display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:#9ca3af;font-weight:600">${difficultWords.length} Wörter</span><span class="arrow">›</span></span>`;
+    difficultBtn.onclick = () => startDifficultWords(difficultWords);
+  }
+  list.appendChild(difficultBtn);
 
   // Units
   Object.entries(CONFIG.units).forEach(([key, unit]) => {
@@ -426,7 +641,7 @@ function showModeSelection() {
 }
 
 function goBack() {
-  if (currentUnit === null || currentUnit === 'special') {
+  if (currentUnit === null || currentUnit === 'special' || currentUnit === 'mix' || currentUnit === 'difficult') {
     renderUnitList();
     showOnly('units');
     setHeaderBtns(false, false);
@@ -455,6 +670,7 @@ function goHome() {
 // ── START MODE ───────────────────────────────────────────────────
 function startMode(mode) {
   currentMode = mode;
+  wrongWordsThisRound = [];
   if (spInterval) clearInterval(spInterval);
   const words = shuffle(currentWords);
   if (mode === 'flashcard') initFlashcard(words);
@@ -476,6 +692,8 @@ function showResult(right, wrong, total, label) {
   document.getElementById('res-pct').textContent = label || pct + '%';
   document.getElementById('res-sub').textContent = `${right} richtig, ${wrong} falsch von ${total}`;
 
+  renderWrongList();
+
   if (window.LernApps && LernApps.saveResult) {
     LernApps.saveResult({
       score: right,
@@ -483,6 +701,42 @@ function showResult(right, wrong, total, label) {
       label: label || (right + ' / ' + total)
     });
   }
+
+  saveHistoryEntry({
+    mode: currentMode,
+    label: currentLabel,
+    percent: pct
+  });
+}
+
+function renderWrongList() {
+  const box = document.getElementById('res-wrong-box');
+  const retryBtn = document.getElementById('res-retry-wrong-btn');
+  const uniqueMap = {};
+  wrongWordsThisRound.forEach(w => uniqueMap[w.en] = w);
+  const uniqueWords = Object.values(uniqueMap);
+  if (!uniqueWords.length) {
+    box.classList.add('hidden'); box.innerHTML = '';
+    retryBtn.classList.add('hidden');
+    return;
+  }
+  box.classList.remove('hidden');
+  retryBtn.classList.remove('hidden');
+  box.innerHTML = '<div class="wrong-title">🔍 Diese Wörter waren schwer:</div>' +
+    uniqueWords.map(w => `<div class="wrong-item"><span>${esc(w.en)}</span><span class="wrong-sep">–</span><span>${esc(w.de)}</span><button class="btn-speak-sm" onclick="speak('${String(w.en).replace(/'/g,"\\'")}')" title="Aussprache anhören">🔊</button></div>`).join('');
+}
+
+function retryWrongWords() {
+  const uniqueMap = {};
+  wrongWordsThisRound.forEach(w => uniqueMap[w.en] = w);
+  const words = Object.values(uniqueMap);
+  if (!words.length) return;
+  currentWords = words;
+  currentLabel = '🔁 Wiederholung – schwierige Wörter';
+  currentMode = 'flashcard';
+  wrongWordsThisRound = [];
+  initFlashcard(shuffle(words));
+  setHeaderBtns(true, true);
 }
 
 // ── FLASHCARD ────────────────────────────────────────────────────
@@ -513,7 +767,9 @@ function flipCard() {
 }
 
 function fcAnswer(correct) {
-  if (correct) fcRight++; else fcWrong++;
+  const w = currentWords[fcIdx];
+  recordWordStat(w, correct);
+  if (correct) fcRight++; else { fcWrong++; wrongWordsThisRound.push(w); }
   fcIdx++;
   if (fcIdx >= currentWords.length) { showResult(fcRight, fcWrong, currentWords.length); return; }
   renderFlashcard();
@@ -560,7 +816,9 @@ function getAllWords() {
 function qzChoose(opt, correct, btn, opts) {
   if (qzAnswered) return;
   qzAnswered = true;
-  if (opt.de === correct.de) qzScore++;
+  const isCorrect = opt.de === correct.de;
+  recordWordStat(correct, isCorrect);
+  if (isCorrect) qzScore++; else wrongWordsThisRound.push(correct);
   const btns = document.querySelectorAll('.opt-btn');
   btns.forEach((b, i) => {
     if (opts[i].de === correct.de) b.classList.add('correct');
@@ -608,6 +866,7 @@ function memFlip(card) {
   if (memFlipped.find(c => c.id === card.id)) return;
   if (memMatched.includes(card.pairId)) return;
   memFlipped = [...memFlipped, card];
+  if (card.lang === 'en') speak(card.text);
   renderMemory();
   if (memFlipped.length === 2) {
     memMoves++;
@@ -648,19 +907,24 @@ function fiCheck() {
   if (fiAnswered) return;
   const inp = document.getElementById('fill-input');
   const answer = inp.value.trim().toLowerCase();
-  const correct = fiWords[fiIdx].en.toLowerCase();
+  const w = fiWords[fiIdx];
+  const correct = w.en.toLowerCase();
   fiAnswered = true;
   inp.disabled = true;
   const fb = document.getElementById('fi-feedback');
   fb.classList.remove('hidden', 'correct', 'wrong');
-  if (answer === correct) {
+  const isCorrect = answer === correct;
+  recordWordStat(w, isCorrect);
+  lastFeedbackWord = w.en;
+  if (isCorrect) {
     fiScore++;
     inp.classList.add('correct');
-    fb.textContent = '✓ Richtig! 🎉';
+    fb.innerHTML = '✓ Richtig! 🎉 <button class="btn-speak-sm" onclick="speak(lastFeedbackWord)" title="Aussprache anhören">🔊</button>';
     fb.className = 'fill-feedback correct';
   } else {
     inp.classList.add('wrong');
-    fb.textContent = `✗ Richtig wäre: ${fiWords[fiIdx].en}`;
+    wrongWordsThisRound.push(w);
+    fb.innerHTML = `✗ Richtig wäre: ${esc(w.en)} <button class="btn-speak-sm" onclick="speak(lastFeedbackWord)" title="Aussprache anhören">🔊</button>`;
     fb.className = 'fill-feedback wrong';
   }
   document.getElementById('fi-feedback').classList.remove('hidden');
@@ -725,16 +989,21 @@ function scClear() {
 function scCheck() {
   if (scAnswered || scSelected.length === 0) return;
   const answer = scSelected.map(i => scLetterPool[i]).join('').toLowerCase();
-  const correct = scWords[scIdx].en.toLowerCase();
+  const w = scWords[scIdx];
+  const correct = w.en.toLowerCase();
   scAnswered = true;
   const fb = document.getElementById('sc-feedback');
   fb.classList.remove('hidden', 'correct', 'wrong');
-  if (answer === correct) {
+  const isCorrect = answer === correct;
+  recordWordStat(w, isCorrect);
+  lastFeedbackWord = w.en;
+  if (isCorrect) {
     scScore++;
-    fb.textContent = '✓ Richtig! 🎉';
+    fb.innerHTML = '✓ Richtig! 🎉 <button class="btn-speak-sm" onclick="speak(lastFeedbackWord)" title="Aussprache anhören">🔊</button>';
     fb.className = 'fill-feedback correct';
   } else {
-    fb.textContent = `✗ Richtig wäre: ${scWords[scIdx].en}`;
+    wrongWordsThisRound.push(w);
+    fb.innerHTML = `✗ Richtig wäre: ${esc(w.en)} <button class="btn-speak-sm" onclick="speak(lastFeedbackWord)" title="Aussprache anhören">🔊</button>`;
     fb.className = 'fill-feedback wrong';
   }
   document.getElementById('sc-check').classList.add('hidden');
@@ -791,12 +1060,14 @@ function renderSpeedQuestion() {
 function spChoose(opt, correct, btn, opts) {
   if (spAnswered || spTimer <= 0) return;
   spAnswered = true;
+  const isCorrect = opt.de === correct.de;
+  recordWordStat(correct, isCorrect);
   const btns = document.querySelectorAll('#sp-options .opt-btn');
   btns.forEach((b, i) => {
     if (opts[i].de === correct.de) b.classList.add('correct');
     else if (b === btn) b.classList.add('wrong');
   });
-  if (opt.de === correct.de) spScore++;
+  if (isCorrect) spScore++; else wrongWordsThisRound.push(correct);
   spIdx++;
   setTimeout(() => {
     if (spTimer > 0) renderSpeedQuestion();
@@ -804,6 +1075,7 @@ function spChoose(opt, correct, btn, opts) {
 }
 
 // ── INIT ─────────────────────────────────────────────────────────
+applyA11y();
 loadConfig();
 </script>
 </body>
