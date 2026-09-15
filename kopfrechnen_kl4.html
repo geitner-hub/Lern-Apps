@@ -244,6 +244,8 @@
     .answer-input::-webkit-outer-spin-button { -webkit-appearance: none; }
     .answer-input.correct { border-color: var(--accent); box-shadow: 0 0 16px rgba(0,229,160,0.3); }
     .answer-input.wrong   { border-color: var(--bad);    box-shadow: 0 0 16px rgba(255,107,107,0.3); }
+    .rest-input-row .answer-input { width: 100px; }
+    .rest-input-row .rest-label { align-self: center; color: var(--muted); font-size: 0.85rem; letter-spacing: 0.08em; }
 
     .level-btn.schwer.active {
       background: var(--schwer); color: var(--bg);
@@ -319,98 +321,8 @@
 </div>
 
 
-<script>
-// ── Eingebettete Navbar (standalone) ──────────────────
-(function () {
-  const STORE_KEY = 'lern-apps-results';
-  function getPageKey() { return 'kopfrechnen_kl4.html'; }
-  function loadResults() {
-    try { return JSON.parse(localStorage.getItem(STORE_KEY) || '{}'); }
-    catch(e) { return {}; }
-  }
-  function getResult() { return loadResults()[getPageKey()] || null; }
-
-  window.LernApps = {
-    saveResult(result) {
-      const all = loadResults();
-      all[getPageKey()] = {
-        score:     result.score,
-        max:       result.max,
-        label:     result.label || (result.score + ' / ' + result.max),
-        percent:   Math.round((result.score / result.max) * 100),
-        timestamp: Date.now()
-      };
-      localStorage.setItem(STORE_KEY, JSON.stringify(all));
-      updateBadge(all[getPageKey()]);
-    },
-    getAllResults() { return loadResults(); },
-    getResult()     { return getResult(); }
-  };
-
-  const style = document.createElement('style');
-  style.textContent = `
-    #lern-home-btn {
-      position: fixed; top: 1rem; left: 1rem; z-index: 9999;
-      background: #161b22; color: #8b949e;
-      font-family: 'JetBrains Mono', monospace;
-      font-weight: 700; font-size: .72rem;
-      padding: .4rem .85rem; border-radius: 8px;
-      border: 1px solid #30363d;
-      text-decoration: none; letter-spacing: 0.1em;
-      transition: color .15s, border-color .15s, background .15s;
-      display: flex; align-items: center; gap: .4rem;
-    }
-    #lern-home-btn:hover {
-      color: #00e5a0; border-color: #00e5a0;
-      background: rgba(0,229,160,0.07);
-    }
-    #lern-result-badge {
-      position: fixed; bottom: 1.2rem; right: 1.2rem; z-index: 9999;
-      background: #1a1f5e; color: #fff;
-      font-family: 'JetBrains Mono', monospace;
-      font-weight: 800; font-size: .82rem;
-      padding: .45rem .95rem; border-radius: 99px;
-      border: 2px solid rgba(255,255,255,.12);
-      box-shadow: 0 4px 20px rgba(26,31,94,.35);
-      display: none; align-items: center; gap: .45rem;
-    }
-    #lern-result-badge.show { display: flex; }
-    #lern-result-badge .rb-bar {
-      width: 52px; height: 6px; border-radius: 99px;
-      background: rgba(255,255,255,.18); overflow: hidden;
-    }
-    #lern-result-badge .rb-fill {
-      height: 100%; border-radius: 99px;
-      background: #4ade80; transition: width .5s ease;
-    }
-    #lern-result-badge .rb-fill.mid { background: #f7c948; }
-    #lern-result-badge .rb-fill.low { background: #f87171; }
-  `;
-  document.head.appendChild(style);
-
-  const homeBtn = document.createElement('a');
-  homeBtn.id = 'lern-home-btn';
-  homeBtn.href = 'https://geitner-hub.github.io/Lern-Apps';
-  homeBtn.innerHTML = `⌂ ALLE APPS`;
-  document.body.appendChild(homeBtn);
-
-  const badge = document.createElement('div');
-  badge.id = 'lern-result-badge';
-  badge.innerHTML = `<span>🏆</span><span class="rb-label"></span><div class="rb-bar"><div class="rb-fill"></div></div>`;
-  document.body.appendChild(badge);
-
-  function updateBadge(result) {
-    if (!result) return;
-    const pct = result.percent || 0;
-    badge.querySelector('.rb-label').textContent = result.label;
-    const fill = badge.querySelector('.rb-fill');
-    fill.style.width = pct + '%';
-    fill.className = 'rb-fill' + (pct >= 70 ? '' : pct >= 40 ? ' mid' : ' low');
-    badge.classList.add('show');
-  }
-  updateBadge(getResult());
-})();
-</script>
+<!-- navbar.js: Home-Button + Ergebnisspeicherung (einheitlich wie in allen anderen Apps) -->
+<script src="navbar.js"></script>
 <script>  const ROUND_SIZE = 10;
 
   const state = {
@@ -432,26 +344,6 @@
   };
 
   function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
-
-  // ── Aufgaben generieren ───────────────────────────────────────
-  // Regeln für BEIDE Niveaus:
-  //   • Alle Zahlen in der Aufgabe: max. 2-stellig (≤ 99)
-  //   • Alle Ergebnisse: max. 2-stellig (≤ 99)
-  //   • Kein Ergebnis negativ
-  //
-  // LEICHT:
-  //   + : beide Summanden 1–9, Summe ≤ 99
-  //   - : Minuend 10–50, Subtrahend 1–9, Ergebnis > 0
-  //   × : kleines Einmaleins 1×1 bis 9×9, Ergebnis ≤ 99
-  //   ÷ : Divisor 2–9, Quotient 1–9 (ganzzahlig)
-  //
-  // MITTEL:
-  //   + : beide Summanden 10–49, Summe ≤ 99
-  //   - : Minuend 20–99, Subtrahend 10–49, Ergebnis > 0 und ≤ 99
-  //   × : kleines Einmaleins bis 10×12 (und 12×10), Ergebnis ≤ 99
-  //   ÷ : Divisor 2–12, Quotient 2–9 (ganzzahlig), Dividend ≤ 99
-
-
 
   function generateQuestion(level) {
     // ── Klasse 4 Aufgaben ────────────────────────────────────────
@@ -513,8 +405,11 @@
           // sicherstellen, dass a kein glatter Zehner ist
           if (a % 10 === 0) { answer = null; } else { answer = a*b; question = `${a} × ${b}`; }
         } else if (t === 'div_rest') {
+          // Division mit Rest: Antwort besteht aus Quotient UND Rest,
+          // deshalb kein einzelner Zahlenwert, sondern ein Objekt.
           const d = rand(2,9); const q = rand(3,9); const r = rand(1,d-1);
-          answer = q; question = `${d*q+r} ÷ ${d} (Rest?)`;
+          answer = { rest: true, quotient: q, remainder: r };
+          question = `${d*q+r} ÷ ${d}`;
         } else {
           // Term: a × b + c oder a × b − c
           const a = rand(2,9); const b = rand(2,9); const c = rand(1,20);
@@ -528,7 +423,7 @@
   }
   function getTipp(q){
     const s=q.question;
-    if(s.includes('Rest?'))return 'Tipp: Wie oft passt der Teiler rein? Was bleibt übrig?';
+    if(q.answer && typeof q.answer === 'object' && q.answer.rest) return 'Tipp: Wie oft passt der Teiler ganz rein? Was bleibt übrig (Rest)?';
     if(s.includes('×')&&(s.includes('+')||s.includes('−')))return 'Tipp: Erst multiplizieren, dann addieren/subtrahieren (Punkt vor Strich)!';
     const p=s.replace('−','-').split(' ');const a=parseFloat(p[0]);const op=p[1];const b=parseFloat(p[2]);
     if(op==='×'){
@@ -601,12 +496,24 @@
 
   function submitAnswer() {
     if (state.feedback) return;
+    const q = state.questions[state.current];
+    const isRest = q.answer && typeof q.answer === 'object' && q.answer.rest === true;
     const input = document.getElementById('answer-input');
     if (!input || input.value === '') return;
-    const given = parseInt(input.value);
-    const correct = given === state.questions[state.current].answer;
+
+    let given, correct;
+    if (isRest) {
+      const restInput = document.getElementById('answer-input-rest');
+      if (!restInput || restInput.value === '') return;
+      given = { quotient: parseInt(input.value), remainder: parseInt(restInput.value) };
+      correct = given.quotient === q.answer.quotient && given.remainder === q.answer.remainder;
+    } else {
+      given = parseInt(input.value);
+      correct = given === q.answer;
+    }
+
     state.feedback = correct ? 'correct' : 'wrong';
-    state.results.push({ ...state.questions[state.current], given, correct, tippUsed: state.tippUsed });
+    state.results.push({ ...q, given, correct, tippUsed: state.tippUsed });
     applyFeedbackUI(correct);
 
     state.feedbackTimeout = setTimeout(() => {
@@ -631,19 +538,26 @@
     }, correct ? 350 : 900);
   }
 
+  function formatAnswer(ans) {
+    if (ans && typeof ans === 'object') return `${ans.quotient} Rest ${ans.remainder}`;
+    return ans;
+  }
+
   function applyFeedbackUI(correct) {
     const qEl = document.getElementById('question-display');
     const fbEl = document.getElementById('feedback-line');
     const inEl = document.getElementById('answer-input');
+    const restEl = document.getElementById('answer-input-rest');
     if (!qEl) return;
     qEl.className = 'question-display ' + (correct ? 'correct' : 'wrong');
     qEl.classList.add(correct ? 'pulse' : 'shake');
     if (inEl) inEl.className = 'answer-input ' + (correct ? 'correct' : 'wrong');
+    if (restEl) restEl.className = 'answer-input ' + (correct ? 'correct' : 'wrong');
     if (fbEl) {
       fbEl.className = 'feedback-line ' + (correct ? 'correct' : 'wrong');
       fbEl.textContent = correct
         ? '✓ RICHTIG'
-        : `✗ FALSCH — RICHTIG: ${state.questions[state.current].answer}`;
+        : `✗ FALSCH — RICHTIG: ${formatAnswer(state.questions[state.current].answer)}`;
     }
   }
 
@@ -711,6 +625,21 @@
     const pct = (state.current / ROUND_SIZE) * 100;
     const lvl = state.level;
     const lvlLabel = lvl === 'leicht' ? '🟢 LEICHT' : lvl === 'mittel' ? '🟡 MITTEL' : '🔴 SCHWER';
+    const isRest = q.answer && typeof q.answer === 'object' && q.answer.rest === true;
+
+    const inputHtml = isRest ? `
+      <div class="input-row rest-input-row">
+        <input id="answer-input" class="answer-input" type="number" placeholder="Quotient" autocomplete="off"/>
+        <span class="rest-label">Rest</span>
+        <input id="answer-input-rest" class="answer-input" type="number" placeholder="Rest" autocomplete="off"/>
+        <button class="btn btn-confirm" onclick="submitAnswer()">↵</button>
+      </div>
+    ` : `
+      <div class="input-row">
+        <input id="answer-input" class="answer-input" type="number" placeholder="___" autocomplete="off"/>
+        <button class="btn btn-confirm" onclick="submitAnswer()">↵</button>
+      </div>
+    `;
 
     card.innerHTML = `
       <div class="meta-row">
@@ -721,18 +650,20 @@
       <div class="progress-track">
         <div class="progress-fill ${lvl}" style="width:${pct}%"></div>
       </div>
-      <div class="question-display" id="question-display">${q.question} =</div>
+      <div class="question-display" id="question-display">${q.question} =${isRest ? ' <span style="font-size:0.6em;color:var(--muted)">(mit Rest)</span>' : ''}</div>
       <div class="feedback-line" id="feedback-line"></div>
       <div id="tipp-area">${state.tippVisible ? `<div class="tipp-box"><div class="tipp-label">💡 TIPP</div>${getTipp(q)}</div>` : ''}</div>
-      <div class="input-row">
-        <input id="answer-input" class="answer-input" type="number" placeholder="___" autocomplete="off"/>
-        <button class="btn btn-confirm" onclick="submitAnswer()">↵</button>
-      </div>
+      ${inputHtml}
       ${!state.tippVisible && !state.feedback ? `<div style="text-align:center;margin-top:14px"><button onclick="showTipp()" style="background:none;border:none;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:0.7rem;letter-spacing:0.1em;cursor:pointer;text-decoration:underline;">💡 TIPP ANZEIGEN</button></div>` : ''}
     `;
     document.getElementById('answer-input').addEventListener('keydown', e => {
-      if (e.key === 'Enter') submitAnswer();
+      if (e.key === 'Enter') { if (isRest) document.getElementById('answer-input-rest').focus(); else submitAnswer(); }
     });
+    if (isRest) {
+      document.getElementById('answer-input-rest').addEventListener('keydown', e => {
+        if (e.key === 'Enter') submitAnswer();
+      });
+    }
   }
 
   function renderResult(card) {
@@ -748,8 +679,8 @@
     const rows = state.results.map((r, i) => `
       <div class="result-row ${r.correct ? 'correct' : 'wrong'}">
         <span class="result-num">${String(i + 1).padStart(2, '0')}.</span>
-        <span class="result-eq">${r.question} = <strong>${r.answer}</strong>${r.tippUsed ? ' <span style="color:var(--accent-warm);font-size:0.65rem">💡</span>' : ''}</span>
-        <span class="result-check ${r.correct ? 'correct' : 'wrong'}">${r.correct ? '✓' : `✗ (${r.given})`}</span>
+        <span class="result-eq">${r.question} = <strong>${formatAnswer(r.answer)}</strong>${r.tippUsed ? ' <span style="color:var(--accent-warm);font-size:0.65rem">💡</span>' : ''}</span>
+        <span class="result-check ${r.correct ? 'correct' : 'wrong'}">${r.correct ? '✓' : `✗ (${formatAnswer(r.given)})`}</span>
       </div>
     `).join('');
 
