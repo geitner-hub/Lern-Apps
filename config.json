@@ -219,7 +219,9 @@
       "emoji": "📓",
       "beschreibung": "Übe Vokabeln aus dem Schulbuch",
       "hidden": false,
-      "klassen": [],
+      "klassen": [
+        6
+      ],
       "customTags": [],
       "aod": false
     }
