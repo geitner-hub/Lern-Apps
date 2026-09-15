@@ -1094,6 +1094,14 @@ function showCelebration() {
   document.getElementById('cel-title').textContent = title;
   document.getElementById('cel-msg').textContent = msg;
   document.getElementById('progress-fill').style.width = '100%';
+
+  if (window.LernApps && LernApps.saveResult) {
+    LernApps.saveResult({
+      score: correctCount,
+      max: TOTAL,
+      label: correctCount + ' / ' + TOTAL + ' · ' + title
+    });
+  }
 }
 
 // ===================

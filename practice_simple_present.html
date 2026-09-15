@@ -743,6 +743,14 @@ function showResults() {
     </div>
   `;
   show('result-screen');
+
+  if (window.LernApps && LernApps.saveResult) {
+    LernApps.saveResult({
+      score: score,
+      max: total,
+      label: score + ' / ' + total + ' · ' + title
+    });
+  }
 }
 </script>
     <script src="navbar.js"></script>

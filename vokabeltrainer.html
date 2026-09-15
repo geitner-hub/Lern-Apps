@@ -475,6 +475,14 @@ function showResult(right, wrong, total, label) {
   document.getElementById('res-emoji').textContent = pct >= 80 ? '🏆' : pct >= 60 ? '👍' : '💪';
   document.getElementById('res-pct').textContent = label || pct + '%';
   document.getElementById('res-sub').textContent = `${right} richtig, ${wrong} falsch von ${total}`;
+
+  if (window.LernApps && LernApps.saveResult) {
+    LernApps.saveResult({
+      score: right,
+      max: total,
+      label: label || (right + ' / ' + total)
+    });
+  }
 }
 
 // ── FLASHCARD ────────────────────────────────────────────────────
