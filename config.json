@@ -211,6 +211,17 @@
         }
       ],
       "aod": false
+    },
+    {
+      "name": "Vokabeltrainer 6. Klasse",
+      "datei": "vokabeltrainer6.html",
+      "fach": "Englisch",
+      "emoji": "📓",
+      "beschreibung": "Übe Vokabeln aus dem Schulbuch",
+      "hidden": false,
+      "klassen": [],
+      "customTags": [],
+      "aod": false
     }
   ],
   "customTags": [
