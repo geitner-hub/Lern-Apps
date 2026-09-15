@@ -222,7 +222,12 @@
       "klassen": [
         6
       ],
-      "customTags": [],
+      "customTags": [
+        {
+          "name": "Vokabeln",
+          "color": 4
+        }
+      ],
       "aod": false
     }
   ],
