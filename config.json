@@ -12,7 +12,7 @@
         5
       ],
       "customTags": [],
-      "aod": true
+      "aod": false
     },
     {
       "name": "Satzglieder ordnen",
@@ -25,7 +25,7 @@
         5
       ],
       "customTags": [],
-      "aod": false
+      "aod": true
     },
     {
       "name": "Vierecke unterscheiden",
