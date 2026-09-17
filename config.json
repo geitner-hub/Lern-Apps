@@ -46,7 +46,7 @@
       "fach": "Englisch",
       "emoji": "📱",
       "beschreibung": "",
-      "hidden": false,
+      "hidden": true,
       "klassen": [
         5
       ],
