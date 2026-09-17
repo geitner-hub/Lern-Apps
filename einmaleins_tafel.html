@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Einmaleins-Tafel – Lernwelt</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Bebas+Neue&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --accent: #00e5a0;
+    --accent-warm: #ffb347;
+    --bad: #ff6b6b;
+    --bg: #0d1117;
+    --card: #161b22;
+    --border: #30363d;
+    --border2: #21262d;
+    --text: #e6edf3;
+    --muted: #8b949e;
+    --leicht: #00e5a0;
+    --mittel: #ffb347;
+    --schwer: #ff6b9d;
+    /* Modus-Akzente */
+    --c-klassik: #00e5a0;
+    --c-profi:   #ffb347;
+    --c-gross:   #6366f1;
+  }
+
+  body {
+    min-height: 100vh;
+    background: var(--bg);
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    padding-bottom: 90px;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 0;
+    background-image:
+      linear-gradient(rgba(0,229,160,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,160,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+  }
+
+  #app { position: relative; z-index: 2; width: 100%; max-width: 700px; }
+
+  .hidden { display: none !important; }
+
+  /* ── Header ── */
+  .header { text-align: center; margin-bottom: 20px; position: relative; }
+  .title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(1.8rem, 6vw, 3rem);
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    text-shadow: 0 0 20px rgba(0,229,160,0.6), 0 0 60px rgba(0,229,160,0.2);
+    line-height: 1;
+  }
+  .subtitle {
+    font-size: 0.68rem; color: var(--muted);
+    letter-spacing: 0.24em; margin-top: 4px;
+  }
+  .back-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    margin-bottom: 10px; padding: 6px 14px;
+    border-radius: 6px; border: 1px solid var(--border);
+    background: var(--border2); color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em;
+    cursor: pointer; transition: all .15s;
+  }
+  .back-btn:hover { color: var(--text); border-color: var(--muted); }
+
+  /* ── Card ── */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: clamp(12px, 4vw, 32px);
+    box-shadow: 0 0 0 1px var(--border2), 0 24px 48px rgba(0,0,0,0.6);
+  }
+
+  /* ── Buttons ── */
+  .btn { cursor: pointer; border: none; font-family: 'JetBrains Mono', monospace; transition: all 0.15s; }
+  .btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
+  .btn:active { transform: translateY(1px); }
+  .btn-confirm {
+    padding: 14px 20px; border-radius: 8px;
+    font-size: 1.05rem; font-weight: 800;
+    background: var(--border2); color: var(--accent);
+    border: 1px solid var(--border);
+  }
+  .btn-reset {
+    padding: 14px 18px; border-radius: 8px;
+    font-size: 0.85rem; font-weight: 700;
+    background: transparent; color: var(--muted);
+    border: 1px solid var(--border);
+  }
+  .start-btn {
+    padding: 14px; border-radius: 8px; font-size: .85rem; font-weight: 800; letter-spacing: .1em;
+    background: var(--accent); color: var(--bg); box-shadow: 0 0 20px rgba(0,229,160,.35);
+  }
+
+  /* ── Startbildschirm ── */
+  .big-sigma {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3.4rem; color: var(--border2);
+    line-height: 1; margin-bottom: 4px; text-align: center;
+  }
+  .start-title { text-align: center; font-weight: 800; font-size: 1rem; letter-spacing: 0.08em; margin-bottom: 6px; }
+  .start-desc { text-align: center; color: var(--muted); font-size: 0.78rem; margin-bottom: 22px; line-height: 1.6; }
+
+  .settings-label {
+    font-size: 0.68rem; color: var(--muted); letter-spacing: 0.15em;
+    font-weight: 800; margin-bottom: 8px;
+  }
+  .settings-block { margin-bottom: 22px; }
+
+  .level-row { display: flex; gap: 8px; margin-bottom: 18px; }
+  .level-btn {
+    flex: 1; padding: 12px 6px; border-radius: 8px;
+    font-size: 0.75rem; font-weight: 800; letter-spacing: 0.05em;
+    cursor: pointer; border: 2px solid var(--border);
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--border2); color: var(--muted);
+    transition: all 0.15s;
+  }
+  .level-btn:hover { filter: brightness(1.15); transform: translateY(-1px); }
+  .level-btn.active { color: var(--bg); border-color: transparent; }
+  .level-btn[data-range="klein"].active { background: var(--accent); box-shadow: 0 0 16px rgba(0,229,160,0.4); }
+  .level-btn[data-range="gross"].active { background: var(--c-gross); color: #fff; box-shadow: 0 0 16px rgba(99,102,241,0.4); }
+  .level-btn[data-diff="leicht"].active { background: var(--leicht); box-shadow: 0 0 16px rgba(0,229,160,0.4); }
+  .level-btn[data-diff="mittel"].active { background: var(--mittel); box-shadow: 0 0 16px rgba(255,179,71,0.4); }
+  .level-btn[data-diff="schwer"].active { background: var(--schwer); box-shadow: 0 0 16px rgba(255,107,157,0.4); }
+
+  /* ── Modus-Kacheln ── */
+  .mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .mode-card {
+    text-align: left; padding: 16px 14px; border-radius: 10px;
+    background: var(--bg); border: 2px solid var(--border);
+    cursor: pointer; transition: all .15s;
+    font-family: 'JetBrains Mono', monospace; color: var(--text);
+  }
+  .mode-card:hover { transform: translateY(-3px); }
+  .mode-icon { font-size: 1.8rem; margin-bottom: 6px; }
+  .mode-name { font-weight: 800; font-size: 0.85rem; letter-spacing: 0.03em; margin-bottom: 4px; }
+  .mode-desc { font-size: 0.68rem; color: var(--muted); line-height: 1.5; }
+  .mc-klassik:hover { border-color: var(--c-klassik); box-shadow: 0 0 18px rgba(0,229,160,.25); }
+  .mc-profi:hover   { border-color: var(--c-profi);   box-shadow: 0 0 18px rgba(255,179,71,.25); }
+
+  @media (max-width: 380px) {
+    .mode-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ── Gemeinsames HUD ── */
+  .meta-row {
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px;
+    margin-bottom: 12px; font-size: 0.7rem; color: var(--muted); letter-spacing: 0.05em;
+  }
+  .meta-count { color: var(--accent); font-weight: 800; }
+  .meta-badge {
+    padding: 3px 10px; border-radius: 4px; font-size: 0.62rem;
+    font-weight: 800; letter-spacing: 0.1em;
+  }
+  .meta-badge.klassik { background: rgba(0,229,160,.15);  color: var(--c-klassik); }
+  .meta-badge.profi   { background: rgba(255,179,71,.15); color: var(--c-profi); }
+
+  .feedback-line { min-height: 20px; margin-bottom: 14px; text-align: center; font-size: 0.75rem; letter-spacing: 0.06em; font-weight: 700; }
+  .feedback-line.correct { color: var(--accent); }
+  .feedback-line.wrong   { color: var(--bad); }
+
+  /* ── Einmaleins-Tafel (Grid, füllt immer die volle Breite, kein Scrollen nötig) ── */
+  .grid-wrap { width: 100%; margin-bottom: 16px; }
+  .tafel-grid {
+    display: grid; gap: 2px; background: var(--border);
+    border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
+    width: 100%; margin: 0 auto;
+  }
+  .tafel-cell {
+    aspect-ratio: 1 / 1; width: 100%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: clamp(0.5rem, var(--cell-vw, 3vw), 1.05rem);
+    font-weight: 700; background: var(--card); color: var(--text);
+    overflow: hidden;
+  }
+  .tafel-cell.corner { background: var(--border2); color: var(--muted); font-weight: 800; }
+  .tafel-cell.head-col { background: var(--accent); color: var(--bg); font-weight: 800; }
+  .tafel-cell.head-row { background: var(--accent-warm); color: var(--bg); font-weight: 800; }
+  .tafel-cell.diag { background: #1c2b25; }
+
+  .tafel-cell input {
+    width: 100%; height: 100%; background: transparent; border: none; outline: none;
+    text-align: center; color: inherit; font-family: inherit; font-weight: 800;
+    font-size: inherit; -moz-appearance: textfield; padding: 0;
+  }
+  .tafel-cell input::-webkit-inner-spin-button, .tafel-cell input::-webkit-outer-spin-button { -webkit-appearance: none; }
+  .tafel-cell.blank { background: #0a0e14; }
+  .tafel-cell.blank input { color: var(--text); }
+
+  .tafel-cell.correct { background: var(--accent) !important; }
+  .tafel-cell.correct input { color: var(--bg) !important; }
+  .tafel-cell.wrong { background: var(--bad) !important; animation: shake .3s; }
+  .tafel-cell.wrong input { color: var(--bg) !important; }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-3px); } 75% { transform: translateX(3px); } }
+
+  /* ── Ergebnis ── */
+  .result-btn-row { display: flex; gap: 10px; margin-top: 22px; }
+  .result-btn-row .btn { flex: 1; }
+
+  @keyframes fadeUp { from { opacity:0; transform: translateY(14px); } to { opacity:1; transform: translateY(0); } }
+  .screen { animation: fadeUp .25s ease both; }
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="header">
+    <button id="back-btn" class="back-btn hidden" onclick="goToStart()">← Zurück</button>
+    <div class="title">🔢 EINMALEINS-TAFEL</div>
+    <div class="subtitle">KLEINES &amp; GROSSES EINMALEINS ÜBEN</div>
+  </div>
+
+  <div class="card" id="card">
+
+    <!-- ═══════════ STARTBILDSCHIRM ═══════════ -->
+    <div id="screen-start" class="screen">
+      <div class="big-sigma">×</div>
+      <div class="start-title">WÄHLE DEINEN MODUS</div>
+      <div class="start-desc">Fülle die fehlenden Zahlen in der Einmaleins-Tafel aus –
+        in zwei Varianten.</div>
+
+      <div class="settings-block">
+        <div class="settings-label">ZAHLENRAUM</div>
+        <div class="level-row" id="range-row">
+          <button class="level-btn active" data-range="klein" onclick="setRange('klein')">KLEIN · 1–10</button>
+          <button class="level-btn" data-range="gross" onclick="setRange('gross')">GROSS · 11–25</button>
+        </div>
+
+        <div class="settings-label">SCHWIERIGKEIT</div>
+        <div class="level-row" id="diff-row">
+          <button class="level-btn active" data-diff="leicht" onclick="setDiff('leicht')">LEICHT</button>
+          <button class="level-btn" data-diff="mittel" onclick="setDiff('mittel')">MITTEL</button>
+          <button class="level-btn" data-diff="schwer" onclick="setDiff('schwer')">SCHWER</button>
+        </div>
+      </div>
+
+      <div class="mode-grid">
+        <button class="mode-card mc-klassik" onclick="startMode('klassik')">
+          <div class="mode-icon">🧩</div>
+          <div class="mode-name">Klassik</div>
+          <div class="mode-desc">Die vollständige Tafel mit vielen Lücken – 3 Tafeln pro Runde.</div>
+        </button>
+        <button class="mode-card mc-profi" onclick="startMode('profi')">
+          <div class="mode-icon">🎯</div>
+          <div class="mode-name">Profi</div>
+          <div class="mode-desc">Nur ausgewählte, nicht fortlaufende Zeilen &amp; Spalten sichtbar.</div>
+        </button>
+      </div>
+    </div>
+
+    <!-- ═══════════ SPIEL-SCREEN (Klassik / Profi) ═══════════ -->
+    <div id="screen-grid" class="screen hidden">
+      <div class="meta-row">
+        <span id="grid-round-label">TAFEL <span id="grid-round" class="meta-count">1</span>/<span id="grid-maxround">3</span></span>
+        <span class="meta-badge" id="grid-badge">MODUS</span>
+        <span>RICHTIG: <span id="grid-score" class="meta-count">0</span></span>
+      </div>
+      <div class="grid-wrap"><div id="tafel-container"></div></div>
+      <div class="feedback-line" id="grid-feedback"></div>
+      <div class="input-row" style="display:flex; gap:10px; justify-content:center;">
+        <button class="btn btn-confirm" id="grid-check-btn" onclick="checkGrid()">✓ Prüfen</button>
+        <button class="btn start-btn hidden" id="grid-next-btn" onclick="advanceRound()">Weiter →</button>
+      </div>
+    </div>
+
+    <!-- ═══════════ ERGEBNIS ═══════════ -->
+    <div id="screen-result" class="screen hidden">
+      <div class="big-sigma" id="result-emoji">🏆</div>
+      <div class="start-title" id="result-title">ERGEBNIS</div>
+      <div class="start-desc" id="result-text"></div>
+      <div class="result-btn-row">
+        <button class="btn start-btn" onclick="retryLastMode()">🔄 NOCHMAL</button>
+        <button class="btn btn-reset" onclick="goToStart()">◀ ANDERE MODI</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="navbar.js" onerror="console.log('navbar not found')"></script>
+<script>
+'use strict';
+
+/* ═══════════════════════════════════════════════════════
+   EINSTELLUNGEN
+   ═══════════════════════════════════════════════════════ */
+const settings = { range: 'klein', diff: 'leicht' };
+let lastMode = null;
+
+function setRange(r) {
+  settings.range = r;
+  document.querySelectorAll('#range-row .level-btn').forEach(b => b.classList.toggle('active', b.dataset.range === r));
+}
+function setDiff(d) {
+  settings.diff = d;
+  document.querySelectorAll('#diff-row .level-btn').forEach(b => b.classList.toggle('active', b.dataset.diff === d));
+}
+
+/* Dichte = Anteil der Felder, die als Lücke erscheinen (bewusst hoch für viel Übung) */
+const DIFF_CFG = {
+  leicht: { density: 0.35, profiFrac: 0.70 },
+  mittel: { density: 0.55, profiFrac: 0.55 },
+  schwer: { density: 0.75, profiFrac: 0.45 }
+};
+const ROUNDS_PER_SESSION = 3;
+
+const MODE_META = {
+  klassik: { label: 'KLASSIK', emoji: '🧩' },
+  profi:   { label: 'PROFI',   emoji: '🎯' }
+};
+
+/* ═══════════════════════════════════════════════════════
+   HILFSFUNKTIONEN
+   ═══════════════════════════════════════════════════════ */
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function rangeList(a, b) {
+  const out = [];
+  for (let i = a; i <= b; i++) out.push(i);
+  return out;
+}
+
+function fullFactors() {
+  return settings.range === 'klein' ? rangeList(1, 10) : rangeList(11, 25);
+}
+
+function sampleSorted(list, count) {
+  const picked = shuffle(list).slice(0, Math.max(1, Math.min(count, list.length)));
+  return picked.sort((x, y) => x - y);
+}
+
+function sampleIndices(n, count) {
+  return new Set(shuffle(rangeList(0, n - 1)).slice(0, Math.max(0, Math.min(count, n))));
+}
+
+/* ═══════════════════════════════════════════════════════
+   TAFEL-GENERATOR
+   ═══════════════════════════════════════════════════════ */
+function buildTableData(mode) {
+  const cfg = DIFF_CFG[settings.diff];
+  const full = fullFactors();
+  let rows = full, cols = full;
+
+  if (mode === 'profi') {
+    const size = Math.max(4, Math.round(full.length * cfg.profiFrac));
+    rows = sampleSorted(full, size);
+    cols = sampleSorted(full, size);
+  }
+
+  const matrix = rows.map(r => cols.map(c => r * c));
+  const totalCells = rows.length * cols.length;
+  const blankCount = Math.max(1, Math.min(totalCells - 1, Math.round(totalCells * cfg.density)));
+  const blankFlat = sampleIndices(totalCells, blankCount);
+
+  return { rows, cols, matrix, blankFlat };
+}
+
+/* ═══════════════════════════════════════════════════════
+   TAFEL RENDERN — Grid füllt immer die volle Breite,
+   Zellengröße/Schrift passen sich automatisch an, damit
+   nie horizontal gescrollt werden muss.
+   ═══════════════════════════════════════════════════════ */
+function renderTable(data) {
+  const container = document.getElementById('tafel-container');
+  container.innerHTML = '';
+  const grid = document.createElement('div');
+  grid.className = 'tafel-grid';
+
+  const totalCols = data.cols.length + 1;
+  grid.style.gridTemplateColumns = `repeat(${totalCols}, minmax(0, 1fr))`;
+  const cellVw = (3.7 * 11 / totalCols).toFixed(2);
+  grid.style.setProperty('--cell-vw', cellVw + 'vw');
+
+  const corner = document.createElement('div');
+  corner.className = 'tafel-cell corner';
+  corner.textContent = '×';
+  grid.appendChild(corner);
+
+  data.cols.forEach(c => {
+    const cell = document.createElement('div');
+    cell.className = 'tafel-cell head-col';
+    cell.textContent = c;
+    grid.appendChild(cell);
+  });
+
+  data.rows.forEach((r, ri) => {
+    const head = document.createElement('div');
+    head.className = 'tafel-cell head-row';
+    head.textContent = r;
+    grid.appendChild(head);
+
+    data.cols.forEach((c, ci) => {
+      const cell = document.createElement('div');
+      const flat = ri * data.cols.length + ci;
+      cell.className = 'tafel-cell';
+      if (r === c) cell.classList.add('diag');
+      if (data.blankFlat.has(flat)) {
+        cell.classList.add('blank');
+        cell.innerHTML = `<input type="number" data-answer="${data.matrix[ri][ci]}" autocomplete="off" />`;
+      } else {
+        cell.textContent = data.matrix[ri][ci];
+      }
+      grid.appendChild(cell);
+    });
+  });
+
+  container.appendChild(grid);
+  return grid.querySelectorAll('input').length;
+}
+
+/* ═══════════════════════════════════════════════════════
+   BILDSCHIRM-STEUERUNG
+   ═══════════════════════════════════════════════════════ */
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+  document.getElementById('screen-' + id).classList.remove('hidden');
+  document.getElementById('back-btn').classList.toggle('hidden', id === 'start');
+}
+
+function stopAllTimers() {
+  if (gridState) gridState.active = false;
+}
+
+function goToStart() {
+  stopAllTimers();
+  showScreen('start');
+}
+
+function startMode(mode) {
+  lastMode = mode;
+  startGridSession(mode);
+}
+
+function retryLastMode() { if (lastMode) startMode(lastMode); }
+
+function showResult({ emoji, title, text, saveLabel, saveScore, saveMax }) {
+  document.getElementById('result-emoji').textContent = emoji;
+  document.getElementById('result-title').textContent = title;
+  document.getElementById('result-text').textContent = text;
+  showScreen('result');
+  if (window.LernApps) {
+    LernApps.saveResult({ score: saveScore, max: saveMax, label: saveLabel });
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   KLASSIK / PROFI — Runden-Sitzung
+   ═══════════════════════════════════════════════════════ */
+let gridState = null;
+
+function startGridSession(mode) {
+  showScreen('grid');
+  document.getElementById('grid-round-label').innerHTML =
+    `TAFEL <span id="grid-round" class="meta-count">1</span>/<span id="grid-maxround">${ROUNDS_PER_SESSION}</span>`;
+  document.getElementById('grid-badge').textContent = MODE_META[mode].label;
+  document.getElementById('grid-badge').className = 'meta-badge ' + mode;
+  gridState = { mode, round: 0, sessionSolved: 0, sessionTotal: 0, active: true };
+  nextGridRound();
+}
+
+function nextGridRound() {
+  gridState.round++;
+  document.getElementById('grid-round').textContent = gridState.round;
+  document.getElementById('grid-score').textContent = gridState.sessionSolved;
+  document.getElementById('grid-feedback').textContent = '';
+  document.getElementById('grid-feedback').className = 'feedback-line';
+  document.getElementById('grid-check-btn').classList.remove('hidden');
+  document.getElementById('grid-next-btn').classList.add('hidden');
+
+  const data = buildTableData(gridState.mode);
+  const blanks = renderTable(data);
+  gridState.roundTotal = blanks;
+  gridState.roundSolved = 0;
+  gridState.sessionTotal += blanks;
+}
+
+function checkGrid() {
+  if (!gridState || !gridState.active) return;
+  const inputs = document.querySelectorAll('#tafel-container input');
+  let newlyCorrect = 0, stillWrong = 0;
+  inputs.forEach(inp => {
+    if (inp.disabled) return;
+    const cell = inp.closest('.tafel-cell');
+    const val = parseInt(inp.value, 10);
+    const ans = parseInt(inp.dataset.answer, 10);
+    if (val === ans) {
+      cell.classList.add('correct'); cell.classList.remove('wrong');
+      inp.disabled = true;
+      newlyCorrect++;
+    } else {
+      cell.classList.add('wrong');
+      stillWrong++;
+    }
+  });
+
+  gridState.sessionSolved += newlyCorrect;
+  gridState.roundSolved += newlyCorrect;
+  document.getElementById('grid-score').textContent = gridState.sessionSolved;
+  const fb = document.getElementById('grid-feedback');
+
+  if (stillWrong === 0) {
+    fb.textContent = `✓ Tafel komplett! ${gridState.roundSolved}/${gridState.roundTotal} richtig.`;
+    fb.className = 'feedback-line correct';
+    document.getElementById('grid-check-btn').classList.add('hidden');
+    const nextBtn = document.getElementById('grid-next-btn');
+    nextBtn.textContent = gridState.round >= ROUNDS_PER_SESSION ? 'Fertig →' : 'Weiter →';
+    nextBtn.classList.remove('hidden');
+  } else {
+    fb.textContent = `Noch ${stillWrong} Feld(er) nicht korrekt – versuch es nochmal!`;
+    fb.className = 'feedback-line wrong';
+  }
+}
+
+function advanceRound() {
+  if (gridState.round >= ROUNDS_PER_SESSION) {
+    endGridSession();
+  } else {
+    nextGridRound();
+  }
+}
+
+function endGridSession() {
+  gridState.active = false;
+  const pct = gridState.sessionTotal ? Math.round((gridState.sessionSolved / gridState.sessionTotal) * 100) : 0;
+  showResult({
+    emoji: MODE_META[gridState.mode].emoji,
+    title: 'TAFEL-SITZUNG BEENDET!',
+    text: `Du hast ${gridState.sessionSolved} von ${gridState.sessionTotal} Feldern richtig gelöst (${pct}%).`,
+    saveLabel: `${MODE_META[gridState.mode].label}: ${gridState.sessionSolved}/${gridState.sessionTotal}`,
+    saveScore: gridState.sessionSolved,
+    saveMax: gridState.sessionTotal
+  });
+}
+</script>
+</body>
+</html>
