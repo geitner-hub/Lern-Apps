@@ -229,6 +229,17 @@
         }
       ],
       "aod": false
+    },
+    {
+      "name": "Einmaleins 1x1",
+      "datei": "einmaileins_tafel.html",
+      "fach": "Mathematik",
+      "emoji": "1️⃣",
+      "beschreibung": "Fülle die Lücken! Trainiere dein Einmaleins",
+      "hidden": false,
+      "klassen": [],
+      "customTags": [],
+      "aod": false
     }
   ],
   "customTags": [
