@@ -238,9 +238,15 @@
       "beschreibung": "Fülle die Lücken! Trainiere dein Einmaleins",
       "hidden": false,
       "klassen": [
-        5
+        5,
+        6
       ],
-      "customTags": [],
+      "customTags": [
+        {
+          "name": "Kopfrechnen",
+          "color": 5
+        }
+      ],
       "aod": false
     }
   ],
