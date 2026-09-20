@@ -115,6 +115,24 @@
       "aod": false
     },
     {
+      "name": "Vokabeltrainer 6. Klasse",
+      "datei": "vokabeltrainer6.html",
+      "fach": "Englisch",
+      "emoji": "📖",
+      "beschreibung": "Übe Vokabeln aus dem Schulbuch",
+      "hidden": false,
+      "klassen": [
+        6
+      ],
+      "customTags": [
+        {
+          "name": "Vokabeln",
+          "color": 4
+        }
+      ],
+      "aod": false
+    },
+    {
       "name": "Kopfrechnen Klasse 3",
       "datei": "kopfrechnen_kl3.html",
       "fach": "Mathematik",
@@ -160,24 +178,6 @@
         {
           "name": "Kopfrechnen",
           "color": 5
-        }
-      ],
-      "aod": false
-    },
-    {
-      "name": "Vokabeltrainer 6. Klasse",
-      "datei": "vokabeltrainer6.html",
-      "fach": "Englisch",
-      "emoji": "📖",
-      "beschreibung": "Übe Vokabeln aus dem Schulbuch",
-      "hidden": false,
-      "klassen": [
-        6
-      ],
-      "customTags": [
-        {
-          "name": "Vokabeln",
-          "color": 4
         }
       ],
       "aod": false
