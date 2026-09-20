@@ -59,19 +59,6 @@
       "aod": false
     },
     {
-      "name": "Längeneinheiten umrechnen",
-      "datei": "laengeneinheiten.html",
-      "fach": "Mathematik",
-      "emoji": "📱",
-      "beschreibung": "",
-      "hidden": false,
-      "klassen": [
-        5
-      ],
-      "customTags": [],
-      "aod": false
-    },
-    {
       "name": "Vokabeltrainer 6. Klasse",
       "datei": "vokabeltrainer6.html",
       "fach": "Englisch",
@@ -87,6 +74,19 @@
           "color": 4
         }
       ],
+      "aod": false
+    },
+    {
+      "name": "Längeneinheiten umrechnen",
+      "datei": "laengeneinheiten.html",
+      "fach": "Mathematik",
+      "emoji": "📱",
+      "beschreibung": "",
+      "hidden": false,
+      "klassen": [
+        5
+      ],
+      "customTags": [],
       "aod": false
     },
     {
