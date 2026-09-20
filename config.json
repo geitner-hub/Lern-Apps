@@ -72,6 +72,24 @@
       "aod": false
     },
     {
+      "name": "Vokabeltrainer 6. Klasse",
+      "datei": "vokabeltrainer6.html",
+      "fach": "Englisch",
+      "emoji": "📖",
+      "beschreibung": "Übe Vokabeln aus dem Schulbuch",
+      "hidden": false,
+      "klassen": [
+        6
+      ],
+      "customTags": [
+        {
+          "name": "Vokabeln",
+          "color": 4
+        }
+      ],
+      "aod": false
+    },
+    {
       "name": "Regeln in unserer Gesellschaft",
       "datei": "regeln-sortierer-gpg.html",
       "fach": "GPG",
@@ -110,24 +128,6 @@
         {
           "name": "Kopfrechnen",
           "color": 5
-        }
-      ],
-      "aod": false
-    },
-    {
-      "name": "Vokabeltrainer 6. Klasse",
-      "datei": "vokabeltrainer6.html",
-      "fach": "Englisch",
-      "emoji": "📖",
-      "beschreibung": "Übe Vokabeln aus dem Schulbuch",
-      "hidden": false,
-      "klassen": [
-        6
-      ],
-      "customTags": [
-        {
-          "name": "Vokabeln",
-          "color": 4
         }
       ],
       "aod": false
