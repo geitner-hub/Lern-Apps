@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Simple Past – Lernwelt</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f0e1a;--surface:#1b1929;--surface2:#25223a;
+  --accent:#e6a817;--indigo:#6366f1;--indigo2:#818cf8;
+  --text:#f1f0fb;--text2:rgba(241,240,251,.68);--muted:rgba(241,240,251,.4);
+  --green:#4ade80;--red:#f87171;--sky:#38bdf8;
+  --line:rgba(255,255,255,.09);--r:14px;
+}
+html{-webkit-text-size-adjust:100%}
+[hidden]{display:none!important}
+body{font-family:'Nunito',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:1.5rem 1.1rem 6rem;line-height:1.5}
+.app-container{max-width:720px;margin:0 auto}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+button{font-family:inherit}
+
+/* ── Kopf ── */
+.head{margin-bottom:1.4rem}
+h1{font-family:'Fredoka One','Nunito',system-ui,sans-serif;font-weight:400;font-size:clamp(1.9rem,6vw,2.6rem);color:var(--accent);line-height:1.1}
+.subtitle{color:var(--text2);font-size:.95rem;margin-top:.3rem}
+
+/* ── Buttons ── */
+.btn{background:var(--accent);color:#1a1300;font:800 1.05rem 'Nunito',system-ui,sans-serif;border:0;border-radius:12px;padding:.85rem 1.4rem;cursor:pointer;transition:transform .12s,filter .12s}
+.btn:hover:not(:disabled){filter:brightness(1.08);transform:translateY(-1px)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.ghost{background:transparent;color:var(--text2);border:1px solid var(--line)}
+.btn.ghost:hover:not(:disabled){color:var(--text);border-color:var(--muted)}
+.btn.small{padding:.5rem .9rem;font-size:.9rem;border-radius:10px}
+.row{display:flex;gap:.7rem;flex-wrap:wrap;margin-top:1.2rem}
+
+/* ── Startseite ── */
+.mode-grid{display:grid;gap:.8rem;grid-template-columns:1fr}
+@media(min-width:560px){.mode-grid{grid-template-columns:1fr 1fr}}
+.mode-card{--k:var(--accent);position:relative;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:1.1rem 1.2rem 1.1rem 1.5rem;color:inherit;font:inherit;cursor:pointer;display:flex;flex-direction:column;gap:.3rem;overflow:hidden;transition:transform .15s,border-color .15s}
+.mode-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--k)}
+.mode-card:hover{transform:translateY(-2px);border-color:var(--k)}
+.mode-card .name{font-family:'Fredoka One','Nunito',sans-serif;font-size:1.4rem;color:var(--k);font-weight:400}
+.mode-card .desc{color:var(--text2);font-size:.92rem}
+.mode-card .ex{font-weight:800;font-size:1rem;margin-top:.25rem}
+.hl{color:var(--accent);font-weight:800}
+
+/* ── Einstellungen ── */
+.back{margin-bottom:1rem}
+h2.sh{font-family:'Fredoka One','Nunito',sans-serif;font-weight:400;font-size:1.6rem;color:var(--text);margin-bottom:.2rem}
+.lbl{font-weight:800;margin:1.3rem 0 .5rem}
+.seg{display:flex;gap:.5rem;flex-wrap:wrap}
+.seg button{flex:1 1 0;min-width:6.2rem;padding:.8rem .6rem;border-radius:12px;border:2px solid var(--line);background:var(--surface);color:var(--text);font:800 1rem 'Nunito',system-ui,sans-serif;cursor:pointer}
+.seg button[aria-pressed="true"]{border-color:var(--accent);background:rgba(230,168,23,.12);color:var(--accent)}
+.check{display:flex;gap:.7rem;align-items:flex-start;margin-top:1.3rem;cursor:pointer;color:var(--text2)}
+.check input{width:1.3rem;height:1.3rem;margin-top:.15rem;accent-color:var(--accent);flex-shrink:0}
+.poolinfo{margin-top:1.3rem;padding:.8rem 1rem;background:var(--surface);border:1px solid var(--line);border-radius:12px;color:var(--text2)}
+.poolinfo b{color:var(--text)}
+details{margin-top:.6rem}
+summary{cursor:pointer;color:var(--indigo2);font-weight:700}
+.chips{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.6rem}
+.chip{background:var(--surface2);border:1px solid var(--line);border-radius:99px;padding:.15rem .7rem;font-size:.88rem;color:var(--text)}
+.chip.zus{color:var(--text2);border-style:dashed}
+.notice{margin-top:.6rem;color:var(--accent);font-size:.9rem}
+
+/* ── Aufgaben ── */
+.qtop{display:flex;align-items:center;gap:.8rem;margin-bottom:.7rem}
+.qtop .grow{flex:1;font-weight:800;color:var(--text2)}
+.qtop .sc{font-weight:800;color:var(--green)}
+.bar{height:6px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden}
+.bar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--indigo),var(--accent));transition:width .3s}
+.qcard{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:1.4rem 1.2rem;margin-top:1rem}
+.qhint{color:var(--text2);font-size:.95rem;margin-bottom:.9rem}
+.qsent{font-size:clamp(1.25rem,4.6vw,1.6rem);font-weight:800;line-height:1.8}
+.sig{color:var(--sky)}
+.fline{display:flex;align-items:baseline;gap:.7rem;flex-wrap:wrap;font-size:clamp(1.9rem,8vw,2.8rem);line-height:1.5}
+.fline .fv{font-family:'Fredoka One','Nunito',sans-serif;font-weight:400}
+.fline .arr{color:var(--muted)}
+.fline .who{font-size:1rem;color:var(--text2);font-weight:700}
+.sub{color:var(--muted);font-size:.9rem;margin-top:.3rem}
+.slot{display:inline-block;min-width:4.5ch;border-bottom:3px solid var(--accent);text-align:center;color:var(--accent);padding:0 .3rem;margin:0 .1rem;font-weight:800}
+.slot.right{color:var(--green);border-color:var(--green)}
+.slot-input{font:inherit;font-weight:800;color:var(--accent);background:transparent;border:0;border-bottom:3px solid var(--accent);text-align:center;width:var(--w,8ch);max-width:100%;outline:0;padding:0 .2rem;border-radius:0}
+.slot-input:focus{background:rgba(230,168,23,.1)}
+.slot-input:disabled{opacity:1;-webkit-text-fill-color:currentColor}
+.slot-input.right{color:var(--green);border-color:var(--green)}
+.slot-input.wrong{color:var(--red);border-color:var(--red);text-decoration:line-through}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-top:1.3rem}
+.opt{min-height:3.5rem;border-radius:12px;border:2px solid rgba(99,102,241,.55);background:rgba(99,102,241,.12);color:var(--text);font:800 1.15rem 'Nunito',system-ui,sans-serif;cursor:pointer;padding:.4rem .6rem;transition:background .12s}
+.opt:hover:not(:disabled){background:rgba(99,102,241,.28)}
+.opt:disabled{cursor:default}
+.opt.right{border-color:var(--green);background:rgba(74,222,128,.15)}
+.opt.right::before{content:'✓ '}
+.opt.wrong{border-color:var(--red);background:rgba(248,113,113,.13)}
+.opt.wrong::before{content:'✗ '}
+.typebar{margin-top:1.3rem}
+.fb{margin-top:1rem;padding:.9rem 1rem;border-radius:12px;border:1px solid var(--line);background:var(--surface2)}
+.fb.ok{border-color:rgba(74,222,128,.55)}
+.fb.no{border-color:rgba(248,113,113,.55)}
+.fb .okc{color:var(--green)}
+.fb .noc{color:var(--red)}
+.fb .full{font-weight:800;margin-top:.35rem}
+.fb .note{color:var(--text2);font-size:.92rem;margin-top:.3rem}
+#qnext{margin-top:1rem;width:100%}
+
+/* ── Ergebnis ── */
+.res{text-align:center;padding:1.5rem 0}
+.res .big{font-family:'Fredoka One','Nunito',sans-serif;font-size:clamp(3.2rem,16vw,5rem);color:var(--accent);line-height:1.1}
+.res .msg{color:var(--text2);margin:.4rem 0 1rem}
+.res .chips{justify-content:center}
+.res .row{justify-content:center}
+
+/* ── Grammatik ── */
+.gnav{position:sticky;top:0;z-index:5;background:var(--bg);padding:.6rem 0;display:flex;gap:.5rem;overflow-x:auto;border-bottom:1px solid var(--line);margin-bottom:.5rem}
+.gnav button{flex-shrink:0;background:var(--surface);color:var(--text);border:1px solid var(--line);border-radius:99px;padding:.4rem .95rem;font:700 .9rem 'Nunito',system-ui,sans-serif;cursor:pointer}
+.gnav button:hover{border-color:var(--accent);color:var(--accent)}
+.gsec{margin-top:2.2rem;scroll-margin-top:3.6rem}
+.gsec h2{font-family:'Fredoka One','Nunito',sans-serif;font-weight:400;font-size:1.55rem;color:var(--accent);margin-bottom:.4rem}
+.gsec p{color:var(--text2);margin-top:.4rem}
+.gsec p b,.gsec li b{color:var(--text)}
+.eg{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:.7rem 1rem;margin-top:.55rem;font-weight:800;font-size:1.05rem}
+.eg .de{display:block;color:var(--muted);font-weight:400;font-size:.9rem}
+.callout{border-left:4px solid var(--indigo);background:rgba(99,102,241,.1);padding:.75rem 1rem;border-radius:0 12px 12px 0;margin-top:.8rem;color:var(--text2)}
+.callout b{color:var(--text)}
+.formula{margin-top:.7rem;padding:.8rem 1rem;background:var(--surface2);border-radius:12px;font-weight:800;text-align:center;font-size:1.05rem}
+.tw{overflow-x:auto;margin-top:.7rem}
+table{width:100%;border-collapse:collapse;min-width:20rem}
+th,td{text-align:left;padding:.55rem .7rem;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--text2);font-weight:700;font-size:.9rem}
+td.w{font-weight:800}
+.sigs{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.6rem}
+.sigs span{background:rgba(56,189,248,.1);border:1px solid rgba(56,189,248,.4);color:var(--text);padding:.25rem .75rem;border-radius:99px;font-weight:700}
+.sigs small{color:var(--muted);font-weight:400}
+.persons{display:grid;grid-template-columns:1fr 1fr;gap:.4rem .8rem;margin-top:.7rem}
+.persons div{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:.4rem .8rem;font-weight:700}
+.pairs{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:.7rem}
+@media(min-width:520px){.pairs{grid-template-columns:repeat(3,1fr)}}
+.pairs div{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:.55rem .8rem;font-weight:800}
+.pairs .a{color:var(--text2);font-weight:700}
+.pairs .b{color:var(--accent)}
+.fix{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-top:.55rem}
+.fix div{border-radius:10px;padding:.55rem .8rem;font-weight:700}
+.fix .x{background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.4)}
+.fix .x span{text-decoration:line-through;color:var(--red)}
+.fix .v{background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.4);color:var(--green)}
+.fix .x::before{content:'✗ ';color:var(--red)}
+.fix .v::before{content:'✓ '}
+.vctl{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:.8rem;align-items:center}
+.vctl .seg button{min-width:0;flex:0 0 auto;padding:.45rem .9rem;font-size:.9rem}
+.vctl input[type=search]{flex:1 1 9rem;background:var(--surface);color:var(--text);border:2px solid var(--line);border-radius:12px;padding:.55rem .8rem;font:700 1rem 'Nunito',system-ui,sans-serif}
+.pron{color:var(--muted);font-weight:400;font-size:.85rem}
+.vcount{color:var(--muted);font-size:.9rem;margin-top:.5rem}
+
+@media(max-width:480px){.fix{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="app-container">
+  <header class="head">
+    <h1>Simple Past</h1>
+    <p class="subtitle">Übe die Vergangenheit: regular und irregular verbs</p>
+  </header>
+
+  <!-- ═════ START ═════ -->
+  <section id="screen-home">
+    <div class="mode-grid">
+      <button class="mode-card" style="--k:var(--green)" data-open="grammar">
+        <span class="name">Grammatik nachlesen</span>
+        <span class="desc">Regeln, Beispiele, Verneinung, Fragen und die Verbenliste</span>
+        <span class="ex">I play → I play<b class="hl">ed</b></span>
+      </button>
+      <button class="mode-card" style="--k:var(--indigo2)" data-practice="reg">
+        <span class="name">Regular verbs</span>
+        <span class="desc">Verben mit -ed: Endungen und Schreibung</span>
+        <span class="ex">like → lik<b class="hl">ed</b> · stop → stop<b class="hl">ped</b></span>
+      </button>
+      <button class="mode-card" style="--k:var(--accent)" data-practice="irr">
+        <span class="name">Irregular verbs</span>
+        <span class="desc">Unregelmäßige Verben mit eigener Form</span>
+        <span class="ex">go → <b class="hl">went</b> · see → <b class="hl">saw</b></span>
+      </button>
+      <button class="mode-card" style="--k:var(--sky)" data-practice="all">
+        <span class="name">Alles gemischt</span>
+        <span class="desc">Regular und irregular verbs durcheinander</span>
+        <span class="ex">played · <b class="hl">had</b> · studi<b class="hl">ed</b> · <b class="hl">ate</b></span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ═════ EINSTELLUNGEN ═════ -->
+  <section id="screen-setup" hidden>
+    <button class="btn ghost small back" data-open="home">← Zurück</button>
+    <h2 class="sh" id="setup-title"></h2>
+    <p class="subtitle" id="setup-sub"></p>
+
+    <div class="lbl" id="lbl-level">Welche Verben?</div>
+    <div class="seg" id="seg-level" role="group" aria-labelledby="lbl-level">
+      <button data-v="5" aria-pressed="false">Klasse 5</button>
+      <button data-v="6" aria-pressed="false">Klasse 6</button>
+      <button data-v="mix" aria-pressed="false">5 + 6 gemischt</button>
+    </div>
+
+    <div class="lbl" id="lbl-count">Wie viele Aufgaben?</div>
+    <div class="seg" id="seg-count" role="group" aria-labelledby="lbl-count">
+      <button data-v="10" aria-pressed="false">10</button>
+      <button data-v="15" aria-pressed="false">15</button>
+      <button data-v="20" aria-pressed="false">20</button>
+    </div>
+
+    <label class="check">
+      <input type="checkbox" id="extras" checked>
+      <span>Auch wichtige Zusatzverben üben (z. B. go, see, have), die nicht in den Vokabellisten stehen</span>
+    </label>
+
+    <div class="poolinfo">
+      <div id="poolinfo"></div>
+      <details id="pooldet"><summary>Verben anzeigen</summary><div class="chips" id="poollist"></div></details>
+      <div class="notice" id="poolnotice" hidden></div>
+    </div>
+
+    <div class="row"><button class="btn" id="start">Los geht's</button></div>
+  </section>
+
+  <!-- ═════ AUFGABEN ═════ -->
+  <section id="screen-quiz" hidden>
+    <div class="qtop">
+      <button class="btn ghost small" id="quit">← Beenden</button>
+      <span class="grow" id="qcount"></span>
+      <span class="sc" id="qscore"></span>
+    </div>
+    <div class="bar"><i id="qbar"></i></div>
+    <div class="qcard">
+      <p class="qhint" id="qhint"></p>
+      <div id="qbody"></div>
+      <div class="opts" id="qopts"></div>
+      <div class="typebar" id="typebar"><button class="btn" id="qcheck">Prüfen</button></div>
+    </div>
+    <div class="fb" id="qfb" hidden role="status" aria-live="polite"></div>
+    <button class="btn" id="qnext" hidden>Weiter</button>
+  </section>
+
+  <!-- ═════ ERGEBNIS ═════ -->
+  <section id="screen-result" hidden>
+    <div class="res">
+      <div class="big" id="rscore"></div>
+      <p class="msg" id="rmsg"></p>
+      <div id="rwrongbox" hidden>
+        <p class="msg">Diese Verben solltest du nochmal üben:</p>
+        <div class="chips" id="rwrong"></div>
+      </div>
+      <div class="row">
+        <button class="btn" id="rretrywrong" hidden>Fehler nochmal üben</button>
+        <button class="btn" id="ragain">Neue Runde</button>
+        <button class="btn ghost" data-open="home">Zur Auswahl</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═════ GRAMMATIK ═════ -->
+  <section id="screen-grammar" hidden>
+    <button class="btn ghost small back" data-open="home">← Zurück</button>
+    <h2 class="sh">Simple Past – so geht's</h2>
+    <p class="subtitle">Mit dem Simple Past erzählst du, was in der Vergangenheit passiert ist und jetzt vorbei ist.</p>
+
+    <nav class="gnav" aria-label="Abschnitte">
+      <button data-scroll="g-wann">Wann?</button>
+      <button data-scroll="g-reg">Regular</button>
+      <button data-scroll="g-irr">Irregular</button>
+      <button data-scroll="g-neg">Verneinung</button>
+      <button data-scroll="g-frage">Fragen</button>
+      <button data-scroll="g-fehler">Fehler</button>
+      <button data-scroll="g-liste">Verbenliste</button>
+    </nav>
+
+    <div class="gsec" id="g-wann">
+      <h2>Wann benutzt man das Simple Past?</h2>
+      <p>Wenn etwas <b>in der Vergangenheit</b> passiert ist und <b>abgeschlossen</b> ist. Oft steht ein Signalwort im Satz:</p>
+      <div class="sigs">
+        <span>yesterday <small>gestern</small></span>
+        <span>last week <small>letzte Woche</small></span>
+        <span>last summer <small>letzten Sommer</small></span>
+        <span>two days ago <small>vor zwei Tagen</small></span>
+        <span>in 2019 <small>im Jahr 2019</small></span>
+        <span>when I was ten <small>als ich zehn war</small></span>
+      </div>
+      <div class="eg">Yesterday I played football.<span class="de">Gestern habe ich Fußball gespielt.</span></div>
+      <div class="eg">We went to the seaside last summer.<span class="de">Letzten Sommer sind wir ans Meer gefahren.</span></div>
+    </div>
+
+    <div class="gsec" id="g-reg">
+      <h2>Regular verbs: Endung -ed</h2>
+      <p>Bei regelmäßigen Verben hängst du <b>-ed</b> an die Grundform. Für <b>alle Personen</b> ist die Form gleich, es gibt kein -s.</p>
+      <div class="persons">
+        <div>I play<b class="hl">ed</b></div><div>we play<b class="hl">ed</b></div>
+        <div>you play<b class="hl">ed</b></div><div>you play<b class="hl">ed</b></div>
+        <div>he / she / it play<b class="hl">ed</b></div><div>they play<b class="hl">ed</b></div>
+      </div>
+      <p>Manchmal ändert sich die Schreibung:</p>
+      <div class="tw"><table>
+        <thead><tr><th>Regel</th><th>Beispiele</th></tr></thead>
+        <tbody>
+          <tr><td>Normalfall: <b>+ ed</b></td><td class="w">walk → walk<b class="hl">ed</b><br>play → play<b class="hl">ed</b></td></tr>
+          <tr><td>Verb endet auf <b>-e</b>: nur <b>+ d</b></td><td class="w">like → like<b class="hl">d</b><br>dance → dance<b class="hl">d</b></td></tr>
+          <tr><td>Konsonant + <b>y</b>: y wird zu <b>ied</b><br><small>(Vokal + y bleibt: play → played)</small></td><td class="w">study → stud<b class="hl">ied</b><br>try → tr<b class="hl">ied</b></td></tr>
+          <tr><td>Kurzer Vokal + ein Konsonant: der <b>Konsonant wird verdoppelt</b></td><td class="w">stop → sto<b class="hl">pped</b><br>plan → pla<b class="hl">nned</b></td></tr>
+        </tbody>
+      </table></div>
+      <div class="callout"><b>Aussprache von -ed:</b> walked [t], played [d], wanted [ɪd]. Nach t und d sprichst du die Endung als eigene Silbe.</div>
+    </div>
+
+    <div class="gsec" id="g-irr">
+      <h2>Irregular verbs: eigene Form</h2>
+      <p>Unregelmäßige Verben bekommen <b>kein -ed</b>. Sie haben eine eigene Form, die du lernen musst. Auch hier ist die Form für alle Personen gleich.</p>
+      <div class="pairs">
+        <div><span class="a">go →</span> <span class="b">went</span></div>
+        <div><span class="a">see →</span> <span class="b">saw</span></div>
+        <div><span class="a">have →</span> <span class="b">had</span></div>
+        <div><span class="a">eat →</span> <span class="b">ate</span></div>
+        <div><span class="a">come →</span> <span class="b">came</span></div>
+        <div><span class="a">make →</span> <span class="b">made</span></div>
+      </div>
+      <div class="callout"><b>be</b> hat zwei Formen: <b>I / he / she / it → was</b> und <b>you / we / they → were</b>.<br>
+      <b>read</b> schreibst du im Simple Past gleich, sprichst es aber <b>[red]</b>.</div>
+      <p>Alle Formen zum Nachschlagen findest du unten in der Verbenliste.</p>
+    </div>
+
+    <div class="gsec" id="g-neg">
+      <h2>Verneinung: didn't + Grundform</h2>
+      <div class="formula">Subjekt + didn't + Grundform</div>
+      <div class="eg">I didn't play football.<span class="de">Ich habe nicht Fußball gespielt.</span></div>
+      <div class="eg">She didn't go to school.<span class="de">Sie ist nicht zur Schule gegangen.</span></div>
+      <div class="callout"><b>didn't</b> (= did not) zeigt schon die Vergangenheit. Das Verb danach steht deshalb in der <b>Grundform</b>, auch bei irregular verbs.</div>
+      <div class="fix"><div class="x"><span>She didn't went home.</span></div><div class="v">She didn't go home.</div></div>
+      <p>Bei <b>be</b> gibt es kein didn't: <b>was not (wasn't)</b> und <b>were not (weren't)</b>.</p>
+      <div class="eg">I wasn't at home.<span class="de">Ich war nicht zu Hause.</span></div>
+    </div>
+
+    <div class="gsec" id="g-frage">
+      <h2>Fragen: Did + Subjekt + Grundform?</h2>
+      <div class="formula">Did + Subjekt + Grundform?</div>
+      <div class="eg">Did you watch TV?<span class="de">Hast du ferngesehen?</span></div>
+      <div class="eg">Did she go to school?<span class="de">Ist sie zur Schule gegangen?</span></div>
+      <p>Kurzantworten: <b>Yes, I did.</b> oder <b>No, I didn't.</b></p>
+      <p>Mit Fragewort steht das Fragewort vor did:</p>
+      <div class="eg">Where did you go?<span class="de">Wohin bist du gegangen?</span></div>
+      <div class="eg">What did he eat?<span class="de">Was hat er gegessen?</span></div>
+      <div class="callout">Auch in Fragen steht nach <b>did</b> immer die <b>Grundform</b>. Bei <b>be</b> fragst du ohne did: <b>Were you at home? – Yes, I was.</b></div>
+    </div>
+
+    <div class="gsec" id="g-fehler">
+      <h2>Typische Fehler</h2>
+      <div class="fix"><div class="x"><span>I goed to school.</span></div><div class="v">I went to school.</div></div>
+      <div class="fix"><div class="x"><span>She didn't went home.</span></div><div class="v">She didn't go home.</div></div>
+      <div class="fix"><div class="x"><span>Did you played?</span></div><div class="v">Did you play?</div></div>
+      <div class="fix"><div class="x"><span>He studyed a lot.</span></div><div class="v">He studied a lot.</div></div>
+      <div class="fix"><div class="x"><span>We stoped at the corner.</span></div><div class="v">We stopped at the corner.</div></div>
+    </div>
+
+    <div class="gsec" id="g-liste">
+      <h2>Verbenliste</h2>
+      <p>Die Verben aus den Vokabellisten und wichtige Zusatzverben.</p>
+      <div class="vctl">
+        <div class="seg" id="vseg-level" role="group" aria-label="Klasse">
+          <button data-v="5" aria-pressed="false">Klasse 5</button>
+          <button data-v="6" aria-pressed="false">Klasse 6</button>
+          <button data-v="mix" aria-pressed="true">Alle</button>
+        </div>
+        <div class="seg" id="vseg-kind" role="group" aria-label="Art">
+          <button data-v="irr" aria-pressed="true">Irregular</button>
+          <button data-v="reg" aria-pressed="false">Regular</button>
+          <button data-v="all" aria-pressed="false">Alle</button>
+        </div>
+        <input type="search" id="vsearch" placeholder="Verb suchen …" aria-label="Verb suchen" autocomplete="off">
+      </div>
+      <div class="vcount" id="vcount"></div>
+      <div class="tw"><table>
+        <thead><tr><th>Grundform</th><th>Simple Past</th><th>Deutsch</th></tr></thead>
+        <tbody id="vbody"></tbody>
+      </table></div>
+      <div class="row">
+        <button class="btn" data-practice="reg">Regular üben</button>
+        <button class="btn" data-practice="irr">Irregular üben</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script src="navbar.js"></script>
+<script>
+'use strict';
+/* ════════════════════════════════════════════════════════════
+   DATEN
+   IRR:  [Grundform, Simple Past, Deutsch, Klasse, Satzergänzung]
+         Klasse 5/6 = wird als Zusatzverb angeboten, 0 = nur zum Erkennen
+   REG:  [Grundform, Deutsch, Klasse, Satzergänzung]  (Zusatzverben)
+   Die Verben aus den Vokabellisten werden zur Laufzeit aus
+   vokabeln.json (Kl. 5) und vokabeln6.json (Kl. 6) gelesen.
+   ════════════════════════════════════════════════════════════ */
+const IRR = [
+ ['be','was/were','sein',5,'at the cinema'],
+ ['have','had','haben',5,'a great time'],
+ ['do','did','tun, machen',5,'the homework'],
+ ['go','went','gehen, fahren',5,'to school by bus'],
+ ['come','came','kommen',5,'home late'],
+ ['see','saw','sehen',5,'a big dog'],
+ ['eat','ate','essen',5,'a big pizza'],
+ ['drink','drank','trinken',5,'a glass of water'],
+ ['get','got','bekommen, holen',5,'a new bike'],
+ ['make','made','machen, herstellen',5,'a cake'],
+ ['take','took','nehmen, bringen',5,'a photo'],
+ ['give','gave','geben',5,'a present to a friend'],
+ ['say','said','sagen',5,'hello to the teacher'],
+ ['run','ran','rennen',5,'in the park'],
+ ['sit','sat','sitzen',5,'on the sofa'],
+ ['stand','stood','stehen',5,'next to the door'],
+ ['read','read','lesen',5,'a book'],
+ ['write','wrote','schreiben',5,'a letter'],
+ ['buy','bought','kaufen',5,'a new T-shirt'],
+ ['sing','sang','singen',5,'a song'],
+ ['swim','swam','schwimmen',5,'in the lake'],
+ ['sleep','slept','schlafen',5,'for eight hours'],
+ ['meet','met','treffen',5,'some friends'],
+ ['find','found','finden',5,'a wallet'],
+ ['put','put','legen, stellen',5,'the book on the table'],
+ ['cut','cut','schneiden',5,'the bread'],
+ ['know','knew','wissen, kennen',5,'the answer'],
+ ['think','thought','denken',5,'about the test'],
+ ['tell','told','erzählen',5,'a funny story'],
+ ['speak','spoke','sprechen',5,'English'],
+ ['bring','brought','mitbringen',5,'some cake'],
+ ['feed','fed','füttern',5,'the cat'],
+ ['leave','left','verlassen, abfahren',6,'the house at eight'],
+ ['lose','lost','verlieren',6,'the game'],
+ ['win','won','gewinnen',6,'the match'],
+ ['wear','wore','tragen (Kleidung)',6,'a red hat'],
+ ['throw','threw','werfen',6,'the ball'],
+ ['catch','caught','fangen',6,'the bus'],
+ ['fall','fell','fallen',6,'off a bike'],
+ ['feel','felt','fühlen',6,'very happy'],
+ ['forget','forgot','vergessen',6,'the keys'],
+ ['hear','heard','hören',6,'a strange noise'],
+ ['begin','began','beginnen',6,'at nine'],
+ ['break','broke','(zer)brechen',6,'a window'],
+ ['build','built','bauen',6,'a sandcastle'],
+ ['choose','chose','wählen',6,'a red one'],
+ ['draw','drew','zeichnen',6,'a picture'],
+ ['drive','drove','fahren (Auto)',6,'to the seaside'],
+ ['fly','flew','fliegen',6,'to Spain'],
+ ['grow','grew','wachsen, anbauen',6,'tomatoes'],
+ ['hide','hid','verstecken',6,'behind a tree'],
+ ['hold','held','halten',6,'the baby'],
+ ['keep','kept','behalten',6,'a secret'],
+ ['lend','lent','leihen',6,'a pen to Sam'],
+ ['let','let','lassen',6,'the dog run in the garden'],
+ ['ride','rode','reiten, (Rad) fahren',6,'a horse'],
+ ['ring','rang','klingeln',6,'the bell'],
+ ['send','sent','schicken',6,'a postcard'],
+ ['spend','spent','verbringen, ausgeben',6,'the summer in Denmark'],
+ ['teach','taught','unterrichten',6,'us a new game'],
+ ['understand','understood','verstehen',6,'the question'],
+ ['wake','woke','aufwachen',6,'up early'],
+ ['hit','hit','schlagen, treffen',6,'the ball'],
+ ['hurt','hurt','wehtun, verletzen',6,'a finger'],
+ ['pay','paid','(be)zahlen',6,'for the tickets'],
+ ['sell','sold','verkaufen',6,'old toys'],
+ ['shut','shut','schließen',6,'the door'],
+ ['dig','dug','graben',6,'a big hole'],
+ ['hang','hung','aufhängen',6,'a poster on the wall'],
+ ['blow','blew','blasen, wehen',6,'out the candles'],
+ ['become','became','werden',6,'very tired'],
+ // nur zum Erkennen (falls in den Vokabellisten vorhanden)
+ ['bite','bit','beißen',0,''],['creep','crept','kriechen',0,''],['deal','dealt','austeilen, handeln',0,''],
+ ['fight','fought','kämpfen',0,''],['forgive','forgave','vergeben',0,''],['freeze','froze','frieren',0,''],
+ ['kneel','knelt','knien',0,''],['lay','laid','legen',0,''],['lead','led','führen',0,''],['leap','leapt','springen',0,''],
+ ['light','lit','anzünden',0,''],['mean','meant','bedeuten, meinen',0,''],['quit','quit','aufhören',0,''],
+ ['seek','sought','suchen',0,''],['set','set','setzen, stellen',0,''],['shake','shook','schütteln',0,''],
+ ['shoot','shot','schießen',0,''],['shrink','shrank','schrumpfen',0,''],['sink','sank','sinken',0,''],
+ ['slide','slid','rutschen',0,''],['split','split','spalten',0,''],['spread','spread','verbreiten',0,''],
+ ['stick','stuck','kleben',0,''],['sting','stung','stechen',0,''],['strike','struck','schlagen',0,''],
+ ['swear','swore','schwören',0,''],['sweep','swept','fegen',0,''],['swing','swung','schaukeln',0,''],
+ ['tear','tore','zerreißen',0,''],['weep','wept','weinen',0,''],['wind','wound','wickeln',0,''],
+ ['cost','cost','kosten',0,''],['spit','spat','spucken',0,''],['rise','rose','aufsteigen',0,''],
+ ['shine','shone','scheinen',0,''],['steal','stole','stehlen',0,''],['bet','bet','wetten',0,''],['burst','burst','platzen',0,'']
+];
+const REG = [
+ ['play','spielen',5,'football in the park'],['watch','anschauen',5,'a funny film'],['walk','gehen, laufen',5,'to school'],
+ ['work','arbeiten',5,'in the garden'],['help','helfen',5,'a friend'],['like','mögen',5,'the pizza'],
+ ['live','wohnen, leben',5,'in a small town'],['talk','reden',5,'to a friend'],['listen','zuhören',5,'to music'],
+ ['learn','lernen',5,'some new words'],['ask','fragen',5,'a question'],['answer','antworten',5,'the question'],
+ ['open','öffnen',5,'the window'],['close','schließen',5,'the door'],['start','anfangen',5,'at nine'],
+ ['stop','anhalten, aufhören',5,'at the traffic lights'],['clean','putzen',5,'the room'],['cook','kochen',5,'dinner'],
+ ['jump','springen',5,'into the water'],['climb','klettern',5,'a big tree'],['visit','besuchen',5,'a museum'],
+ ['use','benutzen',5,'a computer'],['dance','tanzen',5,'at the party'],['laugh','lachen',5,'a lot'],
+ ['smile','lächeln',5,'at the teacher'],['need','brauchen',5,'some help'],['want','wollen',5,'an ice cream'],
+ ['wait','warten',5,'for the bus'],['paint','malen',5,'a picture'],['finish','beenden',5,'the homework'],
+ ['look','schauen',5,'at a picture'],
+ ['study','lernen, studieren',6,'for the test'],['try','versuchen',6,'the new game'],['carry','tragen',6,'a heavy bag'],
+ ['cry','weinen',6,'after the film'],['enjoy','genießen',6,'the party'],['stay','bleiben',6,'at home'],
+ ['plan','planen',6,'a trip'],['travel','reisen',6,'to Spain'],['decide','entscheiden',6,'to stay at home'],
+ ['move','umziehen',6,'to a new house'],['call','anrufen',6,'a friend'],['invite','einladen',6,'some friends'],
+ ['shout','rufen, schreien',6,'at the dog'],['share','teilen',6,'a sandwich'],['miss','verpassen',6,'the bus'],
+ ['kick','treten',6,'the ball'],['push','schieben',6,'the door'],['practise','üben',6,'the guitar'],
+ ['join','beitreten',6,'the football club'],['turn','abbiegen, drehen',6,'left at the corner'],
+ ['hug','umarmen',6,'a friend'],['drop','fallen lassen',6,'a plate'],['shop','einkaufen',6,'in town'],
+ ['show','zeigen',6,'the way']
+];
+const ALT = {learn:['learnt'],spell:['spelt'],dream:['dreamt'],burn:['burnt'],smell:['smelt'],spill:['spilt'],travel:['traveled'],practise:['practiced']};
+const PRON = {read:'[red]'};
+
+const IRR_MAP = new Map(IRR.map(r=>[r[0],{past:r[1],de:r[2],lv:r[3],ex:r[4]}]));
+const REG_MAP = new Map(REG.map(r=>[r[0],{de:r[1],lv:r[2],ex:r[3]}]));
+
+const SUBJ = [
+ {t:'I',m:'I',be:'was'},{t:'You',m:'you',be:'were'},{t:'He',m:'he',be:'was'},{t:'She',m:'she',be:'was'},
+ {t:'We',m:'we',be:'were'},{t:'They',m:'they',be:'were'},{t:'Tom',m:'Tom',be:'was'},{t:'Anna',m:'Anna',be:'was'},
+ {t:'My dad',m:'my dad',be:'was'},{t:'Our teacher',m:'our teacher',be:'was'},
+ {t:'My friends',m:'my friends',be:'were'},{t:'The children',m:'the children',be:'were'}
+];
+const TIMES = ['yesterday','last week','last weekend','last night','two days ago','last summer','last Monday','a week ago','last year'];
+
+/* ════════════════════════════════════════════════════════════
+   HILFSFUNKTIONEN
+   ════════════════════════════════════════════════════════════ */
+const $ = id => document.getElementById(id);
+const shuffle = a => { const b=[...a]; for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];} return b; };
+const rnd = a => a[Math.floor(Math.random()*a.length)];
+const uniq = a => [...new Set(a)];
+const cap = s => s.charAt(0).toUpperCase()+s.slice(1);
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+const DOUBLE = new Set(['stop','plan','drop','hop','jog','shop','skip','clap','chat','hug','wrap','rob','beg','grab','tap','trip','slip','nod','rub','pat','pop','tip','stir','ban','jam','plug','sob','travel','cancel','admit','prefer','refer','permit','regret','commit','control','fit','knit','flip','step','swap','zip','drag','stab','dip','clip','hum','pin','sip','tag','whip','mop']);
+const SPECIAL_REG = {panic:'panicked',picnic:'picnicked',mimic:'mimicked'};
+const SHORT_CVC = /^[^aeiou]*[aeiou][^aeiouwxy]$/;  // einsilbig: Konsonant(en) + Vokal + Konsonant (put, run, stop)
+
+function regularPast(inf){
+  if (SPECIAL_REG[inf]) return SPECIAL_REG[inf];
+  if (DOUBLE.has(inf)) return inf+inf.slice(-1)+'ed';
+  if (/e$/.test(inf)) return inf+'d';
+  if (/[^aeiou]y$/.test(inf)) return inf.slice(0,-1)+'ied';
+  return inf+'ed';
+}
+function sForm(inf){
+  if (/[^aeiou]y$/.test(inf)) return inf.slice(0,-1)+'ies';
+  if (/(s|sh|ch|x|z|o)$/.test(inf)) return inf+'es';
+  return inf+'s';
+}
+function regNote(inf){
+  if (SPECIAL_REG[inf]) return inf+' → '+regularPast(inf)+': Nach -c kommt -k, dann -ed.';
+  if (DOUBLE.has(inf)) return 'Kurzer Vokal + ein Konsonant: Der Konsonant wird verdoppelt ('+inf+' → '+regularPast(inf)+').';
+  if (/e$/.test(inf)) return 'Das Verb endet auf -e: Es kommt nur -d dazu ('+inf+' → '+regularPast(inf)+').';
+  if (/[^aeiou]y$/.test(inf)) return 'Konsonant + y: Das y wird zu i, dann -ed ('+inf+' → '+regularPast(inf)+').';
+  if (/[aeiou]y$/.test(inf)) return 'Vokal + y: Das y bleibt, es kommt einfach -ed dazu ('+inf+' → '+regularPast(inf)+').';
+  return 'Regelmäßiges Verb: einfach -ed anhängen ('+inf+' → '+regularPast(inf)+').';
+}
+const cleanDe = s => String(s||'').split(/[;,(]/)[0].trim();
+
+/* ── Verben ── */
+const VC = new Map();
+function getVerb(inf, deRaw){
+  if (VC.has(inf)){ const v=VC.get(inf); if(!v.de && deRaw) v.de=cleanDe(deRaw); return v; }
+  let v;
+  const ir = IRR_MAP.get(inf), rg = REG_MAP.get(inf);
+  if (ir) v = {inf, past:ir.past.split('/'), type:'irr', de:ir.de, ex:ir.ex};
+  else if (rg) v = {inf, past:[regularPast(inf)], type:'reg', de:rg.de, ex:rg.ex};
+  else v = {inf, past:[regularPast(inf)], type:'reg', de:cleanDe(deRaw), ex:''};
+  v.accepted = uniq([...v.past, ...(ALT[inf]||[])]);
+  v.be = inf==='be';
+  v.pastText = v.past.join(' / ');
+  VC.set(inf, v);
+  return v;
+}
+const EXTRA_ROWS = [
+  ...IRR.filter(r=>r[3]>0&&r[4]).map(r=>({inf:r[0],lv:r[3]})),
+  ...REG.filter(r=>r[2]>0&&r[3]).map(r=>({inf:r[0],lv:r[2]}))
+];
+const ALL_INFS = uniq([...IRR_MAP.keys(), ...REG_MAP.keys()]);
+const DISTRACT_INFS = uniq(EXTRA_ROWS.map(r=>r.inf));  // nur bekannte Alltagsverben als Ablenker
+
+/* ── Vokabellisten laden ── */
+const LISTS = {5:null, 6:null};
+const FILES = {5:'vokabeln.json', 6:'vokabeln6.json'};
+function extractVerbs(json){
+  const out = new Map(); const stack=[json];
+  while(stack.length){
+    const n = stack.pop();
+    if (Array.isArray(n)) { n.forEach(x=>stack.push(x)); continue; }
+    if (n && typeof n==='object'){
+      if (typeof n.en==='string'){
+        const m = /^\(to\)\s+([a-z]+)\b/i.exec(n.en.trim());
+        if (m){ const inf=m[1].toLowerCase(); if(!out.has(inf)) out.set(inf, typeof n.de==='string'?n.de:''); }
+      }
+      Object.values(n).forEach(x=>{ if(x && typeof x==='object') stack.push(x); });
+    }
+  }
+  return out;
+}
+async function loadVocab(){
+  await Promise.all(Object.keys(FILES).map(async lv=>{
+    try{
+      const r = await fetch(FILES[lv]);
+      if(!r.ok) throw new Error('HTTP '+r.status);
+      LISTS[lv] = extractVerbs(await r.json());
+    }catch(e){ LISTS[lv] = null; }
+  }));
+}
+const vocabReady = loadVocab();
+
+/* ── Verb-Pool ── */
+function poolFor(level, kind, extras){
+  const levels = level==='mix' ? ['5','6'] : [level];
+  const seen = new Map();
+  const add = (inf, de, origin) => { if(!seen.has(inf)){ const v=getVerb(inf,de); seen.set(inf, Object.assign({}, v, {origin})); } };
+  levels.forEach(L=>{
+    const src = LISTS[L];
+    if (src){
+      src.forEach((de,inf)=>add(inf,de,'Liste'));
+      if (extras) EXTRA_ROWS.filter(r=>String(r.lv)===L).forEach(r=>add(r.inf,'','Zusatz'));
+    } else {
+      EXTRA_ROWS.filter(r=>String(r.lv)===L).forEach(r=>add(r.inf,'','Standard'));
+    }
+  });
+  let arr = [...seen.values()];
+  if (kind!=='all') arr = arr.filter(v=>v.type===kind);
+  return arr.sort((a,b)=>a.inf.localeCompare(b.inf));
+}
+
+/* ════════════════════════════════════════════════════════════
+   AUFGABEN ERZEUGEN
+   ════════════════════════════════════════════════════════════ */
+function wrongPast(v, pool, extraOk){
+  const ok = new Set(v.be ? (extraOk||v.accepted) : [...v.accepted, ...(extraOk||[])]);
+  const inf = v.inf;
+  if (v.be) return shuffle(['was','were','is','are','been'].filter(x=>!ok.has(x))).slice(0,3);
+  const doubled = SHORT_CVC.test(inf) ? inf+inf.slice(-1)+'ed' : null;
+  let spelled;
+  if (v.type==='irr'){
+    spelled = [regularPast(inf), doubled, inf+'ed', sForm(inf)];
+  } else {
+    spelled = [inf+'ed',
+      doubled,
+      /[aeiou]y$/.test(inf) ? inf.slice(0,-1)+'ied' : null,
+      /e$/.test(inf) ? inf.slice(0,-1)+'ed' : null,
+      /e$/.test(inf) ? inf+'ed' : null];
+  }
+  const cands = uniq(spelled.filter(Boolean)).filter(x=>!ok.has(x));
+  const out = [];
+  if (!ok.has(inf)) out.push(inf);
+  shuffle(cands).forEach(x=>{ if(out.length<3 && !out.includes(x)) out.push(x); });
+  if (out.length<3){
+    const others = shuffle([...pool, ...DISTRACT_INFS.map(i=>getVerb(i))].filter(o=>o.type===v.type&&!o.be).map(o=>o.past[0]));
+    others.forEach(x=>{ if(out.length<3 && !ok.has(x) && !out.includes(x)) out.push(x); });
+  }
+  return out.slice(0,3);
+}
+function wrongInf(v){
+  const c = uniq([v.past[0], sForm(v.inf), 'to '+v.inf, regularPast(v.inf)]).filter(x=>x!==v.inf);
+  return shuffle(c).slice(0,3);
+}
+function wrongInfsForRev(v, pool){
+  const bad = new Set([v.inf, ...ALL_INFS.filter(i=>getVerb(i).past.some(p=>v.past.includes(p)))]);
+  const src = shuffle(uniq([...pool.map(p=>p.inf), ...DISTRACT_INFS])).filter(i=>!bad.has(i));
+  return src.slice(0,3);
+}
+function pastNote(v){
+  if (v.be) return 'be → was (I / he / she / it) und were (you / we / they).';
+  if (v.type==='irr') return v.inf+' ist unregelmäßig: '+v.inf+' → '+v.pastText+(PRON[v.inf]?' (gesprochen '+PRON[v.inf]+')':'')+'.';
+  return regNote(v.inf);
+}
+const wrapTime = (t,capital) => '<span class="sig">'+esc(capital?cap(t):t)+'</span>';
+
+function makeTask(v, pool, modeHist){
+  const canSent = !!v.ex;
+  const canRev = !v.past.includes(v.inf);
+  let kind = 'form';
+  const r = Math.random();
+  if (canRev && r<0.12) kind='rev';
+  else if (canSent){
+    const r2 = Math.random();
+    if (r2<0.42) kind='sent';
+    else if (r2<0.62 && !v.be) kind = Math.random()<0.5 ? 'neg' : 'q';
+  }
+  let mode = Math.random()<0.5 ? 'tap' : 'type';
+  if (modeHist.length>=2 && modeHist.slice(-2).every(m=>m===mode)) mode = mode==='tap'?'type':'tap';
+  modeHist.push(mode);
+
+  const q = {v, kind, mode, line:false, pre:'', post:'', sub:'', answers:[], options:[], full:'', note:'', hint:''};
+
+  if (kind==='form'){
+    q.line = true;
+    q.hint = 'Wie heißt die Form im Simple Past?';
+    let who = '';
+    if (v.be){
+      const g = rnd([{p:'I',a:'was'},{p:'he / she / it',a:'was'},{p:'you / we / they',a:'were'}]);
+      q.answers=[g.a]; who=' <span class="who">('+esc(g.p)+')</span>';
+    } else q.answers = v.accepted;
+    q.pre = '<span class="fv">'+esc(v.inf)+'</span>'+who+' <span class="arr">→</span> ';
+    q.sub = v.de ? '<div class="sub">'+esc(v.de)+'</div>' : '';
+    q.options = [q.answers[0], ...wrongPast(v, pool, q.answers)];
+    q.full = v.inf+' → '+q.answers[0];
+    q.note = pastNote(v);
+  }
+  else if (kind==='rev'){
+    q.line = true;
+    q.hint = 'Wie heißt die Grundform (Infinitiv)?';
+    const shown = rnd(v.past);
+    q.pre = '<span class="fv">'+esc(shown)+'</span> <span class="arr">→</span> ';
+    q.sub = v.de ? '<div class="sub">'+esc(v.de)+'</div>' : '';
+    q.answers = [v.inf, 'to '+v.inf];
+    q.options = [v.inf, ...wrongInfsForRev(v, pool)];
+    q.full = shown+' → '+v.inf;
+    q.note = shown+' ist die Simple-Past-Form von '+v.inf+(v.de?' ('+v.de+')':'')+'.';
+  }
+  else {
+    q.hint = 'Setze die richtige Form ein.';
+    const s = rnd(SUBJ), time = rnd(TIMES), front = Math.random()<0.5;
+    const rest = esc(v.ex);
+    if (kind==='sent'){
+      const ans = v.be ? [s.be] : v.accepted;
+      q.answers = ans;
+      if (front){ q.pre = wrapTime(time,true)+', '+esc(s.m)+' '; q.post = ' ('+esc(v.inf)+') '+rest+'.'; }
+      else { q.pre = esc(s.t)+' '; q.post = ' ('+esc(v.inf)+') '+rest+' '+wrapTime(time)+'.'; }
+      q.options = [ans[0], ...wrongPast(v, pool, ans)];
+      q.full = (front ? cap(time)+', '+s.m : s.t)+' '+ans[0]+' '+v.ex+(front?'':' '+time)+'.';
+      q.note = pastNote(v);
+    } else if (kind==='neg'){
+      q.answers = [v.inf];
+      if (front){ q.pre = wrapTime(time,true)+', '+esc(s.m)+" didn't "; q.post = ' ('+esc(v.inf)+') '+rest+'.'; }
+      else { q.pre = esc(s.t)+" didn't "; q.post = ' ('+esc(v.inf)+') '+rest+' '+wrapTime(time)+'.'; }
+      q.options = [v.inf, ...wrongInf(v)];
+      q.full = (front ? cap(time)+', '+s.m : s.t)+" didn't "+v.inf+' '+v.ex+(front?'':' '+time)+'.';
+      q.note = "Nach didn't steht immer die Grundform: "+v.inf+(v.past[0]!==v.inf?' (nicht '+v.past[0]+')':'')+'.';
+    } else { // q
+      q.answers = [v.inf];
+      q.pre = 'Did '+esc(s.m)+' '; q.post = ' ('+esc(v.inf)+') '+rest+' '+wrapTime(time)+'?';
+      q.options = [v.inf, ...wrongInf(v)];
+      q.full = 'Did '+s.m+' '+v.inf+' '+v.ex+' '+time+'?';
+      q.note = 'Nach did steht immer die Grundform: '+v.inf+(v.past[0]!==v.inf?' (nicht '+v.past[0]+')':'')+'.';
+    }
+  }
+  q.options = uniq(q.options).slice(0,4);
+  if (q.options.length<2) q.mode = 'type';
+  return q;
+}
+function planVerbs(pool, n){
+  const out=[]; let bag=[];
+  while(out.length<n){
+    if(!bag.length){
+      bag = shuffle(pool);
+      if(out.length && bag.length>1 && bag[0].inf===out[out.length-1].inf) [bag[0],bag[1]]=[bag[1],bag[0]];
+    }
+    out.push(bag.shift());
+  }
+  return out;
+}
+
+/* ════════════════════════════════════════════════════════════
+   OBERFLÄCHE
+   ════════════════════════════════════════════════════════════ */
+const SCREENS = ['home','setup','quiz','result','grammar'];
+function go(id){ SCREENS.forEach(s=>{ $('screen-'+s).hidden = s!==id; }); window.scrollTo(0,0); }
+
+const KIND_INFO = {
+  reg:{title:'Regular verbs üben', sub:'Verben mit -ed. Achte auf die Schreibung: liked, studied, stopped.'},
+  irr:{title:'Irregular verbs üben', sub:'Verben mit eigener Form, zum Beispiel went, saw, had.'},
+  all:{title:'Alles gemischt', sub:'Regular und irregular verbs durcheinander.'}
+};
+const S = { kind:'irr', level:'mix', count:10, extras:true, tasks:[], i:0, score:0, answered:false, wrong:new Map(), retry:false, modeHist:[] };
+
+function setPressed(groupId, val){
+  $(groupId).querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed', String(b.dataset.v===String(val))));
+}
+async function openSetup(kind){
+  S.kind = kind;
+  $('setup-title').textContent = KIND_INFO[kind].title;
+  $('setup-sub').textContent = KIND_INFO[kind].sub;
+  setPressed('seg-level', S.level); setPressed('seg-count', S.count);
+  $('extras').checked = S.extras;
+  go('setup');
+  await vocabReady;
+  updateSetup();
+}
+function updateSetup(){
+  const pool = poolFor(S.level, S.kind, S.extras);
+  const fromList = pool.filter(v=>v.origin==='Liste').length;
+  const extra = pool.filter(v=>v.origin==='Zusatz'||v.origin==='Standard').length;
+  const kindWord = S.kind==='reg'?'regular':S.kind==='irr'?'irregular':'';
+  $('poolinfo').innerHTML = pool.length
+    ? '<b>'+pool.length+'</b> '+(kindWord?kindWord+' ':'')+'Verben im Pool'+(extra?' ('+fromList+' aus den Vokabellisten, '+extra+' Zusatzverben)':'')+'.'
+    : 'Keine passenden Verben gefunden. Schalte die Zusatzverben ein oder wähle eine andere Klasse.';
+  $('poollist').innerHTML = pool.map(v=>'<span class="chip'+(v.origin==='Liste'?'':' zus')+'">'+esc(v.inf)+'</span>').join('');
+  $('pooldet').hidden = !pool.length;
+  const missing = (S.level==='mix'?['5','6']:[S.level]).filter(L=>!LISTS[L]);
+  const nt = $('poolnotice');
+  if (missing.length){ nt.hidden=false; nt.textContent='Vokabelliste für Klasse '+missing.join(' und ')+' konnte nicht geladen werden. Es werden Standardverben genutzt.'; }
+  else nt.hidden = true;
+  $('start').disabled = !pool.length;
+}
+
+function startSession(verbs, retry){
+  S.retry = !!retry; S.i = 0; S.score = 0; S.wrong = new Map(); S.modeHist = [];
+  const pool = poolFor(S.level, S.kind, S.extras);
+  S.tasks = verbs.map(v=>makeTask(v, pool.length?pool:verbs, S.modeHist));
+  go('quiz');
+  renderTask();
+}
+function renderTask(){
+  const q = S.tasks[S.i]; S.answered = false;
+  $('qcount').textContent = 'Aufgabe '+(S.i+1)+' von '+S.tasks.length;
+  $('qscore').textContent = S.score+' richtig';
+  $('qbar').style.width = (S.i/S.tasks.length*100)+'%';
+  $('qhint').textContent = q.hint;
+  const maxLen = Math.max(...q.answers.map(a=>a.length));
+  const slot = q.mode==='tap'
+    ? '<span class="slot" id="slot">&nbsp;</span>'
+    : '<input class="slot-input" id="slotin" type="text" style="--w:'+Math.max(6,maxLen+2)+'ch" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="done" aria-label="Deine Antwort">';
+  $('qbody').innerHTML = '<div class="'+(q.line?'fline':'qsent')+'">'+q.pre+slot+q.post+'</div>'+q.sub;
+  $('qfb').hidden = true; $('qnext').hidden = true;
+  const opts = $('qopts');
+  if (q.mode==='tap'){
+    opts.hidden = false; $('typebar').hidden = true;
+    opts.innerHTML = shuffle(q.options).map(o=>'<button class="opt" data-a="'+esc(o)+'">'+esc(o)+'</button>').join('');
+  } else {
+    opts.hidden = true; opts.innerHTML=''; $('typebar').hidden = false;
+    const inp = $('slotin'); inp.focus();
+    inp.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); checkTyped(); } });
+  }
+}
+const norm = s => String(s).toLowerCase().replace(/[’`´]/g,"'").replace(/[.!?]+$/,'').replace(/\s+/g,' ').trim();
+
+function checkTyped(){
+  if (S.answered) return;
+  const inp = $('slotin'); const val = inp.value;
+  if (!norm(val)){ inp.focus(); return; }
+  finish(val);
+}
+function finish(given){
+  const q = S.tasks[S.i]; S.answered = true;
+  const ok = q.answers.some(a=>norm(a)===norm(given));
+  if (ok) S.score++; else S.wrong.set(q.v.inf, q.v);
+  const correct = q.answers[0];
+  if (q.mode==='tap'){
+    const slot = $('slot'); slot.textContent = correct; slot.classList.add('right');
+    $('qopts').querySelectorAll('.opt').forEach(b=>{
+      b.disabled = true;
+      if (norm(b.dataset.a)===norm(correct)) b.classList.add('right');
+      else if (b.dataset.a===given) b.classList.add('wrong');
+    });
+  } else {
+    const inp = $('slotin'); inp.disabled = true; inp.classList.add(ok?'right':'wrong');
+    $('typebar').hidden = true;
+    if (!ok){
+      const span = document.createElement('span'); span.className='slot right'; span.textContent = correct;
+      inp.insertAdjacentElement('afterend', span);
+    }
+  }
+  const fb = $('qfb');
+  fb.className = 'fb '+(ok?'ok':'no'); fb.hidden = false;
+  fb.innerHTML = (ok ? '<strong class="okc">✓ Richtig!</strong>' : '<strong class="noc">✗ Nicht ganz.</strong> Richtig ist <b>'+esc(correct)+'</b>.')
+    +'<div class="full">'+esc(q.full)+'</div><div class="note">'+esc(q.note)+'</div>';
+  $('qscore').textContent = S.score+' richtig';
+  $('qbar').style.width = ((S.i+1)/S.tasks.length*100)+'%';
+  const nx = $('qnext'); nx.hidden = false;
+  nx.textContent = S.i+1>=S.tasks.length ? 'Ergebnis ansehen' : 'Weiter';
+  nx.focus();
+}
+function next(){
+  if (S.i+1>=S.tasks.length) return showResult();
+  S.i++; renderTask();
+}
+function showResult(){
+  const n = S.tasks.length, sc = S.score, pct = Math.round(sc/n*100);
+  $('rscore').textContent = sc+' / '+n;
+  $('rmsg').textContent = pct>=90 ? 'Stark! Du kannst das Simple Past richtig gut.' : pct>=70 ? 'Sehr gut! Nur noch ein paar Verben üben.' : pct>=50 ? 'Gut gemacht! Übe die markierten Verben nochmal.' : 'Bleib dran, mit etwas Übung wird das!';
+  const w = [...S.wrong.values()];
+  $('rwrongbox').hidden = !w.length; $('rretrywrong').hidden = !w.length;
+  $('rwrong').innerHTML = w.map(v=>'<span class="chip">'+esc(v.inf)+' → '+esc(v.pastText)+'</span>').join('');
+  go('result');
+  if (!S.retry && window.LernApps && LernApps.saveResult){
+    LernApps.saveResult({score:sc, max:n, label:sc+' / '+n});
+  }
+}
+
+/* ── Grammatik-Verbenliste ── */
+const G = {lv:'mix', kind:'irr'};
+async function renderVerbList(){
+  await vocabReady;
+  const q = $('vsearch').value.trim().toLowerCase();
+  let arr = poolFor(G.lv, G.kind, true);
+  if (q) arr = arr.filter(v=>v.inf.includes(q)||v.past.some(p=>p.includes(q))||(v.de||'').toLowerCase().includes(q));
+  $('vcount').textContent = arr.length+' Verben';
+  $('vbody').innerHTML = arr.map(v=>'<tr><td class="w">'+esc(v.inf)+'</td><td class="w hl">'+esc(v.pastText)+(PRON[v.inf]?' <span class="pron">'+PRON[v.inf]+'</span>':'')+'</td><td>'+esc(v.de||'')+'</td></tr>').join('')
+    || '<tr><td colspan="3">Kein Verb gefunden.</td></tr>';
+}
+
+/* ── Events ── */
+document.addEventListener('click', e=>{
+  const t = e.target.closest('[data-open],[data-practice],[data-scroll],.opt');
+  if (!t) return;
+  if (t.classList.contains('opt')){ if(!S.answered) finish(t.dataset.a); return; }
+  if (t.dataset.scroll){ $(t.dataset.scroll).scrollIntoView({behavior:'smooth'}); return; }
+  if (t.dataset.practice){ openSetup(t.dataset.practice); return; }
+  const target = t.dataset.open;
+  if (target==='grammar'){ go('grammar'); renderVerbList(); }
+  else go(target);
+});
+$('seg-level').addEventListener('click', e=>{ const b=e.target.closest('button'); if(!b) return; S.level=b.dataset.v; setPressed('seg-level',S.level); updateSetup(); });
+$('seg-count').addEventListener('click', e=>{ const b=e.target.closest('button'); if(!b) return; S.count=+b.dataset.v; setPressed('seg-count',S.count); });
+$('extras').addEventListener('change', e=>{ S.extras=e.target.checked; updateSetup(); });
+$('start').addEventListener('click', ()=>{ const pool=poolFor(S.level,S.kind,S.extras); if(pool.length) startSession(planVerbs(pool,S.count), false); });
+$('qcheck').addEventListener('click', checkTyped);
+$('qnext').addEventListener('click', next);
+$('quit').addEventListener('click', ()=>go('home'));
+$('ragain').addEventListener('click', ()=>{ const pool=poolFor(S.level,S.kind,S.extras); if(pool.length) startSession(planVerbs(pool,S.count), false); });
+$('rretrywrong').addEventListener('click', ()=>{ const w=[...S.wrong.values()]; if(w.length) startSession(planVerbs(w,Math.max(w.length,3)), true); });
+$('vseg-level').addEventListener('click', e=>{ const b=e.target.closest('button'); if(!b) return; G.lv=b.dataset.v; setPressed('vseg-level',G.lv); renderVerbList(); });
+$('vseg-kind').addEventListener('click', e=>{ const b=e.target.closest('button'); if(!b) return; G.kind=b.dataset.v; setPressed('vseg-kind',G.kind); renderVerbList(); });
+$('vsearch').addEventListener('input', renderVerbList);
+document.addEventListener('keydown', e=>{
+  if (e.key==='Enter' && !$('screen-quiz').hidden && S.answered && !(e.target.tagName==='BUTTON')) next();
+});
+</script>
+</body>
+</html>
