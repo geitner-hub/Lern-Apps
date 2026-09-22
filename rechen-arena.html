@@ -244,6 +244,12 @@
   .round-timer-track { height: 5px; background: var(--border2); border-radius: 3px; overflow: hidden; margin-bottom: 18px; }
   .round-timer-fill { height: 100%; width: 100%; background: linear-gradient(90deg, var(--accent-warm), var(--bad)); }
 
+  .highscore-line {
+    text-align: right; margin-top: -6px; margin-bottom: 14px;
+    font-size: 0.66rem; color: var(--muted); letter-spacing: 0.08em; font-weight: 700;
+  }
+  .highscore-value { color: var(--c-ballon); font-weight: 800; }
+
   /* ── Ballon-Pop ── */
   .option-field { position: relative; height: 210px; }
   .balloon {
@@ -420,7 +426,7 @@
         <button class="mode-card mc-ballon" onclick="startMode('ballon')">
           <div class="mode-icon">🎈</div>
           <div class="mode-name">Ballon-Pop</div>
-          <div class="mode-desc">Zerplatze den Ballon mit dem richtigen Ergebnis.</div>
+          <div class="mode-desc">Zerplatze den Ballon mit dem richtigen Ergebnis – endlos, wird immer schneller!</div>
         </button>
         <button class="mode-card mc-mauer" onclick="startMode('mauer')">
           <div class="mode-icon">🧱</div>
@@ -464,6 +470,7 @@
         <span class="meta-badge ballon">BALLON-POP</span>
         <span>PUNKTE: <span id="ballon-score" class="meta-count">0</span></span>
       </div>
+      <div class="highscore-line">🏆 HIGHSCORE: <span id="ballon-highscore" class="highscore-value">0</span></div>
       <div class="question-display" id="ballon-question">? + ? =</div>
       <div class="round-timer-track"><div class="round-timer-fill" id="ballon-timer"></div></div>
       <div class="option-field" id="ballon-field"></div>
@@ -744,15 +751,33 @@ function endRennen() {
 
 /* ═══════════════════════════════════════════════════════
    MODUS 2 — BALLON-POP
-   (Aufgabe + 4 klickbare Ballons, Leben statt hartem Limit)
+   (Aufgabe + 4 klickbare Ballons, Leben statt hartem Limit,
+   endlos, wird alle 5 richtigen Antworten 1s schneller)
    ═══════════════════════════════════════════════════════ */
-const OPT_ROUND_TIME_MS = 13000;
+const OPT_ROUND_TIME_MS = 13000;      // Startzeit pro Runde
+const OPT_ROUND_TIME_STEP_MS = 1000;  // Reduktion je Tempo-Stufe
+const OPT_ROUND_TIME_MIN_MS = 3000;   // Untergrenze, damit es lösbar bleibt
+const OPT_CORRECT_PER_SPEEDUP = 5;    // alle 5 richtigen Antworten schneller
+const BALLON_HIGHSCORE_KEY = 'rechenArena_ballonHighscore';
 
 let optState = null;
 
+function loadBallonHighscore() {
+  return parseInt(localStorage.getItem(BALLON_HIGHSCORE_KEY), 10) || 0;
+}
+
+function saveBallonHighscore(score) {
+  try { localStorage.setItem(BALLON_HIGHSCORE_KEY, String(score)); } catch (e) {}
+}
+
 function startOptionsRound(mode) {
   showScreen(mode);
-  optState = { mode, score: 0, lives: 3, answered: 0, maxAnswers: 12, roundTimer: null, active: true };
+  const highscore = mode === 'ballon' ? loadBallonHighscore() : 0;
+  optState = {
+    mode, score: 0, lives: 3, answered: 0,
+    highscore, startHighscore: highscore,
+    roundTimer: null, active: true
+  };
   updateOptHud(mode);
   nextOptRound(mode);
 }
@@ -760,11 +785,20 @@ function startOptionsRound(mode) {
 function updateOptHud(mode) {
   document.getElementById(mode + '-score').textContent = optState.score;
   document.getElementById(mode + '-lives').textContent = '❤️'.repeat(Math.max(0, optState.lives));
+  if (mode === 'ballon') {
+    document.getElementById('ballon-highscore').textContent = optState.highscore;
+  }
+}
+
+function optRoundTime(mode) {
+  if (mode !== 'ballon') return OPT_ROUND_TIME_MS;
+  const speedupStages = Math.floor(optState.score / OPT_CORRECT_PER_SPEEDUP);
+  return Math.max(OPT_ROUND_TIME_MIN_MS, OPT_ROUND_TIME_MS - speedupStages * OPT_ROUND_TIME_STEP_MS);
 }
 
 function nextOptRound(mode) {
   if (!optState || !optState.active) return;
-  if (optState.answered >= optState.maxAnswers || optState.lives <= 0) {
+  if (optState.lives <= 0) {
     return endOptionsRound(mode);
   }
   const task = generateTask(settings.range, settings.ops);
@@ -785,15 +819,16 @@ function nextOptRound(mode) {
     field.appendChild(el);
   });
 
+  const roundTime = optRoundTime(mode);
   const bar = document.getElementById(mode + '-timer');
   bar.style.transition = 'none';
   bar.style.width = '100%';
   requestAnimationFrame(() => {
-    bar.style.transition = `width ${OPT_ROUND_TIME_MS / 1000}s linear`;
+    bar.style.transition = `width ${roundTime / 1000}s linear`;
     bar.style.width = '0%';
   });
   clearTimeout(optState.roundTimer);
-  optState.roundTimer = setTimeout(() => handleOptTimeout(mode), OPT_ROUND_TIME_MS);
+  optState.roundTimer = setTimeout(() => handleOptTimeout(mode), roundTime);
 }
 
 function handleOptAnswer(mode, correct, el) {
@@ -804,6 +839,10 @@ function handleOptAnswer(mode, correct, el) {
   if (correct) {
     optState.score++;
     el.classList.add('pop-correct');
+    if (mode === 'ballon' && optState.score > optState.highscore) {
+      optState.highscore = optState.score;
+      saveBallonHighscore(optState.highscore);
+    }
   } else {
     optState.lives--;
     el.classList.add('pop-wrong');
@@ -824,11 +863,13 @@ function handleOptTimeout(mode) {
 function endOptionsRound(mode) {
   if (!optState) return;
   optState.active = false;
-  const won = optState.lives > 0;
+  const isNewHighscore = mode === 'ballon' && optState.score > optState.startHighscore;
   showResult({
-    emoji: won ? '🎉' : '💥',
-    title: won ? 'GESCHAFFT!' : 'KEINE LEBEN MEHR!',
-    text: `Du hast ${optState.score} von ${optState.answered} Aufgaben richtig gelöst.`,
+    emoji: isNewHighscore ? '🏆' : '💥',
+    title: isNewHighscore ? 'NEUER HIGHSCORE!' : 'KEINE LEBEN MEHR!',
+    text: mode === 'ballon'
+      ? `Du hast ${optState.score} Ballons richtig zerplatzt${isNewHighscore ? ' – neuer Highscore!' : ` (Highscore: ${optState.highscore})`}.`
+      : `Du hast ${optState.score} von ${optState.answered} Aufgaben richtig gelöst.`,
     saveLabel: `Ballon-Pop: ${optState.score}`,
     saveScore: optState.score,
     saveMax: Math.max(optState.answered, 1)
