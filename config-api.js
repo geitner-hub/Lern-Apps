@@ -117,7 +117,25 @@ const ConfigAPI = (() => {
       if (r.ok) { setPw(pw); return { ok: true, status: r.status }; }
       return { ok: false, status: r.status, error: await readError(r) };
     } catch (e) {
-      return { ok: false, status: 0, error: 'Worker nicht erreichbar' };
+      return { ok: false, status: 0, error: await diagnose() };
+    }
+  }
+
+  /**
+   * Genauere Fehlermeldung, wenn der Browser die Antwort blockiert:
+   * Antwortet der Worker überhaupt (dann fehlt die CORS-Freigabe → alter Code,
+   * Absturz oder falsche Seite) oder ist er gar nicht erreichbar?
+   */
+  async function diagnose() {
+    if (location.protocol === 'file:') {
+      return 'Admin bitte über https://geitner-hub.github.io/Lern-Apps/admin.html öffnen, nicht als lokale Datei';
+    }
+    try {
+      await fetch(WORKER_URL + '/?probe=' + Date.now(), { mode: 'no-cors', cache: 'no-store' });
+      return 'Worker antwortet, blockiert aber die Anfrage – alter Worker-Code aktiv, Worker abgestürzt oder Seite nicht unter ' +
+             'https://geitner-hub.github.io geöffnet (Details: F12 → Konsole)';
+    } catch (e) {
+      return 'Worker nicht erreichbar – Adresse falsch, Worker gelöscht oder keine Internetverbindung';
     }
   }
 
@@ -156,7 +174,7 @@ const ConfigAPI = (() => {
       writeCache(toSave);
       return { ok: true, newSha: d.sha ?? d.content?.sha ?? sha };
     } catch (e) {
-      return { ok: false, status: 0, error: 'Worker nicht erreichbar' };
+      return { ok: false, status: 0, error: await diagnose() };
     }
   }
 
