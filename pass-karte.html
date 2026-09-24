@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="robots" content="noindex">
+  <title>Sicherungskarten – Lernwelt-Pass</title>
+  <link rel="stylesheet" href="fonts.css">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--accent:#e6a817;--indigo:#6366f1;--bg:#0f0e1a;--bg2:#1b1929;--text:#f1f0fb;--muted:rgba(241,240,251,.55);--border:rgba(255,255,255,.13);}
+    body{font-family:'Nunito',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+    /* ── Steuerleiste (wird nicht gedruckt) ── */
+    .toolbar{max-width:900px;margin:0 auto;padding:1.4rem 1.2rem 1rem;}
+    .toolbar h1{font-family:'Fredoka One',cursive;font-size:1.6rem;color:#fff;}
+    .toolbar h1 em{color:var(--accent);font-style:normal;}
+    .toolbar p{font-size:.86rem;color:var(--muted);margin:.35rem 0 .9rem;line-height:1.5;}
+    .row{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;}
+    .btn{border:1px solid var(--border);background:rgba(255,255,255,.06);color:var(--text);border-radius:10px;padding:.6rem 1rem;font-family:inherit;font-weight:800;font-size:.9rem;cursor:pointer;text-decoration:none;display:inline-block;}
+    .btn:hover{border-color:rgba(230,168,23,.5);color:var(--accent);}
+    .btn.primary{background:var(--accent);border-color:var(--accent);color:#0f0e1a;}
+    .btn.primary:hover{color:#0f0e1a;opacity:.9;}
+    .btn:disabled{opacity:.4;cursor:not-allowed;}
+    textarea{width:100%;min-height:110px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;color:var(--text);padding:.7rem .8rem;font-family:'JetBrains Mono',monospace;font-size:.72rem;resize:vertical;outline:none;margin:.5rem 0;}
+    textarea:focus{border-color:rgba(230,168,23,.5);}
+    .msg{font-size:.8rem;margin-top:.4rem;min-height:1.1rem;line-height:1.45;}
+    .msg.err{color:#f87171;} .msg.ok{color:#4ade80;}
+    details{margin-top:1rem;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:.8rem 1rem;}
+    details summary{cursor:pointer;font-weight:800;font-size:.9rem;}
+    .hint{font-size:.78rem;color:var(--muted);line-height:1.5;margin-top:.4rem;}
+    .count{font-size:.8rem;color:var(--muted);font-weight:700;}
+
+    /* ── Karten ── */
+    .sheet{display:grid;grid-template-columns:repeat(2,95mm);gap:4mm;justify-content:center;padding:1rem 0 3rem;}
+    .card{width:95mm;height:66mm;background:#fff;color:#16142a;border:1px dashed #9a97b3;border-radius:3mm;
+          padding:3.5mm 4mm;display:grid;grid-template-columns:1fr 38mm;gap:3mm;position:relative;overflow:hidden;
+          break-inside:avoid;page-break-inside:avoid;}
+    .card .brand{font-family:'Fredoka One',cursive;font-size:11pt;color:#16142a;}
+    .card .brand em{color:#c48d0a;font-style:normal;}
+    .card .sub{font-size:6.5pt;font-weight:800;color:#6b6890;text-transform:uppercase;letter-spacing:.06em;}
+    .card .who{display:flex;align-items:center;gap:2.5mm;margin-top:2.5mm;}
+    .card .av{font-size:20pt;line-height:1;}
+    .card .name{font-weight:900;font-size:12pt;line-height:1.1;word-break:break-word;}
+    .card .lvl{font-size:7.5pt;font-weight:800;color:#c48d0a;}
+    .card .meta{font-size:7pt;color:#4a4766;margin-top:2mm;line-height:1.4;}
+    .card .how{font-size:6.8pt;color:#16142a;margin-top:2mm;line-height:1.35;background:#f4f2fb;border-radius:1.5mm;padding:1.5mm 2mm;}
+    .card .qr{width:38mm;height:38mm;image-rendering:pixelated;align-self:start;}
+    .card .code{grid-column:1 / -1;font-family:'JetBrains Mono',monospace;font-size:4.6pt;line-height:1.25;color:#6b6890;
+                word-break:break-all;align-self:end;border-top:.3mm solid #e2e0ee;padding-top:1.2mm;}
+    .card .rm{position:absolute;top:1.5mm;right:1.5mm;border:none;background:#eee;border-radius:50%;width:5mm;height:5mm;font-size:7pt;cursor:pointer;color:#555;}
+
+    .empty{text-align:center;color:var(--muted);padding:2rem 1rem;font-size:.9rem;}
+
+    @page{size:A4 portrait;margin:8mm;}
+    @media print{
+      body{background:#fff;}
+      .toolbar,.no-print,.rm,#lern-home-btn,#lern-result-badge{display:none!important;}
+      .sheet{padding:0;gap:3mm;}
+      .card{border-color:#b9b6cf;}
+    }
+    @media screen and (max-width:430px){ .sheet{grid-template-columns:95mm;} }
+  </style>
+</head>
+<body>
+
+<div class="toolbar">
+  <h1>🧭 Lern<em>welt</em>-Pass · Sicherungskarten</h1>
+  <p id="intro">Drucke deine Sicherungskarte aus oder speichere sie als PDF. Mit dem QR-Code kannst du deinen Pass jederzeit auf einem anderen Gerät wiederherstellen.</p>
+  <div class="row">
+    <button type="button" class="btn primary" id="btn-print" disabled>🖨 Drucken / als PDF sichern</button>
+    <a class="btn" href="index.html">← Zur Lernwelt</a>
+    <span class="count" id="count"></span>
+  </div>
+  <div class="hint" id="snapshot-hint">Die Karte speichert den Stand von <b>heute</b>. Späterer Fortschritt ist darauf nicht enthalten – am besten kurz vor dem Gerätewechsel drucken.</div>
+
+  <details id="collect" class="no-print">
+    <summary>👩‍🏫 Sammelbogen für Lehrkräfte (mehrere Codes)</summary>
+    <p class="hint">Die Kinder tippen in ihrem Pass auf „🔗 Code kopieren“ und schicken dir den Code (z. B. über den Schul-Messenger). Füge hier beliebig viele Codes ein – einen pro Zeile oder einfach hintereinander. Es werden 8 Karten pro A4-Seite gedruckt. Die Codes bleiben auf diesem Gerät, nichts wird hochgeladen.</p>
+    <textarea id="codes" placeholder="LW1.eyJ2Ijox… &#10;LW1.eyJ2Ijox… "></textarea>
+    <div class="row">
+      <button type="button" class="btn" id="btn-add">➕ Karten erstellen</button>
+      <button type="button" class="btn" id="btn-clear">Alle entfernen</button>
+    </div>
+    <div class="msg" id="msg"></div>
+  </details>
+</div>
+
+<div class="sheet" id="sheet"></div>
+
+<script src="qrcode.js"></script>
+<script src="shared.js"></script>
+<script src="pass.js"></script>
+<script>
+'use strict';
+
+const cards = [];          // { code, preview }
+const MAX_CARDS = 40;
+
+function restoreUrlFor(code) { return lwBaseUrl() + '#pass=' + code; }
+
+function qrImg(text) {
+  const c = document.createElement('canvas');
+  if (!renderQR(c, text, 600)) return '';
+  return c.toDataURL('image/png');
+}
+
+function render() {
+  const sheet = document.getElementById('sheet');
+  if (!cards.length) {
+    sheet.innerHTML = '<div class="empty no-print" style="grid-column:1/-1">Noch keine Karte. Richte zuerst deinen Pass auf der Startseite ein – oder füge als Lehrkraft unten Codes ein.</div>';
+  } else {
+    sheet.innerHTML = cards.map((c, i) => {
+      const p = c.preview;
+      const src = qrImg(restoreUrlFor(c.code));
+      return `
+      <div class="card">
+        <button type="button" class="rm no-print" data-rm="${i}" title="Karte entfernen" aria-label="Karte entfernen">✕</button>
+        <div>
+          <div class="brand">🧭 Lern<em>welt</em>-Pass</div>
+          <div class="sub">Sicherungskarte</div>
+          <div class="who">
+            <span class="av">${escHtml(p.avatar)}</span>
+            <div><div class="name">${escHtml(p.name)}</div><div class="lvl">Level ${p.level} · ${escHtml(p.title)}</div></div>
+          </div>
+          <div class="meta">${p.xp} XP · gesichert am ${escHtml(formatDate(p.date))}</div>
+          <div class="how">📷 QR-Code mit der Kamera scannen → der Pass wird auf dem Gerät wiederhergestellt.</div>
+        </div>
+        ${src ? `<img class="qr" src="${src}" alt="QR-Code zum Wiederherstellen">` : '<div class="qr"></div>'}
+        <div class="code">${escHtml(c.code)}</div>
+      </div>`;
+    }).join('');
+  }
+  document.getElementById('btn-print').disabled = !cards.length;
+  document.getElementById('count').textContent = cards.length > 1 ? `${cards.length} Karten · ${Math.ceil(cards.length / 8)} Seite(n)` : '';
+}
+
+function formatDate(ymd) {
+  const m = String(ymd || '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  return m ? `${m[3]}.${m[2]}.${m[1]}` : '–';
+}
+
+function addCode(code) {
+  const res = LernPass.parseCode(code);
+  if (!res.ok) return { ok: false, error: res.error };
+  if (cards.some(c => c.code === code)) return { ok: false, dup: true };
+  if (cards.length >= MAX_CARDS) return { ok: false, error: 'Maximal ' + MAX_CARDS + ' Karten auf einmal.' };
+  cards.push({ code, preview: res.preview });
+  return { ok: true };
+}
+
+// Codes aus beliebigem Text herausfischen (auch ganze Links mit #pass=)
+function extractCodes(text) {
+  return (String(text).match(/LW1\.[A-Za-z0-9_-]+\.[a-z0-9]+/g) || []);
+}
+
+document.getElementById('btn-add').addEventListener('click', () => {
+  const found = extractCodes(document.getElementById('codes').value);
+  const msg = document.getElementById('msg');
+  if (!found.length) { msg.className = 'msg err'; msg.textContent = 'Keine Codes gefunden. Codes beginnen mit „LW1.“'; return; }
+  let ok = 0, bad = 0, dup = 0, err = '';
+  found.forEach(c => { const r = addCode(c); if (r.ok) ok++; else if (r.dup) dup++; else { bad++; err = r.error; } });
+  render();
+  msg.className = 'msg ' + (bad ? 'err' : 'ok');
+  msg.textContent = `${ok} Karte(n) erstellt` + (dup ? ` · ${dup} doppelt übersprungen` : '') + (bad ? ` · ${bad} ungültig (${err})` : '');
+  if (ok) document.getElementById('codes').value = '';
+});
+document.getElementById('btn-clear').addEventListener('click', () => { cards.length = 0; render(); document.getElementById('msg').textContent = ''; });
+document.getElementById('sheet').addEventListener('click', e => {
+  const b = e.target.closest('[data-rm]');
+  if (b) { cards.splice(Number(b.dataset.rm), 1); render(); }
+});
+document.getElementById('btn-print').addEventListener('click', () => window.print());
+
+// Start: eigene Karte (falls Pass vorhanden) – ?sammel öffnet den Lehrkraft-Modus
+const params = new URLSearchParams(location.search);
+if (params.has('sammel')) {
+  document.getElementById('collect').open = true;
+  document.getElementById('intro').textContent = 'Sammelbogen: Füge die Sicherungs-Codes deiner Klasse ein und drucke 8 Karten pro A4-Seite.';
+} else if (LernPass.hasProfile()) {
+  addCode(LernPass.exportCode());
+}
+render();
+</script>
+</body>
+</html>
