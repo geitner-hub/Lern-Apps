@@ -199,6 +199,79 @@
     .qr-actions button.primary{background:var(--accent);color:#0f0e1a;border-color:var(--accent);}
     .qr-actions button.primary:hover{color:#0f0e1a;opacity:.9;}
     body.qr-open{overflow:hidden;}
+
+    /* ── LERNWELT-PASS ── */
+    #pass-section{max-width:980px;margin:1.2rem auto 1.2rem;padding:0 1.4rem;}
+    .pass-card{display:flex;align-items:center;gap:1rem;background:linear-gradient(120deg,#1e1b30 0%,#221d3d 60%,#2a2146 100%);border:1px solid rgba(230,168,23,.22);border-radius:18px;padding:.8rem 1rem .8rem .9rem;box-shadow:0 6px 24px rgba(0,0,0,.35);cursor:pointer;transition:border-color .18s,transform .18s;position:relative;overflow:hidden;}
+    .pass-card:hover,.pass-card:focus-visible{border-color:rgba(230,168,23,.5);outline:none;}
+    .pass-card::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 95% 50%,rgba(230,168,23,.08),transparent 55%);pointer-events:none;}
+    .pass-avatar{width:52px;height:52px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.9rem;background:radial-gradient(circle at 35% 30%,#3b3470,#1b1929);border:2px solid var(--accent);box-shadow:0 0 16px rgba(230,168,23,.25);position:relative;}
+    .pass-lvl{position:absolute;bottom:-6px;right:-8px;background:var(--accent);color:#0f0e1a;font-size:.62rem;font-weight:900;border-radius:99px;padding:.05rem .38rem;border:2px solid #1e1b30;}
+    .pass-main{flex:1;min-width:0;}
+    .pass-top{display:flex;align-items:baseline;gap:.5rem;flex-wrap:wrap;}
+    .pass-name{font-family:'Fredoka One',cursive;font-size:1.12rem;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
+    .pass-title{font-size:.72rem;font-weight:800;color:var(--accent);text-transform:uppercase;letter-spacing:.06em;}
+    .pass-bar{height:8px;border-radius:99px;background:rgba(255,255,255,.08);margin:.4rem 0 .28rem;overflow:hidden;}
+    .pass-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--indigo),var(--accent));transition:width .6s ease;}
+    .pass-sub{font-size:.7rem;color:var(--muted);font-weight:700;}
+    .pass-side{display:flex;align-items:center;gap:.9rem;flex-shrink:0;}
+    .pass-stat{text-align:center;line-height:1.15;}
+    .pass-stat .v{font-weight:900;font-size:.95rem;color:var(--text);}
+    .pass-stat .l{font-size:.6rem;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.05em;}
+    .week-dots{display:flex;gap:4px;justify-content:center;margin-bottom:3px;}
+    .week-dots i{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.12);}
+    .week-dots i.on{background:#4ade80;border-color:#4ade80;box-shadow:0 0 6px rgba(74,222,128,.5);}
+    .pass-open{background:rgba(230,168,23,.12);border:1px solid rgba(230,168,23,.35);color:var(--accent);border-radius:10px;padding:.42rem .75rem;font-family:inherit;font-weight:800;font-size:.78rem;cursor:pointer;white-space:nowrap;}
+    .pass-card.new .pass-open{background:var(--accent);color:#0f0e1a;}
+    .chest-dot{position:relative;}
+    .chest-dot .badge{position:absolute;top:-6px;right:-9px;background:#f43f5e;color:#fff;font-size:.58rem;font-weight:900;border-radius:99px;padding:0 .3rem;line-height:1.35;}
+    @media (max-width:640px){
+      .pass-card{flex-wrap:wrap;gap:.7rem;padding:.75rem .85rem;}
+      .pass-avatar{width:44px;height:44px;font-size:1.6rem;}
+      .pass-main{flex:1 1 calc(100% - 60px);}
+      .pass-side{width:100%;justify-content:space-between;gap:.5rem;padding-top:.5rem;border-top:1px solid var(--border);}
+    }
+
+    .app-tag.star{background:rgba(230,168,23,.12);color:var(--accent);border-color:rgba(230,168,23,.28);}
+
+    /* ── PASS-MODAL ── */
+    .lw-modal{position:fixed;inset:0;z-index:10000;background:rgba(5,4,12,.78);backdrop-filter:blur(4px);display:none;align-items:flex-start;justify-content:center;padding:4vh 1rem;overflow-y:auto;}
+    .lw-modal.open{display:flex;}
+    .lw-box{background:var(--bg2);border:1px solid var(--border2);border-radius:20px;width:min(560px,100%);box-shadow:0 20px 60px rgba(0,0,0,.6);padding:1.3rem 1.3rem 1.1rem;position:relative;}
+    .lw-close{position:absolute;top:.7rem;right:.7rem;background:rgba(255,255,255,.06);border:1px solid var(--border2);color:var(--text2);width:34px;height:34px;border-radius:10px;cursor:pointer;font-size:1rem;}
+    .lw-h{font-family:'Fredoka One',cursive;font-size:1.35rem;color:#fff;margin-bottom:.2rem;}
+    .lw-p{font-size:.82rem;color:var(--text2);line-height:1.5;}
+    .lw-sec{margin-top:1.1rem;padding-top:1rem;border-top:1px solid var(--border);}
+    .lw-sec h3{font-size:.72rem;font-weight:900;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.6rem;}
+    .lw-hero{display:flex;align-items:center;gap:1rem;}
+    .lw-hero .pass-avatar{width:68px;height:68px;font-size:2.5rem;}
+    .lw-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;}
+    .lw-tile{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:.6rem .4rem;text-align:center;}
+    .lw-tile .v{font-weight:900;font-size:1.1rem;}
+    .lw-tile .l{font-size:.62rem;color:var(--muted);font-weight:800;text-transform:uppercase;margin-top:.15rem;}
+    .lw-input{width:100%;padding:.6rem .8rem;background:var(--bg3);border:1px solid var(--border2);border-radius:10px;color:var(--text);font-family:inherit;font-size:.95rem;outline:none;}
+    .lw-input:focus{border-color:rgba(230,168,23,.5);}
+    .lw-label{font-size:.72rem;font-weight:800;color:var(--text2);margin:.7rem 0 .35rem;display:block;}
+    .avatar-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:.35rem;}
+    .avatar-grid button{font-size:1.5rem;background:var(--bg3);border:2px solid transparent;border-radius:12px;padding:.25rem 0;cursor:pointer;}
+    .avatar-grid button.sel{border-color:var(--accent);background:rgba(230,168,23,.12);}
+    .kl-row{display:flex;gap:.35rem;flex-wrap:wrap;}
+    .kl-row button{background:var(--bg3);border:1px solid var(--border2);color:var(--text2);border-radius:99px;padding:.35rem .85rem;font-family:inherit;font-weight:800;cursor:pointer;}
+    .kl-row button.sel{background:rgba(230,168,23,.14);border-color:rgba(230,168,23,.5);color:var(--accent);}
+    .lw-btns{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.8rem;}
+    .lw-btn{border:1px solid var(--border2);background:rgba(255,255,255,.05);color:var(--text);border-radius:10px;padding:.55rem .9rem;font-family:inherit;font-weight:800;font-size:.84rem;cursor:pointer;}
+    .lw-btn:hover{border-color:rgba(230,168,23,.45);color:var(--accent);}
+    .lw-btn.primary{background:var(--accent);color:#0f0e1a;border-color:var(--accent);}
+    .lw-btn.primary:hover{color:#0f0e1a;opacity:.9;}
+    .lw-btn:disabled{opacity:.45;cursor:not-allowed;}
+    .lw-msg{font-size:.78rem;margin-top:.45rem;min-height:1rem;}
+    .lw-msg.err{color:#f87171;} .lw-msg.ok{color:#4ade80;}
+    .xp-rules{font-size:.78rem;color:var(--text2);line-height:1.55;}
+    .xp-rules b{color:var(--text);}
+    .chest-box{display:flex;align-items:center;gap:.8rem;background:var(--bg3);border:1px dashed rgba(230,168,23,.35);border-radius:12px;padding:.7rem .9rem;}
+    .chest-box .ic{font-size:2rem;}
+    details.lw-details summary{cursor:pointer;font-size:.8rem;font-weight:800;color:var(--text2);}
+    @media (max-width:480px){.avatar-grid{grid-template-columns:repeat(6,1fr);}.lw-grid{grid-template-columns:repeat(2,1fr);}}
   </style>
 </head>
 <body>
@@ -224,6 +297,8 @@
 <div id="sync-bar"><span class="sync-dot"></span><span id="sync-msg">Wird geladen …</span></div>
 
 <div id="ann-banner" role="status" aria-live="polite"></div>
+
+<div id="pass-section"></div>
 
 <div class="filter-bar">
   <div class="fi">
@@ -275,10 +350,20 @@
   </div>
 </div>
 
+
+<!-- ── Pass-Modal ── -->
+<div id="pass-modal" class="lw-modal" role="dialog" aria-modal="true" aria-labelledby="pass-modal-title">
+  <div class="lw-box">
+    <button type="button" class="lw-close" data-close-pass aria-label="Schließen">✕</button>
+    <div id="pass-modal-body"></div>
+  </div>
+</div>
+
 <!-- ── Gemeinsame Module ── -->
 <script src="qrcode.js"></script>
 <script src="shared.js"></script>
 <script src="config-api.js"></script>
+<script src="pass.js"></script>
 <script>
 'use strict';
 
@@ -384,6 +469,7 @@ function buildKlassenChips() {
 
 // ── Seite aufbauen ───────────────────────────────────
 function buildPage() {
+  buildPassCard();
   buildAnnouncement();
   buildAod();
   buildKlassenChips();
@@ -423,6 +509,9 @@ function buildPage() {
         resultBadge = `<span class="app-result ${cls}">🏆 ${escHtml(r.label || pct + ' %')}</span>`;
       }
 
+      const st = LernPass.starsFor(resultKey(app.datei));
+      const starTag = st ? `<span class="app-tag star" title="Meisterschafts-Stern">${['', '🥉 Bronze', '🥈 Silber', '🥇 Gold'][st]}</span>` : '';
+
       const card = document.createElement('a');
       card.className = 'app-card';
       card.href = app.datei;
@@ -436,6 +525,7 @@ function buildPage() {
         <span class="app-name">${escHtml(app.name)}</span>
         <span class="app-desc">${escHtml(app.beschreibung || '')}</span>
         <div class="app-meta">
+          ${starTag}
           ${kl.map(k => `<span class="app-tag tk">Kl.${escHtml(k)}</span>`).join('')}
           ${ct.map(t => {
             const col = tagColor(t);
@@ -602,9 +692,248 @@ try { if (localStorage.getItem('lern-apps-view') === 'list') setView('list'); } 
 // Beim Zurückkehren aus einer App (Browser-Zurück) Ergebnisse auffrischen
 window.addEventListener('pageshow', e => { if (e.persisted) { loadResults(); buildPage(); } });
 
+
+// ══ LERNWELT-PASS ═══════════════════════════════════════
+const STAR_NAMES = ['', '🥉 Bronze', '🥈 Silber', '🥇 Gold'];
+
+function buildPassCard() {
+  const sec = document.getElementById('pass-section');
+  const P = LernPass;
+  if (!P.hasProfile()) {
+    const xp = P.state.xp;
+    sec.innerHTML = `
+      <div class="pass-card new" role="button" tabindex="0" data-open-pass="setup">
+        <div class="pass-avatar">🧭</div>
+        <div class="pass-main">
+          <div class="pass-top"><span class="pass-name">Dein Lernwelt-Pass</span></div>
+          <div class="pass-sub" style="margin-top:.25rem">${xp > 0
+            ? `Du hast schon <b style="color:var(--accent)">${xp} XP</b> gesammelt – richte deinen Pass ein!`
+            : 'Sammle XP, steige Level auf und verdiene Sterne & Truhen.'}</div>
+        </div>
+        <div class="pass-side"><button type="button" class="pass-open" tabindex="-1">Pass starten ›</button></div>
+      </div>`;
+    return;
+  }
+  const pr = P.profile(), lv = P.levelInfo(), wk = P.weekInfo(), ch = P.chestInfo(), ss = P.starsSummary();
+  const dots = Array.from({ length: wk.goal }, (_, i) => `<i class="${i < wk.goodDays ? 'on' : ''}"></i>`).join('');
+  sec.innerHTML = `
+    <div class="pass-card" role="button" tabindex="0" data-open-pass="view" aria-label="Lernwelt-Pass öffnen">
+      <div class="pass-avatar">${escHtml(pr.avatar)}<span class="pass-lvl">${lv.level}</span></div>
+      <div class="pass-main">
+        <div class="pass-top"><span class="pass-name">${escHtml(pr.name)}</span><span class="pass-title">${escHtml(lv.title)}</span></div>
+        <div class="pass-bar"><div class="pass-fill" style="width:${lv.pct}%"></div></div>
+        <div class="pass-sub">Level ${lv.level} · ${lv.into} / ${lv.need} XP</div>
+      </div>
+      <div class="pass-side">
+        <div class="pass-stat" title="Wochenziel: an ${wk.goal} Tagen gut üben"><div class="week-dots">${dots}</div><div class="l">${wk.done ? 'Woche ✓' : 'Diese Woche'}</div></div>
+        <div class="pass-stat" title="Wochen in Folge mit erreichtem Ziel"><div class="v">🔥 ${wk.streak}</div><div class="l">Serie</div></div>
+        <div class="pass-stat" title="Gold-Sterne"><div class="v">🥇 ${ss[3]}</div><div class="l">Gold</div></div>
+        <div class="pass-stat chest-dot" title="Verdiente Truhen"><div class="v">🎁${ch.available ? `<span class="badge">${ch.available}</span>` : ''}</div><div class="l">Truhen</div></div>
+        <button type="button" class="pass-open" tabindex="-1">Mein Pass ›</button>
+      </div>
+    </div>`;
+}
+
+// ── Modal ──────────────────────────────────────────────
+let passDraft = null, passLastFocus = null;
+
+function openPass(mode) {
+  passLastFocus = document.activeElement;
+  const pr = LernPass.profile() || {};
+  passDraft = { name: pr.name || '', avatar: LernPass.AVATARS.includes(pr.avatar) ? pr.avatar : LernPass.AVATARS[0], klasse: pr.klasse || (fKl !== 'all' ? Number(fKl) : null) };
+  renderPass(mode);
+  document.getElementById('pass-modal').classList.add('open');
+  document.body.classList.add('qr-open');
+}
+function closePass() {
+  document.getElementById('pass-modal').classList.remove('open');
+  document.body.classList.remove('qr-open');
+  if (passLastFocus && passLastFocus.focus) passLastFocus.focus();
+}
+
+function profileForm() {
+  return `
+    <label class="lw-label" for="pf-name">Spitzname <span style="color:var(--muted);font-weight:700">(max. 16 Zeichen – bitte keinen Nachnamen)</span></label>
+    <input class="lw-input" id="pf-name" maxlength="16" autocomplete="off" value="${escHtml(passDraft.name)}" placeholder="z. B. Lea oder Rechenblitz">
+    <span class="lw-label">Dein Avatar</span>
+    <div class="avatar-grid">${LernPass.AVATARS.map(a => `<button type="button" data-av="${a}" class="${a === passDraft.avatar ? 'sel' : ''}" aria-label="Avatar ${a}">${a}</button>`).join('')}</div>
+    <span class="lw-label">Deine Klasse</span>
+    <div class="kl-row">${KLASSEN.map(k => `<button type="button" data-kl="${k}" class="${k === passDraft.klasse ? 'sel' : ''}">${k}</button>`).join('')}</div>`;
+}
+
+function renderPass(mode) {
+  const body = document.getElementById('pass-modal-body');
+  const P = LernPass;
+
+  if (mode === 'setup' || mode === 'edit') {
+    body.innerHTML = `
+      <div class="lw-h" id="pass-modal-title">${mode === 'setup' ? '🧭 Dein Lernwelt-Pass' : '✏️ Pass bearbeiten'}</div>
+      ${mode === 'setup' ? `<p class="lw-p">Mit jeder Übung sammelst du XP, steigst Level auf und verdienst Sterne und Truhen. Alles bleibt nur auf diesem Gerät gespeichert.</p>` : ''}
+      ${profileForm()}
+      <div class="lw-btns">
+        <button type="button" class="lw-btn primary" id="pf-save">${mode === 'setup' ? 'Pass starten 🚀' : 'Speichern'}</button>
+        ${mode === 'edit' ? '<button type="button" class="lw-btn" data-mode="view">Abbrechen</button>' : ''}
+      </div>
+      <div class="lw-msg" id="pf-msg"></div>
+      ${mode === 'setup' ? `<div class="lw-sec"><details class="lw-details"><summary>Ich habe schon einen Pass (Sicherungs-Code)</summary>${restoreForm()}</details></div>` : ''}`;
+    return;
+  }
+
+  const pr = P.profile(), lv = P.levelInfo(), wk = P.weekInfo(), ch = P.chestInfo(), ss = P.starsSummary();
+  const R = P.RULES;
+  body.innerHTML = `
+    <div class="lw-hero">
+      <div class="pass-avatar">${escHtml(pr.avatar)}<span class="pass-lvl">${lv.level}</span></div>
+      <div style="flex:1;min-width:0">
+        <div class="lw-h" id="pass-modal-title">${escHtml(pr.name)}</div>
+        <div class="pass-title">Level ${lv.level} · ${escHtml(lv.title)}${pr.klasse ? ' · Klasse ' + pr.klasse : ''}</div>
+        <div class="pass-bar"><div class="pass-fill" style="width:${lv.pct}%"></div></div>
+        <div class="pass-sub">${lv.into} / ${lv.need} XP · noch ${lv.need - lv.into} XP bis „${escHtml(P.levelInfo(lv.to).title)}“</div>
+      </div>
+    </div>
+
+    <div class="lw-sec">
+      <div class="lw-grid">
+        <div class="lw-tile"><div class="v">${wk.goodDays}/${wk.goal}</div><div class="l">Tage diese Woche</div></div>
+        <div class="lw-tile"><div class="v">🔥 ${wk.streak}</div><div class="l">Wochen-Serie</div></div>
+        <div class="lw-tile"><div class="v">${ss[3]}·${ss[2]}·${ss[1]}</div><div class="l">🥇 🥈 🥉</div></div>
+        <div class="lw-tile"><div class="v">${P.state.xp}</div><div class="l">XP gesamt</div></div>
+      </div>
+    </div>
+
+    <div class="lw-sec">
+      <h3>🎁 Truhen</h3>
+      <div class="chest-box">
+        <span class="ic">🎁</span>
+        <div class="lw-p"><b style="color:var(--text)">${ch.available ? `Du hast ${ch.available} Truhe${ch.available > 1 ? 'n' : ''} verdient!` : 'Noch keine Truhe verdient.'}</b><br>
+        Alle ${R.chestEveryXp} XP gibt es eine Truhe mit einem Überraschungs-Teil für deinen Avatar. Öffnen kannst du sie bald – sie laufen nicht weg!
+        <div class="pass-bar" style="margin-top:.45rem"><div class="pass-fill" style="width:${ch.progress}%"></div></div>
+        <span class="pass-sub">Nächste Truhe bei ${ch.nextAt} XP</span></div>
+      </div>
+    </div>
+
+    <div class="lw-sec">
+      <h3>⭐ So bekommst du XP</h3>
+      <div class="xp-rules">
+        <b>+${R.baseXp}</b> für jede fertige Runde · <b>bis +${R.perfXpMax}</b> je nachdem, wie viel du richtig hast ·
+        <b>+${R.recordXp}</b> für einen neuen Rekord · <b>+${R.firstOfDayXp}</b> für deine erste gute Runde am Tag.<br>
+        <b>Sterne:</b> 🥉 ${R.starPct[0]} %, 🥈 ${R.starPct[1]} %, 🥇 ${R.starPct[2]} % – jeweils an ${R.starDays} verschiedenen Tagen.<br>
+        <b>Wochenziel:</b> an ${R.weekGoalDays} Tagen eine Runde mit mindestens ${R.goodPct} %.<br>
+        <span style="color:var(--muted)">Wer nur schnell durchklickt, bekommt keine XP. Nach ${R.fullRoundsPerApp} Runden in derselben App gibt es weniger – probier dann eine andere!</span>
+      </div>
+    </div>
+
+    <div class="lw-sec">
+      <h3>💾 Sicherung</h3>
+      <p class="lw-p">Mit deinem Sicherungs-QR kannst du den Pass auf ein anderes Gerät mitnehmen oder wiederherstellen, falls er verloren geht. Scanne ihn einfach mit der Kamera.</p>
+      <div class="lw-btns">
+        <button type="button" class="lw-btn primary" id="pass-qr">📲 Sicherungs-QR zeigen</button>
+        <button type="button" class="lw-btn" id="pass-copy">🔗 Code kopieren</button>
+      </div>
+      <div class="lw-msg" id="pass-copy-msg"></div>
+      <details class="lw-details" style="margin-top:.6rem"><summary>Pass aus Code wiederherstellen</summary>${restoreForm()}</details>
+    </div>
+
+    <div class="lw-btns" style="margin-top:1.1rem">
+      <button type="button" class="lw-btn" data-mode="edit">✏️ Name, Avatar, Klasse ändern</button>
+    </div>`;
+}
+
+function restoreForm() {
+  return `
+    <textarea class="lw-input" id="rs-code" rows="3" style="margin-top:.6rem;font-size:.75rem;resize:vertical" placeholder="Code hier einfügen (beginnt mit LW1.)"></textarea>
+    <div class="lw-btns"><button type="button" class="lw-btn" id="rs-check">Code prüfen</button></div>
+    <div class="lw-msg" id="rs-msg"></div>`;
+}
+
+function askRestore(code, msgEl) {
+  const res = LernPass.parseCode(code);
+  if (!res.ok) { if (msgEl) { msgEl.className = 'lw-msg err'; msgEl.textContent = res.error; } else alert(res.error); return; }
+  const pv = res.preview;
+  const cur = LernPass.hasProfile() ? `\n\nACHTUNG: Dein aktueller Pass (${LernPass.profile().name}, ${LernPass.state.xp} XP) wird ersetzt.` : '';
+  if (confirm(`Pass wiederherstellen?\n\n${pv.avatar} ${pv.name} – Level ${pv.level} (${pv.title}), ${pv.xp} XP\nGesichert am ${pv.date}${cur}`)) {
+    res.apply();
+    closePass();
+    buildPage();
+  }
+}
+
+// Ereignisse im Modal
+document.getElementById('pass-modal').addEventListener('click', async e => {
+  const t = e.target;
+  if (t.id === 'pass-modal' || t.closest('[data-close-pass]')) { closePass(); return; }
+  const av = t.closest('[data-av]');
+  if (av) {
+    passDraft.name = document.getElementById('pf-name').value;
+    passDraft.avatar = av.dataset.av;
+    document.querySelectorAll('.avatar-grid button').forEach(b => b.classList.toggle('sel', b === av));
+    return;
+  }
+  const kl = t.closest('[data-kl]');
+  if (kl) {
+    passDraft.klasse = Number(kl.dataset.kl);
+    document.querySelectorAll('.kl-row button').forEach(b => b.classList.toggle('sel', b === kl));
+    return;
+  }
+  const md = t.closest('[data-mode]');
+  if (md) { renderPass(md.dataset.mode); return; }
+  if (t.id === 'pf-save') {
+    const name = document.getElementById('pf-name').value.trim();
+    const msg = document.getElementById('pf-msg');
+    if (!name) { msg.className = 'lw-msg err'; msg.textContent = 'Bitte gib einen Spitznamen ein.'; return; }
+    if (!passDraft.klasse) { msg.className = 'lw-msg err'; msg.textContent = 'Bitte wähle deine Klasse.'; return; }
+    LernPass.setProfile({ name, avatar: passDraft.avatar, klasse: passDraft.klasse });
+    LernPass.markLevelSeen();
+    buildPage();
+    renderPass('view');
+    return;
+  }
+  if (t.id === 'pass-qr') {
+    closePass();
+    openQR('Sicherung: ' + LernPass.profile().name, LernPass.restoreUrl());
+    document.querySelector('#qr-modal .qr-sub').textContent = 'Nur für dich! Mit der Kamera scannen, um den Pass wiederherzustellen.';
+    return;
+  }
+  if (t.id === 'pass-copy') {
+    const ok = await copyText(LernPass.exportCode());
+    const m = document.getElementById('pass-copy-msg');
+    m.className = 'lw-msg ' + (ok ? 'ok' : 'err');
+    m.textContent = ok ? '✓ Code kopiert – bewahre ihn gut auf.' : 'Kopieren nicht möglich.';
+    return;
+  }
+  if (t.id === 'rs-check') { askRestore(document.getElementById('rs-code').value, document.getElementById('rs-msg')); }
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && document.getElementById('pass-modal').classList.contains('open')) closePass();
+});
+document.getElementById('pass-section').addEventListener('click', e => {
+  const c = e.target.closest('[data-open-pass]');
+  if (c) openPass(c.dataset.openPass);
+});
+document.getElementById('pass-section').addEventListener('keydown', e => {
+  const c = e.target.closest('[data-open-pass]');
+  if (c && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); openPass(c.dataset.openPass); }
+});
+
+// Standard-Text im QR-Fenster nach Sicherungs-QR zurücksetzen
+document.getElementById('qr-close').addEventListener('click', () => {
+  document.querySelector('#qr-modal .qr-sub').textContent = 'Mit der Kamera scannen – öffnet die App direkt.';
+});
+
+// Wiederherstellen per gescanntem QR (…/#pass=CODE)
+function checkRestoreHash() {
+  const m = location.hash.match(/^#pass=(.+)$/);
+  if (!m) return;
+  const code = decodeURIComponent(m[1]);
+  try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {}
+  setTimeout(() => askRestore(code, null), 300);
+}
+LernPass.onChange(() => { if (document.visibilityState === 'visible') buildPassCard(); });
+
 // ── Start ────────────────────────────────────────────
 buildKlassenChips();
-load();
+buildPassCard();
+load().then(checkRestoreHash);
 </script>
 </body>
 </html>

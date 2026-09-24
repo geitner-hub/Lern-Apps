@@ -12,14 +12,28 @@
 //      skill: 'einmaleins-7' // Kompetenz-Kennung (optional, für später)
 //    });
 //
-//  Das war's. Der Home-Button und die Ergebnisanzeige
-//  erscheinen automatisch.
+//  Das war's. Home-Button, Ergebnisanzeige und Lernwelt-Pass
+//  (XP-Meldung) erscheinen automatisch. pass.js wird von hier
+//  nachgeladen – Apps müssen nichts weiter einbinden.
 // ═══════════════════════════════════════════════════════
 
 (function () {
   const HOME      = 'index.html';
   const STORE_KEY = 'lern-apps-results';
   const HISTORY_MAX = 30;
+  let roundStart = Date.now();
+
+  // pass.js aus demselben Ordner wie navbar.js laden
+  const BASE = (document.currentScript && document.currentScript.src)
+    ? document.currentScript.src.replace(/[^/]*$/, '') : '';
+  function loadPass() {
+    if (window.LernPass || document.getElementById('lw-pass-script')) return;
+    const sc = document.createElement('script');
+    sc.id = 'lw-pass-script';
+    sc.src = BASE + 'pass.js';
+    document.head.appendChild(sc);
+  }
+  loadPass();
 
   // ── Hilfsfunktionen ─────────────────────────────────
   // Schlüssel = Dateiname + URL-Parameter, damit z. B. kopfrechnen.html?kl=5
@@ -44,7 +58,9 @@
      * Beispiel am Ende einer Übung:
      *   LernApps.saveResult({ score: 8, max: 10 });
      */
-    saveResult(result) {
+    saveResult(result, maxArg) {
+      // Auch alte Schreibweise saveResult(richtig, gesamt) unterstützen
+      if (typeof result === 'number') result = { score: result, max: maxArg };
       const score = Number(result && result.score) || 0;
       const max   = Number(result && result.max)   || 0;
       const pct   = max > 0 ? Math.max(0, Math.min(100, Math.round((score / max) * 100))) : 0;
@@ -66,8 +82,18 @@
       };
       try { localStorage.setItem(STORE_KEY, JSON.stringify(all)); } catch (e) {}
       updateBadge(all[key]);
-      // Signal für künftige Erweiterungen (z. B. Lernwelt-Pass mit XP)
+      // Signal für Erweiterungen
       try { window.dispatchEvent(new CustomEvent('lernapps:result', { detail: { key, ...all[key] } })); } catch (e) {}
+
+      // ── Lernwelt-Pass: XP vergeben ──
+      if (max > 0) {
+        const now = Date.now();
+        const seconds = (now - roundStart) / 1000;   // Dauer seit Seitenaufruf bzw. letztem Ergebnis
+        roundStart = now;
+        const entry = { key, score, max, seconds };
+        if (window.LernPass) { window.LernPass.toast(window.LernPass.award(entry)); }
+        else { (window.__lernPassQueue = window.__lernPassQueue || []).push(entry); loadPass(); }
+      }
     },
     getAllResults() { return loadResults(); },
     getResult()     { return getResult(); }

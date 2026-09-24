@@ -13,7 +13,8 @@ verwaltet über ein eigenes Admin-Panel.
 | `config.json` | Zentrale Konfiguration aller Apps |
 | `shared.js` | Gemeinsame Konstanten & Helfer (Fächer, Farben, `escHtml`, `isSafeLink`, QR) – **einzige Quelle** |
 | `config-api.js` | Laden (öffentlich/Admin) und Speichern über den Worker |
-| `navbar.js` | Home-Button + Ergebnisspeicherung, in jeder App am Ende von `<body>` |
+| `navbar.js` | Home-Button + Ergebnisspeicherung, in jeder App am Ende von `<body>`; lädt `pass.js` automatisch |
+| `pass.js` | Lernwelt-Pass: XP, Level, Wochen-Serie, Meisterschafts-Sterne, Sicherungs-Code, Truhen-Zähler |
 | `fonts.css` + `fonts/` | Lokal gehostete Schriften (kein Google Fonts → DSGVO) |
 | `qrcode.js` | QR-Code-Erzeugung im Browser (MIT-Lizenz, Kazuhiko Arase) |
 | `app-template.html` | Vorlage für neue Apps |
@@ -52,3 +53,23 @@ Verlauf der letzten 30 Versuche. Jedes Ergebnis löst zusätzlich das Ereignis
 - „Versteckt“ heißt nicht geschützt: Dateien sind per direkter URL erreichbar.
 - Nach dem Speichern im Admin dauert es ca. 1 Minute, bis GitHub Pages die neue
   `config.json` ausliefert.
+
+## Lernwelt-Pass
+
+Alle Regeln (XP-Werte, Grenzen, Sterne, Wochenziel, Truhen-Abstand) stehen gesammelt
+in `RULES` am Anfang von `pass.js` und können dort angepasst werden.
+
+- **XP pro Runde:** 5 Abschluss (2 bei unter 30 %) + bis 10 Leistung (ab 30 %, anteilig
+  bei Runden unter 10 Aufgaben) + 3 neuer Rekord + 5 erste gute Runde des Tages.
+- **Schutz vor Durchklicken:** unter 10 s → 0 XP; unter 30 s und unter 50 % → 0 XP.
+- **Grenzen:** pro App und Tag 3 Runden voll, bis 6 halb, danach 0; ab 150 XP/Tag halbe XP;
+  Apps nur für niedrigere Klassen halbe XP.
+- **Sterne:** 🥉 60 % / 🥈 80 % / 🥇 90 % an jeweils 2 verschiedenen Tagen.
+- **Wochen-Serie:** Ziel 3 Tage mit ≥ 50 %; Wochen ganz ohne Übung pausieren die Serie.
+- **Sicherung:** QR/Code (`LW1.…`) im Pass; Scannen öffnet `index.html#pass=…` und stellt
+  den Pass nach Rückfrage wieder her. Die Prüfsumme erkennt Tipp-/Kopierfehler, ist aber
+  kein Schutz gegen gezieltes Manipulieren – der Pass ist ohnehin nur lokal.
+- **Vorbereitet für Cosmetics:** `inventory`, `equipped`, `badges`, `chestsOpened` sind
+  bereits im Speicher und im Sicherungs-Code enthalten. Truhen werden aus den XP berechnet
+  (alle 250 XP eine) – schon jetzt verdiente Truhen können später geöffnet werden.
+- Speicher: `localStorage['lernwelt-pass']` (nur auf dem Gerät).
