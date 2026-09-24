@@ -4,10 +4,8 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Admin – Lernwelt</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-  <noscript><link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="fonts.css">
+  <meta name="robots" content="noindex">
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
@@ -179,7 +177,11 @@
 
     /* ── QR MODAL ── */
     #qr-modal-wrap .modal{text-align:center;}
-    #qr-canvas-wrap{background:#fff;border-radius:14px;padding:1.1rem;display:inline-block;margin:.8rem 0;}
+    #qr-canvas-wrap{background:#fff;border-radius:14px;padding:.4rem;display:inline-block;margin:.8rem 0;}
+    #qr-canvas-wrap canvas{width:220px;height:220px;display:block;image-rendering:pixelated;}
+    .aod-row{display:flex;align-items:center;gap:.7rem;flex-wrap:wrap;}
+    .aod-row .btn{margin-left:auto;}
+    .login-hint{font-size:.72rem;color:var(--muted);margin-top:.9rem;line-height:1.4;}
     .qr-url{font-size:.72rem;color:var(--muted);word-break:break-all;margin-bottom:.7rem;background:var(--surface2);padding:.45rem .75rem;border-radius:8px;}
     .qr-app-name-display{font-family:'Fredoka One',cursive;font-size:1.15rem;margin-bottom:.2rem;color:#fff;}
 
@@ -245,17 +247,19 @@
     <p>Admin-Bereich</p>
     <input type="password" id="pw" placeholder="Passwort" autocomplete="off"/>
     <div class="login-err" id="pw-err"></div>
-    <button class="btn-login" onclick="checkLogin()">Anmelden</button>
+    <button class="btn-login" id="btn-login" onclick="checkLogin()">Anmelden</button>
+    <div class="login-hint">Das Passwort wird vom Server geprüft und nur in diesem Tab gemerkt.</div>
   </div>
 </div>
 
 <!-- ══ APP ══ -->
 <div id="app">
   <div class="topbar">
-    <div class="topbar-wordmark">🧭 Lern<em>welt</em> <span style="font-size:.7rem;color:var(--muted);font-family:'Nunito',sans-serif;font-weight:700;margin-left:.2rem">Admin</span></div>
+    <div class="topbar-wordmark">🧭 <span>Lern<em>welt</em></span> <span style="font-size:.7rem;color:var(--muted);font-family:'Nunito',sans-serif;font-weight:700;margin-left:.2rem">Admin</span></div>
     <div class="topbar-actions">
       <span id="sync-status">–</span>
       <a href="index.html" class="btn">← Zur Seite</a>
+      <button class="btn" onclick="logout()" title="Abmelden">🔒 Abmelden</button>
     </div>
   </div>
 
@@ -287,7 +291,7 @@
           <span class="emoji-preview" id="emoji-preview">📱</span>
           <div class="form-group" style="flex:1;">
             <label>Emoji</label>
-            <input type="text" id="f-emoji" placeholder="z.B. 🔢" maxlength="4" oninput="document.getElementById('emoji-preview').textContent=this.value||'📱'"/>
+            <input type="text" id="f-emoji" placeholder="z.B. 🔢" maxlength="8" oninput="document.getElementById('emoji-preview').textContent=this.value||'📱'"/>
           </div>
         </div>
         <div class="form-grid">
@@ -361,8 +365,8 @@
       </div>
       <div class="ann-form">
         <div class="form-grid">
-          <div class="form-group"><label>Emoji</label><input type="text" id="ann-emoji" placeholder="📢" maxlength="4" value="📢" oninput="updateAnnPreview()"/></div>
-          <div class="form-group full"><label>Text</label><input type="text" id="ann-text" placeholder="z.B. Diese Woche: Mathe-Woche! 🎉" oninput="updateAnnPreview()"/></div>
+          <div class="form-group"><label>Emoji</label><input type="text" id="ann-emoji" placeholder="📢" maxlength="8" value="📢" oninput="updateAnnPreview()"/></div>
+          <div class="form-group full"><label>Text</label><input type="text" id="ann-text" maxlength="300" placeholder="z.B. Diese Woche: Mathe-Woche! 🎉" oninput="updateAnnPreview()"/></div>
           <div class="form-group full"><label>Hintergrundfarbe</label><div class="color-chips" id="color-chips"></div></div>
         </div>
         <div style="margin-top:1.1rem;display:flex;gap:.55rem;align-items:center;flex-wrap:wrap;">
@@ -434,90 +438,15 @@
 <div id="toast">✓ Gespeichert</div>
 <div id="undo-bar"></div>
 
-<!-- ── Gemeinsame Module (inline) ── -->
-<script>
-// ── shared.js ────────────────────────────────────────
-'use strict';
-const CAT_STYLES = {
-  "Mathematik": { icon: "➕", color: "#6366f1", color2: "#818cf8" },
-  "Englisch":   { icon: "🇬🇧", color: "#f43f5e", color2: "#fb7185" },
-  "Deutsch":    { icon: "📖", color: "#10b981", color2: "#34d399" },
-  "WiB":        { icon: "🌍", color: "#e6a817", color2: "#fbbf24" },
-  "Sport":      { icon: "⚽", color: "#8b5cf6", color2: "#a78bfa" },
-  "Informatik": { icon: "💻", color: "#06b6d4", color2: "#22d3ee" },
-  "GPG":        { icon: "🏛",  color: "#f97316", color2: "#fb923c" },
-};
-const CAT_ICONS = Object.fromEntries(Object.entries(CAT_STYLES).map(([k,v])=>[k,v.icon]));
-const TAG_COLORS = [
-  { bg:'rgba(167,139,250,.16)',border:'rgba(167,139,250,.35)',text:'#c4b5fd',dot:'#a78bfa',label:'Violett'},
-  { bg:'rgba(99,102,241,.15)', border:'rgba(99,102,241,.32)', text:'#818cf8',dot:'#6366f1',label:'Indigo' },
-  { bg:'rgba(230,168,23,.14)', border:'rgba(230,168,23,.32)', text:'#e6a817',dot:'#e6a817',label:'Gold'   },
-  { bg:'rgba(74,222,128,.13)', border:'rgba(74,222,128,.3)',  text:'#4ade80',dot:'#22c55e',label:'Grün'   },
-  { bg:'rgba(248,113,113,.13)',border:'rgba(248,113,113,.3)', text:'#f87171',dot:'#ef4444',label:'Rot'    },
-  { bg:'rgba(45,212,191,.13)', border:'rgba(45,212,191,.3)',  text:'#2dd4bf',dot:'#14b8a6',label:'Teal'   },
-  { bg:'rgba(244,114,182,.13)',border:'rgba(244,114,182,.3)', text:'#f472b6',dot:'#ec4899',label:'Pink'   },
-  { bg:'rgba(251,191,36,.13)', border:'rgba(251,191,36,.3)',  text:'#fbbf24',dot:'#f59e0b',label:'Gelb'   },
-];
-function tagObj(t){return typeof t==='object'&&t!==null?t:{name:String(t),color:0};}
-function tagName(t){return tagObj(t).name;}
-function tagColor(t){return TAG_COLORS[tagObj(t).color]??TAG_COLORS[0];}
-function escHtml(s){return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-
-// ── config-api.js ─────────────────────────────────────
-const ConfigAPI=(()=>{
-  const WORKER_URL='https://lern-apps-config.bennigeitner.workers.dev';
-  const CACHE_KEY='lernwelt-config-cache';
-  const DEFAULTS={version:1,apps:[],customTags:[],hiddenCats:[],announcement:{active:false,text:'',emoji:'📢',color:0}};
-  function decode(raw){return JSON.parse(decodeURIComponent(atob(raw.replace(/\n/g,'')).split('').map(c=>'%'+('00'+c.charCodeAt(0).toString(16)).slice(-2)).join('')));}
-  function encode(obj){return btoa(unescape(encodeURIComponent(JSON.stringify(obj,null,2))));}
-  function migrate(cfg){if(Array.isArray(cfg.customTags))cfg.customTags=cfg.customTags.map(t=>typeof t==='string'?{name:t,color:0}:t);cfg.version=1;return cfg;}
-  function writeCache(cfg){try{localStorage.setItem(CACHE_KEY,JSON.stringify(cfg));localStorage.setItem(CACHE_KEY+'-ts',Date.now().toString());}catch(e){}}
-  function readCache(){try{const r=localStorage.getItem(CACHE_KEY);return r?JSON.parse(r):null;}catch(e){return null;}}
-  async function load(){
-    try{
-      const r=await fetch(WORKER_URL);
-      if(!r.ok)throw new Error('HTTP '+r.status);
-      const d=await r.json();
-      const parsed=migrate({...DEFAULTS,...decode(d.content)});
-      writeCache(parsed);
-      return{config:parsed,sha:d.sha,fromCache:false};
-    }catch(e){
-      console.warn('[ConfigAPI] Worker nicht erreichbar:',e.message);
-      const cached=readCache();
-      return{config:migrate({...DEFAULTS,...(cached||{})}),sha:'',fromCache:true};
-    }
-  }
-  async function save(config,sha){
-    const toSave={...config};delete toSave.specialLists;delete toSave.units;delete toSave.meta;
-    try{
-      const body={message:'Admin: Einstellungen aktualisiert',content:encode(toSave),branch:'main'};
-      if(sha)body.sha=sha;
-      const r=await fetch(WORKER_URL,{method:'PUT',headers:{'Content-Type':'application/json','X-Admin-Token':ADMIN_SECRET},body:JSON.stringify(body)});
-      if(!r.ok){if(r.status===409)throw new Error('CONFLICT');throw new Error('HTTP '+r.status);}
-      const d=await r.json();
-      writeCache(toSave);
-      return{ok:true,newSha:d.content?.sha??sha};
-    }catch(e){return{ok:false,error:e.message};}
-  }
-  return{load,save,WORKER_URL};
-})();
-</script>
+<!-- ── Gemeinsame Module ── -->
+<script src="qrcode.js"></script>
+<script src="shared.js"></script>
+<script src="config-api.js"></script>
 <script>
 'use strict';
 
-const BASE_URL     = 'https://geitner-hub.github.io/Lern-Apps/';
-const ADMIN_PW     = 'lehrer123';        // ← Login-Passwort hier ändern
-const ADMIN_SECRET = 'xK4#mP2$nQ0vL5jR'; // ← muss mit Cloudflare ADMIN_SECRET übereinstimmen
-const KLASSEN      = [5, 6, 7, 8, 9];
-
-const ANN_COLORS = [
-  { bg: 'rgba(230,168,23,.18)',  text: '#e6a817', label: 'Gold'   },
-  { bg: 'rgba(99,102,241,.18)',  text: '#818cf8', label: 'Indigo' },
-  { bg: 'rgba(74,222,128,.15)',  text: '#4ade80', label: 'Grün'   },
-  { bg: 'rgba(248,113,113,.14)', text: '#f87171', label: 'Rot'    },
-  { bg: 'rgba(45,212,191,.15)',  text: '#2dd4bf', label: 'Teal'   },
-  { bg: 'rgba(244,114,182,.15)', text: '#f472b6', label: 'Pink'   },
-];
+// Passwort & Secret stehen NICHT mehr hier – sie liegen nur als Secret im Cloudflare Worker.
+// KLASSEN, FAECHER, ANN_COLORS, TAG_COLORS kommen aus shared.js.
 
 let CONFIG   = { apps: [], customTags: [], hiddenCats: [], announcement: { active: false, text: '', emoji: '📢', color: 0 } };
 let ghSha    = '';
@@ -528,19 +457,54 @@ let changelog = [];
 let selectedAnnColor    = 0;
 let selectedNewTagColor = 0;
 
-// ── Login ────────────────────────────────────────────
+// ── Login (Prüfung serverseitig im Worker) ─────────────
 document.getElementById('pw').addEventListener('keydown', e => { if (e.key === 'Enter') checkLogin(); });
 
-function checkLogin() {
-  if (document.getElementById('pw').value === ADMIN_PW) {
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('app').style.display = 'block';
-    loadConfig();
+async function checkLogin() {
+  const inp = document.getElementById('pw');
+  const err = document.getElementById('pw-err');
+  const btn = document.getElementById('btn-login');
+  const pw  = inp.value;
+  if (!pw) { err.textContent = 'Bitte Passwort eingeben'; return; }
+  btn.disabled = true; btn.textContent = 'Prüfe …'; err.textContent = '';
+  const res = await ConfigAPI.login(pw);
+  btn.disabled = false; btn.textContent = 'Anmelden';
+  if (res.ok) {
+    inp.value = '';
+    showAdmin();
   } else {
-    document.getElementById('pw-err').textContent = '❌ Falsches Passwort';
-    document.getElementById('pw').value = '';
+    err.textContent = res.status === 401 ? '❌ Falsches Passwort'
+                    : res.status === 429 ? '⏳ ' + res.error
+                    : '⚠ ' + (res.error || 'Fehler');
+    inp.value = '';
+    inp.focus();
   }
 }
+
+function showAdmin() {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  loadConfig();
+}
+
+function showLogin(msg) {
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('pw-err').textContent = msg || '';
+  document.getElementById('pw').focus();
+}
+
+function logout() {
+  ConfigAPI.logout();
+  showLogin('Abgemeldet.');
+}
+
+// Bereits in diesem Tab angemeldet? → Sitzung serverseitig prüfen
+(async () => {
+  if (!ConfigAPI.hasSession()) return;
+  const res = await ConfigAPI.login(ConfigAPI.getPw());
+  if (res.ok) showAdmin(); else { ConfigAPI.logout(); showLogin(res.status === 401 ? 'Bitte erneut anmelden.' : ''); }
+})();
 
 // ── Sync ─────────────────────────────────────────────
 function setSync(s, m) {
@@ -551,11 +515,18 @@ function setSync(s, m) {
 
 async function loadConfig() {
   setSync('saving', 'Lädt …');
-  const { config, sha, fromCache } = await ConfigAPI.load();
-  CONFIG = config;
-  ghSha  = sha;
-  setSync('ok', fromCache ? '📦 Cache' : '✓ Geladen');
-  setTimeout(() => setSync('', '–'), 2000);
+  try {
+    const { config, sha } = await ConfigAPI.loadAdmin();
+    CONFIG = config;
+    ghSha  = sha;
+    setSync('ok', '✓ Geladen');
+    setTimeout(() => setSync('', '–'), 2000);
+  } catch (e) {
+    setSync('error', '⚠ Laden fehlgeschlagen');
+    showToast('⚠ Config konnte nicht geladen werden – Speichern ist gesperrt', true);
+    console.error('[Admin] Ladefehler:', e);
+    ghSha = null;           // ohne aktuelle Version kein Speichern (verhindert Überschreiben)
+  }
   buildAll();
   loadAnnForm();
 }
@@ -566,22 +537,29 @@ function saveConfig() {
 }
 
 async function _doSave() {
+  if (ghSha === null) { showToast('⚠ Speichern gesperrt – bitte Seite neu laden', true); return; }
   if (isSaving) { pendingSave = true; return; }
   isSaving = true;
   setSync('saving', 'Speichert …');
-  const { ok, newSha, error } = await ConfigAPI.save(CONFIG, ghSha);
+  const msg = changelog.length ? changelog[changelog.length - 1].msg : 'Einstellungen aktualisiert';
+  const { ok, newSha, status, error } = await ConfigAPI.save(CONFIG, ghSha, msg);
   if (ok) {
     ghSha = newSha;
     setSync('ok', '✓ Gespeichert');
-    showToast('✓ Gespeichert');
+    showToast('✓ Gespeichert – auf der Startseite in ca. 1 Min. sichtbar');
     setTimeout(() => setSync('', '–'), 3000);
   } else {
     setSync('error', '⚠ Fehler');
-    const msg = error === 'CONFLICT'
-      ? '⚠ Konflikt – bitte Seite neu laden'
-      : '⚠ Fehler beim Speichern';
-    showToast(msg, true);
-    console.error('[Admin] Speicherfehler:', error);
+    if (status === 401) {
+      pendingSave = false; isSaving = false;
+      showLogin('Sitzung abgelaufen – bitte neu anmelden (letzte Änderung nicht gespeichert).');
+      return;
+    }
+    const txt = error === 'CONFLICT'
+      ? '⚠ Konflikt: Config wurde woanders geändert – bitte Seite neu laden'
+      : '⚠ Fehler beim Speichern: ' + (error || '');
+    showToast(txt, true);
+    console.error('[Admin] Speicherfehler:', status, error);
   }
   isSaving = false;
   if (pendingSave) { pendingSave = false; _doSave(); }
@@ -617,7 +595,7 @@ function buildDashboard() {
   const total   = CONFIG.apps.length;
   const visible = CONFIG.apps.filter(a => !a.hidden).length;
   const hidden  = CONFIG.apps.filter(a => a.hidden).length;
-  const aodApp  = CONFIG.apps.find(a => a.aod && !a.hidden);
+  const aodApp  = CONFIG.apps.find(a => a.aod);
   const faecher = [...new Set(CONFIG.apps.map(a => a.fach).filter(Boolean))].length;
 
   document.getElementById('dash-stats').innerHTML = `
@@ -628,15 +606,21 @@ function buildDashboard() {
     <div class="dash-card"><div class="dash-card-label">Banner</div><div class="dash-card-value" style="font-size:1.3rem;">${CONFIG.announcement?.active ? '🟢 AN' : '⚪ AUS'}</div><div class="dash-card-sub">${CONFIG.announcement?.active ? 'aktiv' : 'inaktiv'}</div></div>`;
 
   document.getElementById('aod-info').innerHTML = aodApp
-    ? `<span style="font-size:1.5rem;">${aodApp.emoji || '📱'}</span> <strong style="color:#fff;">${aodApp.name}</strong> <span style="color:var(--muted);">· ${aodApp.fach}</span>`
-    : `<span style="color:var(--muted);font-size:.85rem;">Keine App des Tages gesetzt.</span>`;
+    ? `<div class="aod-row">
+         <span style="font-size:1.5rem;">${escHtml(aodApp.emoji || '📱')}</span>
+         <strong style="color:#fff;">${escHtml(aodApp.name)}</strong>
+         <span style="color:var(--muted);">· ${escHtml(aodApp.fach)}</span>
+         ${aodApp.hidden ? '<span style="color:var(--red);font-size:.78rem;">(App ist versteckt – wird nicht angezeigt)</span>' : ''}
+         <button class="btn danger sm" onclick="clearAod()">✕ Deaktivieren</button>
+       </div>`
+    : `<span style="color:var(--muted);font-size:.85rem;">Keine App des Tages gesetzt. Setzen über ⭐ im Reiter „Apps“.</span>`;
 
   const cl = document.getElementById('changelog-list');
   cl.innerHTML = changelog.length
     ? changelog.slice().reverse().map(e => `
         <div style="background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:.6rem .9rem;font-size:.83rem;display:flex;align-items:center;gap:.7rem;">
           <span style="color:var(--muted);font-size:.7rem;flex-shrink:0;">${e.time}</span>
-          <span style="flex:1;">${e.msg}</span>
+          <span style="flex:1;">${escHtml(e.msg)}</span>
         </div>`).join('')
     : '<div class="empty-msg">Noch keine Änderungen in dieser Sitzung.</div>';
 }
@@ -667,7 +651,7 @@ function buildAppList() {
 
     row.innerHTML = `
       <span class="drag-handle">⠿</span>
-      <span class="row-emoji">${app.emoji || '📱'}</span>
+      <span class="row-emoji">${escHtml(app.emoji || '📱')}</span>
       <div class="row-info" style="flex:1;min-width:0;">
         <div class="row-name">${escHtml(app.name)}${app.aod ? '<span class="aod-indicator">⭐ Heute</span>' : ''}</div>
         <div class="row-meta">${escHtml(app.fach || '–')} · ${escHtml(app.datei || '–')}</div>
@@ -675,10 +659,10 @@ function buildAppList() {
         <div class="inline-edit" id="edit-${i}">
           <div class="form-group"><label>Name</label><input type="text" id="ei-name-${i}" value="${escHtml(app.name)}"/></div>
           <div class="form-group"><label>Datei</label><input type="text" id="ei-datei-${i}" value="${escHtml(app.datei || '')}"/></div>
-          <div class="form-group"><label>Emoji</label><input type="text" id="ei-emoji-${i}" value="${escHtml(app.emoji || '📱')}" maxlength="4"/></div>
+          <div class="form-group"><label>Emoji</label><input type="text" id="ei-emoji-${i}" value="${escHtml(app.emoji || '📱')}" maxlength="8"/></div>
           <div class="form-group"><label>Fach</label>
             <select id="ei-fach-${i}">
-              ${['Mathematik','Englisch','Deutsch','WiB','Sport','Informatik','GPG'].map(f => `<option${app.fach === f ? ' selected' : ''}>${f}</option>`).join('')}
+              ${FAECHER.map(f => `<option${app.fach === f ? ' selected' : ''}>${escHtml(f)}</option>`).join('')}
             </select>
           </div>
           <div class="form-group full"><label>Beschreibung</label><input type="text" id="ei-desc-${i}" value="${escHtml(app.beschreibung || '')}"/></div>
@@ -690,11 +674,11 @@ function buildAppList() {
       </div>
       <div class="row-actions">
         <button class="icon-btn" onclick="toggleEdit(${i})" title="Bearbeiten">✏️</button>
-        <button class="icon-btn ${app.aod ? 'on-gold' : ''}" onclick="toggleAod('${escHtml(app.name)}')" title="App des Tages">⭐</button>
-        <button class="icon-btn ${app.hidden ? 'on-red' : 'on-green'}" onclick="toggleHidden('${escHtml(app.name)}')" title="Ein/Ausblenden">${app.hidden ? '🚫' : '✅'}</button>
-        <button class="icon-btn" onclick="openModal('${escHtml(app.name)}')" title="Tags">🏷</button>
-        <button class="icon-btn" onclick="showQR('${escHtml(app.name)}','${escHtml(app.datei || '')}')" title="QR">📲</button>
-        <button class="icon-btn on-red" onclick="deleteApp('${escHtml(app.name)}')" title="Löschen">🗑</button>
+        <button class="icon-btn ${app.aod ? 'on-gold' : ''}" data-name="${escHtml(app.name)}" onclick="toggleAod(this.dataset.name)" title="${app.aod ? 'App des Tages deaktivieren' : 'Als App des Tages setzen'}">⭐</button>
+        <button class="icon-btn ${app.hidden ? 'on-red' : 'on-green'}" data-name="${escHtml(app.name)}" onclick="toggleHidden(this.dataset.name)" title="Ein/Ausblenden">${app.hidden ? '🚫' : '✅'}</button>
+        <button class="icon-btn" data-name="${escHtml(app.name)}" onclick="openModal(this.dataset.name)" title="Tags">🏷</button>
+        <button class="icon-btn" data-i="${i}" onclick="showQRIdx(this.dataset.i)" title="QR">📲</button>
+        <button class="icon-btn on-red" data-name="${escHtml(app.name)}" onclick="deleteApp(this.dataset.name)" title="Löschen">🗑</button>
       </div>`;
 
     // Drag & Drop
@@ -736,6 +720,8 @@ function saveEdit(i) {
   const newName  = document.getElementById(`ei-name-${i}`).value.trim();
   const newDatei = document.getElementById(`ei-datei-${i}`).value.trim();
   if (!newName || !newDatei) { showToast('⚠ Name und Datei sind Pflichtfelder', true); return; }
+  if (!isSafeLink(newDatei)) { showToast('⚠ Ungültiger Link – erlaubt: name.html (optional ?parameter) oder https://…', true); return; }
+  if (CONFIG.apps.some((a, j) => j !== i && a.name === newName)) { showToast('⚠ Name bereits vergeben', true); return; }
   const oldName = app.name;
   app.name        = newName;
   app.datei       = newDatei;
@@ -775,10 +761,26 @@ function toggleHidden(name) {
 }
 
 function toggleAod(name) {
-  CONFIG.apps.forEach(a => a.aod = false);
   const app = CONFIG.apps.find(a => a.name === name);
-  if (app) { app.aod = true; logChange(`⭐ "${name}" als App des Tages gesetzt`); }
+  if (!app) return;
+  if (app.aod) {                       // erneuter Klick = deaktivieren
+    app.aod = false;
+    logChange(`⭐ App des Tages deaktiviert ("${name}")`);
+  } else {
+    CONFIG.apps.forEach(a => a.aod = false);
+    app.aod = true;
+    logChange(`⭐ "${name}" als App des Tages gesetzt`);
+    if (app.hidden) showToast('Hinweis: Diese App ist versteckt – sie erscheint erst, wenn sie sichtbar ist.', true);
+  }
   saveConfig(); buildAll();
+}
+
+function clearAod() {
+  if (!CONFIG.apps.some(a => a.aod)) return;
+  CONFIG.apps.forEach(a => a.aod = false);
+  logChange('⭐ App des Tages deaktiviert');
+  saveConfig(); buildAll();
+  showToast('App des Tages deaktiviert');
 }
 
 function addApp() {
@@ -788,6 +790,7 @@ function addApp() {
   const emoji = document.getElementById('f-emoji').value.trim() || '📱';
   const desc  = document.getElementById('f-desc').value.trim();
   if (!name || !datei || !fach) { showToast('⚠ Name, Datei und Fach ausfüllen', true); return; }
+  if (!isSafeLink(datei)) { showToast('⚠ Ungültiger Link – erlaubt: name.html (optional ?parameter) oder https://…', true); return; }
   if (CONFIG.apps.find(a => a.name === name)) { showToast('⚠ Name bereits vergeben', true); return; }
   CONFIG.apps.push({ name, datei, fach, emoji, beschreibung: desc, hidden: false, klassen: [], customTags: [], aod: false });
   ['f-name','f-datei','f-desc','f-emoji'].forEach(id => document.getElementById(id).value = '');
@@ -816,7 +819,7 @@ function undoDelete() {
   CONFIG.apps.splice(undoIdx, 0, undoApp);
   logChange(`↩ "${undoApp.name}" wiederhergestellt`);
   undoApp = null; undoIdx = null;
-  hideUndo(); buildAll();
+  hideUndo(); saveConfig(); buildAll();
 }
 
 function showUndo(name) {
@@ -848,16 +851,16 @@ function buildVisibility() {
     block.className = 'vis-cat-block';
     block.innerHTML = `
       <div class="vis-cat-header">
-        <span style="font-size:1.2rem;">${CAT_ICONS[fach] || '📚'}</span>
+        <span style="font-size:1.2rem;">${escHtml(CAT_ICONS[fach] || '📚')}</span>
         <span class="vis-cat-name">${escHtml(fach)} (${apps.length})</span>
-        <button class="vis-toggle ${catHidden ? 'off' : 'on'}" onclick="toggleCat('${escHtml(fach)}')">${catHidden ? 'Ausgeblendet' : 'Sichtbar'}</button>
+        <button class="vis-toggle ${catHidden ? 'off' : 'on'}" data-fach="${escHtml(fach)}" onclick="toggleCat(this.dataset.fach)">${catHidden ? 'Ausgeblendet' : 'Sichtbar'}</button>
       </div>
       <div class="vis-app-list">
         ${apps.map(app => `
           <div class="vis-app-row">
-            <span style="font-size:1.1rem;">${app.emoji || '📱'}</span>
+            <span style="font-size:1.1rem;">${escHtml(app.emoji || '📱')}</span>
             <span class="vis-app-name" style="${app.hidden ? 'opacity:.38' : ''}">${escHtml(app.name)}</span>
-            <button class="vis-toggle ${app.hidden ? 'off' : 'on'}" onclick="toggleHidden('${escHtml(app.name)}')">${app.hidden ? 'Ausgeblendet' : 'Sichtbar'}</button>
+            <button class="vis-toggle ${app.hidden ? 'off' : 'on'}" data-name="${escHtml(app.name)}" onclick="toggleHidden(this.dataset.name)">${app.hidden ? 'Ausgeblendet' : 'Sichtbar'}</button>
           </div>`).join('')}
       </div>`;
     list.appendChild(block);
@@ -973,7 +976,7 @@ function buildTagAssignList() {
     row.className = 'app-row';
     row.style.cursor = 'default';
     row.innerHTML = `
-      <span class="row-emoji">${app.emoji || '📱'}</span>
+      <span class="row-emoji">${escHtml(app.emoji || '📱')}</span>
       <div class="row-info">
         <div class="row-name">${escHtml(app.name)}</div>
         <div class="row-tags">
@@ -982,7 +985,7 @@ function buildTagAssignList() {
           ${!kl.length && !ct.length ? '<span style="font-size:.7rem;color:var(--muted)">Keine Tags</span>' : ''}
         </div>
       </div>
-      <div class="row-actions"><button class="icon-btn" onclick="openModal('${escHtml(app.name)}')">🏷 Bearbeiten</button></div>`;
+      <div class="row-actions"><button class="icon-btn" data-name="${escHtml(app.name)}" onclick="openModal(this.dataset.name)">🏷 Bearbeiten</button></div>`;
     list.appendChild(row);
   });
 }
@@ -1043,31 +1046,29 @@ function openModal(name) {
 function closeModal() { document.getElementById('tag-modal').classList.remove('open'); modalAppName = ''; }
 document.getElementById('tag-modal').addEventListener('click', e => { if (e.target === document.getElementById('tag-modal')) closeModal(); });
 
-// ── QR ────────────────────────────────────────────────
+// ── QR (lokal erzeugt, kein externer Dienst) ─────────────
+function showQRIdx(i) {
+  const app = CONFIG.apps[parseInt(i, 10)];
+  if (app) showQR(app.name, app.datei);
+}
+
 function showQR(name, datei) {
-  const url = BASE_URL + datei;
+  const url = appUrl(datei);
+  if (!url) { showToast('⚠ Kein gültiger Link für QR-Code', true); return; }
   document.getElementById('qr-app-name').textContent = name;
   document.getElementById('qr-url').textContent = url;
   const wrap = document.getElementById('qr-canvas-wrap');
   wrap.innerHTML = '';
-  const img = document.createElement('img');
-  img.src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(url)}&color=0f0e1a&bgcolor=ffffff&qzone=1`;
-  img.width = 220; img.height = 220;
-  img.style.cssText = 'border-radius:8px;display:block;';
-  wrap.appendChild(img);
+  const canvas = document.createElement('canvas');
+  if (!renderQR(canvas, url, 600)) { showToast('⚠ QR-Code konnte nicht erzeugt werden', true); return; }
+  wrap.appendChild(canvas);
   document.getElementById('qr-modal-wrap').classList.add('open');
 }
 
 function downloadQR() {
-  const name = document.getElementById('qr-app-name').textContent;
-  const img  = document.querySelector('#qr-canvas-wrap img');
-  if (!img) return;
-  const canvas = document.createElement('canvas');
-  canvas.width = canvas.height = 220;
-  const ctx = canvas.getContext('2d');
-  const i   = new Image(); i.crossOrigin = 'anonymous'; i.src = img.src;
-  i.onload  = () => { ctx.drawImage(i, 0, 0); const a = document.createElement('a'); a.download = `QR-${name.replace(/[^a-zA-Z0-9]/g,'-')}.png`; a.href = canvas.toDataURL('image/png'); a.click(); };
-  i.onerror = () => { const a = document.createElement('a'); a.href = img.src; a.target = '_blank'; a.click(); };
+  const name   = document.getElementById('qr-app-name').textContent;
+  const canvas = document.querySelector('#qr-canvas-wrap canvas');
+  if (canvas) downloadCanvas(canvas, 'QR-' + name);
 }
 
 function closeQR() { document.getElementById('qr-modal-wrap').classList.remove('open'); }
@@ -1118,13 +1119,12 @@ function updateAnnPreview() {
 function saveAnnouncement() {
   const text = document.getElementById('ann-text').value.trim();
   if (!text) { showToast('⚠ Bitte Text eingeben', true); return; }
+  if (text.length > 300) { showToast('⚠ Maximal 300 Zeichen', true); return; }
   CONFIG.announcement = {
     active:    true,
     text,
     emoji:     document.getElementById('ann-emoji').value || '📢',
     color:     selectedAnnColor,
-    bg:        ANN_COLORS[selectedAnnColor].bg,
-    textColor: ANN_COLORS[selectedAnnColor].text,
   };
   logChange(`📢 Banner aktiviert: "${text.substring(0, 30)}…"`);
   saveConfig();
@@ -1144,7 +1144,7 @@ function hideAnnouncement() {
 }
 
 // ── Link Checker ──────────────────────────────────────
-const GH_RAW = 'https://geitner-hub.github.io/Lern-Apps/';
+const GH_RAW = lwBaseUrl();
 
 async function runChecker() {
   const apps = CONFIG.apps.filter(a => a.datei);
@@ -1166,7 +1166,7 @@ async function runChecker() {
     item.innerHTML = `
       <span class="check-status">⏳</span>
       <div style="flex:1;min-width:0;">
-        <div class="check-name">${app.emoji || '📱'} ${escHtml(app.name)}</div>
+        <div class="check-name">${escHtml(app.emoji || '📱')} ${escHtml(app.name)}</div>
         <div class="check-url">${isExternal ? escHtml(app.datei) : GH_RAW + escHtml(app.datei)}</div>
       </div>
       <span class="check-badge skip">${isExternal ? 'Extern' : 'Prüft …'}</span>`;

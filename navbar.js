@@ -8,7 +8,8 @@
 //    LernApps.saveResult({
 //      score: 8,        // erreichte Punkte (Zahl)
 //      max:   10,       // maximale Punkte  (Zahl)
-//      label: '8 / 10'  // Anzeigetext (optional)
+//      label: '8 / 10', // Anzeigetext (optional)
+//      skill: 'einmaleins-7' // Kompetenz-Kennung (optional, für später)
 //    });
 //
 //  Das war's. Der Home-Button und die Ergebnisanzeige
@@ -18,10 +19,13 @@
 (function () {
   const HOME      = 'index.html';
   const STORE_KEY = 'lern-apps-results';
+  const HISTORY_MAX = 30;
 
   // ── Hilfsfunktionen ─────────────────────────────────
+  // Schlüssel = Dateiname + URL-Parameter, damit z. B. kopfrechnen.html?kl=5
+  // und kopfrechnen.html?kl=6 getrennte Ergebnisse haben.
   function getPageKey() {
-    return location.pathname.split('/').pop() || 'index.html';
+    return (location.pathname.split('/').pop() || 'index.html') + location.search;
   }
   function loadResults() {
     try { return JSON.parse(localStorage.getItem(STORE_KEY) || '{}'); }
@@ -41,16 +45,29 @@
      *   LernApps.saveResult({ score: 8, max: 10 });
      */
     saveResult(result) {
-      const all = loadResults();
-      all[getPageKey()] = {
-        score:     result.score,
-        max:       result.max,
-        label:     result.label || (result.score + ' / ' + result.max),
-        percent:   Math.round((result.score / result.max) * 100),
-        timestamp: Date.now()
+      const score = Number(result && result.score) || 0;
+      const max   = Number(result && result.max)   || 0;
+      const pct   = max > 0 ? Math.max(0, Math.min(100, Math.round((score / max) * 100))) : 0;
+      const all   = loadResults();
+      const key   = getPageKey();
+      const prev  = all[key] || {};
+      // Verlauf der letzten Versuche (Grundlage für spätere Level/Serien/Meisterschaft)
+      const history = Array.isArray(prev.history) ? prev.history.slice(-(HISTORY_MAX - 1)) : [];
+      history.push({ t: Date.now(), p: pct });
+      all[key] = {
+        score, max,
+        label:     String((result && result.label) || (score + ' / ' + max)).slice(0, 40),
+        percent:   pct,
+        best:      Math.max(pct, Number(prev.best) || 0),
+        plays:     (Number(prev.plays) || 0) + 1,
+        timestamp: Date.now(),
+        history,
+        ...(result && result.skill ? { skill: String(result.skill).slice(0, 60) } : {}),
       };
-      localStorage.setItem(STORE_KEY, JSON.stringify(all));
-      updateBadge(all[getPageKey()]);
+      try { localStorage.setItem(STORE_KEY, JSON.stringify(all)); } catch (e) {}
+      updateBadge(all[key]);
+      // Signal für künftige Erweiterungen (z. B. Lernwelt-Pass mit XP)
+      try { window.dispatchEvent(new CustomEvent('lernapps:result', { detail: { key, ...all[key] } })); } catch (e) {}
     },
     getAllResults() { return loadResults(); },
     getResult()     { return getResult(); }

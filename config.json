@@ -6,7 +6,7 @@
       "datei": "practice_simple_present.html",
       "fach": "Englisch",
       "emoji": "📓",
-      "beschreibung": "practice simple present! he she it + -s",
+      "beschreibung": "Practice simple present! he/she/it + -s",
       "hidden": false,
       "klassen": [
         5
@@ -17,9 +17,9 @@
     {
       "name": "Satzglieder ordnen",
       "datei": "satzglieder-erkennen.html",
-      "fach": "Englisch",
-      "emoji": "📓",
-      "beschreibung": "",
+      "fach": "Deutsch",
+      "emoji": "🔤",
+      "beschreibung": "Erkenne und ordne die Satzglieder im Satz.",
       "hidden": false,
       "klassen": [
         5
@@ -31,8 +31,8 @@
       "name": "Vierecke unterscheiden",
       "datei": "vierecke_unterscheiden.html",
       "fach": "Mathematik",
-      "emoji": "📱",
-      "beschreibung": "",
+      "emoji": "📐",
+      "beschreibung": "Quadrat, Rechteck & Co. – erkenne die Unterschiede!",
       "hidden": false,
       "klassen": [
         5
@@ -45,7 +45,7 @@
       "datei": "vokabeltrainer5.html",
       "fach": "Englisch",
       "emoji": "📖",
-      "beschreibung": "",
+      "beschreibung": "Übe Vokabeln aus dem Schulbuch",
       "hidden": false,
       "klassen": [
         5
@@ -80,8 +80,8 @@
       "name": "Längeneinheiten umrechnen",
       "datei": "laengeneinheiten.html",
       "fach": "Mathematik",
-      "emoji": "📱",
-      "beschreibung": "",
+      "emoji": "📏",
+      "beschreibung": "Umrechnen, rechnen, vergleichen: mm, cm, m, km",
       "hidden": false,
       "klassen": [
         5
@@ -93,7 +93,7 @@
       "name": "Regeln in unserer Gesellschaft",
       "datei": "regeln-sortierer-gpg.html",
       "fach": "GPG",
-      "emoji": "📱",
+      "emoji": "⚖️",
       "beschreibung": "Welche Regeln gibt es bei uns? Ordne zu!",
       "hidden": true,
       "klassen": [],
@@ -153,9 +153,11 @@
       "datei": "kopfrechnen_kl4.html",
       "fach": "Mathematik",
       "emoji": "🧠",
-      "beschreibung": "Übe deine Kopfrechenkünste!",
+      "beschreibung": "Wiederholung 4. Klasse: + − × ÷",
       "hidden": false,
-      "klassen": [],
+      "klassen": [
+        5
+      ],
       "customTags": [
         {
           "name": "Kopfrechnen",
@@ -209,7 +211,7 @@
       "hidden": true,
       "klassen": [],
       "customTags": [],
-      "aod": true
+      "aod": false
     },
     {
       "name": "Rechen-Arena",
@@ -253,10 +255,39 @@
       "name": "Simple Past",
       "datei": "simple-past.html",
       "fach": "Englisch",
-      "emoji": "📱",
-      "beschreibung": "",
+      "emoji": "⏪",
+      "beschreibung": "Regular and irregular verbs – übe die Vergangenheit!",
       "hidden": false,
-      "klassen": [],
+      "klassen": [
+        5,
+        6
+      ],
+      "customTags": [],
+      "aod": false
+    },
+    {
+      "name": "Rechteck-Werkstatt",
+      "datei": "rechteck-app.html",
+      "fach": "Mathematik",
+      "emoji": "🟦",
+      "beschreibung": "Verändere die Seiten und beobachte, was passiert.",
+      "hidden": true,
+      "klassen": [
+        5
+      ],
+      "customTags": [],
+      "aod": false
+    },
+    {
+      "name": "Sachaufgaben Längen",
+      "datei": "sachaufgaben_laengen.html",
+      "fach": "Mathematik",
+      "emoji": "📏",
+      "beschreibung": "Knifflige Textaufgaben mit Längeneinheiten",
+      "hidden": true,
+      "klassen": [
+        5
+      ],
       "customTags": [],
       "aod": false
     }

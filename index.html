@@ -4,10 +4,8 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Lernwelt</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-  <noscript><link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="fonts.css">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
@@ -160,7 +158,7 @@
     body.list-view .app-emoji{font-size:1.4rem;flex-shrink:0;}
     body.list-view .app-name{font-size:.9rem;}
     body.list-view .app-desc{font-size:.75rem;flex:1;}
-    body.list-view .app-arrow{margin-left:auto;align-self:center;flex-shrink:0;}
+    body.list-view .app-foot{margin-left:auto;align-self:center;flex-shrink:0;margin-top:0;}
     body.list-view .result-badge{display:none;}
     body.list-view .app-card.placeholder{min-height:50px;}
 
@@ -169,6 +167,38 @@
 
     footer{text-align:center;padding:1.4rem;font-size:.76rem;color:var(--muted);border-top:1px solid var(--border);}
     footer span{color:var(--accent);}
+  
+    /* ── ANKÜNDIGUNG ── */
+    #ann-banner{display:none;max-width:980px;margin:1.2rem auto;padding:0 1.4rem;}
+    #ann-banner .ann-inner{display:flex;align-items:center;gap:.7rem;padding:.8rem 1.1rem;border-radius:14px;font-weight:800;font-size:.93rem;line-height:1.4;}
+    #ann-banner .ann-emoji{font-size:1.4rem;flex-shrink:0;}
+
+    /* ── KARTEN-FUSS & QR-BUTTON ── */
+    .app-foot{display:flex;align-items:center;justify-content:space-between;gap:.5rem;margin-top:.15rem;position:relative;}
+    .app-foot .app-arrow{align-self:center;}
+    .qr-btn{display:inline-flex;align-items:center;gap:.28rem;background:rgba(255,255,255,.05);border:1px solid var(--border2);color:var(--muted);border-radius:8px;padding:.24rem .5rem;font-family:inherit;font-size:.68rem;font-weight:800;cursor:pointer;transition:all .15s;position:relative;z-index:2;}
+    .qr-btn:hover,.qr-btn:focus-visible{color:var(--accent);border-color:rgba(230,168,23,.45);background:rgba(230,168,23,.08);outline:none;}
+    .qr-btn svg{width:13px;height:13px;}
+    .aod-card .qr-btn{position:absolute;right:1rem;bottom:.85rem;}
+    .header-links{display:flex;gap:.9rem;justify-content:center;margin-top:.7rem;position:relative;}
+    .header-links .admin-link{margin-top:0;}
+    .page-qr-link{font-size:.7rem;color:rgba(255,255,255,.3);background:none;border:none;cursor:pointer;font-family:inherit;padding:0;}
+    .page-qr-link:hover{color:var(--accent);}
+
+    /* ── QR-MODAL ── */
+    #qr-modal{position:fixed;inset:0;z-index:10000;background:rgba(5,4,12,.78);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:1rem;}
+    #qr-modal.open{display:flex;}
+    .qr-box{background:var(--bg2);border:1px solid var(--border2);border-radius:20px;padding:1.4rem 1.4rem 1.2rem;width:min(460px,100%);text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.6);max-height:calc(100vh - 2rem);overflow:auto;}
+    .qr-title{font-family:'Fredoka One',cursive;font-size:1.35rem;color:#fff;margin-bottom:.2rem;}
+    .qr-sub{font-size:.78rem;color:var(--muted);margin-bottom:.9rem;}
+    #qr-canvas{width:min(340px,70vw);height:auto;aspect-ratio:1;border-radius:12px;display:block;margin:0 auto;image-rendering:pixelated;background:#fff;}
+    .qr-url{font-size:.75rem;color:var(--text2);word-break:break-all;margin:.8rem 0 1rem;padding:.45rem .7rem;background:var(--bg3);border-radius:8px;border:1px solid var(--border);user-select:all;}
+    .qr-actions{display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;}
+    .qr-actions button{border:1px solid var(--border2);background:rgba(255,255,255,.05);color:var(--text);border-radius:10px;padding:.55rem .9rem;font-family:inherit;font-weight:800;font-size:.82rem;cursor:pointer;}
+    .qr-actions button:hover{border-color:rgba(230,168,23,.45);color:var(--accent);}
+    .qr-actions button.primary{background:var(--accent);color:#0f0e1a;border-color:var(--accent);}
+    .qr-actions button.primary:hover{color:#0f0e1a;opacity:.9;}
+    body.qr-open{overflow:hidden;}
   </style>
 </head>
 <body>
@@ -177,7 +207,7 @@
   <div class="header-deco"></div>
   <div class="wordmark">
     <span class="wordmark-icon">🧭</span>
-    Lern<em>welt</em>
+    <span>Lern<em>welt</em></span>
   </div>
   <p>Klick auf eine App und leg los!</p>
   <div class="header-stats">
@@ -185,20 +215,25 @@
     <span class="hstat" id="stat-apps">… Apps</span>
     <span class="hstat" id="stat-played">… gespielt</span>
   </div>
-  <a href="admin.html" class="admin-link">⚙ Admin</a>
+  <div class="header-links">
+    <button type="button" class="page-qr-link" id="page-qr-btn" title="QR-Code zu dieser Seite (mit aktuellem Klassenfilter)">📲 QR zur Startseite</button>
+    <a href="admin.html" class="admin-link">⚙ Admin</a>
+  </div>
 </header>
 
 <div id="sync-bar"><span class="sync-dot"></span><span id="sync-msg">Wird geladen …</span></div>
 
+<div id="ann-banner" role="status" aria-live="polite"></div>
+
 <div class="filter-bar">
   <div class="fi">
     <div class="filter-top-row">
-      <input type="search" class="filter-search" id="search" placeholder="App suchen …" autocomplete="off"/>
+      <input type="search" class="filter-search" id="search" placeholder="App suchen …" autocomplete="off" aria-label="App suchen"/>
       <div class="view-toggle">
-        <button class="view-btn active" id="btn-grid" title="Kachelansicht" onclick="setView('grid')">
+        <button type="button" class="view-btn active" id="btn-grid" title="Kachelansicht" aria-label="Kachelansicht">
           <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1.5" fill="currentColor"/><rect x="9" y="1" width="6" height="6" rx="1.5" fill="currentColor"/><rect x="1" y="9" width="6" height="6" rx="1.5" fill="currentColor"/><rect x="9" y="9" width="6" height="6" rx="1.5" fill="currentColor"/></svg>
         </button>
-        <button class="view-btn" id="btn-list" title="Listenansicht" onclick="setView('list')">
+        <button type="button" class="view-btn" id="btn-list" title="Listenansicht" aria-label="Listenansicht">
           <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><rect x="1" y="2" width="14" height="2.5" rx="1.2" fill="currentColor"/><rect x="1" y="6.75" width="14" height="2.5" rx="1.2" fill="currentColor"/><rect x="1" y="11.5" width="14" height="2.5" rx="1.2" fill="currentColor"/></svg>
         </button>
       </div>
@@ -206,14 +241,7 @@
     <div class="filter-rows">
       <div class="filter-row">
         <span class="filter-label">Klasse</span>
-        <div class="chips" id="chips-k">
-          <span class="chip all active" data-v="all">Alle</span>
-          <span class="chip" data-v="5">Kl. 5</span>
-          <span class="chip" data-v="6">Kl. 6</span>
-          <span class="chip" data-v="7">Kl. 7</span>
-          <span class="chip" data-v="8">Kl. 8</span>
-          <span class="chip" data-v="9">Kl. 9</span>
-        </div>
+        <div class="chips" id="chips-k"></div>
       </div>
       <div class="filter-row" id="tag-row" style="display:none">
         <span class="filter-label">Tags</span>
@@ -232,80 +260,51 @@
 
 <footer>🧭 <span>Lernwelt</span> · geitner-hub.github.io</footer>
 
-<!-- ── Gemeinsame Module (inline) ── -->
-<script>
-// ── shared.js ────────────────────────────────────────
-'use strict';
-const CAT_STYLES = {
-  "Mathematik": { icon: "➕", color: "#6366f1", color2: "#818cf8" },
-  "Englisch":   { icon: "🇬🇧", color: "#f43f5e", color2: "#fb7185" },
-  "Deutsch":    { icon: "📖", color: "#10b981", color2: "#34d399" },
-  "WiB":        { icon: "🌍", color: "#e6a817", color2: "#fbbf24" },
-  "Sport":      { icon: "⚽", color: "#8b5cf6", color2: "#a78bfa" },
-  "Informatik": { icon: "💻", color: "#06b6d4", color2: "#22d3ee" },
-  "GPG":        { icon: "🏛",  color: "#f97316", color2: "#fb923c" },
-};
-const CAT_ICONS = Object.fromEntries(Object.entries(CAT_STYLES).map(([k,v])=>[k,v.icon]));
-const TAG_COLORS = [
-  { bg:'rgba(167,139,250,.16)',border:'rgba(167,139,250,.35)',text:'#c4b5fd',dot:'#a78bfa',label:'Violett'},
-  { bg:'rgba(99,102,241,.15)', border:'rgba(99,102,241,.32)', text:'#818cf8',dot:'#6366f1',label:'Indigo' },
-  { bg:'rgba(230,168,23,.14)', border:'rgba(230,168,23,.32)', text:'#e6a817',dot:'#e6a817',label:'Gold'   },
-  { bg:'rgba(74,222,128,.13)', border:'rgba(74,222,128,.3)',  text:'#4ade80',dot:'#22c55e',label:'Grün'   },
-  { bg:'rgba(248,113,113,.13)',border:'rgba(248,113,113,.3)', text:'#f87171',dot:'#ef4444',label:'Rot'    },
-  { bg:'rgba(45,212,191,.13)', border:'rgba(45,212,191,.3)',  text:'#2dd4bf',dot:'#14b8a6',label:'Teal'   },
-  { bg:'rgba(244,114,182,.13)',border:'rgba(244,114,182,.3)', text:'#f472b6',dot:'#ec4899',label:'Pink'   },
-  { bg:'rgba(251,191,36,.13)', border:'rgba(251,191,36,.3)',  text:'#fbbf24',dot:'#f59e0b',label:'Gelb'   },
-];
-function tagObj(t){return typeof t==='object'&&t!==null?t:{name:String(t),color:0};}
-function tagName(t){return tagObj(t).name;}
-function tagColor(t){return TAG_COLORS[tagObj(t).color]??TAG_COLORS[0];}
-function escHtml(s){return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+<!-- ── QR-Modal ── -->
+<div id="qr-modal" role="dialog" aria-modal="true" aria-labelledby="qr-title">
+  <div class="qr-box">
+    <div class="qr-title" id="qr-title">QR-Code</div>
+    <div class="qr-sub">Mit der Kamera scannen – öffnet die App direkt.</div>
+    <canvas id="qr-canvas" width="340" height="340"></canvas>
+    <div class="qr-url" id="qr-url"></div>
+    <div class="qr-actions">
+      <button type="button" id="qr-copy">🔗 Link kopieren</button>
+      <button type="button" id="qr-download">⬇ Als Bild</button>
+      <button type="button" class="primary" id="qr-close">Schließen</button>
+    </div>
+  </div>
+</div>
 
-// ── config-api.js ─────────────────────────────────────
-const ConfigAPI=(()=>{
-  const WORKER_URL='https://lern-apps-config.bennigeitner.workers.dev';
-  const CACHE_KEY='lernwelt-config-cache';
-  const DEFAULTS={version:1,apps:[],customTags:[],hiddenCats:[],announcement:{active:false,text:'',emoji:'📢',color:0}};
-  function decode(raw){return JSON.parse(decodeURIComponent(atob(raw.replace(/\n/g,'')).split('').map(c=>'%'+('00'+c.charCodeAt(0).toString(16)).slice(-2)).join('')));}
-  function encode(obj){return btoa(unescape(encodeURIComponent(JSON.stringify(obj,null,2))));}
-  function migrate(cfg){if(Array.isArray(cfg.customTags))cfg.customTags=cfg.customTags.map(t=>typeof t==='string'?{name:t,color:0}:t);cfg.version=1;return cfg;}
-  function writeCache(cfg){try{localStorage.setItem(CACHE_KEY,JSON.stringify(cfg));localStorage.setItem(CACHE_KEY+'-ts',Date.now().toString());}catch(e){}}
-  function readCache(){try{const r=localStorage.getItem(CACHE_KEY);return r?JSON.parse(r):null;}catch(e){return null;}}
-  async function load(){
-    try{
-      const r=await fetch(WORKER_URL);
-      if(!r.ok)throw new Error('HTTP '+r.status);
-      const d=await r.json();
-      const parsed=migrate({...DEFAULTS,...decode(d.content)});
-      writeCache(parsed);
-      return{config:parsed,sha:d.sha,fromCache:false};
-    }catch(e){
-      console.warn('[ConfigAPI] Worker nicht erreichbar:',e.message);
-      const cached=readCache();
-      return{config:migrate({...DEFAULTS,...(cached||{})}),sha:'',fromCache:true};
-    }
-  }
-  async function save(config,sha){
-    const toSave={...config};delete toSave.specialLists;delete toSave.units;delete toSave.meta;
-    try{
-      const body={message:'Admin: Einstellungen aktualisiert',content:encode(toSave),branch:'main'};
-      if(sha)body.sha=sha;
-      const r=await fetch(WORKER_URL,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
-      if(!r.ok){if(r.status===409)throw new Error('CONFLICT');throw new Error('HTTP '+r.status);}
-      const d=await r.json();
-      writeCache(toSave);
-      return{ok:true,newSha:d.content?.sha??sha};
-    }catch(e){return{ok:false,error:e.message};}
-  }
-  return{load,save,WORKER_URL};
-})();
-</script>
+<!-- ── Gemeinsame Module ── -->
+<script src="qrcode.js"></script>
+<script src="shared.js"></script>
+<script src="config-api.js"></script>
 <script>
 'use strict';
 
 const STORE_KEY = 'lern-apps-results';
-let CONFIG = { apps: [], customTags: [], hiddenCats: [] };
+const QR_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M17 20h4v-3"/></svg>';
+
+let CONFIG  = ConfigAPI.migrate({});
+let RESULTS = {};
 let fKl = 'all', fTag = 'all', fQ = '';
+
+// ── URL-Parameter (z. B. index.html?kl=5&tag=Vokabeln&q=rechnen) ──
+(function readUrlParams() {
+  const p = new URLSearchParams(location.search);
+  const kl = p.get('kl');
+  if (kl && KLASSEN.includes(parseInt(kl, 10))) fKl = String(parseInt(kl, 10));
+  if (p.get('tag')) fTag = p.get('tag').slice(0, 40);
+  if (p.get('q'))   { fQ = p.get('q').slice(0, 60).toLowerCase(); document.getElementById('search').value = p.get('q').slice(0, 60); }
+})();
+
+function syncUrl() {
+  const p = new URLSearchParams();
+  if (fKl !== 'all')  p.set('kl', fKl);
+  if (fTag !== 'all') p.set('tag', fTag);
+  const qs = p.toString();
+  try { history.replaceState(null, '', location.pathname + (qs ? '?' + qs : '')); } catch (e) {}
+}
 
 // ── Sync-Bar ─────────────────────────────────────────
 function syncStatus(s, m) {
@@ -314,128 +313,139 @@ function syncStatus(s, m) {
   document.getElementById('sync-msg').textContent = m;
 }
 
-// ── Lade-Einstieg ────────────────────────────────────
+// ── Laden ────────────────────────────────────────────
 async function load() {
   syncStatus('syncing', 'Wird geladen …');
-  const { config, fromCache } = await ConfigAPI.load();
+  const { config, fromCache, empty } = await ConfigAPI.loadPublic();
   CONFIG = config;
   if (fromCache) {
-    syncStatus('cached', '📦 Offline-Modus (gecachte Daten)');
-    setTimeout(() => syncStatus('', ''), 4000);
+    syncStatus(empty ? 'error' : 'cached', empty ? '⚠ Apps konnten nicht geladen werden – bitte neu laden' : '📦 Offline-Modus (gespeicherte Daten)');
+    if (!empty) setTimeout(() => syncStatus('', ''), 4000);
   } else {
     syncStatus('ok', '✓ Geladen');
     setTimeout(() => syncStatus('', ''), 2500);
   }
+  loadResults();
   buildPage();
-  updateHeaderStats();
+}
+
+function loadResults() {
+  try { RESULTS = JSON.parse(localStorage.getItem(STORE_KEY) || '{}') || {}; } catch (e) { RESULTS = {}; }
+}
+
+function visibleApps() {
+  return CONFIG.apps.filter(a => !a.hidden && !CONFIG.hiddenCats.includes(a.fach) && isSafeLink(a.datei));
 }
 
 function updateHeaderStats() {
-  const total = CONFIG.apps.filter(a => !a.hidden).length;
-  document.getElementById('stat-apps').innerHTML = `<strong>${total}</strong> Apps`;
-  try {
-    const stored = JSON.parse(localStorage.getItem(STORE_KEY) || '{}');
-    const played = CONFIG.apps.filter(a => a.datei && stored[a.datei]).length;
-    document.getElementById('stat-played').innerHTML = `<strong>${played}</strong> gespielt`;
-  } catch (e) {}
+  const apps = visibleApps();
+  document.getElementById('stat-apps').innerHTML = `<strong>${apps.length}</strong> Apps`;
+  const played = apps.filter(a => RESULTS[resultKey(a.datei)]).length;
+  document.getElementById('stat-played').innerHTML = `<strong>${played}</strong> gespielt`;
 }
 
-// ── App des Tages ─────────────────────────────────────
+// ── Ankündigung ──────────────────────────────────────
+function buildAnnouncement() {
+  const wrap = document.getElementById('ann-banner');
+  const ann = CONFIG.announcement || {};
+  if (!ann.active || !String(ann.text || '').trim()) { wrap.style.display = 'none'; wrap.innerHTML = ''; return; }
+  const col = ANN_COLORS[ann.color] || ANN_COLORS[0];
+  wrap.innerHTML = `<div class="ann-inner" style="background:${col.bg};color:${col.text};border:1px solid ${col.text}55;">
+      <span class="ann-emoji">${escHtml(ann.emoji || '📢')}</span><span>${escHtml(ann.text)}</span></div>`;
+  wrap.style.display = 'block';
+}
+
+// ── App des Tages ────────────────────────────────────
 function buildAod() {
-  const aodApp = CONFIG.apps.find(a => a.aod && !a.hidden);
+  const aodApp = visibleApps().find(a => a.aod);
   const sec = document.getElementById('aod-section');
-  if (!aodApp) { sec.style.display = 'none'; return; }
+  if (!aodApp) { sec.style.display = 'none'; sec.innerHTML = ''; return; }
+  const idx = CONFIG.apps.indexOf(aodApp);
   sec.style.display = 'block';
   sec.innerHTML = `
-    <a class="aod-card" href="${aodApp.datei}">
+    <a class="aod-card" href="${escHtml(aodApp.datei)}">
       <span class="aod-badge">⭐ App des Tages</span>
-      <span class="aod-emoji">${aodApp.emoji || '📱'}</span>
+      <span class="aod-emoji">${escHtml(aodApp.emoji || '📱')}</span>
       <div class="aod-info">
-        <div class="aod-label">${aodApp.fach}</div>
-        <div class="aod-name">${aodApp.name}</div>
-        <div class="aod-desc">${aodApp.beschreibung || ''}</div>
+        <div class="aod-label">${escHtml(aodApp.fach)}</div>
+        <div class="aod-name">${escHtml(aodApp.name)}</div>
+        <div class="aod-desc">${escHtml(aodApp.beschreibung || '')}</div>
       </div>
+      <button type="button" class="qr-btn" data-qr="${idx}" aria-label="QR-Code für ${escHtml(aodApp.name)} anzeigen">${QR_SVG}QR</button>
     </a>`;
 }
 
-// ── Seite aufbauen ────────────────────────────────────
+// ── Klassen-Chips ────────────────────────────────────
+function buildKlassenChips() {
+  const wrap = document.getElementById('chips-k');
+  wrap.innerHTML = `<span class="chip all${fKl === 'all' ? ' active' : ''}" data-v="all" role="button" tabindex="0">Alle</span>` +
+    KLASSEN.map(k => `<span class="chip${fKl === String(k) ? ' active' : ''}" data-v="${k}" role="button" tabindex="0">Kl. ${k}</span>`).join('');
+}
+
+// ── Seite aufbauen ───────────────────────────────────
 function buildPage() {
+  buildAnnouncement();
   buildAod();
+  buildKlassenChips();
   refreshTagChips();
+  updateHeaderStats();
+
   const main = document.getElementById('main');
   main.querySelectorAll('.category').forEach(e => e.remove());
   const noR = document.getElementById('no-results');
-  const faecher = [...new Set(CONFIG.apps.map(a => a.fach).filter(Boolean))];
+  const apps = visibleApps();
+  const faecher = [...new Set(apps.map(a => a.fach).filter(Boolean))];
 
   faecher.forEach(fach => {
     const kat = CAT_STYLES[fach] || { icon: '📚', color: '#6366f1', color2: '#818cf8' };
     const sec = document.createElement('section');
-    sec.className = 'category' + (CONFIG.hiddenCats.includes(fach) ? ' hidden-cat' : '');
+    sec.className = 'category';
     sec.dataset.cat = fach;
     sec.style.cssText = `--cat-color:${kat.color};--cat-color2:${kat.color2}`;
-    const cid = 'c' + fach.replace(/[^a-z0-9]/gi, '');
     sec.innerHTML = `
       <div class="cat-header">
         <div class="cat-icon">${kat.icon}</div>
-        <span class="cat-title">${fach}</span>
-        <span class="cat-count" id="${cid}"></span>
+        <span class="cat-title">${escHtml(fach)}</span>
+        <span class="cat-count"></span>
       </div>
-      <div class="apps-grid" id="g${cid}"></div>`;
+      <div class="apps-grid"></div>`;
     const grid = sec.querySelector('.apps-grid');
 
-    CONFIG.apps.filter(a => a.fach === fach).forEach(app => {
+    apps.filter(a => a.fach === fach).forEach(app => {
+      const idx = CONFIG.apps.indexOf(app);
       const kl = app.klassen || [], ct = app.customTags || [];
-      const appKey = app.datei ? app.datei.replace('.html', '') : '';
 
-      // Letztes Ergebnis aus localStorage
-      let resultHTML = '';
-      try {
-        const raw = localStorage.getItem('lern_result_' + appKey);
-        if (raw) {
-          const r = JSON.parse(raw);
-          const pct = r.max > 0 ? Math.round((r.score / r.max) * 100) : 0;
-          const cls = pct >= 80 ? 'good' : pct >= 50 ? 'mid' : '';
-          resultHTML = `<div class="result-badge">
-            <span style="font-size:.62rem">Zuletzt: ${r.label}</span>
-            <div class="result-bar"><div class="result-bar-fill ${cls}" style="width:${pct}%"></div></div>
-            <span class="result-pct">${pct}%</span>
-          </div>`;
-        }
-      } catch (e) {}
-
-      // Ergebnis-Badge (neues Format)
       let resultBadge = '';
-      try {
-        const stored = JSON.parse(localStorage.getItem(STORE_KEY) || '{}');
-        const r = stored[app.datei];
-        if (r) {
-          const cls = r.percent >= 70 ? 'high' : r.percent >= 40 ? 'mid' : 'low';
-          resultBadge = `<span class="app-result ${cls}">🏆 ${r.label}</span>`;
-        }
-      } catch (e) {}
+      const r = RESULTS[resultKey(app.datei)];
+      if (r && typeof r === 'object') {
+        const pct = Number(r.percent) || 0;
+        const cls = pct >= 70 ? 'high' : pct >= 40 ? 'mid' : 'low';
+        resultBadge = `<span class="app-result ${cls}">🏆 ${escHtml(r.label || pct + ' %')}</span>`;
+      }
 
       const card = document.createElement('a');
-      card.className = 'app-card' + (app.hidden ? ' hidden-app' : '');
-      card.href = app.datei || '#';
+      card.className = 'app-card';
+      card.href = app.datei;
       card.dataset.name = app.name;
       card.dataset.fach = fach;
       card.dataset.kl = kl.join(',');
-      card.dataset.ct = ct.map(t => tagName(t)).join(',');
-
+      card.dataset.ct = ct.map(t => tagName(t)).join('|');
       card.innerHTML = `
         ${resultBadge}
-        <span class="app-emoji">${app.emoji || '📱'}</span>
-        <span class="app-name">${app.name}</span>
-        <span class="app-desc">${app.beschreibung || ''}</span>
+        <span class="app-emoji">${escHtml(app.emoji || '📱')}</span>
+        <span class="app-name">${escHtml(app.name)}</span>
+        <span class="app-desc">${escHtml(app.beschreibung || '')}</span>
         <div class="app-meta">
-          ${kl.map(k => `<span class="app-tag tk">Kl.${k}</span>`).join('')}
+          ${kl.map(k => `<span class="app-tag tk">Kl.${escHtml(k)}</span>`).join('')}
           ${ct.map(t => {
             const col = tagColor(t);
-            return `<span class="app-tag tc" style="background:${col.bg};border-color:${col.border};color:${col.text};">${tagName(t)}</span>`;
+            return `<span class="app-tag tc" style="background:${col.bg};border-color:${col.border};color:${col.text};">${escHtml(tagName(t))}</span>`;
           }).join('')}
         </div>
-        ${resultHTML}
-        <span class="app-arrow">→</span>`;
+        <div class="app-foot">
+          <button type="button" class="qr-btn" data-qr="${idx}" title="QR-Code anzeigen" aria-label="QR-Code für ${escHtml(app.name)} anzeigen">${QR_SVG}QR</button>
+          <span class="app-arrow" aria-hidden="true">→</span>
+        </div>`;
       grid.appendChild(card);
     });
 
@@ -449,86 +459,135 @@ function buildPage() {
   applyFilters();
 }
 
-// ── Tags ──────────────────────────────────────────────
+// ── Tags ─────────────────────────────────────────────
 function refreshTagChips() {
-  const tags = CONFIG.customTags || [];
+  const tags = (CONFIG.customTags || []).filter(t => tagName(t));
   const wrap = document.getElementById('chips-t');
-  const row = document.getElementById('tag-row');
-  wrap.innerHTML = `<span class="chip all${fTag === 'all' ? ' active' : ''}" data-v="all">Alle</span>`;
+  const row  = document.getElementById('tag-row');
+  if (fTag !== 'all' && !tags.some(t => tagName(t) === fTag)) fTag = 'all';
+  wrap.innerHTML = `<span class="chip all${fTag === 'all' ? ' active' : ''}" data-v="all" role="button" tabindex="0">Alle</span>`;
   tags.forEach(t => {
     const nm = tagName(t), col = tagColor(t);
     const c = document.createElement('span');
-    const isActive = fTag === nm;
-    c.className = 'chip ctag' + (isActive ? ' active' : '');
-    if (isActive) c.style.cssText = `background:${col.bg};border-color:${col.border};color:${col.text};`;
+    c.className = 'chip ctag' + (fTag === nm ? ' active' : '');
+    c.setAttribute('role', 'button');
+    c.tabIndex = 0;
+    if (fTag === nm) c.style.cssText = `background:${col.bg};border-color:${col.border};color:${col.text};`;
     c.dataset.v = nm;
-    c.dataset.bg = col.bg;
-    c.dataset.border = col.border;
-    c.dataset.color = col.text;
+    c.dataset.bg = col.bg; c.dataset.border = col.border; c.dataset.color = col.text;
     c.textContent = nm;
     wrap.appendChild(c);
   });
   row.style.display = tags.length ? '' : 'none';
-  wrap.querySelectorAll('.chip').forEach(c => c.addEventListener('click', () => {
-    wrap.querySelectorAll('.chip').forEach(x => { x.classList.remove('active'); x.style.cssText = ''; });
-    c.classList.add('active');
-    fTag = c.dataset.v;
-    if (fTag !== 'all' && c.dataset.bg) {
-      c.style.cssText = `background:${c.dataset.bg};border-color:${c.dataset.border};color:${c.dataset.color};`;
-    }
-    applyFilters();
-  }));
 }
 
-// ── Filter ────────────────────────────────────────────
+// ── Filter ───────────────────────────────────────────
 function applyFilters() {
   let n = 0;
-  document.querySelectorAll('.app-card:not(.placeholder)').forEach(card => {
-    if (card.classList.contains('hidden-app')) { card.classList.add('fhide'); return; }
+  document.querySelectorAll('#main .app-card:not(.placeholder)').forEach(card => {
     const nm = (card.dataset.name || '').toLowerCase();
-    const ds = card.querySelector('.app-desc')?.textContent.toLowerCase() || '';
+    const ds = (card.querySelector('.app-desc')?.textContent || '').toLowerCase();
     const fc = (card.dataset.fach || '').toLowerCase();
-    const kl = card.dataset.kl ? card.dataset.kl.split(',').map(x => x.trim()) : [];
-    const ct = card.dataset.ct ? card.dataset.ct.split(',').map(x => x.trim().toLowerCase()) : [];
+    const kl = card.dataset.kl ? card.dataset.kl.split(',') : [];
+    const ct = card.dataset.ct ? card.dataset.ct.split('|').map(x => x.toLowerCase()) : [];
     const ok = (!fQ || nm.includes(fQ) || ds.includes(fQ) || fc.includes(fQ))
             && (fKl === 'all' || kl.includes(fKl))
             && (fTag === 'all' || ct.includes(fTag.toLowerCase()));
     card.classList.toggle('fhide', !ok);
     if (ok) n++;
   });
-  document.querySelectorAll('.category:not(.hidden-cat)').forEach(cat => {
-    const any = [...cat.querySelectorAll('.app-card:not(.placeholder):not(.hidden-app):not(.fhide)')].length > 0;
-    cat.style.display = any ? '' : 'none';
+  document.querySelectorAll('#main .category').forEach(cat => {
+    const v = cat.querySelectorAll('.app-card:not(.placeholder):not(.fhide)').length;
+    cat.style.display = v ? '' : 'none';
+    const cnt = cat.querySelector('.cat-count');
+    if (cnt) cnt.textContent = v + (v === 1 ? ' App' : ' Apps');
   });
   document.getElementById('filter-info').textContent =
     (fKl !== 'all' || fTag !== 'all' || fQ) ? `${n} App${n !== 1 ? 's' : ''} gefunden` : '';
   document.getElementById('no-results').style.display = n === 0 ? 'block' : 'none';
-  document.querySelectorAll('.category:not(.hidden-cat)').forEach(cat => {
-    const grid = cat.querySelector('.apps-grid');
-    const el = cat.querySelector('[id^="c"]');
-    if (!grid || !el) return;
-    const v = [...grid.querySelectorAll('.app-card:not(.placeholder):not(.hidden-app):not(.fhide)')].length;
-    el.textContent = v + (v === 1 ? ' App' : ' Apps');
-    const ph = grid.querySelector('.placeholder');
-    if (ph) ph.style.display = v === 0 ? 'flex' : 'none';
-  });
 }
 
-// ── Events ────────────────────────────────────────────
-document.getElementById('chips-k').addEventListener('click', e => {
-  const c = e.target.closest('.chip');
-  if (!c) return;
-  document.querySelectorAll('#chips-k .chip').forEach(x => x.classList.remove('active'));
+// ── QR-Modal ─────────────────────────────────────────
+let qrLastFocus = null, qrFileName = 'qr';
+
+function openQR(title, url) {
+  if (!url) return;
+  const canvas = document.getElementById('qr-canvas');
+  if (!renderQR(canvas, url, 680)) { alert('QR-Code konnte nicht erzeugt werden.'); return; }
+  document.getElementById('qr-title').textContent = title;
+  document.getElementById('qr-url').textContent = url;
+  qrFileName = 'QR-' + title;
+  qrLastFocus = document.activeElement;
+  document.getElementById('qr-modal').classList.add('open');
+  document.body.classList.add('qr-open');
+  document.getElementById('qr-close').focus();
+}
+function closeQR() {
+  document.getElementById('qr-modal').classList.remove('open');
+  document.body.classList.remove('qr-open');
+  if (qrLastFocus && qrLastFocus.focus) qrLastFocus.focus();
+}
+function pageUrl() {
+  const u = new URL(lwBaseUrl());
+  if (fKl !== 'all') u.searchParams.set('kl', fKl);
+  return u.href;
+}
+
+document.getElementById('qr-close').addEventListener('click', closeQR);
+document.getElementById('qr-modal').addEventListener('click', e => { if (e.target.id === 'qr-modal') closeQR(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && document.getElementById('qr-modal').classList.contains('open')) closeQR(); });
+document.getElementById('qr-download').addEventListener('click', () => downloadCanvas(document.getElementById('qr-canvas'), qrFileName));
+document.getElementById('qr-copy').addEventListener('click', async e => {
+  const btn = e.currentTarget;
+  const ok = await copyText(document.getElementById('qr-url').textContent);
+  btn.textContent = ok ? '✓ Kopiert' : '⚠ Nicht möglich';
+  setTimeout(() => btn.textContent = '🔗 Link kopieren', 1800);
+});
+document.getElementById('page-qr-btn').addEventListener('click', () =>
+  openQR('Lernwelt' + (fKl !== 'all' ? ' · Klasse ' + fKl : ''), pageUrl()));
+
+// QR-Buttons in Karten (Klick darf die App NICHT öffnen)
+document.addEventListener('click', e => {
+  const btn = e.target.closest('.qr-btn[data-qr]');
+  if (!btn) return;
+  e.preventDefault();
+  e.stopPropagation();
+  const app = CONFIG.apps[parseInt(btn.dataset.qr, 10)];
+  if (app) openQR(app.name, appUrl(app.datei));
+});
+
+// ── Filter-Events ────────────────────────────────────
+function onChip(wrapId, handler) {
+  const wrap = document.getElementById(wrapId);
+  const act = e => {
+    const c = e.target.closest('.chip');
+    if (!c) return;
+    if (e.type === 'keydown' && e.key !== 'Enter' && e.key !== ' ') return;
+    e.preventDefault();
+    handler(c, wrap);
+  };
+  wrap.addEventListener('click', act);
+  wrap.addEventListener('keydown', act);
+}
+onChip('chips-k', (c, wrap) => {
+  wrap.querySelectorAll('.chip').forEach(x => x.classList.remove('active'));
   c.classList.add('active');
   fKl = c.dataset.v;
-  applyFilters();
+  syncUrl(); applyFilters();
+});
+onChip('chips-t', (c, wrap) => {
+  wrap.querySelectorAll('.chip').forEach(x => { x.classList.remove('active'); x.style.cssText = ''; });
+  c.classList.add('active');
+  fTag = c.dataset.v;
+  if (fTag !== 'all' && c.dataset.bg) c.style.cssText = `background:${c.dataset.bg};border-color:${c.dataset.border};color:${c.dataset.color};`;
+  syncUrl(); applyFilters();
 });
 document.getElementById('search').addEventListener('input', e => {
   fQ = e.target.value.trim().toLowerCase();
   applyFilters();
 });
 
-// ── Ansicht ───────────────────────────────────────────
+// ── Ansicht ──────────────────────────────────────────
 function setView(v) {
   const isGrid = v === 'grid';
   document.body.classList.toggle('list-view', !isGrid);
@@ -536,11 +595,15 @@ function setView(v) {
   document.getElementById('btn-list').classList.toggle('active', !isGrid);
   try { localStorage.setItem('lern-apps-view', v); } catch (e) {}
 }
-try {
-  if (localStorage.getItem('lern-apps-view') === 'list') setView('list');
-} catch (e) {}
+document.getElementById('btn-grid').addEventListener('click', () => setView('grid'));
+document.getElementById('btn-list').addEventListener('click', () => setView('list'));
+try { if (localStorage.getItem('lern-apps-view') === 'list') setView('list'); } catch (e) {}
 
-// ── Start ─────────────────────────────────────────────
+// Beim Zurückkehren aus einer App (Browser-Zurück) Ergebnisse auffrischen
+window.addEventListener('pageshow', e => { if (e.persisted) { loadResults(); buildPage(); } });
+
+// ── Start ────────────────────────────────────────────
+buildKlassenChips();
 load();
 </script>
 </body>

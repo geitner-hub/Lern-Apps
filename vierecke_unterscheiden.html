@@ -4,9 +4,7 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Vierecke entdecken – Klasse 5</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="fonts.css">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -765,11 +763,10 @@ function resetSort() {
 // SAVE & RESET
 // ─────────────────────────────────────────────────
 function saveResult(score, max, pct) {
+  // Über navbar.js speichern (richtiger Schlüssel → Ergebnis erscheint auf der Startseite)
+  const label = pct>=80?'🏆 Super!':pct>=50?'👍 Gut':'💪 Üben';
   try {
-    const stored = JSON.parse(localStorage.getItem('lern-apps-results') || '{}');
-    const label = pct>=80?'🏆 Super!':pct>=50?'👍 Gut':'💪 Üben';
-    stored['vierecke-vorentlastung-kl5.html'] = { score, max, percent:pct, label };
-    localStorage.setItem('lern-apps-results', JSON.stringify(stored));
+    if (window.LernApps) window.LernApps.saveResult({ score, max, label });
   } catch(e){}
 }
 
