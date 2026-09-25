@@ -203,10 +203,11 @@
     .ov th{text-align:left;color:var(--muted);font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;padding:.4rem .5rem;border-bottom:1px solid var(--border2);}
     .ov td{padding:.45rem .5rem;border-bottom:1px solid var(--border);vertical-align:middle;}
     .ov .note{font-size:.76rem;color:var(--muted);line-height:1.5;margin:.2rem 0 .7rem;}
-    .it-prev{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;}
-    .it-prev.it-emoji{font-size:1.35rem;background:var(--surface2);}
-    .it-prev.it-frame{background:radial-gradient(circle at 35% 30%,#3b3470,#1b1929);}
-    .it-prev.it-bg{border-radius:8px;width:52px;height:32px;border:1px solid var(--border2);}
+    .it-prev{display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:10px;vertical-align:middle;}
+    .it-prev.it-3d{background:radial-gradient(circle at 50% 40%,#2b2750,#1b1929);overflow:hidden;}
+    .it-prev img{width:100%;height:100%;object-fit:contain;display:block;}
+    .it-prev.it-bg{border-radius:8px;width:60px;height:38px;border:1px solid var(--border2);position:relative;overflow:hidden;}
+    .it-prev.it-bg svg{position:absolute;inset:0;width:100%;height:100%;}
     .rar{font-size:.68rem;font-weight:900;border-radius:99px;padding:.1rem .5rem;border:1px solid;}
     .login-hint{font-size:.72rem;color:var(--muted);margin-top:.9rem;line-height:1.4;}
     .qr-url{font-size:.72rem;color:var(--muted);word-break:break-all;margin-bottom:.7rem;background:var(--surface2);padding:.45rem .75rem;border-radius:8px;}
@@ -485,6 +486,7 @@
 <script src="shared.js"></script>
 <script src="config-api.js"></script>
 <script src="pass.js"></script>
+<script src="avatar3d.js"></script>
 <script>
 'use strict';
 
@@ -746,7 +748,7 @@ function buildPassOverview() {
       <td>${items.map(i => `${P.itemPreviewHTML(i)}`).join(' ')}</td><td>${set.map(i => `${P.itemPreviewHTML(i)} ${escHtml(i.name)}`).join('<br>') || '–'}</td></tr>`;
   }).join('');
 
-  const counts = { truhe: truhe.length, set: P.ITEMS.filter(i => i.quelle === 'set').length, event: P.ITEMS.filter(i => i.quelle === 'event').length };
+  const counts = { truhe: truhe.length, set: P.ITEMS.filter(i => i.quelle === 'set').length, event: P.ITEMS.filter(i => i.quelle === 'event').length, start: P.ITEMS.filter(i => i.quelle === 'start').length };
 
   document.getElementById('pass-overview').innerHTML = `
     <details open><summary>🏷 Level & Titel (${P.LEVEL_TITLES.length} Titel)</summary><div class="ov-body">
@@ -759,7 +761,7 @@ function buildPassOverview() {
       <table><thead><tr><th>Seltenheit</th><th>Chance</th><th>Pool</th><th>je Teil</th></tr></thead><tbody>${chanceRows}</tbody></table></div></details>
     <details><summary>🏅 Abzeichen (${P.BADGES.length})</summary><div class="ov-body">
       <table><thead><tr><th></th><th>Name</th><th>Bedingung</th><th>Belohnung</th></tr></thead><tbody>${badgeRows}</tbody></table></div></details>
-    <details><summary>👕 Cosmetics (${P.ITEMS.length}: ${counts.truhe} Truhe · ${counts.set} Abzeichen · ${counts.event} Event)</summary><div class="ov-body">
+    <details><summary>👕 Avatar-Teile (${P.ITEMS.length}: ${counts.start} Start · ${counts.truhe} Truhe · ${counts.set} Abzeichen · ${counts.event} Event)</summary><div class="ov-body">
       ${Object.entries(P.SLOTS).map(([slot, info]) => `<h4 style="margin:.8rem 0 .3rem;color:var(--accent);font-size:.85rem">${info.icon} ${escHtml(info.name)}</h4>
         <table><thead><tr><th>Vorschau</th><th>Name</th><th>Seltenheit</th><th>Quelle</th></tr></thead><tbody>${itemRows(slot)}</tbody></table>`).join('')}
     </div></details>

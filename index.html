@@ -233,7 +233,48 @@
     }
 
 
-    /* ── PASS: Cosmetics ── */
+    /* ── PASS: Avatar & Garderobe ── */
+    .pass-avatar{overflow:visible;}
+    .pass-avatar img{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;}
+    .pass-avatar .pa-fb{line-height:1;}
+    .lw-box.wide{width:min(940px,100%);}
+    .it-prev.it-3d{background:radial-gradient(circle at 50% 40%,#2b2750,#1b1929);overflow:hidden;border-radius:12px;}
+    .it-prev img{width:100%;height:100%;object-fit:contain;display:block;}
+    .it-prev.it-bg{position:relative;overflow:hidden;}
+    .it-prev.it-bg svg{position:absolute;inset:0;width:100%;height:100%;}
+    .ward{display:grid;gap:.9rem;margin-top:.9rem;}
+    .ward-stage{position:relative;border-radius:18px;overflow:hidden;height:340px;isolation:isolate;border:1px solid var(--border2);}
+    .ward-deko,.ward-canvas{position:absolute;inset:0;}
+    .ward-deko svg{width:100%;height:100%;display:block;}
+    .ward-canvas{z-index:1;}
+    .ward-cheer{position:absolute;right:.6rem;bottom:.6rem;z-index:2;}
+    .ward-hint{position:absolute;left:.6rem;bottom:.75rem;z-index:2;background:rgba(10,12,32,.5);color:#fff;border-radius:99px;padding:.25rem .65rem;font-size:.7rem;font-weight:800;pointer-events:none;}
+    .ward-try{position:absolute;left:.6rem;right:.6rem;top:.6rem;z-index:2;background:#fff8e6;color:#3d2c00;border:2px dashed #e6a817;border-radius:12px;padding:.4rem .55rem;font-size:.74rem;font-weight:800;display:flex;gap:.5rem;align-items:center;justify-content:space-between;}
+    .ward-try[hidden],.ward-hint[hidden]{display:none;}
+    .ward-try button{background:#e6a817;color:#2a1d00;border:0;border-radius:8px;padding:.3rem .6rem;font-family:inherit;font-weight:900;font-size:.72rem;cursor:pointer;}
+    .ward-cats{display:grid;grid-template-columns:repeat(5,1fr);gap:.4rem;}
+    .cat-tile{background:var(--bg3);border:2px solid var(--border);border-radius:12px;padding:.35rem .2rem .3rem;display:flex;flex-direction:column;align-items:center;gap:.15rem;cursor:pointer;font-family:inherit;color:var(--text);min-width:0;}
+    .cat-tile .it-prev{width:46px;height:46px;}
+    .cat-tile .ci{width:46px;height:46px;display:grid;place-items:center;font-size:1.5rem;border-radius:12px;background:rgba(255,255,255,.04);}
+    .cat-tile .cn{font-size:.64rem;font-weight:900;line-height:1.1;text-align:center;}
+    .cat-tile .cc{font-size:.56rem;font-weight:800;color:var(--muted);}
+    .cat-tile.on{border-color:var(--accent);background:rgba(230,168,23,.12);}
+    .ward-list{margin-top:.7rem;}
+    .ward-list .lw-p{margin-bottom:.5rem;}
+    .item-tile .it-prev{width:64px;height:64px;}
+    .item-tile.locked{cursor:pointer;opacity:1;}
+    .item-tile.locked .it-prev img,.item-tile.locked .it-prev svg{filter:brightness(0) invert(1) opacity(.22);}
+    .item-tile.trying{border-style:dashed;border-color:var(--accent);}
+    .item-tile.trying .it-prev img,.item-tile.trying .it-prev svg{filter:none;}
+    .sw-row{display:flex;flex-wrap:wrap;gap:.45rem;}
+    .sw-row button{width:40px;height:40px;border-radius:50%;border:3px solid var(--bg2);box-shadow:0 0 0 2px var(--border2);cursor:pointer;}
+    .sw-row button.on{box-shadow:0 0 0 3px var(--accent);}
+    .reveal .rv-prev .it-prev.it-3d{width:110px;height:110px;}
+    @media (min-width:760px){
+      .ward{grid-template-columns:minmax(260px,320px) 1fr;align-items:start;}
+      .ward-stage{height:460px;position:sticky;top:0;}
+    }
+    @media (max-width:420px){ .cat-tile .it-prev,.cat-tile .ci{width:38px;height:38px;} }
     .pass-avatar .pa-hat{position:absolute;top:-.62em;left:50%;transform:translateX(-50%) rotate(-8deg);font-size:.62em;line-height:1;filter:drop-shadow(0 2px 2px rgba(0,0,0,.5));pointer-events:none;}
     .pass-avatar .pa-comp{position:absolute;bottom:-.3em;left:-.5em;font-size:.6em;line-height:1;filter:drop-shadow(0 2px 2px rgba(0,0,0,.5));pointer-events:none;animation:paBob 3s ease-in-out infinite;}
     @keyframes paBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
@@ -314,9 +355,6 @@
     .lw-input{width:100%;padding:.6rem .8rem;background:var(--bg3);border:1px solid var(--border2);border-radius:10px;color:var(--text);font-family:inherit;font-size:.95rem;outline:none;}
     .lw-input:focus{border-color:rgba(230,168,23,.5);}
     .lw-label{font-size:.72rem;font-weight:800;color:var(--text2);margin:.7rem 0 .35rem;display:block;}
-    .avatar-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:.35rem;}
-    .avatar-grid button{font-size:1.5rem;background:var(--bg3);border:2px solid transparent;border-radius:12px;padding:.25rem 0;cursor:pointer;}
-    .avatar-grid button.sel{border-color:var(--accent);background:rgba(230,168,23,.12);}
     .kl-row{display:flex;gap:.35rem;flex-wrap:wrap;}
     .kl-row button{background:var(--bg3);border:1px solid var(--border2);color:var(--text2);border-radius:99px;padding:.35rem .85rem;font-family:inherit;font-weight:800;cursor:pointer;}
     .kl-row button.sel{background:rgba(230,168,23,.14);border-color:rgba(230,168,23,.5);color:var(--accent);}
@@ -333,7 +371,7 @@
     .chest-box{display:flex;align-items:center;gap:.8rem;background:var(--bg3);border:1px dashed rgba(230,168,23,.35);border-radius:12px;padding:.7rem .9rem;}
     .chest-box .ic{font-size:2rem;}
     details.lw-details summary{cursor:pointer;font-size:.8rem;font-weight:800;color:var(--text2);}
-    @media (max-width:480px){.avatar-grid{grid-template-columns:repeat(6,1fr);}.lw-grid{grid-template-columns:repeat(2,1fr);}}
+    @media (max-width:480px){.lw-grid{grid-template-columns:repeat(2,1fr);}}
   </style>
 </head>
 <body>
@@ -426,6 +464,7 @@
 <script src="shared.js"></script>
 <script src="config-api.js"></script>
 <script src="pass.js"></script>
+<script src="avatar3d.js"></script>
 <script>
 'use strict';
 
@@ -812,7 +851,8 @@ let passDraft = null, passLastFocus = null;
 function openPass(mode) {
   passLastFocus = document.activeElement;
   const pr = LernPass.profile() || {};
-  passDraft = { name: pr.name || '', avatar: LernPass.AVATARS.includes(pr.avatar) ? pr.avatar : LernPass.AVATARS[0], klasse: pr.klasse || (fKl !== 'all' ? Number(fKl) : null) };
+  passDraft = { name: pr.name || '', klasse: pr.klasse || (fKl !== 'all' ? Number(fKl) : null) };
+  ward.tryOn = {};
   renderPass(mode);
   document.getElementById('pass-modal').classList.add('open');
   const box = document.querySelector('#pass-modal .lw-box');
@@ -821,6 +861,8 @@ function openPass(mode) {
 }
 function closePass() {
   document.getElementById('pass-modal').classList.remove('open');
+  wardStop();
+  ward.tryOn = {};
   document.body.classList.remove('qr-open');
   if (passLastFocus && passLastFocus.focus) passLastFocus.focus();
 }
@@ -829,8 +871,6 @@ function profileForm() {
   return `
     <label class="lw-label" for="pf-name">Spitzname <span style="color:var(--muted);font-weight:700">(max. 16 Zeichen – bitte keinen Nachnamen)</span></label>
     <input class="lw-input" id="pf-name" maxlength="16" autocomplete="off" value="${escHtml(passDraft.name)}" placeholder="z. B. Lea oder Rechenblitz">
-    <span class="lw-label">Dein Avatar</span>
-    <div class="avatar-grid">${LernPass.AVATARS.map(a => `<button type="button" data-av="${a}" class="${a === passDraft.avatar ? 'sel' : ''}" aria-label="Avatar ${a}">${a}</button>`).join('')}</div>
     <span class="lw-label">Deine Klasse</span>
     <div class="kl-row">${KLASSEN.map(k => `<button type="button" data-kl="${k}" class="${k === passDraft.klasse ? 'sel' : ''}">${k}</button>`).join('')}</div>`;
 }
@@ -838,11 +878,14 @@ function profileForm() {
 function renderPass(mode) {
   const body = document.getElementById('pass-modal-body');
   const P = LernPass;
+  const isWard = mode === 'wardrobe' && P.hasProfile();
+  wardStop();
+  document.querySelector('#pass-modal .lw-box').classList.toggle('wide', isWard);
 
   if (mode === 'setup' || mode === 'edit') {
     body.innerHTML = `
       <div class="lw-h" id="pass-modal-title">${mode === 'setup' ? '🧭 Dein Lernwelt-Pass' : '✏️ Pass bearbeiten'}</div>
-      ${mode === 'setup' ? `<p class="lw-p">Mit jeder Übung sammelst du XP, steigst Level auf und verdienst Sterne und Truhen. Alles bleibt nur auf diesem Gerät gespeichert.</p>` : ''}
+      ${mode === 'setup' ? `<p class="lw-p">Mit jeder Übung sammelst du XP, steigst Level auf und verdienst Sterne und Truhen mit Teilen für deine Figur. Dein Aussehen gestaltest du gleich danach. Alles bleibt nur auf diesem Gerät gespeichert.</p>` : ''}
       ${profileForm()}
       <div class="lw-btns">
         <button type="button" class="lw-btn primary" id="pf-save">${mode === 'setup' ? 'Pass starten 🚀' : 'Speichern'}</button>
@@ -873,6 +916,7 @@ function renderPass(mode) {
       <button type="button" data-mode="badges" class="${tab === 'badges' ? 'on' : ''}">🏅 Abzeichen</button>
     </div>`;
   body.innerHTML = head + ({ view: passViewOverview, chests: passViewChests, wardrobe: passViewWardrobe, badges: passViewBadges })[tab]();
+  if (tab === 'wardrobe') wardStart();
 }
 
 function passViewOverview() {
@@ -912,7 +956,8 @@ function passViewOverview() {
       <details class="lw-details" style="margin-top:.6rem"><summary>Pass aus Code wiederherstellen</summary>${restoreForm()}</details>
     </div>
     <div class="lw-btns" style="margin-top:1.1rem">
-      <button type="button" class="lw-btn" data-mode="edit">✏️ Name, Avatar, Klasse ändern</button>
+      <button type="button" class="lw-btn" data-mode="wardrobe" data-cat="figur">🎨 Aussehen ändern</button>
+      <button type="button" class="lw-btn" data-mode="edit">✏️ Name und Klasse ändern</button>
     </div>`;
 }
 
@@ -946,31 +991,100 @@ function passViewChests() {
     <div class="lw-sec">
       <div class="pass-sub">Nächste Truhe bei ${ch.nextAt} XP</div>
       <div class="pass-bar"><div class="pass-fill" style="width:${ch.progress}%"></div></div>
-      <div class="pass-sub">Geöffnet: ${ch.opened} · Teile gesammelt: ${P.state.inventory.length} / ${P.ITEMS.length}${P.state.dust ? ` · ✨ Sternenstaub: ${P.state.dust}` : ''}</div>
+      <div class="pass-sub">Geöffnet: ${ch.opened} · Teile gesammelt: ${P.ownedCount()} / ${P.ITEMS.length}${P.state.dust ? ` · ✨ Sternenstaub: ${P.state.dust}` : ''}</div>
     </div>`;
 }
 
+// ── Garderobe ──────────────────────────────────────────
+const ward = { cat: 'oberteil', tryOn: {}, ctrl: null, cheerOnReady: false };
+const WARD_CATS = ['figur', 'kopf', 'gesicht', 'oberteil', 'hose', 'schuhe', 'ruecken', 'hand', 'begleiter', 'hintergrund'];
+
+function wardLook() { return LernPass.look(ward.tryOn); }
+function wardBg() {
+  const P = LernPass, id = ward.tryOn.hintergrund || P.state.equipped.hintergrund || (P.AVATAR.START || {}).hintergrund;
+  return P.ITEM_BY_ID[id] || null;
+}
 function passViewWardrobe() {
-  const P = LernPass;
-  const bg = P.cardBackground();
-  const slots = Object.entries(P.SLOTS);
-  const tiles = slot => {
-    const items = P.ITEMS.filter(i => i.slot === slot);
-    // Eigene zuerst, dann nach Quelle
-    const order = { truhe: 0, set: 1, event: 2 };
-    items.sort((a, b) => (P.owns(b.id) - P.owns(a.id)) || (order[a.quelle] - order[b.quelle]));
-    return items.map(it => {
-      const own = P.owns(it.id), on = P.state.equipped[slot] === it.id;
-      const rar = P.RARITY[it.selten] || {};
-      return `<button type="button" class="item-tile${own ? '' : ' locked'}${on ? ' on' : ''}" ${own ? `data-equip="${escHtml(it.id)}"` : 'disabled'} title="${escHtml(it.name)} – ${escHtml(rar.name || '')}">
-        ${P.itemPreviewHTML(it)}<span class="nm">${own ? '' : '🔒 '}${escHtml(it.name)}</span>
-        <span class="src" style="color:${own ? rar.farbe : ''}">${own ? (on ? '✓ angezogen' : escHtml(rar.name || '')) : escHtml(P.itemSourceText(it))}</span></button>`;
-    }).join('');
-  };
+  const bg = wardBg();
   return `
-    <div class="ward-preview"${bg ? ` style="background:${escHtml(bg)}"` : ''}>${P.avatarHTML()}
-      <div class="lw-p"><b style="color:#fff">Deine Garderobe</b><br>Tippe ein Teil an, um es anzuziehen. Nochmal tippen legt es ab.</div></div>
-    ${slots.map(([slot, info]) => `<div class="slot-title">${info.icon} ${escHtml(info.name)}</div><div class="item-grid">${tiles(slot)}</div>`).join('')}`;
+    <div class="ward">
+      <div class="ward-stage" id="ward-stage" style="background:${escHtml(bg ? bg.css : '#1b1929')}">
+        <div class="ward-deko" id="ward-deko">${bg && bg.deko ? bg.deko : ''}</div>
+        <div class="ward-canvas" id="ward-canvas"></div>
+        <div class="ward-try" id="ward-try" hidden></div>
+        <div class="ward-hint" id="ward-hint">↔ Zum Drehen wischen</div>
+        <button type="button" class="lw-btn primary ward-cheer" id="ward-cheer">🎉 Jubeln</button>
+      </div>
+      <div id="ward-side">${wardSideHTML()}</div>
+    </div>`;
+}
+function wardSideHTML() {
+  const P = LernPass, lk = wardLook();
+  const tile = c => {
+    if (c === 'figur') return `<button type="button" class="cat-tile${ward.cat === c ? ' on' : ''}" data-cat="figur">
+      <span class="it-prev it-3d" data-avatar-figur="frisur:${escHtml(lk.frisur || '')}"></span><span class="cn">Figur</span><span class="cc">frei</span></button>`;
+    const all = P.ITEMS.filter(i => i.slot === c), own = all.filter(i => P.owns(i.id)).length;
+    const cur = P.ITEM_BY_ID[lk.eq[c]];
+    const info = P.SLOTS[c] || { name: c, icon: '❔' };
+    return `<button type="button" class="cat-tile${ward.cat === c ? ' on' : ''}" data-cat="${c}">
+      ${cur ? P.itemPreviewHTML(cur) : `<span class="ci">${escHtml(info.icon)}</span>`}
+      <span class="cn">${escHtml(info.name)}</span><span class="cc">${own}/${all.length}</span></button>`;
+  };
+  return `<div class="ward-cats">${WARD_CATS.map(tile).join('')}</div><div class="ward-list">${ward.cat === 'figur' ? wardFigurHTML(lk) : wardItemsHTML(ward.cat)}</div>`;
+}
+function wardFigurHTML(lk) {
+  const A = LernPass.AVATAR;
+  const sw = (key, list) => `<div class="sw-row">${list.map((c, i) =>
+    `<button type="button" class="${lk[key] === i ? 'on' : ''}" data-look="${key}:${i}" style="background:${escHtml(c)}" aria-label="Farbe ${i + 1}"></button>`).join('')}</div>`;
+  const opts = (key, list) => `<div class="item-grid">${list.map(o =>
+    `<button type="button" class="item-tile${lk[key] === o.id ? ' on' : ''}" data-look="${key}:${escHtml(o.id)}">
+      <span class="it-prev it-3d" data-avatar-figur="${key}:${escHtml(o.id)}"></span><span class="nm">${escHtml(o.name)}</span></button>`).join('')}</div>`;
+  return `<p class="lw-p">Deine Figur kannst du jederzeit frei ändern.</p>
+    <div class="slot-title">Hautton</div>${sw('haut', A.HAUT || [])}
+    <div class="slot-title">Frisur</div>${opts('frisur', A.FRISUREN || [])}
+    <div class="slot-title">Haarfarbe</div>${sw('haarfarbe', A.HAARFARBEN || [])}
+    <div class="slot-title">Augen</div>${opts('augen', A.AUGEN || [])}
+    <div class="slot-title">Mund</div>${opts('mund', A.MUENDER || [])}`;
+}
+function wardItemsHTML(slot) {
+  const P = LernPass, lk = wardLook();
+  const order = { start: 0, truhe: 1, set: 2, event: 3 };
+  const items = P.ITEMS.filter(i => i.slot === slot)
+    .sort((a, b) => (P.owns(b.id) - P.owns(a.id)) || (order[a.quelle] - order[b.quelle]));
+  const own = items.filter(i => P.owns(i.id)).length;
+  return `<p class="lw-p">${own} von ${items.length} gesammelt. Tippe ein Teil an, um es anzuziehen, nochmal tippen legt es ab. Teile mit 🔒 kannst du anprobieren.</p>
+    <div class="item-grid">${items.map(it => {
+      const owns = P.owns(it.id), on = owns && P.state.equipped[slot] === it.id, trying = !owns && lk.eq[slot] === it.id;
+      const rar = P.RARITY[it.selten] || {};
+      return `<button type="button" class="item-tile${owns ? '' : ' locked'}${on ? ' on' : ''}${trying ? ' trying' : ''}" ${owns ? 'data-equip' : 'data-try'}="${escHtml(it.id)}" title="${escHtml(it.name)}">
+        ${P.itemPreviewHTML(it)}<span class="nm">${owns ? '' : '🔒 '}${escHtml(it.name)}</span>
+        <span class="src" style="color:${owns ? escHtml(rar.farbe || '') : ''}">${on ? '✓ angezogen' : trying ? 'Anprobe' : owns ? escHtml(rar.name || '') : escHtml(P.itemSourceText(it))}</span></button>`;
+    }).join('')}</div>`;
+}
+function wardStart() {
+  const host = document.getElementById('ward-canvas');
+  if (!host || !window.LernAvatar) return;
+  const bg = wardBg();
+  ward.ctrl = LernAvatar.mount(host, {
+    look: wardLook(), boden: bg && bg.boden,
+    onReady: () => { if (ward.cheerOnReady) { ward.cheerOnReady = false; setTimeout(() => ward.ctrl && ward.ctrl.cheer(), 300); } },
+  });
+  wardTryBanner();
+}
+function wardStop() { if (ward.ctrl) { ward.ctrl.destroy(); ward.ctrl = null; } }
+function wardTryBanner() {
+  const el = document.getElementById('ward-try'); if (!el) return;
+  const names = Object.values(ward.tryOn).filter(Boolean).map(id => LernPass.ITEM_BY_ID[id]).filter(Boolean).map(i => i.name);
+  el.hidden = !names.length;
+  el.innerHTML = names.length ? `<span>👀 Anprobe: ${escHtml(names.length === 1 ? names[0] : names.length + ' Teile')} noch gesperrt</span><button type="button" id="ward-try-off">Ausziehen</button>` : '';
+}
+function wardUpdate() {
+  if (ward.ctrl) ward.ctrl.setLook(wardLook());
+  const bg = wardBg(), st = document.getElementById('ward-stage');
+  if (st && bg) { st.style.background = bg.css; document.getElementById('ward-deko').innerHTML = bg.deko || ''; if (ward.ctrl) ward.ctrl.setBoden(bg.boden); }
+  wardTryBanner();
+  const side = document.getElementById('ward-side');
+  if (side) { const y = side.scrollTop; side.innerHTML = wardSideHTML(); side.scrollTop = y; }
 }
 
 function passViewBadges() {
@@ -1002,7 +1116,7 @@ function askRestore(code, msgEl) {
   if (!res.ok) { if (msgEl) { msgEl.className = 'lw-msg err'; msgEl.textContent = res.error; } else alert(res.error); return; }
   const pv = res.preview;
   const cur = LernPass.hasProfile() ? `\n\nACHTUNG: Dein aktueller Pass (${LernPass.profile().name}, ${LernPass.state.xp} XP) wird ersetzt.` : '';
-  if (confirm(`Pass wiederherstellen?\n\n${pv.avatar} ${pv.name} – Level ${pv.level} (${pv.title}), ${pv.xp} XP\nGesichert am ${pv.date}${cur}`)) {
+  if (confirm(`Pass wiederherstellen?\n\n${pv.name} – Level ${pv.level} (${pv.title}), ${pv.xp} XP\nGesichert am ${pv.date}${cur}`)) {
     res.apply();
     closePass();
     buildPage();
@@ -1013,13 +1127,22 @@ function askRestore(code, msgEl) {
 document.getElementById('pass-modal').addEventListener('click', async e => {
   const t = e.target;
   if (t.id === 'pass-modal' || t.closest('[data-close-pass]')) { closePass(); return; }
-  const av = t.closest('[data-av]');
-  if (av) {
-    passDraft.name = document.getElementById('pf-name').value;
-    passDraft.avatar = av.dataset.av;
-    document.querySelectorAll('.avatar-grid button').forEach(b => b.classList.toggle('sel', b === av));
+  const cat = t.closest('[data-cat]');
+  if (cat && !t.closest('[data-mode]')) { ward.cat = cat.dataset.cat; wardUpdate(); return; }
+  const lookBtn = t.closest('[data-look]');
+  if (lookBtn) {
+    const [k, v] = lookBtn.dataset.look.split(':');
+    LernPass.setLook({ [k]: (k === 'haut' || k === 'haarfarbe') ? Number(v) : v });
+    wardUpdate(); buildPassCard(); return;
+  }
+  const tr = t.closest('[data-try]');
+  if (tr) {
+    const it = LernPass.ITEM_BY_ID[tr.dataset.try];
+    if (it) { if (ward.tryOn[it.slot] === it.id) delete ward.tryOn[it.slot]; else ward.tryOn[it.slot] = it.id; wardUpdate(); }
     return;
   }
+  if (t.id === 'ward-try-off') { ward.tryOn = {}; wardUpdate(); return; }
+  if (t.id === 'ward-cheer') { if (ward.ctrl) ward.ctrl.cheer(); return; }
   const kl = t.closest('[data-kl]');
   if (kl) {
     passDraft.klasse = Number(kl.dataset.kl);
@@ -1027,11 +1150,14 @@ document.getElementById('pass-modal').addEventListener('click', async e => {
     return;
   }
   const md = t.closest('[data-mode]');
-  if (md) { renderPass(md.dataset.mode); return; }
+  if (md) { if (md.dataset.cat) ward.cat = md.dataset.cat; if (md.dataset.mode === 'wardrobe') ward.tryOn = {}; renderPass(md.dataset.mode); return; }
   const eq = t.closest('[data-equip]');
   if (eq) {
     const it = LernPass.ITEM_BY_ID[eq.dataset.equip];
-    if (it) { LernPass.equip(it.slot, it.id); buildPassCard(); renderPass('wardrobe'); }
+    if (!it) return;
+    delete ward.tryOn[it.slot];
+    if (document.getElementById('ward-stage')) { LernPass.equip(it.slot, it.id); buildPassCard(); wardUpdate(); if (LernPass.state.equipped[it.slot] === it.id && ward.ctrl) ward.ctrl.cheer(); }
+    else { if (LernPass.state.equipped[it.slot] !== it.id) LernPass.equip(it.slot, it.id); buildPassCard(); ward.cat = it.slot; ward.cheerOnReady = true; renderPass('wardrobe'); }
     return;
   }
   if (t.id === 'chest-open' || t.closest('#chest-big')) { openChestAnimated(); return; }
@@ -1040,10 +1166,11 @@ document.getElementById('pass-modal').addEventListener('click', async e => {
     const msg = document.getElementById('pf-msg');
     if (!name) { msg.className = 'lw-msg err'; msg.textContent = 'Bitte gib einen Spitznamen ein.'; return; }
     if (!passDraft.klasse) { msg.className = 'lw-msg err'; msg.textContent = 'Bitte wähle deine Klasse.'; return; }
-    LernPass.setProfile({ name, avatar: passDraft.avatar, klasse: passDraft.klasse });
+    const isNew = !LernPass.hasProfile();
+    LernPass.setProfile({ name, klasse: passDraft.klasse });
     LernPass.markLevelSeen();
     buildPage();
-    renderPass('view');
+    if (isNew) { ward.cat = 'figur'; renderPass('wardrobe'); } else renderPass('view');
     return;
   }
   if (t.id === 'pass-qr') {
@@ -1061,6 +1188,7 @@ document.getElementById('pass-modal').addEventListener('click', async e => {
   }
   if (t.id === 'rs-check') { askRestore(document.getElementById('rs-code').value, document.getElementById('rs-msg')); }
 });
+document.addEventListener('avatar:gedreht', () => { const h = document.getElementById('ward-hint'); if (h) h.hidden = true; });
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape' && document.getElementById('pass-modal').classList.contains('open')) closePass();
   if ((e.key === 'Enter' || e.key === ' ') && e.target && e.target.id === 'chest-big') { e.preventDefault(); openChestAnimated(); }

@@ -15,7 +15,9 @@ verwaltet über ein eigenes Admin-Panel.
 | `config-api.js` | Laden (öffentlich/Admin) und Speichern über den Worker |
 | `navbar.js` | Home-Button + Ergebnisspeicherung, in jeder App am Ende von `<body>`; lädt `pass.js` automatisch |
 | `pass-karte.html` | Druckbare Sicherungskarten: eigene Karte oder Sammelbogen (`?sammel`, 8 pro A4) |
-| `lernwelt-inhalte.json` | **Alle Pass-Inhalte:** Titel, Abzeichen, Cosmetics (Truhen-Pool, Sets), Events – hier erweitern |
+| `lernwelt-inhalte.json` | **Alle Pass-Inhalte:** Titel, Abzeichen, Events, Avatar (Figur-Optionen) und alle Avatar-Teile – hier erweitern |
+| `avatar3d.js` | 3D-Avatar aus Blöcken: baut Figur und Teile nur aus den Daten, drehbare Bühne, Vorschaubilder |
+| `vendor/three.min.js` | three.js r128 (MIT-Lizenz), wird von `avatar3d.js` erst bei Bedarf geladen |
 | `pass.js` | Lernwelt-Pass: XP, Level, Wochen-Serie, Meisterschafts-Sterne, Sicherungs-Code, Truhen-Zähler |
 | `fonts.css` + `fonts/` | Lokal gehostete Schriften (kein Google Fonts → DSGVO) |
 | `qrcode.js` | QR-Code-Erzeugung im Browser (MIT-Lizenz, Kazuhiko Arase) |
@@ -68,12 +70,14 @@ in `RULES` am Anfang von `pass.js` und können dort angepasst werden.
   Apps nur für niedrigere Klassen halbe XP.
 - **Sterne:** 🥉 60 % / 🥈 80 % / 🥇 90 % an jeweils 2 verschiedenen Tagen.
 - **Wochen-Serie:** Ziel 3 Tage mit ≥ 50 %; Wochen ganz ohne Übung pausieren die Serie.
-- **Sicherung:** QR/Code (`LW1.…`) im Pass; Scannen öffnet `index.html#pass=…` und stellt
+- **Sicherung:** QR/Code (`LW2.…`, alte `LW1`-Codes werden weiter gelesen) im Pass; Scannen öffnet `index.html#pass=…` und stellt
   den Pass nach Rückfrage wieder her. Die Prüfsumme erkennt Tipp-/Kopierfehler, ist aber
   kein Schutz gegen gezieltes Manipulieren – der Pass ist ohnehin nur lokal.
-- **Truhen & Cosmetics:** alle 250 XP eine Truhe. Chancen 60/30/10 % (gewöhnlich/selten/episch),
-  keine Dubletten; ist der Pool leer, gibt es Sternenstaub. Vier Plätze: Rahmen, Kopfschmuck,
-  Begleiter, Hintergrund.
+- **Truhen & Avatar-Teile:** alle 250 XP eine Truhe. Chancen 60/30/10 % (gewöhnlich/selten/episch),
+  keine Dubletten; ist der Pool leer, gibt es Sternenstaub. Neun Plätze: Kopf, Gesicht, Oberteil,
+  Hose, Schuhe, Rücken, In der Hand, Begleiter, Hintergrund. Die Figur selbst (Hautton, Frisur,
+  Haarfarbe, Augen, Mund) ist immer frei wählbar; Startausstattung steht in `AVATAR.START`.
+  Gesperrte Teile können in der Garderobe anprobiert werden.
 - **Abzeichen:** schalten legendäre Set-Teile frei (Liste in `lernwelt-inhalte.json`).
 - **Saison-Modus** (Admin → 🧭 Pass): Level/Titel zählen pro Schuljahr, Wechsel automatisch am
   1. August. Gesamt-XP, Sterne, Abzeichen, Truhen und Cosmetics bleiben.
@@ -85,8 +89,48 @@ in `RULES` am Anfang von `pass.js` und können dort angepasst werden.
 ### Inhalte erweitern (lernwelt-inhalte.json)
 - Reine Datendatei (JSON): keine Kommentare, Texte in doppelten Anführungszeichen, Kommas zwischen
   Einträgen. Nach dem Bearbeiten z. B. auf jsonlint.com prüfen.
-- Neues Truhen-Teil: Eintrag in `ITEMS` mit `quelle: 'truhe'`, `slot`, `selten`, `emoji` oder `css`.
+- Neues Truhen-Teil: Eintrag in `ITEMS` mit `quelle: 'truhe'`, `slot`, `selten` und einem Modell
+  (siehe „Avatar-Teile“ unten).
 - Neues Event: Eintrag in `EVENTS` + Teile mit `quelle: 'event', event: '<id>'` + Abzeichen
   `typ: 'event'` + Set-Teil mit `set: 'event-<id>'`. Es erscheint automatisch im Admin.
 - **IDs nie ändern oder löschen** – sonst verlieren Kinder ihre Teile.
 - Speicher: `localStorage['lernwelt-pass']` (nur auf dem Gerät).
+
+### Avatar-Teile (ohne Programmieren)
+
+Jedes Teil in `ITEMS` beschreibt seine Form als Liste von Blöcken in `modell`. Einheiten sind
+„Pixel“ der Figur: Beine y 0–9, Rumpf y 9–19 (Rücken bei z −2,5), Kopf 11 × 11 × 11.
+
+```json
+{"id":"k-cap","slot":"kopf","name":"Basecap Rot","selten":"gewoehnlich","quelle":"truhe",
+ "versteckt":["oben"],
+ "modell":[
+   {"g":[12.2,3.2,12.2],"p":[0,6.4,0],"f":"#ef4444"},
+   {"g":[12.2,0.7,5.5],"p":[0,5.2,8.4],"f":"#b91c1c"}
+ ]}
+```
+
+| Feld | Bedeutung |
+|---|---|
+| `g` | Größe `[Breite, Höhe, Tiefe]` eines Blocks |
+| `p` | Position `[x, y, z]` relativ zum Anker (x rechts, y oben, z nach vorne) |
+| `r` | Drehung `[x, y, z]` im Bogenmaß (0.785 ≈ 45°) |
+| `f` | Farbe `"#rrggbb"`, Farbwort (`haar`, `haar2`, `haut`), `"muster:ID"` oder je Seite `{"vorne":…, "sonst":…}` |
+| `an` | Anker: `kopf`, `koerper`, `beine`, `armL`, `armR`, `hand`, `begleiter`, `boden` (Standard je Platz) |
+| `paar` | `true` = Block wird gespiegelt ein zweites Mal gebaut (Schuhe, Flügel, Ohren …) |
+| `teile` | Unterblöcke, die sich mit diesem Block mitbewegen (Gruppe) |
+| `anim` | `drehen`, `pulsieren`, `blinken`, `leuchten`, `flattern`, `schlagen`, `wehen`, `flackern`, `schweben`, `wedeln`, `wackeln`, `pendeln` |
+| `licht` | Leuchtstärke 0–1 · `metall`: `true` · `glas`: Deckkraft 0–1 · `kegel`: `[Radius, Höhe]` statt Block |
+| `zone` | nur Frisuren: `"oben"` wird von Kopfbedeckungen mit `"versteckt":["oben"]` ausgeblendet |
+
+- **Farbvariante:** `{"id":"k-cap-blau", …, "basis":"k-cap", "tausch":{"#ef4444":"#3b82f6"}}` übernimmt
+  das Modell der Basis und ersetzt nur Farben.
+- **Kleidung:** Oberteile und Hosen haben zusätzlich `kleidung` (`muster` oder `farbe`, bei Oberteilen
+  `aermel`: `kurz`/`lang`/`ohne`, `bund`, `aermelFarbe`; bei Hosen `lang: false` für kurze Hosen).
+- **Muster** (Pixelbilder) stehen im Teil unter `muster` oder global unter `AVATAR.MUSTER`: `w`, `h`,
+  `basis` oder `verlauf`, optional `streifen`, `senkrecht`, `karo`, `punkte`, `rects` (`[Farbe, x, y, b, h]`),
+  `vorne`/`hinten`/`seite` (nur auf dieser Seite) und `loecher`.
+- **Hintergründe** haben `css` (Bühnenfarbe), `deko` (SVG) und `boden` (Farbe der Plattform).
+- **Figur-Optionen** (`AVATAR.FRISUREN`, `AUGEN`, `MUENDER`, `HAUT`, `HAARFARBEN`) funktionieren genauso.
+- Tipp: neues Teil zuerst im Admin unter 🧭 Pass → Avatar-Teile ansehen – dort erscheint die Vorschau.
+

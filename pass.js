@@ -66,15 +66,43 @@
 
   C = C && typeof C === 'object' ? C : {};
   const LEVEL_TITLES = Array.isArray(C.TITEL) && C.TITEL.length ? C.TITEL : ['Neuling'];
-  const ITEMS      = Array.isArray(C.ITEMS) ? C.ITEMS : [];
+  const RAW_ITEMS  = Array.isArray(C.ITEMS) ? C.ITEMS : [];
+  // Farbvarianten: { basis: 'andere-id', tausch: { '#alt': '#neu' } } übernimmt das Modell der Basis
+  const RAW_BY_ID  = Object.fromEntries(RAW_ITEMS.map(i => [i.id, i]));
+  const ITEMS = RAW_ITEMS.map(i => {
+    const b = i.basis && RAW_BY_ID[i.basis];
+    if (!b) return i;
+    let json = JSON.stringify({ modell: b.modell, kleidung: b.kleidung, muster: b.muster, versteckt: b.versteckt });
+    Object.entries(i.tausch || {}).forEach(([a, n]) => { json = json.split(a).join(n).split(a.toUpperCase()).join(n); });
+    return Object.assign(JSON.parse(json), i);
+  });
   const ITEM_BY_ID = Object.fromEntries(ITEMS.map(i => [i.id, i]));
+  const AVATAR     = C.AVATAR || {};
   const BADGES     = Array.isArray(C.ABZEICHEN) ? C.ABZEICHEN : [];
   const EVENTS     = Array.isArray(C.EVENTS) ? C.EVENTS : [];
   const RARITY     = C.SELTENHEIT || {};
   const SLOTS      = C.SLOTS || {};
 
-  const AVATARS = ['🦊','🐼','🐯','🦁','🐸','🐙','🦉','🐺','🐨','🐵','🦄','🐲',
-                   '🐧','🦖','🐬','🦅','🐝','🐢','🦈','🐱','🐶','🐰','🦝','🐻'];
+  // ── Aussehen (Figur) ─────────────────────────────────
+  const LOOK_KEYS = ['haut', 'frisur', 'haarfarbe', 'augen', 'mund'];
+  const lists = {
+    haut: () => (AVATAR.HAUT || []).map((_, i) => i),
+    haarfarbe: () => (AVATAR.HAARFARBEN || []).map((_, i) => i),
+    frisur: () => (AVATAR.FRISUREN || []).map(x => x.id),
+    augen: () => (AVATAR.AUGEN || []).map(x => x.id),
+    mund: () => (AVATAR.MUENDER || []).map(x => x.id),
+  };
+  function cleanLook(l) {
+    const out = {};
+    LOOK_KEYS.forEach(k => { const opts = lists[k](); out[k] = l && opts.includes(l[k]) ? l[k] : (opts.length ? opts[0] : null); });
+    return out;
+  }
+  function randomLook() {
+    const out = {};
+    LOOK_KEYS.forEach(k => { const opts = lists[k](); out[k] = opts.length ? opts[Math.floor(Math.random() * opts.length)] : null; });
+    out.mund = lists.mund()[0] || null;
+    return out;
+  }
 
   // ── Datum ───────────────────────────────────────────────
   const pad = n => String(n).padStart(2, '0');
@@ -96,7 +124,7 @@
   function blank() {
     return {
       v: VERSION,
-      profile: null,             // { name, avatar, klasse, created }
+      profile: null,             // { name, look, klasse, created }
       xp: 0,
       rounds: 0,
       today: { day: '', xp: 0, good: false },
@@ -122,7 +150,9 @@
     try {
       const raw = JSON.parse(localStorage.getItem(STORE_KEY) || 'null');
       if (!raw || typeof raw !== 'object') return blank();
-      return { ...blank(), ...raw, today: { ...blank().today, ...(raw.today || {}) } };
+      const st = { ...blank(), ...raw, today: { ...blank().today, ...(raw.today || {}) } };
+      if (st.profile) st.profile.look = cleanLook(st.profile.look);
+      return st;
     } catch (e) { return blank(); }
   }
 
@@ -221,7 +251,8 @@
              nextAt: (fromXp + 1) * RULES.chestEveryXp, progress: Math.round(((S.xp % RULES.chestEveryXp) / RULES.chestEveryXp) * 100) };
   }
 
-  function owns(id) { return S.inventory.includes(id); }
+  function owns(id) { const it = ITEM_BY_ID[id]; return !!it && (it.quelle === 'start' || S.inventory.includes(id)); }
+  function ownedCount() { return ITEMS.filter(i => owns(i.id)).length; }
 
   // Erst Seltenheit nach Gewicht (z. B. 60/30/10) wählen – nur unter Stufen,
   // in denen noch Teile fehlen –, dann ein Teil dieser Stufe zufällig.
@@ -315,21 +346,37 @@
 
   function ensureProfile() {
     if (!S.profile) {
-      S.profile = { name: '', avatar: '🧭', klasse: null, created: Date.now() };
+      S.profile = { name: '', look: randomLook(), klasse: null, created: Date.now() };
+      Object.entries(AVATAR.START || {}).forEach(([sl, id]) => { if (SLOTS[sl] && ITEM_BY_ID[id]) S.equipped[sl] = id; });
       importHistory();
     }
   }
 
-  function setProfile({ name, avatar, klasse } = {}) {
+  function setProfile({ name, klasse } = {}) {
     ensureProfile();
     if (name !== undefined)   S.profile.name = cleanName(name);
-    if (avatar !== undefined && AVATARS.includes(avatar)) S.profile.avatar = avatar;
     if (klasse !== undefined) S.profile.klasse = [5, 6, 7, 8, 9].includes(Number(klasse)) ? Number(klasse) : null;
     save();
     return S.profile;
   }
 
   // Bisherige Ergebnisse (vor dem Pass) als Sterne-Fortschritt übernehmen – ohne XP
+  /** Aussehen ändern, z. B. setLook({ frisur: 'bob' }) */
+  function setLook(part) {
+    ensureProfile();
+    S.profile.look = cleanLook(Object.assign({}, S.profile.look, part));
+    save();
+    return S.profile.look;
+  }
+  /** Aussehen + angezogene Teile für die 3D-Figur. preview = { slot: id|null } zum Anprobieren */
+  function look(preview) {
+    const base = cleanLook(S.profile && S.profile.look);
+    const eq = {};
+    Object.keys(SLOTS).forEach(sl => { const it = equippedItem(sl); if (it) eq[sl] = it.id; });
+    if (preview) Object.entries(preview).forEach(([sl, id]) => { if (!SLOTS[sl]) return; if (id && ITEM_BY_ID[id]) eq[sl] = id; else delete eq[sl]; });
+    return Object.assign(base, { eq });
+  }
+
   function importHistory() {
     try {
       const res = JSON.parse(localStorage.getItem(RESULTS_KEY) || '{}');
@@ -473,7 +520,7 @@
   }
 
   // ── Sicherungs-Code ─────────────────────────────────────
-  //  Format:  LW1.<base64url(JSON)>.<Prüfsumme>
+  //  Format:  LW2.<base64url(JSON)>.<Prüfsumme>   (LW1 wird weiterhin gelesen)
   //  Die Prüfsumme erkennt Tippfehler und einfaches Herumbasteln –
   //  sie ist bewusst KEIN Kopierschutz (alles liegt ohnehin auf dem Gerät).
   function fnv(str) {
@@ -502,8 +549,8 @@
     });
     const wkeys = Object.keys(S.weeks).sort().slice(-30);
     const payload = {
-      v: VERSION,
-      p: [S.profile.name, S.profile.avatar, S.profile.klasse || 0],
+      v: 2,
+      p: [S.profile.name, LOOK_KEYS.map(k => S.profile.look[k]), S.profile.klasse || 0],
       x: S.xp, r: S.rounds, o: S.chestsOpened,
       w: Object.fromEntries(wkeys.map(k => [k.replace(/-/g, ''), S.weeks[k]])),
       a: apps,
@@ -515,7 +562,7 @@
       t: dayKey().replace(/-/g, ''),
     };
     const body = b64urlEncode(JSON.stringify(payload));
-    return 'LW1.' + body + '.' + fnv('lernwelt|' + body);
+    return 'LW2.' + body + '.' + fnv('lernwelt|' + body);
   }
 
   function restoreUrl() {
@@ -529,13 +576,14 @@
       const m = code.match(/#pass=([^\s]+)$/);          // ganze URL eingefügt?
       if (m) code = decodeURIComponent(m[1]);
       const parts = code.split('.');
-      if (parts.length !== 3 || parts[0] !== 'LW1') return { ok: false, error: 'Das ist kein gültiger Lernwelt-Code.' };
+      if (parts.length !== 3 || !['LW1', 'LW2'].includes(parts[0])) return { ok: false, error: 'Das ist kein gültiger Lernwelt-Code.' };
       if (fnv('lernwelt|' + parts[1]) !== parts[2]) return { ok: false, error: 'Der Code ist beschädigt oder unvollständig.' };
       const d = JSON.parse(b64urlDecode(parts[1]));
-      if (!d || d.v !== 1 || !Array.isArray(d.p)) return { ok: false, error: 'Unbekanntes Code-Format.' };
+      if (!d || ![1, 2].includes(d.v) || !Array.isArray(d.p)) return { ok: false, error: 'Unbekanntes Code-Format.' };
       const ymd = s => String(s).replace(/^(\d{4})(\d{2})(\d{2})$/, '$1-$2-$3');
       const restored = blank();
-      restored.profile = { name: cleanName(d.p[0]), avatar: AVATARS.includes(d.p[1]) ? d.p[1] : '🧭',
+      const lk = Array.isArray(d.p[1]) ? Object.fromEntries(LOOK_KEYS.map((k, i) => [k, d.p[1][i]])) : null;
+      restored.profile = { name: cleanName(d.p[0]), look: lk ? cleanLook(lk) : randomLook(),
                            klasse: [5, 6, 7, 8, 9].includes(d.p[2]) ? d.p[2] : null, created: Date.now() };
       restored.xp = Math.max(0, Math.min(1e6, Math.floor(Number(d.x) || 0)));
       restored.rounds = Math.max(0, Math.floor(Number(d.r) || 0));
@@ -553,7 +601,7 @@
       restored.inventory = Array.isArray(d.i) ? [...new Set(d.i.filter(x => typeof x === 'string' && ITEM_BY_ID[x]))].slice(0, 500) : [];
       restored.equipped  = {};
       if (d.e && typeof d.e === 'object') Object.entries(d.e).forEach(([sl, id]) => {
-        if (SLOTS[sl] && ITEM_BY_ID[id] && ITEM_BY_ID[id].slot === sl && restored.inventory.includes(id)) restored.equipped[sl] = id;
+        if (SLOTS[sl] && ITEM_BY_ID[id] && ITEM_BY_ID[id].slot === sl && (restored.inventory.includes(id) || ITEM_BY_ID[id].quelle === 'start')) restored.equipped[sl] = id;
       });
       restored.badges    = Array.isArray(d.b) ? [...new Set(d.b.filter(x => typeof x === 'string' && BADGES.some(b => b.id === x)))] : [];
       const num = (v, max) => Math.max(0, Math.min(max, Math.floor(Number(v) || 0)));
@@ -571,7 +619,7 @@
       restored.seenLevel = 1;
       return {
         ok: true,
-        preview: { name: restored.profile.name || 'Ohne Namen', avatar: restored.profile.avatar,
+        preview: { name: restored.profile.name || 'Ohne Namen', look: Object.assign({}, restored.profile.look, { eq: Object.assign({}, restored.equipped) }),
                    level: levelInfo(seasonsOn() ? (restored.seasons[seasonId()] || 0) : restored.xp).level,
                    title: levelInfo(seasonsOn() ? (restored.seasons[seasonId()] || 0) : restored.xp).title, xp: restored.xp,
                    date: ymd(d.t || '') },
@@ -635,28 +683,29 @@
 
   // ── Darstellung ─────────────────────────────────────────
   const escA = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-  /** Avatar-HTML mit Rahmen, Kopfschmuck, Begleiter. preview = {slot: item} zum Anprobieren */
+  /** Avatar als Bild (wird von avatar3d.js gezeichnet und zwischengespeichert) */
   function avatarHTML(opts = {}) {
-    const pr = S.profile || { avatar: '🧭' };
-    const get = sl => (opts.preview && sl in opts.preview) ? opts.preview[sl] : equippedItem(sl);
-    const fr = get('rahmen'), hat = get('hut'), comp = get('begleiter');
+    let cached = '';
+    try { cached = localStorage.getItem('lernwelt-avatar-bild') || ''; } catch (e) {}
+    if (!/^data:image\/png;base64,[A-Za-z0-9+/=]+$/.test(cached)) cached = '';
     const lvl = opts.level ? `<span class="pass-lvl">${escA(opts.level)}</span>` : '';
-    return `<div class="pass-avatar${opts.cls ? ' ' + opts.cls : ''}"${fr && fr.css ? ` style="${escA(fr.css)}"` : ''}>${escA(opts.avatar || pr.avatar)}` +
-      (hat ? `<span class="pa-hat">${escA(hat.emoji)}</span>` : '') +
-      (comp ? `<span class="pa-comp">${escA(comp.emoji)}</span>` : '') + lvl + `</div>`;
+    return `<div class="pass-avatar${opts.cls ? ' ' + opts.cls : ''}">` +
+      (cached ? `<img data-avatar-bild="portrait" alt="" src="${cached}">` : `<img data-avatar-bild="portrait" alt="" hidden><span class="pa-fb">🧭</span>`) +
+      lvl + `</div>`;
   }
   function cardBackground(preview) {
     const bg = preview !== undefined ? preview : equippedItem('hintergrund');
     return bg && bg.css ? bg.css : '';
   }
+  /** Vorschau eines Teils. Hintergründe direkt, alles andere zeichnet avatar3d.js nach. */
   function itemPreviewHTML(it) {
     if (!it) return '';
-    if (it.slot === 'rahmen')      return `<span class="it-prev it-frame" style="${escA(it.css)}"></span>`;
-    if (it.slot === 'hintergrund') return `<span class="it-prev it-bg" style="background:${escA(it.css)}"></span>`;
-    return `<span class="it-prev it-emoji">${escA(it.emoji)}</span>`;
+    if (it.slot === 'hintergrund') return `<span class="it-prev it-bg" style="background:${escA(it.css || '')}">${it.deko || ''}</span>`;
+    return `<span class="it-prev it-3d" data-avatar-thumb="${escA(it.id)}"></span>`;
   }
   function itemSourceText(it) {
     if (it.quelle === 'truhe') return 'Aus Truhen';
+    if (it.quelle === 'start') return 'Startausstattung';
     if (it.quelle === 'event') { const e = EVENTS.find(x => x.id === it.event); return e ? `${e.icon} Nur im ${e.titel || e.name + '-Event'}` : 'Event'; }
     if (it.quelle === 'set')   { const b = BADGES.find(x => x.id === it.set); return b ? `${b.icon} Abzeichen „${b.name}“` : 'Abzeichen'; }
     return '';
@@ -669,11 +718,11 @@
 
   // ── Öffentliche API ─────────────────────────────────────
   window.LernPass = {
-    RULES, LEVEL_TITLES, AVATARS, ITEMS, ITEM_BY_ID, BADGES, EVENTS, RARITY, SLOTS,
+    RULES, LEVEL_TITLES, ITEMS, ITEM_BY_ID, BADGES, EVENTS, RARITY, SLOTS, AVATAR,
     get state()   { return S; },
     get settings(){ return readSettings(); },
     setSettings, activeEvents, seasonsOn, seasonId, levelXp, pastSeasons,
-    openChest, equip, equippedItem, owns, checkBadges, badgeProgress,
+    openChest, equip, equippedItem, owns, ownedCount, checkBadges, badgeProgress, setLook, look,
     avatarHTML, cardBackground, itemPreviewHTML, itemSourceText,
     hasProfile()  { return !!(S.profile && S.profile.name); },
     profile()     { return S.profile; },

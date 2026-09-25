@@ -1,743 +1,136 @@
-{
-  "TITEL": [
-    "Neuling",
-    "Spurensucher",
-    "Pfadfinder",
-    "Kartenleser",
-    "Wegfinder",
-    "Kartograf",
-    "Navigator",
-    "Kapitän",
-    "Weltenbummler",
-    "Entdecker",
-    "Sternengucker",
-    "Gipfelstürmer",
-    "Schatzjäger",
-    "Meister-Entdecker",
-    "Kompass-Profi",
-    "Horizontläufer",
-    "Weltenkenner",
-    "Großmeister",
-    "Held der Lernwelt",
-    "Legende"
-  ],
-  "SELTENHEIT": {
-    "gewoehnlich": {
-      "name": "Gewöhnlich",
-      "farbe": "#94a3b8",
-      "gewicht": 60
-    },
-    "selten": {
-      "name": "Selten",
-      "farbe": "#818cf8",
-      "gewicht": 30
-    },
-    "episch": {
-      "name": "Episch",
-      "farbe": "#c084fc",
-      "gewicht": 10
-    },
-    "legendaer": {
-      "name": "Legendär",
-      "farbe": "#e6a817",
-      "gewicht": 0
-    },
-    "event": {
-      "name": "Event",
-      "farbe": "#fb923c",
-      "gewicht": 0
-    }
-  },
-  "SLOTS": {
-    "rahmen": {
-      "name": "Rahmen",
-      "icon": "⭕"
-    },
-    "hut": {
-      "name": "Kopfschmuck",
-      "icon": "👑"
-    },
-    "begleiter": {
-      "name": "Begleiter",
-      "icon": "🐾"
-    },
-    "hintergrund": {
-      "name": "Hintergrund",
-      "icon": "🖼"
-    }
-  },
-  "ABZEICHEN": [
-    {
-      "id": "erste-schritte",
-      "icon": "👣",
-      "name": "Erste Schritte",
-      "typ": "runden",
-      "n": 1,
-      "text": "Schaffe deine erste gute Runde (mind. 50 %)."
-    },
-    {
-      "id": "entdecker",
-      "icon": "🧭",
-      "name": "Entdecker",
-      "typ": "apps",
-      "n": 5,
-      "text": "Übe in 5 verschiedenen Apps."
-    },
-    {
-      "id": "weltreisender",
-      "icon": "🌍",
-      "name": "Weltreisender",
-      "typ": "apps",
-      "n": 10,
-      "text": "Übe in 10 verschiedenen Apps."
-    },
-    {
-      "id": "sternensammler",
-      "icon": "⭐",
-      "name": "Sternensammler",
-      "typ": "sterne",
-      "n": 3,
-      "text": "Verdiene 3 Sterne (egal welche Farbe)."
-    },
-    {
-      "id": "goldkind",
-      "icon": "🥇",
-      "name": "Goldkind",
-      "typ": "gold",
-      "n": 1,
-      "text": "Verdiene deinen ersten Gold-Stern."
-    },
-    {
-      "id": "goldschatz",
-      "icon": "💰",
-      "name": "Goldschatz",
-      "typ": "gold",
-      "n": 5,
-      "text": "Verdiene 5 Gold-Sterne."
-    },
-    {
-      "id": "fleissig",
-      "icon": "💪",
-      "name": "Fleißig",
-      "typ": "runden",
-      "n": 25,
-      "text": "Schaffe 25 gute Runden."
-    },
-    {
-      "id": "unermuedlich",
-      "icon": "🐝",
-      "name": "Unermüdlich",
-      "typ": "runden",
-      "n": 100,
-      "text": "Schaffe 100 gute Runden."
-    },
-    {
-      "id": "wochenziel",
-      "icon": "📅",
-      "name": "Wochenziel",
-      "typ": "wochen",
-      "n": 1,
-      "text": "Erreiche einmal dein Wochenziel."
-    },
-    {
-      "id": "serienheld",
-      "icon": "🔥",
-      "name": "Serienheld",
-      "typ": "serie",
-      "n": 3,
-      "text": "Erreiche 3 Wochen in Folge dein Wochenziel."
-    },
-    {
-      "id": "dauerbrenner",
-      "icon": "☄️",
-      "name": "Dauerbrenner",
-      "typ": "serie",
-      "n": 8,
-      "text": "Erreiche 8 Wochen in Folge dein Wochenziel."
-    },
-    {
-      "id": "comeback",
-      "icon": "🦅",
-      "name": "Comeback",
-      "typ": "comeback",
-      "text": "Verbessere dich in einer App von unter 50 % auf mindestens 80 %."
-    },
-    {
-      "id": "xp-1000",
-      "icon": "💎",
-      "name": "Tausender",
-      "typ": "xp",
-      "n": 1000,
-      "text": "Sammle insgesamt 1.000 XP."
-    },
-    {
-      "id": "xp-5000",
-      "icon": "🏆",
-      "name": "Fünftausender",
-      "typ": "xp",
-      "n": 5000,
-      "text": "Sammle insgesamt 5.000 XP."
-    },
-    {
-      "id": "event-halloween",
-      "icon": "🎃",
-      "name": "Gruselig gut",
-      "typ": "event",
-      "event": "halloween",
-      "n": 3,
-      "text": "Übe während des Halloween-Events an 3 Tagen gut."
-    },
-    {
-      "id": "event-weihnachten",
-      "icon": "🎄",
-      "name": "Weihnachtsstern",
-      "typ": "event",
-      "event": "weihnachten",
-      "n": 3,
-      "text": "Übe während des Weihnachts-Events an 3 Tagen gut."
-    },
-    {
-      "id": "event-ostern",
-      "icon": "🐣",
-      "name": "Osterprofi",
-      "typ": "event",
-      "event": "ostern",
-      "n": 3,
-      "text": "Übe während des Oster-Events an 3 Tagen gut."
-    }
-  ],
-  "EVENTS": [
-    {
-      "id": "halloween",
-      "name": "Halloween",
-      "titel": "Halloween-Event",
-      "geschenk": "Halloween-Geschenk",
-      "icon": "🎃",
-      "farbe": "#fb923c",
-      "farbe2": "#a855f7",
-      "text": "Event-Truhen enthalten gruselige Teile – und die erste gute Runde bringt eine Geschenk-Truhe!"
-    },
-    {
-      "id": "weihnachten",
-      "name": "Weihnachten",
-      "titel": "Weihnachts-Event",
-      "geschenk": "Weihnachtsgeschenk",
-      "icon": "🎄",
-      "farbe": "#ef4444",
-      "farbe2": "#22c55e",
-      "text": "Event-Truhen enthalten winterliche Teile – und die erste gute Runde bringt eine Geschenk-Truhe!"
-    },
-    {
-      "id": "ostern",
-      "name": "Ostern",
-      "titel": "Oster-Event",
-      "geschenk": "Ostergeschenk",
-      "icon": "🐣",
-      "farbe": "#f9a8d4",
-      "farbe2": "#86efac",
-      "text": "Event-Truhen enthalten Frühlings-Teile – und die erste gute Runde bringt eine Geschenk-Truhe!"
-    }
-  ],
-  "ITEMS": [
-    {
-      "id": "r-holz",
-      "slot": "rahmen",
-      "name": "Holzrahmen",
-      "selten": "gewoehnlich",
-      "quelle": "truhe",
-      "css": "border:3px solid #a0703c;box-shadow:0 0 0 2px #5c3d1e"
-    },
-    {
-      "id": "r-silber",
-      "slot": "rahmen",
-      "name": "Silberrahmen",
-      "selten": "gewoehnlich",
-      "quelle": "truhe",
-      "css": "border:3px solid #cbd5e1;box-shadow:0 0 10px rgba(203,213,225,.5)"
-    },
-    {
-      "id": "r-himmel",
-      "slot": "rahmen",
-      "name": "Himmelblau",
-      "selten": "gewoehnlich",
-      "quelle": "truhe",
-      "css": "border:3px solid #38bdf8;box-shadow:0 0 10px rgba(56,189,248,.45)"
-    },
-    {
-      "id": "r-wald",
-      "slot": "rahmen",
-      "name": "Waldgrün",
-      "selten": "gewoehnlich",
-      "quelle": "truhe",
-      "css": "border:3px solid #22c55e;box-shadow:0 0 10px rgba(34,197,94,.4)"
-    },
-    {
-      "id": "r-regenbogen",
-      "slot": "rahmen",
-      "name": "Regenbogen",
-      "selten": "selten",
-      "quelle": "truhe",
-      "css": "border:3px solid transparent;background:linear-gradient(#1b1929,#1b1929) padding-box,conic-gradient(#f43f5e,#f59e0b,#22c55e,#3b82f6,#a855f7,#f43f5e) border-box"
-    },
-    {
-      "id": "r-lava",
-      "slot": "rahmen",
-      "name": "Lava",
-      "selten": "selten",
-      "quelle": "truhe",
-      "css": "border:3px solid #f97316;box-shadow:0 0 14px rgba(239,68,68,.7),inset 0 0 8px rgba(249,115,22,.5)"
-    },
-    {
-      "id": "r-galaxie",
-      "slot": "rahmen",
-      "name": "Galaxie",
-      "selten": "episch",
-      "quelle": "truhe",
-      "css": "border:3px solid transparent;background:linear-gradient(#1b1929,#1b1929) padding-box,conic-gradient(#6366f1,#ec4899,#06b6d4,#6366f1) border-box;box-shadow:0 0 18px rgba(168,85,247,.6)"
-    },
-    {
-      "id": "h-kappe",
-      "slot": "hut",
-      "name": "Kappe",
-      "selten": "gewoehnlich",
-      "quelle": "truhe",
-      "emoji": "🧢"
-    },
-    {
-      "id": "h-schleife",
-      "slot": "hut",
-      "name": "Schleife",
-      "selten": "gewoehnlich",
-      "quelle": "truhe",
-      "emoji": "🎀"
-    },
-    {
-      "id": "h-bluete",
-      "slot": "hut",
-      "name": "Blüte",
-      "selten": "gewoehnlich",
-      "quelle": "truhe",
-      "emoji": "🌼"
-    },
-    {
-      "id": "h-helm",
-      "slot": "hut",
-      "name": "Forscherhelm",
-      "selten": "gewoehnlich",
-      "quelle": "truhe",
-      "emoji": "⛑️"
-    },
-    {
-      "id": "h-sonnenhut",
-      "slot": "hut",
-      "name": "Sonnenhut",
-      "selten": "selten",
-      "quelle": "truhe",
-      "emoji": "👒"
-    },
-    {
-      "id": "h-doktorhut",
-      "slot": "hut",
-      "name": "Doktorhut",
-      "selten": "selten",
-      "quelle": "truhe",
-      "emoji": "🎓"
-    },
-    {
-      "id": "h-zylinder",
-      "slot": "hut",
-      "name": "Zylinder",
-      "selten": "selten",
-      "quelle": "truhe",
-      "emoji": "🎩"
-    },
-    {
-      "id": "h-krone",
-      "slot": "hut",
-      "name": "Krone",
-      "selten": "episch",
-      "quelle": "truhe",
-      "emoji": "👑"
-    },
-    {
-      "id": "b-kueken",
-      "slot": "begleiter",
-      "name": "Küken",
-      "selten": "gewoehnlich",
-      "quelle": "truhe",
-      "emoji": "🐤"
-    },
-    {
-      "id": "b-marienkaefer",
-      "slot": "begleiter",
-      "name": "Marienkäfer",
-      "selten": "gewoehnlich",
-      "quelle": "truhe",
-      "emoji": "🐞"
-    },
-    {
-      "id": "b-schmetterling",
-      "slot": "begleiter",
-      "name": "Schmetterling",
-      "selten": "gewoehnlich",
-      "quelle": "truhe",
-      "emoji": "🦋"
-    },
-    {
-      "id": "b-stern",
-      "slot": "begleiter",
-      "name": "Sternchen",
-      "selten": "gewoehnlich",
-      "quelle": "truhe",
-      "emoji": "⭐"
-    },
-    {
-      "id": "b-schildkroete",
-      "slot": "begleiter",
-      "name": "Schildkröte",
-      "selten": "gewoehnlich",
-      "quelle": "truhe",
-      "emoji": "🐢"
-    },
-    {
-      "id": "b-rakete",
-      "slot": "begleiter",
-      "name": "Rakete",
-      "selten": "selten",
-      "quelle": "truhe",
-      "emoji": "🚀"
-    },
-    {
-      "id": "b-komet",
-      "slot": "begleiter",
-      "name": "Komet",
-      "selten": "selten",
-      "quelle": "truhe",
-      "emoji": "☄️"
-    },
-    {
-      "id": "b-papagei",
-      "slot": "begleiter",
-      "name": "Papagei",
-      "selten": "selten",
-      "quelle": "truhe",
-      "emoji": "🦜"
-    },
-    {
-      "id": "b-drache",
-      "slot": "begleiter",
-      "name": "Drache",
-      "selten": "episch",
-      "quelle": "truhe",
-      "emoji": "🐉"
-    },
-    {
-      "id": "b-ufo",
-      "slot": "begleiter",
-      "name": "Ufo",
-      "selten": "episch",
-      "quelle": "truhe",
-      "emoji": "🛸"
-    },
-    {
-      "id": "bg-mitternacht",
-      "slot": "hintergrund",
-      "name": "Mitternacht",
-      "selten": "gewoehnlich",
-      "quelle": "truhe",
-      "css": "linear-gradient(120deg,#0b1026,#1e2a5a)"
-    },
-    {
-      "id": "bg-wald",
-      "slot": "hintergrund",
-      "name": "Wald",
-      "selten": "gewoehnlich",
-      "quelle": "truhe",
-      "css": "linear-gradient(120deg,#0f2418,#1f4d2e)"
-    },
-    {
-      "id": "bg-ozean",
-      "slot": "hintergrund",
-      "name": "Ozean",
-      "selten": "gewoehnlich",
-      "quelle": "truhe",
-      "css": "linear-gradient(120deg,#082f49,#0e7490)"
-    },
-    {
-      "id": "bg-sonnenuntergang",
-      "slot": "hintergrund",
-      "name": "Sonnenuntergang",
-      "selten": "selten",
-      "quelle": "truhe",
-      "css": "linear-gradient(120deg,#3b0d2e,#9a3412 70%,#b45309)"
-    },
-    {
-      "id": "bg-polarlicht",
-      "slot": "hintergrund",
-      "name": "Polarlicht",
-      "selten": "selten",
-      "quelle": "truhe",
-      "css": "linear-gradient(120deg,#051a1f,#0f3d3e 45%,#1e5d4b 70%,#3b2a6b)"
-    },
-    {
-      "id": "bg-sternenhimmel",
-      "slot": "hintergrund",
-      "name": "Sternenhimmel",
-      "selten": "episch",
-      "quelle": "truhe",
-      "css": "radial-gradient(1px 1px at 20% 30%,#fff,transparent),radial-gradient(1px 1px at 70% 60%,#fff,transparent),radial-gradient(1.5px 1.5px at 45% 80%,#fde68a,transparent),radial-gradient(1px 1px at 85% 25%,#fff,transparent),linear-gradient(120deg,#0b0a1f,#27124a)"
-    },
-    {
-      "id": "s-entdeckerhut",
-      "slot": "hut",
-      "name": "Entdecker-Kompass",
-      "selten": "legendaer",
-      "quelle": "set",
-      "set": "entdecker",
-      "emoji": "🧭"
-    },
-    {
-      "id": "s-weltkarte",
-      "slot": "hintergrund",
-      "name": "Weltkarte",
-      "selten": "legendaer",
-      "quelle": "set",
-      "set": "weltreisender",
-      "css": "repeating-linear-gradient(0deg,rgba(230,168,23,.07) 0 1px,transparent 1px 22px),repeating-linear-gradient(90deg,rgba(230,168,23,.07) 0 1px,transparent 1px 22px),linear-gradient(120deg,#1c2b3a,#2d3f2a)"
-    },
-    {
-      "id": "s-goldrahmen",
-      "slot": "rahmen",
-      "name": "Goldrahmen",
-      "selten": "legendaer",
-      "quelle": "set",
-      "set": "goldkind",
-      "css": "border:3px solid #e6a817;box-shadow:0 0 16px rgba(230,168,23,.75)"
-    },
-    {
-      "id": "s-diamant",
-      "slot": "rahmen",
-      "name": "Diamantrahmen",
-      "selten": "legendaer",
-      "quelle": "set",
-      "set": "goldschatz",
-      "css": "border:3px solid #a5f3fc;box-shadow:0 0 18px rgba(165,243,252,.8),inset 0 0 6px rgba(255,255,255,.6)"
-    },
-    {
-      "id": "s-biene",
-      "slot": "begleiter",
-      "name": "Fleißige Biene",
-      "selten": "legendaer",
-      "quelle": "set",
-      "set": "unermuedlich",
-      "emoji": "🐝"
-    },
-    {
-      "id": "s-honig",
-      "slot": "hintergrund",
-      "name": "Honigwabe",
-      "selten": "legendaer",
-      "quelle": "set",
-      "set": "unermuedlich",
-      "css": "radial-gradient(circle at 20% 50%,rgba(251,191,36,.25),transparent 40%),linear-gradient(120deg,#3a2606,#6b4410)"
-    },
-    {
-      "id": "s-flamme",
-      "slot": "begleiter",
-      "name": "Flamme",
-      "selten": "legendaer",
-      "quelle": "set",
-      "set": "serienheld",
-      "emoji": "🔥"
-    },
-    {
-      "id": "s-feuerrahmen",
-      "slot": "rahmen",
-      "name": "Feuerrahmen",
-      "selten": "legendaer",
-      "quelle": "set",
-      "set": "dauerbrenner",
-      "css": "border:3px solid #f59e0b;box-shadow:0 0 12px #f97316,0 0 24px rgba(239,68,68,.6)"
-    },
-    {
-      "id": "s-adler",
-      "slot": "begleiter",
-      "name": "Adler",
-      "selten": "legendaer",
-      "quelle": "set",
-      "set": "comeback",
-      "emoji": "🦅"
-    },
-    {
-      "id": "s-diamant-krone",
-      "slot": "hut",
-      "name": "Juwelen-Krone",
-      "selten": "legendaer",
-      "quelle": "set",
-      "set": "xp-5000",
-      "emoji": "💎"
-    },
-    {
-      "id": "e-kuerbis",
-      "slot": "hut",
-      "name": "Kürbis",
-      "selten": "event",
-      "quelle": "event",
-      "event": "halloween",
-      "emoji": "🎃"
-    },
-    {
-      "id": "e-fledermaus",
-      "slot": "begleiter",
-      "name": "Fledermaus",
-      "selten": "event",
-      "quelle": "event",
-      "event": "halloween",
-      "emoji": "🦇"
-    },
-    {
-      "id": "e-gespenst",
-      "slot": "begleiter",
-      "name": "Gespenst",
-      "selten": "event",
-      "quelle": "event",
-      "event": "halloween",
-      "emoji": "👻"
-    },
-    {
-      "id": "e-spinnennetz",
-      "slot": "rahmen",
-      "name": "Spinnennetz",
-      "selten": "event",
-      "quelle": "event",
-      "event": "halloween",
-      "css": "border:3px dashed #a855f7;box-shadow:0 0 0 2px #fb923c,0 0 14px rgba(168,85,247,.6)"
-    },
-    {
-      "id": "e-geisternacht",
-      "slot": "hintergrund",
-      "name": "Geisternacht",
-      "selten": "event",
-      "quelle": "event",
-      "event": "halloween",
-      "css": "radial-gradient(circle at 85% 30%,rgba(251,146,60,.35),transparent 30%),linear-gradient(120deg,#1a0b2e,#3b1450)"
-    },
-    {
-      "id": "s-schwarze-katze",
-      "slot": "begleiter",
-      "name": "Schwarze Katze",
-      "selten": "legendaer",
-      "quelle": "set",
-      "set": "event-halloween",
-      "emoji": "🐈‍⬛"
-    },
-    {
-      "id": "e-weihnachtsstern",
-      "slot": "hut",
-      "name": "Weihnachtsstern",
-      "selten": "event",
-      "quelle": "event",
-      "event": "weihnachten",
-      "emoji": "🌟"
-    },
-    {
-      "id": "e-schneemann",
-      "slot": "begleiter",
-      "name": "Schneemann",
-      "selten": "event",
-      "quelle": "event",
-      "event": "weihnachten",
-      "emoji": "⛄"
-    },
-    {
-      "id": "e-geschenk",
-      "slot": "begleiter",
-      "name": "Geschenk",
-      "selten": "event",
-      "quelle": "event",
-      "event": "weihnachten",
-      "emoji": "🎁"
-    },
-    {
-      "id": "e-zuckerstange",
-      "slot": "rahmen",
-      "name": "Zuckerstange",
-      "selten": "event",
-      "quelle": "event",
-      "event": "weihnachten",
-      "css": "border:3px solid transparent;background:linear-gradient(#1b1929,#1b1929) padding-box,repeating-linear-gradient(45deg,#ef4444 0 6px,#fff 6px 12px) border-box"
-    },
-    {
-      "id": "e-schneenacht",
-      "slot": "hintergrund",
-      "name": "Schneenacht",
-      "selten": "event",
-      "quelle": "event",
-      "event": "weihnachten",
-      "css": "radial-gradient(2px 2px at 15% 25%,#fff,transparent),radial-gradient(2px 2px at 60% 15%,#fff,transparent),radial-gradient(1.5px 1.5px at 35% 70%,#fff,transparent),radial-gradient(2px 2px at 80% 60%,#fff,transparent),linear-gradient(120deg,#0c1a3a,#14325e)"
-    },
-    {
-      "id": "s-rentier",
-      "slot": "begleiter",
-      "name": "Rentier",
-      "selten": "legendaer",
-      "quelle": "set",
-      "set": "event-weihnachten",
-      "emoji": "🦌"
-    },
-    {
-      "id": "e-tulpe",
-      "slot": "hut",
-      "name": "Tulpe",
-      "selten": "event",
-      "quelle": "event",
-      "event": "ostern",
-      "emoji": "🌷"
-    },
-    {
-      "id": "e-osterhase",
-      "slot": "begleiter",
-      "name": "Osterhase",
-      "selten": "event",
-      "quelle": "event",
-      "event": "ostern",
-      "emoji": "🐇"
-    },
-    {
-      "id": "e-osterei",
-      "slot": "begleiter",
-      "name": "Osterei",
-      "selten": "event",
-      "quelle": "event",
-      "event": "ostern",
-      "emoji": "🥚"
-    },
-    {
-      "id": "e-fruehling",
-      "slot": "rahmen",
-      "name": "Frühlingsrahmen",
-      "selten": "event",
-      "quelle": "event",
-      "event": "ostern",
-      "css": "border:3px solid transparent;background:linear-gradient(#1b1929,#1b1929) padding-box,linear-gradient(135deg,#f9a8d4,#fde68a,#86efac,#93c5fd) border-box"
-    },
-    {
-      "id": "e-blumenwiese",
-      "slot": "hintergrund",
-      "name": "Blumenwiese",
-      "selten": "event",
-      "quelle": "event",
-      "event": "ostern",
-      "css": "radial-gradient(circle at 15% 80%,rgba(249,168,212,.35),transparent 25%),radial-gradient(circle at 80% 75%,rgba(253,230,138,.3),transparent 25%),linear-gradient(120deg,#12301f,#2a4d2f)"
-    },
-    {
-      "id": "s-regenbogen",
-      "slot": "begleiter",
-      "name": "Regenbogen",
-      "selten": "legendaer",
-      "quelle": "set",
-      "set": "event-ostern",
-      "emoji": "🌈"
-    }
-  ]
-}
+{"TITEL":["Neuling","Spurensucher","Pfadfinder","Kartenleser","Wegfinder","Kartograf","Navigator","Kapitän","Weltenbummler","Entdecker","Sternengucker","Gipfelstürmer","Schatzjäger","Meister-Entdecker","Kompass-Profi","Horizontläufer","Weltenkenner","Großmeister","Held der Lernwelt","Legende"],"ABZEICHEN":[{"id":"erste-schritte","icon":"👣","name":"Erste Schritte","typ":"runden","n":1,"text":"Schaffe deine erste gute Runde (mind. 50 %)."},
+{"id":"entdecker","icon":"🧭","name":"Entdecker","typ":"apps","n":5,"text":"Übe in 5 verschiedenen Apps."},
+{"id":"weltreisender","icon":"🌍","name":"Weltreisender","typ":"apps","n":10,"text":"Übe in 10 verschiedenen Apps."},
+{"id":"sternensammler","icon":"⭐","name":"Sternensammler","typ":"sterne","n":3,"text":"Verdiene 3 Sterne (egal welche Farbe)."},
+{"id":"goldkind","icon":"🥇","name":"Goldkind","typ":"gold","n":1,"text":"Verdiene deinen ersten Gold-Stern."},
+{"id":"goldschatz","icon":"💰","name":"Goldschatz","typ":"gold","n":5,"text":"Verdiene 5 Gold-Sterne."},
+{"id":"fleissig","icon":"💪","name":"Fleißig","typ":"runden","n":25,"text":"Schaffe 25 gute Runden."},
+{"id":"unermuedlich","icon":"🐝","name":"Unermüdlich","typ":"runden","n":100,"text":"Schaffe 100 gute Runden."},
+{"id":"wochenziel","icon":"📅","name":"Wochenziel","typ":"wochen","n":1,"text":"Erreiche einmal dein Wochenziel."},
+{"id":"serienheld","icon":"🔥","name":"Serienheld","typ":"serie","n":3,"text":"Erreiche 3 Wochen in Folge dein Wochenziel."},
+{"id":"dauerbrenner","icon":"☄️","name":"Dauerbrenner","typ":"serie","n":8,"text":"Erreiche 8 Wochen in Folge dein Wochenziel."},
+{"id":"comeback","icon":"🦅","name":"Comeback","typ":"comeback","text":"Verbessere dich in einer App von unter 50 % auf mindestens 80 %."},
+{"id":"xp-1000","icon":"💎","name":"Tausender","typ":"xp","n":1000,"text":"Sammle insgesamt 1.000 XP."},
+{"id":"xp-5000","icon":"🏆","name":"Fünftausender","typ":"xp","n":5000,"text":"Sammle insgesamt 5.000 XP."},
+{"id":"event-halloween","icon":"🎃","name":"Gruselig gut","typ":"event","event":"halloween","n":3,"text":"Übe während des Halloween-Events an 3 Tagen gut."},
+{"id":"event-weihnachten","icon":"🎄","name":"Weihnachtsstern","typ":"event","event":"weihnachten","n":3,"text":"Übe während des Weihnachts-Events an 3 Tagen gut."},
+{"id":"event-ostern","icon":"🐣","name":"Osterprofi","typ":"event","event":"ostern","n":3,"text":"Übe während des Oster-Events an 3 Tagen gut."}],"EVENTS":[{"id":"halloween","name":"Halloween","titel":"Halloween-Event","geschenk":"Halloween-Geschenk","icon":"🎃","farbe":"#fb923c","farbe2":"#a855f7","text":"Event-Truhen enthalten gruselige Teile – und die erste gute Runde bringt eine Geschenk-Truhe!"},
+{"id":"weihnachten","name":"Weihnachten","titel":"Weihnachts-Event","geschenk":"Weihnachtsgeschenk","icon":"🎄","farbe":"#ef4444","farbe2":"#22c55e","text":"Event-Truhen enthalten winterliche Teile – und die erste gute Runde bringt eine Geschenk-Truhe!"},
+{"id":"ostern","name":"Ostern","titel":"Oster-Event","geschenk":"Ostergeschenk","icon":"🐣","farbe":"#f9a8d4","farbe2":"#86efac","text":"Event-Truhen enthalten Frühlings-Teile – und die erste gute Runde bringt eine Geschenk-Truhe!"}],"SELTENHEIT":{"gewoehnlich":{"name":"Gewöhnlich","farbe":"#94a3b8","gewicht":60},"selten":{"name":"Selten","farbe":"#818cf8","gewicht":30},"episch":{"name":"Episch","farbe":"#c084fc","gewicht":10},"legendaer":{"name":"Legendär","farbe":"#e6a817","gewicht":0},"event":{"name":"Event","farbe":"#fb923c","gewicht":0},"basis":{"name":"Basis","farbe":"#94a3b8","gewicht":0}},"SLOTS":{"kopf":{"name":"Kopf","icon":"👑"},"gesicht":{"name":"Gesicht","icon":"😎"},"oberteil":{"name":"Oberteil","icon":"👕"},"hose":{"name":"Hose","icon":"👖"},"schuhe":{"name":"Schuhe","icon":"👟"},"ruecken":{"name":"Rücken","icon":"🎒"},"hand":{"name":"In der Hand","icon":"🪄"},"begleiter":{"name":"Begleiter","icon":"🐾"},"hintergrund":{"name":"Hintergrund","icon":"🖼"}},"AVATAR":{"HAUT":["#f7d6ba","#efc3a0","#e0a67c","#c98c5f","#8f5b3a","#5c3a25"],"HAARFARBEN":["#2b1c14","#6b3e1f","#a0522d","#e3b94f","#f1dfae","#b5462b","#1a1a22","#6d7cff","#ec6fb3"],"FRISUREN":[{"id":"kurz","name":"Kurz","teile":[{"g":[11.8,2.6,11.8],"p":[0,5.1,0],"f":"haar"},{"g":[11.8,7.5,1.2],"p":[0,1.6,-5.6],"f":"haar"},{"g":[1.2,4.5,11],"p":[5.7,3.2,-0.2],"f":"haar","paar":true},{"g":[4.2,1.4,0.8],"p":[-2.6,3.3,5.7],"f":"haar"},{"g":[2.8,0.9,0.8],"p":[1.8,3.6,5.7],"f":"haar"},{"g":[3,0.4,3],"p":[-2,6.45,1],"f":"haar2"}]},
+{"id":"seitenscheitel","name":"Seitenscheitel","teile":[{"g":[11.8,2.6,11.8],"p":[0,5.1,0],"f":"haar"},{"g":[11.8,7.5,1.2],"p":[0,1.6,-5.6],"f":"haar"},{"g":[1.2,4.5,11],"p":[5.7,3.2,-0.2],"f":"haar","paar":true},{"g":[3,0.4,3],"p":[-2,6.45,1],"f":"haar2"},{"g":[6.4,1.9,0.9],"p":[-2.4,3.1,5.75],"f":"haar","r":[0,0,0.12]},{"g":[3.4,1.2,0.9],"p":[3.6,3.9,5.75],"f":"haar"},{"g":[1.4,3.4,0.9],"p":[-5.1,1.6,5.6],"f":"haar"}]},
+{"id":"stachelig","name":"Stachelig","teile":[{"g":[11.8,2.6,11.8],"p":[0,5.1,0],"f":"haar"},{"g":[11.8,7.5,1.2],"p":[0,1.6,-5.6],"f":"haar"},{"g":[1.2,4.5,11],"p":[5.7,3.2,-0.2],"f":"haar","paar":true},{"g":[3,0.4,3],"p":[-2,6.45,1],"f":"haar2"},{"g":[2.9,2.9,2.9],"p":[-3.5,7,-2],"f":"haar","r":[0.62,0.785,0.62],"zone":"oben"},{"g":[2.9,2.9,2.9],"p":[0,7,-3.2],"f":"haar2","r":[0.62,0.785,0.62],"zone":"oben"},{"g":[2.9,2.9,2.9],"p":[3.5,7,-2],"f":"haar","r":[0.62,0.785,0.62],"zone":"oben"},{"g":[2.9,2.9,2.9],"p":[-2,7,1.6],"f":"haar2","r":[0.62,0.785,0.62],"zone":"oben"},{"g":[2.9,2.9,2.9],"p":[2,7,1.6],"f":"haar","r":[0.62,0.785,0.62],"zone":"oben"},{"g":[2.9,2.9,2.9],"p":[0,7,-0.2],"f":"haar2","r":[0.62,0.785,0.62],"zone":"oben"},{"g":[2.9,2.9,2.9],"p":[-4.2,7,1.8],"f":"haar","r":[0.62,0.785,0.62],"zone":"oben"},{"g":[2.9,2.9,2.9],"p":[4.2,7,1.8],"f":"haar2","r":[0.62,0.785,0.62],"zone":"oben"},{"g":[1.8,1.8,1.8],"p":[-3,4.4,5.2],"f":"haar","r":[0.6,0.785,0.6]},{"g":[1.8,1.8,1.8],"p":[0,4.4,5.4],"f":"haar","r":[0.6,0.785,0.6]},{"g":[1.8,1.8,1.8],"p":[3,4.4,5.2],"f":"haar","r":[0.6,0.785,0.6]}]},
+{"id":"buzz","name":"Kurz rasiert","teile":[{"g":[11.4,0.9,11.4],"p":[0,5.8,0],"f":"haar"},{"g":[11.4,4,0.8],"p":[0,3.4,-5.6],"f":"haar"},{"g":[0.8,2.4,10],"p":[5.6,4.4,-0.4],"f":"haar","paar":true}]},
+{"id":"lockig","name":"Locken","teile":[{"g":[11.8,2.6,11.8],"p":[0,5.1,0],"f":"haar"},{"g":[11.8,7.5,1.2],"p":[0,1.6,-5.6],"f":"haar"},{"g":[1.2,4.5,11],"p":[5.7,3.2,-0.2],"f":"haar","paar":true},{"g":[3,0.4,3],"p":[-2,6.45,1],"f":"haar2"},{"g":[2.6,2.6,2.6],"p":[3.16,5.54,3.4],"f":"haar2"},{"g":[2.6,2.6,2.6],"p":[-5.53,6.17,0.73],"f":"haar"},{"g":[2.6,2.6,2.6],"p":[2.12,5.02,-5.58],"f":"haar"},{"g":[2.6,2.6,2.6],"p":[0.46,4.48,3.4],"f":"haar2"},{"g":[2.6,2.6,2.6],"p":[-4.63,6.18,-2.75],"f":"haar"},{"g":[2.6,2.6,2.6],"p":[0.62,3.17,3.4],"f":"haar"},{"g":[2.6,2.6,2.6],"p":[6.26,6.5,-0.1],"f":"haar2"},{"g":[2.6,2.6,2.6],"p":[-3.99,4.32,-3.56],"f":"haar"},{"g":[2.6,2.6,2.6],"p":[-5.45,6.81,0.08],"f":"haar"},{"g":[2.6,2.6,2.6],"p":[-3.73,6.27,3.4],"f":"haar2"},{"g":[2.6,2.6,2.6],"p":[4.6,4.81,3.4],"f":"haar"},{"g":[2.6,2.6,2.6],"p":[-5.44,4.94,-1.84],"f":"haar"},{"g":[2.6,2.6,2.6],"p":[2.07,6.46,3.4],"f":"haar2"},{"g":[2.6,2.6,2.6],"p":[0.6,3.83,3.4],"f":"haar"},{"g":[2.6,2.6,2.6],"p":[6.34,6.02,-1.26],"f":"haar"},{"g":[2.6,2.6,2.6],"p":[0.49,5.92,-6.04],"f":"haar2"},{"g":[2.6,2.6,2.6],"p":[4.25,6.31,3.4],"f":"haar"},{"g":[2.6,2.6,2.6],"p":[1.97,6.55,3.4],"f":"haar"},{"g":[2.6,2.6,2.6],"p":[-4.87,4.81,3.11],"f":"haar2"},{"g":[2.6,2.6,2.6],"p":[-4.97,4.55,3.4],"f":"haar"},{"g":[2.6,2.6,2.6],"p":[5.34,5.87,0.91],"f":"haar"},{"g":[2.6,2.6,2.6],"p":[5.94,4.97,-0.27],"f":"haar2"},{"g":[2.6,2.6,2.6],"p":[-5.96,3.89,-1.95],"f":"haar"},{"g":[2.6,2.6,2.6],"p":[-4.67,5.49,-3.81],"f":"haar"},{"g":[2.6,2.6,2.6],"p":[2.33,4.39,3.4],"f":"haar2"},{"g":[2.6,2.6,2.6],"p":[5.16,5.39,-2.54],"f":"haar"},{"g":[2.6,2.6,2.6],"p":[-1.89,3.26,3.4],"f":"haar"},{"g":[2.6,2.6,2.6],"p":[2.46,4.5,-5.81],"f":"haar2"},{"g":[2.6,2.4,2.4],"p":[-4.5,4.3,5.4],"f":"haar"},{"g":[2.6,2.4,2.4],"p":[-1.5,4.3,5.4],"f":"haar"},{"g":[2.6,2.4,2.4],"p":[1.5,4.3,5.4],"f":"haar"},{"g":[2.6,2.4,2.4],"p":[4.5,4.3,5.4],"f":"haar"}]},
+{"id":"afro","name":"Afro","teile":[{"g":[11.8,2.6,11.8],"p":[0,5.1,0],"f":"haar"},{"g":[11.8,7.5,1.2],"p":[0,1.6,-5.6],"f":"haar"},{"g":[1.2,4.5,11],"p":[5.7,3.2,-0.2],"f":"haar","paar":true},{"g":[3,0.4,3],"p":[-2,6.45,1],"f":"haar2"},{"g":[14.6,7.4,14],"p":[0,6.2,-0.8],"f":"haar","zone":"oben"},{"g":[3,2,2],"p":[-4.4,9.6,3],"f":"haar2","zone":"oben"},{"g":[2.6,2,2],"p":[3.8,9.8,-2],"f":"haar2","zone":"oben"},{"g":[12.4,1.8,1],"p":[0,3.6,5.8],"f":"haar"}]},
+{"id":"bob","name":"Bob","teile":[{"g":[11.8,2.6,11.8],"p":[0,5.1,0],"f":"haar"},{"g":[11.8,7.5,1.2],"p":[0,1.6,-5.6],"f":"haar"},{"g":[1.2,4.5,11],"p":[5.7,3.2,-0.2],"f":"haar","paar":true},{"g":[3,0.4,3],"p":[-2,6.45,1],"f":"haar2"},{"g":[11.8,1.8,0.9],"p":[0,3.3,5.75],"f":"haar"},{"g":[1.3,8,9.4],"p":[5.75,-0.6,-0.9],"f":"haar","paar":true},{"g":[11.8,10,1.3],"p":[0,0.2,-5.75],"f":"haar"}]},
+{"id":"lang","name":"Lang","teile":[{"g":[11.8,2.6,11.8],"p":[0,5.1,0],"f":"haar"},{"g":[11.8,7.5,1.2],"p":[0,1.6,-5.6],"f":"haar"},{"g":[1.2,4.5,11],"p":[5.7,3.2,-0.2],"f":"haar","paar":true},{"g":[4.2,1.4,0.8],"p":[-2.6,3.3,5.7],"f":"haar"},{"g":[2.8,0.9,0.8],"p":[1.8,3.6,5.7],"f":"haar"},{"g":[3,0.4,3],"p":[-2,6.45,1],"f":"haar2"},{"g":[11.8,15,1.4],"p":[0,-2.2,-5.75],"f":"haar"},{"g":[1.3,11,7],"p":[5.75,0.3,-2.2],"f":"haar","paar":true}]},
+{"id":"wellen","name":"Lange Wellen","teile":[{"g":[11.8,2.6,11.8],"p":[0,5.1,0],"f":"haar"},{"g":[11.8,7.5,1.2],"p":[0,1.6,-5.6],"f":"haar"},{"g":[1.2,4.5,11],"p":[5.7,3.2,-0.2],"f":"haar","paar":true},{"g":[3,0.4,3],"p":[-2,6.45,1],"f":"haar2"},{"g":[11.8,1.6,0.9],"p":[-1,3.4,5.75],"f":"haar","r":[0,0,0.08]},{"g":[11.8,16,1.4],"p":[0,-2.6,-5.75],"f":"haar"},{"g":[1.3,12,8.4],"p":[5.75,-0.2,-1.6],"f":"haar","paar":true},{"g":[1.6,2.4,2.4],"p":[6.2,-3,1.2],"f":"haar2","paar":true},{"g":[1.6,2.4,2.4],"p":[6.2,-6.8,-0.6],"f":"haar2","paar":true},{"g":[2.4,2.4,1.6],"p":[3,-8,-6.2],"f":"haar2"},{"g":[2.4,2.4,1.6],"p":[-3.2,-5,-6.2],"f":"haar2"}]},
+{"id":"pferdeschwanz","name":"Pferdeschwanz","teile":[{"g":[11.8,2.6,11.8],"p":[0,5.1,0],"f":"haar"},{"g":[11.8,7.5,1.2],"p":[0,1.6,-5.6],"f":"haar"},{"g":[1.2,4.5,11],"p":[5.7,3.2,-0.2],"f":"haar","paar":true},{"g":[4.2,1.4,0.8],"p":[-2.6,3.3,5.7],"f":"haar"},{"g":[2.8,0.9,0.8],"p":[1.8,3.6,5.7],"f":"haar"},{"g":[3,0.4,3],"p":[-2,6.45,1],"f":"haar2"},{"g":[2.6,2.4,1.4],"p":[0,3.2,-6.5],"f":"#f472b6"},{"p":[0,3,-7],"teile":[{"g":[2.8,8,2.4],"p":[0,-4,-0.6],"f":"haar"},{"g":[2.2,2.4,2],"p":[0,-8.6,-0.9],"f":"haar2"}],"r":[0.3,0,0]}]},
+{"id":"zoepfe","name":"Zwei Zöpfe","teile":[{"g":[11.8,2.6,11.8],"p":[0,5.1,0],"f":"haar"},{"g":[11.8,7.5,1.2],"p":[0,1.6,-5.6],"f":"haar"},{"g":[1.2,4.5,11],"p":[5.7,3.2,-0.2],"f":"haar","paar":true},{"g":[4.2,1.4,0.8],"p":[-2.6,3.3,5.7],"f":"haar"},{"g":[2.8,0.9,0.8],"p":[1.8,3.6,5.7],"f":"haar"},{"g":[3,0.4,3],"p":[-2,6.45,1],"f":"haar2"},{"g":[1.8,1.8,1.8],"p":[5.9,-0.6,-1.6],"f":"#f472b6","paar":true},{"g":[2.1,2.2,2.1],"p":[6,-2.6,-1.6],"f":"haar","paar":true},{"g":[1.9,2.2,1.9],"p":[6,-4.7,-1.6],"f":"haar2","paar":true},{"g":[1.7,2.2,1.7],"p":[6,-6.8,-1.6],"f":"haar","paar":true},{"g":[1.3,1.6,1.3],"p":[6,-8.6,-1.6],"f":"haar2","paar":true}]},
+{"id":"dutt","name":"Dutt","teile":[{"g":[11.8,2.6,11.8],"p":[0,5.1,0],"f":"haar"},{"g":[11.8,7.5,1.2],"p":[0,1.6,-5.6],"f":"haar"},{"g":[1.2,4.5,11],"p":[5.7,3.2,-0.2],"f":"haar","paar":true},{"g":[4.2,1.4,0.8],"p":[-2.6,3.3,5.7],"f":"haar"},{"g":[2.8,0.9,0.8],"p":[1.8,3.6,5.7],"f":"haar"},{"g":[3,0.4,3],"p":[-2,6.45,1],"f":"haar2"},{"g":[5,4.4,5],"p":[0,8.6,-1.5],"f":"haar","zone":"oben"},{"g":[5.4,1,5.4],"p":[0,6.7,-1.5],"f":"#e6a817","zone":"oben"}]}],"AUGEN":[{"id":"normal","name":"Normal","offen":[["d",4,7,2,3],["d",10,7,2,3],["w",5,7,1,1],["w",11,7,1,1]]},
+{"id":"wimpern","name":"Mit Wimpern","offen":[["d",4,7,2,3],["d",10,7,2,3],["w",5,7,1,1],["w",11,7,1,1],["d",3,6,1,1],["d",4,6,2,1],["d",10,6,2,1],["d",12,6,1,1]],"zu":[["d",3,9,3,1],["d",10,9,3,1],["d",3,8,1,1],["d",12,8,1,1]]},
+{"id":"gross","name":"Große Augen","offen":[["d",3,6,3,4],["d",10,6,3,4],["w",4,6,1,1],["w",11,6,1,1],["w",5,7,1,1],["w",12,7,1,1]],"zu":[["d",3,9,3,1],["d",10,9,3,1]]},
+{"id":"froehlich","name":"Fröhlich","offen":[["d",3,8,1,1],["d",4,7,2,1],["d",6,8,1,1],["d",9,8,1,1],["d",10,7,2,1],["d",12,8,1,1]],"zu":[["d",3,8,4,1],["d",9,8,4,1]]}],"MUENDER":[{"id":"laecheln","name":"Lächeln","teile":[["r",6,12,1,1],["r",7,13,2,1],["r",9,12,1,1]]},
+{"id":"breit","name":"Breites Lachen","teile":[["r",5,12,1,1],["w",6,12,4,1],["r",10,12,1,1],["r",6,13,4,1]]},
+{"id":"frech","name":"Frech","teile":[["r",6,12,4,1],["r",10,11,1,1]]},
+{"id":"lippen-rosa","name":"Lippen rosa","farbe":"#e76f8f","teile":[["l",6,12,4,1],["l",7,13,2,1]],"jubel":[["l",6,12,4,1],["o",6,13,4,1],["z",7,13,2,1]]},
+{"id":"lippen-rot","name":"Lippen rot","farbe":"#c0314a","teile":[["l",6,12,4,1],["l",7,13,2,1]],"jubel":[["l",6,12,4,1],["o",6,13,4,1],["z",7,13,2,1]]}],"START":{"oberteil":"o-basis","hose":"h-jeans","schuhe":"s-sneaker","hintergrund":"bg-buehne"},"OHNE":{"oberteil":{"kleidung":{"muster":"muster:tee-weiss","aermel":"kurz"}},"hose":{"kleidung":{"farbe":"#64748b","lang":false}},"schuhe":{"id":"ohne-schuhe","modell":[{"g":[4.3,1.8,5],"p":[2.2,0.9,0.4],"f":"#334155","paar":true}]}},"MUSTER":{"tee-weiss":{"w":18,"h":20,"basis":"#eef2f7","vorne":[["#b9c2d3",6,0,6,1],["#b9c2d3",7,1,4,1]]}}},"ITEMS":[
+{"id":"o-basis","slot":"oberteil","name":"Basis-Shirt","selten":"basis","quelle":"start","kleidung":{"muster":"muster:s","aermel":"kurz"},"muster":{"s":{"w":18,"h":20,"basis":"#dbe3ee","rects":[["#c7d0de",0,19,18,1]],"vorne":[["#9aa6ba",6,0,6,1],["#9aa6ba",7,1,4,1],["#e6a817",8,7,2,2]]}}},
+{"id":"o-shirt","slot":"oberteil","name":"T-Shirt Himmelblau","selten":"gewoehnlich","quelle":"truhe","kleidung":{"muster":"muster:s","aermel":"kurz"},"muster":{"s":{"w":18,"h":20,"basis":"#38bdf8","rects":[["#0ea5e9",0,19,18,1]],"vorne":[["#0c4a6e",6,0,6,1],["#0c4a6e",7,1,4,1],["#fde047",9,6,1,1],["#fde047",8,7,3,1],["#fde047",6,8,7,1],["#fde047",7,9,5,1],["#fde047",7,10,2,1],["#fde047",10,10,2,1]]}}},
+{"id":"o-shirt-gelb","slot":"oberteil","name":"T-Shirt Sonnengelb","selten":"gewoehnlich","quelle":"truhe","basis":"o-shirt","tausch":{"#38bdf8":"#facc15","#0ea5e9":"#eab308","#0c4a6e":"#854d0e","#fde047":"#ffffff"}},
+{"id":"o-hoodie","slot":"oberteil","name":"Hoodie Rot","selten":"gewoehnlich","quelle":"truhe","kleidung":{"muster":"muster:s","aermel":"lang","bund":"#b5352e"},"muster":{"s":{"w":18,"h":20,"basis":"#e2433b","rects":[["#b5352e",0,18,18,2]],"vorne":[["#c93a33",4,12,10,5],["#9e2e28",4,12,10,1],["#f8fafc",7,1,1,7],["#f8fafc",10,1,1,7]]}},"modell":[{"g":[7,2.6,2.6],"p":[0,19.4,-2.4],"f":"#b5352e"}]},
+{"id":"o-hoodie-mint","slot":"oberteil","name":"Hoodie Mint","selten":"gewoehnlich","quelle":"truhe","basis":"o-hoodie","tausch":{"#e2433b":"#2fbf92","#b5352e":"#24987a","#c93a33":"#29aa83","#9e2e28":"#1d7d64"}},
+{"id":"o-hoodie-lila","slot":"oberteil","name":"Hoodie Lila","selten":"gewoehnlich","quelle":"truhe","basis":"o-hoodie","tausch":{"#e2433b":"#8b5cf6","#b5352e":"#6d44c9","#c93a33":"#7c4fe0","#9e2e28":"#5b37a8"}},
+{"id":"o-trikot","slot":"oberteil","name":"Streifentrikot","selten":"selten","quelle":"truhe","kleidung":{"muster":"muster:s","aermel":"kurz","aermelFarbe":"#1d4ed8","bund":"#f8fafc"},"muster":{"s":{"w":18,"h":20,"streifen":{"farben":["#1d4ed8","#f8fafc"],"hoehe":2},"vorne":[["#dc2626",6,0,6,1],["#f8fafc",5,5,8,10],["#dc2626",6,6,6,2],["#dc2626",10,8,2,2],["#dc2626",9,10,2,2],["#dc2626",8,12,2,2]]}}},
+{"id":"o-karohemd","slot":"oberteil","name":"Karohemd","selten":"selten","quelle":"truhe","kleidung":{"muster":"muster:s","aermel":"lang","bund":"#7f1d1d"},"muster":{"s":{"w":18,"h":20,"karo":{"farben":["#dc2626","#7f1d1d"],"groesse":2},"rects":[["#1f2937",0,4,18,1],["#1f2937",0,12,18,1]],"vorne":[["#f8fafc",8,0,2,20],["#e2e8f0",6,0,2,2],["#e2e8f0",10,0,2,2],["#94a3b8",8,4,2,1],["#94a3b8",8,9,2,1],["#94a3b8",8,14,2,1]]}}},
+{"id":"o-kleid","slot":"oberteil","name":"Sommerkleid","selten":"selten","quelle":"truhe","kleidung":{"muster":"muster:s","aermel":"kurz"},"muster":{"s":{"w":18,"h":20,"basis":"#f472b6","punkte":{"n":22,"farben":["#ffffff","#fde68a"],"seed":4},"vorne":[["#be185d",5,0,8,1],["#fde68a",0,17,18,1]]},"r":{"w":20,"h":8,"basis":"#f472b6","punkte":{"n":14,"farben":["#ffffff","#fde68a"],"seed":9},"rects":[["#db2777",0,7,20,1]]}},"modell":[{"g":[10.2,4.2,6],"p":[0,7.4,0],"f":"muster:r"},{"g":[11,1.2,6.8],"p":[0,5.3,0],"f":"#db2777"}]},
+{"id":"o-ruestung","slot":"oberteil","name":"Ritterrüstung","selten":"episch","quelle":"truhe","kleidung":{"muster":"muster:s","aermel":"lang","aermelFarbe":"#a3adc2","bund":"#7c879c","metall":true},"muster":{"s":{"w":18,"h":20,"basis":"#b9c3d4","rects":[["#dfe5ee",0,0,18,1],["#6b4f2a",0,16,18,2],["#e6a817",8,15,2,4],["#64748b",1,2,1,1],["#64748b",16,2,1,1]],"vorne":[["#e2e8f0",3,1,12,10],["#e6a817",8,2,2,8],["#e6a817",5,4,8,2]]}},"modell":[{"g":[4.8,2.4,4.8],"p":[6.3,18,0],"f":"#cfd6e2","paar":true,"metall":true}]},
+{"id":"o-astronaut","slot":"oberteil","name":"Astronautenanzug","selten":"episch","quelle":"truhe","kleidung":{"muster":"muster:s","aermel":"lang","aermelFarbe":"#f1f5f9","bund":"#f97316"},"muster":{"s":{"w":18,"h":20,"basis":"#f1f5f9","rects":[["#cbd5e1",0,17,18,3],["#f97316",0,0,18,1]],"vorne":[["#334155",4,4,10,7],["#22d3ee",5,5,2,2],["#ef4444",8,5,2,2],["#facc15",11,5,2,2],["#22c55e",5,8,8,1],["#1d4ed8",12,13,4,3],["#ffffff",13,14,2,1]]}},"modell":[{"g":[6,6,2.2],"p":[0,14.5,-3.6],"f":"#e2e8f0"},{"g":[1.2,1.2,1],"p":[1.8,16.4,-4.8],"f":"#22d3ee","licht":0.6,"anim":"blinken"}]},
+{"id":"o-galaxie","slot":"oberteil","name":"Galaxie-Hoodie","selten":"legendaer","quelle":"set","set":"sternensammler","kleidung":{"muster":"muster:s","aermel":"lang","bund":"#5eead4","licht":0.45},"muster":{"s":{"w":18,"h":20,"verlauf":["#5b21b6","#1e1b4b","#0e7490"],"punkte":{"n":18,"farben":["#ffffff","#ffffff","#fde68a"],"seed":5},"rects":[["#5eead4",0,18,18,2]],"vorne":[["#5eead4",7,1,1,7],["#5eead4",10,1,1,7]]}},"modell":[{"g":[7,2.6,2.6],"p":[0,19.4,-2.4],"f":"#241a5c"}]},
+{"id":"o-goldruestung","slot":"oberteil","name":"Goldene Rüstung","selten":"legendaer","quelle":"set","set":"goldkind","kleidung":{"muster":"muster:s","aermel":"lang","aermelFarbe":"#e3a92b","bund":"#fff1b8","licht":0.2},"muster":{"s":{"w":18,"h":20,"basis":"#f5b82e","rects":[["#fff1b8",0,0,18,1],["#b7791f",0,16,18,2],["#dc2626",8,15,2,4]],"vorne":[["#fde68a",3,1,12,10],["#dc2626",8,3,2,6],["#dc2626",6,5,6,2],["#ffffff",4,2,1,1]]}},"modell":[{"g":[4.8,2.4,4.8],"p":[6.3,18,0],"f":"#f5b82e","paar":true,"licht":0.3}]},
+{"id":"o-kuerbis","slot":"oberteil","name":"Kürbis-Pulli","selten":"event","quelle":"event","event":"halloween","kleidung":{"muster":"muster:s","aermel":"lang","bund":"#15803d"},"muster":{"s":{"w":18,"h":20,"basis":"#f97316","senkrecht":{"farben":["#f97316","#f97316","#ea580c","#f97316","#f97316"],"breite":1},"rects":[["#15803d",0,0,18,1]],"vorne":[["#15803d",6,0,6,2],["#3b1a06",4,5,3,2],["#3b1a06",5,4,1,1],["#3b1a06",11,5,3,2],["#3b1a06",12,4,1,1],["#3b1a06",4,11,10,2],["#3b1a06",5,10,1,1],["#3b1a06",8,10,1,1],["#3b1a06",11,10,1,1],["#3b1a06",6,13,1,1],["#3b1a06",9,13,1,1],["#3b1a06",12,13,1,1]]}}},
+{"id":"o-rentierpulli","slot":"oberteil","name":"Rentier-Pulli","selten":"event","quelle":"event","event":"weihnachten","kleidung":{"muster":"muster:s","aermel":"lang","bund":"#15803d"},"muster":{"s":{"w":18,"h":20,"basis":"#b91c1c","punkte":{"n":14,"farben":["#ffffff"],"seed":12},"rects":[["#15803d",0,16,18,2],["#ffffff",0,15,18,1]],"vorne":[["#8b5a2b",6,5,6,6],["#8b5a2b",7,11,4,2],["#1f1b2e",7,7,1,1],["#1f1b2e",10,7,1,1],["#ef4444",8,11,2,2],["#e2c290",5,2,1,3],["#e2c290",4,2,1,1],["#e2c290",12,2,1,3],["#e2c290",13,2,1,1]]}}},
+{"id":"o-fruehling","slot":"oberteil","name":"Frühlingskleid","selten":"event","quelle":"event","event":"ostern","kleidung":{"muster":"muster:s","aermel":"kurz"},"muster":{"s":{"w":18,"h":20,"basis":"#a7f3d0","punkte":{"n":16,"farben":["#f9a8d4","#fde047","#c4b5fd"],"seed":3},"vorne":[["#10b981",5,0,8,1]]},"r":{"w":20,"h":8,"basis":"#a7f3d0","punkte":{"n":16,"farben":["#f9a8d4","#fde047","#c4b5fd"],"seed":8},"rects":[["#10b981",0,7,20,1]]}},"modell":[{"g":[10.2,4.2,6],"p":[0,7.4,0],"f":"muster:r"},{"g":[11,1.2,6.8],"p":[0,5.3,0],"f":"#34d399"}]},
+{"id":"h-jeans","slot":"hose","name":"Jeans","selten":"basis","quelle":"start","kleidung":{"muster":"muster:j"},"muster":{"j":{"w":8,"h":14,"basis":"#3b5b9a","rects":[["#2a4274",0,0,8,1],["#6f8fcf",0,12,8,1],["#7fa0dd",1,0,1,1],["#7fa0dd",1,2,1,1],["#7fa0dd",1,4,1,1],["#7fa0dd",1,6,1,1],["#7fa0dd",1,8,1,1],["#7fa0dd",1,10,1,1],["#7fa0dd",1,12,1,1]]}}},
+{"id":"h-shorts","slot":"hose","name":"Shorts","selten":"gewoehnlich","quelle":"truhe","kleidung":{"muster":"muster:s","lang":false},"muster":{"s":{"w":8,"h":8,"basis":"#22a35a","rects":[["#f8fafc",0,0,1,8],["#f8fafc",7,0,1,8]]}}},
+{"id":"h-jogging","slot":"hose","name":"Jogginghose","selten":"gewoehnlich","quelle":"truhe","kleidung":{"muster":"muster:s"},"muster":{"s":{"w":8,"h":14,"basis":"#6b7280","rects":[["#f8fafc",0,0,1,14],["#f8fafc",7,0,1,14],["#4b5563",0,12,8,2],["#4b5563",0,0,8,1]]}}},
+{"id":"h-rock","slot":"hose","name":"Faltenrock","selten":"gewoehnlich","quelle":"truhe","kleidung":{"farbe":"#4c1d95","lang":false},"muster":{"r":{"w":20,"h":8,"senkrecht":{"farben":["#7c3aed","#6d28d9"],"breite":2},"rects":[["#4c1d95",0,0,20,1],["#fde68a",0,6,20,1]]}},"modell":[{"g":[10.4,4.6,6.2],"p":[0,7,0],"f":"muster:r"}]},
+{"id":"h-karo","slot":"hose","name":"Karohose","selten":"selten","quelle":"truhe","kleidung":{"muster":"muster:s"},"muster":{"s":{"w":8,"h":14,"karo":{"farben":["#c0262d","#7f1d1d"],"groesse":2},"rects":[["#1f2937",0,0,8,1],["#1f2937",0,4,8,1],["#1f2937",0,8,8,1],["#1f2937",0,12,8,1]]}}},
+{"id":"h-leggings","slot":"hose","name":"Glitzer-Leggings","selten":"selten","quelle":"truhe","kleidung":{"muster":"muster:s","licht":0.25},"muster":{"s":{"w":8,"h":14,"basis":"#db2777","punkte":{"n":12,"farben":["#ffffff","#fde68a"],"seed":6},"rects":[["#9d174d",0,0,8,1]]}}},
+{"id":"h-ruestung","slot":"hose","name":"Beinschienen","selten":"episch","quelle":"truhe","kleidung":{"farbe":"#b8c2d4","metall":true},"modell":[{"g":[3.2,2.2,0.8],"p":[2.2,4.6,2.3],"f":"#e2e8f0","paar":true,"metall":true},{"g":[1,1,0.3],"p":[2.2,4.6,2.8],"f":"#f5b82e","paar":true,"licht":0.4}]},
+{"id":"h-latzhose","slot":"hose","name":"Latzhose","selten":"selten","quelle":"truhe","kleidung":{"muster":"muster:s"},"muster":{"s":{"w":8,"h":14,"basis":"#60a5fa","rects":[["#3b82f6",1,0,1,14],["#3b82f6",6,0,1,14]]}},"modell":[{"g":[6,5,0.5],"p":[0,12,2.6],"f":"#60a5fa","an":"koerper"},{"g":[1.1,1.1,0.3],"p":[2.2,14,2.9],"f":"#fde047","paar":true,"an":"koerper"},{"g":[1.2,0.5,5.4],"p":[2.4,19.1,0],"f":"#3b82f6","paar":true,"an":"koerper"}]},
+{"id":"s-sneaker","slot":"schuhe","name":"Sneaker","selten":"basis","quelle":"start","modell":[{"g":[4.4,2,5.4],"p":[2.2,1.2,0.5],"f":"#f8fafc","paar":true},{"g":[4.6,0.7,5.8],"p":[2.2,0.35,0.5],"f":"#cbd5e1","paar":true},{"g":[0.2,0.7,3.2],"p":[4.45,1.3,0.4],"f":"#ef4444","paar":true},{"g":[0.2,0.7,3.2],"p":[-0.05,1.3,0.4],"f":"#ef4444","paar":true},{"g":[2.4,0.3,1.6],"p":[2.2,2.25,1.5],"f":"#94a3b8","paar":true}]},
+{"id":"s-stiefel","slot":"schuhe","name":"Gummistiefel","selten":"gewoehnlich","quelle":"truhe","modell":[{"g":[4.5,5,4.6],"p":[2.2,2.8,0.1],"f":"#facc15","paar":true},{"g":[4.5,2,1.6],"p":[2.2,1.3,3.1],"f":"#facc15","paar":true},{"g":[4.7,0.6,6.2],"p":[2.2,0.3,0.8],"f":"#3f3f46","paar":true},{"g":[4.7,0.8,4.8],"p":[2.2,5,0.1],"f":"#ca8a04","paar":true}]},
+{"id":"s-ballerina","slot":"schuhe","name":"Ballerinas","selten":"gewoehnlich","quelle":"truhe","modell":[{"g":[4.3,1.3,5.2],"p":[2.2,0.65,0.5],"f":"#e11d48","paar":true},{"g":[1.8,0.9,0.5],"p":[2.2,1.4,3.1],"f":"#fda4af","paar":true}]},
+{"id":"s-hightop","slot":"schuhe","name":"High-Tops","selten":"gewoehnlich","quelle":"truhe","modell":[{"g":[4.4,3.6,5],"p":[2.2,2,0.4],"f":"#7c3aed","paar":true},{"g":[4.6,0.7,5.6],"p":[2.2,0.35,0.5],"f":"#f8fafc","paar":true},{"g":[4.5,1.2,1.4],"p":[2.2,1,2.6],"f":"#f8fafc","paar":true},{"g":[2,0.3,0.3],"p":[2.2,2.6,2.95],"f":"#f8fafc","paar":true},{"g":[2,0.3,0.3],"p":[2.2,3.3,2.95],"f":"#f8fafc","paar":true}]},
+{"id":"s-rollschuh","slot":"schuhe","name":"Rollschuhe","selten":"selten","quelle":"truhe","modell":[{"g":[4.4,3,5],"p":[2.2,2.6,0.4],"f":"#f8fafc","paar":true},{"g":[4.6,0.5,5.8],"p":[2.2,1,0.4],"f":"#64748b","paar":true},{"g":[1,1.3,1.3],"p":[3.4,0.3,2],"f":"#ec4899","paar":true,"licht":0.3},{"g":[1,1.3,1.3],"p":[3.4,0.3,-1.2],"f":"#ec4899","paar":true,"licht":0.3},{"g":[1,1.3,1.3],"p":[1,0.3,2],"f":"#ec4899","paar":true,"licht":0.3},{"g":[1,1.3,1.3],"p":[1,0.3,-1.2],"f":"#ec4899","paar":true,"licht":0.3},{"g":[4.5,0.6,1],"p":[2.2,3.8,2.4],"f":"#ec4899","paar":true}]},
+{"id":"s-ritter","slot":"schuhe","name":"Ritterstiefel","selten":"episch","quelle":"truhe","modell":[{"g":[4.6,5,4.8],"p":[2.2,2.8,0.1],"f":"#b8c2d4","paar":true,"metall":true},{"g":[4.6,2,1.8],"p":[2.2,1.3,3.2],"f":"#b8c2d4","paar":true,"metall":true},{"g":[4.8,0.6,6.4],"p":[2.2,0.3,0.9],"f":"#475569","paar":true},{"g":[4.8,0.5,5],"p":[2.2,3.6,0.1],"f":"#7d889e","paar":true,"metall":true},{"g":[0.9,0.9,0.3],"p":[2.2,4.4,2.6],"f":"#f5b82e","paar":true,"licht":0.4}]},
+{"id":"s-rakete","slot":"schuhe","name":"Raketenschuhe","selten":"legendaer","quelle":"set","set":"dauerbrenner","modell":[{"g":[4.4,2.4,5.4],"p":[2.2,1.4,0.5],"f":"#dc2626","paar":true},{"g":[4.5,1.6,1.6],"p":[2.2,1.1,2.7],"f":"#f8fafc","paar":true},{"g":[0.3,1.8,1.8],"p":[4.5,1.6,-1.6],"f":"#f5b82e","paar":true,"licht":0.4},{"g":[4.6,0.5,5.8],"p":[2.2,0.25,0.5],"f":"#1f2937","paar":true},{"p":[2.2,1.2,-2.3],"teile":[{"kegel":[1.1,3.2],"p":[0,1.6,0],"f":"#fb923c","licht":1},{"kegel":[0.6,2.2],"p":[0,1.1,0],"f":"#fde047","licht":1}],"r":[-1.95,0,0],"paar":true,"anim":"flackern"}]},
+{"id":"k-cap","slot":"kopf","name":"Basecap Rot","selten":"gewoehnlich","quelle":"truhe","modell":[{"g":[12.2,3.2,12.2],"p":[0,6.4,0],"f":"#ef4444"},{"g":[12.2,0.7,5.5],"p":[0,5.2,8.4],"f":"#b91c1c"},{"g":[1.4,1,1.4],"p":[0,8.4,0],"f":"#b91c1c"},{"g":[2.4,2.4,0.3],"p":[0,6.6,6.2],"f":"#fde047","licht":0.3}],"versteckt":["oben"]},
+{"id":"k-cap-blau","slot":"kopf","name":"Basecap Blau","selten":"gewoehnlich","quelle":"truhe","basis":"k-cap","tausch":{"#ef4444":"#3b82f6","#b91c1c":"#1d4ed8","#fde047":"#ffffff"}},
+{"id":"k-muetze","slot":"kopf","name":"Bommelmütze","selten":"gewoehnlich","quelle":"truhe","versteckt":["oben"],"modell":[{"g":[12.4,4.8,12.4],"p":[0,7.5,0],"f":"#3b82f6"},{"g":[12.5,0.8,12.5],"p":[0,8.4,0],"f":"#93c5fd"},{"g":[12.9,1.9,12.9],"p":[0,5.3,0],"f":"#1d4ed8"},{"g":[3.6,3.6,3.6],"p":[0,11.6,0],"f":"#f8fafc"}]},
+{"id":"k-muetze-pink","slot":"kopf","name":"Bommelmütze Pink","selten":"gewoehnlich","quelle":"truhe","basis":"k-muetze","tausch":{"#3b82f6":"#ec4899","#93c5fd":"#fbcfe8","#1d4ed8":"#be185d"}},
+{"id":"k-schleife","slot":"kopf","name":"Schleife","selten":"gewoehnlich","quelle":"truhe","modell":[{"p":[3.4,6,1.6],"teile":[{"g":[1.6,1.6,1.4],"p":[0,0,0],"f":"#be185d"},{"g":[2.6,2.2,1.1],"p":[1.9,0.2,0],"f":"#ec4899","paar":true,"r":[0,0,0.25]}]}]},
+{"id":"k-haarreif","slot":"kopf","name":"Haarreif","selten":"gewoehnlich","quelle":"truhe","modell":[{"g":[12.2,0.8,1.4],"p":[0,5.9,1.4],"f":"#a78bfa"},{"g":[0.8,3.4,1.4],"p":[5.9,4.4,1.4],"f":"#a78bfa","paar":true},{"g":[1.6,1.6,0.6],"p":[2.6,6.5,1.6],"f":"#f0abfc","licht":0.4}]},
+{"id":"k-stirnband","slot":"kopf","name":"Stirnband","selten":"gewoehnlich","quelle":"truhe","modell":[{"g":[11.6,1.6,11.6],"p":[0,2.9,0],"f":"#ef4444"},{"g":[11.8,0.5,11.8],"p":[0,2.9,0],"f":"#ffffff"}]},
+{"id":"k-blumenkranz","slot":"kopf","name":"Blumenkranz","selten":"selten","quelle":"truhe","modell":[{"g":[12,0.6,12],"p":[0,5.5,0],"f":"#15803d"},{"g":[1.8,1.4,1.8],"p":[-5,5.9,4],"f":"#f472b6"},{"g":[0.7,0.5,0.7],"p":[-5,6.7,4],"f":"#f59e0b"},{"g":[1.8,1.4,1.8],"p":[-2,5.9,5.6],"f":"#fde047"},{"g":[0.7,0.5,0.7],"p":[-2,6.7,5.6],"f":"#f59e0b"},{"g":[1.8,1.4,1.8],"p":[1.4,5.9,5.6],"f":"#ffffff"},{"g":[0.7,0.5,0.7],"p":[1.4,6.7,5.6],"f":"#f59e0b"},{"g":[1.8,1.4,1.8],"p":[4.4,5.9,4.4],"f":"#c084fc"},{"g":[0.7,0.5,0.7],"p":[4.4,6.7,4.4],"f":"#f59e0b"},{"g":[1.8,1.4,1.8],"p":[5.6,5.9,1],"f":"#f472b6"},{"g":[0.7,0.5,0.7],"p":[5.6,6.7,1],"f":"#f59e0b"},{"g":[1.8,1.4,1.8],"p":[5.4,5.9,-3],"f":"#fde047"},{"g":[0.7,0.5,0.7],"p":[5.4,6.7,-3],"f":"#f59e0b"},{"g":[1.8,1.4,1.8],"p":[2,5.9,-5.6],"f":"#ffffff"},{"g":[0.7,0.5,0.7],"p":[2,6.7,-5.6],"f":"#f59e0b"},{"g":[1.8,1.4,1.8],"p":[-2.2,5.9,-5.6],"f":"#c084fc"},{"g":[0.7,0.5,0.7],"p":[-2.2,6.7,-5.6],"f":"#f59e0b"},{"g":[1.8,1.4,1.8],"p":[-5.6,5.9,-2.4],"f":"#f472b6"},{"g":[0.7,0.5,0.7],"p":[-5.6,6.7,-2.4],"f":"#f59e0b"},{"g":[1.8,1.4,1.8],"p":[-5.8,5.9,1],"f":"#fde047"},{"g":[0.7,0.5,0.7],"p":[-5.8,6.7,1],"f":"#f59e0b"}]},
+{"id":"k-zauber","slot":"kopf","name":"Zauberhut","selten":"selten","quelle":"truhe","versteckt":["oben"],"modell":[{"g":[17,0.8,17],"p":[0,5.7,0],"f":"#312e81"},{"g":[11.6,1.1,11.6],"p":[0,6.6,0],"f":"#f5b82e","licht":0.45},{"g":[11.2,2.1,11.2],"p":[0.0,7.4,0],"f":"#4338ca"},{"g":[9.4,2.1,9.4],"p":[-0.09,9.45,0],"f":"#4338ca"},{"g":[7.6,2.1,7.6],"p":[-0.36,11.5,0],"f":"#4338ca"},{"g":[5.8,2.1,5.8],"p":[-0.81,13.55,0],"f":"#4338ca"},{"g":[4.2,2.1,4.2],"p":[-1.44,15.6,0],"f":"#4338ca"},{"g":[2.8,2.1,2.8],"p":[-2.25,17.65,0],"f":"#4338ca"},{"g":[1.6,2.1,1.6],"p":[-3.24,19.7,0],"f":"#4338ca"},{"g":[1.2,1.2,0.3],"p":[1.8,9.4,4.85],"f":"#fde047","r":[0,0,0.785],"licht":0.8},{"g":[1,1,0.3],"p":[-1.5,13.6,2.55],"f":"#fde047","r":[0,0,0.785],"licht":0.8},{"p":[-3.9,21.2,0],"teile":[{"g":[1.5,1.5,1.5],"p":[0,0,0],"f":"#fde047","r":[0.785,0.785,0],"licht":0.8}],"anim":"drehen"}]},
+{"id":"k-pirat","slot":"kopf","name":"Piratenhut","selten":"selten","quelle":"truhe","versteckt":["oben"],"modell":[{"g":[12.4,3,12.4],"p":[0,6.6,0],"f":"#1f2937"},{"g":[15,3.2,1],"p":[0,7.6,6.6],"f":"#111827"},{"g":[1,3,12],"p":[7.2,7.4,0],"f":"#111827","paar":true},{"g":[15,3,1],"p":[0,7.4,-6.6],"f":"#111827"},{"g":[2,2,0.3],"p":[0,7.8,7.2],"f":"#f8fafc"},{"g":[15.2,0.5,1.2],"p":[0,9.2,6.6],"f":"#f5b82e","licht":0.45}]},
+{"id":"k-cowboy","slot":"kopf","name":"Cowboyhut","selten":"selten","quelle":"truhe","versteckt":["oben"],"modell":[{"g":[17,0.7,15],"p":[0,5.7,0],"f":"#92400e"},{"g":[3,0.7,15],"p":[8,6.3,0],"f":"#92400e","paar":true},{"g":[9.4,4.4,8.6],"p":[0,8.2,0],"f":"#a16207"},{"g":[9.6,1,8.8],"p":[0,6.6,0],"f":"#3f2a14"},{"g":[9.6,0.6,2],"p":[0,10.3,0],"f":"#854d0e"}]},
+{"id":"k-katzenohren","slot":"kopf","name":"Katzenohren","selten":"selten","quelle":"truhe","modell":[{"g":[12,0.7,1.4],"p":[0,5.9,0.6],"f":"#1f2937"},{"g":[2.8,3,1.1],"p":[3.6,7.6,0.6],"f":"#1f2937","paar":true,"r":[0,0,-0.2]},{"g":[1.4,1.8,0.3],"p":[3.6,7.4,1.2],"f":"#f9a8d4","paar":true,"r":[0,0,-0.2]}]},
+{"id":"k-krone","slot":"kopf","name":"Krone","selten":"episch","quelle":"truhe","modell":[{"g":[12.4,2.6,0.8],"p":[0,6.8,5.8],"f":"#f5b82e","licht":0.45},{"g":[12.4,2.6,0.8],"p":[0,6.8,-5.8],"f":"#f5b82e","licht":0.45},{"g":[0.8,2.6,12.4],"p":[5.8,6.8,0],"f":"#f5b82e","paar":true,"licht":0.45},{"g":[1.6,2.2,0.8],"p":[-5.4,9.2,5.8],"f":"#f5b82e","licht":0.45},{"g":[1.6,2.2,0.8],"p":[-5.4,9.2,-5.8],"f":"#f5b82e","licht":0.45},{"g":[0.8,2.2,1.6],"p":[5.8,9.2,-5.4],"f":"#f5b82e","paar":true,"licht":0.45},{"g":[0.9,0.9,0.9],"p":[-5.4,10.7,5.8],"f":"#fef08a","licht":0.6},{"g":[1.6,2.2,0.8],"p":[0,9.2,5.8],"f":"#f5b82e","licht":0.45},{"g":[1.6,2.2,0.8],"p":[0,9.2,-5.8],"f":"#f5b82e","licht":0.45},{"g":[0.8,2.2,1.6],"p":[5.8,9.2,0],"f":"#f5b82e","paar":true,"licht":0.45},{"g":[0.9,0.9,0.9],"p":[0,10.7,5.8],"f":"#fef08a","licht":0.6},{"g":[1.6,2.2,0.8],"p":[5.4,9.2,5.8],"f":"#f5b82e","licht":0.45},{"g":[1.6,2.2,0.8],"p":[5.4,9.2,-5.8],"f":"#f5b82e","licht":0.45},{"g":[0.8,2.2,1.6],"p":[5.8,9.2,5.4],"f":"#f5b82e","paar":true,"licht":0.45},{"g":[0.9,0.9,0.9],"p":[5.4,10.7,5.8],"f":"#fef08a","licht":0.6},{"g":[1.4,1.4,0.3],"p":[0,6.8,6.3],"f":"#dc2626","licht":0.8},{"g":[1.1,1.1,0.3],"p":[-3.5,6.8,6.3],"f":"#2563eb","licht":0.8},{"g":[1.1,1.1,0.3],"p":[3.5,6.8,6.3],"f":"#16a34a","licht":0.8}]},
+{"id":"k-wikinger","slot":"kopf","name":"Wikingerhelm","selten":"episch","quelle":"truhe","versteckt":["oben"],"modell":[{"g":[12.4,4,12.4],"p":[0,6.8,0],"f":"#9ca3af","metall":true},{"g":[12.8,1,12.8],"p":[0,5,0],"f":"#78350f"},{"g":[1,5,1],"p":[0,6,6.3],"f":"#9ca3af","metall":true},{"g":[1.8,3,1.8],"p":[7,6.6,0],"f":"#fef3c7","paar":true,"r":[0,0,-0.5]},{"g":[1.3,2.4,1.3],"p":[8.2,8.8,0],"f":"#fef3c7","paar":true,"r":[0,0,-0.2]},{"g":[0.9,1.6,0.9],"p":[8.5,10.6,0],"f":"#fde68a","paar":true}]},
+{"id":"k-einhorn","slot":"kopf","name":"Einhorn-Horn","selten":"episch","quelle":"truhe","modell":[{"p":[0,5.8,3],"teile":[{"g":[2.2,2,2.2],"p":[0,0.8,0],"f":"#f9a8d4","licht":0.4},{"g":[1.7,2,1.7],"p":[0,2.7,0],"f":"#c4b5fd","licht":0.4},{"g":[1.2,2,1.2],"p":[0,4.6,0],"f":"#93c5fd","licht":0.4},{"g":[0.7,1.5,0.7],"p":[0,6.2,0],"f":"#fef08a","licht":0.6}],"r":[0.35,0,0],"anim":"leuchten"}]},
+{"id":"k-entdecker","slot":"kopf","name":"Entdeckerhut","selten":"legendaer","quelle":"set","set":"entdecker","versteckt":["oben"],"modell":[{"g":[15.6,0.6,15.6],"p":[0,5.3,0],"f":"#b08d57"},{"g":[12.6,3.8,12.6],"p":[0,7.4,0],"f":"#d6b77a"},{"g":[10,1.2,10],"p":[0,9.8,0],"f":"#d6b77a"},{"g":[12.8,1,12.8],"p":[0,6.1,0],"f":"#6b4f2a"},{"g":[2,2,0.4],"p":[0,7.4,6.5],"f":"#f5b82e","licht":0.5},{"g":[0.6,0.6,0.5],"p":[0,7.6,6.7],"f":"#dc2626","licht":0.6}]},
+{"id":"k-diamantkrone","slot":"kopf","name":"Diamantkrone","selten":"legendaer","quelle":"set","set":"xp-5000","modell":[{"g":[12.4,2.6,0.8],"p":[0,6.8,5.8],"f":"#e0f2fe","licht":0.35},{"g":[12.4,2.6,0.8],"p":[0,6.8,-5.8],"f":"#e0f2fe","licht":0.35},{"g":[0.8,2.6,12.4],"p":[5.8,6.8,0],"f":"#e0f2fe","paar":true,"licht":0.35},{"g":[1.6,2.2,0.8],"p":[-5.4,9.2,5.8],"f":"#e0f2fe","licht":0.35},{"g":[1.6,2.2,0.8],"p":[-5.4,9.2,-5.8],"f":"#e0f2fe","licht":0.35},{"g":[0.8,2.2,1.6],"p":[5.8,9.2,-5.4],"f":"#e0f2fe","paar":true,"licht":0.35},{"g":[0.9,0.9,0.9],"p":[-5.4,10.7,5.8],"f":"#fef08a","licht":0.6},{"g":[1.6,2.2,0.8],"p":[0,9.2,5.8],"f":"#e0f2fe","licht":0.35},{"g":[1.6,2.2,0.8],"p":[0,9.2,-5.8],"f":"#e0f2fe","licht":0.35},{"g":[0.8,2.2,1.6],"p":[5.8,9.2,0],"f":"#e0f2fe","paar":true,"licht":0.35},{"g":[0.9,0.9,0.9],"p":[0,10.7,5.8],"f":"#fef08a","licht":0.6},{"g":[1.6,2.2,0.8],"p":[5.4,9.2,5.8],"f":"#e0f2fe","licht":0.35},{"g":[1.6,2.2,0.8],"p":[5.4,9.2,-5.8],"f":"#e0f2fe","licht":0.35},{"g":[0.8,2.2,1.6],"p":[5.8,9.2,5.4],"f":"#e0f2fe","paar":true,"licht":0.35},{"g":[0.9,0.9,0.9],"p":[5.4,10.7,5.8],"f":"#fef08a","licht":0.6},{"g":[1.6,1.6,0.3],"p":[0,6.8,6.3],"f":"#22d3ee","licht":0.9},{"p":[0,13,0],"teile":[{"g":[2.2,2.2,2.2],"p":[0,0,0],"f":"#67e8f9","r":[0.785,0,0.785],"licht":0.8}],"anim":"drehen"}]},
+{"id":"k-hexe","slot":"kopf","name":"Hexenhut","selten":"event","quelle":"event","event":"halloween","versteckt":["oben"],"modell":[{"g":[17.5,0.8,17.5],"p":[0,5.7,0],"f":"#1f1433"},{"g":[10.5,2.1,10.5],"p":[0.0,7.2,0.0],"f":"#2e1a4f"},{"g":[8.6,2.1,8.6],"p":[-0.07,9.25,-0.07],"f":"#2e1a4f"},{"g":[6.8,2.1,6.8],"p":[-0.28,11.3,-0.28],"f":"#2e1a4f"},{"g":[5.2,2.1,5.2],"p":[-0.63,13.35,-0.63],"f":"#2e1a4f"},{"g":[3.8,2.1,3.8],"p":[-1.12,15.4,-1.12],"f":"#2e1a4f"},{"g":[2.6,2.1,2.6],"p":[-1.75,17.45,-1.75],"f":"#2e1a4f"},{"g":[1.6,2.1,1.6],"p":[-2.52,19.5,-2.52],"f":"#2e1a4f"},{"g":[10.9,1.2,10.9],"p":[0,6.8,0],"f":"#7c3aed"},{"g":[2.2,1.6,0.3],"p":[0,6.8,5.52],"f":"#f5b82e","licht":0.45}]},
+{"id":"k-weihnacht","slot":"kopf","name":"Weihnachtsmütze","selten":"event","quelle":"event","event":"weihnachten","versteckt":["oben"],"modell":[{"g":[12.9,2,12.9],"p":[0,5.4,0],"f":"#f8fafc"},{"g":[11.6,3.4,11.6],"p":[0,7.8,0],"f":"#dc2626"},{"g":[8,3,8],"p":[-1,10.6,-0.6],"f":"#dc2626"},{"g":[4.4,2.6,4.4],"p":[-3.4,12.2,-1.4],"f":"#dc2626","r":[0,0,0.4]},{"g":[3,3,3],"p":[-6.2,12,-1.6],"f":"#f8fafc"}]},
+{"id":"k-hasenohren","slot":"kopf","name":"Hasenohren","selten":"event","quelle":"event","event":"ostern","modell":[{"g":[12,0.7,1.4],"p":[0,5.9,0.4],"f":"#f9a8d4"},{"g":[2.4,7,1.2],"p":[2.8,9.4,0.4],"f":"#ffffff","paar":true,"r":[0,0,-0.15]},{"g":[1.2,5.4,0.3],"p":[2.8,9.4,1.05],"f":"#f9a8d4","paar":true,"r":[0,0,-0.15]}]},
+{"id":"g-brille","slot":"gesicht","name":"Runde Brille","selten":"gewoehnlich","quelle":"truhe","modell":[{"g":[3.6,0.4,0.4],"p":[-2.1,1.4,5.8],"f":"#1f2937"},{"g":[3.6,0.4,0.4],"p":[-2.1,-2.1,5.8],"f":"#1f2937"},{"g":[0.4,3.9,0.4],"p":[-3.7,-0.35,5.8],"f":"#1f2937"},{"g":[0.4,3.9,0.4],"p":[-0.5,-0.35,5.8],"f":"#1f2937"},{"g":[3,3.1,0.1],"p":[-2.1,-0.35,5.65],"f":"#bae6fd","glas":0.3},{"g":[3.6,0.4,0.4],"p":[2.1,1.4,5.8],"f":"#1f2937"},{"g":[3.6,0.4,0.4],"p":[2.1,-2.1,5.8],"f":"#1f2937"},{"g":[0.4,3.9,0.4],"p":[0.5,-0.35,5.8],"f":"#1f2937"},{"g":[0.4,3.9,0.4],"p":[3.7,-0.35,5.8],"f":"#1f2937"},{"g":[3,3.1,0.1],"p":[2.1,-0.35,5.65],"f":"#bae6fd","glas":0.3},{"g":[1.2,0.4,0.4],"p":[0,0.9,5.8],"f":"#1f2937"},{"g":[0.4,0.4,5.6],"p":[5.75,0.9,3],"f":"#1f2937","paar":true}]},
+{"id":"g-schnurrbart","slot":"gesicht","name":"Schnurrbart","selten":"gewoehnlich","quelle":"truhe","modell":[{"g":[4.2,1,0.5],"p":[0,-2.5,5.8],"f":"#3b2618"},{"g":[1.2,1,0.5],"p":[2.5,-2,5.8],"f":"#3b2618","paar":true},{"g":[0.8,0.8,0.5],"p":[3.2,-1.4,5.8],"f":"#3b2618","paar":true}]},
+{"id":"g-sommersprossen","slot":"gesicht","name":"Sommersprossen","selten":"gewoehnlich","quelle":"truhe","modell":[{"g":[0.45,0.45,0.1],"p":[3.4,-2.1,5.56],"f":"#b45309","paar":true},{"g":[0.45,0.45,0.1],"p":[4.2,-2.7,5.56],"f":"#b45309","paar":true},{"g":[0.45,0.45,0.1],"p":[3,-3,5.56],"f":"#b45309","paar":true},{"g":[0.45,0.45,0.1],"p":[0.9,-1.8,5.56],"f":"#b45309","paar":true}]},
+{"id":"g-sonne","slot":"gesicht","name":"Sonnenbrille","selten":"selten","quelle":"truhe","modell":[{"g":[3.8,2.8,0.5],"p":[2.1,-0.3,5.85],"f":"#0f172a","paar":true},{"g":[1.2,0.4,0.1],"p":[1.3,0.6,6.12],"f":"#818cf8","paar":true,"licht":0.5},{"g":[0.4,0.4,5.6],"p":[5.75,0.9,3],"f":"#0f172a","paar":true},{"g":[1,0.5,0.5],"p":[0,0.6,5.85],"f":"#0f172a"}]},
+{"id":"g-herz","slot":"gesicht","name":"Herzbrille","selten":"selten","quelle":"truhe","modell":[{"p":[0,0,0],"teile":[{"g":[1.4,1.4,0.5],"p":[1.3,0.5,5.85],"f":"#ec4899"},{"g":[1.4,1.4,0.5],"p":[2.9,0.5,5.85],"f":"#ec4899"},{"g":[3.2,1.4,0.5],"p":[2.1,-0.7,5.85],"f":"#ec4899"},{"g":[1.6,1,0.5],"p":[2.1,-1.8,5.85],"f":"#ec4899"}],"paar":true},{"g":[0.8,0.4,0.4],"p":[0,0.6,5.85],"f":"#be185d"},{"g":[0.4,0.4,5.6],"p":[5.75,0.9,3],"f":"#be185d","paar":true}]},
+{"id":"g-klappe","slot":"gesicht","name":"Augenklappe","selten":"selten","quelle":"truhe","modell":[{"g":[3.4,3.4,0.5],"p":[2.06,-0.34,5.85],"f":"#111827"},{"g":[12,0.5,0.3],"p":[0,1.2,5.75],"f":"#111827","r":[0,0,-0.28]},{"g":[0.3,0.5,11.4],"p":[5.75,1.6,0],"f":"#111827","paar":true},{"g":[11.4,0.5,0.3],"p":[0,1.6,-5.75],"f":"#111827"}]},
+{"id":"g-maske","slot":"gesicht","name":"Heldenmaske","selten":"episch","quelle":"truhe","muster":{"m":{"w":23,"h":6,"basis":"#dc2626","loecher":[[5,1,5,4],[14,1,5,4]]}},"modell":[{"g":[11.4,3.2,0.4],"p":[0,-0.34,5.75],"f":{"vorne":"muster:m","sonst":"#dc2626"}},{"g":[0.4,3.2,11.4],"p":[5.75,-0.34,0],"f":"#dc2626","paar":true},{"g":[11.4,3.2,0.4],"p":[0,-0.34,-5.75],"f":"#dc2626"},{"g":[0.5,3,0.4],"p":[0.8,-2.4,-6.1],"f":"#dc2626","paar":true,"r":[0,0,-0.3]}]},
+{"id":"r-rucksack","slot":"ruecken","name":"Rucksack","selten":"gewoehnlich","quelle":"truhe","modell":[{"g":[8,8.5,3.4],"p":[0,14.2,-4.2],"f":"#f59e0b"},{"g":[6,3.6,1],"p":[0,12,-6.3],"f":"#fbbf24"},{"g":[8.2,2.4,3.6],"p":[0,18,-4.2],"f":"#d97706"},{"g":[1.2,9,0.4],"p":[2.4,14.5,2.7],"f":"#b45309","paar":true},{"g":[1.2,0.4,5.6],"p":[2.4,19.1,0],"f":"#b45309","paar":true}]},
+{"id":"r-umhang","slot":"ruecken","name":"Umhang","selten":"selten","quelle":"truhe","modell":[{"p":[0,18.6,-2.8],"teile":[{"g":[10.4,17,0.5],"p":[0,-8.5,-0.3],"f":{"vorne":"#f5b82e","sonst":"#dc2626"}}],"r":[0.12,0,0],"anim":"wehen"},{"g":[10.8,1.3,6],"p":[0,19.4,-0.2],"f":"#dc2626"},{"g":[1.6,1.6,0.5],"p":[0,18.4,2.7],"f":"#f5b82e","licht":0.45}]},
+{"id":"r-panzer","slot":"ruecken","name":"Schildkrötenpanzer","selten":"selten","quelle":"truhe","muster":{"p":{"w":12,"h":12,"basis":"#15803d","rects":[["#166534",0,3,12,1],["#166534",0,8,12,1],["#166534",3,0,1,3],["#166534",8,4,1,4],["#166534",4,9,1,3],["#22c55e",5,4,3,4],["#4ade80",6,5,1,1]]}},"modell":[{"g":[9,9.4,2.8],"p":[0,14.2,-3.9],"f":{"hinten":"muster:p","sonst":"#166534"}},{"g":[9.6,1,3.2],"p":[0,9.6,-3.6],"f":"#a3e635"}]},
+{"id":"r-fee","slot":"ruecken","name":"Feenflügel","selten":"selten","quelle":"truhe","modell":[{"p":[1.2,16.4,-2.9],"teile":[{"g":[7,5.6,0.3],"p":[3.8,2.2,0],"f":"#a5f3fc","glas":0.6,"licht":0.5},{"g":[5,4,0.3],"p":[2.8,-2.6,0],"f":"#f9a8d4","glas":0.6,"licht":0.5},{"g":[0.4,0.4,0.4],"p":[6.4,4.6,0.2],"f":"#ffffff","licht":1}],"r":[0,0.5,0],"anim":"flattern","paar":true}]},
+{"id":"r-engel","slot":"ruecken","name":"Engelsflügel","selten":"episch","quelle":"truhe","modell":[{"p":[1.6,16.8,-2.9],"teile":[{"g":[10,2.2,0.7],"p":[5,1.6,-0.0],"f":"#ffffff"},{"g":[11,2,0.7],"p":[6,-0.4,-0.2],"f":"#ffffff"},{"g":[9.5,2,0.7],"p":[6.2,-2.4,-0.4],"f":"#e2e8f0"},{"g":[7.5,2,0.7],"p":[6.4,-4.4,-0.6],"f":"#e2e8f0"},{"g":[5,2,0.7],"p":[6.8,-6.4,-0.8],"f":"#cbd5e1"},{"g":[3,3.2,0.7],"p":[10.4,3.2,-1.0],"f":"#ffffff"}],"r":[0,0.45,0],"anim":"flattern","paar":true}]},
+{"id":"r-jetpack","slot":"ruecken","name":"Jetpack","selten":"episch","quelle":"truhe","modell":[{"g":[3,8,3],"p":[2,14,-4.3],"f":"#94a3b8","paar":true,"metall":true},{"g":[3.2,1.4,3.2],"p":[2,18.6,-4.3],"f":"#dc2626","paar":true},{"g":[2,1.4,2],"p":[2,9.4,-4.3],"f":"#475569","paar":true},{"g":[1.6,3,0.8],"p":[0,14,-3],"f":"#475569"},{"p":[2,8.6,-4.3],"teile":[{"kegel":[1,3],"p":[0,1.5,0],"f":"#fb923c","licht":1},{"kegel":[0.55,2],"p":[0,1,0],"f":"#fde047","licht":1}],"r":[3.14,0,0],"paar":true,"anim":"flackern"}]},
+{"id":"r-flammen","slot":"ruecken","name":"Flammenflügel","selten":"legendaer","quelle":"set","set":"serienheld","modell":[{"p":[1.6,16.8,-2.9],"teile":[{"g":[9,2.4,0.5],"p":[5,1.8,0],"f":"#f97316","licht":0.8},{"g":[10,2.2,0.5],"p":[5.8,-0.4,0],"f":"#fb923c","licht":0.8},{"g":[8,2.2,0.5],"p":[6.2,-2.6,0],"f":"#f59e0b","licht":0.8},{"g":[5.6,2,0.5],"p":[6.8,-4.8,0],"f":"#fde047","licht":0.8},{"g":[3,3,0.5],"p":[10,4,0],"f":"#fde047","licht":0.8}],"r":[0,0.45,0],"anim":"flattern","paar":true}]},
+{"id":"r-fledermaus","slot":"ruecken","name":"Fledermausflügel","selten":"event","quelle":"event","event":"halloween","modell":[{"p":[1.6,16.8,-2.9],"teile":[{"g":[11,2.6,0.4],"p":[6.5,1.6,-0.2],"f":"#3b0764","licht":0.3},{"g":[10,2.4,0.4],"p":[6.8,-0.8,-0.2],"f":"#4c1d95","licht":0.3},{"g":[7,2.4,0.4],"p":[7.4,-3.2,-0.2],"f":"#581c87","licht":0.3},{"g":[13,0.8,0.8],"p":[6.4,2.8,0.1],"f":"#1e1b2e"},{"g":[0.6,6,0.6],"p":[12.5,-2,0.1],"f":"#1e1b2e","r":[0,0,0.25]},{"g":[0.6,6,0.6],"p":[9,-4,0.1],"f":"#1e1b2e","r":[0,0,0.25]}],"r":[0,0.45,0],"anim":"flattern","paar":true}]},
+{"id":"r-regenbogen","slot":"ruecken","name":"Regenbogen-Umhang","selten":"legendaer","quelle":"set","set":"event-ostern","muster":{"c":{"w":7,"h":12,"senkrecht":{"farben":["#ef4444","#f97316","#facc15","#22c55e","#3b82f6","#6366f1","#a855f7"],"breite":1}}},"modell":[{"p":[0,18.6,-2.8],"teile":[{"g":[10.4,17,0.5],"p":[0,-8.5,-0.3],"f":"muster:c","licht":0.25}],"r":[0.12,0,0],"anim":"wehen"},{"g":[10.8,1.3,6],"p":[0,19.4,-0.2],"f":"#ffffff"},{"g":[1.6,1.6,0.5],"p":[0,18.4,2.7],"f":"#fde047","licht":0.5}]},
+{"id":"a-buch","slot":"hand","name":"Buch","selten":"gewoehnlich","quelle":"truhe","modell":[{"p":[0,0,1],"teile":[{"g":[1.6,5,4.2],"p":[0,0.4,0],"f":"#2563eb"},{"g":[1.2,4.6,3.8],"p":[0.3,0.4,0.3],"f":"#f8fafc"},{"g":[0.2,1.4,1.4],"p":[-0.85,0.8,0],"f":"#fde047","licht":0.4}],"r":[0,-0.3,0]}]},
+{"id":"a-eis","slot":"hand","name":"Eistüte","selten":"gewoehnlich","quelle":"truhe","modell":[{"p":[0,0,1.2],"teile":[{"g":[2.4,1.1,2.4],"p":[0,-0.3,0],"f":"#d6a35c"},{"g":[1.9,1.1,1.9],"p":[0,-1.35,0],"f":"#d6a35c"},{"g":[1.4,1.1,1.4],"p":[0,-2.4,0],"f":"#d6a35c"},{"g":[0.9,1.1,0.9],"p":[0,-3.45,0],"f":"#d6a35c"},{"g":[0.5,1.1,0.5],"p":[0,-4.5,0],"f":"#d6a35c"},{"g":[3,2.8,3],"p":[0,1.5,0],"f":"#f472b6"},{"g":[2.6,2.4,2.6],"p":[0,3.9,0],"f":"#6ee7b7"},{"g":[0.9,0.9,0.9],"p":[0.3,5.5,0.3],"f":"#dc2626"}]}]},
+{"id":"a-lolli","slot":"hand","name":"Lolli","selten":"gewoehnlich","quelle":"truhe","muster":{"l":{"w":8,"h":8,"basis":"#f472b6","rects":[["#ffffff",1,1,6,1],["#ffffff",6,1,1,5],["#ffffff",2,5,5,1],["#ffffff",2,3,1,2],["#ffffff",3,3,2,1],["#a855f7",0,0,8,1],["#a855f7",0,7,8,1]]}},"modell":[{"g":[0.4,5,0.4],"p":[0,2,1.4],"f":"#f8fafc"},{"g":[4,4,0.6],"p":[0,6.2,1.4],"f":{"vorne":"muster:l","hinten":"muster:l","sonst":"#f472b6"}}]},
+{"id":"a-stab","slot":"hand","name":"Zauberstab","selten":"selten","quelle":"truhe","modell":[{"p":[0,0,0],"teile":[{"g":[0.6,9,0.6],"p":[0,3.6,0],"f":"#7c4a24"},{"p":[0,8.6,0],"teile":[{"g":[1.8,1.8,0.6],"p":[0,0,0],"f":"#fde047","r":[0,0,0.785],"licht":0.7},{"g":[1.2,1.2,0.7],"p":[0,0,0],"f":"#fff7c2","licht":0.9}],"anim":"pulsieren"}],"r":[1,0,0]}]},
+{"id":"a-ballon","slot":"hand","name":"Luftballon","selten":"selten","quelle":"truhe","modell":[{"p":[0,0,1.2],"teile":[{"g":[0.15,17,0.15],"p":[0,8.5,0],"f":"#f8fafc"},{"g":[0.8,0.8,0.8],"p":[0,16.6,0],"f":"#b91c1c"},{"g":[4.4,5,4.4],"p":[0,19.4,0],"f":"#ef4444","licht":0.15},{"g":[0.8,1.4,0.2],"p":[-1,20.4,2.25],"f":"#fecaca"}],"r":[0,0,-0.4],"anim":"pendeln"}]},
+{"id":"a-schwert","slot":"hand","name":"Schwert","selten":"episch","quelle":"truhe","modell":[{"p":[0,0,0],"teile":[{"g":[1,3.2,1],"p":[0,0.4,0],"f":"#7c4a24"},{"g":[1.5,1.5,1.5],"p":[0,-1.6,0],"f":"#f5b82e","licht":0.45},{"g":[4.8,0.9,1.3],"p":[0,2.4,0],"f":"#f5b82e","licht":0.45},{"g":[1.4,11,0.45],"p":[0,8.4,0],"f":"#e5e9f0","metall":true},{"g":[0.8,1.2,0.45],"p":[0,14.4,0],"f":"#e5e9f0","metall":true},{"g":[0.35,9,0.5],"p":[0,8,0],"f":"#94a3b8"}],"r":[1.15,0,0]}]},
+{"id":"a-diamantschwert","slot":"hand","name":"Diamantschwert","selten":"legendaer","quelle":"set","set":"goldschatz","modell":[{"p":[0,0,0],"teile":[{"g":[1,3.2,1],"p":[0,0.4,0],"f":"#7c4a24"},{"g":[1.5,1.5,1.5],"p":[0,-1.6,0],"f":"#f5b82e","licht":0.45},{"g":[4.8,0.9,1.3],"p":[0,2.4,0],"f":"#f5b82e","licht":0.45},{"g":[1.4,11,0.45],"p":[0,8.4,0],"f":"#67e8f9","licht":0.6},{"g":[0.8,1.2,0.45],"p":[0,14.4,0],"f":"#67e8f9","licht":0.6},{"g":[0.35,9,0.5],"p":[0,8,0],"f":"#ecfeff"}],"r":[1.15,0,0]}]},
+{"id":"a-zuckerstange","slot":"hand","name":"Zuckerstange","selten":"event","quelle":"event","event":"weihnachten","modell":[{"p":[0,0,1.4],"teile":[{"g":[1,1.6,1],"p":[0,0.0,0],"f":"#f8fafc"},{"g":[1,1.6,1],"p":[0,1.5,0],"f":"#dc2626"},{"g":[1,1.6,1],"p":[0,3.0,0],"f":"#f8fafc"},{"g":[1,1.6,1],"p":[0,4.5,0],"f":"#dc2626"},{"g":[1,1.6,1],"p":[0,6.0,0],"f":"#f8fafc"},{"g":[1,1.6,1],"p":[0,7.5,0],"f":"#dc2626"},{"g":[1,1.6,1],"p":[0,9.0,0],"f":"#f8fafc"},{"g":[1,1.6,1],"p":[0,10.5,0],"f":"#dc2626"},{"g":[1,1,1],"p":[-0.9,12,0],"f":"#dc2626"},{"g":[1,1,1],"p":[-1.9,11.6,0],"f":"#f8fafc"},{"g":[1,1.4,1],"p":[-2.5,10.5,0],"f":"#dc2626"}]}]},
+{"id":"a-osterkorb","slot":"hand","name":"Osterkorb","selten":"event","quelle":"event","event":"ostern","modell":[{"p":[0,-2.4,2.4],"teile":[{"g":[4.4,2.8,3.6],"p":[0,0,0],"f":"#a16207"},{"g":[4.6,0.6,3.8],"p":[0,1.4,0],"f":"#ca8a04"},{"g":[0.5,4,0.5],"p":[2,3.4,0],"f":"#a16207","paar":true},{"g":[4.4,0.5,0.5],"p":[0,5.3,0],"f":"#a16207"},{"g":[1.2,1.6,1.2],"p":[-1.1,2,0.4],"f":"#f9a8d4"},{"g":[1.2,1.6,1.2],"p":[0.4,2.1,-0.6],"f":"#93c5fd"},{"g":[1.2,1.6,1.2],"p":[1.3,2,0.6],"f":"#fde047"},{"g":[3.6,0.4,2.8],"p":[0,1.6,0],"f":"#86efac"}]}]},
+{"id":"b-katze","slot":"begleiter","name":"Katze","selten":"gewoehnlich","quelle":"truhe","muster":{"f":{"w":12,"h":12,"basis":"#f5a524","rects":[["#c46f0e",2,0,1,3],["#c46f0e",5,0,1,3],["#c46f0e",8,0,1,3],["#1f1b2e",2,5,2,2],["#1f1b2e",8,5,2,2],["#86efac",3,5,1,1],["#86efac",9,5,1,1],["#e56b7c",5,8,2,1],["#2a2342",4,9,1,1],["#2a2342",7,9,1,1],["#fde7c2",0,8,2,1],["#fde7c2",10,8,2,1]]}},"modell":[{"g":[4.8,4.4,5],"p":[0,2.2,0],"f":"#f5a524"},{"g":[3,3,0.2],"p":[0,2.4,2.6],"f":"#fde7c2"},{"g":[5.4,5,5],"p":[0,6.8,0.6],"f":{"vorne":"muster:f","sonst":"#f5a524"}},{"g":[1.4,1.8,1.2],"p":[1.8,10.1,0.6],"f":"#f5a524","paar":true},{"g":[0.7,1,0.3],"p":[1.8,10,1.25],"f":"#f9a8d4","paar":true},{"g":[1.6,1,1.8],"p":[1.3,0.5,2.6],"f":"#fde7c2","paar":true},{"p":[0,1.2,-2.5],"teile":[{"g":[1.1,1.1,3],"p":[0,0,-1.5],"f":"#f5a524"},{"g":[1.1,4,1.1],"p":[0,1.5,-3],"f":"#f5a524"},{"g":[1.1,1.2,1.1],"p":[0,4,-3],"f":"#c46f0e"}],"anim":"wedeln"}]},
+{"id":"b-schwarze-katze","slot":"begleiter","name":"Schwarze Katze","selten":"legendaer","quelle":"set","set":"event-halloween","basis":"b-katze","tausch":{"#f5a524":"#27273a","#fde7c2":"#3b3b52","#c46f0e":"#15151f","#86efac":"#fde047","#1f1b2e":"#0b0b12"}},
+{"id":"b-hund","slot":"begleiter","name":"Hund","selten":"gewoehnlich","quelle":"truhe","muster":{"f":{"w":12,"h":12,"basis":"#b7773d","rects":[["#1f1b2e",2,4,2,2],["#1f1b2e",8,4,2,2],["#ffffff",3,4,1,1],["#ffffff",9,4,1,1]]}},"modell":[{"g":[4.6,4.2,6.4],"p":[0,3,-0.4],"f":"#b7773d"},{"g":[1.4,2.4,1.4],"p":[1.5,0.9,2],"f":"#8b5a2b","paar":true},{"g":[1.4,2.4,1.4],"p":[1.5,0.9,-2.6],"f":"#8b5a2b","paar":true},{"g":[5,4.6,4.4],"p":[0,6.6,2.4],"f":{"vorne":"muster:f","sonst":"#b7773d"}},{"g":[2.8,2,2],"p":[0,5.4,5.3],"f":"#e7c49b"},{"g":[1.2,0.8,0.6],"p":[0,6.2,6.4],"f":"#1f1b2e"},{"g":[1.2,3.4,2.6],"p":[3,6.2,2.2],"f":"#7c4a24","paar":true},{"g":[4.7,0.6,4.5],"p":[0,4.5,2.4],"f":"#dc2626"},{"p":[0,4.6,-3.6],"teile":[{"g":[0.9,3.4,0.9],"p":[0,1.5,-0.4],"f":"#b7773d","r":[-0.5,0,0]}],"anim":"wedeln"}]},
+{"id":"b-eule","slot":"begleiter","name":"Eule","selten":"selten","quelle":"truhe","muster":{"f":{"w":12,"h":10,"basis":"#8b5e3c","rects":[["#ffffff",1,2,4,4],["#ffffff",7,2,4,4],["#1f1b2e",2,3,2,2],["#1f1b2e",8,3,2,2],["#ffffff",3,3,1,1],["#ffffff",9,3,1,1],["#f59e0b",5,6,2,2]]},"b":{"w":10,"h":10,"basis":"#8b5e3c","rects":[["#ecd9b8",2,1,6,8],["#b08858",3,2,1,1],["#b08858",6,2,1,1],["#b08858",3,5,1,1],["#b08858",6,5,1,1]]}},"modell":[{"p":[0,3.5,0],"teile":[{"g":[5.4,5,4.6],"p":[0,2.5,0],"f":{"vorne":"muster:b","sonst":"#8b5e3c"}},{"g":[5.6,4.2,4.8],"p":[0,7.1,0],"f":{"vorne":"muster:f","sonst":"#8b5e3c"}},{"g":[0.9,1.4,0.9],"p":[2.2,9.8,0],"f":"#8b5e3c","paar":true},{"g":[1,0.6,1.4],"p":[1,-0.3,0.6],"f":"#f59e0b","paar":true},{"p":[2.9,5,0],"teile":[{"g":[0.8,4,3.6],"p":[0,-1.8,0],"f":"#6b4226"}],"anim":"schlagen","paar":true}],"anim":"schweben"}]},
+{"id":"b-pinguin","slot":"begleiter","name":"Pinguin","selten":"selten","quelle":"truhe","muster":{"f":{"w":10,"h":10,"basis":"#1f2937","rects":[["#ffffff",1,2,8,8],["#1f1b2e",2,3,2,2],["#1f1b2e",6,3,2,2],["#ffffff",3,3,1,1],["#ffffff",7,3,1,1]]}},"modell":[{"g":[5,7,4.4],"p":[0,3.9,0],"f":{"vorne":"#f8fafc","sonst":"#1f2937"}},{"g":[4.6,4,4.2],"p":[0,9.3,0.2],"f":{"vorne":"muster:f","sonst":"#1f2937"}},{"g":[1.8,1,1.6],"p":[0,8.8,3.1],"f":"#f59e0b"},{"g":[1.6,0.6,2],"p":[1.2,0.3,0.9],"f":"#f59e0b","paar":true},{"p":[2.7,6.2,0],"teile":[{"g":[0.6,4,2.6],"p":[0,-1.8,0],"f":"#111827"}],"anim":"schlagen","paar":true}]},
+{"id":"b-drache","slot":"begleiter","name":"Mini-Drache","selten":"episch","quelle":"truhe","muster":{"f":{"w":10,"h":10,"basis":"#22c55e","rects":[["#1f1b2e",2,3,2,2],["#1f1b2e",6,3,2,2],["#ffffff",3,3,1,1],["#ffffff",7,3,1,1],["#4ade80",1,7,8,2]]}},"modell":[{"p":[0,7,0],"teile":[{"g":[4,3.6,6],"p":[0,0,0],"f":"#22c55e"},{"g":[3,0.4,4.6],"p":[0,-1.9,0.3],"f":"#fde68a"},{"g":[4.2,3.8,4],"p":[0,2.2,3.6],"f":{"vorne":"muster:f","sonst":"#22c55e"}},{"g":[2.6,1.6,1.4],"p":[0,1.3,6],"f":"#4ade80"},{"g":[0.7,1.6,0.7],"p":[1.2,4.7,3.2],"f":"#fef3c7","paar":true},{"g":[1.8,1.8,1.8],"p":[0,-0.4,-4],"f":"#22c55e"},{"g":[1.4,1.4,1.8],"p":[0,0.1,-5.6],"f":"#22c55e"},{"g":[1,1,1.8],"p":[0,0.6,-7],"f":"#22c55e"},{"g":[1.6,1.2,0.5],"p":[0,1.2,-8],"f":"#a855f7"},{"g":[0.6,1,0.8],"p":[0,2.2,-1.5],"f":"#fef3c7"},{"g":[0.6,1,0.8],"p":[0,2.2,0.3],"f":"#fef3c7"},{"p":[2,1.4,0.4],"teile":[{"g":[5,0.3,3.2],"p":[2.5,0,0],"f":"#a855f7"}],"anim":"schlagen","paar":true}],"anim":"schweben"}]},
+{"id":"b-biene","slot":"begleiter","name":"Biene","selten":"legendaer","quelle":"set","set":"unermuedlich","muster":{"b":{"w":8,"h":8,"streifen":{"farben":["#facc15","#facc15","#1f1b2e"],"hoehe":1}},"f":{"w":8,"h":8,"basis":"#facc15","rects":[["#1f1b2e",1,2,2,2],["#1f1b2e",5,2,2,2],["#ffffff",2,2,1,1],["#ffffff",6,2,1,1],["#b45309",3,5,2,1]]}},"modell":[{"p":[0,8,0],"teile":[{"g":[4.2,4.2,5.6],"p":[0,0,0],"f":{"oben":"muster:b","rechts":"muster:b","links":"muster:b","unten":"muster:b","hinten":"#1f1b2e","vorne":"#facc15"},"r":[0,0,1.5708]},{"g":[3.6,3.6,3],"p":[0,0.6,3.8],"f":{"vorne":"muster:f","sonst":"#facc15"}},{"g":[0.3,2,0.3],"p":[0.9,3.2,3.8],"f":"#1f1b2e","paar":true},{"g":[0.6,0.6,1.2],"p":[0,-0.4,-3.4],"f":"#1f1b2e"},{"p":[1.6,2,0],"teile":[{"g":[4,0.3,2.6],"p":[2,0,0],"f":"#e0f2fe","glas":0.6,"licht":0.3}],"anim":"schlagen","paar":true}],"anim":"schweben"}]},
+{"id":"b-phoenix","slot":"begleiter","name":"Phönix","selten":"legendaer","quelle":"set","set":"comeback","muster":{"f":{"w":8,"h":8,"basis":"#ef4444","rects":[["#1f1b2e",1,2,2,2],["#1f1b2e",5,2,2,2],["#fde047",2,2,1,1],["#fde047",6,2,1,1]]}},"modell":[{"p":[0,8,0],"teile":[{"g":[3.6,4,5],"p":[0,0,0],"f":"#ef4444","licht":0.4},{"g":[3.4,3.2,3.2],"p":[0,3,2.4],"f":{"vorne":"muster:f","sonst":"#ef4444"},"licht":0.3},{"g":[1.2,0.8,1.6],"p":[0,2.6,4.6],"f":"#f59e0b"},{"g":[0.6,2,0.6],"p":[0,5.4,2],"f":"#fde047","licht":0.8},{"g":[0.6,1.6,0.6],"p":[0.8,5,1.6],"f":"#fb923c","licht":0.8},{"g":[1.4,1,4],"p":[0,-0.6,-4.4],"f":"#f97316","licht":0.6,"r":[-0.4,0,0]},{"g":[1,0.8,3.4],"p":[0,0.8,-4.6],"f":"#fde047","licht":0.8,"r":[-0.7,0,0]},{"p":[1.8,1,0],"teile":[{"g":[5.4,0.4,3.2],"p":[2.6,0,0],"f":"#f97316","licht":0.6},{"g":[3.4,0.4,2],"p":[2.6,0,-2.4],"f":"#fde047","licht":0.8}],"anim":"schlagen","paar":true}],"anim":"schweben"}]},
+{"id":"b-rentier","slot":"begleiter","name":"Rentier","selten":"legendaer","quelle":"set","set":"event-weihnachten","muster":{"f":{"w":10,"h":10,"basis":"#8b5a2b","rects":[["#1f1b2e",2,3,2,2],["#1f1b2e",6,3,2,2],["#ffffff",3,3,1,1],["#ffffff",7,3,1,1],["#e2c290",2,6,6,4]]}},"modell":[{"g":[4.4,4,7],"p":[0,5,-0.6],"f":"#8b5a2b"},{"g":[1.2,3.4,1.2],"p":[1.5,1.7,2],"f":"#6b4226","paar":true},{"g":[1.2,3.4,1.2],"p":[1.5,1.7,-2.8],"f":"#6b4226","paar":true},{"g":[4,4,4],"p":[0,8.4,3],"f":{"vorne":"muster:f","sonst":"#8b5a2b"}},{"g":[1.2,1.2,1.2],"p":[0,7.4,5.2],"f":"#ef4444","licht":0.9,"anim":"leuchten"},{"g":[0.6,3,0.6],"p":[1.4,11.6,2.8],"f":"#e2c290","paar":true,"r":[0,0,-0.3]},{"g":[2,0.6,0.6],"p":[2.6,12.6,2.8],"f":"#e2c290","paar":true},{"g":[0.6,1.6,0.6],"p":[2.8,13.4,2.8],"f":"#e2c290","paar":true},{"g":[4.6,0.8,0.8],"p":[0,6.6,1.6],"f":"#15803d"},{"g":[0.8,0.8,0.8],"p":[0,6.2,2.1],"f":"#fde047","licht":0.6}]},
+{"id":"b-gespenst","slot":"begleiter","name":"Gespenst","selten":"event","quelle":"event","event":"halloween","muster":{"f":{"w":10,"h":10,"basis":"#f8fafc","rects":[["#1f1b2e",2,3,2,3],["#1f1b2e",6,3,2,3],["#1f1b2e",4,7,2,2]]}},"modell":[{"p":[0,5,0],"teile":[{"g":[5,6,4.6],"p":[0,2,0],"f":{"vorne":"muster:f","sonst":"#f8fafc"},"glas":0.88,"licht":0.3},{"g":[1.6,2,4.6],"p":[-1.7,-1.6,0],"f":"#f8fafc","glas":0.88},{"g":[1.6,1.4,4.6],"p":[0,-1.3,0],"f":"#f8fafc","glas":0.88},{"g":[1.6,2,4.6],"p":[1.7,-1.6,0],"f":"#f8fafc","glas":0.88},{"g":[1.2,2.6,1.2],"p":[3,2,0.6],"f":"#f8fafc","glas":0.88,"r":[0,0,-0.6]}],"anim":"schweben"}]},
+{"id":"b-schneemann","slot":"begleiter","name":"Schneemann","selten":"event","quelle":"event","event":"weihnachten","muster":{"f":{"w":8,"h":8,"basis":"#f8fafc","rects":[["#1f1b2e",2,2,1,1],["#1f1b2e",5,2,1,1],["#1f1b2e",2,6,1,1],["#1f1b2e",3,7,2,1],["#1f1b2e",5,6,1,1]]}},"modell":[{"g":[6,5,6],"p":[0,2.5,0],"f":"#f8fafc"},{"g":[4.6,4,4.6],"p":[0,7,0],"f":"#f1f5f9"},{"g":[3.8,3.6,3.8],"p":[0,10.8,0],"f":{"vorne":"muster:f","sonst":"#f8fafc"}},{"g":[0.8,0.8,2.4],"p":[0,10.8,2.8],"f":"#f97316"},{"g":[4.8,1,4.8],"p":[0,8.9,0],"f":"#dc2626"},{"g":[1.2,3,0.8],"p":[1.4,7.6,2.6],"f":"#dc2626"},{"g":[4.4,0.6,4.4],"p":[0,12.9,0],"f":"#1f2937"},{"g":[3,2.4,3],"p":[0,14.3,0],"f":"#1f2937"},{"g":[0.8,0.8,0.4],"p":[0,7.4,2.4],"f":"#1f2937"},{"g":[0.8,0.8,0.4],"p":[0,5.6,3.1],"f":"#1f2937"}]},
+{"id":"b-kueken","slot":"begleiter","name":"Küken","selten":"event","quelle":"event","event":"ostern","muster":{"f":{"w":8,"h":8,"basis":"#fde047","rects":[["#1f1b2e",1,2,2,2],["#1f1b2e",5,2,2,2],["#ffffff",2,2,1,1],["#ffffff",6,2,1,1]]}},"modell":[{"g":[5,2.4,5],"p":[0,1.2,0],"f":"#f8fafc"},{"g":[5.2,0.6,5.2],"p":[0,2.5,0],"f":"#e2e8f0"},{"g":[4,4,4],"p":[0,4.4,0],"f":{"vorne":"muster:f","sonst":"#fde047"}},{"g":[1.4,0.8,1],"p":[0,3.8,2.4],"f":"#f97316"},{"g":[0.6,1.4,0.6],"p":[0,7,0],"f":"#fde047"},{"p":[2.1,4.6,0],"teile":[{"g":[0.5,2,2],"p":[0,-0.8,0],"f":"#facc15"}],"anim":"schlagen","paar":true}]},
+{"id":"bg-buehne","slot":"hintergrund","name":"Bühne","selten":"basis","quelle":"start","css":"radial-gradient(120% 85% at 50% 0%,#4d52b8 0%,#262a66 45%,#111330 100%)","boden":"#262a55","deko":"<svg viewBox=\"0 0 400 300\" preserveAspectRatio=\"xMidYMax slice\" aria-hidden=\"true\"><polygon points=\"118,0 158,0 236,300 52,300\" fill=\"#fff\" opacity=\".07\"/><polygon points=\"242,0 282,0 348,300 164,300\" fill=\"#fff\" opacity=\".05\"/><path d=\"M0 0H44Q30 150 48 300H0Z\" fill=\"#8c1f42\"/><path d=\"M400 0H356Q370 150 352 300H400Z\" fill=\"#8c1f42\"/><path d=\"M14 0Q8 150 18 300M30 0Q22 150 34 300M386 0Q392 150 382 300M370 0Q378 150 366 300\" stroke=\"#5e1230\" stroke-width=\"3\" fill=\"none\"/></svg>"},
+{"id":"bg-sonne","slot":"hintergrund","name":"Sonnenuntergang","selten":"gewoehnlich","quelle":"truhe","css":"linear-gradient(180deg,#ffb36b 0%,#ff6f6f 45%,#7b3f98 100%)","boden":"#5a2a66","deko":"<svg viewBox=\"0 0 400 300\" preserveAspectRatio=\"xMidYMax slice\" aria-hidden=\"true\"><circle cx=\"200\" cy=\"175\" r=\"68\" fill=\"#ffe39a\" opacity=\".9\"/><circle cx=\"200\" cy=\"175\" r=\"92\" fill=\"#ffe39a\" opacity=\".18\"/><path d=\"M0 222Q80 180 170 214T400 204V300H0Z\" fill=\"#8a3f7c\"/><path d=\"M0 250Q110 214 220 246T400 238V300H0Z\" fill=\"#5a2a66\"/></svg>"},
+{"id":"bg-himmel","slot":"hintergrund","name":"Wolkenhimmel","selten":"gewoehnlich","quelle":"truhe","css":"linear-gradient(180deg,#60a5fa 0%,#93c5fd 60%,#dbeafe 100%)","boden":"#3b82f6","deko":"<svg viewBox=\"0 0 400 300\" preserveAspectRatio=\"xMidYMax slice\" aria-hidden=\"true\"><g fill=\"#fff\" opacity=\".9\"><ellipse cx=\"80\" cy=\"70\" rx=\"46\" ry=\"16\"/><ellipse cx=\"104\" cy=\"58\" rx=\"26\" ry=\"18\"/><ellipse cx=\"300\" cy=\"110\" rx=\"54\" ry=\"18\"/><ellipse cx=\"322\" cy=\"96\" rx=\"30\" ry=\"20\"/><ellipse cx=\"190\" cy=\"230\" rx=\"90\" ry=\"22\"/></g><circle cx=\"340\" cy=\"40\" r=\"22\" fill=\"#fde047\"/></svg>"},
+{"id":"bg-nacht","slot":"hintergrund","name":"Sternennacht","selten":"selten","quelle":"truhe","css":"linear-gradient(180deg,#0a1030 0%,#1d2a6e 100%)","boden":"#0a1233","deko":"<svg viewBox=\"0 0 400 300\" preserveAspectRatio=\"xMidYMax slice\" aria-hidden=\"true\"><circle class=\"tw\" style=\"animation-delay:0.45s\" cx=\"260.4\" cy=\"14.5\" r=\"1.5\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:0.17s\" cx=\"203.0\" cy=\"7.5\" r=\"1.3\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:0.27s\" cx=\"169.8\" cy=\"165.4\" r=\"0.8\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:1.88s\" cx=\"379.1\" cy=\"115.4\" r=\"1.2\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:0.14s\" cx=\"343.4\" cy=\"57.9\" r=\"0.8\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:0.93s\" cx=\"326.5\" cy=\"36.1\" r=\"1.5\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:1.12s\" cx=\"219.1\" cy=\"12.6\" r=\"0.7\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:2.04s\" cx=\"171.0\" cy=\"62.8\" r=\"1.5\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:0.90s\" cx=\"317.8\" cy=\"139.8\" r=\"1.0\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:1.58s\" cx=\"350.1\" cy=\"145.9\" r=\"1.1\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:0.35s\" cx=\"167.2\" cy=\"151.4\" r=\"0.8\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:0.12s\" cx=\"267.3\" cy=\"152.9\" r=\"1.5\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:0.94s\" cx=\"278.1\" cy=\"118.9\" r=\"1.5\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:2.52s\" cx=\"377.9\" cy=\"94.8\" r=\"1.7\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:2.10s\" cx=\"258.9\" cy=\"198.6\" r=\"1.9\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:1.16s\" cx=\"267.5\" cy=\"4.5\" r=\"1.3\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:0.35s\" cx=\"23.6\" cy=\"153.6\" r=\"0.8\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:1.17s\" cx=\"348.6\" cy=\"16.1\" r=\"1.3\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:2.65s\" cx=\"327.7\" cy=\"172.8\" r=\"1.0\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:1.08s\" cx=\"353.7\" cy=\"191.5\" r=\"0.8\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:0.70s\" cx=\"93.3\" cy=\"97.0\" r=\"1.5\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:0.01s\" cx=\"167.6\" cy=\"73.9\" r=\"1.5\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:2.07s\" cx=\"206.2\" cy=\"123.5\" r=\"1.7\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:2.70s\" cx=\"312.0\" cy=\"174.9\" r=\"1.9\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:1.20s\" cx=\"41.4\" cy=\"126.9\" r=\"0.7\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:0.63s\" cx=\"64.9\" cy=\"68.0\" r=\"0.7\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:0.45s\" cx=\"40.6\" cy=\"72.7\" r=\"0.6\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:1.84s\" cx=\"59.4\" cy=\"50.5\" r=\"1.2\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:0.37s\" cx=\"339.6\" cy=\"198.6\" r=\"1.3\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:0.26s\" cx=\"40.9\" cy=\"68.5\" r=\"1.0\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:0.48s\" cx=\"9.2\" cy=\"190.2\" r=\"1.4\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:1.63s\" cx=\"10.8\" cy=\"105.6\" r=\"2.2\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:2.09s\" cx=\"104.4\" cy=\"73.3\" r=\"0.9\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:1.60s\" cx=\"311.6\" cy=\"65.9\" r=\"1.0\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:2.95s\" cx=\"341.1\" cy=\"161.2\" r=\"1.9\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:0.68s\" cx=\"207.1\" cy=\"71.1\" r=\"0.6\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:0.84s\" cx=\"103.7\" cy=\"138.5\" r=\"2.1\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:2.81s\" cx=\"395.2\" cy=\"191.0\" r=\"1.2\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:0.68s\" cx=\"78.7\" cy=\"40.9\" r=\"1.6\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:2.52s\" cx=\"191.8\" cy=\"130.6\" r=\"1.9\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:1.98s\" cx=\"363.9\" cy=\"156.5\" r=\"1.8\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:0.54s\" cx=\"315.7\" cy=\"66.5\" r=\"1.9\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:1.19s\" cx=\"160.6\" cy=\"189.4\" r=\"1.8\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:0.38s\" cx=\"60.5\" cy=\"181.0\" r=\"1.9\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:2.48s\" cx=\"392.1\" cy=\"131.5\" r=\"1.2\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:0.39s\" cx=\"5.7\" cy=\"194.2\" r=\"1.6\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:2.80s\" cx=\"173.5\" cy=\"174.3\" r=\"1.9\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:0.76s\" cx=\"117.2\" cy=\"48.1\" r=\"1.5\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:1.26s\" cx=\"52.4\" cy=\"182.0\" r=\"1.2\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:1.75s\" cx=\"361.7\" cy=\"84.1\" r=\"2.1\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:1.60s\" cx=\"209.4\" cy=\"3.7\" r=\"1.3\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:0.01s\" cx=\"319.7\" cy=\"34.5\" r=\"1.4\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:1.67s\" cx=\"130.4\" cy=\"103.7\" r=\"1.5\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:0.32s\" cx=\"224.1\" cy=\"49.7\" r=\"1.0\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:1.52s\" cx=\"224.7\" cy=\"152.0\" r=\"2.1\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:1.84s\" cx=\"202.2\" cy=\"102.4\" r=\"1.7\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:1.60s\" cx=\"191.2\" cy=\"188.3\" r=\"1.7\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:2.83s\" cx=\"103.8\" cy=\"111.9\" r=\"2.1\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:0.41s\" cx=\"48.6\" cy=\"88.4\" r=\"0.7\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:0.22s\" cx=\"267.8\" cy=\"156.8\" r=\"2.0\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:2.15s\" cx=\"264.1\" cy=\"28.6\" r=\"2.0\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:0.66s\" cx=\"381.0\" cy=\"79.7\" r=\"1.4\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:2.50s\" cx=\"64.6\" cy=\"86.3\" r=\"1.4\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:0.59s\" cx=\"127.4\" cy=\"144.4\" r=\"0.6\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:1.32s\" cx=\"7.2\" cy=\"66.3\" r=\"1.6\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:0.19s\" cx=\"394.0\" cy=\"157.7\" r=\"2.2\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:0.80s\" cx=\"15.8\" cy=\"155.8\" r=\"1.0\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:1.27s\" cx=\"364.6\" cy=\"163.8\" r=\"1.0\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:2.76s\" cx=\"228.2\" cy=\"140.1\" r=\"0.7\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:2.06s\" cx=\"170.1\" cy=\"14.5\" r=\"2.1\" fill=\"#fff\"/><circle cx=\"318\" cy=\"64\" r=\"28\" fill=\"#fdf2c4\"/><circle cx=\"310\" cy=\"58\" r=\"5\" fill=\"#eadca2\"/><path d=\"M0 240Q100 206 200 236T400 226V300H0Z\" fill=\"#0a1233\"/></svg>"},
+{"id":"bg-dschungel","slot":"hintergrund","name":"Dschungel","selten":"selten","quelle":"truhe","css":"linear-gradient(180deg,#14532d 0%,#166534 50%,#052e16 100%)","boden":"#3f2a14","deko":"<svg viewBox=\"0 0 400 300\" preserveAspectRatio=\"xMidYMax slice\" aria-hidden=\"true\"><path d=\"M0 0C40 60 10 120 30 300H0Z\" fill=\"#052e16\"/><path d=\"M400 0C360 70 390 140 372 300H400Z\" fill=\"#052e16\"/><g fill=\"#22c55e\" opacity=\".8\"><ellipse cx=\"60\" cy=\"40\" rx=\"50\" ry=\"14\" transform=\"rotate(20 60 40)\"/><ellipse cx=\"340\" cy=\"60\" rx=\"54\" ry=\"14\" transform=\"rotate(-24 340 60)\"/><ellipse cx=\"200\" cy=\"10\" rx=\"70\" ry=\"16\"/></g><path d=\"M120 0Q124 60 118 110\" stroke=\"#65a30d\" stroke-width=\"3\" fill=\"none\"/><path d=\"M280 0Q276 50 284 90\" stroke=\"#65a30d\" stroke-width=\"3\" fill=\"none\"/><circle cx=\"118\" cy=\"112\" r=\"6\" fill=\"#f97316\"/><circle cx=\"284\" cy=\"92\" r=\"5\" fill=\"#ec4899\"/></svg>"},
+{"id":"bg-meer","slot":"hintergrund","name":"Unterwasser","selten":"episch","quelle":"truhe","css":"linear-gradient(180deg,#27bde8 0%,#0b5d8a 62%,#073b5c 100%)","boden":"#c9a86a","deko":"<svg viewBox=\"0 0 400 300\" preserveAspectRatio=\"xMidYMax slice\" aria-hidden=\"true\"><polygon points=\"80,0 120,0 170,300 60,300\" fill=\"#fff\" opacity=\".07\"/><polygon points=\"250,0 280,0 330,300 230,300\" fill=\"#fff\" opacity=\".06\"/><circle class=\"bub\" style=\"animation-delay:0.0s\" cx=\"40\" cy=\"290\" r=\"3\" fill=\"none\" stroke=\"#dff6ff\" stroke-width=\"1.5\"/><circle class=\"bub\" style=\"animation-delay:1.1s\" cx=\"90\" cy=\"290\" r=\"5\" fill=\"none\" stroke=\"#dff6ff\" stroke-width=\"1.5\"/><circle class=\"bub\" style=\"animation-delay:2.2s\" cx=\"150\" cy=\"290\" r=\"7\" fill=\"none\" stroke=\"#dff6ff\" stroke-width=\"1.5\"/><circle class=\"bub\" style=\"animation-delay:3.3000000000000003s\" cx=\"260\" cy=\"290\" r=\"3\" fill=\"none\" stroke=\"#dff6ff\" stroke-width=\"1.5\"/><circle class=\"bub\" style=\"animation-delay:4.4s\" cx=\"330\" cy=\"290\" r=\"5\" fill=\"none\" stroke=\"#dff6ff\" stroke-width=\"1.5\"/><circle class=\"bub\" style=\"animation-delay:5.5s\" cx=\"370\" cy=\"290\" r=\"7\" fill=\"none\" stroke=\"#dff6ff\" stroke-width=\"1.5\"/><path class=\"weed\" d=\"M30 266C20 236 44 222 30 190C22 172 40 160 34 140\" stroke=\"#1f9d6b\" stroke-width=\"7\" fill=\"none\" stroke-linecap=\"round\"/><path class=\"weed\" style=\"animation-delay:-2s\" d=\"M372 266C382 240 360 222 374 196\" stroke=\"#15855a\" stroke-width=\"7\" fill=\"none\" stroke-linecap=\"round\"/><path d=\"M300 120q14-10 28 0q-14 10-28 0l-8-6v12z\" fill=\"#fbbf24\"/></svg>"},
+{"id":"bg-all","slot":"hintergrund","name":"Weltall","selten":"episch","quelle":"truhe","css":"radial-gradient(90% 70% at 28% 20%,#5b21b6 0%,#1e1147 45%,#070617 100%)","boden":"#1e1b4b","deko":"<svg viewBox=\"0 0 400 300\" preserveAspectRatio=\"xMidYMax slice\" aria-hidden=\"true\"><ellipse cx=\"120\" cy=\"90\" rx=\"110\" ry=\"40\" fill=\"#c026d3\" opacity=\".18\"/><ellipse cx=\"300\" cy=\"200\" rx=\"120\" ry=\"36\" fill=\"#0891b2\" opacity=\".16\"/><circle class=\"\" style=\"animation-delay:0.08s\" cx=\"110.0\" cy=\"67.0\" r=\"1.8\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:2.68s\" cx=\"34.8\" cy=\"126.6\" r=\"0.6\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:1.52s\" cx=\"10.6\" cy=\"59.7\" r=\"1.6\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:0.66s\" cx=\"235.7\" cy=\"242.8\" r=\"0.6\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:2.09s\" cx=\"136.1\" cy=\"46.6\" r=\"2.1\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:0.28s\" cx=\"38.7\" cy=\"254.2\" r=\"1.6\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:2.19s\" cx=\"214.5\" cy=\"291.9\" r=\"1.2\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:2.49s\" cx=\"247.4\" cy=\"258.5\" r=\"1.5\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:0.14s\" cx=\"91.2\" cy=\"86.8\" r=\"0.7\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:0.30s\" cx=\"111.2\" cy=\"190.7\" r=\"1.2\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:0.63s\" cx=\"106.8\" cy=\"281.0\" r=\"1.6\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:0.51s\" cx=\"291.7\" cy=\"49.0\" r=\"1.2\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:1.92s\" cx=\"222.8\" cy=\"205.4\" r=\"1.9\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:0.69s\" cx=\"12.8\" cy=\"94.6\" r=\"1.0\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:2.83s\" cx=\"350.5\" cy=\"94.4\" r=\"1.6\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:2.74s\" cx=\"183.5\" cy=\"79.5\" r=\"1.0\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:0.79s\" cx=\"233.8\" cy=\"269.3\" r=\"1.2\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:2.99s\" cx=\"203.8\" cy=\"27.3\" r=\"0.7\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:1.88s\" cx=\"316.8\" cy=\"126.6\" r=\"0.7\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:2.99s\" cx=\"211.6\" cy=\"291.3\" r=\"2.0\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:2.16s\" cx=\"272.7\" cy=\"161.1\" r=\"1.0\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:0.33s\" cx=\"173.9\" cy=\"136.1\" r=\"2.1\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:0.79s\" cx=\"200.2\" cy=\"53.6\" r=\"2.1\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:0.90s\" cx=\"255.6\" cy=\"182.7\" r=\"0.8\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:1.62s\" cx=\"311.5\" cy=\"159.1\" r=\"0.6\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:0.06s\" cx=\"371.6\" cy=\"263.6\" r=\"1.9\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:0.17s\" cx=\"351.2\" cy=\"284.1\" r=\"0.7\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:0.21s\" cx=\"304.2\" cy=\"229.8\" r=\"0.8\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:1.65s\" cx=\"106.0\" cy=\"261.7\" r=\"1.3\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:1.62s\" cx=\"292.0\" cy=\"60.3\" r=\"1.1\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:1.95s\" cx=\"175.2\" cy=\"155.3\" r=\"0.8\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:1.01s\" cx=\"235.3\" cy=\"69.0\" r=\"1.0\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:1.89s\" cx=\"91.6\" cy=\"271.6\" r=\"2.0\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:0.71s\" cx=\"267.6\" cy=\"64.3\" r=\"0.8\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:1.71s\" cx=\"189.1\" cy=\"235.4\" r=\"1.9\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:0.29s\" cx=\"172.4\" cy=\"127.1\" r=\"1.3\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:2.02s\" cx=\"393.7\" cy=\"29.5\" r=\"1.2\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:2.59s\" cx=\"99.5\" cy=\"57.1\" r=\"1.3\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:0.84s\" cx=\"99.9\" cy=\"277.0\" r=\"1.3\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:1.65s\" cx=\"20.2\" cy=\"299.8\" r=\"1.9\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:2.78s\" cx=\"339.5\" cy=\"49.9\" r=\"1.4\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:1.20s\" cx=\"23.5\" cy=\"113.7\" r=\"2.2\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:2.35s\" cx=\"182.0\" cy=\"126.9\" r=\"2.1\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:1.67s\" cx=\"287.4\" cy=\"46.4\" r=\"1.1\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:1.74s\" cx=\"216.9\" cy=\"224.4\" r=\"0.7\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:1.51s\" cx=\"341.1\" cy=\"47.2\" r=\"2.1\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:0.56s\" cx=\"238.0\" cy=\"202.6\" r=\"1.0\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:2.67s\" cx=\"98.5\" cy=\"178.4\" r=\"1.6\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:1.75s\" cx=\"209.1\" cy=\"280.4\" r=\"0.9\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:0.72s\" cx=\"158.3\" cy=\"201.5\" r=\"1.1\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:2.26s\" cx=\"29.0\" cy=\"137.5\" r=\"2.2\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:0.22s\" cx=\"85.3\" cy=\"79.6\" r=\"2.1\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:2.64s\" cx=\"147.8\" cy=\"47.3\" r=\"1.9\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:1.84s\" cx=\"394.9\" cy=\"196.2\" r=\"0.6\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:0.90s\" cx=\"265.4\" cy=\"281.7\" r=\"0.8\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:0.32s\" cx=\"221.3\" cy=\"81.7\" r=\"1.6\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:0.61s\" cx=\"253.7\" cy=\"79.2\" r=\"1.4\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:2.54s\" cx=\"36.9\" cy=\"127.1\" r=\"1.0\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:2.31s\" cx=\"254.8\" cy=\"78.6\" r=\"1.8\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:1.28s\" cx=\"3.9\" cy=\"22.6\" r=\"2.0\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:1.64s\" cx=\"333.8\" cy=\"174.8\" r=\"0.8\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:0.92s\" cx=\"359.6\" cy=\"238.8\" r=\"2.0\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:0.63s\" cx=\"99.8\" cy=\"30.8\" r=\"1.8\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:1.22s\" cx=\"248.3\" cy=\"46.4\" r=\"2.1\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:2.93s\" cx=\"324.3\" cy=\"264.4\" r=\"0.6\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:1.00s\" cx=\"372.3\" cy=\"240.7\" r=\"2.0\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:0.80s\" cx=\"314.9\" cy=\"32.4\" r=\"2.0\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:0.67s\" cx=\"326.6\" cy=\"138.1\" r=\"1.1\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:0.68s\" cx=\"9.5\" cy=\"57.9\" r=\"1.1\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:2.90s\" cx=\"111.6\" cy=\"192.4\" r=\"1.2\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:1.61s\" cx=\"375.7\" cy=\"34.6\" r=\"2.2\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:2.89s\" cx=\"106.2\" cy=\"32.5\" r=\"1.3\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:0.94s\" cx=\"242.5\" cy=\"153.4\" r=\"1.2\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:0.76s\" cx=\"283.5\" cy=\"0.5\" r=\"2.1\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:2.16s\" cx=\"296.8\" cy=\"201.2\" r=\"1.2\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:1.99s\" cx=\"132.1\" cy=\"94.2\" r=\"2.0\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:0.90s\" cx=\"123.7\" cy=\"122.5\" r=\"1.2\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:0.38s\" cx=\"168.2\" cy=\"282.1\" r=\"1.7\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:1.85s\" cx=\"120.4\" cy=\"164.4\" r=\"0.6\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:1.29s\" cx=\"232.0\" cy=\"196.4\" r=\"1.3\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:0.64s\" cx=\"189.3\" cy=\"270.4\" r=\"1.9\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:0.25s\" cx=\"206.2\" cy=\"189.9\" r=\"1.1\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:2.25s\" cx=\"269.1\" cy=\"67.4\" r=\"0.9\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:0.73s\" cx=\"190.1\" cy=\"254.9\" r=\"0.7\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:1.89s\" cx=\"77.8\" cy=\"208.9\" r=\"1.4\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:1.97s\" cx=\"2.2\" cy=\"225.3\" r=\"1.8\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:1.28s\" cx=\"70.4\" cy=\"287.4\" r=\"1.4\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:0.75s\" cx=\"339.3\" cy=\"136.9\" r=\"1.9\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:2.96s\" cx=\"238.2\" cy=\"285.0\" r=\"2.0\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:2.16s\" cx=\"201.9\" cy=\"249.2\" r=\"1.5\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:2.23s\" cx=\"189.9\" cy=\"77.8\" r=\"1.0\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:2.30s\" cx=\"208.5\" cy=\"188.0\" r=\"1.0\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:0.86s\" cx=\"108.7\" cy=\"95.9\" r=\"1.5\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:0.69s\" cx=\"277.6\" cy=\"211.9\" r=\"0.7\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:1.63s\" cx=\"166.3\" cy=\"62.1\" r=\"1.3\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:1.75s\" cx=\"278.2\" cy=\"257.0\" r=\"1.8\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:0.02s\" cx=\"140.7\" cy=\"226.0\" r=\"2.0\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:1.26s\" cx=\"299.0\" cy=\"163.8\" r=\"1.6\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:0.66s\" cx=\"174.3\" cy=\"8.7\" r=\"1.1\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:1.21s\" cx=\"66.0\" cy=\"140.2\" r=\"0.8\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:0.08s\" cx=\"157.6\" cy=\"169.3\" r=\"0.6\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:0.41s\" cx=\"184.7\" cy=\"15.1\" r=\"1.2\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:0.98s\" cx=\"304.5\" cy=\"113.7\" r=\"1.8\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:0.76s\" cx=\"32.8\" cy=\"5.8\" r=\"1.5\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:1.05s\" cx=\"260.1\" cy=\"234.4\" r=\"1.6\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:2.85s\" cx=\"79.7\" cy=\"6.1\" r=\"0.8\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:2.01s\" cx=\"225.6\" cy=\"65.4\" r=\"1.7\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:0.50s\" cx=\"242.9\" cy=\"224.4\" r=\"0.8\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:2.89s\" cx=\"43.2\" cy=\"7.7\" r=\"1.1\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:2.87s\" cx=\"158.7\" cy=\"214.5\" r=\"0.7\" fill=\"#fff\"/><circle cx=\"330\" cy=\"72\" r=\"30\" fill=\"#f59e0b\"/><circle cx=\"322\" cy=\"64\" r=\"30\" fill=\"#fbbf24\" opacity=\".6\"/><ellipse cx=\"330\" cy=\"72\" rx=\"52\" ry=\"10\" fill=\"none\" stroke=\"#fde68a\" stroke-width=\"3\" transform=\"rotate(-18 330 72)\"/></svg>"},
+{"id":"bg-weltreise","slot":"hintergrund","name":"Weltreise","selten":"legendaer","quelle":"set","css":"linear-gradient(180deg,#0ea5e9 0%,#0369a1 100%)","boden":"#d6b77a","deko":"<svg viewBox=\"0 0 400 300\" preserveAspectRatio=\"xMidYMax slice\" aria-hidden=\"true\"><g fill=\"#86efac\" opacity=\".85\"><path d=\"M40 60q30-20 60 0t40 30q-20 30-50 20t-50-50z\"/><path d=\"M170 40q40-10 70 10q10 30-20 40q-40 0-50-50z\"/><path d=\"M190 120q30 10 30 40t-20 50q-30-20-10-90z\"/><path d=\"M290 70q40-10 70 20q-10 30-40 30t-30-50z\"/><path d=\"M320 180q30 0 30 20t-30 10z\"/></g><g stroke=\"#fff\" stroke-opacity=\".25\" fill=\"none\"><path d=\"M0 100H400M0 200H400M100 0V300M200 0V300M300 0V300\"/></g><circle cx=\"360\" cy=\"250\" r=\"26\" fill=\"#fff\" opacity=\".9\"/><path d=\"M360 230L366 250L360 270L354 250Z\" fill=\"#dc2626\"/></svg>","set":"weltreisender"},
+{"id":"bg-spuk","slot":"hintergrund","name":"Spukschloss","selten":"event","quelle":"event","css":"linear-gradient(180deg,#2e1065 0%,#6d28d9 55%,#f97316 100%)","boden":"#1a0b33","deko":"<svg viewBox=\"0 0 400 300\" preserveAspectRatio=\"xMidYMax slice\" aria-hidden=\"true\"><circle cx=\"300\" cy=\"72\" r=\"42\" fill=\"#fde68a\"/><path d=\"M36 250V150h14v-20l12-18 12 18v20h24v-40l16-24 16 24v40h14v100z\" fill=\"#1a0b33\"/><rect x=\"60\" y=\"176\" width=\"8\" height=\"12\" fill=\"#facc15\"/><rect x=\"108\" y=\"140\" width=\"8\" height=\"12\" fill=\"#facc15\"/><path d=\"M0 250H400V300H0Z\" fill=\"#1a0b33\"/><path d=\"M200 60q6-8 12 0q6-4 8 2q-4-2-8 2q-6-4-12 0q-6-4-12 0q-4-4-8-2q2-6 8-2q6-8 12 0z\" fill=\"#1a0b33\"/></svg>","event":"halloween"},
+{"id":"bg-schneenacht","slot":"hintergrund","name":"Schneenacht","selten":"event","quelle":"event","css":"linear-gradient(180deg,#0c1e4a 0%,#1e3a8a 70%,#e0f2fe 100%)","boden":"#e2e8f0","deko":"<svg viewBox=\"0 0 400 300\" preserveAspectRatio=\"xMidYMax slice\" aria-hidden=\"true\"><circle class=\"tw\" style=\"animation-delay:1.63s\" cx=\"148.0\" cy=\"90.6\" r=\"1.6\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:0.04s\" cx=\"335.0\" cy=\"38.9\" r=\"1.0\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:1.41s\" cx=\"334.6\" cy=\"71.5\" r=\"1.6\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:1.90s\" cx=\"347.2\" cy=\"78.5\" r=\"1.8\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:0.19s\" cx=\"303.3\" cy=\"88.7\" r=\"1.1\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:2.60s\" cx=\"189.1\" cy=\"107.8\" r=\"2.0\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:2.76s\" cx=\"158.0\" cy=\"120.1\" r=\"1.3\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:2.64s\" cx=\"39.0\" cy=\"20.4\" r=\"0.9\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:1.31s\" cx=\"250.7\" cy=\"45.2\" r=\"1.4\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:1.05s\" cx=\"234.0\" cy=\"87.6\" r=\"2.0\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:2.79s\" cx=\"342.6\" cy=\"148.6\" r=\"1.7\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:2.58s\" cx=\"385.9\" cy=\"135.7\" r=\"1.5\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:0.63s\" cx=\"332.6\" cy=\"86.0\" r=\"1.1\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:2.56s\" cx=\"395.9\" cy=\"13.3\" r=\"1.9\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:0.45s\" cx=\"117.6\" cy=\"115.3\" r=\"2.0\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:1.84s\" cx=\"18.0\" cy=\"107.8\" r=\"1.1\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:2.94s\" cx=\"202.2\" cy=\"149.8\" r=\"1.1\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:1.80s\" cx=\"12.6\" cy=\"29.6\" r=\"1.3\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:0.47s\" cx=\"17.0\" cy=\"130.2\" r=\"1.1\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:2.69s\" cx=\"151.1\" cy=\"69.1\" r=\"1.4\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:1.79s\" cx=\"223.7\" cy=\"93.0\" r=\"2.1\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:1.29s\" cx=\"288.1\" cy=\"35.6\" r=\"1.1\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:1.56s\" cx=\"219.4\" cy=\"1.7\" r=\"1.3\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:0.06s\" cx=\"246.3\" cy=\"94.8\" r=\"0.7\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:1.40s\" cx=\"271.7\" cy=\"52.9\" r=\"1.7\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:0.07s\" cx=\"24.2\" cy=\"101.4\" r=\"2.1\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:1.37s\" cx=\"237.1\" cy=\"48.0\" r=\"1.2\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:1.11s\" cx=\"238.2\" cy=\"45.1\" r=\"1.2\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:0.08s\" cx=\"227.7\" cy=\"110.3\" r=\"1.1\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:2.41s\" cx=\"95.5\" cy=\"28.1\" r=\"1.3\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:0.31s\" cx=\"128.8\" cy=\"50.1\" r=\"1.9\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:2.57s\" cx=\"67.7\" cy=\"50.5\" r=\"1.6\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:1.35s\" cx=\"90.0\" cy=\"18.1\" r=\"1.4\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:2.42s\" cx=\"335.4\" cy=\"27.5\" r=\"1.0\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:1.93s\" cx=\"322.5\" cy=\"51.8\" r=\"0.8\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:2.38s\" cx=\"108.5\" cy=\"52.0\" r=\"1.3\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:1.23s\" cx=\"368.2\" cy=\"23.4\" r=\"0.6\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:2.64s\" cx=\"394.8\" cy=\"65.2\" r=\"2.1\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:0.67s\" cx=\"298.2\" cy=\"125.5\" r=\"1.7\" fill=\"#fff\"/><circle class=\"\" style=\"animation-delay:0.87s\" cx=\"136.4\" cy=\"34.1\" r=\"0.7\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:0.0s\" cx=\"0\" cy=\"20\" r=\"2.4\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:0.3s\" cx=\"53\" cy=\"57\" r=\"2.4\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:0.6s\" cx=\"106\" cy=\"94\" r=\"2.4\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:0.9s\" cx=\"159\" cy=\"131\" r=\"2.4\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:1.2s\" cx=\"212\" cy=\"168\" r=\"2.4\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:1.5s\" cx=\"265\" cy=\"205\" r=\"2.4\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:1.8s\" cx=\"318\" cy=\"22\" r=\"2.4\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:2.1s\" cx=\"371\" cy=\"59\" r=\"2.4\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:2.4s\" cx=\"24\" cy=\"96\" r=\"2.4\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:2.7s\" cx=\"77\" cy=\"133\" r=\"2.4\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:3.0s\" cx=\"130\" cy=\"170\" r=\"2.4\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:3.3s\" cx=\"183\" cy=\"207\" r=\"2.4\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:3.6s\" cx=\"236\" cy=\"24\" r=\"2.4\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:3.9s\" cx=\"289\" cy=\"61\" r=\"2.4\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:4.2s\" cx=\"342\" cy=\"98\" r=\"2.4\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:4.5s\" cx=\"395\" cy=\"135\" r=\"2.4\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:4.8s\" cx=\"48\" cy=\"172\" r=\"2.4\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:5.1s\" cx=\"101\" cy=\"209\" r=\"2.4\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:5.4s\" cx=\"154\" cy=\"26\" r=\"2.4\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:5.7s\" cx=\"207\" cy=\"63\" r=\"2.4\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:6.0s\" cx=\"260\" cy=\"100\" r=\"2.4\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:6.3s\" cx=\"313\" cy=\"137\" r=\"2.4\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:6.6s\" cx=\"366\" cy=\"174\" r=\"2.4\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:6.9s\" cx=\"19\" cy=\"211\" r=\"2.4\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:7.2s\" cx=\"72\" cy=\"28\" r=\"2.4\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:7.5s\" cx=\"125\" cy=\"65\" r=\"2.4\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:7.8s\" cx=\"178\" cy=\"102\" r=\"2.4\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:8.1s\" cx=\"231\" cy=\"139\" r=\"2.4\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:8.4s\" cx=\"284\" cy=\"176\" r=\"2.4\" fill=\"#fff\"/><circle class=\"tw\" style=\"animation-delay:8.7s\" cx=\"337\" cy=\"213\" r=\"2.4\" fill=\"#fff\"/><path d=\"M60 250L90 190L120 250Z M80 210L90 180L100 210Z\" fill=\"#14532d\"/><path d=\"M300 250L336 176L372 250Z\" fill=\"#166534\"/><circle cx=\"336\" cy=\"172\" r=\"5\" fill=\"#fde047\"/><path d=\"M0 250Q200 230 400 250V300H0Z\" fill=\"#f8fafc\"/></svg>","event":"weihnachten"},
+{"id":"bg-wiese","slot":"hintergrund","name":"Blumenwiese","selten":"event","quelle":"event","css":"linear-gradient(180deg,#bae6fd 0%,#e0f2fe 55%,#86efac 100%)","boden":"#4ade80","deko":"<svg viewBox=\"0 0 400 300\" preserveAspectRatio=\"xMidYMax slice\" aria-hidden=\"true\"><circle cx=\"330\" cy=\"50\" r=\"24\" fill=\"#fde047\"/><path d=\"M0 230Q200 200 400 230V300H0Z\" fill=\"#4ade80\"/><circle cx=\"40\" cy=\"250\" r=\"5\" fill=\"#f9a8d4\"/><circle cx=\"40\" cy=\"250\" r=\"2\" fill=\"#f59e0b\"/><circle cx=\"90\" cy=\"270\" r=\"5\" fill=\"#fff\"/><circle cx=\"90\" cy=\"270\" r=\"2\" fill=\"#f59e0b\"/><circle cx=\"150\" cy=\"246\" r=\"5\" fill=\"#c4b5fd\"/><circle cx=\"150\" cy=\"246\" r=\"2\" fill=\"#f59e0b\"/><circle cx=\"240\" cy=\"262\" r=\"5\" fill=\"#f9a8d4\"/><circle cx=\"240\" cy=\"262\" r=\"2\" fill=\"#f59e0b\"/><circle cx=\"310\" cy=\"248\" r=\"5\" fill=\"#fff\"/><circle cx=\"310\" cy=\"248\" r=\"2\" fill=\"#f59e0b\"/><circle cx=\"360\" cy=\"272\" r=\"5\" fill=\"#c4b5fd\"/><circle cx=\"360\" cy=\"272\" r=\"2\" fill=\"#f59e0b\"/></svg>","event":"ostern"}]}
