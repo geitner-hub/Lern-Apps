@@ -819,7 +819,7 @@ function qzChoose(opt, correct, btn, opts) {
   const isCorrect = opt.de === correct.de;
   recordWordStat(correct, isCorrect);
   if (isCorrect) qzScore++; else wrongWordsThisRound.push(correct);
-  const btns = document.querySelectorAll('.opt-btn');
+  const btns = document.querySelectorAll('#qz-options .opt-btn');
   btns.forEach((b, i) => {
     if (opts[i].de === correct.de) b.classList.add('correct');
     else if (b === btn) b.classList.add('wrong');

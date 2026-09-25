@@ -272,6 +272,10 @@
 
   .balloon.pop-correct { background: var(--accent); box-shadow: 0 0 24px rgba(0,229,160,.7); transform: translate(-50%,-50%) scale(1.3); opacity: 0; }
   .balloon.pop-wrong   { background: var(--bad);    box-shadow: 0 0 24px rgba(255,107,107,.7); transform: translate(-50%,-50%) scale(.5); opacity: 0; }
+  .balloon.pop-correct, .balloon.pop-wrong { animation: none; }
+  .balloon.reveal-correct { animation: none; background: var(--accent); box-shadow: 0 0 24px rgba(0,229,160,.7); transform: translate(-50%,0) scale(1.15); }
+  .balloon.fade-out { animation: none; opacity: .25; }
+  .question-display.timeout { color: var(--bad); }
 
   /* ── Zahlenmauern ── */
   .mauer-pyramid { display: flex; flex-direction: column; align-items: center; gap: clamp(3px, 1.4vw, 7px); margin-bottom: 6px; }
@@ -636,6 +640,24 @@ function showScreen(id) {
   document.getElementById('back-btn').classList.toggle('hidden', id === 'start');
 }
 
+/* Zeitleiste neu starten. Ohne erzwungenen Reflow fasst der Browser
+   „zurück auf 100 %" und „schrumpfe auf 0 %" zusammen – der Balken
+   bliebe dann leer bzw. würde nicht zurückgesetzt. */
+function runTimerBar(bar, ms) {
+  bar.style.transition = 'none';
+  bar.style.width = '100%';
+  void bar.offsetWidth;
+  bar.style.transition = `width ${ms / 1000}s linear`;
+  bar.style.width = '0%';
+}
+
+/* Zeitleiste an der aktuellen Stelle anhalten (nach einer Antwort). */
+function freezeTimerBar(bar) {
+  const w = getComputedStyle(bar).width;
+  bar.style.transition = 'none';
+  bar.style.width = w;
+}
+
 function stopAllTimers() {
   if (rennenState) { clearInterval(rennenState.timer); rennenState.active = false; }
   if (optState) { clearTimeout(optState.roundTimer); optState.active = false; }
@@ -819,14 +841,9 @@ function nextOptRound(mode) {
     field.appendChild(el);
   });
 
+  document.getElementById(mode + '-question').classList.remove('timeout');
   const roundTime = optRoundTime(mode);
-  const bar = document.getElementById(mode + '-timer');
-  bar.style.transition = 'none';
-  bar.style.width = '100%';
-  requestAnimationFrame(() => {
-    bar.style.transition = `width ${roundTime / 1000}s linear`;
-    bar.style.width = '0%';
-  });
+  runTimerBar(document.getElementById(mode + '-timer'), roundTime);
   clearTimeout(optState.roundTimer);
   optState.roundTimer = setTimeout(() => handleOptTimeout(mode), roundTime);
 }
@@ -834,6 +851,7 @@ function nextOptRound(mode) {
 function handleOptAnswer(mode, correct, el) {
   if (!optState || !optState.active) return;
   clearTimeout(optState.roundTimer);
+  freezeTimerBar(document.getElementById(mode + '-timer'));
   document.querySelectorAll(`#${mode}-field button`).forEach(b => b.disabled = true);
   optState.answered++;
   if (correct) {
@@ -855,9 +873,16 @@ function handleOptTimeout(mode) {
   if (!optState || !optState.active) return;
   optState.answered++;
   optState.lives--;
-  document.querySelectorAll(`#${mode}-field button`).forEach(b => b.disabled = true);
+  const answer = optState.currentTask.answer;
+  document.querySelectorAll(`#${mode}-field button`).forEach(b => {
+    b.disabled = true;
+    b.classList.add(Number(b.textContent) === answer ? 'reveal-correct' : 'fade-out');
+  });
+  const q = document.getElementById(mode + '-question');
+  q.textContent = `⏰ Zeit um! ${optState.currentTask.text} = ${answer}`;
+  q.classList.add('timeout');
   updateOptHud(mode);
-  setTimeout(() => nextOptRound(mode), 400);
+  setTimeout(() => nextOptRound(mode), 1400);
 }
 
 function endOptionsRound(mode) {
@@ -1147,6 +1172,7 @@ function nextHuepferRound() {
   const task = generateTask(settings.range, settings.ops);
   huepferState.currentTask = task;
   document.getElementById('huepfer-question').textContent = task.text + ' =';
+  document.getElementById('huepfer-question').classList.remove('timeout');
 
   const options = shuffle(generateOptions(task.answer, 3));
   for (let i = 0; i < 3; i++) {
@@ -1157,13 +1183,7 @@ function nextHuepferRound() {
     btn.onclick = () => handleHuepferAnswer(options[i] === task.answer, btn);
   }
 
-  const bar = document.getElementById('huepfer-timer');
-  bar.style.transition = 'none';
-  bar.style.width = '100%';
-  requestAnimationFrame(() => {
-    bar.style.transition = `width ${roundTime / 1000}s linear`;
-    bar.style.width = '0%';
-  });
+  runTimerBar(document.getElementById('huepfer-timer'), roundTime);
   clearTimeout(huepferState.roundTimer);
   huepferState.roundTimer = setTimeout(() => handleHuepferAnswer(false, null), roundTime);
 }
@@ -1171,6 +1191,7 @@ function nextHuepferRound() {
 function handleHuepferAnswer(correct, btn) {
   if (!huepferState || !huepferState.active) return;
   clearTimeout(huepferState.roundTimer);
+  freezeTimerBar(document.getElementById('huepfer-timer'));
   for (let i = 0; i < 3; i++) document.getElementById('lane-' + i).disabled = true;
   huepferState.totalAnswered++;
 
@@ -1186,13 +1207,18 @@ function handleHuepferAnswer(correct, btn) {
   } else {
     huepferState.lives--;
     if (btn) btn.classList.add('lane-wrong');
+    else {
+      const q = document.getElementById('huepfer-question');
+      q.textContent = `⏰ Zeit um! ${huepferState.currentTask.text} = ${huepferState.currentTask.answer}`;
+      q.classList.add('timeout');
+    }
     updateHuepferHud(false);
     if (huepferState.lives <= 0) {
       setTimeout(() => endHuepfer(false), 650);
       return;
     }
   }
-  setTimeout(() => nextHuepferRound(), 550);
+  setTimeout(() => nextHuepferRound(), btn ? 550 : 1400);
 }
 
 function completeHuepferLevel() {
