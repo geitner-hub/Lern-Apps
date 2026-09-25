@@ -2,8 +2,13 @@
 //  Lernwelt – pass.js   (Lernwelt-Pass: XP, Level, Serie, Sterne)
 //
 //  Wird geladen von:
-//    - index.html   (<script src="pass.js"></script>)
+//    - index.html / admin.html / pass-karte.html
 //    - jeder App automatisch über navbar.js
+//
+//  Inhalte (Titel, Abzeichen, Cosmetics, Events) stehen in der reinen
+//  Datendatei lernwelt-inhalte.json. Sobald sie geladen ist, steht
+//  window.LernPass bereit und das Ereignis 'lernpass:ready' wird ausgelöst.
+//  Einstellungen (Saison-Modus, aktive Events) kommen aus config.json → "pass".
 //
 //  Alle Daten bleiben im localStorage des Geräts ('lernwelt-pass').
 //  Sicherung/Umzug über einen Code bzw. QR (exportCode / parseCode).
@@ -13,7 +18,20 @@
 
 (function () {
   'use strict';
-  if (window.LernPass) return;           // doppeltes Laden verhindern
+  if (window.LernPass || window.__lernPassLoading) return;   // doppeltes Laden verhindern
+  window.__lernPassLoading = true;
+
+  // Inhalte laden (liegt im selben Ordner wie diese Datei); offline aus dem Zwischenspeicher
+  const CONTENT_CACHE = 'lernwelt-inhalte-cache';
+  const here = (document.currentScript && document.currentScript.src) || location.href;
+  const contentFile = new URL('lernwelt-inhalte.json', here).href;
+  fetch(contentFile, { cache: 'no-cache' })
+    .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(c => { try { localStorage.setItem(CONTENT_CACHE, JSON.stringify(c)); } catch (e) {} return c; })
+    .catch(() => { try { return JSON.parse(localStorage.getItem(CONTENT_CACHE) || '{}'); } catch (e) { return {}; } })
+    .then(start);
+
+  function start(C) {
 
   const STORE_KEY   = 'lernwelt-pass';
   const RESULTS_KEY = 'lern-apps-results';
@@ -39,16 +57,21 @@
     dailySoftCap:    150,   // über diesem Tageswert nur noch halbe XP
     lowerClassFactor: 0.5,  // Apps nur für niedrigere Klassen
     weekGoalDays:    3,     // Tage pro Woche für das Wochenziel
-    chestEveryXp:    250,   // alle X XP eine Truhe (Öffnen kommt später)
+    chestEveryXp:    250,   // alle X XP eine Truhe
+    eventChestShare: 0.6,   // Anteil Event-Teile in Truhen während eines Events
+    eventGiftChests: 1,     // Geschenk-Truhen je Event & Schuljahr (nach erster guter Runde)
     starPct:         [60, 80, 90],  // Bronze, Silber, Gold
     starDays:        2,     // an so vielen verschiedenen Tagen erreicht
   };
 
-  const LEVEL_TITLES = [
-    'Neuling', 'Spurensucher', 'Pfadfinder', 'Kartenleser', 'Wegfinder',
-    'Kartograf', 'Navigator', 'Kapitän', 'Weltenbummler', 'Entdecker',
-    'Meister-Entdecker', 'Legende',
-  ];
+  C = C && typeof C === 'object' ? C : {};
+  const LEVEL_TITLES = Array.isArray(C.TITEL) && C.TITEL.length ? C.TITEL : ['Neuling'];
+  const ITEMS      = Array.isArray(C.ITEMS) ? C.ITEMS : [];
+  const ITEM_BY_ID = Object.fromEntries(ITEMS.map(i => [i.id, i]));
+  const BADGES     = Array.isArray(C.ABZEICHEN) ? C.ABZEICHEN : [];
+  const EVENTS     = Array.isArray(C.EVENTS) ? C.EVENTS : [];
+  const RARITY     = C.SELTENHEIT || {};
+  const SLOTS      = C.SLOTS || {};
 
   const AVATARS = ['🦊','🐼','🐯','🦁','🐸','🐙','🦉','🐺','🐨','🐵','🦄','🐲',
                    '🐧','🦖','🐬','🦅','🐝','🐢','🦈','🐱','🐶','🐰','🦝','🐻'];
@@ -63,6 +86,11 @@
     return dayKey(x);
   }
   function prevWeek(wk) { const d = parseDay(wk); d.setDate(d.getDate() - 7); return dayKey(d); }
+  // Schuljahr = Saison, Wechsel am 1. August  →  '2026/27'
+  function seasonId(d = new Date()) {
+    const y = d.getMonth() >= 7 ? d.getFullYear() : d.getFullYear() - 1;
+    return y + '/' + pad((y + 1) % 100);
+  }
 
   // ── Speicher ────────────────────────────────────────────
   function blank() {
@@ -76,10 +104,17 @@
       weekDays: {},              // { Montag: ['YYYY-MM-DD', …] } nur aktuelle + letzte Woche
       apps: {},                  // { key: { h:{60:[],80:[],90:[]}, best, last, day, n } }
       seenLevel: 1,
-      chestsOpened: 0,           // für spätere Truhen
-      inventory: [],             // spätere Cosmetics (IDs)
-      equipped: {},              // spätere Cosmetics (Slot → ID)
-      badges: [],                // spätere Abzeichen (IDs)
+      goodRounds: 0,             // Runden mit mind. goodPct
+      seasons: {},               // { '2026/27': XP in diesem Schuljahr }
+      chestsOpened: 0,
+      bonusChests: 0,            // Geschenk-Truhen (Events)
+      dust: 0,                   // Sternenstaub (wenn der Pool leer ist)
+      inventory: [],             // Cosmetics (IDs)
+      equipped: {},              // Slot → ID
+      badges: [],                // Abzeichen (IDs)
+      flags: {},                 // z. B. comeback
+      eventDays: {},             // { 'halloween|2026/27': ['YYYY-MM-DD', …] }
+      eventGifts: {},            // { 'halloween|2026/27': true }
     };
   }
 
@@ -102,10 +137,33 @@
     if (e.key === STORE_KEY) { S = load(); listeners.forEach(fn => { try { fn(S); } catch (x) {} }); }
   });
 
+  // ── Einstellungen aus config.json ("pass") ─────────────
+  let SETTINGS = null;
+  function readSettings() {
+    if (SETTINGS) return SETTINGS;
+    let raw = null;
+    try { const cfg = JSON.parse(localStorage.getItem(CONFIG_KEY) || 'null'); raw = cfg && cfg.pass; } catch (e) {}
+    return sanitizeSettings(raw);
+  }
+  function sanitizeSettings(raw) {
+    const out = { seasons: false, events: [] };
+    if (raw && typeof raw === 'object') {
+      out.seasons = raw.seasons === true;
+      const ev = raw.events && typeof raw.events === 'object' ? raw.events : {};
+      out.events = EVENTS.filter(e => ev[e.id] === true).map(e => e.id);
+    }
+    return out;
+  }
+  function setSettings(raw) { SETTINGS = sanitizeSettings(raw); listeners.forEach(fn => { try { fn(S); } catch (e) {} }); }
+  function activeEvents() { const ids = readSettings().events; return EVENTS.filter(e => ids.includes(e.id)); }
+  function seasonsOn() { return readSettings().seasons; }
+
   // ── Level ───────────────────────────────────────────────
   // Gesamt-XP für Level n:  100·(n−1) + 25·(n−1)(n−2)   → L2:100, L3:250, L4:450, L5:700 …
   function xpForLevel(n) { return 100 * (n - 1) + 25 * (n - 1) * (n - 2); }
-  function levelInfo(xp = S.xp) {
+  /** XP, nach denen sich das angezeigte Level richtet (Saison oder gesamt) */
+  function levelXp() { return seasonsOn() ? (S.seasons[seasonId()] || 0) : S.xp; }
+  function levelInfo(xp = levelXp()) {
     let n = 1;
     while (xpForLevel(n + 1) <= xp) n++;
     const from = xpForLevel(n), to = xpForLevel(n + 1);
@@ -155,11 +213,92 @@
     return { goodDays, goal: RULES.weekGoalDays, done: goodDays >= RULES.weekGoalDays, streak, totalWeeks: total };
   }
 
-  // ── Truhen (Vorbereitung) ───────────────────────────────
+  // ── Truhen ──────────────────────────────────────────────
   function chestInfo() {
-    const earned = Math.floor(S.xp / RULES.chestEveryXp);
-    return { earned, opened: S.chestsOpened, available: Math.max(0, earned - S.chestsOpened),
-             nextAt: (earned + 1) * RULES.chestEveryXp, progress: Math.round(((S.xp % RULES.chestEveryXp) / RULES.chestEveryXp) * 100) };
+    const fromXp = Math.floor(S.xp / RULES.chestEveryXp);
+    const earned = fromXp + (S.bonusChests || 0);
+    return { earned, fromXp, bonus: S.bonusChests || 0, opened: S.chestsOpened, available: Math.max(0, earned - S.chestsOpened),
+             nextAt: (fromXp + 1) * RULES.chestEveryXp, progress: Math.round(((S.xp % RULES.chestEveryXp) / RULES.chestEveryXp) * 100) };
+  }
+
+  function owns(id) { return S.inventory.includes(id); }
+
+  // Erst Seltenheit nach Gewicht (z. B. 60/30/10) wählen – nur unter Stufen,
+  // in denen noch Teile fehlen –, dann ein Teil dieser Stufe zufällig.
+  function pickByRarity(pool) {
+    const groups = {};
+    pool.forEach(i => (groups[i.selten] = groups[i.selten] || []).push(i));
+    const keys = Object.keys(groups);
+    const w = k => (RARITY[k] && RARITY[k].gewicht) || 1;
+    const total = keys.reduce((s, k) => s + w(k), 0);
+    let r = Math.random() * total, pick = keys[keys.length - 1];
+    for (const k of keys) { r -= w(k); if (r <= 0) { pick = k; break; } }
+    const g = groups[pick];
+    return g[Math.floor(Math.random() * g.length)];
+  }
+  function pickAny(pool) { return pool[Math.floor(Math.random() * pool.length)]; }
+
+  /** Öffnet eine Truhe. → { ok, item, event, dust } */
+  function openChest() {
+    if (chestInfo().available <= 0) return { ok: false };
+    const evIds = activeEvents().map(e => e.id);
+    const eventPool = ITEMS.filter(i => i.quelle === 'event' && evIds.includes(i.event) && !owns(i.id));
+    const normalPool = ITEMS.filter(i => i.quelle === 'truhe' && !owns(i.id));
+    let item = null;
+    if (eventPool.length && (Math.random() < RULES.eventChestShare || !normalPool.length)) item = pickAny(eventPool);
+    else if (normalPool.length) item = pickByRarity(normalPool);
+    S.chestsOpened++;
+    if (!item) { S.dust += 1; save(); return { ok: true, item: null, dust: 1 }; }
+    const clean = ITEM_BY_ID[item.id];
+    S.inventory.push(clean.id);
+    save();
+    return { ok: true, item: clean, event: clean.quelle === 'event' ? EVENTS.find(e => e.id === clean.event) : null };
+  }
+
+  function equip(slot, id) {
+    if (!SLOTS[slot]) return false;
+    if (id === null || id === undefined || S.equipped[slot] === id) { delete S.equipped[slot]; save(); return true; }
+    const it = ITEM_BY_ID[id];
+    if (!it || it.slot !== slot || !owns(id)) return false;
+    S.equipped[slot] = id; save(); return true;
+  }
+  function equippedItem(slot) { const id = S.equipped[slot]; return id && owns(id) ? ITEM_BY_ID[id] || null : null; }
+
+  // ── Abzeichen ───────────────────────────────────────────
+  function badgeProgress(b) {
+    const ss = starsSummary();
+    const playedApps = Object.values(S.apps).filter(a => a.last).length;
+    switch (b.typ) {
+      case 'runden':   return { cur: S.goodRounds || 0, n: b.n };
+      case 'apps':     return { cur: playedApps, n: b.n };
+      case 'sterne':   return { cur: ss[1] + ss[2] + ss[3], n: b.n };
+      case 'gold':     return { cur: ss[3], n: b.n };
+      case 'wochen':   return { cur: weekInfo().totalWeeks, n: b.n };
+      case 'serie':    return { cur: weekInfo().streak, n: b.n };
+      case 'xp':       return { cur: S.xp, n: b.n };
+      case 'comeback': return { cur: S.flags.comeback ? 1 : 0, n: 1 };
+      case 'event': {
+        const days = Object.entries(S.eventDays).filter(([k]) => k.split('|')[0] === b.event).reduce((m, [, v]) => Math.max(m, v.length), 0);
+        return { cur: days, n: b.n };
+      }
+      default: return { cur: 0, n: 1 };
+    }
+  }
+  /** Prüft alle Abzeichen, vergibt neue inkl. Set-Teile. → [{badge, items}] */
+  function checkBadges() {
+    const fresh = [];
+    BADGES.forEach(b => {
+      if (S.badges.includes(b.id)) return;
+      const p = badgeProgress(b);
+      if (p.cur >= p.n) {
+        S.badges.push(b.id);
+        const items = ITEMS.filter(i => i.quelle === 'set' && i.set === b.id);
+        items.forEach(i => { if (!owns(i.id)) S.inventory.push(i.id); });
+        fresh.push({ badge: b, items });
+      }
+    });
+    if (fresh.length) save();
+    return fresh;
   }
 
   // ── Klassenstufe der App (aus der zwischengespeicherten Config) ──
@@ -230,13 +369,15 @@
     const day = dayKey();
     const wk  = weekKey();
     const before = levelInfo();
+    const season = seasonId();
     const starsBefore = starsFor(key);
-    const chestsBefore = chestInfo().earned;
+    const chestsBefore = chestInfo().fromXp;
 
     if (S.today.day !== day) S.today = { day, xp: 0, good: false };
     const a = S.apps[key] || (S.apps[key] = { h: {}, best: 0, last: '', day: '', n: 0 });
     const prevBest = a.best || 0;
     const hadPlayed = !!a.last;
+    const prevLow = hadPlayed && prevBest < 50;
 
     // 1) Durchklick-Schutz
     if (isFinite(sec) && (sec < RULES.minSeconds || (sec < RULES.rushSeconds && pct < RULES.goodPct))) {
@@ -281,8 +422,27 @@
 
     // 6) Übernehmen
     S.xp += xp;
+    S.seasons[season] = (S.seasons[season] || 0) + xp;
     S.rounds++;
     S.today.xp += xp;
+    if (good) S.goodRounds = (S.goodRounds || 0) + 1;
+    if (pct >= 80 && (prevLow || (a.low && !S.flags.comeback))) S.flags.comeback = true;
+    if (pct < 50) a.low = true;
+
+    // Events: gute Tage zählen, Geschenk-Truhe nach erster guter Runde
+    let eventGift = null;
+    if (good) {
+      activeEvents().forEach(ev => {
+        const k = ev.id + '|' + season;
+        const days = S.eventDays[k] || (S.eventDays[k] = []);
+        if (!days.includes(day)) days.push(day);
+        if (!S.eventGifts[k] && RULES.eventGiftChests > 0) {
+          S.eventGifts[k] = true;
+          S.bonusChests = (S.bonusChests || 0) + RULES.eventGiftChests;
+          eventGift = ev;
+        }
+      });
+    }
     if (good) {
       if (!S.today.good) { S.weeks[wk] = (S.weeks[wk] || 0) + 1; }
       S.today.good = true;
@@ -293,13 +453,14 @@
     pruneWeeks();
     save();
 
+    const newBadges = checkBadges();
     const after = levelInfo();
     const starsAfter = starsFor(key);
     return {
-      xp, lines, pct, blocked: null,
+      xp, lines, pct, blocked: null, eventGift, newBadges,
       levelUp: after.level > before.level ? after : null,
       level: after,
-      chest: chestInfo().earned > chestsBefore,
+      chest: chestInfo().fromXp > chestsBefore,
       stars: starsAfter,
       starUp: starsAfter > starsBefore ? starsAfter : 0,
       week: weekInfo(),
@@ -347,6 +508,10 @@
       w: Object.fromEntries(wkeys.map(k => [k.replace(/-/g, ''), S.weeks[k]])),
       a: apps,
       i: S.inventory, e: S.equipped, b: S.badges,
+      z: S.seasons, g: S.goodRounds || 0, bc: S.bonusChests || 0, sd: S.dust || 0,
+      f: S.flags.comeback ? 1 : 0,
+      eg: Object.keys(S.eventGifts),
+      ed: Object.fromEntries(Object.entries(S.eventDays).map(([k, v]) => [k, v.length])),
       t: dayKey().replace(/-/g, ''),
     };
     const body = b64urlEncode(JSON.stringify(payload));
@@ -385,14 +550,30 @@
         });
         restored.apps[k] = { h, best: Math.max(0, Math.min(100, Number(v[1]) || 0)), last: /^\d{4}-\d{2}-\d{2}$/.test(last) ? last : '', day: '', n: 0 };
       });
-      restored.inventory = Array.isArray(d.i) ? d.i.filter(x => typeof x === 'string').slice(0, 500) : [];
-      restored.equipped  = d.e && typeof d.e === 'object' ? d.e : {};
-      restored.badges    = Array.isArray(d.b) ? d.b.filter(x => typeof x === 'string').slice(0, 200) : [];
-      restored.seenLevel = levelInfo(restored.xp).level;
+      restored.inventory = Array.isArray(d.i) ? [...new Set(d.i.filter(x => typeof x === 'string' && ITEM_BY_ID[x]))].slice(0, 500) : [];
+      restored.equipped  = {};
+      if (d.e && typeof d.e === 'object') Object.entries(d.e).forEach(([sl, id]) => {
+        if (SLOTS[sl] && ITEM_BY_ID[id] && ITEM_BY_ID[id].slot === sl && restored.inventory.includes(id)) restored.equipped[sl] = id;
+      });
+      restored.badges    = Array.isArray(d.b) ? [...new Set(d.b.filter(x => typeof x === 'string' && BADGES.some(b => b.id === x)))] : [];
+      const num = (v, max) => Math.max(0, Math.min(max, Math.floor(Number(v) || 0)));
+      if (d.z && typeof d.z === 'object') Object.entries(d.z).forEach(([k, v]) => { if (/^\d{4}\/\d{2}$/.test(k)) restored.seasons[k] = num(v, 1e6); });
+      else restored.seasons[seasonId()] = restored.xp;             // alte Codes ohne Saison-Daten
+      restored.goodRounds = num(d.g, 1e6);
+      restored.bonusChests = num(d.bc, 1000);
+      restored.dust = num(d.sd, 1e5);
+      restored.flags = d.f ? { comeback: true } : {};
+      (Array.isArray(d.eg) ? d.eg : []).forEach(k => { if (typeof k === 'string' && /^[a-z-]+\|\d{4}\/\d{2}$/.test(k)) restored.eventGifts[k] = true; });
+      if (d.ed && typeof d.ed === 'object') Object.entries(d.ed).forEach(([k, n]) => {
+        if (/^[a-z-]+\|\d{4}\/\d{2}$/.test(k)) restored.eventDays[k] = Array.from({ length: num(n, 60) }, (_, j) => 'import-' + j);
+      });
+      restored.chestsOpened = Math.min(restored.chestsOpened, Math.floor(restored.xp / RULES.chestEveryXp) + restored.bonusChests);
+      restored.seenLevel = 1;
       return {
         ok: true,
         preview: { name: restored.profile.name || 'Ohne Namen', avatar: restored.profile.avatar,
-                   level: levelInfo(restored.xp).level, title: levelInfo(restored.xp).title, xp: restored.xp,
+                   level: levelInfo(seasonsOn() ? (restored.seasons[seasonId()] || 0) : restored.xp).level,
+                   title: levelInfo(seasonsOn() ? (restored.seasons[seasonId()] || 0) : restored.xp).title, xp: restored.xp,
                    date: ymd(d.t || '') },
         apply() { S = restored; save(); },
       };
@@ -428,7 +609,9 @@
     }
     const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     let html;
-    if (res.blocked === 'fast') {
+    if (res.notice) {
+      html = (res.newBadges || []).map(n => `<div class="t-big">${esc(n.badge.icon)} Abzeichen „${esc(n.badge.name)}“!${n.items.length ? ' +' + n.items.length + ' Set-Teil' + (n.items.length > 1 ? 'e' : '') : ''}</div>`).join('');
+    } else if (res.blocked === 'fast') {
       html = `<div class="t-xp" style="color:#f87171">0 XP</div>
               <div class="t-lines">Das ging sehr schnell. Nimm dir Zeit für die Aufgaben – dann gibt es XP!</div>`;
     } else {
@@ -438,19 +621,60 @@
               ${res.levelUp ? `<div class="t-big">🎉 Level ${lv.level}: ${esc(lv.title)}!</div>` : ''}
               ${res.starUp ? `<div class="t-big">${['', '🥉 Bronze', '🥈 Silber', '🥇 Gold'][res.starUp]}-Stern verdient!</div>` : ''}
               ${res.chest ? `<div class="t-big">🎁 Neue Truhe verdient!</div>` : ''}
+              ${res.eventGift ? `<div class="t-big">${esc(res.eventGift.icon)} ${esc(res.eventGift.geschenk || res.eventGift.name + '-Geschenk')}: eine Truhe für dich!</div>` : ''}
+              ${(res.newBadges || []).map(n => `<div class="t-big">${esc(n.badge.icon)} Abzeichen „${esc(n.badge.name)}“!${n.items.length ? ' +' + n.items.length + ' Set-Teil' + (n.items.length > 1 ? 'e' : '') : ''}</div>`).join('')}
               <div class="t-bar"><div class="t-fill" style="width:${lv.pct}%"></div></div>
               <div class="t-lines">Level ${lv.level} · ${lv.into} / ${lv.need} XP</div>`;
     }
     el.innerHTML = html;
     requestAnimationFrame(() => el.classList.add('show'));
     clearTimeout(el._t);
-    el._t = setTimeout(() => el.classList.remove('show'), res.levelUp || res.starUp || res.chest ? 6500 : 4200);
+    const big = res.levelUp || res.starUp || res.chest || res.eventGift || (res.newBadges && res.newBadges.length);
+    el._t = setTimeout(() => el.classList.remove('show'), big ? 6500 : 4200);
+  }
+
+  // ── Darstellung ─────────────────────────────────────────
+  const escA = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  /** Avatar-HTML mit Rahmen, Kopfschmuck, Begleiter. preview = {slot: item} zum Anprobieren */
+  function avatarHTML(opts = {}) {
+    const pr = S.profile || { avatar: '🧭' };
+    const get = sl => (opts.preview && sl in opts.preview) ? opts.preview[sl] : equippedItem(sl);
+    const fr = get('rahmen'), hat = get('hut'), comp = get('begleiter');
+    const lvl = opts.level ? `<span class="pass-lvl">${escA(opts.level)}</span>` : '';
+    return `<div class="pass-avatar${opts.cls ? ' ' + opts.cls : ''}"${fr && fr.css ? ` style="${escA(fr.css)}"` : ''}>${escA(opts.avatar || pr.avatar)}` +
+      (hat ? `<span class="pa-hat">${escA(hat.emoji)}</span>` : '') +
+      (comp ? `<span class="pa-comp">${escA(comp.emoji)}</span>` : '') + lvl + `</div>`;
+  }
+  function cardBackground(preview) {
+    const bg = preview !== undefined ? preview : equippedItem('hintergrund');
+    return bg && bg.css ? bg.css : '';
+  }
+  function itemPreviewHTML(it) {
+    if (!it) return '';
+    if (it.slot === 'rahmen')      return `<span class="it-prev it-frame" style="${escA(it.css)}"></span>`;
+    if (it.slot === 'hintergrund') return `<span class="it-prev it-bg" style="background:${escA(it.css)}"></span>`;
+    return `<span class="it-prev it-emoji">${escA(it.emoji)}</span>`;
+  }
+  function itemSourceText(it) {
+    if (it.quelle === 'truhe') return 'Aus Truhen';
+    if (it.quelle === 'event') { const e = EVENTS.find(x => x.id === it.event); return e ? `${e.icon} Nur im ${e.titel || e.name + '-Event'}` : 'Event'; }
+    if (it.quelle === 'set')   { const b = BADGES.find(x => x.id === it.set); return b ? `${b.icon} Abzeichen „${b.name}“` : 'Abzeichen'; }
+    return '';
+  }
+  function pastSeasons() {
+    const cur = seasonId();
+    return Object.entries(S.seasons).filter(([k, v]) => k < cur && v > 0).sort((a, b) => b[0].localeCompare(a[0]))
+      .map(([k, v]) => ({ id: k, xp: v, ...levelInfo(v) }));
   }
 
   // ── Öffentliche API ─────────────────────────────────────
   window.LernPass = {
-    RULES, LEVEL_TITLES, AVATARS,
+    RULES, LEVEL_TITLES, AVATARS, ITEMS, ITEM_BY_ID, BADGES, EVENTS, RARITY, SLOTS,
     get state()   { return S; },
+    get settings(){ return readSettings(); },
+    setSettings, activeEvents, seasonsOn, seasonId, levelXp, pastSeasons,
+    openChest, equip, equippedItem, owns, checkBadges, badgeProgress,
+    avatarHTML, cardBackground, itemPreviewHTML, itemSourceText,
     hasProfile()  { return !!(S.profile && S.profile.name); },
     profile()     { return S.profile; },
     setProfile, levelInfo, xpForLevel, starsFor, starProgress, starsSummary, weekInfo, chestInfo,
@@ -464,4 +688,6 @@
   // Ergebnisse, die navbar.js vor dem Laden dieses Skripts gemeldet hat
   const q = window.__lernPassQueue;
   if (Array.isArray(q)) { q.splice(0).forEach(r => toast(award(r))); }
+  try { window.dispatchEvent(new CustomEvent('lernpass:ready')); } catch (e) {}
+  }
 })();

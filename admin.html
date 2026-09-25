@@ -181,6 +181,33 @@
     #qr-canvas-wrap canvas{width:220px;height:220px;display:block;image-rendering:pixelated;}
     .aod-row{display:flex;align-items:center;gap:.7rem;flex-wrap:wrap;}
     .aod-row .btn{margin-left:auto;}
+
+    /* ── Pass-Reiter ── */
+    .sw-row{display:flex;align-items:center;gap:1rem;padding:.9rem 0;border-bottom:1px solid var(--border);}
+    .sw-row:last-child{border-bottom:none;}
+    .sw-row .sw-ic{font-size:1.6rem;width:2.2rem;text-align:center;}
+    .sw-row .sw-txt{flex:1;min-width:0;}
+    .sw-row .sw-name{font-weight:900;color:#fff;}
+    .sw-row .sw-desc{font-size:.78rem;color:var(--muted);line-height:1.45;margin-top:.15rem;}
+    .switch{position:relative;width:48px;height:27px;flex-shrink:0;}
+    .switch input{opacity:0;width:0;height:0;}
+    .switch span{position:absolute;inset:0;background:var(--surface2);border:1px solid var(--border2);border-radius:99px;cursor:pointer;transition:.18s;}
+    .switch span::before{content:'';position:absolute;width:19px;height:19px;left:3px;top:3px;background:var(--muted);border-radius:50%;transition:.18s;}
+    .switch input:checked + span{background:var(--green-dim);border-color:var(--green);}
+    .switch input:checked + span::before{transform:translateX(21px);background:var(--green);}
+    .switch input:focus-visible + span{outline:2px solid var(--accent);outline-offset:2px;}
+    .ov details{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);margin-bottom:.7rem;}
+    .ov summary{cursor:pointer;padding:.9rem 1.1rem;font-weight:900;color:#fff;font-size:.92rem;}
+    .ov .ov-body{padding:0 1.1rem 1.1rem;overflow-x:auto;}
+    .ov table{width:100%;border-collapse:collapse;font-size:.8rem;}
+    .ov th{text-align:left;color:var(--muted);font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;padding:.4rem .5rem;border-bottom:1px solid var(--border2);}
+    .ov td{padding:.45rem .5rem;border-bottom:1px solid var(--border);vertical-align:middle;}
+    .ov .note{font-size:.76rem;color:var(--muted);line-height:1.5;margin:.2rem 0 .7rem;}
+    .it-prev{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;}
+    .it-prev.it-emoji{font-size:1.35rem;background:var(--surface2);}
+    .it-prev.it-frame{background:radial-gradient(circle at 35% 30%,#3b3470,#1b1929);}
+    .it-prev.it-bg{border-radius:8px;width:52px;height:32px;border:1px solid var(--border2);}
+    .rar{font-size:.68rem;font-weight:900;border-radius:99px;padding:.1rem .5rem;border:1px solid;}
     .login-hint{font-size:.72rem;color:var(--muted);margin-top:.9rem;line-height:1.4;}
     .qr-url{font-size:.72rem;color:var(--muted);word-break:break-all;margin-bottom:.7rem;background:var(--surface2);padding:.45rem .75rem;border-radius:8px;}
     .qr-app-name-display{font-family:'Fredoka One',cursive;font-size:1.15rem;margin-bottom:.2rem;color:#fff;}
@@ -272,6 +299,7 @@
       <button class="tab" data-t="announcement">📢 Banner</button>
       <button class="tab" data-t="checker">🔗 Link-Check</button>
       <button class="tab" data-t="vokabeln">📚 Vokabeln</button>
+      <button class="tab" data-t="pass">🧭 Pass</button>
     </div>
 
     <!-- DASHBOARD -->
@@ -281,7 +309,7 @@
       <div class="form-card" id="aod-info" style="margin-bottom:1.5rem;font-size:.88rem;color:var(--text2);">–</div>
       <div class="sec-header"><span class="sec-title">🧭 Lernwelt-Pass</span></div>
       <div class="form-card" style="margin-bottom:1.5rem;font-size:.86rem;color:var(--text2);display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;">
-        <span style="flex:1;min-width:220px;">Sicherungskarten für die Klasse drucken (8 pro A4-Seite). Die Kinder schicken dir ihren Code aus „Mein Pass → Code kopieren“.</span>
+        <span style="flex:1;min-width:220px;">Sicherungskarten für die Klasse drucken (8 pro A4-Seite). Die Kinder schicken dir ihren Code aus „Mein Pass → Code kopieren“.<br><span id="pass-status" style="font-size:.78rem;color:var(--muted)"></span></span>
         <a class="btn accent" href="pass-karte.html?sammel" target="_blank" rel="noopener">🖨 Sammelbogen öffnen</a>
       </div>
       <div class="sec-header"><span class="sec-title">📋 Letzte Aktionen</span></div>
@@ -396,6 +424,15 @@
     </div>
 
     <!-- VOKABELN -->
+
+    <!-- ── PASS ── -->
+    <div class="tab-panel" id="panel-pass">
+      <div class="sec-header"><span class="sec-title">⚙️ Einstellungen</span></div>
+      <div class="form-card" style="margin-bottom:1.5rem;padding:.4rem 1.2rem;" id="pass-settings"></div>
+      <div class="sec-header"><span class="sec-title">📖 Übersicht aller Inhalte</span></div>
+      <p style="font-size:.8rem;color:var(--muted);margin:-.4rem 0 .9rem;line-height:1.5;">Nur zur Ansicht. Inhalte werden in <code>lernwelt-inhalte.json</code> gepflegt, Regeln in <code>pass.js</code> (RULES).</p>
+      <div class="ov" id="pass-overview"></div>
+    </div>
     <div class="tab-panel" id="panel-vokabeln">
       <div class="sec-header"><span class="sec-title">📚 Vokabeln – vokabeln.json</span></div>
       <div class="dash-grid" id="vok-stats" style="margin-bottom:1.5rem;"></div>
@@ -447,6 +484,7 @@
 <script src="qrcode.js"></script>
 <script src="shared.js"></script>
 <script src="config-api.js"></script>
+<script src="pass.js"></script>
 <script>
 'use strict';
 
@@ -588,6 +626,7 @@ document.querySelectorAll('.tab').forEach(tab => tab.addEventListener('click', (
 
 // ── Build All ─────────────────────────────────────────
 function buildAll() {
+  buildPassAdmin();
   buildDashboard();
   buildAppList();
   buildVisibility();
@@ -595,8 +634,147 @@ function buildAll() {
   buildTagAssignList();
 }
 
+
+// ── Lernwelt-Pass: Einstellungen & Übersicht ───────────
+function passCfg() {
+  const p = CONFIG.pass && typeof CONFIG.pass === 'object' ? CONFIG.pass : {};
+  return { seasons: p.seasons === true, events: p.events && typeof p.events === 'object' ? { ...p.events } : {} };
+}
+
+function buildPassAdmin() {
+  if (!window.LernPass) return;
+  const P = LernPass, cfg = passCfg();
+  const sid = P.seasonId();
+  document.getElementById('pass-settings').innerHTML = `
+    <div class="sw-row">
+      <span class="sw-ic">📅</span>
+      <div class="sw-txt"><div class="sw-name">Saison-Modus (Schuljahr)</div>
+        <div class="sw-desc">Level und Titel zählen pro Schuljahr und beginnen am 1. August neu. Gesamt-XP, Sterne, Abzeichen, Truhen und Cosmetics bleiben erhalten; vergangene Schuljahre erscheinen im Pass mit dem erreichten Titel. Aktuelles Schuljahr: <b>${escHtml(sid)}</b>.</div></div>
+      <label class="switch"><input type="checkbox" data-pass-set="seasons" ${cfg.seasons ? 'checked' : ''} aria-label="Saison-Modus"><span></span></label>
+    </div>
+    ${P.EVENTS.map(ev => {
+      const n = P.ITEMS.filter(i => i.event === ev.id).length;
+      const set = P.ITEMS.filter(i => i.quelle === 'set' && i.set === 'event-' + ev.id);
+      return `<div class="sw-row">
+        <span class="sw-ic">${escHtml(ev.icon)}</span>
+        <div class="sw-txt"><div class="sw-name">${escHtml(ev.titel || ev.name + '-Event')}</div>
+          <div class="sw-desc">${n} Event-Teile in den Truhen · Geschenk-Truhe nach der ersten guten Runde · Abzeichen nach ${escHtml(String((P.BADGES.find(b => b.id === 'event-' + ev.id) || {}).n || 3))} guten Tagen${set.length ? ' → ' + set.map(i => escHtml(i.name)).join(', ') : ''}</div></div>
+        <label class="switch"><input type="checkbox" data-pass-set="event:${escHtml(ev.id)}" ${cfg.events[ev.id] === true ? 'checked' : ''} aria-label="${escHtml(ev.name)}-Event"><span></span></label>
+      </div>`;
+    }).join('')}`;
+  buildPassOverview();
+}
+
+// pass.js meldet sich, sobald seine Inhalte geladen sind
+window.addEventListener('lernpass:ready', () => {
+  if (CONFIG && document.getElementById('app').style.display === 'block') { buildPassAdmin(); buildDashboard(); }
+});
+
+document.getElementById('pass-settings').addEventListener('change', e => {
+  const inp = e.target.closest('[data-pass-set]');
+  if (!inp) return;
+  const cfg = passCfg();
+  const key = inp.dataset.passSet;
+  if (key === 'seasons') {
+    cfg.seasons = inp.checked;
+    logChange(`📅 Saison-Modus ${inp.checked ? 'aktiviert' : 'deaktiviert'}`);
+  } else if (key.startsWith('event:')) {
+    const id = key.slice(6);
+    const ev = LernPass.EVENTS.find(x => x.id === id);
+    if (!ev) return;
+    cfg.events[id] = inp.checked;
+    logChange(`${ev.icon} ${ev.titel || ev.name + '-Event'} ${inp.checked ? 'aktiviert' : 'deaktiviert'}`);
+  }
+  // nur bekannte Events speichern
+  cfg.events = Object.fromEntries(LernPass.EVENTS.map(ev => [ev.id, cfg.events[ev.id] === true]));
+  CONFIG.pass = cfg;
+  saveConfig();
+  buildDashboard();
+});
+
+function rarBadge(key) {
+  const r = LernPass.RARITY[key] || { name: key, farbe: '#94a3b8' };
+  return `<span class="rar" style="color:${r.farbe};border-color:${r.farbe}66">${escHtml(r.name)}</span>`;
+}
+
+function buildPassOverview() {
+  const P = LernPass, R = P.RULES;
+  const truhe = P.ITEMS.filter(i => i.quelle === 'truhe');
+  const rars = ['gewoehnlich', 'selten', 'episch'];
+  const wSum = rars.filter(k => truhe.some(i => i.selten === k)).reduce((s, k) => s + (P.RARITY[k].gewicht || 0), 0);
+  const maxLvl = P.LEVEL_TITLES.length + 5;
+
+  const lvlRows = Array.from({ length: maxLvl }, (_, i) => {
+    const n = i + 1, info = P.levelInfo(P.xpForLevel(n));
+    return `<tr><td>${n}</td><td>${P.xpForLevel(n).toLocaleString('de-DE')}</td><td>${n > 1 ? '+' + (P.xpForLevel(n) - P.xpForLevel(n - 1)) : '–'}</td><td><b>${escHtml(info.title)}</b></td></tr>`;
+  }).join('');
+
+  const rules = [
+    ['Abschluss einer Runde', `${R.baseXp} XP (unter ${R.lowPct} % richtig: ${R.baseXpLow} XP)`],
+    ['Leistung', `bis ${R.perfXpMax} XP, linear ab ${R.perfFromPct} %; volle Punkte ab ${R.fullSizeItems} Aufgaben pro Runde`],
+    ['Neuer Rekord in einer App', `+${R.recordXp} XP (ab ${R.recordMinPct} %)`],
+    ['Erste gute Runde des Tages', `+${R.firstOfDayXp} XP (ab ${R.goodPct} %)`],
+    ['Durchklick-Schutz', `unter ${R.minSeconds} s → 0 XP; unter ${R.rushSeconds} s und unter ${R.goodPct} % → 0 XP`],
+    ['Runden pro App und Tag', `${R.fullRoundsPerApp} voll, bis ${R.halfRoundsPerApp} halb, danach 0 XP`],
+    ['Tages-Obergrenze', `ab ${R.dailySoftCap} XP pro Tag nur noch halbe XP`],
+    ['Apps jüngerer Klassen', `× ${R.lowerClassFactor}`],
+    ['Wochenziel', `${R.weekGoalDays} Tage mit mind. ${R.goodPct} %; Wochen ohne Übung pausieren die Serie`],
+    ['Sterne', `🥉 ${R.starPct[0]} % · 🥈 ${R.starPct[1]} % · 🥇 ${R.starPct[2]} % – jeweils an ${R.starDays} verschiedenen Tagen`],
+    ['Truhen', `alle ${R.chestEveryXp} XP eine Truhe; bei aktivem Event ${Math.round(R.eventChestShare * 100)} % Event-Teile; ${R.eventGiftChests} Geschenk-Truhe je Event und Schuljahr`],
+  ].map(([a, b]) => `<tr><td><b>${escHtml(a)}</b></td><td>${escHtml(b)}</td></tr>`).join('');
+
+  const chanceRows = rars.map(k => {
+    const n = truhe.filter(i => i.selten === k).length;
+    const pct = wSum ? Math.round(((P.RARITY[k].gewicht || 0) / wSum) * 100) : 0;
+    return `<tr><td>${rarBadge(k)}</td><td>${pct} %</td><td>${n} Teile</td><td>${n ? (pct / n).toFixed(1).replace('.', ',') + ' % je Teil' : '–'}</td></tr>`;
+  }).join('');
+
+  const badgeRows = P.BADGES.map(b => {
+    const reward = P.ITEMS.filter(i => i.quelle === 'set' && i.set === b.id);
+    return `<tr><td style="font-size:1.3rem">${escHtml(b.icon)}</td><td><b>${escHtml(b.name)}</b></td><td>${escHtml(b.text)}</td>
+      <td>${reward.length ? reward.map(i => `${P.itemPreviewHTML(i)} ${escHtml(i.name)}`).join('<br>') : '–'}</td></tr>`;
+  }).join('');
+
+  const itemRows = slot => P.ITEMS.filter(i => i.slot === slot).map(i =>
+    `<tr><td>${P.itemPreviewHTML(i)}</td><td><b>${escHtml(i.name)}</b><div style="font-size:.66rem;color:var(--muted)">${escHtml(i.id)}</div></td><td>${rarBadge(i.selten)}</td><td>${escHtml(P.itemSourceText(i))}</td></tr>`).join('');
+
+  const eventBlocks = P.EVENTS.map(ev => {
+    const items = P.ITEMS.filter(i => i.event === ev.id);
+    const set = P.ITEMS.filter(i => i.quelle === 'set' && i.set === 'event-' + ev.id);
+    const on = passCfg().events[ev.id] === true;
+    return `<tr><td style="font-size:1.4rem">${escHtml(ev.icon)}</td><td><b>${escHtml(ev.name)}</b><br><span style="color:${on ? 'var(--green)' : 'var(--muted)'};font-size:.72rem;font-weight:800">${on ? '● aktiv' : '○ aus'}</span></td>
+      <td>${items.map(i => `${P.itemPreviewHTML(i)}`).join(' ')}</td><td>${set.map(i => `${P.itemPreviewHTML(i)} ${escHtml(i.name)}`).join('<br>') || '–'}</td></tr>`;
+  }).join('');
+
+  const counts = { truhe: truhe.length, set: P.ITEMS.filter(i => i.quelle === 'set').length, event: P.ITEMS.filter(i => i.quelle === 'event').length };
+
+  document.getElementById('pass-overview').innerHTML = `
+    <details open><summary>🏷 Level & Titel (${P.LEVEL_TITLES.length} Titel)</summary><div class="ov-body">
+      <p class="note">Jedes Level braucht 50 XP mehr als das vorherige. Nach Level ${P.LEVEL_TITLES.length} geht es mit „${escHtml(P.LEVEL_TITLES[P.LEVEL_TITLES.length - 1])} ★ … ★★★★★“ weiter. Richtwerte für ein Schuljahr: nur Aufwärmen im Unterricht ≈ Level 11, mit Übung daheim ≈ Level 15, sehr fleißig ≈ Level 20.</p>
+      <table><thead><tr><th>Level</th><th>ab XP</th><th>Schritt</th><th>Titel</th></tr></thead><tbody>${lvlRows}</tbody></table></div></details>
+    <details><summary>⭐ XP-Regeln & Schutz vor Tricks</summary><div class="ov-body">
+      <table><tbody>${rules}</tbody></table></div></details>
+    <details><summary>🎁 Truhen-Chancen</summary><div class="ov-body">
+      <p class="note">Eine Truhe wählt zuerst die Seltenheit (nur unter Stufen, in denen dem Kind noch Teile fehlen) und dann ein fehlendes Teil. Es gibt keine doppelten Teile. Hat ein Kind alles, gibt es ✨ Sternenstaub.</p>
+      <table><thead><tr><th>Seltenheit</th><th>Chance</th><th>Pool</th><th>je Teil</th></tr></thead><tbody>${chanceRows}</tbody></table></div></details>
+    <details><summary>🏅 Abzeichen (${P.BADGES.length})</summary><div class="ov-body">
+      <table><thead><tr><th></th><th>Name</th><th>Bedingung</th><th>Belohnung</th></tr></thead><tbody>${badgeRows}</tbody></table></div></details>
+    <details><summary>👕 Cosmetics (${P.ITEMS.length}: ${counts.truhe} Truhe · ${counts.set} Abzeichen · ${counts.event} Event)</summary><div class="ov-body">
+      ${Object.entries(P.SLOTS).map(([slot, info]) => `<h4 style="margin:.8rem 0 .3rem;color:var(--accent);font-size:.85rem">${info.icon} ${escHtml(info.name)}</h4>
+        <table><thead><tr><th>Vorschau</th><th>Name</th><th>Seltenheit</th><th>Quelle</th></tr></thead><tbody>${itemRows(slot)}</tbody></table>`).join('')}
+    </div></details>
+    <details><summary>🎉 Events (${P.EVENTS.length})</summary><div class="ov-body">
+      <table><thead><tr><th></th><th>Event</th><th>Teile in Truhen</th><th>Abzeichen-Belohnung</th></tr></thead><tbody>${eventBlocks}</tbody></table></div></details>`;
+}
+
 // ── Dashboard ─────────────────────────────────────────
 function buildDashboard() {
+  const ps = document.getElementById('pass-status');
+  if (ps && window.LernPass) {
+    const c = passCfg();
+    const evs = LernPass.EVENTS.filter(e => c.events[e.id] === true);
+    ps.innerHTML = `Saison-Modus: <b style="color:${c.seasons ? 'var(--green)' : 'var(--muted)'}">${c.seasons ? 'an' : 'aus'}</b> · Events: ${evs.length ? evs.map(e => escHtml(e.icon + ' ' + e.name)).join(', ') : 'keine'}`;
+  }
   const total   = CONFIG.apps.length;
   const visible = CONFIG.apps.filter(a => !a.hidden).length;
   const hidden  = CONFIG.apps.filter(a => a.hidden).length;

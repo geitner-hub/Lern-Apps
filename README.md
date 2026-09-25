@@ -15,6 +15,7 @@ verwaltet über ein eigenes Admin-Panel.
 | `config-api.js` | Laden (öffentlich/Admin) und Speichern über den Worker |
 | `navbar.js` | Home-Button + Ergebnisspeicherung, in jeder App am Ende von `<body>`; lädt `pass.js` automatisch |
 | `pass-karte.html` | Druckbare Sicherungskarten: eigene Karte oder Sammelbogen (`?sammel`, 8 pro A4) |
+| `lernwelt-inhalte.json` | **Alle Pass-Inhalte:** Titel, Abzeichen, Cosmetics (Truhen-Pool, Sets), Events – hier erweitern |
 | `pass.js` | Lernwelt-Pass: XP, Level, Wochen-Serie, Meisterschafts-Sterne, Sicherungs-Code, Truhen-Zähler |
 | `fonts.css` + `fonts/` | Lokal gehostete Schriften (kein Google Fonts → DSGVO) |
 | `qrcode.js` | QR-Code-Erzeugung im Browser (MIT-Lizenz, Kazuhiko Arase) |
@@ -70,7 +71,22 @@ in `RULES` am Anfang von `pass.js` und können dort angepasst werden.
 - **Sicherung:** QR/Code (`LW1.…`) im Pass; Scannen öffnet `index.html#pass=…` und stellt
   den Pass nach Rückfrage wieder her. Die Prüfsumme erkennt Tipp-/Kopierfehler, ist aber
   kein Schutz gegen gezieltes Manipulieren – der Pass ist ohnehin nur lokal.
-- **Vorbereitet für Cosmetics:** `inventory`, `equipped`, `badges`, `chestsOpened` sind
-  bereits im Speicher und im Sicherungs-Code enthalten. Truhen werden aus den XP berechnet
-  (alle 250 XP eine) – schon jetzt verdiente Truhen können später geöffnet werden.
+- **Truhen & Cosmetics:** alle 250 XP eine Truhe. Chancen 60/30/10 % (gewöhnlich/selten/episch),
+  keine Dubletten; ist der Pool leer, gibt es Sternenstaub. Vier Plätze: Rahmen, Kopfschmuck,
+  Begleiter, Hintergrund.
+- **Abzeichen:** schalten legendäre Set-Teile frei (Liste in `lernwelt-inhalte.json`).
+- **Saison-Modus** (Admin → 🧭 Pass): Level/Titel zählen pro Schuljahr, Wechsel automatisch am
+  1. August. Gesamt-XP, Sterne, Abzeichen, Truhen und Cosmetics bleiben.
+- **Events** (Admin → 🧭 Pass, einzeln schaltbar): Halloween, Weihnachten, Ostern. Während eines
+  Events: 60 % Event-Teile in Truhen, eine Geschenk-Truhe nach der ersten guten Runde (einmal pro
+  Schuljahr), Event-Abzeichen nach 3 guten Tagen mit legendärem Teil.
+- Einstellungen stehen in `config.json` unter `"pass"` und werden über das Admin-Panel gespeichert.
+
+### Inhalte erweitern (lernwelt-inhalte.json)
+- Reine Datendatei (JSON): keine Kommentare, Texte in doppelten Anführungszeichen, Kommas zwischen
+  Einträgen. Nach dem Bearbeiten z. B. auf jsonlint.com prüfen.
+- Neues Truhen-Teil: Eintrag in `ITEMS` mit `quelle: 'truhe'`, `slot`, `selten`, `emoji` oder `css`.
+- Neues Event: Eintrag in `EVENTS` + Teile mit `quelle: 'event', event: '<id>'` + Abzeichen
+  `typ: 'event'` + Set-Teil mit `set: 'event-<id>'`. Es erscheint automatisch im Admin.
+- **IDs nie ändern oder löschen** – sonst verlieren Kinder ihre Teile.
 - Speicher: `localStorage['lernwelt-pass']` (nur auf dem Gerät).

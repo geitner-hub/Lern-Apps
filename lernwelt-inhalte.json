@@ -1,0 +1,743 @@
+{
+  "TITEL": [
+    "Neuling",
+    "Spurensucher",
+    "Pfadfinder",
+    "Kartenleser",
+    "Wegfinder",
+    "Kartograf",
+    "Navigator",
+    "Kapitän",
+    "Weltenbummler",
+    "Entdecker",
+    "Sternengucker",
+    "Gipfelstürmer",
+    "Schatzjäger",
+    "Meister-Entdecker",
+    "Kompass-Profi",
+    "Horizontläufer",
+    "Weltenkenner",
+    "Großmeister",
+    "Held der Lernwelt",
+    "Legende"
+  ],
+  "SELTENHEIT": {
+    "gewoehnlich": {
+      "name": "Gewöhnlich",
+      "farbe": "#94a3b8",
+      "gewicht": 60
+    },
+    "selten": {
+      "name": "Selten",
+      "farbe": "#818cf8",
+      "gewicht": 30
+    },
+    "episch": {
+      "name": "Episch",
+      "farbe": "#c084fc",
+      "gewicht": 10
+    },
+    "legendaer": {
+      "name": "Legendär",
+      "farbe": "#e6a817",
+      "gewicht": 0
+    },
+    "event": {
+      "name": "Event",
+      "farbe": "#fb923c",
+      "gewicht": 0
+    }
+  },
+  "SLOTS": {
+    "rahmen": {
+      "name": "Rahmen",
+      "icon": "⭕"
+    },
+    "hut": {
+      "name": "Kopfschmuck",
+      "icon": "👑"
+    },
+    "begleiter": {
+      "name": "Begleiter",
+      "icon": "🐾"
+    },
+    "hintergrund": {
+      "name": "Hintergrund",
+      "icon": "🖼"
+    }
+  },
+  "ABZEICHEN": [
+    {
+      "id": "erste-schritte",
+      "icon": "👣",
+      "name": "Erste Schritte",
+      "typ": "runden",
+      "n": 1,
+      "text": "Schaffe deine erste gute Runde (mind. 50 %)."
+    },
+    {
+      "id": "entdecker",
+      "icon": "🧭",
+      "name": "Entdecker",
+      "typ": "apps",
+      "n": 5,
+      "text": "Übe in 5 verschiedenen Apps."
+    },
+    {
+      "id": "weltreisender",
+      "icon": "🌍",
+      "name": "Weltreisender",
+      "typ": "apps",
+      "n": 10,
+      "text": "Übe in 10 verschiedenen Apps."
+    },
+    {
+      "id": "sternensammler",
+      "icon": "⭐",
+      "name": "Sternensammler",
+      "typ": "sterne",
+      "n": 3,
+      "text": "Verdiene 3 Sterne (egal welche Farbe)."
+    },
+    {
+      "id": "goldkind",
+      "icon": "🥇",
+      "name": "Goldkind",
+      "typ": "gold",
+      "n": 1,
+      "text": "Verdiene deinen ersten Gold-Stern."
+    },
+    {
+      "id": "goldschatz",
+      "icon": "💰",
+      "name": "Goldschatz",
+      "typ": "gold",
+      "n": 5,
+      "text": "Verdiene 5 Gold-Sterne."
+    },
+    {
+      "id": "fleissig",
+      "icon": "💪",
+      "name": "Fleißig",
+      "typ": "runden",
+      "n": 25,
+      "text": "Schaffe 25 gute Runden."
+    },
+    {
+      "id": "unermuedlich",
+      "icon": "🐝",
+      "name": "Unermüdlich",
+      "typ": "runden",
+      "n": 100,
+      "text": "Schaffe 100 gute Runden."
+    },
+    {
+      "id": "wochenziel",
+      "icon": "📅",
+      "name": "Wochenziel",
+      "typ": "wochen",
+      "n": 1,
+      "text": "Erreiche einmal dein Wochenziel."
+    },
+    {
+      "id": "serienheld",
+      "icon": "🔥",
+      "name": "Serienheld",
+      "typ": "serie",
+      "n": 3,
+      "text": "Erreiche 3 Wochen in Folge dein Wochenziel."
+    },
+    {
+      "id": "dauerbrenner",
+      "icon": "☄️",
+      "name": "Dauerbrenner",
+      "typ": "serie",
+      "n": 8,
+      "text": "Erreiche 8 Wochen in Folge dein Wochenziel."
+    },
+    {
+      "id": "comeback",
+      "icon": "🦅",
+      "name": "Comeback",
+      "typ": "comeback",
+      "text": "Verbessere dich in einer App von unter 50 % auf mindestens 80 %."
+    },
+    {
+      "id": "xp-1000",
+      "icon": "💎",
+      "name": "Tausender",
+      "typ": "xp",
+      "n": 1000,
+      "text": "Sammle insgesamt 1.000 XP."
+    },
+    {
+      "id": "xp-5000",
+      "icon": "🏆",
+      "name": "Fünftausender",
+      "typ": "xp",
+      "n": 5000,
+      "text": "Sammle insgesamt 5.000 XP."
+    },
+    {
+      "id": "event-halloween",
+      "icon": "🎃",
+      "name": "Gruselig gut",
+      "typ": "event",
+      "event": "halloween",
+      "n": 3,
+      "text": "Übe während des Halloween-Events an 3 Tagen gut."
+    },
+    {
+      "id": "event-weihnachten",
+      "icon": "🎄",
+      "name": "Weihnachtsstern",
+      "typ": "event",
+      "event": "weihnachten",
+      "n": 3,
+      "text": "Übe während des Weihnachts-Events an 3 Tagen gut."
+    },
+    {
+      "id": "event-ostern",
+      "icon": "🐣",
+      "name": "Osterprofi",
+      "typ": "event",
+      "event": "ostern",
+      "n": 3,
+      "text": "Übe während des Oster-Events an 3 Tagen gut."
+    }
+  ],
+  "EVENTS": [
+    {
+      "id": "halloween",
+      "name": "Halloween",
+      "titel": "Halloween-Event",
+      "geschenk": "Halloween-Geschenk",
+      "icon": "🎃",
+      "farbe": "#fb923c",
+      "farbe2": "#a855f7",
+      "text": "Event-Truhen enthalten gruselige Teile – und die erste gute Runde bringt eine Geschenk-Truhe!"
+    },
+    {
+      "id": "weihnachten",
+      "name": "Weihnachten",
+      "titel": "Weihnachts-Event",
+      "geschenk": "Weihnachtsgeschenk",
+      "icon": "🎄",
+      "farbe": "#ef4444",
+      "farbe2": "#22c55e",
+      "text": "Event-Truhen enthalten winterliche Teile – und die erste gute Runde bringt eine Geschenk-Truhe!"
+    },
+    {
+      "id": "ostern",
+      "name": "Ostern",
+      "titel": "Oster-Event",
+      "geschenk": "Ostergeschenk",
+      "icon": "🐣",
+      "farbe": "#f9a8d4",
+      "farbe2": "#86efac",
+      "text": "Event-Truhen enthalten Frühlings-Teile – und die erste gute Runde bringt eine Geschenk-Truhe!"
+    }
+  ],
+  "ITEMS": [
+    {
+      "id": "r-holz",
+      "slot": "rahmen",
+      "name": "Holzrahmen",
+      "selten": "gewoehnlich",
+      "quelle": "truhe",
+      "css": "border:3px solid #a0703c;box-shadow:0 0 0 2px #5c3d1e"
+    },
+    {
+      "id": "r-silber",
+      "slot": "rahmen",
+      "name": "Silberrahmen",
+      "selten": "gewoehnlich",
+      "quelle": "truhe",
+      "css": "border:3px solid #cbd5e1;box-shadow:0 0 10px rgba(203,213,225,.5)"
+    },
+    {
+      "id": "r-himmel",
+      "slot": "rahmen",
+      "name": "Himmelblau",
+      "selten": "gewoehnlich",
+      "quelle": "truhe",
+      "css": "border:3px solid #38bdf8;box-shadow:0 0 10px rgba(56,189,248,.45)"
+    },
+    {
+      "id": "r-wald",
+      "slot": "rahmen",
+      "name": "Waldgrün",
+      "selten": "gewoehnlich",
+      "quelle": "truhe",
+      "css": "border:3px solid #22c55e;box-shadow:0 0 10px rgba(34,197,94,.4)"
+    },
+    {
+      "id": "r-regenbogen",
+      "slot": "rahmen",
+      "name": "Regenbogen",
+      "selten": "selten",
+      "quelle": "truhe",
+      "css": "border:3px solid transparent;background:linear-gradient(#1b1929,#1b1929) padding-box,conic-gradient(#f43f5e,#f59e0b,#22c55e,#3b82f6,#a855f7,#f43f5e) border-box"
+    },
+    {
+      "id": "r-lava",
+      "slot": "rahmen",
+      "name": "Lava",
+      "selten": "selten",
+      "quelle": "truhe",
+      "css": "border:3px solid #f97316;box-shadow:0 0 14px rgba(239,68,68,.7),inset 0 0 8px rgba(249,115,22,.5)"
+    },
+    {
+      "id": "r-galaxie",
+      "slot": "rahmen",
+      "name": "Galaxie",
+      "selten": "episch",
+      "quelle": "truhe",
+      "css": "border:3px solid transparent;background:linear-gradient(#1b1929,#1b1929) padding-box,conic-gradient(#6366f1,#ec4899,#06b6d4,#6366f1) border-box;box-shadow:0 0 18px rgba(168,85,247,.6)"
+    },
+    {
+      "id": "h-kappe",
+      "slot": "hut",
+      "name": "Kappe",
+      "selten": "gewoehnlich",
+      "quelle": "truhe",
+      "emoji": "🧢"
+    },
+    {
+      "id": "h-schleife",
+      "slot": "hut",
+      "name": "Schleife",
+      "selten": "gewoehnlich",
+      "quelle": "truhe",
+      "emoji": "🎀"
+    },
+    {
+      "id": "h-bluete",
+      "slot": "hut",
+      "name": "Blüte",
+      "selten": "gewoehnlich",
+      "quelle": "truhe",
+      "emoji": "🌼"
+    },
+    {
+      "id": "h-helm",
+      "slot": "hut",
+      "name": "Forscherhelm",
+      "selten": "gewoehnlich",
+      "quelle": "truhe",
+      "emoji": "⛑️"
+    },
+    {
+      "id": "h-sonnenhut",
+      "slot": "hut",
+      "name": "Sonnenhut",
+      "selten": "selten",
+      "quelle": "truhe",
+      "emoji": "👒"
+    },
+    {
+      "id": "h-doktorhut",
+      "slot": "hut",
+      "name": "Doktorhut",
+      "selten": "selten",
+      "quelle": "truhe",
+      "emoji": "🎓"
+    },
+    {
+      "id": "h-zylinder",
+      "slot": "hut",
+      "name": "Zylinder",
+      "selten": "selten",
+      "quelle": "truhe",
+      "emoji": "🎩"
+    },
+    {
+      "id": "h-krone",
+      "slot": "hut",
+      "name": "Krone",
+      "selten": "episch",
+      "quelle": "truhe",
+      "emoji": "👑"
+    },
+    {
+      "id": "b-kueken",
+      "slot": "begleiter",
+      "name": "Küken",
+      "selten": "gewoehnlich",
+      "quelle": "truhe",
+      "emoji": "🐤"
+    },
+    {
+      "id": "b-marienkaefer",
+      "slot": "begleiter",
+      "name": "Marienkäfer",
+      "selten": "gewoehnlich",
+      "quelle": "truhe",
+      "emoji": "🐞"
+    },
+    {
+      "id": "b-schmetterling",
+      "slot": "begleiter",
+      "name": "Schmetterling",
+      "selten": "gewoehnlich",
+      "quelle": "truhe",
+      "emoji": "🦋"
+    },
+    {
+      "id": "b-stern",
+      "slot": "begleiter",
+      "name": "Sternchen",
+      "selten": "gewoehnlich",
+      "quelle": "truhe",
+      "emoji": "⭐"
+    },
+    {
+      "id": "b-schildkroete",
+      "slot": "begleiter",
+      "name": "Schildkröte",
+      "selten": "gewoehnlich",
+      "quelle": "truhe",
+      "emoji": "🐢"
+    },
+    {
+      "id": "b-rakete",
+      "slot": "begleiter",
+      "name": "Rakete",
+      "selten": "selten",
+      "quelle": "truhe",
+      "emoji": "🚀"
+    },
+    {
+      "id": "b-komet",
+      "slot": "begleiter",
+      "name": "Komet",
+      "selten": "selten",
+      "quelle": "truhe",
+      "emoji": "☄️"
+    },
+    {
+      "id": "b-papagei",
+      "slot": "begleiter",
+      "name": "Papagei",
+      "selten": "selten",
+      "quelle": "truhe",
+      "emoji": "🦜"
+    },
+    {
+      "id": "b-drache",
+      "slot": "begleiter",
+      "name": "Drache",
+      "selten": "episch",
+      "quelle": "truhe",
+      "emoji": "🐉"
+    },
+    {
+      "id": "b-ufo",
+      "slot": "begleiter",
+      "name": "Ufo",
+      "selten": "episch",
+      "quelle": "truhe",
+      "emoji": "🛸"
+    },
+    {
+      "id": "bg-mitternacht",
+      "slot": "hintergrund",
+      "name": "Mitternacht",
+      "selten": "gewoehnlich",
+      "quelle": "truhe",
+      "css": "linear-gradient(120deg,#0b1026,#1e2a5a)"
+    },
+    {
+      "id": "bg-wald",
+      "slot": "hintergrund",
+      "name": "Wald",
+      "selten": "gewoehnlich",
+      "quelle": "truhe",
+      "css": "linear-gradient(120deg,#0f2418,#1f4d2e)"
+    },
+    {
+      "id": "bg-ozean",
+      "slot": "hintergrund",
+      "name": "Ozean",
+      "selten": "gewoehnlich",
+      "quelle": "truhe",
+      "css": "linear-gradient(120deg,#082f49,#0e7490)"
+    },
+    {
+      "id": "bg-sonnenuntergang",
+      "slot": "hintergrund",
+      "name": "Sonnenuntergang",
+      "selten": "selten",
+      "quelle": "truhe",
+      "css": "linear-gradient(120deg,#3b0d2e,#9a3412 70%,#b45309)"
+    },
+    {
+      "id": "bg-polarlicht",
+      "slot": "hintergrund",
+      "name": "Polarlicht",
+      "selten": "selten",
+      "quelle": "truhe",
+      "css": "linear-gradient(120deg,#051a1f,#0f3d3e 45%,#1e5d4b 70%,#3b2a6b)"
+    },
+    {
+      "id": "bg-sternenhimmel",
+      "slot": "hintergrund",
+      "name": "Sternenhimmel",
+      "selten": "episch",
+      "quelle": "truhe",
+      "css": "radial-gradient(1px 1px at 20% 30%,#fff,transparent),radial-gradient(1px 1px at 70% 60%,#fff,transparent),radial-gradient(1.5px 1.5px at 45% 80%,#fde68a,transparent),radial-gradient(1px 1px at 85% 25%,#fff,transparent),linear-gradient(120deg,#0b0a1f,#27124a)"
+    },
+    {
+      "id": "s-entdeckerhut",
+      "slot": "hut",
+      "name": "Entdecker-Kompass",
+      "selten": "legendaer",
+      "quelle": "set",
+      "set": "entdecker",
+      "emoji": "🧭"
+    },
+    {
+      "id": "s-weltkarte",
+      "slot": "hintergrund",
+      "name": "Weltkarte",
+      "selten": "legendaer",
+      "quelle": "set",
+      "set": "weltreisender",
+      "css": "repeating-linear-gradient(0deg,rgba(230,168,23,.07) 0 1px,transparent 1px 22px),repeating-linear-gradient(90deg,rgba(230,168,23,.07) 0 1px,transparent 1px 22px),linear-gradient(120deg,#1c2b3a,#2d3f2a)"
+    },
+    {
+      "id": "s-goldrahmen",
+      "slot": "rahmen",
+      "name": "Goldrahmen",
+      "selten": "legendaer",
+      "quelle": "set",
+      "set": "goldkind",
+      "css": "border:3px solid #e6a817;box-shadow:0 0 16px rgba(230,168,23,.75)"
+    },
+    {
+      "id": "s-diamant",
+      "slot": "rahmen",
+      "name": "Diamantrahmen",
+      "selten": "legendaer",
+      "quelle": "set",
+      "set": "goldschatz",
+      "css": "border:3px solid #a5f3fc;box-shadow:0 0 18px rgba(165,243,252,.8),inset 0 0 6px rgba(255,255,255,.6)"
+    },
+    {
+      "id": "s-biene",
+      "slot": "begleiter",
+      "name": "Fleißige Biene",
+      "selten": "legendaer",
+      "quelle": "set",
+      "set": "unermuedlich",
+      "emoji": "🐝"
+    },
+    {
+      "id": "s-honig",
+      "slot": "hintergrund",
+      "name": "Honigwabe",
+      "selten": "legendaer",
+      "quelle": "set",
+      "set": "unermuedlich",
+      "css": "radial-gradient(circle at 20% 50%,rgba(251,191,36,.25),transparent 40%),linear-gradient(120deg,#3a2606,#6b4410)"
+    },
+    {
+      "id": "s-flamme",
+      "slot": "begleiter",
+      "name": "Flamme",
+      "selten": "legendaer",
+      "quelle": "set",
+      "set": "serienheld",
+      "emoji": "🔥"
+    },
+    {
+      "id": "s-feuerrahmen",
+      "slot": "rahmen",
+      "name": "Feuerrahmen",
+      "selten": "legendaer",
+      "quelle": "set",
+      "set": "dauerbrenner",
+      "css": "border:3px solid #f59e0b;box-shadow:0 0 12px #f97316,0 0 24px rgba(239,68,68,.6)"
+    },
+    {
+      "id": "s-adler",
+      "slot": "begleiter",
+      "name": "Adler",
+      "selten": "legendaer",
+      "quelle": "set",
+      "set": "comeback",
+      "emoji": "🦅"
+    },
+    {
+      "id": "s-diamant-krone",
+      "slot": "hut",
+      "name": "Juwelen-Krone",
+      "selten": "legendaer",
+      "quelle": "set",
+      "set": "xp-5000",
+      "emoji": "💎"
+    },
+    {
+      "id": "e-kuerbis",
+      "slot": "hut",
+      "name": "Kürbis",
+      "selten": "event",
+      "quelle": "event",
+      "event": "halloween",
+      "emoji": "🎃"
+    },
+    {
+      "id": "e-fledermaus",
+      "slot": "begleiter",
+      "name": "Fledermaus",
+      "selten": "event",
+      "quelle": "event",
+      "event": "halloween",
+      "emoji": "🦇"
+    },
+    {
+      "id": "e-gespenst",
+      "slot": "begleiter",
+      "name": "Gespenst",
+      "selten": "event",
+      "quelle": "event",
+      "event": "halloween",
+      "emoji": "👻"
+    },
+    {
+      "id": "e-spinnennetz",
+      "slot": "rahmen",
+      "name": "Spinnennetz",
+      "selten": "event",
+      "quelle": "event",
+      "event": "halloween",
+      "css": "border:3px dashed #a855f7;box-shadow:0 0 0 2px #fb923c,0 0 14px rgba(168,85,247,.6)"
+    },
+    {
+      "id": "e-geisternacht",
+      "slot": "hintergrund",
+      "name": "Geisternacht",
+      "selten": "event",
+      "quelle": "event",
+      "event": "halloween",
+      "css": "radial-gradient(circle at 85% 30%,rgba(251,146,60,.35),transparent 30%),linear-gradient(120deg,#1a0b2e,#3b1450)"
+    },
+    {
+      "id": "s-schwarze-katze",
+      "slot": "begleiter",
+      "name": "Schwarze Katze",
+      "selten": "legendaer",
+      "quelle": "set",
+      "set": "event-halloween",
+      "emoji": "🐈‍⬛"
+    },
+    {
+      "id": "e-weihnachtsstern",
+      "slot": "hut",
+      "name": "Weihnachtsstern",
+      "selten": "event",
+      "quelle": "event",
+      "event": "weihnachten",
+      "emoji": "🌟"
+    },
+    {
+      "id": "e-schneemann",
+      "slot": "begleiter",
+      "name": "Schneemann",
+      "selten": "event",
+      "quelle": "event",
+      "event": "weihnachten",
+      "emoji": "⛄"
+    },
+    {
+      "id": "e-geschenk",
+      "slot": "begleiter",
+      "name": "Geschenk",
+      "selten": "event",
+      "quelle": "event",
+      "event": "weihnachten",
+      "emoji": "🎁"
+    },
+    {
+      "id": "e-zuckerstange",
+      "slot": "rahmen",
+      "name": "Zuckerstange",
+      "selten": "event",
+      "quelle": "event",
+      "event": "weihnachten",
+      "css": "border:3px solid transparent;background:linear-gradient(#1b1929,#1b1929) padding-box,repeating-linear-gradient(45deg,#ef4444 0 6px,#fff 6px 12px) border-box"
+    },
+    {
+      "id": "e-schneenacht",
+      "slot": "hintergrund",
+      "name": "Schneenacht",
+      "selten": "event",
+      "quelle": "event",
+      "event": "weihnachten",
+      "css": "radial-gradient(2px 2px at 15% 25%,#fff,transparent),radial-gradient(2px 2px at 60% 15%,#fff,transparent),radial-gradient(1.5px 1.5px at 35% 70%,#fff,transparent),radial-gradient(2px 2px at 80% 60%,#fff,transparent),linear-gradient(120deg,#0c1a3a,#14325e)"
+    },
+    {
+      "id": "s-rentier",
+      "slot": "begleiter",
+      "name": "Rentier",
+      "selten": "legendaer",
+      "quelle": "set",
+      "set": "event-weihnachten",
+      "emoji": "🦌"
+    },
+    {
+      "id": "e-tulpe",
+      "slot": "hut",
+      "name": "Tulpe",
+      "selten": "event",
+      "quelle": "event",
+      "event": "ostern",
+      "emoji": "🌷"
+    },
+    {
+      "id": "e-osterhase",
+      "slot": "begleiter",
+      "name": "Osterhase",
+      "selten": "event",
+      "quelle": "event",
+      "event": "ostern",
+      "emoji": "🐇"
+    },
+    {
+      "id": "e-osterei",
+      "slot": "begleiter",
+      "name": "Osterei",
+      "selten": "event",
+      "quelle": "event",
+      "event": "ostern",
+      "emoji": "🥚"
+    },
+    {
+      "id": "e-fruehling",
+      "slot": "rahmen",
+      "name": "Frühlingsrahmen",
+      "selten": "event",
+      "quelle": "event",
+      "event": "ostern",
+      "css": "border:3px solid transparent;background:linear-gradient(#1b1929,#1b1929) padding-box,linear-gradient(135deg,#f9a8d4,#fde68a,#86efac,#93c5fd) border-box"
+    },
+    {
+      "id": "e-blumenwiese",
+      "slot": "hintergrund",
+      "name": "Blumenwiese",
+      "selten": "event",
+      "quelle": "event",
+      "event": "ostern",
+      "css": "radial-gradient(circle at 15% 80%,rgba(249,168,212,.35),transparent 25%),radial-gradient(circle at 80% 75%,rgba(253,230,138,.3),transparent 25%),linear-gradient(120deg,#12301f,#2a4d2f)"
+    },
+    {
+      "id": "s-regenbogen",
+      "slot": "begleiter",
+      "name": "Regenbogen",
+      "selten": "legendaer",
+      "quelle": "set",
+      "set": "event-ostern",
+      "emoji": "🌈"
+    }
+  ]
+}

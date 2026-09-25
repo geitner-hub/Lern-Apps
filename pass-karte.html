@@ -173,14 +173,18 @@ document.getElementById('sheet').addEventListener('click', e => {
 document.getElementById('btn-print').addEventListener('click', () => window.print());
 
 // Start: eigene Karte (falls Pass vorhanden) – ?sammel öffnet den Lehrkraft-Modus
-const params = new URLSearchParams(location.search);
-if (params.has('sammel')) {
-  document.getElementById('collect').open = true;
-  document.getElementById('intro').textContent = 'Sammelbogen: Füge die Sicherungs-Codes deiner Klasse ein und drucke 8 Karten pro A4-Seite.';
-} else if (LernPass.hasProfile()) {
-  addCode(LernPass.exportCode());
+function startKarten() {
+  const params = new URLSearchParams(location.search);
+  if (params.has('sammel')) {
+    document.getElementById('collect').open = true;
+    document.getElementById('intro').textContent = 'Sammelbogen: Füge die Sicherungs-Codes deiner Klasse ein und drucke 8 Karten pro A4-Seite.';
+  } else if (LernPass.hasProfile()) {
+    addCode(LernPass.exportCode());
+  }
+  render();
 }
-render();
+if (window.LernPass) startKarten();
+else window.addEventListener('lernpass:ready', startKarten, { once: true });
 </script>
 </body>
 </html>
