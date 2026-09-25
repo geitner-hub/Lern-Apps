@@ -312,5 +312,13 @@
     "text": "",
     "emoji": "📢",
     "color": 0
+  },
+  "pass": {
+    "seasons": true,
+    "events": {
+      "halloween": false,
+      "weihnachten": false,
+      "ostern": false
+    }
   }
 }
