@@ -298,7 +298,9 @@
       "emoji": "🗺️",
       "beschreibung": "Wie gut kennst du dich in Deutschland und Europa aus?",
       "hidden": false,
-      "klassen": [],
+      "klassen": [
+        6
+      ],
       "customTags": [],
       "aod": false
     }
