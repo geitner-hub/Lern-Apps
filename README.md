@@ -20,6 +20,7 @@ verwaltet über ein eigenes Admin-Panel.
 | `vendor/three.min.js` | three.js r128 (MIT-Lizenz), wird von `avatar3d.js` erst bei Bedarf geladen |
 | `pass.js` | Lernwelt-Pass: XP, Level, Wochen-Serie, Meisterschafts-Sterne, Sicherungs-Code, Truhen-Zähler |
 | `manifest.webmanifest` + `icons/` | App-Symbol für den Home-Bildschirm (Anleitung für Schul-iPads: `APP-SYMBOL.md`) |
+| `vendor/jsQR.min.js` | QR-Erkennung für „📷 QR scannen“ (Apache-2.0), wird erst beim Scannen geladen |
 | `sw.js` | Offline-Speicher (Service Worker): „Internet zuerst“, bei fehlendem/langsamem Netz die letzte Kopie |
 | `fonts.css` + `fonts/` | Lokal gehostete Schriften (kein Google Fonts → DSGVO) |
 | `qrcode.js` | QR-Code-Erzeugung im Browser (MIT-Lizenz, Kazuhiko Arase) |
@@ -113,7 +114,11 @@ in `RULES` am Anfang von `pass.js` und können dort angepasst werden.
 - Speicher: `localStorage['lernwelt-pass']` (nur auf dem Gerät).
 - Schutz vor Datenverlust: Symbol auf dem Home-Bildschirm (`APP-SYMBOL.md`, eigener Speicher ohne
   Safari-Löschregel), `navigator.storage.persist()`, Sicherungs-QR/-Karte. Achtung: App-Symbol und
-  Safari haben getrennte Speicher – Übernahme per „Code kopieren“.
+  Safari haben getrennte Speicher – Übernahme per „📷 QR scannen“ (Sicherungskarte) oder „Code kopieren“.
+- **📷 QR scannen** (Startseite): öffnet gescannte Lernwelt-Apps innerhalb der Lernwelt (wichtig für das
+  App-Symbol, weil die Kamera-App immer Safari öffnet), liest Sicherungskarten ein, lehnt fremde Codes ab.
+- **Safari-Hinweis:** Auf iPad/iPhone in Safari (nicht im App-Symbol) erscheint oben einmal pro Tag der
+  Hinweis, das Lernwelt-Symbol zu benutzen (nicht im Admin und auf der Druckkarte).
 
 ### Avatar-Teile (ohne Programmieren)
 

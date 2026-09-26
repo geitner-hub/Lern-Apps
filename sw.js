@@ -9,7 +9,7 @@
 //
 //  Nach einer Änderung an DIESER Datei VERSION erhöhen.
 // ═══════════════════════════════════════════════════════
-const VERSION = 'lernwelt-v1';
+const VERSION = 'lernwelt-v2';
 const START = ['./', 'index.html', 'shared.js', 'config-api.js', 'navbar.js', 'pass.js', 'avatar3d.js',
                'fonts.css', 'qrcode.js', 'config.json', 'lernwelt-inhalte.json', 'manifest.webmanifest'];
 const FEST = /\/(vendor|fonts|icons)\//;      // ändern sich (fast) nie

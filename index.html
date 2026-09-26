@@ -82,6 +82,14 @@
     .filter-search:focus{border-color:rgba(230,168,23,.4);background:rgba(15,14,26,.8);}
     .filter-search::placeholder{color:var(--muted);}
 
+    .scan-btn{flex-shrink:0;display:flex;align-items:center;gap:.35rem;background:rgba(230,168,23,.14);border:1px solid rgba(230,168,23,.45);color:var(--accent);border-radius:10px;padding:.45rem .8rem;font-family:inherit;font-weight:900;font-size:.84rem;cursor:pointer;white-space:nowrap;}
+    .scan-btn:hover{background:rgba(230,168,23,.22);}
+    @media (max-width:480px){.scan-btn span{display:none;}}
+    .scan-box{width:min(460px,100%);text-align:center;}
+    .scan-view{position:relative;margin:.8rem auto .4rem;width:100%;aspect-ratio:1;max-width:380px;border-radius:16px;overflow:hidden;background:#000;}
+    .scan-view video{width:100%;height:100%;object-fit:cover;display:block;}
+    .scan-frame{position:absolute;inset:14%;border:3px solid rgba(230,168,23,.9);border-radius:14px;box-shadow:0 0 0 999px rgba(0,0,0,.35);pointer-events:none;}
+    .scan-view.hit .scan-frame{border-color:#4ade80;}
     .view-toggle{display:flex;background:rgba(255,255,255,.05);border-radius:9px;padding:3px;gap:2px;flex-shrink:0;border:1px solid var(--border);}
     .view-btn{width:30px;height:30px;border:none;border-radius:6px;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted);transition:all .15s;}
     .view-btn.active{background:rgba(230,168,23,.14);color:var(--accent);}
@@ -412,6 +420,7 @@
   <div class="fi">
     <div class="filter-top-row">
       <input type="search" class="filter-search" id="search" placeholder="App suchen …" autocomplete="off" aria-label="App suchen"/>
+      <button type="button" class="scan-btn" id="scan-btn" title="QR-Code der Lehrkraft scannen – die App öffnet sich hier in der Lernwelt">📷 <span>QR scannen</span></button>
       <div class="view-toggle">
         <button type="button" class="view-btn active" id="btn-grid" title="Kachelansicht" aria-label="Kachelansicht">
           <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1.5" fill="currentColor"/><rect x="9" y="1" width="6" height="6" rx="1.5" fill="currentColor"/><rect x="1" y="9" width="6" height="6" rx="1.5" fill="currentColor"/><rect x="9" y="9" width="6" height="6" rx="1.5" fill="currentColor"/></svg>
@@ -444,6 +453,19 @@
 <footer>🧭 <span>Lernwelt</span> · geitner-hub.github.io</footer>
 
 <!-- ── QR-Modal ── -->
+<div id="scan-modal" class="lw-modal" role="dialog" aria-modal="true" aria-labelledby="scan-title">
+  <div class="lw-box scan-box">
+    <button type="button" class="lw-close" id="scan-close" aria-label="Schließen">✕</button>
+    <div class="lw-h" id="scan-title">📷 QR-Code scannen</div>
+    <div class="scan-view" id="scan-view">
+      <video id="scan-video" playsinline muted></video>
+      <div class="scan-frame"></div>
+    </div>
+    <div class="lw-msg" id="scan-msg">Halte den QR-Code in den Rahmen.</div>
+    <div class="lw-btns" id="scan-btns" style="justify-content:center"></div>
+  </div>
+</div>
+
 <div id="qr-modal" role="dialog" aria-modal="true" aria-labelledby="qr-title">
   <div class="qr-box">
     <div class="qr-title" id="qr-title">QR-Code</div>
@@ -1270,7 +1292,7 @@ function showRestoreChoice(code) {
     <p class="lw-p"><b style="color:#fff">${escHtml(pv.name)}</b> – Level ${pv.level} (${escHtml(pv.title)}), ${pv.xp} XP, gesichert am ${escHtml(pv.date)}</p>
     <div class="lw-sec" style="border-top:none;padding-top:.4rem">
       <h3>📱 Du benutzt das Lernwelt-Symbol auf dem Home-Bildschirm?</h3>
-      <p class="lw-p">1. Code kopieren · 2. Lernwelt-Symbol öffnen · 3. Pass öffnen → „Ich habe schon einen Pass“ (oder „Pass aus Code wiederherstellen“) → einfügen.</p>
+      <p class="lw-p">Am einfachsten: Lernwelt-Symbol öffnen → <b>📷 QR scannen</b> → diese Sicherungskarte scannen.<br>Oder: Code kopieren → im Lernwelt-Symbol den Pass öffnen → „Ich habe schon einen Pass“ → einfügen.</p>
       <div class="lw-btns"><button type="button" class="lw-btn primary" id="rc-copy">📋 Code kopieren</button></div>
       <div class="lw-msg" id="rc-msg"></div>
     </div>
@@ -1287,6 +1309,107 @@ function showRestoreChoice(code) {
   document.getElementById('rc-here').onclick = () => askRestore(code, null);
 }
 
+
+// ── QR-Scanner (öffnet Apps innerhalb der Lernwelt-App) ─
+const scan = { stream: null, timer: 0, lib: null, busy: false };
+function loadJsQR() {
+  if (window.jsQR) return Promise.resolve(window.jsQR);
+  if (scan.lib) return scan.lib;
+  scan.lib = new Promise((res, rej) => {
+    const s = document.createElement('script');
+    s.src = 'vendor/jsQR.min.js';
+    s.onload = () => (window.jsQR ? res(window.jsQR) : rej(new Error('jsQR')));
+    s.onerror = () => { scan.lib = null; rej(new Error('jsQR')); };
+    document.head.appendChild(s);
+  });
+  return scan.lib;
+}
+function scanMsg(text, cls) { const m = document.getElementById('scan-msg'); m.className = 'lw-msg' + (cls ? ' ' + cls : ''); m.textContent = text; }
+function scanButtons(html) { document.getElementById('scan-btns').innerHTML = html || ''; }
+async function openScanner() {
+  document.getElementById('scan-modal').classList.add('open');
+  document.body.classList.add('qr-open');
+  document.getElementById('scan-view').classList.remove('hit');
+  scanButtons('');
+  scanMsg('Kamera wird gestartet …');
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { scanMsg('Dieses Gerät erlaubt hier keinen Kamerazugriff.', 'err'); return; }
+  try {
+    const [stream] = await Promise.all([
+      navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false }),
+      loadJsQR(),
+    ]);
+    if (!document.getElementById('scan-modal').classList.contains('open')) { stream.getTracks().forEach(t => t.stop()); return; }
+    scan.stream = stream;
+    const v = document.getElementById('scan-video');
+    v.srcObject = stream;
+    await v.play().catch(() => {});
+    scanMsg('Halte den QR-Code in den Rahmen.');
+    scanLoop();
+  } catch (e) {
+    const denied = e && (e.name === 'NotAllowedError' || e.name === 'SecurityError');
+    scanMsg(denied ? 'Die Kamera ist nicht erlaubt. Frag deine Lehrkraft oder erlaube die Kamera in den Einstellungen.'
+                   : e && e.message === 'jsQR' ? 'Der Scanner konnte nicht geladen werden. Bitte mit Internet erneut versuchen.'
+                   : 'Keine Kamera gefunden.', 'err');
+  }
+}
+function scanLoop() {
+  const v = document.getElementById('scan-video');
+  const c = scanLoop.c || (scanLoop.c = document.createElement('canvas'));
+  const ctx = c.getContext('2d', { willReadFrequently: true });
+  clearInterval(scan.timer);
+  scan.timer = setInterval(() => {
+    if (!v.videoWidth || scan.busy) return;
+    const k = Math.min(1, 640 / Math.max(v.videoWidth, v.videoHeight));
+    c.width = Math.round(v.videoWidth * k); c.height = Math.round(v.videoHeight * k);
+    ctx.drawImage(v, 0, 0, c.width, c.height);
+    const img = ctx.getImageData(0, 0, c.width, c.height);
+    const hit = window.jsQR(img.data, c.width, c.height, { inversionAttempts: 'attemptBoth' });
+    if (hit && hit.data) { scan.busy = true; document.getElementById('scan-view').classList.add('hit'); stopCamera(); handleScan(hit.data.trim()); }
+  }, 180);
+}
+function stopCamera() {
+  clearInterval(scan.timer);
+  if (scan.stream) { scan.stream.getTracks().forEach(t => t.stop()); scan.stream = null; }
+  const v = document.getElementById('scan-video'); if (v) v.srcObject = null;
+}
+function closeScanner() {
+  stopCamera(); scan.busy = false;
+  document.getElementById('scan-modal').classList.remove('open');
+  document.body.classList.remove('qr-open');
+}
+/** Was steckt im Code? Nur Lernwelt-Inhalte werden geöffnet. */
+function handleScan(text) {
+  const again = '<button type="button" class="lw-btn" id="scan-again">Nochmal scannen</button>';
+  if (/^LW[12]\./.test(text)) { closeScanner(); askRestore(text, null); return; }
+  let url = null;
+  try { url = new URL(text); } catch (e) {}
+  if (url) {
+    const m = url.hash.match(/^#pass=(.+)$/);
+    if (m && url.href.startsWith(lwBaseUrl())) { closeScanner(); askRestore(decodeURIComponent(m[1]), null); return; }
+    if (url.href.startsWith(lwBaseUrl()) && /(\/|\.html)$/.test(url.pathname)) {
+      const name = (CONFIG && CONFIG.apps || []).find(a => appUrl(a.datei) && url.href.startsWith(appUrl(a.datei).split('#')[0]));
+      scanMsg('✓ ' + (name ? name.name : 'Lernwelt') + ' wird geöffnet …', 'ok');
+      setTimeout(() => { location.href = url.href; }, 350);
+      return;
+    }
+    const ext = (CONFIG && CONFIG.apps || []).find(a => /^https:\/\//.test(a.datei) && a.datei === url.href);
+    if (ext) {
+      scanMsg(`„${ext.name}“ ist eine Seite außerhalb der Lernwelt.`);
+      scanButtons(`<a class="lw-btn primary" href="${escHtml(ext.datei)}" target="_blank" rel="noopener" style="text-decoration:none">Öffnen</a>` + again);
+      return;
+    }
+  }
+  scanMsg('Dieser QR-Code gehört nicht zur Lernwelt.', 'err');
+  scanButtons(again);
+}
+document.getElementById('scan-btn').addEventListener('click', openScanner);
+document.getElementById('scan-close').addEventListener('click', closeScanner);
+document.getElementById('scan-modal').addEventListener('click', e => {
+  if (e.target.id === 'scan-modal') closeScanner();
+  if (e.target.id === 'scan-again') { scan.busy = false; openScanner(); }
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && document.getElementById('scan-modal').classList.contains('open')) closeScanner(); });
+document.addEventListener('visibilitychange', () => { if (document.hidden && scan.stream) closeScanner(); });
 
 // ── App-Modus & Offline-Speicher ──────────────────────
 const IS_APP = (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;

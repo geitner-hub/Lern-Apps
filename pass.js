@@ -848,6 +848,38 @@
     _dayKey: dayKey, _weekKey: weekKey,
   };
 
+  // ── Hinweis in Safari (iPad/iPhone): der Pass wohnt im App-Symbol ──
+  function safariHint() {
+    const ios = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    const app = (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
+    if (!ios || app || /(admin|pass-karte)\.html$/.test(location.pathname)) return;
+    const KEY = 'lernwelt-safari-hinweis';
+    try { if (localStorage.getItem(KEY) === dayKey()) return; } catch (e) { return; }
+    const st = document.createElement('style');
+    st.textContent = `
+      #lw-safari{position:fixed;left:50%;top:max(10px,env(safe-area-inset-top));transform:translateX(-50%);z-index:10004;
+        width:min(94vw,520px);background:#fff8e6;color:#2a1d00;border:2px solid #e6a817;border-radius:16px;
+        box-shadow:0 12px 36px rgba(0,0,0,.35);padding:.75rem .9rem;font:700 .86rem/1.4 'Nunito','Segoe UI',sans-serif;}
+      #lw-safari b{font-weight:900;}
+      #lw-safari .row{display:flex;gap:.7rem;align-items:flex-start;}
+      #lw-safari .ic{font-size:1.7rem;line-height:1;}
+      #lw-safari .small{font-size:.74rem;color:#6b5a2a;margin-top:.35rem;font-weight:700;}
+      #lw-safari button{margin-top:.55rem;background:#e6a817;color:#2a1d00;border:0;border-radius:10px;padding:.45rem .9rem;
+        font:900 .84rem 'Nunito','Segoe UI',sans-serif;cursor:pointer;}`;
+    document.head.appendChild(st);
+    const el = document.createElement('div');
+    el.id = 'lw-safari';
+    el.setAttribute('role', 'alert');
+    el.innerHTML = `<div class="row"><span class="ic">🧭</span><div>
+      <b>Du bist gerade in Safari.</b> Dein Lernwelt-Pass wohnt im <b>Lernwelt-Symbol</b> auf dem Home-Bildschirm –
+      was du hier übst, zählt dort nicht. Öffne lieber das Symbol und scanne QR-Codes dort mit <b>📷 QR scannen</b>.
+      <div class="small">Noch kein Symbol? Teilen-Knopf → „Zum Home-Bildschirm“.</div>
+      <button type="button">Verstanden</button></div></div>`;
+    el.querySelector('button').onclick = () => { try { localStorage.setItem(KEY, dayKey()); } catch (e) {} el.remove(); };
+    document.body.appendChild(el);
+  }
+  if (document.body) safariHint(); else document.addEventListener('DOMContentLoaded', safariHint);
+
   // Ergebnisse, die navbar.js vor dem Laden dieses Skripts gemeldet hat
   const q = window.__lernPassQueue;
   if (Array.isArray(q)) { q.splice(0).forEach(r => toast(award(r))); }
