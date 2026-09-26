@@ -209,6 +209,10 @@
     .it-prev.it-bg{border-radius:8px;width:60px;height:38px;border:1px solid var(--border2);position:relative;overflow:hidden;}
     .it-prev.it-bg svg{position:absolute;inset:0;width:100%;height:100%;}
     .rar{font-size:.68rem;font-weight:900;border-radius:99px;padding:.1rem .5rem;border:1px solid;}
+    .session-info{font-size:.72rem;color:var(--muted);font-weight:700;white-space:nowrap;}
+    .btn-danger-soft{border-color:rgba(248,113,113,.45)!important;color:#fca5a5!important;}
+    .btn-danger-soft:hover{background:rgba(248,113,113,.12)!important;}
+    @media (max-width:700px){.session-info{display:none;}}
     .login-hint{font-size:.72rem;color:var(--muted);margin-top:.9rem;line-height:1.4;}
     .qr-url{font-size:.72rem;color:var(--muted);word-break:break-all;margin-bottom:.7rem;background:var(--surface2);padding:.45rem .75rem;border-radius:8px;}
     .qr-app-name-display{font-family:'Fredoka One',cursive;font-size:1.15rem;margin-bottom:.2rem;color:#fff;}
@@ -276,7 +280,7 @@
     <input type="password" id="pw" placeholder="Passwort" autocomplete="off"/>
     <div class="login-err" id="pw-err"></div>
     <button class="btn-login" id="btn-login" onclick="checkLogin()">Anmelden</button>
-    <div class="login-hint">Das Passwort wird vom Server geprüft und nur in diesem Tab gemerkt.</div>
+    <div class="login-hint">Das Passwort wird vom Server geprüft und nicht gespeichert. Dieses Gerät bleibt danach 7 Tage angemeldet.</div>
   </div>
 </div>
 
@@ -287,7 +291,9 @@
     <div class="topbar-actions">
       <span id="sync-status">–</span>
       <a href="index.html" class="btn">← Zur Seite</a>
-      <button class="btn" onclick="logout()" title="Abmelden">🔒 Abmelden</button>
+      <span id="session-info" class="session-info"></span>
+      <button class="btn" onclick="logout()" title="Nur dieses Gerät abmelden">🔒 Abmelden</button>
+      <button class="btn btn-danger-soft" onclick="logoutAllDevices()" title="Alle Geräte abmelden – danach braucht jedes Gerät wieder das Passwort">🚫 Alle Geräte abmelden</button>
     </div>
   </div>
 
@@ -529,6 +535,9 @@ async function checkLogin() {
 function showAdmin() {
   document.getElementById('login-screen').style.display = 'none';
   document.getElementById('app').style.display = 'block';
+  const exp = ConfigAPI.sessionExpiry();
+  document.getElementById('session-info').textContent = exp
+    ? 'Angemeldet bis ' + exp.toLocaleDateString('de-DE', { weekday: 'short', day: '2-digit', month: '2-digit' }) : '';
   loadConfig();
 }
 
@@ -544,11 +553,21 @@ function logout() {
   showLogin('Abgemeldet.');
 }
 
-// Bereits in diesem Tab angemeldet? → Sitzung serverseitig prüfen
+async function logoutAllDevices() {
+  if (!confirm('Alle Geräte abmelden?\n\nDanach ist der Admin auf JEDEM Gerät gesperrt – auch auf diesem – bis dort wieder das Passwort eingegeben wird.\n\nWirkt innerhalb von ca. 1 Minute überall.')) return;
+  const res = await ConfigAPI.logoutAll();
+  if (res.ok) showLogin('✓ Alle Geräte wurden abgemeldet.');
+  else if (res.status === 401) showLogin('Sitzung abgelaufen – bitte neu anmelden.');
+  else showToast('⚠ ' + (res.error || 'Abmelden nicht möglich'), true);
+}
+
+// Auf diesem Gerät schon angemeldet? → Schlüssel serverseitig prüfen
 (async () => {
   if (!ConfigAPI.hasSession()) return;
-  const res = await ConfigAPI.login(ConfigAPI.getPw());
-  if (res.ok) showAdmin(); else { ConfigAPI.logout(); showLogin(res.status === 401 ? 'Bitte erneut anmelden.' : ''); }
+  const res = await ConfigAPI.checkSession();
+  if (res.ok) showAdmin();
+  else if (res.status === 401) showLogin('Anmeldung abgelaufen – bitte Passwort eingeben.');
+  else showLogin(res.error ? '⚠ ' + res.error : '');
 })();
 
 // ── Sync ─────────────────────────────────────────────

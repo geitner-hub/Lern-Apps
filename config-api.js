@@ -12,8 +12,10 @@
 //    const { config, sha } = await ConfigAPI.loadAdmin();
 //    const r = await ConfigAPI.save(config, sha, 'Nachricht'); // { ok, newSha, status, error }
 //
-//  Das Passwort wird NUR im sessionStorage dieses Tabs gehalten
-//  (weg beim Schließen des Tabs) und NIE im Code gespeichert.
+//  Das Passwort wird NIE gespeichert. Nach dem Anmelden hält das Gerät nur
+//  einen vom Worker signierten Schlüssel (7 Tage gültig) im localStorage.
+//    await ConfigAPI.checkSession();   // gilt der Schlüssel noch?
+//    await ConfigAPI.logoutAll();      // alle Geräte abmelden
 // ═══════════════════════════════════════════════════════
 
 'use strict';
@@ -24,7 +26,8 @@ const ConfigAPI = (() => {
   const STATIC_URL     = 'config.json';
   const CACHE_KEY      = 'lernwelt-config-cache';
   const CACHE_TS_KEY   = 'lernwelt-config-cache-ts';
-  const PW_KEY         = 'lernwelt-admin-pw';
+  const TOKEN_KEY      = 'lernwelt-admin-schluessel';
+  try { sessionStorage.removeItem('lernwelt-admin-pw'); } catch (e) {}   // früher: Passwort im Tab
   const CONFIG_VERSION = 1;
 
   // Standard-Config – verhindert undefined-Fehler bei fehlenden Feldern
@@ -82,10 +85,18 @@ const ConfigAPI = (() => {
   }
 
   // ── Passwort (nur für diesen Tab) ──────────────────────
-  function getPw()   { try { return sessionStorage.getItem(PW_KEY) || ''; } catch (e) { return ''; } }
-  function setPw(pw) { try { sessionStorage.setItem(PW_KEY, pw); } catch (e) {} }
-  function logout()  { try { sessionStorage.removeItem(PW_KEY); } catch (e) {} }
-  function hasSession() { return !!getPw(); }
+  function readToken() {
+    try {
+      const t = JSON.parse(localStorage.getItem(TOKEN_KEY) || 'null');
+      return t && typeof t.token === 'string' && t.exp > Date.now() ? t : null;
+    } catch (e) { return null; }
+  }
+  function getToken() { const t = readToken(); return t ? t.token : ''; }
+  function setToken(token, exp) { try { localStorage.setItem(TOKEN_KEY, JSON.stringify({ token, exp })); } catch (e) {} }
+  function logout()  { try { localStorage.removeItem(TOKEN_KEY); } catch (e) {} }
+  function hasSession() { return !!readToken(); }
+  /** Ablauf der Anmeldung als Date (oder null) */
+  function sessionExpiry() { const t = readToken(); return t ? new Date(t.exp) : null; }
 
   async function readError(r) {
     try { const j = await r.json(); return j.error || ('HTTP ' + r.status); }
@@ -114,7 +125,40 @@ const ConfigAPI = (() => {
         method: 'POST',
         headers: { 'Authorization': 'Bearer ' + pw },
       });
-      if (r.ok) { setPw(pw); return { ok: true, status: r.status }; }
+      if (r.ok) {
+        const d = await r.json().catch(() => ({}));
+        if (!d.token) return { ok: false, status: 0, error: 'Der Worker bei Cloudflare ist noch die alte Version – bitte zuerst den neuen Code aus cloudflare/worker.js einfügen.' };
+        setToken(d.token, d.exp);
+        return { ok: true, status: r.status };
+      }
+      return { ok: false, status: r.status, error: await readError(r) };
+    } catch (e) {
+      return { ok: false, status: 0, error: await diagnose() };
+    }
+  }
+
+  // ── Admin: gilt der gespeicherte Schlüssel noch? ───────
+  async function checkSession() {
+    const token = getToken();
+    if (!token) return { ok: false, status: 401 };
+    try {
+      const r = await fetch(WORKER_URL + '/session', { method: 'POST', headers: { 'Authorization': 'Bearer ' + token } });
+      if (r.ok) return { ok: true, status: 200 };
+      if (r.status === 401) logout();
+      return { ok: false, status: r.status, error: await readError(r) };
+    } catch (e) {
+      return { ok: false, status: 0, error: await diagnose() };
+    }
+  }
+
+  // ── Admin: alle Geräte abmelden (auch dieses) ──────────
+  async function logoutAll() {
+    const token = getToken();
+    if (!token) return { ok: false, status: 401, error: 'Nicht angemeldet' };
+    try {
+      const r = await fetch(WORKER_URL + '/logout-all', { method: 'POST', headers: { 'Authorization': 'Bearer ' + token } });
+      if (r.ok) { logout(); return { ok: true }; }
+      if (r.status === 401) logout();
       return { ok: false, status: r.status, error: await readError(r) };
     } catch (e) {
       return { ok: false, status: 0, error: await diagnose() };
@@ -151,8 +195,8 @@ const ConfigAPI = (() => {
 
   // ── Admin: speichern ───────────────────────────────────
   async function save(config, sha, message) {
-    const pw = getPw();
-    if (!pw) return { ok: false, status: 401, error: 'Nicht angemeldet' };
+    const token = getToken();
+    if (!token) return { ok: false, status: 401, error: 'Nicht angemeldet' };
     const toSave = { ...config };
     delete toSave.specialLists; delete toSave.units; delete toSave.meta; // Vokabeln gehören nicht hierher
     try {
@@ -163,7 +207,7 @@ const ConfigAPI = (() => {
       };
       const r = await fetch(WORKER_URL, {
         method:  'PUT',
-        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + pw },
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
         body:    JSON.stringify(body),
       });
       if (!r.ok) {
@@ -186,7 +230,7 @@ const ConfigAPI = (() => {
   }
 
   return {
-    loadPublic, loadAdmin, login, logout, hasSession, getPw, save, getCacheAge, migrate,
+    loadPublic, loadAdmin, login, logout, logoutAll, checkSession, hasSession, sessionExpiry, save, getCacheAge, migrate,
     load: loadPublic,           // Abwärtskompatibel
     WORKER_URL,
     _b64: { b64ToUtf8, utf8ToB64 },   // für Tests

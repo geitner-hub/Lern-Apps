@@ -23,7 +23,7 @@ verwaltet über ein eigenes Admin-Panel.
 | `qrcode.js` | QR-Code-Erzeugung im Browser (MIT-Lizenz, Kazuhiko Arase) |
 | `app-template.html` | Vorlage für neue Apps |
 | `cloudflare/worker.js` | Quelltext des Cloudflare Workers (Vorlage – aktiv ist der bei Cloudflare eingefügte Code) |
-| `cloudflare/ANLEITUNG.md` | Wartung des Workers: Token erneuern, Passwort ändern, Code aktualisieren, Fehlersuche |
+| `cloudflare/ANLEITUNG.md` | Wartung des Workers: Anmeldung, Token erneuern, Passwort ändern, Code aktualisieren, Fehlersuche |
 
 ## Neue App einpflegen
 
@@ -53,6 +53,8 @@ Verlauf der letzten 30 Versuche. Jedes Ergebnis löst zusätzlich das Ereignis
 ## Sicherheit
 
 - Passwort und GitHub-Token liegen **nur** als Secrets im Cloudflare Worker.
+- Admin-Anmeldung: Das Passwort wird nicht gespeichert; das Gerät erhält einen Schlüssel, der
+  7 Tage gilt. „🚫 Alle Geräte abmelden“ im Admin macht alle Schlüssel sofort ungültig.
 - Der Worker schreibt ausschließlich `config.json` und prüft jedes Feld (Apps, Tags, Ankündigung,
   Pass-Schalter). Wartung und Fehlersuche: `cloudflare/ANLEITUNG.md`.
 - Der GitHub-Token läuft ab – Ablaufdatum im Kalender notieren (Erneuern: siehe Anleitung).
