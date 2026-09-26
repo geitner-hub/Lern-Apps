@@ -446,7 +446,7 @@
       <div class="ov" id="pass-overview"></div>
     </div>
     <div class="tab-panel" id="panel-vokabeln">
-      <div class="sec-header"><span class="sec-title">📚 Vokabeln – vokabeln.json</span></div>
+      <div class="sec-header"><span class="sec-title">📚 Vokabeln – vokabeln5.json</span></div>
       <div class="dash-grid" id="vok-stats" style="margin-bottom:1.5rem;"></div>
       <div class="filter-row-admin" style="margin-bottom:1rem;">
         <input type="search" class="admin-search" id="vok-search" placeholder="Englisch oder Deutsch suchen …" oninput="vokSearch(this.value)" autocomplete="off"/>
@@ -1435,14 +1435,14 @@ async function runChecker() {
   logChange(`🔗 Link-Check: ${ok} OK, ${fail} fehlerhaft`);
 }
 
-// ── Vokabeln (lazy load aus vokabeln.json) ────────────
+// ── Vokabeln (lazy load aus vokabeln5.json) ────────────
 let VOK_CONFIG = null;
 let vokIndex   = [];
 
 async function loadVokabeln() {
   if (VOK_CONFIG) return;
   try {
-    const r = await fetch('vokabeln.json');
+    const r = await fetch('vokabeln5.json');
     if (!r.ok) throw new Error('HTTP ' + r.status);
     VOK_CONFIG = await r.json();
     buildVokIndex();
@@ -1450,7 +1450,7 @@ async function loadVokabeln() {
     buildVokSpecial();
     buildVokUnits();
   } catch (e) {
-    document.getElementById('vok-units').innerHTML = '<div class="empty-msg">⚠ vokabeln.json konnte nicht geladen werden.</div>';
+    document.getElementById('vok-units').innerHTML = '<div class="empty-msg">⚠ vokabeln5.json konnte nicht geladen werden.</div>';
   }
 }
 
