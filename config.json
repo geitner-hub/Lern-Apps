@@ -290,6 +290,17 @@
       ],
       "customTags": [],
       "aod": false
+    },
+    {
+      "name": "Länder finden",
+      "datei": "laender-finder.html",
+      "fach": "GPG",
+      "emoji": "🗺️",
+      "beschreibung": "Wie gut kennst du dich in Deutschland und Europa aus?",
+      "hidden": false,
+      "klassen": [],
+      "customTags": [],
+      "aod": false
     }
   ],
   "customTags": [
