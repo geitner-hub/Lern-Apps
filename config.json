@@ -297,7 +297,7 @@
       "fach": "GPG",
       "emoji": "🗺️",
       "beschreibung": "Wie gut kennst du dich in Deutschland und Europa aus?",
-      "hidden": true,
+      "hidden": false,
       "klassen": [
         6
       ],
