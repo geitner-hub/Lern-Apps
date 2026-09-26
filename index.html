@@ -4,6 +4,14 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Lernwelt</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="icons/icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Lernwelt">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="theme-color" content="#13121f">
   <link rel="stylesheet" href="fonts.css">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <style>
@@ -1243,9 +1251,46 @@ function checkRestoreHash() {
   if (!m) return;
   const code = decodeURIComponent(m[1]);
   try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {}
-  setTimeout(() => askRestore(code, null), 300);
+  if (IS_APP) { setTimeout(() => askRestore(code, null), 300); return; }
+  setTimeout(() => showRestoreChoice(code), 300);
 }
 
+// QR-Code wurde mit der Kamera gescannt → öffnet Safari, nicht die Lernwelt-App.
+// Nutzt das Kind die App, kopiert es den Code hier und fügt ihn in der App ein.
+function showRestoreChoice(code) {
+  const res = LernPass.parseCode(code);
+  if (!res.ok) { alert(res.error); return; }
+  const pv = res.preview;
+  passLastFocus = document.activeElement;
+  document.querySelector('#pass-modal .lw-box').classList.remove('wide');
+  document.getElementById('pass-modal').classList.add('open');
+  document.body.classList.add('qr-open');
+  document.getElementById('pass-modal-body').innerHTML = `
+    <div class="lw-h" id="pass-modal-title">💾 Pass wiederherstellen</div>
+    <p class="lw-p"><b style="color:#fff">${escHtml(pv.name)}</b> – Level ${pv.level} (${escHtml(pv.title)}), ${pv.xp} XP, gesichert am ${escHtml(pv.date)}</p>
+    <div class="lw-sec" style="border-top:none;padding-top:.4rem">
+      <h3>📱 Du benutzt das Lernwelt-Symbol auf dem Home-Bildschirm?</h3>
+      <p class="lw-p">1. Code kopieren · 2. Lernwelt-Symbol öffnen · 3. Pass öffnen → „Ich habe schon einen Pass“ (oder „Pass aus Code wiederherstellen“) → einfügen.</p>
+      <div class="lw-btns"><button type="button" class="lw-btn primary" id="rc-copy">📋 Code kopieren</button></div>
+      <div class="lw-msg" id="rc-msg"></div>
+    </div>
+    <div class="lw-sec">
+      <h3>🌐 Oder hier in Safari wiederherstellen</h3>
+      <div class="lw-btns"><button type="button" class="lw-btn" id="rc-here">Hier wiederherstellen</button></div>
+    </div>`;
+  document.getElementById('rc-copy').onclick = async () => {
+    const ok = await copyText(code);
+    const m = document.getElementById('rc-msg');
+    m.className = 'lw-msg ' + (ok ? 'ok' : 'err');
+    m.textContent = ok ? '✓ Kopiert – jetzt das Lernwelt-Symbol öffnen und einfügen.' : 'Kopieren nicht möglich.';
+  };
+  document.getElementById('rc-here').onclick = () => askRestore(code, null);
+}
+
+
+// ── App-Modus & Offline-Speicher ──────────────────────
+const IS_APP = (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
+if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
 
 // ── Start ────────────────────────────────────────────
 // pass.js lädt zuerst seine Inhalte (lernwelt-inhalte.json) und meldet dann 'lernpass:ready'

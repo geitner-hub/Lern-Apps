@@ -19,6 +19,8 @@ verwaltet über ein eigenes Admin-Panel.
 | `avatar3d.js` | 3D-Avatar aus Blöcken: baut Figur und Teile nur aus den Daten, drehbare Bühne, Vorschaubilder |
 | `vendor/three.min.js` | three.js r128 (MIT-Lizenz), wird von `avatar3d.js` erst bei Bedarf geladen |
 | `pass.js` | Lernwelt-Pass: XP, Level, Wochen-Serie, Meisterschafts-Sterne, Sicherungs-Code, Truhen-Zähler |
+| `manifest.webmanifest` + `icons/` | App-Symbol für den Home-Bildschirm (Anleitung für Schul-iPads: `APP-SYMBOL.md`) |
+| `sw.js` | Offline-Speicher (Service Worker): „Internet zuerst“, bei fehlendem/langsamem Netz die letzte Kopie |
 | `fonts.css` + `fonts/` | Lokal gehostete Schriften (kein Google Fonts → DSGVO) |
 | `qrcode.js` | QR-Code-Erzeugung im Browser (MIT-Lizenz, Kazuhiko Arase) |
 | `app-template.html` | Vorlage für neue Apps |
@@ -109,6 +111,9 @@ in `RULES` am Anfang von `pass.js` und können dort angepasst werden.
   `typ: 'event'` + Set-Teil mit `set: 'event-<id>'`. Es erscheint automatisch im Admin.
 - **IDs nie ändern oder löschen** – sonst verlieren Kinder ihre Teile.
 - Speicher: `localStorage['lernwelt-pass']` (nur auf dem Gerät).
+- Schutz vor Datenverlust: Symbol auf dem Home-Bildschirm (`APP-SYMBOL.md`, eigener Speicher ohne
+  Safari-Löschregel), `navigator.storage.persist()`, Sicherungs-QR/-Karte. Achtung: App-Symbol und
+  Safari haben getrennte Speicher – Übernahme per „Code kopieren“.
 
 ### Avatar-Teile (ohne Programmieren)
 

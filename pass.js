@@ -157,6 +157,8 @@
   }
 
   let S = load();
+  // Browser bitten, die Daten nicht automatisch zu löschen (wird nicht überall gewährt)
+  try { if (navigator.storage && navigator.storage.persist) navigator.storage.persisted().then(p => p || navigator.storage.persist()).catch(() => {}); } catch (e) {}
   const listeners = [];
   function save() {
     try { localStorage.setItem(STORE_KEY, JSON.stringify(S)); } catch (e) {}

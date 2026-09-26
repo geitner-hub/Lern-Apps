@@ -34,6 +34,9 @@
     document.head.appendChild(sc);
   }
   loadPass();
+  if ('serviceWorker' in navigator && BASE) {
+    window.addEventListener('load', () => navigator.serviceWorker.register(BASE + 'sw.js').catch(() => {}));
+  }
 
   // ── Hilfsfunktionen ─────────────────────────────────
   // Schlüssel = Dateiname + URL-Parameter, damit z. B. kopfrechnen.html?kl=5
