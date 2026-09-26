@@ -640,7 +640,7 @@ function buildAll() {
 // ── Lernwelt-Pass: Einstellungen & Übersicht ───────────
 function passCfg() {
   const p = CONFIG.pass && typeof CONFIG.pass === 'object' ? CONFIG.pass : {};
-  return { seasons: p.seasons === true, events: p.events && typeof p.events === 'object' ? { ...p.events } : {} };
+  return { seasons: p.seasons === true, avatar: p.avatar !== false, events: p.events && typeof p.events === 'object' ? { ...p.events } : {} };
 }
 
 function buildPassAdmin() {
@@ -653,6 +653,12 @@ function buildPassAdmin() {
       <div class="sw-txt"><div class="sw-name">Saison-Modus (Schuljahr)</div>
         <div class="sw-desc">Level und Titel zählen pro Schuljahr und beginnen am 1. August neu. Gesamt-XP, Sterne, Abzeichen, Truhen und Cosmetics bleiben erhalten; vergangene Schuljahre erscheinen im Pass mit dem erreichten Titel. Aktuelles Schuljahr: <b>${escHtml(sid)}</b>.</div></div>
       <label class="switch"><input type="checkbox" data-pass-set="seasons" ${cfg.seasons ? 'checked' : ''} aria-label="Saison-Modus"><span></span></label>
+    </div>
+    <div class="sw-row">
+      <span class="sw-ic">🧍</span>
+      <div class="sw-txt"><div class="sw-name">Avatar & Effekte nach Runden</div>
+        <div class="sw-desc">Die eigene Figur erscheint nach jeder Runde für ein paar Sekunden unten rechts, jubelt oder muntert auf (nie traurig) und feiert Level, Sterne, Abzeichen und Truhen mit. Dazu Feuerwerk bei Level und Abzeichen, Konfetti bei perfekten Runden, Gold-Sternen und Truhen. Auf der Startseite begrüßt sie einmal am Tag. Ausschalten z. B. bei sehr langsamen Geräten oder Prüfungen.</div></div>
+      <label class="switch"><input type="checkbox" data-pass-set="avatar" ${cfg.avatar ? 'checked' : ''} aria-label="Avatar nach Runden anzeigen"><span></span></label>
     </div>
     ${P.EVENTS.map(ev => {
       const n = P.ITEMS.filter(i => i.event === ev.id).length;
@@ -680,6 +686,9 @@ document.getElementById('pass-settings').addEventListener('change', e => {
   if (key === 'seasons') {
     cfg.seasons = inp.checked;
     logChange(`📅 Saison-Modus ${inp.checked ? 'aktiviert' : 'deaktiviert'}`);
+  } else if (key === 'avatar') {
+    cfg.avatar = inp.checked;
+    logChange(`🧍 Avatar nach Runden ${inp.checked ? 'aktiviert' : 'deaktiviert'}`);
   } else if (key.startsWith('event:')) {
     const id = key.slice(6);
     const ev = LernPass.EVENTS.find(x => x.id === id);
@@ -775,7 +784,7 @@ function buildDashboard() {
   if (ps && window.LernPass) {
     const c = passCfg();
     const evs = LernPass.EVENTS.filter(e => c.events[e.id] === true);
-    ps.innerHTML = `Saison-Modus: <b style="color:${c.seasons ? 'var(--green)' : 'var(--muted)'}">${c.seasons ? 'an' : 'aus'}</b> · Events: ${evs.length ? evs.map(e => escHtml(e.icon + ' ' + e.name)).join(', ') : 'keine'}`;
+    ps.innerHTML = `Saison-Modus: <b style="color:${c.seasons ? 'var(--green)' : 'var(--muted)'}">${c.seasons ? 'an' : 'aus'}</b> · Avatar: <b style="color:${c.avatar ? 'var(--green)' : 'var(--muted)'}">${c.avatar ? 'an' : 'aus'}</b> · Events: ${evs.length ? evs.map(e => escHtml(e.icon + ' ' + e.name)).join(', ') : 'keine'}`;
   }
   const total   = CONFIG.apps.length;
   const visible = CONFIG.apps.filter(a => !a.hidden).length;

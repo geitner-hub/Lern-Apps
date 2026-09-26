@@ -516,6 +516,18 @@ async function load() {
   const fresh = LernPass.hasProfile() ? LernPass.checkBadges() : [];
   buildPage();
   if (fresh.length) LernPass.toast({ notice: true, newBadges: fresh });
+  else greetOnce();
+}
+
+// Begrüßung durch die eigene Figur – einmal pro Tag
+function greetOnce() {
+  if (!LernPass.hasProfile() || /^#pass=/.test(location.hash)) return;
+  const day = LernPass._dayKey();
+  try { if (localStorage.getItem('lernwelt-gruss') === day) return; localStorage.setItem('lernwelt-gruss', day); } catch (e) { return; }
+  const name = LernPass.profile().name, ch = LernPass.chestInfo().available;
+  const hallo = [`Hallo ${name}! 👋`, `Schön, dass du da bist, ${name}!`, `Hi ${name}! Los geht's! 🚀`];
+  const text = ch ? `Hallo ${name}! Du hast ${ch} Truhe${ch > 1 ? 'n' : ''} 🎁` : hallo[Math.floor(Math.random() * hallo.length)];
+  setTimeout(() => LernPass.showAvatar({ text, aktion: 'winken', dauer: 4200 }), 900);
 }
 
 function loadResults() {
@@ -1216,6 +1228,7 @@ function openChestAnimated() {
     chestBusy = false;
     buildPassCard();
     renderPass('chests');
+    if (lastReveal && lastReveal.item && ['episch', 'legendaer', 'event'].includes(lastReveal.item.selten)) LernPass.celebrate('konfetti');
   }, reduce ? 50 : 700);
 }
 

@@ -176,9 +176,10 @@
     return sanitizeSettings(raw);
   }
   function sanitizeSettings(raw) {
-    const out = { seasons: false, events: [] };
+    const out = { seasons: false, events: [], avatar: true };
     if (raw && typeof raw === 'object') {
       out.seasons = raw.seasons === true;
+      out.avatar = raw.avatar !== false;
       const ev = raw.events && typeof raw.events === 'object' ? raw.events : {};
       out.events = EVENTS.filter(e => ev[e.id] === true).map(e => e.id);
     }
@@ -679,6 +680,117 @@
     clearTimeout(el._t);
     const big = res.levelUp || res.starUp || res.chest || res.eventGift || (res.newBadges && res.newBadges.length);
     el._t = setTimeout(() => el.classList.remove('show'), big ? 6500 : 4200);
+    avatarForResult(res);
+  }
+
+  // ── Avatar-Auftritt (avatar3d.js wird erst beim ersten Mal geladen) ──
+  let avatarLoad = null;
+  function loadAvatar() {
+    if (window.LernAvatar) return Promise.resolve(window.LernAvatar);
+    if (!avatarLoad) avatarLoad = new Promise((res, rej) => {
+      const s = document.createElement('script');
+      s.src = new URL('avatar3d.js', here).href;
+      s.onload = () => (window.LernAvatar ? res(window.LernAvatar) : rej());
+      s.onerror = () => { avatarLoad = null; rej(); };
+      document.head.appendChild(s);
+    });
+    return avatarLoad;
+  }
+  /** Figur unten rechts zeigen: { text, big, aktion: 'jubeln'|'winken' } */
+  function showAvatar(o) {
+    if (!readSettings().avatar || !S.profile || !S.profile.name) return;
+    loadAvatar().then(A => A.appear(o)).catch(() => {});
+  }
+  // ── Konfetti & Feuerwerk (Canvas, ohne 3D) ──────────────
+  const FARBEN = ['#e6a817', '#f43f5e', '#6366f1', '#22c55e', '#38bdf8', '#f472b6', '#facc15', '#ffffff'];
+  function celebrate(art) {
+    if (!document.body || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
+    const cv = document.createElement('canvas');
+    cv.setAttribute('aria-hidden', 'true');
+    cv.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:10003';
+    document.body.appendChild(cv);
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    const W = innerWidth, H = innerHeight;
+    cv.width = W * dpr; cv.height = H * dpr;
+    const x = cv.getContext('2d'); x.scale(dpr, dpr);
+    const parts = [], rnd = (a, b) => a + Math.random() * (b - a);
+    const scale = Math.min(1, W / 900) * .5 + .5;
+    function konfetti(ox, oy, dir, n) {
+      for (let i = 0; i < n; i++) {
+        const a = -Math.PI / 2 + dir * rnd(.15, .75), v = rnd(9, 17) * scale;
+        parts.push({ k: 'k', x: ox, y: oy, vx: Math.cos(a) * v, vy: Math.sin(a) * v, w: rnd(6, 10), h: rnd(3, 6), r: rnd(0, 6), vr: rnd(-.3, .3),
+                     c: FARBEN[i % FARBEN.length], life: rnd(2.2, 3), t: 0 });
+      }
+    }
+    function knall(ox, oy) {
+      const c = FARBEN[Math.floor(Math.random() * 7)], n = 46;
+      for (let i = 0; i < n; i++) {
+        const a = (i / n) * Math.PI * 2, v = rnd(2.5, 5.5) * scale;
+        parts.push({ k: 'f', x: ox, y: oy, vx: Math.cos(a) * v, vy: Math.sin(a) * v, c: Math.random() < .25 ? '#ffffff' : c, life: rnd(1.1, 1.6), t: 0 });
+      }
+    }
+    const rockets = [];
+    if (art === 'feuerwerk') {
+      for (let i = 0; i < 5; i++) rockets.push({ at: i * .38, x: rnd(W * .15, W * .85), ty: rnd(H * .15, H * .45), y: H + 10, fired: false });
+    } else {
+      konfetti(0, H * .75, 1, 70); konfetti(W, H * .75, -1, 70);
+    }
+    let t0 = performance.now(), last = t0;
+    (function frame(now) {
+      const dt = Math.min((now - last) / 16.7, 3), T = (now - t0) / 1000; last = now;
+      x.clearRect(0, 0, W, H);
+      rockets.forEach(r => {
+        if (r.done || T < r.at) return;
+        r.y -= (r.y - r.ty) * .09 * dt + 2 * dt;
+        x.fillStyle = '#fde68a'; x.fillRect(r.x - 1.5, r.y, 3, 10);
+        if (r.y <= r.ty + 4) { r.done = true; knall(r.x, r.ty); }
+      });
+      for (let i = parts.length - 1; i >= 0; i--) {
+        const p = parts[i];
+        p.t += dt / 60;
+        if (p.t > p.life) { parts.splice(i, 1); continue; }
+        const fade = Math.min(1, (p.life - p.t) * 2.5);
+        x.globalAlpha = fade;
+        if (p.k === 'k') {
+          p.vy += .32 * dt; p.vx *= .985; p.x += p.vx * dt; p.y += p.vy * dt; p.r += p.vr * dt;
+          x.save(); x.translate(p.x, p.y); x.rotate(p.r); x.fillStyle = p.c;
+          x.fillRect(-p.w / 2, -p.h / 2 * Math.abs(Math.cos(p.r * 2)), p.w, p.h * Math.abs(Math.cos(p.r * 2)) + .5); x.restore();
+        } else {
+          p.vy += .06 * dt; p.vx *= .97; p.vy *= .97; p.x += p.vx * dt; p.y += p.vy * dt;
+          x.fillStyle = p.c; x.beginPath(); x.arc(p.x, p.y, 2.2, 0, 6.283); x.fill();
+        }
+      }
+      x.globalAlpha = 1;
+      if (parts.length || rockets.some(r => !r.done)) requestAnimationFrame(frame); else cv.remove();
+    })(t0);
+  }
+
+  const pick = list => list[Math.floor(Math.random() * list.length)];
+  const LOB = {
+    top:  ['Super gemacht! 🌟', 'Wow, stark! 💪', 'Spitze! 🚀', 'Klasse Runde! ⭐'],
+    gut:  ['Toll gemacht! 👍', 'Gute Runde! 😄', 'Richtig gut! ✨'],
+    okay: ['Gut gemacht! 🙂', 'Weiter so! 👏', 'Das wird immer besser!'],
+    mut:  ['Dranbleiben – du schaffst das! 💪', 'Übung macht den Meister! 🙂', 'Probier es gleich nochmal!', 'Jeder Versuch hilft dir! 👍'],
+  };
+  function avatarForResult(res) {
+    if (!res || res.blocked) return;
+    const badges = res.newBadges || [];
+    const perfekt = !res.notice && Number(res.pct) === 100 && Number(res.xp) > 0;
+    if (readSettings().avatar) {
+      if (res.levelUp || badges.length) celebrate('feuerwerk');
+      else if (perfekt || res.starUp === 3 || res.chest || res.eventGift) celebrate('konfetti');
+    }
+    let text = '', big = true;
+    if (res.levelUp) text = `Level ${res.levelUp.level}! 🎉`;
+    else if (badges.length) text = `Abzeichen: ${badges[0].badge.name}! ${badges[0].badge.icon}`;
+    else if (res.starUp) text = ['', 'Bronze-Stern! 🥉', 'Silber-Stern! 🥈', 'Gold-Stern! 🥇'][res.starUp];
+    else if (res.chest) text = 'Neue Truhe! 🎁';
+    else if (res.eventGift) text = `${res.eventGift.icon} Geschenk-Truhe!`;
+    else big = false;
+    if (res.notice && !big) return;
+    const pct = Number(res.pct) || 0;
+    if (!big) text = perfekt ? pick(['Perfekt – alles richtig! 💯', 'Null Fehler! 💯', 'Wahnsinn, alles richtig! 🏆']) : pick(pct >= 90 ? LOB.top : pct >= 70 ? LOB.gut : pct >= 50 ? LOB.okay : LOB.mut);
+    showAvatar({ text, big, aktion: big || pct >= 50 ? 'jubeln' : 'winken' });
   }
 
   // ── Darstellung ─────────────────────────────────────────
@@ -727,7 +839,7 @@
     hasProfile()  { return !!(S.profile && S.profile.name); },
     profile()     { return S.profile; },
     setProfile, levelInfo, xpForLevel, starsFor, starProgress, starsSummary, weekInfo, chestInfo,
-    award, toast, exportCode, restoreUrl, parseCode,
+    award, toast, showAvatar, celebrate, exportCode, restoreUrl, parseCode,
     markLevelSeen() { S.seenLevel = levelInfo().level; save(); },
     onChange(fn)  { listeners.push(fn); },
     reset()       { S = blank(); save(); },

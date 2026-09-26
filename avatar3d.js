@@ -468,7 +468,7 @@
     const plat = new T3.Mesh(new T3.CylinderGeometry(17, 18.5, 2.4, 48), colMat('#262a55')); plat.position.y = -1.2; scene.add(plat);
     const ring = new T3.Mesh(new T3.TorusGeometry(17.2, .35, 8, 72), colMat('#b98612', { licht: .35 }));
     ring.rotation.x = Math.PI / 2; ring.position.y = .02; scene.add(ring);
-    live = { renderer, cv, scene, camera, plat, P: null, host: null, ro: null, raf: 0, clock: new T3.Clock(), t: 0,
+    live = { renderer, cv, scene, camera, plat, ring, P: null, waveT: -1, cheerLeft: 0, host: null, ro: null, raf: 0, clock: new T3.Clock(), t: 0,
              ctl: { yaw: .35, v: 0, drag: false, lastX: 0, idle: 10 }, cheerT: -1, blinkT: 2.5, blinkOn: false };
     const c = live.ctl;
     cv.addEventListener('pointerdown', e => { c.drag = true; c.lastX = e.clientX; c.v = 0; try { cv.setPointerCapture(e.pointerId); } catch (x) {} cv.style.cursor = 'grabbing'; });
@@ -488,8 +488,9 @@
     live.renderer.setSize(w, h, false);
     const cam = live.camera; cam.aspect = w / h;
     const tan = Math.tan(T3.MathUtils.degToRad(15));
-    const dist = Math.max(27 / tan, (19.5 / cam.aspect) / tan);
-    cam.position.set(0, 26, dist); cam.lookAt(0, 21.5, 0); cam.updateProjectionMatrix();
+    const f = live.frame || { cy: 21.5, hh: 27, hw: 19.5 };
+    const dist = Math.max(f.hh / tan, (f.hw / cam.aspect) / tan);
+    cam.position.set(0, f.cy + 4.5, dist); cam.lookAt(0, f.cy, 0); cam.updateProjectionMatrix();
   }
   function setFace(mode) {
     const P = live && live.P;
@@ -510,18 +511,31 @@
     L.blinkT -= dt;
     if (!L.blinkOn && L.blinkT < 0 && L.cheerT < 0) { setFace('blink'); L.blinkOn = true; }
     if (L.blinkOn && L.blinkT < -.13) { setFace('open'); L.blinkOn = false; L.blinkT = 2.5 + Math.random() * 3; }
-    let k = 0;
+    let k = 0, w = 0, wave = 0;
     if (L.cheerT >= 0) {
       L.cheerT += dt;
       const p = L.cheerT / 1.15;
-      if (p >= 1) { L.cheerT = -1; P.fig.position.y = 0; if (P.pet) P.pet.position.y = 0; setFace('open'); }
-      else {
+      if (p >= 1) {
+        if (L.cheerLeft > 0) { L.cheerLeft--; L.cheerT = 0; }
+        else { L.cheerT = -1; setFace('open'); }
+        P.fig.position.y = 0; if (P.pet) P.pet.position.y = 0;
+      } else {
         k = p < .18 ? p / .18 : p > .8 ? (1 - p) / .2 : 1;
-        P.fig.position.y = p < .45 ? Math.sin(p / .45 * Math.PI) * 7 : p < .7 ? Math.sin((p - .45) / .25 * Math.PI) * 2 : 0;
-        if (P.pet) { const q = p - .1; P.pet.position.y = q > 0 && q < .4 ? Math.sin(q / .4 * Math.PI) * 4 : 0; }
+        if (L.cheerLeft > 0 && p > .8) k = 1;
+        if (!reduce) {
+          P.fig.position.y = p < .45 ? Math.sin(p / .45 * Math.PI) * 7 : p < .7 ? Math.sin((p - .45) / .25 * Math.PI) * 2 : 0;
+          if (P.pet) { const q = p - .1; P.pet.position.y = q > 0 && q < .4 ? Math.sin(q / .4 * Math.PI) * 4 : 0; }
+        }
       }
     }
-    P.armL.rotation.z = -(.1 + 2.3 * k); P.armR.rotation.z = .1 + 2.3 * k;
+    if (L.waveT >= 0) {
+      L.waveT += dt;
+      const p = L.waveT / 2.2;
+      if (p >= 1) { L.waveT = -1; setFace('open'); }
+      else { w = p < .15 ? p / .15 : p > .85 ? (1 - p) / .15 : 1; wave = reduce ? 0 : Math.sin(L.waveT * 11) * .35 * w; }
+    }
+    P.armL.rotation.z = -(.1 + 2.3 * k);
+    P.armR.rotation.z = .1 + Math.max(2.3 * k, 2.5 * w) + wave;
     L.renderer.render(L.scene, L.camera);
   }
   /** Zeigt die drehbare Figur in host. Nur eine Bühne gleichzeitig. */
@@ -536,8 +550,9 @@
       live.blinkOn = false; live.blinkT = 2;
       if (opts.boden) live.plat.material = colMat(opts.boden);
     };
+    ctrl.wave = () => { if (live && live.host === host && live.P) { live.cheerT = -1; live.waveT = 0; setFace('cheer'); } };
     ctrl.setBoden = c => { if (live && live.host === host) live.plat.material = colMat(c || '#262a55'); };
-    ctrl.cheer = () => { if (live && live.host === host && live.P) { live.cheerT = 0; setFace('cheer'); } };
+    ctrl.cheer = (n = 1) => { if (live && live.host === host && live.P) { live.waveT = -1; live.cheerT = 0; live.cheerLeft = Math.max(0, n - 1); setFace('cheer'); } };
     ctrl.destroy = () => {
       ctrl.dead = true;
       if (!live || live.host !== host) return;
@@ -552,6 +567,11 @@
       if (!live) liveInit();
       if (live.host && live.host !== host) { cancelAnimationFrame(live.raf); if (live.ro) live.ro.disconnect(); if (live.P) live.scene.remove(live.P.root); live.P = null; }
       live.host = host;
+      live.plat.visible = live.ring.visible = opts.buehne !== false;
+      live.frame = opts.buehne === false ? { cy: 19.5, hh: 22, hw: 16 } : null;
+      live.cv.style.pointerEvents = opts.drehbar === false ? 'none' : '';
+      live.cheerT = live.waveT = -1; live.cheerLeft = 0;
+      live.ctl.yaw = .35; live.ctl.v = 0;
       host.appendChild(live.cv);
       live.ro = new ResizeObserver(fit); live.ro.observe(host); fit();
       live.ctl.idle = 10;
@@ -567,5 +587,66 @@
     return ctrl;
   }
 
-  window.LernAvatar = { ready, mount, snapshot: (l, o) => snapshot(l, o), refresh, PORTRAIT_KEY };
+  // ── Auftritt in der Ecke (nach Runden, Begrüßung) ──────
+  let pop = null, popCtrl = null, popT = null, popHideT = null;
+  function popEl() {
+    if (pop) return pop;
+    const st = document.createElement('style');
+    st.textContent = `
+      #lw-avatar-pop{position:fixed;right:max(10px,env(safe-area-inset-right));bottom:max(10px,env(safe-area-inset-bottom));z-index:10002;
+        width:150px;height:190px;pointer-events:none;transform:translateY(130%);opacity:0;
+        transition:transform .45s cubic-bezier(.2,.9,.3,1.25),opacity .3s;}
+      #lw-avatar-pop.show{transform:translateY(0);opacity:1;}
+      #lw-avatar-pop .lwa-stage{position:absolute;inset:0;}
+      #lw-avatar-pop .lwa-glow{position:absolute;left:12%;right:12%;bottom:2px;height:26px;border-radius:50%;
+        background:radial-gradient(closest-side,rgba(230,168,23,.55),rgba(230,168,23,0));}
+      #lw-avatar-pop .lwa-bubble{position:absolute;right:112px;bottom:128px;background:#fff;color:#1b1929;border-radius:16px;
+        padding:.5rem .75rem;font:800 .9rem/1.25 'Nunito','Segoe UI',sans-serif;width:max-content;max-width:210px;
+        box-shadow:0 8px 24px rgba(0,0,0,.3);transform-origin:bottom right;transform:scale(.4);opacity:0;
+        transition:transform .35s cubic-bezier(.2,.9,.3,1.4) .25s,opacity .2s .25s;}
+      #lw-avatar-pop.show .lwa-bubble{transform:scale(1);opacity:1;}
+      #lw-avatar-pop .lwa-bubble::after{content:'';position:absolute;right:-7px;bottom:12px;border:8px solid transparent;border-left-color:#fff;border-right:0;}
+      #lw-avatar-pop .lwa-bubble.big{background:linear-gradient(135deg,#fde68a,#e6a817);font-size:1rem;}
+      #lw-avatar-pop .lwa-bubble.big::after{border-left-color:#eab308;}
+      @media (max-width:600px){#lw-avatar-pop{width:118px;height:150px;}#lw-avatar-pop .lwa-bubble{right:88px;bottom:100px;max-width:170px;font-size:.82rem;}}
+      @media (prefers-reduced-motion: reduce){#lw-avatar-pop,#lw-avatar-pop .lwa-bubble{transition:opacity .2s;}}`;
+    document.head.appendChild(st);
+    pop = document.createElement('div');
+    pop.id = 'lw-avatar-pop';
+    pop.setAttribute('aria-hidden', 'true');
+    pop.innerHTML = '<div class="lwa-glow"></div><div class="lwa-stage"></div><div class="lwa-bubble"></div>';
+    document.body.appendChild(pop);
+    return pop;
+  }
+  function hidePop() {
+    if (!pop) return;
+    pop.classList.remove('show');
+    clearTimeout(popHideT);
+    popHideT = setTimeout(() => { if (popCtrl) { popCtrl.destroy(); popCtrl = null; } }, 500);
+  }
+  /**
+   * Lässt die Figur unten rechts erscheinen.
+   * o = { text, big, aktion: 'jubeln'|'winken', dauer (ms) }
+   */
+  function appear(o = {}) {
+    return ready().then(() => {
+      if (live && live.host && (!pop || !pop.contains(live.host))) return;   // Bühne (z. B. Garderobe) ist gerade in Benutzung
+      const el = popEl();
+      const b = el.querySelector('.lwa-bubble');
+      b.textContent = o.text || '';
+      b.className = 'lwa-bubble' + (o.big ? ' big' : '');
+      b.style.display = o.text ? '' : 'none';
+      clearTimeout(popT); clearTimeout(popHideT);
+      const act = () => {
+        if (!popCtrl) return;
+        if (o.aktion === 'winken') popCtrl.wave(); else popCtrl.cheer(o.big ? 3 : 2);
+      };
+      if (popCtrl && !popCtrl.dead) { popCtrl.setLook(PASS.look()); act(); }
+      else popCtrl = mount(el.querySelector('.lwa-stage'), { buehne: false, drehbar: false, onReady: act });
+      requestAnimationFrame(() => el.classList.add('show'));
+      popT = setTimeout(hidePop, o.dauer || (o.big ? 5200 : 3400));
+    }, () => {});
+  }
+
+  window.LernAvatar = { ready, mount, appear, hide: hidePop, snapshot: (l, o) => snapshot(l, o), refresh, PORTRAIT_KEY };
 })();
