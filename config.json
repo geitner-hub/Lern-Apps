@@ -312,7 +312,12 @@
       "beschreibung": "Wie weit schaffst du es?",
       "hidden": false,
       "klassen": [],
-      "customTags": [],
+      "customTags": [
+        {
+          "name": "Spiele",
+          "color": 6
+        }
+      ],
       "aod": false
     }
   ],
