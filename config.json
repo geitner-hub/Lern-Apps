@@ -328,7 +328,12 @@
       "beschreibung": "Halte den Gegnerwellen so lange wie möglich stand!",
       "hidden": false,
       "klassen": [],
-      "customTags": [],
+      "customTags": [
+        {
+          "name": "Spiele",
+          "color": 6
+        }
+      ],
       "aod": false
     }
   ],
