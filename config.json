@@ -319,6 +319,17 @@
         }
       ],
       "aod": false
+    },
+    {
+      "name": "Tower Defense",
+      "datei": "burg-verteidigung.html",
+      "fach": "Allgemein",
+      "emoji": "🏰",
+      "beschreibung": "Halte den Gegnerwellen so lange wie möglich stand!",
+      "hidden": false,
+      "klassen": [],
+      "customTags": [],
+      "aod": false
     }
   ],
   "customTags": [
