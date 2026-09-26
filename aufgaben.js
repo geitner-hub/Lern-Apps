@@ -29,6 +29,7 @@
 
   const here = (document.currentScript && document.currentScript.src) || location.href;
   const MAX_ANTWORT = 22;             // längere Antworten passen nicht aufs Tor
+  const BRUECHE = false;              // Bruchaufgaben (Kl. 6) im Spiel? true = wieder einschalten
   const OPTIONEN = 3;
 
   // ── Hilfen ─────────────────────────────────────────────
@@ -127,9 +128,10 @@
 
   // Klasse 6 – wie kopfrechnen_kl6.html (Brüche, Dezimalzahlen, negative Zahlen)
   function kopf6(level) {
-    const types = level === 'leicht' ? ['int', 'frac_same', 'dec1', 'mal']
-                : level === 'mittel' ? ['int_neg', 'frac_diff', 'dec2', 'mal']
-                : ['rat', 'frac_mul', 'frac_div', 'neg_dec'];
+    let types = level === 'leicht' ? ['int', 'frac_same', 'dec1', 'mal']
+              : level === 'mittel' ? ['int_neg', 'frac_diff', 'dec2', 'mal']
+              : ['rat', 'frac_mul', 'frac_div', 'neg_dec'];
+    if (!BRUECHE) types = types.filter(t => !t.startsWith('frac'));
     for (let v = 0; v < 80; v++) {
       const t = pick(types), r = kopf6Typ(t);
       if (r) return r;
@@ -287,7 +289,7 @@
     { id: '1x1-klein', fach: 'Mathematik', gruppe: 'Einmaleins', klasse: 5, titel: 'Kleines Einmaleins', gen: () => einmaleins(false) },
     { id: '1x1-gross', fach: 'Mathematik', gruppe: 'Einmaleins', klasse: 5, titel: 'Großes Einmaleins (11–25)', gen: () => einmaleins(true) },
 
-    { id: 'vok5', fach: 'Englisch', gruppe: 'Vokabeln', klasse: 5, titel: 'Vokabeln 5. Klasse', quelle: 'vokabeln.json', typ: 'vokabeln' },
+    { id: 'vok5', fach: 'Englisch', gruppe: 'Vokabeln', klasse: 5, titel: 'Vokabeln 5. Klasse', quelle: 'vokabeln5.json', typ: 'vokabeln' },
     { id: 'vok6', fach: 'Englisch', gruppe: 'Vokabeln', klasse: 6, titel: 'Vokabeln 6. Klasse', quelle: 'vokabeln6.json', typ: 'vokabeln' },
 
     { id: 'hauptstaedte-europa', fach: 'GPG', gruppe: 'Hauptstädte', klasse: 5, titel: 'Hauptstädte Europas (Start)',
