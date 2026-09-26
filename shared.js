@@ -27,6 +27,20 @@ const FAECHER   = Object.keys(CAT_STYLES);
 const CAT_ICONS = Object.fromEntries(Object.entries(CAT_STYLES).map(([k, v]) => [k, v.icon]));
 const KLASSEN   = [5, 6, 7, 8, 9];
 
+// ── Fach-Reihenfolge (config.catOrder, im Admin einstellbar) ──
+// Fächer aus `order` zuerst in dieser Reihenfolge, alle übrigen danach
+// in der Standard-Reihenfolge von CAT_STYLES (neue Fächer landen unten).
+function sortFaecher(list, order) {
+  const ord = Array.isArray(order) ? order : [];
+  const rank = f => {
+    const i = ord.indexOf(f);
+    if (i !== -1) return i;
+    const j = FAECHER.indexOf(f);
+    return ord.length + (j === -1 ? FAECHER.length : j);
+  };
+  return [...list].sort((a, b) => rank(a) - rank(b));
+}
+
 // ── Tag-Farben (Index = color-Feld in config.json) ─────
 const TAG_COLORS = [
   { bg:'rgba(167,139,250,.16)',border:'rgba(167,139,250,.35)',text:'#c4b5fd',dot:'#a78bfa',label:'Violett'},

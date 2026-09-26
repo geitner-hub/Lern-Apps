@@ -627,7 +627,9 @@ function buildPage() {
   main.querySelectorAll('.category').forEach(e => e.remove());
   const noR = document.getElementById('no-results');
   const apps = visibleApps();
-  const faecher = [...new Set(apps.map(a => a.fach).filter(Boolean))];
+  const alleFaecher = [...new Set(apps.map(a => a.fach).filter(Boolean))];
+  // Reihenfolge aus dem Admin (Fallback, falls offline noch ein altes shared.js im Speicher liegt)
+  const faecher = typeof sortFaecher === 'function' ? sortFaecher(alleFaecher, CONFIG.catOrder) : alleFaecher;
 
   faecher.forEach(fach => {
     const kat = CAT_STYLES[fach] || { icon: '📚', color: '#6366f1', color2: '#818cf8' };

@@ -146,6 +146,10 @@
     .vis-app-row{display:flex;align-items:center;gap:.65rem;padding:.35rem 0;border-bottom:1px solid var(--border);}
     .vis-app-row:last-child{border-bottom:none;}
     .vis-app-name{flex:1;font-size:.85rem;font-weight:700;}
+    .vis-order{display:flex;gap:.3rem;}
+    .vis-move{width:34px;height:34px;border-radius:8px;border:1px solid var(--border2);background:var(--surface);color:var(--text);font-size:.8rem;cursor:pointer;transition:all .14s;font-family:inherit;}
+    .vis-move:hover:not(:disabled){border-color:var(--accent);color:var(--accent);}
+    .vis-move:disabled{opacity:.25;cursor:default;}
 
     /* ── TAG MANAGER ── */
     .tag-manager{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.1rem;}
@@ -376,7 +380,8 @@
 
     <!-- VISIBILITY -->
     <div class="tab-panel" id="panel-visibility">
-      <div class="sec-header"><span class="sec-title">👁 Apps &amp; Kategorien ein/ausblenden</span></div>
+      <div class="sec-header"><span class="sec-title">👁 Kategorien anordnen &amp; ein/ausblenden</span></div>
+      <p style="color:var(--muted);font-size:.82rem;margin:-.4rem 0 .9rem;">Mit ▲ ▼ legst du fest, in welcher Reihenfolge die Fächer auf der Startseite stehen.</p>
       <div id="vis-list"></div>
     </div>
 
@@ -1067,9 +1072,9 @@ function hideUndo() {
 function buildVisibility() {
   const list = document.getElementById('vis-list');
   list.innerHTML = '';
-  const faecher = [...new Set(CONFIG.apps.map(a => a.fach).filter(Boolean))];
+  const faecher = currentCatOrder();
   if (!faecher.length) { list.innerHTML = '<div class="empty-msg">Noch keine Apps vorhanden.</div>'; return; }
-  faecher.forEach(fach => {
+  faecher.forEach((fach, i) => {
     const catHidden = CONFIG.hiddenCats.includes(fach);
     const apps = CONFIG.apps.filter(a => a.fach === fach);
     const block = document.createElement('div');
@@ -1078,6 +1083,10 @@ function buildVisibility() {
       <div class="vis-cat-header">
         <span style="font-size:1.2rem;">${escHtml(CAT_ICONS[fach] || '📚')}</span>
         <span class="vis-cat-name">${escHtml(fach)} (${apps.length})</span>
+        <div class="vis-order">
+          <button class="vis-move" data-fach="${escHtml(fach)}" onclick="moveCat(this.dataset.fach, -1)" ${i === 0 ? 'disabled' : ''} title="Nach oben" aria-label="${escHtml(fach)} nach oben">▲</button>
+          <button class="vis-move" data-fach="${escHtml(fach)}" onclick="moveCat(this.dataset.fach, 1)" ${i === faecher.length - 1 ? 'disabled' : ''} title="Nach unten" aria-label="${escHtml(fach)} nach unten">▼</button>
+        </div>
         <button class="vis-toggle ${catHidden ? 'off' : 'on'}" data-fach="${escHtml(fach)}" onclick="toggleCat(this.dataset.fach)">${catHidden ? 'Ausgeblendet' : 'Sichtbar'}</button>
       </div>
       <div class="vis-app-list">
@@ -1096,6 +1105,21 @@ function toggleCat(fach) {
   const idx = CONFIG.hiddenCats.indexOf(fach);
   if (idx === -1) CONFIG.hiddenCats.push(fach); else CONFIG.hiddenCats.splice(idx, 1);
   logChange(`${CONFIG.hiddenCats.includes(fach) ? '🚫' : '✅'} Kategorie "${fach}" umgeschaltet`);
+  saveConfig(); buildAll();
+}
+
+// Aktuelle Reihenfolge aller Fächer, die Apps haben (wie auf der Startseite)
+function currentCatOrder() {
+  return sortFaecher([...new Set(CONFIG.apps.map(a => a.fach).filter(Boolean))], CONFIG.catOrder);
+}
+
+function moveCat(fach, dir) {
+  const order = currentCatOrder();
+  const i = order.indexOf(fach), j = i + dir;
+  if (i === -1 || j < 0 || j >= order.length) return;
+  [order[i], order[j]] = [order[j], order[i]];
+  CONFIG.catOrder = order;
+  logChange(`↕ Kategorie "${fach}" ${dir < 0 ? 'nach oben' : 'nach unten'} verschoben`);
   saveConfig(); buildAll();
 }
 

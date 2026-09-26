@@ -36,6 +36,7 @@ const ConfigAPI = (() => {
     apps:         [],
     customTags:   [],
     hiddenCats:   [],
+    catOrder:     [],
     announcement: { active: false, text: '', emoji: '📢', color: 0 },
   });
 
@@ -60,6 +61,8 @@ const ConfigAPI = (() => {
     if (!Array.isArray(cfg.apps))       cfg.apps = [];
     if (!Array.isArray(cfg.customTags)) cfg.customTags = [];
     if (!Array.isArray(cfg.hiddenCats)) cfg.hiddenCats = [];
+    if (!Array.isArray(cfg.catOrder))   cfg.catOrder = [];
+    cfg.catOrder = cfg.catOrder.filter(f => typeof f === 'string');
     cfg.customTags = cfg.customTags.map(t => typeof t === 'string' ? { name: t, color: 0 } : t);
     cfg.announcement = { ...d.announcement, ...(cfg.announcement || {}) };
     cfg.apps = cfg.apps.filter(a => a && typeof a === 'object').map(a => ({
