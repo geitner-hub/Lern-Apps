@@ -308,10 +308,10 @@
   ],
   "hiddenCats": [],
   "announcement": {
-    "active": false,
-    "text": "",
+    "active": true,
+    "text": "Ab jetzt: Schalte im Lernwelt-Pass neue Gegenstände frei und gestalte deinen Avatar damit! Viel Spaß!",
     "emoji": "📢",
-    "color": 0
+    "color": 4
   },
   "pass": {
     "seasons": true,
