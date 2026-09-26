@@ -371,7 +371,7 @@ const modeNames = { flashcard: '🃏 Flashcards', quiz: '🧠 Quiz', memory: '�
 // ── LOAD CONFIG ──────────────────────────────────────────────────
 async function loadConfig() {
   try {
-    const res = await fetch('vokabeln.json');
+    const res = await fetch('vokabeln5.json');
     CONFIG = await res.json();
     showOnly('units');
     renderUnitList();
