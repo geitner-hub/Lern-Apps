@@ -303,6 +303,17 @@
       ],
       "customTags": [],
       "aod": false
+    },
+    {
+      "name": "RUN!",
+      "datei": "runner.html",
+      "fach": "Mathematik",
+      "emoji": "🏃🏻‍♀️ᯓ",
+      "beschreibung": "Wie weit schaffst du es?",
+      "hidden": false,
+      "klassen": [],
+      "customTags": [],
+      "aod": false
     }
   ],
   "customTags": [
