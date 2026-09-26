@@ -19,6 +19,14 @@
 //    POST /login     → 200 bei richtigem Passwort       (Header: Authorization: Bearer <pw>)
 //    PUT  /          → config.json speichern            (Header: Authorization: Bearer <pw>)
 //                      Body: { content (base64), sha, message }
+//
+//  Geprüfte Felder von config.json (validateConfig):
+//    apps[]        – name, datei (nur sichere Links), fach, emoji, beschreibung,
+//                    klassen, hidden, aod (höchstens eine App des Tages), customTags
+//    customTags[], hiddenCats[], announcement
+//    pass          – seasons, avatar (true/false), events { id: true/false }
+//
+//  Wartung & Fehlersuche: cloudflare/ANLEITUNG.md
 // ═══════════════════════════════════════════════════════
 
 // ── Einstellungen ──────────────────────────────────────
@@ -154,6 +162,19 @@ function validateConfig(cfg) {
     if (app.aod) aodCount++;
   });
   if (aodCount > 1) p.push('mehr als eine App des Tages');
+
+  // Lernwelt-Pass: nur Schalter (Saison-Modus, Avatar & Effekte, Events)
+  const ps = cfg.pass;
+  if (ps !== undefined) {
+    if (!ps || typeof ps !== 'object' || Array.isArray(ps)) p.push('pass ungültig');
+    else {
+      if (!isBool(ps.seasons) || !isBool(ps.avatar)) p.push('pass: seasons/avatar');
+      const ev = ps.events;
+      if (ev !== undefined && (!ev || typeof ev !== 'object' || Array.isArray(ev) || Object.keys(ev).length > 20
+          || !Object.entries(ev).every(([k, v]) => /^[a-z0-9-]{1,30}$/.test(k) && typeof v === 'boolean'))) p.push('pass: events');
+      if (Object.keys(ps).some(k => !['seasons', 'avatar', 'events'].includes(k))) p.push('pass: unbekanntes Feld');
+    }
+  }
   return p;
 }
 
