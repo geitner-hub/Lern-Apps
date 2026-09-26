@@ -346,8 +346,7 @@
             <label>Fach *</label>
             <select id="f-fach">
               <option value="">– Fach wählen –</option>
-              <option>Mathematik</option><option>Englisch</option><option>Deutsch</option>
-              <option>WiB</option><option>Sport</option><option>Informatik</option><option>GPG</option>
+              <!-- Fächer kommen aus shared.js (CAT_STYLES) -->
             </select>
           </div>
           <div class="form-group"><label>Beschreibung</label><input type="text" id="f-desc" placeholder="Kurze Beschreibung für Schüler"/></div>
@@ -364,8 +363,7 @@
         <input type="search" class="admin-search" id="app-search" placeholder="App suchen …" oninput="filterAppList()" autocomplete="off"/>
         <select class="fach-filter" id="fach-filter" onchange="filterAppList()">
           <option value="">Alle Fächer</option>
-          <option>Mathematik</option><option>Englisch</option><option>Deutsch</option>
-          <option>WiB</option><option>Sport</option><option>Informatik</option><option>GPG</option>
+          <!-- Fächer kommen aus shared.js (CAT_STYLES) -->
         </select>
         <select class="fach-filter" id="status-filter" onchange="filterAppList()">
           <option value="">Alle Status</option>
@@ -503,6 +501,15 @@
 
 // Passwort & Secret stehen NICHT mehr hier – sie liegen nur als Secret im Cloudflare Worker.
 // KLASSEN, FAECHER, ANN_COLORS, TAG_COLORS kommen aus shared.js.
+
+// Fach-Auswahlen aus shared.js füllen – neues Fach nur dort in CAT_STYLES eintragen
+(function fillFachSelects() {
+  ['f-fach', 'fach-filter'].forEach(id => {
+    const sel = document.getElementById(id);
+    if (!sel) return;
+    FAECHER.forEach(f => { const o = document.createElement('option'); o.textContent = f; o.value = f; sel.appendChild(o); });
+  });
+})();
 
 let CONFIG   = { apps: [], customTags: [], hiddenCats: [], announcement: { active: false, text: '', emoji: '📢', color: 0 } };
 let ghSha    = '';
@@ -880,7 +887,7 @@ function buildAppList() {
           <div class="form-group"><label>Emoji</label><input type="text" id="ei-emoji-${i}" value="${escHtml(app.emoji || '📱')}" maxlength="8"/></div>
           <div class="form-group"><label>Fach</label>
             <select id="ei-fach-${i}">
-              ${FAECHER.map(f => `<option${app.fach === f ? ' selected' : ''}>${escHtml(f)}</option>`).join('')}
+              ${(FAECHER.includes(app.fach) || !app.fach ? FAECHER : [...FAECHER, app.fach]).map(f => `<option${app.fach === f ? ' selected' : ''}>${escHtml(f)}</option>`).join('')}
             </select>
           </div>
           <div class="form-group full"><label>Beschreibung</label><input type="text" id="ei-desc-${i}" value="${escHtml(app.beschreibung || '')}"/></div>

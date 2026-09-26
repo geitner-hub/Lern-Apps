@@ -20,7 +20,9 @@ const CAT_STYLES = {
   "Sport":      { icon: "⚽", color: "#8b5cf6", color2: "#a78bfa" },
   "Informatik": { icon: "💻", color: "#06b6d4", color2: "#22d3ee" },
   "GPG":        { icon: "🏛",  color: "#f97316", color2: "#fb923c" },
+  "Allgemein":  { icon: "✨", color: "#84cc16", color2: "#a3e635" },
 };
+// Neues Fach? Nur hier eintragen – Admin (Auswahl, Filter) und Startseite übernehmen es automatisch.
 const FAECHER   = Object.keys(CAT_STYLES);
 const CAT_ICONS = Object.fromEntries(Object.entries(CAT_STYLES).map(([k, v]) => [k, v.icon]));
 const KLASSEN   = [5, 6, 7, 8, 9];
