@@ -16,9 +16,16 @@
 //
 //  Endpunkte:
 //    GET  /          → { content (base64), sha }       (öffentlich, nur lesen)
-//    POST /login     → 200 bei richtigem Passwort       (Header: Authorization: Bearer <pw>)
-//    PUT  /          → config.json speichern            (Header: Authorization: Bearer <pw>)
-//                      Body: { content (base64), sha, message }
+//    POST /login      → { token, exp } bei richtigem Passwort   (Header: Authorization: Bearer <passwort>)
+//    POST /session    → { ok, exp } wenn der Schlüssel gilt      (Header: Authorization: Bearer <schlüssel>)
+//    POST /logout-all → alle Schlüssel ungültig (braucht LOGIN_KV)(Header: Authorization: Bearer <schlüssel>)
+//    PUT  /           → config.json speichern                    (Header: Authorization: Bearer <schlüssel>)
+//                       Body: { content (base64), sha, message }
+//
+//  Anmelde-Schlüssel: Nur beim Anmelden wird das Passwort gesendet. Der Admin
+//  speichert danach nur einen signierten Schlüssel, der SESSION_DAYS gilt.
+//  Er ist mit dem Passwort signiert – ein neues Passwort macht alle Schlüssel
+//  ungültig. „Alle Geräte abmelden“ setzt einen Stichtag im KV-Speicher.
 //
 //  Geprüfte Felder von config.json (validateConfig):
 //    apps[]        – name, datei (nur sichere Links), fach, emoji, beschreibung,
@@ -42,6 +49,7 @@ const ALLOWED_ORIGINS = [
 const MAX_BODY_BYTES = 300_000;     // Schutz vor Riesen-Uploads
 const MAX_FAILS      = 5;           // Fehlversuche …
 const LOCK_SECONDS   = 15 * 60;     // … dann 15 Minuten Sperre
+const SESSION_DAYS   = 7;           // so lange gilt ein Anmelde-Schlüssel
 
 // Gleiche Regel wie isSafeLink() in shared.js
 const SAFE_LINK = /^(?:[A-Za-z0-9_-]+\/)*[A-Za-z0-9_.-]+\.html(?:\?[A-Za-z0-9_.~%=&+-]*)?(?:#[A-Za-z0-9_-]*)?$|^https:\/\/[^\s"'<>`]+$/;
@@ -67,6 +75,8 @@ export default {
     try {
       if (request.method === 'GET' && url.pathname === '/')       return await handleGet(env, cors);
       if (request.method === 'POST' && url.pathname === '/login') return await handleLogin(request, env, cors);
+      if (request.method === 'POST' && url.pathname === '/session') return await handleSession(request, env, cors);
+      if (request.method === 'POST' && url.pathname === '/logout-all') return await handleLogoutAll(request, env, cors);
       if (request.method === 'PUT' && url.pathname === '/')       return await handlePut(request, env, cors);
       return json({ error: 'Nicht gefunden' }, 404, cors);
     } catch (e) {
@@ -84,16 +94,33 @@ async function handleGet(env, cors) {
   return json({ content: d.content, sha: d.sha }, 200, { ...cors, 'Cache-Control': 'no-store' });
 }
 
-// ── POST /login: nur Passwort prüfen ───────────────────
+// ── POST /login: Passwort prüfen, Schlüssel ausstellen ─
 async function handleLogin(request, env, cors) {
-  const auth = await checkAuth(request, env);
+  const auth = await checkPassword(request, env);
   if (!auth.ok) return json({ error: auth.error }, auth.status, cors);
+  const { token, exp } = await makeToken(env);
+  return json({ ok: true, token, exp }, 200, { ...cors, 'Cache-Control': 'no-store' });
+}
+
+// ── POST /session: gilt der Schlüssel noch? ────────────
+async function handleSession(request, env, cors) {
+  const auth = await checkToken(request, env);
+  if (!auth.ok) return json({ error: auth.error }, auth.status, cors);
+  return json({ ok: true, exp: auth.exp }, 200, cors);
+}
+
+// ── POST /logout-all: alle Geräte abmelden ─────────────
+async function handleLogoutAll(request, env, cors) {
+  const auth = await checkToken(request, env);
+  if (!auth.ok) return json({ error: auth.error }, auth.status, cors);
+  if (!env.LOGIN_KV) return json({ error: 'Dafür fehlt der KV-Speicher LOGIN_KV (siehe cloudflare/ANLEITUNG.md)' }, 501, cors);
+  await env.LOGIN_KV.put('sessions:since', String(Date.now()));
   return json({ ok: true }, 200, cors);
 }
 
 // ── PUT: config.json schreiben ─────────────────────────
 async function handlePut(request, env, cors) {
-  const auth = await checkAuth(request, env);
+  const auth = await checkToken(request, env);
   if (!auth.ok) return json({ error: auth.error }, auth.status, cors);
 
   const raw = await request.text();
@@ -178,10 +205,59 @@ function validateConfig(cfg) {
   return p;
 }
 
+// ── Anmelde-Schlüssel ──────────────────────────────────
+//  Aufbau: v1.<Daten base64url>.<Signatur base64url>, Daten = { iat, exp }
+function b64url(bytes) {
+  let bin = ''; bytes.forEach(b => bin += String.fromCharCode(b));
+  return btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+function fromB64url(s) {
+  s = s.replace(/-/g, '+').replace(/_/g, '/'); while (s.length % 4) s += '=';
+  return Uint8Array.from(atob(s), c => c.charCodeAt(0));
+}
+async function sign(env, text) {
+  const key = await crypto.subtle.importKey('raw', new TextEncoder().encode('lernwelt-session|' + env.ADMIN_PASSWORD),
+    { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+  return new Uint8Array(await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(text)));
+}
+async function makeToken(env) {
+  const iat = Date.now(), exp = iat + SESSION_DAYS * 86400 * 1000;
+  const data = 'v1.' + b64url(new TextEncoder().encode(JSON.stringify({ iat, exp })));
+  return { token: data + '.' + b64url(await sign(env, data)), exp };
+}
+// Zeitkonstanter Vergleich zweier Byte-Folgen
+function bytesEqual(x, y) {
+  if (x.length !== y.length) return false;
+  if (crypto.subtle.timingSafeEqual) return crypto.subtle.timingSafeEqual(x, y);
+  let diff = 0;
+  for (let i = 0; i < x.length; i++) diff |= x[i] ^ y[i];
+  return diff === 0;
+}
+async function checkToken(request, env) {
+  const bad = { ok: false, status: 401, error: 'Sitzung abgelaufen – bitte neu anmelden' };
+  const header = request.headers.get('Authorization') || '';
+  const token = header.startsWith('Bearer ') ? header.slice(7) : '';
+  const parts = token.split('.');
+  if (parts.length !== 3 || parts[0] !== 'v1' || token.length > 400) return bad;
+  const data = parts[0] + '.' + parts[1];
+  let payload;
+  try {
+    const want = await sign(env, data), got = fromB64url(parts[2]);
+    if (!bytesEqual(want, got)) return bad;
+    payload = JSON.parse(new TextDecoder().decode(fromB64url(parts[1])));
+  } catch (e) { return bad; }
+  if (!payload || !(payload.exp > Date.now())) return bad;
+  if (env.LOGIN_KV) {
+    const since = Number(await env.LOGIN_KV.get('sessions:since')) || 0;
+    if (!(payload.iat > since)) return bad;
+  }
+  return { ok: true, exp: payload.exp };
+}
+
 // ── Passwortprüfung mit Sperre nach Fehlversuchen ──────
 const memFails = new Map();   // Fallback ohne KV (gilt nur pro Worker-Instanz)
 
-async function checkAuth(request, env) {
+async function checkPassword(request, env) {
   const ip  = request.headers.get('CF-Connecting-IP') || 'unknown';
   const key = 'fails:' + ip;
 

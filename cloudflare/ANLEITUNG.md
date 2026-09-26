@@ -14,11 +14,26 @@ GitHub Pages. Fällt der Worker aus, funktioniert nur das Speichern im Admin nic
 | Anfrage | Wer | Zweck |
 |---|---|---|
 | `GET /` | öffentlich | liest `config.json` (Admin lädt damit den neuesten Stand) |
-| `POST /login` | mit Passwort | prüft das Passwort beim Anmelden im Admin |
-| `PUT /` | mit Passwort | speichert `config.json`, nach Prüfung jedes Feldes |
+| `POST /login` | mit Passwort | prüft das Passwort und stellt einen Anmelde-Schlüssel aus (7 Tage gültig) |
+| `POST /session` | mit Schlüssel | prüft beim Öffnen des Admins, ob der Schlüssel noch gilt |
+| `POST /logout-all` | mit Schlüssel | meldet alle Geräte ab (braucht `LOGIN_KV`) |
+| `PUT /` | mit Schlüssel | speichert `config.json`, nach Prüfung jedes Feldes |
 
 Nur Anfragen von `https://geitner-hub.github.io` werden angenommen. Nach 5 falschen
 Passwörtern ist das Gerät 15 Minuten gesperrt.
+
+## Anmeldung im Admin
+
+- Das Passwort wird nur beim Anmelden gesendet und **nirgends gespeichert**. Das Gerät
+  behält nur einen signierten Schlüssel, der nach **7 Tagen** abläuft – dann fragt der Admin
+  wieder nach dem Passwort. Oben im Admin steht „Angemeldet bis …“.
+- **🔒 Abmelden** meldet nur dieses Gerät ab.
+- **🚫 Alle Geräte abmelden** macht sofort jeden Schlüssel ungültig – auf allen Geräten,
+  auch auf diesem. Wirkt überall innerhalb von ca. 1 Minute. Danach kommt nur noch hinein,
+  wer das Passwort kennt. Braucht den KV-Speicher `LOGIN_KV` (unten).
+- **Passwort ändern** (unten) meldet ebenfalls alle Geräte ab – das ist der Notfallweg,
+  wenn jemand das Passwort kennen könnte.
+- Die Dauer steht als `SESSION_DAYS` oben in `worker.js`.
 
 ## Einstellungen bei Cloudflare
 
@@ -28,7 +43,18 @@ dash.cloudflare.com → *Workers & Pages* → `lern-apps-config` → *Settings*
 |---|---|---|
 | `ADMIN_PASSWORD` | Secret | Admin-Passwort |
 | `GITHUB_TOKEN` | Secret | Fine-grained Token, nur Repo `Lern-Apps`, Berechtigung *Contents: Read and write* |
-| `LOGIN_KV` | Binding (KV), optional | macht die Sperre nach Fehlversuchen dauerhaft (sonst gilt sie nur pro Worker-Instanz) |
+| `LOGIN_KV` | Binding (KV) | nötig für „Alle Geräte abmelden“; macht außerdem die Sperre nach Fehlversuchen dauerhaft |
+
+### KV-Speicher `LOGIN_KV` einrichten (einmalig, ca. 3 Minuten)
+
+1. Cloudflare → *Storage & Databases* → *Workers KV* → *Create* (Namespace) →
+   Name `lernwelt-login` → erstellen.
+2. *Workers & Pages* → `lern-apps-config` → *Settings* → *Bindings* → *Add* → *KV namespace*
+   → Variablenname **`LOGIN_KV`** (genau so) → Namespace `lernwelt-login` auswählen → speichern/*Deploy*.
+3. Test: Im Admin „🚫 Alle Geräte abmelden“ → „✓ Alle Geräte wurden abgemeldet“.
+   Ohne Binding erscheint „Dafür fehlt der KV-Speicher LOGIN_KV“.
+
+Der kostenlose Tarif reicht bei Weitem (Lesen bei jedem Speichern, Schreiben nur beim Abmelden).
 
 ## Regelmäßig: GitHub-Token erneuern
 
@@ -46,7 +72,8 @@ Speichern „GitHub: 401“. **Ablaufdatum im Kalender notieren** und vorher ern
 ## Passwort ändern
 
 Cloudflare → Worker → *Settings* → *Variables and Secrets* → `ADMIN_PASSWORD` → *Edit*.
-Wirkt sofort; im Admin einmal ab- und wieder anmelden.
+Wirkt sofort und meldet dabei alle Geräte ab (alte Schlüssel sind mit dem alten Passwort
+signiert). Danach im Admin mit dem neuen Passwort anmelden.
 
 ## Worker-Code aktualisieren
 
@@ -66,6 +93,9 @@ Secrets und Bindings bleiben beim Code-Tausch erhalten.
 |---|---|
 | „Worker nicht erreichbar“ | Code nicht deployt, Adresse geändert (`WORKER_URL` in `config-api.js`) oder Cloudflare-Störung |
 | „Falsches Passwort“ trotz richtigem | `ADMIN_PASSWORD` falsch geschrieben oder Leerzeichen am Ende |
+| „Der Worker bei Cloudflare ist noch die alte Version“ | `admin.html`/`config-api.js` sind neuer als der Worker → Worker-Code aktualisieren (oben) |
+| „Anmeldung abgelaufen“ | 7 Tage um, „Alle Geräte abmelden“ gedrückt oder Passwort geändert → Passwort eingeben |
+| „Dafür fehlt der KV-Speicher LOGIN_KV“ | Binding fehlt oder heißt anders → KV einrichten (oben) |
 | „Zu viele Fehlversuche“ | 15 Minuten warten |
 | „GitHub: 401/403“ | Token abgelaufen, falsch oder ohne *Contents: Read and write* → Token erneuern (oben) |
 | „Konflikt“ | `config.json` wurde inzwischen woanders geändert → Admin neu laden, Änderung wiederholen |
