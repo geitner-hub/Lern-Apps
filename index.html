@@ -546,7 +546,8 @@ async function load() {
   const fresh = LernPass.hasProfile() ? LernPass.checkBadges() : [];
   buildPage();
   if (fresh.length) LernPass.toast({ notice: true, newBadges: fresh });
-  else greetOnce();
+  if (LernPass.needsClassCheck() && !/^#pass=/.test(location.hash)) openPass('klasse');   // neues Schuljahr
+  else if (!fresh.length) greetOnce();
 }
 
 // Begrüßung durch die eigene Figur – einmal pro Tag
@@ -894,6 +895,7 @@ function openPass(mode) {
   passLastFocus = document.activeElement;
   const pr = LernPass.profile() || {};
   passDraft = { name: pr.name || '', klasse: pr.klasse || (fKl !== 'all' ? Number(fKl) : null) };
+  if (mode === 'klasse') passDraft.klasse = LernPass.suggestedClass();
   ward.tryOn = {};
   renderPass(mode);
   document.getElementById('pass-modal').classList.add('open');
@@ -923,6 +925,22 @@ function renderPass(mode) {
   const isWard = mode === 'wardrobe' && P.hasProfile();
   wardStop();
   document.querySelector('#pass-modal .lw-box').classList.toggle('wide', isWard);
+
+  if (mode === 'klasse' && P.hasProfile()) {
+    const alt = P.profile().klasse, neu = P.suggestedClass();
+    body.innerHTML = `
+      <div class="lw-h" id="pass-modal-title">🎒 Neues Schuljahr!</div>
+      <p class="lw-p">Letztes Jahr warst du in Klasse ${alt}. ${neu !== alt ? `Bist du jetzt in Klasse ${neu}?` : `Bist du immer noch in Klasse ${alt}?`}
+        Deine XP, Truhen und deine Figur bleiben natürlich erhalten.</p>
+      <div class="lw-btns"><button type="button" class="lw-btn primary" id="kl-yes" data-kl-neu="${neu}">Ja, Klasse ${neu} 🚀</button></div>
+      <div class="lw-sec">
+        <span class="lw-label">Nein, ich bin in Klasse …</span>
+        <div class="kl-row">${KLASSEN.map(k => `<button type="button" data-kl="${k}" class="${k === passDraft.klasse ? 'sel' : ''}">${k}</button>`).join('')}</div>
+        <div class="lw-btns"><button type="button" class="lw-btn" id="kl-save">Speichern</button></div>
+        <div class="lw-msg" id="kl-msg"></div>
+      </div>`;
+    return;
+  }
 
   if (mode === 'setup' || mode === 'edit') {
     body.innerHTML = `
@@ -1203,6 +1221,15 @@ document.getElementById('pass-modal').addEventListener('click', async e => {
     return;
   }
   if (t.id === 'chest-open' || t.closest('#chest-big')) { openChestAnimated(); return; }
+  if (t.id === 'kl-yes' || t.id === 'kl-save') {
+    const k = t.id === 'kl-yes' ? Number(t.dataset.klNeu) : passDraft.klasse;
+    if (!k) { const m = document.getElementById('kl-msg'); m.className = 'lw-msg err'; m.textContent = 'Bitte wähle deine Klasse.'; return; }
+    LernPass.confirmClass(k);
+    buildPage();
+    renderPass('view');
+    LernPass.showAvatar({ text: `Auf geht's in Klasse ${k}! 🎒`, big: true, aktion: 'jubeln' });
+    return;
+  }
   if (t.id === 'pf-save') {
     const name = document.getElementById('pf-name').value.trim();
     const msg = document.getElementById('pf-msg');

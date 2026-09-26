@@ -12,6 +12,8 @@
 //    mount(host, {drehbar})     → { setLook(look), cheer(), destroy() }
 //    snapshot(look, opts)       → Bild als data-URL
 //    refresh()                  → alle [data-avatar-bild] neu zeichnen
+//    figur(look?, opts)         → Promise: Figur für eigene Szenen (z. B. Runner)
+//                                 { root, THREE, pose({lauf, phase, stolpern, jubel, t}), gesicht(mode) }
 //
 //  Automatisch befüllt werden Elemente mit
 //    data-avatar-thumb="ITEM-ID"         Vorschau eines Teils
@@ -587,6 +589,53 @@
     return ctrl;
   }
 
+  // ── Figur für eigene 3D-Szenen (Runner & Co.) ──────────
+  /**
+   * Baut die Figur ohne Bühne, damit ein Spiel sie in seine eigene Szene setzen kann.
+   * Die Beine werden dafür auf zwei Hüftgelenke verteilt (auch Hosen und Schuhe),
+   * damit sie beim Laufen schwingen können.
+   * Blickrichtung der Figur: +z.  Einheiten: Figur ca. 31 hoch.
+   */
+  function figur(look, o = {}) {
+    const P = build(look || PASS.look(), { noShadow: !!o.ohneSchatten });
+    const lower = P.anchors.beine;
+    const huefte = { '-1': grp(lower, -2.2, 9, 0), '1': grp(lower, 2.2, 9, 0) };
+    P.root.updateMatrixWorld(true);
+    const b = new T3.Box3(), c = new T3.Vector3();
+    [...lower.children].forEach(ch => {
+      if (ch === huefte['-1'] || ch === huefte['1']) return;
+      b.setFromObject(ch);
+      if (b.isEmpty()) return;
+      b.getCenter(c);
+      if (Math.abs(c.x) < .9) return;                      // Mittelteile (Bund, Rock) bleiben stehen
+      huefte[c.x < 0 ? '-1' : '1'].attach(ch);
+    });
+    let faceMode = 'open';
+    return {
+      root: P.root, THREE: T3,
+      /** lauf 0–1 (Stärke), phase (Schrittzyklus), stolpern 0–1, jubel 0–1, t (Zeit für Teile-Animationen) */
+      pose({ lauf = 0, phase = 0, stolpern = 0, jubel = 0, t = 0 } = {}) {
+        const sw = Math.sin(phase) * .85 * lauf;
+        huefte['-1'].rotation.x = sw;
+        huefte['1'].rotation.x = -sw;
+        P.armL.rotation.x = -sw * .9 * (1 - jubel);
+        P.armR.rotation.x = sw * .9 * (1 - jubel);
+        P.armL.rotation.z = -(.1 + 2.3 * jubel);
+        P.armR.rotation.z = .1 + 2.3 * jubel;
+        P.upper.position.y = Math.abs(Math.cos(phase)) * .9 * lauf;
+        P.fig.rotation.x = .1 * lauf + .55 * stolpern;
+        if (P.pet) P.pet.position.y = Math.abs(Math.sin(phase * .75)) * 2.5 * lauf;
+        if (!reduce) P.anim.forEach(f => f(t));
+      },
+      /** 'open' | 'blink' | 'cheer' */
+      gesicht(mode) {
+        if (mode === faceMode || !P.headMesh || P.ghost) return;
+        faceMode = mode;
+        P.headMesh.material[4] = faceMat(P.look, mode, P.hautC, P.haarC);
+      },
+    };
+  }
+
   // ── Auftritt in der Ecke (nach Runden, Begrüßung) ──────
   let pop = null, popCtrl = null, popT = null, popHideT = null;
   function popEl() {
@@ -648,5 +697,6 @@
     }, () => {});
   }
 
-  window.LernAvatar = { ready, mount, appear, hide: hidePop, snapshot: (l, o) => snapshot(l, o), refresh, PORTRAIT_KEY };
+  window.LernAvatar = { ready, mount, appear, hide: hidePop, snapshot: (l, o) => snapshot(l, o), refresh, PORTRAIT_KEY,
+                        figur: (look, o) => ready().then(() => figur(look, o)) };
 })();

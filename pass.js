@@ -62,6 +62,12 @@
     eventGiftChests: 1,     // Geschenk-Truhen je Event & Schuljahr (nach erster guter Runde)
     starPct:         [60, 80, 90],  // Bronze, Silber, Gold
     starDays:        2,     // an so vielen verschiedenen Tagen erreicht
+    // Endlos-Modus (z. B. Runner): XP für den besten Lauf des Tages, als Differenz ausgezahlt
+    endlessXpPerCorrect: 1, // XP je richtiger Antwort
+    endlessXpCap:    30,    // höchstens so viele Endlos-XP pro App und Tag
+    endlessGoodCorrect: 10, // ab so vielen richtigen Antworten zählt der Lauf als „guter Tag“ (Wochenziel)
+    // Schuljahreswechsel: nach dem 1. August einmal nach der neuen Klasse fragen
+    klassenAbfrage:  true,
   };
 
   C = C && typeof C === 'object' ? C : {};
@@ -143,6 +149,7 @@
       flags: {},                 // z. B. comeback
       eventDays: {},             // { 'halloween|2026/27': ['YYYY-MM-DD', …] }
       eventGifts: {},            // { 'halloween|2026/27': true }
+      endless: {},               // { key: { day, best, paid, good } } Endlos-Modus, nur heute
     };
   }
 
@@ -151,7 +158,12 @@
       const raw = JSON.parse(localStorage.getItem(STORE_KEY) || 'null');
       if (!raw || typeof raw !== 'object') return blank();
       const st = { ...blank(), ...raw, today: { ...blank().today, ...(raw.today || {}) } };
-      if (st.profile) st.profile.look = cleanLook(st.profile.look);
+      if (st.profile) {
+        st.profile.look = cleanLook(st.profile.look);
+        // ältere Pässe: Klasse gilt als im laufenden Schuljahr bestätigt (keine Abfrage bis zum nächsten August)
+        if (!st.profile.klasseSeason) st.profile.klasseSeason = seasonId();
+      }
+      if (!st.endless || typeof st.endless !== 'object') st.endless = {};
       return st;
     } catch (e) { return blank(); }
   }
@@ -349,7 +361,7 @@
 
   function ensureProfile() {
     if (!S.profile) {
-      S.profile = { name: '', look: randomLook(), klasse: null, created: Date.now() };
+      S.profile = { name: '', look: randomLook(), klasse: null, klasseSeason: seasonId(), created: Date.now() };
       Object.entries(AVATAR.START || {}).forEach(([sl, id]) => { if (SLOTS[sl] && ITEM_BY_ID[id]) S.equipped[sl] = id; });
       importHistory();
     }
@@ -358,10 +370,27 @@
   function setProfile({ name, klasse } = {}) {
     ensureProfile();
     if (name !== undefined)   S.profile.name = cleanName(name);
-    if (klasse !== undefined) S.profile.klasse = [5, 6, 7, 8, 9].includes(Number(klasse)) ? Number(klasse) : null;
+    if (klasse !== undefined) {
+      S.profile.klasse = [5, 6, 7, 8, 9].includes(Number(klasse)) ? Number(klasse) : null;
+      S.profile.klasseSeason = seasonId();         // Klasse gilt für dieses Schuljahr als bestätigt
+    }
     save();
     return S.profile;
   }
+
+  // ── Schuljahreswechsel ─────────────────────────────────
+  /** true, wenn seit dem letzten 1. August die Klasse noch nicht bestätigt wurde */
+  function needsClassCheck() {
+    return !!(RULES.klassenAbfrage && S.profile && S.profile.name && S.profile.klasse &&
+              S.profile.klasseSeason !== seasonId());
+  }
+  /** Vorschlag für die neue Klasse (eins höher, höchstens 9) */
+  function suggestedClass() {
+    const k = S.profile && S.profile.klasse;
+    return k ? Math.min(9, k + 1) : null;
+  }
+  /** Klasse für das neue Schuljahr bestätigen (auch gleiche Klasse, z. B. bei Wiederholung) */
+  function confirmClass(klasse) { return setProfile({ klasse }); }
 
   // Bisherige Ergebnisse (vor dem Pass) als Sterne-Fortschritt übernehmen – ohne XP
   /** Aussehen ändern, z. B. setLook({ frisur: 'bob' }) */
@@ -426,7 +455,8 @@
     if (S.today.day !== day) S.today = { day, xp: 0, good: false };
     const a = S.apps[key] || (S.apps[key] = { h: {}, best: 0, last: '', day: '', n: 0 });
     const prevBest = a.best || 0;
-    const hadPlayed = !!a.last;
+    const hadPlayed = !!a.last && !a.nurEndlos;       // nur Endlos-Läufe zählen nicht als „schon gespielt“ (kein Schein-Rekord)
+    delete a.nurEndlos;
     const prevLow = hadPlayed && prevBest < 50;
 
     // 1) Durchklick-Schutz
@@ -522,6 +552,101 @@
     while (keys.length > 80) delete S.weeks[keys.shift()];
   }
 
+  // ── XP im Endlos-Modus ──────────────────────────────────
+  /**
+   * Zählt nur der beste Lauf des Tages (je App): 1 XP je richtiger Antwort,
+   * höchstens RULES.endlessXpCap. Wer später besser läuft, bekommt die Differenz.
+   * Sterne gibt es hier nicht (die beruhen auf Prozent) – nur im Rundenmodus.
+   * @param {object} r  { key, correct, seconds }
+   * @returns {object}  wie award(), zusätzlich { endless, correct, dayBest, newDayBest, capReached }
+   */
+  function awardEndless(r) {
+    const key = String(r.key || '');
+    const correct = Math.max(0, Math.floor(Number(r.correct) || 0));
+    if (!key) return { xp: 0, lines: [], blocked: 'invalid' };
+
+    ensureProfile();
+    const sec = Number(r.seconds);
+    const day = dayKey(), wk = weekKey(), season = seasonId();
+    const before = levelInfo();
+    const chestsBefore = chestInfo().fromXp;
+    if (S.today.day !== day) S.today = { day, xp: 0, good: false };
+
+    if (isFinite(sec) && sec < RULES.minSeconds) {
+      S.rounds++; save();
+      return { xp: 0, lines: [], blocked: 'fast', endless: true, correct };
+    }
+
+    let e = S.endless[key];
+    if (!e || e.day !== day) e = S.endless[key] = { day, best: 0, paid: 0, good: false };
+    Object.keys(S.endless).forEach(k => { if (S.endless[k].day !== day) delete S.endless[k]; });   // alte Tage aufräumen
+
+    const prevBest = e.best;
+    const newDayBest = correct > prevBest;
+    e.best = Math.max(prevBest, correct);
+    const target = Math.min(RULES.endlessXpCap, e.best * RULES.endlessXpPerCorrect);
+    let xp = Math.max(0, target - e.paid);
+    e.paid += xp;
+    const capReached = e.paid >= RULES.endlessXpCap;
+
+    const lines = [];
+    if (xp > 0) lines.push(prevBest > 0 ? `Neuer Tagesbestwert: ${correct} richtig +${xp}` : `${correct} richtige Antworten +${xp}`);
+    else if (correct > 0 && capReached) lines.push('Endlos-XP für heute schon komplett – morgen gibt es wieder welche!');
+    else if (correct > 0) lines.push(`Heute zählt dein bester Lauf (${e.best} richtig) – übertriff ihn für mehr XP!`);
+    if (capReached && xp > 0) lines.push(`Tagesgrenze erreicht (${RULES.endlessXpCap} XP)`);
+    if (correct === 0) lines.push('Beim nächsten Lauf klappt es besser!');
+
+    if (xp > 0 && S.today.xp >= RULES.dailySoftCap) { xp = Math.round(xp / 2); lines.push('Viel geübt heute: halbe XP'); }
+
+    // „Guter Tag“ fürs Wochenziel, einmal pro Tag und App
+    const good = correct >= RULES.endlessGoodCorrect;
+    let eventGift = null;
+    if (good && !e.good) {
+      e.good = true;
+      S.goodRounds = (S.goodRounds || 0) + 1;
+      activeEvents().forEach(ev => {
+        const k = ev.id + '|' + season;
+        const days = S.eventDays[k] || (S.eventDays[k] = []);
+        if (!days.includes(day)) days.push(day);
+        if (!S.eventGifts[k] && RULES.eventGiftChests > 0) {
+          S.eventGifts[k] = true;
+          S.bonusChests = (S.bonusChests || 0) + RULES.eventGiftChests;
+          eventGift = ev;
+        }
+      });
+    }
+    if (good) {
+      if (!S.today.good) S.weeks[wk] = (S.weeks[wk] || 0) + 1;
+      S.today.good = true;
+    } else if (S.weeks[wk] === undefined) {
+      S.weeks[wk] = 0;
+    }
+
+    // App als „gespielt“ vermerken (für Abzeichen), ohne Sterne
+    let a = S.apps[key];
+    if (!a) a = S.apps[key] = { h: {}, best: 0, last: '', day: '', n: 0, nurEndlos: true };
+    if (!a.last || day > a.last) a.last = day;
+
+    S.xp += xp;
+    S.seasons[season] = (S.seasons[season] || 0) + xp;
+    S.rounds++;
+    S.today.xp += xp;
+    pruneWeeks();
+    save();
+
+    const newBadges = checkBadges();
+    const after = levelInfo();
+    return {
+      xp, lines, blocked: null, endless: true, correct, dayBest: e.best, newDayBest, capReached,
+      pct: good ? 100 : 0, eventGift, newBadges,
+      levelUp: after.level > before.level ? after : null,
+      level: after,
+      chest: chestInfo().fromXp > chestsBefore,
+      stars: starsFor(key), starUp: 0,
+      week: weekInfo(),
+    };
+  }
+
   // ── Sicherungs-Code ─────────────────────────────────────
   //  Format:  LW2.<base64url(JSON)>.<Prüfsumme>   (LW1 wird weiterhin gelesen)
   //  Die Prüfsumme erkennt Tippfehler und einfaches Herumbasteln –
@@ -553,7 +678,7 @@
     const wkeys = Object.keys(S.weeks).sort().slice(-30);
     const payload = {
       v: 2,
-      p: [S.profile.name, LOOK_KEYS.map(k => S.profile.look[k]), S.profile.klasse || 0],
+      p: [S.profile.name, LOOK_KEYS.map(k => S.profile.look[k]), S.profile.klasse || 0, S.profile.klasseSeason || ''],
       x: S.xp, r: S.rounds, o: S.chestsOpened,
       w: Object.fromEntries(wkeys.map(k => [k.replace(/-/g, ''), S.weeks[k]])),
       a: apps,
@@ -587,7 +712,8 @@
       const restored = blank();
       const lk = Array.isArray(d.p[1]) ? Object.fromEntries(LOOK_KEYS.map((k, i) => [k, d.p[1][i]])) : null;
       restored.profile = { name: cleanName(d.p[0]), look: lk ? cleanLook(lk) : randomLook(),
-                           klasse: [5, 6, 7, 8, 9].includes(d.p[2]) ? d.p[2] : null, created: Date.now() };
+                           klasse: [5, 6, 7, 8, 9].includes(d.p[2]) ? d.p[2] : null,
+                           klasseSeason: /^\d{4}\/\d{2}$/.test(d.p[3] || '') ? d.p[3] : seasonId(), created: Date.now() };
       restored.xp = Math.max(0, Math.min(1e6, Math.floor(Number(d.x) || 0)));
       restored.rounds = Math.max(0, Math.floor(Number(d.r) || 0));
       restored.chestsOpened = Math.max(0, Math.floor(Number(d.o) || 0));
@@ -777,12 +903,18 @@
   function avatarForResult(res) {
     if (!res || res.blocked) return;
     const badges = res.newBadges || [];
-    const perfekt = !res.notice && Number(res.pct) === 100 && Number(res.xp) > 0;
+    const perfekt = !res.notice && !res.endless && Number(res.pct) === 100 && Number(res.xp) > 0;
     if (readSettings().avatar) {
       if (res.levelUp || badges.length) celebrate('feuerwerk');
       else if (perfekt || res.starUp === 3 || res.chest || res.eventGift) celebrate('konfetti');
     }
     let text = '', big = true;
+    if (res.endless && !res.levelUp && !badges.length && !res.chest && !res.eventGift) {
+      text = res.newDayBest && res.correct > 0 ? pick(['Neuer Tagesrekord! 🏃', 'So weit warst du heute noch nie! 🚀', 'Stark gelaufen! 💪'])
+           : res.correct >= RULES.endlessGoodCorrect ? pick(LOB.gut) : pick(LOB.mut);
+      showAvatar({ text, big: false, aktion: res.correct >= RULES.endlessGoodCorrect ? 'jubeln' : 'winken' });
+      return;
+    }
     if (res.levelUp) text = `Level ${res.levelUp.level}! 🎉`;
     else if (badges.length) text = `Abzeichen: ${badges[0].badge.name}! ${badges[0].badge.icon}`;
     else if (res.starUp) text = ['', 'Bronze-Stern! 🥉', 'Silber-Stern! 🥈', 'Gold-Stern! 🥇'][res.starUp];
@@ -840,8 +972,8 @@
     avatarHTML, cardBackground, itemPreviewHTML, itemSourceText,
     hasProfile()  { return !!(S.profile && S.profile.name); },
     profile()     { return S.profile; },
-    setProfile, levelInfo, xpForLevel, starsFor, starProgress, starsSummary, weekInfo, chestInfo,
-    award, toast, showAvatar, celebrate, exportCode, restoreUrl, parseCode,
+    setProfile, needsClassCheck, suggestedClass, confirmClass, levelInfo, xpForLevel, starsFor, starProgress, starsSummary, weekInfo, chestInfo,
+    award, awardEndless, toast, showAvatar, celebrate, exportCode, restoreUrl, parseCode,
     markLevelSeen() { S.seenLevel = levelInfo().level; save(); },
     onChange(fn)  { listeners.push(fn); },
     reset()       { S = blank(); save(); },

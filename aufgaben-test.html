@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Aufgaben prüfen – Lernwelt</title>
+  <!--
+   Werkzeug für Lehrkräfte (nicht im Admin eintragen):
+   Zeigt Beispielaufgaben aus aufgaben.js, so wie sie später im Runner erscheinen.
+   Die richtige Antwort ist grün markiert.
+  -->
+  <link rel="stylesheet" href="fonts.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --bg:#0f0e1a; --surface:#1b1929; --accent:#e6a817; --indigo:#818cf8; --text:#f1f0fb; --text2:rgba(241,240,251,.65);
+            --muted:rgba(241,240,251,.4); --green:#4ade80; --red:#f87171; }
+    body { font-family: 'Nunito', system-ui, sans-serif; background: var(--bg); color: var(--text); padding: 1.5rem 1rem 3rem; }
+    .wrap { max-width: 900px; margin: 0 auto; }
+    h1 { font-family: 'Fredoka One', 'Nunito', sans-serif; font-weight: 400; color: var(--accent); font-size: 1.9rem; }
+    .sub { color: var(--text2); margin: .3rem 0 1.3rem; font-size: .92rem; }
+    .panel { background: var(--surface); border-radius: 16px; padding: 1rem 1.1rem; margin-bottom: 1rem; border: 1px solid rgba(255,255,255,.06); }
+    .row { display: flex; flex-wrap: wrap; gap: .8rem 1.4rem; align-items: center; }
+    label, .lbl { font-weight: 800; font-size: .85rem; color: var(--text2); }
+    select, button { font: inherit; font-weight: 800; border-radius: 10px; border: 1px solid rgba(255,255,255,.12);
+      background: #252238; color: var(--text); padding: .45rem .7rem; }
+    button { cursor: pointer; }
+    button.primary { background: var(--accent); color: #231a02; border: 0; padding: .6rem 1.1rem; }
+    .fach { margin-top: .8rem; }
+    .fach h3 { font-size: .8rem; color: var(--muted); margin-bottom: .35rem; font-weight: 900; }
+    .pools { display: flex; flex-wrap: wrap; gap: .4rem; }
+    .pool { display: inline-flex; gap: .35rem; align-items: center; padding: .35rem .65rem; border-radius: 99px;
+      background: rgba(255,255,255,.05); font-size: .85rem; font-weight: 700; cursor: pointer; }
+    .pool input { accent-color: var(--accent); }
+    .pool small { color: var(--muted); font-weight: 800; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: .7rem; }
+    .card { background: var(--surface); border-radius: 14px; padding: .85rem .95rem; border: 1px solid rgba(255,255,255,.06); }
+    .card .h { font-size: .7rem; color: var(--muted); font-weight: 800; }
+    .card .q { font-family: 'Fredoka One', 'Nunito', sans-serif; font-size: 1.25rem; margin: .2rem 0 .55rem; line-height: 1.2; }
+    .opts { display: grid; grid-template-columns: repeat(3, 1fr); gap: .35rem; }
+    .opt { text-align: center; font-weight: 800; font-size: .88rem; padding: .45rem .3rem; border-radius: 9px;
+      background: rgba(255,255,255,.05); overflow-wrap: anywhere; }
+    .opt.ok { background: rgba(74,222,128,.16); color: var(--green); }
+    .meta { font-size: .72rem; color: var(--muted); margin-top: .4rem; }
+    .msg { color: var(--red); font-weight: 800; margin-top: .6rem; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Aufgaben prüfen</h1>
+  <p class="sub">So sehen die Aufgaben im Runner aus. Grün ist die richtige Antwort. Angezeigt werden nur Themen bis zur gewählten Klasse.</p>
+
+  <div class="panel">
+    <div class="row">
+      <label>Klasse <select id="klasse"></select></label>
+      <label>Vokabeln bis <select id="bis"><option value="">alle Units</option></select></label>
+      <label>Richtung <select id="richtung"><option value="de-en">Deutsch → Englisch</option><option value="en-de">Englisch → Deutsch</option></select></label>
+    </div>
+    <div id="pool-list"></div>
+    <div class="row" style="margin-top:1rem">
+      <button class="primary" id="go" type="button">12 Beispiele zeigen</button>
+      <span class="lbl" id="link"></span>
+    </div>
+    <div class="msg" id="msg"></div>
+  </div>
+
+  <div class="grid" id="out"></div>
+</div>
+
+<script src="pass.js"></script>
+<script src="aufgaben.js"></script>
+<script>
+'use strict';
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+function init() {
+  const passKl = LernAufgaben.klasse();
+  $('klasse').innerHTML = [5, 6, 7, 8, 9].map(k => `<option value="${k}" ${k === (passKl || 5) ? 'selected' : ''}>${k}${k === passKl ? ' (Pass)' : ''}</option>`).join('');
+  $('klasse').onchange = renderPools;
+  renderPools();
+}
+
+function renderPools() {
+  const kl = Number($('klasse').value);
+  const list = LernAufgaben.pools({ klasse: kl });
+  const faecher = [...new Set(list.map(p => p.fach))];
+  $('pool-list').innerHTML = faecher.map(f => `<div class="fach"><h3>${esc(f)}</h3><div class="pools">${
+    list.filter(p => p.fach === f).map((p, i) => `<label class="pool"><input type="checkbox" value="${esc(p.id)}" ${f === faecher[0] && i === 0 ? 'checked' : ''}> ${esc(p.titel)} <small>ab Kl. ${p.klasse}</small></label>`).join('')
+  }</div></div>`).join('');
+  $('pool-list').onchange = updateUnits;
+  updateUnits();
+}
+
+async function updateUnits() {
+  const ids = selected();
+  const vok = ids.find(id => /^vok/.test(id));
+  const sel = $('bis');
+  sel.innerHTML = '<option value="">alle Units</option>';
+  if (vok) (await LernAufgaben.einheiten(vok)).forEach(u => sel.insertAdjacentHTML('beforeend', `<option value="${esc(u.id)}">${esc(u.label)} (${u.anzahl})</option>`));
+  showLink();
+}
+function selected() { return [...document.querySelectorAll('#pool-list input:checked')].map(i => i.value); }
+function showLink() {
+  const p = new URLSearchParams();
+  const ids = selected();
+  if (ids.length) p.set('pool', ids.join(','));
+  if ($('bis').value) p.set('bis', $('bis').value);
+  if ($('richtung').value === 'en-de') p.set('richtung', 'en-de');
+  $('link').textContent = ids.length ? 'Link für den Runner: runner.html?' + p.toString() : '';
+}
+$('bis').onchange = showLink;
+$('richtung').onchange = showLink;
+
+$('go').onclick = async () => {
+  $('msg').textContent = '';
+  $('out').innerHTML = '';
+  try {
+    const gen = await LernAufgaben.erzeuger(selected(), { klasse: Number($('klasse').value), bis: $('bis').value || undefined, richtung: $('richtung').value });
+    const cards = [];
+    for (let i = 0; i < 12; i++) {
+      const a = gen.next();
+      if (!a) break;
+      cards.push(`<div class="card"><div class="h">${esc(a.pool)}${a.hinweis ? ' · ' + esc(a.hinweis) : ''}</div>
+        <div class="q">${esc(a.frage)}</div>
+        <div class="opts">${a.optionen.map(o => `<div class="opt${o === a.antwort ? ' ok' : ''}">${esc(o)}</div>`).join('')}</div>
+        <div class="meta">Lesezeit ca. ${LernAufgaben.lesezeit(a).toFixed(1).replace('.', ',')} s</div></div>`);
+    }
+    $('out').innerHTML = cards.join('');
+  } catch (e) { $('msg').textContent = e.message; }
+};
+
+if (window.LernPass) init(); else window.addEventListener('lernpass:ready', init, { once: true });
+setTimeout(() => { if (!$('klasse').options.length) init(); }, 1500);   // falls der Pass nicht lädt
+</script>
+</body>
+</html>
