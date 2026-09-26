@@ -22,7 +22,8 @@ verwaltet über ein eigenes Admin-Panel.
 | `fonts.css` + `fonts/` | Lokal gehostete Schriften (kein Google Fonts → DSGVO) |
 | `qrcode.js` | QR-Code-Erzeugung im Browser (MIT-Lizenz, Kazuhiko Arase) |
 | `app-template.html` | Vorlage für neue Apps |
-| `cloudflare/worker.js` | Quelltext des Cloudflare Workers (dort einfügen, nicht auf GitHub Pages nötig) |
+| `cloudflare/worker.js` | Quelltext des Cloudflare Workers (Vorlage – aktiv ist der bei Cloudflare eingefügte Code) |
+| `cloudflare/ANLEITUNG.md` | Wartung des Workers: Token erneuern, Passwort ändern, Code aktualisieren, Fehlersuche |
 
 ## Neue App einpflegen
 
@@ -52,7 +53,9 @@ Verlauf der letzten 30 Versuche. Jedes Ergebnis löst zusätzlich das Ereignis
 ## Sicherheit
 
 - Passwort und GitHub-Token liegen **nur** als Secrets im Cloudflare Worker.
-- Der Worker schreibt ausschließlich `config.json` und prüft jeden Inhalt.
+- Der Worker schreibt ausschließlich `config.json` und prüft jedes Feld (Apps, Tags, Ankündigung,
+  Pass-Schalter). Wartung und Fehlersuche: `cloudflare/ANLEITUNG.md`.
+- Der GitHub-Token läuft ab – Ablaufdatum im Kalender notieren (Erneuern: siehe Anleitung).
 - Alle Texte aus der Config werden auf der Seite escaped dargestellt.
 - „Versteckt“ heißt nicht geschützt: Dateien sind per direkter URL erreichbar.
 - Nach dem Speichern im Admin dauert es ca. 1 Minute, bis GitHub Pages die neue
