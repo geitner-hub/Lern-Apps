@@ -70,6 +70,8 @@
     return [...new Set(l.filter(x => typeof x === 'string' && /^[a-z0-9][a-z0-9:/_.+-]{0,79}$/i.test(x)))].slice(0, 10);
   }
 
+  let tastaturLoslassen = () => {};                 // wird vom Tastatur-Halter (unten) gesetzt
+
   // ── Öffentliche API ─────────────────────────────────
   window.LernApps = {
     /**
@@ -80,6 +82,7 @@
      *   LernApps.saveResult({ score: 8, max: 10 });
      */
     saveResult(result, maxArg) {
+      tastaturLoslassen();                           // Runde vorbei → Bildschirmtastatur darf zu
       // Auch alte Schreibweise saveResult(richtig, gesamt) unterstützen
       if (typeof result === 'number') result = { score: result, max: maxArg };
       const score = Number(result && result.score) || 0;
@@ -125,6 +128,85 @@
     getAllResults() { return loadResults(); },
     getResult()     { return getResult(); }
   };
+
+  // ── Bildschirmtastatur zwischen Aufgaben offen halten (iPad/Handy) ──
+  //  Viele Apps bauen nach dem Prüfen das Eingabefeld neu auf oder sperren es kurz.
+  //  Dabei schließt iOS die Tastatur. Deshalb springt der Fokus beim Prüfen (Enter
+  //  oder Knopf) auf ein unsichtbares Ersatzfeld – die Tastatur bleibt offen – und
+  //  von dort ins nächste freie Eingabefeld. Was in der Zwischenzeit getippt wird,
+  //  wandert mit. Kommt kein Feld mehr (Rundenende = saveResult, oder nach 6 s),
+  //  schließt die Tastatur wie gewohnt.
+  //  Abschalten für eine App: <body data-tastatur="aus">
+  (function tastaturHalter() {
+    const touch = (navigator.maxTouchPoints || 0) > 0 || 'ontouchstart' in window;
+    if (!touch) return;
+    const TYPEN = /^(text|number|search|tel|url|email|)$/;
+    let ersatz = null, uhr = null, zuletzt = null, start = 0;
+    const tippfeld = el => !!el && el !== ersatz && el.tagName === 'INPUT' && TYPEN.test((el.getAttribute('type') || '').toLowerCase());
+    const nutzbar = el => tippfeld(el) && el.isConnected && !el.disabled && !el.readOnly
+      && el.getClientRects().length > 0 && getComputedStyle(el).visibility !== 'hidden';
+    const aus = () => document.body && document.body.dataset.tastatur === 'aus';
+
+    function ersatzFeld(vorbild) {
+      if (!ersatz) {
+        ersatz = document.createElement('input');
+        ersatz.setAttribute('aria-hidden', 'true');
+        ersatz.tabIndex = -1;
+        ersatz.autocomplete = 'off';
+        ersatz.style.cssText = 'position:fixed;width:1px;height:1px;opacity:0;border:0;padding:0;margin:0;font-size:16px;pointer-events:none;z-index:-1;';
+        document.body.appendChild(ersatz);
+      }
+      const r = vorbild.getBoundingClientRect();                      // an gleicher Stelle → kein Scrollsprung
+      ersatz.style.left = Math.max(0, Math.round(r.left)) + 'px';
+      ersatz.style.top = Math.max(0, Math.min(window.innerHeight - 2, Math.round(r.top))) + 'px';
+      ersatz.type = vorbild.type === 'number' ? 'number' : 'text';     // gleiche Tastatur (Ziffern/Buchstaben)
+      ersatz.inputMode = vorbild.inputMode || '';
+      ersatz.value = '';
+      return ersatz;
+    }
+    function stopp(schliessen) {
+      clearInterval(uhr); uhr = null;
+      if (schliessen && ersatz && document.activeElement === ersatz) ersatz.blur();
+    }
+    function hinein(el) {
+      const vorab = ersatz.value;
+      stopp(false);
+      el.focus();
+      if (vorab && el.value === '' && document.activeElement === el) { el.value = vorab; el.dispatchEvent(new Event('input', { bubbles: true })); }
+    }
+    function pruefen() {
+      if (document.activeElement !== ersatz) return stopp(false);       // App hat selbst fokussiert
+      const t = Date.now() - start;
+      const altDa = nutzbar(zuletzt);
+      if (!altDa) {                                                     // Feld weg/gesperrt → nächstes freies Feld
+        const alle = [...document.querySelectorAll('input')].filter(nutzbar);
+        const neu = alle.find(el => el.value === '') || alle[0];
+        if (neu) return hinein(neu);
+      } else if (t > 1500) return hinein(zuletzt);                      // Feld blieb (z. B. „nochmal versuchen“)
+      if (t > 6000) stopp(true);
+    }
+    function springen() {
+      const akt = document.activeElement;
+      if (aus() || !tippfeld(akt)) return;
+      zuletzt = akt;
+      ersatzFeld(akt).focus();
+      start = Date.now();
+      clearInterval(uhr);
+      uhr = setInterval(pruefen, 80);
+    }
+    // Enter im Eingabefeld (vor den Handlern der App)
+    document.addEventListener('keydown', e => {
+      if (e.key !== 'Enter') return;
+      if (document.activeElement === ersatz) { start = Date.now(); return; }   // Enter im Warten = „Weiter“ in manchen Apps
+      springen();
+    }, true);
+    // Knopf antippen, während ein Eingabefeld aktiv ist (z. B. „Prüfen“, „↵“)
+    const knopf = t => !tippfeld(t) && t.closest && t.closest('button, [role="button"], [onclick], a');
+    document.addEventListener('pointerdown', e => { if (knopf(e.target)) springen(); }, true);
+    // Manche Browser (Android) geben dem Knopf beim Antippen den Fokus – das würde die Tastatur schließen
+    document.addEventListener('mousedown', e => { if (uhr && document.activeElement === ersatz && knopf(e.target)) e.preventDefault(); }, true);
+    tastaturLoslassen = () => stopp(true);
+  })();
 
   // ── Styles ──────────────────────────────────────────
   const style = document.createElement('style');

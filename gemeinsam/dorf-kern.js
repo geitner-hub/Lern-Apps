@@ -477,6 +477,14 @@
         #lw-dorf-toast.show{transform:translate(-50%,0);opacity:1;}
         #lw-dorf-toast b{font-family:'Fredoka One','Nunito',sans-serif;font-weight:400;font-size:1.15rem;color:#4ade80;display:block;}
         #lw-dorf-toast.klein{border-color:rgba(255,255,255,.15);}
+        @media (max-width:640px){#lw-dorf-toast.hoch{bottom:8.2rem;}}
+        #lw-dorf-zurueck{position:fixed;left:1.2rem;bottom:calc(1.2rem + 3.3rem + env(safe-area-inset-bottom,0px));z-index:9999;
+          display:flex;align-items:center;gap:.45rem;background:#166534;color:#fff;text-decoration:none;
+          font-family:'Nunito','Segoe UI',sans-serif;font-weight:800;font-size:.88rem;padding:.55rem 1.1rem .55rem .9rem;
+          border-radius:99px;border:2px solid rgba(74,222,128,.6);box-shadow:0 4px 20px rgba(22,101,52,.45);
+          transform:translateX(-140%);transition:transform .35s cubic-bezier(.2,.9,.3,1.2);}
+        #lw-dorf-zurueck.show{transform:none;}
+        @media (prefers-reduced-motion: reduce){#lw-dorf-zurueck{transition:none;}}
         @media (prefers-reduced-motion: reduce){#lw-dorf-toast{transition:none;}}`;
       document.head.appendChild(st);
       el = document.createElement('div');
@@ -487,7 +495,8 @@
     }
     const r = rohstoff(q.r);
     if (art === 'erfuellt') {
-      el.className = '';
+      el.className = 'hoch';
+      zurueckKnopf();
       el.innerHTML = `<b>🏘️ Auftrag erfüllt!</b>+${q.b} ${r.icon} ${r.name} für dein Dorf`;
     } else if (art === 'fortschritt') {
       el.className = 'klein';
@@ -499,6 +508,22 @@
     clearTimeout(el._t);
     requestAnimationFrame(() => el.classList.add('show'));
     el._t = setTimeout(() => el.classList.remove('show'), art === 'erfuellt' ? 5000 : 3500);
+  }
+
+  // Nach einem erfüllten Auftrag: 10 s lang ein Knopf zurück ins Dorf (über „Alle Apps“)
+  function zurueckKnopf() {
+    if (/\/spiele\/dorf\.html$/.test(location.pathname)) return;
+    let a = document.getElementById('lw-dorf-zurueck');
+    if (!a) {
+      a = document.createElement('a');
+      a.id = 'lw-dorf-zurueck';
+      a.href = new URL('spiele/dorf.html', ROOT).href;
+      a.innerHTML = '<span aria-hidden="true">🏘️</span> Zum Dorf';
+      document.body.appendChild(a);
+    }
+    clearTimeout(a._t);
+    requestAnimationFrame(() => a.classList.add('show'));
+    a._t = setTimeout(() => a.classList.remove('show'), 10000);
   }
 
   // Tageswechsel, während eine Seite offen bleibt (iPad im Standby)
