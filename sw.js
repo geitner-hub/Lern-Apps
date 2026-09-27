@@ -9,11 +9,13 @@
 //
 //  Nach einer Änderung an DIESER Datei VERSION erhöhen.
 // ═══════════════════════════════════════════════════════
-const VERSION = 'lernwelt-v3';
-const START = ['./', 'index.html', 'shared.js', 'config-api.js', 'navbar.js', 'pass.js', 'avatar3d.js',
-               'fonts.css', 'qrcode.js', 'config.json', 'lernwelt-inhalte.json', 'manifest.webmanifest',
+const VERSION = 'lernwelt-v4';   // v4: neue Ordnerstruktur
+const START = ['./', 'index.html', 'config.json', 'manifest.webmanifest',
+               'gemeinsam/shared.js', 'gemeinsam/config-api.js', 'gemeinsam/navbar.js', 'gemeinsam/pass.js',
+               'gemeinsam/avatar3d.js', 'gemeinsam/fonts.css', 'gemeinsam/qrcode.js', 'daten/lernwelt-inhalte.json',
                // Spiele: sollen auch offline laufen, ohne vorher einmal online geöffnet worden zu sein
-               'runner.html', 'burg-verteidigung.html', 'aufgaben.js', 'vokabeln5.json', 'vokabeln6.json',
+               'spiele/runner.html', 'spiele/burg-verteidigung.html', 'gemeinsam/aufgaben.js',
+               'daten/vokabeln5.json', 'daten/vokabeln6.json',
                'vendor/three.min.js',
                'fonts/nunito-latin-wght-normal.woff2', 'fonts/nunito-latin-ext-wght-normal.woff2',
                'fonts/fredoka-one-latin-400-normal.woff2'];

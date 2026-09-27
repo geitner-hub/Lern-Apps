@@ -5,7 +5,7 @@ Die Startseite und alle Apps brauchen ihn **nicht** – sie lesen `config.json` 
 GitHub Pages. Fällt der Worker aus, funktioniert nur das Speichern im Admin nicht.
 
 - Adresse: `https://lern-apps-config.bennigeitner.workers.dev`
-  (steht als `WORKER_URL` in `config-api.js`)
+  (steht als `WORKER_URL` in `gemeinsam/config-api.js`)
 - Quelltext: `cloudflare/worker.js` im Repo. Die Datei im Repo ist nur die Vorlage –
   **aktiv ist der Code, der bei Cloudflare eingefügt ist.**
 
@@ -91,9 +91,9 @@ Secrets und Bindings bleiben beim Code-Tausch erhalten.
 
 | Meldung im Admin | Ursache und Lösung |
 |---|---|
-| „Worker nicht erreichbar“ | Code nicht deployt, Adresse geändert (`WORKER_URL` in `config-api.js`) oder Cloudflare-Störung |
+| „Worker nicht erreichbar“ | Code nicht deployt, Adresse geändert (`WORKER_URL` in `gemeinsam/config-api.js`) oder Cloudflare-Störung |
 | „Falsches Passwort“ trotz richtigem | `ADMIN_PASSWORD` falsch geschrieben oder Leerzeichen am Ende |
-| „Der Worker bei Cloudflare ist noch die alte Version“ | `admin.html`/`config-api.js` sind neuer als der Worker → Worker-Code aktualisieren (oben) |
+| „Der Worker bei Cloudflare ist noch die alte Version“ | `admin.html`/`gemeinsam/config-api.js` sind neuer als der Worker → Worker-Code aktualisieren (oben) |
 | „Anmeldung abgelaufen“ | 7 Tage um, „Alle Geräte abmelden“ gedrückt oder Passwort geändert → Passwort eingeben |
 | „Dafür fehlt der KV-Speicher LOGIN_KV“ | Binding fehlt oder heißt anders → KV einrichten (oben) |
 | „Zu viele Fehlversuche“ | 15 Minuten warten |

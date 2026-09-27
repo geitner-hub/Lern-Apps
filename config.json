@@ -3,7 +3,7 @@
   "apps": [
     {
       "name": "Simple present",
-      "datei": "practice_simple_present.html",
+      "datei": "apps/englisch/practice_simple_present.html",
       "fach": "Englisch",
       "emoji": "📓",
       "beschreibung": "Practice simple present! he/she/it + -s",
@@ -16,7 +16,7 @@
     },
     {
       "name": "Satzglieder ordnen",
-      "datei": "satzglieder-erkennen.html",
+      "datei": "apps/englisch/satzglieder-erkennen.html",
       "fach": "Englisch",
       "emoji": "🔤",
       "beschreibung": "Erkenne und ordne die Satzglieder im Satz.",
@@ -29,7 +29,7 @@
     },
     {
       "name": "Vierecke unterscheiden",
-      "datei": "vierecke_unterscheiden.html",
+      "datei": "apps/mathe/vierecke_unterscheiden.html",
       "fach": "Mathematik",
       "emoji": "📐",
       "beschreibung": "Quadrat, Rechteck & Co. – erkenne die Unterschiede!",
@@ -42,7 +42,7 @@
     },
     {
       "name": "Vokabeltrainer 5. Klasse",
-      "datei": "vokabeltrainer5.html",
+      "datei": "apps/englisch/vokabeltrainer5.html",
       "fach": "Englisch",
       "emoji": "📖",
       "beschreibung": "Übe Vokabeln aus dem Schulbuch",
@@ -60,7 +60,7 @@
     },
     {
       "name": "Vokabeltrainer 6. Klasse",
-      "datei": "vokabeltrainer6.html",
+      "datei": "apps/englisch/vokabeltrainer6.html",
       "fach": "Englisch",
       "emoji": "📖",
       "beschreibung": "Übe Vokabeln aus dem Schulbuch",
@@ -78,7 +78,7 @@
     },
     {
       "name": "Längeneinheiten umrechnen",
-      "datei": "laengeneinheiten.html",
+      "datei": "apps/mathe/laengeneinheiten.html",
       "fach": "Mathematik",
       "emoji": "📏",
       "beschreibung": "Umrechnen, rechnen, vergleichen: mm, cm, m, km",
@@ -91,7 +91,7 @@
     },
     {
       "name": "Regeln in unserer Gesellschaft",
-      "datei": "regeln-sortierer-gpg.html",
+      "datei": "apps/gpg/regeln-sortierer-gpg.html",
       "fach": "GPG",
       "emoji": "⚖️",
       "beschreibung": "Welche Regeln gibt es bei uns? Ordne zu!",
@@ -102,7 +102,7 @@
     },
     {
       "name": "Kopfrechnen Klasse 1",
-      "datei": "kopfrechnen_kl1.html",
+      "datei": "apps/mathe/kopfrechnen_kl1.html",
       "fach": "Mathematik",
       "emoji": "🧠",
       "beschreibung": "Übe deine Kopfrechenkünste!",
@@ -118,7 +118,7 @@
     },
     {
       "name": "Kopfrechnen Klasse 2",
-      "datei": "kopfrechnen_kl2.html",
+      "datei": "apps/mathe/kopfrechnen_kl2.html",
       "fach": "Mathematik",
       "emoji": "🧠",
       "beschreibung": "Übe deine Kopfrechenkünste!",
@@ -134,7 +134,7 @@
     },
     {
       "name": "Kopfrechnen Klasse 3",
-      "datei": "kopfrechnen_kl3.html",
+      "datei": "apps/mathe/kopfrechnen_kl3.html",
       "fach": "Mathematik",
       "emoji": "🧠",
       "beschreibung": "Übe deine Kopfrechenkünste!",
@@ -150,7 +150,7 @@
     },
     {
       "name": "Kopfrechnen Klasse 4",
-      "datei": "kopfrechnen_kl4.html",
+      "datei": "apps/mathe/kopfrechnen_kl4.html",
       "fach": "Mathematik",
       "emoji": "🧠",
       "beschreibung": "Wiederholung 4. Klasse: + − × ÷",
@@ -168,7 +168,7 @@
     },
     {
       "name": "Kopfrechnen Klasse 5",
-      "datei": "kopfrechnen.html",
+      "datei": "apps/mathe/kopfrechnen.html",
       "fach": "Mathematik",
       "emoji": "🧠",
       "beschreibung": "Übe deine Kopfrechenkünste!",
@@ -186,7 +186,7 @@
     },
     {
       "name": "Kopfrechnen Klasse 6",
-      "datei": "kopfrechnen_kl6.html",
+      "datei": "apps/mathe/kopfrechnen_kl6.html",
       "fach": "Mathematik",
       "emoji": "🧠",
       "beschreibung": "Übe deine Kopfrechenkünste!",
@@ -204,7 +204,7 @@
     },
     {
       "name": "English Dialogue",
-      "datei": "english-dialog-vorlagen.html",
+      "datei": "apps/englisch/english-dialog-vorlagen.html",
       "fach": "Englisch",
       "emoji": "📱",
       "beschreibung": "Choose one!",
@@ -215,7 +215,7 @@
     },
     {
       "name": "Rechen-Arena",
-      "datei": "rechen-arena.html",
+      "datei": "apps/mathe/rechen-arena.html",
       "fach": "Mathematik",
       "emoji": "🧮",
       "beschreibung": "Rechen-Spiele: Knacke deinen Rekord!",
@@ -234,7 +234,7 @@
     },
     {
       "name": "Einmaleins 1x1",
-      "datei": "einmaleins_tafel.html",
+      "datei": "apps/mathe/einmaleins_tafel.html",
       "fach": "Mathematik",
       "emoji": "1️⃣",
       "beschreibung": "Fülle die Lücken! Trainiere dein Einmaleins",
@@ -253,7 +253,7 @@
     },
     {
       "name": "Simple Past",
-      "datei": "simple-past.html",
+      "datei": "apps/englisch/simple-past.html",
       "fach": "Englisch",
       "emoji": "⏪",
       "beschreibung": "Regular and irregular verbs – übe die Vergangenheit!",
@@ -267,7 +267,7 @@
     },
     {
       "name": "Rechteck-Werkstatt",
-      "datei": "rechteck-app.html",
+      "datei": "apps/mathe/rechteck-app.html",
       "fach": "Mathematik",
       "emoji": "🟦",
       "beschreibung": "Verändere die Seiten und beobachte, was passiert.",
@@ -280,7 +280,7 @@
     },
     {
       "name": "Sachaufgaben Längen",
-      "datei": "sachaufgaben_laengen.html",
+      "datei": "apps/mathe/sachaufgaben_laengen.html",
       "fach": "Mathematik",
       "emoji": "📏",
       "beschreibung": "Knifflige Textaufgaben mit Längeneinheiten",
@@ -293,7 +293,7 @@
     },
     {
       "name": "Länder finden",
-      "datei": "laender-finder.html",
+      "datei": "apps/gpg/laender-finder.html",
       "fach": "GPG",
       "emoji": "🗺️",
       "beschreibung": "Wie gut kennst du dich in Deutschland und Europa aus?",
@@ -306,7 +306,7 @@
     },
     {
       "name": "RUN!",
-      "datei": "runner.html",
+      "datei": "spiele/runner.html",
       "fach": "Allgemein",
       "emoji": "🏃🏻‍♀️ᯓ",
       "beschreibung": "Wie weit schaffst du es?",
@@ -322,7 +322,7 @@
     },
     {
       "name": "Tower Defense",
-      "datei": "burg-verteidigung.html",
+      "datei": "spiele/burg-verteidigung.html",
       "fach": "Allgemein",
       "emoji": "🏰",
       "beschreibung": "Halte den Gegnerwellen so lange wie möglich stand!",

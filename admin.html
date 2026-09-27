@@ -4,7 +4,7 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Admin – Lernwelt</title>
-  <link rel="stylesheet" href="fonts.css">
+  <link rel="stylesheet" href="gemeinsam/fonts.css">
   <meta name="robots" content="noindex">
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -352,7 +352,7 @@
         </div>
         <div class="form-grid">
           <div class="form-group"><label>Name *</label><input type="text" id="f-name" placeholder="z.B. Kopfrechnen"/></div>
-          <div class="form-group"><label>Datei / Link *</label><input type="text" id="f-datei" placeholder="z.B. kopfrechnen.html"/></div>
+          <div class="form-group"><label>Datei / Link *</label><input type="text" id="f-datei" placeholder="z.B. apps/mathe/kopfrechnen.html"/></div>
           <div class="form-group">
             <label>Fach *</label>
             <select id="f-fach">
@@ -503,12 +503,12 @@
 <div id="undo-bar"></div>
 
 <!-- ── Gemeinsame Module ── -->
-<script src="qrcode.js"></script>
-<script src="shared.js"></script>
-<script src="config-api.js"></script>
-<script src="pass.js"></script>
-<script src="aufgaben.js"></script>
-<script src="avatar3d.js"></script>
+<script src="gemeinsam/qrcode.js"></script>
+<script src="gemeinsam/shared.js"></script>
+<script src="gemeinsam/config-api.js"></script>
+<script src="gemeinsam/pass.js"></script>
+<script src="gemeinsam/aufgaben.js"></script>
+<script src="gemeinsam/avatar3d.js"></script>
 <script>
 'use strict';
 
@@ -1036,7 +1036,7 @@ function saveEdit(i) {
   const newName  = document.getElementById(`ei-name-${i}`).value.trim();
   const newDatei = document.getElementById(`ei-datei-${i}`).value.trim();
   if (!newName || !newDatei) { showToast('⚠ Name und Datei sind Pflichtfelder', true); return; }
-  if (!isSafeLink(newDatei)) { showToast('⚠ Ungültiger Link – erlaubt: name.html (optional ?parameter) oder https://…', true); return; }
+  if (!isSafeLink(newDatei)) { showToast('⚠ Ungültiger Link – erlaubt: ordner/name.html (optional ?parameter) oder https://…', true); return; }
   if (CONFIG.apps.some((a, j) => j !== i && a.name === newName)) { showToast('⚠ Name bereits vergeben', true); return; }
   const oldName = app.name;
   app.name        = newName;
@@ -1106,7 +1106,7 @@ function addApp() {
   const emoji = document.getElementById('f-emoji').value.trim() || '📱';
   const desc  = document.getElementById('f-desc').value.trim();
   if (!name || !datei || !fach) { showToast('⚠ Name, Datei und Fach ausfüllen', true); return; }
-  if (!isSafeLink(datei)) { showToast('⚠ Ungültiger Link – erlaubt: name.html (optional ?parameter) oder https://…', true); return; }
+  if (!isSafeLink(datei)) { showToast('⚠ Ungültiger Link – erlaubt: ordner/name.html (optional ?parameter) oder https://…', true); return; }
   if (CONFIG.apps.find(a => a.name === name)) { showToast('⚠ Name bereits vergeben', true); return; }
   CONFIG.apps.push({ name, datei, fach, emoji, beschreibung: desc, hidden: false, klassen: [], customTags: [], aod: false });
   ['f-name','f-datei','f-desc','f-emoji'].forEach(id => document.getElementById(id).value = '');
@@ -1559,7 +1559,7 @@ let vokIndex   = [];
 async function loadVokabeln() {
   if (VOK_CONFIG) return;
   try {
-    const r = await fetch('vokabeln5.json');
+    const r = await fetch('daten/vokabeln5.json');
     if (!r.ok) throw new Error('HTTP ' + r.status);
     VOK_CONFIG = await r.json();
     buildVokIndex();

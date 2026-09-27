@@ -6,36 +6,58 @@ verwaltet über ein eigenes Admin-Panel.
 
 ## Struktur
 
-| Datei | Zweck |
+```
+index.html            Startseite (bleibt im Hauptordner – Home-Bildschirm-Symbol!)
+admin.html            Verwaltung (Login wird im Cloudflare Worker geprüft)
+pass-karte.html       Druckbare Sicherungskarten (?sammel = 8 pro A4)
+aufgaben-check.html   Werkzeug: Beispielaufgaben aus aufgaben.js ansehen
+404.html              Leitet alte Links (vor der Ordnerstruktur) automatisch um
+config.json           Zentrale Konfiguration (nur diese Datei schreibt der Worker)
+sw.js                 Offline-Speicher – muss im Hauptordner liegen
+manifest.webmanifest  App-Symbol (Anleitung: APP-SYMBOL.md)
+
+apps/mathe/  apps/englisch/  apps/gpg/   Lern-Apps nach Fach
+apps/vorlage/app-template.html          Vorlage für neue Apps
+spiele/               RUN!, Tower Defense (später Mein Dorf)
+daten/                vokabeln5.json, vokabeln6.json, lernwelt-inhalte.json
+gemeinsam/            Code, den alle Seiten nutzen (siehe unten)
+fonts/ icons/ vendor/ Schriften, Symbole, fremde Bibliotheken
+cloudflare/           Worker-Quelltext und Anleitung
+```
+
+| Datei in `gemeinsam/` | Zweck |
 |---|---|
-| `index.html` | Startseite für Schüler:innen – lädt `config.json` direkt, QR-Codes pro App |
-| `admin.html` | Verwaltung (Login wird im Cloudflare Worker geprüft) |
-| `config.json` | Zentrale Konfiguration aller Apps |
 | `shared.js` | Gemeinsame Konstanten & Helfer (Fächer, Farben, `escHtml`, `isSafeLink`, QR) – **einzige Quelle** |
 | `config-api.js` | Laden (öffentlich/Admin) und Speichern über den Worker |
 | `navbar.js` | Home-Button + Ergebnisspeicherung, in jeder App am Ende von `<body>`; lädt `pass.js` automatisch |
-| `pass-karte.html` | Druckbare Sicherungskarten: eigene Karte oder Sammelbogen (`?sammel`, 8 pro A4) |
-| `lernwelt-inhalte.json` | **Alle Pass-Inhalte:** Titel, Abzeichen, Events, Avatar (Figur-Optionen) und alle Avatar-Teile – hier erweitern |
-| `avatar3d.js` | 3D-Avatar aus Blöcken: baut Figur und Teile nur aus den Daten, drehbare Bühne, Vorschaubilder |
-| `vendor/three.min.js` | three.js r128 (MIT-Lizenz), wird von `avatar3d.js` erst bei Bedarf geladen |
 | `pass.js` | Lernwelt-Pass: XP, Level, Wochen-Serie, Meisterschafts-Sterne, Sicherungs-Code, Truhen-Zähler |
-| `manifest.webmanifest` + `icons/` | App-Symbol für den Home-Bildschirm (Anleitung für Schul-iPads: `APP-SYMBOL.md`) |
-| `vendor/jsQR.min.js` | QR-Erkennung für „📷 QR scannen“ (Apache-2.0), wird erst beim Scannen geladen |
-| `sw.js` | Offline-Speicher (Service Worker): „Internet zuerst“, bei fehlendem/langsamem Netz die letzte Kopie |
-| `fonts.css` + `fonts/` | Lokal gehostete Schriften (kein Google Fonts → DSGVO) |
+| `avatar3d.js` | 3D-Avatar aus Blöcken (lädt `vendor/three.min.js` erst bei Bedarf) |
+| `chest3d.js` | 3D-Truhe zum Öffnen |
+| `aufgaben.js` | Aufgaben-Pools für die Spiele („Meine Themen“) |
 | `qrcode.js` | QR-Code-Erzeugung im Browser (MIT-Lizenz, Kazuhiko Arase) |
-| `app-template.html` | Vorlage für neue Apps |
-| `cloudflare/worker.js` | Quelltext des Cloudflare Workers (Vorlage – aktiv ist der bei Cloudflare eingefügte Code) |
-| `cloudflare/ANLEITUNG.md` | Wartung des Workers: Anmeldung, Token erneuern, Passwort ändern, Code aktualisieren, Fehlersuche |
+| `fonts.css` | Lokal gehostete Schriften aus `fonts/` (kein Google Fonts → DSGVO) |
+
+Die Skripte in `gemeinsam/` finden den Hauptordner selbst (über ihren eigenen Ort).
+Deshalb funktionieren sie aus jeder Ordnertiefe – nur der Pfad beim Einbinden ändert sich.
+
+**Wichtig:** Ergebnisse und Pass-Fortschritt werden nach dem **Dateinamen** gespeichert
+(ohne Ordner). Jeder Dateiname darf also nur einmal vorkommen – und eine App darf später
+in einen anderen Ordner umziehen, ohne dass Fortschritt verloren geht (dann `config.json`
+über den Admin und die Liste in `404.html` anpassen).
 
 ## Neue App einpflegen
 
-1. HTML-Datei ins Repo legen. Im `<head>`: `<link rel="stylesheet" href="fonts.css">`,
-   am Ende von `<body>`: `<script src="navbar.js"></script>` (siehe `app-template.html`).
+1. Vorlage `apps/vorlage/app-template.html` in den Fach-Ordner kopieren, z. B.
+   `apps/mathe/meine-app.html`. Einbinden (für `apps/<fach>/`):
+   im `<head>` `<link rel="stylesheet" href="../../gemeinsam/fonts.css">`,
+   am Ende von `<body>` `<script src="../../gemeinsam/navbar.js"></script>`.
+   Spiele liegen eine Ebene höher (`spiele/`) und nutzen `../gemeinsam/…`.
+   Daten (JSON) aus `daten/` laden, z. B. `fetch('../../daten/vokabeln5.json')`.
    **Keine Google-Fonts-Links oder andere externe Dienste einbinden.**
-2. In `admin.html` über „Neue App“ eintragen. Erlaubte Links: `name.html`,
-   `name.html?parameter=wert` oder `https://…`.
+2. In `admin.html` über „Neue App“ eintragen, mit Ordner: `apps/mathe/meine-app.html`
+   (auch `…?parameter=wert` oder `https://…` möglich).
 3. Klassenstufe(n) und Tags über 🏷 setzen – fertig.
+4. Neues Fach mit eigenem Ordner? Einfach `apps/<fach>/` anlegen.
 
 ## Ergebnisse speichern (in Apps)
 

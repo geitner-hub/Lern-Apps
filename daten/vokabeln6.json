@@ -1,0 +1,1837 @@
+{
+  "meta": {
+    "title": "Lern-Apps Vokabeln",
+    "klasse": "6",
+    "buch": "Highlight 6"
+  },
+  "units": {
+    "unit1": {
+      "label": "Unit 1: Together again",
+      "themes": {
+        "grundwortschatz": {
+          "label": "Grundwortschatz",
+          "words": [
+            {
+              "en": "at the seaside",
+              "de": "am Meer, an der See"
+            },
+            {
+              "en": "sunny",
+              "de": "sonnig"
+            },
+            {
+              "en": "Spain",
+              "de": "Spanien"
+            },
+            {
+              "en": "stadium",
+              "de": "Stadion"
+            },
+            {
+              "en": "sentence",
+              "de": "Satz"
+            },
+            {
+              "en": "mountain",
+              "de": "Berg"
+            },
+            {
+              "en": "Turkey",
+              "de": "die Türkei"
+            },
+            {
+              "en": "Munich",
+              "de": "München"
+            },
+            {
+              "en": "fantastic",
+              "de": "fantastisch"
+            },
+            {
+              "en": "rainy",
+              "de": "regnerisch"
+            },
+            {
+              "en": "last week",
+              "de": "vorige/letzte Woche"
+            },
+            {
+              "en": "weather",
+              "de": "Wetter"
+            }
+          ]
+        },
+        "theme1": {
+          "label": "Theme 1",
+          "words": [
+            {
+              "en": "Nice to be together again.",
+              "de": "Schön, wieder zusammen zu sein."
+            },
+            {
+              "en": "Give me five!",
+              "de": "Gib mir fünf!"
+            },
+            {
+              "en": "guys (pl)",
+              "de": "Leute (als Anrede)"
+            },
+            {
+              "en": "yeah",
+              "de": "ja"
+            },
+            {
+              "en": "the US (= the United States)",
+              "de": "die USA, die Vereinigten Staaten"
+            },
+            {
+              "en": "(to) read, simple past: read",
+              "de": "lesen; ich las, ich habe gelesen"
+            },
+            {
+              "en": "factory",
+              "de": "Fabrik"
+            },
+            {
+              "en": "easy",
+              "de": "einfach, leicht"
+            },
+            {
+              "en": "strict",
+              "de": "streng, strikt"
+            },
+            {
+              "en": "alone",
+              "de": "allein(e)"
+            },
+            {
+              "en": "at lunchtime",
+              "de": "mittags, zur Mittagszeit"
+            }
+          ]
+        },
+        "theme2": {
+          "label": "Theme 2",
+          "words": [
+            {
+              "en": "(to) join",
+              "de": "mitmachen (bei); (einem Klub) beitreten"
+            },
+            {
+              "en": "I'd like to / I wouldn't like to",
+              "de": "ich würde/möchte gern mitmachen / ich würde nicht gern mitmachen"
+            },
+            {
+              "en": "interesting",
+              "de": "interessant"
+            },
+            {
+              "en": "also",
+              "de": "auch"
+            },
+            {
+              "en": "adventure",
+              "de": "Abenteuer"
+            },
+            {
+              "en": "sports hall",
+              "de": "Sporthalle"
+            },
+            {
+              "en": "(to) act",
+              "de": "Theater spielen; schauspielern"
+            },
+            {
+              "en": "(to) learn",
+              "de": "lernen"
+            },
+            {
+              "en": "Which club?",
+              "de": "Welcher Klub?"
+            },
+            {
+              "en": "dream",
+              "de": "Traum"
+            },
+            {
+              "en": "more",
+              "de": "mehr, weitere"
+            },
+            {
+              "en": "table tennis",
+              "de": "Tischtennis"
+            },
+            {
+              "en": "window",
+              "de": "Fenster"
+            },
+            {
+              "en": "(to) put in",
+              "de": "einsetzen"
+            }
+          ]
+        },
+        "story": {
+          "label": "Story",
+          "words": [
+            {
+              "en": "(to) be/feel sorry for sb.",
+              "de": "Mitleid mit jm. haben"
+            },
+            {
+              "en": "sad",
+              "de": "traurig"
+            },
+            {
+              "en": "into the classroom",
+              "de": "ins Klassenzimmer (hinein)"
+            },
+            {
+              "en": "(to) sit",
+              "de": "er saß; er setzte sich (hin)"
+            },
+            {
+              "en": "(to) feel",
+              "de": "sich fühlen; sie fühlte sich traurig"
+            },
+            {
+              "en": "lonely",
+              "de": "einsam"
+            },
+            {
+              "en": "(to) wait (for)",
+              "de": "warten (auf)"
+            },
+            {
+              "en": "(to) think of/about",
+              "de": "denken an"
+            },
+            {
+              "en": "the next day",
+              "de": "am nächsten Tag"
+            },
+            {
+              "en": "(to) look",
+              "de": "aussehen"
+            },
+            {
+              "en": "eye",
+              "de": "Auge"
+            },
+            {
+              "en": "(to) cry",
+              "de": "weinen"
+            },
+            {
+              "en": "(to) die",
+              "de": "sterben"
+            },
+            {
+              "en": "that's why",
+              "de": "deswegen"
+            },
+            {
+              "en": "(to) understand",
+              "de": "verstehen"
+            },
+            {
+              "en": "just like Berry",
+              "de": "genau wie Berry"
+            },
+            {
+              "en": "better",
+              "de": "besser"
+            }
+          ]
+        },
+        "focusonlanguage": {
+          "label": "Focus on language",
+          "words": [
+            {
+              "en": "aunt",
+              "de": "Tante"
+            },
+            {
+              "en": "(to) meet sb.",
+              "de": "jn. abholen"
+            },
+            {
+              "en": "diner (AE)",
+              "de": "Imbissstube, Lokal"
+            },
+            {
+              "en": "veggie (= vegetarian)",
+              "de": "vegetarisch; Vegetarier/in"
+            }
+          ]
+        },
+        "weitere2": {
+          "label": "Weitere Wörter",
+          "words": [
+            {
+              "en": "(to) speak clearly",
+              "de": "deutlich sprechen"
+            },
+            {
+              "en": "clear",
+              "de": "deutlich, klar"
+            },
+            {
+              "en": "(to) show",
+              "de": "zeigen"
+            },
+            {
+              "en": "Do you have any questions?",
+              "de": "Hast du/Habt ihr (irgendwelche) Fragen?"
+            },
+            {
+              "en": "interest",
+              "de": "Interesse"
+            },
+            {
+              "en": "crime series",
+              "de": "Krimiserie"
+            },
+            {
+              "en": "comedy",
+              "de": "Comedyshow; Komödie"
+            },
+            {
+              "en": "cartoon",
+              "de": "Zeichentrickfilm; Comic"
+            },
+            {
+              "en": "soap",
+              "de": "Seife; (informell auch:) Seifenoper"
+            },
+            {
+              "en": "reality",
+              "de": "Realität, Wirklichkeit"
+            },
+            {
+              "en": "(to) be interested in",
+              "de": "sich interessieren für, interessiert sein an"
+            },
+            {
+              "en": "(to) vote for sb.",
+              "de": "für jn. stimmen"
+            },
+            {
+              "en": "leader",
+              "de": "Leiter/in, (An-)Führer/in"
+            },
+            {
+              "en": "(to) be good at sth.",
+              "de": "etwas gut können, gut sein in etwas"
+            },
+            {
+              "en": "tourist",
+              "de": "Tourist/in"
+            },
+            {
+              "en": "mustn't do",
+              "de": "nicht tun dürfen"
+            },
+            {
+              "en": "skirt",
+              "de": "Rock"
+            },
+            {
+              "en": "etc.",
+              "de": "usw. (und so weiter)"
+            },
+            {
+              "en": "Oh dear!",
+              "de": "Oje!"
+            },
+            {
+              "en": "surprised",
+              "de": "überrascht"
+            },
+            {
+              "en": "perhaps",
+              "de": "vielleicht"
+            },
+            {
+              "en": "post office",
+              "de": "Post(amt)"
+            },
+            {
+              "en": "jealous (of)",
+              "de": "eifersüchtig (auf); neidisch (auf)"
+            },
+            {
+              "en": "at first",
+              "de": "zuerst, am Anfang"
+            },
+            {
+              "en": "(to) smile; smile",
+              "de": "lächeln; (das) Lächeln"
+            },
+            {
+              "en": "player",
+              "de": "Spieler/in"
+            },
+            {
+              "en": "(to) win",
+              "de": "gewinnen"
+            },
+            {
+              "en": "rule",
+              "de": "Regel, Vorschrift"
+            },
+            {
+              "en": "(to) wear",
+              "de": "tragen, anhaben (Kleidung)"
+            }
+          ]
+        }
+      }
+    },
+    "unit2": {
+      "label": "Unit 2: Neighbours",
+      "themes": {
+        "grundwortschatz": {
+          "label": "Grundwortschatz",
+          "words": [
+            {
+              "en": "neighbour",
+              "de": "Nachbar/in"
+            },
+            {
+              "en": "true",
+              "de": "wahr"
+            },
+            {
+              "en": "false",
+              "de": "falsch, unrichtig"
+            },
+            {
+              "en": "traffic lights (pl)",
+              "de": "Verkehrsampel"
+            },
+            {
+              "en": "(to) cross",
+              "de": "überqueren"
+            },
+            {
+              "en": "neighbourhood",
+              "de": "Nachbarschaft, Viertel, Gegend"
+            },
+            {
+              "en": "hairdresser",
+              "de": "Frisör/in"
+            },
+            {
+              "en": "supermarket",
+              "de": "Supermarkt"
+            },
+            {
+              "en": "bus stop",
+              "de": "Bushaltestelle"
+            }
+          ]
+        },
+        "theme1": {
+          "label": "Theme 1",
+          "words": [
+            {
+              "en": "festival",
+              "de": "Fest"
+            },
+            {
+              "en": "more popular",
+              "de": "beliebter, populärer"
+            },
+            {
+              "en": "(Great) Britain",
+              "de": "Großbritannien"
+            },
+            {
+              "en": "without",
+              "de": "ohne"
+            },
+            {
+              "en": "bread",
+              "de": "Brot"
+            },
+            {
+              "en": "the same (as)",
+              "de": "dasselbe/das gleiche (wie); gleich"
+            },
+            {
+              "en": "mineral water",
+              "de": "Mineralwasser"
+            },
+            {
+              "en": "(to) try",
+              "de": "versuchen, (aus)probieren"
+            }
+          ]
+        },
+        "weitere2": {
+          "label": "Weitere Wörter",
+          "words": [
+            {
+              "en": "firework",
+              "de": "Feuerwerkskörper"
+            },
+            {
+              "en": "in the street",
+              "de": "auf der Straße"
+            },
+            {
+              "en": "(to) run",
+              "de": "rennen"
+            },
+            {
+              "en": "(to) be scared (of)",
+              "de": "Angst haben (vor)"
+            },
+            {
+              "en": "we'll (= we will) find him",
+              "de": "wir werden ihn finden"
+            },
+            {
+              "en": "(to) lose",
+              "de": "verlieren"
+            },
+            {
+              "en": "(to) worry (about)",
+              "de": "sich Sorgen machen (wegen, um)"
+            },
+            {
+              "en": "missing",
+              "de": "vermisst"
+            },
+            {
+              "en": "friendly",
+              "de": "freundlich, nett"
+            },
+            {
+              "en": "reward",
+              "de": "Belohnung"
+            }
+          ]
+        },
+        "theme2": {
+          "label": "Theme 2",
+          "words": [
+            {
+              "en": "dogs' home",
+              "de": "Hundeheim"
+            },
+            {
+              "en": "phone call",
+              "de": "(Telefon-)Anruf"
+            },
+            {
+              "en": "poor Mrs Trent",
+              "de": "die arme Mrs Trent"
+            },
+            {
+              "en": "she can't walk well",
+              "de": "sie kann nicht gut gehen/laufen"
+            },
+            {
+              "en": "(to) be closed / (to) be open",
+              "de": "geschlossen sein / offen sein"
+            },
+            {
+              "en": "near",
+              "de": "in der Nähe von, nahe (bei)"
+            },
+            {
+              "en": "centre",
+              "de": "Zentrum, (Stadt-)Mitte"
+            },
+            {
+              "en": "long",
+              "de": "lang; lange"
+            },
+            {
+              "en": "tail",
+              "de": "Schwanz"
+            },
+            {
+              "en": "ear",
+              "de": "Ohr"
+            },
+            {
+              "en": "short",
+              "de": "kurz; klein (Person)"
+            },
+            {
+              "en": "space",
+              "de": "Platz"
+            },
+            {
+              "en": "(to) share",
+              "de": "teilen; austauschen"
+            }
+          ]
+        },
+        "story": {
+          "label": "Story",
+          "words": [
+            {
+              "en": "(to) act",
+              "de": "aufführen, spielen"
+            },
+            {
+              "en": "play",
+              "de": "Theaterstück"
+            },
+            {
+              "en": "(to) come in",
+              "de": "hereinkommen"
+            },
+            {
+              "en": "mask",
+              "de": "Maske"
+            },
+            {
+              "en": "(to) put",
+              "de": "(etwas wohin) tun, legen, stellen"
+            },
+            {
+              "en": "toy",
+              "de": "Spielzeug"
+            },
+            {
+              "en": "helper",
+              "de": "Helfer/in"
+            },
+            {
+              "en": "(to) stand up",
+              "de": "aufstehen"
+            },
+            {
+              "en": "(to) get sth.",
+              "de": "(sich) etwas holen, besorgen"
+            },
+            {
+              "en": "(to) collect",
+              "de": "sammeln"
+            },
+            {
+              "en": "(to) stand",
+              "de": "stehen"
+            },
+            {
+              "en": "line",
+              "de": "Linie, Reihe"
+            },
+            {
+              "en": "if",
+              "de": "wenn, falls"
+            },
+            {
+              "en": "50p will do",
+              "de": "50 Pence reichen (auch)"
+            },
+            {
+              "en": "penny, pl pence",
+              "de": "Penny (kleinste britische Münze)"
+            },
+            {
+              "en": "(to) like sth. better / like sth. best",
+              "de": "etwas lieber mögen / etwas am liebsten mögen"
+            },
+            {
+              "en": "ugly",
+              "de": "hässlich"
+            },
+            {
+              "en": "bonfire",
+              "de": "(großes Freuden-)Feuer"
+            },
+            {
+              "en": "(to) finish",
+              "de": "beenden; enden"
+            },
+            {
+              "en": "potato, pl potatoes",
+              "de": "Kartoffel"
+            },
+            {
+              "en": "young",
+              "de": "jung"
+            }
+          ]
+        },
+        "weitere3": {
+          "label": "Weitere Wörter 2",
+          "words": [
+            {
+              "en": "lantern",
+              "de": "Laterne"
+            },
+            {
+              "en": "(to) celebrate",
+              "de": "feiern"
+            },
+            {
+              "en": "biscuit",
+              "de": "Keks, Plätzchen"
+            },
+            {
+              "en": "warm",
+              "de": "warm"
+            },
+            {
+              "en": "hot chocolate",
+              "de": "Kakao, heiße (Trink-)Schokolade"
+            },
+            {
+              "en": "nut",
+              "de": "Nuss"
+            },
+            {
+              "en": "lemonade",
+              "de": "Limonade"
+            },
+            {
+              "en": "(to) drink",
+              "de": "trinken"
+            },
+            {
+              "en": "(to) do better",
+              "de": "besser abschneiden"
+            },
+            {
+              "en": "grass",
+              "de": "Gras"
+            },
+            {
+              "en": "(to) park (a car)",
+              "de": "parken"
+            },
+            {
+              "en": "(to) run around",
+              "de": "umherrennen; herumlaufen"
+            },
+            {
+              "en": "(to) skateboard; skateboard",
+              "de": "Skateboard fahren; Skateboard"
+            },
+            {
+              "en": "(to) cycle",
+              "de": "Rad fahren"
+            },
+            {
+              "en": "at least",
+              "de": "mindestens, wenigstens"
+            },
+            {
+              "en": "penfriend",
+              "de": "Brieffreund/in"
+            },
+            {
+              "en": "game",
+              "de": "Spiel"
+            },
+            {
+              "en": "(to) visit",
+              "de": "besuchen"
+            },
+            {
+              "en": "(to) tell sb. the way",
+              "de": "jm. den Weg beschreiben"
+            },
+            {
+              "en": "(to) ask sb. the way",
+              "de": "jn. nach dem Weg fragen"
+            },
+            {
+              "en": "Excuse me, ...",
+              "de": "Entschuldigung, ..."
+            },
+            {
+              "en": "(to) turn right/left",
+              "de": "(nach) rechts/links abbiegen"
+            },
+            {
+              "en": "along the street",
+              "de": "die Straße entlang"
+            },
+            {
+              "en": "for 100 metres",
+              "de": "100 Meter weit"
+            }
+          ]
+        }
+      }
+    },
+    "unit3": {
+      "label": "Unit 3: I'm feeling great!",
+      "themes": {
+        "grundwortschatz": {
+          "label": "Grundwortschatz",
+          "words": [
+            {
+              "en": "these kids",
+              "de": "diese Kinder (hier)"
+            },
+            {
+              "en": "street surfing",
+              "de": "Waveboarden"
+            },
+            {
+              "en": "cricket",
+              "de": "Kricket (Mannschaftssportart)"
+            },
+            {
+              "en": "hand",
+              "de": "Hand"
+            },
+            {
+              "en": "up",
+              "de": "hinauf, hoch"
+            },
+            {
+              "en": "arm",
+              "de": "Arm"
+            }
+          ]
+        },
+        "theme1": {
+          "label": "Theme 1",
+          "words": [
+            {
+              "en": "pasty",
+              "de": "Pastete (mit Fleisch- oder Gemüsefüllung)"
+            },
+            {
+              "en": "meat",
+              "de": "Fleisch"
+            },
+            {
+              "en": "yum!",
+              "de": "lecker!"
+            },
+            {
+              "en": "yogurt",
+              "de": "Joghurt"
+            },
+            {
+              "en": "carrot",
+              "de": "Möhre, Karotte"
+            },
+            {
+              "en": "healthy",
+              "de": "gesund"
+            },
+            {
+              "en": "junk food",
+              "de": "Junkfood (ungesundes Essen)"
+            },
+            {
+              "en": "unhealthy",
+              "de": "ungesund"
+            }
+          ]
+        },
+        "gegensaetzemitun": {
+          "label": "Gegensätze mit „un-“",
+          "words": [
+            {
+              "en": "uninteresting",
+              "de": "uninteressant"
+            },
+            {
+              "en": "unpopular",
+              "de": "unbeliebt"
+            },
+            {
+              "en": "unreal",
+              "de": "unwirklich"
+            },
+            {
+              "en": "unsure",
+              "de": "unsicher"
+            },
+            {
+              "en": "uncool",
+              "de": "uncool"
+            },
+            {
+              "en": "unfriendly",
+              "de": "unfreundlich"
+            },
+            {
+              "en": "unhappy",
+              "de": "unglücklich"
+            }
+          ]
+        },
+        "theme2": {
+          "label": "Theme 2",
+          "words": [
+            {
+              "en": "What's wrong with...?",
+              "de": "Was stimmt nicht mit...?"
+            },
+            {
+              "en": "ill",
+              "de": "krank"
+            },
+            {
+              "en": "(to) skive",
+              "de": "(Schule) schwänzen"
+            },
+            {
+              "en": "maybe",
+              "de": "vielleicht"
+            },
+            {
+              "en": "she isn't feeling well",
+              "de": "es geht ihr nicht gut"
+            },
+            {
+              "en": "(to) find out",
+              "de": "herausfinden"
+            },
+            {
+              "en": "(to) have a headache",
+              "de": "Kopfschmerzen haben"
+            },
+            {
+              "en": "doctor",
+              "de": "Arzt/Ärztin, Doktor/in"
+            },
+            {
+              "en": "I have a sore throat.",
+              "de": "Ich habe Halsschmerzen. / Mir tut der Hals weh."
+            },
+            {
+              "en": "I have a temperature.",
+              "de": "Ich habe Fieber."
+            },
+            {
+              "en": "you should / you shouldn't",
+              "de": "du solltest / du solltest nicht"
+            }
+          ]
+        },
+        "story": {
+          "label": "Story",
+          "words": [
+            {
+              "en": "I don't feel like it.",
+              "de": "Mir ist nicht danach."
+            },
+            {
+              "en": "(to) ring",
+              "de": "läuten, klingeln"
+            },
+            {
+              "en": "disappointed (with sb./sth.)",
+              "de": "enttäuscht"
+            },
+            {
+              "en": "kitten",
+              "de": "Kätzchen, junge Katze"
+            },
+            {
+              "en": "(to) miss/like/love sb. so much",
+              "de": "jn. so sehr vermissen/mögen/lieben"
+            },
+            {
+              "en": "chat; (to) chat",
+              "de": "Gespräch, Unterhaltung; Chat; plaudern, chatten"
+            },
+            {
+              "en": "(to) have to do sth.",
+              "de": "etwas tun müssen"
+            },
+            {
+              "en": "of course",
+              "de": "natürlich, selbstverständlich"
+            },
+            {
+              "en": "Wait for this.",
+              "de": "Stell dir nur vor! / Du wirst es kaum glauben!"
+            },
+            {
+              "en": "(to) change",
+              "de": "(ver)ändern, sich (ver)ändern"
+            },
+            {
+              "en": "lifestyle",
+              "de": "Lebensstil"
+            }
+          ]
+        },
+        "focusonlanguage": {
+          "label": "Focus on language",
+          "words": [
+            {
+              "en": "I'm glad.",
+              "de": "Ich bin froh."
+            },
+            {
+              "en": "somebody / someone",
+              "de": "jemand"
+            },
+            {
+              "en": "everybody / everyone",
+              "de": "jeder; alle"
+            },
+            {
+              "en": "group",
+              "de": "Gruppe"
+            },
+            {
+              "en": "special",
+              "de": "besondere(r,s)"
+            },
+            {
+              "en": "hour",
+              "de": "Stunde"
+            },
+            {
+              "en": "loud",
+              "de": "laut"
+            },
+            {
+              "en": "shopping list",
+              "de": "Einkaufsliste"
+            },
+            {
+              "en": "sugary",
+              "de": "süß(lich), zuckerhaltig"
+            },
+            {
+              "en": "health",
+              "de": "Gesundheit"
+            },
+            {
+              "en": "butter",
+              "de": "Butter"
+            },
+            {
+              "en": "pepper",
+              "de": "Pfeffer"
+            },
+            {
+              "en": "activity",
+              "de": "Aktivität, Beschäftigung"
+            },
+            {
+              "en": "spoon",
+              "de": "Löffel"
+            }
+          ]
+        },
+        "skillstraining": {
+          "label": "Skills training",
+          "words": [
+            {
+              "en": "tall",
+              "de": "groß (Person); hoch (Gebäude)"
+            },
+            {
+              "en": "hair",
+              "de": "Haar, Haare"
+            },
+            {
+              "en": "glasses (pl)",
+              "de": "(eine) Brille"
+            },
+            {
+              "en": "sporty",
+              "de": "sportlich"
+            },
+            {
+              "en": "ginger",
+              "de": "ingwer; rotblond (Haare)"
+            },
+            {
+              "en": "spot",
+              "de": "Tupfen (Leopard); Pickel"
+            },
+            {
+              "en": "kind",
+              "de": "freundlich, nett"
+            },
+            {
+              "en": "kind of",
+              "de": "Art/Sorte (von)"
+            },
+            {
+              "en": "(to) describe",
+              "de": "beschreiben"
+            },
+            {
+              "en": "between",
+              "de": "zwischen"
+            },
+            {
+              "en": "gymnastics",
+              "de": "Turnen, Gymnastik"
+            },
+            {
+              "en": "aerobics",
+              "de": "Aerobic (Fitnesstraining mit Gymnastik und Tanz)"
+            },
+            {
+              "en": "difficult",
+              "de": "schwierig, schwer"
+            },
+            {
+              "en": "judo",
+              "de": "Judo"
+            },
+            {
+              "en": "diving",
+              "de": "(das) Tauchen (Sport)"
+            },
+            {
+              "en": "climbing",
+              "de": "(das) Klettern (Sport)"
+            },
+            {
+              "en": "scary",
+              "de": "unheimlich, gruselig; verängstigt"
+            },
+            {
+              "en": "skiing",
+              "de": "(das) Skilaufen (Sport)"
+            }
+          ]
+        }
+      }
+    },
+    "unit4": {
+      "label": "Unit 4: Teenage life",
+      "themes": {
+        "grundwortschatz": {
+          "label": "Grundwortschatz",
+          "words": [
+            {
+              "en": "(to) message",
+              "de": "Nachrichten schicken/austauschen"
+            },
+            {
+              "en": "What makes a perfect weekend?",
+              "de": "Was macht ein perfektes Wochenende aus?"
+            },
+            {
+              "en": "(to) prefer sth. to sth.",
+              "de": "etwas lieber mögen als etwas, etwas einer Sache vorziehen"
+            }
+          ]
+        },
+        "theme1": {
+          "label": "Theme 1",
+          "words": [
+            {
+              "en": "magazine",
+              "de": "Zeitschrift, Magazin"
+            },
+            {
+              "en": "pocket money",
+              "de": "Taschengeld"
+            },
+            {
+              "en": "mean",
+              "de": "gemein, fies; geizig"
+            },
+            {
+              "en": "older than me",
+              "de": "älter als ich"
+            },
+            {
+              "en": "until",
+              "de": "bis (zeitlich)"
+            },
+            {
+              "en": "(to) do chores",
+              "de": "(Haus-)Arbeiten erledigen"
+            },
+            {
+              "en": "once",
+              "de": "einmal; einst"
+            },
+            {
+              "en": "twice",
+              "de": "zweimal"
+            },
+            {
+              "en": "once a week",
+              "de": "einmal pro Woche"
+            },
+            {
+              "en": "(to) hoover",
+              "de": "staubsaugen"
+            },
+            {
+              "en": "(to) fill",
+              "de": "füllen"
+            },
+            {
+              "en": "(to) empty",
+              "de": "leeren"
+            },
+            {
+              "en": "dishwasher",
+              "de": "Geschirrspülmaschine"
+            },
+            {
+              "en": "(to) cut",
+              "de": "schneiden; (Rasen) mähen"
+            },
+            {
+              "en": "(to) tidy",
+              "de": "aufräumen"
+            },
+            {
+              "en": "(to) do a paper round",
+              "de": "Zeitungen austragen"
+            },
+            {
+              "en": "Poor you! / Lucky you!",
+              "de": "Du Arme/r! / Du Glückliche/r!"
+            },
+            {
+              "en": "the meanest parents",
+              "de": "die geizigsten Eltern"
+            }
+          ]
+        },
+        "theme2": {
+          "label": "Theme 2",
+          "words": [
+            {
+              "en": "ice skating",
+              "de": "Schlittschuhlaufen"
+            },
+            {
+              "en": "all day",
+              "de": "den ganzen Tag (lang)"
+            }
+          ]
+        },
+        "weitere2": {
+          "label": "Weitere Wörter",
+          "words": [
+            {
+              "en": "(to) be busy",
+              "de": "beschäftigt sein, (viel) zu tun haben"
+            },
+            {
+              "en": "Let's see.",
+              "de": "Lass(t) uns (mal) sehen."
+            },
+            {
+              "en": "cheap",
+              "de": "billig, preiswert"
+            },
+            {
+              "en": "It's cheaper than that.",
+              "de": "So viel kostet das nicht."
+            },
+            {
+              "en": "still",
+              "de": "(immer) noch; trotzdem"
+            },
+            {
+              "en": "next time",
+              "de": "nächstes Mal"
+            },
+            {
+              "en": "glove",
+              "de": "Handschuh"
+            },
+            {
+              "en": "enough",
+              "de": "genug"
+            }
+          ]
+        },
+        "story": {
+          "label": "Story",
+          "words": [
+            {
+              "en": "It's a deal!",
+              "de": "Abgemacht!"
+            },
+            {
+              "en": "part",
+              "de": "Teil"
+            },
+            {
+              "en": "I'm going to help ...",
+              "de": "ich werde ... helfen"
+            },
+            {
+              "en": "out of ...",
+              "de": "aus ... (heraus/hinaus)"
+            },
+            {
+              "en": "newspaper",
+              "de": "(Tages-)Zeitung"
+            },
+            {
+              "en": "(to) take",
+              "de": "(mit)nehmen; bringen"
+            },
+            {
+              "en": "charity shop",
+              "de": "Geschäft, das gespendete Waren für wohltätige Zwecke verkauft"
+            },
+            {
+              "en": "charity",
+              "de": "wohltätige Organisation"
+            },
+            {
+              "en": "second-hand shop",
+              "de": "Second-Hand-Laden"
+            },
+            {
+              "en": "those CDs",
+              "de": "die CDs dort, jene CDs"
+            }
+          ]
+        },
+        "weitere3": {
+          "label": "Weitere Wörter 2",
+          "words": [
+            {
+              "en": "nobody",
+              "de": "niemand"
+            },
+            {
+              "en": "everybody",
+              "de": "jeder, alle"
+            },
+            {
+              "en": "wall",
+              "de": "Wand; Mauer"
+            },
+            {
+              "en": "(to) pay",
+              "de": "(be)zahlen"
+            },
+            {
+              "en": "(to) open",
+              "de": "öffnen, aufmachen"
+            },
+            {
+              "en": "door",
+              "de": "Tür"
+            },
+            {
+              "en": "comfortable",
+              "de": "bequem, gemütlich"
+            },
+            {
+              "en": "dress",
+              "de": "Kleid"
+            },
+            {
+              "en": "the 90s",
+              "de": "die Neunzigerjahre"
+            }
+          ]
+        },
+        "focusonlanguage": {
+          "label": "Focus on language",
+          "words": [
+            {
+              "en": "day out, pl days out",
+              "de": "(Tages-)Ausflug"
+            },
+            {
+              "en": "adult",
+              "de": "Erwachsene/r"
+            },
+            {
+              "en": "mile",
+              "de": "Meile (ca. 1,6 km)"
+            },
+            {
+              "en": "kilometre (km)",
+              "de": "Kilometer"
+            },
+            {
+              "en": "theatre",
+              "de": "Theater"
+            },
+            {
+              "en": "winter",
+              "de": "Winter"
+            },
+            {
+              "en": "American",
+              "de": "amerikanisch; Amerikaner/in"
+            },
+            {
+              "en": "circus",
+              "de": "Zirkus"
+            },
+            {
+              "en": "worse",
+              "de": "schlechter, schlimmer"
+            },
+            {
+              "en": "worst",
+              "de": "der/die/das schlechteste, schlimmste; am schlechtesten"
+            },
+            {
+              "en": "mouse, pl mice",
+              "de": "Maus, Mäuse"
+            },
+            {
+              "en": "(to) go skating",
+              "de": "(Inline-)Skaten gehen"
+            },
+            {
+              "en": "stuff",
+              "de": "Zeug, Kram"
+            },
+            {
+              "en": "(to) wash",
+              "de": "waschen"
+            }
+          ]
+        },
+        "skillstraining": {
+          "label": "Skills training",
+          "words": [
+            {
+              "en": "talk",
+              "de": "Vortrag, Rede; Gespräch"
+            },
+            {
+              "en": "(to) speak",
+              "de": "sprechen"
+            },
+            {
+              "en": "(to) give a talk",
+              "de": "einen Vortrag halten"
+            },
+            {
+              "en": "interest",
+              "de": "Interesse"
+            },
+            {
+              "en": "crime series",
+              "de": "Krimiserie"
+            },
+            {
+              "en": "comedy",
+              "de": "Comedyshow; Komödie"
+            },
+            {
+              "en": "cartoon",
+              "de": "Zeichentrickfilm; Comic"
+            },
+            {
+              "en": "soap",
+              "de": "Seife; (informell auch:) Seifenoper"
+            },
+            {
+              "en": "reality",
+              "de": "Realität, Wirklichkeit"
+            },
+            {
+              "en": "(to) be interested in",
+              "de": "sich interessieren für, interessiert sein an"
+            },
+            {
+              "en": "(to) vote for sb.",
+              "de": "für jn. stimmen"
+            },
+            {
+              "en": "leader",
+              "de": "Leiter/in, (An-)Führer/in"
+            },
+            {
+              "en": "(to) be good at sth.",
+              "de": "etwas gut können, gut sein in etwas"
+            },
+            {
+              "en": "tourist",
+              "de": "Tourist/in"
+            }
+          ]
+        }
+      }
+    },
+    "unit5": {
+      "label": "Unit 5: Dartmoor adventures",
+      "themes": {
+        "grundwortschatz": {
+          "label": "Grundwortschatz",
+          "words": [
+            {
+              "en": "national park",
+              "de": "Nationalpark (staatliches Naturschutzgebiet)"
+            },
+            {
+              "en": "south-west",
+              "de": "Südwesten; südwestlich; Südwest-"
+            },
+            {
+              "en": "river",
+              "de": "Fluss"
+            },
+            {
+              "en": "hang-gliding",
+              "de": "Drachenfliegen"
+            },
+            {
+              "en": "mud",
+              "de": "Matsch, Schlamm"
+            },
+            {
+              "en": "hiking",
+              "de": "(das) Wandern"
+            },
+            {
+              "en": "(to) drive",
+              "de": "(mit dem Auto) fahren"
+            },
+            {
+              "en": "careful",
+              "de": "vorsichtig; sorgfältig"
+            },
+            {
+              "en": "windy",
+              "de": "windig"
+            },
+            {
+              "en": "foggy",
+              "de": "nebelig"
+            },
+            {
+              "en": "hairy",
+              "de": "behaart, haarig"
+            },
+            {
+              "en": "(to) enjoy",
+              "de": "genießen"
+            }
+          ]
+        },
+        "theme1": {
+          "label": "Theme 1",
+          "words": [
+            {
+              "en": "it won't (= will not) rain",
+              "de": "es wird nicht regnen"
+            },
+            {
+              "en": "(to) rain",
+              "de": "regnen"
+            },
+            {
+              "en": "boot",
+              "de": "(ein) Stiefel"
+            },
+            {
+              "en": "(to) pack",
+              "de": "packen, einpacken"
+            },
+            {
+              "en": "first-aid kit",
+              "de": "Erste-Hilfe-Set, Verbandkasten"
+            },
+            {
+              "en": "sleeping bag",
+              "de": "Schlafsack"
+            },
+            {
+              "en": "rucksack",
+              "de": "Rucksack"
+            },
+            {
+              "en": "hairdryer",
+              "de": "Föhn, Haartrockner"
+            }
+          ]
+        },
+        "theme2": {
+          "label": "Theme 2",
+          "words": [
+            {
+              "en": "(to) check",
+              "de": "(über)prüfen, kontrollieren"
+            },
+            {
+              "en": "careful",
+              "de": "vorsichtig; sorgfältig, ganz genau"
+            },
+            {
+              "en": "(to) listen carefully",
+              "de": "ganz genau zuhören"
+            },
+            {
+              "en": "Go straight on.",
+              "de": "Geh geradeaus (weiter)."
+            },
+            {
+              "en": "slow",
+              "de": "langsam"
+            },
+            {
+              "en": "Turn right/left.",
+              "de": "Nach rechts/links abbiegen."
+            },
+            {
+              "en": "safe",
+              "de": "sicher (gefahrlos); in Sicherheit"
+            },
+            {
+              "en": "(to) leave",
+              "de": "verlassen"
+            }
+          ]
+        },
+        "story": {
+          "label": "Story",
+          "words": [
+            {
+              "en": "track",
+              "de": "Pfad, (Feld-)Weg"
+            },
+            {
+              "en": "plastic bag",
+              "de": "Plastiktüte"
+            },
+            {
+              "en": "whistle",
+              "de": "(Triller-)Pfeife"
+            },
+            {
+              "en": "poem",
+              "de": "Gedicht"
+            },
+            {
+              "en": "bridge",
+              "de": "Brücke"
+            },
+            {
+              "en": "cottage",
+              "de": "Häuschen, Hütte"
+            },
+            {
+              "en": "stone",
+              "de": "Stein"
+            },
+            {
+              "en": "cross",
+              "de": "Kreuz"
+            },
+            {
+              "en": "(to) take a photo",
+              "de": "ein Foto machen"
+            },
+            {
+              "en": "Bavarian",
+              "de": "bayerisch; Bayer/in"
+            },
+            {
+              "en": "at the top (of)",
+              "de": "oben, am oberen Ende (von); an der Spitze (von)"
+            },
+            {
+              "en": "inside",
+              "de": "(nach) drinnen"
+            },
+            {
+              "en": "(to) scream",
+              "de": "schreien"
+            },
+            {
+              "en": "cloudy",
+              "de": "wolkig, bewölkt"
+            },
+            {
+              "en": "not (...) anything",
+              "de": "nichts"
+            },
+            {
+              "en": "(to) hear",
+              "de": "hören"
+            },
+            {
+              "en": "side",
+              "de": "Seite"
+            },
+            {
+              "en": "ground",
+              "de": "Erde (Erdboden)"
+            },
+            {
+              "en": "she could, she couldn't",
+              "de": "sie konnte, sie konnte nicht"
+            },
+            {
+              "en": "joke",
+              "de": "Witz, Scherz"
+            },
+            {
+              "en": "her leg was sore",
+              "de": "ihr Bein tat weh"
+            },
+            {
+              "en": "(to) climb",
+              "de": "klettern (auf)"
+            }
+          ]
+        },
+        "focusonlanguage": {
+          "label": "Focus on language",
+          "words": [
+            {
+              "en": "(to) happen",
+              "de": "geschehen, passieren"
+            },
+            {
+              "en": "(to) leave",
+              "de": "1. (jn.) verlassen; 2. zurücklassen; abfahren"
+            }
+          ]
+        },
+        "weitere2": {
+          "label": "Weitere Wörter",
+          "words": [
+            {
+              "en": "rubbish",
+              "de": "Müll, Abfall"
+            },
+            {
+              "en": "rubbish bin",
+              "de": "Mülleimer"
+            },
+            {
+              "en": "forecast (kurz für weather forecast)",
+              "de": "(Wetter-)Vorhersage"
+            },
+            {
+              "en": "(to) put sth. on",
+              "de": "etwas anziehen (Kleidung); etwas aufsetzen (Hut, Brille)"
+            },
+            {
+              "en": "future",
+              "de": "Zukunft"
+            },
+            {
+              "en": "girlfriend/boyfriend",
+              "de": "(feste) Freundin/(fester) Freund"
+            },
+            {
+              "en": "this morning/afternoon/evening",
+              "de": "heute Morgen/Nachmittag/Abend"
+            },
+            {
+              "en": "postcard",
+              "de": "Postkarte"
+            },
+            {
+              "en": "Denmark",
+              "de": "Dänemark"
+            },
+            {
+              "en": "Sweden",
+              "de": "Schweden"
+            }
+          ]
+        },
+        "skillstraining": {
+          "label": "Skills Training",
+          "words": [
+            {
+              "en": "(to) ask sb. about sth.",
+              "de": "sich bei jm. nach etwas erkundigen, jn. nach etwas fragen"
+            },
+            {
+              "en": "(to) be",
+              "de": "sein: du bist gewesen"
+            },
+            {
+              "en": "Have you ever been ...?",
+              "de": "Warst du schon mal ...? / Bist du schon mal ... gewesen?"
+            },
+            {
+              "en": "ever",
+              "de": "je(mals)"
+            },
+            {
+              "en": "Italy",
+              "de": "Italien"
+            },
+            {
+              "en": "a week's/six weeks' holiday",
+              "de": "eine Woche/sechs Wochen Urlaub"
+            },
+            {
+              "en": "(to) listen to sth. / (to) listen for sth.",
+              "de": "sich etwas anhören / auf etwas horchen, auf etwas achten"
+            },
+            {
+              "en": "information (about)",
+              "de": "Information(en) (über)"
+            }
+          ]
+        },
+        "weitere3": {
+          "label": "Weitere Wörter 2",
+          "words": [
+            {
+              "en": "(train) station",
+              "de": "Bahnhof"
+            },
+            {
+              "en": "platform",
+              "de": "Bahnsteig"
+            },
+            {
+              "en": "train",
+              "de": "Zug, Eisenbahn"
+            },
+            {
+              "en": "(to) panic",
+              "de": "Panik bekommen"
+            },
+            {
+              "en": "on time",
+              "de": "pünktlich"
+            },
+            {
+              "en": "(to) correct",
+              "de": "korrigieren, berichtigen"
+            },
+            {
+              "en": "lake",
+              "de": "(Binnen-)See"
+            },
+            {
+              "en": "over here",
+              "de": "hier drüben; hier herüber"
+            },
+            {
+              "en": "ending",
+              "de": "Ende (Text, Geschichte); Endung"
+            },
+            {
+              "en": "What's special about him?",
+              "de": "Was ist das Besondere an ihm?"
+            },
+            {
+              "en": "flag",
+              "de": "Fahne, Flagge"
+            },
+            {
+              "en": "fire",
+              "de": "Feuer"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

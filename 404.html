@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Seite nicht gefunden – Lernwelt</title>
+  <!--
+   GitHub Pages zeigt diese Seite, wenn eine Adresse nicht existiert.
+   Alte Links aus der Zeit vor der Ordnerstruktur (z. B. …/Lern-Apps/runner.html)
+   werden hier automatisch an den neuen Ort weitergeleitet.
+   Wird eine App später verschoben: einfach unten in UMZUG ergänzen.
+  -->
+  <style>
+    body { margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
+           background:#13121f; color:#f1f0fb; font-family:'Nunito','Segoe UI',system-ui,sans-serif; text-align:center; padding:1.5rem; }
+    h1 { color:#e6a817; font-size:1.6rem; margin:0 0 .6rem; }
+    p  { color:rgba(241,240,251,.7); margin:0 0 1.4rem; }
+    a  { display:inline-block; background:#6366f1; color:#fff; text-decoration:none; font-weight:800;
+           padding:.7rem 1.3rem; border-radius:99px; }
+  </style>
+  <script>
+  (function () {
+    // alter Dateiname → neuer Ort (relativ zum Hauptordner)
+    var UMZUG = {
+    'app-template.html': 'apps/vorlage/app-template.html',
+    'burg-verteidigung.html': 'spiele/burg-verteidigung.html',
+    'einmaleins_tafel.html': 'apps/mathe/einmaleins_tafel.html',
+    'english-dialog-vorlagen.html': 'apps/englisch/english-dialog-vorlagen.html',
+    'kopfrechnen.html': 'apps/mathe/kopfrechnen.html',
+    'kopfrechnen_kl1.html': 'apps/mathe/kopfrechnen_kl1.html',
+    'kopfrechnen_kl2.html': 'apps/mathe/kopfrechnen_kl2.html',
+    'kopfrechnen_kl3.html': 'apps/mathe/kopfrechnen_kl3.html',
+    'kopfrechnen_kl4.html': 'apps/mathe/kopfrechnen_kl4.html',
+    'kopfrechnen_kl6.html': 'apps/mathe/kopfrechnen_kl6.html',
+    'laender-finder.html': 'apps/gpg/laender-finder.html',
+    'laengeneinheiten.html': 'apps/mathe/laengeneinheiten.html',
+    'practice_simple_present.html': 'apps/englisch/practice_simple_present.html',
+    'rechen-arena.html': 'apps/mathe/rechen-arena.html',
+    'rechteck-app.html': 'apps/mathe/rechteck-app.html',
+    'regeln-sortierer-gpg.html': 'apps/gpg/regeln-sortierer-gpg.html',
+    'runner.html': 'spiele/runner.html',
+    'sachaufgaben_laengen.html': 'apps/mathe/sachaufgaben_laengen.html',
+    'satzglieder-erkennen.html': 'apps/englisch/satzglieder-erkennen.html',
+    'simple-past.html': 'apps/englisch/simple-past.html',
+    'vierecke_unterscheiden.html': 'apps/mathe/vierecke_unterscheiden.html',
+    'vokabeltrainer5.html': 'apps/englisch/vokabeltrainer5.html',
+    'vokabeltrainer6.html': 'apps/englisch/vokabeltrainer6.html'
+    };
+    var m = location.pathname.match(/^(.*?\/Lern-Apps\/)(.*)$/i);
+    var root = m ? m[1] : '/';
+    var rest = m ? m[2] : location.pathname.replace(/^\//, '');
+    var name = rest.split('/').pop();
+    window.__lwRoot = root;
+    if (name && UMZUG[name] && rest !== UMZUG[name]) {
+      location.replace(root + UMZUG[name] + location.search + location.hash);
+    }
+  })();
+  </script>
+</head>
+<body>
+  <div>
+    <h1>Diese Seite gibt es hier nicht (mehr).</h1>
+    <p>Vielleicht wurde sie verschoben. Auf der Startseite findest du alle Apps.</p>
+    <a id="home" href="/Lern-Apps/">🏠 Zur Lernwelt</a>
+  </div>
+  <script>document.getElementById('home').href = window.__lwRoot || '/';</script>
+</body>
+</html>
