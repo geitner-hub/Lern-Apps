@@ -55,7 +55,9 @@
     },
     "woche": {
       "rohstoffe": 60,
-      "gold": 2
+      "gold": 2,
+      "auftraege": 5,
+      "runden": 3
     },
     "rerolls": {
       "proTag": 1,
