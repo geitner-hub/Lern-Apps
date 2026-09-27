@@ -6,7 +6,8 @@
   <title>Mein Dorf – Lernwelt</title>
   <!--
     Mein Dorf – Aufbauspiel der Lernwelt
-    Etappe 2: 3D-Dorf mit Bauplätzen, Bauen/Ausbauen, Auftragsbrett.
+    Etappe 4: 3D-Dorf mit Bauplätzen, Bauen/Ausbauen (Stufe 1–4, Ansehen), Auftragsbrett mit
+    Wochen- und Bewohner-Auftrag, Bewohner, Sammelbuch, Dorf-Postkarte.
     Logik und Spielstand: gemeinsam/dorf-kern.js · 3D: gemeinsam/dorf-szene.js
     Inhalte: daten/dorf-inhalte.json
   -->
@@ -107,6 +108,56 @@
     .von-lk { display: inline-block; font-size: .75rem; font-weight: 900; background: #3b2a1a; color: #fde68a; border-radius: 6px; padding: .1rem .45rem; margin-left: .3rem; vertical-align: 2px; }
     .rest { font-size: .82rem; font-weight: 800; color: var(--tinte2); }
     @media (max-width: 560px) { .zettel.woche { grid-template-columns: 1fr; } .zettel.woche .rechts { align-items: stretch; } }
+
+    /* Bewohner-Auftrag */
+    .zettel.bewohner { grid-column: 1 / -1; min-height: 0; --dreh: -.4deg; background: linear-gradient(180deg, #eef6ff, #f6ecd2);
+      display: grid; grid-template-columns: auto 1fr auto; gap: .5rem 1rem; align-items: center; }
+    .zettel.bewohner .portrait { font-size: 3rem; line-height: 1; }
+    .zettel.bewohner .geschichte { font-style: italic; line-height: 1.4; }
+    .zettel.bewohner .rechts { display: flex; flex-direction: column; gap: .5rem; align-items: flex-end; }
+    @media (max-width: 560px) { .zettel.bewohner { grid-template-columns: auto 1fr; } .zettel.bewohner .rechts { grid-column: 1 / -1; align-items: stretch; } }
+
+    /* Kopf-Knöpfe, Neuigkeiten */
+    .kopf-knoepfe { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: .6rem; }
+    .kopf-knoepfe button { border: 2px solid rgba(255,255,255,.18); background: rgba(255,255,255,.07); color: var(--text); border-radius: 99px;
+      padding: .45rem .9rem; font-weight: 800; cursor: pointer; }
+    .kopf-knoepfe button .punkt { display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: #f87171; margin-left: .3rem; vertical-align: 1px; }
+    .kiste.ansehen { background: #3b2f5c; border-color: #7c6bc4; }
+    .neu-banner { background: linear-gradient(90deg, #14532d, #166534); border: 2px solid rgba(74,222,128,.5); border-radius: 14px;
+      padding: .8rem 1rem; margin: 0 0 1rem; display: flex; gap: .8rem; align-items: center; flex-wrap: wrap; font-weight: 700; }
+    .neu-banner .gross { font-size: 2rem; }
+    .neu-banner button { margin-left: auto; background: rgba(0,0,0,.25); border: 0; color: #fff; border-radius: 99px; padding: .4rem .9rem; font-weight: 800; cursor: pointer; }
+    .ansehen-balken { height: 10px; border-radius: 99px; background: rgba(255,255,255,.1); overflow: hidden; max-width: 320px; margin: .2rem 0; }
+    .ansehen-balken i { display: block; height: 100%; background: linear-gradient(90deg, #a78bfa, #c4b5fd); }
+
+    /* Overlays: Sammelbuch, Postkarte */
+    .overlay { position: fixed; inset: 0; z-index: 10002; background: rgba(10,9,20,.82); display: flex; align-items: flex-start; justify-content: center;
+      overflow: auto; padding: max(1rem, env(safe-area-inset-top)) .8rem 2rem; }
+    .overlay[hidden] { display: none; }
+    .buch { width: min(920px, 100%); background: #f3e7c9; color: var(--tinte); border-radius: 12px; padding: 1.3rem 1.2rem 1.6rem;
+      box-shadow: 0 30px 80px rgba(0,0,0,.6), inset 0 0 0 6px #7a4a28; }
+    .buch-kopf { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: .6rem; }
+    .buch-kopf h2 { color: var(--tinte); font-size: 1.7rem; }
+    .zu { border: 0; background: #7a4a28; color: #fff; border-radius: 99px; width: 2.4rem; height: 2.4rem; font-size: 1.2rem; cursor: pointer; flex: none; }
+    .buch h3 { font-family: 'Fredoka One', 'Nunito', sans-serif; font-weight: 400; margin: 1.2rem 0 .6rem; font-size: 1.2rem; }
+    .buch .leise { color: var(--tinte2); font-weight: 700; font-size: .9rem; margin: 0; }
+    .seiten { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: .7rem; }
+    .person { background: rgba(255,255,255,.5); border-radius: 10px; padding: .7rem .8rem; display: grid; grid-template-columns: auto 1fr; gap: .15rem .7rem; align-items: center; }
+    .person .gesicht { font-size: 2rem; grid-row: span 2; }
+    .person b { font-size: 1rem; }
+    .person small { color: var(--tinte2); font-weight: 700; }
+    .person .fach-stuecke { grid-column: 1 / -1; display: flex; gap: .4rem; margin-top: .3rem; flex-wrap: wrap; }
+    .stueck { display: inline-flex; align-items: center; gap: .35rem; background: #fff8e7; border: 2px solid #d9c49a; border-radius: 10px; padding: .25rem .55rem; font-weight: 800; font-size: .85rem; }
+    .stueck.fehlt { background: transparent; border-style: dashed; color: rgba(59,42,26,.45); }
+    .person.fremd { opacity: .55; }
+    .meilen { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: .6rem; }
+    .meilen div { background: rgba(255,255,255,.5); border-radius: 10px; padding: .6rem; text-align: center; font-weight: 800; font-size: .85rem; }
+    .meilen div .gross { font-size: 1.8rem; display: block; }
+    .meilen div small { display: block; font-weight: 600; color: var(--tinte2); }
+    .meilen div.fehlt { opacity: .4; filter: grayscale(1); }
+    .karte-bild { width: 100%; height: auto; display: block; border-radius: 6px; box-shadow: 0 10px 30px rgba(0,0,0,.35); }
+    .postkarte-steuer { display: flex; gap: .5rem; flex-wrap: wrap; align-items: center; margin-top: .9rem; }
+    .postkarte-steuer input { font: inherit; font-weight: 700; padding: .55rem .8rem; border-radius: 10px; border: 2px solid #d9c49a; background: #fff; min-width: 0; flex: 1 1 200px; }
 
     .hinweis { margin: 1.1rem .2rem 0; color: var(--text2); font-size: .92rem; font-weight: 600; }
 
@@ -220,16 +271,24 @@
     const D = window.LernDorf;
     $app.innerHTML = `
       <header class="kopf">
-        <div><h1>Mein Dorf</h1><p id="untertitel"></p></div>
+        <div><h1 id="dorfname">Mein Dorf</h1><p id="untertitel"></p>
+          <div class="kopf-knoepfe"><button id="k-buch">📖 Sammelbuch<span id="k-buch-punkt"></span></button><button id="k-karte">📮 Postkarte</button></div></div>
         <div class="vorrat" id="vorrat" aria-label="Deine Rohstoffe"></div>
       </header>
+      <div id="neues"></div>
       <section class="szene" id="szene" aria-label="Dein Dorf"><div class="szene-tipp">Tippe auf einen Bauplatz</div></section>
       <section class="bau" id="bau" aria-live="polite"></section>
       <section class="brett" aria-labelledby="brett-titel">
         <div class="brett-kopf"><h2 id="brett-titel">Auftragsbrett</h2><div class="wuerfel" id="wuerfel"></div></div>
         <div class="zettel-reihe" id="zettel"></div>
       </section>
-      <p class="hinweis" id="hinweis"></p>`;
+      <p class="hinweis" id="hinweis"></p>
+      <div class="overlay" id="ov-buch" hidden role="dialog" aria-modal="true" aria-labelledby="buch-titel"><div class="buch" id="buch"></div></div>
+      <div class="overlay" id="ov-karte" hidden role="dialog" aria-modal="true" aria-labelledby="karte-titel"><div class="buch" id="karte"></div></div>`;
+    document.getElementById('k-buch').onclick = () => { buchZeichnen(); oeffnen('ov-buch'); };
+    document.getElementById('k-karte').onclick = () => { oeffnen('ov-karte'); karteZeichnen(); };
+    document.querySelectorAll('.overlay').forEach(o => o.addEventListener('click', e => { if (e.target === o) schliessen(o.id); }));
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') document.querySelectorAll('.overlay:not([hidden])').forEach(o => schliessen(o.id)); });
     // Start: noch nichts gebaut → Rathaus-Platz zeigen
     const rathausPlatz = D.plaetze().find(p => p.fest === 'rathaus');
     if (rathausPlatz && !D.state.b[rathausPlatz.id]) gewaehlt = rathausPlatz.id;
@@ -239,6 +298,7 @@
     szene = window.LernDorfSzene ? await window.LernDorfSzene.mount(host, { onPlatz: waehle }) : null;
     if (szene) { szene.auswahl(gewaehlt); }
     else { host.querySelector('.szene-tipp').remove(); rasterZeichnen(); }
+    neuesZeigen();
     D.onChange(() => zeichnen());
   }
 
@@ -257,8 +317,11 @@
     document.getElementById('vorrat').innerHTML = D.rohstoffe().map(r => {
       const n = S.r[r.id] || 0, neu = vorher[r.id] !== undefined && n > vorher[r.id];
       return `<div class="kiste${neu ? ' neu' : ''}" title="${esc(r.name)}"><span aria-hidden="true">${r.icon}</span><div>${n}<small>${esc(r.name)}</small></div></div>`;
-    }).join('');
-    vorher = Object.assign({}, S.r);
+    }).join('') + `<div class="kiste ansehen${vorher.an !== undefined && S.an > vorher.an ? ' neu' : ''}" title="Ansehen: wie beliebt dein Dorf ist"><span aria-hidden="true">⭐</span><div>${S.an}<small>Ansehen</small></div></div>`;
+    vorher = Object.assign({}, S.r, { an: S.an });
+    document.getElementById('dorfname').textContent = S.dn || 'Mein Dorf';
+    document.getElementById('k-buch-punkt').className = S.nz && S.nz.length ? 'punkt' : '';
+    if (S.nz && S.nz.length) setTimeout(neuesZeigen, 0);
     if (szene) szene.update(); else if (document.querySelector('.raster')) rasterZeichnen();
     bauZeichnen();
     brettZeichnen();
@@ -287,8 +350,14 @@
   function stufenHtml(st, max) { return `<span class="stufen" aria-label="Stufe ${st} von ${max}">${Array.from({ length: max }, (_, i) => `<i class="${i < st ? 'voll' : ''}"></i>`).join('')}</span>`; }
   function bonusText(g, st) {
     if (!g.bonus || st < 1) return '';
-    return Object.entries(g.bonus).map(([r, l]) => { const v = Array.isArray(l) ? l[Math.min(st, l.length) - 1] : 0; const R = window.LernDorf.rohstoff(r);
-      return v ? `+${Math.round(v * 100)} % ${R.name} aus jedem Auftrag` : ''; }).filter(Boolean).join(' · ');
+    return Object.entries(g.bonus).map(([r, l]) => {
+      const v = Array.isArray(l) ? l[Math.min(st, l.length) - 1] : 0;
+      if (!v) return '';
+      const p = Math.round(v * 100);
+      if (r === 'rabatt') return `alle Bauten ${p} % günstiger`;
+      if (r === 'woche') return `+${p} % Holz und Stein aus dem Wochenauftrag`;
+      return `+${p} % ${window.LernDorf.rohstoff(r).name} aus jedem Auftrag`;
+    }).filter(Boolean).join(' · ');
   }
   function wann(tag) {
     const D = window.LernDorf, t = D.heute();
@@ -340,12 +409,16 @@
       unten = `<p>🔨 ${i.stufe ? 'Ausbau auf Stufe ' + i.zielStufe : 'Wird gebaut'} – fertig ${wann(i.fertigAb)}.</p>`;
     } else if (i.naechste) {
       const frei = g.id === 'rathaus' ? D.plaetze().filter(p => p.rathaus === i.naechste).length : 0;
+      const an = D.state.an, noetig = i.ansehen || 0;
+      const kann = i.genug && i.ansehenOk;
       unten = `<div class="option" style="margin-top:.7rem">
-          <b>Ausbauen auf Stufe ${i.naechste}</b>
+          <b>Ausbauen auf Stufe ${i.naechste}${i.naechste === 4 ? ' ✨ Prachtstufe' : ''}</b>
           ${frei ? `<small>Schaltet ${frei} neue Bauplätze frei.</small>` : ''}
           ${bonusText(g, i.naechste) ? `<small>Danach: ${esc(bonusText(g, i.naechste))}</small>` : ''}
+          ${noetig ? `<small>⭐ Ansehen: ${an} von ${noetig} nötig${i.ansehenOk ? ' ✓' : ' – mehr Ansehen gibt es für Gebäude und Aufträge deiner Bewohner'}</small>
+            <div class="ansehen-balken" aria-hidden="true"><i style="width:${Math.min(100, Math.round(an / noetig * 100))}%"></i></div>` : ''}
           ${kostenHtml(i.kosten)}
-          <button class="knopf" id="ausbauen" ${i.genug ? '' : 'disabled'}>${i.genug ? 'Ausbauen' : 'Noch zu wenig'}</button>
+          <button class="knopf" id="ausbauen" ${kann ? '' : 'disabled'}>${kann ? 'Ausbauen' : !i.ansehenOk ? 'Noch zu wenig Ansehen' : 'Noch zu wenig'}</button>
         </div>`;
     } else {
       unten = '<p class="leise">Höchste Stufe erreicht.</p>';
@@ -354,6 +427,140 @@
       <p>${esc(g.text || '')}${bonus ? ' <b>' + esc(bonus) + '</b>' : ''}</p>${unten}`;
     const k = document.getElementById('ausbauen');
     if (k) k.onclick = () => { const r = D.ausbauen(gewaehlt); if (r.ok && szene) szene.jubel(); };
+  }
+
+  function bewohnerZettel() {
+    const D = window.LernDorf, i = D.bewohnerAuftragInfo();
+    if (!i) return '';
+    const q = i.auftrag, b = i.bewohner, app = D.appInfo(q.a);
+    const punkte = Array.from({ length: q.n }, (_, k) => `<i class="${k < q.c ? 'voll' : ''}"></i>`).join('');
+    const farbe = Array.isArray(b.farben) ? b.farben[0] : '#60a5fa';
+    return `<article class="zettel bewohner" style="--pin:${esc(farbe)}">
+        <div class="portrait" aria-hidden="true">${esc(b.icon)}</div>
+        <div>
+          <div class="fach">Auftrag von ${esc(b.name)}</div>
+          <div class="geschichte">„${esc(i.text)}“</div>
+          <div class="ziel" style="margin-top:.35rem">${q.n} Runden in <b>${esc(app.name)}</b> mit mindestens ${q.m} %</div>
+          <div class="punkte" role="img" aria-label="${q.c} von ${q.n} Runden geschafft" style="margin-top:.3rem">${punkte}</div>
+        </div>
+        <div class="rechts">
+          <div class="lohn">+${i.ansehen} ⭐${i.stueck ? ` + ${esc(i.stueck.icon)}` : ''}</div>
+          ${i.stueck ? `<small style="font-weight:800;color:var(--tinte2)">${esc(i.stueck.name)} fürs Sammelbuch</small>` : ''}
+          ${app.link ? `<a class="knopf" href="${esc(app.link)}">Los geht's</a>` : ''}
+        </div>
+      </article>`;
+  }
+
+  // ── Neuigkeiten: neue Bewohner, neue Sammelstücke ──
+  function neuesZeigen() {
+    const box = document.getElementById('neues');
+    if (!box || box.childElementCount) return;
+    const l = window.LernDorf.neuigkeiten();
+    if (!l.length) return;
+    const zeile = x => x.art === 'bewohner'
+      ? `<span class="gross" aria-hidden="true">${esc(x.icon)}</span><span>Neu eingezogen: <b>${esc(x.name)}</b> – ${esc(x.text || '')}</span>`
+      : `<span class="gross" aria-hidden="true">${esc(x.icon)}</span><span>Neu im Sammelbuch: <b>${esc(x.name)}</b>${x.von ? ' von ' + esc(x.von) : ''}</span>`;
+    box.innerHTML = l.slice(0, 4).map(x => `<div class="neu-banner">${zeile(x)}</div>`).join('')
+      + (l.length > 4 ? `<div class="neu-banner"><span>… und ${l.length - 4} weitere Neuigkeiten im Sammelbuch</span></div>` : '');
+    const letzte = box.lastElementChild, knopf = document.createElement('button');
+    knopf.textContent = 'Super!';
+    knopf.onclick = () => { box.innerHTML = ''; };
+    letzte.appendChild(knopf);
+  }
+
+  // ── Sammelbuch ──
+  function oeffnen(id) { const o = document.getElementById(id); o.hidden = false; const z = o.querySelector('.zu'); if (z) z.focus(); document.body.style.overflow = 'hidden'; }
+  function schliessen(id) { document.getElementById(id).hidden = true; document.body.style.overflow = ''; }
+  function buchZeichnen() {
+    const D = window.LernDorf, sb = D.sammelbuch();
+    const leute = sb.bewohner.map(b => `
+      <div class="person${b.da ? '' : ' fremd'}">
+        <span class="gesicht" aria-hidden="true">${b.da ? esc(b.icon) : '❔'}</span>
+        <b>${b.da ? esc(b.name) : '???'}</b>
+        <small>${b.da ? esc(b.text) : 'zieht vielleicht noch ein'}</small>
+        <div class="fach-stuecke">${b.stuecke.map(s => s.hat
+          ? `<span class="stueck" title="${esc(s.name)}">${esc(s.icon)} ${esc(s.name)}</span>`
+          : `<span class="stueck fehlt">❔ ${b.da ? 'Hilf ' + esc(b.name.split(' ').pop()) : '???'}</span>`).join('')}</div>
+      </div>`).join('');
+    const meilen = sb.meilensteine.map(m => `<div class="${m.hat ? '' : 'fehlt'}"><span class="gross" aria-hidden="true">${esc(m.icon)}</span>${esc(m.name)}<small>${esc(m.text)}</small></div>`).join('');
+    document.getElementById('buch').innerHTML = `
+      <div class="buch-kopf"><h2 id="buch-titel">📖 Sammelbuch</h2><button class="zu" aria-label="Schließen">✕</button></div>
+      <p class="leise">${sb.gesammelt} von ${sb.gesamt} Sammelstücken · ${D.state.bw.length} Bewohner</p>
+      <h3>Deine Bewohner</h3>
+      <p class="leise">Jedes Wohnhaus bringt pro Stufe einen Bewohner. Hilf ihnen bei ihren Aufträgen – dann schenken sie dir etwas.</p>
+      <div class="seiten" style="margin-top:.6rem">${leute}</div>
+      <h3>Meilensteine</h3>
+      <div class="meilen">${meilen}</div>`;
+    document.querySelector('#buch .zu').onclick = () => schliessen('ov-buch');
+  }
+
+  // ── Dorf-Postkarte: Foto vom Dorf + Name + Zahlen, zum Herzeigen am Gerät ──
+  async function karteZeichnen() {
+    const D = window.LernDorf, S = D.state;
+    const el = document.getElementById('karte');
+    el.innerHTML = `<div class="buch-kopf"><h2 id="karte-titel">📮 Deine Dorf-Postkarte</h2><button class="zu" aria-label="Schließen">✕</button></div>
+      <img class="karte-bild" id="karte-bild" alt="Postkarte deines Dorfs">
+      <div class="postkarte-steuer">
+        <label for="dn" style="font-weight:800">Wie heißt dein Dorf?</label>
+        <input id="dn" maxlength="24" placeholder="z. B. Sonnenhausen" value="${esc(S.dn || '')}">
+        <button class="knopf" id="dn-ok" style="flex:none">Speichern</button>
+      </div>
+      <p class="leise" style="margin-top:.6rem">Zeig die Karte deinen Freunden! Auf dem iPad kannst du das Bild lange drücken und sichern.</p>`;
+    el.querySelector('.zu').onclick = () => schliessen('ov-karte');
+    const neu = () => postkarte().then(url => { const img = document.getElementById('karte-bild'); if (img && url) img.src = url; });
+    document.getElementById('dn-ok').onclick = () => { D.dorfname(document.getElementById('dn').value); neu(); };
+    document.getElementById('dn').onkeydown = e => { if (e.key === 'Enter') document.getElementById('dn-ok').click(); };
+    neu();
+  }
+  async function postkarte() {
+    const D = window.LernDorf, S = D.state, sb = D.sammelbuch();
+    const name = (window.LernPass.profile() || {}).name || '';
+    try { await document.fonts.ready; } catch (e) {}
+    const W = 1200, H = 800, c = document.createElement('canvas'); c.width = W; c.height = H;
+    const g = c.getContext('2d');
+    g.fillStyle = '#f6ecd2'; g.fillRect(0, 0, W, H);
+    g.strokeStyle = '#7a4a28'; g.lineWidth = 14; g.strokeRect(7, 7, W - 14, H - 14);
+    // Foto
+    const foto = szene ? szene.foto() : null;
+    g.save(); g.translate(60, 70); g.rotate(-.025);
+    g.fillStyle = '#fff'; g.fillRect(0, 0, 660, 540);
+    if (foto) {
+      const img = new Image(); img.src = foto;
+      await new Promise(r => { img.onload = r; img.onerror = r; });
+      const s = Math.max(620 / img.width, 500 / img.height), iw = img.width * s, ih = img.height * s;
+      g.save(); g.beginPath(); g.rect(20, 20, 620, 500); g.clip();
+      g.drawImage(img, 20 + (620 - iw) / 2, 20 + (500 - ih) / 2, iw, ih); g.restore();
+    } else { g.fillStyle = '#6cc56f'; g.fillRect(20, 20, 620, 500); g.font = '200px serif'; g.textAlign = 'center'; g.fillText('🏘️', 330, 340); }
+    g.restore();
+    // Trennlinie wie bei einer Postkarte
+    g.strokeStyle = 'rgba(122,98,72,.35)'; g.lineWidth = 3; g.beginPath(); g.moveTo(780, 90); g.lineTo(780, 720); g.stroke();
+    // Briefmarke
+    g.save(); g.translate(1010, 60);
+    g.fillStyle = '#fff'; g.fillRect(0, 0, 140, 170);
+    g.setLineDash([8, 6]); g.strokeStyle = '#b91c1c'; g.lineWidth = 4; g.strokeRect(8, 8, 124, 154); g.setLineDash([]);
+    g.font = '72px serif'; g.textAlign = 'center'; g.fillText('🏘️', 70, 100);
+    g.fillStyle = '#b91c1c'; g.font = '800 20px Nunito, sans-serif'; g.fillText('LERNWELT', 70, 145);
+    g.restore();
+    // Stempel
+    g.save(); g.translate(930, 200); g.rotate(-.2); g.strokeStyle = 'rgba(30,64,175,.55)'; g.lineWidth = 4;
+    g.beginPath(); g.arc(0, 0, 58, 0, Math.PI * 2); g.stroke(); g.beginPath(); g.arc(0, 0, 46, 0, Math.PI * 2); g.stroke();
+    g.fillStyle = 'rgba(30,64,175,.6)'; g.font = '800 16px Nunito, sans-serif'; g.textAlign = 'center';
+    const d = new Date(); g.fillText(d.toLocaleDateString('de-DE'), 0, 6); g.restore();
+    // Text
+    g.fillStyle = '#3b2a1a'; g.textAlign = 'left';
+    g.font = '400 34px "Fredoka One", Nunito, sans-serif'; g.fillText('Grüße aus', 810, 330);
+    const dn = S.dn || (name ? name + 's Dorf' : 'meinem Dorf');
+    let gr = 58; g.font = `400 ${gr}px "Fredoka One", Nunito, sans-serif`;
+    while (g.measureText(dn).width > 360 && gr > 26) { gr -= 2; g.font = `400 ${gr}px "Fredoka One", Nunito, sans-serif`; }
+    g.fillText(dn, 810, 400);
+    g.font = '700 24px Nunito, sans-serif'; g.fillStyle = '#7a6248';
+    if (name) g.fillText('Bürgermeisterei: ' + name, 810, 450);
+    const gebaeude = Object.values(S.b).length;
+    const zeilen = [['🏠', gebaeude + (gebaeude === 1 ? ' Gebäude' : ' Gebäude')], ['👥', S.bw.length + (S.bw.length === 1 ? ' Bewohner' : ' Bewohner')],
+                    ['📖', sb.gesammelt + ' von ' + sb.gesamt + ' Sammelstücken'], ['⭐', S.an + ' Ansehen']];
+    g.font = '800 26px Nunito, sans-serif'; g.fillStyle = '#3b2a1a';
+    zeilen.forEach(([ic, t], k) => { g.fillText(ic + '  ' + t, 810, 520 + k * 44); });
+    return c.toDataURL('image/png');
   }
 
   function wochenZettel() {
@@ -413,7 +620,7 @@
     }).join('');
     getauscht = null;
     const box = document.getElementById('zettel');
-    box.innerHTML = zettel + wochenZettel();
+    box.innerHTML = zettel + bewohnerZettel() + wochenZettel();
     box.querySelectorAll('.tausch').forEach(b => b.onclick = () => {
       const platz = Number(b.dataset.platz);
       getauscht = platz;
