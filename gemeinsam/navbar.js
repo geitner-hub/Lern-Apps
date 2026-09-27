@@ -15,8 +15,9 @@
 //    });
 //
 //  Das war's. Home-Button, Ergebnisanzeige und Lernwelt-Pass
-//  (XP-Meldung) erscheinen automatisch. pass.js wird von hier
-//  nachgeladen – Apps müssen nichts weiter einbinden.
+//  (XP-Meldung) erscheinen automatisch. pass.js und dorf-kern.js
+//  („Mein Dorf“: Aufträge zählen mit) werden von hier nachgeladen –
+//  Apps müssen nichts weiter einbinden.
 // ═══════════════════════════════════════════════════════
 
 (function () {
@@ -38,6 +39,14 @@
     document.head.appendChild(sc);
   }
   loadPass();
+  // „Mein Dorf“: zählt Runden für Aufträge mit, auch wenn das Dorf nicht offen ist
+  (function loadDorf() {
+    if (window.LernDorf || document.getElementById('lw-dorf-script') || !BASE) return;
+    const sc = document.createElement('script');
+    sc.id = 'lw-dorf-script';
+    sc.src = BASE + 'dorf-kern.js';
+    document.head.appendChild(sc);
+  })();
   if ('serviceWorker' in navigator && ROOT) {
     window.addEventListener('load', () => navigator.serviceWorker.register(ROOT + 'sw.js').catch(() => {}));
   }

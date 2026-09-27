@@ -13,6 +13,9 @@
 //
 //  Alle Daten bleiben im localStorage des Geräts ('lernwelt-pass').
 //  Sicherung/Umzug über einen Code bzw. QR (exportCode / parseCode).
+//  Der Code enthält auch den Spielstand von „Mein Dorf“ ('lernwelt-dorf').
+//
+//  Jede gewertete Runde löst 'lernpass:gewertet' aus (für „Mein Dorf“).
 //
 //  ⚙ Stellschrauben stehen gesammelt in RULES (unten).
 // ═══════════════════════════════════════════════════════
@@ -27,17 +30,31 @@
   const here = (document.currentScript && document.currentScript.src) || location.href;
   const ROOT = new URL('../', here).href;           // Hauptordner der Lernwelt (pass.js liegt in gemeinsam/)
   const contentFile = new URL('daten/lernwelt-inhalte.json', ROOT).href;
-  fetch(contentFile, { cache: 'no-cache' })
+  const inhalte = fetch(contentFile, { cache: 'no-cache' })
     .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
     .then(c => { try { localStorage.setItem(CONTENT_CACHE, JSON.stringify(c)); } catch (e) {} return c; })
-    .catch(() => { try { return JSON.parse(localStorage.getItem(CONTENT_CACHE) || '{}'); } catch (e) { return {}; } })
-    .then(start);
+    .catch(() => { try { return JSON.parse(localStorage.getItem(CONTENT_CACHE) || '{}'); } catch (e) { return {}; } });
+  Promise.all([inhalte, ladeKompression()]).then(([c]) => start(c));
+
+  // Kompression für den Sicherungscode (vendor/fflate.min.js). Fehlt sie
+  // (z. B. offline und nie geladen), entsteht ein längerer LW2-Code.
+  function ladeKompression() {
+    if (window.fflate) return Promise.resolve();
+    return new Promise(fertig => {
+      const sc = document.createElement('script');
+      sc.src = new URL('vendor/fflate.min.js', ROOT).href;
+      sc.onload = sc.onerror = () => fertig();
+      (document.head || document.documentElement).appendChild(sc);
+      setTimeout(fertig, 4000);                      // nie länger als 4 s auf den Pass warten
+    });
+  }
 
   function start(C) {
 
   const STORE_KEY   = 'lernwelt-pass';
   const RESULTS_KEY = 'lern-apps-results';
   const CONFIG_KEY  = 'lernwelt-config-cache';
+  const DORF_KEY    = 'lernwelt-dorf';               // Spielstand „Mein Dorf“ (gemeinsam/dorf-kern.js)
   const VERSION     = 1;
 
   // ── Regeln (hier anpassen) ──────────────────────────────
@@ -500,6 +517,37 @@
    * @returns {object}  { xp, lines[], blocked, levelUp, level, chest, stars, starUp }
    */
   function award(r) {
+    const res = awardIntern(r);
+    meldeGewertet(r, res);
+    return res;
+  }
+
+  // Jede gewertete Runde (auch gesperrte) für Erweiterungen wie „Mein Dorf“ melden.
+  // Sitzt hier und nicht in navbar.js, weil award() auch aus der Warteschlange
+  // (Ergebnis kam, bevor pass.js geladen war) aufgerufen wird.
+  // Ist dorf-kern.js noch nicht da, wartet die Meldung in window.__lernDorfQueue.
+  function meldeGewertet(r, res) {
+    const max = Number(r.max) || 0;
+    const sec = Number(r.seconds);
+    const detail = {
+      app:     String(r.key || ''),
+      prozent: typeof res.pct === 'number' ? res.pct
+               : (max > 0 ? Math.max(0, Math.min(100, Math.round((Number(r.score) || 0) / max * 100))) : 0),
+      anzahl:  max,
+      dauer:   isFinite(sec) ? Math.round(sec) : null,
+      blocked: res.blocked || null,             // 'fast' = Durchklicken, 'invalid' = unbrauchbar
+      inhalt:  Array.isArray(r.inhalt) ? r.inhalt.slice() : [],
+      tag:     dayKey(),
+    };
+    if (!window.LernDorf) {
+      const q = window.__lernDorfQueue = window.__lernDorfQueue || [];
+      q.push(detail);
+      if (q.length > 20) q.shift();
+    }
+    try { window.dispatchEvent(new CustomEvent('lernpass:gewertet', { detail })); } catch (e) {}
+  }
+
+  function awardIntern(r) {
     const score = Number(r.score) || 0, max = Number(r.max) || 0;
     const key = String(r.key || '');
     if (!key || max <= 0) return { xp: 0, lines: [], blocked: 'invalid' };
@@ -755,7 +803,10 @@
   }
 
   // ── Sicherungs-Code ─────────────────────────────────────
-  //  Format:  LW2.<base64url(JSON)>.<Prüfsumme>   (LW1 wird weiterhin gelesen)
+  //  Format:  LW3.<base64url(deflate(JSON))>.<Prüfsumme>   komprimiert (Standard)
+  //           LW2.<base64url(JSON)>.<Prüfsumme>            wenn die Kompression fehlt
+  //  LW1 und LW2 werden weiterhin gelesen. JSON-Version v: 3 enthält zusätzlich
+  //  d = Spielstand „Mein Dorf“ (so wie er in 'lernwelt-dorf' steht).
   //  Die Prüfsumme erkennt Tippfehler und einfaches Herumbasteln –
   //  sie ist bewusst KEIN Kopierschutz (alles liegt ohnehin auf dem Gerät).
   function fnv(str) {
@@ -763,16 +814,27 @@
     for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 0x01000193); }
     return (h >>> 0).toString(36);
   }
-  function b64urlEncode(str) {
-    const bytes = new TextEncoder().encode(str);
+  function bytesToB64url(bytes) {
     let bin = ''; bytes.forEach(b => bin += String.fromCharCode(b));
     return btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
   }
-  function b64urlDecode(s) {
+  function b64urlToBytes(s) {
     s = s.replace(/-/g, '+').replace(/_/g, '/');
     while (s.length % 4) s += '=';
-    const bin = atob(s);
-    return new TextDecoder().decode(Uint8Array.from(bin, c => c.charCodeAt(0)));
+    return Uint8Array.from(atob(s), c => c.charCodeAt(0));
+  }
+  function b64urlEncode(str) { return bytesToB64url(new TextEncoder().encode(str)); }
+  function b64urlDecode(s)   { return new TextDecoder().decode(b64urlToBytes(s)); }
+  function kannKomprimieren() { return !!(window.fflate && window.fflate.deflateSync && window.fflate.inflateSync); }
+
+  // Dorf-Spielstand roh lesen (pass.js braucht dorf-kern.js dafür nicht)
+  function dorfLesen() {
+    try {
+      const s = localStorage.getItem(DORF_KEY);
+      if (!s || s.length > 20000) return null;
+      const d = JSON.parse(s);
+      return d && typeof d === 'object' && !Array.isArray(d) ? d : null;
+    } catch (e) { return null; }
   }
 
   function exportCode() {
@@ -784,7 +846,7 @@
     });
     const wkeys = Object.keys(S.weeks).sort().slice(-30);
     const payload = {
-      v: 2,
+      v: 3,
       p: [S.profile.name, LOOK_KEYS.map(k => S.profile.look[k]), S.profile.klasse || 0, S.profile.klasseSeason || ''],
       x: S.xp, r: S.rounds, o: S.chestsOpened,
       w: Object.fromEntries(wkeys.map(k => [k.replace(/-/g, ''), S.weeks[k]])),
@@ -806,10 +868,17 @@
       if (p.length) ls[id] = p;
     });
     if (Object.keys(ls).length) payload.ls = ls;
-    const body = b64urlEncode(JSON.stringify(payload));
+    const dorf = dorfLesen();
+    if (dorf) payload.d = dorf;
+    const json = JSON.stringify(payload);
+    let prefix = 'LW3', body = '';
+    if (kannKomprimieren()) {
+      try { body = bytesToB64url(window.fflate.deflateSync(new TextEncoder().encode(json), { level: 9 })); } catch (e) { body = ''; }
+    }
+    if (!body) { prefix = 'LW2'; body = b64urlEncode(json); }
     // Wer einen Code/QR/Karte erzeugt, hat gesichert → für die Erinnerung im Pass merken
     if (S.lastBackup !== dayKey()) { S.lastBackup = dayKey(); save(); }
-    return 'LW2.' + body + '.' + fnv('lernwelt|' + body);
+    return prefix + '.' + body + '.' + fnv('lernwelt|' + body);
   }
 
   /** Stand der Sicherung: { last: 'YYYY-MM-DD'|'', days: Tage seit letzter Sicherung|null, remind: bool } */
@@ -831,10 +900,18 @@
       const m = code.match(/#pass=([^\s]+)$/);          // ganze URL eingefügt?
       if (m) code = decodeURIComponent(m[1]);
       const parts = code.split('.');
-      if (parts.length !== 3 || !['LW1', 'LW2'].includes(parts[0])) return { ok: false, error: 'Das ist kein gültiger Lernwelt-Code.' };
+      if (parts.length !== 3 || !['LW1', 'LW2', 'LW3'].includes(parts[0])) return { ok: false, error: 'Das ist kein gültiger Lernwelt-Code.' };
       if (fnv('lernwelt|' + parts[1]) !== parts[2]) return { ok: false, error: 'Der Code ist beschädigt oder unvollständig.' };
-      const d = JSON.parse(b64urlDecode(parts[1]));
-      if (!d || ![1, 2].includes(d.v) || !Array.isArray(d.p)) return { ok: false, error: 'Unbekanntes Code-Format.' };
+      let json;
+      if (parts[0] === 'LW3') {
+        if (!kannKomprimieren()) return { ok: false, error: 'Der Code kann gerade nicht gelesen werden. Bitte kurz mit dem Internet verbinden und nochmal versuchen.' };
+        json = new TextDecoder().decode(window.fflate.inflateSync(b64urlToBytes(parts[1])));
+      } else json = b64urlDecode(parts[1]);
+      if (json.length > 200000) return { ok: false, error: 'Unbekanntes Code-Format.' };
+      const d = JSON.parse(json);
+      if (!d || ![1, 2, 3].includes(d.v) || !Array.isArray(d.p)) return { ok: false, error: 'Unbekanntes Code-Format.' };
+      // Dorf nur grob prüfen – genau säubert dorf-kern.js beim Laden
+      const dorf = d.d && typeof d.d === 'object' && !Array.isArray(d.d) && JSON.stringify(d.d).length <= 20000 ? d.d : null;
       const ymd = s => String(s).replace(/^(\d{4})(\d{2})(\d{2})$/, '$1-$2-$3');
       const restored = blank();
       const lk = Array.isArray(d.p[1]) ? Object.fromEntries(LOOK_KEYS.map((k, i) => [k, d.p[1][i]])) : null;
@@ -889,8 +966,13 @@
         preview: { name: restored.profile.name || 'Ohne Namen', look: Object.assign({}, restored.profile.look, { eq: Object.assign({}, restored.equipped) }),
                    level: levelInfo(seasonsOn() ? (restored.seasons[seasonId()] || 0) : restored.xp).level,
                    title: levelInfo(seasonsOn() ? (restored.seasons[seasonId()] || 0) : restored.xp).title, xp: restored.xp,
-                   date: ymd(d.t || '') },
-        apply() { S = restored; save(); },
+                   date: ymd(d.t || ''), dorf: !!dorf },
+        apply() {
+          S = restored; save();
+          // Dorf gehört zum Pass: mitersetzen (alter Code ohne Dorf → Dorf beginnt neu)
+          try { if (dorf) localStorage.setItem(DORF_KEY, JSON.stringify(dorf)); else localStorage.removeItem(DORF_KEY); } catch (e) {}
+          try { window.dispatchEvent(new CustomEvent('lernpass:wiederhergestellt')); } catch (e) {}
+        },
       };
     } catch (e) {
       return { ok: false, error: 'Der Code konnte nicht gelesen werden.' };
