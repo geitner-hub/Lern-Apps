@@ -9,13 +9,13 @@
 //
 //  Nach einer Änderung an DIESER Datei VERSION erhöhen.
 // ═══════════════════════════════════════════════════════
-const VERSION = 'lernwelt-v5';   // v5: Mein Dorf (dorf-kern.js, dorf-inhalte.json), fflate für den Sicherungscode
+const VERSION = 'lernwelt-v7';   // v7: Mein Dorf – 3D-Dorf (dorf-szene.js)
 const START = ['./', 'index.html', 'config.json', 'manifest.webmanifest',
                'gemeinsam/shared.js', 'gemeinsam/config-api.js', 'gemeinsam/navbar.js', 'gemeinsam/pass.js',
                'gemeinsam/avatar3d.js', 'gemeinsam/fonts.css', 'gemeinsam/qrcode.js', 'daten/lernwelt-inhalte.json',
-               'gemeinsam/dorf-kern.js', 'daten/dorf-inhalte.json', 'vendor/fflate.min.js',
+               'gemeinsam/dorf-kern.js', 'gemeinsam/dorf-szene.js', 'daten/dorf-inhalte.json', 'vendor/fflate.min.js',
                // Spiele: sollen auch offline laufen, ohne vorher einmal online geöffnet worden zu sein
-               'spiele/runner.html', 'spiele/burg-verteidigung.html', 'gemeinsam/aufgaben.js',
+               'spiele/runner.html', 'spiele/burg-verteidigung.html', 'spiele/dorf.html', 'gemeinsam/aufgaben.js',
                'daten/vokabeln5.json', 'daten/vokabeln6.json',
                'vendor/three.min.js',
                'fonts/nunito-latin-wght-normal.woff2', 'fonts/nunito-latin-ext-wght-normal.woff2',

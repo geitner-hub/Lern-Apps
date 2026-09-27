@@ -18,7 +18,7 @@ manifest.webmanifest  App-Symbol (Anleitung: APP-SYMBOL.md)
 
 apps/mathe/  apps/englisch/  apps/gpg/   Lern-Apps nach Fach
 apps/vorlage/app-template.html          Vorlage für neue Apps
-spiele/               RUN!, Tower Defense, Mein Dorf (dorf.html, ab Etappe 1)
+spiele/               RUN!, Tower Defense, Mein Dorf (dorf.html)
 daten/                vokabeln5.json, vokabeln6.json, lernwelt-inhalte.json, dorf-inhalte.json
 gemeinsam/            Code, den alle Seiten nutzen (siehe unten)
 fonts/ icons/ vendor/ Schriften, Symbole, fremde Bibliotheken
@@ -34,6 +34,7 @@ cloudflare/           Worker-Quelltext und Anleitung
 | `avatar3d.js` | 3D-Avatar aus Blöcken (lädt `vendor/three.min.js` erst bei Bedarf) |
 | `chest3d.js` | 3D-Truhe zum Öffnen |
 | `dorf-kern.js` | „Mein Dorf“: Spielstand, Aufträge, Bauen; von `navbar.js` in jeder App mitgeladen |
+| `dorf-szene.js` | „Mein Dorf“: 3D-Dorf (Voxel-Gebäude als Code, feste Iso-Kamera), nur in `spiele/dorf.html` |
 | `aufgaben.js` | Aufgaben-Pools für die Spiele („Meine Themen“) |
 | `qrcode.js` | QR-Code-Erzeugung im Browser (MIT-Lizenz, Kazuhiko Arase) |
 | `fonts.css` | Lokal gehostete Schriften aus `fonts/` (kein Google Fonts → DSGVO) |
@@ -209,3 +210,20 @@ Plan und Stand: Claude-Doc „Aktionsplan: Aufbauspiel „Mein Dorf““.
   (`spiele/`) und nicht mit `"dorf": false` ausgeschlossen sind. Das Feld steht im App-Eintrag in
   `config.json`, z. B. `{ "name": "…", "datei": "apps/mathe/…", …, "dorf": false }`
   (Schalter im Admin folgt in Etappe 3).
+- **Auftragsbrett** (`spiele/dorf.html`): 3 Plätze – Mathematik, Englisch/GPG, freie Wahl. Eine App steht
+  nie auf zwei Plätzen; ist eine Kategorie leer, nimmt der Platz eine beliebige Lern-App. Ein Auftrag =
+  2 Runden mit mind. 70 % in dieser App → 15–25 Holz oder Stein (+50 %, wenn die App seit 14 Tagen nicht
+  geübt wurde). Erledigte Plätze füllen sich am nächsten Tag, offene Aufträge bleiben. Tauschen: 1 pro Tag,
+  bis 3 ansparbar. Aufträge, deren App versteckt oder ausgeschlossen wird, werden sofort ersetzt.
+  Alle Werte in `daten/dorf-inhalte.json` → `AUFTRAEGE`.
+- In den Lern-Apps erscheint unten eine kurze Meldung („Dorf-Auftrag: 1 von 2“, „Auftrag erfüllt!“).
+- **Bauen:** 12 feste Bauplätze (Lage in `dorf-inhalte.json` → `BAUPLAETZE`). Platz 1 gehört dem Rathaus,
+  jede Rathaus-Stufe schaltet 3–4 Plätze frei. Gebäude in `GEBAEUDE` (Name, Icon, Stufen, Ansehen, Bonus);
+  Kosten je Stufe in `BAU.stufenKosten`. Der erste Bau ist sofort fertig, alle weiteren ab dem nächsten Tag.
+  Sägewerk und Schmiede geben +10/20/30 % Holz bzw. Stein auf Auftragsbelohnungen. Außer Wohnhäusern
+  gibt es jedes Gebäude nur einmal.
+- **3D** (`dorf-szene.js`): gezeichnet wird nur bei Änderungen, Pixel-Ratio höchstens 2. Die Modelle sind
+  Code (`MODELLE`), ein neues Gebäude ohne Modell erscheint als einfaches Haus. Ohne WebGL zeigt die
+  Seite die Bauplätze als Knöpfe.
+- **Dorf für Kinder freischalten:** im Admin „Neue App“ → Datei `spiele/dorf.html`, Fach „Allgemein“;
+  mit „versteckt“ lässt es sich vorher selbst testen.
