@@ -13,7 +13,9 @@
    Modi:   Runde (15 Tore, XP wie jede App) · Endlos (3 Herzen, wird schneller,
            XP für den besten Lauf des Tages über LernPass.awardEndless)
    Fragen: aufgaben.js (Klassenfilter über den Pass)
-   Links:  runner.html?pool=vok5&bis=unit3            Thema festlegen
+   Themen: „⭐ Meine Themen“ = in den Lern-Apps freigeschalteter Stoff + Starter-Paket
+           (aufgaben.js → meineThemen, Einstellungen im Admin: config.json → spiele)
+   Links:  runner.html?pool=vok5&bis=unit3            Thema festlegen (hat Vorrang)
            runner.html?pool=1x1-klein&modus=endlos    direkt im Endlosmodus
    Braucht: navbar.js, aufgaben.js, avatar3d.js, vendor/three.min.js
   ═══════════════════════════════════════════════
@@ -101,6 +103,19 @@
     .row { display: flex; gap: .6rem; flex-wrap: wrap; align-items: center; }
     select { font: inherit; font-weight: 800; font-size: .88rem; background: #252238; color: var(--text); border: 1px solid rgba(255,255,255,.12);
       border-radius: 10px; padding: .45rem .6rem; max-width: 100%; }
+    /* „Meine Themen“ */
+    #meine-box { margin-bottom: .9rem; }
+    .meine { width: 100%; min-height: 66px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: .55rem 1rem; border-radius: 16px; background: rgba(255,255,255,.06); border: 3px solid rgba(230,168,23,.3);
+      font-family: 'Fredoka One', 'Nunito', sans-serif; font-size: 1.45rem; line-height: 1.1; color: var(--text); }
+    .meine small { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: .8rem; color: var(--muted); margin-top: .15rem; }
+    .meine small:empty { display: none; }
+    .meine.on { border-color: var(--accent); background: rgba(230,168,23,.18); color: var(--accent2); }
+    .meine:active { transform: scale(.98); }
+    .selbst { display: block; margin: .5rem auto 0; min-height: 44px; padding: .4rem 1.1rem; border-radius: 99px; font-weight: 900; font-size: .92rem;
+      background: rgba(255,255,255,.06); color: var(--text2); }
+    .selbst.on { background: var(--indigo); color: #fff; }
+    @media (prefers-reduced-motion: reduce) { .meine:active { transform: none; } }
     .note { font-size: .8rem; color: var(--muted); margin-top: .5rem; font-weight: 700; }
     .note b { color: var(--accent2); }
     .go { width: 100%; margin-top: 1.1rem; background: var(--accent); color: #231a02; font-weight: 900; font-size: 1.2rem;
@@ -164,6 +179,11 @@
     <h1>🏃 Lern-Runner</h1>
     <p class="lead">Lauf durch das Tor mit der richtigen Antwort! Wischen, Pfeiltasten oder einfach die Antwort unten antippen.</p>
 
+    <div id="meine-box" hidden>
+      <button type="button" class="meine on" id="meine-btn">⭐ Meine Themen<small id="meine-info"></small></button>
+      <button type="button" class="selbst" id="selbst-btn" hidden>Selbst wählen</button>
+    </div>
+
     <div class="seg" id="mode-seg">
       <button type="button" data-mode="runde" class="on">Runde<small>15 Tore</small></button>
       <button type="button" data-mode="endlos">Endlos<small>3 Herzen · immer schneller</small></button>
@@ -174,11 +194,11 @@
       <div class="tabs" id="klasse-tabs"></div>
     </div>
 
+    <div id="frei-box">
     <span class="lbl">Thema</span>
     <div class="tabs" id="fach-tabs"></div>
     <div class="pools" id="pool-list"></div>
     <div class="tabs" style="margin-top:.55rem"><button type="button" id="mix-btn">🔀 Mehrere Themen mischen</button></div>
-    <p class="note" id="lehrer-note" hidden>Deine Lehrkraft hat dieses Thema ausgewählt.</p>
 
     <div id="vok-box" hidden>
       <span class="lbl">Vokabeln</span>
@@ -190,6 +210,9 @@
         </select>
       </div>
     </div>
+    </div>
+
+    <p class="note" id="lehrer-note" hidden>Deine Lehrkraft hat dieses Thema ausgewählt.</p>
 
     <div id="tempo-box">
       <span class="lbl">Tempo</span>
@@ -259,10 +282,20 @@ const rnd = (a, b) => a + Math.random() * (b - a);
    ═══════════════════════════════════════════════════════ */
 const WAHL_KEY = 'lern-runner-wahl', REKORD_KEY = 'lern-runner-rekorde';
 const W = { modus: 'runde', pools: [], bis: '', richtung: 'de-en', tempo: 'normal', fach: null, klasse: null, lehrer: false, mix: false };
-function loadWahl() { try { Object.assign(W, JSON.parse(localStorage.getItem(WAHL_KEY) || '{}')); } catch (e) {} W.lehrer = false; }
-function saveWahl() { try { const { lehrer, ...w } = W; localStorage.setItem(WAHL_KEY, JSON.stringify(w)); } catch (e) {} }
+function loadWahl() { try { Object.assign(W, JSON.parse(localStorage.getItem(WAHL_KEY) || '{}')); } catch (e) {} W.lehrer = false; W.quelle = 'meine'; }
+function saveWahl() { try { const { lehrer, quelle, ...w } = W; localStorage.setItem(WAHL_KEY, JSON.stringify(w)); } catch (e) {} }
+// „Meine Themen“ (Einstellung der Lehrkraft im Admin: config.json → spiele.auswahl)
+function spielAuswahl() { try { return LernPass.settings.spiele.auswahl || 'auto+frei'; } catch (e) { return 'auto+frei'; } }
+/** 'meine' oder 'frei' – Lehrer-Links haben Vorrang */
+function quelle() {
+  const a = spielAuswahl();
+  if (W.lehrer || a === 'frei') return 'frei';
+  if (a === 'auto') return 'meine';
+  return W.quelle === 'frei' ? 'frei' : 'meine';
+}
+let MEINE = null;
 function rekorde() { try { return JSON.parse(localStorage.getItem(REKORD_KEY) || '{}'); } catch (e) { return {}; } }
-function rekordKey() { return [...W.pools].sort().join('+') + (W.pools.some(p => /^vok/.test(p)) ? '|' + (W.bis || 'alle') + '|' + W.richtung : ''); }
+function rekordKey() { if (quelle() === 'meine') return 'meine-themen'; return [...W.pools].sort().join('+') + (W.pools.some(p => /^vok/.test(p)) ? '|' + (W.bis || 'alle') + '|' + W.richtung : ''); }
 
 function klasse() { return LernAufgaben.klasse() || W.klasse || null; }
 
@@ -281,6 +314,15 @@ function buildMenu() {
     .map(p => `<button type="button" data-pool="${esc(p.id)}" class="${W.pools.includes(p.id) ? 'on' : ''}">${esc(p.titel)}</button>`).join('')
     || (klasse() ? '' : '<p class="note">Wähle zuerst deine Klasse.</p>');
   $('lehrer-note').hidden = !W.lehrer;
+  const auswahl = spielAuswahl(), q = quelle();
+  $('meine-box').hidden = auswahl === 'frei';
+  $('selbst-btn').hidden = auswahl !== 'auto+frei';
+  $('frei-box').hidden = q !== 'frei' || (auswahl === 'auto' && W.lehrer);
+  $('meine-btn').classList.toggle('on', q === 'meine');
+  $('selbst-btn').classList.toggle('on', q === 'frei' && !W.lehrer);
+  MEINE = q === 'meine' && klasse() ? LernAufgaben.meineThemen({ klasse: klasse() }) : null;
+  $('meine-info').textContent = MEINE ? (MEINE.anzahl === 1 ? '1 Thema' : MEINE.anzahl + ' Themen') : '';
+  const bereit = q === 'meine' ? !!(MEINE && MEINE.anzahl) : W.pools.length > 0;
   if (W.pools.length > 1) W.mix = true;
   $('mix-btn').classList.toggle('on', W.mix);
   document.querySelectorAll('#mode-seg button').forEach(b => b.classList.toggle('on', b.dataset.mode === W.modus));
@@ -289,10 +331,10 @@ function buildMenu() {
   $('vok-richtung').value = W.richtung;
   updateVok();
   const rk = rekorde()[rekordKey()];
-  $('rekord-note').hidden = W.modus !== 'endlos' || !W.pools.length;
+  $('rekord-note').hidden = W.modus !== 'endlos' || !bereit;
   $('rekord-note').innerHTML = rk ? `Dein Rekord bei diesem Thema: <b>${rk} richtig</b>` : 'Noch kein Rekord bei diesem Thema – leg los!';
-  $('go').disabled = !W.pools.length || !gl;
-  $('go').textContent = W.pools.length > 1 ? `Los geht's! (Mix aus ${W.pools.length})` : "Los geht's!";
+  $('go').disabled = !bereit || !gl;
+  $('go').textContent = q === 'frei' && W.pools.length > 1 ? `Los geht's! (Mix aus ${W.pools.length})` : "Los geht's!";
 }
 
 let vokFuer = null;
@@ -313,6 +355,8 @@ $('menu').addEventListener('click', e => {
   if (!t) return;
   if (t.dataset.mode) { W.modus = t.dataset.mode; }
   else if (t.dataset.kl) { W.klasse = Number(t.dataset.kl); }
+  else if (t.id === 'meine-btn') { W.quelle = 'meine'; W.lehrer = false; }
+  else if (t.id === 'selbst-btn') { W.quelle = 'frei'; W.lehrer = false; }
   else if (t.dataset.fach) { W.fach = t.dataset.fach; }
   else if (t.dataset.pool) {
     const id = t.dataset.pool, vok = /^vok/.test(id);
@@ -522,10 +566,22 @@ const G = {
   start: 0, stufe: 0, countT: 0, endeT: 0,
 };
 
+/** Aufgaben für den Start: „Meine Themen“ oder die eigene Auswahl → { ids, opts, meine } */
+function aufgabenQuelle() {
+  if (!klasse()) throw new Error('Wähle zuerst deine Klasse.');
+  if (quelle() === 'meine') {
+    const M = LernAufgaben.meineThemen({ klasse: klasse() });
+    return { ids: M.ids, opts: M.opts, meine: true };
+  }
+  return { ids: W.pools, opts: { klasse: klasse(), bis: W.bis || undefined, richtung: W.richtung }, meine: false };
+}
+
 async function startGame() {
   $('menu-err').textContent = '';
   try {
-    G.gen = await LernAufgaben.erzeuger(W.pools, { klasse: klasse(), bis: W.bis || undefined, richtung: W.richtung });
+    const A = aufgabenQuelle();
+    G.gen = await LernAufgaben.erzeuger(A.ids, A.opts);
+    G.meine = A.meine;
   } catch (e) { $('menu-err').textContent = e.message; return; }
   world.gates.forEach(entferneTorSet); world.gates = [];
   world.coins.forEach(c => scene.remove(c)); world.coins = [];
@@ -645,7 +701,7 @@ function ende() {
   $('hud').hidden = true;
   setNavbar(true);
   const sek = (performance.now() - G.start) / 1000;
-  const titel = W.pools.length === 1 ? (LernAufgaben.pools({ klasse: 9 }).find(p => p.id === W.pools[0]) || {}).titel || '' : 'Mix';
+  const titel = G.meine ? 'Meine Themen' : W.pools.length === 1 ? (LernAufgaben.pools({ klasse: 9 }).find(p => p.id === W.pools[0]) || {}).titel || '' : 'Mix';
   let html;
   if (W.modus === 'runde') {
     const n = CFG.runde, s = G.richtig, pct = s / n;
@@ -668,7 +724,7 @@ function ende() {
       G.fehler.slice(-10).map(f => `<li>${esc(f.frage)} → <b>${esc(f.antwort)}</b></li>`).join('')}</ul></div>`;
   }
   html += `<div class="btns"><button class="btn primary" id="again" type="button">🔄 Nochmal</button>
-    <button class="btn" id="to-menu" type="button">Anderes Thema</button></div>`;
+    <button class="btn" id="to-menu" type="button">${G.meine ? 'Menü' : 'Anderes Thema'}</button></div>`;
   $('result-body').innerHTML = html;
   $('result').hidden = false;
   $('again').onclick = startGame;
@@ -679,7 +735,7 @@ function speichereRunde(score, max, titel) {
   // Alle Runner-Runden zählen im Pass als eine App – auch wenn ein Lehrer-Link Parameter mitgibt
   const s = location.search;
   try { history.replaceState(null, '', location.pathname); } catch (e) {}
-  try { if (window.LernApps) LernApps.saveResult({ score, max, label: `${score} / ${max} ${titel}`.slice(0, 40), skill: 'runner:' + W.pools.join('+') }); } catch (e) {}
+  try { if (window.LernApps) LernApps.saveResult({ score, max, label: `${score} / ${max} ${titel}`.slice(0, 40), skill: G.meine ? 'runner:meine-themen' : 'runner:' + W.pools.join('+') }); } catch (e) {}
   try { history.replaceState(null, '', location.pathname + s); } catch (e) {}
 }
 function whenPass(fn) {

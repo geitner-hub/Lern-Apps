@@ -15,7 +15,9 @@
            Endlos (bis die Burg fällt, Rekord = erreichte Welle,
            XP über LernPass.awardEndless)
    Fragen: aufgaben.js (Klassenfilter über den Pass)
-   Links:  burg-verteidigung.html?pool=vok5&bis=unit3
+   Themen: „⭐ Meine Themen“ = in den Lern-Apps freigeschalteter Stoff + Starter-Paket
+           (aufgaben.js → meineThemen, Einstellungen im Admin: config.json → spiele)
+   Links:  burg-verteidigung.html?pool=vok5&bis=unit3  (haben Vorrang)
            burg-verteidigung.html?pool=1x1-klein&modus=endlos
    Braucht: navbar.js, aufgaben.js, avatar3d.js, vendor/three.min.js
    Speicher: lern-burg-wahl, lern-burg-rekorde (localStorage)
@@ -133,6 +135,19 @@
     .row { display: flex; gap: .6rem; flex-wrap: wrap; align-items: center; }
     select { font: inherit; font-weight: 800; font-size: .9rem; background: #252238; color: var(--text); border: 1px solid rgba(255,255,255,.12);
       border-radius: 10px; padding: .55rem .6rem; min-height: 44px; max-width: 100%; }
+    /* „Meine Themen“ */
+    #meine-box { margin-bottom: .9rem; }
+    .meine { width: 100%; min-height: 66px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: .55rem 1rem; border-radius: 16px; background: rgba(255,255,255,.06); border: 3px solid rgba(230,168,23,.3);
+      font-family: 'Fredoka One', 'Nunito', sans-serif; font-size: 1.45rem; line-height: 1.1; color: var(--text); }
+    .meine small { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: .8rem; color: var(--muted); margin-top: .15rem; }
+    .meine small:empty { display: none; }
+    .meine.on { border-color: var(--accent); background: rgba(230,168,23,.18); color: var(--accent2); }
+    .meine:active { transform: scale(.98); }
+    .selbst { display: block; margin: .5rem auto 0; min-height: 44px; padding: .4rem 1.1rem; border-radius: 99px; font-weight: 900; font-size: .92rem;
+      background: rgba(255,255,255,.06); color: var(--text2); }
+    .selbst.on { background: var(--indigo); color: #fff; }
+    @media (prefers-reduced-motion: reduce) { .meine:active { transform: none; } }
     .note { font-size: .82rem; color: var(--muted); margin-top: .5rem; font-weight: 700; }
     .note b { color: var(--accent2); }
     .unten { display: flex; gap: .5rem; margin-top: 1rem; }
@@ -207,6 +222,11 @@
     <h1>🏰 Burg-Verteidigung</h1>
     <p class="lead">Richtige Antworten bringen Münzen. Tippe auf eine Steinplatte und bau Türme – so kommt kein Monster in deine Burg!</p>
 
+    <div id="meine-box" hidden>
+      <button type="button" class="meine on" id="meine-btn">⭐ Meine Themen<small id="meine-info"></small></button>
+      <button type="button" class="selbst" id="selbst-btn" hidden>Selbst wählen</button>
+    </div>
+
     <div class="seg" id="mode-seg">
       <button type="button" data-mode="runde" class="on">Runde<small>6 Wellen</small></button>
       <button type="button" data-mode="endlos">Endlos<small>bis die Burg fällt</small></button>
@@ -217,11 +237,11 @@
       <div class="tabs" id="klasse-tabs"></div>
     </div>
 
+    <div id="frei-box">
     <span class="lbl">Thema</span>
     <div class="tabs" id="fach-tabs"></div>
     <div class="pools" id="pool-list"></div>
     <div class="tabs" style="margin-top:.55rem"><button type="button" id="mix-btn">🔀 Mehrere Themen mischen</button></div>
-    <p class="note" id="lehrer-note" hidden>Deine Lehrkraft hat dieses Thema ausgewählt.</p>
 
     <div id="vok-box" hidden>
       <span class="lbl">Vokabeln</span>
@@ -233,6 +253,9 @@
         </select>
       </div>
     </div>
+    </div>
+
+    <p class="note" id="lehrer-note" hidden>Deine Lehrkraft hat dieses Thema ausgewählt.</p>
 
     <div id="tempo-box">
       <span class="lbl">Tempo der Monster</span>
@@ -368,10 +391,20 @@ const gw = (gx, gy) => [(gx - KARTE.spalten / 2) * TILE, (gy - KARTE.zeilen / 2)
    ═══════════════════════════════════════════════════════ */
 const WAHL_KEY = 'lern-burg-wahl', REKORD_KEY = 'lern-burg-rekorde';
 const W = { modus: 'runde', pools: [], bis: '', richtung: 'de-en', tempo: 'normal', fach: null, klasse: null, lehrer: false, mix: false, ton: false };
-function loadWahl() { try { Object.assign(W, JSON.parse(localStorage.getItem(WAHL_KEY) || '{}')); } catch (e) {} W.lehrer = false; }
-function saveWahl() { try { const { lehrer, ...w } = W; localStorage.setItem(WAHL_KEY, JSON.stringify(w)); } catch (e) {} }
+function loadWahl() { try { Object.assign(W, JSON.parse(localStorage.getItem(WAHL_KEY) || '{}')); } catch (e) {} W.lehrer = false; W.quelle = 'meine'; }
+function saveWahl() { try { const { lehrer, quelle, ...w } = W; localStorage.setItem(WAHL_KEY, JSON.stringify(w)); } catch (e) {} }
+// „Meine Themen“ (Einstellung der Lehrkraft im Admin: config.json → spiele.auswahl)
+function spielAuswahl() { try { return LernPass.settings.spiele.auswahl || 'auto+frei'; } catch (e) { return 'auto+frei'; } }
+/** 'meine' oder 'frei' – Lehrer-Links haben Vorrang */
+function quelle() {
+  const a = spielAuswahl();
+  if (W.lehrer || a === 'frei') return 'frei';
+  if (a === 'auto') return 'meine';
+  return W.quelle === 'frei' ? 'frei' : 'meine';
+}
+let MEINE = null;
 function rekorde() { try { return JSON.parse(localStorage.getItem(REKORD_KEY) || '{}'); } catch (e) { return {}; } }
-function rekordKey() { return [...W.pools].sort().join('+') + (W.pools.some(p => /^vok/.test(p)) ? '|' + (W.bis || 'alle') + '|' + W.richtung : ''); }
+function rekordKey() { if (quelle() === 'meine') return 'meine-themen'; return [...W.pools].sort().join('+') + (W.pools.some(p => /^vok/.test(p)) ? '|' + (W.bis || 'alle') + '|' + W.richtung : ''); }
 function klasse() { return LernAufgaben.klasse() || W.klasse || null; }
 
 function buildMenu() {
@@ -389,6 +422,15 @@ function buildMenu() {
     .map(p => `<button type="button" data-pool="${esc(p.id)}" class="${W.pools.includes(p.id) ? 'on' : ''}">${esc(p.titel)}</button>`).join('')
     || (klasse() ? '' : '<p class="note">Wähle zuerst deine Klasse.</p>');
   $('lehrer-note').hidden = !W.lehrer;
+  const auswahl = spielAuswahl(), q = quelle();
+  $('meine-box').hidden = auswahl === 'frei';
+  $('selbst-btn').hidden = auswahl !== 'auto+frei';
+  $('frei-box').hidden = q !== 'frei' || (auswahl === 'auto' && W.lehrer);
+  $('meine-btn').classList.toggle('on', q === 'meine');
+  $('selbst-btn').classList.toggle('on', q === 'frei' && !W.lehrer);
+  MEINE = q === 'meine' && klasse() ? LernAufgaben.meineThemen({ klasse: klasse() }) : null;
+  $('meine-info').textContent = MEINE ? (MEINE.anzahl === 1 ? '1 Thema' : MEINE.anzahl + ' Themen') : '';
+  const bereit = q === 'meine' ? !!(MEINE && MEINE.anzahl) : W.pools.length > 0;
   if (W.pools.length > 1) W.mix = true;
   $('mix-btn').classList.toggle('on', W.mix);
   document.querySelectorAll('#mode-seg button').forEach(b => b.classList.toggle('on', b.dataset.mode === W.modus));
@@ -398,10 +440,10 @@ function buildMenu() {
   $('ton-btn').textContent = W.ton ? '🔊' : '🔇';
   updateVok();
   const rk = rekorde()[rekordKey()];
-  $('rekord-note').hidden = W.modus !== 'endlos' || !W.pools.length;
+  $('rekord-note').hidden = W.modus !== 'endlos' || !bereit;
   $('rekord-note').innerHTML = rk ? `Dein Rekord bei diesem Thema: <b>Welle ${rk}</b>` : 'Noch kein Rekord bei diesem Thema – leg los!';
-  $('go').disabled = !W.pools.length || !gl;
-  $('go').textContent = W.pools.length > 1 ? `Los geht's! (Mix aus ${W.pools.length})` : "Los geht's!";
+  $('go').disabled = !bereit || !gl;
+  $('go').textContent = q === 'frei' && W.pools.length > 1 ? `Los geht's! (Mix aus ${W.pools.length})` : "Los geht's!";
   CAM.dirty = true;
 }
 
@@ -423,6 +465,8 @@ $('menu').addEventListener('click', e => {
   if (!t) return;
   if (t.dataset.mode) { W.modus = t.dataset.mode; }
   else if (t.dataset.kl) { W.klasse = Number(t.dataset.kl); }
+  else if (t.id === 'meine-btn') { W.quelle = 'meine'; W.lehrer = false; }
+  else if (t.id === 'selbst-btn') { W.quelle = 'frei'; W.lehrer = false; }
   else if (t.dataset.fach) { W.fach = t.dataset.fach; }
   else if (t.dataset.pool) {
     const id = t.dataset.pool, vok = /^vok/.test(id);
@@ -1034,13 +1078,24 @@ const G = {
 };
 const Q = { a: null, sperreBis: 0, naechsteBei: 0, falsch: false, beantwortet: 0, richtig: 0, serie: 0, besteSerie: 0, fehler: [] };
 
+/** Aufgaben für den Start: „Meine Themen“ oder die eigene Auswahl → { ids, opts, meine } */
+function aufgabenQuelle() {
+  if (!klasse()) throw new Error('Wähle zuerst deine Klasse.');
+  if (quelle() === 'meine') {
+    const M = LernAufgaben.meineThemen({ klasse: klasse() });
+    return { ids: M.ids, opts: M.opts, meine: true };
+  }
+  return { ids: W.pools, opts: { klasse: klasse(), bis: W.bis || undefined, richtung: W.richtung }, meine: false };
+}
+
 async function startGame() {
   $('menu-err').textContent = '';
-  const opts = { klasse: klasse(), bis: W.bis || undefined, richtung: W.richtung };
   try {
-    G.gen = await LernAufgaben.erzeuger(W.pools, opts);
+    const A = aufgabenQuelle();
+    G.gen = await LernAufgaben.erzeuger(A.ids, A.opts);
+    G.meine = A.meine;
     // Lesezeit des Themas abschätzen → Monster-Tempo anpassen
-    const probe = await LernAufgaben.erzeuger(W.pools, opts);
+    const probe = await LernAufgaben.erzeuger(A.ids, A.opts);
     let summe = 0, n = 0;
     for (let i = 0; i < 20; i++) { const a = probe.next(); if (a) { summe += LernAufgaben.lesezeit(a); n++; } }
     const L = CFG.lesezeit;
@@ -1363,7 +1418,7 @@ function ende() {
   $('hud').hidden = true;
   setNavbar(true);
   const sek = (performance.now() - G.start) / 1000;
-  const titel = W.pools.length === 1 ? (LernAufgaben.pools({ klasse: 9 }).find(p => p.id === W.pools[0]) || {}).titel || '' : 'Mix';
+  const titel = G.meine ? 'Meine Themen' : W.pools.length === 1 ? (LernAufgaben.pools({ klasse: 9 }).find(p => p.id === W.pools[0]) || {}).titel || '' : 'Mix';
   let html;
   if (W.modus === 'runde') {
     const n = Q.beantwortet, s = Q.richtig;
@@ -1392,7 +1447,7 @@ function ende() {
       Q.fehler.slice(-10).map(f => `<li>${esc(f.frage)} → <b>${esc(f.antwort)}</b></li>`).join('')}</ul></div>`;
   }
   html += `<div class="btns"><button class="btn primary" id="again" type="button">🔄 Nochmal</button>
-    <button class="btn" id="to-menu" type="button">Anderes Thema</button></div>`;
+    <button class="btn" id="to-menu" type="button">${G.meine ? 'Menü' : 'Anderes Thema'}</button></div>`;
   $('result-body').innerHTML = html;
   $('result').hidden = false;
   $('again').onclick = startGame;
@@ -1403,7 +1458,7 @@ function speichereRunde(score, max, titel) {
   // Alle Runden zählen im Pass als eine App – auch wenn ein Lehrer-Link Parameter mitgibt
   const s = location.search;
   try { history.replaceState(null, '', location.pathname); } catch (e) {}
-  try { if (window.LernApps) LernApps.saveResult({ score, max, label: `${score} / ${max} ${titel}`.slice(0, 40), skill: 'burg:' + W.pools.join('+') }); } catch (e) {}
+  try { if (window.LernApps) LernApps.saveResult({ score, max, label: `${score} / ${max} ${titel}`.slice(0, 40), skill: G.meine ? 'burg:meine-themen' : 'burg:' + W.pools.join('+') }); } catch (e) {}
   try { history.replaceState(null, '', location.pathname + s); } catch (e) {}
 }
 function whenPass(fn) {

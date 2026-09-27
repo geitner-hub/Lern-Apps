@@ -196,6 +196,13 @@
     .switch{position:relative;width:48px;height:27px;flex-shrink:0;}
     .switch input{opacity:0;width:0;height:0;}
     .switch span{position:absolute;inset:0;background:var(--surface2);border:1px solid var(--border2);border-radius:99px;cursor:pointer;transition:.18s;}
+    .sw-row select.sw-sel{width:auto;max-width:15rem;flex-shrink:0;min-height:40px;}
+    .sw-sub{font-size:.72rem;font-weight:900;color:var(--muted);margin-top:.6rem;}
+    .st-chips{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.35rem;}
+    .st-chip{display:inline-flex;align-items:center;gap:.35rem;min-height:36px;padding:.3rem .7rem;border-radius:99px;background:var(--surface2);border:1px solid var(--border2);
+      font-size:.78rem;font-weight:800;color:var(--text);text-transform:none;letter-spacing:0;cursor:pointer;}
+    .st-chip input{accent-color:var(--accent);}
+    .st-chip:has(input:checked){border-color:var(--accent);}
     .switch span::before{content:'';position:absolute;width:19px;height:19px;left:3px;top:3px;background:var(--muted);border-radius:50%;transition:.18s;}
     .switch input:checked + span{background:var(--green-dim);border-color:var(--green);}
     .switch input:checked + span::before{transform:translateX(21px);background:var(--green);}
@@ -500,6 +507,7 @@
 <script src="shared.js"></script>
 <script src="config-api.js"></script>
 <script src="pass.js"></script>
+<script src="aufgaben.js"></script>
 <script src="avatar3d.js"></script>
 <script>
 'use strict';
@@ -705,9 +713,85 @@ function buildPassAdmin() {
           <div class="sw-desc">${n} Event-Teile in den Truhen · Geschenk-Truhe nach der ersten guten Runde · Abzeichen nach ${escHtml(String((P.BADGES.find(b => b.id === 'event-' + ev.id) || {}).n || 3))} guten Tagen${set.length ? ' → ' + set.map(i => escHtml(i.name)).join(', ') : ''}</div></div>
         <label class="switch"><input type="checkbox" data-pass-set="event:${escHtml(ev.id)}" ${cfg.events[ev.id] === true ? 'checked' : ''} aria-label="${escHtml(ev.name)}-Event"><span></span></label>
       </div>`;
-    }).join('')}`;
+    }).join('')}
+    ${spieleAdminHTML()}`;
   buildPassOverview();
 }
+
+// ── Spiele (Runner & Burg): „Meine Themen“ → CONFIG.spiele ──
+const SPIELE_AUSWAHL = {
+  'auto+frei': 'Meine Themen + selbst wählen',
+  'auto':      'Nur Meine Themen',
+  'frei':      'Nur selbst wählen (wie bisher)',
+};
+const STARTER_KLASSEN = [5, 6];
+function spieleCfg() {
+  LernPass.setSpiele(CONFIG.spiele);                 // gleiche Standardwerte wie in pass.js
+  return JSON.parse(JSON.stringify(LernPass.settings.spiele));
+}
+function spieleAdminHTML() {
+  if (!window.LernPass || !LernPass.setSpiele) return '';
+  const sp = spieleCfg();
+  const opt = (v, txt, cur) => `<option value="${escHtml(String(v))}" ${String(v) === String(cur) ? 'selected' : ''}>${escHtml(txt)}</option>`;
+  const starter = window.LernAufgaben ? STARTER_KLASSEN.map(k => {
+    const pools = LernAufgaben.pools({ klasse: k });
+    const an = sp.starter[k] || [];
+    return `<div class="sw-sub">Klasse ${k}</div><div class="st-chips">${pools.map(p =>
+      `<label class="st-chip"><input type="checkbox" data-starter="${k}" value="${escHtml(p.id)}" ${an.includes(p.id) ? 'checked' : ''}> ${escHtml(p.titel)}</label>`).join('')}</div>`;
+  }).join('') : '<div class="sw-sub">aufgaben.js nicht geladen – Starter-Paket hier nicht einstellbar.</div>';
+  return `
+    <div class="sw-row">
+      <span class="sw-ic">🎮</span>
+      <div class="sw-txt"><div class="sw-name">Spiele: Themenauswahl</div>
+        <div class="sw-desc">Runner und Burg-Verteidigung. „⭐ Meine Themen“ = alles, was das Kind in den Lern-Apps (Vokabeltrainer 5/6: Quiz, Fill in, Scramble · Kopfrechnen Kl. 4–6 · Einmaleins-Tafel) erfolgreich geübt hat, plus Starter-Paket. Nie Stoff über der Klasse aus dem Pass. Lehrer-Links mit <code>?pool=…</code> haben immer Vorrang.</div></div>
+      <select class="sw-sel" data-spiele-set="auswahl" aria-label="Themenauswahl in den Spielen">
+        ${Object.entries(SPIELE_AUSWAHL).map(([v, t]) => opt(v, t, sp.auswahl)).join('')}
+      </select>
+    </div>
+    <div class="sw-row">
+      <span class="sw-ic">🔓</span>
+      <div class="sw-txt"><div class="sw-name">Freischalten ab</div>
+        <div class="sw-desc">Ein Thema kommt in „Meine Themen“, sobald es so oft mit mindestens diesem Ergebnis geübt wurde (Runden mit mind. 5 Aufgaben, nicht durchgeklickt). Einmal freigeschaltet bleibt freigeschaltet. Eine niedrigere Einstellung wirkt sofort, auch für schon gespielte Runden.</div></div>
+      <select class="sw-sel" data-spiele-set="schwelle" aria-label="Mindestergebnis in Prozent">
+        ${[50, 60, 70, 80, 90, 100].map(v => opt(v, v + ' %', sp.schwelle)).join('')}
+      </select>
+      <select class="sw-sel" data-spiele-set="runden" aria-label="Anzahl Runden">
+        ${[1, 2, 3].map(v => opt(v, v === 1 ? '1 Runde' : v + ' Runden', sp.runden)).join('')}
+      </select>
+    </div>
+    <div class="sw-row" style="align-items:flex-start">
+      <span class="sw-ic">🎒</span>
+      <div class="sw-txt"><div class="sw-name">Starter-Paket</div>
+        <div class="sw-desc">Ist bei „Meine Themen“ immer dabei – so kann jedes Kind auch ohne Vorübung spielen. Klasse 7–9 nutzt das Paket von Klasse 6.</div>
+        ${starter}
+      </div>
+    </div>`;
+}
+
+document.getElementById('pass-settings').addEventListener('change', e => {
+  const el = e.target.closest('[data-spiele-set],[data-starter]');
+  if (!el || !window.LernPass || !LernPass.setSpiele) return;
+  const sp = spieleCfg();
+  const key = el.dataset.spieleSet;
+  if (key === 'auswahl') {
+    sp.auswahl = el.value;
+    logChange(`🎮 Spiele: ${SPIELE_AUSWAHL[sp.auswahl] || sp.auswahl}`);
+  } else if (key === 'schwelle') {
+    sp.schwelle = Number(el.value);
+    logChange(`🔓 Spiele: freischalten ab ${sp.schwelle} %`);
+  } else if (key === 'runden') {
+    sp.runden = Number(el.value);
+    logChange(`🔓 Spiele: freischalten nach ${sp.runden} Runde${sp.runden > 1 ? 'n' : ''}`);
+  } else if (el.dataset.starter) {
+    const k = Number(el.dataset.starter);
+    sp.starter[k] = [...document.querySelectorAll(`#pass-settings [data-starter="${k}"]:checked`)].map(i => i.value);
+    logChange(`🎒 Starter-Paket Kl. ${k}: ${sp.starter[k].length} Themen`);
+  } else return;
+  CONFIG.spiele = { auswahl: sp.auswahl, schwelle: sp.schwelle, runden: sp.runden,
+    starter: Object.fromEntries(STARTER_KLASSEN.map(k => [String(k), sp.starter[k] || []])) };
+  LernPass.setSpiele(CONFIG.spiele);
+  saveConfig();
+});
 
 // pass.js meldet sich, sobald seine Inhalte geladen sind
 window.addEventListener('lernpass:ready', () => {

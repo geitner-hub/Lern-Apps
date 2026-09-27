@@ -743,6 +743,21 @@ function startMode(mode) {
 
 function retryMode() { startMode(currentMode); }
 
+// Inhalt-ID für „Meine Themen“ in den Spielen (nur echte Abfrage-Modi;
+// Karteikarten, Memory und Speed zählen nicht, Mix und schwierige Wörter melden nichts)
+const LERN_PREFIX = 'vok6';
+const ABFRAGE_MODI = ['quiz', 'fill', 'scramble'];
+function lernInhalt() {
+  if (!ABFRAGE_MODI.includes(currentMode)) return null;
+  if (currentUnit === 'mix' || currentUnit === 'difficult' || currentTheme === 'difficult') return null;
+  if (currentUnit === null && currentTheme && CONFIG.specialLists && CONFIG.specialLists[currentTheme]) return LERN_PREFIX + ':liste/' + currentTheme;
+  const unit = currentUnit && CONFIG.units[currentUnit];
+  if (!unit) return null;
+  if (currentTheme === 'all') return LERN_PREFIX + ':' + currentUnit;
+  if (currentTheme && unit.themes && unit.themes[currentTheme]) return LERN_PREFIX + ':' + currentUnit + '/' + currentTheme;
+  return null;
+}
+
 function showResult(right, wrong, total, label) {
   if (spInterval) clearInterval(spInterval);
   showOnly('result');
@@ -754,10 +769,12 @@ function showResult(right, wrong, total, label) {
   renderWrongList();
 
   if (window.LernApps && LernApps.saveResult) {
+    const inhalt = lernInhalt();
     LernApps.saveResult({
       score: right,
       max: total,
-      label: label || (right + ' / ' + total)
+      label: label || (right + ' / ' + total),
+      ...(inhalt ? { inhalt } : {})
     });
   }
 

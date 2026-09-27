@@ -465,7 +465,7 @@ function showResult({ emoji, title, text, saveLabel, saveScore, saveMax }) {
   document.getElementById('result-text').textContent = text;
   showScreen('result');
   if (window.LernApps) {
-    LernApps.saveResult({ score: saveScore, max: saveMax, label: saveLabel });
+    LernApps.saveResult({ score: saveScore, max: saveMax, label: saveLabel, inhalt: '1x1-' + settings.range });
   }
 }
 

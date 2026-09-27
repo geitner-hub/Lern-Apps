@@ -13,7 +13,13 @@
 //    klasse()                   → Klasse aus dem Pass (oder null)
 //    einheiten(poolId)          → Promise: [{ id, label }] (nur Vokabel-Pools)
 //    erzeuger(ids, opts)        → Promise: { next() → Aufgabe }
-//       opts: { bis: 'unit3', einheiten: ['unit1', …], richtung: 'de-en' | 'en-de' }
+//       opts: { bis: 'unit3', einheiten: ['unit1', …], richtung: 'de-en' | 'en-de',
+//               themen: { vok5: ['unit1/theme1', 'unit2', 'liste/colors'] } }
+//       Mit opts.themen kommen aus dem Vokabel-Pool nur diese Themen dran
+//       (Eintrag ohne „/“ = ganze Unit). Jedes Thema zählt dann beim Mischen
+//       so viel wie ein Rechen-Pool (gleiches Gewicht je Inhalt).
+//    meineThemen({ klasse })    → { ids, opts, anzahl, inhalte } „Meine Themen“ für die Spiele:
+//                                 freigeschalteter Stoff aus dem Pass + Starter-Paket
 //    ausLink(location.search)   → { ids, opts } aus ?pool=vok5&bis=unit3&richtung=en-de
 //    lesezeit(aufgabe)          → empfohlene Sekunden zum Lesen
 //
@@ -339,7 +345,13 @@
     return units;
   }
 
-  function vokabelErzeuger(units, opts) {
+  /** Filter für ein Thema: 'unit1/theme1', 'liste/colors' genau; 'unit2' = ganze Unit (ohne Sonderlisten) */
+  function themaFilter(eintrag) {
+    const e = String(eintrag);
+    return e.includes('/') ? w => w.thema === e : w => w.thema === e || w.thema.startsWith(e + '/');
+  }
+
+  function vokabelErzeuger(units, opts, filter) {
     const richtung = opts.richtung === 'en-de' ? 'en-de' : 'de-en';
     const [von, nach] = richtung === 'de-en' ? ['de', 'en'] : ['en', 'de'];
     const alle = units.flatMap(u => u.woerter);
@@ -350,9 +362,10 @@
       if (!w[nach] || !w[von] || w[nach].length > MAX_ANTWORT || seen.has(k)) return false;
       seen.add(k); return true;
     });
+    const fragen = filter ? nutzbar.filter(filter) : nutzbar;      // gefragt wird nur daraus, Ablenker aus allen
     return () => {
-      if (nutzbar.length < OPTIONEN) return null;
-      const w = pick(nutzbar);
+      if (nutzbar.length < OPTIONEN || !fragen.length) return null;
+      const w = pick(fragen);
       const L = w[nach].length;
       // Ablenker: gleiches Thema bzw. gleiche Unit, ähnliche Länge, nicht bedeutungsgleich
       const kandidaten = nutzbar.filter(x => x !== w && norm(x[nach]) !== norm(w[nach]) && norm(x[von]) !== norm(w[von]));
@@ -396,12 +409,24 @@
     if (!ids.length) throw new Error('Keine passenden Aufgaben gefunden.');
 
     const quellen = [];
+    const themen = opts.themen && typeof opts.themen === 'object' ? opts.themen : {};
     for (const id of ids) {
       const p = POOL_BY_ID[id];
       if (p.typ === 'vokabeln') {
         const units = waehleUnits(await ladeVokabeln(p), opts);
-        const g = vokabelErzeuger(units, opts);
-        if (g()) quellen.push({ id, gen: g });
+        if (Array.isArray(themen[id])) {
+          // eine Quelle je Thema → jedes Thema so oft wie ein Rechen-Pool
+          for (const t of reduziereThemen(themen[id])) {
+            const f = themaFilter(t);
+            const teil = units.filter(u => u.woerter.some(f));         // Ablenker aus denselben Units
+            if (!teil.length) continue;
+            const g = vokabelErzeuger(teil, opts, f);
+            if (g()) quellen.push({ id, gen: g, inhalt: id + ':' + t });
+          }
+        } else {
+          const g = vokabelErzeuger(units, opts);
+          if (g()) quellen.push({ id, gen: g });
+        }
       } else {
         quellen.push({ id, gen: p.gen });
       }
@@ -410,7 +435,7 @@
 
     const zuletzt = [];                                          // keine Wiederholung der letzten Fragen
     return {
-      pools: quellen.map(q => q.id),
+      pools: [...new Set(quellen.map(q => q.id))],
       next() {
         for (let v = 0; v < 40; v++) {
           const q = pick(quellen);
@@ -423,11 +448,60 @@
           if (falsch.length < OPTIONEN - 1) continue;
           const a = { frage: r.frage, antwort: String(r.antwort), optionen: shuffle([String(r.antwort), ...falsch]), pool: q.id };
           if (r.hinweis) a.hinweis = r.hinweis;
+          if (q.inhalt) a.inhalt = q.inhalt;
           return a;
         }
         return null;
       },
     };
+  }
+
+  /** Themen, die schon in einer freigeschalteten ganzen Unit stecken, weglassen */
+  function reduziereThemen(liste) {
+    const l = [...new Set((liste || []).filter(t => typeof t === 'string' && t))];
+    const units = l.filter(t => !t.includes('/'));
+    return l.filter(t => !t.includes('/') || t.startsWith('liste/') || !units.includes(t.split('/')[0]));
+  }
+
+  // Starter-Paket (Standard, falls der Pass keine Einstellungen liefert)
+  const STARTER_STANDARD = { 5: ['kopf4-leicht', '1x1-klein'], 6: ['kopf5-leicht', '1x1-klein'] };
+  function starterFuer(starter, k) {
+    const s = starter && typeof starter === 'object' ? starter : STARTER_STANDARD;
+    for (let kl = k || 5; kl >= 5; kl--) if (Array.isArray(s[kl])) return s[kl];
+    return Array.isArray(s[5]) ? s[5] : [];
+  }
+
+  /**
+   * „Meine Themen“: alles, was im Pass freigeschaltet ist, plus Starter-Paket –
+   * nie Stoff über der Klasse. → { ids, opts, anzahl, inhalte }
+   * inhalte = Liste der Inhalt-IDs (z. B. 'kopf5-mittel', 'vok5:unit1/theme1').
+   */
+  function meineThemen(o = {}) {
+    const k = o.klasse !== undefined ? o.klasse : passKlasse();
+    const P = window.LernPass;
+    const sp = (P && P.settings && P.settings.spiele) || { starter: STARTER_STANDARD };
+    let frei = [];
+    try { frei = P && P.freigeschaltet ? P.freigeschaltet() : []; } catch (e) {}
+    const erlaubt = id => POOL_BY_ID[id] && (!k || POOL_BY_ID[id].klasse <= k);
+    const ids = [], themen = {}, ganz = new Set();
+    const pool = id => { if (!ids.includes(id)) ids.push(id); };
+    starterFuer(sp.starter, k).forEach(id => {
+      if (!erlaubt(id)) return;
+      pool(id);
+      if (POOL_BY_ID[id].typ === 'vokabeln') ganz.add(id);              // ganzes Vokabelbuch im Starter
+    });
+    frei.forEach(fid => {
+      const m = /^(vok\d+):(.+)$/.exec(fid);
+      if (m) {
+        if (!erlaubt(m[1]) || POOL_BY_ID[m[1]].typ !== 'vokabeln') return;
+        pool(m[1]);
+        (themen[m[1]] = themen[m[1]] || []).push(m[2]);
+      } else if (erlaubt(fid)) pool(fid);
+    });
+    ganz.forEach(id => { delete themen[id]; });
+    Object.keys(themen).forEach(id => { themen[id] = reduziereThemen(themen[id]); });
+    const inhalte = ids.flatMap(id => themen[id] ? themen[id].map(t => id + ':' + t) : [id]);
+    return { ids, opts: { klasse: k, themen, richtung: 'de-en' }, anzahl: inhalte.length, inhalte };
   }
 
   /** ?pool=vok5,1x1-klein&bis=unit3&richtung=en-de  →  { ids, opts } */
@@ -448,5 +522,5 @@
     return Math.min(7, 1.3 + zeichen * 0.07);
   }
 
-  window.LernAufgaben = { pools, klasse: passKlasse, einheiten, erzeuger, ausLink, lesezeit, _POOLS: POOLS };
+  window.LernAufgaben = { pools, klasse: passKlasse, einheiten, erzeuger, meineThemen, ausLink, lesezeit, _POOLS: POOLS };
 })();

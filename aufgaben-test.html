@@ -42,6 +42,13 @@
     .opt.ok { background: rgba(74,222,128,.16); color: var(--green); }
     .meta { font-size: .72rem; color: var(--muted); margin-top: .4rem; }
     .msg { color: var(--red); font-weight: 800; margin-top: .6rem; }
+    #meine-info h3 { font-size: .8rem; color: var(--muted); font-weight: 900; margin: .6rem 0 .3rem; }
+    #meine-info h3:first-child { margin-top: 0; }
+    #meine-info table { width: 100%; border-collapse: collapse; font-size: .82rem; }
+    #meine-info td, #meine-info th { text-align: left; padding: .3rem .4rem; border-bottom: 1px solid rgba(255,255,255,.06); }
+    #meine-info th { color: var(--muted); font-size: .7rem; }
+    .tag { display: inline-block; padding: .15rem .55rem; border-radius: 99px; background: rgba(255,255,255,.06); font-size: .8rem; font-weight: 800; margin: .15rem .2rem 0 0; }
+    .tag.ok { background: rgba(74,222,128,.16); color: var(--green); }
   </style>
 </head>
 <body>
@@ -58,11 +65,13 @@
     <div id="pool-list"></div>
     <div class="row" style="margin-top:1rem">
       <button class="primary" id="go" type="button">12 Beispiele zeigen</button>
+      <button class="primary" id="meine" type="button">⭐ Meine Themen</button>
       <span class="lbl" id="link"></span>
     </div>
     <div class="msg" id="msg"></div>
   </div>
 
+  <div class="panel" id="meine-info" hidden></div>
   <div class="grid" id="out"></div>
 </div>
 
@@ -111,21 +120,49 @@ function showLink() {
 $('bis').onchange = showLink;
 $('richtung').onchange = showLink;
 
+function zeigeKarten(gen) {
+  const cards = [];
+  for (let i = 0; i < 12; i++) {
+    const a = gen.next();
+    if (!a) break;
+    cards.push(`<div class="card"><div class="h">${esc(a.inhalt || a.pool)}${a.hinweis ? ' · ' + esc(a.hinweis) : ''}</div>
+      <div class="q">${esc(a.frage)}</div>
+      <div class="opts">${a.optionen.map(o => `<div class="opt${o === a.antwort ? ' ok' : ''}">${esc(o)}</div>`).join('')}</div>
+      <div class="meta">Lesezeit ca. ${LernAufgaben.lesezeit(a).toFixed(1).replace('.', ',')} s</div></div>`);
+  }
+  $('out').innerHTML = cards.join('');
+}
+
+// Stand „Meine Themen“ dieses Geräts (Pass) für die gewählte Klasse
+$('meine').onclick = async () => {
+  $('msg').textContent = '';
+  $('out').innerHTML = '';
+  const box = $('meine-info');
+  const kl = Number($('klasse').value);
+  const P = window.LernPass;
+  const sp = P && P.settings ? P.settings.spiele : null;
+  const M = LernAufgaben.meineThemen({ klasse: kl });
+  const ls = (P && P.lernstand) || {};
+  const frei = P && P.freigeschaltet ? P.freigeschaltet() : [];
+  const zeilen = Object.entries(ls).sort((a, b) => a[0].localeCompare(b[0])).map(([id, e]) =>
+    `<tr><td>${esc(id)}</td><td>${e.n || 0}</td><td>${e.best || 0} %</td><td>${esc((e.p || []).join(' / '))}</td><td>${frei.includes(id) ? '✅' : '–'}</td><td>${esc(e.last || '')}</td></tr>`).join('');
+  box.innerHTML = `<h3>Einstellungen</h3>
+    <div>${sp ? `Auswahl: <b>${esc(sp.auswahl)}</b> · ab <b>${sp.schwelle} %</b> in <b>${sp.runden}</b> Runde(n) · Starter Kl. ${kl}: ${esc((sp.starter[kl] || sp.starter[6] || []).join(', ') || '–')}` : 'Pass nicht geladen – Standardwerte.'}</div>
+    <h3>Im Spiel für Klasse ${kl} (${M.anzahl} Inhalte, gleich gewichtet)</h3>
+    <div>${M.inhalte.map(i => `<span class="tag${frei.includes(i) ? ' ok' : ''}">${esc(i)}</span>`).join('') || '–'}</div>
+    <h3>Lernstand auf diesem Gerät</h3>
+    ${zeilen ? `<div style="overflow-x:auto"><table><tr><th>Inhalt</th><th>Runden</th><th>Beste</th><th>Top 3</th><th>Frei</th><th>Zuletzt</th></tr>${zeilen}</table></div>` : '<div>Noch nichts geübt.</div>'}`;
+  box.hidden = false;
+  try { zeigeKarten(await LernAufgaben.erzeuger(M.ids, M.opts)); }
+  catch (e) { $('msg').textContent = e.message; }
+};
+
 $('go').onclick = async () => {
   $('msg').textContent = '';
   $('out').innerHTML = '';
+  $('meine-info').hidden = true;
   try {
-    const gen = await LernAufgaben.erzeuger(selected(), { klasse: Number($('klasse').value), bis: $('bis').value || undefined, richtung: $('richtung').value });
-    const cards = [];
-    for (let i = 0; i < 12; i++) {
-      const a = gen.next();
-      if (!a) break;
-      cards.push(`<div class="card"><div class="h">${esc(a.pool)}${a.hinweis ? ' · ' + esc(a.hinweis) : ''}</div>
-        <div class="q">${esc(a.frage)}</div>
-        <div class="opts">${a.optionen.map(o => `<div class="opt${o === a.antwort ? ' ok' : ''}">${esc(o)}</div>`).join('')}</div>
-        <div class="meta">Lesezeit ca. ${LernAufgaben.lesezeit(a).toFixed(1).replace('.', ',')} s</div></div>`);
-    }
-    $('out').innerHTML = cards.join('');
+    zeigeKarten(await LernAufgaben.erzeuger(selected(), { klasse: Number($('klasse').value), bis: $('bis').value || undefined, richtung: $('richtung').value }));
   } catch (e) { $('msg').textContent = e.message; }
 };
 

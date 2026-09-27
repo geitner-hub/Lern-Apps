@@ -674,7 +674,7 @@
     const label = pct === 100 ? 'PERFEKT!' : pct >= 80 ? 'SEHR GUT' : pct >= 60 ? 'GUT GEMACHT' : 'WEITER ÜBEN';
     const lvl = state.level;
     const lvlLabel = lvl === 'leicht' ? '🟢 LEICHT' : lvl === 'mittel' ? '🟡 MITTEL' : '🔴 SCHWER';
-    LernApps.saveResult({ score: correctCount, max: ROUND_SIZE, label: correctCount + ' / ' + ROUND_SIZE + ' · ' + label });
+    LernApps.saveResult({ score: correctCount, max: ROUND_SIZE, label: correctCount + ' / ' + ROUND_SIZE + ' · ' + label, inhalt: 'kopf4-' + state.level });
 
     const rows = state.results.map((r, i) => `
       <div class="result-row ${r.correct ? 'correct' : 'wrong'}">

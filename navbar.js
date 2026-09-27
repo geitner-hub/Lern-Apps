@@ -9,7 +9,9 @@
 //      score: 8,        // erreichte Punkte (Zahl)
 //      max:   10,       // maximale Punkte  (Zahl)
 //      label: '8 / 10', // Anzeigetext (optional)
-//      skill: 'einmaleins-7' // Kompetenz-Kennung (optional, für später)
+//      skill: 'einmaleins-7', // Kompetenz-Kennung (optional, für später)
+//      inhalt: 'kopf5-mittel' // geübter Stoff für „Meine Themen“ in den Spielen
+//                             // (optional, String oder Array, z. B. 'vok5:unit1/theme1')
 //    });
 //
 //  Das war's. Home-Button, Ergebnisanzeige und Lernwelt-Pass
@@ -50,6 +52,11 @@
   }
   function getResult() {
     return loadResults()[getPageKey()] || null;
+  }
+  // Inhalt-ID(s) für „Meine Themen“ säubern → Array
+  function normInhalt(v) {
+    const l = Array.isArray(v) ? v : (v ? [v] : []);
+    return [...new Set(l.filter(x => typeof x === 'string' && /^[a-z0-9][a-z0-9:/_.+-]{0,79}$/i.test(x)))].slice(0, 10);
   }
 
   // ── Öffentliche API ─────────────────────────────────
@@ -94,7 +101,13 @@
         const seconds = (now - roundStart) / 1000;   // Dauer seit Seitenaufruf bzw. letztem Ergebnis
         roundStart = now;
         const entry = { key, score, max, seconds };
-        if (window.LernPass) { window.LernPass.toast(window.LernPass.award(entry)); }
+        const inhalt = normInhalt(result && result.inhalt);
+        if (inhalt.length) entry.inhalt = inhalt;
+        if (window.LernPass) {
+          const P = window.LernPass, res = P.award(entry);
+          P.toast(res);
+          if (inhalt.length && P.lernstandMelden) P.lernstandMelden(inhalt, pct, max, res.blocked);
+        }
         else { (window.__lernPassQueue = window.__lernPassQueue || []).push(entry); loadPass(); }
       }
     },

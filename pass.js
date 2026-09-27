@@ -8,7 +8,8 @@
 //  Inhalte (Titel, Abzeichen, Cosmetics, Events) stehen in der reinen
 //  Datendatei lernwelt-inhalte.json. Sobald sie geladen ist, steht
 //  window.LernPass bereit und das Ereignis 'lernpass:ready' wird ausgelöst.
-//  Einstellungen (Saison-Modus, aktive Events) kommen aus config.json → "pass".
+//  Einstellungen (Saison-Modus, aktive Events) kommen aus config.json → "pass",
+//  die für die Spiele („Meine Themen“) aus config.json → "spiele".
 //
 //  Alle Daten bleiben im localStorage des Geräts ('lernwelt-pass').
 //  Sicherung/Umzug über einen Code bzw. QR (exportCode / parseCode).
@@ -150,6 +151,7 @@
       eventDays: {},             // { 'halloween|2026/27': ['YYYY-MM-DD', …] }
       eventGifts: {},            // { 'halloween|2026/27': true }
       endless: {},               // { key: { day, best, paid, good } } Endlos-Modus, nur heute
+      lernstand: {},             // { 'vok5:unit1/theme1': { n, best, last, p:[Top-3 %], f } } für „Meine Themen“
     };
   }
 
@@ -164,6 +166,7 @@
         if (!st.profile.klasseSeason) st.profile.klasseSeason = seasonId();
       }
       if (!st.endless || typeof st.endless !== 'object') st.endless = {};
+      if (!st.lernstand || typeof st.lernstand !== 'object' || Array.isArray(st.lernstand)) st.lernstand = {};
       return st;
     } catch (e) { return blank(); }
   }
@@ -183,12 +186,42 @@
 
   // ── Einstellungen aus config.json ("pass") ─────────────
   let SETTINGS = null;
-  function readSettings() {
-    if (SETTINGS) return SETTINGS;
-    let raw = null;
-    try { const cfg = JSON.parse(localStorage.getItem(CONFIG_KEY) || 'null'); raw = cfg && cfg.pass; } catch (e) {}
-    return sanitizeSettings(raw);
+  function readConfigCache() {
+    try { return JSON.parse(localStorage.getItem(CONFIG_KEY) || 'null'); } catch (e) { return null; }
   }
+  function readSettings() {
+    const cfg = readConfigCache();
+    const base = SETTINGS || sanitizeSettings(cfg && cfg.pass);
+    return Object.assign({}, base, { spiele: sanitizeSpiele(SPIELE_RAW !== undefined ? SPIELE_RAW : cfg && cfg.spiele) });
+  }
+
+  // ── Spiele: „Meine Themen“ (config.json → "spiele") ────
+  const SPIELE_DEFAULT = {
+    auswahl: 'auto+frei',            // 'auto' | 'auto+frei' | 'frei'
+    schwelle: 70,                    // % je Runde
+    runden: 2,                       // so viele Runden ab schwelle → freigeschaltet
+    starter: { 5: ['kopf4-leicht', '1x1-klein'], 6: ['kopf5-leicht', '1x1-klein'] },
+  };
+  let SPIELE_RAW;                    // von setSpiele() gesetzt (Admin/Startseite), sonst aus dem Config-Cache
+  const INHALT_ID = /^[a-z0-9][a-z0-9:/_.+-]{0,79}$/i;
+  function sanitizeSpiele(raw) {
+    const r = raw && typeof raw === 'object' ? raw : {};
+    const int = (v, lo, hi, d) => { const n = Math.round(Number(v)); return Number.isFinite(n) ? Math.max(lo, Math.min(hi, n)) : d; };
+    const out = {
+      auswahl: ['auto', 'auto+frei', 'frei'].includes(r.auswahl) ? r.auswahl : SPIELE_DEFAULT.auswahl,
+      schwelle: int(r.schwelle, 50, 100, SPIELE_DEFAULT.schwelle),
+      runden: int(r.runden, 1, 3, SPIELE_DEFAULT.runden),
+      starter: {},
+    };
+    const st = r.starter && typeof r.starter === 'object' ? r.starter : {};
+    [5, 6, 7, 8, 9].forEach(k => {
+      const v = st[k] !== undefined ? st[k] : st[String(k)];
+      if (Array.isArray(v)) out.starter[k] = [...new Set(v.filter(x => typeof x === 'string' && INHALT_ID.test(x)))].slice(0, 30);
+      else if (SPIELE_DEFAULT.starter[k]) out.starter[k] = SPIELE_DEFAULT.starter[k].slice();
+    });
+    return out;
+  }
+  function setSpiele(raw) { SPIELE_RAW = raw === undefined ? null : raw; }   // null → Standardwerte
   function sanitizeSettings(raw) {
     const out = { seasons: false, events: [], avatar: true };
     if (raw && typeof raw === 'object') {
@@ -647,6 +680,49 @@
     };
   }
 
+  // ── Lernstand für „Meine Themen“ ───────────────────────
+  //  Die Lern-Apps melden über LernApps.saveResult({ …, inhalt }) mit, welcher Stoff
+  //  geübt wurde (z. B. 'vok5:unit1/theme1', 'kopf5-mittel'). Gemerkt werden je Inhalt:
+  //  n = gezählte Runden, best = beste %, last = Tag, p = die drei besten % (reicht für
+  //  runden ≤ 3 und wirkt so auch rückwirkend, wenn die Lehrkraft die Schwelle ändert),
+  //  f = freigeschaltet (bleibt dauerhaft).
+  const LERN_MIN_AUFGABEN = 5;
+  function erfuellt(e, sp) { return !!e && (e.f === true || (Array.isArray(e.p) && e.p.filter(x => x >= sp.schwelle).length >= sp.runden)); }
+  /** Runde melden. ids: String oder Array, pct: 0–100, anzahl: Aufgaben der Runde, blocked: aus award() */
+  function lernstandMelden(ids, pct, anzahl, blocked) {
+    if (blocked === 'fast' || blocked === 'invalid') return false;
+    if (!(Number(anzahl) >= LERN_MIN_AUFGABEN)) return false;
+    pct = Math.max(0, Math.min(100, Math.round(Number(pct))));
+    if (!Number.isFinite(pct)) return false;
+    const liste = [...new Set((Array.isArray(ids) ? ids : [ids]).filter(x => typeof x === 'string' && INHALT_ID.test(x)))].slice(0, 10);
+    if (!liste.length) return false;
+    ensureProfile();
+    const sp = readSettings().spiele, day = dayKey();
+    liste.forEach(id => {
+      const e = S.lernstand[id] || (S.lernstand[id] = { n: 0, best: 0, last: '', p: [] });
+      e.n = (e.n || 0) + 1;
+      e.best = Math.max(e.best || 0, pct);
+      e.last = day;
+      e.p = (Array.isArray(e.p) ? e.p : []).concat(pct).sort((a, b) => b - a).slice(0, 3);
+      if (erfuellt(e, sp)) e.f = true;
+    });
+    save();
+    return true;
+  }
+  /** Inhalt-IDs, die mit den aktuellen Einstellungen freigeschaltet sind */
+  function freigeschaltet() {
+    const sp = readSettings().spiele;
+    let neu = false;
+    const out = Object.keys(S.lernstand).filter(id => {
+      const e = S.lernstand[id];
+      if (!erfuellt(e, sp)) return false;
+      if (e.f !== true) { e.f = true; neu = true; }
+      return true;
+    });
+    if (neu) save();
+    return out;
+  }
+
   // ── Sicherungs-Code ─────────────────────────────────────
   //  Format:  LW2.<base64url(JSON)>.<Prüfsumme>   (LW1 wird weiterhin gelesen)
   //  Die Prüfsumme erkennt Tippfehler und einfaches Herumbasteln –
@@ -689,6 +765,15 @@
       ed: Object.fromEntries(Object.entries(S.eventDays).map(([k, v]) => [k, v.length])),
       t: dayKey().replace(/-/g, ''),
     };
+    // Lernstand kompakt: freigeschaltet → 1, sonst die besten % (nur ab 50 %, sonst weglassen)
+    const ls = {};
+    Object.entries(S.lernstand || {}).forEach(([id, e]) => {
+      if (!e || !INHALT_ID.test(id)) return;
+      if (e.f === true) { ls[id] = 1; return; }
+      const p = (Array.isArray(e.p) ? e.p : []).filter(x => x >= 50);
+      if (p.length) ls[id] = p;
+    });
+    if (Object.keys(ls).length) payload.ls = ls;
     const body = b64urlEncode(JSON.stringify(payload));
     return 'LW2.' + body + '.' + fnv('lernwelt|' + body);
   }
@@ -743,6 +828,13 @@
       (Array.isArray(d.eg) ? d.eg : []).forEach(k => { if (typeof k === 'string' && /^[a-z-]+\|\d{4}\/\d{2}$/.test(k)) restored.eventGifts[k] = true; });
       if (d.ed && typeof d.ed === 'object') Object.entries(d.ed).forEach(([k, n]) => {
         if (/^[a-z-]+\|\d{4}\/\d{2}$/.test(k)) restored.eventDays[k] = Array.from({ length: num(n, 60) }, (_, j) => 'import-' + j);
+      });
+      if (d.ls && typeof d.ls === 'object' && !Array.isArray(d.ls)) Object.entries(d.ls).slice(0, 500).forEach(([id, v]) => {
+        if (!INHALT_ID.test(id)) return;
+        if (v === 1) { restored.lernstand[id] = { n: 1, best: 0, last: '', p: [], f: true }; return; }
+        if (!Array.isArray(v)) return;
+        const p = v.map(x => Math.max(0, Math.min(100, Math.round(Number(x) || 0)))).sort((a, b) => b - a).slice(0, 3);
+        if (p.length) restored.lernstand[id] = { n: p.length, best: p[0], last: '', p };
       });
       restored.chestsOpened = Math.min(restored.chestsOpened, Math.floor(restored.xp / RULES.chestEveryXp) + restored.bonusChests);
       restored.seenLevel = 1;
@@ -967,7 +1059,8 @@
     RULES, LEVEL_TITLES, ITEMS, ITEM_BY_ID, BADGES, EVENTS, RARITY, SLOTS, AVATAR,
     get state()   { return S; },
     get settings(){ return readSettings(); },
-    setSettings, activeEvents, seasonsOn, seasonId, levelXp, pastSeasons,
+    get lernstand() { return S.lernstand; },
+    setSettings, setSpiele, lernstandMelden, freigeschaltet, activeEvents, seasonsOn, seasonId, levelXp, pastSeasons,
     openChest, equip, equippedItem, owns, ownedCount, checkBadges, badgeProgress, setLook, look,
     avatarHTML, cardBackground, itemPreviewHTML, itemSourceText,
     hasProfile()  { return !!(S.profile && S.profile.name); },
@@ -1014,7 +1107,13 @@
 
   // Ergebnisse, die navbar.js vor dem Laden dieses Skripts gemeldet hat
   const q = window.__lernPassQueue;
-  if (Array.isArray(q)) { q.splice(0).forEach(r => toast(award(r))); }
+  if (Array.isArray(q)) {
+    q.splice(0).forEach(r => {
+      const res = award(r);
+      toast(res);
+      if (r.inhalt) lernstandMelden(r.inhalt, r.max > 0 ? (r.score / r.max) * 100 : 0, r.max, res.blocked);
+    });
+  }
   try { window.dispatchEvent(new CustomEvent('lernpass:ready')); } catch (e) {}
   }
 })();
