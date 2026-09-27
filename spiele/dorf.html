@@ -10,6 +10,8 @@
     Wochen- und Bewohner-Auftrag, Bewohner, Sammelbuch, Dorf-Postkarte.
     Etappe 5: Dorf-Events (Festwiese mit Festgebäude und Gast, Event-Währung, Deko und Festkiste,
     Adventskalender bzw. Suche, Fest-Seiten im Sammelbuch).
+    Etappe 6 (Teil 1): Bewohner laufen, Landschaft wächst ins Umland, Dorf-Deko, Tiere; Bewohner und
+    das Schild „Hier geht es bald weiter“ lassen sich antippen.
     Logik und Spielstand: gemeinsam/dorf-kern.js · 3D: gemeinsam/dorf-szene.js
     Inhalte: daten/dorf-inhalte.json
   -->
@@ -315,7 +317,7 @@
     $app.innerHTML = `
       <header class="kopf">
         <div><h1 id="dorfname">Mein Dorf</h1><p id="untertitel"></p>
-          <div class="kopf-knoepfe"><button id="k-buch">📖 Sammelbuch<span id="k-buch-punkt"></span></button><button id="k-karte">📮 Postkarte</button><button id="k-kiste" hidden>🎁 Festkiste</button></div></div>
+          <div class="kopf-knoepfe"><button id="k-buch">📖 Sammelbuch<span id="k-buch-punkt"></span></button><button id="k-karte">📮 Postkarte</button><button id="k-kiste" hidden>🎁 Kiste</button></div></div>
         <div class="vorrat" id="vorrat" aria-label="Deine Rohstoffe"></div>
       </header>
       <div id="event"></div>
@@ -365,9 +367,9 @@
         if (r.ok && szene) szene.jubel();
       }
       setzen = null;
-      tipp('Tippe auf einen Bauplatz');
       if (szene) szene.setzModus(false);
     }
+    tipp('');                                                         // Tipp nur bis zum ersten Antippen
     gewaehlt = id;
     if (szene) szene.auswahl(id); else rasterZeichnen();
     bauZeichnen();
@@ -457,6 +459,11 @@
     if (setzen) { setzenZeichnen(el); return; }
     if (gewaehlt === 'fest') { festZeichnen(el); return; }
     if (typeof gewaehlt === 'string' && gewaehlt.startsWith('d:')) { dekoPlatzZeichnen(el, gewaehlt.slice(2)); return; }
+    if (typeof gewaehlt === 'string' && gewaehlt.startsWith('b:')) { bewohnerZeichnen(el, gewaehlt.slice(2)); return; }
+    if (gewaehlt === 'rand') {
+      el.innerHTML = `<h2>🪧 Hier geht es bald weiter</h2><p>Hinter der Schranke liegt ein neues Gebiet. Zum nächsten Schuljahr wächst dein Dorf dorthin – mit neuen Gebäuden. Alles, was du jetzt baust, bleibt.</p>`;
+      return;
+    }
     if (gewaehlt === null) {
       el.innerHTML = (fund ? fundHtml() : '') + `<h2>🏗️ Bauen</h2><p>Tippe im Dorf auf einen Bauplatz. Dort kannst du bauen oder ein Gebäude ausbauen.</p>`;
       return;
@@ -584,7 +591,7 @@
       el.innerHTML = `<h2>🎪 Festwiese</h2>
         <p>Hier feiert dein Dorf seine Feste: Halloween, Weihnachten und Ostern. Sobald das nächste Fest beginnt, geht es hier los.</p>
         ${a ? '<p class="leise">Zu diesem Fest gibt es im Dorf nichts zu bauen – aber schau in die Lern-Apps: Dort gibt es Event-Truhen.</p>' : ''}
-        ${alt.length ? `<p>In deiner Festkiste warten: ${alt.map(x => `${esc(x.i.gebaeude.icon)} <b>${esc(x.i.gebaeude.name)}</b> (Stufe ${x.i.stufe})`).join(', ')}. Beim nächsten Fest stehen sie wieder hier.</p>` : ''}`;
+        ${alt.length ? `<p>In deiner Kiste warten: ${alt.map(x => `${esc(x.i.gebaeude.icon)} <b>${esc(x.i.gebaeude.name)}</b> (Stufe ${x.i.stufe})`).join(', ')}. Beim nächsten Fest stehen sie wieder hier.</p>` : ''}`;
       return;
     }
     const e = a.def, w = e.waehrung, i = D.festInfo(a.id);
@@ -601,13 +608,13 @@
         </div>`;
       else unten = '<p class="leise">Höchste Stufe erreicht. Wunderschön!</p>';
       gebaeude = `<h2><span aria-hidden="true">${esc(i.gebaeude.icon)}</span> ${esc(i.gebaeude.name)} ${stufenHtml(i.stufe, i.max)}</h2>
-        <p>${i.stufe && texte[i.stufe - 1] ? esc(texte[i.stufe - 1]) + ' ' : ''}Nach dem Fest kommt es in die Festkiste und steht beim nächsten Fest wieder hier.</p>${unten}`;
+        <p>${i.stufe && texte[i.stufe - 1] ? esc(texte[i.stufe - 1]) + ' ' : ''}Nach dem Fest kommt es in die Kiste und steht beim nächsten Fest wieder hier.</p>${unten}`;
     }
     const shop = D.dekoShop();
     const deko = shop.length ? `<h2 style="margin-top:1.1rem">✨ Deko zum Fest</h2>
       <p>Einmal freigeschaltet gehört die Deko dir für immer. Du kannst sie überall im Dorf aufstellen – sie darf auch nach dem Fest stehen bleiben.</p>
       <div class="deko-reihe">${shop.map(x => `<div class="option"><span class="icon" aria-hidden="true">${esc(x.deko.icon)}</span><b>${esc(x.deko.name)}</b>
-        ${x.hat ? '<span class="fertig-marke">✓ in deiner Festkiste</span>' : kostenHtml(x.kosten) + `<button class="knopf" data-deko="${esc(x.key)}" ${x.genug ? '' : 'disabled'}>${x.genug ? 'Freischalten' : 'Noch zu wenig'}</button>`}</div>`).join('')}</div>` : '';
+        ${x.hat ? '<span class="fertig-marke">✓ in deiner Kiste</span>' : kostenHtml(x.kosten) + `<button class="knopf" data-deko="${esc(x.key)}" ${x.genug ? '' : 'disabled'}>${x.genug ? 'Freischalten' : 'Noch zu wenig'}</button>`}</div>`).join('')}</div>` : '';
     el.innerHTML = (fund ? fundHtml() : '') + gebaeude + deko
       + `<p class="leise" style="margin-top:.8rem">${esc(w.icon)} ${esc(w.name)} bekommst du für jeden erfüllten Auftrag${e.gast ? ', für Aufträge von ' + esc(e.gast.name) : ''}${e.mechanik && e.mechanik.art === 'kalender' ? ' und aus dem ' + esc(e.mechanik.name || 'Kalender') : e.mechanik && e.mechanik.art === 'suche' ? ' und wenn du ' + esc(e.mechanik.ding || 'etwas') + ' im Dorf findest' : ''}. ${esc(w.name)} verfallen nicht.</p>`;
     const k = document.getElementById('fest-bauen');
@@ -621,7 +628,7 @@
   }
 
   // Deko aufstellen: freie Plätze leuchten, dann einen antippen
-  function tipp(text) { const t = document.querySelector('.szene-tipp'); if (t) t.textContent = text; }
+  function tipp(text) { const t = document.querySelector('.szene-tipp'); if (t) { t.textContent = text; t.style.display = text ? '' : 'none'; } }
   function platzieren(key) {
     setzen = key;
     tipp('Tippe auf einen leuchtenden Platz');
@@ -634,7 +641,7 @@
     el.innerHTML = `<h2>${esc(d ? d.icon : '✨')} ${esc(d ? d.name : 'Deko')} aufstellen</h2>
       <p>${szene ? 'Tippe im Dorf auf einen <b>leuchtenden Platz</b>.' : 'Tippe oben auf einen Deko-Platz.'} Du kannst die Deko später jederzeit versetzen.</p>
       <button class="knopf" id="setzen-weg" style="background:#4b5563;box-shadow:0 4px 0 #374151">Später aufstellen</button>`;
-    document.getElementById('setzen-weg').onclick = () => { setzen = null; tipp('Tippe auf einen Bauplatz'); if (szene) szene.setzModus(false); else rasterZeichnen(); bauZeichnen(); };
+    document.getElementById('setzen-weg').onclick = () => { setzen = null; tipp(''); if (szene) szene.setzModus(false); else rasterZeichnen(); bauZeichnen(); };
   }
   function dekoPlatzZeichnen(el, id) {
     const D = window.LernDorf, p = D.dekoPlaetze().find(x => x.id === id);
@@ -644,7 +651,7 @@
       el.innerHTML = `<h2>${esc(d.icon)} ${esc(d.name)}</h2><p>Deko vom Fest ${esc(d.eventIcon)} ${esc(d.eventName)}.</p>
         <div class="knoepfe" style="gap:.6rem;flex-wrap:wrap">
           <button class="knopf" id="deko-versetzen" style="flex:none">Versetzen</button>
-          <button class="tausch" id="deko-weg" style="color:var(--text);border-color:rgba(255,255,255,.35)">In die Festkiste</button>
+          <button class="tausch" id="deko-weg" style="color:var(--text);border-color:rgba(255,255,255,.35)">In die Kiste</button>
         </div>`;
       document.getElementById('deko-versetzen').onclick = () => platzieren(p.belegt);
       document.getElementById('deko-weg').onclick = () => { D.dekoWeg(id); gewaehlt = null; if (szene) szene.auswahl(null); bauZeichnen(); };
@@ -654,7 +661,7 @@
     el.innerHTML = `<h2>✨ Deko-Platz</h2>
       ${frei.length ? `<p>Was soll hier stehen?</p><div class="deko-reihe">${frei.map(k => `<div class="option"><span class="icon" aria-hidden="true">${esc(k.deko.icon)}</span><b>${esc(k.deko.name)}</b>
         <button class="knopf" data-hier="${esc(k.key)}">Hierhin stellen</button></div>`).join('')}</div>`
-        : '<p>Hier kannst du Deko aufstellen. Deko schaltest du während eines Fests auf der Festwiese frei.</p>'}`;
+        : '<p>Hier kannst du Deko aufstellen. Neue Deko kommt, wenn dein Dorf wächst, und bei Festen.</p>'}`;
     el.querySelectorAll('[data-hier]').forEach(b => b.onclick = () => { const r = D.dekoSetzen(id, b.dataset.hier); if (r.ok && szene) szene.jubel(); });
   }
 
@@ -705,17 +712,30 @@
   function kisteZeichnen() {
     const D = window.LernDorf, el = document.getElementById('kiste'), l = D.festkiste();
     const alt = D.eventListe().map(e => D.festInfo(e.id)).filter(i => i && i.stufe > 0 && !i.aktiv);
-    el.innerHTML = `<div class="buch-kopf"><h2 id="kiste-titel">🎁 Festkiste</h2><button class="zu" aria-label="Schließen">✕</button></div>
-      <p class="leise">Alles, was du bei Festen freigeschaltet hast. Deko kannst du jederzeit aufstellen, versetzen oder wieder einpacken.</p>
+    el.innerHTML = `<div class="buch-kopf"><h2 id="kiste-titel">🎁 Deine Kiste</h2><button class="zu" aria-label="Schließen">✕</button></div>
+      <p class="leise">Deine Deko aus dem Dorf und von den Festen. Du kannst sie jederzeit aufstellen, versetzen oder wieder einpacken.</p>
       ${l.length ? `<div class="kisten-liste">${l.map(k => `<div class="person"><span class="gesicht" aria-hidden="true">${esc(k.deko.icon)}</span>
           <b>${esc(k.deko.name)}</b><small>${esc(k.deko.eventIcon)} ${esc(k.deko.eventName)} · ${k.platz ? 'steht im Dorf' : 'in der Kiste'}</small>
           <button data-setzen="${esc(k.key)}" class="${k.platz ? 'leise' : ''}">${k.platz ? 'Versetzen' : 'Aufstellen'}</button></div>`).join('')}</div>`
-        : '<p>Noch leer. Während eines Fests schaltest du auf der Festwiese Deko frei.</p>'}
+        : '<p>Noch leer. Neue Deko kommt, wenn dein Dorf wächst, und bei Festen auf der Festwiese.</p>'}
+      ${(() => { const zu = D.dorfDekoListe().filter(d => !D.bedingungOk(d.ab));
+        return zu.length ? `<h3>Kommt noch</h3><p class="leise">${zu.map(d => `${esc(d.icon)} ${esc(d.name)} (${esc(D.bedingungText(d.ab))})`).join(' · ')}</p>` : ''; })()}
       ${alt.length ? `<h3>Festgebäude</h3><p class="leise">${alt.map(i => `${esc(i.gebaeude.icon)} ${esc(i.gebaeude.name)} (Stufe ${i.stufe})`).join(' · ')} – steht beim nächsten Fest wieder auf der Festwiese.</p>` : ''}
       ${Object.keys(D.state.r).filter(id => D.waehrungen().some(w => w.id === id) && D.state.r[id] > 0).length
         ? `<h3>Fest-Vorrat</h3><p class="leise">${D.waehrungen().filter(w => D.state.r[w.id] > 0).map(w => `${esc(w.icon)} ${D.state.r[w.id]} ${esc(w.name)}`).join(' · ')} – bleibt dir bis zum nächsten Fest.</p>` : ''}`;
     el.querySelector('.zu').onclick = () => schliessen('ov-kiste');
     el.querySelectorAll('[data-setzen]').forEach(b => b.onclick = () => { schliessen('ov-kiste'); platzieren(b.dataset.setzen); });
+  }
+
+  // Antippen eines Bewohners: wer ist das, was braucht er gerade?
+  function bewohnerZeichnen(el, id) {
+    const D = window.LernDorf, b = D.bewohnerDef(id);
+    if (!b) { el.innerHTML = ''; return; }
+    const sb = D.sammelbuch().bewohner.find(x => x.id === id) || { stuecke: [] };
+    const auftrag = D.state.bq && D.state.bq.b === id;
+    el.innerHTML = `<h2><span aria-hidden="true">${esc(b.icon)}</span> ${esc(b.name)}</h2>
+      <p>${esc(b.name)} ${esc(b.text || '')}.</p>
+      <p>${auftrag ? '📌 Hat gerade einen Auftrag für dich – schau aufs Auftragsbrett!' : sb.stuecke.length ? `Sammelstücke: ${sb.stuecke.filter(x => x.hat).length} von ${sb.stuecke.length}` : ''}</p>`;
   }
 
   // ── Neuigkeiten: neue Bewohner, neue Sammelstücke ──
@@ -724,11 +744,13 @@
     if (!box || box.childElementCount) return;
     const l = window.LernDorf.neuigkeiten();
     if (!l.length) return;
-    const zeile = x => x.art === 'bewohner'
-      ? `<span class="gross" aria-hidden="true">${esc(x.icon)}</span><span>Neu eingezogen: <b>${esc(x.name)}</b> – ${esc(x.text || '')}</span>`
-      : `<span class="gross" aria-hidden="true">${esc(x.icon)}</span><span>Neu im Sammelbuch: <b>${esc(x.name)}</b>${x.von ? ' von ' + esc(x.von) : ''}</span>`;
+    const zeile = x => `<span class="gross" aria-hidden="true">${esc(x.icon)}</span>` + (
+      x.art === 'bewohner' ? `<span>Neu eingezogen: <b>${esc(x.name)}</b> – ${esc(x.text || '')}</span>`
+      : x.art === 'landschaft' ? `<span>Dein Dorf wächst: <b>${esc(x.name)}</b> – ${esc(x.text || '')}</span>`
+      : x.art === 'deko' ? `<span>Neue Deko in deiner Kiste: <b>${esc(x.name)}</b></span>`
+      : `<span>Neu im Sammelbuch: <b>${esc(x.name)}</b>${x.von ? ' von ' + esc(x.von) : ''}</span>`);
     box.innerHTML = l.slice(0, 4).map(x => `<div class="neu-banner">${zeile(x)}</div>`).join('')
-      + (l.length > 4 ? `<div class="neu-banner"><span>… und ${l.length - 4} weitere Neuigkeiten im Sammelbuch</span></div>` : '');
+      + (l.length > 4 ? `<div class="neu-banner"><span>… und ${l.length - 4} weitere Neuigkeiten – schau ins Sammelbuch</span></div>` : '');
     const letzte = box.lastElementChild, knopf = document.createElement('button');
     knopf.textContent = 'Super!';
     knopf.onclick = () => { box.innerHTML = ''; };
@@ -758,6 +780,8 @@
       <div class="seiten" style="margin-top:.6rem">${leute}</div>
       <h3>Meilensteine</h3>
       <div class="meilen">${meilen}</div>
+      ${sb.landschaft && sb.landschaft.length ? `<h3>Rund ums Dorf</h3><p class="leise">Die Landschaft wächst mit deinem Dorf – ganz ohne Kosten.</p>
+        <div class="meilen">${sb.landschaft.map(l => `<div class="${l.hat ? '' : 'fehlt'}"><span class="gross" aria-hidden="true">${esc(l.icon)}</span>${esc(l.name)}<small>${l.hat ? esc(l.text || '') : esc(l.hinweis ? 'Kommt mit: ' + l.hinweis : 'Kommt bald')}</small></div>`).join('')}</div>` : ''}
       ${sb.feste && sb.feste.length ? `<h3>Feste</h3><p class="leise">Zu Halloween, Weihnachten und Ostern kommen Gäste ins Dorf. Hilf ihnen – dann schenken sie dir etwas.</p>` + sb.feste.map(f => `
         <div class="fest-seite"><h4>${esc(f.icon)} ${esc(f.titel)}${f.aktiv ? '<span class="fest-marke">läuft gerade</span>' : ''}</h4>
           <p class="leise">${f.gast ? esc(f.gast.icon) + ' ' + esc(f.gast.name) + ' · ' : ''}${f.festgebaeude ? esc(f.festgebaeude.icon) + ' ' + esc(f.festgebaeude.name) + (f.stufe ? ' Stufe ' + f.stufe : ' noch nicht gebaut') + ' · ' : ''}${f.dekoHat} von ${f.deko} Deko · ${f.menge} ${esc(f.waehrung.icon)}</p>
