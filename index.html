@@ -305,24 +305,41 @@
     .lw-tabs{display:flex;gap:.3rem;margin:1rem 0 .2rem;background:var(--bg3);border-radius:12px;padding:.25rem;overflow-x:auto;}
     .lw-tabs button{flex:1;border:none;background:none;color:var(--muted);font-family:inherit;font-weight:800;font-size:.8rem;padding:.5rem .4rem;border-radius:9px;cursor:pointer;white-space:nowrap;position:relative;}
     .lw-tabs button.on{background:var(--bg2);color:var(--accent);}
+    .lw-tabs button i{font-style:normal;margin-right:.3rem;}
+    @media (max-width:520px){
+      .lw-tabs{gap:.15rem;}
+      .lw-tabs button{display:flex;flex-direction:column;align-items:center;gap:.1rem;font-size:.66rem;padding:.4rem .1rem;}
+      .lw-tabs button i{margin:0;font-size:1.05rem;line-height:1.1;}
+    }
     .lw-tabs .dot{position:absolute;top:3px;right:6px;background:#f43f5e;color:#fff;font-size:.58rem;border-radius:99px;padding:0 .3rem;line-height:1.35;}
 
     /* Truhen */
-    .chest-stage{text-align:center;padding:1rem 0 .4rem;}
-    .chest-big{font-size:4.2rem;display:inline-block;cursor:pointer;filter:drop-shadow(0 8px 18px rgba(230,168,23,.35));transition:transform .15s;}
-    .chest-big:hover{transform:scale(1.06);}
-    .chest-big.shake{animation:chShake .7s ease-in-out;}
-    @keyframes chShake{0%,100%{transform:rotate(0)}15%{transform:rotate(-12deg) scale(1.05)}30%{transform:rotate(10deg) scale(1.1)}45%{transform:rotate(-8deg) scale(1.12)}60%{transform:rotate(6deg) scale(1.15)}80%{transform:scale(1.25)}}
-    .chest-count{font-weight:900;font-size:1rem;margin-top:.3rem;}
-    .reveal{margin:.8rem auto 0;max-width:320px;border-radius:16px;padding:1rem;border:2px solid;animation:rvIn .5s cubic-bezier(.2,.9,.3,1.3);}
-    @keyframes rvIn{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
-    .reveal .rv-prev{display:flex;justify-content:center;margin-bottom:.5rem;}
-    .reveal .rv-prev .it-prev{width:72px;height:72px;}
-    .reveal .rv-prev .it-prev.it-emoji{font-size:2.8rem;}
-    .reveal .rv-prev .it-prev.it-bg{width:110px;height:64px;}
-    .reveal .rv-name{font-family:'Fredoka One',cursive;font-size:1.25rem;color:#fff;}
-    .reveal .rv-rar{font-size:.72rem;font-weight:900;text-transform:uppercase;letter-spacing:.08em;}
-    @media (prefers-reduced-motion: reduce){.chest-big.shake,.reveal,.pass-avatar .pa-comp{animation:none;}}
+    .chest-wrap{margin-top:.9rem;}
+    .chest-stage3d{position:relative;height:360px;border-radius:18px;overflow:hidden;isolation:isolate;border:1px solid var(--border2);
+      background:radial-gradient(ellipse at 50% 38%,#2d2860 0%,#191632 58%,#110f22 100%);outline:none;-webkit-tap-highlight-color:transparent;}
+    .chest-stage3d:focus-visible{box-shadow:0 0 0 3px var(--accent);}
+    .chest-stage3d.leer{background:radial-gradient(ellipse at 50% 38%,#222038 0%,#15142a 60%,#0f0e1c 100%);}
+    .chest-canvas{position:absolute;inset:0;z-index:1;}
+    .chest-top{position:absolute;left:.6rem;right:.6rem;top:.6rem;z-index:2;display:flex;justify-content:space-between;align-items:center;pointer-events:none;}
+    .chest-kind{background:rgba(10,12,32,.55);color:#fff;border-radius:99px;padding:.28rem .7rem;font-size:.74rem;font-weight:900;}
+    .chest-kind.level{background:linear-gradient(135deg,#4f46e5,#7c3aed);}
+    .chest-num{background:var(--accent);color:#1b1300;border-radius:99px;padding:.22rem .6rem;font-size:.78rem;font-weight:900;}
+    .chest-hint{position:absolute;left:50%;bottom:.75rem;transform:translateX(-50%);z-index:2;background:rgba(10,12,32,.62);color:#fff;border-radius:99px;
+      padding:.35rem .85rem;font-size:.76rem;font-weight:800;display:flex;align-items:center;gap:.55rem;white-space:nowrap;pointer-events:none;transition:opacity .3s;}
+    .chest-hint.off{opacity:0;}
+    .knock-dots{display:flex;gap:.3rem;}
+    .knock-dots i{width:11px;height:11px;border-radius:50%;background:rgba(255,255,255,.18);border:2px solid rgba(255,230,166,.45);transition:all .2s;}
+    .knock-dots i.on{background:#ffe6a6;border-color:#ffe6a6;box-shadow:0 0 10px #ffe6a6;transform:scale(1.15);}
+    .chest-reveal{margin:.8rem auto 0;max-width:420px;border-radius:16px;padding:.9rem 1rem;border:2px solid;text-align:center;animation:rvIn .45s cubic-bezier(.2,.9,.3,1.3);}
+    .chest-reveal[hidden]{display:none;}
+    @keyframes rvIn{from{transform:translateY(14px) scale(.9);opacity:0}to{transform:none;opacity:1}}
+    .chest-reveal .rv-name{font-family:'Fredoka One',cursive;font-size:1.35rem;color:#fff;margin-top:.1rem;}
+    .chest-reveal .rv-rar{font-size:.72rem;font-weight:900;text-transform:uppercase;letter-spacing:.08em;}
+    .chest-reveal .lw-btns{justify-content:center;}
+    .chest-info .pass-sub+.pass-bar{margin-top:.3rem;}
+    .chest-info .row{display:flex;justify-content:space-between;gap:.6rem;flex-wrap:wrap;}
+    @media (min-width:760px){ .chest-stage3d{height:420px;} }
+    @media (prefers-reduced-motion: reduce){.chest-reveal,.pass-avatar .pa-comp{animation:none;}}
 
     /* Garderobe */
     .ward-preview{display:flex;align-items:center;gap:1rem;padding:.8rem;border-radius:14px;border:1px solid var(--border);margin-top:.8rem;background:linear-gradient(120deg,#1e1b30,#2a2146);}
@@ -347,6 +364,27 @@
     .badge-tile .bp i{display:block;height:100%;background:var(--indigo);}
     .badge-tile.got{border-color:rgba(230,168,23,.4);background:rgba(230,168,23,.07);}
     .badge-tile:not(.got) .bi{filter:grayscale(1);opacity:.45;}
+    .badge-tile .bn,.badge-tile .rw span{overflow-wrap:anywhere;}
+    .badge-tile .bp-txt{font-size:.6rem;color:var(--muted);font-weight:800;margin-top:.2rem;}
+    .badge-tile .rw{display:flex;align-items:center;gap:.35rem;margin-top:.35rem;font-size:.64rem;font-weight:800;color:var(--accent);line-height:1.25;}
+    .badge-tile .rw .it-prev{width:32px;height:32px;border-radius:8px;flex-shrink:0;}
+    .badge-tile .rw .it-prev.it-bg{width:40px;height:28px;}
+    .badge-tile.near{border-color:rgba(99,102,241,.55);background:rgba(99,102,241,.08);}
+    .erf-h{display:flex;align-items:baseline;gap:.5rem;margin-top:1.1rem;}
+    .erf-h h3{font-size:.72rem;font-weight:900;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);}
+    .erf-h span{font-size:.7rem;color:var(--muted);font-weight:800;}
+    .erf-h + .badge-grid{margin-top:.5rem;}
+    .backup-wrap{max-width:560px;margin:0 auto;}
+    .backup-state{display:flex;align-items:center;gap:.8rem;margin-top:1rem;padding:.8rem .9rem;border-radius:14px;border:1px solid var(--border2);background:var(--bg3);}
+    .backup-state .ic{font-size:1.8rem;line-height:1;}
+    .backup-state b{display:block;font-size:.92rem;}
+    .backup-state span{font-size:.74rem;color:var(--text2);}
+    .backup-state.ok{border-color:rgba(74,222,128,.4);background:rgba(74,222,128,.07);}
+    .backup-state.warn{border-color:rgba(230,168,23,.5);background:rgba(230,168,23,.09);}
+    .lw-tabs .dot.warn{background:var(--accent);color:#1b1300;}
+    .lw-hero .name-row{display:flex;align-items:center;gap:.45rem;}
+    .lw-edit{background:rgba(255,255,255,.06);border:1px solid var(--border2);color:var(--text2);border-radius:8px;width:28px;height:28px;font-size:.8rem;cursor:pointer;flex-shrink:0;}
+    .lw-edit:hover{border-color:rgba(230,168,23,.45);}
     .season-list{display:flex;flex-direction:column;gap:.35rem;}
     .season-row{display:flex;align-items:center;gap:.6rem;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:.45rem .7rem;font-size:.8rem;}
     .season-row b{color:var(--accent);}
@@ -495,6 +533,7 @@
 <script src="config-api.js"></script>
 <script src="pass.js"></script>
 <script src="avatar3d.js"></script>
+<script src="chest3d.js"></script>
 <script>
 'use strict';
 
@@ -873,7 +912,7 @@ function buildPassCard() {
   const dots = Array.from({ length: wk.goal }, (_, i) => `<i class="${i < wk.goodDays ? 'on' : ''}"></i>`).join('');
   const bg = P.cardBackground();
   sec.innerHTML = `
-    <div class="pass-card${bg ? ' has-bg' : ''}" role="button" tabindex="0" data-open-pass="view" aria-label="Lernwelt-Pass öffnen"${bg ? ` style="background:${escHtml(bg)}"` : ''}>
+    <div class="pass-card${bg ? ' has-bg' : ''}" role="button" tabindex="0" data-open-pass="wardrobe" aria-label="Lernwelt-Pass öffnen"${bg ? ` style="background:${escHtml(bg)}"` : ''}>
       ${P.avatarHTML({ level: lv.level })}
       <div class="pass-main">
         <div class="pass-top"><span class="pass-name">${escHtml(pr.name)}</span><span class="pass-title">${escHtml(lv.title)}</span></div>
@@ -908,6 +947,7 @@ function openPass(mode) {
 function closePass() {
   document.getElementById('pass-modal').classList.remove('open');
   wardStop();
+  chestStop();
   ward.tryOn = {};
   document.body.classList.remove('qr-open');
   if (passLastFocus && passLastFocus.focus) passLastFocus.focus();
@@ -924,9 +964,10 @@ function profileForm() {
 function renderPass(mode) {
   const body = document.getElementById('pass-modal-body');
   const P = LernPass;
-  const isWard = mode === 'wardrobe' && P.hasProfile();
+  const isTabs = P.hasProfile() && !['setup', 'edit', 'klasse'].includes(mode);
   wardStop();
-  document.querySelector('#pass-modal .lw-box').classList.toggle('wide', isWard);
+  chestStop();
+  document.querySelector('#pass-modal .lw-box').classList.toggle('wide', isTabs);
 
   if (mode === 'klasse' && P.hasProfile()) {
     const alt = P.profile().klasse, neu = P.suggestedClass();
@@ -951,7 +992,7 @@ function renderPass(mode) {
       ${profileForm()}
       <div class="lw-btns">
         <button type="button" class="lw-btn primary" id="pf-save">${mode === 'setup' ? 'Pass starten 🚀' : 'Speichern'}</button>
-        ${mode === 'edit' ? '<button type="button" class="lw-btn" data-mode="view">Abbrechen</button>' : ''}
+        ${mode === 'edit' ? '<button type="button" class="lw-btn" data-mode="wardrobe">Abbrechen</button>' : ''}
       </div>
       <div class="lw-msg" id="pf-msg"></div>
       ${mode === 'setup' ? `<div class="lw-sec"><details class="lw-details"><summary>Ich habe schon einen Pass (Sicherungs-Code)</summary>${restoreForm()}</details></div>` : ''}`;
@@ -959,31 +1000,47 @@ function renderPass(mode) {
   }
 
   const pr = P.profile(), lv = P.levelInfo();
-  const ch = P.chestInfo();
-  const tab = ['view', 'chests', 'wardrobe', 'badges'].includes(mode) ? mode : 'view';
+  const ch = P.chestInfo(), bk = P.backupInfo();
+  // Reihenfolge: Garderobe · Truhen · Erfolge · Sicherung (alte Namen werden umgeleitet)
+  const alias = { view: 'wardrobe', badges: 'erfolge' };
+  const tab = PASS_TABS.includes(alias[mode] || mode) ? (alias[mode] || mode) : 'wardrobe';
   const head = `
     <div class="lw-hero">
       ${P.avatarHTML({ level: lv.level })}
       <div style="flex:1;min-width:0">
-        <div class="lw-h" id="pass-modal-title">${escHtml(pr.name)}</div>
+        <div class="name-row"><div class="lw-h" id="pass-modal-title">${escHtml(pr.name)}</div>
+          <button type="button" class="lw-edit" data-mode="edit" title="Name und Klasse ändern" aria-label="Name und Klasse ändern">✏️</button></div>
         <div class="pass-title">Level ${lv.level} · ${escHtml(lv.title)}${pr.klasse ? ' · Klasse ' + pr.klasse : ''}</div>
         <div class="pass-bar"><div class="pass-fill" style="width:${lv.pct}%"></div></div>
         <div class="pass-sub">${lv.into} / ${lv.need} XP · noch ${lv.need - lv.into} XP bis „${escHtml(P.levelInfo(lv.to).title)}“</div>
       </div>
     </div>
     <div class="lw-tabs" role="tablist">
-      <button type="button" data-mode="view" class="${tab === 'view' ? 'on' : ''}">📊 Übersicht</button>
-      <button type="button" data-mode="chests" class="${tab === 'chests' ? 'on' : ''}">🎁 Truhen${ch.available ? `<span class="dot">${ch.available}</span>` : ''}</button>
-      <button type="button" data-mode="wardrobe" class="${tab === 'wardrobe' ? 'on' : ''}">👕 Garderobe</button>
-      <button type="button" data-mode="badges" class="${tab === 'badges' ? 'on' : ''}">🏅 Abzeichen</button>
+      <button type="button" role="tab" data-mode="wardrobe" class="${tab === 'wardrobe' ? 'on' : ''}"><i>👕</i><span>Garderobe</span></button>
+      <button type="button" role="tab" data-mode="chests" class="${tab === 'chests' ? 'on' : ''}">${chestTabInner(ch.available)}</button>
+      <button type="button" role="tab" data-mode="erfolge" class="${tab === 'erfolge' ? 'on' : ''}"><i>🏆</i><span>Erfolge</span></button>
+      <button type="button" role="tab" data-mode="sicherung" class="${tab === 'sicherung' ? 'on' : ''}"><i>💾</i><span>Sicherung</span>${bk.remind ? '<span class="dot warn">!</span>' : ''}</button>
     </div>`;
-  body.innerHTML = head + ({ view: passViewOverview, chests: passViewChests, wardrobe: passViewWardrobe, badges: passViewBadges })[tab]();
+  body.innerHTML = head + ({ wardrobe: passViewWardrobe, chests: passViewChests, erfolge: passViewErfolge, sicherung: passViewSicherung })[tab]();
   if (tab === 'wardrobe') wardStart();
+  if (tab === 'chests') chestStart();
 }
+const PASS_TABS = ['wardrobe', 'chests', 'erfolge', 'sicherung'];
+function chestTabInner(n) { return `<i>🎁</i><span>Truhen</span>${n ? `<span class="dot">${n}</span>` : ''}`; }
 
-function passViewOverview() {
-  const P = LernPass, R = P.RULES, wk = P.weekInfo(), ss = P.starsSummary();
+// ── Erfolge ────────────────────────────────────────────
+function passViewErfolge() {
+  const P = LernPass, wk = P.weekInfo(), ss = P.starsSummary();
   const past = P.seasonsOn() ? P.pastSeasons() : [];
+  const list = P.BADGES.map(b => {
+    const pr = P.badgeProgress(b);
+    return { b, pr, has: P.state.badges.includes(b.id), pct: pr.n ? Math.min(100, Math.round((pr.cur / pr.n) * 100)) : 0 };
+  });
+  const offen = list.filter(x => !x.has).sort((a, b) => b.pct - a.pct);
+  const fast = offen.filter(x => x.pct >= 50 && x.pct < 100).slice(0, 4);
+  const rest = offen.filter(x => !fast.includes(x));
+  const got = list.filter(x => x.has);
+  const grid = (arr, near) => `<div class="badge-grid">${arr.map(x => badgeTileHTML(x, near)).join('')}</div>`;
   return `
     <div class="lw-sec" style="border-top:none;padding-top:.6rem;margin-top:.4rem">
       <div class="lw-grid">
@@ -995,67 +1052,168 @@ function passViewOverview() {
     </div>
     ${past.length ? `<div class="lw-sec"><h3>🏛 Vergangene Schuljahre</h3><div class="season-list">${past.map(p =>
         `<div class="season-row">📜 <span>Schuljahr ${escHtml(p.id)}</span><span style="margin-left:auto">Level ${p.level} · <b>${escHtml(p.title)}</b></span></div>`).join('')}</div></div>` : ''}
-    <div class="lw-sec">
-      <h3>⭐ So bekommst du XP</h3>
-      <div class="xp-rules">
-        <b>+${R.baseXp}</b> für jede fertige Runde · <b>bis +${R.perfXpMax}</b> je nachdem, wie viel du richtig hast ·
-        <b>+${R.recordXp}</b> für einen neuen Rekord · <b>+${R.firstOfDayXp}</b> für deine erste gute Runde am Tag.<br>
-        <b>Sterne:</b> 🥉 ${R.starPct[0]} %, 🥈 ${R.starPct[1]} %, 🥇 ${R.starPct[2]} % – jeweils an ${R.starDays} verschiedenen Tagen.<br>
-        <b>Wochenziel:</b> an ${R.weekGoalDays} Tagen eine Runde mit mindestens ${R.goodPct} %.<br>
-        <b>Truhen:</b> alle ${R.chestEveryXp} XP eine Truhe mit einem Teil für deinen Avatar.<br>
-        <span style="color:var(--muted)">Wer nur schnell durchklickt, bekommt keine XP. Nach ${R.fullRoundsPerApp} Runden in derselben App gibt es weniger – probier dann eine andere!</span>
-      </div>
-    </div>
-    <div class="lw-sec">
-      <h3>💾 Sicherung</h3>
-      <p class="lw-p">Mit deinem Sicherungs-QR kannst du den Pass auf ein anderes Gerät mitnehmen oder wiederherstellen, falls er verloren geht. Scanne ihn einfach mit der Kamera – oder drucke dir eine Sicherungskarte aus.</p>
+    <div class="lw-sec" style="padding-top:.2rem">
+      ${fast.length ? `<div class="erf-h"><h3>🎯 Fast geschafft</h3></div>${grid(fast, true)}` : ''}
+      ${rest.length ? `<div class="erf-h"><h3>🔒 Noch offen</h3><span>${rest.length}</span></div>${grid(rest, false)}` : ''}
+      ${got.length ? `<div class="erf-h"><h3>✅ Geschafft</h3><span>${got.length} von ${list.length}</span></div>${grid(got, false)}` : ''}
+    </div>`;
+}
+function badgeTileHTML({ b, pr, has, pct }, near) {
+  const P = LernPass;
+  const reward = P.ITEMS.filter(i => i.quelle === 'set' && i.set === b.id);
+  return `<div class="badge-tile${has ? ' got' : ''}${near ? ' near' : ''}"><span class="bi">${escHtml(b.icon)}</span><div style="min-width:0;flex:1">
+    <div class="bn">${escHtml(b.name)}</div><div class="bt">${escHtml(b.text)}</div>
+    ${has ? '' : `<div class="bp"><i style="width:${pct}%"></i></div><div class="bp-txt">${pr.cur} / ${pr.n}</div>`}
+    ${reward.length ? `<div class="rw">${reward.slice(0, 2).map(r => P.itemPreviewHTML(r)).join('')}<span>🎁 ${reward.map(r => escHtml(r.name)).join(', ')}</span></div>` : ''}
+  </div></div>`;
+}
+
+// ── Sicherung ──────────────────────────────────────────
+function backupStateHTML() {
+  const bi = LernPass.backupInfo();
+  const when = bi.days === null ? '' : bi.days === 0 ? 'heute' : bi.days === 1 ? 'gestern' : `vor ${bi.days} Tagen`;
+  const cls = !bi.last ? (bi.remind ? 'warn' : '') : bi.remind ? 'warn' : 'ok';
+  const ic = !bi.last ? '💾' : bi.remind ? '⏰' : '✅';
+  const txt = !bi.last ? 'Noch nie gesichert' : `Zuletzt gesichert: ${when}`;
+  const sub = !bi.last ? 'Sichere deinen Pass, damit nichts verloren geht.' : bi.remind ? 'Zeit für eine neue Sicherung – zeig den QR oder kopiere den Code.' : 'Super, dein Pass ist gesichert.';
+  return `<div class="backup-state ${cls}" id="backup-state"><span class="ic">${ic}</span><div><b>${txt}</b><span>${sub}</span></div></div>`;
+}
+function passViewSicherung() {
+  return `
+    <div class="backup-wrap">
+      ${backupStateHTML()}
+      <p class="lw-p" style="margin-top:.9rem">Mit deinem Sicherungs-QR kannst du den Pass auf ein anderes Gerät mitnehmen oder wiederherstellen, falls er verloren geht. Scanne ihn einfach mit der Kamera – oder drucke dir eine Sicherungskarte aus.</p>
       <div class="lw-btns">
         <button type="button" class="lw-btn primary" id="pass-qr">📲 Sicherungs-QR zeigen</button>
         <a class="lw-btn" href="pass-karte.html" style="text-decoration:none">🖨 Karte drucken</a>
         <button type="button" class="lw-btn" id="pass-copy">🔗 Code kopieren</button>
       </div>
       <div class="lw-msg" id="pass-copy-msg"></div>
-      <details class="lw-details" style="margin-top:.6rem"><summary>Pass aus Code wiederherstellen</summary>${restoreForm()}</details>
-    </div>
-    <div class="lw-btns" style="margin-top:1.1rem">
-      <button type="button" class="lw-btn" data-mode="wardrobe" data-cat="figur">🎨 Aussehen ändern</button>
-      <button type="button" class="lw-btn" data-mode="edit">✏️ Name und Klasse ändern</button>
+      <p class="lw-p" style="margin-top:.4rem;color:var(--muted);font-size:.74rem">Tipp: Öffne die Lernwelt über das Symbol auf dem Home-Bildschirm – dort ist dein Pass am besten aufgehoben.</p>
+      <div class="lw-sec"><details class="lw-details"><summary>Pass aus Code wiederherstellen</summary>${restoreForm()}</details></div>
     </div>`;
 }
 
-let lastReveal = null;
+// ── Truhen ─────────────────────────────────────────────
+//  Die Truhe wird dreimal angeklopft (Glühen wird stärker, verrät aber nichts),
+//  beim dritten Mal wird das Teil sofort gezogen und gespeichert – erst dann
+//  läuft die Animation. Antippen während der Animation überspringt sie.
+const chest = { ctrl: null, taps: 0, opening: false, revealed: false, kind: null, variante: 'normal' };
+
+function chestVariante(kind) {
+  if (kind === 'level') return 'level';
+  const ev = LernPass.activeEvents().find(e => LernChest.SKINS[e.id]);
+  return ev ? ev.id : 'normal';
+}
+function chestLabel(kind, variante) {
+  if (kind === 'level') return '⭐ Level-Truhe';
+  const ev = LernPass.EVENTS.find(e => e.id === variante);
+  return ev ? `${ev.icon} ${ev.name}-Truhe` : '🎁 Truhe';
+}
 function passViewChests() {
-  const P = LernPass, ch = P.chestInfo(), R = P.RULES;
+  const P = LernPass, ch = P.chestInfo(), lv = P.levelInfo();
+  const kind = ch.next, variante = chestVariante(kind);
+  chest.kind = kind; chest.variante = variante;
   const ev = P.activeEvents();
-  const rv = lastReveal;
-  lastReveal = null;
-  let reveal = '';
-  if (rv && rv.item) {
-    const rar = P.RARITY[rv.item.selten] || { name: '', farbe: '#94a3b8' };
-    reveal = `<div class="reveal" style="border-color:${rar.farbe};background:${rar.farbe}14">
-      <div class="rv-prev">${P.itemPreviewHTML(rv.item)}</div>
-      <div class="rv-rar" style="color:${rar.farbe}">${escHtml(rar.name)}${rv.event ? ' · ' + escHtml(rv.event.icon + ' ' + rv.event.name) : ''}</div>
-      <div class="rv-name">${escHtml(rv.item.name)}</div>
-      <div class="lw-btns" style="justify-content:center"><button type="button" class="lw-btn primary" data-equip="${escHtml(rv.item.id)}">Gleich anziehen</button></div>
-    </div>`;
-  } else if (rv && rv.dust) {
-    reveal = `<div class="reveal" style="border-color:#a5b4fc;background:#a5b4fc14"><div class="rv-prev"><span class="it-prev it-emoji">✨</span></div>
-      <div class="rv-name">Sternenstaub</div><div class="lw-p">Du hast schon alle Teile aus den Truhen! Dafür gibt es Sternenstaub.</div></div>`;
-  }
   return `
-    <div class="chest-stage">
-      <span class="chest-big" id="chest-big" role="button" tabindex="0" aria-label="Truhe öffnen">${ch.available ? '🎁' : '📦'}</span>
-      <div class="chest-count">${ch.available ? `${ch.available} Truhe${ch.available > 1 ? 'n' : ''} bereit!` : 'Keine Truhe bereit'}</div>
-      <div class="lw-btns" style="justify-content:center"><button type="button" class="lw-btn primary" id="chest-open" ${ch.available ? '' : 'disabled'}>Truhe öffnen</button></div>
-      ${reveal}
+    <div class="chest-wrap">
+      <div class="chest-stage3d${kind ? '' : ' leer'}" id="chest-stage" tabindex="0" role="button"
+           aria-label="${kind ? 'Truhe: dreimal antippen zum Öffnen' : 'Keine Truhe bereit'}">
+        <div class="chest-canvas" id="chest-canvas"></div>
+        <div class="chest-top">
+          <span class="chest-kind${kind === 'level' ? ' level' : ''}">${kind ? escHtml(chestLabel(kind, variante)) : '📦 Keine Truhe bereit'}</span>
+          ${ch.available > 1 ? `<span class="chest-num" id="chest-num">×${ch.available}</span>` : ''}
+        </div>
+        <div class="chest-hint" id="chest-hint">${kind
+          ? `<span class="knock-dots" id="knock-dots"><i></i><i></i><i></i></span><span>Tippe 3× auf die Truhe!</span>`
+          : `<span>Nächste Truhe bei ${ch.nextAt} XP</span>`}</div>
+      </div>
+      <div class="chest-reveal" id="chest-reveal" hidden></div>
     </div>
     ${ev.length ? `<div style="margin-top:.6rem">${eventStripHTML()}</div>` : ''}
-    <div class="lw-sec">
-      <div class="pass-sub">Nächste Truhe bei ${ch.nextAt} XP</div>
+    <div class="lw-sec chest-info">
+      <div class="row"><div class="pass-sub">🎁 Nächste Truhe bei ${ch.nextAt} XP</div><div class="pass-sub">noch ${ch.nextAt - P.state.xp} XP</div></div>
       <div class="pass-bar"><div class="pass-fill" style="width:${ch.progress}%"></div></div>
-      <div class="pass-sub">Geöffnet: ${ch.opened} · Teile gesammelt: ${P.ownedCount()} / ${P.ITEMS.length}${P.state.dust ? ` · ✨ Sternenstaub: ${P.state.dust}` : ''}</div>
+      <div class="row" style="margin-top:.6rem"><div class="pass-sub">⭐ Level-Truhe bei Level ${lv.level + 1}</div><div class="pass-sub">noch ${lv.need - lv.into} XP</div></div>
+      <div class="pass-bar"><div class="pass-fill" style="width:${lv.pct}%;background:linear-gradient(90deg,#6366f1,#a78bfa)"></div></div>
+      <div class="pass-sub" style="margin-top:.6rem">Geöffnet: ${ch.opened} · Teile gesammelt: ${P.ownedCount()} / ${P.ITEMS.length}${P.state.dust ? ` · ✨ Sternenstaub: ${P.state.dust}` : ''}</div>
     </div>`;
 }
+function chestStart() {
+  const host = document.getElementById('chest-canvas');
+  if (!host || !window.LernChest) return;
+  chest.taps = 0; chest.opening = false; chest.revealed = false;
+  chest.ctrl = LernChest.mount(host, {
+    variante: chest.variante, leer: !chest.kind, onTap: chestTap,
+    onBurst: st => { if (st >= 3) LernPass.celebrate('feuerwerk'); else if (st >= 2) LernPass.celebrate('konfetti'); },
+  });
+}
+function chestStop() {
+  if (chest.ctrl) { chest.ctrl.destroy(); chest.ctrl = null; }
+  chest.taps = 0; chest.opening = false; chest.revealed = false;
+}
+function chestTap() {
+  if (!chest.ctrl) return;
+  if (chest.opening) { chest.ctrl.skip(); return; }
+  if (chest.revealed) return;
+  if (!chest.kind || LernPass.chestInfo().available <= 0) { chest.ctrl.knock(0); return; }
+  chest.taps = Math.min(3, chest.taps + 1);
+  chest.ctrl.knock(chest.taps);
+  document.querySelectorAll('#knock-dots i').forEach((d, i) => d.classList.toggle('on', i < chest.taps));
+  if (chest.taps >= 3) chestOpen();
+}
+function chestOpen() {
+  const P = LernPass;
+  const res = P.openChest(chest.kind);
+  if (!res || !res.ok) { renderPass('chests'); return; }
+  chest.opening = true;
+  buildPassCard();
+  chestUpdateDot();
+  const hint = document.getElementById('chest-hint');
+  if (hint) { hint.innerHTML = '<span>Tippen zum Überspringen</span>'; setTimeout(() => hint.classList.add('off'), 900); }
+  const it = res.item;
+  const rar = it ? (P.RARITY[it.selten] || { farbe: '#94a3b8' }) : { farbe: '#a5b4fc' };
+  const stufe = it ? ({ gewoehnlich: 0, selten: 1, episch: 2, legendaer: 3, event: 3 }[it.selten] || 0) : 1;
+  chest.ctrl.open({
+    farbe: rar.farbe, stufe, staub: !it,
+    itemId: it && it.slot !== 'hintergrund' ? it.id : null,
+    bgCss: it && it.slot === 'hintergrund' ? (it.css || '') : undefined,
+  }).then(() => {
+    if (!chest.ctrl) return;
+    chest.opening = false; chest.revealed = true;
+    chestShowReveal(res);
+  });
+}
+function chestUpdateDot() {
+  const ch = LernPass.chestInfo();
+  const btn = document.querySelector('.lw-tabs [data-mode="chests"]');
+  if (btn) btn.innerHTML = chestTabInner(ch.available);
+  const num = document.getElementById('chest-num');
+  if (num) num.hidden = true;
+}
+function chestShowReveal(res) {
+  const P = LernPass, el = document.getElementById('chest-reveal');
+  if (!el) return;
+  const left = P.chestInfo().available;
+  const next = left ? `<button type="button" class="lw-btn${res.item ? '' : ' primary'}" id="chest-next">🎁 Nächste Truhe (noch ${left})</button>` : '';
+  if (res.item) {
+    const rar = P.RARITY[res.item.selten] || { name: '', farbe: '#94a3b8' };
+    el.style.borderColor = rar.farbe; el.style.background = rar.farbe + '14';
+    el.innerHTML = `
+      <div class="rv-rar" style="color:${rar.farbe}">${escHtml(rar.name)}${res.event ? ' · ' + escHtml(res.event.icon + ' ' + res.event.name) : ''}${res.kind === 'level' ? ' · ⭐ Level-Truhe' : ''}</div>
+      <div class="rv-name">${escHtml(res.item.name)}</div>
+      <div class="pass-sub">${escHtml((P.SLOTS[res.item.slot] || {}).name || '')}</div>
+      <div class="lw-btns"><button type="button" class="lw-btn primary" data-equip="${escHtml(res.item.id)}">👕 Gleich anziehen</button>${next}</div>`;
+  } else {
+    el.style.borderColor = '#a5b4fc'; el.style.background = '#a5b4fc14';
+    el.innerHTML = `<div class="rv-name">✨ Sternenstaub</div>
+      <div class="lw-p">Du hast schon alle Teile aus den Truhen! Dafür gibt es Sternenstaub.</div>
+      ${next ? `<div class="lw-btns">${next}</div>` : ''}`;
+  }
+  el.hidden = false;
+  if (el.scrollIntoView && window.innerHeight < 800) el.scrollIntoView({ behavior: reduceMotion() ? 'auto' : 'smooth', block: 'nearest' });
+}
+function reduceMotion() { return !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches); }
 
 // ── Garderobe ──────────────────────────────────────────
 const ward = { cat: 'oberteil', tryOn: {}, ctrl: null, cheerOnReady: false };
@@ -1149,26 +1307,9 @@ function wardUpdate() {
   if (side) { const y = side.scrollTop; side.innerHTML = wardSideHTML(); side.scrollTop = y; }
 }
 
-function passViewBadges() {
-  const P = LernPass;
-  const got = P.state.badges.length;
-  return `
-    <p class="lw-p" style="margin-top:.8rem">${got} von ${P.BADGES.length} Abzeichen. Viele Abzeichen schalten besondere Teile für deine Garderobe frei.</p>
-    <div class="badge-grid">${P.BADGES.map(b => {
-      const has = P.state.badges.includes(b.id);
-      const pr = P.badgeProgress(b);
-      const reward = P.ITEMS.filter(i => i.quelle === 'set' && i.set === b.id);
-      return `<div class="badge-tile${has ? ' got' : ''}"><span class="bi">${escHtml(b.icon)}</span><div style="min-width:0">
-        <div class="bn">${escHtml(b.name)}</div><div class="bt">${escHtml(b.text)}</div>
-        ${reward.length ? `<div class="bt" style="color:var(--accent)">🎁 ${reward.map(r => escHtml(r.name)).join(', ')}</div>` : ''}
-        ${has ? '' : `<div class="bp"><i style="width:${Math.min(100, Math.round((pr.cur / pr.n) * 100))}%"></i></div>`}
-      </div></div>`;
-    }).join('')}</div>`;
-}
-
 function restoreForm() {
   return `
-    <textarea class="lw-input" id="rs-code" rows="3" style="margin-top:.6rem;font-size:.75rem;resize:vertical" placeholder="Code hier einfügen (beginnt mit LW1.)"></textarea>
+    <textarea class="lw-input" id="rs-code" rows="3" style="margin-top:.6rem;font-size:.75rem;resize:vertical" placeholder="Code hier einfügen (beginnt mit LW2.)"></textarea>
     <div class="lw-btns"><button type="button" class="lw-btn" id="rs-check">Code prüfen</button></div>
     <div class="lw-msg" id="rs-msg"></div>`;
 }
@@ -1222,13 +1363,13 @@ document.getElementById('pass-modal').addEventListener('click', async e => {
     else { if (LernPass.state.equipped[it.slot] !== it.id) LernPass.equip(it.slot, it.id); buildPassCard(); ward.cat = it.slot; ward.cheerOnReady = true; renderPass('wardrobe'); }
     return;
   }
-  if (t.id === 'chest-open' || t.closest('#chest-big')) { openChestAnimated(); return; }
+  if (t.id === 'chest-next') { renderPass('chests'); return; }
   if (t.id === 'kl-yes' || t.id === 'kl-save') {
     const k = t.id === 'kl-yes' ? Number(t.dataset.klNeu) : passDraft.klasse;
     if (!k) { const m = document.getElementById('kl-msg'); m.className = 'lw-msg err'; m.textContent = 'Bitte wähle deine Klasse.'; return; }
     LernPass.confirmClass(k);
     buildPage();
-    renderPass('view');
+    renderPass('wardrobe');
     LernPass.showAvatar({ text: `Auf geht's in Klasse ${k}! 🎒`, big: true, aktion: 'jubeln' });
     return;
   }
@@ -1241,7 +1382,8 @@ document.getElementById('pass-modal').addEventListener('click', async e => {
     LernPass.setProfile({ name, klasse: passDraft.klasse });
     LernPass.markLevelSeen();
     buildPage();
-    if (isNew) { ward.cat = 'figur'; renderPass('wardrobe'); } else renderPass('view');
+    if (isNew) ward.cat = 'figur';
+    renderPass('wardrobe');
     return;
   }
   if (t.id === 'pass-qr') {
@@ -1255,6 +1397,12 @@ document.getElementById('pass-modal').addEventListener('click', async e => {
     const m = document.getElementById('pass-copy-msg');
     m.className = 'lw-msg ' + (ok ? 'ok' : 'err');
     m.textContent = ok ? '✓ Code kopiert – bewahre ihn gut auf.' : 'Kopieren nicht möglich.';
+    if (ok) {
+      const st = document.getElementById('backup-state');
+      if (st) st.outerHTML = backupStateHTML();
+      const d = document.querySelector('.lw-tabs [data-mode="sicherung"] .dot');
+      if (d) d.remove();
+    }
     return;
   }
   if (t.id === 'rs-check') { askRestore(document.getElementById('rs-code').value, document.getElementById('rs-msg')); }
@@ -1262,7 +1410,7 @@ document.getElementById('pass-modal').addEventListener('click', async e => {
 document.addEventListener('avatar:gedreht', () => { const h = document.getElementById('ward-hint'); if (h) h.hidden = true; });
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape' && document.getElementById('pass-modal').classList.contains('open')) closePass();
-  if ((e.key === 'Enter' || e.key === ' ') && e.target && e.target.id === 'chest-big') { e.preventDefault(); openChestAnimated(); }
+  if ((e.key === 'Enter' || e.key === ' ') && e.target && e.target.id === 'chest-stage') { e.preventDefault(); chestTap(); }
 });
 document.getElementById('pass-section').addEventListener('click', e => {
   const c = e.target.closest('[data-open-pass]');
@@ -1270,26 +1418,8 @@ document.getElementById('pass-section').addEventListener('click', e => {
 });
 document.getElementById('pass-section').addEventListener('keydown', e => {
   const c = e.target.closest('[data-open-pass]');
-  if (c && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); openPass(c.dataset.openPass); }
+  if (c && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); openPass(LernPass.hasProfile() ? c.dataset.openPass : 'setup'); }
 });
-
-let chestBusy = false;
-function openChestAnimated() {
-  if (chestBusy || LernPass.chestInfo().available <= 0) return;
-  chestBusy = true;
-  const big = document.getElementById('chest-big');
-  const btn = document.getElementById('chest-open');
-  if (btn) btn.disabled = true;
-  const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (big && !reduce) big.classList.add('shake');
-  setTimeout(() => {
-    lastReveal = LernPass.openChest();
-    chestBusy = false;
-    buildPassCard();
-    renderPass('chests');
-    if (lastReveal && lastReveal.item && ['episch', 'legendaer', 'event'].includes(lastReveal.item.selten)) LernPass.celebrate('konfetti');
-  }, reduce ? 50 : 700);
-}
 
 // Standard-Text im QR-Fenster nach Sicherungs-QR zurücksetzen
 document.getElementById('qr-close').addEventListener('click', () => {

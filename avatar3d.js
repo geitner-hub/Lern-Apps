@@ -14,6 +14,7 @@
 //    refresh()                  → alle [data-avatar-bild] neu zeichnen
 //    figur(look?, opts)         → Promise: Figur für eigene Szenen (z. B. Runner)
 //                                 { root, THREE, pose({lauf, phase, stolpern, jubel, t}), gesicht(mode) }
+//    teil(itemId)               → Promise: einzelnes Teil, normiert auf Größe 1 { root, anim[] } oder null
 //
 //  Automatisch befüllt werden Elemente mit
 //    data-avatar-thumb="ITEM-ID"         Vorschau eines Teils
@@ -636,6 +637,47 @@
     };
   }
 
+  // ── Einzelnes Teil als 3D-Modell (Truhen-Enthüllung) ──
+  /**
+   * Baut ein Avatar-Teil allein (auf einer grauen Probierfigur, nur der passende Ausschnitt),
+   * zentriert und auf Größe 1 normiert. Hintergründe haben kein Modell → null.
+   * → { root, anim[] }   anim-Funktionen mit f(t) je Bild aufrufen
+   */
+  function teil(id) {
+    const it = ITEM(id);
+    if (!it || it.slot === 'hintergrund') return null;
+    const look = { haut: 0, frisur: '', haarfarbe: 0, augen: '', mund: '', eq: { [it.slot]: it.id } };
+    let P, part;
+    if (it.slot === 'begleiter') {
+      P = build(look, { ghost: true, only: 'begleiter', noShadow: true });
+      part = P.anchors.begleiter;
+    } else {
+      P = build(look, { ghost: true, noPet: true, noShadow: true, noHead: ['oberteil', 'hose', 'schuhe', 'ruecken'].includes(it.slot) });
+      part = { kopf: P.head, gesicht: P.head, oberteil: P.upper, ruecken: P.upper, hose: P.anchors.beine, schuhe: P.anchors.beine, hand: P.anchors.hand }[it.slot];
+    }
+    if (!part) return null;
+    // Nur das Teil zeigen: Blöcke der grauen Probierfigur entfernen (falls danach noch etwas übrig ist)
+    const skin = colMat(P.hautC);
+    const nackt = m => m.isMesh && (Array.isArray(m.material) ? m.material.every(x => x === skin) : m.material === skin);
+    const weg = [];
+    part.traverse(m => { if (nackt(m)) weg.push(m); });
+    let rest = 0;
+    part.traverse(m => { if (m.isMesh && !weg.includes(m)) rest++; });
+    if (rest) weg.forEach(m => m.parent && m.parent.remove(m));
+    P.root.updateMatrixWorld(true);
+    const inner = new T3.Group();
+    inner.attach(part);
+    const box3 = new T3.Box3().setFromObject(inner);
+    if (box3.isEmpty()) return null;
+    const c = new T3.Vector3(), sz = new T3.Vector3();
+    box3.getCenter(c); box3.getSize(sz);
+    inner.position.sub(c);
+    const root = new T3.Group();
+    root.add(inner);
+    root.scale.setScalar(1 / Math.max(sz.x, sz.y, sz.z, .001));
+    return { root, anim: P.anim };
+  }
+
   // ── Auftritt in der Ecke (nach Runden, Begrüßung) ──────
   let pop = null, popCtrl = null, popT = null, popHideT = null;
   function popEl() {
@@ -698,5 +740,6 @@
   }
 
   window.LernAvatar = { ready, mount, appear, hide: hidePop, snapshot: (l, o) => snapshot(l, o), refresh, PORTRAIT_KEY,
-                        figur: (look, o) => ready().then(() => figur(look, o)) };
+                        figur: (look, o) => ready().then(() => figur(look, o)),
+                        teil: id => ready().then(() => teil(id)) };
 })();

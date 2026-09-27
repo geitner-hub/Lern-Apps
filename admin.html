@@ -852,6 +852,8 @@ function buildPassOverview() {
     ['Wochenziel', `${R.weekGoalDays} Tage mit mind. ${R.goodPct} %; Wochen ohne Übung pausieren die Serie`],
     ['Sterne', `🥉 ${R.starPct[0]} % · 🥈 ${R.starPct[1]} % · 🥇 ${R.starPct[2]} % – jeweils an ${R.starDays} verschiedenen Tagen`],
     ['Truhen', `alle ${R.chestEveryXp} XP eine Truhe; bei aktivem Event ${Math.round(R.eventChestShare * 100)} % Event-Teile; ${R.eventGiftChests} Geschenk-Truhe je Event und Schuljahr`],
+    ['Level-Truhen', 'bei jedem Level-Aufstieg eine Truhe (im Saison-Modus jedes Schuljahr neu); zieht nur aus dem normalen Truhen-Pool, ohne Event-Teile; wird vor den anderen Truhen geöffnet'],
+    ['Sicherungs-Erinnerung', `Hinweis im Pass nach ${R.backupRemindDays} Tagen ohne Sicherung bzw. ab ${R.backupFirstXp} XP, wenn noch nie gesichert wurde`],
   ].map(([a, b]) => `<tr><td><b>${escHtml(a)}</b></td><td>${escHtml(b)}</td></tr>`).join('');
 
   const chanceRows = rars.map(k => {

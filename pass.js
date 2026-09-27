@@ -61,6 +61,8 @@
     chestEveryXp:    250,   // alle X XP eine Truhe
     eventChestShare: 0.6,   // Anteil Event-Teile in Truhen während eines Events
     eventGiftChests: 1,     // Geschenk-Truhen je Event & Schuljahr (nach erster guter Runde)
+    backupRemindDays: 30,   // Erinnerung im Pass, wenn so lange nicht gesichert wurde
+    backupFirstXp: 100,     // … bzw. ab so vielen XP, wenn noch nie gesichert wurde
     starPct:         [60, 80, 90],  // Bronze, Silber, Gold
     starDays:        2,     // an so vielen verschiedenen Tagen erreicht
     // Endlos-Modus (z. B. Runner): XP für den besten Lauf des Tages, als Differenz ausgezahlt
@@ -143,6 +145,9 @@
       seasons: {},               // { '2026/27': XP in diesem Schuljahr }
       chestsOpened: 0,
       bonusChests: 0,            // Geschenk-Truhen (Events)
+      levelChests: 0,            // Level-Truhen (je Level-Aufstieg eine)
+      levelOpened: 0,            // davon geöffnet (zählen auch in chestsOpened)
+      lastBackup: '',            // Tag der letzten Sicherung (QR, Code, Karte)
       dust: 0,                   // Sternenstaub (wenn der Pool leer ist)
       inventory: [],             // Cosmetics (IDs)
       equipped: {},              // Slot → ID
@@ -292,10 +297,17 @@
   }
 
   // ── Truhen ──────────────────────────────────────────────
+  //  Zwei Sorten: normale Truhen (XP + Geschenke) und Level-Truhen (je Level-Aufstieg).
+  //  chestsOpened zählt alle geöffneten, levelOpened nur die Level-Truhen.
   function chestInfo() {
     const fromXp = Math.floor(S.xp / RULES.chestEveryXp);
-    const earned = fromXp + (S.bonusChests || 0);
-    return { earned, fromXp, bonus: S.bonusChests || 0, opened: S.chestsOpened, available: Math.max(0, earned - S.chestsOpened),
+    const lc = S.levelChests || 0, lo = Math.min(S.levelOpened || 0, lc);
+    const earned = fromXp + (S.bonusChests || 0) + lc;
+    const level = Math.max(0, lc - lo);
+    const normal = Math.max(0, fromXp + (S.bonusChests || 0) - (S.chestsOpened - lo));
+    const available = level + normal;
+    return { earned, fromXp, bonus: S.bonusChests || 0, levelEarned: lc, opened: S.chestsOpened, available, level, normal,
+             next: level > 0 ? 'level' : normal > 0 ? 'normal' : null,
              nextAt: (fromXp + 1) * RULES.chestEveryXp, progress: Math.round(((S.xp % RULES.chestEveryXp) / RULES.chestEveryXp) * 100) };
   }
 
@@ -317,21 +329,37 @@
   }
   function pickAny(pool) { return pool[Math.floor(Math.random() * pool.length)]; }
 
-  /** Öffnet eine Truhe. → { ok, item, event, dust } */
-  function openChest() {
-    if (chestInfo().available <= 0) return { ok: false };
-    const evIds = activeEvents().map(e => e.id);
+  /**
+   * Öffnet eine Truhe. kind: 'level' | 'normal' | leer (= die nächste, Level-Truhen zuerst).
+   * Level-Truhen ziehen (vorerst) nur aus dem normalen Truhen-Pool, ohne Event-Anteil.
+   * → { ok, kind, item, event, dust }
+   */
+  function openChest(kind) {
+    const ch = chestInfo();
+    if (ch.available <= 0) return { ok: false };
+    if (kind !== 'level' && kind !== 'normal') kind = ch.next;
+    if (kind === 'level' && ch.level <= 0) kind = 'normal';
+    if (kind === 'normal' && ch.normal <= 0) kind = 'level';
+    const evIds = kind === 'level' ? [] : activeEvents().map(e => e.id);
     const eventPool = ITEMS.filter(i => i.quelle === 'event' && evIds.includes(i.event) && !owns(i.id));
     const normalPool = ITEMS.filter(i => i.quelle === 'truhe' && !owns(i.id));
     let item = null;
     if (eventPool.length && (Math.random() < RULES.eventChestShare || !normalPool.length)) item = pickAny(eventPool);
     else if (normalPool.length) item = pickByRarity(normalPool);
     S.chestsOpened++;
-    if (!item) { S.dust += 1; save(); return { ok: true, item: null, dust: 1 }; }
+    if (kind === 'level') S.levelOpened = (S.levelOpened || 0) + 1;
+    if (!item) { S.dust += 1; save(); return { ok: true, kind, item: null, dust: 1 }; }
     const clean = ITEM_BY_ID[item.id];
     S.inventory.push(clean.id);
     save();
-    return { ok: true, item: clean, event: clean.quelle === 'event' ? EVENTS.find(e => e.id === clean.event) : null };
+    return { ok: true, kind, item: clean, event: clean.quelle === 'event' ? EVENTS.find(e => e.id === clean.event) : null };
+  }
+
+  /** Level-Truhen für Aufstiege gutschreiben (aus award/awardEndless). → Anzahl neuer Truhen */
+  function grantLevelChests(before, after) {
+    const n = Math.max(0, after.level - before.level);
+    if (n) { S.levelChests = (S.levelChests || 0) + n; save(); }
+    return n;
   }
 
   function equip(slot, id) {
@@ -568,11 +596,12 @@
 
     const newBadges = checkBadges();
     const after = levelInfo();
+    const levelChest = grantLevelChests(before, after);
     const starsAfter = starsFor(key);
     return {
       xp, lines, pct, blocked: null, eventGift, newBadges,
       levelUp: after.level > before.level ? after : null,
-      level: after,
+      level: after, levelChest,
       chest: chestInfo().fromXp > chestsBefore,
       stars: starsAfter,
       starUp: starsAfter > starsBefore ? starsAfter : 0,
@@ -669,11 +698,12 @@
 
     const newBadges = checkBadges();
     const after = levelInfo();
+    const levelChest = grantLevelChests(before, after);
     return {
       xp, lines, blocked: null, endless: true, correct, dayBest: e.best, newDayBest, capReached,
       pct: good ? 100 : 0, eventGift, newBadges,
       levelUp: after.level > before.level ? after : null,
-      level: after,
+      level: after, levelChest,
       chest: chestInfo().fromXp > chestsBefore,
       stars: starsFor(key), starUp: 0,
       week: weekInfo(),
@@ -760,6 +790,7 @@
       a: apps,
       i: S.inventory, e: S.equipped, b: S.badges,
       z: S.seasons, g: S.goodRounds || 0, bc: S.bonusChests || 0, sd: S.dust || 0,
+      lc: S.levelChests || 0, lo: S.levelOpened || 0,
       f: S.flags.comeback ? 1 : 0,
       eg: Object.keys(S.eventGifts),
       ed: Object.fromEntries(Object.entries(S.eventDays).map(([k, v]) => [k, v.length])),
@@ -775,7 +806,17 @@
     });
     if (Object.keys(ls).length) payload.ls = ls;
     const body = b64urlEncode(JSON.stringify(payload));
+    // Wer einen Code/QR/Karte erzeugt, hat gesichert → für die Erinnerung im Pass merken
+    if (S.lastBackup !== dayKey()) { S.lastBackup = dayKey(); save(); }
     return 'LW2.' + body + '.' + fnv('lernwelt|' + body);
+  }
+
+  /** Stand der Sicherung: { last: 'YYYY-MM-DD'|'', days: Tage seit letzter Sicherung|null, remind: bool } */
+  function backupInfo() {
+    const last = /^\d{4}-\d{2}-\d{2}$/.test(S.lastBackup || '') ? S.lastBackup : '';
+    const days = last ? Math.max(0, Math.round((parseDay(dayKey()) - parseDay(last)) / 864e5)) : null;
+    const remind = !!S.profile && (last ? days >= RULES.backupRemindDays : S.xp >= RULES.backupFirstXp);
+    return { last, days, remind };
   }
 
   function restoreUrl() {
@@ -823,6 +864,8 @@
       else restored.seasons[seasonId()] = restored.xp;             // alte Codes ohne Saison-Daten
       restored.goodRounds = num(d.g, 1e6);
       restored.bonusChests = num(d.bc, 1000);
+      restored.levelChests = num(d.lc, 1000);
+      restored.levelOpened = Math.min(num(d.lo, 1000), restored.levelChests);
       restored.dust = num(d.sd, 1e5);
       restored.flags = d.f ? { comeback: true } : {};
       (Array.isArray(d.eg) ? d.eg : []).forEach(k => { if (typeof k === 'string' && /^[a-z-]+\|\d{4}\/\d{2}$/.test(k)) restored.eventGifts[k] = true; });
@@ -836,7 +879,9 @@
         const p = v.map(x => Math.max(0, Math.min(100, Math.round(Number(x) || 0)))).sort((a, b) => b - a).slice(0, 3);
         if (p.length) restored.lernstand[id] = { n: p.length, best: p[0], last: '', p };
       });
-      restored.chestsOpened = Math.min(restored.chestsOpened, Math.floor(restored.xp / RULES.chestEveryXp) + restored.bonusChests);
+      restored.chestsOpened = Math.min(restored.chestsOpened, Math.floor(restored.xp / RULES.chestEveryXp) + restored.bonusChests + restored.levelChests);
+      restored.levelOpened = Math.min(restored.levelOpened, restored.chestsOpened);
+      restored.lastBackup = dayKey();                              // der Code war ja eine Sicherung
       restored.seenLevel = 1;
       return {
         ok: true,
@@ -889,6 +934,7 @@
               <div class="t-lines">${res.lines.map(esc).join('<br>')}</div>
               ${res.levelUp ? `<div class="t-big">🎉 Level ${lv.level}: ${esc(lv.title)}!</div>` : ''}
               ${res.starUp ? `<div class="t-big">${['', '🥉 Bronze', '🥈 Silber', '🥇 Gold'][res.starUp]}-Stern verdient!</div>` : ''}
+              ${res.levelChest ? `<div class="t-big">🎁 Level-Truhe verdient!</div>` : ''}
               ${res.chest ? `<div class="t-big">🎁 Neue Truhe verdient!</div>` : ''}
               ${res.eventGift ? `<div class="t-big">${esc(res.eventGift.icon)} ${esc(res.eventGift.geschenk || res.eventGift.name + '-Geschenk')}: eine Truhe für dich!</div>` : ''}
               ${(res.newBadges || []).map(n => `<div class="t-big">${esc(n.badge.icon)} Abzeichen „${esc(n.badge.name)}“!${n.items.length ? ' +' + n.items.length + ' Set-Teil' + (n.items.length > 1 ? 'e' : '') : ''}</div>`).join('')}
@@ -1007,7 +1053,7 @@
       showAvatar({ text, big: false, aktion: res.correct >= RULES.endlessGoodCorrect ? 'jubeln' : 'winken' });
       return;
     }
-    if (res.levelUp) text = `Level ${res.levelUp.level}! 🎉`;
+    if (res.levelUp) text = `Level ${res.levelUp.level}! 🎉` + (res.levelChest ? ' + Truhe 🎁' : '');
     else if (badges.length) text = `Abzeichen: ${badges[0].badge.name}! ${badges[0].badge.icon}`;
     else if (res.starUp) text = ['', 'Bronze-Stern! 🥉', 'Silber-Stern! 🥈', 'Gold-Stern! 🥇'][res.starUp];
     else if (res.chest) text = 'Neue Truhe! 🎁';
@@ -1061,7 +1107,7 @@
     get settings(){ return readSettings(); },
     get lernstand() { return S.lernstand; },
     setSettings, setSpiele, lernstandMelden, freigeschaltet, activeEvents, seasonsOn, seasonId, levelXp, pastSeasons,
-    openChest, equip, equippedItem, owns, ownedCount, checkBadges, badgeProgress, setLook, look,
+    openChest, backupInfo, equip, equippedItem, owns, ownedCount, checkBadges, badgeProgress, setLook, look,
     avatarHTML, cardBackground, itemPreviewHTML, itemSourceText,
     hasProfile()  { return !!(S.profile && S.profile.name); },
     profile()     { return S.profile; },

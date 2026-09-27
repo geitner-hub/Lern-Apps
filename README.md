@@ -86,6 +86,16 @@ in `RULES` am Anfang von `pass.js` und können dort angepasst werden.
   Hose, Schuhe, Rücken, In der Hand, Begleiter, Hintergrund. Die Figur selbst (Hautton, Frisur,
   Haarfarbe, Augen, Mund) ist immer frei wählbar; Startausstattung steht in `AVATAR.START`.
   Gesperrte Teile können in der Garderobe anprobiert werden.
+- **Level-Truhen:** jeder Level-Aufstieg gibt zusätzlich eine Truhe (nur ab Einführung, nicht rückwirkend).
+  Sie zieht aus dem normalen Truhen-Pool (ohne Event-Anteil) und wird zuerst geöffnet. Zählung in
+  `levelChests`/`levelOpened`, beides steckt im Sicherungs-Code (`lc`/`lo`).
+- **Truhe öffnen** (`chest3d.js`): 3D-Truhe im Block-Stil, dreimal antippen (das Glühen wird stärker,
+  bleibt aber neutral), dann wird das Teil gezogen und gespeichert, erst danach läuft die Animation
+  (Deckel, Lichtsäule, Funken, das 3D-Teil steigt auf; Stärke je Seltenheit). Tippen überspringt.
+  Varianten: normal, Level-Truhe, Halloween, Weihnachten (Geschenk), Ostern – neue Varianten in `SKINS`.
+  Ohne WebGL: gezeichnete Truhe. Bei „Bewegung reduzieren“: ruhige Version.
+- **Pass-Reiter:** Garderobe (Start) · Truhen · Erfolge (Leiste + Abzeichen) · Sicherung (mit Stand der
+  letzten Sicherung; „!“ nach 30 Tagen ohne Sicherung bzw. ab 100 XP ohne jede Sicherung).
 - **Abzeichen:** schalten legendäre Set-Teile frei (Liste in `lernwelt-inhalte.json`).
 - **Saison-Modus** (Admin → 🧭 Pass): Level/Titel zählen pro Schuljahr, Wechsel automatisch am
   1. August. Gesamt-XP, Sterne, Abzeichen, Truhen und Cosmetics bleiben.
