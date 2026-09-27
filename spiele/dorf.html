@@ -97,6 +97,17 @@
     .zettel.getauscht { animation: tausch .5s ease; }
     @keyframes tausch { 0% { transform: rotate(var(--dreh)) rotateY(90deg); } 100% { transform: rotate(var(--dreh)); } }
 
+    /* Wochenauftrag: breiter Zettel über die ganze Reihe */
+    .zettel.woche { grid-column: 1 / -1; min-height: 0; --pin: #e6a817; --dreh: .3deg;
+      background: linear-gradient(180deg, #fff6d6, var(--papier)); display: grid; grid-template-columns: 1fr auto; gap: .5rem 1.2rem; align-items: center; }
+    .zettel.woche .links { display: flex; flex-direction: column; gap: .45rem; }
+    .zettel.woche .rechts { display: flex; flex-direction: column; gap: .5rem; align-items: flex-end; }
+    .balken { height: 12px; border-radius: 99px; background: rgba(122,98,72,.25); overflow: hidden; max-width: 360px; }
+    .balken i { display: block; height: 100%; background: linear-gradient(90deg, #e6a817, #f5c542); border-radius: 99px; }
+    .von-lk { display: inline-block; font-size: .75rem; font-weight: 900; background: #3b2a1a; color: #fde68a; border-radius: 6px; padding: .1rem .45rem; margin-left: .3rem; vertical-align: 2px; }
+    .rest { font-size: .82rem; font-weight: 800; color: var(--tinte2); }
+    @media (max-width: 560px) { .zettel.woche { grid-template-columns: 1fr; } .zettel.woche .rechts { align-items: stretch; } }
+
     .hinweis { margin: 1.1rem .2rem 0; color: var(--text2); font-size: .92rem; font-weight: 600; }
 
     /* Das Dorf (3D) */
@@ -345,11 +356,39 @@
     if (k) k.onclick = () => { const r = D.ausbauen(gewaehlt); if (r.ok && szene) szene.jubel(); };
   }
 
+  function wochenZettel() {
+    const D = window.LernDorf, w = D.state.w;
+    if (!w) return '';
+    const tag = new Date().getDay(), rest = (7 - tag) % 7;             // Tage bis Sonntag
+    const lohn = Object.entries(D.wocheLohn()).filter(([, n]) => n).map(([r, n]) => `+${n} ${D.rohstoff(r).icon}`).join(' ');
+    let was, link = '';
+    if (w.a === 'auftraege') was = `Erledige ${w.n} Aufträge vom Brett.`;
+    else {
+      const app = D.appInfo(w.p || w.z);
+      was = w.a === 'app'
+        ? `${w.n} Runden in <b>${esc(app.name)}</b> mit mindestens ${w.m} %.`
+        : `${w.n} Runden zum Thema <b>${esc(w.t || w.z)}</b> mit mindestens ${w.m} %.`;
+      if (app.link && !w.f) link = `<a class="knopf" href="${esc(app.link)}">Los geht's</a>`;
+    }
+    const pct = Math.round(w.c / w.n * 100);
+    return `<article class="zettel woche">
+        <div class="links">
+          <div class="fach">📅 Wochenauftrag${w.a !== 'auftraege' ? '<span class="von-lk">von deiner Lehrkraft</span>' : ''}</div>
+          <div class="ziel">${w.f ? '✅ Geschafft! Nächste Woche gibt es einen neuen Wochenauftrag.' : was}</div>
+          ${w.f ? '' : `<div class="balken" role="img" aria-label="${w.c} von ${w.n} geschafft"><i style="width:${pct}%"></i></div>
+          <div class="rest">${w.c} von ${w.n} geschafft · ${rest === 0 ? 'heute ist der letzte Tag' : rest === 1 ? 'noch 1 Tag' : 'noch ' + rest + ' Tage'}</div>`}
+        </div>
+        <div class="rechts"><div class="lohn">${w.f ? '' : lohn}</div>${link}</div>
+      </article>`;
+  }
+
   function brettZeichnen() {
     const D = window.LernDorf, S = D.state, W = D.werte();
     document.getElementById('wuerfel').textContent = `🎲 ${S.rr} ${S.rr === 1 ? 'Tausch' : 'Tausche'} übrig`;
     document.getElementById('hinweis').textContent =
-      `Jeden Tag kommen neue Aufträge. Offene Aufträge bleiben hängen, bis du sie erledigst. Pro Tag bekommst du einen Tausch dazu, sparen kannst du bis zu ${W.rrMax}.`;
+      'Jeden Tag kommen neue Aufträge. Offene Aufträge bleiben hängen, bis du sie erledigst. '
+      + (W.rrProTag && W.rrMax ? `Pro Tag bekommst du ${W.rrProTag === 1 ? 'einen Tausch' : W.rrProTag + ' Tausche'} dazu, sparen kannst du bis zu ${W.rrMax}. ` : '')
+      + 'Der Wochenauftrag gilt bis Sonntag, Gold gibt es nur dafür.';
     const zettel = W.plaetze.map(platz => {
       const q = S.q.find(x => x.p === platz.id);
       const titel = `${platz.faecher === 'alle' ? '🎲' : (ICON[platz.faecher[0]] || '📌')} ${esc(platz.name || '')}`;
@@ -374,7 +413,7 @@
     }).join('');
     getauscht = null;
     const box = document.getElementById('zettel');
-    box.innerHTML = zettel;
+    box.innerHTML = zettel + wochenZettel();
     box.querySelectorAll('.tausch').forEach(b => b.onclick = () => {
       const platz = Number(b.dataset.platz);
       getauscht = platz;
