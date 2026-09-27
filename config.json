@@ -386,7 +386,7 @@
     "events": {
       "halloween": false,
       "weihnachten": false,
-      "ostern": true
+      "ostern": false
     }
   },
   "spiele": {
