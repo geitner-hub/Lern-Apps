@@ -732,6 +732,10 @@ function buildPassAdmin() {
         <label class="switch"><input type="checkbox" data-pass-set="event:${escHtml(ev.id)}" ${cfg.events[ev.id] === true ? 'checked' : ''} aria-label="${escHtml(ev.name)}-Event"><span></span></label>
       </div>`;
     }).join('')}
+    ${(() => {                                   // Mein Dorf: nur ein Event gleichzeitig
+      const an = P.EVENTS.filter(ev => cfg.events[ev.id] === true);
+      return an.length > 1 ? `<p class="note" style="margin:.4rem 0 .8rem;color:var(--gold,#e6a817)">⚠️ ${an.length} Events sind an. Im Dorf („Mein Dorf“) läuft immer nur eins: <b>${escHtml(an[0].titel || an[0].name)}</b> (das erste in der Liste). Truhen und Abzeichen im Pass gelten für alle.</p>` : '';
+    })()}
     ${spieleAdminHTML()}`;
   buildPassOverview();
 }
@@ -1003,6 +1007,18 @@ async function buildDorfAdmin() {
     <details><summary>🧱 Baukosten je Stufe (mit Faktor ${Math.round(f * 100)} %)</summary><div class="ov-body"><table>
       <tr><th>Stufe</th><th>Kosten</th></tr>${stufen.map(z => `<tr><td>${z.stufe}</td><td>${kostenTxt(z)}</td></tr>`).join('')}</table>
       <p class="note">Der allererste Bau ist sofort fertig, alle weiteren Bauten und Ausbauten ab dem nächsten Tag.</p></div></details>
+    ${Array.isArray(C.EVENTS) && C.EVENTS.length ? `<details><summary>🎉 Feste im Dorf (${C.EVENTS.length})</summary><div class="ov-body"><table>
+      <tr><th></th><th>Fest</th><th>Währung</th><th>Festgebäude (Kosten je Stufe)</th><th>Deko</th><th>Gast → Sammelstücke</th><th>Besonderes</th></tr>
+      ${C.EVENTS.map(e => {
+        const fg = e.festgebaeude || {}, m = e.mechanik || {}, g = e.gast || {}, an = passCfg().events[e.id] === true;
+        return `<tr><td style="font-size:1.3rem">${escHtml(e.icon)}</td><td><b>${escHtml(e.name)}</b><div style="font-size:.7rem;color:${an ? 'var(--green)' : 'var(--muted)'}">${an ? 'läuft gerade' : 'aus'}</div></td>
+          <td>${escHtml(e.waehrung.icon)} ${escHtml(e.waehrung.name)}</td>
+          <td>${escHtml(fg.icon || '')} ${escHtml(fg.name || '–')}<br><span style="color:var(--muted)">${(fg.kosten || []).map(k => Math.round(k * f)).join(' / ')} ${escHtml(e.waehrung.icon)}</span></td>
+          <td>${(e.deko || []).map(d => `${escHtml(d.icon)} ${escHtml(d.name)} (${Math.round(d.kosten * f)})`).join('<br>')}</td>
+          <td>${escHtml(g.icon || '')} <b>${escHtml(g.name || '–')}</b><br>${(g.geschichten || []).map(x => escHtml(x.stueck.icon) + ' ' + escHtml(x.stueck.name)).join(', ')}</td>
+          <td>${m.art === 'kalender' ? `${escHtml(m.icon || '🗓️')} ${escHtml(m.name)}: ${m.tueren || 24} Türen, eine je Übungstag${m.stueck ? ', letzte → ' + escHtml(m.stueck.icon) + ' ' + escHtml(m.stueck.name) : ''}` : m.art === 'suche' ? `${escHtml(m.icon || '🔍')} ${escHtml(m.name)}: täglich nach dem ersten erfüllten Auftrag` : '–'}<br>🏅 ${escHtml((e.meilenstein || {}).name || '')}</td></tr>`;
+      }).join('')}</table>
+      <p class="note">Ein- und ausgeschaltet werden die Feste im Reiter „🧭 Pass“ bei den Events – dort, wo auch die Event-Truhen an- und ausgehen. Währung pro Fest: Startgeschenk ${(C.EVENT_WERTE || {}).startgeschenk ?? 5}, +${(C.EVENT_WERTE || {}).proAuftrag ?? 3} je erfülltem Tagesauftrag, +${(C.EVENT_WERTE || {}).mechanik ?? 3} je Kalendertür bzw. Fund, Gast-Auftrag +${((C.EVENT_WERTE || {}).gast || {}).lohn ?? 8}. Deko bleibt nach dem Fest im Dorf, das Festgebäude kommt in die Festkiste und steht beim nächsten Fest wieder da. Nichts verfällt.</p></div></details>` : ''}
     <details><summary>📍 Bauplätze</summary><div class="ov-body"><table><tr><th>Frei ab</th><th>Anzahl</th></tr>${platzRows}</table></div></details>
     <details><summary>📋 Aufträge</summary><div class="ov-body"><table>
       <tr><td><b>Tagesauftrag</b></td><td>${t.runden ?? 2} Runden mit mind. ${t.schwelle ?? 70} % in einer App → ${(t.belohnung || [15, 25]).join('–')} Holz oder Stein</td></tr>

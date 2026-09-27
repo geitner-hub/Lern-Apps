@@ -255,3 +255,16 @@ Plan und Stand: Claude-Doc „Aktionsplan: Aufbauspiel „Mein Dorf““.
   **Postkarte** (📮): Bild vom Dorf mit Dorfname und Zahlen zum Herzeigen am Gerät – nichts wird verschickt.
 - **Dorf für Kinder freischalten:** im Admin „Neue App“ → Datei `spiele/dorf.html`, Fach „Allgemein“;
   mit „versteckt“ lässt es sich vorher selbst testen.
+- **Feste (Etappe 5):** Halloween, Weihnachten und Ostern kommen ins Dorf, sobald das passende Event im
+  Admin unter **🧭 Pass → Events** an ist (ein Schalter für Pass und Dorf). Sind zwei an, läuft im Dorf das
+  erste. Jedes Fest hat eine eigene Währung (🎃 Kürbiskerne, 🍪 Lebkuchen, 🥚 Ostereier; Startgeschenk 5,
+  +3 je erfülltem Tagesauftrag), ein Festgebäude mit 3 Stufen auf der **Festwiese** (außerhalb des
+  Dorfquadrats, rechts unten), 4 Deko-Stücke, einen Gast mit 5 Geschichten-Aufträgen (Sammelstücke) und
+  eine Mechanik: Adventskalender (eine Tür je Übungstag) oder Suche (täglich versteckt sich etwas im Dorf).
+  Nach dem Fest bleibt alles: Deko bleibt stehen (Festkiste 🎁 zum Aufstellen/Versetzen), das Festgebäude
+  kommt in die Festkiste und steht beim nächsten Fest wieder da, Währung verfällt nicht. Neues Fest =
+  neuer Eintrag in `dorf-inhalte.json` → `EVENTS` (Id wie in `lernwelt-inhalte.json` → `EVENTS`); Modelle
+  sind dort Klötzchen-Listen (`g`/`p`/`f`, kein Code). Ein Pass-Event ohne Dorf-Eintrag bekommt Wimpel.
+- **Flächenplan** (`dorf-inhalte.json` → `FLAECHEN`): Festwiese, Deko-Plätze, Verstecke und reservierte
+  Umland-Bereiche für Etappe 6 (Landschaft) und 7 (neues Gebiet). Dauer-Animationen (Schnee, Blätter,
+  Versteck, Begleiter) laufen mit höchstens 30 Bildern/s, nur sichtbar, mit Pause nach 60 s ohne Antippen.
