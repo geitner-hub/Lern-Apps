@@ -1,56 +1,259 @@
 {
-  "_hinweis": "Inhalte und Startwerte für „Mein Dorf“ (gemeinsam/dorf-kern.js). Werte hier ändern, der Admin kann Einzelnes überschreiben (ab Etappe 3). Gebäudeliste und Namen sind vorläufig und werden in Etappe 2 endgültig festgelegt. IDs nie umbenennen, sie stehen in den Spielständen der Kinder.",
+  "_hinweis": "Inhalte und Startwerte für „Mein Dorf“ (gemeinsam/dorf-kern.js, 3D: gemeinsam/dorf-szene.js). Werte hier ändern, der Admin kann Einzelnes überschreiben (ab Etappe 3). IDs nie umbenennen, sie stehen in den Spielständen der Kinder. BAUPLAETZE: x/z = Lage im Dorf (Dorfplatz in der Mitte bei 0/0; im Bild ist −x/−z oben, Abstand 20 = ein Feld).",
   "version": 1,
-
   "ROHSTOFFE": [
-    { "id": "h", "name": "Holz",  "icon": "🪵" },
-    { "id": "s", "name": "Stein", "icon": "🪨" },
-    { "id": "g", "name": "Gold",  "icon": "🪙" }
+    {
+      "id": "h",
+      "name": "Holz",
+      "icon": "🪵"
+    },
+    {
+      "id": "s",
+      "name": "Stein",
+      "icon": "🪨"
+    },
+    {
+      "id": "g",
+      "name": "Gold",
+      "icon": "🪙"
+    }
   ],
-
   "AUFTRAEGE": {
     "plaetze": [
-      { "id": 1, "name": "Mathematik",   "faecher": ["Mathematik"] },
-      { "id": 2, "name": "Englisch/GPG", "faecher": ["Englisch", "GPG"] },
-      { "id": 3, "name": "Freie Wahl",   "faecher": "alle" }
+      {
+        "id": 1,
+        "name": "Mathematik",
+        "faecher": [
+          "Mathematik"
+        ]
+      },
+      {
+        "id": 2,
+        "name": "Englisch/GPG",
+        "faecher": [
+          "Englisch",
+          "GPG"
+        ]
+      },
+      {
+        "id": 3,
+        "name": "Freie Wahl",
+        "faecher": "alle"
+      }
     ],
-    "tag":   { "runden": 2, "schwelle": 70, "belohnung": [15, 25], "rohstoffe": ["h", "s"] },
-    "woche": { "rohstoffe": 60, "gold": 2 },
-    "rerolls": { "proTag": 1, "max": 3 },
-    "langeNichtGespielt": { "tage": 14, "bonus": 0.5 }
+    "tag": {
+      "runden": 2,
+      "schwelle": 70,
+      "belohnung": [
+        15,
+        25
+      ],
+      "rohstoffe": [
+        "h",
+        "s"
+      ]
+    },
+    "woche": {
+      "rohstoffe": 60,
+      "gold": 2
+    },
+    "rerolls": {
+      "proTag": 1,
+      "max": 3
+    },
+    "langeNichtGespielt": {
+      "tage": 14,
+      "bonus": 0.5
+    }
   },
-
   "BAU": {
     "kostenfaktor": 1.0,
     "ersterBauSofort": true,
     "stufenKosten": [
-      { "stufe": 1, "h": 25,  "s": 15  },
-      { "stufe": 2, "h": 50,  "s": 40  },
-      { "stufe": 3, "h": 90,  "s": 90  },
-      { "stufe": 4, "h": 175, "s": 175 }
+      {
+        "stufe": 1,
+        "h": 25,
+        "s": 15
+      },
+      {
+        "stufe": 2,
+        "h": 50,
+        "s": 40
+      },
+      {
+        "stufe": 3,
+        "h": 90,
+        "s": 90
+      },
+      {
+        "stufe": 4,
+        "h": 175,
+        "s": 175
+      }
     ]
   },
-
   "BAUPLAETZE": [
-    { "id": 1,  "rathaus": 0, "fest": "rathaus" },
-    { "id": 2,  "rathaus": 1 }, { "id": 3,  "rathaus": 1 }, { "id": 4,  "rathaus": 1 },
-    { "id": 5,  "rathaus": 2 }, { "id": 6,  "rathaus": 2 }, { "id": 7,  "rathaus": 2 }, { "id": 8,  "rathaus": 2 },
-    { "id": 9,  "rathaus": 3 }, { "id": 10, "rathaus": 3 }, { "id": 11, "rathaus": 3 }, { "id": 12, "rathaus": 3 }
+    {
+      "id": 1,
+      "rathaus": 0,
+      "fest": "rathaus",
+      "x": -20,
+      "z": -20
+    },
+    {
+      "id": 2,
+      "rathaus": 1,
+      "x": 0,
+      "z": -20
+    },
+    {
+      "id": 3,
+      "rathaus": 1,
+      "x": -20,
+      "z": 0
+    },
+    {
+      "id": 4,
+      "rathaus": 1,
+      "x": 0,
+      "z": 20
+    },
+    {
+      "id": 5,
+      "rathaus": 2,
+      "x": 20,
+      "z": 0
+    },
+    {
+      "id": 6,
+      "rathaus": 2,
+      "x": 20,
+      "z": -20
+    },
+    {
+      "id": 7,
+      "rathaus": 2,
+      "x": -20,
+      "z": 20
+    },
+    {
+      "id": 8,
+      "rathaus": 2,
+      "x": 20,
+      "z": 20
+    },
+    {
+      "id": 9,
+      "rathaus": 3,
+      "x": -40,
+      "z": -20
+    },
+    {
+      "id": 10,
+      "rathaus": 3,
+      "x": -20,
+      "z": -40
+    },
+    {
+      "id": 11,
+      "rathaus": 3,
+      "x": 40,
+      "z": 0
+    },
+    {
+      "id": 12,
+      "rathaus": 3,
+      "x": 0,
+      "z": 40
+    }
   ],
-
   "GEBAEUDE": [
-    { "id": "rathaus",   "name": "Rathaus",   "icon": "🏛️", "maxStufe": 3, "ansehen": [5, 10, 20],
-      "text": "Hier regierst du. Jede Stufe schaltet neue Bauplätze frei." },
-    { "id": "wohnhaus",  "name": "Wohnhaus",  "icon": "🏠", "maxStufe": 3, "ansehen": [3, 6, 12], "mehrfach": true,
-      "text": "Hier ziehen Bewohner ein." },
-    { "id": "brunnen",   "name": "Brunnen",   "icon": "⛲", "maxStufe": 3, "ansehen": [4, 8, 15],
-      "text": "Frisches Wasser für alle." },
-    { "id": "baeckerei", "name": "Bäckerei",  "icon": "🥖", "maxStufe": 3, "ansehen": [4, 8, 15],
-      "text": "Es duftet nach frischem Brot." },
-    { "id": "schmiede",  "name": "Schmiede",  "icon": "⚒️", "maxStufe": 3, "ansehen": [4, 8, 15],
-      "text": "Hier entstehen Werkzeuge." },
-    { "id": "saegewerk", "name": "Sägewerk",  "icon": "🪚", "maxStufe": 3, "ansehen": [3, 6, 12],
-      "bonus": { "h": [0.1, 0.2, 0.3] },
-      "text": "Mehr Holz aus jedem Auftrag." }
+    {
+      "id": "rathaus",
+      "name": "Rathaus",
+      "icon": "🏛️",
+      "maxStufe": 3,
+      "ansehen": [
+        5,
+        10,
+        20
+      ],
+      "text": "Hier regierst du. Jede Stufe schaltet neue Bauplätze frei."
+    },
+    {
+      "id": "wohnhaus",
+      "name": "Wohnhaus",
+      "icon": "🏠",
+      "maxStufe": 3,
+      "ansehen": [
+        3,
+        6,
+        12
+      ],
+      "mehrfach": true,
+      "text": "Hier ziehen Bewohner ein."
+    },
+    {
+      "id": "brunnen",
+      "name": "Brunnen",
+      "icon": "⛲",
+      "maxStufe": 3,
+      "ansehen": [
+        4,
+        8,
+        15
+      ],
+      "text": "Frisches Wasser für alle."
+    },
+    {
+      "id": "baeckerei",
+      "name": "Bäckerei",
+      "icon": "🥖",
+      "maxStufe": 3,
+      "ansehen": [
+        4,
+        8,
+        15
+      ],
+      "text": "Es duftet nach frischem Brot."
+    },
+    {
+      "id": "schmiede",
+      "name": "Schmiede",
+      "icon": "⚒️",
+      "maxStufe": 3,
+      "ansehen": [
+        4,
+        8,
+        15
+      ],
+      "text": "Mehr Stein aus jedem Auftrag.",
+      "bonus": {
+        "s": [
+          0.1,
+          0.2,
+          0.3
+        ]
+      }
+    },
+    {
+      "id": "saegewerk",
+      "name": "Sägewerk",
+      "icon": "🪚",
+      "maxStufe": 3,
+      "ansehen": [
+        3,
+        6,
+        12
+      ],
+      "bonus": {
+        "h": [
+          0.1,
+          0.2,
+          0.3
+        ]
+      },
+      "text": "Mehr Holz aus jedem Auftrag."
+    }
   ]
 }
