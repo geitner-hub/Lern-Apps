@@ -824,7 +824,7 @@ function renderTask(){
   } else {
     opts.hidden = true; opts.innerHTML=''; $('typebar').hidden = false;
     const inp = $('slotin'); inp.focus();
-    inp.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); checkTyped(); } });
+    inp.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); e.stopPropagation(); checkTyped(); } });   // stopPropagation: sonst springt dasselbe Enter gleich weiter
   }
 }
 const norm = s => String(s).toLowerCase().replace(/[’`´]/g,"'").replace(/[.!?]+$/,'').replace(/\s+/g,' ').trim();
@@ -863,7 +863,7 @@ function finish(given){
   $('qbar').style.width = ((S.i+1)/S.tasks.length*100)+'%';
   const nx = $('qnext'); nx.hidden = false;
   nx.textContent = S.i+1>=S.tasks.length ? 'Ergebnis ansehen' : 'Weiter';
-  nx.focus();
+  if (q.mode==='tap') nx.focus();   // beim Tippen nicht: Bildschirmtastatur bleibt offen, Enter = Weiter
 }
 function next(){
   if (S.i+1>=S.tasks.length) return showResult();

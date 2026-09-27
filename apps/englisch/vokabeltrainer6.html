@@ -963,7 +963,7 @@ function initFill(words) {
   fiWords = pick(words, Math.min(10, words.length));
   showOnly('fill');
   renderFill();
-  document.getElementById('fill-input').onkeydown = e => { if (e.key === 'Enter' && !fiAnswered) fiCheck(); };
+  document.getElementById('fill-input').onkeydown = e => { if (e.key === 'Enter' && !fiAnswered) { e.stopPropagation(); fiCheck(); } };
 }
 
 function renderFill() {
@@ -1006,6 +1006,12 @@ function fiCheck() {
   document.getElementById('fi-check').classList.add('hidden');
   document.getElementById('fi-next').classList.remove('hidden');
 }
+
+// Enter nach dem Prüfen = „Weiter“ (die Bildschirmtastatur bleibt dabei offen)
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && fiAnswered && !document.getElementById('screen-fill').classList.contains('hidden')
+      && e.target.tagName !== 'BUTTON') { e.preventDefault(); fiNext(); }
+});
 
 function fiNext() {
   fiIdx++;
