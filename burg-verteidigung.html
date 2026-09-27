@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
-  <title>Burg-Verteidigung – Lernwelt</title>
+  <title>Tower Defense – Lernwelt</title>
   <!--
   ═══════════════════════════════════════════════
-   LERNWELT – Burg-Verteidigung (Tower Defense)
+   LERNWELT – Tower Defense (Burg-Verteidigung)
    Richtige Antworten bringen Münzen, Münzen bauen Türme,
    Türme halten die Monster von der Burg fern. Die eigene
    Figur steht als Burgherr/Burgherrin auf der Burg.
@@ -219,7 +219,7 @@
 <!-- ── Menü ────────────────────────────────────── -->
 <div class="overlay" id="menu">
   <div class="sheet">
-    <h1>🏰 Burg-Verteidigung</h1>
+    <h1>🏰 Tower Defense</h1>
     <p class="lead">Richtige Antworten bringen Münzen. Tippe auf eine Steinplatte und bau Türme – so kommt kein Monster in deine Burg!</p>
 
     <div id="meine-box" hidden>
@@ -491,6 +491,7 @@ function ton(f, d = .12, typ = 'triangle', vol = .06) {
   if (!W.ton) return;
   try {
     AC = AC || new (window.AudioContext || window.webkitAudioContext)();
+    if (AC.state === 'suspended') AC.resume();
     const o = AC.createOscillator(), g = AC.createGain(), t = AC.currentTime;
     o.type = typ; o.frequency.setValueAtTime(f, t);
     g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(.0001, t + d);

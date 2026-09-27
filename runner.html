@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
-  <title>Lern-Runner – Lernwelt</title>
+  <title>RUN! – Lernwelt</title>
   <!--
   ═══════════════════════════════════════════════
-   LERNWELT – Lern-Runner
+   LERNWELT – RUN! (Lern-Runner)
    Die eigene Figur läuft, drei Tore mit Antworten kommen näher –
    durch das richtige Tor laufen.
 
@@ -118,8 +118,10 @@
     @media (prefers-reduced-motion: reduce) { .meine:active { transform: none; } }
     .note { font-size: .8rem; color: var(--muted); margin-top: .5rem; font-weight: 700; }
     .note b { color: var(--accent2); }
-    .go { width: 100%; margin-top: 1.1rem; background: var(--accent); color: #231a02; font-weight: 900; font-size: 1.2rem;
-      padding: .9rem; border-radius: 16px; box-shadow: 0 8px 24px rgba(230,168,23,.3); }
+    .unten { display: flex; gap: .5rem; margin-top: 1.1rem; }
+    .go { flex: 1; background: var(--accent); color: #231a02; font-weight: 900; font-size: 1.2rem;
+      padding: .9rem; min-height: 56px; border-radius: 16px; box-shadow: 0 8px 24px rgba(230,168,23,.3); }
+    .ton { min-width: 56px; min-height: 56px; border-radius: 16px; background: rgba(255,255,255,.08); font-size: 1.3rem; }
     .go:active { transform: scale(.98); }
     .go:disabled { opacity: .45; cursor: default; }
     .err { color: var(--red); font-weight: 800; font-size: .85rem; margin-top: .5rem; }
@@ -176,7 +178,7 @@
 <!-- ── Menü ────────────────────────────────────── -->
 <div class="overlay" id="menu">
   <div class="sheet">
-    <h1>🏃 Lern-Runner</h1>
+    <h1>🏃 RUN!</h1>
     <p class="lead">Lauf durch das Tor mit der richtigen Antwort! Wischen, Pfeiltasten oder einfach die Antwort unten antippen.</p>
 
     <div id="meine-box" hidden>
@@ -224,7 +226,10 @@
     </div>
     <p class="note" id="rekord-note" hidden></p>
 
-    <button class="go" id="go" type="button" disabled>Los geht's!</button>
+    <div class="unten">
+      <button class="go" id="go" type="button" disabled>Los geht's!</button>
+      <button class="ton" id="ton-btn" type="button" aria-label="Ton an oder aus">🔇</button>
+    </div>
     <div class="err" id="menu-err"></div>
   </div>
 </div>
@@ -281,7 +286,7 @@ const rnd = (a, b) => a + Math.random() * (b - a);
    AUSWAHL (Menü)
    ═══════════════════════════════════════════════════════ */
 const WAHL_KEY = 'lern-runner-wahl', REKORD_KEY = 'lern-runner-rekorde';
-const W = { modus: 'runde', pools: [], bis: '', richtung: 'de-en', tempo: 'normal', fach: null, klasse: null, lehrer: false, mix: false };
+const W = { modus: 'runde', pools: [], bis: '', richtung: 'de-en', tempo: 'normal', fach: null, klasse: null, lehrer: false, mix: false, ton: false };
 function loadWahl() { try { Object.assign(W, JSON.parse(localStorage.getItem(WAHL_KEY) || '{}')); } catch (e) {} W.lehrer = false; W.quelle = 'meine'; }
 function saveWahl() { try { const { lehrer, quelle, ...w } = W; localStorage.setItem(WAHL_KEY, JSON.stringify(w)); } catch (e) {} }
 // „Meine Themen“ (Einstellung der Lehrkraft im Admin: config.json → spiele.auswahl)
@@ -334,6 +339,7 @@ function buildMenu() {
   $('rekord-note').hidden = W.modus !== 'endlos' || !bereit;
   $('rekord-note').innerHTML = rk ? `Dein Rekord bei diesem Thema: <b>${rk} richtig</b>` : 'Noch kein Rekord bei diesem Thema – leg los!';
   $('go').disabled = !bereit || !gl;
+  $('ton-btn').textContent = W.ton ? '🔊' : '🔇';
   $('go').textContent = q === 'frei' && W.pools.length > 1 ? `Los geht's! (Mix aus ${W.pools.length})` : "Los geht's!";
 }
 
@@ -367,10 +373,32 @@ $('menu').addEventListener('click', e => {
   }
   else if (t.id === 'mix-btn') { W.mix = !W.mix; if (!W.mix) W.pools = W.pools.slice(-1); }
   else if (t.dataset.tempo) { W.tempo = t.dataset.tempo; }
-  else if (t.id === 'go') { startGame(); return; }
+  else if (t.id === 'ton-btn') { W.ton = !W.ton; tonBereit(); if (W.ton) ton(660, .1); }
+  else if (t.id === 'go') { tonBereit(); startGame(); return; }
   else return;
   saveWahl(); buildMenu();
 });
+
+/* ── Ton (standardmäßig aus, ohne Dateien – wie in der Burg) ── */
+let AC = null;
+/** Ton-Ausgabe beim Antippen vorbereiten (iPad spielt sonst nichts ab) */
+function tonBereit() {
+  if (!W.ton) return;
+  try {
+    AC = AC || new (window.AudioContext || window.webkitAudioContext)();
+    if (AC.state === 'suspended') AC.resume();
+  } catch (e) {}
+}
+function ton(f, d = .12, typ = 'triangle', vol = .06) {
+  if (!W.ton) return;
+  try {
+    AC = AC || new (window.AudioContext || window.webkitAudioContext)();
+    const o = AC.createOscillator(), g = AC.createGain(), t = AC.currentTime;
+    o.type = typ; o.frequency.setValueAtTime(f, t);
+    g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(.0001, t + d);
+    o.connect(g); g.connect(AC.destination); o.start(t); o.stop(t + d + .02);
+  } catch (e) {}
+}
 $('vok-bis').onchange = () => { W.bis = $('vok-bis').value; saveWahl(); buildMenu(); };
 $('vok-richtung').onchange = () => { W.richtung = $('vok-richtung').value; saveWahl(); buildMenu(); };
 
@@ -651,6 +679,7 @@ function werte(set) {
     btns[lanes.indexOf(G.lane)].classList.add('ok');
     funken(G.lane * CFG.lane, 22, -4, '#e6a817', 22);
     blitz(pick(['Richtig! ⭐', 'Super! ✨', 'Stark! 💪', 'Genau! 🎯']), 'ok');
+    ton(660, .08); ton(990, .12);
     G.jubelT = 0;
   } else {
     set.tore[lanes.indexOf(G.lane)].s.draw('bad');
@@ -659,6 +688,7 @@ function werte(set) {
     btns[lanes.indexOf(set.richtigLane)].classList.add('ok');
     G.fehler.push({ frage: set.a.frage, antwort: set.a.antwort, gewaehlt: set.a.optionen[lanes.indexOf(G.lane)] });
     blitz(`Richtig wäre: ${set.a.antwort}`, 'bad');
+    ton(200, .18, 'square', .04);
     G.stolperT = 0;
     G.shake = REDUCED ? 0 : .35;
     if (W.modus === 'endlos') G.herzen--;
@@ -667,8 +697,8 @@ function werte(set) {
   // Endlos: Stufen & Herzen
   if (W.modus === 'endlos' && ok) {
     const E = CFG.endlos;
-    if (G.richtig % E.stufeAlle === 0) { G.stufe++; setTimeout(() => G.zustand === 'play' && blitz('Schneller! ⚡', 'ok'), 700); }
-    if (G.richtig % E.herzAlle === 0 && G.herzen < E.herzen) { G.herzen++; setTimeout(() => G.zustand === 'play' && blitz('+1 ❤️', 'ok'), 1300); }
+    if (G.richtig % E.stufeAlle === 0) { G.stufe++; setTimeout(() => { if (G.zustand === 'play') { blitz('Schneller! ⚡', 'ok'); ton(523, .1); ton(784, .12); } }, 700); }
+    if (G.richtig % E.herzAlle === 0 && G.herzen < E.herzen) { G.herzen++; setTimeout(() => { if (G.zustand === 'play') { blitz('+1 ❤️', 'ok'); ton(880, .14); } }, 1300); }
   }
   G.vZiel = tempo().v;
   updateHud();
@@ -709,6 +739,8 @@ function ende() {
       <div class="rmsg">${pct === 1 ? 'Perfekt – alle Tore richtig!' : pct >= .8 ? 'Super gelaufen!' : pct >= .5 ? 'Gut gemacht!' : 'Dranbleiben – nochmal!'}</div>
       <div class="rsub">${esc(titel)} · 🪙 ${G.muenzen} Münzen</div>`;
     speichereRunde(s, n, titel);
+    if (pct >= .5) { ton(523, .1); setTimeout(() => ton(659, .1), 110); setTimeout(() => ton(784, .18), 220); }
+    else { ton(392, .12); ton(523, .16); }
   } else {
     const rk = rekorde(), key = rekordKey(), alt = rk[key] || 0, neu = G.richtig > alt;
     if (neu) { rk[key] = G.richtig; try { localStorage.setItem(REKORD_KEY, JSON.stringify(rk)); } catch (e) {} }
@@ -717,6 +749,8 @@ function ende() {
       <div class="rsub">${esc(titel)} · 🪙 ${G.muenzen} Münzen</div>
       ${!neu && alt ? `<span class="record">Rekord: ${alt} richtig</span>` : ''}`;
     if (neu && window.LernPass) LernPass.celebrate('konfetti');
+    if (neu) { ton(523, .1); setTimeout(() => ton(659, .1), 110); setTimeout(() => ton(784, .18), 220); }
+    else ton(180, .25, 'sawtooth', .05);
     whenPass(P => P.toast(P.awardEndless({ key: APP_KEY, correct: G.richtig, seconds: sek })));
   }
   if (G.fehler.length) {
@@ -794,7 +828,9 @@ function loop(now) {
 
   if (Z === 'countdown') {
     G.countT -= dt;
-    $('count').textContent = G.countT > 2.2 ? '3' : G.countT > 1.2 ? '2' : G.countT > .2 ? '1' : 'Los!';
+    const zahlText = G.countT > 2.2 ? '3' : G.countT > 1.2 ? '2' : G.countT > .2 ? '1' : 'Los!';
+    if ($('count').textContent !== zahlText) ton(zahlText === 'Los!' ? 880 : 440, zahlText === 'Los!' ? .16 : .08);
+    $('count').textContent = zahlText;
     G.vZiel = tempo().v * .6;
     if (G.countT <= -.3) { $('count').textContent = ''; G.zustand = 'play'; G.vZiel = tempo().v; neueFrage(); updateHud(); }
   }
@@ -860,7 +896,7 @@ function scrolle(dz, dt) {
     c.position.z += dz;
     c.rotation.y += dt * 4;
     if (c.position.z > -3 && c.position.z < 6 && Math.abs(c.position.x - player.position.x) < 8) {
-      G.muenzen++; funken(c.position.x, 7, c.position.z, '#fde68a', 5); scene.remove(c); world.coins.splice(i, 1); updateHud(); continue;
+      G.muenzen++; ton(1320, .05, 'sine', .025); funken(c.position.x, 7, c.position.z, '#fde68a', 5); scene.remove(c); world.coins.splice(i, 1); updateHud(); continue;
     }
     if (c.position.z > 60) { scene.remove(c); world.coins.splice(i, 1); }
   }

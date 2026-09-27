@@ -9,9 +9,14 @@
 //
 //  Nach einer Änderung an DIESER Datei VERSION erhöhen.
 // ═══════════════════════════════════════════════════════
-const VERSION = 'lernwelt-v2';
+const VERSION = 'lernwelt-v3';
 const START = ['./', 'index.html', 'shared.js', 'config-api.js', 'navbar.js', 'pass.js', 'avatar3d.js',
-               'fonts.css', 'qrcode.js', 'config.json', 'lernwelt-inhalte.json', 'manifest.webmanifest'];
+               'fonts.css', 'qrcode.js', 'config.json', 'lernwelt-inhalte.json', 'manifest.webmanifest',
+               // Spiele: sollen auch offline laufen, ohne vorher einmal online geöffnet worden zu sein
+               'runner.html', 'burg-verteidigung.html', 'aufgaben.js', 'vokabeln5.json', 'vokabeln6.json',
+               'vendor/three.min.js',
+               'fonts/nunito-latin-wght-normal.woff2', 'fonts/nunito-latin-ext-wght-normal.woff2',
+               'fonts/fredoka-one-latin-400-normal.woff2'];
 const FEST = /\/(vendor|fonts|icons)\//;      // ändern sich (fast) nie
 const WARTEN_MS = 4000;                        // so lange auf das Netz warten
 
