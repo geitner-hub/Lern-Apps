@@ -954,7 +954,7 @@ async function buildDorfAdmin() {
   const cur = k => cfg[k] ?? std[k];
   document.getElementById('dorf-settings').innerHTML = `
     <div class="sw-row"><span class="sw-ic">📌</span>
-      <div class="sw-txt"><div class="sw-name">Auftragsplätze</div><div class="sw-desc">Platz 1 Mathematik, Platz 2 Englisch/GPG, Platz 3 freie Wahl. Weniger Plätze = weniger Rohstoffe pro Tag.</div></div>
+      <div class="sw-txt"><div class="sw-name">Auftragsplätze</div><div class="sw-desc">Platz 1 Mathematik, Platz 2 Englisch/GPG, Platz 3 freie Wahl. Weniger Plätze = weniger Rohstoffe pro Tag. Wer eine Bibliothek baut, bekommt einen Platz dazu.</div></div>
       <select class="sw-sel" data-dorf-set="plaetze">${[1, 2, 3].map(n => opt(n, n + (n === 1 ? ' Platz' : ' Plätze') + (n === std.plaetze ? ' (Standard)' : ''), cur('plaetze'))).join('')}</select></div>
     <div class="sw-row"><span class="sw-ic">🎲</span>
       <div class="sw-txt"><div class="sw-name">Tauschen</div><div class="sw-desc">So viele Tausche bekommt ein Kind pro Tag dazu – und so viele kann es höchstens ansparen.</div></div>
@@ -981,8 +981,9 @@ async function buildDorfAdmin() {
   const stufen = (C.BAU || {}).stufenKosten || [];
   const gebRows = (C.GEBAEUDE || []).map(g => `<tr><td style="font-size:1.3rem">${escHtml(g.icon || '')}</td><td><b>${escHtml(g.name)}</b><div style="font-size:.66rem;color:var(--muted)">${escHtml(g.id)}</div></td>
       <td>${escHtml(g.text || '')}</td><td>${g.maxStufe || '–'}</td><td>${g.mehrfach === true ? 'beliebig' : Number.isInteger(g.mehrfach) ? 'bis ' + g.mehrfach : '1'}</td>
-      <td>${g.bonus ? Object.entries(g.bonus).map(([r, l]) => `${(R[r] || {}).icon || r} ${l.map(x => '+' + Math.round(x * 100) + ' %').join(' / ')}`).join('<br>') : '–'}</td>
-      <td>${(g.ansehen || []).join(' / ') || '–'}</td></tr>`).join('');
+      <td>${g.bonus ? Object.entries(g.bonus).map(([r, l]) => `${r === 'rabatt' ? '🧱 günstiger' : r === 'woche' ? '📅 Wochenauftrag' : (R[r] || {}).icon || r} ${l.map(x => (r === 'rabatt' ? '−' : '+') + Math.round(x * 100) + ' %').join(' / ')}`).join('<br>') : '–'}</td>
+      <td>${(g.ansehen || []).join(' / ') || '–'}${Array.isArray(g.ansehenNoetig) ? `<br><span style="color:var(--muted)">nötig: ${g.ansehenNoetig.join(' / ')}</span>` : ''}</td>
+      <td>${g.zusatz ? Object.entries(g.zusatz).map(([r, l]) => `${(R[r] || {}).icon || r} ${l.join(' / ')}`).join('<br>') : '–'}</td></tr>`).join('');
   const platzRows = [...new Set((C.BAUPLAETZE || []).map(p => p.rathaus))].sort((a, b) => a - b).map(st => {
     const n = (C.BAUPLAETZE || []).filter(p => p.rathaus === st).length;
     return `<tr><td>${st === 0 ? 'von Anfang an' : 'Rathaus Stufe ' + st}</td><td>${n} ${n === 1 ? 'Platz' : 'Plätze'}</td></tr>`;
@@ -990,7 +991,15 @@ async function buildDorfAdmin() {
   const t = A.tag || {}, w = A.woche || {};
   document.getElementById('dorf-overview').innerHTML = `
     <details open><summary>🏠 Gebäude</summary><div class="ov-body"><table>
-      <tr><th></th><th>Gebäude</th><th>Beschreibung</th><th>Stufen</th><th>Anzahl</th><th>Bonus je Stufe</th><th>Ansehen je Stufe</th></tr>${gebRows}</table></div></details>
+      <tr><th></th><th>Gebäude</th><th>Beschreibung</th><th>Stufen</th><th>Anzahl</th><th>Bonus je Stufe</th><th>Ansehen je Stufe</th><th>Zusatzkosten</th></tr>${gebRows}</table>
+      <p class="note">Stufe 4 („Prachtstufe“) kostet zusätzlich Gold. Wohnhäuser bringen je Stufe einen Bewohner. Das Rathaus steigt nur mit genug Ansehen auf (Ansehen gibt es für Gebäude und Bewohner-Aufträge).</p></div></details>
+    <details><summary>👥 Bewohner und Sammelstücke (${(C.BEWOHNER || []).length} Bewohner)</summary><div class="ov-body"><table>
+      <tr><th></th><th>Bewohner</th><th>Geschichten → Sammelstück</th></tr>
+      ${(C.BEWOHNER || []).map(b => `<tr><td style="font-size:1.3rem">${escHtml(b.icon)}</td><td><b>${escHtml(b.name)}</b><div style="font-size:.7rem;color:var(--muted)">${escHtml(b.text)}</div></td>
+        <td>${(b.geschichten || []).map(g => `„${escHtml(g.text)}“ → ${escHtml(g.stueck.icon)} ${escHtml(g.stueck.name)}`).join('<br>')}</td></tr>`).join('')}</table>
+      <p class="note">Einzug in dieser Reihenfolge. Bewohner-Auftrag: ${(A.bewohner || {}).runden ?? 2} Runden in einer Lern-App → +${(A.bewohner || {}).ansehen ?? 10} Ansehen und das Sammelstück; einer auf einmal, der nächste am Tag danach.</p></div></details>
+    <details><summary>🏅 Meilensteine</summary><div class="ov-body"><table>
+      ${(C.MEILENSTEINE || []).map(m => `<tr><td style="font-size:1.3rem">${escHtml(m.icon)}</td><td><b>${escHtml(m.name)}</b></td><td>${escHtml(m.text)}</td></tr>`).join('')}</table></div></details>
     <details><summary>🧱 Baukosten je Stufe (mit Faktor ${Math.round(f * 100)} %)</summary><div class="ov-body"><table>
       <tr><th>Stufe</th><th>Kosten</th></tr>${stufen.map(z => `<tr><td>${z.stufe}</td><td>${kostenTxt(z)}</td></tr>`).join('')}</table>
       <p class="note">Der allererste Bau ist sofort fertig, alle weiteren Bauten und Ausbauten ab dem nächsten Tag.</p></div></details>

@@ -9,7 +9,7 @@
 //
 //  Nach einer Änderung an DIESER Datei VERSION erhöhen.
 // ═══════════════════════════════════════════════════════
-const VERSION = 'lernwelt-v9';   // v9: Mein Dorf – Wochenauftrag
+const VERSION = 'lernwelt-v10';  // v10: Mein Dorf – Bewohner, Ansehen, Sammelbuch, Postkarte
 const START = ['./', 'index.html', 'config.json', 'manifest.webmanifest',
                'gemeinsam/shared.js', 'gemeinsam/config-api.js', 'gemeinsam/navbar.js', 'gemeinsam/pass.js',
                'gemeinsam/avatar3d.js', 'gemeinsam/fonts.css', 'gemeinsam/qrcode.js', 'daten/lernwelt-inhalte.json',

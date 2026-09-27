@@ -242,5 +242,16 @@ Plan und Stand: Claude-Doc „Aktionsplan: Aufbauspiel „Mein Dorf““.
   Apps ausschließen, Übersicht der Dorf-Inhalte. Gespeichert in `config.json` → `"dorf"` und `apps[].dorf`.
   Der Worker (`cloudflare/worker.js`) prüft diese Felder ab der Version mit „Mein Dorf“ – der alte Worker
   lässt sie ungeprüft durch, beides funktioniert.
+- **Bewohner:** Jede fertige Wohnhaus-Stufe bringt einen Bewohner (Reihenfolge und Texte in `BEWOHNER`;
+  16 Stück = 4 Häuser × Stufe 4). Sie stehen als kleine Figuren vor ihrem Haus. Es gibt immer einen
+  **Bewohner-Auftrag** mit kleiner Geschichte (2 Runden in einer Lern-App → +10 Ansehen + Sammelstück),
+  der nächste kommt am Tag nach dem Erledigen.
+- **Ansehen** (⭐, nur für das Kind sichtbar, kein Vergleich): gibt es für Gebäude und Bewohner-Aufträge;
+  das Rathaus braucht für Stufe 2/3/4 mindestens 25/70/150 (`ansehenNoetig`).
+- **Stufe 4** („Prachtstufe“, kostet zusätzlich 3 Gold) für alle Gebäude; Rathaus Stufe 4 schaltet die
+  Plätze 13–16 frei. Neu: Steinbruch (+Stein), Bibliothek (4. Auftragsplatz, kostet Gold), Marktplatz
+  (+Wochenauftrag, kostet Gold). Die Schmiede macht jetzt alle Bauten 5–20 % günstiger.
+- **Sammelbuch** (📖 im Dorf): Sammelstücke der Bewohner und Meilensteine (`MEILENSTEINE`).
+  **Postkarte** (📮): Bild vom Dorf mit Dorfname und Zahlen zum Herzeigen am Gerät – nichts wird verschickt.
 - **Dorf für Kinder freischalten:** im Admin „Neue App“ → Datei `spiele/dorf.html`, Fach „Allgemein“;
   mit „versteckt“ lässt es sich vorher selbst testen.
