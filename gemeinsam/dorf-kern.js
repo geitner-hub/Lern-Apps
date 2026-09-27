@@ -17,10 +17,11 @@
 //  Solange ein Kind das Dorf nie geöffnet hat, wird NICHTS gespeichert
 //  (kein Dorf im Sicherungscode, keine Aufträge).
 //
-//  Stand Etappe 3: Auftragsbrett (Aufträge erzeugen, zählen, belohnen,
+//  Stand Etappe 4: Auftragsbrett (Aufträge erzeugen, zählen, belohnen,
 //  tauschen, täglich nachfüllen), Wochenauftrag (automatisch oder von der
-//  Lehrkraft), Bauen (Gebäude, Stufen, Bauzeit, Bauplätze über das Rathaus,
-//  Boni). Einstellungen der Lehrkraft: config.json → "dorf" (Admin → 🏘️ Dorf).
+//  Lehrkraft), Bauen (Gebäude, Stufen 1–4, Bauzeit, Bauplätze über das Rathaus,
+//  Ansehen für Rathaus-Stufen, Boni, Rabatt), Bewohner mit eigenen Aufträgen,
+//  Sammelbuch (Sammelstücke der Bewohner + Meilensteine), Dorfname. Einstellungen der Lehrkraft: config.json → "dorf" (Admin → 🏘️ Dorf).
 //  Die 3D-Szene: gemeinsam/dorf-szene.js.
 // ═══════════════════════════════════════════════════════
 
@@ -65,12 +66,17 @@
   //    b   Bauplätze { '1': [gebäudeId, stufe, fertigAb 'JJJJMMTT'] }
   //    an  Ansehen · e erledigte Aufträge (gesamt)
   //    n   laufende Nummer für Auftrags-IDs · l die zuletzt vergebenen Apps (für Abwechslung)
+  //    bw  Bewohner [[bewohnerId, platzNr]] in Einzugsreihenfolge
+  //    bq  Bewohner-Auftrag { i, b: bewohnerId, g: Geschichte, a: App, n, c, m, d } · bd Tag des letzten erledigten
+  //    sa  Sammelbuch: gesammelte Stück-IDs · nz neu, noch nicht im Dorf angezeigt ('b:id' Bewohner, 's:id' Stück)
+  //    we  erledigte Wochenaufträge (gesamt) · dn Name des Dorfs · pz Auftragsplätze, die es schon gab
   //    w   Wochenauftrag { i: ID, k: Montag 'JJJJMMTT', a: 'auftraege'|'app'|'thema', z: Ziel,
   //                        t: Text der Lehrkraft, p: App für den Knopf, n: nötig, c: geschafft, m: Mindest-%, f: 1 = erledigt }
   //  Weitere Felder späterer Etappen (Sammelbuch, Bewohner …) bleiben beim
   //  Säubern erhalten, damit ältere Geräte nichts wegwerfen.
   function leer() {
-    return { v: VERSION, s: heute(), r: { h: 0, s: 0, g: 0 }, q: [], rr: 0, rd: '', fd: '', b: {}, an: 0, e: 0, n: 0, l: [] };
+    return { v: VERSION, s: heute(), r: { h: 0, s: 0, g: 0 }, q: [], rr: 0, rd: '', fd: '', b: {}, an: 0, e: 0, n: 0, l: [],
+             bw: [], sa: [], nz: [], we: 0, bd: '', dn: '' };
   }
 
   function auftragSaeubern(a) {
@@ -107,6 +113,21 @@
     d.e  = zahl(raw.e, 0, 1e6);
     d.n  = zahl(raw.n, 0, 1e9);
     if (Array.isArray(raw.l)) d.l = raw.l.filter(istKey).slice(0, 3);
+    if (Array.isArray(raw.bw)) {
+      const ids = new Set();
+      raw.bw.slice(0, 40).forEach(x => { if (Array.isArray(x) && istId(x[0]) && !ids.has(x[0])) { ids.add(x[0]); d.bw.push([x[0], zahl(x[1], 0, 999)]); } });
+    }
+    const bq = raw.bq;
+    if (bq && typeof bq === 'object' && !Array.isArray(bq) && istId(bq.b) && istKey(bq.a)) {
+      const n = zahl(bq.n, 1, 10);
+      d.bq = { i: zahl(bq.i, 0, 1e9), b: bq.b, g: zahl(bq.g, 0, 9), a: bq.a, n, c: zahl(bq.c, 0, n), m: zahl(bq.m, 0, 100), d: TAG.test(bq.d) ? bq.d : heute() };
+    }
+    if (TAG.test(raw.bd)) d.bd = raw.bd;
+    if (Array.isArray(raw.sa)) d.sa = [...new Set(raw.sa.filter(istId))].slice(0, 300);
+    if (Array.isArray(raw.nz)) d.nz = raw.nz.filter(x => typeof x === 'string' && /^[bs]:[a-z0-9_-]{1,40}$/i.test(x)).slice(0, 20);
+    d.we = zahl(raw.we, 0, 1e5);
+    if (Array.isArray(raw.pz)) d.pz = raw.pz.filter(x => Number.isInteger(x) && x > 0 && x < 10).slice(0, 10);
+    if (typeof raw.dn === 'string') d.dn = raw.dn.replace(/[<>"'`\\]/g, '').replace(/\s+/g, ' ').trim().slice(0, 24);
     const w = raw.w;
     if (w && typeof w === 'object' && !Array.isArray(w) && TAG.test(w.k) && ['auftraege', 'app', 'thema'].includes(w.a)) {
       const n = zahl(w.n, 1, 50);
@@ -179,10 +200,13 @@
                  max: L.rerollsMax !== undefined ? L.rerollsMax : (A.rerolls || {}).max };
     const bel = Array.isArray(t.belohnung) ? t.belohnung : [15, 25];
     const lo = wert(bel[0], 0, 1000, 15), hi = Math.max(lo, wert(bel[1], 0, 1000, 25));
-    let plaetze = (Array.isArray(A.plaetze) ? A.plaetze : [])
+    const alle = (Array.isArray(A.plaetze) ? A.plaetze : [])
       .filter(p => p && Number.isInteger(p.id) && (p.faecher === 'alle' || Array.isArray(p.faecher)))
       .sort((a, b) => a.id - b.id);
+    // Plätze ohne Gebäude: Admin kann sie begrenzen. Plätze mit Gebäude (Bibliothek): nur, wenn es fertig steht.
+    let plaetze = alle.filter(p => !p.gebaeude);
     if (Number.isInteger(L.plaetze) && L.plaetze >= 1) plaetze = plaetze.slice(0, L.plaetze);
+    plaetze = plaetze.concat(alle.filter(p => p.gebaeude && steht(p.gebaeude)));
     const rohstoffe = (Array.isArray(t.rohstoffe) ? t.rohstoffe : []).filter(r => /^[a-z]{1,4}$/.test(r));
     return {
       plaetze: plaetze.length ? plaetze : [
@@ -197,6 +221,10 @@
       rrMax:    Math.round(wert(rr.max, 0, 20, 3)),
       lnTage:   Math.round(wert(ln.tage, 1, 365, 14)),
       lnBonus:  wert(ln.bonus, 0, 5, 0.5),
+      bewohner: {
+        runden:  Math.round(wert((A.bewohner || {}).runden, 1, 10, 2)),
+        ansehen: Math.round(wert((A.bewohner || {}).ansehen, 0, 1000, 10)),
+      },
       woche: {
         rohstoffe: Math.round(wert(wo.rohstoffe, 0, 1000, 60)),
         gold:      Math.round(wert(wo.gold, 0, 100, 2)),
@@ -310,19 +338,25 @@
       D.q = D.q.filter(q => aktiv.has(q.p));                            // Platz im Admin abgeschaltet
       D.q = D.q.filter(q => { if (erlaubt.has(q.a)) return true; ersetzen.add(q.p); return false; });
       const neuerTag = D.fd !== t;
-      if (neuerTag || ersetzen.size) {
+      const bekannt = new Set(D.pz || []);
+      const neuePlaetze = W.plaetze.filter(p => !bekannt.has(p.id)).map(p => p.id);  // z. B. Bibliothek gerade fertig
+      if (neuerTag || ersetzen.size || neuePlaetze.length) {
         W.plaetze.forEach(platz => {
           if (D.q.some(q => q.p === platz.id)) return;
-          if (!neuerTag && !ersetzen.has(platz.id)) return;          // erledigte Plätze erst morgen wieder
+          if (!neuerTag && !ersetzen.has(platz.id) && !neuePlaetze.includes(platz.id)) return;   // erledigte Plätze erst morgen wieder
           const q = neuerAuftrag(platz, W, D.q.map(x => x.a));
           if (q) D.q.push(q);
         });
         D.q.sort((a, b) => a.p - b.p);
+        D.pz = [...new Set([...(D.pz || []), ...W.plaetze.map(p => p.id)])].slice(0, 10);
         D.fd = t;
         geaendert = true;
       }
     }
     if (wocheCheck(W)) geaendert = true;
+    if (bewohnerCheck()) geaendert = true;
+    if (bewohnerAuftragCheck(W)) geaendert = true;
+    if (meilensteinCheck()) geaendert = true;
     if (geaendert) speichern();
     return geaendert;
   }
@@ -359,8 +393,8 @@
     return true;
   }
   function wocheLohn() {
-    const W = werte().woche, halb = Math.floor(W.rohstoffe / 2);
-    return { h: W.rohstoffe - halb, s: halb, g: W.gold };
+    const W = werte().woche, roh = Math.round(W.rohstoffe * (1 + bonus('woche'))), halb = Math.floor(roh / 2);
+    return { h: roh - halb, s: halb, g: W.gold };
   }
   /** Passt die Runde zum Wochenauftrag? (bei „auftraege“ zählt stattdessen jeder erfüllte Tagesauftrag) */
   function passtZurWoche(runde) {
@@ -375,8 +409,138 @@
     w.c = Math.min(w.n, w.c + 1);
     if (w.c < w.n) return 'woche-fortschritt';
     w.f = 1;
+    D.we++;
     Object.entries(wocheLohn()).forEach(([r, n]) => { D.r[r] = (D.r[r] || 0) + n; });
     return 'woche-erfuellt';
+  }
+
+  // ── Bewohner ────────────────────────────────────────────
+  //  Jede fertige Stufe eines Wohnhauses bringt einen Bewohner ("bewohner" je Stufe),
+  //  in der Reihenfolge von BEWOHNER in dorf-inhalte.json. Wer eingezogen ist, bleibt.
+  function bewohnerListe() { return C && Array.isArray(C.BEWOHNER) ? C.BEWOHNER.filter(b => b && istId(b.id)) : []; }
+  function bewohnerDef(id) { return bewohnerListe().find(b => b.id === id) || null; }
+  function bewohnerCheck() {
+    if (!C || !bewohnerListe().length) return false;
+    let neu = false;
+    // Bewohner, die es in dorf-inhalte.json nicht mehr gibt, ziehen aus – ihr Platz wird neu besetzt
+    const vorher = D.bw.length;
+    D.bw = D.bw.filter(x => bewohnerDef(x[0]));
+    if (D.bw.length !== vorher) neu = true;
+    if (D.bq && !bewohnerDef(D.bq.b)) { D.bq = null; neu = true; }
+    const frei = bewohnerListe().filter(b => !D.bw.some(x => x[0] === b.id));
+    Object.entries(D.b).sort((a, b) => a[0] - b[0]).forEach(([platz, e]) => {
+      const g = gebaeude(e[0]);
+      if (!g || !g.bewohner) return;
+      const soll = stehendeStufe(e) * zahl(g.bewohner, 0, 10);
+      let ist = D.bw.filter(x => x[1] === Number(platz)).length;
+      while (ist < soll && frei.length) {
+        const b = frei.shift();
+        D.bw.push([b.id, Number(platz)]);
+        D.nz = [...D.nz, 'b:' + b.id].slice(-20);
+        ist++; neu = true;
+      }
+    });
+    return neu;
+  }
+
+  // ── Bewohner-Aufträge ───────────────────────────────────
+  //  Einer auf einmal, mit kleiner Geschichte. Nach dem Erledigen kommt am nächsten
+  //  Tag der nächste. Belohnung: Ansehen + Sammelstück aus der Geschichte.
+  //  Wer noch Geschichten übrig hat, kommt zuerst dran.
+  function offeneGeschichten(b) {
+    return (b.geschichten || []).map((g, i) => i).filter(i => {
+      const st = b.geschichten[i].stueck;
+      return st && istId(st.id) && !D.sa.includes(st.id);
+    });
+  }
+  function bewohnerAuftragCheck(W) {
+    const kl = klasse();
+    if (!kl || !configApps()) return false;
+    const erlaubt = dorfApps(kl);
+    if (D.bq) {                                                    // App nicht mehr erlaubt → neue App, gleiche Geschichte
+      if (erlaubt.some(a => a.key === D.bq.a) || !erlaubt.length) return false;
+      D.bq.a = zufall(erlaubt).key; D.bq.c = 0;
+      return true;
+    }
+    if (!D.bw.length || D.bd === heute() || !erlaubt.length) return false;
+    const da = D.bw.map(x => bewohnerDef(x[0])).filter(Boolean);
+    if (!da.length) return false;
+    const mitGeschichte = da.filter(b => offeneGeschichten(b).length);
+    const b = zufall(mitGeschichte.length ? mitGeschichte : da);
+    const offen = offeneGeschichten(b);
+    const g = offen.length ? offen[0] : Math.floor(Math.random() * Math.max(1, (b.geschichten || []).length));
+    const belegt = D.q.map(q => q.a);
+    const apps = erlaubt.filter(a => !belegt.includes(a.key));
+    D.n++;
+    D.bq = { i: D.n, b: b.id, g, a: zufall(apps.length ? apps : erlaubt).key, n: W.bewohner.runden, c: 0, m: W.schwelle, d: heute() };
+    return true;
+  }
+  function bewohnerAuftragInfo() {
+    if (!D.bq) return null;
+    const b = bewohnerDef(D.bq.b);
+    if (!b) return null;
+    const gesch = (b.geschichten || [])[D.bq.g] || {};
+    const st = gesch.stueck && !D.sa.includes(gesch.stueck.id) ? gesch.stueck : null;
+    return { auftrag: D.bq, bewohner: b, text: gesch.text || '', stueck: st, ansehen: werte().bewohner.ansehen };
+  }
+
+  // ── Meilensteine (landen im Sammelbuch) ─────────────────
+  function meilensteine() { return C && Array.isArray(C.MEILENSTEINE) ? C.MEILENSTEINE.filter(m => m && istId(m.id) && m.bedingung) : []; }
+  function erfuellt(bed) {
+    const w = Number(bed.wert) || 0;
+    const stehen = Object.values(D.b).filter(e => stehendeStufe(e) > 0);
+    switch (bed.art) {
+      case 'gebaeude':     return stehen.length >= w;
+      case 'rathaus':      return rathausStufe() >= w;
+      case 'auftraege':    return D.e >= w;
+      case 'wochen':       return D.we >= w;
+      case 'bewohner':     return D.bw.length >= w;
+      case 'stufe':        return stehen.some(e => stehendeStufe(e) >= w);
+      case 'alleGebaeude': return gebaeudeListe().every(g => stehen.some(e => e[0] === g.id));
+      default:             return false;
+    }
+  }
+  function meilensteinCheck() {
+    if (!C) return false;
+    let neu = false;
+    meilensteine().forEach(m => {
+      if (!D.sa.includes(m.id) && erfuellt(m.bedingung)) { D.sa.push(m.id); D.nz = [...D.nz, 's:' + m.id].slice(-20); neu = true; }
+    });
+    return neu;
+  }
+
+  /** Sammelbuch für die Anzeige: Bewohner (mit ihren Stücken) und Meilensteine */
+  function sammelbuch() {
+    const bewohner = bewohnerListe().map(b => ({
+      id: b.id, name: b.name, icon: b.icon, text: b.text,
+      da: D.bw.some(x => x[0] === b.id),
+      stuecke: (b.geschichten || []).map(g => g.stueck).filter(Boolean).map(st => ({ ...st, hat: D.sa.includes(st.id) })),
+    }));
+    const meilen = meilensteine().map(m => ({ id: m.id, name: m.name, icon: m.icon, text: m.text, hat: D.sa.includes(m.id) }));
+    const alle = bewohner.flatMap(b => b.stuecke).concat(meilen);
+    return { bewohner, meilensteine: meilen, gesamt: alle.length, gesammelt: alle.filter(x => x.hat).length };
+  }
+  /** Was ist neu seit dem letzten Blick ins Dorf? Liefert und leert die Liste. */
+  function neuigkeiten() {
+    D = laden();
+    const l = D.nz.slice();
+    if (!l.length) return [];
+    D.nz = [];
+    speichern();
+    const stueck = id => {
+      for (const b of bewohnerListe()) for (const g of b.geschichten || []) if (g.stueck && g.stueck.id === id) return { ...g.stueck, von: b.name };
+      const m = meilensteine().find(x => x.id === id);
+      return m ? { id: m.id, name: m.name, icon: m.icon, text: m.text } : null;
+    };
+    return l.map(x => x.startsWith('b:') ? { art: 'bewohner', ...(bewohnerDef(x.slice(2)) || {}) } : { art: 'stueck', ...(stueck(x.slice(2)) || {}) })
+            .filter(x => x.name);
+  }
+  function dorfname(name) {
+    if (name === undefined) return D.dn;
+    D = laden();
+    D.dn = String(name).replace(/[<>"'`\\]/g, '').replace(/\s+/g, ' ').trim().slice(0, 24);
+    speichern();
+    return D.dn;
   }
 
   /** Kann der Auftrag auf diesem Platz getauscht werden? */
@@ -428,14 +592,28 @@
     const f = Number(C && C.BAU && C.BAU.kostenfaktor); return Number.isFinite(f) && f > 0 ? f : 1;
   }
   /** Kosten einer Stufe { h, s, … } (mit Kostenfaktor). Ein Gebäude darf eigene "kosten" haben. */
+  //  Holz und Stein: × Kostenfaktor × (1 − Rabatt der Schmiede). Gold bleibt, wie es ist.
+  //  "zusatz" eines Gebäudes kommt je Stufe dazu (z. B. Gold für die Bibliothek).
   function kosten(gebId, stufe) {
     const g = gebaeude(gebId);
     const eigene = g && Array.isArray(g.kosten) ? g.kosten : null;
     const tab = eigene || (C && C.BAU && Array.isArray(C.BAU.stufenKosten) ? C.BAU.stufenKosten : []);
     const zeile = tab.find(z => z && z.stufe === stufe) || {};
+    const faktor = kostenfaktor() * (1 - Math.min(.5, bonus('rabatt')));
     const k = {};
-    Object.keys(zeile).forEach(r => { if (r !== 'stufe' && /^[a-z]{1,4}$/.test(r)) k[r] = Math.round(zahl(zeile[r], 0, 1e6) * kostenfaktor()); });
+    const dazu = (r, n) => { if (/^[a-z]{1,4}$/.test(r) && n > 0) k[r] = (k[r] || 0) + n; };
+    Object.keys(zeile).forEach(r => { if (r !== 'stufe') dazu(r, r === 'g' ? zahl(zeile[r], 0, 1e6) : Math.round(zahl(zeile[r], 0, 1e6) * faktor)); });
+    if (g && g.zusatz && typeof g.zusatz === 'object') Object.entries(g.zusatz).forEach(([r, l]) => {
+      if (Array.isArray(l)) dazu(r, r === 'g' ? zahl(l[stufe - 1], 0, 1e6) : Math.round(zahl(l[stufe - 1], 0, 1e6) * faktor));
+    });
     return k;
+  }
+  /** Steht dieses Gebäude irgendwo fertig (mind. Stufe 1)? */
+  function steht(gebId) { return Object.values(D.b).some(e => e[0] === gebId && stehendeStufe(e) > 0); }
+  /** Nötiges Ansehen für eine Stufe (0 = keins) */
+  function ansehenNoetig(gebId, stufe) {
+    const g = gebaeude(gebId);
+    return g && Array.isArray(g.ansehenNoetig) ? zahl(g.ansehenNoetig[stufe - 1], 0, 1e6) : 0;
   }
   function genug(k) { return Object.entries(k).every(([r, n]) => (D.r[r] || 0) >= n); }
 
@@ -452,7 +630,12 @@
         gebaeude: g, stufe: stehendeStufe(e), imBau: !fertig(e), zielStufe: e[1], fertigAb: e[2],
         naechste: fertig(e) && e[1] < max ? e[1] + 1 : null,
       });
-      if (info.naechste) { info.kosten = kosten(e[0], info.naechste); info.genug = genug(info.kosten); }
+      if (info.naechste) {
+        info.kosten = kosten(e[0], info.naechste);
+        info.genug = genug(info.kosten);
+        info.ansehen = ansehenNoetig(e[0], info.naechste);            // 0 = kein Ansehen nötig
+        info.ansehenOk = D.an >= info.ansehen;
+      }
     }
     return info;
   }
@@ -486,6 +669,8 @@
     bezahlen(wahl.kosten);
     D.b[platzId] = [gebId, 1, erster ? heute() : morgen()];
     D.an += ansehenFuer(gebId, 1);
+    bewohnerCheck();
+    meilensteinCheck();
     speichern();
     return { ok: true, sofort: erster };
   }
@@ -495,10 +680,12 @@
     D = laden();
     const info = platzInfo(platzId);
     if (!info || !info.eintrag || !info.naechste) return { ok: false, grund: 'nicht-ausbaubar' };
+    if (!info.ansehenOk) return { ok: false, grund: 'ansehen' };
     if (!info.genug) return { ok: false, grund: 'zu-wenig' };
     bezahlen(info.kosten);
     D.b[platzId] = [info.gebaeude.id, info.naechste, morgen()];
     D.an += ansehenFuer(info.gebaeude.id, info.naechste);
+    meilensteinCheck();
     speichern();
     return { ok: true };
   }
@@ -548,8 +735,23 @@
       }
     }
     if (passtZurWoche(runde)) wochenMeldung = wocheZaehlen();
-    if (!meldung && !wochenMeldung) return;
+    let bewohnerMeldung = null;
+    if (D.bq && D.bq.a === runde.app && zaehlt(runde, D.bq.m)) {
+      const info = bewohnerAuftragInfo();
+      D.bq.c = Math.min(D.bq.n, D.bq.c + 1);
+      if (D.bq.c >= D.bq.n) {
+        D.an += werte().bewohner.ansehen;
+        if (info && info.stueck) { D.sa.push(info.stueck.id); D.nz = [...D.nz, 's:' + info.stueck.id].slice(-20); }
+        bewohnerMeldung = { art: 'bewohner-erfuellt', info };
+        D.bq = null; D.bd = heute();
+      } else bewohnerMeldung = { art: 'bewohner-fortschritt', info };
+    }
+    if (!meldung && !wochenMeldung && !bewohnerMeldung) return;
+    meilensteinCheck();
     speichern();
+    if (bewohnerMeldung && (bewohnerMeldung.art === 'bewohner-erfuellt' || (!meldung && !wochenMeldung))) {
+      toast(bewohnerMeldung.art, bewohnerMeldung.info); return;
+    }
     // Wochenauftrag erfüllt ist die größere Nachricht; sonst zuerst der Tagesauftrag
     if (wochenMeldung === 'woche-erfuellt') toast('woche-erfuellt', D.w);
     else if (meldung) toast(meldung, q, wochenMeldung ? D.w : null);
@@ -594,6 +796,21 @@
   function toast(art, q, woche) {
     if (!document.body) return;
     let el = baueToast();
+    if (art === 'bewohner-erfuellt' || art === 'bewohner-fortschritt') {
+      const i = q || {}, b = i.bewohner || {}, a = i.auftrag || {};
+      if (art === 'bewohner-erfuellt') {
+        el.className = 'hoch';
+        zurueckKnopf();
+        el.innerHTML = `<b>${b.icon || '🙂'} ${b.name || ''} sagt Danke!</b>+${i.ansehen} ⭐ Ansehen${i.stueck ? ` · ${i.stueck.icon} ${i.stueck.name} fürs Sammelbuch` : ''}`;
+      } else {
+        el.className = 'klein';
+        el.textContent = `${b.icon || '🙂'} Auftrag von ${b.name || ''}: ${a.c} von ${a.n} Runden`;
+      }
+      clearTimeout(el._t);
+      requestAnimationFrame(() => el.classList.add('show'));
+      el._t = setTimeout(() => el.classList.remove('show'), art === 'bewohner-erfuellt' ? 5500 : 3500);
+      return;
+    }
     const r = rohstoff(q.r || 'h');
     const wZeile = woche ? `<br><small>📅 Wochenauftrag: ${woche.c} von ${woche.n}</small>` : '';
     if (art === 'woche-erfuellt') {
@@ -649,6 +866,7 @@
     dorfApps, appKey, appInfo, klasse, zaehlt, heute, tagesCheck, kannTauschen, tauschen,
     gebaeudeListe, gebaeude, plaetze, platzInfo, baubar, bauen, ausbauen, kosten, rathausStufe, lohn, bonus,
     wocheLohn, montag, lehrkraft,
+    bewohnerListe, bewohnerDef, bewohnerAuftragInfo, sammelbuch, neuigkeiten, dorfname, steht, ansehenNoetig,
     onChange(fn) { listeners.push(fn); },
     onRunde(fn)  { rundenHandler.push(fn); },
     _saeubern: saeubern, _leer: leer, _tageZwischen: tageZwischen,

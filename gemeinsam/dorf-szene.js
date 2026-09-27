@@ -19,6 +19,7 @@
 //      .update()                      Bauplätze aus LernDorf neu zeichnen (nur geänderte)
 //      .auswahl(id|null)              Bauplatz markieren
 //      .jubel()                       Figur jubelt kurz (nach dem Bauen)
+//      .foto()                        aktuelles Bild als PNG-Daten-URL (für die Postkarte)
 //      .destroy()
 // ═══════════════════════════════════════════════════════
 
@@ -277,9 +278,100 @@
         return p;
       },
     };
+    Object.assign(MODELLE, {
+      steinbruch(st) {
+        const p = new T.Group(), r = seeded(7);
+        b(p, 12, .4, 10, 0, 0, 0, '#8f8a7e');
+        const grau = ['#8d8d8d', '#a3a3a3', '#777777', '#9a948a'];
+        const felsen = st >= 2 ? 9 : 6;                                              // Felswand hinten
+        for (let i = 0; i < felsen; i++) {
+          const w = 2.4 + r() * 2.4, h = 2 + r() * (st >= 3 ? 6 : 4);
+          b(p, w, h, 2.6 + r() * 1.5, -5 + i * (10 / felsen) + r(), .4, -3 + r() * 1.2, grau[i % 4]);
+        }
+        b(p, 3.4, 1.2, 2.2, 2.6, .9, 2.4, F.holz2);                                     // Lore
+        [-1, 1].forEach(sx => [-1, 1].forEach(sz => b(p, .6, .6, .3, 2.6 + sx * 1.2, .4, 2.4 + sz * 1.15, '#333')));
+        for (let i = 0; i < 3; i++) b(p, .9, .8, .9, 1.9 + i * .7, 2.1, 2.3 + (i % 2) * .3, grau[(i + 1) % 4]);
+        b(p, .25, 2.6, .25, -2.4, .4, 3, F.holz); b(p, 1.6, .35, .35, -2.4, 2.8, 3, '#6b7280');   // Spitzhacke
+        if (st >= 2) {                                                                   // Holzkran
+          b(p, .5, 7, .5, 4.4, .4, -1.2, F.holz2); b(p, 5, .45, .45, 2.2, 7, -1.2, F.holz2);
+          b(p, .12, 3, .12, 0, 4.2, -1.2, '#444'); b(p, 1.2, 1, 1.2, 0, 3.2, -1.2, grau[0]);
+        }
+        if (st >= 3) { for (let i = 0; i < 6; i++) b(p, .3, .15, 2.2, -4.5 + i * 1.6, .4, 4.5, F.balken); b(p, 10, .15, .25, -.5, .55, 4, '#6b7280'); b(p, 10, .15, .25, -.5, .55, 5, '#6b7280'); }
+        return p;
+      },
+      bibliothek(st) {
+        const p = new T.Group();
+        const w = st >= 2 ? 12 : 10, d = 8, h = st >= 3 ? 8 : 6.5;
+        sockel(p, w + 1, d + 1, '#b8b2a6');
+        b(p, w, h, d, 0, .8, -.5, '#e8e1d0');
+        for (let i = 0; i < 4; i++) b(p, .9, h, .9, -w / 2 + 1.3 + i * (w - 2.6) / 3, .8, d / 2 + .2, F.weiss);   // Säulen
+        b(p, w + .8, .8, d + 1.6, 0, .8 + h, 0, '#cfc8b8');
+        dach(p, w + 1, d + 1.6, 1.6 + h, '#4b5b73', .9);
+        tuer(p, 0, d / 2 - .5, 2.4, 3.6);
+        [-1, 1].forEach(sx => fenster(p, sx * (w / 2 - 2.8), 3.6, d / 2 - .5, 'vorn', 1.4, 2.2));
+        b(p, 1.6, 1.2, .3, 0, 5.2, d / 2 - .4, '#8b1e1e'); b(p, .3, 1.2, .35, 0, 5.2, d / 2 - .35, '#f5f5f0');  // Buch-Schild
+        if (st >= 3) { b(p, 3, 3, 3, 0, 2.4 + h, -1, '#e8e1d0'); zelt(p, 3.6, 5.4 + h, '#2f6f8f', .6, 0, -1); }
+        return p;
+      },
+      marktplatz(st) {
+        const p = new T.Group();
+        b(p, 13, .3, 12, 0, 0, 0, '#b9b3a8');
+        const stand = (x, z, f1, f2) => {
+          [-1, 1].forEach(sx => [-1, 1].forEach(sz => b(p, .35, 3.6, .35, x + sx * 1.7, .3, z + sz * 1.1, F.holz2)));
+          b(p, 3.6, 1.2, 2.4, x, .3, z, F.holz);
+          for (let i = 0; i < 5; i++) b(p, .8, .35, 3, x - 1.6 + i * .8, 3.9, z, i % 2 ? f1 : f2);
+          ['#ef4444', '#f59e0b', '#84cc16'].forEach((c, i) => b(p, .7, .5, .7, x - 1.1 + i * 1.1, 1.5, z + .4, c));
+        };
+        stand(-3.2, -2.5, '#d9483b', F.weiss);
+        stand(3.2, -2.5, F.blau, F.weiss);
+        if (st >= 2) { stand(-3.2, 3, '#16a34a', '#fde68a'); [[3.4, 3], [4.6, 3.4]].forEach(([x, z]) => b(p, 1.1, 1.5, 1.1, x, .3, z, '#8a5a30')); }
+        if (st >= 3) {                                                                    // Maibaum (weiß-blau)
+          for (let i = 0; i < 14; i++) b(p, .6, 1, .6, 3.6, .3 + i, 3.6, i % 2 ? F.blau : F.weiss);
+          b(p, 2.2, .4, 2.2, 3.6, 12, 3.6, '#2f7d32'); b(p, .9, .9, .15, 3.6, 12.8, 3.6, F.gold);
+          [9, 6.5].forEach(y => { b(p, 2.6, .25, .25, 3.6, y, 3.6, F.holz2); b(p, .25, .25, 2.6, 3.6, y, 3.6, F.holz2); });
+        }
+        return p;
+      },
+    });
+    // Stufe 4: Prachtstufe = Stufe 3 mit Goldschmuck, Laternen und Blumen
+    function pracht(p) {
+      const box = new T.Box3().setFromObject(p);
+      const x0 = box.min.x, x1 = box.max.x, z1 = box.max.z, oben = box.max.y;
+      const bw = x1 - x0 + 1.4, bt = z1 - box.min.z + 1.4, mx = (x0 + x1) / 2, mz = (box.min.z + z1) / 2;   // goldener Rand
+      b(p, bw, .4, .5, mx, .75, mz + bt / 2, F.gold); b(p, bw, .4, .5, mx, .75, mz - bt / 2, F.gold);
+      b(p, .5, .4, bt, mx + bw / 2, .75, mz, F.gold); b(p, .5, .4, bt, mx - bw / 2, .75, mz, F.gold);
+      [x0 - .6, x1 + .6].forEach(x => {
+        b(p, .4, 4.2, .4, x, 0, z1 + .6, '#374151');
+        b(p, .9, .9, .9, x, 4.2, z1 + .6, '#ffe7a3', { emissive: new T.Color('#b88a1e') });
+        blumen(p, x + (x < 0 ? 1.8 : -1.8), 0, z1 + 1.3, 2.4);
+      });
+      b(p, .3, 2.2, .3, (x0 + x1) / 2, oben, (box.min.z + z1) / 2, F.gold);            // goldene Spitze
+      b(p, 1.1, 1.1, 1.1, (x0 + x1) / 2, oben + 2.2, (box.min.z + z1) / 2, F.gold, { emissive: new T.Color('#6b4e00') });
+      return p;
+    }
     function modell(id, st) {
-      if (MODELLE[id]) return MODELLE[id](st);
+      if (MODELLE[id]) return st >= 4 ? pracht(MODELLE[id](3)) : MODELLE[id](st);
       const p = new T.Group(); sockel(p, 9, 7); b(p, 8, 4, 6, 0, .8, 0, F.putz); dach(p, 9, 7, 4.8, F.dach, 1.1); return p;
+    }
+    // Bewohner als kleine Blockfiguren (Farben aus dorf-inhalte.json: Oberteil, Hose, Haare)
+    const HAUT = ['#f1c9a5', '#e0ac7e', '#c68c5f', '#8d5b3a'];
+    function figurBewohner(p, def, x, z, dreh, nr) {
+      const f = Array.isArray(def.farben) ? def.farben : ['#64748b', '#334155', '#422006'];
+      const g = new T.Group(); g.position.set(x, 0, z); g.rotation.y = dreh;
+      if (def.tier === 'katze') {                                                         // Katze
+        b(g, .9, .8, 1.8, 0, .3, 0, f[0]); b(g, .9, .9, .9, 0, .8, 1.1, f[0]);
+        b(g, .25, .35, .2, -.3, 1.7, 1.2, f[0]); b(g, .25, .35, .2, .3, 1.7, 1.2, f[0]);
+        b(g, .25, .25, 1.4, 0, 1.1, -1.3, f[0]);
+        [[-.3, .7], [.3, .7], [-.3, -.7], [.3, -.7]].forEach(([a, c]) => b(g, .25, .3, .25, a, 0, c, '#7c2d12'));
+      } else {
+        b(g, .6, 1.6, .7, -.35, 0, 0, f[1]); b(g, .6, 1.6, .7, .35, 0, 0, f[1]);
+        b(g, 1.5, 1.8, .9, 0, 1.6, 0, f[0]);
+        b(g, .45, 1.5, .5, -.98, 1.8, 0, f[0]); b(g, .45, 1.5, .5, .98, 1.8, 0, f[0]);
+        b(g, 1.2, 1.2, 1.2, 0, 3.4, 0, HAUT[nr % HAUT.length]);
+        b(g, 1.3, .4, 1.3, 0, 4.5, -.05, f[2]); b(g, 1.3, .9, .3, 0, 3.7, -.55, f[2]);
+        b(g, .2, .2, .1, -.28, 3.9, .61, '#1f2937'); b(g, .2, .2, .1, .28, 3.9, .61, '#1f2937');
+      }
+      p.add(g);
     }
     function geruest(p, w = 11, h = 7, d = 9) {                                         // Baugerüst
       [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(([sx, sz]) => b(p, .45, h, .45, sx * w / 2, 0, sz * d / 2, '#c8a068'));
@@ -417,8 +509,28 @@
         geaendert = true;
       });
       bodenMalen(zustand);
+      leuteZeichnen();
       zeichne();
       return geaendert;
+    }
+
+    let leute = null, leuteKey = null;
+    function leuteZeichnen() {
+      const bw = DORF.state.bw || [];
+      const key = JSON.stringify(bw);
+      if (key === leuteKey) return;
+      leuteKey = key;
+      if (leute) { scene.remove(leute); entsorgen(leute); }
+      const roh = new T.Group(), proPlatz = {};
+      bw.forEach(([id, platz], nr) => {
+        const def = DORF.bewohnerDef(id), p = plaetze.find(x => x.id === platz);
+        if (!def || !p) return;
+        const k = proPlatz[platz] = (proPlatz[platz] || 0) + 1;                       // 1.–4. Bewohner dieses Hauses
+        const pos = [[PLATZ / 2 + 1.6, 3], [PLATZ / 2 + 1.6, -1], [3, PLATZ / 2 + 1.6], [-1.5, PLATZ / 2 + 1.6]][(k - 1) % 4];
+        figurBewohner(roh, def, p.x + pos[0], p.z + pos[1], Math.PI / 4 + (k % 2 ? .3 : -.3), nr);
+      });
+      leute = backe(roh);
+      scene.add(leute);
     }
 
     // ── Kamera: feste Iso-Ansicht, passt das Dorf ein ──────
@@ -503,8 +615,19 @@
     update();
     kameraEinpassen();
 
+    function foto() {
+      const sichtbar = rahmen.visible;
+      rahmen.visible = false;                                                             // ohne Auswahlrahmen
+      renderer.render(scene, camera);
+      let url = null;
+      try { url = cv.toDataURL('image/png'); } catch (e) {}
+      rahmen.visible = sichtbar;
+      zeichne();
+      return url;
+    }
+
     return {
-      update, auswahl, jubel,
+      update, auswahl, jubel, foto,
       destroy() { lebt = false; ro.disconnect(); cv.removeEventListener('click', onClick); cv.removeEventListener('pointermove', onMove); renderer.dispose(); cv.remove(); },
     };
   }
