@@ -32,6 +32,8 @@
 //                    klassen, hidden, aod (höchstens eine App des Tages), customTags
 //    customTags[], hiddenCats[], announcement
 //    pass          – seasons, avatar (true/false), events { id: true/false }
+//    dorf          – plaetze, rerollsProTag, rerollsMax, kostenfaktor, wochen[] (Mein Dorf)
+//    apps[].dorf   – nur false (App bekommt keine Dorf-Aufträge)
 //
 //  Wartung & Fehlersuche: cloudflare/ANLEITUNG.md
 // ═══════════════════════════════════════════════════════
@@ -186,6 +188,7 @@ function validateConfig(cfg) {
     if (!isBool(app.hidden) || !isBool(app.aod))            p.push(w + ': hidden/aod');
     if (app.klassen !== undefined && (!Array.isArray(app.klassen) || !app.klassen.every(k => Number.isInteger(k) && k >= 1 && k <= 13))) p.push(w + ': klassen');
     if (app.customTags !== undefined && (!Array.isArray(app.customTags) || !app.customTags.every(isTag))) p.push(w + ': customTags');
+    if (app.dorf !== undefined && app.dorf !== false)       p.push(w + ': dorf');
     if (app.aod) aodCount++;
   });
   if (aodCount > 1) p.push('mehr als eine App des Tages');
@@ -200,6 +203,21 @@ function validateConfig(cfg) {
       if (ev !== undefined && (!ev || typeof ev !== 'object' || Array.isArray(ev) || Object.keys(ev).length > 20
           || !Object.entries(ev).every(([k, v]) => /^[a-z0-9-]{1,30}$/.test(k) && typeof v === 'boolean'))) p.push('pass: events');
       if (Object.keys(ps).some(k => !['seasons', 'avatar', 'events'].includes(k))) p.push('pass: unbekanntes Feld');
+    }
+  }
+
+  // Mein Dorf: Einstellungen und Wochenaufträge der Lehrkraft
+  const dv = cfg.dorf;
+  if (dv !== undefined) {
+    const zahl = (v, lo, hi) => v === undefined || (typeof v === 'number' && Number.isFinite(v) && v >= lo && v <= hi);
+    if (!dv || typeof dv !== 'object' || Array.isArray(dv)) p.push('dorf ungültig');
+    else {
+      if (!zahl(dv.plaetze, 1, 5) || !zahl(dv.rerollsProTag, 0, 10) || !zahl(dv.rerollsMax, 0, 20) || !zahl(dv.kostenfaktor, .25, 4)) p.push('dorf: Zahlen');
+      const wOk = w => w && typeof w === 'object' && isStr(w.id, 40) && /^\d{4}-\d{2}-\d{2}$/.test(w.start || '')
+        && ['app', 'thema'].includes(w.art) && isStr(w.ziel, 120) && isStr(w.name ?? '', 120) && (w.app === undefined || isStr(w.app, 120))
+        && zahl(w.runden, 1, 20) && (w.klassen === undefined || (Array.isArray(w.klassen) && w.klassen.every(k => Number.isInteger(k) && k >= 1 && k <= 13)));
+      if (dv.wochen !== undefined && (!Array.isArray(dv.wochen) || dv.wochen.length > 20 || !dv.wochen.every(wOk))) p.push('dorf: wochen');
+      if (Object.keys(dv).some(k => !['plaetze', 'rerollsProTag', 'rerollsMax', 'kostenfaktor', 'wochen'].includes(k))) p.push('dorf: unbekanntes Feld');
     }
   }
   return p;
