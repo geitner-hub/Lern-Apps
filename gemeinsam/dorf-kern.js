@@ -17,9 +17,11 @@
 //  Solange ein Kind das Dorf nie geöffnet hat, wird NICHTS gespeichert
 //  (kein Dorf im Sicherungscode, keine Aufträge).
 //
-//  Stand Etappe 2: Auftragsbrett (Aufträge erzeugen, zählen, belohnen,
-//  tauschen, täglich nachfüllen) und Bauen (Gebäude, Stufen, Bauzeit,
-//  Bauplätze über das Rathaus, Boni). Die 3D-Szene: gemeinsam/dorf-szene.js.
+//  Stand Etappe 3: Auftragsbrett (Aufträge erzeugen, zählen, belohnen,
+//  tauschen, täglich nachfüllen), Wochenauftrag (automatisch oder von der
+//  Lehrkraft), Bauen (Gebäude, Stufen, Bauzeit, Bauplätze über das Rathaus,
+//  Boni). Einstellungen der Lehrkraft: config.json → "dorf" (Admin → 🏘️ Dorf).
+//  Die 3D-Szene: gemeinsam/dorf-szene.js.
 // ═══════════════════════════════════════════════════════
 
 (function () {
@@ -63,6 +65,8 @@
   //    b   Bauplätze { '1': [gebäudeId, stufe, fertigAb 'JJJJMMTT'] }
   //    an  Ansehen · e erledigte Aufträge (gesamt)
   //    n   laufende Nummer für Auftrags-IDs · l die zuletzt vergebenen Apps (für Abwechslung)
+  //    w   Wochenauftrag { i: ID, k: Montag 'JJJJMMTT', a: 'auftraege'|'app'|'thema', z: Ziel,
+  //                        t: Text der Lehrkraft, p: App für den Knopf, n: nötig, c: geschafft, m: Mindest-%, f: 1 = erledigt }
   //  Weitere Felder späterer Etappen (Sammelbuch, Bewohner …) bleiben beim
   //  Säubern erhalten, damit ältere Geräte nichts wegwerfen.
   function leer() {
@@ -103,6 +107,12 @@
     d.e  = zahl(raw.e, 0, 1e6);
     d.n  = zahl(raw.n, 0, 1e9);
     if (Array.isArray(raw.l)) d.l = raw.l.filter(istKey).slice(0, 3);
+    const w = raw.w;
+    if (w && typeof w === 'object' && !Array.isArray(w) && TAG.test(w.k) && ['auftraege', 'app', 'thema'].includes(w.a)) {
+      const n = zahl(w.n, 1, 50);
+      d.w = { i: String(w.i || '').slice(0, 40), k: w.k, a: w.a, z: typeof w.z === 'string' ? w.z.slice(0, 120) : '',
+              t: typeof w.t === 'string' ? w.t.slice(0, 80) : '', p: istKey(w.p) ? w.p : '', n, c: zahl(w.c, 0, n), m: zahl(w.m, 0, 100), f: w.f ? 1 : 0 };
+    }
     Object.keys(raw).forEach(k => {
       if (!(k in d) && /^[a-z]{1,3}$/.test(k) && klein(raw[k], 4000)) d[k] = raw[k];
     });
@@ -155,14 +165,24 @@
   /** Inhalte laden und den Tag prüfen (Nachfüllen, Rerolls). Liefert den Spielstand. */
   function bereit() { return inhalte().then(() => { tagesCheck(); return D; }); }
 
-  // Stellschrauben aus dorf-inhalte.json (mit sicheren Standardwerten)
+  // Einstellungen der Lehrkraft (config.json → "dorf", über den Admin)
+  function lehrkraft() {
+    const cfg = lesen(CONFIG_KEY);
+    return cfg && cfg.dorf && typeof cfg.dorf === 'object' && !Array.isArray(cfg.dorf) ? cfg.dorf : {};
+  }
+
+  // Stellschrauben aus dorf-inhalte.json, überschrieben vom Admin (mit sicheren Standardwerten)
   function werte() {
-    const A = (C && C.AUFTRAEGE) || {};
-    const t = A.tag || {}, rr = A.rerolls || {}, ln = A.langeNichtGespielt || {};
+    const A = (C && C.AUFTRAEGE) || {}, L = lehrkraft();
+    const t = A.tag || {}, ln = A.langeNichtGespielt || {}, wo = A.woche || {};
+    const rr = { proTag: L.rerollsProTag !== undefined ? L.rerollsProTag : (A.rerolls || {}).proTag,
+                 max: L.rerollsMax !== undefined ? L.rerollsMax : (A.rerolls || {}).max };
     const bel = Array.isArray(t.belohnung) ? t.belohnung : [15, 25];
     const lo = wert(bel[0], 0, 1000, 15), hi = Math.max(lo, wert(bel[1], 0, 1000, 25));
-    const plaetze = (Array.isArray(A.plaetze) ? A.plaetze : [])
-      .filter(p => p && Number.isInteger(p.id) && (p.faecher === 'alle' || Array.isArray(p.faecher)));
+    let plaetze = (Array.isArray(A.plaetze) ? A.plaetze : [])
+      .filter(p => p && Number.isInteger(p.id) && (p.faecher === 'alle' || Array.isArray(p.faecher)))
+      .sort((a, b) => a.id - b.id);
+    if (Number.isInteger(L.plaetze) && L.plaetze >= 1) plaetze = plaetze.slice(0, L.plaetze);
     const rohstoffe = (Array.isArray(t.rohstoffe) ? t.rohstoffe : []).filter(r => /^[a-z]{1,4}$/.test(r));
     return {
       plaetze: plaetze.length ? plaetze : [
@@ -177,6 +197,12 @@
       rrMax:    Math.round(wert(rr.max, 0, 20, 3)),
       lnTage:   Math.round(wert(ln.tage, 1, 365, 14)),
       lnBonus:  wert(ln.bonus, 0, 5, 0.5),
+      woche: {
+        rohstoffe: Math.round(wert(wo.rohstoffe, 0, 1000, 60)),
+        gold:      Math.round(wert(wo.gold, 0, 100, 2)),
+        auftraege: Math.round(wert(wo.auftraege, 1, 20, 5)),
+        runden:    Math.round(wert(wo.runden, 1, 20, 3)),
+      },
     };
   }
   function rohstoffe() {
@@ -280,6 +306,8 @@
     if (kl && configApps()) {
       const erlaubt = new Set(dorfApps(kl).map(a => a.key));
       const ersetzen = new Set();
+      const aktiv = new Set(W.plaetze.map(p => p.id));
+      D.q = D.q.filter(q => aktiv.has(q.p));                            // Platz im Admin abgeschaltet
       D.q = D.q.filter(q => { if (erlaubt.has(q.a)) return true; ersetzen.add(q.p); return false; });
       const neuerTag = D.fd !== t;
       if (neuerTag || ersetzen.size) {
@@ -294,8 +322,61 @@
         geaendert = true;
       }
     }
+    if (wocheCheck(W)) geaendert = true;
     if (geaendert) speichern();
     return geaendert;
+  }
+
+  // ── Wochenauftrag ───────────────────────────────────────
+  //  Jede Woche (Montag bis Sonntag) ein Auftrag: von der Lehrkraft (Admin, je Klasse)
+  //  oder automatisch „Erledige 5 Aufträge vom Brett“. Belohnung: 60 Rohstoffe + 2 Gold.
+  //  Ein neuer Auftrag der Lehrkraft ersetzt einen noch offenen; ein erledigter bleibt
+  //  erledigt, bis eine neue Woche beginnt oder die Lehrkraft einen neuen setzt.
+  function montag(d = new Date()) {
+    const x = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    x.setDate(x.getDate() - (x.getDay() + 6) % 7);
+    return heute(x);
+  }
+  function wocheSoll(W) {
+    const mo = montag(), kl = klasse();
+    const liste = Array.isArray(lehrkraft().wochen) ? lehrkraft().wochen : [];
+    const erlaubt = kl ? new Set(dorfApps(kl).map(a => a.key)) : new Set();
+    const lk = liste.find(x => x && typeof x === 'object' && String(x.start || '').replace(/-/g, '') === mo
+      && ['app', 'thema'].includes(x.art) && typeof x.ziel === 'string' && x.ziel
+      && (!Array.isArray(x.klassen) || !x.klassen.length || x.klassen.includes(kl))
+      && (x.art !== 'app' || erlaubt.has(x.ziel)));
+    if (lk) {
+      return { i: String(lk.id || 'lk').slice(0, 40), k: mo, a: lk.art, z: lk.ziel.slice(0, 120), t: String(lk.name || '').slice(0, 80),
+               p: lk.art === 'app' ? lk.ziel : (istKey(lk.app) ? lk.app : ''), n: zahl(lk.runden || W.woche.runden, 1, 20), c: 0, m: W.schwelle, f: 0 };
+    }
+    return { i: 'auto-' + mo, k: mo, a: 'auftraege', z: '', t: '', p: '', n: W.woche.auftraege, c: 0, m: W.schwelle, f: 0 };
+  }
+  function wocheCheck(W) {
+    if (!klasse() || !configApps()) return false;
+    const soll = wocheSoll(W), w = D.w;
+    if (w && w.k === soll.k && (w.i === soll.i || (w.f && soll.a === 'auftraege'))) return false;
+    D.w = soll;
+    return true;
+  }
+  function wocheLohn() {
+    const W = werte().woche, halb = Math.floor(W.rohstoffe / 2);
+    return { h: W.rohstoffe - halb, s: halb, g: W.gold };
+  }
+  /** Passt die Runde zum Wochenauftrag? (bei „auftraege“ zählt stattdessen jeder erfüllte Tagesauftrag) */
+  function passtZurWoche(runde) {
+    const w = D.w;
+    if (!w || w.f || !zaehlt(runde, w.m)) return false;
+    if (w.a === 'app') return runde.app === w.z;
+    if (w.a === 'thema') return (runde.inhalt || []).some(id => id === w.z || id.startsWith(w.z + '/') || id.startsWith(w.z + ':'));
+    return false;
+  }
+  function wocheZaehlen() {
+    const w = D.w;
+    w.c = Math.min(w.n, w.c + 1);
+    if (w.c < w.n) return 'woche-fortschritt';
+    w.f = 1;
+    Object.entries(wocheLohn()).forEach(([r, n]) => { D.r[r] = (D.r[r] || 0) + n; });
+    return 'woche-erfuellt';
   }
 
   /** Kann der Auftrag auf diesem Platz getauscht werden? */
@@ -341,7 +422,11 @@
     const e = p && D.b[p.id];
     return e && e[0] === 'rathaus' ? stehendeStufe(e) : 0;
   }
-  function kostenfaktor() { const f = Number(C && C.BAU && C.BAU.kostenfaktor); return Number.isFinite(f) && f > 0 ? f : 1; }
+  function kostenfaktor() {
+    const L = Number(lehrkraft().kostenfaktor);
+    if (Number.isFinite(L) && L >= .25 && L <= 4) return L;
+    const f = Number(C && C.BAU && C.BAU.kostenfaktor); return Number.isFinite(f) && f > 0 ? f : 1;
+  }
   /** Kosten einer Stufe { h, s, … } (mit Kostenfaktor). Ein Gebäude darf eigene "kosten" haben. */
   function kosten(gebId, stufe) {
     const g = gebaeude(gebId);
@@ -445,28 +530,36 @@
   function auftragZaehlen(runde) {
     D = laden();                                       // anderer Tab (z. B. offenes Dorf) könnte geändert haben
     if (C && D.fd !== heute()) tagesCheck();
+    if (runde.blocked) return;
     const q = D.q.find(x => x.a === runde.app);
-    if (!q || runde.blocked) return;
-    if (!zaehlt(runde, q.m)) { toast('zuwenig', q); return; }
-    q.c = Math.min(q.n, q.c + 1);
-    if (q.c >= q.n) {
-      q.b = lohn(q).gesamt;                            // Bonus von Sägewerk & Co. zum Zeitpunkt der Erfüllung
-      D.r[q.r] = (D.r[q.r] || 0) + q.b;
-      D.q = D.q.filter(x => x !== q);
-      D.e++;
-      speichern();
-      toast('erfuellt', q);
-    } else {
-      speichern();
-      toast('fortschritt', q);
+    let meldung = null, wochenMeldung = null;
+    if (q) {
+      if (!zaehlt(runde, q.m)) meldung = 'zuwenig';
+      else {
+        q.c = Math.min(q.n, q.c + 1);
+        if (q.c >= q.n) {
+          q.b = lohn(q).gesamt;                        // Bonus von Sägewerk & Co. zum Zeitpunkt der Erfüllung
+          D.r[q.r] = (D.r[q.r] || 0) + q.b;
+          D.q = D.q.filter(x => x !== q);
+          D.e++;
+          meldung = 'erfuellt';
+          if (D.w && !D.w.f && D.w.a === 'auftraege') wochenMeldung = wocheZaehlen();
+        } else meldung = 'fortschritt';
+      }
     }
+    if (passtZurWoche(runde)) wochenMeldung = wocheZaehlen();
+    if (!meldung && !wochenMeldung) return;
+    speichern();
+    // Wochenauftrag erfüllt ist die größere Nachricht; sonst zuerst der Tagesauftrag
+    if (wochenMeldung === 'woche-erfuellt') toast('woche-erfuellt', D.w);
+    else if (meldung) toast(meldung, q, wochenMeldung ? D.w : null);
+    else toast(wochenMeldung, D.w);
   }
   window.addEventListener('lernpass:gewertet', e => rundeEmpfangen(e.detail));
 
   // ── Meldung in der Lern-App ─────────────────────────────
   //  Unten in der Mitte, damit sie nicht mit der XP-Meldung (oben) kollidiert.
-  function toast(art, q) {
-    if (!document.body) return;
+  function baueToast() {
     let el = document.getElementById('lw-dorf-toast');
     if (!el) {
       const st = document.createElement('style');
@@ -495,11 +588,26 @@
       el.setAttribute('aria-live', 'polite');
       document.body.appendChild(el);
     }
-    const r = rohstoff(q.r);
-    if (art === 'erfuellt') {
+    return el;
+  }
+
+  function toast(art, q, woche) {
+    if (!document.body) return;
+    let el = baueToast();
+    const r = rohstoff(q.r || 'h');
+    const wZeile = woche ? `<br><small>📅 Wochenauftrag: ${woche.c} von ${woche.n}</small>` : '';
+    if (art === 'woche-erfuellt') {
       el.className = 'hoch';
       zurueckKnopf();
-      el.innerHTML = `<b>🏘️ Auftrag erfüllt!</b>+${q.b} ${r.icon} ${r.name} für dein Dorf`;
+      const l = wocheLohn();
+      el.innerHTML = `<b>📅 Wochenauftrag geschafft!</b>` + Object.entries(l).filter(([, n]) => n).map(([id, n]) => `+${n} ${rohstoff(id).icon}`).join(' ') + ' für dein Dorf';
+    } else if (art === 'woche-fortschritt') {
+      el.className = 'klein';
+      el.textContent = `📅 Wochenauftrag: ${q.c} von ${q.n} geschafft`;
+    } else if (art === 'erfuellt') {
+      el.className = 'hoch';
+      zurueckKnopf();
+      el.innerHTML = `<b>🏘️ Auftrag erfüllt!</b>+${q.b} ${r.icon} ${r.name} für dein Dorf` + wZeile;
     } else if (art === 'fortschritt') {
       el.className = 'klein';
       el.textContent = `🏘️ Dorf-Auftrag: ${q.c} von ${q.n} Runden geschafft`;
@@ -509,7 +617,7 @@
     }
     clearTimeout(el._t);
     requestAnimationFrame(() => el.classList.add('show'));
-    el._t = setTimeout(() => el.classList.remove('show'), art === 'erfuellt' ? 5000 : 3500);
+    el._t = setTimeout(() => el.classList.remove('show'), /erfuellt/.test(art) ? 5000 : 3500);
   }
 
   // Nach einem erfüllten Auftrag: 10 s lang ein Knopf zurück ins Dorf (über „Alle Apps“)
@@ -540,6 +648,7 @@
     gestartet, starten, bereit, speichern, neuLaden, inhalte, werte, rohstoffe, rohstoff,
     dorfApps, appKey, appInfo, klasse, zaehlt, heute, tagesCheck, kannTauschen, tauschen,
     gebaeudeListe, gebaeude, plaetze, platzInfo, baubar, bauen, ausbauen, kosten, rathausStufe, lohn, bonus,
+    wocheLohn, montag, lehrkraft,
     onChange(fn) { listeners.push(fn); },
     onRunde(fn)  { rundenHandler.push(fn); },
     _saeubern: saeubern, _leer: leer, _tageZwischen: tageZwischen,
