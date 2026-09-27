@@ -72,6 +72,15 @@ Dateiname + URL-Parameter. Pro App: letztes Ergebnis, Bestwert, Anzahl Versuche,
 Verlauf der letzten 30 Versuche. Jedes Ergebnis löst zusätzlich das Ereignis
 `lernapps:result` aus (Grundlage für spätere Level/XP).
 
+## Bildschirmtastatur (iPad/Handy)
+
+`navbar.js` hält die Bildschirmtastatur zwischen den Aufgaben offen: Beim Prüfen (Enter oder Knopf)
+springt der Fokus kurz auf ein unsichtbares Ersatzfeld und von dort ins nächste freie Eingabefeld – auch
+wenn die App das Feld neu aufbaut oder sperrt. Was in der Zwischenzeit getippt wird, wandert mit. Nach
+`saveResult()` (Rundenende) oder 6 s ohne neues Feld schließt die Tastatur. Apps müssen dafür nichts tun.
+Wer nach dem Prüfen auf „Weiter“ wartet, sollte **Enter = Weiter** anbieten (wie Vokabeltrainer, Simple Past)
+und das Enter im Eingabefeld mit `e.stopPropagation()` abschließen. Abschalten: `<body data-tastatur="aus">`.
+
 ## Links mit Voreinstellungen (Unterricht)
 
 - `index.html?kl=5` – Startseite nur mit Klasse-5-Apps (auch als QR über „QR zur Startseite“)
