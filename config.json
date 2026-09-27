@@ -376,7 +376,7 @@
   "spiele": {
     "auswahl": "auto+frei",
     "schwelle": 80,
-    "runden": 2,
+    "runden": 3,
     "starter": {
       "5": [
         "kopf4-leicht",
