@@ -385,7 +385,7 @@
     "avatar": true,
     "events": {
       "halloween": false,
-      "weihnachten": true,
+      "weihnachten": false,
       "ostern": false
     }
   },
