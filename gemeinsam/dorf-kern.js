@@ -377,9 +377,11 @@
     const info = platzInfo(platzId);
     if (!info || info.gesperrt || info.eintrag) return [];
     const stehen = Object.values(D.b).map(e => e[0]);
+    // "mehrfach": true = beliebig oft, eine Zahl = höchstens so oft, fehlt = nur einmal
+    const hoechstens = g => g.mehrfach === true ? Infinity : (Number.isInteger(g.mehrfach) && g.mehrfach > 0 ? g.mehrfach : 1);
     return gebaeudeListe()
       .filter(g => info.def.fest ? g.id === info.def.fest
-                                 : !plaetze().some(p => p.fest === g.id) && (g.mehrfach || !stehen.includes(g.id)))
+                                 : !plaetze().some(p => p.fest === g.id) && stehen.filter(id => id === g.id).length < hoechstens(g))
       .map(g => { const k = kosten(g.id, 1); return { gebaeude: g, kosten: k, genug: genug(k) }; });
   }
 
