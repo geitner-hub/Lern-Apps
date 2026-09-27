@@ -32,7 +32,7 @@
 //                    klassen, hidden, aod (höchstens eine App des Tages), customTags
 //    customTags[], hiddenCats[], announcement
 //    pass          – seasons, avatar (true/false), events { id: true/false }
-//    dorf          – plaetze, rerollsProTag, rerollsMax, kostenfaktor, wochen[] (Mein Dorf)
+//    dorf          – plaetze, rerollsProTag, rerollsMax, kostenfaktor, wochen[], challenges[], challengeRotation (Mein Dorf)
 //    apps[].dorf   – nur false (App bekommt keine Dorf-Aufträge)
 //
 //  Wartung & Fehlersuche: cloudflare/ANLEITUNG.md
@@ -217,7 +217,12 @@ function validateConfig(cfg) {
         && ['app', 'thema'].includes(w.art) && isStr(w.ziel, 120) && isStr(w.name ?? '', 120) && (w.app === undefined || isStr(w.app, 120))
         && zahl(w.runden, 1, 20) && (w.klassen === undefined || (Array.isArray(w.klassen) && w.klassen.every(k => Number.isInteger(k) && k >= 1 && k <= 13)));
       if (dv.wochen !== undefined && (!Array.isArray(dv.wochen) || dv.wochen.length > 20 || !dv.wochen.every(wOk))) p.push('dorf: wochen');
-      if (Object.keys(dv).some(k => !['plaetze', 'rerollsProTag', 'rerollsMax', 'kostenfaktor', 'wochen'].includes(k))) p.push('dorf: unbekanntes Feld');
+      const cOk = c => c && typeof c === 'object' && /^[a-z0-9_-]{1,40}$/i.test(c.id || '') && /^\d{4}-\d{2}-\d{2}$/.test(c.start || '')
+        && (c.klassen === undefined || (Array.isArray(c.klassen) && c.klassen.length <= 13 && c.klassen.every(k => Number.isInteger(k) && k >= 1 && k <= 13)))
+        && Object.keys(c).every(k => ['id', 'start', 'klassen'].includes(k));
+      if (dv.challenges !== undefined && (!Array.isArray(dv.challenges) || dv.challenges.length > 10 || !dv.challenges.every(cOk))) p.push('dorf: challenges');
+      if (dv.challengeRotation !== undefined && dv.challengeRotation !== false) p.push('dorf: challengeRotation');
+      if (Object.keys(dv).some(k => !['plaetze', 'rerollsProTag', 'rerollsMax', 'kostenfaktor', 'wochen', 'challenges', 'challengeRotation'].includes(k))) p.push('dorf: unbekanntes Feld');
     }
   }
   return p;
