@@ -25,6 +25,8 @@
 //  Stand Etappe 5: Dorf-Events (Halloween, Weihnachten, Ostern …) nach EVENTS in dorf-inhalte.json,
 //  gekoppelt an die Pass-Events (config.json → pass.events): Event-Währung, Startgeschenk, Festgebäude
 //  auf der Festwiese, Event-Deko (frei platzierbar, bleibt stehen), Gast-Aufträge, Suche oder Kalender.
+//  Stand Etappe 6 (Teil 1): Landschaft im Umland und Dorf-Deko wachsen ohne Kosten mit (LANDSCHAFT,
+//  DEKO in dorf-inhalte.json, Bedingungen „ab“); neue Elemente erscheinen als Neuigkeit.
 //  Die 3D-Szene: gemeinsam/dorf-szene.js.
 // ═══════════════════════════════════════════════════════
 
@@ -79,7 +81,8 @@
   //                      d: freigeschaltete Deko-IDs, kz: freigeschaltete Kalendertüren, kg: geöffnete, kt: Tag der letzten Tür,
   //                      sv: Versteck (−1 = nichts versteckt), sd: Tag des letzten Versteckens, sf: gefunden (gesamt),
   //                      q: Gast-Auftrag { i, g: Geschichte, a, n, c, m, d }, qd: Tag des letzten erledigten } }
-  //    dp  platzierte Deko { dekoPlatzId: 'eventId/dekoId' }
+  //    dp  platzierte Deko { dekoPlatzId: 'eventId/dekoId' } (Dorf-Deko: 'dorf/dekoId')
+  //    ls  bereits gemeldete Landschafts-Elemente · lk bereits gemeldete Dorf-Deko (für Neuigkeiten)
   //  Weitere Felder späterer Etappen (Sammelbuch, Bewohner …) bleiben beim
   //  Säubern erhalten, damit ältere Geräte nichts wegwerfen.
   function leer() {
@@ -132,7 +135,9 @@
     }
     if (TAG.test(raw.bd)) d.bd = raw.bd;
     if (Array.isArray(raw.sa)) d.sa = [...new Set(raw.sa.filter(istId))].slice(0, 300);
-    if (Array.isArray(raw.nz)) d.nz = raw.nz.filter(x => typeof x === 'string' && /^[bs]:[a-z0-9_-]{1,40}$/i.test(x)).slice(0, 20);
+    if (Array.isArray(raw.nz)) d.nz = raw.nz.filter(x => typeof x === 'string' && /^[bslk]:[a-z0-9_-]{1,40}$/i.test(x)).slice(0, 20);
+    if (Array.isArray(raw.ls)) d.ls = [...new Set(raw.ls.filter(istId))].slice(0, 100);
+    if (Array.isArray(raw.lk)) d.lk = [...new Set(raw.lk.filter(istId))].slice(0, 100);
     d.we = zahl(raw.we, 0, 1e5);
     if (Array.isArray(raw.pz)) d.pz = raw.pz.filter(x => Number.isInteger(x) && x > 0 && x < 10).slice(0, 10);
     if (typeof raw.dn === 'string') d.dn = raw.dn.replace(/[<>"'`\\]/g, '').replace(/\s+/g, ' ').trim().slice(0, 24);
@@ -558,6 +563,7 @@
       const m = e.meilenstein;
       if (m && istId(m.id) && !D.sa.includes(m.id) && festStufe(e.id) >= 1) { D.sa.push(m.id); D.nz = [...D.nz, 's:' + m.id].slice(-20); neu = true; }
     });
+    if (landschaftCheck()) neu = true;
     return neu;
   }
 
@@ -578,7 +584,8 @@
                deko: (e.deko || []).length, dekoHat: (evLesen(e.id).d || []).length, stuecke, aktiv: (aktivesEvent() || {}).id === e.id };
     });
     const alle = bewohner.flatMap(b => b.stuecke).concat(meilen, feste.flatMap(f => f.stuecke));
-    return { bewohner, meilensteine: meilen, feste, gesamt: alle.length, gesammelt: alle.filter(x => x.hat).length };
+    const landschaft = landschaftListe().map(l => ({ id: l.id, name: l.name, icon: l.icon, text: l.text, hat: bedingungOk(l.ab), hinweis: bedingungText(l.ab) }));
+    return { bewohner, meilensteine: meilen, feste, landschaft, gesamt: alle.length, gesammelt: alle.filter(x => x.hat).length };
   }
   /** Was ist neu seit dem letzten Blick ins Dorf? Liefert und leert die Liste. */
   function neuigkeiten() {
@@ -597,8 +604,13 @@
       }
       return null;
     };
-    return l.map(x => x.startsWith('b:') ? { art: 'bewohner', ...(bewohnerDef(x.slice(2)) || {}) } : { art: 'stueck', ...(stueck(x.slice(2)) || {}) })
-            .filter(x => x.name);
+    return l.map(x => {
+      const id = x.slice(2);
+      if (x.startsWith('b:')) return { art: 'bewohner', ...(bewohnerDef(id) || {}) };
+      if (x.startsWith('l:')) { const e = landschaftListe().find(y => y.id === id); return e ? { art: 'landschaft', name: e.name, icon: e.icon, text: e.text } : {}; }
+      if (x.startsWith('k:')) { const e = dekoDef('dorf/' + id); return e ? { art: 'deko', name: e.name, icon: e.icon } : {}; }
+      return { art: 'stueck', ...(stueck(id) || {}) };
+    }).filter(x => x.name);
   }
   function dorfname(name) {
     if (name === undefined) return D.dn;
@@ -834,6 +846,10 @@
         .map(p => ({ id: p.id, x: Number(p.x) || 0, z: Number(p.z) || 0, festwiese: !!p.festwiese })),
       verstecke: (Array.isArray(F.verstecke) ? F.verstecke : []).map(p => ({ x: Number(p && p.x) || 0, z: Number(p && p.z) || 0 })),
       umland: Array.isArray(F.umland) ? F.umland : [],
+      wege: {
+        gitter: (F.wege && Array.isArray(F.wege.gitter) ? F.wege.gitter : [-50, -30, -10, 10, 30, 50]).map(Number).filter(Number.isFinite).sort((a, b) => a - b),
+        tempo: wert(F.wege && F.wege.tempo, .5, 10, 3.2),
+      },
     };
   }
 
@@ -875,7 +891,12 @@
   // Deko: im Event mit Event-Währung freischalten, danach für immer in der Festkiste
   function dekoDef(key) {
     if (typeof key !== 'string' || !DEKO_KEY.test(key)) return null;
-    const [eid, did] = key.split('/'), e = eventDef(eid);
+    const [eid, did] = key.split('/');
+    if (eid === 'dorf') {
+      const d = dorfDekoListe().find(x => x.id === did);
+      return d ? Object.assign({}, d, { key, eventId: 'dorf', eventName: 'Dorf', eventIcon: '🏘️', dorf: true }) : null;
+    }
+    const e = eventDef(eid);
     const d = e && (e.deko || []).find(x => x && x.id === did);
     return d ? Object.assign({}, d, { key, eventId: eid, eventName: e.name, eventIcon: e.icon }) : null;
   }
@@ -909,6 +930,10 @@
     const dp = D.dp || {}, wo = {};
     Object.entries(dp).forEach(([p, k]) => { wo[k] = p; });
     const out = [];
+    dorfDekoListe().filter(d => bedingungOk(d.ab)).forEach(x => {
+      const d = dekoDef('dorf/' + x.id);
+      if (d) out.push({ key: d.key, deko: d, platz: wo[d.key] || null });
+    });
     eventListe().forEach(e => (evLesen(e.id).d || []).forEach(id => {
       const d = dekoDef(e.id + '/' + id);
       if (d) out.push({ key: d.key, deko: d, platz: wo[d.key] || null });
@@ -1078,6 +1103,43 @@
       if (nr >= 0) { z.sv = nr; z.sd = heute(); out.zeilen.push(`${m.icon || '🔍'} Im Dorf hat sich ${m.ding || 'etwas'} versteckt!`); }
     }
     return out;
+  }
+
+  // ── Landschaft und Dorf-Deko (wachsen ohne Kosten mit) ──
+  //  Bedingung „ab“: { rathaus, ansehen, bewohner, meilensteine, gebaeude + stufe } – alles muss stimmen.
+  function landschaftListe() { return C && Array.isArray(C.LANDSCHAFT) ? C.LANDSCHAFT.filter(l => l && istId(l.id) && l.art) : []; }
+  function dorfDekoListe() { return C && Array.isArray(C.DEKO) ? C.DEKO.filter(d => d && istId(d.id) && Array.isArray(d.modell)) : []; }
+  function meilensteinZahl() { return D.sa.filter(id => meilensteine().some(m => m.id === id)).length; }
+  function gebaeudeStufe(id) { return Object.values(D.b).reduce((m, e) => e[0] === id ? Math.max(m, stehendeStufe(e)) : m, 0); }
+  function bedingungOk(ab) {
+    if (!ab || typeof ab !== 'object') return true;
+    if (ab.rathaus !== undefined && rathausStufe() < Number(ab.rathaus)) return false;
+    if (ab.ansehen !== undefined && D.an < Number(ab.ansehen)) return false;
+    if (ab.bewohner !== undefined && D.bw.length < Number(ab.bewohner)) return false;
+    if (ab.meilensteine !== undefined && meilensteinZahl() < Number(ab.meilensteine)) return false;
+    if (ab.gebaeude !== undefined && gebaeudeStufe(ab.gebaeude) < Math.max(1, Number(ab.stufe) || 1)) return false;
+    return true;
+  }
+  function bedingungText(ab) {
+    if (!ab || typeof ab !== 'object') return '';
+    const t = [];
+    if (ab.rathaus) t.push(Number(ab.rathaus) === 1 ? 'Rathaus bauen' : 'Rathaus auf Stufe ' + ab.rathaus);
+    if (ab.gebaeude) { const g = gebaeude(ab.gebaeude); t.push((g ? g.name : ab.gebaeude) + (Number(ab.stufe) > 1 ? ' auf Stufe ' + ab.stufe : ' bauen')); }
+    if (ab.ansehen) t.push(ab.ansehen + ' Ansehen');
+    if (ab.bewohner) t.push(ab.bewohner + ' Bewohner');
+    if (ab.meilensteine) t.push(ab.meilensteine + ' Meilensteine');
+    return t.join(' · ');
+  }
+  function landschaftAktiv() { return landschaftListe().filter(l => bedingungOk(l.ab)); }
+  /** Neu gewachsene Landschaft und neue Dorf-Deko als Neuigkeit melden. Beim allerersten Mal still. */
+  function landschaftCheck() {
+    if (!C || !landschaftListe().length) return false;
+    const land = landschaftAktiv().map(l => l.id), deko = dorfDekoListe().filter(d => bedingungOk(d.ab)).map(d => d.id);
+    if (!Array.isArray(D.ls) || !Array.isArray(D.lk)) { D.ls = land; D.lk = deko; return true; }
+    let neu = false;
+    land.filter(id => !D.ls.includes(id)).forEach(id => { D.ls.push(id); D.nz = [...D.nz, 'l:' + id].slice(-20); neu = true; });
+    deko.filter(id => !D.lk.includes(id)).forEach(id => { D.lk.push(id); D.nz = [...D.nz, 'k:' + id].slice(-20); neu = true; });
+    return neu;
   }
 
   // ── Runden aus pass.js empfangen ────────────────────────
@@ -1274,6 +1336,7 @@
     eventListe, eventDef, aktivesEvent, eventWerte, waehrungen, saison, flaechen, eventBesuch,
     festInfo, festBauen, dekoDef, dekoShop, dekoKaufen, dekoPlaetze, festkiste, dekoSetzen, dekoWeg,
     gastAuftragInfo, sucheInfo, gefunden, kalenderInfo, tuerOeffnen,
+    landschaftListe, landschaftAktiv, dorfDekoListe, bedingungOk, bedingungText, gebaeudeStufe,
     onChange(fn) { listeners.push(fn); },
     onRunde(fn)  { rundenHandler.push(fn); },
     _saeubern: saeubern, _leer: leer, _tageZwischen: tageZwischen,

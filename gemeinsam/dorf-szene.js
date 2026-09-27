@@ -20,6 +20,11 @@
 //  „Takt“: höchstens 30 Bilder pro Sekunde, nur wenn das Dorf sichtbar ist, und Pause nach
 //  60 Sekunden ohne Antippen. Bei „Bewegung reduzieren“ gibt es keine Dauer-Animationen.
 //
+//  Etappe 6: Bewohner laufen auf den Gassen (FLAECHEN.wege.gitter) zu ihren Zielen, Tiere und die
+//  Bürgermeister·in mit Pass-Begleiter bewegen sich, die Landschaft (LANDSCHAFT) wächst ins Umland.
+//  Gebacken wird mit Vertex-Farben: ein Gebäude = meist ein Draw-Call.
+//  Antippbar zusätzlich: 'b:ID' = Bewohner, 'rand' = Schild zum neuen Gebiet.
+//
 //  API (window.LernDorfSzene):
 //    webglOk()                        → true, wenn 3D möglich ist
 //    mount(host, { onPlatz(id) })     → Promise: Steuerung oder null (kein 3D)
@@ -88,37 +93,50 @@
     }
     function seeded(s) { return () => { s = (s * 16807) % 2147483647; return (s - 1) / 2147483646; }; }
 
-    // Alle Meshes einer Gruppe zu je einem Mesh pro Material zusammenfügen
+    // Alle Meshes einer Gruppe zusammenfügen: einfarbige Klötze zu EINEM Mesh mit Vertex-Farben
+    // (ein Draw-Call für ein ganzes Gebäude), Besonderes (leuchtend, durchsichtig, Textur,
+    // Fenster) bleibt je Material getrennt.
+    const BUNT = new T.MeshLambertMaterial({ vertexColors: true });
+    function eigen(m) {
+      return !m.isMeshLambertMaterial || (m.userData && m.userData.eigen) || m.transparent || m.map || m.vertexColors
+        || (m.emissive && (m.emissive.r || m.emissive.g || m.emissive.b));
+    }
     function backe(gruppe) {
       gruppe.updateMatrixWorld(true);
-      const nachMat = new Map();
+      const nachMat = new Map(), bunt = [];
       gruppe.traverse(o => {
-        if (!o.isMesh) return;
+        if (!o.isMesh || !o.material || o.material.visible === false) return;
         const g = o.geometry.clone(); g.applyMatrix4(o.matrixWorld);
+        if (!eigen(o.material)) { g.userData.farbe = o.material.color; bunt.push(g); return; }
         if (!nachMat.has(o.material)) nachMat.set(o.material, []);
         nachMat.get(o.material).push(g);
       });
       const out = new T.Group();
+      if (bunt.length) out.add(new T.Mesh(verbinde(bunt), BUNT));
       nachMat.forEach((geos, mat) => out.add(new T.Mesh(verbinde(geos), mat)));
       return out;
     }
     function verbinde(geos) {
       let n = 0, ni = 0;
       geos.forEach(g => { n += g.attributes.position.count; ni += g.index.count; });
-      const pos = new Float32Array(n * 3), nor = new Float32Array(n * 3);
+      const farbig = geos.every(g => g.userData.farbe);
+      const pos = new Float32Array(n * 3), nor = new Float32Array(n * 3), col = farbig ? new Float32Array(n * 3) : null;
       const ind = n > 65000 ? new Uint32Array(ni) : new Uint16Array(ni);
       let o = 0, io = 0;
       geos.forEach(g => {
         pos.set(g.attributes.position.array, o * 3);
         nor.set(g.attributes.normal.array, o * 3);
+        const c = g.userData.farbe, k = g.attributes.position.count;
+        if (col) for (let i = 0; i < k; i++) { col[(o + i) * 3] = c.r; col[(o + i) * 3 + 1] = c.g; col[(o + i) * 3 + 2] = c.b; }
         const I = g.index.array;
         for (let i = 0; i < I.length; i++) ind[io + i] = I[i] + o;
-        o += g.attributes.position.count; io += I.length;
+        o += k; io += I.length;
         g.dispose();
       });
       const bg = new T.BufferGeometry();
       bg.setAttribute('position', new T.BufferAttribute(pos, 3));
       bg.setAttribute('normal', new T.BufferAttribute(nor, 3));
+      if (col) bg.setAttribute('color', new T.BufferAttribute(col, 3));
       bg.setIndex(new T.BufferAttribute(ind, 1));
       return bg;
     }
@@ -541,13 +559,24 @@
       scene.add(backe(z));
     })();
 
+    // Wege ins Umland (alle, auch noch nicht gewachsene) bleiben frei von Bäumen
+    function abstandStrecke(x, z, ax, az, bx, bz) {
+      const dx = bx - ax, dz = bz - az, l = dx * dx + dz * dz, t = l ? Math.max(0, Math.min(1, ((x - ax) * dx + (z - az) * dz) / l)) : 0;
+      return Math.hypot(x - ax - t * dx, z - az - t * dz);
+    }
+    const wegPunkte = [];
+    DORF.landschaftListe().forEach(l => [l.besuch, l.punkte, l.weg && l.weg.punkte].forEach(pt => {
+      if (Array.isArray(pt)) for (let i = 1; i < pt.length; i++) wegPunkte.push([pt[i - 1][0], pt[i - 1][1], pt[i][0], pt[i][1]]);
+    }));
     // Deko: Bäume am Rand und in Lücken (fest, jedes Mal gleich; Variante je nach Stimmung)
     const dekoPos = [];
     (function () {
       const r = seeded(42), frei = (x, z) => Math.abs(x) + Math.abs(z) > 16 && plaetze.every(p => Math.abs(p.x - x) > PLATZ / 2 + 3 || Math.abs(p.z - z) > PLATZ / 2 + 3)
         && plaetze.every(p => !((Math.abs(z) < 4 && x * p.x > 0 && Math.abs(x) <= Math.abs(p.x) + 2) || (Math.abs(x - p.x) < 4 && z * p.z >= 0 && Math.abs(z) <= Math.abs(p.z) + 2)))
         && FL.dekoplaetze.every(d => Math.hypot(d.x - x, d.z - z) > 5.5) && FL.verstecke.every(v => Math.hypot(v.x - x, v.z - z) > 4)
-        && !(x > maxX - 12 && Math.abs(z - FW.z) < 5);                                 // Weg zur Festwiese
+        && !(x > maxX - 12 && Math.abs(z - FW.z) < 5)                                  // Weg zur Festwiese
+        && !FL.wege.gitter.some(g => Math.abs(x - g) < 2.8 || Math.abs(z - g) < 2.8)      // Gassen für die Bewohner
+        && !wegPunkte.some(([ax, az, bx, bz]) => abstandStrecke(x, z, ax, az, bx, bz) < 3.2);
       let n = 0;
       for (let i = 0; i < 400 && n < 46; i++) {
         const x = minX + 3 + r() * (BW - 6), z = minZ + 3 + r() * (BT - 6);
@@ -582,7 +611,7 @@
     buerger.rotation.y = Math.PI / 4;                                                    // zur Kamera
     figur.pose({ lauf: 0, jubel: 0, t: 0 });
     scene.add(buerger);
-    b(scene, 3.6, .15, 3.6, 2, 0, 2, lam('#000', { transparent: true, opacity: .18 }));  // Schatten
+    b(buerger, 3.6, .15, 3.6, 0, 0, 0, lam('#000', { transparent: true, opacity: .18 }));  // Schatten (läuft mit)
 
     // ── Bauplätze, Festwiese, Deko-Plätze ──────────────────
     const hitMat = new T.MeshBasicMaterial({ visible: false });
@@ -620,6 +649,7 @@
 
     // ── Stimmung (Event) ───────────────────────────────────
     const fensterMat = lam(F.fenster);
+    fensterMat.userData.eigen = true;                                                     // bleibt getrennt (leuchtet im Event)
     let stimmungKey = null, ev = null, partikel = null, wimpel = null;
     function stimmungAnwenden() {
       const a = DORF.aktivesEvent();
@@ -748,7 +778,7 @@
     }
     function dekoZeichnen() {
       const plaetzeD = DORF.dekoPlaetze(), kiste = DORF.festkiste();
-      const zeigeFreie = setzModus || kiste.some(k => !k.platz);
+      const zeigeFreie = setzModus;                                                        // freie Plätze nur beim Aufstellen
       let geaendert = false;
       plaetzeD.forEach(p => {
         const o = dekoObj[p.id];
@@ -820,6 +850,7 @@
         geaendert = true;
       });
       bodenMalen(zustand);
+      if (landZeichnen()) geaendert = true;
       if (festZeichnen()) geaendert = true;
       if (dekoZeichnen()) geaendert = true;
       if (sucheZeichnen()) geaendert = true;
@@ -828,30 +859,288 @@
       return geaendert;
     }
 
-    // Bewohner: jede Figur als eigene Gruppe (damit sie ab Etappe 6 laufen können)
+    // ── Wege: Gassen zwischen den Bauplätzen (FLAECHEN.wege.gitter) ──
+    //  Jede Gasse ist eine Linie x = g oder z = g. Ein Ort hat einen Punkt auf einer Gasse
+    //  (gasse) und optional ein Stück Weg danach (rest). Gelaufen wird nur auf Gassen, darum
+    //  nie durch Häuser: Gassen liegen immer zwischen zwei Reihen von Bauplätzen.
+    const GASSEN = FL.wege.gitter, TEMPO = FL.wege.tempo;
+    const auf = (v, l) => l.some(g => Math.abs(g - v) < .01);
+    function zuGasse(v, ziel) { return GASSEN.reduce((b, g) => (Math.abs(g - v) + Math.abs(g - ziel) < Math.abs(b - v) + Math.abs(b - ziel) ? g : b), GASSEN[0]); }
+    function gitterWeg(p, q) {
+      if ((auf(p.z, GASSEN) && Math.abs(p.z - q.z) < .01) || (auf(p.x, GASSEN) && Math.abs(p.x - q.x) < .01)) return [q];
+      const np = auf(p.z, GASSEN) ? { x: zuGasse(p.x, q.x), z: p.z } : { x: p.x, z: zuGasse(p.z, q.z) };
+      const nq = auf(q.z, GASSEN) ? { x: zuGasse(q.x, p.x), z: q.z } : { x: q.x, z: zuGasse(q.z, p.z) };
+      const l = [np, { x: nq.x, z: np.z }, nq, q], out = [];
+      l.forEach(k => { const v = out.length ? out[out.length - 1] : p; if (Math.abs(v.x - k.x) > .01 || Math.abs(v.z - k.z) > .01) out.push(k); });
+      return out;
+    }
+    function route(a, b) { return [...(a.rest || []).slice().reverse().slice(1), a.gasse, ...gitterWeg(a.gasse, b.gasse), ...(b.rest || [])]; }
+    const zufallR = Math.random;
+    function vorHaus(p, dx = 0) { return { gasse: { x: p.x + dx, z: p.z + 10 }, blick: Math.PI / 4 }; }  // Eingang vorne (+z)
+    function dorfplatzOrt() {
+      const sx = zufallR() < .5 ? -1 : 1, sz = zufallR() < .5 ? -1 : 1;
+      const x = sx * (1 + zufallR() * 3), z = sz * (1 + zufallR() * 3);
+      return { gasse: { x: sx * 10, z: sz * 10 }, rest: [{ x: sx * 10, z: sz * 10 }, { x, z }], blick: Math.atan2(-x, -z) };
+    }
+    function besuchOrt(pfad) {
+      const pt = pfad.map(([x, z]) => ({ x: Number(x) || 0, z: Number(z) || 0 }));
+      return { gasse: pt[0], rest: pt, blick: Math.PI / 4 };
+    }
+    // Ziel eines Bewohners → Ort (null, wenn es das Ziel gerade nicht gibt)
+    function zielOrt(ziel, heim) {
+      if (ziel === 'dorfplatz') return dorfplatzOrt();
+      if (ziel === 'haeuser' || ziel === 'post') {
+        const l = plaetze.filter(p => { const i = DORF.platzInfo(p.id); return i && i.stufe > 0 && !(heim && heim.platz === p.id); });
+        return l.length ? vorHaus(l[Math.floor(zufallR() * l.length)], (zufallR() - .5) * 6) : null;
+      }
+      if (ziel === 'festwiese') return ev && ev.def ? besuchOrt([[50, 10], [50, 0], [60, 0], [FW.gast[0] + 2, FW.gast[1] + 3]]) : null;
+      const bau = plaetze.find(p => { const i = DORF.platzInfo(p.id); return i && i.stufe > 0 && i.gebaeude.id === ziel; });
+      if (bau) return vorHaus(bau, (zufallR() - .5) * 5);
+      const land = landAktiv.find(l => l.id === ziel && Array.isArray(l.besuch) && l.besuch.length);
+      return land ? besuchOrt(land.besuch) : null;
+    }
+
+    // ── Läufer: Bewohner, Katze, Bürgermeister·in (bewegt im Takt) ──
+    const laeufer = new Set();
+    function laufen(w, dt, t) {
+      if (w.pause && w.pause()) return;
+      if (w.warte > 0) { w.warte -= dt; w.pose(0, t); if (w.warte <= 0 && !w.pfad.length) w.naechstes(); return; }
+      const z = w.pfad[0];
+      if (!z) { w.warte = w.pauseMin + zufallR() * w.pauseMax; w.g.rotation.y = w.blick; w.pose(0, t); return; }
+      const dx = z.x - w.g.position.x, dz = z.z - w.g.position.z, d = Math.hypot(dx, dz), s = w.tempo * dt;
+      if (d <= s) { w.g.position.x = z.x; w.g.position.z = z.z; w.pfad.shift(); }
+      else { w.g.position.x += dx / d * s; w.g.position.z += dz / d * s; }
+      if (d > .01) w.g.rotation.y = Math.atan2(dx, dz);
+      w.schritt += s;
+      w.pose(1, t);
+    }
+    function neuerLaeufer(g, o) {
+      const w = Object.assign({ g, pfad: [], warte: 1 + zufallR() * 8, schritt: 0, tempo: TEMPO, pauseMin: 4, pauseMax: 8, blick: Math.PI / 4,
+                                pose() {}, naechstes() {} }, o);
+      laeufer.add(w);
+      return w;
+    }
+    const laeuferFn = (dt, t) => laeufer.forEach(w => { try { laufen(w, dt, t); } catch (e) {} });
+
+    // Bewohner-Figur mit beweglichen Beinen (Körper gebacken = 1 Draw-Call, Beine je 1)
+    function figurLaeufer(def, nr) {
+      const f = Array.isArray(def.farben) ? def.farben : ['#64748b', '#334155', '#422006'];
+      const g = new T.Group(), roh = new T.Group(), beine = [];
+      if (def.tier === 'katze') figurBewohner(roh, def, 0, 0, 0, nr);
+      else {
+        const hose = lam(f[1]);
+        [-.35, .35].forEach(x => { const h = new T.Group(); h.position.set(x, 1.6, 0); b(h, .6, 1.6, .7, 0, -1.6, 0, hose); g.add(h); beine.push(h); });
+        const tmp = new T.Group();
+        figurBewohner(tmp, def, 0, 0, 0, nr);
+        const koerper = tmp.children[0];
+        koerper.children.slice(0, 2).forEach(m => koerper.remove(m));                  // Beine kommen oben dazu
+        roh.add(koerper);
+      }
+      g.add(backe(roh));
+      return { g, beine };
+    }
+    let buergerW = null, jubeltBis = 0;
+    function buergerLaeufer() {
+      if (buergerW) return;
+      const punkte = [{ x: 2, z: 2 }, { x: -3, z: 1.5 }, { x: 1, z: -3 }, { x: -1.5, z: -1 }, { x: 3, z: -.5 }];
+      buergerW = neuerLaeufer(buerger, {
+        tempo: 2.4, pauseMin: 6, pauseMax: 10, warte: 6,
+        pause() { return performance.now() < jubeltBis; },
+        pose(lauf) { figur.pose({ lauf, phase: this.schritt * 1.3, jubel: 0, t: performance.now() / 1000 }); if (!lauf) buerger.rotation.y = Math.PI / 4; },
+        naechstes() { const z = punkte[Math.floor(zufallR() * punkte.length)]; this.pfad = [z]; this.blick = Math.PI / 4; },
+      });
+    }
     let leuteKey = null;
-    const leute = [];                                                                     // [{ id, gruppe, heim: {x, z}, platz }]
+    const leute = [];                                                                     // [{ id, gruppe, heim, platz, laeufer }]
     function leuteZeichnen() {
       const bw = DORF.state.bw || [];
       const key = JSON.stringify(bw);
       if (key === leuteKey) return;
       leuteKey = key;
-      leute.splice(0).forEach(l => { scene.remove(l.gruppe); entsorgen(l.gruppe); });
+      dauer.add(laeuferFn);
+      buergerLaeufer();
+      leute.splice(0).forEach(l => { scene.remove(l.gruppe); entsorgen(l.gruppe); laeufer.delete(l.laeufer); hits.splice(hits.indexOf(l.hit), 1); });
       const proPlatz = {};
       bw.forEach(([id, platz], nr) => {
         const def = DORF.bewohnerDef(id), p = plaetze.find(x => x.id === platz);
         if (!def || !p) return;
         const k = proPlatz[platz] = (proPlatz[platz] || 0) + 1;                       // 1.–4. Bewohner dieses Hauses
-        const pos = [[PLATZ / 2 + 1.6, 3], [PLATZ / 2 + 1.6, -1], [3, PLATZ / 2 + 1.6], [-1.5, PLATZ / 2 + 1.6]][(k - 1) % 4];
-        const roh = new T.Group();
-        figurBewohner(roh, def, 0, 0, 0, nr);
-        const g = new T.Group();
-        g.add(backe(roh));
-        g.position.set(p.x + pos[0], 0, p.z + pos[1]);
-        g.rotation.y = Math.PI / 4 + (k % 2 ? .3 : -.3);
+        const { g, beine } = figurLaeufer(def, nr);
+        const heim = { x: p.x - 4.5 + (k - 1) * 3, z: p.z + 10, platz: p.id };
+        g.position.set(heim.x, 0, heim.z);
+        g.rotation.y = Math.PI / 4;
+        const hit = new T.Mesh(geo(2.6, 5.2, 2.6), hitMat); hit.position.y = 2.6; hit.userData.platz = 'b:' + id;
+        g.add(hit); hits.push(hit);
         scene.add(g);
-        leute.push({ id, gruppe: g, heim: { x: g.position.x, z: g.position.z }, platz });
+        const katze = def.tier === 'katze';
+        const ziele = Array.isArray(def.ziele) && def.ziele.length ? def.ziele : ['dorfplatz', 'haeuser'];
+        const w = neuerLaeufer(g, {
+          tempo: TEMPO * (katze ? 1.35 : .85 + (nr % 4) * .1), pauseMin: katze ? 6 : 4, pauseMax: katze ? 14 : 9, ort: { gasse: { x: heim.x, z: heim.z } },
+          pose(lauf, t) {
+            const ph = this.schritt * 1.6;
+            beine.forEach((h, i) => { h.rotation.x = lauf ? Math.sin(ph + i * Math.PI) * .7 : 0; });
+            g.position.y = lauf ? Math.abs(Math.sin(ph)) * (katze ? .25 : .15) : 0;
+          },
+          naechstes() {
+            const daheim = Math.hypot(g.position.x - heim.x, g.position.z - heim.z) < 1;
+            let ziel = !daheim && zufallR() < .4 ? { gasse: { x: heim.x, z: heim.z }, blick: Math.PI / 4 } : null;
+            for (let i = 0; !ziel && i < 4; i++) ziel = zielOrt(ziele[Math.floor(zufallR() * ziele.length)], heim);
+            if (!ziel) { this.warte = 5; return; }
+            this.pfad = route(this.ort, ziel); this.ort = ziel; this.blick = ziel.blick !== undefined ? ziel.blick : Math.PI / 4;
+          },
+        });
+        leute.push({ id, gruppe: g, heim, platz, laeufer: w, hit });
       });
+    }
+
+    // ── Landschaft im Umland (LANDSCHAFT in dorf-inhalte.json) ──
+    let land = null, landKey = null, landAktiv = [], rotor = null;
+    const landHits = [], tiere = [];
+    function streifen(p, x1, z1, x2, z2, w, h, y, farbe) {
+      const l = Math.hypot(x2 - x1, z2 - z1);
+      if (l < .01) return;
+      const m = new T.Mesh(geo(l + w * .6, h, w), typeof farbe === 'string' ? lam(farbe) : farbe);
+      m.position.set((x1 + x2) / 2, y + h / 2, (z1 + z2) / 2); m.rotation.y = -Math.atan2(z2 - z1, x2 - x1);
+      p.add(m);
+    }
+    function bachPunkt(l, t) {                                                           // Punkt auf einer Linie, t 0–1
+      const pt = l.punkte, seg = [];
+      let ges = 0;
+      for (let i = 1; i < pt.length; i++) { const d = Math.hypot(pt[i][0] - pt[i - 1][0], pt[i][1] - pt[i - 1][1]); seg.push(d); ges += d; }
+      let r = t * ges;
+      for (let i = 0; i < seg.length; i++) {
+        if (r <= seg[i]) { const k = r / seg[i]; return { x: pt[i][0] + (pt[i + 1][0] - pt[i][0]) * k, z: pt[i][1] + (pt[i + 1][1] - pt[i][1]) * k, dreh: Math.atan2(pt[i + 1][0] - pt[i][0], pt[i + 1][1] - pt[i][1]) }; }
+        r -= seg[i];
+      }
+      const e = pt[pt.length - 1]; return { x: e[0], z: e[1], dreh: 0 };
+    }
+    function tierModell(art) {
+      const g = new T.Group(), roh = new T.Group();
+      if (art === 'huhn') { b(roh, .9, .8, 1.1, 0, .3, 0, F.weiss); b(roh, .6, .6, .6, 0, 1, .5, F.weiss); b(roh, .3, .3, .3, 0, 1.6, .5, '#dc2626'); b(roh, .25, .2, .3, 0, 1.15, .9, '#f59e0b'); b(roh, .2, .3, .2, -.2, 0, 0, '#f59e0b'); b(roh, .2, .3, .2, .2, 0, 0, '#f59e0b'); }
+      else if (art === 'schaf') { b(roh, 2, 1.4, 2.6, 0, .8, 0, '#f1f5f9'); b(roh, 1, 1, 1, 0, 1.6, 1.5, '#3f3f46'); [[-.6, .8], [.6, .8], [-.6, -.8], [.6, -.8]].forEach(([x, z]) => b(roh, .4, .8, .4, x, 0, z, '#3f3f46')); }
+      else { b(roh, 1, .7, 1.5, 0, .1, 0, '#8b5a2b'); b(roh, .7, .7, .7, 0, .6, .7, '#166534'); b(roh, .3, .25, .4, 0, .75, 1.2, '#f59e0b'); }
+      g.add(backe(roh));
+      return g;
+    }
+    function landZeichnen() {
+      landAktiv = DORF.landschaftAktiv();
+      const art = ev && ev.def && ev.def.stimmung ? ev.def.stimmung.baeume || '' : '';
+      const key = landAktiv.map(l => l.id).join(',') + '|' + art;
+      if (key === landKey) return false;
+      landKey = key;
+      if (land) { scene.remove(land); entsorgen(land); }
+      if (rotor) { scene.remove(rotor.g); entsorgen(rotor.g); dauer.delete(rotor.fn); rotor = null; }
+      landHits.splice(0).forEach(h => { scene.remove(h); hits.splice(hits.indexOf(h), 1); });
+      tiere.splice(0).forEach(t => { scene.remove(t.g); entsorgen(t.g); if (t.w) laeufer.delete(t.w); if (t.fn) dauer.delete(t.fn); });
+      const schnee = art === 'schnee', roh = new T.Group();
+      landAktiv.forEach(l => {
+        const r = seeded(Number(l.seed) || l.id.length * 7 + 3);
+        const X = Number(l.x) || 0, Z = Number(l.z) || 0, B = Number(l.b) || 10, D = Number(l.t) || 8;
+        if (l.art === 'blumen') {
+          const rb = seeded(77), inseln = [];                                            // Blumen in kleinen Inseln, dazwischen Büsche
+          for (let i = 0; i < 40; i++) inseln.push([-110 + rb() * 220, -110 + rb() * 220, ['#f5d04a', '#f5f5f0', '#a78bfa', F.blume][i % 4]]);
+          for (let i = 0; i < 200; i++) {
+            const insel = inseln[i % inseln.length], busch = i % 9 === 0;
+            const x = busch ? -110 + rb() * 220 : insel[0] + (rb() - .5) * 7, z = busch ? -110 + rb() * 220 : insel[1] + (rb() - .5) * 7;
+            if (Math.max(Math.abs(x), Math.abs(z)) < 59 || Math.abs(x) + Math.abs(z) > 125) continue;
+            if (Math.abs(x - FW.x) < FW.breite / 2 + 1 && Math.abs(z - FW.z) < FW.tiefe / 2 + 1) continue;
+            if (landAktiv.some(o => o !== l && o.x !== undefined && Math.abs(x - o.x) < (o.b || 10) / 2 + 2 && Math.abs(z - o.z) < (o.t || 8) / 2 + 2)) continue;
+            if (schnee) continue;
+            if (busch) b(roh, 1.8, 1.2, 1.8, Math.round(x), 0, Math.round(z), rb() < .5 ? '#3f8f47' : '#4a9d4f');
+            else b(roh, .6, .5, .6, Math.round(x), 0, Math.round(z), insel[2]);
+          }
+        } else if (l.art === 'bach' && Array.isArray(l.punkte)) {
+          const w = Number(l.breite) || 4;
+          for (let i = 1; i < l.punkte.length; i++) {
+            const [a, c] = [l.punkte[i - 1], l.punkte[i]];
+            streifen(roh, a[0], a[1], c[0], c[1], w + 1.6, .12, 0, schnee ? '#e2e8f0' : '#8fbf6a');
+            streifen(roh, a[0], a[1], c[0], c[1], w, .16, 0, schnee ? '#cfe8f7' : F.wasser);
+          }
+        } else if (l.art === 'feld') {
+          b(roh, B, .3, D, X, 0, Z, schnee ? '#eef2f6' : '#7d5836');
+          if (!schnee) for (let zz = -D / 2 + 1; zz < D / 2 - .4; zz += 1.4) for (let xx = -B / 2 + .8; xx < B / 2 - .4; xx += 1.2) {
+            const k = Math.round(xx * 3 + zz * 7);
+            if (l.frucht === 'sonnenblume') { b(roh, .2, 1.8, .2, X + xx, .3, Z + zz, '#3f7d2c'); b(roh, .8, .8, .3, X + xx, 2.1, Z + zz + .1, '#facc15'); b(roh, .35, .35, .1, X + xx, 2.3, Z + zz + .3, '#78350f'); }
+            else if (l.frucht === 'gemuese') { if (k % 2) b(roh, .9, .7, .9, X + xx, .3, Z + zz, '#f28c28'); else b(roh, .9, .6, .9, X + xx, .3, Z + zz, '#4d7c0f'); }
+            else b(roh, .9, 1.1 + (k % 3) * .15, .5, X + xx, .3, Z + zz, art === 'herbst' ? '#c8a04a' : '#e3c45a');
+          }
+        } else if (l.art === 'baeume') {
+          const pos = [];
+          for (let i = 0; i < 80 && pos.length < (Number(l.n) || 5); i++) {
+            const x = X - B / 2 + r() * B, z = Z - D / 2 + r() * D;
+            if (pos.some(q => Math.hypot(q[0] - x, q[1] - z) < 5.2)) continue;
+            pos.push([x, z]);
+          }
+          pos.forEach(([x, z]) => {
+            const h = (l.klein ? 3 : 4) + Math.round(r() * 3);
+            if (l.tanne) { b(roh, 1, 1.4, 1, Math.round(x), 0, Math.round(z), '#6b4226'); [5, 4, 3, 2].forEach((w, i) => { b(roh, w, 1.4, w, Math.round(x), 1.4 + i * 1.4, Math.round(z), schnee ? '#2c6236' : '#2e6b3a'); if (schnee) b(roh, w * .8, .3, w * .8, Math.round(x), 2.8 + i * 1.4, Math.round(z), '#f8fafc'); }); }
+            else {
+              baum(roh, Math.round(x), Math.round(z), h, r, art);
+              if (l.obst && art !== 'schnee') [[-1.6, 1.4], [1.4, 1.2], [0, -1.8], [1.2, -.6]].forEach(([dx, dz]) => b(roh, .6, .6, .6, Math.round(x) + dx, h + .9, Math.round(z) + dz + .3, '#dc2626'));
+            }
+          });
+        } else if (l.art === 'felsen') {
+          const grau = ['#8d8d8d', '#a3a3a3', '#777777', '#9a948a'], H = Number(l.h) || 6;
+          for (let i = 0; i < 9; i++) {
+            const w = 2.4 + r() * 2.6, h = 2 + r() * H, x = X - B / 2 + (i + .5) * B / 9, z = Z - D / 4 + r() * D / 2;
+            b(roh, w, h, 2.6 + r() * 2, x, 0, z, grau[i % 4]);
+            if (schnee) b(roh, w + .1, .35, 2.4, x, h, z, '#f8fafc');
+          }
+        }
+        if (l.art === 'weg' && Array.isArray(l.punkte)) for (let i = 1; i < l.punkte.length; i++) streifen(roh, l.punkte[i - 1][0], l.punkte[i - 1][1], l.punkte[i][0], l.punkte[i][1], Number(l.breite) || 3, .06, 0, schnee ? '#d9d2c3' : '#c9a877');
+        if (l.weg && Array.isArray(l.weg.punkte)) for (let i = 1; i < l.weg.punkte.length; i++) streifen(roh, l.weg.punkte[i - 1][0], l.weg.punkte[i - 1][1], l.weg.punkte[i][0], l.weg.punkte[i][1], Number(l.weg.breite) || 3, .06, 0, schnee ? '#d9d2c3' : '#c9a877');
+        if (Array.isArray(l.zaun)) {
+          const [zb, zt] = l.zaun, x0 = X - zb / 2, x1 = X + zb / 2, z0 = Z - zt / 2, z1 = Z + zt / 2;
+          for (let x = x0; x <= x1 + .01; x += 2) { b(roh, .3, 1.3, .3, x, 0, z0, F.holz2); b(roh, .3, 1.3, .3, x, 0, z1, F.holz2); }
+          for (let z = z0 + 2; z < z1; z += 2) { b(roh, .3, 1.3, .3, x0, 0, z, F.holz2); b(roh, .3, 1.3, .3, x1, 0, z, F.holz2); }
+          b(roh, zb, .2, .2, X, .9, z0, F.holz2); b(roh, zb, .2, .2, X, .9, z1, F.holz2); b(roh, .2, .2, zt, x0, .9, Z, F.holz2); b(roh, .2, .2, zt, x1, .9, Z, F.holz2);
+        }
+        (Array.isArray(l.modelle) ? l.modelle : []).forEach(m => {
+          const g = new T.Group(); g.position.set(Number(m.x) || 0, 0, Number(m.z) || 0); g.rotation.y = (Number(m.dreh) || 0) * Math.PI / 180;
+          klotz(g, m.modell); roh.add(g);
+          if (m.drehteil && Array.isArray(m.drehteil.teile)) {                                // z. B. Windmühlenflügel
+            const r0 = new T.Group(), hub = m.drehteil.punkt || [0, 0, 0];
+            r0.position.set(Number(m.x) || 0, 0, Number(m.z) || 0); r0.rotation.y = g.rotation.y;
+            const nabe = new T.Group(); nabe.position.set(hub[0], hub[1], hub[2]);
+            const teile = new T.Group(); klotz(teile, m.drehteil.teile); nabe.add(backe(teile)); r0.add(nabe);
+            scene.add(r0);
+            const fn = (dt) => { nabe.rotation.z -= dt * .8; };
+            rotor = { g: r0, fn }; dauer.add(fn);
+          }
+        });
+        if (l.tippen && Array.isArray(l.modelle) && l.modelle[0]) {
+          const h = hitBox(l.tippen, Number(l.modelle[0].x) || 0, Number(l.modelle[0].z) || 0, 9, 8, 9); landHits.push(h);
+        }
+        if (l.art === 'tiere') {
+          const n = Math.max(1, Math.min(8, Number(l.n) || 3));
+          for (let i = 0; i < n; i++) {
+            const g = tierModell(l.tier);
+            scene.add(g);
+            if (l.bach) {
+              const bach = landAktiv.find(o => o.id === l.bach);
+              if (!bach) continue;
+              let t = .3 + i * .12, dir = i % 2 ? 1 : -1;
+              const setz = () => { const q = bachPunkt(bach, t); g.position.set(q.x, .1, q.z); g.rotation.y = q.dreh + (dir < 0 ? Math.PI : 0); };
+              setz();
+              const fn = (dt, tt) => { t += dir * dt * .004; if (t > .72 || t < .28) dir = -dir; setz(); g.position.y = .1 + Math.sin(tt / 500 + i) * .06; };
+              dauer.add(fn);
+              tiere.push({ g, fn });
+              continue;
+            }
+            const R = Number(l.radius) || 4, cx0 = X, cz0 = Z;
+            g.position.set(cx0 + (r() - .5) * R, 0, cz0 + (r() - .5) * R);
+            const w = neuerLaeufer(g, {
+              tempo: l.tier === 'schaf' ? .9 : 1.4, pauseMin: 2, pauseMax: 6,
+              pose(lauf, t) { g.position.y = lauf ? Math.abs(Math.sin(t / 90)) * .15 : 0; },
+              naechstes() { this.pfad = [{ x: cx0 + (zufallR() - .5) * 2 * R, z: cz0 + (zufallR() - .5) * 2 * R }]; this.blick = zufallR() * 6.3; },
+            });
+            tiere.push({ g, w });
+          }
+        }
+      });
+      land = backe(roh);
+      scene.add(land);
+      return true;
     }
 
     // ── Kamera: feste Iso-Ansicht, passt das Dorf ein ──────
@@ -921,6 +1210,8 @@
     function jubel() {
       if (reduce) return;
       let t0 = null;
+      jubeltBis = performance.now() + 1700;
+      buerger.rotation.y = Math.PI / 4;
       animiere(t => { if (t0 === null) t0 = t; const k = (t - t0) / 1600;
         figur.pose({ lauf: 0, jubel: k < 1 ? 1 : 0, t: (t - t0) / 1000 });
         buerger.position.y = k < 1 ? Math.abs(Math.sin(k * Math.PI * 3)) * 1.2 : 0;
@@ -987,6 +1278,8 @@
       /** Bildschirmposition (Pixel im Canvas) eines Punkts im Dorf – für Tests und Hinweise */
       bildpunkt(x, z, y = 0) { const v = new T.Vector3(x, y, z).project(camera); return { x: (v.x + 1) / 2 * cv.clientWidth, y: (1 - v.y) / 2 * cv.clientHeight, w: cv.clientWidth, h: cv.clientHeight }; },
       get leute() { return leute; },
+      /** Zeichen-Statistik (Draw-Calls, Dreiecke) – für Leistungstests */
+      get info() { return { calls: renderer.info.render.calls, dreiecke: renderer.info.render.triangles }; },
       destroy() {
         lebt = false; ro.disconnect(); if (io) io.disconnect(); dauer.clear();
         document.removeEventListener('visibilitychange', onVis);
