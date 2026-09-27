@@ -335,6 +335,17 @@
         }
       ],
       "aod": false
+    },
+    {
+      "name": "Mein Dorf",
+      "datei": "spiele/dorf.html",
+      "fach": "Allgemein",
+      "emoji": "🏘️",
+      "beschreibung": "Baue dein eigenes Dorf! Sieh dem Dorf über das Schuljahr beim Wachsen zu!",
+      "hidden": false,
+      "klassen": [],
+      "customTags": [],
+      "aod": false
     }
   ],
   "customTags": [
