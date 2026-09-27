@@ -344,7 +344,12 @@
       "beschreibung": "Baue dein eigenes Dorf! Sieh dem Dorf über das Schuljahr beim Wachsen zu!",
       "hidden": false,
       "klassen": [],
-      "customTags": [],
+      "customTags": [
+        {
+          "name": "Spiele",
+          "color": 6
+        }
+      ],
       "aod": false
     }
   ],
