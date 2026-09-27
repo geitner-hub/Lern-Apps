@@ -78,7 +78,7 @@
   <details id="collect" class="no-print">
     <summary>👩‍🏫 Sammelbogen für Lehrkräfte (mehrere Codes)</summary>
     <p class="hint">Die Kinder tippen in ihrem Pass auf „🔗 Code kopieren“ und schicken dir den Code (z. B. über den Schul-Messenger). Füge hier beliebig viele Codes ein – einen pro Zeile oder einfach hintereinander. Es werden 8 Karten pro A4-Seite gedruckt. Die Codes bleiben auf diesem Gerät, nichts wird hochgeladen.</p>
-    <textarea id="codes" placeholder="LW1.eyJ2Ijox… &#10;LW1.eyJ2Ijox… "></textarea>
+    <textarea id="codes" placeholder="LW3.… &#10;LW3.… "></textarea>
     <div class="row">
       <button type="button" class="btn" id="btn-add">➕ Karten erstellen</button>
       <button type="button" class="btn" id="btn-clear">Alle entfernen</button>
@@ -159,13 +159,13 @@ function addCode(code) {
 
 // Codes aus beliebigem Text herausfischen (auch ganze Links mit #pass=)
 function extractCodes(text) {
-  return (String(text).match(/LW1\.[A-Za-z0-9_-]+\.[a-z0-9]+/g) || []);
+  return (String(text).match(/LW[1-3]\.[A-Za-z0-9_-]+\.[a-z0-9]+/g) || []);
 }
 
 document.getElementById('btn-add').addEventListener('click', () => {
   const found = extractCodes(document.getElementById('codes').value);
   const msg = document.getElementById('msg');
-  if (!found.length) { msg.className = 'msg err'; msg.textContent = 'Keine Codes gefunden. Codes beginnen mit „LW1.“'; return; }
+  if (!found.length) { msg.className = 'msg err'; msg.textContent = 'Keine Codes gefunden. Codes beginnen mit „LW“ und einer Zahl, z. B. „LW3.“'; return; }
   let ok = 0, bad = 0, dup = 0, err = '';
   found.forEach(c => { const r = addCode(c); if (r.ok) ok++; else if (r.dup) dup++; else { bad++; err = r.error; } });
   render();

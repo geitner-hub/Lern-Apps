@@ -18,8 +18,8 @@ manifest.webmanifest  App-Symbol (Anleitung: APP-SYMBOL.md)
 
 apps/mathe/  apps/englisch/  apps/gpg/   Lern-Apps nach Fach
 apps/vorlage/app-template.html          Vorlage für neue Apps
-spiele/               RUN!, Tower Defense (später Mein Dorf)
-daten/                vokabeln5.json, vokabeln6.json, lernwelt-inhalte.json
+spiele/               RUN!, Tower Defense, Mein Dorf (dorf.html, ab Etappe 1)
+daten/                vokabeln5.json, vokabeln6.json, lernwelt-inhalte.json, dorf-inhalte.json
 gemeinsam/            Code, den alle Seiten nutzen (siehe unten)
 fonts/ icons/ vendor/ Schriften, Symbole, fremde Bibliotheken
 cloudflare/           Worker-Quelltext und Anleitung
@@ -33,6 +33,7 @@ cloudflare/           Worker-Quelltext und Anleitung
 | `pass.js` | Lernwelt-Pass: XP, Level, Wochen-Serie, Meisterschafts-Sterne, Sicherungs-Code, Truhen-Zähler |
 | `avatar3d.js` | 3D-Avatar aus Blöcken (lädt `vendor/three.min.js` erst bei Bedarf) |
 | `chest3d.js` | 3D-Truhe zum Öffnen |
+| `dorf-kern.js` | „Mein Dorf“: Spielstand, Aufträge, Bauen; von `navbar.js` in jeder App mitgeladen |
 | `aufgaben.js` | Aufgaben-Pools für die Spiele („Meine Themen“) |
 | `qrcode.js` | QR-Code-Erzeugung im Browser (MIT-Lizenz, Kazuhiko Arase) |
 | `fonts.css` | Lokal gehostete Schriften aus `fonts/` (kein Google Fonts → DSGVO) |
@@ -100,7 +101,9 @@ in `RULES` am Anfang von `pass.js` und können dort angepasst werden.
   Apps nur für niedrigere Klassen halbe XP.
 - **Sterne:** 🥉 60 % / 🥈 80 % / 🥇 90 % an jeweils 2 verschiedenen Tagen.
 - **Wochen-Serie:** Ziel 3 Tage mit ≥ 50 %; Wochen ganz ohne Übung pausieren die Serie.
-- **Sicherung:** QR/Code (`LW2.…`, alte `LW1`-Codes werden weiter gelesen) im Pass; Scannen öffnet `index.html#pass=…` und stellt
+- **Sicherung:** QR/Code (`LW3.…` komprimiert mit `vendor/fflate.min.js`, ohne Kompression `LW2.…`;
+  alte `LW1`/`LW2`-Codes werden weiter gelesen) im Pass. Der Code enthält auch das Dorf (Feld `d`).
+  Scannen öffnet `index.html#pass=…` und stellt
   den Pass nach Rückfrage wieder her. Die Prüfsumme erkennt Tipp-/Kopierfehler, ist aber
   kein Schutz gegen gezieltes Manipulieren – der Pass ist ohnehin nur lokal.
 - **Truhen & Avatar-Teile:** alle 250 XP eine Truhe. Chancen 60/30/10 % (gewöhnlich/selten/episch),
@@ -190,3 +193,19 @@ Jedes Teil in `ITEMS` beschreibt seine Form als Liste von Blöcken in `modell`. 
 - **Figur-Optionen** (`AVATAR.FRISUREN`, `AUGEN`, `MUENDER`, `HAUT`, `HAARFARBEN`) funktionieren genauso.
 - Tipp: neues Teil zuerst im Admin unter 🧭 Pass → Avatar-Teile ansehen – dort erscheint die Vorschau.
 
+## Mein Dorf (im Aufbau)
+
+Aufbauspiel über das ganze Schuljahr: Lern-Apps erfüllen Aufträge, die Belohnungen bauen das Dorf.
+Plan und Stand: Claude-Doc „Aktionsplan: Aufbauspiel „Mein Dorf““.
+
+- `gemeinsam/dorf-kern.js` – Spielstand im `localStorage` (`lernwelt-dorf`, bewusst kompakt, weil er im
+  Sicherungscode mitreist). Gespeichert wird erst, wenn ein Kind das Dorf zum ersten Mal öffnet.
+- `daten/dorf-inhalte.json` – Gebäude, Stufen, Kosten, Bauplätze, Auftragswerte (reine Datendatei).
+  IDs nie umbenennen, sie stehen in den Spielständen.
+- `pass.js` meldet jede gewertete Runde als Ereignis `lernpass:gewertet`
+  (`{ app, prozent, anzahl, dauer, blocked, inhalt, tag }`). Aufträge zählen nur Runden ohne `blocked`
+  und ab der Prozent-Schwelle.
+- Aufträge bekommen nur Apps, die nicht versteckt, für die Klasse freigeschaltet, keine Spiele
+  (`spiele/`) und nicht mit `"dorf": false` ausgeschlossen sind. Das Feld steht im App-Eintrag in
+  `config.json`, z. B. `{ "name": "…", "datei": "apps/mathe/…", …, "dorf": false }`
+  (Schalter im Admin folgt in Etappe 3).
