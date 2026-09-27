@@ -436,6 +436,11 @@
     }
     function modell(id, st) {
       if (MODELLE[id]) return st >= 4 ? pracht(MODELLE[id](3)) : MODELLE[id](st);
+      const def = DORF.gebaeude(id);                                                     // Modell aus Daten (z. B. Bonus-Gebäude)
+      if (def && Array.isArray(def.stufen) && def.stufen.length) {
+        const bau = n => { const p = new T.Group(); for (let i = 0; i < Math.min(n, def.stufen.length); i++) klotz(p, def.stufen[i]); return p; };
+        return st >= 4 ? pracht(bau(3)) : bau(st);
+      }
       const p = new T.Group(); sockel(p, 9, 7); b(p, 8, 4, 6, 0, .8, 0, F.putz); dach(p, 9, 7, 4.8, F.dach, 1.1); return p;
     }
     // Bewohner als kleine Blockfiguren (Farben aus dorf-inhalte.json: Oberteil, Hose, Haare)

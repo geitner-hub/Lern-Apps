@@ -27,6 +27,9 @@
 //  auf der Festwiese, Event-Deko (frei platzierbar, bleibt stehen), Gast-Aufträge, Suche oder Kalender.
 //  Stand Etappe 6 (Teil 1): Landschaft im Umland und Dorf-Deko wachsen ohne Kosten mit (LANDSCHAFT,
 //  DEKO in dorf-inhalte.json, Bedingungen „ab“); neue Elemente erscheinen als Neuigkeit.
+//  Stand Etappe 6 (Teil 2): Challenges über zwei Wochen (rotierend oder von der Lehrkraft geplant,
+//  config.json → dorf.challenges / dorf.challengeRotation) mit Trophäen, Bonus-Gebäude für Trophäen,
+//  Tausch Holz ↔ Stein am Marktplatz.
 //  Die 3D-Szene: gemeinsam/dorf-szene.js.
 // ═══════════════════════════════════════════════════════
 
@@ -83,6 +86,8 @@
   //                      q: Gast-Auftrag { i, g: Geschichte, a, n, c, m, d }, qd: Tag des letzten erledigten } }
   //    dp  platzierte Deko { dekoPlatzId: 'eventId/dekoId' } (Dorf-Deko: 'dorf/dekoId')
   //    ls  bereits gemeldete Landschafts-Elemente · lk bereits gemeldete Dorf-Deko (für Neuigkeiten)
+  //    ch  laufende Challenge { i: challengeId@Starttag, c: geschafft, d: Tag der letzten gezählten Runde (art tage),
+  //                            l: geübte Apps (art apps), f: 1 = erledigt } · tr Trophäen { challengeId: wie oft geschafft }
   //  Weitere Felder späterer Etappen (Sammelbuch, Bewohner …) bleiben beim
   //  Säubern erhalten, damit ältere Geräte nichts wegwerfen.
   function leer() {
@@ -135,9 +140,17 @@
     }
     if (TAG.test(raw.bd)) d.bd = raw.bd;
     if (Array.isArray(raw.sa)) d.sa = [...new Set(raw.sa.filter(istId))].slice(0, 300);
-    if (Array.isArray(raw.nz)) d.nz = raw.nz.filter(x => typeof x === 'string' && /^[bslk]:[a-z0-9_-]{1,40}$/i.test(x)).slice(0, 20);
+    if (Array.isArray(raw.nz)) d.nz = raw.nz.filter(x => typeof x === 'string' && /^[bslkt]:[a-z0-9_-]{1,40}$/i.test(x)).slice(0, 20);
     if (Array.isArray(raw.ls)) d.ls = [...new Set(raw.ls.filter(istId))].slice(0, 100);
     if (Array.isArray(raw.lk)) d.lk = [...new Set(raw.lk.filter(istId))].slice(0, 100);
+    const ch = raw.ch;
+    if (ch && typeof ch === 'object' && !Array.isArray(ch) && typeof ch.i === 'string' && /^[a-z0-9_-]{1,40}@\d{8}$/i.test(ch.i)) {
+      d.ch = { i: ch.i, c: zahl(ch.c, 0, 999), d: TAG.test(ch.d) ? ch.d : '', l: Array.isArray(ch.l) ? ch.l.filter(istKey).slice(0, 20) : [], f: ch.f ? 1 : 0 };
+    }
+    if (raw.tr && typeof raw.tr === 'object' && !Array.isArray(raw.tr)) {
+      d.tr = {};
+      Object.entries(raw.tr).slice(0, 50).forEach(([k, v]) => { if (istId(k)) d.tr[k] = zahl(v, 0, 999); });
+    }
     d.we = zahl(raw.we, 0, 1e5);
     if (Array.isArray(raw.pz)) d.pz = raw.pz.filter(x => Number.isInteger(x) && x > 0 && x < 10).slice(0, 10);
     if (typeof raw.dn === 'string') d.dn = raw.dn.replace(/[<>"'`\\]/g, '').replace(/\s+/g, ' ').trim().slice(0, 24);
@@ -409,6 +422,7 @@
     if (bewohnerCheck()) geaendert = true;
     if (bewohnerAuftragCheck(W)) geaendert = true;
     if (eventCheck(W)) geaendert = true;
+    if (challengeCheck()) geaendert = true;
     if (meilensteinCheck()) geaendert = true;
     if (geaendert) speichern();
     return geaendert;
@@ -549,7 +563,7 @@
       case 'wochen':       return D.we >= w;
       case 'bewohner':     return D.bw.length >= w;
       case 'stufe':        return stehen.some(e => stehendeStufe(e) >= w);
-      case 'alleGebaeude': return gebaeudeListe().every(g => stehen.some(e => e[0] === g.id));
+      case 'alleGebaeude': return gebaeudeListe().filter(g => !g.bonusGebaeude).every(g => stehen.some(e => e[0] === g.id));
       default:             return false;
     }
   }
@@ -584,8 +598,9 @@
                deko: (e.deko || []).length, dekoHat: (evLesen(e.id).d || []).length, stuecke, aktiv: (aktivesEvent() || {}).id === e.id };
     });
     const alle = bewohner.flatMap(b => b.stuecke).concat(meilen, feste.flatMap(f => f.stuecke));
+    const trophaeenListe = challengeListe().map(c => ({ id: c.id, name: c.name, icon: c.icon, text: c.text, mal: (D.tr || {})[c.id] || 0 }));
     const landschaft = landschaftListe().map(l => ({ id: l.id, name: l.name, icon: l.icon, text: l.text, hat: bedingungOk(l.ab), hinweis: bedingungText(l.ab) }));
-    return { bewohner, meilensteine: meilen, feste, landschaft, gesamt: alle.length, gesammelt: alle.filter(x => x.hat).length };
+    return { bewohner, meilensteine: meilen, feste, landschaft, trophaeen: trophaeenListe, gesamt: alle.length, gesammelt: alle.filter(x => x.hat).length };
   }
   /** Was ist neu seit dem letzten Blick ins Dorf? Liefert und leert die Liste. */
   function neuigkeiten() {
@@ -609,6 +624,7 @@
       if (x.startsWith('b:')) return { art: 'bewohner', ...(bewohnerDef(id) || {}) };
       if (x.startsWith('l:')) { const e = landschaftListe().find(y => y.id === id); return e ? { art: 'landschaft', name: e.name, icon: e.icon, text: e.text } : {}; }
       if (x.startsWith('k:')) { const e = dekoDef('dorf/' + id); return e ? { art: 'deko', name: e.name, icon: e.icon } : {}; }
+      if (x.startsWith('t:')) { const c = challengeListe().find(y => y.id === id); return c ? { art: 'trophaee', name: c.name, icon: TROPHAEE[Math.min(3, (D.tr || {})[id] || 1) - 1], text: c.text } : {}; }
       return { art: 'stueck', ...(stueck(id) || {}) };
     }).filter(x => x.name);
   }
@@ -727,7 +743,10 @@
     return gebaeudeListe()
       .filter(g => info.def.fest ? g.id === info.def.fest
                                  : !plaetze().some(p => p.fest === g.id) && stehen.filter(id => id === g.id).length < hoechstens(g))
-      .map(g => { const k = kosten(g.id, 1); return { gebaeude: g, kosten: k, genug: genug(k) }; });
+      .map(g => {
+        const k = kosten(g.id, 1), fehlen = Math.max(0, zahl(g.trophaeen, 0, 99) - trophaeen());
+        return { gebaeude: g, kosten: k, genug: genug(k) && !fehlen, trophaeenFehlen: fehlen };
+      });
   }
 
   function ansehenFuer(gebId, stufe) {
@@ -1118,6 +1137,7 @@
     if (ab.bewohner !== undefined && D.bw.length < Number(ab.bewohner)) return false;
     if (ab.meilensteine !== undefined && meilensteinZahl() < Number(ab.meilensteine)) return false;
     if (ab.gebaeude !== undefined && gebaeudeStufe(ab.gebaeude) < Math.max(1, Number(ab.stufe) || 1)) return false;
+    if (ab.trophaeen !== undefined && trophaeen() < Number(ab.trophaeen)) return false;
     return true;
   }
   function bedingungText(ab) {
@@ -1128,6 +1148,7 @@
     if (ab.ansehen) t.push(ab.ansehen + ' Ansehen');
     if (ab.bewohner) t.push(ab.bewohner + ' Bewohner');
     if (ab.meilensteine) t.push(ab.meilensteine + ' Meilensteine');
+    if (ab.trophaeen) t.push(ab.trophaeen + (Number(ab.trophaeen) === 1 ? ' Trophäe' : ' Trophäen'));
     return t.join(' · ');
   }
   function landschaftAktiv() { return landschaftListe().filter(l => bedingungOk(l.ab)); }
@@ -1140,6 +1161,97 @@
     land.filter(id => !D.ls.includes(id)).forEach(id => { D.ls.push(id); D.nz = [...D.nz, 'l:' + id].slice(-20); neu = true; });
     deko.filter(id => !D.lk.includes(id)).forEach(id => { D.lk.push(id); D.nz = [...D.nz, 'k:' + id].slice(-20); neu = true; });
     return neu;
+  }
+
+  // ── Challenges (zwei Wochen, mit Trophäen) ──────────────
+  //  Welche läuft: zuerst eine, die die Lehrkraft für diesen Zeitraum (und diese Klasse) geplant hat
+  //  (config.json → dorf.challenges: [{ id, start 'JJJJ-MM-TT', klassen? }]), sonst die nächste im
+  //  Wechsel (ab CHALLENGE_WERTE.start alle „tage“ Tage). dorf.challengeRotation: false schaltet den Wechsel ab.
+  const TROPHAEE = ['🥉', '🥈', '🥇'];
+  function challengeListe() { return C && Array.isArray(C.CHALLENGES) ? C.CHALLENGES.filter(c => c && istId(c.id) && c.art && Number(c.ziel) > 0) : []; }
+  function challengeWerte() {
+    const W = (C && C.CHALLENGE_WERTE) || {};
+    return { tage: Math.round(wert(W.tage, 3, 60, 14)), start: /^\d{4}-\d{2}-\d{2}$/.test(W.start || '') ? W.start.replace(/-/g, '') : '20260914',
+             ansehen: Math.round(wert(W.ansehen, 0, 1000, 15)), gold: Math.round(wert(W.gold, 0, 50, 1)) };
+  }
+  function tagPlus(tag, n) { const d = new Date(+tag.slice(0, 4), +tag.slice(4, 6) - 1, +tag.slice(6, 8)); d.setDate(d.getDate() + n); return heute(d); }
+  function aktuelleChallenge() {
+    const liste = challengeListe();
+    if (!liste.length) return null;
+    const W = challengeWerte(), t = heute(), L = lehrkraft(), kl = klasse();
+    const geplant = (Array.isArray(L.challenges) ? L.challenges : []).map(x => x && typeof x === 'object' ? {
+        def: liste.find(c => c.id === x.id), start: String(x.start || '').replace(/-/g, ''),
+        klassen: Array.isArray(x.klassen) ? x.klassen : null } : null)
+      .filter(x => x && x.def && TAG.test(x.start) && x.start <= t && t < tagPlus(x.start, W.tage) && (!x.klassen || !x.klassen.length || x.klassen.includes(kl)))
+      .sort((a, b) => (a.start < b.start ? 1 : -1))[0];
+    if (geplant) return { def: geplant.def, start: geplant.start, ende: tagPlus(geplant.start, W.tage - 1), i: geplant.def.id + '@' + geplant.start, vonLk: true };
+    if (L.challengeRotation === false || t < W.start) return null;
+    const nr = Math.floor(tageZwischen(W.start, t) / W.tage), start = tagPlus(W.start, nr * W.tage);
+    const def = liste[nr % liste.length];
+    return { def, start, ende: tagPlus(start, W.tage - 1), i: def.id + '@' + start, vonLk: false };
+  }
+  function challengeCheck() {
+    const a = aktuelleChallenge();
+    if (!a) { if (D.ch) { D.ch = null; return true; } return false; }
+    if (D.ch && D.ch.i === a.i) return false;
+    D.ch = { i: a.i, c: 0, d: '', l: [], f: 0 };
+    return true;
+  }
+  function trophaeen() { return Object.values(D.tr || {}).reduce((s, n) => s + n, 0); }
+  function challengeInfo() {
+    const a = aktuelleChallenge();
+    if (!a) return null;
+    const z = D.ch && D.ch.i === a.i ? D.ch : { c: 0, f: 0 };
+    const W = challengeWerte(), mal = (D.tr || {})[a.def.id] || 0;
+    return { def: a.def, start: a.start, ende: a.ende, vonLk: a.vonLk, c: Math.min(z.c, a.def.ziel), ziel: Number(a.def.ziel), f: !!z.f,
+             restTage: Math.max(0, tageZwischen(heute(), a.ende)), lohn: { ansehen: W.ansehen, gold: W.gold },
+             trophaee: TROPHAEE[Math.min(2, z.f ? mal - 1 : mal)], mal };
+  }
+  /** Runde für die Challenge zählen. Liefert Zeilen für die Meldung. */
+  function challengeRunde(runde, o) {
+    const a = aktuelleChallenge();
+    if (!a) return [];
+    if (!D.ch || D.ch.i !== a.i) challengeCheck();
+    const z = D.ch, c = a.def, W = werte();
+    if (!z || z.f) return [];
+    const gut = zaehlt(runde, W.schwelle), vorher = z.c;
+    if (c.art === 'auftraege' && o.tagesauftrag) z.c++;
+    else if (c.art === 'tage' && gut && z.d !== heute()) { z.c++; z.d = heute(); }
+    else if (c.art === 'fach' && gut && (Array.isArray(c.faecher) ? c.faecher : [c.faecher]).includes(appInfo(runde.app).fach)) z.c++;
+    else if (c.art === 'apps' && gut && !z.l.includes(runde.app)) { z.l = [...z.l, runde.app].slice(-20); z.c = z.l.length; }
+    else if (c.art === 'stark' && !runde.blocked && Number(runde.prozent) >= (Number(c.prozent) || 90)) z.c++;
+    if (z.c === vorher) return [];
+    if (z.c < c.ziel) return [`${c.icon} Challenge „${c.name}“: ${z.c} von ${c.ziel}`];
+    const aus = [];
+    z.f = 1;
+    const Wc = challengeWerte();
+    if (!D.tr) D.tr = {};
+    D.tr[c.id] = (D.tr[c.id] || 0) + 1;
+    D.an += Wc.ansehen; gutschrift('g', Wc.gold);
+    D.nz = [...D.nz, 't:' + c.id].slice(-20);
+    aus.push(`${TROPHAEE[Math.min(3, D.tr[c.id]) - 1]} Challenge „${c.name}“ geschafft! +${Wc.ansehen} ⭐${Wc.gold ? ' +' + Wc.gold + ' 🪙' : ''} und eine Trophäe`);
+    aus.geschafft = true;
+    return aus;
+  }
+
+  // ── Marktplatz: Holz gegen Stein tauschen (mit Verlust) ──
+  function marktInfo() {
+    const e = Object.entries(D.b).find(([, v]) => v[0] === 'marktplatz' && stehendeStufe(v) > 0);
+    if (!e) return null;
+    const M = (C && C.MARKT) || {}, st = stehendeStufe(e[1]);
+    const kurs = Array.isArray(M.tausch) ? wert(M.tausch[Math.min(st, M.tausch.length) - 1], .1, 1, .6) : .6;
+    const mengen = (Array.isArray(M.mengen) ? M.mengen : [10, 50]).map(n => zahl(n, 1, 1000)).filter(n => n > 0);
+    return { stufe: st, kurs, mengen };
+  }
+  function marktTausch(von, nach, menge) {
+    D = laden();
+    const m = marktInfo();
+    if (!m || !['h', 's'].includes(von) || !['h', 's'].includes(nach) || von === nach || !m.mengen.includes(menge)) return { ok: false };
+    if ((D.r[von] || 0) < menge) return { ok: false, grund: 'zu-wenig' };
+    const bekommt = Math.floor(menge * m.kurs);
+    D.r[von] -= menge; gutschrift(nach, bekommt);
+    speichern();
+    return { ok: true, gibt: menge, bekommt };
   }
 
   // ── Runden aus pass.js empfangen ────────────────────────
@@ -1187,10 +1299,14 @@
     // Dorf-Event: Gast-Auftrag, Währung für erfüllte Tagesaufträge, Kalendertür, Versteck
     const ev = eventRunde(runde, { tagesauftrag: meldung === 'erfuellt', erfuellt });
     if (ev.gast) erfuellt = true;
+    const chZeilen = challengeRunde(runde, { tagesauftrag: meldung === 'erfuellt' });
+    ev.zeilen.push(...chZeilen);
     if (!meldung && !wochenMeldung && !bewohnerMeldung && !ev.gast && !ev.zeilen.length) return;
     meilensteinCheck();
     speichern();
     const extra = ev.zeilen.map(z => `<small class="ev">${z}</small>`).join('');
+    const gross = meldung === 'erfuellt' || wochenMeldung === 'woche-erfuellt' || (bewohnerMeldung && bewohnerMeldung.art === 'bewohner-erfuellt') || (ev.gast && ev.gast.art === 'gast-erfuellt');
+    if (chZeilen.geschafft && !gross) { toast('challenge-erfuellt', null, null, extra); return; }
     if (ev.gast && (ev.gast.art === 'gast-erfuellt' || (!meldung && !wochenMeldung && !bewohnerMeldung))) { toast(ev.gast.art, ev.gast.info, null, extra); return; }
     if (bewohnerMeldung && (bewohnerMeldung.art === 'bewohner-erfuellt' || (!meldung && !wochenMeldung))) {
       toast(bewohnerMeldung.art, bewohnerMeldung.info, null, extra); return;
@@ -1243,6 +1359,13 @@
     if (!document.body) return;
     let el = baueToast();
     const zeigen = ms => { clearTimeout(el._t); requestAnimationFrame(() => el.classList.add('show')); el._t = setTimeout(() => el.classList.remove('show'), ms); };
+    if (art === 'challenge-erfuellt') {
+      el.className = 'hoch';
+      zurueckKnopf();
+      el.innerHTML = `<b>🏆 Challenge geschafft!</b>` + extra;
+      zeigen(6000);
+      return;
+    }
     if (art === 'event') {                                           // nur Event-Neuigkeiten (z. B. neue Kalendertür)
       el.className = 'klein';
       el.innerHTML = extra;
@@ -1337,6 +1460,7 @@
     festInfo, festBauen, dekoDef, dekoShop, dekoKaufen, dekoPlaetze, festkiste, dekoSetzen, dekoWeg,
     gastAuftragInfo, sucheInfo, gefunden, kalenderInfo, tuerOeffnen,
     landschaftListe, landschaftAktiv, dorfDekoListe, bedingungOk, bedingungText, gebaeudeStufe,
+    challengeListe, challengeWerte, aktuelleChallenge, challengeInfo, trophaeen, marktInfo, marktTausch,
     onChange(fn) { listeners.push(fn); },
     onRunde(fn)  { rundenHandler.push(fn); },
     _saeubern: saeubern, _leer: leer, _tageZwischen: tageZwischen,
