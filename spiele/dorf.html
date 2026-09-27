@@ -8,6 +8,8 @@
     Mein Dorf – Aufbauspiel der Lernwelt
     Etappe 4: 3D-Dorf mit Bauplätzen, Bauen/Ausbauen (Stufe 1–4, Ansehen), Auftragsbrett mit
     Wochen- und Bewohner-Auftrag, Bewohner, Sammelbuch, Dorf-Postkarte.
+    Etappe 5: Dorf-Events (Festwiese mit Festgebäude und Gast, Event-Währung, Deko und Festkiste,
+    Adventskalender bzw. Suche, Fest-Seiten im Sammelbuch).
     Logik und Spielstand: gemeinsam/dorf-kern.js · 3D: gemeinsam/dorf-szene.js
     Inhalte: daten/dorf-inhalte.json
   -->
@@ -161,6 +163,47 @@
 
     .hinweis { margin: 1.1rem .2rem 0; color: var(--text2); font-size: .92rem; font-weight: 600; }
 
+    /* Dorf-Event */
+    .event-band { --e1: #f59e0b; --e2: #6366f1; position: relative; overflow: hidden; margin: 0 0 1rem; border-radius: 16px; padding: .9rem 1rem;
+      background: #2a2340; border: 2px solid rgba(255,255,255,.2);
+      background: linear-gradient(110deg, color-mix(in srgb, var(--e1) 38%, #1b1929), color-mix(in srgb, var(--e2) 34%, #1b1929));
+      border: 2px solid color-mix(in srgb, var(--e1) 60%, transparent); display: grid; grid-template-columns: auto 1fr; gap: .2rem .9rem; align-items: center; }
+    .event-band .gross { font-size: 2.6rem; grid-row: span 2; line-height: 1; }
+    .event-band h2 { font-size: 1.35rem; }
+    .event-band p { margin: 0; color: var(--text2); font-weight: 700; font-size: .92rem; line-height: 1.4; }
+    .event-band .ev-knoepfe { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .5rem; }
+    .event-band .ev-knoepfe button { border: 0; border-radius: 99px; padding: .5rem 1rem; font-weight: 900; cursor: pointer; background: rgba(255,255,255,.14); color: #fff; }
+    .event-band .ev-knoepfe button.an { background: #fff; color: #3b2a1a; box-shadow: 0 0 0 3px color-mix(in srgb, var(--e1) 70%, transparent); }
+    .event-band .geschenk { grid-column: 1 / -1; margin-top: .5rem; background: rgba(0,0,0,.25); border-radius: 10px; padding: .45rem .7rem; font-weight: 800; }
+    .kiste.event { background: #4a2d5c; border-color: #a78bfa; }
+    .zettel.gast { grid-column: 1 / -1; min-height: 0; --dreh: .5deg; background: linear-gradient(180deg, #fff1e6, #f6ecd2);
+      display: grid; grid-template-columns: auto 1fr auto; gap: .5rem 1rem; align-items: center; }
+    .zettel.gast .portrait { font-size: 3rem; line-height: 1; }
+    .zettel.gast .geschichte { font-style: italic; line-height: 1.4; }
+    .zettel.gast .rechts { display: flex; flex-direction: column; gap: .5rem; align-items: flex-end; }
+    .fest-marke { display: inline-block; font-size: .75rem; font-weight: 900; background: #3b2a1a; color: #fde68a; border-radius: 6px; padding: .1rem .45rem; margin-left: .3rem; vertical-align: 2px; }
+    @media (max-width: 560px) { .zettel.gast { grid-template-columns: auto 1fr; } .zettel.gast .rechts { grid-column: 1 / -1; align-items: stretch; } }
+    .deko-reihe { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: .6rem; margin-top: .7rem; }
+    .deko-reihe .option { align-items: flex-start; }
+    .deko-reihe .icon { font-size: 2rem; }
+    .fertig-marke { font-weight: 900; color: var(--gruen); }
+    .tueren { display: grid; grid-template-columns: repeat(auto-fill, minmax(76px, 1fr)); gap: .5rem; margin-top: .8rem; }
+    .tuer { width: 100%; min-height: 64px; aspect-ratio: 1; align-self: start; border-radius: 10px; border: 3px solid #7a4a28; background: #b91c1c; color: #fff; font-family: 'Fredoka One', 'Nunito', sans-serif;
+      font-size: 1.5rem; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: default; position: relative; }
+    .tuer:nth-child(3n+2) { background: #15803d; } .tuer:nth-child(3n) { background: #1d4ed8; }
+    .tuer small { font-family: 'Nunito', sans-serif; font-size: .7rem; font-weight: 900; }
+    .tuer.zu { opacity: .45; }
+    .tuer.offen { background: #f6ecd2 !important; color: var(--tinte); border-style: dashed; font-size: 1.2rem; }
+    .tuer.jetzt { cursor: pointer; box-shadow: 0 0 0 4px #fde047, 0 0 20px #fde047; animation: wackeln 1.4s ease-in-out infinite; }
+    @keyframes wackeln { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-3deg); } 75% { transform: rotate(3deg); } }
+    .kisten-liste { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: .6rem; margin-top: .6rem; }
+    .kisten-liste .person { grid-template-columns: auto 1fr; }
+    .kisten-liste button { grid-column: 1 / -1; border: 0; border-radius: 8px; padding: .45rem; font-weight: 900; background: #16a34a; color: #fff; cursor: pointer; }
+    .kisten-liste button.leise { background: transparent; color: var(--tinte); border: 2px dashed var(--tinte2); }
+    .fest-seite { background: rgba(255,255,255,.45); border-radius: 12px; padding: .7rem .8rem; margin-top: .6rem; }
+    .fest-seite h4 { margin: 0 0 .3rem; font-family: 'Fredoka One', 'Nunito', sans-serif; font-weight: 400; font-size: 1.1rem; }
+    @media (prefers-reduced-motion: reduce) { .tuer.jetzt { animation: none; } }
+
     /* Das Dorf (3D) */
     .szene {
       position: relative; height: clamp(280px, 68vw, 560px); max-height: 70vh; border-radius: 18px; overflow: hidden;
@@ -265,16 +308,17 @@
   }
 
   // ── Seite aufbauen (einmal), danach nur Teile aktualisieren ──
-  let szene = null, gewaehlt = null;
+  let szene = null, gewaehlt = null, besuch = null, setzen = null, fund = null;
 
   async function laufen() {
     const D = window.LernDorf;
     $app.innerHTML = `
       <header class="kopf">
         <div><h1 id="dorfname">Mein Dorf</h1><p id="untertitel"></p>
-          <div class="kopf-knoepfe"><button id="k-buch">📖 Sammelbuch<span id="k-buch-punkt"></span></button><button id="k-karte">📮 Postkarte</button></div></div>
+          <div class="kopf-knoepfe"><button id="k-buch">📖 Sammelbuch<span id="k-buch-punkt"></span></button><button id="k-karte">📮 Postkarte</button><button id="k-kiste" hidden>🎁 Festkiste</button></div></div>
         <div class="vorrat" id="vorrat" aria-label="Deine Rohstoffe"></div>
       </header>
+      <div id="event"></div>
       <div id="neues"></div>
       <section class="szene" id="szene" aria-label="Dein Dorf"><div class="szene-tipp">Tippe auf einen Bauplatz</div></section>
       <section class="bau" id="bau" aria-live="polite"></section>
@@ -284,7 +328,10 @@
       </section>
       <p class="hinweis" id="hinweis"></p>
       <div class="overlay" id="ov-buch" hidden role="dialog" aria-modal="true" aria-labelledby="buch-titel"><div class="buch" id="buch"></div></div>
-      <div class="overlay" id="ov-karte" hidden role="dialog" aria-modal="true" aria-labelledby="karte-titel"><div class="buch" id="karte"></div></div>`;
+      <div class="overlay" id="ov-karte" hidden role="dialog" aria-modal="true" aria-labelledby="karte-titel"><div class="buch" id="karte"></div></div>
+      <div class="overlay" id="ov-kal" hidden role="dialog" aria-modal="true" aria-labelledby="kal-titel"><div class="buch" id="kal"></div></div>
+      <div class="overlay" id="ov-kiste" hidden role="dialog" aria-modal="true" aria-labelledby="kiste-titel"><div class="buch" id="kiste"></div></div>`;
+    document.getElementById('k-kiste').onclick = () => { kisteZeichnen(); oeffnen('ov-kiste'); };
     document.getElementById('k-buch').onclick = () => { buchZeichnen(); oeffnen('ov-buch'); };
     document.getElementById('k-karte').onclick = () => { oeffnen('ov-karte'); karteZeichnen(); };
     document.querySelectorAll('.overlay').forEach(o => o.addEventListener('click', e => { if (e.target === o) schliessen(o.id); }));
@@ -294,8 +341,11 @@
     if (rathausPlatz && !D.state.b[rathausPlatz.id]) gewaehlt = rathausPlatz.id;
     zeichnen();
 
+    besuch = D.eventBesuch();
+    if (besuch && besuch.start) zeichnen();
     const host = document.getElementById('szene');
     szene = window.LernDorfSzene ? await window.LernDorfSzene.mount(host, { onPlatz: waehle }) : null;
+    window.LernDorfSeite = { get szene() { return szene; }, waehle };
     if (szene) { szene.auswahl(gewaehlt); }
     else { host.querySelector('.szene-tipp').remove(); rasterZeichnen(); }
     neuesZeigen();
@@ -303,6 +353,21 @@
   }
 
   function waehle(id) {
+    const D = window.LernDorf;
+    if (id === 'suche') {                                              // Gefunden!
+      const r = D.gefunden();
+      if (r.ok) { fund = r; if (szene) szene.jubel(); }
+      id = gewaehlt;
+    } else fund = null;
+    if (setzen) {                                                      // Deko platzieren
+      if (typeof id === 'string' && id.startsWith('d:')) {
+        const r = D.dekoSetzen(id.slice(2), setzen);
+        if (r.ok && szene) szene.jubel();
+      }
+      setzen = null;
+      tipp('Tippe auf einen Bauplatz');
+      if (szene) szene.setzModus(false);
+    }
     gewaehlt = id;
     if (szene) szene.auswahl(id); else rasterZeichnen();
     bauZeichnen();
@@ -317,8 +382,16 @@
     document.getElementById('vorrat').innerHTML = D.rohstoffe().map(r => {
       const n = S.r[r.id] || 0, neu = vorher[r.id] !== undefined && n > vorher[r.id];
       return `<div class="kiste${neu ? ' neu' : ''}" title="${esc(r.name)}"><span aria-hidden="true">${r.icon}</span><div>${n}<small>${esc(r.name)}</small></div></div>`;
-    }).join('') + `<div class="kiste ansehen${vorher.an !== undefined && S.an > vorher.an ? ' neu' : ''}" title="Ansehen: wie beliebt dein Dorf ist"><span aria-hidden="true">⭐</span><div>${S.an}<small>Ansehen</small></div></div>`;
+    }).join('') + `<div class="kiste ansehen${vorher.an !== undefined && S.an > vorher.an ? ' neu' : ''}" title="Ansehen: wie beliebt dein Dorf ist"><span aria-hidden="true">⭐</span><div>${S.an}<small>Ansehen</small></div></div>`
+      + (() => {                                                       // Währung des laufenden Events
+        const a = D.aktivesEvent(), w = a && a.def && a.def.waehrung;
+        if (!w) return '';
+        const n = S.r[w.id] || 0, neu = vorher[w.id] !== undefined && n > vorher[w.id];
+        return `<div class="kiste event${neu ? ' neu' : ''}" title="${esc(w.name)}: nur für das Fest"><span aria-hidden="true">${esc(w.icon)}</span><div>${n}<small>${esc(w.name)}</small></div></div>`;
+      })();
     vorher = Object.assign({}, S.r, { an: S.an });
+    eventZeichnen();
+    document.getElementById('k-kiste').hidden = !(D.festkiste().length || (D.aktivesEvent() || {}).def);
     document.getElementById('dorfname').textContent = S.dn || 'Mein Dorf';
     document.getElementById('k-buch-punkt').className = S.nz && S.nz.length ? 'punkt' : '';
     if (S.nz && S.nz.length) setTimeout(neuesZeigen, 0);
@@ -336,8 +409,19 @@
       const icon = i.gesperrt ? '🔒' : !i.eintrag ? '🚧' : i.imBau && i.stufe === 0 ? '🏗️' : (i.gebaeude.icon || '🏠');
       const text = i.gesperrt ? 'Gesperrt' : !i.eintrag ? 'Bauplatz' : esc(i.gebaeude.name) + (i.stufe ? ' ' + i.stufe : '');
       return `<button class="${i.gesperrt ? 'zu' : ''}${gewaehlt === p.id ? ' an' : ''}" data-platz="${p.id}"><span class="gross" aria-hidden="true">${icon}</span>${text}</button>`;
-    }).join('') + '</div>';
-    host.querySelectorAll('button').forEach(b => b.onclick = () => waehle(Number(b.dataset.platz)));
+    }).join('') + (() => {
+      const a = D.aktivesEvent(), fi = a && a.def ? D.festInfo(a.id) : null, s = D.sucheInfo();
+      const kiste = D.festkiste(), frei = setzen || kiste.some(k => !k.platz);
+      let h = `<button class="${gewaehlt === 'fest' ? 'an' : ''}" data-platz="fest"><span class="gross" aria-hidden="true">${fi ? esc(fi.gebaeude.icon) : '🎪'}</span>Festwiese</button>`;
+      D.dekoPlaetze().forEach(p => {
+        if (!p.belegt && !frei) return;
+        const d = p.belegt ? D.dekoDef(p.belegt) : null;
+        h += `<button class="${gewaehlt === 'd:' + p.id ? 'an' : ''}" data-platz="d:${esc(p.id)}"><span class="gross" aria-hidden="true">${d ? esc(d.icon) : '✨'}</span>${d ? esc(d.name) : 'Deko-Platz'}</button>`;
+      });
+      if (s && s.versteck) h += `<button data-platz="suche"><span class="gross" aria-hidden="true">${esc(s.mechanik.icon)}</span>Suchen!</button>`;
+      return h;
+    })() + '</div>';
+    host.querySelectorAll('button').forEach(b => b.onclick = () => waehle(/^\d+$/.test(b.dataset.platz) ? Number(b.dataset.platz) : b.dataset.platz));
   }
 
   function kostenHtml(k) {
@@ -370,8 +454,11 @@
   function bauZeichnen() {
     const D = window.LernDorf, el = document.getElementById('bau');
     if (!el) return;
+    if (setzen) { setzenZeichnen(el); return; }
+    if (gewaehlt === 'fest') { festZeichnen(el); return; }
+    if (typeof gewaehlt === 'string' && gewaehlt.startsWith('d:')) { dekoPlatzZeichnen(el, gewaehlt.slice(2)); return; }
     if (gewaehlt === null) {
-      el.innerHTML = `<h2>🏗️ Bauen</h2><p>Tippe im Dorf auf einen Bauplatz. Dort kannst du bauen oder ein Gebäude ausbauen.</p>`;
+      el.innerHTML = (fund ? fundHtml() : '') + `<h2>🏗️ Bauen</h2><p>Tippe im Dorf auf einen Bauplatz. Dort kannst du bauen oder ein Gebäude ausbauen.</p>`;
       return;
     }
     const i = D.platzInfo(gewaehlt);
@@ -423,7 +510,7 @@
     } else {
       unten = '<p class="leise">Höchste Stufe erreicht.</p>';
     }
-    el.innerHTML = `<h2><span aria-hidden="true">${esc(g.icon || '🏠')}</span> ${esc(g.name)} ${stufenHtml(i.stufe, max)}</h2>
+    el.innerHTML = (fund ? fundHtml() : '') + `<h2><span aria-hidden="true">${esc(g.icon || '🏠')}</span> ${esc(g.name)} ${stufenHtml(i.stufe, max)}</h2>
       <p>${esc(g.text || '')}${bonus ? ' <b>' + esc(bonus) + '</b>' : ''}</p>${unten}`;
     const k = document.getElementById('ausbauen');
     if (k) k.onclick = () => { const r = D.ausbauen(gewaehlt); if (r.ok && szene) szene.jubel(); };
@@ -449,6 +536,186 @@
           ${app.link ? `<a class="knopf" href="${esc(app.link)}">Los geht's</a>` : ''}
         </div>
       </article>`;
+  }
+
+  // ── Dorf-Event: Band oben, Festwiese, Deko, Kalender, Festkiste ──
+  function eventZeichnen() {
+    const D = window.LernDorf, box = document.getElementById('event');
+    if (!box) return;
+    const a = D.aktivesEvent();
+    if (!a) { box.innerHTML = ''; return; }
+    const pe = a.pass || {}, e = a.def;
+    const f1 = /^#[0-9a-f]{6}$/i.test(pe.farbe || '') ? pe.farbe : '#f59e0b', f2 = /^#[0-9a-f]{6}$/i.test(pe.farbe2 || '') ? pe.farbe2 : '#6366f1';
+    if (!e) {
+      box.innerHTML = `<section class="event-band" style="--e1:${f1};--e2:${f2}"><div class="gross" aria-hidden="true">${esc(pe.icon || '🎉')}</div>
+        <h2>${esc(pe.titel || pe.name || 'Event')}</h2><p>Das Dorf ist geschmückt. Event-Truhen gibt es in den Lern-Apps.</p></section>`;
+      return;
+    }
+    const w = e.waehrung, k = D.kalenderInfo(), s = D.sucheInfo();
+    let knoepfe = `<button data-ev="fest" class="${gewaehlt === 'fest' ? 'an' : ''}">${esc((e.festgebaeude || {}).icon || '🎪')} Zur Festwiese</button>`;
+    if (k) {
+      const offen = k.frei - k.offen;
+      knoepfe += `<button data-ev="kal" class="${offen > 0 ? 'an' : ''}">${esc(k.mechanik.icon || '🗓️')} ${esc(k.mechanik.name || 'Kalender')}${offen > 0 ? ` · ${offen} ${offen === 1 ? 'Tür' : 'Türen'} offen!` : ''}</button>`;
+    }
+    const suche = s && s.versteck ? `<div class="geschenk">${esc(s.mechanik.icon)} ${esc(s.mechanik.ding || 'Etwas')} hat sich im Dorf versteckt! Findest du es? Tippe es an.</div>` : '';
+    const start = besuch && besuch.start ? `<div class="geschenk">🎁 Willkommen zum Fest! Dein Startgeschenk: +${besuch.start} ${esc(w.icon)} ${esc(w.name)}</div>` : '';
+    box.innerHTML = `<section class="event-band" style="--e1:${f1};--e2:${f2}">
+        <div class="gross" aria-hidden="true">${esc(e.icon || pe.icon || '🎉')}</div>
+        <h2>${esc(e.titel || e.name)}</h2>
+        <p>${esc(e.text || '')} Jeder erfüllte Auftrag bringt dir ${D.eventWerte().proAuftrag} ${esc(w.icon)} extra.</p>
+        ${start}${suche}
+        <div class="ev-knoepfe">${knoepfe}</div>
+      </section>`;
+    box.querySelectorAll('[data-ev]').forEach(b => b.onclick = () => {
+      if (b.dataset.ev === 'kal') { kalenderZeichnen(); oeffnen('ov-kal'); }
+      else { waehle('fest'); document.getElementById('szene').scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+    });
+  }
+
+  function fundHtml() {
+    const w = fund.waehrung || {};
+    return `<p class="neu-banner" style="margin-bottom:.8rem"><span class="gross" aria-hidden="true">🎉</span><span>Gefunden! <b>+${fund.lohn} ${esc(w.icon || '')} ${esc(w.name || '')}</b>. Morgen versteckt sich wieder etwas.</span></p>`;
+  }
+
+  function festZeichnen(el) {
+    const D = window.LernDorf, a = D.aktivesEvent();
+    if (!a || !a.def) {
+      const alt = D.eventListe().map(e => ({ e, i: D.festInfo(e.id) })).filter(x => x.i && x.i.stufe > 0);
+      el.innerHTML = `<h2>🎪 Festwiese</h2>
+        <p>Hier feiert dein Dorf seine Feste: Halloween, Weihnachten und Ostern. Sobald das nächste Fest beginnt, geht es hier los.</p>
+        ${a ? '<p class="leise">Zu diesem Fest gibt es im Dorf nichts zu bauen – aber schau in die Lern-Apps: Dort gibt es Event-Truhen.</p>' : ''}
+        ${alt.length ? `<p>In deiner Festkiste warten: ${alt.map(x => `${esc(x.i.gebaeude.icon)} <b>${esc(x.i.gebaeude.name)}</b> (Stufe ${x.i.stufe})`).join(', ')}. Beim nächsten Fest stehen sie wieder hier.</p>` : ''}`;
+      return;
+    }
+    const e = a.def, w = e.waehrung, i = D.festInfo(a.id);
+    let gebaeude = '';
+    if (i) {
+      const texte = Array.isArray(i.gebaeude.text) ? i.gebaeude.text : [];
+      let unten;
+      if (i.imBau) unten = `<p>🔨 ${i.stufe ? 'Ausbau auf Stufe ' + i.zielStufe : 'Wird gebaut'} – fertig ${wann(i.fertigAb)}.</p>`;
+      else if (i.naechste) unten = `<div class="option" style="margin-top:.6rem">
+          <b>${i.stufe ? 'Ausbauen auf Stufe ' + i.naechste : 'Bauen'}</b>
+          ${texte[i.naechste - 1] ? `<small>${esc(texte[i.naechste - 1])}</small>` : ''}
+          ${kostenHtml(i.kosten)}
+          <button class="knopf" id="fest-bauen" ${i.genug ? '' : 'disabled'}>${i.genug ? (i.stufe ? 'Ausbauen' : 'Bauen') : 'Noch zu wenig ' + esc(w.name)}</button>
+        </div>`;
+      else unten = '<p class="leise">Höchste Stufe erreicht. Wunderschön!</p>';
+      gebaeude = `<h2><span aria-hidden="true">${esc(i.gebaeude.icon)}</span> ${esc(i.gebaeude.name)} ${stufenHtml(i.stufe, i.max)}</h2>
+        <p>${i.stufe && texte[i.stufe - 1] ? esc(texte[i.stufe - 1]) + ' ' : ''}Nach dem Fest kommt es in die Festkiste und steht beim nächsten Fest wieder hier.</p>${unten}`;
+    }
+    const shop = D.dekoShop();
+    const deko = shop.length ? `<h2 style="margin-top:1.1rem">✨ Deko zum Fest</h2>
+      <p>Einmal freigeschaltet gehört die Deko dir für immer. Du kannst sie überall im Dorf aufstellen – sie darf auch nach dem Fest stehen bleiben.</p>
+      <div class="deko-reihe">${shop.map(x => `<div class="option"><span class="icon" aria-hidden="true">${esc(x.deko.icon)}</span><b>${esc(x.deko.name)}</b>
+        ${x.hat ? '<span class="fertig-marke">✓ in deiner Festkiste</span>' : kostenHtml(x.kosten) + `<button class="knopf" data-deko="${esc(x.key)}" ${x.genug ? '' : 'disabled'}>${x.genug ? 'Freischalten' : 'Noch zu wenig'}</button>`}</div>`).join('')}</div>` : '';
+    el.innerHTML = (fund ? fundHtml() : '') + gebaeude + deko
+      + `<p class="leise" style="margin-top:.8rem">${esc(w.icon)} ${esc(w.name)} bekommst du für jeden erfüllten Auftrag${e.gast ? ', für Aufträge von ' + esc(e.gast.name) : ''}${e.mechanik && e.mechanik.art === 'kalender' ? ' und aus dem ' + esc(e.mechanik.name || 'Kalender') : e.mechanik && e.mechanik.art === 'suche' ? ' und wenn du ' + esc(e.mechanik.ding || 'etwas') + ' im Dorf findest' : ''}. ${esc(w.name)} verfallen nicht.</p>`;
+    const k = document.getElementById('fest-bauen');
+    if (k) k.onclick = () => { const r = D.festBauen(); if (r.ok && szene) szene.jubel(); };
+    el.querySelectorAll('[data-deko]').forEach(b => b.onclick = () => {
+      const key = b.dataset.deko, r = D.dekoKaufen(key);
+      if (!r.ok) return;
+      if (szene) szene.jubel();
+      platzieren(key);
+    });
+  }
+
+  // Deko aufstellen: freie Plätze leuchten, dann einen antippen
+  function tipp(text) { const t = document.querySelector('.szene-tipp'); if (t) t.textContent = text; }
+  function platzieren(key) {
+    setzen = key;
+    tipp('Tippe auf einen leuchtenden Platz');
+    if (szene) { szene.setzModus(true); szene.auswahl(null); } else rasterZeichnen();
+    bauZeichnen();
+    document.getElementById('szene').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+  function setzenZeichnen(el) {
+    const d = window.LernDorf.dekoDef(setzen);
+    el.innerHTML = `<h2>${esc(d ? d.icon : '✨')} ${esc(d ? d.name : 'Deko')} aufstellen</h2>
+      <p>${szene ? 'Tippe im Dorf auf einen <b>leuchtenden Platz</b>.' : 'Tippe oben auf einen Deko-Platz.'} Du kannst die Deko später jederzeit versetzen.</p>
+      <button class="knopf" id="setzen-weg" style="background:#4b5563;box-shadow:0 4px 0 #374151">Später aufstellen</button>`;
+    document.getElementById('setzen-weg').onclick = () => { setzen = null; tipp('Tippe auf einen Bauplatz'); if (szene) szene.setzModus(false); else rasterZeichnen(); bauZeichnen(); };
+  }
+  function dekoPlatzZeichnen(el, id) {
+    const D = window.LernDorf, p = D.dekoPlaetze().find(x => x.id === id);
+    if (!p) { el.innerHTML = ''; return; }
+    if (p.belegt) {
+      const d = D.dekoDef(p.belegt);
+      el.innerHTML = `<h2>${esc(d.icon)} ${esc(d.name)}</h2><p>Deko vom Fest ${esc(d.eventIcon)} ${esc(d.eventName)}.</p>
+        <div class="knoepfe" style="gap:.6rem;flex-wrap:wrap">
+          <button class="knopf" id="deko-versetzen" style="flex:none">Versetzen</button>
+          <button class="tausch" id="deko-weg" style="color:var(--text);border-color:rgba(255,255,255,.35)">In die Festkiste</button>
+        </div>`;
+      document.getElementById('deko-versetzen').onclick = () => platzieren(p.belegt);
+      document.getElementById('deko-weg').onclick = () => { D.dekoWeg(id); gewaehlt = null; if (szene) szene.auswahl(null); bauZeichnen(); };
+      return;
+    }
+    const frei = D.festkiste().filter(k => !k.platz);
+    el.innerHTML = `<h2>✨ Deko-Platz</h2>
+      ${frei.length ? `<p>Was soll hier stehen?</p><div class="deko-reihe">${frei.map(k => `<div class="option"><span class="icon" aria-hidden="true">${esc(k.deko.icon)}</span><b>${esc(k.deko.name)}</b>
+        <button class="knopf" data-hier="${esc(k.key)}">Hierhin stellen</button></div>`).join('')}</div>`
+        : '<p>Hier kannst du Deko aufstellen. Deko schaltest du während eines Fests auf der Festwiese frei.</p>'}`;
+    el.querySelectorAll('[data-hier]').forEach(b => b.onclick = () => { const r = D.dekoSetzen(id, b.dataset.hier); if (r.ok && szene) szene.jubel(); });
+  }
+
+  function gastZettel() {
+    const D = window.LernDorf, i = D.gastAuftragInfo();
+    if (!i) return '';
+    const q = i.auftrag, g = i.gast, app = D.appInfo(q.a);
+    const punkte = Array.from({ length: q.n }, (_, k) => `<i class="${k < q.c ? 'voll' : ''}"></i>`).join('');
+    const farbe = Array.isArray(g.farben) ? g.farben[0] : '#f59e0b';
+    return `<article class="zettel gast" style="--pin:${esc(farbe)}">
+        <div class="portrait" aria-hidden="true">${esc(g.icon)}</div>
+        <div>
+          <div class="fach">Auftrag von ${esc(g.name)}<span class="fest-marke">${esc(i.event.icon)} ${esc(i.event.name)}</span></div>
+          <div class="geschichte">„${esc(i.text)}“</div>
+          <div class="ziel" style="margin-top:.35rem">${q.n} Runden in <b>${esc(app.name)}</b> mit mindestens ${q.m} %</div>
+          <div class="punkte" role="img" aria-label="${q.c} von ${q.n} Runden geschafft" style="margin-top:.3rem">${punkte}</div>
+        </div>
+        <div class="rechts">
+          <div class="lohn">+${i.lohn} ${esc(i.waehrung.icon)}${i.stueck ? ` + ${esc(i.stueck.icon)}` : ''}</div>
+          ${i.stueck ? `<small style="font-weight:800;color:var(--tinte2)">${esc(i.stueck.name)} fürs Sammelbuch</small>` : ''}
+          ${app.link ? `<a class="knopf" href="${esc(app.link)}">Los geht's</a>` : ''}
+        </div>
+      </article>`;
+  }
+
+  function kalenderZeichnen() {
+    const D = window.LernDorf, k = D.kalenderInfo(), el = document.getElementById('kal');
+    if (!k) { el.innerHTML = `<div class="buch-kopf"><h2 id="kal-titel">🗓️ Kalender</h2><button class="zu" aria-label="Schließen">✕</button></div><p class="leise">Gerade läuft kein Kalender.</p>`; }
+    else {
+      const w = k.waehrung, m = k.mechanik;
+      const tueren = Array.from({ length: k.tueren }, (_, i) => {
+        const nr = i + 1, letzte = nr === k.tueren && k.stueck;
+        if (nr <= k.offen) return `<div class="tuer offen" aria-label="Tür ${nr}: geöffnet">${letzte ? esc(k.stueck.icon) : esc(w.icon)}<small>+${k.lohn}</small></div>`;
+        if (nr === k.offen + 1 && nr <= k.frei) return `<button class="tuer jetzt" id="tuer-auf" aria-label="Tür ${nr} öffnen">${nr}<small>Öffnen!</small></button>`;
+        return `<div class="tuer ${nr <= k.frei ? '' : 'zu'}" aria-label="Tür ${nr}${nr <= k.frei ? '' : ': noch zu'}">${nr}${letzte ? '<small>' + esc(k.stueck.icon) + '</small>' : ''}</div>`;
+      }).join('');
+      const warten = k.frei - k.offen;
+      el.innerHTML = `<div class="buch-kopf"><h2 id="kal-titel">${esc(m.icon || '🗓️')} ${esc(m.name || 'Kalender')}</h2><button class="zu" aria-label="Schließen">✕</button></div>
+        <p class="leise">${esc(m.text || '')} Jede Tür bringt ${k.lohn} ${esc(w.icon)}${k.stueck ? `, hinter der letzten wartet ${esc(k.stueck.icon)} ${esc(k.stueck.name)} fürs Sammelbuch` : ''}.</p>
+        <p style="font-weight:800;margin:.5rem 0 0">${warten > 0 ? `${warten} ${warten === 1 ? 'Tür wartet' : 'Türen warten'} auf dich!` : k.heuteSchon ? 'Für heute hast du deine Tür bekommen. Morgen gibt es die nächste.' : 'Übe heute in einer Lern-App (mindestens 70 %) – dann geht die nächste Tür auf.'}</p>
+        <div class="tueren">${tueren}</div>`;
+      const auf = document.getElementById('tuer-auf');
+      if (auf) auf.onclick = () => { const r = D.tuerOeffnen(); if (r.ok) { kalenderZeichnen(); if (szene) szene.jubel(); } };
+    }
+    el.querySelector('.zu').onclick = () => schliessen('ov-kal');
+  }
+
+  function kisteZeichnen() {
+    const D = window.LernDorf, el = document.getElementById('kiste'), l = D.festkiste();
+    const alt = D.eventListe().map(e => D.festInfo(e.id)).filter(i => i && i.stufe > 0 && !i.aktiv);
+    el.innerHTML = `<div class="buch-kopf"><h2 id="kiste-titel">🎁 Festkiste</h2><button class="zu" aria-label="Schließen">✕</button></div>
+      <p class="leise">Alles, was du bei Festen freigeschaltet hast. Deko kannst du jederzeit aufstellen, versetzen oder wieder einpacken.</p>
+      ${l.length ? `<div class="kisten-liste">${l.map(k => `<div class="person"><span class="gesicht" aria-hidden="true">${esc(k.deko.icon)}</span>
+          <b>${esc(k.deko.name)}</b><small>${esc(k.deko.eventIcon)} ${esc(k.deko.eventName)} · ${k.platz ? 'steht im Dorf' : 'in der Kiste'}</small>
+          <button data-setzen="${esc(k.key)}" class="${k.platz ? 'leise' : ''}">${k.platz ? 'Versetzen' : 'Aufstellen'}</button></div>`).join('')}</div>`
+        : '<p>Noch leer. Während eines Fests schaltest du auf der Festwiese Deko frei.</p>'}
+      ${alt.length ? `<h3>Festgebäude</h3><p class="leise">${alt.map(i => `${esc(i.gebaeude.icon)} ${esc(i.gebaeude.name)} (Stufe ${i.stufe})`).join(' · ')} – steht beim nächsten Fest wieder auf der Festwiese.</p>` : ''}
+      ${Object.keys(D.state.r).filter(id => D.waehrungen().some(w => w.id === id) && D.state.r[id] > 0).length
+        ? `<h3>Fest-Vorrat</h3><p class="leise">${D.waehrungen().filter(w => D.state.r[w.id] > 0).map(w => `${esc(w.icon)} ${D.state.r[w.id]} ${esc(w.name)}`).join(' · ')} – bleibt dir bis zum nächsten Fest.</p>` : ''}`;
+    el.querySelector('.zu').onclick = () => schliessen('ov-kiste');
+    el.querySelectorAll('[data-setzen]').forEach(b => b.onclick = () => { schliessen('ov-kiste'); platzieren(b.dataset.setzen); });
   }
 
   // ── Neuigkeiten: neue Bewohner, neue Sammelstücke ──
@@ -490,7 +757,14 @@
       <p class="leise">Jedes Wohnhaus bringt pro Stufe einen Bewohner. Hilf ihnen bei ihren Aufträgen – dann schenken sie dir etwas.</p>
       <div class="seiten" style="margin-top:.6rem">${leute}</div>
       <h3>Meilensteine</h3>
-      <div class="meilen">${meilen}</div>`;
+      <div class="meilen">${meilen}</div>
+      ${sb.feste && sb.feste.length ? `<h3>Feste</h3><p class="leise">Zu Halloween, Weihnachten und Ostern kommen Gäste ins Dorf. Hilf ihnen – dann schenken sie dir etwas.</p>` + sb.feste.map(f => `
+        <div class="fest-seite"><h4>${esc(f.icon)} ${esc(f.titel)}${f.aktiv ? '<span class="fest-marke">läuft gerade</span>' : ''}</h4>
+          <p class="leise">${f.gast ? esc(f.gast.icon) + ' ' + esc(f.gast.name) + ' · ' : ''}${f.festgebaeude ? esc(f.festgebaeude.icon) + ' ' + esc(f.festgebaeude.name) + (f.stufe ? ' Stufe ' + f.stufe : ' noch nicht gebaut') + ' · ' : ''}${f.dekoHat} von ${f.deko} Deko · ${f.menge} ${esc(f.waehrung.icon)}</p>
+          <div class="fach-stuecke" style="display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.4rem">${f.stuecke.map(st => st.hat
+            ? `<span class="stueck" title="${esc(st.text || st.name)}">${esc(st.icon)} ${esc(st.name)}</span>`
+            : `<span class="stueck fehlt">❔ ${f.aktiv ? (st.meilenstein ? 'Festgebäude bauen' : 'Hilf ' + esc(st.von || '')) : 'zum nächsten Fest'}</span>`).join('')}</div>
+        </div>`).join('') : ''}`;
     document.querySelector('#buch .zu').onclick = () => schliessen('ov-buch');
   }
 
@@ -620,7 +894,7 @@
     }).join('');
     getauscht = null;
     const box = document.getElementById('zettel');
-    box.innerHTML = zettel + bewohnerZettel() + wochenZettel();
+    box.innerHTML = zettel + gastZettel() + bewohnerZettel() + wochenZettel();
     box.querySelectorAll('.tausch').forEach(b => b.onclick = () => {
       const platz = Number(b.dataset.platz);
       getauscht = platz;
