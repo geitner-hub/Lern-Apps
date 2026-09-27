@@ -84,7 +84,8 @@
       "beschreibung": "Umrechnen, rechnen, vergleichen: mm, cm, m, km",
       "hidden": false,
       "klassen": [
-        5
+        5,
+        6
       ],
       "customTags": [],
       "aod": false
