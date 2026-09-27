@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>Mein Dorf – Lernwelt</title>
+  <!--
+    Mein Dorf – Aufbauspiel der Lernwelt
+    Etappe 2: 3D-Dorf mit Bauplätzen, Bauen/Ausbauen, Auftragsbrett.
+    Logik und Spielstand: gemeinsam/dorf-kern.js · 3D: gemeinsam/dorf-szene.js
+    Inhalte: daten/dorf-inhalte.json
+  -->
+  <link rel="stylesheet" href="../gemeinsam/fonts.css">
+  <style>
+    :root {
+      --nacht: #13121f; --nacht2: #1b1929; --text: #f1f0fb; --text2: rgba(241,240,251,.72); --muted: rgba(241,240,251,.45);
+      --holz: #7a4a28; --holz2: #5c351b; --holz3: #9a6538;
+      --papier: #f6ecd2; --papier2: #efe0bb; --tinte: #3b2a1a; --tinte2: #7a6248;
+      --gruen: #4ade80; --gold: #e6a817;
+    }
+    * { box-sizing: border-box; }
+    html { background: var(--nacht); }
+    html, body { margin: 0; }
+    body {
+      min-height: 100vh; font-family: 'Nunito', system-ui, sans-serif; color: var(--text);
+      background: linear-gradient(180deg, #1d2447 0, var(--nacht) 520px) no-repeat var(--nacht);
+      padding: max(1rem, env(safe-area-inset-top)) 1rem calc(5.5rem + env(safe-area-inset-bottom));
+    }
+    main { max-width: 980px; margin: 0 auto; }
+    h1, h2 { font-family: 'Fredoka One', 'Nunito', sans-serif; font-weight: 400; margin: 0; }
+    button, .knopf { font: inherit; }
+    button:focus-visible, a:focus-visible { outline: 3px solid #818cf8; outline-offset: 3px; }
+
+    /* Kopf */
+    .kopf { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: .8rem 1.5rem; margin: .4rem 0 1.4rem; }
+    .kopf h1 { font-size: clamp(2rem, 6vw, 2.8rem); line-height: 1; }
+    .kopf p { margin: .35rem 0 0; color: var(--text2); font-weight: 700; }
+    .vorrat { display: flex; gap: .5rem; flex-wrap: wrap; }
+    .kiste {
+      display: flex; align-items: center; gap: .45rem; padding: .45rem .8rem .45rem .6rem; border-radius: 10px;
+      background: var(--holz2); border: 2px solid var(--holz3); box-shadow: inset 0 -3px 0 rgba(0,0,0,.25);
+      font-weight: 900; font-size: 1.15rem; min-width: 5.2rem;
+    }
+    .kiste span { font-size: 1.3rem; }
+    .kiste small { display: block; font-size: .68rem; font-weight: 800; color: rgba(255,255,255,.6); line-height: 1; }
+    .kiste.neu { animation: puls .9s ease; }
+    @keyframes puls { 40% { transform: scale(1.12); border-color: var(--gruen); } }
+
+    /* Das Brett */
+    .brett {
+      position: relative; padding: 1.2rem 1.2rem 1.4rem; border-radius: 14px;
+      background:
+        repeating-linear-gradient(180deg, transparent 0 58px, rgba(0,0,0,.18) 58px 61px),
+        linear-gradient(90deg, var(--holz2), var(--holz) 12%, var(--holz) 88%, var(--holz2));
+      border: 6px solid #4a2a14; box-shadow: 0 18px 40px rgba(0,0,0,.45);
+    }
+    .brett-kopf { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: .5rem 1rem; margin-bottom: 1.1rem; }
+    .brett-kopf h2 { font-size: 1.55rem; text-shadow: 0 2px 0 rgba(0,0,0,.35); }
+    .wuerfel { font-weight: 800; color: #fde7c4; background: rgba(0,0,0,.25); padding: .3rem .7rem; border-radius: 99px; font-size: .92rem; }
+    .zettel-reihe { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.3rem 1.1rem; }
+
+    .zettel {
+      --pin: #818cf8; position: relative; background: var(--papier); color: var(--tinte);
+      padding: 1.4rem 1.1rem 1rem; border-radius: 3px 3px 6px 6px; min-height: 250px;
+      display: flex; flex-direction: column; gap: .55rem;
+      box-shadow: 0 8px 14px rgba(0,0,0,.35), inset 0 -18px 30px -24px rgba(122,74,40,.5);
+      transform: rotate(var(--dreh, -1deg));
+    }
+    .zettel:nth-child(2) { --dreh: 1.2deg; }
+    .zettel:nth-child(3) { --dreh: -.4deg; }
+    .zettel:nth-child(4) { --dreh: .8deg; }
+    .zettel::before {                                     /* Reißzwecke */
+      content: ''; position: absolute; top: -9px; left: 50%; width: 20px; height: 20px; margin-left: -10px; border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, rgba(255,255,255,.7) 0 3px, var(--pin) 4px);
+      box-shadow: 0 3px 4px rgba(0,0,0,.4);
+    }
+    .fach { font-weight: 900; font-size: .85rem; color: var(--tinte2); }
+    .app { display: flex; align-items: center; gap: .55rem; font-family: 'Fredoka One', 'Nunito', sans-serif; font-size: 1.3rem; line-height: 1.15; }
+    .app .emoji { font-size: 1.8rem; }
+    .ziel { font-weight: 700; font-size: .95rem; }
+    .punkte { display: flex; gap: .4rem; }
+    .punkte i { width: 22px; height: 22px; border-radius: 50%; border: 3px solid var(--tinte2); }
+    .punkte i.voll { background: #16a34a; border-color: #15803d; }
+    .lohn { font-weight: 900; font-size: 1.15rem; margin-top: auto; }
+    .bonus { display: inline-block; font-size: .78rem; font-weight: 800; background: #fde68a; color: #7a4a00; border-radius: 6px; padding: .1rem .4rem; margin-left: .2rem; vertical-align: 2px; }
+    .knoepfe { display: flex; gap: .5rem; margin-top: .35rem; }
+    .knopf, .tausch {
+      border: 0; border-radius: 10px; padding: .6rem .9rem; font-weight: 900; cursor: pointer; text-decoration: none; text-align: center;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .knopf { flex: 1; background: #16a34a; color: #fff; box-shadow: 0 4px 0 #0f6b30; }
+    .knopf:active { transform: translateY(3px); box-shadow: 0 1px 0 #0f6b30; }
+    .tausch { background: transparent; color: var(--tinte); border: 2px dashed var(--tinte2); }
+    .tausch:disabled { opacity: .35; cursor: default; }
+    .zettel.leer { background: var(--papier2); align-items: center; justify-content: center; text-align: center; color: var(--tinte2); font-weight: 800; }
+    .zettel.leer .gross { font-size: 2.2rem; }
+    .zettel.getauscht { animation: tausch .5s ease; }
+    @keyframes tausch { 0% { transform: rotate(var(--dreh)) rotateY(90deg); } 100% { transform: rotate(var(--dreh)); } }
+
+    .hinweis { margin: 1.1rem .2rem 0; color: var(--text2); font-size: .92rem; font-weight: 600; }
+
+    /* Das Dorf (3D) */
+    .szene {
+      position: relative; height: clamp(280px, 68vw, 560px); max-height: 70vh; border-radius: 18px; overflow: hidden;
+      background: linear-gradient(180deg, #6fb6ff, #e9f5ff); border: 4px solid #4a2a14; box-shadow: 0 18px 40px rgba(0,0,0,.45);
+    }
+    .szene-tipp { position: absolute; left: .7rem; bottom: .6rem; background: rgba(19,18,31,.72); color: #fff; font-weight: 800; font-size: .85rem;
+      padding: .3rem .7rem; border-radius: 99px; pointer-events: none; }
+    .raster { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: .5rem; padding: .8rem; height: 100%; overflow: auto; align-content: start; }
+    .raster button { border: 2px solid rgba(0,0,0,.15); border-radius: 12px; background: #e9dcc0; color: var(--tinte); font-weight: 800; padding: .6rem .3rem; cursor: pointer; }
+    .raster button .gross { display: block; font-size: 1.8rem; }
+    .raster button.zu { background: #cfd8c8; opacity: .75; }
+    .raster button.an { outline: 3px solid #ffd84a; }
+
+    /* Bau-Tafel zum gewählten Bauplatz */
+    .bau { margin: 1rem 0 2rem; background: var(--nacht2); border: 1px solid rgba(255,255,255,.09); border-radius: 16px; padding: 1.1rem 1.2rem; }
+    .bau h2 { font-size: 1.35rem; display: flex; align-items: center; gap: .5rem; }
+    .bau p { margin: .45rem 0; color: var(--text2); line-height: 1.45; }
+    .bau .leise { color: var(--muted); font-size: .9rem; }
+    .optionen { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: .7rem; margin-top: .8rem; }
+    .option { background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1); border-radius: 12px; padding: .8rem; display: flex; flex-direction: column; gap: .4rem; }
+    .option b { font-size: 1.05rem; }
+    .option .icon { font-size: 1.6rem; }
+    .option small { color: var(--text2); line-height: 1.35; }
+    .kosten { display: flex; gap: .4rem; flex-wrap: wrap; font-weight: 900; }
+    .kosten span { background: rgba(255,255,255,.08); border-radius: 8px; padding: .15rem .5rem; }
+    .kosten span.fehlt { background: rgba(248,113,113,.18); color: #fca5a5; }
+    .bau .knopf { flex: none; align-self: flex-start; margin-top: .3rem; }
+    .bau .knopf:disabled { background: #4b5563; box-shadow: 0 4px 0 #374151; cursor: default; opacity: .8; }
+    .stufen { display: inline-flex; gap: 3px; vertical-align: middle; margin-left: .3rem; }
+    .stufen i { width: 10px; height: 10px; border-radius: 2px; background: rgba(255,255,255,.18); }
+    .stufen i.voll { background: var(--gold); }
+
+    /* Start und Hinweise */
+    .karte { max-width: 520px; margin: 3rem auto; text-align: center; background: var(--nacht2); border-radius: 18px; padding: 2rem 1.6rem; border: 1px solid rgba(255,255,255,.08); }
+    .karte h1 { font-size: 2rem; margin: .4rem 0 .6rem; }
+    .karte p { color: var(--text2); line-height: 1.5; margin: .4rem 0; }
+    .karte .gross { font-size: 3.2rem; }
+    .karte .knopf { display: inline-block; flex: none; margin-top: 1.1rem; padding: .8rem 1.5rem; font-size: 1.1rem; }
+
+    @media (max-width: 560px) { .zettel { transform: none; } .zettel-reihe { gap: 1.4rem; } }
+    @media (prefers-reduced-motion: reduce) { .kiste.neu, .zettel.getauscht { animation: none; } }
+    .hinweis + .ende { height: 1rem; }
+  </style>
+</head>
+<body>
+<main id="app" aria-live="polite">
+  <div class="karte"><div class="gross">🏘️</div><p>Dorf wird geladen …</p></div>
+</main>
+
+<script src="../gemeinsam/shared.js"></script>
+<script src="../gemeinsam/config-api.js"></script>
+<script src="../gemeinsam/avatar3d.js"></script>
+<script src="../gemeinsam/dorf-szene.js"></script>
+<script>
+(function () {
+  'use strict';
+  const $app = document.getElementById('app');
+  const esc = s => (typeof escHtml === 'function' ? escHtml(s) : String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])));
+  const farbe = fach => (typeof CAT_STYLES !== 'undefined' && CAT_STYLES[fach]) ? CAT_STYLES[fach].color : '#94a3b8';
+  const ICON = { Mathematik: '➕', Englisch: '🇬🇧', GPG: '🏛' };
+  let vorher = {};                                  // Rohstoffe beim letzten Zeichnen (für den Puls)
+  let getauscht = null;
+
+  // Warten, bis navbar.js pass.js und dorf-kern.js geladen hat
+  function warte(test, ms = 8000) {
+    return new Promise(res => {
+      const t0 = Date.now();
+      (function schau() { if (test()) return res(true); if (Date.now() - t0 > ms) return res(false); setTimeout(schau, 60); })();
+    });
+  }
+
+  async function start() {
+    await ConfigAPI.loadPublic().catch(() => {});  // App-Liste aktuell halten (schreibt den Zwischenspeicher)
+    const da = await warte(() => window.LernDorf && window.LernPass);
+    if (!da) { karte('⚠️', 'Das Dorf konnte nicht geladen werden.', 'Prüfe die Internetverbindung und lade die Seite neu.'); return; }
+    const D = window.LernDorf, P = window.LernPass;
+
+    if (!P.hasProfile()) {
+      karte('🪪', 'Du brauchst zuerst einen Lernwelt-Pass.', 'Leg ihn auf der Startseite an. Danach kannst du hier dein Dorf gründen.',
+            '<a class="knopf" href="../index.html">Zur Startseite</a>');
+      return;
+    }
+    if (!D.klasse()) {
+      karte('🎒', 'Welche Klasse bist du?', 'Wähle deine Klasse im Pass auf der Startseite. Dann bekommst du passende Aufträge.',
+            '<a class="knopf" href="../index.html">Zur Startseite</a>');
+      return;
+    }
+    if (!D.gestartet()) {
+      const name = esc(P.profile().name || '');
+      karte('🏘️', 'Gründe dein Dorf!',
+        `${name ? name + ', du' : 'Du'} wirst Bürgermeister oder Bürgermeisterin. Erledige Aufträge in den Lern-Apps und sammle Holz und Stein. Damit baust du dein Dorf.`,
+        '<button class="knopf" id="gruenden">Dorf gründen</button>');
+      document.getElementById('gruenden').onclick = async () => { await D.starten(); laufen(); };
+      return;
+    }
+    await D.bereit();
+    laufen();
+  }
+
+  function karte(icon, titel, text, extra = '') {
+    $app.innerHTML = `<div class="karte"><div class="gross" aria-hidden="true">${icon}</div><h1>${titel}</h1><p>${text}</p>${extra}</div>`;
+  }
+
+  // ── Seite aufbauen (einmal), danach nur Teile aktualisieren ──
+  let szene = null, gewaehlt = null;
+
+  async function laufen() {
+    const D = window.LernDorf;
+    $app.innerHTML = `
+      <header class="kopf">
+        <div><h1>Mein Dorf</h1><p id="untertitel"></p></div>
+        <div class="vorrat" id="vorrat" aria-label="Deine Rohstoffe"></div>
+      </header>
+      <section class="szene" id="szene" aria-label="Dein Dorf"><div class="szene-tipp">Tippe auf einen Bauplatz</div></section>
+      <section class="bau" id="bau" aria-live="polite"></section>
+      <section class="brett" aria-labelledby="brett-titel">
+        <div class="brett-kopf"><h2 id="brett-titel">Auftragsbrett</h2><div class="wuerfel" id="wuerfel"></div></div>
+        <div class="zettel-reihe" id="zettel"></div>
+      </section>
+      <p class="hinweis" id="hinweis"></p>`;
+    // Start: noch nichts gebaut → Rathaus-Platz zeigen
+    const rathausPlatz = D.plaetze().find(p => p.fest === 'rathaus');
+    if (rathausPlatz && !D.state.b[rathausPlatz.id]) gewaehlt = rathausPlatz.id;
+    zeichnen();
+
+    const host = document.getElementById('szene');
+    szene = window.LernDorfSzene ? await window.LernDorfSzene.mount(host, { onPlatz: waehle }) : null;
+    if (szene) { szene.auswahl(gewaehlt); }
+    else { host.querySelector('.szene-tipp').remove(); rasterZeichnen(); }
+    D.onChange(() => zeichnen());
+  }
+
+  function waehle(id) {
+    gewaehlt = id;
+    if (szene) szene.auswahl(id); else rasterZeichnen();
+    bauZeichnen();
+    const bau = document.getElementById('bau');
+    if (bau && bau.getBoundingClientRect().top > window.innerHeight - 120) bau.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function zeichnen() {
+    const D = window.LernDorf, S = D.state;
+    const name = (window.LernPass.profile() || {}).name || '';
+    document.getElementById('untertitel').textContent = name ? 'Bürgermeisterei von ' + name : 'Deine Bürgermeisterei';
+    document.getElementById('vorrat').innerHTML = D.rohstoffe().map(r => {
+      const n = S.r[r.id] || 0, neu = vorher[r.id] !== undefined && n > vorher[r.id];
+      return `<div class="kiste${neu ? ' neu' : ''}" title="${esc(r.name)}"><span aria-hidden="true">${r.icon}</span><div>${n}<small>${esc(r.name)}</small></div></div>`;
+    }).join('');
+    vorher = Object.assign({}, S.r);
+    if (szene) szene.update(); else if (document.querySelector('.raster')) rasterZeichnen();
+    bauZeichnen();
+    brettZeichnen();
+  }
+
+  // Ohne 3D: Bauplätze als Knöpfe
+  function rasterZeichnen() {
+    const D = window.LernDorf;
+    const host = document.getElementById('szene');
+    host.innerHTML = '<div class="raster">' + D.plaetze().map(p => {
+      const i = D.platzInfo(p.id);
+      const icon = i.gesperrt ? '🔒' : !i.eintrag ? '🚧' : i.imBau && i.stufe === 0 ? '🏗️' : (i.gebaeude.icon || '🏠');
+      const text = i.gesperrt ? 'Gesperrt' : !i.eintrag ? 'Bauplatz' : esc(i.gebaeude.name) + (i.stufe ? ' ' + i.stufe : '');
+      return `<button class="${i.gesperrt ? 'zu' : ''}${gewaehlt === p.id ? ' an' : ''}" data-platz="${p.id}"><span class="gross" aria-hidden="true">${icon}</span>${text}</button>`;
+    }).join('') + '</div>';
+    host.querySelectorAll('button').forEach(b => b.onclick = () => waehle(Number(b.dataset.platz)));
+  }
+
+  function kostenHtml(k) {
+    const D = window.LernDorf, S = D.state;
+    return '<div class="kosten">' + Object.entries(k).filter(([, n]) => n > 0).map(([r, n]) => {
+      const R = D.rohstoff(r), hat = S.r[r] || 0;
+      return `<span class="${hat < n ? 'fehlt' : ''}" title="${esc(R.name)}: du hast ${hat}">${R.icon} ${n}</span>`;
+    }).join('') + '</div>';
+  }
+  function stufenHtml(st, max) { return `<span class="stufen" aria-label="Stufe ${st} von ${max}">${Array.from({ length: max }, (_, i) => `<i class="${i < st ? 'voll' : ''}"></i>`).join('')}</span>`; }
+  function bonusText(g, st) {
+    if (!g.bonus || st < 1) return '';
+    return Object.entries(g.bonus).map(([r, l]) => { const v = Array.isArray(l) ? l[Math.min(st, l.length) - 1] : 0; const R = window.LernDorf.rohstoff(r);
+      return v ? `+${Math.round(v * 100)} % ${R.name} aus jedem Auftrag` : ''; }).filter(Boolean).join(' · ');
+  }
+  function wann(tag) {
+    const D = window.LernDorf, t = D.heute();
+    const d = D._tageZwischen(t, tag);
+    if (d <= 0) return 'heute';
+    if (d === 1) return 'morgen';
+    return 'am ' + tag.slice(6, 8) + '.' + tag.slice(4, 6) + '.';
+  }
+
+  function bauZeichnen() {
+    const D = window.LernDorf, el = document.getElementById('bau');
+    if (!el) return;
+    if (gewaehlt === null) {
+      el.innerHTML = `<h2>🏗️ Bauen</h2><p>Tippe im Dorf auf einen Bauplatz. Dort kannst du bauen oder ein Gebäude ausbauen.</p>`;
+      return;
+    }
+    const i = D.platzInfo(gewaehlt);
+    if (!i) { el.innerHTML = ''; return; }
+    const nichts = Object.keys(D.state.b).length === 0;
+
+    if (i.gesperrt) {
+      el.innerHTML = `<h2>🔒 Gesperrter Bauplatz</h2><p>Baue dein Rathaus auf Stufe ${i.noetig} aus. Dann kannst du hier bauen.</p>`;
+      return;
+    }
+    if (!i.eintrag) {
+      const liste = D.baubar(gewaehlt);
+      const opt = liste.map(o => `
+        <div class="option">
+          <div><span class="icon" aria-hidden="true">${esc(o.gebaeude.icon || '🏠')}</span> <b>${esc(o.gebaeude.name)}</b></div>
+          <small>${esc(o.gebaeude.text || '')}</small>
+          ${kostenHtml(o.kosten)}
+          <button class="knopf" data-bauen="${esc(o.gebaeude.id)}" ${o.genug ? '' : 'disabled'}>${o.genug ? 'Bauen' : 'Noch zu wenig'}</button>
+        </div>`).join('');
+      const fest = i.def.fest ? D.gebaeude(i.def.fest) : null;
+      el.innerHTML = `<h2>🚧 ${fest ? 'Platz für dein ' + esc(fest.name) : 'Freier Bauplatz'}</h2>
+        <p>${nichts ? 'Dein erster Bau ist sofort fertig. Holz und Stein bekommst du für Aufträge vom Auftragsbrett.' : 'Neue Gebäude und Ausbauten sind ab dem nächsten Tag fertig.'}</p>
+        ${liste.length ? `<div class="optionen">${opt}</div>` : '<p class="leise">Hier ist gerade nichts mehr zu bauen. Jedes Gebäude außer Wohnhäusern gibt es nur einmal.</p>'}`;
+      el.querySelectorAll('[data-bauen]').forEach(b => b.onclick = () => {
+        const r = D.bauen(gewaehlt, b.dataset.bauen);
+        if (r.ok && szene) szene.jubel();
+      });
+      return;
+    }
+
+    const g = i.gebaeude, max = Number(g.maxStufe) || i.zielStufe;
+    const bonus = bonusText(g, i.stufe);
+    let unten;
+    if (i.imBau) {
+      unten = `<p>🔨 ${i.stufe ? 'Ausbau auf Stufe ' + i.zielStufe : 'Wird gebaut'} – fertig ${wann(i.fertigAb)}.</p>`;
+    } else if (i.naechste) {
+      const frei = g.id === 'rathaus' ? D.plaetze().filter(p => p.rathaus === i.naechste).length : 0;
+      unten = `<div class="option" style="margin-top:.7rem">
+          <b>Ausbauen auf Stufe ${i.naechste}</b>
+          ${frei ? `<small>Schaltet ${frei} neue Bauplätze frei.</small>` : ''}
+          ${bonusText(g, i.naechste) ? `<small>Danach: ${esc(bonusText(g, i.naechste))}</small>` : ''}
+          ${kostenHtml(i.kosten)}
+          <button class="knopf" id="ausbauen" ${i.genug ? '' : 'disabled'}>${i.genug ? 'Ausbauen' : 'Noch zu wenig'}</button>
+        </div>`;
+    } else {
+      unten = '<p class="leise">Höchste Stufe erreicht.</p>';
+    }
+    el.innerHTML = `<h2><span aria-hidden="true">${esc(g.icon || '🏠')}</span> ${esc(g.name)} ${stufenHtml(i.stufe, max)}</h2>
+      <p>${esc(g.text || '')}${bonus ? ' <b>' + esc(bonus) + '</b>' : ''}</p>${unten}`;
+    const k = document.getElementById('ausbauen');
+    if (k) k.onclick = () => { const r = D.ausbauen(gewaehlt); if (r.ok && szene) szene.jubel(); };
+  }
+
+  function brettZeichnen() {
+    const D = window.LernDorf, S = D.state, W = D.werte();
+    document.getElementById('wuerfel').textContent = `🎲 ${S.rr} ${S.rr === 1 ? 'Tausch' : 'Tausche'} übrig`;
+    document.getElementById('hinweis').textContent =
+      `Jeden Tag kommen neue Aufträge. Offene Aufträge bleiben hängen, bis du sie erledigst. Pro Tag bekommst du einen Tausch dazu, sparen kannst du bis zu ${W.rrMax}.`;
+    const zettel = W.plaetze.map(platz => {
+      const q = S.q.find(x => x.p === platz.id);
+      const titel = `${platz.faecher === 'alle' ? '🎲' : (ICON[platz.faecher[0]] || '📌')} ${esc(platz.name || '')}`;
+      if (!q) {
+        return `<div class="zettel leer" style="--pin:#a8a29e"><div class="fach">${titel}</div><div class="gross" aria-hidden="true">✅</div>
+                  <div>Erledigt!<br>Morgen hängt hier ein neuer Auftrag.</div></div>`;
+      }
+      const app = D.appInfo(q.a), r = D.rohstoff(q.r), l = D.lohn(q);
+      const punkte = Array.from({ length: q.n }, (_, i) => `<i class="${i < q.c ? 'voll' : ''}"></i>`).join('');
+      const kann = D.kannTauschen(q.p);
+      return `<article class="zettel${getauscht === q.p ? ' getauscht' : ''}" style="--pin:${farbe(app.fach)}">
+          <div class="fach">${titel}</div>
+          <div class="app"><span class="emoji" aria-hidden="true">${esc(app.emoji)}</span>${esc(app.name)}</div>
+          <div class="ziel">${q.n} ${q.n === 1 ? 'Runde' : 'Runden'} mit mindestens ${q.m} %</div>
+          <div class="punkte" role="img" aria-label="${q.c} von ${q.n} Runden geschafft">${punkte}</div>
+          <div class="lohn">+${l.gesamt} ${r.icon} ${esc(r.name)}${q.x ? '<span class="bonus" title="Diese App hast du lange nicht geübt">+50 % Bonus</span>' : ''}${l.extra ? `<span class="bonus" title="Bonus durch deine Gebäude">+${l.extra} Gebäude</span>` : ''}</div>
+          <div class="knoepfe">
+            ${app.link ? `<a class="knopf" href="${esc(app.link)}">Los geht's</a>` : ''}
+            <button class="tausch" data-platz="${q.p}" ${kann ? '' : 'disabled'} aria-label="Auftrag tauschen">🎲 Tauschen</button>
+          </div>
+        </article>`;
+    }).join('');
+    getauscht = null;
+    const box = document.getElementById('zettel');
+    box.innerHTML = zettel;
+    box.querySelectorAll('.tausch').forEach(b => b.onclick = () => {
+      const platz = Number(b.dataset.platz);
+      getauscht = platz;
+      if (!D.tauschen(platz).ok) getauscht = null;
+    });
+  }
+
+  start();
+})();
+</script>
+<script src="../gemeinsam/navbar.js"></script>
+</body>
+</html>
