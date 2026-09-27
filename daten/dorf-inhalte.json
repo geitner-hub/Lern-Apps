@@ -1,261 +1,103 @@
 {
-  "_hinweis": "Inhalte und Startwerte für „Mein Dorf“ (gemeinsam/dorf-kern.js, 3D: gemeinsam/dorf-szene.js). Werte hier ändern, der Admin kann Einzelnes überschreiben (ab Etappe 3). IDs nie umbenennen, sie stehen in den Spielständen der Kinder. BAUPLAETZE: x/z = Lage im Dorf (Dorfplatz in der Mitte bei 0/0; im Bild ist −x/−z oben, Abstand 20 = ein Feld).",
-  "version": 1,
+  "_hinweis": "Inhalte und Startwerte für „Mein Dorf“ (gemeinsam/dorf-kern.js, 3D: gemeinsam/dorf-szene.js). Werte hier ändern, der Admin kann Einzelnes überschreiben (🏘️ Dorf). IDs nie umbenennen, sie stehen in den Spielständen der Kinder. BAUPLAETZE: x/z = Lage im Dorf (Dorfplatz in der Mitte bei 0/0; im Bild ist −x/−z oben, Abstand 20 = ein Feld). GEBAEUDE: ansehen = Ansehen je Stufe, ansehenNoetig = nötiges Ansehen für jede Stufe (Rathaus), bonus = h/s mehr Holz/Stein, rabatt = günstiger bauen, woche = mehr aus dem Wochenauftrag; zusatz = zusätzliche Kosten je Stufe (z. B. Gold); mehrfach = true (beliebig) oder Höchstzahl; bewohner = neue Bewohner je Stufe.",
+  "version": 2,
+
   "ROHSTOFFE": [
-    {
-      "id": "h",
-      "name": "Holz",
-      "icon": "🪵"
-    },
-    {
-      "id": "s",
-      "name": "Stein",
-      "icon": "🪨"
-    },
-    {
-      "id": "g",
-      "name": "Gold",
-      "icon": "🪙"
-    }
+    {"id": "h", "name": "Holz", "icon": "🪵"},
+    {"id": "s", "name": "Stein", "icon": "🪨"},
+    {"id": "g", "name": "Gold", "icon": "🪙"}
   ],
+
   "AUFTRAEGE": {
     "plaetze": [
-      {
-        "id": 1,
-        "name": "Mathematik",
-        "faecher": [
-          "Mathematik"
-        ]
-      },
-      {
-        "id": 2,
-        "name": "Englisch/GPG",
-        "faecher": [
-          "Englisch",
-          "GPG"
-        ]
-      },
-      {
-        "id": 3,
-        "name": "Freie Wahl",
-        "faecher": "alle"
-      }
+      {"id": 1, "name": "Mathematik", "faecher": ["Mathematik"]},
+      {"id": 2, "name": "Englisch/GPG", "faecher": ["Englisch", "GPG"]},
+      {"id": 3, "name": "Freie Wahl", "faecher": "alle"},
+      {"id": 4, "name": "Bibliothek", "faecher": "alle", "gebaeude": "bibliothek"}
     ],
-    "tag": {
-      "runden": 2,
-      "schwelle": 70,
-      "belohnung": [
-        15,
-        25
-      ],
-      "rohstoffe": [
-        "h",
-        "s"
-      ]
-    },
-    "woche": {
-      "rohstoffe": 60,
-      "gold": 2,
-      "auftraege": 5,
-      "runden": 3
-    },
-    "rerolls": {
-      "proTag": 1,
-      "max": 3
-    },
-    "langeNichtGespielt": {
-      "tage": 14,
-      "bonus": 0.5
-    }
+    "tag": {"runden": 2, "schwelle": 70, "belohnung": [15, 25], "rohstoffe": ["h", "s"]},
+    "woche": {"rohstoffe": 60, "gold": 2, "auftraege": 5, "runden": 3},
+    "rerolls": {"proTag": 1, "max": 3},
+    "langeNichtGespielt": {"tage": 14, "bonus": 0.5},
+    "bewohner": {"runden": 2, "ansehen": 10}
   },
+
   "BAU": {
     "kostenfaktor": 1.0,
     "ersterBauSofort": true,
     "stufenKosten": [
-      {
-        "stufe": 1,
-        "h": 25,
-        "s": 15
-      },
-      {
-        "stufe": 2,
-        "h": 50,
-        "s": 40
-      },
-      {
-        "stufe": 3,
-        "h": 90,
-        "s": 90
-      },
-      {
-        "stufe": 4,
-        "h": 175,
-        "s": 175
-      }
+      {"stufe": 1, "h": 25, "s": 15},
+      {"stufe": 2, "h": 50, "s": 40},
+      {"stufe": 3, "h": 90, "s": 90},
+      {"stufe": 4, "h": 175, "s": 175, "g": 3}
     ]
   },
+
   "BAUPLAETZE": [
-    {
-      "id": 1,
-      "rathaus": 0,
-      "fest": "rathaus",
-      "x": -20,
-      "z": -20
-    },
-    {
-      "id": 2,
-      "rathaus": 1,
-      "x": 0,
-      "z": -20
-    },
-    {
-      "id": 3,
-      "rathaus": 1,
-      "x": -20,
-      "z": 0
-    },
-    {
-      "id": 4,
-      "rathaus": 1,
-      "x": 0,
-      "z": 20
-    },
-    {
-      "id": 5,
-      "rathaus": 2,
-      "x": 20,
-      "z": 0
-    },
-    {
-      "id": 6,
-      "rathaus": 2,
-      "x": 20,
-      "z": -20
-    },
-    {
-      "id": 7,
-      "rathaus": 2,
-      "x": -20,
-      "z": 20
-    },
-    {
-      "id": 8,
-      "rathaus": 2,
-      "x": 20,
-      "z": 20
-    },
-    {
-      "id": 9,
-      "rathaus": 3,
-      "x": -40,
-      "z": -20
-    },
-    {
-      "id": 10,
-      "rathaus": 3,
-      "x": -20,
-      "z": -40
-    },
-    {
-      "id": 11,
-      "rathaus": 3,
-      "x": 40,
-      "z": 0
-    },
-    {
-      "id": 12,
-      "rathaus": 3,
-      "x": 0,
-      "z": 40
-    }
+    {"id": 1, "rathaus": 0, "fest": "rathaus", "x": -20, "z": -20},
+    {"id": 2, "rathaus": 1, "x": 0, "z": -20},
+    {"id": 3, "rathaus": 1, "x": -20, "z": 0},
+    {"id": 4, "rathaus": 1, "x": 0, "z": 20},
+    {"id": 5, "rathaus": 2, "x": 20, "z": 0},
+    {"id": 6, "rathaus": 2, "x": 20, "z": -20},
+    {"id": 7, "rathaus": 2, "x": -20, "z": 20},
+    {"id": 8, "rathaus": 2, "x": 20, "z": 20},
+    {"id": 9, "rathaus": 3, "x": -40, "z": -20},
+    {"id": 10, "rathaus": 3, "x": -20, "z": -40},
+    {"id": 11, "rathaus": 3, "x": 40, "z": 0},
+    {"id": 12, "rathaus": 3, "x": 0, "z": 40},
+    {"id": 13, "rathaus": 4, "x": -40, "z": 0},
+    {"id": 14, "rathaus": 4, "x": 0, "z": -40},
+    {"id": 15, "rathaus": 4, "x": 40, "z": 20},
+    {"id": 16, "rathaus": 4, "x": 20, "z": 40}
   ],
+
   "GEBAEUDE": [
-    {
-      "id": "rathaus",
-      "name": "Rathaus",
-      "icon": "🏛️",
-      "maxStufe": 3,
-      "ansehen": [
-        5,
-        10,
-        20
-      ],
-      "text": "Hier regierst du. Jede Stufe schaltet neue Bauplätze frei."
-    },
-    {
-      "id": "wohnhaus",
-      "name": "Wohnhaus",
-      "icon": "🏠",
-      "maxStufe": 3,
-      "ansehen": [
-        3,
-        6,
-        12
-      ],
-      "mehrfach": 4,
-      "text": "Hier ziehen Bewohner ein."
-    },
-    {
-      "id": "brunnen",
-      "name": "Brunnen",
-      "icon": "⛲",
-      "maxStufe": 3,
-      "ansehen": [
-        4,
-        8,
-        15
-      ],
-      "text": "Frisches Wasser für alle."
-    },
-    {
-      "id": "baeckerei",
-      "name": "Bäckerei",
-      "icon": "🥖",
-      "maxStufe": 3,
-      "ansehen": [
-        4,
-        8,
-        15
-      ],
-      "text": "Es duftet nach frischem Brot."
-    },
-    {
-      "id": "schmiede",
-      "name": "Schmiede",
-      "icon": "⚒️",
-      "maxStufe": 3,
-      "ansehen": [
-        4,
-        8,
-        15
-      ],
-      "text": "Mehr Stein aus jedem Auftrag.",
-      "bonus": {
-        "s": [
-          0.1,
-          0.2,
-          0.3
-        ]
-      }
-    },
-    {
-      "id": "saegewerk",
-      "name": "Sägewerk",
-      "icon": "🪚",
-      "maxStufe": 3,
-      "ansehen": [
-        3,
-        6,
-        12
-      ],
-      "bonus": {
-        "h": [
-          0.1,
-          0.2,
-          0.3
-        ]
-      },
-      "text": "Mehr Holz aus jedem Auftrag."
-    }
+    {"id": "rathaus", "name": "Rathaus", "icon": "🏛️", "maxStufe": 4, "ansehen": [5, 10, 20, 40], "ansehenNoetig": [0, 25, 70, 150], "text": "Hier regierst du. Jede Stufe schaltet neue Bauplätze frei – dafür braucht dein Dorf genug Ansehen."},
+    {"id": "wohnhaus", "name": "Wohnhaus", "icon": "🏠", "maxStufe": 4, "ansehen": [3, 6, 12, 20], "mehrfach": 4, "bewohner": 1, "text": "Pro Stufe zieht ein neuer Bewohner ein."},
+    {"id": "brunnen", "name": "Brunnen", "icon": "⛲", "maxStufe": 4, "ansehen": [4, 8, 15, 25], "text": "Frisches Wasser für alle."},
+    {"id": "baeckerei", "name": "Bäckerei", "icon": "🥖", "maxStufe": 4, "ansehen": [4, 8, 15, 25], "text": "Es duftet nach frischem Brot."},
+    {"id": "schmiede", "name": "Schmiede", "icon": "⚒️", "maxStufe": 4, "ansehen": [4, 8, 15, 25], "bonus": {"rabatt": [0.05, 0.1, 0.15, 0.2]}, "text": "Gutes Werkzeug: Alle Bauten werden günstiger."},
+    {"id": "saegewerk", "name": "Sägewerk", "icon": "🪚", "maxStufe": 4, "ansehen": [3, 6, 12, 20], "bonus": {"h": [0.1, 0.2, 0.3, 0.4]}, "text": "Mehr Holz aus jedem Auftrag."},
+    {"id": "steinbruch", "name": "Steinbruch", "icon": "⛏️", "maxStufe": 4, "ansehen": [3, 6, 12, 20], "bonus": {"s": [0.1, 0.2, 0.3, 0.4]}, "text": "Mehr Stein aus jedem Auftrag."},
+    {"id": "bibliothek", "name": "Bibliothek", "icon": "📚", "maxStufe": 4, "ansehen": [6, 10, 18, 30], "zusatz": {"g": [2, 1, 1, 1]}, "text": "Ein vierter Platz am Auftragsbrett."},
+    {"id": "marktplatz", "name": "Marktplatz", "icon": "🎪", "maxStufe": 4, "ansehen": [6, 10, 18, 30], "zusatz": {"g": [2, 1, 1, 1]}, "bonus": {"woche": [0.1, 0.2, 0.3, 0.4]}, "text": "Mehr Holz und Stein aus dem Wochenauftrag."}
+  ],
+
+  "BEWOHNER": [
+    {"id": "yusuf", "name": "Yusuf", "icon": "👨🏽‍🍳", "text": "kocht im Dorfcafé Gerichte aus aller Welt", "farben": ["#f59e0b", "#1f2937", "#1c1917"], "geschichten": [{"text": "Yusuf probiert ein neues Rezept. Er braucht jemanden, der ganz genau abmisst.", "stueck": {"id": "yusuf-gewuerz", "name": "Gewürzdose", "icon": "🫙"}}, {"text": "Yusuf lädt das ganze Dorf zum Essen ein. Hilfst du beim Tischdecken für alle?", "stueck": {"id": "yusuf-teeglas", "name": "Buntes Teeglas", "icon": "🍵"}}]},
+    {"id": "resi", "name": "Oma Resi", "icon": "👵", "text": "strickt für das ganze Dorf", "farben": ["#c2410c", "#57534e", "#e7e5e4"], "geschichten": [{"text": "Oma Resi hat ihre Brille verlegt. Wenn du ihr beim Suchen hilfst, strickt sie dir etwas Warmes.", "stueck": {"id": "resi-socken", "name": "Gestrickte Socken", "icon": "🧦"}}, {"text": "Oma Resi backt für das Dorffest und braucht eine Hilfe in der Küche.", "stueck": {"id": "resi-rezept", "name": "Resis Kuchenrezept", "icon": "📜"}}]},
+    {"id": "amara", "name": "Amara", "icon": "👩🏿", "text": "fährt den Dorfbus", "farben": ["#0ea5e9", "#1e3a8a", "#1c1917"], "geschichten": [{"text": "Im Busfahrplan ist alles durcheinander. Amara und du bringt die Zeiten wieder in Ordnung.", "stueck": {"id": "amara-fahrkarte", "name": "Busfahrkarte", "icon": "🎫"}}, {"text": "Amara plant eine Ausflugsfahrt ans Meer. Wie weit ist es und wie lange dauert es?", "stueck": {"id": "amara-kompass", "name": "Kleiner Kompass", "icon": "🧭"}}]},
+    {"id": "luca", "name": "Luca", "icon": "🧑🏻‍🎨", "text": "malt Bilder auf Hauswände", "farben": ["#e11d48", "#334155", "#78350f"], "geschichten": [{"text": "Luca malt ein großes Bild an die Rathauswand. Aber welche Farbe fehlt noch?", "stueck": {"id": "luca-pinsel", "name": "Lucas Pinsel", "icon": "🖌️"}}, {"text": "Luca will einen Regenbogen malen und mischt die Farben. Mischst du mit?", "stueck": {"id": "luca-palette", "name": "Farbpalette", "icon": "🎨"}}]},
+    {"id": "oksana", "name": "Oksana", "icon": "👩🏼‍⚕️", "text": "ist die Tierärztin im Dorf", "farben": ["#f8fafc", "#0f766e", "#fde68a"], "geschichten": [{"text": "Oksana pflegt einen kleinen Igel gesund. Er braucht jeden Tag genau das richtige Futter.", "stueck": {"id": "oksana-igel", "name": "Igel-Zeichnung", "icon": "🦔"}}, {"text": "Oksana zählt die Vögel am Futterhaus. Zählst du mit?", "stueck": {"id": "oksana-feder", "name": "Bunte Feder", "icon": "🪶"}}]},
+    {"id": "sepp", "name": "Bauer Sepp", "icon": "👨‍🌾", "text": "fährt einen alten Traktor", "farben": ["#15803d", "#1e3a8a", "#78350f"], "geschichten": [{"text": "Sepps Traktor springt nicht an. Er rechnet, welches Teil fehlt – rechnest du mit?", "stueck": {"id": "sepp-schluessel", "name": "Traktor-Schlüssel", "icon": "🔑"}}, {"text": "Die Kartoffeln sind reif! Sepp braucht fleißige Hände auf dem Acker.", "stueck": {"id": "sepp-kartoffel", "name": "Riesen-Kartoffel", "icon": "🥔"}}]},
+    {"id": "priya", "name": "Doktor Priya", "icon": "👩🏽‍⚕️", "text": "hilft, wenn jemand krank ist", "farben": ["#8b5cf6", "#1f2937", "#1c1917"], "geschichten": [{"text": "In der Praxis sind die Pflaster ausgegangen. Doktor Priya zählt den Vorrat.", "stueck": {"id": "priya-pflaster", "name": "Pflaster-Dose", "icon": "🩹"}}, {"text": "Doktor Priya kocht Kräutertee für alle, die erkältet sind. Weißt du, welche Kräuter helfen?", "stueck": {"id": "priya-minze", "name": "Minzblatt", "icon": "🌿"}}]},
+    {"id": "kenji", "name": "Kenji", "icon": "👦🏻", "text": "will einmal Astronaut werden", "farben": ["#1d4ed8", "#475569", "#111827"], "geschichten": [{"text": "Kenji beobachtet nachts die Sterne. Hilf ihm, die Sternbilder zu zählen!", "stueck": {"id": "kenji-fernrohr", "name": "Kleines Fernrohr", "icon": "🔭"}}, {"text": "Heute Nacht soll eine Sternschnuppe kommen. Kenji rechnet aus, wann genau.", "stueck": {"id": "kenji-sternschnuppe", "name": "Sternschnuppe im Glas", "icon": "🌠"}}]},
+    {"id": "malik", "name": "Malik", "icon": "🧑🏾‍🔧", "text": "repariert alle Fahrräder im Dorf", "farben": ["#ea580c", "#374151", "#111827"], "geschichten": [{"text": "Ein Fahrrad hat einen Platten. Malik flickt ihn – du reichst die Werkzeuge.", "stueck": {"id": "malik-klingel", "name": "Fahrradklingel", "icon": "🔔"}}, {"text": "Malik baut ein Tandem für zwei. Wie lang muss die Kette sein?", "stueck": {"id": "malik-werkzeug", "name": "Schraubenschlüssel", "icon": "🔧"}}]},
+    {"id": "linh", "name": "Linh", "icon": "👩🏻", "text": "bringt als Postbotin jeden Brief ans Ziel", "farben": ["#eab308", "#1e40af", "#111827"], "geschichten": [{"text": "Ein Brief hat keine Adresse. Linh und du findet heraus, wem er gehört.", "stueck": {"id": "linh-marke", "name": "Seltene Briefmarke", "icon": "✉️"}}, {"text": "Vor dem Dorffest kommen ganz viele Päckchen. Linh sortiert sie – sortierst du mit?", "stueck": {"id": "linh-paket", "name": "Kleines Päckchen", "icon": "📦"}}]},
+    {"id": "elena", "name": "Elena", "icon": "👩🏼‍🎤", "text": "spielt Geige im Dorforchester", "farben": ["#be123c", "#111827", "#a16207"], "geschichten": [{"text": "Elenas Geige klingt schief. Übt zusammen, bis jeder Ton sitzt.", "stueck": {"id": "elena-noten", "name": "Notenblatt", "icon": "🎼"}}, {"text": "Das Dorforchester probt für ein Konzert. Elena braucht jemanden, der den Takt hält.", "stueck": {"id": "elena-konzert", "name": "Konzertkarte", "icon": "🎟️"}}]},
+    {"id": "tomasz", "name": "Tomasz", "icon": "🧔🏼", "text": "ist bei der Dorffeuerwehr", "farben": ["#dc2626", "#1f2937", "#a16207"], "geschichten": [{"text": "Die Feuerwehr übt heute. Tomasz braucht jemanden, der gut mitdenkt.", "stueck": {"id": "tomasz-helm", "name": "Feuerwehrhelm", "icon": "⛑️"}}, {"text": "Katze Minka sitzt oben im Baum. Tomasz holt die Leiter – du passt auf.", "stueck": {"id": "tomasz-leiter", "name": "Kleine Leiter", "icon": "🪜"}}]},
+    {"id": "ana", "name": "Ana", "icon": "👩🏽‍🌾", "text": "liebt ihren Blumengarten", "farben": ["#db2777", "#65a30d", "#1c1917"], "geschichten": [{"text": "Ana will die größten Sonnenblumen im Dorf ziehen. Hilf ihr beim Gießen!", "stueck": {"id": "ana-kerne", "name": "Sonnenblumenkerne", "icon": "🌻"}}, {"text": "Schnecken fressen Anas Salat. Gemeinsam findet ihr eine Lösung.", "stueck": {"id": "ana-schnecke", "name": "Leeres Schneckenhaus", "icon": "🐌"}}]},
+    {"id": "omar", "name": "Opa Omar", "icon": "👴🏽", "text": "erzählt die spannendsten Geschichten", "farben": ["#4b5563", "#78350f", "#f5f5f4"], "geschichten": [{"text": "Opa Omar spielt Schach und sucht eine Figur. Sie muss irgendwo im Dorf sein!", "stueck": {"id": "omar-schach", "name": "Schachfigur", "icon": "♟️"}}, {"text": "Opa Omar erzählt von einer langen Reise. Hör gut zu und rechne mit!", "stueck": {"id": "omar-karte", "name": "Alte Landkarte", "icon": "🗺️"}}]},
+    {"id": "mia", "name": "Erfinderin Mia", "icon": "👧", "text": "baut aus allem etwas Neues", "farben": ["#0d9488", "#6b21a8", "#1c1917"], "geschichten": [{"text": "Mia baut einen Roboter. Es fehlt nur noch ein Zahnrad – und eine gute Rechnung.", "stueck": {"id": "mia-zahnrad", "name": "Zahnrad", "icon": "⚙️"}}, {"text": "Mia hat einen Drachen gebaut. Hilf ihr, dass er richtig fliegt!", "stueck": {"id": "mia-drachen", "name": "Selbstgebauter Drachen", "icon": "🪁"}}]},
+    {"id": "minka", "name": "Katze Minka", "icon": "🐈", "text": "gehört irgendwie allen", "farben": ["#f97316", "#f97316", "#f97316"], "tier": "katze", "geschichten": [{"text": "Minka ist verschwunden! Suche mit – bestimmt versteckt sie sich irgendwo.", "stueck": {"id": "minka-gloeckchen", "name": "Katzenglöckchen", "icon": "🎐"}}, {"text": "Minka spielt mit Wolle und hat alles verknotet. Entwirrst du das Knäuel?", "stueck": {"id": "minka-wolle", "name": "Wollknäuel", "icon": "🧶"}}]}
+  ],
+
+  "MEILENSTEINE": [
+    {"id": "m-erster-bau", "name": "Grundstein", "icon": "🧱", "text": "Dein erstes Gebäude steht.", "bedingung": {"art": "gebaeude", "wert": 1}},
+    {"id": "m-rathaus-2", "name": "Rathaus Stufe 2", "icon": "🏛️", "text": "Dein Rathaus ist gewachsen.", "bedingung": {"art": "rathaus", "wert": 2}},
+    {"id": "m-rathaus-3", "name": "Rathaus Stufe 3", "icon": "🏰", "text": "Ein prächtiges Rathaus!", "bedingung": {"art": "rathaus", "wert": 3}},
+    {"id": "m-rathaus-4", "name": "Goldenes Rathaus", "icon": "👑", "text": "Höchste Stufe erreicht.", "bedingung": {"art": "rathaus", "wert": 4}},
+    {"id": "m-auftraege-10", "name": "Fleißig", "icon": "📋", "text": "10 Aufträge erledigt.", "bedingung": {"art": "auftraege", "wert": 10}},
+    {"id": "m-auftraege-50", "name": "Sehr fleißig", "icon": "📜", "text": "50 Aufträge erledigt.", "bedingung": {"art": "auftraege", "wert": 50}},
+    {"id": "m-auftraege-100", "name": "Hundert!", "icon": "💯", "text": "100 Aufträge erledigt.", "bedingung": {"art": "auftraege", "wert": 100}},
+    {"id": "m-woche-1", "name": "Erste Woche", "icon": "📅", "text": "Den ersten Wochenauftrag geschafft.", "bedingung": {"art": "wochen", "wert": 1}},
+    {"id": "m-woche-5", "name": "Fünf Wochen", "icon": "🗓️", "text": "5 Wochenaufträge geschafft.", "bedingung": {"art": "wochen", "wert": 5}},
+    {"id": "m-woche-10", "name": "Zehn Wochen", "icon": "🌟", "text": "10 Wochenaufträge geschafft.", "bedingung": {"art": "wochen", "wert": 10}},
+    {"id": "m-bewohner-4", "name": "Kleines Dorf", "icon": "👨‍👩‍👧", "text": "4 Bewohner leben bei dir.", "bedingung": {"art": "bewohner", "wert": 4}},
+    {"id": "m-bewohner-8", "name": "Lebendiges Dorf", "icon": "🎉", "text": "8 Bewohner leben bei dir.", "bedingung": {"art": "bewohner", "wert": 8}},
+    {"id": "m-bewohner-16", "name": "Volles Haus", "icon": "🏘️", "text": "16 Bewohner – alle sind da!", "bedingung": {"art": "bewohner", "wert": 16}},
+    {"id": "m-alle-gebaeude", "name": "Von allem etwas", "icon": "🗺️", "text": "Jedes Gebäude steht mindestens einmal.", "bedingung": {"art": "alleGebaeude", "wert": 1}},
+    {"id": "m-stufe-4", "name": "Prachtbau", "icon": "✨", "text": "Ein Gebäude auf Stufe 4.", "bedingung": {"art": "stufe", "wert": 4}}
   ]
 }
