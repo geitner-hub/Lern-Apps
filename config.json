@@ -33,7 +33,7 @@
       "fach": "Mathematik",
       "emoji": "📐",
       "beschreibung": "Quadrat, Rechteck & Co. – erkenne die Unterschiede!",
-      "hidden": false,
+      "hidden": true,
       "klassen": [
         5
       ],
