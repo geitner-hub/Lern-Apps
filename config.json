@@ -372,5 +372,20 @@
       "weihnachten": false,
       "ostern": false
     }
+  },
+  "spiele": {
+    "auswahl": "auto+frei",
+    "schwelle": 80,
+    "runden": 2,
+    "starter": {
+      "5": [
+        "kopf4-leicht",
+        "1x1-klein"
+      ],
+      "6": [
+        "kopf5-leicht",
+        "1x1-klein"
+      ]
+    }
   }
 }
