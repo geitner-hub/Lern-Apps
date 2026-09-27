@@ -22,6 +22,9 @@
 //  Lehrkraft), Bauen (Gebäude, Stufen 1–4, Bauzeit, Bauplätze über das Rathaus,
 //  Ansehen für Rathaus-Stufen, Boni, Rabatt), Bewohner mit eigenen Aufträgen,
 //  Sammelbuch (Sammelstücke der Bewohner + Meilensteine), Dorfname. Einstellungen der Lehrkraft: config.json → "dorf" (Admin → 🏘️ Dorf).
+//  Stand Etappe 5: Dorf-Events (Halloween, Weihnachten, Ostern …) nach EVENTS in dorf-inhalte.json,
+//  gekoppelt an die Pass-Events (config.json → pass.events): Event-Währung, Startgeschenk, Festgebäude
+//  auf der Festwiese, Event-Deko (frei platzierbar, bleibt stehen), Gast-Aufträge, Suche oder Kalender.
 //  Die 3D-Szene: gemeinsam/dorf-szene.js.
 // ═══════════════════════════════════════════════════════
 
@@ -72,6 +75,11 @@
   //    we  erledigte Wochenaufträge (gesamt) · dn Name des Dorfs · pz Auftragsplätze, die es schon gab
   //    w   Wochenauftrag { i: ID, k: Montag 'JJJJMMTT', a: 'auftraege'|'app'|'thema', z: Ziel,
   //                        t: Text der Lehrkraft, p: App für den Knopf, n: nötig, c: geschafft, m: Mindest-%, f: 1 = erledigt }
+  //    ev  Dorf-Events { eventId: { j: Schuljahr der Zähler, sg: 1 = Startgeschenk bekommen, g: Festgebäude [stufe, fertigAb],
+  //                      d: freigeschaltete Deko-IDs, kz: freigeschaltete Kalendertüren, kg: geöffnete, kt: Tag der letzten Tür,
+  //                      sv: Versteck (−1 = nichts versteckt), sd: Tag des letzten Versteckens, sf: gefunden (gesamt),
+  //                      q: Gast-Auftrag { i, g: Geschichte, a, n, c, m, d }, qd: Tag des letzten erledigten } }
+  //    dp  platzierte Deko { dekoPlatzId: 'eventId/dekoId' }
   //  Weitere Felder späterer Etappen (Sammelbuch, Bewohner …) bleiben beim
   //  Säubern erhalten, damit ältere Geräte nichts wegwerfen.
   function leer() {
@@ -134,10 +142,34 @@
       d.w = { i: String(w.i || '').slice(0, 40), k: w.k, a: w.a, z: typeof w.z === 'string' ? w.z.slice(0, 120) : '',
               t: typeof w.t === 'string' ? w.t.slice(0, 80) : '', p: istKey(w.p) ? w.p : '', n, c: zahl(w.c, 0, n), m: zahl(w.m, 0, 100), f: w.f ? 1 : 0 };
     }
+    if (raw.ev && typeof raw.ev === 'object' && !Array.isArray(raw.ev)) {
+      d.ev = {};
+      Object.entries(raw.ev).slice(0, 20).forEach(([id, z]) => { if (istId(id) && z && typeof z === 'object' && !Array.isArray(z)) d.ev[id] = evSaeubern(z); });
+    }
+    if (raw.dp && typeof raw.dp === 'object' && !Array.isArray(raw.dp)) {
+      d.dp = {};
+      Object.entries(raw.dp).slice(0, 80).forEach(([platz, key]) => { if (istId(platz) && typeof key === 'string' && DEKO_KEY.test(key)) d.dp[platz] = key; });
+    }
     Object.keys(raw).forEach(k => {
       if (!(k in d) && /^[a-z]{1,3}$/.test(k) && klein(raw[k], 4000)) d[k] = raw[k];
     });
     return d;
+  }
+  const DEKO_KEY = /^[a-z0-9][a-z0-9_-]{0,39}\/[a-z0-9][a-z0-9_-]{0,39}$/i;
+  const SAISON = /^\d{4}\/\d{2}$/;
+  function evSaeubern(z) {
+    const o = { j: SAISON.test(z.j) ? z.j : '', sg: z.sg ? 1 : 0 };
+    if (Array.isArray(z.g) && TAG.test(z.g[1])) o.g = [zahl(z.g[0], 1, 9), z.g[1]];
+    o.d = Array.isArray(z.d) ? [...new Set(z.d.filter(istId))].slice(0, 30) : [];
+    o.kz = zahl(z.kz, 0, 60); o.kg = Math.min(o.kz, zahl(z.kg, 0, 60)); o.kt = TAG.test(z.kt) ? z.kt : '';
+    o.sv = Number.isInteger(z.sv) && z.sv >= 0 && z.sv < 100 ? z.sv : -1; o.sd = TAG.test(z.sd) ? z.sd : ''; o.sf = zahl(z.sf, 0, 1e5);
+    const q = z.q;
+    if (q && typeof q === 'object' && !Array.isArray(q) && istKey(q.a)) {
+      const n = zahl(q.n, 1, 10);
+      o.q = { i: zahl(q.i, 0, 1e9), g: zahl(q.g, 0, 9), a: q.a, n, c: zahl(q.c, 0, n), m: zahl(q.m, 0, 100), d: TAG.test(q.d) ? q.d : heute() };
+    }
+    o.qd = TAG.test(z.qd) ? z.qd : '';
+    return o;
   }
 
   function roh() { try { return localStorage.getItem(KEY); } catch (e) { return null; } }
@@ -152,8 +184,23 @@
   /** Hat das Kind das Dorf schon begonnen? Vorher wird nichts gespeichert. */
   function gestartet() { return !!roh(); }
 
+  // Event-Zustände ohne Standardwerte speichern (der Stand reist im Sicherungscode mit)
+  const EV_STD = { sg: 0, kz: 0, kg: 0, kt: '', sv: -1, sd: '', sf: 0, qd: '' };
+  function kompakt(d) {
+    if (!d.ev) return d;
+    const ev = {};
+    Object.entries(d.ev).forEach(([id, z]) => {
+      const o = {};
+      Object.entries(z || {}).forEach(([k, v]) => {
+        if (v === null || v === undefined || EV_STD[k] === v || (k === 'd' && Array.isArray(v) && !v.length)) return;
+        o[k] = v;
+      });
+      ev[id] = o;
+    });
+    return Object.assign({}, d, { ev });
+  }
   function schreiben() {
-    try { localStorage.setItem(KEY, JSON.stringify(D)); } catch (e) {}
+    try { localStorage.setItem(KEY, JSON.stringify(kompakt(D))); } catch (e) {}
     melden();
   }
   /** Spielstand speichern – nur, wenn das Dorf schon begonnen wurde. */
@@ -238,7 +285,7 @@
     const l = C && Array.isArray(C.ROHSTOFFE) ? C.ROHSTOFFE.filter(r => r && /^[a-z]{1,4}$/.test(r.id)) : [];
     return l.length ? l : std;
   }
-  function rohstoff(id) { return rohstoffe().find(r => r.id === id) || { id, name: id, icon: '📦' }; }
+  function rohstoff(id) { return rohstoffe().find(r => r.id === id) || waehrungen().find(r => r.id === id) || { id, name: id, icon: '📦' }; }
 
   // ── Daten aus dem Pass und der Config ───────────────────
   function lesen(key) { try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) { return null; } }
@@ -356,6 +403,7 @@
     if (wocheCheck(W)) geaendert = true;
     if (bewohnerCheck()) geaendert = true;
     if (bewohnerAuftragCheck(W)) geaendert = true;
+    if (eventCheck(W)) geaendert = true;
     if (meilensteinCheck()) geaendert = true;
     if (geaendert) speichern();
     return geaendert;
@@ -469,7 +517,7 @@
     const b = zufall(mitGeschichte.length ? mitGeschichte : da);
     const offen = offeneGeschichten(b);
     const g = offen.length ? offen[0] : Math.floor(Math.random() * Math.max(1, (b.geschichten || []).length));
-    const belegt = D.q.map(q => q.a);
+    const belegt = D.q.map(q => q.a).concat(gastApps());
     const apps = erlaubt.filter(a => !belegt.includes(a.key));
     D.n++;
     D.bq = { i: D.n, b: b.id, g, a: zufall(apps.length ? apps : erlaubt).key, n: W.bewohner.runden, c: 0, m: W.schwelle, d: heute() };
@@ -506,6 +554,10 @@
     meilensteine().forEach(m => {
       if (!D.sa.includes(m.id) && erfuellt(m.bedingung)) { D.sa.push(m.id); D.nz = [...D.nz, 's:' + m.id].slice(-20); neu = true; }
     });
+    eventListe().forEach(e => {                                  // Fest-Meilenstein: Festgebäude steht
+      const m = e.meilenstein;
+      if (m && istId(m.id) && !D.sa.includes(m.id) && festStufe(e.id) >= 1) { D.sa.push(m.id); D.nz = [...D.nz, 's:' + m.id].slice(-20); neu = true; }
+    });
     return neu;
   }
 
@@ -517,8 +569,16 @@
       stuecke: (b.geschichten || []).map(g => g.stueck).filter(Boolean).map(st => ({ ...st, hat: D.sa.includes(st.id) })),
     }));
     const meilen = meilensteine().map(m => ({ id: m.id, name: m.name, icon: m.icon, text: m.text, hat: D.sa.includes(m.id) }));
-    const alle = bewohner.flatMap(b => b.stuecke).concat(meilen);
-    return { bewohner, meilensteine: meilen, gesamt: alle.length, gesammelt: alle.filter(x => x.hat).length };
+    const feste = eventListe().map(e => {
+      const w = e.waehrung, gast = e.gast || null;
+      const stuecke = festStuecke(e).map(st => ({ ...st, hat: D.sa.includes(st.id) }));
+      return { id: e.id, name: e.name, icon: e.icon, titel: e.titel || e.name, waehrung: w, menge: D.r[w.id] || 0,
+               gast: gast ? { name: gast.name, icon: gast.icon, text: gast.text } : null, stufe: festStufe(e.id),
+               festgebaeude: e.festgebaeude ? { name: e.festgebaeude.name, icon: e.festgebaeude.icon, max: (e.festgebaeude.stufen || []).length } : null,
+               deko: (e.deko || []).length, dekoHat: (evLesen(e.id).d || []).length, stuecke, aktiv: (aktivesEvent() || {}).id === e.id };
+    });
+    const alle = bewohner.flatMap(b => b.stuecke).concat(meilen, feste.flatMap(f => f.stuecke));
+    return { bewohner, meilensteine: meilen, feste, gesamt: alle.length, gesammelt: alle.filter(x => x.hat).length };
   }
   /** Was ist neu seit dem letzten Blick ins Dorf? Liefert und leert die Liste. */
   function neuigkeiten() {
@@ -530,7 +590,12 @@
     const stueck = id => {
       for (const b of bewohnerListe()) for (const g of b.geschichten || []) if (g.stueck && g.stueck.id === id) return { ...g.stueck, von: b.name };
       const m = meilensteine().find(x => x.id === id);
-      return m ? { id: m.id, name: m.name, icon: m.icon, text: m.text } : null;
+      if (m) return { id: m.id, name: m.name, icon: m.icon, text: m.text };
+      for (const e of eventListe()) {
+        const st = festStuecke(e).find(x => x.id === id);
+        if (st) return { ...st, von: st.von || e.name };
+      }
+      return null;
     };
     return l.map(x => x.startsWith('b:') ? { art: 'bewohner', ...(bewohnerDef(x.slice(2)) || {}) } : { art: 'stueck', ...(stueck(x.slice(2)) || {}) })
             .filter(x => x.name);
@@ -706,6 +771,315 @@
     return { basis: q.b, extra, gesamt: q.b + extra };
   }
 
+  // ── Dorf-Events ─────────────────────────────────────────
+  //  Welches Event gerade läuft, bestimmt der Pass (Admin → Pass → Events). Das Dorf nimmt
+  //  das erste aktive in der Reihenfolge der Pass-Events. Hat es in dorf-inhalte.json keinen
+  //  Eintrag unter EVENTS, bekommt das Dorf nur Wimpel in den Event-Farben (ohne Inhalte).
+  //  Alles, was ein Kind im Event bekommt, bleibt: Währung, Festgebäude (erscheint im nächsten
+  //  Event wieder), Deko (bleibt stehen, wo sie platziert wurde), Sammelstücke.
+  function eventListe() {
+    return C && Array.isArray(C.EVENTS) ? C.EVENTS.filter(e => e && istId(e.id) && e.waehrung && /^[a-z]{1,4}$/.test(e.waehrung.id)) : [];
+  }
+  function eventDef(id) { return eventListe().find(e => e.id === id) || null; }
+  function waehrungen() { return eventListe().map(e => ({ id: e.waehrung.id, name: e.waehrung.name, icon: e.waehrung.icon, event: e.id })); }
+  function eventWerte() {
+    const E = (C && C.EVENT_WERTE) || {}, g = E.gast || {};
+    return {
+      start:      Math.round(wert(E.startgeschenk, 0, 1000, 5)),
+      proAuftrag: Math.round(wert(E.proAuftrag, 0, 1000, 3)),
+      mechanik:   Math.round(wert(E.mechanik, 0, 1000, 3)),
+      gast: { runden: Math.round(wert(g.runden, 1, 10, 2)), lohn: Math.round(wert(g.lohn, 0, 1000, 8)), lohnWieder: Math.round(wert(g.lohnWieder, 0, 1000, 5)) },
+    };
+  }
+  /** Aktive Pass-Events in ihrer Reihenfolge ([{ id, name, icon, farbe, farbe2, titel }]) */
+  function passEvents() {
+    try { if (window.LernPass && typeof window.LernPass.activeEvents === 'function') return window.LernPass.activeEvents(); } catch (e) {}
+    const cfg = lesen(CONFIG_KEY), an = cfg && cfg.pass && cfg.pass.events && typeof cfg.pass.events === 'object' ? cfg.pass.events : {};
+    const pc = lesen('lernwelt-inhalte-cache');
+    const liste = pc && Array.isArray(pc.EVENTS) ? pc.EVENTS : eventListe();
+    return liste.filter(e => e && an[e.id] === true);
+  }
+  /** Das Event, das im Dorf gerade gilt: { id, pass, def (null = nur Wimpel), mehrere } oder null */
+  function aktivesEvent() {
+    const l = passEvents();
+    if (!l.length) return null;
+    return { id: l[0].id, pass: l[0], def: eventDef(l[0].id), mehrere: l.length > 1 };
+  }
+  // Schuljahr wie im Pass ('2026/27', Wechsel am 1. August)
+  function saison() {
+    try { if (window.LernPass && typeof window.LernPass.seasonId === 'function') return window.LernPass.seasonId(); } catch (e) {}
+    const d = new Date(), y = d.getMonth() >= 7 ? d.getFullYear() : d.getFullYear() - 1;
+    return y + '/' + String((y + 1) % 100).padStart(2, '0');
+  }
+  function evLesen(id) { return (D.ev && D.ev[id]) || { d: [], kz: 0, kg: 0, sv: -1, sf: 0 }; }
+  /** Zustand eines Events zum Schreiben. Neues Schuljahr: Kalender und Startgeschenk beginnen neu. */
+  function evZustand(id) {
+    if (!D.ev) D.ev = {};
+    const z = D.ev[id] || (D.ev[id] = evSaeubern({}));
+    if (z.j !== saison()) { z.j = saison(); z.sg = 0; z.kz = 0; z.kg = 0; z.kt = ''; }
+    return z;
+  }
+  function gutschrift(rid, n) { if (n > 0) D.r[rid] = (D.r[rid] || 0) + n; }
+  function flaechen() {
+    const F = (C && C.FLAECHEN) || {};
+    const fw = F.festwiese && typeof F.festwiese === 'object' ? F.festwiese : {};
+    const pos = (v, std) => Array.isArray(v) && v.length === 2 ? [Number(v[0]) || 0, Number(v[1]) || 0] : std;
+    const festwiese = { x: Number(fw.x) || 80, z: Number(fw.z) || 0, breite: Number(fw.breite) || 24, tiefe: Number(fw.tiefe) || 26 };
+    festwiese.gebaeude = pos(fw.gebaeude, [festwiese.x, festwiese.z - 3]);
+    festwiese.gast = pos(fw.gast, [festwiese.x - 10, festwiese.z - 5]);
+    festwiese.begleiter = pos(fw.begleiter, [festwiese.x + 8, festwiese.z + 6]);
+    return {
+      dorf: Number(F.dorf) || 57, festwiese,
+      dekoplaetze: (Array.isArray(F.dekoplaetze) ? F.dekoplaetze : []).filter(p => p && istId(p.id))
+        .map(p => ({ id: p.id, x: Number(p.x) || 0, z: Number(p.z) || 0, festwiese: !!p.festwiese })),
+      verstecke: (Array.isArray(F.verstecke) ? F.verstecke : []).map(p => ({ x: Number(p && p.x) || 0, z: Number(p && p.z) || 0 })),
+      umland: Array.isArray(F.umland) ? F.umland : [],
+    };
+  }
+
+  // Festgebäude auf der Festwiese: [stufe, fertigAb] – fertig ab dem nächsten Tag
+  function festStufe(id) {
+    const g = evLesen(id).g;
+    return !g ? 0 : (g[1] <= heute() ? g[0] : g[0] - 1);
+  }
+  function eventKosten(n) { return Math.max(0, Math.round(zahl(n, 0, 1e5) * kostenfaktor())); }
+  function festInfo(id) {
+    const a = aktivesEvent();
+    id = id || (a && a.id);
+    const e = eventDef(id);
+    if (!e || !e.festgebaeude) return null;
+    const fg = e.festgebaeude, max = Math.min(9, Array.isArray(fg.stufen) ? fg.stufen.length : 0), g = evLesen(id).g || null;
+    const stufe = festStufe(id), imBau = !!g && g[1] > heute(), ziel = g ? g[0] : 0;
+    const info = { event: e, gebaeude: fg, max, stufe, zielStufe: ziel, imBau, fertigAb: g ? g[1] : '', aktiv: !!a && a.id === id,
+                   naechste: !imBau && ziel < max ? ziel + 1 : null };
+    if (info.naechste) {
+      info.kosten = { [e.waehrung.id]: eventKosten((fg.kosten || [])[info.naechste - 1]) };
+      info.genug = genug(info.kosten);
+    }
+    return info;
+  }
+  function festBauen() {
+    D = laden();
+    const a = aktivesEvent(), info = a && festInfo(a.id);
+    if (!info || !info.aktiv) return { ok: false, grund: 'kein-event' };
+    if (!info.naechste) return { ok: false, grund: 'nicht-ausbaubar' };
+    if (!info.genug) return { ok: false, grund: 'zu-wenig' };
+    const z = evZustand(a.id);
+    bezahlen(info.kosten);
+    z.g = [info.naechste, morgen()];
+    meilensteinCheck();
+    speichern();
+    return { ok: true };
+  }
+
+  // Deko: im Event mit Event-Währung freischalten, danach für immer in der Festkiste
+  function dekoDef(key) {
+    if (typeof key !== 'string' || !DEKO_KEY.test(key)) return null;
+    const [eid, did] = key.split('/'), e = eventDef(eid);
+    const d = e && (e.deko || []).find(x => x && x.id === did);
+    return d ? Object.assign({}, d, { key, eventId: eid, eventName: e.name, eventIcon: e.icon }) : null;
+  }
+  function dekoShop() {
+    const a = aktivesEvent();
+    if (!a || !a.def) return [];
+    const hat = evLesen(a.id).d || [];
+    return (a.def.deko || []).filter(d => d && istId(d.id)).map(d => {
+      const k = { [a.def.waehrung.id]: eventKosten(d.kosten) };
+      return { key: a.id + '/' + d.id, deko: d, hat: hat.includes(d.id), kosten: k, genug: genug(k) };
+    });
+  }
+  function dekoKaufen(key) {
+    D = laden();
+    const w = dekoShop().find(x => x.key === key);
+    if (!w) return { ok: false, grund: 'kein-event' };
+    if (w.hat) return { ok: false, grund: 'schon-da' };
+    if (!w.genug) return { ok: false, grund: 'zu-wenig' };
+    const z = evZustand(key.split('/')[0]);
+    bezahlen(w.kosten);
+    z.d = [...z.d, w.deko.id];
+    speichern();
+    return { ok: true };
+  }
+  function dekoPlaetze() {
+    const dp = D.dp || {};
+    return flaechen().dekoplaetze.map(p => Object.assign({}, p, { belegt: dp[p.id] && dekoDef(dp[p.id]) ? dp[p.id] : null }));
+  }
+  /** Alle freigeschalteten Deko-Stücke (aus allen Events) mit ihrem Platz (null = in der Festkiste) */
+  function festkiste() {
+    const dp = D.dp || {}, wo = {};
+    Object.entries(dp).forEach(([p, k]) => { wo[k] = p; });
+    const out = [];
+    eventListe().forEach(e => (evLesen(e.id).d || []).forEach(id => {
+      const d = dekoDef(e.id + '/' + id);
+      if (d) out.push({ key: d.key, deko: d, platz: wo[d.key] || null });
+    }));
+    return out;
+  }
+  function dekoSetzen(platzId, key) {
+    D = laden();
+    const platz = flaechen().dekoplaetze.find(p => p.id === platzId);
+    if (!platz || !festkiste().some(x => x.key === key)) return { ok: false };
+    if (!D.dp) D.dp = {};
+    Object.keys(D.dp).forEach(p => { if (D.dp[p] === key) delete D.dp[p]; });   // versetzen: alter Platz wird frei
+    D.dp[platzId] = key;
+    speichern();
+    return { ok: true };
+  }
+  function dekoWeg(platzId) {
+    D = laden();
+    if (!D.dp || !D.dp[platzId]) return { ok: false };
+    delete D.dp[platzId];
+    speichern();
+    return { ok: true };
+  }
+
+  // Startgeschenk beim ersten Dorfbesuch im Event (einmal pro Schuljahr)
+  function eventBesuch() {
+    if (!gestartet() || !C) return null;
+    D = laden();
+    const a = aktivesEvent();
+    if (!a || !a.def) return a ? { event: a } : null;
+    const z = evZustand(a.id);
+    let start = 0;
+    if (!z.sg) { z.sg = 1; start = eventWerte().start; gutschrift(a.def.waehrung.id, start); }
+    speichern();
+    return { event: a, start };
+  }
+
+  // Gast-Auftrag: einer auf einmal, der nächste am Tag danach
+  function gastApps() {
+    const a = aktivesEvent(), z = a && D.ev && D.ev[a.id];
+    return z && z.q ? [z.q.a] : [];
+  }
+  function gastOffen(g) {
+    return (g.geschichten || []).map((x, i) => i).filter(i => { const st = g.geschichten[i].stueck; return st && istId(st.id) && !D.sa.includes(st.id); });
+  }
+  function eventCheck(W) {
+    const a = aktivesEvent();
+    if (!a || !a.def) return false;
+    const vorher = JSON.stringify((D.ev || {})[a.id] || null);
+    const z = evZustand(a.id), g = a.def.gast, kl = klasse();
+    if (g && Array.isArray(g.geschichten) && g.geschichten.length && kl && configApps()) {
+      const erlaubt = dorfApps(kl);
+      if (z.q) {
+        if (!erlaubt.some(x => x.key === z.q.a) && erlaubt.length) { z.q.a = zufall(erlaubt).key; z.q.c = 0; }
+      } else if (z.qd !== heute() && erlaubt.length) {
+        const offen = gastOffen(g);
+        const nr = offen.length ? offen[0] : Math.floor(Math.random() * g.geschichten.length);
+        const belegt = D.q.map(q => q.a).concat(D.bq ? [D.bq.a] : []);
+        const apps = erlaubt.filter(x => !belegt.includes(x.key));
+        D.n++;
+        z.q = { i: D.n, g: nr, a: zufall(apps.length ? apps : erlaubt).key, n: eventWerte().gast.runden, c: 0, m: W.schwelle, d: heute() };
+      }
+    }
+    return JSON.stringify(z) !== vorher;
+  }
+  function gastAuftragInfo() {
+    const a = aktivesEvent();
+    if (!a || !a.def || !a.def.gast) return null;
+    const z = evLesen(a.id);
+    if (!z.q) return null;
+    const g = a.def.gast, gesch = (g.geschichten || [])[z.q.g] || {};
+    const st = gesch.stueck && !D.sa.includes(gesch.stueck.id) ? gesch.stueck : null;
+    const E = eventWerte().gast;
+    return { auftrag: z.q, gast: g, event: a.def, text: gesch.text || '', stueck: st, lohn: st ? E.lohn : E.lohnWieder, waehrung: a.def.waehrung };
+  }
+  /** Sammelstücke eines Events: Geschichten des Gasts, Kalender-Stück, Fest-Meilenstein */
+  function festStuecke(e) {
+    const l = [];
+    ((e.gast && e.gast.geschichten) || []).forEach(x => { if (x && x.stueck && istId(x.stueck.id)) l.push(Object.assign({}, x.stueck, { von: e.gast.name })); });
+    const m = e.mechanik || {};
+    if (m.art === 'kalender' && m.stueck && istId(m.stueck.id)) l.push(Object.assign({}, m.stueck, { von: m.name || 'Kalender' }));
+    if (e.meilenstein && istId(e.meilenstein.id)) l.push(Object.assign({}, e.meilenstein, { meilenstein: true }));
+    return l;
+  }
+
+  // Suche: nach dem ersten erfüllten Auftrag des Tages versteckt sich etwas im Dorf
+  function versteckWaehlen() {
+    const F = flaechen(), belegt = dekoPlaetze().filter(p => p.belegt);
+    const frei = F.verstecke.map((v, i) => i).filter(i => belegt.every(p => Math.hypot(p.x - F.verstecke[i].x, p.z - F.verstecke[i].z) > 6));
+    return frei.length ? zufall(frei) : (F.verstecke.length ? Math.floor(Math.random() * F.verstecke.length) : -1);
+  }
+  function sucheInfo() {
+    const a = aktivesEvent(), m = a && a.def && a.def.mechanik;
+    if (!m || m.art !== 'suche') return null;
+    const z = evLesen(a.id), v = z.sv >= 0 ? flaechen().verstecke[z.sv] : null;
+    return { mechanik: m, versteck: v || null, nr: z.sv, gefunden: z.sf || 0, lohn: eventWerte().mechanik, waehrung: a.def.waehrung };
+  }
+  function gefunden() {
+    D = laden();
+    const a = aktivesEvent(), m = a && a.def && a.def.mechanik;
+    if (!m || m.art !== 'suche') return { ok: false };
+    const z = evZustand(a.id);
+    if (z.sv < 0) return { ok: false };
+    const n = eventWerte().mechanik;
+    z.sv = -1; z.sf = (z.sf || 0) + 1;
+    gutschrift(a.def.waehrung.id, n);
+    speichern();
+    return { ok: true, lohn: n, waehrung: a.def.waehrung };
+  }
+
+  // Kalender: jeder Tag mit einer guten Runde schaltet eine Tür frei (nicht an Daten gebunden)
+  function kalenderInfo() {
+    const a = aktivesEvent(), m = a && a.def && a.def.mechanik;
+    if (!m || m.art !== 'kalender') return null;
+    const z = D.ev && D.ev[a.id] && D.ev[a.id].j === saison() ? D.ev[a.id] : { kz: 0, kg: 0, kt: '' };
+    const tueren = zahl(m.tueren || 24, 1, 60);
+    return { mechanik: m, tueren, frei: Math.min(tueren, z.kz), offen: z.kg, heuteSchon: z.kt === heute(), lohn: eventWerte().mechanik,
+             waehrung: a.def.waehrung, stueck: m.stueck || null, stueckHat: !!(m.stueck && D.sa.includes(m.stueck.id)) };
+  }
+  function tuerOeffnen() {
+    D = laden();
+    const k = kalenderInfo();
+    if (!k || k.offen >= k.frei) return { ok: false };
+    const a = aktivesEvent(), z = evZustand(a.id);
+    z.kg++;
+    const n = eventWerte().mechanik;
+    gutschrift(k.waehrung.id, n);
+    let stueck = null;
+    if (z.kg >= k.tueren && k.stueck && istId(k.stueck.id) && !D.sa.includes(k.stueck.id)) {
+      stueck = k.stueck; D.sa.push(stueck.id); D.nz = [...D.nz, 's:' + stueck.id].slice(-20);
+    }
+    speichern();
+    return { ok: true, nr: z.kg, lohn: n, waehrung: k.waehrung, stueck };
+  }
+
+  /** Eine Runde für das laufende Dorf-Event auswerten. Liefert { gast, zeilen[] } für die Meldung. */
+  function eventRunde(runde, o) {
+    const out = { gast: null, zeilen: [] };
+    const a = aktivesEvent();
+    if (!a || !a.def) return out;
+    const e = a.def, w = e.waehrung, E = eventWerte(), W = werte();
+    const z = evZustand(a.id);
+    // Gast-Auftrag
+    if (z.q && z.q.a === runde.app && zaehlt(runde, z.q.m)) {
+      const info = gastAuftragInfo();
+      z.q.c = Math.min(z.q.n, z.q.c + 1);
+      if (z.q.c >= z.q.n) {
+        gutschrift(w.id, info.lohn);
+        if (info.stueck) { D.sa.push(info.stueck.id); D.nz = [...D.nz, 's:' + info.stueck.id].slice(-20); }
+        z.q = null; z.qd = heute();
+        out.gast = { art: 'gast-erfuellt', info };
+        o.erfuellt = true;
+      } else out.gast = { art: 'gast-fortschritt', info: gastAuftragInfo() };
+    }
+    // Währung für jeden erfüllten Tagesauftrag
+    if (o.tagesauftrag && E.proAuftrag) { gutschrift(w.id, E.proAuftrag); out.zeilen.push(`${w.icon} +${E.proAuftrag} ${w.name} fürs Fest`); }
+    const m = e.mechanik || {};
+    // Kalender: erste gute Runde des Tages schaltet eine Tür frei
+    if (m.art === 'kalender' && zaehlt(runde, W.schwelle) && z.kt !== heute()) {
+      const tueren = zahl(m.tueren || 24, 1, 60);
+      z.kt = heute();
+      if (z.kz < tueren) { z.kz++; out.zeilen.push(`${m.icon || '🗓️'} Eine neue Tür im ${m.name || 'Kalender'} wartet im Dorf!`); }
+    }
+    // Suche: nach dem ersten erfüllten Auftrag des Tages versteckt sich etwas
+    if (m.art === 'suche' && (o.erfuellt || out.gast && out.gast.art === 'gast-erfuellt') && z.sv < 0 && z.sd !== heute()) {
+      const nr = versteckWaehlen();
+      if (nr >= 0) { z.sv = nr; z.sd = heute(); out.zeilen.push(`${m.icon || '🔍'} Im Dorf hat sich ${m.ding || 'etwas'} versteckt!`); }
+    }
+    return out;
+  }
+
   // ── Runden aus pass.js empfangen ────────────────────────
   const rundenHandler = [];
   function rundeEmpfangen(runde) {
@@ -715,11 +1089,12 @@
   }
 
   function auftragZaehlen(runde) {
+    if (!C) { inhalte().then(() => { if (C) auftragZaehlen(runde); }); return; }   // Inhalte erst laden (Events, Gast)
     D = laden();                                       // anderer Tab (z. B. offenes Dorf) könnte geändert haben
-    if (C && D.fd !== heute()) tagesCheck();
+    if (D.fd !== heute()) tagesCheck();
     if (runde.blocked) return;
     const q = D.q.find(x => x.a === runde.app);
-    let meldung = null, wochenMeldung = null;
+    let meldung = null, wochenMeldung = null, erfuellt = false;
     if (q) {
       if (!zaehlt(runde, q.m)) meldung = 'zuwenig';
       else {
@@ -729,12 +1104,13 @@
           D.r[q.r] = (D.r[q.r] || 0) + q.b;
           D.q = D.q.filter(x => x !== q);
           D.e++;
-          meldung = 'erfuellt';
+          meldung = 'erfuellt'; erfuellt = true;
           if (D.w && !D.w.f && D.w.a === 'auftraege') wochenMeldung = wocheZaehlen();
         } else meldung = 'fortschritt';
       }
     }
     if (passtZurWoche(runde)) wochenMeldung = wocheZaehlen();
+    if (wochenMeldung === 'woche-erfuellt') erfuellt = true;
     let bewohnerMeldung = null;
     if (D.bq && D.bq.a === runde.app && zaehlt(runde, D.bq.m)) {
       const info = bewohnerAuftragInfo();
@@ -743,19 +1119,25 @@
         D.an += werte().bewohner.ansehen;
         if (info && info.stueck) { D.sa.push(info.stueck.id); D.nz = [...D.nz, 's:' + info.stueck.id].slice(-20); }
         bewohnerMeldung = { art: 'bewohner-erfuellt', info };
-        D.bq = null; D.bd = heute();
+        D.bq = null; D.bd = heute(); erfuellt = true;
       } else bewohnerMeldung = { art: 'bewohner-fortschritt', info };
     }
-    if (!meldung && !wochenMeldung && !bewohnerMeldung) return;
+    // Dorf-Event: Gast-Auftrag, Währung für erfüllte Tagesaufträge, Kalendertür, Versteck
+    const ev = eventRunde(runde, { tagesauftrag: meldung === 'erfuellt', erfuellt });
+    if (ev.gast) erfuellt = true;
+    if (!meldung && !wochenMeldung && !bewohnerMeldung && !ev.gast && !ev.zeilen.length) return;
     meilensteinCheck();
     speichern();
+    const extra = ev.zeilen.map(z => `<small class="ev">${z}</small>`).join('');
+    if (ev.gast && (ev.gast.art === 'gast-erfuellt' || (!meldung && !wochenMeldung && !bewohnerMeldung))) { toast(ev.gast.art, ev.gast.info, null, extra); return; }
     if (bewohnerMeldung && (bewohnerMeldung.art === 'bewohner-erfuellt' || (!meldung && !wochenMeldung))) {
-      toast(bewohnerMeldung.art, bewohnerMeldung.info); return;
+      toast(bewohnerMeldung.art, bewohnerMeldung.info, null, extra); return;
     }
     // Wochenauftrag erfüllt ist die größere Nachricht; sonst zuerst der Tagesauftrag
-    if (wochenMeldung === 'woche-erfuellt') toast('woche-erfuellt', D.w);
-    else if (meldung) toast(meldung, q, wochenMeldung ? D.w : null);
-    else toast(wochenMeldung, D.w);
+    if (wochenMeldung === 'woche-erfuellt') toast('woche-erfuellt', D.w, null, extra);
+    else if (meldung) toast(meldung, q, wochenMeldung ? D.w : null, extra);
+    else if (wochenMeldung) toast(wochenMeldung, D.w, null, extra);
+    else toast('event', null, null, extra);
   }
   window.addEventListener('lernpass:gewertet', e => rundeEmpfangen(e.detail));
 
@@ -774,6 +1156,8 @@
         #lw-dorf-toast.show{transform:translate(-50%,0);opacity:1;}
         #lw-dorf-toast b{font-family:'Fredoka One','Nunito',sans-serif;font-weight:400;font-size:1.15rem;color:#4ade80;display:block;}
         #lw-dorf-toast.klein{border-color:rgba(255,255,255,.15);}
+        #lw-dorf-toast small.ev{display:block;margin-top:.2rem;font-weight:700;color:#fde68a;}
+        #lw-dorf-toast.klein small.ev:first-child{margin-top:0;}
         @media (max-width:640px){#lw-dorf-toast.hoch{bottom:8.2rem;}}
         #lw-dorf-zurueck{position:fixed;left:1.2rem;bottom:calc(1.2rem + 3.3rem + env(safe-area-inset-bottom,0px));z-index:9999;
           display:flex;align-items:center;gap:.45rem;background:#166534;color:#fff;text-decoration:none;
@@ -793,18 +1177,38 @@
     return el;
   }
 
-  function toast(art, q, woche) {
+  function toast(art, q, woche, extra = '') {
     if (!document.body) return;
     let el = baueToast();
+    const zeigen = ms => { clearTimeout(el._t); requestAnimationFrame(() => el.classList.add('show')); el._t = setTimeout(() => el.classList.remove('show'), ms); };
+    if (art === 'event') {                                           // nur Event-Neuigkeiten (z. B. neue Kalendertür)
+      el.className = 'klein';
+      el.innerHTML = extra;
+      zeigen(4000);
+      return;
+    }
+    if (art === 'gast-erfuellt' || art === 'gast-fortschritt') {
+      const i = q || {}, g = i.gast || {}, a = i.auftrag || {}, w = i.waehrung || {};
+      if (art === 'gast-erfuellt') {
+        el.className = 'hoch';
+        zurueckKnopf();
+        el.innerHTML = `<b>${g.icon || '🙂'} ${g.name || ''} freut sich!</b>+${i.lohn} ${w.icon || ''}${i.stueck ? ` · ${i.stueck.icon} ${i.stueck.name} fürs Sammelbuch` : ''}` + extra;
+      } else {
+        el.className = 'klein';
+        el.innerHTML = `${g.icon || '🙂'} Auftrag von ${g.name || ''}: ${a.c} von ${a.n} Runden` + extra;
+      }
+      zeigen(art === 'gast-erfuellt' ? 5500 : 3500);
+      return;
+    }
     if (art === 'bewohner-erfuellt' || art === 'bewohner-fortschritt') {
       const i = q || {}, b = i.bewohner || {}, a = i.auftrag || {};
       if (art === 'bewohner-erfuellt') {
         el.className = 'hoch';
         zurueckKnopf();
-        el.innerHTML = `<b>${b.icon || '🙂'} ${b.name || ''} sagt Danke!</b>+${i.ansehen} ⭐ Ansehen${i.stueck ? ` · ${i.stueck.icon} ${i.stueck.name} fürs Sammelbuch` : ''}`;
+        el.innerHTML = `<b>${b.icon || '🙂'} ${b.name || ''} sagt Danke!</b>+${i.ansehen} ⭐ Ansehen${i.stueck ? ` · ${i.stueck.icon} ${i.stueck.name} fürs Sammelbuch` : ''}` + extra;
       } else {
         el.className = 'klein';
-        el.textContent = `${b.icon || '🙂'} Auftrag von ${b.name || ''}: ${a.c} von ${a.n} Runden`;
+        el.innerHTML = `${b.icon || '🙂'} Auftrag von ${b.name || ''}: ${a.c} von ${a.n} Runden` + extra;
       }
       clearTimeout(el._t);
       requestAnimationFrame(() => el.classList.add('show'));
@@ -817,20 +1221,20 @@
       el.className = 'hoch';
       zurueckKnopf();
       const l = wocheLohn();
-      el.innerHTML = `<b>📅 Wochenauftrag geschafft!</b>` + Object.entries(l).filter(([, n]) => n).map(([id, n]) => `+${n} ${rohstoff(id).icon}`).join(' ') + ' für dein Dorf';
+      el.innerHTML = `<b>📅 Wochenauftrag geschafft!</b>` + Object.entries(l).filter(([, n]) => n).map(([id, n]) => `+${n} ${rohstoff(id).icon}`).join(' ') + ' für dein Dorf' + extra;
     } else if (art === 'woche-fortschritt') {
       el.className = 'klein';
-      el.textContent = `📅 Wochenauftrag: ${q.c} von ${q.n} geschafft`;
+      el.innerHTML = `📅 Wochenauftrag: ${q.c} von ${q.n} geschafft` + extra;
     } else if (art === 'erfuellt') {
       el.className = 'hoch';
       zurueckKnopf();
-      el.innerHTML = `<b>🏘️ Auftrag erfüllt!</b>+${q.b} ${r.icon} ${r.name} für dein Dorf` + wZeile;
+      el.innerHTML = `<b>🏘️ Auftrag erfüllt!</b>+${q.b} ${r.icon} ${r.name} für dein Dorf` + wZeile + extra;
     } else if (art === 'fortschritt') {
       el.className = 'klein';
-      el.textContent = `🏘️ Dorf-Auftrag: ${q.c} von ${q.n} Runden geschafft`;
+      el.innerHTML = `🏘️ Dorf-Auftrag: ${q.c} von ${q.n} Runden geschafft` + extra;
     } else {
       el.className = 'klein';
-      el.textContent = `🏘️ Für deinen Dorf-Auftrag brauchst du mindestens ${q.m} %`;
+      el.innerHTML = `🏘️ Für deinen Dorf-Auftrag brauchst du mindestens ${q.m} %` + extra;
     }
     clearTimeout(el._t);
     requestAnimationFrame(() => el.classList.add('show'));
@@ -867,6 +1271,9 @@
     gebaeudeListe, gebaeude, plaetze, platzInfo, baubar, bauen, ausbauen, kosten, rathausStufe, lohn, bonus,
     wocheLohn, montag, lehrkraft,
     bewohnerListe, bewohnerDef, bewohnerAuftragInfo, sammelbuch, neuigkeiten, dorfname, steht, ansehenNoetig,
+    eventListe, eventDef, aktivesEvent, eventWerte, waehrungen, saison, flaechen, eventBesuch,
+    festInfo, festBauen, dekoDef, dekoShop, dekoKaufen, dekoPlaetze, festkiste, dekoSetzen, dekoWeg,
+    gastAuftragInfo, sucheInfo, gefunden, kalenderInfo, tuerOeffnen,
     onChange(fn) { listeners.push(fn); },
     onRunde(fn)  { rundenHandler.push(fn); },
     _saeubern: saeubern, _leer: leer, _tageZwischen: tageZwischen,
