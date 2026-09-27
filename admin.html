@@ -461,6 +461,9 @@
       <div class="sec-header"><span class="sec-title">📅 Wochenauftrag</span></div>
       <p style="font-size:.8rem;color:var(--muted);margin:-.4rem 0 .9rem;line-height:1.5;">Ohne eigenen Wochenauftrag bekommen die Kinder automatisch „Erledige 5 Aufträge vom Brett“. Ein Wochenauftrag gilt von Montag bis Sonntag und erscheint bei den Kindern, sobald sie die Lernwelt oder das Dorf öffnen (nach dem Speichern ca. 1 Minute).</p>
       <div class="form-card" id="dorf-woche" style="margin-bottom:1.5rem;"></div>
+      <div class="sec-header"><span class="sec-title">🏆 Challenges</span></div>
+      <p style="font-size:.8rem;color:var(--muted);margin:-.4rem 0 .9rem;line-height:1.5;">Eine Challenge läuft zwei Wochen und bringt eine Trophäe fürs Sammelbuch (dazu Ansehen und Gold). Normalerweise wechseln sie automatisch. Du kannst auch selbst eine starten – sie gilt dann für die gewählten Klassen und ersetzt dort die automatische.</p>
+      <div class="form-card" id="dorf-challenge" style="margin-bottom:1.5rem;"></div>
       <div class="sec-header"><span class="sec-title">⚙️ Einstellungen</span></div>
       <div class="form-card" id="dorf-settings" style="margin-bottom:1.5rem;padding:.4rem 1.2rem;"></div>
       <div class="sec-header"><span class="sec-title">📋 Welche Apps bekommen Aufträge?</span></div>
@@ -853,11 +856,23 @@ const THEMA_APP = { vok5: 'vokabeltrainer5.html', vok6: 'vokabeltrainer6.html', 
                     kopf5: 'kopfrechnen.html', kopf6: 'kopfrechnen_kl6.html', '1x1': 'einmaleins_tafel.html' };
 function dorfCfg() {
   const d = CONFIG.dorf && typeof CONFIG.dorf === 'object' ? CONFIG.dorf : {};
-  return JSON.parse(JSON.stringify({ ...d, wochen: Array.isArray(d.wochen) ? d.wochen : [] }));
+  return JSON.parse(JSON.stringify({ ...d, wochen: Array.isArray(d.wochen) ? d.wochen : [], challenges: Array.isArray(d.challenges) ? d.challenges : [] }));
+}
+// Challenge-Hilfen (gleiche Rechnung wie gemeinsam/dorf-kern.js)
+function isoPlus(iso, n) { const d = new Date(iso + 'T12:00:00'); d.setDate(d.getDate() + n); return d.toISOString().slice(0, 10); }
+function heuteIso() { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+function challengeRotation(C, abIso) {
+  const W = C.CHALLENGE_WERTE || {}, L = C.CHALLENGES || [], tage = W.tage || 14, start = W.start || '2026-09-14';
+  if (!L.length || abIso < start) return null;
+  const nr = Math.floor((new Date(abIso + 'T12:00:00') - new Date(start + 'T12:00:00')) / 864e5 / tage), s = isoPlus(start, nr * tage);
+  return { def: L[nr % L.length], start: s, ende: isoPlus(s, tage - 1) };
 }
 function dorfSpeichern(cfg, msg) {
   const heute = montagIso(0);
   cfg.wochen = (cfg.wochen || []).filter(w => w.start >= heute).slice(0, 12);    // Vergangenes aufräumen
+  const tage = ((DORF_INHALT || {}).CHALLENGE_WERTE || {}).tage || 14;
+  cfg.challenges = (cfg.challenges || []).filter(c => isoPlus(c.start, tage) > heuteIso()).slice(0, 10);
+  if (!cfg.challenges.length) delete cfg.challenges;
   CONFIG.dorf = cfg;
   logChange(msg);
   saveConfig();
@@ -954,6 +969,47 @@ async function buildDorfAdmin() {
     dorfSpeichern(c, `📅 Wochenauftrag entfernt: ${w ? w.name : ''}`);
   });
 
+  // Challenges
+  {
+    const CH = C.CHALLENGES || [], tage = (C.CHALLENGE_WERTE || {}).tage || 14, h = heuteIso();
+    const jetzt = challengeRotation(C, h), dann = jetzt ? challengeRotation(C, isoPlus(jetzt.ende, 1)) : null;
+    const rotAn = cfg.challengeRotation !== false;
+    const geplant = cfg.challenges.slice().sort((a, b) => a.start.localeCompare(b.start)).map(c => {
+      const d = CH.find(x => x.id === c.id) || { name: c.id, icon: '🏆' };
+      return `<div class="sw-row"><span class="sw-ic">${escHtml(d.icon)}</span>
+        <div class="sw-txt"><div class="sw-name">${escHtml(d.name)}</div><div class="sw-desc">${datumKurz(c.start)} bis ${datumKurz(isoPlus(c.start, tage - 1))} · ${(c.klassen || []).length ? 'Klasse ' + c.klassen.join(', ') : 'alle Klassen'}</div></div>
+        <button class="btn sm danger" data-ch-weg="${escHtml(c.id + '|' + c.start)}">Entfernen</button></div>`;
+    }).join('');
+    document.getElementById('dorf-challenge').innerHTML = `
+      <div class="sw-row"><span class="sw-ic">🔄</span>
+        <div class="sw-txt"><div class="sw-name">Automatisch wechseln</div><div class="sw-desc">${rotAn && jetzt ? `Gerade: ${escHtml(jetzt.def.icon)} <b>${escHtml(jetzt.def.name)}</b> (bis ${datumKurz(jetzt.ende)})${dann ? ` · danach ${escHtml(dann.def.icon)} ${escHtml(dann.def.name)}` : ''}` : rotAn ? 'Startet am ' + escHtml(datumKurz((C.CHALLENGE_WERTE || {}).start || '')) : 'Aus – es laufen nur Challenges, die du startest.'}</div></div>
+        <label class="switch"><input type="checkbox" data-dorf-rot ${rotAn ? 'checked' : ''} aria-label="Challenges automatisch wechseln"><span></span></label></div>
+      ${geplant || '<p style="font-size:.85rem;color:var(--text2);margin:.4rem 0 .6rem">Keine eigene Challenge geplant.</p>'}
+      <div style="border-top:1px solid var(--border);margin-top:.6rem;padding-top:1rem;display:grid;gap:.7rem;">
+        <div style="display:flex;gap:.6rem;flex-wrap:wrap;">
+          <select id="dc-id" style="width:auto">${CH.map(c => opt(c.id, `${c.icon} ${c.name} – ${c.text}`, '')).join('')}</select>
+          <select id="dc-start" style="width:auto">${opt(h, 'ab heute', h)}${opt(montagIso(1), 'ab nächstem Montag (' + datumKurz(montagIso(1)) + ')', h)}</select>
+        </div>
+        <div class="st-chips" id="dc-klassen">${klassenAlle.map(k => `<label class="st-chip"><input type="checkbox" value="${k}"> Klasse ${k}</label>`).join('')}
+          <span style="font-size:.75rem;color:var(--muted);align-self:center">keine Auswahl = alle Klassen</span></div>
+        <div><button class="btn accent" id="dc-setzen">🏆 Challenge starten</button></div>
+      </div>`;
+    document.getElementById('dc-setzen').onclick = () => {
+      const c = dorfCfg(), e = { id: document.getElementById('dc-id').value, start: document.getElementById('dc-start').value,
+        klassen: [...document.querySelectorAll('#dc-klassen input:checked')].map(i => Number(i.value)) };
+      if (!e.klassen.length) delete e.klassen;
+      c.challenges = c.challenges.filter(x => !(x.start === e.start && JSON.stringify(x.klassen || []) === JSON.stringify(e.klassen || [])));
+      c.challenges.push(e);
+      const d = CH.find(x => x.id === e.id) || {};
+      dorfSpeichern(c, `🏆 Challenge ab ${datumKurz(e.start)}: ${d.name || e.id}`);
+    };
+    document.querySelectorAll('[data-ch-weg]').forEach(b => b.onclick = () => {
+      const c = dorfCfg(), [id, start] = b.dataset.chWeg.split('|');
+      c.challenges = c.challenges.filter(x => !(x.id === id && x.start === start));
+      dorfSpeichern(c, `🏆 Challenge entfernt: ${id}`);
+    });
+  }
+
   // Einstellungen
   const cur = k => cfg[k] ?? std[k];
   document.getElementById('dorf-settings').innerHTML = `
@@ -1027,6 +1083,9 @@ async function buildDorfAdmin() {
         <tr><th></th><th>Dorf-Deko</th><th>Kommt mit</th></tr>
         ${K.map(d => `<tr><td style="font-size:1.3rem">${escHtml(d.icon || '')}</td><td><b>${escHtml(d.name)}</b></td><td>${escHtml(bedTxt(d.ab))}</td></tr>`).join('')}</table>
         <p class="note">Landschaft und Dorf-Deko kosten nichts: Sie wachsen mit Rathaus, Ansehen, Bewohnern und Gebäuden. Die Kinder sehen neue Teile als Neuigkeit im Dorf. Die Bewohner laufen durchs Dorf und ins Umland – nur solange das Dorf sichtbar ist, höchstens 30 Bilder pro Sekunde, mit Pause nach 60 Sekunden ohne Antippen.</p></div></details>` : ''; })()}
+    ${Array.isArray(C.CHALLENGES) && C.CHALLENGES.length ? `<details><summary>🏆 Challenges (${C.CHALLENGES.length})</summary><div class="ov-body"><table>
+      ${C.CHALLENGES.map(c => `<tr><td style="font-size:1.3rem">${escHtml(c.icon)}</td><td><b>${escHtml(c.name)}</b></td><td>${escHtml(c.text)}</td></tr>`).join('')}</table>
+      <p class="note">Je ${(C.CHALLENGE_WERTE || {}).tage || 14} Tage, Belohnung +${(C.CHALLENGE_WERTE || {}).ansehen ?? 15} Ansehen, +${(C.CHALLENGE_WERTE || {}).gold ?? 1} Gold und eine Trophäe (🥉 🥈 🥇 beim 1., 2., 3. Mal). Trophäen schalten Bonus-Gebäude frei: ${(C.GEBAEUDE || []).filter(g => g.trophaeen).map(g => escHtml(g.icon + ' ' + g.name) + ' ab ' + g.trophaeen).join(', ')}. Am Marktplatz können die Kinder Holz und Stein tauschen (10 → ${Math.floor(10 * (((C.MARKT || {}).tausch || [.6])[0]))} bis ${Math.floor(10 * (((C.MARKT || {}).tausch || [.6, .7, .75, .8])[3] || .8))}, je nach Stufe).</p></div></details>` : ''}
     <details><summary>📍 Bauplätze</summary><div class="ov-body"><table><tr><th>Frei ab</th><th>Anzahl</th></tr>${platzRows}</table></div></details>
     <details><summary>📋 Aufträge</summary><div class="ov-body"><table>
       <tr><td><b>Tagesauftrag</b></td><td>${t.runden ?? 2} Runden mit mind. ${t.schwelle ?? 70} % in einer App → ${(t.belohnung || [15, 25]).join('–')} Holz oder Stein</td></tr>
@@ -1037,6 +1096,12 @@ async function buildDorfAdmin() {
 
 document.getElementById('panel-dorf').addEventListener('change', e => {
   const set = e.target.closest('[data-dorf-set]'), app = e.target.closest('[data-dorf-app]');
+  if (e.target.closest('[data-dorf-rot]')) {
+    const c = dorfCfg();
+    if (e.target.checked) delete c.challengeRotation; else c.challengeRotation = false;
+    dorfSpeichern(c, `🏆 Challenges automatisch ${e.target.checked ? 'an' : 'aus'}`);
+    return;
+  }
   if (set) {
     const c = dorfCfg(), k = set.dataset.dorfSet;
     c[k] = Number(set.value);

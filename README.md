@@ -277,3 +277,9 @@ Plan und Stand: Claude-Doc „Aktionsplan: Aufbauspiel „Mein Dorf““.
   Bewohnern und Gebäuden (Bedingung `ab`); Neues erscheint als Neuigkeit und im Sammelbuch („Rund ums Dorf“).
   **Dorf-Deko** (`DEKO`) kommt genauso in die Kiste 🎁. Gebäude werden mit Vertex-Farben zu einem Mesh
   gebacken (weniger Draw-Calls für ältere iPads).
+- **Challenges** (`CHALLENGES`, `CHALLENGE_WERTE`): je zwei Wochen, im Wechsel ab `start` oder von der Lehrkraft
+  im Admin (🏘️ Dorf → 🏆 Challenges) für bestimmte Klassen gestartet (`config.json` → `dorf.challenges`,
+  `dorf.challengeRotation: false` schaltet den Wechsel ab; braucht den aktuellen Worker). Arten: Aufträge,
+  Übungstage, gute Runden in Fächern, verschiedene Apps, Runden ab 90 %. Belohnung: Ansehen, Gold und eine
+  Trophäe (🥉🥈🥇) im Sammelbuch. **Bonus-Gebäude** (Musikpavillon ab 2, Aussichtsturm ab 5 Trophäen; Modell als
+  Klötzchen in `GEBAEUDE[].stufen`). **Marktplatz:** Holz ↔ Stein tauschen, Kurs je Stufe in `MARKT`.
