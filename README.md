@@ -234,5 +234,13 @@ Plan und Stand: Claude-Doc „Aktionsplan: Aufbauspiel „Mein Dorf““.
 - **3D** (`dorf-szene.js`): gezeichnet wird nur bei Änderungen, Pixel-Ratio höchstens 2. Die Modelle sind
   Code (`MODELLE`), ein neues Gebäude ohne Modell erscheint als einfaches Haus. Ohne WebGL zeigt die
   Seite die Bauplätze als Knöpfe.
+- **Wochenauftrag** (Montag bis Sonntag, auf dem Brett unter den Tageszetteln): automatisch „Erledige 5 Aufträge
+  vom Brett“, oder von der Lehrkraft im Admin (🏘️ Dorf) je Woche und Klasse eine App oder ein Thema
+  (z. B. „Vokabeln Unit 2“ = Runden, die `vok5:unit2…` melden). Belohnung 30 Holz + 30 Stein + 2 Gold – Gold
+  gibt es nur hierfür. Ein neuer Auftrag der Lehrkraft ersetzt einen offenen; am Montag beginnt ein neuer.
+- **Admin → 🏘️ Dorf:** Wochenaufträge, Auftragsplätze (1–3), Tausche pro Tag / höchstens, Baukosten-Faktor,
+  Apps ausschließen, Übersicht der Dorf-Inhalte. Gespeichert in `config.json` → `"dorf"` und `apps[].dorf`.
+  Der Worker (`cloudflare/worker.js`) prüft diese Felder ab der Version mit „Mein Dorf“ – der alte Worker
+  lässt sie ungeprüft durch, beides funktioniert.
 - **Dorf für Kinder freischalten:** im Admin „Neue App“ → Datei `spiele/dorf.html`, Fach „Allgemein“;
   mit „versteckt“ lässt es sich vorher selbst testen.

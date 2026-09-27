@@ -323,6 +323,7 @@
       <button class="tab" data-t="checker">🔗 Link-Check</button>
       <button class="tab" data-t="vokabeln">📚 Vokabeln</button>
       <button class="tab" data-t="pass">🧭 Pass</button>
+      <button class="tab" data-t="dorf">🏘️ Dorf</button>
     </div>
 
     <!-- DASHBOARD -->
@@ -455,6 +456,21 @@
       <p style="font-size:.8rem;color:var(--muted);margin:-.4rem 0 .9rem;line-height:1.5;">Nur zur Ansicht. Inhalte werden in <code>lernwelt-inhalte.json</code> gepflegt, Regeln in <code>pass.js</code> (RULES).</p>
       <div class="ov" id="pass-overview"></div>
     </div>
+    <!-- ── DORF ── -->
+    <div class="tab-panel" id="panel-dorf">
+      <div class="sec-header"><span class="sec-title">📅 Wochenauftrag</span></div>
+      <p style="font-size:.8rem;color:var(--muted);margin:-.4rem 0 .9rem;line-height:1.5;">Ohne eigenen Wochenauftrag bekommen die Kinder automatisch „Erledige 5 Aufträge vom Brett“. Ein Wochenauftrag gilt von Montag bis Sonntag und erscheint bei den Kindern, sobald sie die Lernwelt oder das Dorf öffnen (nach dem Speichern ca. 1 Minute).</p>
+      <div class="form-card" id="dorf-woche" style="margin-bottom:1.5rem;"></div>
+      <div class="sec-header"><span class="sec-title">⚙️ Einstellungen</span></div>
+      <div class="form-card" id="dorf-settings" style="margin-bottom:1.5rem;padding:.4rem 1.2rem;"></div>
+      <div class="sec-header"><span class="sec-title">📋 Welche Apps bekommen Aufträge?</span></div>
+      <p style="font-size:.8rem;color:var(--muted);margin:-.4rem 0 .9rem;line-height:1.5;">Versteckte Apps und Spiele bekommen nie Aufträge. Hier kannst du einzelne Lern-Apps zusätzlich ausschließen. Offene Aufträge einer ausgeschlossenen App werden bei den Kindern sofort ersetzt.</p>
+      <div class="form-card" id="dorf-apps" style="margin-bottom:1.5rem;padding:.4rem 1.2rem;"></div>
+      <div class="sec-header"><span class="sec-title">📖 Übersicht Dorf-Inhalte</span></div>
+      <p style="font-size:.8rem;color:var(--muted);margin:-.4rem 0 .9rem;line-height:1.5;">Nur zur Ansicht. Inhalte werden in <code>daten/dorf-inhalte.json</code> gepflegt, Kosten mit dem Baukosten-Faktor von oben.</p>
+      <div class="ov" id="dorf-overview"></div>
+    </div>
+
     <div class="tab-panel" id="panel-vokabeln">
       <div class="sec-header"><span class="sec-title">📚 Vokabeln – vokabeln5.json</span></div>
       <div class="dash-grid" id="vok-stats" style="margin-bottom:1.5rem;"></div>
@@ -668,11 +684,13 @@ document.querySelectorAll('.tab').forEach(tab => tab.addEventListener('click', (
   tab.classList.add('active');
   document.getElementById('panel-' + tab.dataset.t).classList.add('active');
   if (tab.dataset.t === 'vokabeln') loadVokabeln();
+  if (tab.dataset.t === 'dorf') buildDorfAdmin();
 }));
 
 // ── Build All ─────────────────────────────────────────
 function buildAll() {
   buildPassAdmin();
+  if (document.querySelector('.tab[data-t="dorf"].active')) buildDorfAdmin();
   buildDashboard();
   buildAppList();
   buildVisibility();
@@ -821,6 +839,184 @@ document.getElementById('pass-settings').addEventListener('change', e => {
   CONFIG.pass = cfg;
   saveConfig();
   buildDashboard();
+});
+
+// ── Mein Dorf → CONFIG.dorf ──────────────────────────────
+//  { plaetze, rerollsProTag, rerollsMax, kostenfaktor, wochen: [{ id, start, art, ziel, name, app, runden, klassen }] }
+//  Ausschluss einzelner Apps: "dorf": false im App-Eintrag. Logik bei den Kindern: gemeinsam/dorf-kern.js
+let DORF_INHALT = null, DORF_THEMEN = null;
+const THEMA_APP = { vok5: 'vokabeltrainer5.html', vok6: 'vokabeltrainer6.html', kopf4: 'kopfrechnen_kl4.html',
+                    kopf5: 'kopfrechnen.html', kopf6: 'kopfrechnen_kl6.html', '1x1': 'einmaleins_tafel.html' };
+function dorfCfg() {
+  const d = CONFIG.dorf && typeof CONFIG.dorf === 'object' ? CONFIG.dorf : {};
+  return JSON.parse(JSON.stringify({ ...d, wochen: Array.isArray(d.wochen) ? d.wochen : [] }));
+}
+function dorfSpeichern(cfg, msg) {
+  const heute = montagIso(0);
+  cfg.wochen = (cfg.wochen || []).filter(w => w.start >= heute).slice(0, 12);    // Vergangenes aufräumen
+  CONFIG.dorf = cfg;
+  logChange(msg);
+  saveConfig();
+  buildDorfAdmin();
+}
+function montagIso(wochenDazu) {
+  const d = new Date(); d.setHours(12, 0, 0, 0);
+  d.setDate(d.getDate() - (d.getDay() + 6) % 7 + 7 * wochenDazu);
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+const datumKurz = iso => iso.slice(8, 10) + '.' + iso.slice(5, 7) + '.';
+const appDateiKey = a => String(a.datei || '').split('/').pop();
+function lernAppsFuerDorf() {
+  return CONFIG.apps.filter(a => a.datei && !/^https?:/i.test(a.datei) && !a.datei.startsWith('spiele/') && a.fach !== 'Allgemein');
+}
+
+async function dorfDatenLaden() {
+  if (!DORF_INHALT) {
+    try { DORF_INHALT = await (await fetch('daten/dorf-inhalte.json', { cache: 'no-cache' })).json(); } catch (e) { DORF_INHALT = {}; }
+  }
+  if (!DORF_THEMEN) {
+    const liste = [];
+    for (const [k, datei, kl] of [['vok5', 'daten/vokabeln5.json', 5], ['vok6', 'daten/vokabeln6.json', 6]]) {
+      try {
+        const v = await (await fetch(datei, { cache: 'no-cache' })).json();
+        Object.entries(v.units || {}).forEach(([u, def]) => liste.push({ id: k + ':' + u, name: `Vokabeln Kl. ${kl}: ${def.label || u}`, app: THEMA_APP[k], klasse: kl }));
+      } catch (e) {}
+    }
+    if (window.LernAufgaben) LernAufgaben.pools({ klasse: 9 }).forEach(p => {
+      const pre = Object.keys(THEMA_APP).find(k => p.id.startsWith(k + '-'));
+      if (pre && !pre.startsWith('vok')) liste.push({ id: p.id, name: p.titel, app: THEMA_APP[pre], klasse: p.klasse });
+    });
+    DORF_THEMEN = liste;
+  }
+}
+
+async function buildDorfAdmin() {
+  if (!document.getElementById('dorf-woche')) return;
+  await dorfDatenLaden();
+  const C = DORF_INHALT || {}, A = C.AUFTRAEGE || {}, cfg = dorfCfg();
+  const std = { plaetze: (A.plaetze || []).length || 3, rerollsProTag: (A.rerolls || {}).proTag ?? 1, rerollsMax: (A.rerolls || {}).max ?? 3,
+                kostenfaktor: (C.BAU || {}).kostenfaktor ?? 1, runden: (A.woche || {}).runden ?? 3 };
+  const opt = (v, txt, cur) => `<option value="${escHtml(String(v))}" ${String(v) === String(cur) ? 'selected' : ''}>${escHtml(txt)}</option>`;
+  const klassenAlle = [...new Set(lernAppsFuerDorf().flatMap(a => a.klassen || []))].sort((a, b) => a - b);
+
+  // Wochenauftrag: bestehende + Formular
+  const wochen = cfg.wochen.slice().sort((a, b) => a.start.localeCompare(b.start));
+  const diese = montagIso(0), naechste = montagIso(1);
+  const liste = wochen.length ? wochen.map(w => `
+      <div class="sw-row">
+        <span class="sw-ic">${w.art === 'app' ? '📱' : '📚'}</span>
+        <div class="sw-txt"><div class="sw-name">${escHtml(w.name || w.ziel)}</div>
+          <div class="sw-desc">Woche ab ${datumKurz(w.start)}${w.start === diese ? ' (diese Woche)' : w.start === naechste ? ' (nächste Woche)' : ''} · ${w.runden} Runden mit mind. ${escHtml(String((A.tag || {}).schwelle ?? 70))} % · ${Array.isArray(w.klassen) && w.klassen.length ? 'Klasse ' + w.klassen.join(', ') : 'alle Klassen'}</div></div>
+        <button class="btn sm danger" data-woche-weg="${escHtml(w.id)}">Entfernen</button>
+      </div>`).join('') : '<p style="font-size:.85rem;color:var(--text2);margin:.2rem 0 1rem">Noch kein eigener Wochenauftrag – die Kinder haben den automatischen.</p>';
+  const apps = lernAppsFuerDorf().filter(a => !a.hidden && a.dorf !== false)
+    .sort((a, b) => (a.fach + a.name).localeCompare(b.fach + b.name));
+  document.getElementById('dorf-woche').innerHTML = `
+    ${liste}
+    <div style="border-top:1px solid var(--border);margin-top:.6rem;padding-top:1rem;display:grid;gap:.7rem;">
+      <div style="display:flex;gap:.6rem;flex-wrap:wrap;">
+        <select id="dw-start" style="width:auto">${opt(diese, 'Diese Woche (ab ' + datumKurz(diese) + ')', diese)}${opt(naechste, 'Nächste Woche (ab ' + datumKurz(naechste) + ')', diese)}</select>
+        <select id="dw-art" style="width:auto">${opt('app', 'Eine App', 'app')}${opt('thema', 'Ein Thema', 'app')}</select>
+        <select id="dw-runden" style="width:auto">${[1, 2, 3, 4, 5, 6, 8, 10].map(n => opt(n, n + (n === 1 ? ' Runde' : ' Runden'), std.runden)).join('')}</select>
+      </div>
+      <select id="dw-app">${apps.map(a => opt(appDateiKey(a), `${a.emoji || '📱'} ${a.name} (${a.fach}${(a.klassen || []).length ? ', Kl. ' + a.klassen.join('/') : ''})`, '')).join('')}</select>
+      <select id="dw-thema" style="display:none">${DORF_THEMEN.map(t => opt(t.id, t.name, '')).join('')}</select>
+      <div class="st-chips" id="dw-klassen">${klassenAlle.map(k => `<label class="st-chip"><input type="checkbox" value="${k}"> Klasse ${k}</label>`).join('')}
+        <span style="font-size:.75rem;color:var(--muted);align-self:center">keine Auswahl = alle Klassen</span></div>
+      <div><button class="btn accent" id="dw-setzen">📅 Wochenauftrag setzen</button></div>
+      <p style="font-size:.75rem;color:var(--muted);margin:0;line-height:1.5">Thema = Runden in den Apps, die dieses Thema melden (Vokabeltrainer: Quiz, Fill in, Scramble; Kopfrechnen; Einmaleins). Pro Woche und Klasse zählt der zuerst eingetragene Auftrag. Ist die gewählte App für ein Kind nicht freigeschaltet, bekommt es den automatischen.</p>
+    </div>`;
+  const art = document.getElementById('dw-art');
+  art.onchange = () => { const t = art.value === 'thema'; document.getElementById('dw-app').style.display = t ? 'none' : ''; document.getElementById('dw-thema').style.display = t ? '' : 'none'; };
+  document.getElementById('dw-setzen').onclick = () => {
+    const c = dorfCfg(), a = art.value;
+    const ziel = document.getElementById(a === 'app' ? 'dw-app' : 'dw-thema').value;
+    if (!ziel) { showToast('⚠ Bitte eine App oder ein Thema wählen', true); return; }
+    const th = a === 'thema' ? DORF_THEMEN.find(t => t.id === ziel) : null;
+    const app = a === 'app' ? CONFIG.apps.find(x => appDateiKey(x) === ziel) : null;
+    const eintrag = { id: 'lk-' + Date.now().toString(36), start: document.getElementById('dw-start').value, art: a, ziel,
+      name: th ? th.name : (app ? app.name : ziel), runden: Number(document.getElementById('dw-runden').value),
+      klassen: [...document.querySelectorAll('#dw-klassen input:checked')].map(i => Number(i.value)) };
+    if (th && th.app) eintrag.app = th.app;
+    // gleiche Woche + gleiche Klassen → ersetzen
+    const k = JSON.stringify(eintrag.klassen);
+    c.wochen = c.wochen.filter(w => !(w.start === eintrag.start && JSON.stringify(w.klassen || []) === k));
+    c.wochen.push(eintrag);
+    dorfSpeichern(c, `📅 Wochenauftrag ab ${datumKurz(eintrag.start)}: ${eintrag.name}`);
+  };
+  document.querySelectorAll('[data-woche-weg]').forEach(b => b.onclick = () => {
+    const c = dorfCfg(), w = c.wochen.find(x => x.id === b.dataset.wocheWeg);
+    c.wochen = c.wochen.filter(x => x.id !== b.dataset.wocheWeg);
+    dorfSpeichern(c, `📅 Wochenauftrag entfernt: ${w ? w.name : ''}`);
+  });
+
+  // Einstellungen
+  const cur = k => cfg[k] ?? std[k];
+  document.getElementById('dorf-settings').innerHTML = `
+    <div class="sw-row"><span class="sw-ic">📌</span>
+      <div class="sw-txt"><div class="sw-name">Auftragsplätze</div><div class="sw-desc">Platz 1 Mathematik, Platz 2 Englisch/GPG, Platz 3 freie Wahl. Weniger Plätze = weniger Rohstoffe pro Tag.</div></div>
+      <select class="sw-sel" data-dorf-set="plaetze">${[1, 2, 3].map(n => opt(n, n + (n === 1 ? ' Platz' : ' Plätze') + (n === std.plaetze ? ' (Standard)' : ''), cur('plaetze'))).join('')}</select></div>
+    <div class="sw-row"><span class="sw-ic">🎲</span>
+      <div class="sw-txt"><div class="sw-name">Tauschen</div><div class="sw-desc">So viele Tausche bekommt ein Kind pro Tag dazu – und so viele kann es höchstens ansparen.</div></div>
+      <select class="sw-sel" data-dorf-set="rerollsProTag">${[0, 1, 2].map(n => opt(n, n + ' pro Tag' + (n === std.rerollsProTag ? ' (Standard)' : ''), cur('rerollsProTag'))).join('')}</select>
+      <select class="sw-sel" data-dorf-set="rerollsMax">${[0, 1, 2, 3, 4, 5].map(n => opt(n, 'bis ' + n + (n === std.rerollsMax ? ' (Standard)' : ''), cur('rerollsMax'))).join('')}</select></div>
+    <div class="sw-row"><span class="sw-ic">🧱</span>
+      <div class="sw-txt"><div class="sw-name">Baukosten</div><div class="sw-desc">Gilt für alle Gebäude und Stufen. Wenn die Klasse zu schnell oder zu langsam vorankommt: hier nachjustieren. Wirkt sofort, bereits Gebautes bleibt.</div></div>
+      <select class="sw-sel" data-dorf-set="kostenfaktor">${[0.5, 0.75, 1, 1.25, 1.5, 2].map(n => opt(n, Math.round(n * 100) + ' %' + (n === std.kostenfaktor ? ' (Standard)' : ''), cur('kostenfaktor'))).join('')}</select></div>`;
+
+  // Apps
+  const alle = lernAppsFuerDorf().sort((a, b) => (a.fach + a.name).localeCompare(b.fach + b.name));
+  document.getElementById('dorf-apps').innerHTML = alle.map(a => {
+    const i = CONFIG.apps.indexOf(a);
+    const grund = a.hidden ? 'versteckt' : !(a.klassen || []).length ? 'keiner Klasse zugeordnet' : '';
+    return `<div class="sw-row"><span class="sw-ic">${escHtml(a.emoji || '📱')}</span>
+      <div class="sw-txt"><div class="sw-name">${escHtml(a.name)}</div><div class="sw-desc">${escHtml(a.fach)}${(a.klassen || []).length ? ' · Klasse ' + a.klassen.join(', ') : ''}${grund ? ' · <b>bekommt keine Aufträge (' + grund + ')</b>' : ''}</div></div>
+      <label class="switch"><input type="checkbox" data-dorf-app="${i}" ${a.dorf !== false && !grund ? 'checked' : ''} ${grund ? 'disabled' : ''} aria-label="${escHtml(a.name)} bekommt Aufträge"><span></span></label></div>`;
+  }).join('');
+
+  // Übersicht
+  const f = Number(cur('kostenfaktor')) || 1;
+  const R = Object.fromEntries((C.ROHSTOFFE || []).map(r => [r.id, r]));
+  const kostenTxt = k => Object.entries(k).filter(([r]) => r !== 'stufe').map(([r, n]) => `${(R[r] || {}).icon || r} ${Math.round(n * f)}`).join(' ');
+  const stufen = (C.BAU || {}).stufenKosten || [];
+  const gebRows = (C.GEBAEUDE || []).map(g => `<tr><td style="font-size:1.3rem">${escHtml(g.icon || '')}</td><td><b>${escHtml(g.name)}</b><div style="font-size:.66rem;color:var(--muted)">${escHtml(g.id)}</div></td>
+      <td>${escHtml(g.text || '')}</td><td>${g.maxStufe || '–'}</td><td>${g.mehrfach === true ? 'beliebig' : Number.isInteger(g.mehrfach) ? 'bis ' + g.mehrfach : '1'}</td>
+      <td>${g.bonus ? Object.entries(g.bonus).map(([r, l]) => `${(R[r] || {}).icon || r} ${l.map(x => '+' + Math.round(x * 100) + ' %').join(' / ')}`).join('<br>') : '–'}</td>
+      <td>${(g.ansehen || []).join(' / ') || '–'}</td></tr>`).join('');
+  const platzRows = [...new Set((C.BAUPLAETZE || []).map(p => p.rathaus))].sort((a, b) => a - b).map(st => {
+    const n = (C.BAUPLAETZE || []).filter(p => p.rathaus === st).length;
+    return `<tr><td>${st === 0 ? 'von Anfang an' : 'Rathaus Stufe ' + st}</td><td>${n} ${n === 1 ? 'Platz' : 'Plätze'}</td></tr>`;
+  }).join('');
+  const t = A.tag || {}, w = A.woche || {};
+  document.getElementById('dorf-overview').innerHTML = `
+    <details open><summary>🏠 Gebäude</summary><div class="ov-body"><table>
+      <tr><th></th><th>Gebäude</th><th>Beschreibung</th><th>Stufen</th><th>Anzahl</th><th>Bonus je Stufe</th><th>Ansehen je Stufe</th></tr>${gebRows}</table></div></details>
+    <details><summary>🧱 Baukosten je Stufe (mit Faktor ${Math.round(f * 100)} %)</summary><div class="ov-body"><table>
+      <tr><th>Stufe</th><th>Kosten</th></tr>${stufen.map(z => `<tr><td>${z.stufe}</td><td>${kostenTxt(z)}</td></tr>`).join('')}</table>
+      <p class="note">Der allererste Bau ist sofort fertig, alle weiteren Bauten und Ausbauten ab dem nächsten Tag.</p></div></details>
+    <details><summary>📍 Bauplätze</summary><div class="ov-body"><table><tr><th>Frei ab</th><th>Anzahl</th></tr>${platzRows}</table></div></details>
+    <details><summary>📋 Aufträge</summary><div class="ov-body"><table>
+      <tr><td><b>Tagesauftrag</b></td><td>${t.runden ?? 2} Runden mit mind. ${t.schwelle ?? 70} % in einer App → ${(t.belohnung || [15, 25]).join('–')} Holz oder Stein</td></tr>
+      <tr><td><b>Lange nicht gespielt</b></td><td>+${Math.round(((A.langeNichtGespielt || {}).bonus ?? .5) * 100)} % ab ${(A.langeNichtGespielt || {}).tage ?? 14} Tagen ohne die App (nur Apps, die das Kind schon kennt)</td></tr>
+      <tr><td><b>Wochenauftrag</b></td><td>automatisch ${w.auftraege ?? 5} erledigte Aufträge, sonst deiner → ${w.rohstoffe ?? 60} Rohstoffe (halb Holz, halb Stein) + ${w.gold ?? 2} Gold</td></tr>
+      <tr><td><b>Nichts verfällt</b></td><td>Offene Tagesaufträge bleiben, bis sie erledigt sind; freie Plätze füllen sich einmal am Tag. Der Wochenauftrag wechselt montags.</td></tr></table></div></details>`;
+}
+
+document.getElementById('panel-dorf').addEventListener('change', e => {
+  const set = e.target.closest('[data-dorf-set]'), app = e.target.closest('[data-dorf-app]');
+  if (set) {
+    const c = dorfCfg(), k = set.dataset.dorfSet;
+    c[k] = Number(set.value);
+    const namen = { plaetze: 'Auftragsplätze', rerollsProTag: 'Tausche pro Tag', rerollsMax: 'Tausche höchstens', kostenfaktor: 'Baukosten' };
+    dorfSpeichern(c, `🏘️ ${namen[k]}: ${k === 'kostenfaktor' ? Math.round(c[k] * 100) + ' %' : c[k]}`);
+  } else if (app) {
+    const a = CONFIG.apps[Number(app.dataset.dorfApp)];
+    if (!a) return;
+    if (app.checked) delete a.dorf; else a.dorf = false;
+    logChange(`🏘️ „${a.name}“ ${app.checked ? 'bekommt wieder' : 'bekommt keine'} Dorf-Aufträge`);
+    saveConfig();
+    buildDorfAdmin();
+  }
 });
 
 function rarBadge(key) {
