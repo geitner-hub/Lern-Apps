@@ -12,6 +12,7 @@
     Adventskalender bzw. Suche, Fest-Seiten im Sammelbuch).
     Etappe 6 (Teil 1): Bewohner laufen, Landschaft wächst ins Umland, Dorf-Deko, Tiere; Bewohner und
     das Schild „Hier geht es bald weiter“ lassen sich antippen.
+    Etappe 6 (Teil 2): Challenge-Zettel am Brett, Trophäen im Sammelbuch, Bonus-Gebäude, Tausch am Marktplatz.
     Logik und Spielstand: gemeinsam/dorf-kern.js · 3D: gemeinsam/dorf-szene.js
     Inhalte: daten/dorf-inhalte.json
   -->
@@ -183,6 +184,14 @@
     .zettel.gast .portrait { font-size: 3rem; line-height: 1; }
     .zettel.gast .geschichte { font-style: italic; line-height: 1.4; }
     .zettel.gast .rechts { display: flex; flex-direction: column; gap: .5rem; align-items: flex-end; }
+    .zettel.challenge { grid-column: 1 / -1; min-height: 0; --pin: #a855f7; --dreh: -.3deg; background: linear-gradient(180deg, #f3e8ff, var(--papier));
+      display: grid; grid-template-columns: auto 1fr auto; gap: .5rem 1.1rem; align-items: center; }
+    .zettel.challenge .portrait { font-size: 2.8rem; line-height: 1; }
+    .zettel.challenge .rechts { display: flex; flex-direction: column; gap: .4rem; align-items: flex-end; text-align: right; }
+    .zettel.challenge .balken i { background: linear-gradient(90deg, #a855f7, #c084fc); }
+    @media (max-width: 560px) { .zettel.challenge { grid-template-columns: auto 1fr; } .zettel.challenge .rechts { grid-column: 1 / -1; align-items: stretch; text-align: left; } }
+    .tausch-reihe { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .5rem; }
+    .tausch-reihe button { flex: none; }
     .fest-marke { display: inline-block; font-size: .75rem; font-weight: 900; background: #3b2a1a; color: #fde68a; border-radius: 6px; padding: .1rem .45rem; margin-left: .3rem; vertical-align: 2px; }
     @media (max-width: 560px) { .zettel.gast { grid-template-columns: auto 1fr; } .zettel.gast .rechts { grid-column: 1 / -1; align-items: stretch; } }
     .deko-reihe { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: .6rem; margin-top: .7rem; }
@@ -483,7 +492,8 @@
           <div><span class="icon" aria-hidden="true">${esc(o.gebaeude.icon || '🏠')}</span> <b>${esc(o.gebaeude.name)}</b></div>
           <small>${esc(o.gebaeude.text || '')}</small>
           ${kostenHtml(o.kosten)}
-          <button class="knopf" data-bauen="${esc(o.gebaeude.id)}" ${o.genug ? '' : 'disabled'}>${o.genug ? 'Bauen' : 'Noch zu wenig'}</button>
+          ${o.trophaeenFehlen ? `<small>🏆 Braucht noch ${o.trophaeenFehlen} ${o.trophaeenFehlen === 1 ? 'Trophäe' : 'Trophäen'} aus Challenges.</small>` : ''}
+          <button class="knopf" data-bauen="${esc(o.gebaeude.id)}" ${o.genug ? '' : 'disabled'}>${o.genug ? 'Bauen' : o.trophaeenFehlen ? 'Noch zu wenig Trophäen' : 'Noch zu wenig'}</button>
         </div>`).join('');
       const fest = i.def.fest ? D.gebaeude(i.def.fest) : null;
       el.innerHTML = `<h2>🚧 ${fest ? 'Platz für dein ' + esc(fest.name) : 'Freier Bauplatz'}</h2>
@@ -519,6 +529,17 @@
     }
     el.innerHTML = (fund ? fundHtml() : '') + `<h2><span aria-hidden="true">${esc(g.icon || '🏠')}</span> ${esc(g.name)} ${stufenHtml(i.stufe, max)}</h2>
       <p>${esc(g.text || '')}${bonus ? ' <b>' + esc(bonus) + '</b>' : ''}</p>${unten}`;
+    if (g.id === 'marktplatz' && i.stufe > 0) {
+      const m = D.marktInfo(), S = D.state;
+      if (m) {
+        el.insertAdjacentHTML('beforeend', `<div class="option" style="margin-top:.8rem"><b>⚖️ Tauschen am Markt</b>
+          <small>Für 10 bekommst du ${Math.floor(10 * m.kurs)} von der anderen Sorte. Je höher dein Marktplatz, desto besser der Kurs.</small>
+          <div class="tausch-reihe">${m.mengen.map(n => `
+            <button class="knopf" data-markt="h|s|${n}" ${(S.r.h || 0) >= n ? '' : 'disabled'}>${n} 🪵 → ${Math.floor(n * m.kurs)} 🪨</button>
+            <button class="knopf" data-markt="s|h|${n}" ${(S.r.s || 0) >= n ? '' : 'disabled'}>${n} 🪨 → ${Math.floor(n * m.kurs)} 🪵</button>`).join('')}</div></div>`);
+        el.querySelectorAll('[data-markt]').forEach(b => b.onclick = () => { const [v, n, x] = b.dataset.markt.split('|'); D.marktTausch(v, n, Number(x)); });
+      }
+    }
     const k = document.getElementById('ausbauen');
     if (k) k.onclick = () => { const r = D.ausbauen(gewaehlt); if (r.ok && szene) szene.jubel(); };
   }
@@ -738,6 +759,25 @@
       <p>${auftrag ? '📌 Hat gerade einen Auftrag für dich – schau aufs Auftragsbrett!' : sb.stuecke.length ? `Sammelstücke: ${sb.stuecke.filter(x => x.hat).length} von ${sb.stuecke.length}` : ''}</p>`;
   }
 
+  // Challenge (zwei Wochen) auf dem Brett
+  function challengeZettel() {
+    const D = window.LernDorf, c = D.challengeInfo();
+    if (!c) return '';
+    const pct = Math.round(c.c / c.ziel * 100);
+    return `<article class="zettel challenge">
+        <div class="portrait" aria-hidden="true">${esc(c.def.icon)}</div>
+        <div>
+          <div class="fach">🏆 Challenge${c.vonLk ? '<span class="von-lk">von deiner Lehrkraft</span>' : ''}</div>
+          <div class="app" style="font-size:1.15rem">${esc(c.def.name)}</div>
+          <div class="ziel">${c.f ? '✅ Geschafft! Deine Trophäe steht im Sammelbuch.' : esc(c.def.text)}</div>
+          ${c.f ? '' : `<div class="balken" role="img" aria-label="${c.c} von ${c.ziel}" style="margin-top:.3rem"><i style="width:${pct}%"></i></div>
+          <div class="rest">${c.c} von ${c.ziel} · ${c.restTage === 0 ? 'heute ist der letzte Tag' : c.restTage === 1 ? 'noch 1 Tag' : 'noch ' + c.restTage + ' Tage'}</div>`}
+        </div>
+        <div class="rechts"><div class="lohn">${c.f ? esc(c.trophaee) : `${esc(c.trophaee)} +${c.lohn.ansehen} ⭐${c.lohn.gold ? ' +' + c.lohn.gold + ' 🪙' : ''}`}</div>
+          ${c.f ? '' : '<small style="font-weight:800;color:var(--tinte2)">Trophäe fürs Sammelbuch</small>'}</div>
+      </article>`;
+  }
+
   // ── Neuigkeiten: neue Bewohner, neue Sammelstücke ──
   function neuesZeigen() {
     const box = document.getElementById('neues');
@@ -748,6 +788,7 @@
       x.art === 'bewohner' ? `<span>Neu eingezogen: <b>${esc(x.name)}</b> – ${esc(x.text || '')}</span>`
       : x.art === 'landschaft' ? `<span>Dein Dorf wächst: <b>${esc(x.name)}</b> – ${esc(x.text || '')}</span>`
       : x.art === 'deko' ? `<span>Neue Deko in deiner Kiste: <b>${esc(x.name)}</b></span>`
+      : x.art === 'trophaee' ? `<span>Neue Trophäe: <b>${esc(x.name)}</b> – Challenge geschafft!</span>`
       : `<span>Neu im Sammelbuch: <b>${esc(x.name)}</b>${x.von ? ' von ' + esc(x.von) : ''}</span>`);
     box.innerHTML = l.slice(0, 4).map(x => `<div class="neu-banner">${zeile(x)}</div>`).join('')
       + (l.length > 4 ? `<div class="neu-banner"><span>… und ${l.length - 4} weitere Neuigkeiten – schau ins Sammelbuch</span></div>` : '');
@@ -780,6 +821,8 @@
       <div class="seiten" style="margin-top:.6rem">${leute}</div>
       <h3>Meilensteine</h3>
       <div class="meilen">${meilen}</div>
+      ${sb.trophaeen && sb.trophaeen.length ? `<h3>Trophäen</h3><p class="leise">Für jede geschaffte Challenge: 🥉 beim ersten, 🥈 beim zweiten, 🥇 beim dritten Mal. ${D.trophaeen()} insgesamt.</p>
+        <div class="meilen">${sb.trophaeen.map(t => `<div class="${t.mal ? '' : 'fehlt'}"><span class="gross" aria-hidden="true">${t.mal ? ['🥉', '🥈', '🥇'][Math.min(3, t.mal) - 1] : esc(t.icon)}</span>${esc(t.name)}<small>${t.mal ? t.mal + '× geschafft' : esc(t.text)}</small></div>`).join('')}</div>` : ''}
       ${sb.landschaft && sb.landschaft.length ? `<h3>Rund ums Dorf</h3><p class="leise">Die Landschaft wächst mit deinem Dorf – ganz ohne Kosten.</p>
         <div class="meilen">${sb.landschaft.map(l => `<div class="${l.hat ? '' : 'fehlt'}"><span class="gross" aria-hidden="true">${esc(l.icon)}</span>${esc(l.name)}<small>${l.hat ? esc(l.text || '') : esc(l.hinweis ? 'Kommt mit: ' + l.hinweis : 'Kommt bald')}</small></div>`).join('')}</div>` : ''}
       ${sb.feste && sb.feste.length ? `<h3>Feste</h3><p class="leise">Zu Halloween, Weihnachten und Ostern kommen Gäste ins Dorf. Hilf ihnen – dann schenken sie dir etwas.</p>` + sb.feste.map(f => `
@@ -918,7 +961,7 @@
     }).join('');
     getauscht = null;
     const box = document.getElementById('zettel');
-    box.innerHTML = zettel + gastZettel() + bewohnerZettel() + wochenZettel();
+    box.innerHTML = zettel + gastZettel() + bewohnerZettel() + challengeZettel() + wochenZettel();
     box.querySelectorAll('.tausch').forEach(b => b.onclick = () => {
       const platz = Number(b.dataset.platz);
       getauscht = platz;
