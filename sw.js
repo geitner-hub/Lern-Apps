@@ -9,7 +9,7 @@
 //
 //  Nach einer Änderung an DIESER Datei VERSION erhöhen.
 // ═══════════════════════════════════════════════════════
-const VERSION = 'lernwelt-v11';  // v11: Mein Dorf – Feste (Halloween, Weihnachten, Ostern)
+const VERSION = 'lernwelt-v12';  // v12: Mein Dorf – laufende Bewohner, Landschaft, Dorf-Deko
 const START = ['./', 'index.html', 'config.json', 'manifest.webmanifest',
                'gemeinsam/shared.js', 'gemeinsam/config-api.js', 'gemeinsam/navbar.js', 'gemeinsam/pass.js',
                'gemeinsam/avatar3d.js', 'gemeinsam/fonts.css', 'gemeinsam/qrcode.js', 'daten/lernwelt-inhalte.json',

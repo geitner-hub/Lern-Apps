@@ -268,3 +268,12 @@ Plan und Stand: Claude-Doc „Aktionsplan: Aufbauspiel „Mein Dorf““.
 - **Flächenplan** (`dorf-inhalte.json` → `FLAECHEN`): Festwiese, Deko-Plätze, Verstecke und reservierte
   Umland-Bereiche für Etappe 6 (Landschaft) und 7 (neues Gebiet). Dauer-Animationen (Schnee, Blätter,
   Versteck, Begleiter) laufen mit höchstens 30 Bildern/s, nur sichtbar, mit Pause nach 60 s ohne Antippen.
+- **Lebendiges Dorf (Etappe 6):** Bewohner laufen auf den Gassen zwischen den Bauplätzen (`FLAECHEN` →
+  `wege.gitter`, nie durch Häuser) zu ihren Lieblingszielen (`BEWOHNER[].ziele`: Gebäude-Id, `dorfplatz`,
+  `haeuser`, `festwiese` oder eine Landschafts-Id) und wieder nach Hause; die Bürgermeister·in spaziert mit
+  ihrem Pass-Begleiter über den Dorfplatz. Antippen eines Bewohners zeigt, wer das ist.
+  **Landschaft** (`LANDSCHAFT`): Bach, Felder, Wald, Felswand, Holzlager, Windmühle, Obstwiese, Hühner,
+  Schafe, Enten und der Weg mit Schild „Hier geht es bald weiter“ wachsen ohne Kosten mit Rathaus, Ansehen,
+  Bewohnern und Gebäuden (Bedingung `ab`); Neues erscheint als Neuigkeit und im Sammelbuch („Rund ums Dorf“).
+  **Dorf-Deko** (`DEKO`) kommt genauso in die Kiste 🎁. Gebäude werden mit Vertex-Farben zu einem Mesh
+  gebacken (weniger Draw-Calls für ältere iPads).
