@@ -22,6 +22,13 @@
 //                                 freigeschalteter Stoff aus dem Pass + Starter-Paket
 //    ausLink(location.search)   → { ids, opts } aus ?pool=vok5&bis=unit3&richtung=en-de
 //    lesezeit(aufgabe)          → empfohlene Sekunden zum Lesen
+//    woerter(opts)              → Promise: englische Einzelwörter für Wort-Spiele
+//       opts: { meine: true }  → aus „Meine Themen“ (nur Vokabel-Pools)
+//             { pools: ['vok5'], bis, einheiten, themen, klasse } → wie erzeuger()
+//             min, max: Buchstaben (Standard 3–10)
+//             grossgeschrieben: false → ohne Wörter, die im Buch großgeschrieben sind (Germany, Monday …)
+//       → [{ wort: 'CRAB', en: 'the crab', de: 'die Krabbe', pool: 'vok5', thema: 'unit1/theme2', unit: 'unit1', gross }]
+//    wortForm(en)               → 'CRAB' aus 'the crab' bzw. null, wenn kein Einzelwort
 //
 //  Aufgabe: { frage, antwort, optionen: [3 Texte, gemischt], pool, hinweis? }
 //
@@ -522,5 +529,49 @@
     return Math.min(7, 1.3 + zeichen * 0.07);
   }
 
-  window.LernAufgaben = { pools, klasse: passKlasse, einheiten, erzeuger, meineThemen, ausLink, lesezeit, _POOLS: POOLS };
+  // ═══════════════════════════════════════════════════════
+  //  WORTQUELLE für Wort-Spiele (Wort des Tages, Zauberwort)
+  // ═══════════════════════════════════════════════════════
+  /**
+   * Vokabel → ein Wort aus Buchstaben (Großbuchstaben) oder null.
+   * 'the crab' → 'CRAB', '(to) join' → 'JOIN', 'guys (pl)' → 'GUYS';
+   * Wendungen, Sätze und Einträge mit Zusätzen wie „simple past“ fallen weg.
+   */
+  function wortForm(en) {
+    let w = String(en || '').trim();
+    if (!w || /[,;/=?!]|simple past|\.\.\./i.test(w)) return null;
+    w = w.replace(/\s*\((pl|sg|AE|BE|infml)\.?\)\s*$/i, '');           // Zusätze am Ende
+    w = w.replace(/^\(to\)\s+/i, '').replace(/^(to|the|a|an)\s+/i, '');
+    return /^[A-Za-z]+$/.test(w) ? w.toUpperCase() : null;
+  }
+
+  async function woerter(o = {}) {
+    const min = Math.max(2, Number(o.min) || 3), max = Math.max(min, Number(o.max) || 10);
+    let ids = o.pools, opts = { ...o };
+    if (o.meine) { const m = meineThemen({ klasse: o.klasse }); ids = m.ids; opts = { ...m.opts, ...o, themen: m.opts.themen }; }
+    ids = (Array.isArray(ids) ? ids : ids ? [ids] : []).filter(id => POOL_BY_ID[id] && POOL_BY_ID[id].typ === 'vokabeln');
+    const k = opts.klasse !== undefined ? opts.klasse : passKlasse();
+    ids = ids.filter(id => !k || POOL_BY_ID[id].klasse <= k);
+    const themen = opts.themen && typeof opts.themen === 'object' ? opts.themen : {};
+    const liste = [], gesehen = new Set();
+    for (const id of ids) {
+      let units;
+      try { units = waehleUnits(await ladeVokabeln(POOL_BY_ID[id]), opts); } catch (e) { continue; }
+      const filter = Array.isArray(themen[id]) && themen[id].length
+        ? (fs => w => fs.some(f => f(w)))(reduziereThemen(themen[id]).map(themaFilter)) : null;
+      units.forEach(u => u.woerter.forEach(w => {
+        if (filter && !filter(w)) return;
+        const wort = wortForm(w.en);
+        if (!wort || wort.length < min || wort.length > max || !w.de) return;
+        const gross = /^(\(to\)\s+|to\s+|the\s+|an?\s+)?[A-Z]/.test(String(w.en).trim()) && !/^[A-Z]+$/.test(String(w.en).trim());
+        if (o.grossgeschrieben === false && gross) return;
+        if (gesehen.has(wort)) return;
+        gesehen.add(wort);
+        liste.push({ wort, en: w.en, de: w.de, pool: id, thema: w.thema, unit: u.id, gross });
+      }));
+    }
+    return liste;
+  }
+
+  window.LernAufgaben = { pools, klasse: passKlasse, einheiten, erzeuger, meineThemen, ausLink, lesezeit, woerter, wortForm, _POOLS: POOLS };
 })();
