@@ -379,6 +379,17 @@
       "klassen": [],
       "customTags": [],
       "aod": false
+    },
+    {
+      "name": "Wort des Tages",
+      "datei": "wort-des-tages.html",
+      "fach": "Allgemein",
+      "emoji": "📱",
+      "beschreibung": "Finde das richtige Wort heraus!",
+      "hidden": false,
+      "klassen": [],
+      "customTags": [],
+      "aod": false
     }
   ],
   "customTags": [
