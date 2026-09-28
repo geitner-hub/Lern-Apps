@@ -371,7 +371,7 @@
     },
     {
       "name": "Tauziehen",
-      "datei": "tauziehen.html",
+      "datei": "spiele/tauziehen.html",
       "fach": "Allgemein",
       "emoji": "🪢",
       "beschreibung": "Tritt gegen jemand anders an!",
