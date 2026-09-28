@@ -377,7 +377,12 @@
       "beschreibung": "Tritt gegen jemand anders an!",
       "hidden": true,
       "klassen": [],
-      "customTags": [],
+      "customTags": [
+        {
+          "name": "Spiele",
+          "color": 6
+        }
+      ],
       "aod": false
     },
     {
