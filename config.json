@@ -458,6 +458,7 @@
   "dorf": {
     "wochen": [],
     "plaetze": 3,
-    "rerollsProTag": 2
+    "rerollsProTag": 2,
+    "rerollsMax": 4
   }
 }
