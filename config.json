@@ -352,6 +352,17 @@
         }
       ],
       "aod": false
+    },
+    {
+      "name": "Zauberwort",
+      "datei": "zauberwort.html",
+      "fach": "Allgemein",
+      "emoji": "🪄",
+      "beschreibung": "Finde das richtige Wort und bekämpfe die Monster!",
+      "hidden": false,
+      "klassen": [],
+      "customTags": [],
+      "aod": false
     }
   ],
   "customTags": [
