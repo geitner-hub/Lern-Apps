@@ -368,6 +368,17 @@
         }
       ],
       "aod": false
+    },
+    {
+      "name": "Tauziehen",
+      "datei": "tauziehen.html",
+      "fach": "Allgemein",
+      "emoji": "🪢",
+      "beschreibung": "Tritt gegen jemand anders an!",
+      "hidden": false,
+      "klassen": [],
+      "customTags": [],
+      "aod": false
     }
   ],
   "customTags": [
