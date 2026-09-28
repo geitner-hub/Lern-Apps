@@ -359,7 +359,7 @@
       "fach": "Allgemein",
       "emoji": "🪄",
       "beschreibung": "Finde das richtige Wort und bekämpfe die Monster!",
-      "hidden": true,
+      "hidden": false,
       "klassen": [],
       "customTags": [
         {
