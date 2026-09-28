@@ -388,7 +388,12 @@
       "beschreibung": "Finde das richtige Wort heraus!",
       "hidden": true,
       "klassen": [],
-      "customTags": [],
+      "customTags": [
+        {
+          "name": "Spiele",
+          "color": 6
+        }
+      ],
       "aod": false
     }
   ],
