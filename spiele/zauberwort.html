@@ -13,8 +13,8 @@
    Wort. Besiegt wird es nur, wenn das Kind das englische Wort im Buchstaben-
    feld richtig zusammenwischt – das richtig geschriebene Wort IST der Zauber
    (intrinsische Integration: Rechtschreibung ist die Spielmechanik).
-   Falsch geschrieben → der Zauber verpufft. Nach 2 Fehlversuchen leuchtet
-   der erste Buchstabe, danach jeder weitere. Erreicht ein Monster den Turm,
+   Falsch geschrieben → der Zauber verpufft. Nach jedem Fehlversuch leuchtet
+   ein Buchstabe mehr (vom Anfang her). Erreicht ein Monster den Turm,
    kostet das ein Herz, die Lösung wird gezeigt und das Wort kommt später
    noch einmal dran.
 
@@ -229,9 +229,9 @@
 const CFG = {
   runde: 12,                          // Monster pro Runde
   herzen: 3,
-  laufBasis: 11, laufJeBuchstabe: 1.5, // Sekunden bis zum Turm (Runde)
+  laufBasis: 20, laufJeBuchstabe: 2.5, // Sekunden bis zum Turm (5 Buchstaben ≈ 32 s; Endlos startet genauso)
   endlos: { stufeAlle: 5, faktor: .92, min: .45, herzAlle: 15 },
-  hilfeAb: 2,                         // ab so vielen Fehlversuchen leuchtet der erste Buchstabe
+  hilfeAb: 1,                         // ab so vielen Fehlversuchen leuchtet der erste Buchstabe (danach je einer mehr)
   wiederholenNach: 3,                 // verpasstes Wort kommt nach so vielen anderen wieder
   minWoerter: 4,
 };
@@ -627,7 +627,7 @@ function zaubere() {
     const e = $('eingabe'); e.classList.remove('bad'); void e.offsetWidth; e.classList.add('bad');
     ton(200, .2, 'sawtooth', .05);
     if (gl) puff(figHalter.position);
-    flash('bad', 'Puff … verpufft!', G.fehler >= CFG.hilfeAb ? 'Achte auf die leuchtenden Buchstaben.' : 'Prüf die Buchstaben noch einmal.', 900);
+    flash('bad', 'Puff … verpufft!', G.fehler >= CFG.hilfeAb ? 'Die leuchtenden Felder zeigen dir den Anfang.' : 'Prüf die Buchstaben noch einmal.', 1100);
     setTimeout(() => { if (G.zustand === 'spiel') { F.pfad = []; zeichnePfad(); zeigeHilfe(); } }, 380);
   }
 }

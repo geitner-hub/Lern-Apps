@@ -154,7 +154,8 @@
 const CFG = {
   versuche: 6,
   min: 4, max: 6,              // Wortlänge
-  tippAb: 3,                   // Tipp (deutsche Bedeutung) nach so vielen Fehlversuchen
+  tippAb: 1,                   // Tipp (deutsche Bedeutung) nach so vielen Fehlversuchen
+  anfangAb: 3,                 // ab so vielen Fehlversuchen wird der erste Buchstabe verraten (kostenlos)
   keineWiederholung: 30,       // so viele Tage kommt ein Wort nicht noch einmal
   startTag: '2026-09-01',      // ab hier wird die Wortfolge berechnet
   merkeTage: 40,               // so viele Tage bleiben im Gerät gespeichert
@@ -368,9 +369,10 @@ function pruefe() {
 
 function tippAnzeigen() {
   const fehl = S.versuche.filter(v => v !== S.ziel.wort).length;
+  const anfang = !S.fertig && fehl >= CFG.anfangAb;
   $('tipp-btn').hidden = S.fertig || S.tipp || fehl < CFG.tippAb;
-  $('tipp-text').hidden = !S.tipp;
-  if (S.tipp) $('tipp-text').textContent = `💡 Auf Deutsch: ${S.ziel.de}`;
+  $('tipp-text').hidden = !S.tipp && !anfang;
+  $('tipp-text').textContent = [S.tipp ? `💡 Auf Deutsch: ${S.ziel.de}` : '', anfang ? `🔤 Es beginnt mit „${S.ziel.wort[0]}“.` : ''].filter(Boolean).join('  ·  ');
 }
 $('tipp-btn').onclick = () => { S.tipp = true; sichereTag(); tippAnzeigen(); };
 
@@ -398,8 +400,8 @@ function ende(geloest) {
         D.verteilung[S.versuche.length - 1]++;
       } else D.serie = 0;
       speichere();
-      // XP: gelöst zählt als „guter Tag“ (ab 10), früher gelöst gibt mehr, Tipp kostet 2
-      const punkte = geloest ? Math.max(8, 10 + (CFG.versuche - S.versuche.length) * 2 - (S.tipp ? 2 : 0)) : 3;
+      // XP: gelöst zählt immer als „guter Tag“ (ab 10), früher gelöst gibt mehr, Tipp kostet 2
+      const punkte = geloest ? Math.max(10, 10 + (CFG.versuche - S.versuche.length) * 2 - (S.tipp ? 2 : 0)) : 3;
       LernSpiel.endlos({ key: APP_KEY, correct: punkte, seconds: (Date.now() - (S.start || Date.now())) / 1000 });
       if (geloest && window.LernPass) LernPass.celebrate('konfetti');
     }
