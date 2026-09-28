@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#0f0e1a">
+  <title>Wort des Tages</title>
+  <!--
+  ═══════════════════════════════════════════════
+   WORT DES TAGES  (spiele/wort-des-tages.html)
+
+   Englisches Worträtsel im Stil von Wordle. Jeden Tag ein Wort (4–6 Buchstaben)
+   aus dem Englischbuch der Klasse – für alle Kinder einer Klasse dasselbe.
+   Sechs Versuche; Grün = richtige Stelle, Gelb = kommt vor, Grau = kommt nicht vor.
+   Lernen = Spielen: Jeder Versuch muss ein echtes englisches Wort sein
+   (Buchwörter oder Prüfliste daten/woerter-en.json), das Kind ruft also
+   Wörter der richtigen Länge ab und buchstabiert sie.
+
+   Welche Units: Admin → „Wort des Tages“ (config.json → spiele.wortBis).
+   Klasse 5: Band 5 bis zur Unit · Klasse 6: Band 5 ganz + Band 6 bis zur Unit ·
+   Klasse 7–9: Band 5 und 6 ganz.
+   Das Tageswort ergibt sich aus Datum, Klasse und Wortliste (ohne Server).
+   In den letzten 30 Tagen gewählte Wörter kommen nicht noch einmal dran.
+
+   XP: einmal am Tag über LernPass.awardEndless (gelöst = „guter Tag“).
+   Braucht: navbar.js, aufgaben.js, spiel-hilfen.js
+  ═══════════════════════════════════════════════
+  -->
+  <link rel="stylesheet" href="../gemeinsam/fonts.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f0e1a; --panel: #1b1929; --panel2: #252238;
+      --accent: #e6a817; --accent2: #fde68a; --indigo: #6366f1; --indigo2: #818cf8;
+      --text: #f1f0fb; --text2: rgba(241,240,251,.7); --muted: rgba(241,240,251,.45);
+      --gruen: #22a55a; --gruen2: #15803d; --gelb: #d4a012; --gelb2: #a16207; --grau: #57546e; --grau2: #3d3a52;
+      --red: #f87171;
+      --tile: clamp(40px, min(10.5vw, 7.4vh), 74px);
+    }
+    html, body { height: 100%; }
+    body { font-family: 'Nunito', system-ui, sans-serif; background: radial-gradient(ellipse at 50% -10%, #2a2550 0%, var(--bg) 60%) fixed;
+      color: var(--text); -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; overflow: hidden; }
+    button { font: inherit; color: inherit; border: 0; background: none; cursor: pointer; touch-action: manipulation; }
+    button:focus-visible { outline: 3px solid var(--indigo2); outline-offset: 2px; }
+    [hidden] { display: none !important; }
+
+    .app { height: 100%; display: flex; flex-direction: column; align-items: center;
+      padding: max(.6rem, env(safe-area-inset-top)) .6rem calc(4.4rem + env(safe-area-inset-bottom)); }
+    header { width: min(560px, 100%); display: flex; align-items: center; gap: .6rem; }
+    h1 { font-family: 'Fredoka One', 'Nunito', sans-serif; font-weight: 400; color: var(--accent); font-size: clamp(1.4rem, 4.5vw, 2rem); line-height: 1; flex: 1; }
+    h1 small { display: block; font-family: 'Nunito', sans-serif; font-weight: 800; font-size: .8rem; color: var(--muted); margin-top: .2rem; }
+    .chip { background: var(--panel); border-radius: 14px; padding: .4rem .7rem; font-weight: 900; font-size: .95rem; display: inline-flex; gap: .35rem; align-items: center; }
+    .chip.aus { opacity: .55; }
+    .hint { margin: .5rem 0 .4rem; font-size: .88rem; font-weight: 800; color: var(--text2); text-align: center; min-height: 1.2em; }
+    .hint b { color: var(--accent2); }
+
+    /* ── Raster ─────────────────────────── */
+    .raster { display: grid; gap: 6px; margin: .2rem 0; }
+    .zeile { display: grid; gap: 6px; }
+    .zeile.wackeln { animation: wackeln .4s; }
+    @keyframes wackeln { 20%, 60% { transform: translateX(-7px); } 40%, 80% { transform: translateX(7px); } }
+    .kachel { width: var(--tile); height: var(--tile); border-radius: 10px; display: grid; place-items: center;
+      font-family: 'Fredoka One', 'Nunito', sans-serif; font-size: calc(var(--tile) * .52); text-transform: uppercase;
+      background: transparent; border: 2px dashed rgba(255,255,255,.14);
+      transition: transform .12s; }
+    .kachel.voll { border: 2px solid rgba(255,255,255,.55); background: rgba(255,255,255,.06); animation: tipp .12s; }
+    @keyframes tipp { 50% { transform: scale(1.08); } }
+    .kachel.gruen, .kachel.gelb, .kachel.grau { border: 2px solid transparent; color: #fff; }
+    .kachel.gruen { background: var(--gruen); box-shadow: inset 0 -5px 0 var(--gruen2); }
+    .kachel.gelb { background: var(--gelb); box-shadow: inset 0 -5px 0 var(--gelb2); }
+    .kachel.grau { background: var(--grau); box-shadow: inset 0 -5px 0 var(--grau2); color: rgba(255,255,255,.8); }
+    .kachel.dreh { animation: dreh .5s ease-in-out both; }
+    @keyframes dreh { 0% { transform: rotateX(0); } 50% { transform: rotateX(90deg); } 100% { transform: rotateX(0); } }
+    .kachel.huepf { animation: huepf .45s ease both; }
+    @keyframes huepf { 40% { transform: translateY(-14px); } 70% { transform: translateY(3px); } }
+
+    .meldung { min-height: 1.8rem; margin: .35rem 0; font-weight: 900; font-size: .95rem; text-align: center; }
+    .meldung span { background: var(--text); color: var(--bg); padding: .3rem .8rem; border-radius: 10px; display: inline-block; }
+    .tipp-btn { margin-bottom: .35rem; padding: .35rem .9rem; border-radius: 99px; background: rgba(230,168,23,.14); color: var(--accent2); font-weight: 900; font-size: .88rem; min-height: 38px; }
+    .tipp-text { margin-bottom: .35rem; font-weight: 800; color: var(--accent2); font-size: .95rem; }
+
+    /* ── Tastatur ───────────────────────── */
+    .tasten { width: min(560px, 100%); margin-top: auto; display: grid; gap: 6px; }
+    .reihe { display: flex; gap: 5px; justify-content: center; }
+    .taste { flex: 1 1 0; max-width: 52px; min-height: clamp(44px, 6.8vh, 58px); border-radius: 9px; background: #4a4766; font-weight: 900;
+      font-size: clamp(.95rem, 3.4vw, 1.2rem); box-shadow: inset 0 -3px 0 rgba(0,0,0,.25); }
+    .taste.breit { flex-grow: 1.6; max-width: 84px; font-size: clamp(.8rem, 2.6vw, 1rem); }
+    .taste.gruen { background: var(--gruen); }
+    .taste.gelb { background: var(--gelb); }
+    .taste.grau { background: #29273a; color: rgba(255,255,255,.4); }
+    .taste:active { transform: translateY(1px); filter: brightness(1.15); }
+
+    /* ── Klassenwahl, Ergebnis ──────────── */
+    .overlay { position: fixed; inset: 0; background: rgba(10,9,20,.7); display: flex; align-items: center; justify-content: center;
+      padding: 1rem 1rem calc(4.6rem + env(safe-area-inset-bottom)); z-index: 5; overflow-y: auto; }
+    .sheet { width: min(440px, 100%); background: var(--panel); border-radius: 22px; padding: 1.2rem; text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,.45); animation: rein .3s ease; margin: auto 0; }
+    @keyframes rein { from { transform: translateY(20px); opacity: 0; } }
+    .sheet h2 { font-family: 'Fredoka One', 'Nunito', sans-serif; font-weight: 400; color: var(--accent2); font-size: 1.8rem; }
+    .loesung { margin: .6rem 0; }
+    .loesung .en { font-family: 'Fredoka One', 'Nunito', sans-serif; font-size: 2rem; letter-spacing: .06em; }
+    .loesung .de { color: var(--text2); font-weight: 800; }
+    .muster { font-size: 1.35rem; line-height: 1.15; margin: .6rem 0 .2rem; letter-spacing: .06em; }
+    .klein { font-size: .8rem; color: var(--muted); font-weight: 800; }
+    .stat { display: grid; grid-template-columns: repeat(3, 1fr); gap: .4rem; margin: .9rem 0 .4rem; }
+    .stat div { background: var(--panel2); border-radius: 12px; padding: .45rem .2rem; }
+    .stat b { display: block; font-family: 'Fredoka One', 'Nunito', sans-serif; font-weight: 400; font-size: 1.5rem; color: var(--accent2); }
+    .stat span { font-size: .72rem; font-weight: 800; color: var(--muted); }
+    .btns { display: flex; gap: .6rem; justify-content: center; margin-top: .9rem; flex-wrap: wrap; }
+    .btn { min-height: 48px; padding: .5rem 1.1rem; border-radius: 14px; font-weight: 900; background: rgba(255,255,255,.08); }
+    .btn.primary { background: var(--accent); color: #231a02; }
+    .tabs { display: flex; gap: .4rem; justify-content: center; flex-wrap: wrap; margin-top: .8rem; }
+    .tabs button { padding: .55rem 1rem; border-radius: 99px; font-weight: 900; background: rgba(255,255,255,.08); min-height: 44px; }
+    .modus { font-size: .78rem; font-weight: 900; color: #231a02; background: var(--indigo2); border-radius: 99px; padding: .15rem .55rem; }
+    @media (prefers-reduced-motion: reduce) { .kachel, .kachel.dreh, .kachel.huepf, .zeile.wackeln, .sheet { animation: none !important; } }
+  </style>
+</head>
+<body>
+<div class="app" id="app">
+  <header>
+    <h1>🔤 Wort des Tages<small id="datum"></small></h1>
+    <span class="modus" id="modus" hidden>Übung</span>
+    <span class="chip" id="serie" title="Serie">🔥 0</span>
+  </header>
+  <div class="hint" id="hint">Lade Wörter …</div>
+  <div class="raster" id="raster"></div>
+  <div class="meldung" id="meldung" aria-live="polite"></div>
+  <button class="tipp-btn" id="tipp-btn" type="button" hidden>💡 Tipp: Was heißt das Wort auf Deutsch?</button>
+  <div class="tipp-text" id="tipp-text" hidden></div>
+  <div class="tasten" id="tasten"></div>
+</div>
+
+<div class="overlay" id="klasse-wahl" hidden>
+  <div class="sheet">
+    <h2>In welche Klasse gehst du?</h2>
+    <p class="klein" style="margin-top:.4rem">Dann bekommst du dasselbe Wort wie deine Klasse.</p>
+    <div class="tabs" id="klasse-tabs"></div>
+  </div>
+</div>
+
+<div class="overlay" id="ergebnis" hidden>
+  <div class="sheet" id="ergebnis-body"></div>
+</div>
+
+<script src="../gemeinsam/navbar.js"></script>
+<script src="../gemeinsam/aufgaben.js"></script>
+<script src="../gemeinsam/spiel-hilfen.js"></script>
+<script>
+'use strict';
+
+/* ═══════════════════════════════════════════════════════
+   EINSTELLUNGEN
+   ═══════════════════════════════════════════════════════ */
+const CFG = {
+  versuche: 6,
+  min: 4, max: 6,              // Wortlänge
+  tippAb: 3,                   // Tipp (deutsche Bedeutung) nach so vielen Fehlversuchen
+  keineWiederholung: 30,       // so viele Tage kommt ein Wort nicht noch einmal
+  startTag: '2026-09-01',      // ab hier wird die Wortfolge berechnet
+  merkeTage: 40,               // so viele Tage bleiben im Gerät gespeichert
+};
+const APP_KEY = 'wort-des-tages.html';
+const SPEICHER = 'lern-wort-des-tages';
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const REDUCED = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ═══════════════════════════════════════════════════════
+   SPEICHER
+   ═══════════════════════════════════════════════════════ */
+function lade() {
+  let d = {};
+  try { d = JSON.parse(localStorage.getItem(SPEICHER) || '{}') || {}; } catch (e) {}
+  return Object.assign({ tage: {}, serie: 0, besteSerie: 0, gespielt: 0, geloest: 0, verteilung: [0, 0, 0, 0, 0, 0], klasse: null }, d);
+}
+function speichere() {
+  const tage = Object.keys(D.tage).sort();
+  tage.slice(0, Math.max(0, tage.length - CFG.merkeTage)).forEach(t => delete D.tage[t]);
+  try { localStorage.setItem(SPEICHER, JSON.stringify(D)); } catch (e) {}
+}
+let D = lade();
+
+/* ═══════════════════════════════════════════════════════
+   WÖRTER
+   ═══════════════════════════════════════════════════════ */
+function klasse() { return LernAufgaben.klasse() || D.klasse || null; }
+function wortBis() { try { return LernPass.settings.spiele.wortBis || {}; } catch (e) { return {}; } }
+
+/** Wortliste der Klasse (für alle Kinder der Klasse gleich) */
+async function klassenWoerter(k) {
+  const bis = wortBis();
+  const teile = [];
+  const opt = { klasse: 9, min: CFG.min, max: CFG.max };
+  if (k <= 5) teile.push(await LernAufgaben.woerter({ ...opt, pools: ['vok5'], bis: bis[5] || undefined }));
+  else if (k === 6) {
+    teile.push(await LernAufgaben.woerter({ ...opt, pools: ['vok5'] }));
+    teile.push(await LernAufgaben.woerter({ ...opt, pools: ['vok6'], bis: bis[6] || undefined }));
+  } else teile.push(await LernAufgaben.woerter({ ...opt, pools: ['vok5', 'vok6'] }));
+  const gesehen = new Set(), liste = [];
+  teile.flat().forEach(w => { if (!gesehen.has(w.wort)) { gesehen.add(w.wort); liste.push(w); } });
+  return liste.sort((a, b) => a.wort < b.wort ? -1 : a.wort > b.wort ? 1 : 0);
+}
+
+/** Zahl aus Text (für die feste Tagesreihenfolge) */
+function hash(s) { let h = 2166136261 >>> 0; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
+function tagNr(key) { const [y, m, d] = key.split('-').map(Number); return Math.round(Date.UTC(y, m - 1, d) / 864e5); }
+function tagAus(nr) { const d = new Date(nr * 864e5); return d.toISOString().slice(0, 10); }
+
+/**
+ * Tageswort: für jeden Tag ab CFG.startTag das Wort mit dem kleinsten Hash,
+ * das in den letzten 30 Tagen noch nicht dran war. Überall gleich, ohne Server.
+ */
+function tagesWort(liste, k, heute) {
+  if (!liste.length) return null;
+  const sperre = Math.min(CFG.keineWiederholung, liste.length - 1);
+  const letzte = [];
+  let wort = null;
+  for (let n = tagNr(CFG.startTag); n <= tagNr(heute); n++) {
+    const tag = tagAus(n);
+    let best = null, bestH = Infinity;
+    for (const w of liste) {
+      if (letzte.includes(w.wort)) continue;
+      const h = hash(tag + '|' + k + '|' + w.wort);
+      if (h < bestH) { bestH = h; best = w; }
+    }
+    wort = best;
+    letzte.push(best.wort);
+    if (letzte.length > sperre) letzte.shift();
+  }
+  return wort;
+}
+
+// Prüfliste: Wörter aus beiden Büchern + gemeinfreie Wortliste (nur 4–6 Buchstaben)
+let PRUEF = null;
+async function ladePruefliste() {
+  const s = new Set();
+  (await LernAufgaben.woerter({ pools: ['vok5', 'vok6'], klasse: 9, min: CFG.min, max: CFG.max })).forEach(w => s.add(w.wort));
+  try {
+    const d = await fetch('../daten/woerter-en.json').then(r => r.json());
+    [4, 5, 6].forEach(n => { const t = d[n] || ''; for (let i = 0; i + n <= t.length; i += n) s.add(t.slice(i, i + n).toUpperCase()); });
+  } catch (e) { PRUEF_OFFEN = true; }
+  PRUEF = s;
+}
+let PRUEF_OFFEN = false;          // Liste nicht ladbar → jedes Wort zählt
+function istWort(w) { return PRUEF_OFFEN || !PRUEF || PRUEF.has(w); }
+
+/* ═══════════════════════════════════════════════════════
+   SPIEL
+   ═══════════════════════════════════════════════════════ */
+const S = { ziel: null, versuche: [], eingabe: '', fertig: false, geloest: false, tipp: false, uebung: false, tag: '', start: 0, sperre: false, liste: [] };
+const L = () => S.ziel.wort.length;
+
+/** Farben eines Versuchs (doppelte Buchstaben richtig behandelt) */
+function bewerte(versuch, ziel) {
+  const erg = Array(ziel.length).fill('grau'), rest = {};
+  for (let i = 0; i < ziel.length; i++) {
+    if (versuch[i] === ziel[i]) erg[i] = 'gruen';
+    else rest[ziel[i]] = (rest[ziel[i]] || 0) + 1;
+  }
+  for (let i = 0; i < ziel.length; i++) {
+    if (erg[i] !== 'gruen' && rest[versuch[i]] > 0) { erg[i] = 'gelb'; rest[versuch[i]]--; }
+  }
+  return erg;
+}
+
+function baueRaster() {
+  $('raster').innerHTML = Array.from({ length: CFG.versuche }, (_, r) =>
+    `<div class="zeile" style="grid-template-columns:repeat(${L()},var(--tile))" data-r="${r}">${
+      Array.from({ length: L() }, () => '<div class="kachel"></div>').join('')}</div>`).join('');
+}
+function zeigeZeile(r, text, farben, animiert) {
+  const z = $('raster').children[r];
+  if (!z) return;
+  [...z.children].forEach((k, i) => {
+    const c = text[i] || '';
+    if (farben) {
+      const setze = () => { k.textContent = c; k.className = 'kachel ' + farben[i] + (animiert && !REDUCED ? ' dreh' : ''); };
+      if (animiert && !REDUCED) { k.textContent = c; setTimeout(setze, i * 230); } else setze();
+    } else {
+      const neu = c && k.textContent !== c;
+      k.textContent = c;
+      k.className = 'kachel' + (c ? ' voll' : '');
+      if (neu && !REDUCED) { k.classList.remove('voll'); void k.offsetWidth; k.classList.add('voll'); }
+    }
+  });
+}
+function alleZeilen() {
+  S.versuche.forEach((v, r) => zeigeZeile(r, v, bewerte(v, S.ziel.wort), false));
+  if (!S.fertig) zeigeZeile(S.versuche.length, S.eingabe, null, false);
+}
+
+const REIHEN = ['QWERTYUIOP', 'ASDFGHJKL', '⏎ZXCVBNM⌫'];
+function baueTasten() {
+  $('tasten').innerHTML = REIHEN.map(r => `<div class="reihe">${[...r].map(c => {
+    if (c === '⏎') return '<button type="button" class="taste breit" data-k="Enter" aria-label="Prüfen">Prüfen</button>';
+    if (c === '⌫') return '<button type="button" class="taste breit" data-k="Backspace" aria-label="Löschen">⌫</button>';
+    return `<button type="button" class="taste" data-k="${c}">${c}</button>`;
+  }).join('')}</div>`).join('');
+}
+function faerbeTasten() {
+  const rang = { grau: 1, gelb: 2, gruen: 3 }, st = {};
+  S.versuche.forEach(v => bewerte(v, S.ziel.wort).forEach((f, i) => { const c = v[i]; if (!st[c] || rang[f] > rang[st[c]]) st[c] = f; }));
+  document.querySelectorAll('.taste[data-k]').forEach(t => {
+    const k = t.dataset.k;
+    t.classList.remove('gruen', 'gelb', 'grau');
+    if (st[k]) t.classList.add(st[k]);
+  });
+}
+
+// Tippen: sofort beim Berühren (schnelles Schreiben auf dem iPad)
+$('tasten').addEventListener('pointerdown', e => {
+  const t = e.target.closest('.taste');
+  if (!t) return;
+  e.preventDefault();
+  taste(t.dataset.k);
+});
+window.addEventListener('keydown', e => {
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+  if (e.key === 'Enter' || e.key === 'Backspace') { e.preventDefault(); taste(e.key); }
+  else if (/^[a-zA-Z]$/.test(e.key)) taste(e.key.toUpperCase());
+});
+
+function taste(k) {
+  if (!S.ziel || S.fertig || S.sperre) return;
+  if (k === 'Backspace') S.eingabe = S.eingabe.slice(0, -1);
+  else if (k === 'Enter') { pruefe(); return; }
+  else if (/^[A-Z]$/.test(k) && S.eingabe.length < L()) S.eingabe += k;
+  zeigeZeile(S.versuche.length, S.eingabe, null, false);
+}
+
+function meldung(txt, ms = 1600) {
+  $('meldung').innerHTML = txt ? `<span>${esc(txt)}</span>` : '';
+  clearTimeout(meldung.t);
+  if (txt && ms) meldung.t = setTimeout(() => { $('meldung').innerHTML = ''; }, ms);
+}
+function wackeln() {
+  const z = $('raster').children[S.versuche.length];
+  if (!z || REDUCED) return;
+  z.classList.remove('wackeln'); void z.offsetWidth; z.classList.add('wackeln');
+}
+
+function pruefe() {
+  const w = S.eingabe;
+  if (w.length < L()) { meldung(`Das Wort hat ${L()} Buchstaben.`); wackeln(); return; }
+  if (!istWort(w)) { meldung('Dieses Wort kenne ich nicht.'); wackeln(); return; }
+  S.versuche.push(w); S.eingabe = '';
+  const r = S.versuche.length - 1, farben = bewerte(w, S.ziel.wort);
+  S.sperre = true;
+  zeigeZeile(r, w, farben, true);
+  const dauer = REDUCED ? 0 : L() * 230 + 300;
+  S.geloest = w === S.ziel.wort;
+  S.fertig = S.geloest || S.versuche.length >= CFG.versuche;
+  sichereTag();
+  setTimeout(() => {
+    S.sperre = false;
+    faerbeTasten();
+    tippAnzeigen();
+    if (S.geloest) {
+      if (!REDUCED) [...$('raster').children[r].children].forEach((k, i) => setTimeout(() => k.classList.add('huepf'), i * 90));
+      meldung(['Genial!', 'Super!', 'Stark!', 'Gut gemacht!', 'Geschafft!', 'Puh, knapp!'][r], 1400);
+      setTimeout(() => ende(true), REDUCED ? 300 : 1300);
+    } else if (S.fertig) {
+      meldung(S.ziel.wort, 0);
+      setTimeout(() => ende(false), 1400);
+    }
+  }, dauer);
+}
+
+function tippAnzeigen() {
+  const fehl = S.versuche.filter(v => v !== S.ziel.wort).length;
+  $('tipp-btn').hidden = S.fertig || S.tipp || fehl < CFG.tippAb;
+  $('tipp-text').hidden = !S.tipp;
+  if (S.tipp) $('tipp-text').textContent = `💡 Auf Deutsch: ${S.ziel.de}`;
+}
+$('tipp-btn').onclick = () => { S.tipp = true; sichereTag(); tippAnzeigen(); };
+
+/** Stand des heutigen Tages sichern (nicht im Übungsmodus) */
+function sichereTag() {
+  if (S.uebung) return;
+  D.tage[S.tag] = { wort: S.ziel.wort, versuche: S.versuche.slice(), fertig: S.fertig, geloest: S.geloest, tipp: S.tipp, start: S.start, gewertet: (D.tage[S.tag] || {}).gewertet || false };
+  speichere();
+}
+
+function muster() {
+  const zeichen = { gruen: '🟩', gelb: '🟨', grau: '⬛' };
+  return S.versuche.map(v => bewerte(v, S.ziel.wort).map(f => zeichen[f]).join('')).join('<br>');
+}
+
+function ende(geloest) {
+  let xpInfo = '';
+  if (!S.uebung) {
+    const T = D.tage[S.tag];
+    if (!T.gewertet) {
+      T.gewertet = true;
+      D.gespielt++;
+      if (geloest) {
+        D.geloest++; D.serie++; D.besteSerie = Math.max(D.besteSerie, D.serie);
+        D.verteilung[S.versuche.length - 1]++;
+      } else D.serie = 0;
+      speichere();
+      // XP: gelöst zählt als „guter Tag“ (ab 10), früher gelöst gibt mehr, Tipp kostet 2
+      const punkte = geloest ? Math.max(8, 10 + (CFG.versuche - S.versuche.length) * 2 - (S.tipp ? 2 : 0)) : 3;
+      LernSpiel.endlos({ key: APP_KEY, correct: punkte, seconds: (Date.now() - (S.start || Date.now())) / 1000 });
+      if (geloest && window.LernPass) LernPass.celebrate('konfetti');
+    }
+  }
+  kopf();
+  zeigeErgebnis(geloest);
+}
+
+function zeigeErgebnis(geloest) {
+  const w = S.ziel;
+  const datum = new Date(S.tag + 'T12:00').toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' });
+  $('ergebnis-body').innerHTML = `
+    <h2>${geloest ? (S.uebung ? 'Gelöst!' : 'Gelöst! 🎉') : 'Diesmal nicht …'}</h2>
+    <div class="loesung"><div class="en">${esc(w.wort)}</div><div class="de">${esc(w.en)} = ${esc(w.de)}</div></div>
+    ${S.uebung ? '<p class="klein">Übungswort – zählt nicht für die Serie.</p>' : `
+    <div class="muster" aria-label="Dein Ergebnis-Muster">${muster()}</div>
+    <p class="klein">Wort des Tages ${datum} · ${geloest ? S.versuche.length : 'X'}/${CFG.versuche}${S.tipp ? ' · mit Tipp' : ''}<br>
+      Zeig dein Muster her – aber verrate das Wort nicht!</p>
+    <div class="stat"><div><b>${D.serie}</b><span>Serie 🔥</span></div><div><b>${D.besteSerie}</b><span>beste Serie</span></div>
+      <div><b>${D.gespielt ? Math.round(D.geloest / D.gespielt * 100) : 0} %</b><span>gelöst</span></div></div>
+    <p class="klein" id="naechstes"></p>`}
+    <div class="btns">
+      <button class="btn primary" type="button" id="ueben-btn">🔁 Weiter üben</button>
+      <button class="btn" type="button" id="zu-btn">${S.uebung ? 'Zum Wort des Tages' : 'Schließen'}</button>
+    </div>`;
+  $('ergebnis').hidden = false;
+  $('ueben-btn').onclick = () => { $('ergebnis').hidden = true; starteUebung(); };
+  $('zu-btn').onclick = () => { $('ergebnis').hidden = true; if (S.uebung) starteTag(); };
+  countdown();
+}
+function countdown() {
+  const el = $('naechstes');
+  if (!el) return;
+  const jetzt = new Date(), morgen = new Date(jetzt.getFullYear(), jetzt.getMonth(), jetzt.getDate() + 1);
+  const min = Math.ceil((morgen - jetzt) / 60000);
+  el.textContent = `Nächstes Wort in ${Math.floor(min / 60)} h ${min % 60} min`;
+  clearTimeout(countdown.t);
+  countdown.t = setTimeout(() => { if (LernSpiel.tagSchluessel() !== S.tag && !S.uebung) location.reload(); else countdown(); }, 30000);
+}
+
+function kopf() {
+  $('serie').textContent = '🔥 ' + D.serie;
+  $('serie').classList.toggle('aus', !D.serie);
+  $('modus').hidden = !S.uebung;
+  const t = new Date(S.tag + 'T12:00');
+  $('datum').textContent = S.uebung ? 'Übungswort' : t.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' });
+  $('hint').innerHTML = `Ein englisches Wort aus deinem Buch · <b>${L()} Buchstaben</b>`;
+}
+
+function spielBereit() {
+  baueRaster(); alleZeilen(); faerbeTasten(); tippAnzeigen(); kopf();
+  meldung('');
+}
+
+function starteTag() {
+  const k = klasse();
+  S.uebung = false;
+  S.tag = LernSpiel.tagSchluessel();
+  const ziel = tagesWort(S.liste, k, S.tag);
+  if (!ziel) { $('hint').textContent = 'Für deine Klasse gibt es noch keine Wörter.'; return; }
+  S.ziel = ziel;
+  const T = D.tage[S.tag];
+  if (T && T.wort === ziel.wort) Object.assign(S, { versuche: T.versuche.slice(), fertig: !!T.fertig, geloest: !!T.geloest, tipp: !!T.tipp, start: T.start || Date.now() });
+  else Object.assign(S, { versuche: [], fertig: false, geloest: false, tipp: false, start: Date.now() });
+  S.eingabe = '';
+  spielBereit();
+  if (S.fertig) zeigeErgebnis(S.geloest);
+}
+
+function starteUebung() {
+  const heute = S.uebung ? null : S.ziel && S.ziel.wort;
+  const pool = S.liste.filter(w => w.wort !== heute && (!S.ziel || w.wort !== S.ziel.wort));
+  if (!pool.length) return;
+  S.ziel = pool[Math.floor(Math.random() * pool.length)];
+  Object.assign(S, { uebung: true, versuche: [], eingabe: '', fertig: false, geloest: false, tipp: false });
+  spielBereit();
+}
+
+/* ═══════════════════════════════════════════════════════
+   START
+   ═══════════════════════════════════════════════════════ */
+async function los() {
+  const k = klasse();
+  if (!k) {
+    $('klasse-tabs').innerHTML = [5, 6, 7, 8, 9].map(n => `<button type="button" data-kl="${n}">Klasse ${n}</button>`).join('');
+    $('klasse-wahl').hidden = false;
+    return;
+  }
+  baueTasten();
+  try {
+    [S.liste] = await Promise.all([klassenWoerter(k), ladePruefliste()]);
+  } catch (e) { $('hint').textContent = 'Die Wörter konnten nicht geladen werden. Bist du online?'; return; }
+  starteTag();
+}
+$('klasse-tabs').addEventListener('click', e => {
+  const b = e.target.closest('[data-kl]');
+  if (!b) return;
+  D.klasse = Number(b.dataset.kl); speichere();
+  $('klasse-wahl').hidden = true;
+  los();
+});
+LernSpiel.whenPass(los);
+</script>
+</body>
+</html>

@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#0f0e1a">
+  <title>Tauziehen-Duell</title>
+  <!--
+  ═══════════════════════════════════════════════
+   TAUZIEHEN-DUELL  (spiele/tauziehen.html)
+
+   Zwei Kinder, ein iPad, gegenüber am Tisch. Der Bildschirm ist geteilt,
+   die obere Hälfte steht auf dem Kopf. Beide bekommen dieselbe Aufgabe
+   (Antworten je Seite anders gemischt). Wer zuerst richtig antwortet,
+   zieht das Seil ein Stück zu sich – schnelles, sicheres Abrufen IST die
+   Zugkraft. Wer falsch tippt, stolpert und ist bei dieser Aufgabe raus.
+   Gewinnt ein Satz: Tuch über die eigene Linie oder nach Ablauf der Zeit
+   vorne. Wer zuerst 2 Sätze hat, gewinnt das Duell.
+
+   Aufgaben: „Meine Themen“ des iPad-Kindes (unten), frei gewählt oder per
+   Lehrer-Link, z. B. tauziehen.html?pool=1x1-klein
+   XP: nur für das iPad-Kind, über LernPass.awardEndless (einmal am Tag).
+   Braucht: navbar.js, aufgaben.js, spiel-hilfen.js, avatar3d.js, vendor/three.min.js
+  ═══════════════════════════════════════════════
+  -->
+  <link rel="stylesheet" href="../gemeinsam/fonts.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f0e1a; --panel: rgba(27,25,41,.9); --surface: #1b1929;
+      --accent: #e6a817; --accent2: #fde68a; --indigo: #6366f1; --indigo2: #818cf8;
+      --text: #f1f0fb; --text2: rgba(241,240,251,.7); --muted: rgba(241,240,251,.42);
+      --green: #4ade80; --red: #f87171;
+      --team1: #f59e0b; --team2: #818cf8;
+    }
+    html, body { height: 100%; overflow: hidden; }
+    body { font-family: 'Nunito', system-ui, sans-serif; background: #9fd4ff; color: var(--text);
+      -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+    button { font: inherit; color: inherit; border: 0; background: none; cursor: pointer; touch-action: manipulation; }
+    button:focus-visible, select:focus-visible { outline: 3px solid var(--indigo2); outline-offset: 2px; }
+    [hidden] { display: none !important; }
+
+    #stage { position: fixed; inset: 0; touch-action: none; }
+    #stage canvas { display: block; width: 100%; height: 100%; }
+
+    /* ── Spielhälften ─────────────────────── */
+    .half { position: fixed; left: 0; right: 0; height: 50%; pointer-events: none; }
+    .half.bot { bottom: 0; }
+    .half.top { top: 0; transform: rotate(180deg); }
+    .half .inner { position: absolute; inset: 0; padding: .6rem max(.7rem, env(safe-area-inset-left)) max(.7rem, env(safe-area-inset-bottom));
+      display: flex; flex-direction: column; justify-content: space-between; }
+    .half.top .inner { padding-bottom: max(.7rem, env(safe-area-inset-top)); }
+    .hud { display: flex; justify-content: space-between; align-items: center; gap: .5rem; }
+    .chip { background: var(--panel); border-radius: 14px; padding: .35rem .7rem; font-weight: 900; font-size: .95rem;
+      display: inline-flex; align-items: center; gap: .4rem; box-shadow: 0 6px 18px rgba(0,0,0,.25); }
+    .chip .dot { width: .8rem; height: .8rem; border-radius: 50%; border: 2px solid currentColor; display: inline-block; }
+    .chip .dot.on { background: currentColor; }
+    .bot .chip.name { color: var(--team1); }
+    .top .chip.name { color: var(--team2); }
+    .zeit.knapp { color: var(--red); }
+
+    .qbar { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 2.4fr); gap: .6rem; align-items: stretch; pointer-events: auto; }
+    .qcard { background: var(--panel); border-radius: 18px; padding: .45rem .8rem; text-align: center; display: flex; flex-direction: column;
+      justify-content: center; box-shadow: 0 10px 30px rgba(0,0,0,.3); border: 2px solid rgba(230,168,23,.35); min-height: 76px; }
+    .top .qcard { border-color: rgba(129,140,248,.45); }
+    .qhint { font-size: .78rem; font-weight: 800; color: var(--muted); }
+    .qtext { font-family: 'Fredoka One', 'Nunito', sans-serif; font-size: clamp(1.25rem, 3.6vmin, 2.2rem); line-height: 1.1; overflow-wrap: anywhere; }
+    .qtext.in { animation: pop .3s cubic-bezier(.2,.9,.3,1.3); }
+    @keyframes pop { from { transform: scale(.85); opacity: 0; } to { transform: none; opacity: 1; } }
+    .answers { display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem; }
+    .ans { background: var(--panel); border-radius: 16px; min-height: 76px; padding: .4rem .5rem; font-weight: 900;
+      font-size: clamp(1rem, 2.9vmin, 1.5rem); line-height: 1.12; border: 3px solid transparent; box-shadow: 0 8px 22px rgba(0,0,0,.28);
+      overflow-wrap: anywhere; transition: transform .1s, opacity .2s; }
+    .ans:active { transform: scale(.97); }
+    .half.fertig .qbar { visibility: hidden; }
+    .ans.ok { background: #14532d; border-color: var(--green); }
+    .ans.bad { background: #5b1a24; border-color: var(--red); }
+    .ans.loesung { border-color: var(--green); }
+    .answers.aus .ans:not(.ok):not(.bad):not(.loesung) { opacity: .35; }
+    @media (max-width: 640px) { .qbar { grid-template-columns: 1fr; } .qcard { min-height: 58px; } .ans { min-height: 60px; } }
+
+    .flash { position: absolute; left: 50%; top: 38%; transform: translate(-50%, -50%); font-family: 'Fredoka One', 'Nunito', sans-serif;
+      font-size: clamp(1.3rem, 4.5vmin, 2.4rem); padding: .45rem 1.1rem; border-radius: 18px; background: var(--panel); opacity: 0;
+      transition: opacity .15s; text-align: center; white-space: nowrap; pointer-events: none; }
+    .flash.show { opacity: 1; }
+    .flash.ok { color: var(--accent2); }
+    .flash.bad { color: var(--red); }
+    .flash.info { color: var(--text); }
+    .flash small { display: block; font-family: 'Nunito', sans-serif; font-weight: 900; font-size: .55em; color: var(--text2); }
+    .count { position: absolute; inset: 0; display: grid; place-items: center; font-family: 'Fredoka One', 'Nunito', sans-serif;
+      font-size: clamp(3.5rem, 16vmin, 8rem); color: #fff; text-shadow: 0 6px 30px rgba(0,0,0,.35); pointer-events: none; }
+
+    /* Ersatz ohne 3D */
+    .nogl { position: absolute; left: 10%; right: 10%; top: 42%; height: 18px; border-radius: 9px;
+      background: linear-gradient(90deg, var(--team2) 0 10%, rgba(0,0,0,.25) 10% 90%, var(--team1) 90%); }
+    .nogl i { position: absolute; top: -9px; width: 12px; height: 36px; border-radius: 4px; background: #dc2626;
+      left: calc(50% + var(--p, 0) * 8% - 6px); transition: left .25s; }
+    .top .nogl { transform: scaleX(-1); }
+
+    #ende-btn { position: fixed; left: 24%; top: 50%; transform: translate(-50%, -50%); width: 42px; height: 42px;
+      border-radius: 50%; background: var(--panel); font-size: 1.1rem; font-weight: 900; box-shadow: 0 6px 18px rgba(0,0,0,.3); z-index: 5; }
+
+    /* ── Menü ─────────────────────────────── */
+    .overlay { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
+      padding: 1rem 1rem calc(4.5rem + env(safe-area-inset-bottom)); overflow-y: auto; background: rgba(15,14,26,.35); z-index: 10; }
+    .sheet { width: min(560px, 100%); background: var(--panel); border-radius: 22px; padding: 1.3rem 1.3rem 1.2rem;
+      box-shadow: 0 20px 60px rgba(0,0,0,.35); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); margin: auto 0; }
+    h1 { font-family: 'Fredoka One', 'Nunito', sans-serif; font-weight: 400; color: var(--accent); font-size: 2.1rem; line-height: 1.05; }
+    .lead { color: var(--text2); font-size: .92rem; margin: .3rem 0 .9rem; }
+    .lbl { display: block; font-size: .78rem; font-weight: 900; color: var(--muted); margin: .9rem 0 .4rem; }
+    .tabs { display: flex; gap: .35rem; flex-wrap: wrap; }
+    .tabs button { padding: .45rem .85rem; border-radius: 99px; font-weight: 900; font-size: .86rem; background: rgba(255,255,255,.06); color: var(--text2); min-height: 40px; }
+    .tabs button.on { background: var(--indigo); color: #fff; }
+    .pools { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .55rem; }
+    .pools button { padding: .45rem .75rem; border-radius: 12px; font-weight: 800; font-size: .86rem; background: rgba(255,255,255,.06);
+      border: 2px solid transparent; text-align: left; min-height: 40px; }
+    .pools button.on { border-color: var(--accent); background: rgba(230,168,23,.14); color: var(--accent2); }
+    .row { display: flex; gap: .6rem; flex-wrap: wrap; align-items: center; }
+    select { font: inherit; font-weight: 800; font-size: .88rem; background: #252238; color: var(--text); border: 1px solid rgba(255,255,255,.12);
+      border-radius: 10px; padding: .45rem .6rem; max-width: 100%; }
+    .meine { width: 100%; min-height: 62px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: .5rem 1rem; border-radius: 16px; background: rgba(255,255,255,.06); border: 3px solid rgba(230,168,23,.3);
+      font-family: 'Fredoka One', 'Nunito', sans-serif; font-size: 1.35rem; line-height: 1.1; }
+    .meine small { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: .8rem; color: var(--muted); margin-top: .15rem; }
+    .meine small:empty { display: none; }
+    .meine.on { border-color: var(--accent); background: rgba(230,168,23,.18); color: var(--accent2); }
+    .selbst { display: block; margin: .5rem auto 0; min-height: 44px; padding: .4rem 1.1rem; border-radius: 99px; font-weight: 900; font-size: .92rem;
+      background: rgba(255,255,255,.06); color: var(--text2); }
+    .selbst.on { background: var(--indigo); color: #fff; }
+    .note { font-size: .8rem; color: var(--muted); margin-top: .5rem; font-weight: 700; }
+    .gaeste { display: grid; grid-template-columns: repeat(6, 1fr); gap: .4rem; }
+    .gaeste button { border-radius: 14px; background: rgba(255,255,255,.06); border: 3px solid transparent; padding: .2rem; aspect-ratio: 5 / 6;
+      display: grid; place-items: center; font-size: 1.6rem; overflow: hidden; }
+    .gaeste button img { width: 100%; height: 100%; object-fit: contain; display: block; }
+    .gaeste button.on { border-color: var(--team2); background: rgba(129,140,248,.18); }
+    @media (max-width: 480px) { .gaeste { grid-template-columns: repeat(3, 1fr); } }
+    .sitz { display: flex; gap: .6rem; align-items: center; background: rgba(255,255,255,.05); border-radius: 14px; padding: .6rem .8rem;
+      font-size: .86rem; font-weight: 800; color: var(--text2); margin-top: .8rem; }
+    .sitz b { color: var(--team1); }
+    .unten { display: flex; gap: .6rem; margin-top: 1.1rem; }
+    .go { flex: 1; min-height: 56px; border-radius: 16px; background: var(--accent); color: #231a02; font-family: 'Fredoka One', 'Nunito', sans-serif; font-size: 1.4rem; }
+    .go:disabled { opacity: .45; cursor: default; }
+    .ton { width: 56px; min-height: 56px; border-radius: 16px; background: rgba(255,255,255,.08); font-size: 1.3rem; }
+    .err { color: var(--red); font-weight: 800; font-size: .88rem; margin-top: .6rem; min-height: 1em; }
+
+    /* ── Ergebnis (je Hälfte) ─────────────── */
+    .res { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -58%); width: min(460px, 90%); background: var(--panel);
+      border-radius: 22px; padding: 1rem 1.2rem; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,.35); pointer-events: auto; }
+    .res .big { font-family: 'Fredoka One', 'Nunito', sans-serif; font-size: clamp(1.8rem, 6vmin, 2.8rem); color: var(--accent2); line-height: 1.05; }
+    .res .sub { color: var(--text2); font-weight: 800; font-size: .92rem; margin-top: .35rem; }
+    .res .fehler { text-align: left; margin-top: .6rem; font-size: .85rem; color: var(--text2); max-height: 7.5em; overflow-y: auto; }
+    .res .fehler b { color: var(--accent2); }
+    .btns { display: flex; gap: .6rem; justify-content: center; margin-top: .8rem; flex-wrap: wrap; }
+    .btn { min-height: 48px; padding: .5rem 1.1rem; border-radius: 14px; font-weight: 900; background: rgba(255,255,255,.08); }
+    .btn.primary { background: var(--accent); color: #231a02; }
+    @media (prefers-reduced-motion: reduce) { .qtext.in { animation: none; } .ans { transition: none; } }
+  </style>
+</head>
+<body>
+
+<div id="stage" aria-hidden="true"></div>
+
+<!-- ── Obere Hälfte: Kind 2 (steht auf dem Kopf) ── -->
+<div class="half top" id="half-1" hidden>
+  <div class="inner">
+    <div class="hud">
+      <span class="chip name"><span id="name-1">Gast</span> <span class="saetze" id="saetze-1"></span></span>
+      <span class="chip zeit" id="zeit-1">1:30</span>
+    </div>
+    <div class="qbar">
+      <div class="qcard"><div class="qhint" id="hint-1"></div><div class="qtext" id="q-1"></div></div>
+      <div class="answers" id="ans-1" data-seite="1"></div>
+    </div>
+  </div>
+  <div class="nogl" id="nogl-1" hidden><i></i></div>
+  <div class="flash" id="flash-1"></div>
+  <div class="count" id="count-1"></div>
+  <div class="res" id="res-1" hidden></div>
+</div>
+
+<!-- ── Untere Hälfte: Kind 1 (iPad-Kind) ── -->
+<div class="half bot" id="half-0" hidden>
+  <div class="inner">
+    <div class="hud">
+      <span class="chip name"><span id="name-0">Du</span> <span class="saetze" id="saetze-0"></span></span>
+      <span class="chip zeit" id="zeit-0">1:30</span>
+    </div>
+    <div class="qbar">
+      <div class="qcard"><div class="qhint" id="hint-0"></div><div class="qtext" id="q-0"></div></div>
+      <div class="answers" id="ans-0" data-seite="0"></div>
+    </div>
+  </div>
+  <div class="nogl" id="nogl-0" hidden><i></i></div>
+  <div class="flash" id="flash-0"></div>
+  <div class="count" id="count-0"></div>
+  <div class="res" id="res-0" hidden></div>
+</div>
+
+<button id="ende-btn" type="button" aria-label="Duell beenden" hidden>✕</button>
+
+<!-- ── Menü ─────────────────────────────────── -->
+<div class="overlay" id="menu">
+  <div class="sheet">
+    <h1>🪢 Tauziehen-Duell</h1>
+    <p class="lead">Zu zweit an einem iPad! Wer zuerst richtig antwortet, zieht das Seil zu sich. Falsch getippt? Dann stolperst du.</p>
+
+    <div id="meine-box" hidden>
+      <button type="button" class="meine on" id="meine-btn">⭐ Meine Themen<small id="meine-info"></small></button>
+      <button type="button" class="selbst" id="selbst-btn" hidden>Thema gemeinsam wählen</button>
+    </div>
+
+    <div id="klasse-box" hidden>
+      <span class="lbl">Klasse</span>
+      <div class="tabs" id="klasse-tabs"></div>
+    </div>
+
+    <div id="frei-box">
+      <span class="lbl">Thema</span>
+      <div class="tabs" id="fach-tabs"></div>
+      <div class="pools" id="pool-list"></div>
+      <div id="vok-box" hidden>
+        <span class="lbl">Vokabeln</span>
+        <div class="row">
+          <select id="vok-bis" aria-label="Vokabeln bis Unit"><option value="">Alle Units</option></select>
+          <select id="vok-richtung" aria-label="Richtung">
+            <option value="de-en">Deutsch → Englisch</option>
+            <option value="en-de">Englisch → Deutsch</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <p class="note" id="lehrer-note" hidden>Deine Lehrkraft hat dieses Thema ausgewählt.</p>
+
+    <span class="lbl">Figur für dein Gegenüber</span>
+    <div class="gaeste" id="gaeste"></div>
+
+    <span class="lbl">Vorsprung (für faire Duelle)</span>
+    <div class="tabs" id="vor-tabs">
+      <button type="button" data-vor="" class="on">Kein Vorsprung</button>
+      <button type="button" data-vor="0">Vorsprung für mich</button>
+      <button type="button" data-vor="1">Vorsprung für Gegenüber</button>
+    </div>
+
+    <div class="sitz">📱 <span>Du sitzt <b>unten</b>, dein Gegenüber sitzt dir gegenüber. Legt das iPad flach zwischen euch.</span></div>
+
+    <div class="unten">
+      <button class="go" id="go" type="button" disabled>Duell starten!</button>
+      <button class="ton" id="ton-btn" type="button" aria-label="Ton an oder aus">🔇</button>
+    </div>
+    <div class="err" id="menu-err"></div>
+  </div>
+</div>
+
+<script src="../gemeinsam/navbar.js"></script>
+<script src="../gemeinsam/aufgaben.js"></script>
+<script src="../gemeinsam/spiel-hilfen.js"></script>
+<script src="../gemeinsam/avatar3d.js"></script>
+<script>
+'use strict';
+
+/* ═══════════════════════════════════════════════════════
+   EINSTELLUNGEN (hier anpassen)
+   ═══════════════════════════════════════════════════════ */
+const CFG = {
+  schritte: 5,          // so viele Züge bis zur Linie
+  satzSek: 90,          // Länge eines Satzes
+  saetzeZumSieg: 2,     // „Best of 3“
+  vorsprung: 2,         // Vorsprung in Zügen
+  loesungSek: .9,       // Lösung kurz zeigen, bevor die nächste Aufgabe kommt
+  stolperSek: 1.1,
+  schritt: 4,           // Weg pro Zug in der 3D-Welt
+};
+// Figuren für das zweite Kind (Aussehen wie im Pass; Teile müssen nicht gekauft sein)
+const GAESTE = [
+  { name: 'Komet',     look: { haut: 1, frisur: 'zoepfe',      haarfarbe: 0, augen: 'wimpern',   mund: 'laecheln', eq: { oberteil: 'o-hoodie-lila', hose: 'h-jeans', schuhe: 's-sneaker' } } },
+  { name: 'Fels',      look: { haut: 4, frisur: 'buzz',        haarfarbe: 6, augen: 'normal',    mund: 'breit',    eq: { oberteil: 'o-trikot', hose: 'h-shorts', schuhe: 's-hightop' } } },
+  { name: 'Wirbel',    look: { haut: 2, frisur: 'afro',        haarfarbe: 1, augen: 'froehlich', mund: 'frech',    eq: { oberteil: 'o-shirt-gelb', hose: 'h-jogging', schuhe: 's-sneaker', kopf: 'k-stirnband' } } },
+  { name: 'Blitz',     look: { haut: 0, frisur: 'stachelig',   haarfarbe: 3, augen: 'gross',     mund: 'breit',    eq: { oberteil: 'o-hoodie-mint', hose: 'h-jeans', schuhe: 's-hightop' } } },
+  { name: 'Sturm',     look: { haut: 5, frisur: 'pferdeschwanz', haarfarbe: 6, augen: 'wimpern', mund: 'laecheln', eq: { oberteil: 'o-karohemd', hose: 'h-leggings', schuhe: 's-stiefel' } } },
+  { name: 'Rakete',    look: { haut: 3, frisur: 'lockig',      haarfarbe: 5, augen: 'froehlich', mund: 'frech',    eq: { oberteil: 'o-shirt', hose: 'h-latzhose', schuhe: 's-sneaker', kopf: 'k-cap-blau' } } },
+];
+const REDUCED = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+const APP_KEY = 'tauziehen.html';
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+
+/* ═══════════════════════════════════════════════════════
+   AUSWAHL (Menü) – wie in RUN!, aber ein Thema für beide
+   ═══════════════════════════════════════════════════════ */
+const WAHL_KEY = 'lern-tauziehen-wahl';
+const W = { pools: [], bis: '', richtung: 'de-en', fach: null, klasse: null, gast: 0, vor: '', ton: false, quelle: 'meine', lehrer: false };
+function loadWahl() { try { Object.assign(W, JSON.parse(localStorage.getItem(WAHL_KEY) || '{}')); } catch (e) {} W.lehrer = false; W.quelle = 'meine'; W.vor = ''; }
+function saveWahl() { try { const { lehrer, quelle, vor, ...w } = W; localStorage.setItem(WAHL_KEY, JSON.stringify(w)); } catch (e) {} }
+function spielAuswahl() { try { return LernPass.settings.spiele.auswahl || 'auto+frei'; } catch (e) { return 'auto+frei'; } }
+function quelle() {
+  const a = spielAuswahl();
+  if (W.lehrer || a === 'frei') return 'frei';
+  if (a === 'auto') return 'meine';
+  return W.quelle === 'frei' ? 'frei' : 'meine';
+}
+function klasse() { return LernAufgaben.klasse() || W.klasse || null; }
+
+let MEINE = null, gastBilder = [];
+function buildMenu() {
+  const passKl = LernAufgaben.klasse();
+  $('klasse-box').hidden = !!passKl;
+  if (!passKl) $('klasse-tabs').innerHTML = [5, 6, 7, 8, 9].map(k => `<button type="button" data-kl="${k}" class="${W.klasse === k ? 'on' : ''}">Klasse ${k}</button>`).join('');
+  const list = klasse() ? LernAufgaben.pools({ klasse: klasse() }) : [];
+  if (klasse() && !W.lehrer) W.pools = W.pools.filter(id => list.some(p => p.id === id)).slice(0, 1);
+  const faecher = [...new Set(list.map(p => p.fach))];
+  if (!faecher.includes(W.fach)) W.fach = ((list.find(p => p.id === W.pools[0]) || {}).fach) || faecher[0] || null;
+  $('fach-tabs').innerHTML = faecher.map(f => `<button type="button" data-fach="${esc(f)}" class="${f === W.fach ? 'on' : ''}">${esc(f)}</button>`).join('');
+  $('pool-list').innerHTML = list.filter(p => p.fach === W.fach)
+    .map(p => `<button type="button" data-pool="${esc(p.id)}" class="${W.pools.includes(p.id) ? 'on' : ''}">${esc(p.titel)}</button>`).join('')
+    || (klasse() ? '' : '<p class="note">Wähle zuerst die Klasse.</p>');
+  $('lehrer-note').hidden = !W.lehrer;
+  const auswahl = spielAuswahl(), q = quelle();
+  $('meine-box').hidden = auswahl === 'frei';
+  $('selbst-btn').hidden = auswahl !== 'auto+frei';
+  $('frei-box').hidden = q !== 'frei' || (auswahl === 'auto' && W.lehrer);
+  $('meine-btn').classList.toggle('on', q === 'meine');
+  $('selbst-btn').classList.toggle('on', q === 'frei' && !W.lehrer);
+  MEINE = q === 'meine' && klasse() ? LernAufgaben.meineThemen({ klasse: klasse() }) : null;
+  $('meine-info').textContent = MEINE ? (MEINE.anzahl === 1 ? '1 Thema' : MEINE.anzahl + ' Themen') : '';
+  $('gaeste').innerHTML = GAESTE.map((g, i) => `<button type="button" data-gast="${i}" class="${W.gast === i ? 'on' : ''}" aria-label="${esc(g.name)}">${
+    gastBilder[i] ? `<img src="${gastBilder[i]}" alt="">` : '🧍'}</button>`).join('');
+  document.querySelectorAll('#vor-tabs button').forEach(b => b.classList.toggle('on', b.dataset.vor === W.vor));
+  $('vok-richtung').value = W.richtung;
+  updateVok();
+  const bereit = q === 'meine' ? !!(MEINE && MEINE.anzahl) : W.pools.length > 0;
+  $('go').disabled = !bereit;
+  $('ton-btn').textContent = W.ton ? '🔊' : '🔇';
+}
+let vokFuer = null;
+async function updateVok() {
+  const vok = W.pools.find(id => /^vok/.test(id));
+  $('vok-box').hidden = !vok || quelle() !== 'frei';
+  if (!vok || vokFuer === vok) { $('vok-bis').value = W.bis; return; }
+  vokFuer = vok;
+  const units = await LernAufgaben.einheiten(vok).catch(() => []);
+  if (!units.length) vokFuer = null;
+  $('vok-bis').innerHTML = '<option value="">Alle Units</option>' +
+    units.map(u => `<option value="${esc(u.id)}">bis ${esc(u.id === 'intro' ? 'Einführung: ' + u.label : u.label)}</option>`).join('');
+  $('vok-bis').value = units.some(u => u.id === W.bis) ? W.bis : '';
+}
+$('menu').addEventListener('click', e => {
+  const t = e.target.closest('button');
+  if (!t) return;
+  if (t.dataset.kl) W.klasse = Number(t.dataset.kl);
+  else if (t.id === 'meine-btn') { W.quelle = 'meine'; W.lehrer = false; }
+  else if (t.id === 'selbst-btn') { W.quelle = 'frei'; W.lehrer = false; }
+  else if (t.dataset.fach) W.fach = t.dataset.fach;
+  else if (t.dataset.pool) { W.pools = [t.dataset.pool]; W.lehrer = false; }
+  else if (t.dataset.gast !== undefined) { W.gast = Number(t.dataset.gast); if (gl) setzeGast(); }
+  else if (t.dataset.vor !== undefined) W.vor = t.dataset.vor;
+  else if (t.id === 'ton-btn') { W.ton = !W.ton; tonBereit(); if (W.ton) ton(660, .1); }
+  else if (t.id === 'go') { tonBereit(); starteDuell(); return; }
+  else return;
+  saveWahl(); buildMenu();
+});
+$('vok-bis').onchange = () => { W.bis = $('vok-bis').value; saveWahl(); buildMenu(); };
+$('vok-richtung').onchange = () => { W.richtung = $('vok-richtung').value; saveWahl(); buildMenu(); };
+
+/* ── Ton (standardmäßig aus) ── */
+let AC = null;
+function tonBereit() {
+  if (!W.ton) return;
+  try { AC = AC || new (window.AudioContext || window.webkitAudioContext)(); if (AC.state === 'suspended') AC.resume(); } catch (e) {}
+}
+function ton(f, d = .12, typ = 'triangle', vol = .06) {
+  if (!W.ton) return;
+  try {
+    AC = AC || new (window.AudioContext || window.webkitAudioContext)();
+    const o = AC.createOscillator(), g = AC.createGain(), t = AC.currentTime;
+    o.type = typ; o.frequency.setValueAtTime(f, t);
+    g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(.0001, t + d);
+    o.connect(g); g.connect(AC.destination); o.start(t); o.stop(t + d + .02);
+  } catch (e) {}
+}
+
+/* ═══════════════════════════════════════════════════════
+   3D-WELT
+   Ein Seil entlang der z-Achse. Kind 1 (unten) steht bei +z, Kind 2 bei −z.
+   Jede Bildschirmhälfte zeigt die Welt von hinter der eigenen Figur;
+   die obere Kamera ist um 180° gedreht, damit das Bild für das Kind
+   gegenüber richtig herum steht.
+   ═══════════════════════════════════════════════════════ */
+let gl = false, T = null, renderer, scene, cams = [], team, figuren = [null, null], figHalter = [], seil, tuch, staub = [];
+const D = 30;                                   // Abstand Figur – Mitte
+
+async function init3d() {
+  const f0 = await LernAvatar.figur(null);
+  T = f0.THREE;
+  renderer = new T.WebGLRenderer({ antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+  $('stage').appendChild(renderer.domElement);
+  scene = new T.Scene();
+  scene.background = new T.Color(0x9fd4ff);
+  scene.fog = new T.Fog(0x9fd4ff, 320, 900);
+  scene.add(new T.HemisphereLight(0xffffff, 0x6b8f4e, .95));
+  const sonne = new T.DirectionalLight(0xffffff, .75); sonne.position.set(40, 80, 25); scene.add(sonne);
+
+  const M = c => new T.MeshLambertMaterial({ color: c });
+  const box = (w, h, d, c, x, y, z, p = scene) => { const m = new T.Mesh(new T.BoxGeometry(w, h, d), M(c)); m.position.set(x, y, z); p.add(m); return m; };
+  // Wiese: große Fläche bis zum Horizont, in der Mitte Schachbrett-Muster aus Blöcken
+  const weit = new T.Mesh(new T.PlaneGeometry(3000, 3000), M(0x74ba55));
+  weit.rotation.x = -Math.PI / 2; weit.position.y = -.05; scene.add(weit);
+  const wiese = new T.Group(); scene.add(wiese);
+  for (let x = -10; x < 10; x++) for (let z = -14; z < 14; z++)
+    box(10, 2, 10, (x + z) % 2 ? 0x7cc35a : 0x72b852, x * 10 + 5, -1, z * 10 + 5, wiese);
+  // Schlammgrube in der Mitte
+  box(34, .6, 12, 0x7a5230, 0, .1, 0);
+  for (let i = 0; i < 14; i++) box(2 + Math.random() * 3, .5, 2 + Math.random() * 3, 0x5e3d22, (Math.random() - .5) * 30, .45, (Math.random() - .5) * 9);
+  box(40, .25, .6, 0xffffff, 0, .5, 0);                                            // Mittellinie
+  // Siegeslinien in Teamfarben
+  const L = CFG.schritte * CFG.schritt;
+  box(28, .3, 1.2, 0xf59e0b, 0, .3, L);
+  box(28, .3, 1.2, 0x818cf8, 0, .3, -L);
+  // Deko: Bäume und Fahnen
+  const baum = (x, z) => { box(2.4, 8, 2.4, 0x8b5a2b, x, 4, z); box(9, 7, 9, 0x3f9a4a, x, 11, z); box(6, 4, 6, 0x4fb35a, x, 16, z); };
+  [[-38, -40], [42, -20], [-44, 12], [40, 34], [-36, 52], [46, -58], [-50, -70], [52, 70]].forEach(([x, z]) => baum(x, z));
+  const fahne = (x, z, c) => { box(.8, 16, .8, 0xe5e7eb, x, 8, z); box(.3, 5, 7, c, x, 13.5, z + 3.6 * Math.sign(-z || 1)); };
+  fahne(-17, L, 0xf59e0b); fahne(17, L, 0xf59e0b); fahne(-17, -L, 0x818cf8); fahne(17, -L, 0x818cf8);
+
+  // Team: Seil, Tuch und beide Figuren bewegen sich zusammen
+  team = new T.Group(); scene.add(team);
+  seil = new T.Mesh(new T.CylinderGeometry(.9, .9, D * 2 + 10, 8), M(0xd6b36a));
+  seil.rotation.x = Math.PI / 2; seil.position.y = 12.5; team.add(seil);
+  for (let z = -D - 4; z <= D + 4; z += 3) box(1.9, 1.9, .6, 0xb8934d, 0, 12.5, z, team);   // Seil-Struktur
+  tuch = new T.Group(); team.add(tuch);
+  box(.8, 2, 1.6, 0xdc2626, 0, 12.5, 0, tuch);
+  const lappen = box(.4, 6, 3, 0xef4444, 0, 8.8, 0, tuch);
+  tuch.userData.lappen = lappen;
+
+  for (let s = 0; s < 2; s++) {
+    const h = new T.Group();
+    h.position.z = s === 0 ? D : -D;
+    h.rotation.y = s === 0 ? Math.PI : 0;                                      // beide schauen zur Mitte
+    team.add(h); figHalter.push(h);
+  }
+  figuren[0] = f0; figHalter[0].add(f0.root);
+  await setzeGast();
+
+  // Kameras: schräg hinter der eigenen Figur, weit weg mit engem Blickwinkel
+  // (fast wie eine Zeichnung – beide Figuren wirken ähnlich groß)
+  for (let s = 0; s < 2; s++) {
+    const c = new T.PerspectiveCamera(18, 2, 20, 1400);
+    const sg = s === 0 ? 1 : -1;
+    c.position.set(sg * 40, 120, sg * 200);
+    if (s === 1) c.up.set(0, -1, 0);                                           // 180° gedreht für das Kind gegenüber
+    c.lookAt(0, 10, 0);
+    cams.push(c);
+  }
+  gl = true;
+  resize();
+  window.addEventListener('resize', resize);
+}
+async function setzeGast() {
+  if (!figHalter[1]) return;
+  if (figuren[1]) figHalter[1].remove(figuren[1].root);
+  figuren[1] = await LernAvatar.figur(GAESTE[W.gast].look);
+  figHalter[1].add(figuren[1].root);
+  zeichne();
+}
+function resize() {
+  if (!gl) return;
+  const w = innerWidth, h = innerHeight;
+  renderer.setSize(w, h, false);
+  const asp = w / (h / 2);
+  // gleicher Bildausschnitt in der Breite, im Hochformat etwas mehr Höhe
+  // Hochformat: etwas enger und näher an die Mitte, damit die Szene die Hälfte füllt
+  const fov = Math.min(24, Math.max(17, 17 + (2.9 - asp) * 4.5));
+  const blickZ = Math.min(14, Math.max(0, (2.9 - asp) * 9));
+  cams.forEach((c, s) => { c.aspect = asp; c.fov = fov; c.lookAt(0, 10, (s === 0 ? 1 : -1) * blickZ); c.updateProjectionMatrix(); });
+  zeichne();
+}
+function zeichne() {
+  if (!gl) return;
+  const w = innerWidth, h = innerHeight, hh = Math.floor(h / 2);
+  renderer.setScissorTest(true);
+  // WebGL zählt von unten: Kind 1 (unten) = 0 … hh, Kind 2 (oben) = hh … h
+  renderer.setViewport(0, 0, w, hh); renderer.setScissor(0, 0, w, hh); renderer.render(scene, cams[0]);
+  renderer.setViewport(0, hh, w, h - hh); renderer.setScissor(0, hh, w, h - hh); renderer.render(scene, cams[1]);
+  renderer.setScissorTest(false);
+}
+
+function staubWolke(s) {
+  if (!gl || REDUCED) return;
+  const z = team.position.z + (s === 0 ? D : -D);
+  for (let i = 0; i < 7; i++) {
+    const m = new T.Mesh(new T.BoxGeometry(1.4, 1.4, 1.4), new T.MeshLambertMaterial({ color: 0xc8a97a, transparent: true, opacity: .9 }));
+    m.position.set((Math.random() - .5) * 8, 1, z + (Math.random() - .5) * 4);
+    m.userData = { v: new T.Vector3((Math.random() - .5) * 14, 8 + Math.random() * 8, (Math.random() - .5) * 10), t: 0 };
+    scene.add(m); staub.push(m);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   SPIELABLAUF
+   ═══════════════════════════════════════════════════════ */
+const G = { zustand: 'menu', gen: null, meine: false, aufgabe: null, richtig: [0, 0], opts: [[], []],
+  pos: 0, posAnz: 0, saetze: [0, 0], zeit: 0, entscheidung: false, sp: null, wartT: 0, countT: 0, t: 0,
+  start: 0, fragen: 0, fehlerListe: [], zugT: [-1, -1], jubelT: [-1, -1], sieger: -1 };
+
+function neueSeite() { return { versucht: false, stolperT: -1, richtig: 0, falsch: 0 }; }
+
+function aufgabenQuelle() {
+  if (!klasse()) throw new Error('Wähle zuerst die Klasse.');
+  if (quelle() === 'meine') { const M = LernAufgaben.meineThemen({ klasse: klasse() }); return { ids: M.ids, opts: M.opts, meine: true }; }
+  return { ids: W.pools, opts: { klasse: klasse(), bis: W.bis || undefined, richtung: W.richtung }, meine: false };
+}
+
+async function starteDuell() {
+  $('menu-err').textContent = '';
+  try {
+    const A = aufgabenQuelle();
+    G.gen = await LernAufgaben.erzeuger(A.ids, A.opts);
+    G.meine = A.meine;
+    if (!G.gen.next()) throw new Error('Zu diesem Thema gibt es noch keine Aufgaben.');
+  } catch (e) { $('menu-err').textContent = e.message; return; }
+  const P = window.LernPass && LernPass.profile && LernPass.profile();
+  $('name-0').textContent = (P && P.name) || 'Du';
+  $('name-1').textContent = GAESTE[W.gast].name;
+  Object.assign(G, { saetze: [0, 0], sp: [neueSeite(), neueSeite()], start: performance.now(), fragen: 0, fehlerListe: [], sieger: -1 });
+  $('menu').hidden = true; $('ende-btn').hidden = false;
+  [0, 1].forEach(s => { $('half-' + s).hidden = false; $('half-' + s).classList.remove('fertig'); $('res-' + s).hidden = true; $('nogl-' + s).hidden = gl; });
+  setNavbar(false);
+  starteSatz();
+}
+
+function starteSatz() {
+  G.pos = W.vor === '0' ? CFG.vorsprung : W.vor === '1' ? -CFG.vorsprung : 0;
+  G.zeit = CFG.satzSek; G.entscheidung = false; G.aufgabe = null;
+  G.zustand = 'count'; G.countT = 3.2;
+  [0, 1].forEach(s => { $('q-' + s).textContent = ''; $('hint-' + s).textContent = 'Macht euch bereit …'; $('ans-' + s).innerHTML = ''; });
+  hud();
+}
+
+function neueAufgabe() {
+  let a = null;
+  for (let v = 0; v < 8 && !a; v++) { a = G.gen.next(); if (a && G.aufgabe && a.frage === G.aufgabe.frage) a = null; }
+  if (!a) a = G.gen.next();
+  G.aufgabe = a; G.fragen++;
+  G.sp.forEach(s => { s.versucht = false; });
+  for (let s = 0; s < 2; s++) {
+    // Antworten je Seite anders mischen, damit Abschauen nichts bringt
+    let o = shuffle(a.optionen);
+    if (s === 1) for (let v = 0; v < 6 && o.indexOf(a.antwort) === G.opts[0].indexOf(a.antwort); v++) o = shuffle(a.optionen);
+    G.opts[s] = o; G.richtig[s] = o.indexOf(a.antwort);
+    $('hint-' + s).textContent = G.entscheidung ? 'Entscheidungsfrage!' : (a.hinweis || '');
+    const q = $('q-' + s); q.textContent = a.frage; q.classList.remove('in'); void q.offsetWidth; q.classList.add('in');
+    const box = $('ans-' + s); box.classList.remove('aus');
+    box.innerHTML = o.map((t, i) => `<button type="button" class="ans" data-i="${i}">${esc(t)}</button>`).join('');
+  }
+  G.zustand = 'spiel';
+}
+
+// Tippen: sofort bei pointerdown, jede Seite unabhängig (beide gleichzeitig möglich)
+[0, 1].forEach(s => {
+  $('ans-' + s).addEventListener('pointerdown', e => {
+    const b = e.target.closest('.ans');
+    if (!b) return;
+    e.preventDefault();
+    antworte(s, Number(b.dataset.i));
+  });
+});
+// Tastatur (zum Testen am Rechner): unten 1–3, oben 7–9
+window.addEventListener('keydown', e => {
+  const k = { '1': [0, 0], '2': [0, 1], '3': [0, 2], '7': [1, 0], '8': [1, 1], '9': [1, 2] }[e.key];
+  if (k) antworte(k[0], k[1]);
+});
+
+function antworte(s, i) {
+  if (G.zustand !== 'spiel') return;
+  const sp = G.sp[s];
+  if (sp.versucht) return;
+  sp.versucht = true;
+  const knopf = $('ans-' + s).children[i];
+  if (i === G.richtig[s]) {
+    sp.richtig++;
+    if (knopf) knopf.classList.add('ok');
+    G.pos += s === 0 ? 1 : -1;                     // + = zu Kind 1 (unten)
+    G.zugT[s] = 0; G.jubelT[s] = 0; staubWolke(s);
+    ton(s === 0 ? 523 : 440, .12); setTimeout(() => ton(s === 0 ? 784 : 659, .14), 90);
+    flash(s, 'ok', 'Zug! 💪');
+    const andere = 1 - s;
+    if (!G.sp[andere].versucht) flash(andere, 'bad', 'Zu langsam!', `Richtig: ${G.aufgabe.antwort}`);
+    zeigeLoesung();
+    if (G.entscheidung || Math.abs(G.pos) >= CFG.schritte) { satzEnde(s); return; }
+    warte(CFG.loesungSek);
+  } else {
+    sp.falsch++;
+    if (knopf) knopf.classList.add('bad');
+    $('ans-' + s).classList.add('aus');
+    sp.stolperT = 0;
+    G.fehlerListe.push({ s, frage: G.aufgabe.frage, antwort: G.aufgabe.antwort });
+    ton(180, .22, 'sawtooth', .05);
+    flash(s, 'bad', 'Gestolpert!', `Richtig: ${G.aufgabe.antwort}`);
+    if (G.sp[1 - s].versucht) { zeigeLoesung(); warte(CFG.loesungSek + .4); }
+  }
+  hud();
+}
+function zeigeLoesung() {
+  for (let s = 0; s < 2; s++) {
+    const box = $('ans-' + s); box.classList.add('aus');
+    const r = box.children[G.richtig[s]];
+    if (r && !r.classList.contains('ok')) r.classList.add('loesung');
+  }
+}
+function warte(sek) { G.zustand = 'loesung'; G.wartT = sek; }
+
+function satzEnde(s) {
+  G.saetze[s]++;
+  G.zustand = 'satzEnde'; G.wartT = 2.2; G.sieger = s;
+  G.jubelT[s] = 0;
+  hud();
+  const ende = G.saetze[s] >= CFG.saetzeZumSieg;
+  if (!ende) {
+    flash(s, 'ok', 'Satz gewonnen! 🎉', `Stand ${G.saetze[s]} : ${G.saetze[1 - s]}`, 2000);
+    flash(1 - s, 'info', 'Satz verloren', `Stand ${G.saetze[1 - s]} : ${G.saetze[s]} – weiter geht's!`, 2000);
+  }
+  ton(523, .1); setTimeout(() => ton(659, .1), 110); setTimeout(() => ton(784, .18), 220);
+}
+
+function zeitAus() {
+  if (G.pos > 0) satzEnde(0);
+  else if (G.pos < 0) satzEnde(1);
+  else {
+    G.entscheidung = true;
+    hud();
+    [0, 1].forEach(s => flash(s, 'info', 'Gleichstand!', 'Wer die nächste Aufgabe schafft, gewinnt den Satz.', 1600));
+    warte(1.6);
+  }
+}
+
+function duellEnde() {
+  G.zustand = 'ende';
+  $('ende-btn').hidden = true;
+  const sieger = G.saetze[0] > G.saetze[1] ? 0 : 1;
+  const sek = (performance.now() - G.start) / 1000;
+  for (let s = 0; s < 2; s++) {
+    const ich = G.sp[s], gewonnen = s === sieger;
+    const fehler = G.fehlerListe.filter(f => f.s === s).slice(-5);
+    $('res-' + s).innerHTML = `<div class="big">${gewonnen ? 'Gewonnen! 🏆' : 'Knapp daneben!'}</div>
+      <div class="sub">Sätze ${G.saetze[s]} : ${G.saetze[1 - s]} · ${ich.richtig} richtig${ich.falsch ? ` · ${ich.falsch} falsch` : ''}</div>
+      ${fehler.length ? `<div class="fehler">Übe noch einmal: ${fehler.map(f => `${esc(f.frage)} → <b>${esc(f.antwort)}</b>`).join(' · ')}</div>` : ''}
+      ${s === 0 ? `<div class="btns"><button class="btn primary" type="button" data-akt="revanche">🔄 Revanche</button>
+        <button class="btn" type="button" data-akt="menu">Menü</button></div>`
+        : `<div class="btns"><button class="btn primary" type="button" data-akt="revanche">🔄 Revanche</button></div>`}`;
+    $('res-' + s).hidden = false;
+    $('half-' + s).classList.add('fertig');
+    [0, 1].forEach(x => { $('q-' + x).textContent = ''; $('hint-' + x).textContent = ''; $('ans-' + x).innerHTML = ''; });
+  }
+  if (sieger === 0 && window.LernPass) LernPass.celebrate('konfetti');
+  // XP nur für das iPad-Kind (unten), höchstens einmal am Tag – wie der Endlosmodus in RUN!
+  LernSpiel.endlos({ key: APP_KEY, correct: G.sp[0].richtig, seconds: sek });
+}
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-akt]');
+  if (!b) return;
+  if (b.dataset.akt === 'revanche') starteDuell();
+  else zeigeMenu();
+});
+$('ende-btn').onclick = () => { if (confirm('Duell wirklich beenden?')) zeigeMenu(); };
+
+function zeigeMenu() {
+  G.zustand = 'menu';
+  [0, 1].forEach(s => { $('half-' + s).hidden = true; });
+  $('ende-btn').hidden = true; $('menu').hidden = false;
+  setNavbar(true);
+  G.pos = 0;
+  buildMenu();
+}
+function setNavbar(an) {
+  ['lern-home-btn', 'lern-result-badge'].forEach(id => { const el = $(id); if (el) el.style.visibility = an ? '' : 'hidden'; });
+}
+
+function hud() {
+  const zeit = Math.max(0, Math.ceil(G.zeit)), txt = G.entscheidung ? '⚡' : `${Math.floor(zeit / 60)}:${String(zeit % 60).padStart(2, '0')}`;
+  for (let s = 0; s < 2; s++) {
+    const z = $('zeit-' + s); z.textContent = txt; z.classList.toggle('knapp', !G.entscheidung && zeit <= 10 && G.zustand !== 'count');
+    $('saetze-' + s).innerHTML = Array.from({ length: CFG.saetzeZumSieg }, (_, i) => `<span class="dot${i < G.saetze[s] ? ' on' : ''}"></span>`).join('');
+    if (!gl) $('nogl-' + s).style.setProperty('--p', G.pos);
+  }
+}
+
+const flashT = [0, 0];
+function flash(s, typ, text, klein = '', ms = 900) {
+  const el = $('flash-' + s);
+  el.className = 'flash show ' + typ;
+  el.innerHTML = esc(text) + (klein ? `<small>${esc(klein)}</small>` : '');
+  clearTimeout(flashT[s]);
+  flashT[s] = setTimeout(() => el.classList.remove('show'), ms);
+}
+
+/* ═══════════════════════════════════════════════════════
+   SCHLEIFE
+   ═══════════════════════════════════════════════════════ */
+let last = performance.now();
+function loop(now) {
+  requestAnimationFrame(loop);
+  const dt = Math.min(.05, (now - last) / 1000); last = now;
+  G.t += dt;
+  schritt(dt);
+  if (!gl) return;
+  if (G.zustand === 'menu' && document.hidden) return;
+  animiere(dt);
+  zeichne();
+}
+function schritt(dt) {
+  if (G.zustand === 'count') {
+    const vor = Math.ceil(G.countT);
+    G.countT -= dt;
+    const n = Math.ceil(G.countT);
+    [0, 1].forEach(s => { $('count-' + s).textContent = G.countT > 0 ? (n > 0 ? n : '') : ''; });
+    if (n !== vor && n > 0) ton(392, .08);
+    if (G.countT <= 0) { [0, 1].forEach(s => { $('count-' + s).textContent = ''; }); ton(784, .15); neueAufgabe(); }
+    return;
+  }
+  if (G.zustand === 'spiel' || G.zustand === 'loesung') {
+    if (!G.entscheidung) {
+      const vor = Math.ceil(G.zeit);
+      G.zeit -= dt;
+      if (Math.ceil(G.zeit) !== vor) hud();
+      if (G.zeit <= 0 && G.zustand === 'spiel') { G.zeit = 0; zeitAus(); return; }
+    }
+    if (G.zustand === 'loesung') {
+      G.wartT -= dt;
+      if (G.wartT <= 0) { if (!G.entscheidung && G.zeit <= 0) zeitAus(); else neueAufgabe(); }
+    } else if (G.sp.every(s => s.versucht)) { zeigeLoesung(); warte(CFG.loesungSek); }
+  }
+  if (G.zustand === 'satzEnde') {
+    G.wartT -= dt;
+    if (G.wartT <= 0) {
+      if (G.saetze.some(x => x >= CFG.saetzeZumSieg)) duellEnde();
+      else starteSatz();
+    }
+  }
+  G.sp && G.sp.forEach(s => { if (s.stolperT >= 0) { s.stolperT += dt; if (s.stolperT > CFG.stolperSek) s.stolperT = -1; } });
+}
+function animiere(dt) {
+  // Team gleitet weich zur Seilposition
+  const ziel = G.pos * CFG.schritt;
+  G.posAnz += (ziel - G.posAnz) * Math.min(1, dt * (REDUCED ? 20 : 7));
+  team.position.z = G.posAnz;
+  const zieht = G.zustand !== 'menu';
+  for (let s = 0; s < 2; s++) {
+    const f = figuren[s];
+    if (!f) continue;
+    if (G.zugT[s] >= 0) { G.zugT[s] += dt; if (G.zugT[s] > .45) G.zugT[s] = -1; }
+    if (G.jubelT[s] >= 0) { G.jubelT[s] += dt; if (G.jubelT[s] > (G.zustand === 'ende' || G.zustand === 'satzEnde' ? 99 : .5)) G.jubelT[s] = -1; }
+    const zug = G.zugT[s] >= 0 ? Math.sin(G.zugT[s] / .45 * Math.PI) : 0;
+    const sp = G.sp && G.sp[s];
+    const stolper = sp && sp.stolperT >= 0 ? Math.sin(Math.min(1, sp.stolperT / CFG.stolperSek) * Math.PI) : 0;
+    const feiert = (G.zustand === 'ende' || G.zustand === 'satzEnde') && G.sieger === s;
+    const verliert = (G.zustand === 'ende' || G.zustand === 'satzEnde') && G.sieger === 1 - s;
+    const wackel = REDUCED ? 0 : Math.sin(G.t * 6 + s * 2) * .04;
+    f.pose({
+      arme: zieht && !feiert ? 1.35 : 0,
+      lehnen: zieht && !feiert && !verliert ? .22 + .22 * zug + wackel : 0,
+      stolpern: verliert ? .9 : stolper,
+      jubel: feiert ? .5 + .5 * Math.abs(Math.sin(G.t * 5)) : 0,
+      t: G.t,
+    });
+    f.gesicht(feiert || zug > .3 ? 'cheer' : 'open');
+    figHalter[s].position.y = feiert && !REDUCED ? Math.abs(Math.sin(G.t * 6)) * 2 : 0;
+  }
+  // Seil im Spiel gespannt, sonst durchhängend
+  seil.position.y = zieht ? 12.5 : 11;
+  tuch.userData.lappen.rotation.x = REDUCED ? 0 : Math.sin(G.t * 4) * .12;
+  for (let i = staub.length - 1; i >= 0; i--) {
+    const m = staub[i], u = m.userData;
+    u.t += dt; u.v.y -= 30 * dt;
+    m.position.addScaledVector(u.v, dt);
+    m.material.opacity = Math.max(0, .9 - u.t * 1.4);
+    if (u.t > .7) { scene.remove(m); m.geometry.dispose(); m.material.dispose(); staub.splice(i, 1); }
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   START
+   ═══════════════════════════════════════════════════════ */
+loadWahl();
+(function linkAuswerten() {
+  const L = LernAufgaben.ausLink(location.search);
+  if (L.ids.length) { W.pools = L.ids.slice(0, 1); W.bis = L.opts.bis || ''; W.richtung = L.opts.richtung || 'de-en'; W.lehrer = true; W.fach = null; }
+})();
+
+LernSpiel.whenPass(() => {
+  buildMenu();
+  requestAnimationFrame(loop);
+  LernAvatar.ready().then(() => {
+    gastBilder = GAESTE.map(g => { try { return LernAvatar.snapshot(g.look, { w: 120, h: 144 }); } catch (e) { return null; } });
+    buildMenu();
+    return init3d();
+  }).catch(() => {
+    gl = false;
+    $('menu-err').textContent = '';
+    buildMenu();
+  });
+});
+</script>
+</body>
+</html>
