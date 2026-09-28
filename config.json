@@ -387,7 +387,7 @@
     },
     {
       "name": "Wort des Tages",
-      "datei": "wort-des-tages.html",
+      "datei": "spiele/wort-des-tages.html",
       "fach": "Allgemein",
       "emoji": "📱",
       "beschreibung": "Finde das richtige Wort heraus!",
