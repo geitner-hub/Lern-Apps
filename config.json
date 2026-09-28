@@ -406,5 +406,9 @@
         "vok5"
       ]
     }
+  },
+  "dorf": {
+    "wochen": [],
+    "plaetze": 3
   }
 }
