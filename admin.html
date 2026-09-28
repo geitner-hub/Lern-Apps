@@ -740,6 +740,7 @@ function buildPassAdmin() {
       return an.length > 1 ? `<p class="note" style="margin:.4rem 0 .8rem;color:var(--gold,#e6a817)">⚠️ ${an.length} Events sind an. Im Dorf („Mein Dorf“) läuft immer nur eins: <b>${escHtml(an[0].titel || an[0].name)}</b> (das erste in der Liste). Truhen und Abzeichen im Pass gelten für alle.</p>` : '';
     })()}
     ${spieleAdminHTML()}`;
+  fuelleWortUnits();
   buildPassOverview();
 }
 
@@ -753,6 +754,20 @@ const STARTER_KLASSEN = [5, 6];
 function spieleCfg() {
   LernPass.setSpiele(CONFIG.spiele);                 // gleiche Standardwerte wie in pass.js
   return JSON.parse(JSON.stringify(LernPass.settings.spiele));
+}
+/** Auswahllisten „Wort des Tages“ mit den Units aus den Vokabeldateien füllen */
+async function fuelleWortUnits() {
+  if (!window.LernAufgaben || !window.LernPass) return;
+  const sp = spieleCfg();
+  for (const k of [5, 6]) {
+    const sel = document.querySelector(`#pass-settings [data-spiele-set="wort${k}"]`);
+    if (!sel) continue;
+    const units = await LernAufgaben.einheiten('vok' + k).catch(() => []);
+    if (!units.length) continue;
+    const cur = sp.wortBis[k] || '';
+    sel.innerHTML = units.map(u => `<option value="${escHtml(u.id)}" ${u.id === cur ? 'selected' : ''}>Kl. ${k}: bis ${escHtml(u.id === 'intro' ? 'Einführung' : u.label)}</option>`).join('')
+      + `<option value="" ${cur === '' ? 'selected' : ''}>Kl. ${k}: alle Units</option>`;
+  }
 }
 function spieleAdminHTML() {
   if (!window.LernPass || !LernPass.setSpiele) return '';
@@ -768,7 +783,7 @@ function spieleAdminHTML() {
     <div class="sw-row">
       <span class="sw-ic">🎮</span>
       <div class="sw-txt"><div class="sw-name">Spiele: Themenauswahl</div>
-        <div class="sw-desc">RUN! und Tower Defense. „⭐ Meine Themen“ = alles, was das Kind in den Lern-Apps (Vokabeltrainer 5/6: Quiz, Fill in, Scramble · Kopfrechnen Kl. 4–6 · Einmaleins-Tafel) erfolgreich geübt hat, plus Starter-Paket. Nie Stoff über der Klasse aus dem Pass. Lehrer-Links mit <code>?pool=…</code> haben immer Vorrang.</div></div>
+        <div class="sw-desc">RUN!, Tower Defense und Tauziehen-Duell. „⭐ Meine Themen“ = alles, was das Kind in den Lern-Apps (Vokabeltrainer 5/6: Quiz, Fill in, Scramble · Kopfrechnen Kl. 4–6 · Einmaleins-Tafel) erfolgreich geübt hat, plus Starter-Paket. Nie Stoff über der Klasse aus dem Pass. Lehrer-Links mit <code>?pool=…</code> haben immer Vorrang.</div></div>
       <select class="sw-sel" data-spiele-set="auswahl" aria-label="Themenauswahl in den Spielen">
         ${Object.entries(SPIELE_AUSWAHL).map(([v, t]) => opt(v, t, sp.auswahl)).join('')}
       </select>
@@ -783,6 +798,13 @@ function spieleAdminHTML() {
       <select class="sw-sel" data-spiele-set="runden" aria-label="Anzahl Runden">
         ${[1, 2, 3].map(v => opt(v, v === 1 ? '1 Runde' : v + ' Runden', sp.runden)).join('')}
       </select>
+    </div>
+    <div class="sw-row">
+      <span class="sw-ic">🔤</span>
+      <div class="sw-txt"><div class="sw-name">Wort des Tages</div>
+        <div class="sw-desc">Alle Kinder einer Klasse bekommen am selben Tag dasselbe englische Wort – aus den Vokabeln bis zu dieser Unit. Klasse 6 bekommt zusätzlich alle Wörter aus Band 5, Klasse 7–9 alles aus Band 5 und 6.</div></div>
+      <select class="sw-sel" data-spiele-set="wort5" aria-label="Wort des Tages Klasse 5">${opt(sp.wortBis[5], 'Kl. 5: bis ' + (sp.wortBis[5] || 'alle'), sp.wortBis[5])}</select>
+      <select class="sw-sel" data-spiele-set="wort6" aria-label="Wort des Tages Klasse 6">${opt(sp.wortBis[6], 'Kl. 6: bis ' + (sp.wortBis[6] || 'alle'), sp.wortBis[6])}</select>
     </div>
     <div class="sw-row" style="align-items:flex-start">
       <span class="sw-ic">🎒</span>
@@ -807,13 +829,18 @@ document.getElementById('pass-settings').addEventListener('change', e => {
   } else if (key === 'runden') {
     sp.runden = Number(el.value);
     logChange(`🔓 Spiele: freischalten nach ${sp.runden} Runde${sp.runden > 1 ? 'n' : ''}`);
+  } else if (key === 'wort5' || key === 'wort6') {
+    const k = key === 'wort5' ? 5 : 6;
+    sp.wortBis[k] = el.value;
+    logChange(`🔤 Wort des Tages Kl. ${k}: ${el.value ? 'bis ' + (el.selectedOptions[0] ? el.selectedOptions[0].textContent.replace(/^Kl\. \d: /, '') : el.value) : 'alle Units'}`);
   } else if (el.dataset.starter) {
     const k = Number(el.dataset.starter);
     sp.starter[k] = [...document.querySelectorAll(`#pass-settings [data-starter="${k}"]:checked`)].map(i => i.value);
     logChange(`🎒 Starter-Paket Kl. ${k}: ${sp.starter[k].length} Themen`);
   } else return;
   CONFIG.spiele = { auswahl: sp.auswahl, schwelle: sp.schwelle, runden: sp.runden,
-    starter: Object.fromEntries(STARTER_KLASSEN.map(k => [String(k), sp.starter[k] || []])) };
+    starter: Object.fromEntries(STARTER_KLASSEN.map(k => [String(k), sp.starter[k] || []])),
+    wortBis: { '5': sp.wortBis[5] || '', '6': sp.wortBis[6] || '' } };
   LernPass.setSpiele(CONFIG.spiele);
   saveConfig();
 });

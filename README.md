@@ -18,8 +18,10 @@ manifest.webmanifest  App-Symbol (Anleitung: APP-SYMBOL.md)
 
 apps/mathe/  apps/englisch/  apps/gpg/   Lern-Apps nach Fach
 apps/vorlage/app-template.html          Vorlage für neue Apps
-spiele/               RUN!, Tower Defense, Mein Dorf (dorf.html)
-daten/                vokabeln5.json, vokabeln6.json, lernwelt-inhalte.json, dorf-inhalte.json
+spiele/               RUN!, Tower Defense, Mein Dorf (dorf.html), Tauziehen-Duell (tauziehen.html), Wort des Tages (wort-des-tages.html),
+                      Zauberwort (zauberwort.html)
+daten/                vokabeln5.json, vokabeln6.json, lernwelt-inhalte.json, dorf-inhalte.json,
+                      woerter-en.json (Prüfliste fürs Wort des Tages, ENABLE-Wortliste, gemeinfrei)
 gemeinsam/            Code, den alle Seiten nutzen (siehe unten)
 fonts/ icons/ vendor/ Schriften, Symbole, fremde Bibliotheken
 cloudflare/           Worker-Quelltext und Anleitung
@@ -35,7 +37,8 @@ cloudflare/           Worker-Quelltext und Anleitung
 | `chest3d.js` | 3D-Truhe zum Öffnen |
 | `dorf-kern.js` | „Mein Dorf“: Spielstand, Aufträge, Bauen; von `navbar.js` in jeder App mitgeladen |
 | `dorf-szene.js` | „Mein Dorf“: 3D-Dorf (Voxel-Gebäude als Code, feste Iso-Kamera), nur in `spiele/dorf.html` |
-| `aufgaben.js` | Aufgaben-Pools für die Spiele („Meine Themen“) |
+| `aufgaben.js` | Aufgaben-Pools für die Spiele („Meine Themen“), Wortquelle `woerter()` für Wort-Spiele |
+| `spiel-hilfen.js` | Kleine Bausteine für die neuen Spiele: Runde melden, Endlos-XP, robuste Zeiger (mehrere Finger), wiederholbarer Zufall |
 | `qrcode.js` | QR-Code-Erzeugung im Browser (MIT-Lizenz, Kazuhiko Arase) |
 | `fonts.css` | Lokal gehostete Schriften aus `fonts/` (kein Google Fonts → DSGVO) |
 
