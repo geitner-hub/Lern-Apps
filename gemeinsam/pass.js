@@ -224,6 +224,7 @@
     schwelle: 70,                    // % je Runde
     runden: 2,                       // so viele Runden ab schwelle → freigeschaltet
     starter: { 5: ['kopf4-leicht', '1x1-klein'], 6: ['kopf5-leicht', '1x1-klein'] },
+    wortBis: { 5: 'unit1', 6: 'unit1' },   // Wort des Tages: Vokabeln bis zu dieser Unit ('' = alle)
   };
   let SPIELE_RAW;                    // von setSpiele() gesetzt (Admin/Startseite), sonst aus dem Config-Cache
   const INHALT_ID = /^[a-z0-9][a-z0-9:/_.+-]{0,79}$/i;
@@ -241,6 +242,13 @@
       const v = st[k] !== undefined ? st[k] : st[String(k)];
       if (Array.isArray(v)) out.starter[k] = [...new Set(v.filter(x => typeof x === 'string' && INHALT_ID.test(x)))].slice(0, 30);
       else if (SPIELE_DEFAULT.starter[k]) out.starter[k] = SPIELE_DEFAULT.starter[k].slice();
+    });
+    // Wort des Tages: gleiche Unit-Grenze für die ganze Klasse
+    const wb = r.wortBis && typeof r.wortBis === 'object' ? r.wortBis : {};
+    out.wortBis = {};
+    [5, 6].forEach(k => {
+      const v = wb[k] !== undefined ? wb[k] : wb[String(k)];
+      out.wortBis[k] = typeof v === 'string' && /^[a-z0-9_]{0,20}$/i.test(v) ? v : SPIELE_DEFAULT.wortBis[k];
     });
     return out;
   }

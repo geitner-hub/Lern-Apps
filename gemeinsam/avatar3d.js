@@ -13,7 +13,7 @@
 //    snapshot(look, opts)       → Bild als data-URL
 //    refresh()                  → alle [data-avatar-bild] neu zeichnen
 //    figur(look?, opts)         → Promise: Figur für eigene Szenen (z. B. Runner)
-//                                 { root, THREE, pose({lauf, phase, stolpern, jubel, t}), gesicht(mode) }
+//                                 { root, THREE, pose({lauf, phase, stolpern, jubel, t, arme, lehnen}), gesicht(mode) }
 //    teil(itemId)               → Promise: einzelnes Teil, normiert auf Größe 1 { root, anim[] } oder null
 //
 //  Automatisch befüllt werden Elemente mit
@@ -614,17 +614,18 @@
     let faceMode = 'open';
     return {
       root: P.root, THREE: T3,
-      /** lauf 0–1 (Stärke), phase (Schrittzyklus), stolpern 0–1, jubel 0–1, t (Zeit für Teile-Animationen) */
-      pose({ lauf = 0, phase = 0, stolpern = 0, jubel = 0, t = 0 } = {}) {
+      /** lauf 0–1 (Stärke), phase (Schrittzyklus), stolpern 0–1, jubel 0–1, t (Zeit für Teile-Animationen)
+       *  arme: Arme nach vorn heben (Bogenmaß, z. B. 1.3 zum Seilziehen), lehnen: Oberkörper nach hinten (Bogenmaß) */
+      pose({ lauf = 0, phase = 0, stolpern = 0, jubel = 0, t = 0, arme = 0, lehnen = 0 } = {}) {
         const sw = Math.sin(phase) * .85 * lauf;
         huefte['-1'].rotation.x = sw;
         huefte['1'].rotation.x = -sw;
-        P.armL.rotation.x = -sw * .9 * (1 - jubel);
-        P.armR.rotation.x = sw * .9 * (1 - jubel);
+        P.armL.rotation.x = -sw * .9 * (1 - jubel) - arme * (1 - jubel);
+        P.armR.rotation.x = sw * .9 * (1 - jubel) - arme * (1 - jubel);
         P.armL.rotation.z = -(.1 + 2.3 * jubel);
         P.armR.rotation.z = .1 + 2.3 * jubel;
         P.upper.position.y = Math.abs(Math.cos(phase)) * .9 * lauf;
-        P.fig.rotation.x = .1 * lauf + .55 * stolpern;
+        P.fig.rotation.x = .1 * lauf + .55 * stolpern - lehnen;
         if (P.pet) P.pet.position.y = Math.abs(Math.sin(phase * .75)) * 2.5 * lauf;
         if (!reduce) P.anim.forEach(f => f(t));
       },
