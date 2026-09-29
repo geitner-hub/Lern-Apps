@@ -9,9 +9,10 @@
 //
 //  Nach einer Änderung an DIESER Datei VERSION erhöhen.
 // ═══════════════════════════════════════════════════════
-const VERSION = 'lernwelt-v21';  // v21: Dorf-Feinschliff (Heute-Leiste, Lehrer- und Fleißzettel, Jahreszeiten), Dorf-Aufträge auf der Startseite
+const VERSION = 'lernwelt-v21';  // v21: automatische Pass-Sicherung (sync-code.js, sync.js)
 const START = ['./', 'index.html', 'config.json', 'manifest.webmanifest',
                'gemeinsam/shared.js', 'gemeinsam/config-api.js', 'gemeinsam/navbar.js', 'gemeinsam/pass.js',
+               'gemeinsam/sync-code.js', 'gemeinsam/sync.js',
                'gemeinsam/avatar3d.js', 'gemeinsam/fonts.css', 'gemeinsam/qrcode.js', 'daten/lernwelt-inhalte.json',
                'gemeinsam/dorf-kern.js', 'gemeinsam/dorf-szene.js', 'daten/dorf-inhalte.json', 'vendor/fflate.min.js',
                // Spiele: sollen auch offline laufen, ohne vorher einmal online geöffnet worden zu sein
