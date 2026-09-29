@@ -488,6 +488,15 @@
     "wochen": [],
     "plaetze": 3,
     "rerollsProTag": 2,
-    "rerollsMax": 4
+    "rerollsMax": 4,
+    "lehrerZettel": [
+      {
+        "id": "lz-muml53v3",
+        "start": "2026-09-30",
+        "bis": "2026-10-02",
+        "app": "kopfrechnen.html",
+        "runden": 4
+      }
+    ]
   }
 }
