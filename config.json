@@ -250,7 +250,8 @@
           "color": 5
         }
       ],
-      "aod": false
+      "aod": false,
+      "dorfRunden": 1
     },
     {
       "name": "Simple Past",
