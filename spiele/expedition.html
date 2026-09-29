@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#0f0e1a">
+  <title>Entdecker-Expedition</title>
+  <!--
+  ═══════════════════════════════════════════════
+   ENTDECKER-EXPEDITION  (spiele/expedition.html)
+
+   Mit dem Heißluftballon durch Europa bzw. mit dem Zug durch Deutschland.
+   Die Karte liegt im Nebel; jedes erreichte Land färbt sich und gibt einen
+   Stempel ins Reisetagebuch. Intrinsische Integration: Wohin die Reise geht,
+   bestimmen Himmelsrichtungen, Nachbarländer, Hauptstädte und die Lage der
+   Länder – wer das Ziel nicht findet, kommt nicht weiter.
+
+   Auftragsarten: Land finden · Nachbarland · Himmelsrichtung · Hauptstadt ·
+   Nachbarland eines anderen Landes. Je mehr Stempel, desto schwerer.
+   Falsch getippt → Name des Landes und ein Richtungshinweis; nach zwei
+   Fehlversuchen leuchten die passenden Länder.
+
+   Daten: daten/karten.json (Karten, mit dem Länder-Finder geteilt),
+          daten/expedition.json (Hauptstädte, Nachbarn, Kartenmitten).
+   Fortschritt: 'lernwelt-expedition' – wird im Sicherungscode mitgesichert.
+   XP: jede Reise (10 Aufträge) über LernApps.saveResult.
+   Braucht: navbar.js, spiel-hilfen.js, karten-ansicht.js
+  ═══════════════════════════════════════════════
+  -->
+  <link rel="stylesheet" href="../gemeinsam/fonts.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f0e1a; --surface: #1b1929; --panel: rgba(27,25,41,.94);
+      --accent: #e6a817; --accent2: #fde68a; --indigo: #6366f1; --indigo2: #818cf8;
+      --text: #f1f0fb; --text2: rgba(241,240,251,.7); --muted: rgba(241,240,251,.42);
+      --green: #4ade80; --red: #f87171;
+      --sea: #13244a; --sea2: #1d3a6e; --nebel: #59607f; --nebel-st: #2a3050; --ctx: #2c3252;
+    }
+    html, body { height: 100%; overflow: hidden; }
+    body { font-family: 'Nunito', system-ui, sans-serif; background: var(--bg); color: var(--text);
+      -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+    button { font: inherit; color: inherit; border: 0; background: none; cursor: pointer; touch-action: manipulation; }
+    button:focus-visible { outline: 3px solid var(--indigo2); outline-offset: 2px; }
+    [hidden] { display: none !important; }
+
+    /* ── Karte ───────────────────────────── */
+    #spiel { position: fixed; inset: 0; display: flex; flex-direction: column; }
+    .leiste { display: flex; gap: .5rem; align-items: stretch; padding: max(.5rem, env(safe-area-inset-top)) max(.6rem, env(safe-area-inset-right)) .5rem max(.6rem, env(safe-area-inset-left));
+      background: var(--surface); box-shadow: 0 4px 16px rgba(0,0,0,.3); z-index: 2; }
+    .auftrag { flex: 1; background: #fef3c7; color: #1c1917; border: 3px solid #1c1917; box-shadow: 4px 4px 0 rgba(0,0,0,.45); padding: .35rem .8rem;
+      display: flex; flex-direction: column; justify-content: center; min-height: 64px; }
+    .auftrag small { font-size: .66rem; font-weight: 900; letter-spacing: .12em; color: rgba(28,25,23,.55); }
+    .auftrag b { font-family: 'Fredoka One', 'Nunito', sans-serif; font-weight: 400; font-size: clamp(1.1rem, 3vmin, 1.55rem); line-height: 1.15; }
+    .auftrag b em { font-style: normal; color: #b45309; }
+    .seite { display: flex; flex-direction: column; gap: .35rem; align-items: flex-end; justify-content: center; }
+    .chip { background: rgba(255,255,255,.07); border-radius: 12px; padding: .3rem .6rem; font-weight: 900; font-size: .88rem; white-space: nowrap; }
+    .dots { display: flex; gap: 4px; }
+    .dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,.15); }
+    .dot.now { box-shadow: 0 0 0 2px var(--indigo2); }
+    .dot.ok { background: var(--accent); } .dot.spaet { background: var(--indigo2); }
+    .ende-btn { font-weight: 900; font-size: .85rem; color: var(--text2); padding: .3rem .6rem; border-radius: 10px; background: rgba(255,255,255,.07); }
+    #map-wrap { position: relative; flex: 1; min-height: 0; overflow: hidden; background: radial-gradient(ellipse at 50% 40%, var(--sea2), var(--sea) 75%); touch-action: none; }
+    #map { width: 100%; height: 100%; display: block; touch-action: none; }
+    .grat { fill: none; stroke: rgba(255,255,255,.07); stroke-width: 1px; vector-effect: non-scaling-stroke; pointer-events: none; }
+    .land { fill: var(--ctx); stroke: var(--nebel-st); stroke-width: .8px; vector-effect: non-scaling-stroke; transition: fill .9s ease; }
+    .land.spiel { fill: var(--nebel); cursor: pointer; }
+    .land.besucht { stroke: rgba(255,255,255,.55); }
+    .land.hier { stroke: #fde047; stroke-width: 3px; }
+    .land.falsch { fill: #9f3a55 !important; transition: fill .15s; }
+    .land.tipp { animation: tipp 1s ease-in-out infinite; }
+    @keyframes tipp { 50% { fill: #fde047; } }
+    .hit { fill: transparent; stroke: rgba(253,224,71,.45); stroke-width: 1.2px; stroke-dasharray: 3 3; vector-effect: non-scaling-stroke; }
+    .spur { fill: none; stroke: #fde68a; stroke-width: 2.2px; stroke-dasharray: 6 6; vector-effect: non-scaling-stroke; opacity: .8; pointer-events: none; }
+    .fahrzeug { pointer-events: none; }
+    .zoom { position: absolute; right: max(.6rem, env(safe-area-inset-right)); bottom: calc(4.6rem + env(safe-area-inset-bottom)); display: flex; flex-direction: column; gap: .4rem; }
+    .zoom button { width: 46px; height: 46px; border-radius: 14px; background: var(--panel); font-size: 1.3rem; font-weight: 900; box-shadow: 0 6px 16px rgba(0,0,0,.3); }
+    .meldung { position: absolute; left: 50%; bottom: calc(4.8rem + env(safe-area-inset-bottom)); transform: translateX(-50%); max-width: min(92vw, 560px);
+      background: var(--panel); border-radius: 16px; padding: .6rem 1rem; font-weight: 800; font-size: 1rem; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,.4);
+      opacity: 0; transition: opacity .2s; pointer-events: none; }
+    .meldung.show { opacity: 1; }
+    .meldung.ok { color: var(--accent2); } .meldung.bad { color: #fecaca; }
+    .stempel { position: absolute; left: 50%; top: 42%; transform: translate(-50%, -50%) rotate(-8deg) scale(.4); opacity: 0; pointer-events: none;
+      background: #fff7ed; color: #9a3412; border: 5px double #c2410c; border-radius: 16px; padding: .5rem 1.2rem; text-align: center;
+      font-family: 'Fredoka One', 'Nunito', sans-serif; transition: transform .35s cubic-bezier(.2,1.6,.4,1), opacity .25s; }
+    .stempel.show { opacity: 1; transform: translate(-50%, -50%) rotate(-8deg) scale(1); }
+    .stempel .flagge { font-size: 3rem; line-height: 1; display: block; }
+    .stempel b { font-size: 1.5rem; font-weight: 400; display: block; }
+    .stempel small { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: .85rem; }
+
+    /* ── Menü, Tagebuch, Ergebnis ──────── */
+    .overlay { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(15,14,26,.72);
+      padding: 1rem 1rem calc(4.6rem + env(safe-area-inset-bottom)); overflow-y: auto; z-index: 10; }
+    .sheet { width: min(560px, 100%); background: var(--surface); border-radius: 22px; padding: 1.3rem; box-shadow: 0 20px 60px rgba(0,0,0,.45); margin: auto 0; }
+    h1 { font-family: 'Fredoka One', 'Nunito', sans-serif; font-weight: 400; color: var(--accent); font-size: 2.1rem; line-height: 1.05; }
+    h2 { font-family: 'Fredoka One', 'Nunito', sans-serif; font-weight: 400; color: var(--accent2); font-size: 1.8rem; text-align: center; }
+    .lead { color: var(--text2); font-size: .92rem; margin: .3rem 0 .9rem; }
+    .karten { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; }
+    .kwahl { border-radius: 18px; background: rgba(255,255,255,.06); border: 3px solid transparent; padding: .8rem .5rem; text-align: center; font-weight: 900; }
+    .kwahl .em { font-size: 2.4rem; display: block; }
+    .kwahl .bar { height: 8px; border-radius: 4px; background: rgba(255,255,255,.1); margin: .45rem .4rem 0; overflow: hidden; }
+    .kwahl .bar i { display: block; height: 100%; background: var(--accent); }
+    .kwahl small { display: block; font-size: .78rem; color: var(--muted); margin-top: .3rem; }
+    .kwahl.on { border-color: var(--accent); background: rgba(230,168,23,.12); }
+    .unten { display: flex; gap: .6rem; margin-top: 1.1rem; }
+    .go { flex: 1; min-height: 56px; border-radius: 16px; background: var(--accent); color: #231a02; font-family: 'Fredoka One', 'Nunito', sans-serif; font-size: 1.35rem; }
+    .buch-btn { min-height: 56px; padding: 0 1rem; border-radius: 16px; background: rgba(255,255,255,.08); font-weight: 900; }
+    .err { color: var(--red); font-weight: 800; font-size: .88rem; margin-top: .6rem; min-height: 1em; }
+    .stempelbuch { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: .5rem; margin-top: .8rem; max-height: 55vh; overflow-y: auto; padding: .2rem; }
+    .sb { border-radius: 14px; padding: .5rem .3rem; text-align: center; background: #fff7ed; color: #7c2d12; border: 3px double #c2410c; transform: rotate(-2deg); }
+    .sb:nth-child(2n) { transform: rotate(2deg); }
+    .sb .em { font-size: 1.9rem; display: block; line-height: 1.1; }
+    .sb .kz { display: inline-block; font-family: 'Fredoka One', 'Nunito', sans-serif; font-size: 1.1rem; background: #c2410c; color: #fff; border-radius: 50%; width: 2.2rem; height: 2.2rem; line-height: 2.2rem; }
+    .sb b { display: block; font-size: .78rem; line-height: 1.15; margin-top: .2rem; }
+    .sb small { display: block; font-size: .68rem; font-weight: 800; opacity: .75; }
+    .sb.leer { background: rgba(255,255,255,.05); color: var(--muted); border: 3px dashed rgba(255,255,255,.15); transform: none; }
+    .tabs { display: flex; gap: .35rem; justify-content: center; margin-top: .6rem; }
+    .tabs button { padding: .45rem .9rem; border-radius: 99px; font-weight: 900; font-size: .88rem; background: rgba(255,255,255,.06); color: var(--text2); min-height: 42px; }
+    .tabs button.on { background: var(--indigo); color: #fff; }
+    .res-zahl { text-align: center; font-family: 'Fredoka One', 'Nunito', sans-serif; font-size: 3rem; margin: .2rem 0; }
+    .res-sub { text-align: center; color: var(--text2); font-weight: 800; }
+    .neu { text-align: center; margin-top: .6rem; font-weight: 900; color: var(--accent2); }
+    .ueben { margin-top: .8rem; background: rgba(255,255,255,.05); border-radius: 14px; padding: .6rem .8rem; font-size: .9rem; color: var(--text2); max-height: 11em; overflow-y: auto; }
+    .ueben p { margin: .3rem 0; } .ueben b { color: var(--accent2); }
+    .btns { display: flex; gap: .6rem; justify-content: center; margin-top: 1rem; flex-wrap: wrap; }
+    .btn { min-height: 48px; padding: .5rem 1.1rem; border-radius: 14px; font-weight: 900; background: rgba(255,255,255,.08); }
+    .btn.primary { background: var(--accent); color: #231a02; }
+    @media (prefers-reduced-motion: reduce) { .land { transition: none; } .land.tipp { animation: none; fill: #fde047; } .stempel { transition: none; } }
+  </style>
+</head>
+<body>
+
+<div id="spiel" hidden>
+  <div class="leiste">
+    <div class="auftrag"><small>REISEAUFTRAG</small><b id="auftrag">…</b></div>
+    <div class="seite">
+      <div class="dots" id="dots"></div>
+      <span class="chip" id="stempel-zahl">🛂 0</span>
+      <button class="ende-btn" id="ende" type="button">Beenden</button>
+    </div>
+  </div>
+  <div id="map-wrap">
+    <svg id="map" preserveAspectRatio="xMidYMid meet" aria-label="Karte"></svg>
+    <div class="zoom">
+      <button id="z-in" type="button" aria-label="Hineinzoomen">+</button>
+      <button id="z-out" type="button" aria-label="Herauszoomen">−</button>
+      <button id="z-reset" type="button" aria-label="Ganze Karte">⤢</button>
+    </div>
+    <div class="meldung" id="meldung" aria-live="polite"></div>
+    <div class="stempel" id="stempel"></div>
+  </div>
+</div>
+
+<div class="overlay" id="menu">
+  <div class="sheet">
+    <h1>🧭 Entdecker-Expedition</h1>
+    <p class="lead">Die Karte liegt im Nebel. Folge den Reiseaufträgen, finde deine Ziele und sammle Stempel für dein Reisetagebuch!</p>
+    <div class="karten" id="karten"></div>
+    <div class="unten">
+      <button class="go" id="go" type="button" disabled>Reise starten!</button>
+      <button class="buch-btn" id="buch-btn" type="button">📔 Tagebuch</button>
+    </div>
+    <div class="err" id="menu-err"></div>
+  </div>
+</div>
+
+<div class="overlay" id="buch" hidden>
+  <div class="sheet">
+    <h2>📔 Mein Reisetagebuch</h2>
+    <div class="tabs" id="buch-tabs"></div>
+    <div class="stempelbuch" id="stempelbuch"></div>
+    <div class="btns"><button class="btn primary" id="buch-zu" type="button">Schließen</button></div>
+  </div>
+</div>
+
+<div class="overlay" id="ergebnis" hidden><div class="sheet" id="ergebnis-body"></div></div>
+
+<script src="../gemeinsam/navbar.js"></script>
+<script src="../gemeinsam/spiel-hilfen.js"></script>
+<script src="../gemeinsam/karten-ansicht.js"></script>
+<script>
+'use strict';
+
+/* ═══════════════════════════════════════════════════════
+   EINSTELLUNGEN
+   ═══════════════════════════════════════════════════════ */
+const CFG = {
+  auftraege: 10,
+  tippNach: 2,                  // nach so vielen Fehlversuchen leuchten die passenden Länder
+  flugMs: 1300,
+  // ab so vielen Stempeln wird es schwerer (Stufe 2 / 3)
+  stufen: { europa: [8, 18], deutschland: [5, 11] },
+  // Auftragsarten je Stufe (Gewichte)
+  mix: {
+    1: { land: 6, nachbar: 4 },
+    2: { land: 3, nachbar: 2, richtung: 3, hauptstadt: 2 },
+    3: { land: 1, nachbar: 1, richtung: 3, hauptstadt: 3, nachbarVon: 2 },
+  },
+};
+const APP_KEY = 'expedition.html';
+const SPEICHER = 'lernwelt-expedition';        // auch im Sicherungscode (gemeinsam/pass.js)
+const REDUCED = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const zufall = a => a[Math.floor(Math.random() * a.length)];
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const RICHTUNGEN = ['Osten', 'Nordosten', 'Norden', 'Nordwesten', 'Westen', 'Südwesten', 'Süden', 'Südosten'];
+const FARBEN = ['#f59e0b', '#34d399', '#60a5fa', '#f472b6', '#a78bfa', '#fb923c', '#4ade80', '#38bdf8', '#facc15', '#f87171', '#2dd4bf', '#c084fc'];
+
+let KARTEN = null, EXP = null;
+
+/* ═══════════════════════════════════════════════════════
+   FORTSCHRITT
+   ═══════════════════════════════════════════════════════ */
+function lade() {
+  let d = {};
+  try { d = JSON.parse(localStorage.getItem(SPEICHER) || '{}') || {}; } catch (e) {}
+  const out = { wahl: d.wahl === 'deutschland' ? 'deutschland' : 'europa' };
+  ['europa', 'deutschland'].forEach(k => {
+    const x = d[k] && typeof d[k] === 'object' ? d[k] : {};
+    out[k] = { besucht: Array.isArray(x.besucht) ? x.besucht.filter(id => typeof id === 'string').slice(0, 80) : [], ort: typeof x.ort === 'string' ? x.ort : '' };
+  });
+  return out;
+}
+let S = lade();
+function speichere() { try { localStorage.setItem(SPEICHER, JSON.stringify(S)); } catch (e) {} }
+/** Fortschritt einer Karte säubern und Startort setzen (erst nach dem Laden der Daten möglich) */
+function stand(k) {
+  const L = EXP.karten[k].laender, st = S[k];
+  st.besucht = [...new Set(st.besucht.filter(id => L[id]))];
+  if (!L[st.ort]) st.ort = EXP.karten[k].start;
+  if (!st.besucht.includes(st.ort)) st.besucht.push(st.ort);
+  return st;
+}
+
+/* ═══════════════════════════════════════════════════════
+   GEOGRAFIE-HILFEN
+   ═══════════════════════════════════════════════════════ */
+const L = id => EXP.karten[G.karte].laender[id];
+const istDE = () => G.karte === 'deutschland';
+function winkel(a, b) { const A = L(a).m, B = L(b).m; return Math.atan2(A[1] - B[1], B[0] - A[0]) * 180 / Math.PI; }   // 0° = Osten, 90° = Norden
+function richtung(a, b) { return RICHTUNGEN[Math.floor(((winkel(a, b) + 22.5 + 360) % 360) / 45)]; }
+function richtungsWinkel(name) { return RICHTUNGEN.indexOf(name) * 45; }
+function winkelAbstand(a, b) { const d = Math.abs(((a - b) % 360 + 540) % 360 - 180); return d; }
+const artikelRichtung = r => (r === 'Norden' || r === 'Süden' || r === 'Osten' || r === 'Westen') ? 'im ' + r : 'im ' + r;
+const land = () => istDE() ? 'Bundesland' : 'Land';
+const nachbarWort = () => istDE() ? 'ein Nachbar-Bundesland' : 'ein Nachbarland';
+function flagge(id) {
+  const x = L(id);
+  if (!x || !x.iso2) return '';
+  return [...x.iso2.toUpperCase()].map(c => String.fromCodePoint(0x1F1E6 + c.charCodeAt(0) - 65)).join('');
+}
+
+/* ═══════════════════════════════════════════════════════
+   AUFTRÄGE
+   Jeder Auftrag: { art, text (HTML), gueltig: [ids], bezug?, ziel? }
+   ═══════════════════════════════════════════════════════ */
+function stufe() {
+  const n = S[G.karte].besucht.length, [a, b] = CFG.stufen[G.karte];
+  return n < a ? 1 : n < b ? 2 : 3;
+}
+function gewichtet(mix) {
+  const e = Object.entries(mix), sum = e.reduce((s, [, w]) => s + w, 0);
+  let r = Math.random() * sum;
+  for (const [k, w] of e) { r -= w; if (r <= 0) return k; }
+  return e[0][0];
+}
+function zielWahl(ausser) {
+  const alle = Object.keys(EXP.karten[G.karte].laender).filter(id => !ausser.includes(id));
+  const neu = alle.filter(id => !S[G.karte].besucht.includes(id));
+  return neu.length && Math.random() < .8 ? zufall(neu) : zufall(alle);
+}
+function baueAuftrag(art) {
+  const ort = G.ort, nb = L(ort).nb.filter(id => id !== ort);
+  const n = id => `<em>${esc(L(id).n)}</em>`;
+  if (art === 'land') {
+    const z = zielWahl([ort, G.letztesZiel]);
+    return { art, ziel: z, gueltig: [z], text: `Reise nach ${n(z)}.` };
+  }
+  if (art === 'hauptstadt') {
+    const z = zielWahl([ort, G.letztesZiel]);
+    return { art, ziel: z, gueltig: [z], text: istDE()
+      ? `Reise in das Bundesland mit der Landeshauptstadt <em>${esc(L(z).h)}</em>.`
+      : `Reise in das Land mit der Hauptstadt <em>${esc(L(z).h)}</em>.` };
+  }
+  if (art === 'nachbar') {
+    if (!nb.length) return null;
+    return { art, bezug: ort, gueltig: nb, text: `Reise in ${nachbarWort()} von ${n(ort)}.` };
+  }
+  if (art === 'richtung') {
+    if (!nb.length) return null;
+    const neu = nb.filter(id => !S[G.karte].besucht.includes(id));
+    const wahl = zufall(neu.length ? neu : nb);
+    const r = richtung(ort, wahl), w = richtungsWinkel(r);
+    const gueltig = nb.filter(id => winkelAbstand(winkel(ort, id), w) <= 50);
+    return { art, bezug: ort, richtung: r, gueltig, text: `Reise nach <em>${r}</em> in ${nachbarWort()}.` };
+  }
+  if (art === 'nachbarVon') {
+    const kand = Object.keys(EXP.karten[G.karte].laender).filter(id => id !== ort && L(id).nb.some(x => x !== ort));
+    if (!kand.length) return null;
+    const x = zufall(kand);
+    return { art, bezug: x, gueltig: L(x).nb.filter(id => id !== ort), text: `Reise in ${nachbarWort()} von ${n(x)}.` };
+  }
+  return null;
+}
+function neuerAuftrag() {
+  const mix = CFG.mix[stufe()];
+  let a = null;
+  for (let v = 0; v < 12 && !a; v++) {
+    a = baueAuftrag(gewichtet(mix));
+    if (a && (!a.gueltig.length || (a.gueltig.length === 1 && a.gueltig[0] === G.ort))) a = null;
+    if (a && G.auftrag && a.text === G.auftrag.text) a = null;
+  }
+  return a || baueAuftrag('land');
+}
+
+/* ═══════════════════════════════════════════════════════
+   KARTE ZEICHNEN
+   ═══════════════════════════════════════════════════════ */
+const NS = 'http://www.w3.org/2000/svg';
+const View = LernKarte.ansicht({ svg: $('map'), wrap: $('map-wrap'), maxZoom: 8, onTap: (id, x, y) => tippe(id) });
+$('z-in').onclick = () => View.centerZoom(1.5);
+$('z-out').onclick = () => View.centerZoom(1 / 1.5);
+$('z-reset').onclick = () => View.reset();
+
+function farbe(id) { const ids = Object.keys(EXP.karten[G.karte].laender); return FARBEN[ids.indexOf(id) % FARBEN.length]; }
+function karteZeichnen() {
+  const M = KARTEN[G.karte], spiel = EXP.karten[G.karte].laender;
+  let s = `<path class="grat" d="${M.g}"/><g class="lands">`;
+  M.f.forEach(f => { s += `<path class="land${spiel[f.id] ? ' spiel' : ''}" data-id="${f.id}" d="${f.d}"/>`; });
+  s += '</g><g class="hits">';
+  M.f.forEach(f => { if (spiel[f.id]) (f.h || []).forEach(h => { s += `<circle class="hit" data-id="${f.id}" cx="${h[0]}" cy="${h[1]}" r="${h[2]}"/>`; }); });
+  s += `</g><path class="spur" id="spur" d=""/><g class="fahrzeug" id="fahrzeug"></g>`;
+  $('map').innerHTML = s;
+  // Fahrzeug: Heißluftballon (Europa) oder Zug (Deutschland), in Kartengröße
+  const k = M.w / 2300;
+  $('fahrzeug').innerHTML = istDE()
+    ? `<g transform="scale(${k})"><circle r="34" fill="rgba(15,14,26,.55)"/><text y="16" text-anchor="middle" font-size="48">🚂</text></g>`
+    : `<g transform="scale(${k})"><line x1="-13" y1="8" x2="-7" y2="30" stroke="#5b3a1e" stroke-width="2"/><line x1="13" y1="8" x2="7" y2="30" stroke="#5b3a1e" stroke-width="2"/>
+       <ellipse cx="0" cy="-12" rx="24" ry="28" fill="#ef4444" stroke="#7f1d1d" stroke-width="2"/>
+       <path d="M-8 -39 Q0 -12 -8 15 M8 -39 Q0 -12 8 15" fill="none" stroke="#fde047" stroke-width="5"/>
+       <rect x="-9" y="28" width="18" height="12" rx="2" fill="#a16207" stroke="#422006" stroke-width="2"/></g>`;
+  faerben();
+}
+function faerben() {
+  const st = S[G.karte];
+  document.querySelectorAll('#map .land.spiel').forEach(p => {
+    const id = p.dataset.id, b = st.besucht.includes(id);
+    p.classList.toggle('besucht', b);
+    p.classList.toggle('hier', id === G.ort);
+    p.style.fill = b ? farbe(id) : '';
+  });
+}
+function fahrzeugNach(x, y) { $('fahrzeug').setAttribute('transform', `translate(${x.toFixed(1)} ${y.toFixed(1)})`); }
+
+/* ═══════════════════════════════════════════════════════
+   REISE
+   ═══════════════════════════════════════════════════════ */
+const G = { karte: 'europa', ort: '', auftrag: null, nr: 0, richtig: 0, fehler: 0, neu: [], verpasst: [], punkte: [], gesperrt: false, spur: '', letztesZiel: '', start: 0 };
+
+function starteReise() {
+  G.karte = S.wahl;
+  const st = stand(G.karte);
+  Object.assign(G, { ort: st.ort, auftrag: null, nr: 0, richtig: 0, neu: [], verpasst: [], punkte: [], gesperrt: false, spur: '', letztesZiel: '', start: performance.now() });
+  speichere();
+  $('menu').hidden = true; $('ergebnis').hidden = true; $('spiel').hidden = false;
+  setNavbar(false);
+  karteZeichnen();
+  View.init(KARTEN[G.karte]);
+  const m = L(G.ort).m; fahrzeugNach(m[0], m[1]);
+  G.spur = `M${m[0]} ${m[1]}`;
+  naechsterAuftrag();
+}
+function naechsterAuftrag() {
+  if (G.nr >= CFG.auftraege) { reiseEnde(); return; }
+  G.nr++;
+  G.auftrag = neuerAuftrag(); G.fehler = 0; G.gesperrt = false;
+  $('auftrag').innerHTML = G.auftrag.text;
+  document.querySelectorAll('#map .land.tipp').forEach(p => p.classList.remove('tipp'));
+  kopf();
+}
+function kopf() {
+  $('dots').innerHTML = Array.from({ length: CFG.auftraege }, (_, i) => `<span class="dot ${G.punkte[i] || ''}${i === G.nr - 1 && !G.punkte[i] ? ' now' : ''}"></span>`).join('');
+  $('stempel-zahl').textContent = `🛂 ${S[G.karte].besucht.length} / ${Object.keys(EXP.karten[G.karte].laender).length}`;
+}
+
+function tippe(id) {
+  if (G.gesperrt || !G.auftrag || $('spiel').hidden) return;
+  if (!id) return;                                         // Meer
+  if (!EXP.karten[G.karte].laender[id]) { meldung(istDE() ? 'Dieses Land gehört nicht zu Deutschland – dahin fährt dein Zug heute nicht.' : 'Dort landet dein Ballon heute nicht. Such ein anderes Land!', 'bad'); return; }
+  const a = G.auftrag;
+  if (a.gueltig.includes(id)) { reise(id); return; }
+  if (id === G.ort) { meldung(`Hier in ${L(id).n} bist du gerade!`, 'bad'); return; }
+  G.fehler++;
+  const p = document.querySelector(`#map .land[data-id="${id}"]`);
+  if (p) { p.classList.add('falsch'); setTimeout(() => p.classList.remove('falsch'), 900); }
+  meldung(hinweis(a, id), 'bad', 4200);
+  if (G.fehler >= CFG.tippNach) a.gueltig.forEach(g => { const q = document.querySelector(`#map .land[data-id="${g}"]`); if (q) q.classList.add('tipp'); });
+}
+/** Hinweis nach einem falschen Tipp – immer mit Geografie, nie einfach nur „falsch“ */
+function hinweis(a, id) {
+  const n = L(id).n;
+  const zusatz = G.fehler >= CFG.tippNach ? ' Die leuchtenden passen.' : '';
+  if (a.art === 'land') return `Das ist ${n}. ${L(a.ziel).n} liegt weiter ${artikelRichtung(richtung(id, a.ziel))}.${zusatz}`;
+  if (a.art === 'hauptstadt') return `Das ist ${n} – dort ist ${L(id).h} die Hauptstadt. Dein Ziel liegt weiter ${artikelRichtung(richtung(id, a.ziel))}.${zusatz}`;
+  if (a.art === 'richtung') {
+    if (L(a.bezug).nb.includes(id)) return `${n} grenzt an ${L(a.bezug).n}, liegt aber ${artikelRichtung(richtung(a.bezug, id))}.${zusatz}`;
+    return `${n} grenzt nicht an ${L(a.bezug).n}.${zusatz}`;
+  }
+  return `${n} grenzt nicht an ${L(a.bezug).n}.${zusatz}`;
+}
+
+function reise(ziel) {
+  G.gesperrt = true;
+  const erster = G.fehler === 0;
+  if (erster) G.richtig++;
+  else G.verpasst.push({ text: G.auftrag.text.replace(/<[^>]+>/g, ''), loesung: G.auftrag.gueltig.map(id => L(id).n) });
+  G.punkte[G.nr - 1] = erster ? 'ok' : 'spaet';
+  G.letztesZiel = ziel;
+  document.querySelectorAll('#map .land.tipp').forEach(p => p.classList.remove('tipp'));
+  meldung('');
+  const A = L(G.ort).m, B = L(ziel).m;
+  const cx = (A[0] + B[0]) / 2, cy = (A[1] + B[1]) / 2 - Math.hypot(B[0] - A[0], B[1] - A[1]) * .25;
+  const t0 = performance.now(), dauer = REDUCED ? 1 : CFG.flugMs;
+  const schritt = now => {
+    const t = Math.min(1, (now - t0) / dauer), e = t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+    const x = (1 - e) * (1 - e) * A[0] + 2 * (1 - e) * e * cx + e * e * B[0];
+    const y = (1 - e) * (1 - e) * A[1] + 2 * (1 - e) * e * cy + e * e * B[1];
+    fahrzeugNach(x, y);
+    if (t < 1) requestAnimationFrame(schritt); else ankunft(ziel, cx, cy);
+  };
+  requestAnimationFrame(schritt);
+  kopf();
+}
+function ankunft(ziel, cx, cy) {
+  const B = L(ziel).m;
+  G.spur += ` Q${cx.toFixed(0)} ${cy.toFixed(0)} ${B[0]} ${B[1]}`;
+  $('spur').setAttribute('d', G.spur);
+  G.ort = ziel;
+  const st = S[G.karte];
+  st.ort = ziel;
+  const neu = !st.besucht.includes(ziel);
+  if (neu) { st.besucht.push(ziel); G.neu.push(ziel); }
+  speichere();
+  faerben(); kopf();
+  if (neu) {
+    $('stempel').innerHTML = `${istDE() ? `<span class="flagge">🏛️</span>` : `<span class="flagge">${flagge(ziel)}</span>`}<b>${esc(L(ziel).n)}</b><small>${istDE() ? 'Landeshauptstadt' : 'Hauptstadt'}: ${esc(L(ziel).h)}</small>`;
+    $('stempel').classList.add('show');
+    setTimeout(() => $('stempel').classList.remove('show'), 1700);
+    if (window.LernPass) try { LernPass.celebrate && LernPass.celebrate('konfetti'); } catch (e) {}
+  } else meldung(`Angekommen in ${L(ziel).n}!`, 'ok', 1400);
+  setTimeout(naechsterAuftrag, neu ? 1900 : 1300);
+}
+
+function reiseEnde() {
+  G.gesperrt = true;
+  LernSpiel.speichereRunde({ score: G.richtig, max: CFG.auftraege, titel: 'Aufträge', skill: 'expedition:' + G.karte });
+  const gesamt = Object.keys(EXP.karten[G.karte].laender).length, st = S[G.karte];
+  $('ergebnis-body').innerHTML = `<h2>${G.richtig >= 8 ? 'Tolle Reise! 🧭' : 'Reise beendet!'}</h2>
+    <div class="res-zahl">${G.richtig} / ${CFG.auftraege}</div><div class="res-sub">Aufträge beim ersten Versuch · ${st.besucht.length} von ${gesamt} ${istDE() ? 'Bundesländern' : 'Ländern'} entdeckt</div>
+    ${G.neu.length ? `<div class="neu">Neue Stempel: ${G.neu.map(id => (istDE() ? '' : flagge(id) + ' ') + esc(L(id).n)).join(' · ')}</div>` : ''}
+    ${G.verpasst.length ? `<div class="ueben"><b>Das übst du noch:</b>${G.verpasst.map(v => `<p>${esc(v.text)}<br>→ <b>${esc(v.loesung.join(', '))}</b></p>`).join('')}</div>` : ''}
+    <div class="btns"><button class="btn primary" type="button" id="weiter-reisen">🧭 Weiterreisen</button>
+    <button class="btn" type="button" id="zum-buch">📔 Tagebuch</button><button class="btn" type="button" id="zum-menu">Menü</button></div>`;
+  $('ergebnis').hidden = false;
+  $('weiter-reisen').onclick = starteReise;
+  $('zum-buch').onclick = () => { $('ergebnis').hidden = true; zeigeBuch(G.karte, true); };
+  $('zum-menu').onclick = zeigeMenu;
+}
+$('ende').onclick = () => { if (confirm('Reise beenden? Deine Stempel bleiben erhalten.')) zeigeMenu(); };
+
+let meldT = 0;
+function meldung(text, typ = '', ms = 2200) {
+  const el = $('meldung');
+  el.className = 'meldung' + (text ? ' show ' + typ : '');
+  el.textContent = text;
+  clearTimeout(meldT);
+  if (text) meldT = setTimeout(() => el.classList.remove('show'), ms);
+}
+function setNavbar(an) { ['lern-home-btn', 'lern-result-badge'].forEach(id => { const el = $(id); if (el) el.style.visibility = an ? '' : 'hidden'; }); }
+
+/* ═══════════════════════════════════════════════════════
+   MENÜ & TAGEBUCH
+   ═══════════════════════════════════════════════════════ */
+function buildMenu() {
+  $('karten').innerHTML = ['europa', 'deutschland'].map(k => {
+    const st = stand(k), gesamt = Object.keys(EXP.karten[k].laender).length;
+    return `<button type="button" class="kwahl ${S.wahl === k ? 'on' : ''}" data-karte="${k}">
+      <span class="em">${k === 'europa' ? '🎈' : '🚂'}</span>${k === 'europa' ? 'Europa' : 'Deutschland'}
+      <div class="bar"><i style="width:${st.besucht.length / gesamt * 100}%"></i></div>
+      <small>${st.besucht.length} / ${gesamt} ${k === 'europa' ? 'Länder' : 'Bundesländer'} · ${k === 'europa' ? 'mit dem Ballon' : 'mit dem Zug'}</small></button>`;
+  }).join('');
+  $('go').disabled = false;
+  speichere();
+}
+$('karten').addEventListener('click', e => { const b = e.target.closest('[data-karte]'); if (!b) return; S.wahl = b.dataset.karte; buildMenu(); });
+$('go').onclick = starteReise;
+$('buch-btn').onclick = () => zeigeBuch(S.wahl);
+function zeigeBuch(k, ausReise) {
+  const vorher = G.karte; G.karte = k;
+  const st = stand(k), ids = Object.keys(EXP.karten[k].laender).sort((a, b) => L(a).n.localeCompare(L(b).n, 'de'));
+  $('buch-tabs').innerHTML = ['europa', 'deutschland'].map(x => `<button type="button" data-buch="${x}" class="${x === k ? 'on' : ''}">${x === 'europa' ? '🎈 Europa' : '🚂 Deutschland'}</button>`).join('');
+  $('stempelbuch').innerHTML = ids.map(id => st.besucht.includes(id)
+    ? `<div class="sb">${k === 'deutschland' ? `<span class="kz">${esc(L(id).k)}</span>` : `<span class="em">${flagge(id)}</span>`}<b>${esc(L(id).n)}</b><small>${esc(L(id).h)}</small></div>`
+    : `<div class="sb leer"><span class="em">❔</span><b>${esc(L(id).n)}</b><small>noch nicht besucht</small></div>`).join('');
+  G.karte = ausReise ? k : vorher;
+  $('buch').hidden = false;
+  $('buch').dataset.ausReise = ausReise ? '1' : '';
+}
+$('buch-tabs').addEventListener('click', e => { const b = e.target.closest('[data-buch]'); if (b) zeigeBuch(b.dataset.buch, $('buch').dataset.ausReise === '1'); });
+$('buch-zu').onclick = () => { $('buch').hidden = true; if ($('buch').dataset.ausReise === '1') $('ergebnis').hidden = false; };
+function zeigeMenu() {
+  $('spiel').hidden = true; $('ergebnis').hidden = true; $('buch').hidden = true; $('menu').hidden = false;
+  setNavbar(true); buildMenu();
+}
+
+/* ═══════════════════════════════════════════════════════
+   START
+   ═══════════════════════════════════════════════════════ */
+LernSpiel.whenPass(() => {
+  Promise.all([LernKarte.laden('../daten/karten.json'), fetch('../daten/expedition.json').then(r => r.json())])
+    .then(([k, e]) => { KARTEN = k; EXP = e; buildMenu(); })
+    .catch(() => { $('menu-err').textContent = 'Die Karten konnten nicht geladen werden. Bist du online?'; });
+});
+window.addEventListener('lernpass:wiederhergestellt', () => { S = lade(); if (EXP && !$('menu').hidden) buildMenu(); });
+</script>
+</body>
+</html>
