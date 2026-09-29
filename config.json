@@ -391,7 +391,7 @@
       "fach": "Allgemein",
       "emoji": "📱",
       "beschreibung": "Finde das richtige Wort heraus!",
-      "hidden": true,
+      "hidden": false,
       "klassen": [],
       "customTags": [
         {
