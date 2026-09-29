@@ -216,6 +216,19 @@
     .qr-actions button.primary:hover{color:#0f0e1a;opacity:.9;}
     body.qr-open{overflow:hidden;}
 
+    /* ── MEIN DORF: offene Aufträge (gemeinsam/dorf-kern.js) ── */
+    #dorf-section{max-width:980px;margin:-.4rem auto 1.2rem;padding:0 1.4rem;}
+    #dorf-section:empty{display:none;}
+    .dorf-strip{display:flex;align-items:center;gap:.55rem;flex-wrap:wrap;background:linear-gradient(110deg,#2a1d12,#1f1a2e);border:1px solid rgba(154,101,56,.55);border-radius:16px;padding:.6rem .7rem;}
+    .dorf-strip .dh{font-weight:900;font-size:.9rem;color:#fde7c4;margin-right:.2rem;white-space:nowrap;}
+    .dorf-chip{display:inline-flex;align-items:center;gap:.4rem;background:#f6ecd2;color:#3b2a1a;text-decoration:none;border-radius:10px;padding:.35rem .6rem;font-weight:800;font-size:.85rem;box-shadow:0 3px 0 rgba(0,0,0,.35);}
+    .dorf-chip:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(0,0,0,.35);}
+    .dorf-chip small{font-weight:900;color:#7a6248;}
+    .dorf-chip.lk{background:#e0f2fe;}
+    .dorf-strip .zum{margin-left:auto;color:#fde7c4;font-weight:800;font-size:.85rem;text-decoration:none;white-space:nowrap;}
+    .dorf-strip .leer{color:rgba(253,231,196,.8);font-weight:700;font-size:.85rem;}
+    .app-tag.dorf{background:#f6ecd2;color:#3b2a1a;border-color:#9a6538;font-weight:900;}
+
     /* ── LERNWELT-PASS ── */
     #pass-section{max-width:980px;margin:1.2rem auto 1.2rem;padding:0 1.4rem;}
     .pass-card{display:flex;align-items:center;gap:1rem;background:linear-gradient(120deg,#1e1b30 0%,#221d3d 60%,#2a2146 100%);border:1px solid rgba(230,168,23,.22);border-radius:18px;padding:.8rem 1rem .8rem .9rem;box-shadow:0 6px 24px rgba(0,0,0,.35);cursor:pointer;transition:border-color .18s,transform .18s;position:relative;overflow:hidden;}
@@ -453,6 +466,7 @@
 <div id="ann-banner" role="status" aria-live="polite"></div>
 
 <div id="pass-section"></div>
+<div id="dorf-section"></div>
 
 <div class="filter-bar">
   <div class="fi">
@@ -532,6 +546,7 @@
 <script src="gemeinsam/shared.js"></script>
 <script src="gemeinsam/config-api.js"></script>
 <script src="gemeinsam/pass.js"></script>
+<script src="gemeinsam/dorf-kern.js"></script>
 <script src="gemeinsam/avatar3d.js"></script>
 <script src="gemeinsam/chest3d.js"></script>
 <script>
@@ -654,8 +669,35 @@ function buildKlassenChips() {
 }
 
 // ── Seite aufbauen ───────────────────────────────────
+// ── Mein Dorf: offene Aufträge oben und als Pin an den Apps ──
+let DORF_PINS = {};
+function dorfDa() {
+  return !!window.LernDorf && LernDorf.gestartet() && LernPass.hasProfile()
+    && (CONFIG.apps || []).some(a => a && a.datei === 'spiele/dorf.html' && !a.hidden);
+}
+function buildDorfStrip() {
+  const sec = document.getElementById('dorf-section');
+  DORF_PINS = {};
+  if (!sec) return;
+  if (!dorfDa()) { sec.innerHTML = ''; return; }
+  const liste = LernDorf.offeneAuftraege().filter(x => x.c < x.n);
+  liste.forEach(x => { if (!DORF_PINS[x.app] || x.art === 'tag' || x.art === 'lehrer') DORF_PINS[x.app] = { c: x.c, n: x.n }; });
+  const vorname = { lehrer: '📣 ', fleiss: '💪 ', bewohner: '✉️ ', gast: '🎁 ', woche: '📅 ' };
+  const chips = liste.slice(0, 6).map(x => {
+    const a = LernDorf.appInfo(x.app);
+    return a.link ? `<a class="dorf-chip${x.art === 'lehrer' ? ' lk' : ''}" href="${escHtml(a.link)}">${vorname[x.art] || ''}${escHtml(a.emoji)} ${escHtml(a.name)} <small>${x.c}/${x.n}</small></a>` : '';
+  }).join('');
+  sec.innerHTML = `<div class="dorf-strip"><span class="dh">🏘️ Dorf-Aufträge</span>${chips || '<span class="leer">Alles erledigt – super! Morgen gibt es neue.</span>'}
+    <a class="zum" href="spiele/dorf.html">Zum Dorf ›</a></div>`;
+}
+if (window.LernDorf) {
+  if (LernDorf.gestartet()) LernDorf.bereit().then(() => { if (CONFIG.apps && CONFIG.apps.length) buildPage(); });
+  LernDorf.onChange(() => { if (CONFIG.apps && CONFIG.apps.length) buildPage(); });
+}
+
 function buildPage() {
   buildPassCard();
+  buildDorfStrip();
   buildAnnouncement();
   buildAod();
   buildKlassenChips();
@@ -698,6 +740,8 @@ function buildPage() {
       }
 
       const st = LernPass.starsFor(resultKey(app.datei));
+      const dp = DORF_PINS[resultKey(app.datei)];
+      const dorfTag = dp ? `<span class="app-tag dorf" title="Diese App hat einen Auftrag für dein Dorf">📌 Dorf ${dp.c}/${dp.n}</span>` : '';
       const starTag = st ? `<span class="app-tag star" title="Meisterschafts-Stern">${['', '🥉 Bronze', '🥈 Silber', '🥇 Gold'][st]}</span>` : '';
 
       const card = document.createElement('a');
@@ -713,7 +757,7 @@ function buildPage() {
         <span class="app-name">${escHtml(app.name)}</span>
         <span class="app-desc">${escHtml(app.beschreibung || '')}</span>
         <div class="app-meta">
-          ${starTag}
+          ${dorfTag}${starTag}
           ${kl.map(k => `<span class="app-tag tk">Kl.${escHtml(k)}</span>`).join('')}
           ${ct.map(t => {
             const col = tagColor(t);

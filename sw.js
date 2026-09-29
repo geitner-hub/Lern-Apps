@@ -9,7 +9,7 @@
 //
 //  Nach einer Änderung an DIESER Datei VERSION erhöhen.
 // ═══════════════════════════════════════════════════════
-const VERSION = 'lernwelt-v20';  // v20: Entdecker-Expedition, Karten für Länder-Finder ausgelagert
+const VERSION = 'lernwelt-v21';  // v21: Dorf-Feinschliff (Heute-Leiste, Lehrer- und Fleißzettel, Jahreszeiten), Dorf-Aufträge auf der Startseite
 const START = ['./', 'index.html', 'config.json', 'manifest.webmanifest',
                'gemeinsam/shared.js', 'gemeinsam/config-api.js', 'gemeinsam/navbar.js', 'gemeinsam/pass.js',
                'gemeinsam/avatar3d.js', 'gemeinsam/fonts.css', 'gemeinsam/qrcode.js', 'daten/lernwelt-inhalte.json',

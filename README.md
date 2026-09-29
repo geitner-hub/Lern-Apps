@@ -242,7 +242,7 @@ Plan und Stand: Claude-Doc „Aktionsplan: Aufbauspiel „Mein Dorf““.
 - **3D** (`dorf-szene.js`): gezeichnet wird nur bei Änderungen, Pixel-Ratio höchstens 2. Die Modelle sind
   Code (`MODELLE`), ein neues Gebäude ohne Modell erscheint als einfaches Haus. Ohne WebGL zeigt die
   Seite die Bauplätze als Knöpfe.
-- **Wochenauftrag** (Montag bis Sonntag, auf dem Brett unter den Tageszetteln): automatisch „Erledige 5 Aufträge
+- **Wochenauftrag** (Montag bis Sonntag, auf dem Brett unter den Tageszetteln): automatisch „Erledige 4 Aufträge
   vom Brett“, oder von der Lehrkraft im Admin (🏘️ Dorf) je Woche und Klasse eine App oder ein Thema
   (z. B. „Vokabeln Unit 2“ = Runden, die `vok5:unit2…` melden). Belohnung 30 Holz + 30 Stein + 2 Gold – Gold
   gibt es nur hierfür. Ein neuer Auftrag der Lehrkraft ersetzt einen offenen; am Montag beginnt ein neuer.
@@ -291,3 +291,27 @@ Plan und Stand: Claude-Doc „Aktionsplan: Aufbauspiel „Mein Dorf““.
   Übungstage, gute Runden in Fächern, verschiedene Apps, Runden ab 90 %. Belohnung: Ansehen, Gold und eine
   Trophäe (🥉🥈🥇) im Sammelbuch. **Bonus-Gebäude** (Musikpavillon ab 2, Aussichtsturm ab 5 Trophäen; Modell als
   Klötzchen in `GEBAEUDE[].stufen`). **Marktplatz:** Holz ↔ Stein tauschen, Kurs je Stufe in `MARKT`.
+- **Feinschliff (Etappe 6c):** Kein Reset, alte Spielstände laufen weiter.
+  - **Heute-Leiste** oben im Dorf: alle offenen Aufträge zum Antippen (`LernDorf.offeneAuftraege()`),
+    „Du kannst bauen“ (`bauMoeglich()`) und das Sparziel.
+  - **Bau-Tafel als Schublade:** im Hochformat von unten, im Querformat rechts; ✕ oder Esc schließt.
+    Querformat (ab 900 px) mit zwei Spalten: Dorf links (bleibt stehen), Aufträge und Brett rechts.
+    Neuigkeiten und „Willkommen zurück“ (eigener Speicher `lernwelt-dorf-besuch`, nicht im Sicherungscode)
+    stehen in einem Kasten unter den Aufträgen.
+  - **Startseite:** Zeile „🏘️ Dorf-Aufträge“ unter dem Pass und „📌 Dorf 1/2“ an den App-Kacheln
+    (`index.html` lädt dafür `gemeinsam/dorf-kern.js`; nur, wenn das Dorf begonnen und freigeschaltet ist).
+  - **Sparziel** (`zg` im Spielstand): „🎯 Als Ziel merken“ in der Bau-Tafel; Anzeige im Dorf und in der
+    Meldung der Lern-Apps. Verschwindet von selbst, wenn gebaut.
+  - **Rohstoff-Lenkung** (`AUFTRAEGE.tag.rohstoffLenkung`, Start 0,7): so viele neue Aufträge bringen den
+    Rohstoff, der fürs Ziel bzw. im Vorrat fehlt.
+  - **Runden je App:** Admin → 🏘️ Dorf → Apps (`apps[].dorfRunden`, 1–10), gilt für neue Aufträge.
+  - **Lehrer-Zettel** (Platz 5, `config.json` → `dorf.lehrerZettel`: `{ id, start, bis, app, text, runden, klassen }`):
+    im Admin unter 📣 Lehrer-Zettel; hängt von start bis bis oben am Brett, pro Kind nur einmal, Belohnung wie ein
+    Tagesauftrag, kein Tausch. **Braucht den aktuellen Worker.**
+  - **Fleißzettel** (Platz 6, `AUFTRAEGE.fleiss`): einmal am Tag, wenn alle Tageszettel erledigt sind, mit halber Belohnung.
+  - **Werkstatt-Bonus** (`AUFTRAEGE.werkstatt`): +25 % für schon geübte Apps mit höchstens 1 Meisterschafts-Stern
+    (nicht zusätzlich zum Lange-nicht-gespielt-Bonus).
+  - **Briefe auf Englisch** (`BEWOHNER[].geschichten[].en`, `AUFTRAEGE.bewohner.englischAnteil` 0,5): Bewohner-Auftrag in
+    einer Englisch-App → kurzer Brief auf Englisch mit aufklappbarer deutscher Fassung.
+  - **Jahreszeiten** (`JAHRESZEITEN` in `dorf-inhalte.json`, nur Optik): Frühling, Sommer, Herbst, Winter nach Datum;
+    ein Fest mit eigener Stimmung hat Vorrang.
