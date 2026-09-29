@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Partyzentrale">
+<meta name="theme-color" content="#23102b">
+<title>Partyzentrale</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍻</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bowlby+One&family=Rubik:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --tresen:#23102b; --tresen2:#35183f; --papier:#fff3d6; --tinte:#23102b;
+  --rot:#e8364f; --senf:#f5b700; --tuerkis:#1fb8a6; --blau:#3a8dde; --lila:#8e5bd6; --orange:#f07a2a;
+  --display:"Bowlby One","Arial Black",Impact,sans-serif;
+  --body:"Rubik",system-ui,-apple-system,"Segoe UI",sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*,*::before,*::after{box-sizing:inherit}
+html,body{height:100%;margin:0}
+body{
+  background:radial-gradient(circle at 50% 30%,var(--tresen2),var(--tresen) 70%);
+  background-color:var(--tresen);
+  color:var(--papier);font-family:var(--body);font-size:18px;line-height:1.4;
+  -webkit-user-select:none;user-select:none;touch-action:manipulation;overflow:hidden;
+  -webkit-tap-highlight-color:transparent;
+}
+button{font:inherit;cursor:pointer;border:0;touch-action:manipulation}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--senf);outline-offset:3px}
+input,textarea{font:inherit;-webkit-user-select:text;user-select:text}
+
+.screen{display:none;height:100%;flex-direction:column;overflow:hidden}
+.screen.active{display:flex}
+.scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:24px 20px 40px}
+.wrap{max-width:900px;margin:0 auto;width:100%}
+
+/* Kopfzeile */
+.bar{display:flex;align-items:center;gap:12px;padding:12px 16px;flex-shrink:0}
+.bar h2{flex:1;margin:0;font-family:var(--display);font-weight:400;font-size:26px;letter-spacing:.5px}
+.ic{width:52px;height:52px;border-radius:50%;background:rgba(255,243,214,.12);color:var(--papier);font-size:24px;display:grid;place-items:center}
+.ic:active{transform:scale(.92)}
+
+/* Knöpfe */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:16px 26px;border-radius:999px;
+  font-weight:800;font-size:20px;background:var(--papier);color:var(--tinte);box-shadow:0 5px 0 rgba(0,0,0,.35);transition:transform .08s}
+.btn:active{transform:translateY(4px);box-shadow:0 1px 0 rgba(0,0,0,.35)}
+.btn.rot{background:var(--rot);color:#fff}
+.btn.senf{background:var(--senf)}
+.btn.tuerkis{background:var(--tuerkis);color:#fff}
+.btn.ghost{background:rgba(255,243,214,.12);color:var(--papier);box-shadow:none}
+.btn.big{font-size:26px;padding:20px 40px}
+.row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+
+/* Start */
+.logo{font-family:var(--display);font-size:clamp(48px,9vw,96px);line-height:.95;margin:10px 0 6px;color:var(--senf);
+  text-shadow:4px 4px 0 var(--rot)}
+.lead{margin:0 0 28px;opacity:.8}
+.sec{margin:28px 0 12px;font-weight:800;font-size:20px}
+.players{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.pl{display:flex;align-items:center;background:rgba(255,243,214,.1);border-radius:16px;padding:4px 4px 4px 14px}
+.pl input{flex:1;min-width:0;background:transparent;border:0;color:var(--papier);font-size:19px;padding:10px 0}
+.pl input::placeholder{color:rgba(255,243,214,.4)}
+.pl button{width:40px;height:40px;border-radius:50%;background:transparent;color:var(--papier);font-size:22px;opacity:.6}
+.addpl{border:2px dashed rgba(255,243,214,.3);background:transparent;color:var(--papier);border-radius:16px;padding:12px;font-weight:600;font-size:18px}
+.seg{display:flex;background:rgba(255,243,214,.1);border-radius:999px;padding:5px;gap:4px;flex-wrap:wrap}
+.seg button{flex:1;padding:12px 14px;border-radius:999px;background:transparent;color:var(--papier);font-weight:600;font-size:17px;min-width:90px}
+.seg button.on{background:var(--papier);color:var(--tinte)}
+.hint{font-size:15px;opacity:.65;margin:8px 0 0}
+.err{color:var(--senf);font-weight:600;min-height:1.4em;margin-top:12px}
+
+/* Hub */
+.modes{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:10px}
+.mode{border-radius:28px;padding:26px 24px;text-align:left;color:var(--tinte);min-height:190px;display:flex;flex-direction:column;
+  justify-content:space-between;box-shadow:0 7px 0 rgba(0,0,0,.35);transition:transform .08s}
+.mode:active{transform:translateY(5px);box-shadow:0 2px 0 rgba(0,0,0,.35)}
+.mode .em{font-size:52px;line-height:1}
+.mode b{display:block;font-family:var(--display);font-weight:400;font-size:28px;line-height:1.05;margin-top:12px}
+.mode span{display:block;font-size:16px;margin-top:6px;opacity:.85}
+.m1{background:var(--senf)} .m2{background:var(--rot);color:#fff} .m3{background:var(--tuerkis);color:#fff} .m4{background:var(--papier)}
+.hubinfo{opacity:.75;margin:4px 0 0}
+@media (max-width:560px){.modes{grid-template-columns:1fr}.mode{min-height:140px}}
+
+/* Bierdeckel-Karte */
+.stage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 20px 20px;gap:20px;min-height:0}
+.deckel{--c:var(--rot);width:min(640px,100%);min-height:min(420px,52vh);background:var(--papier);color:var(--tinte);border-radius:34px;
+  padding:34px 36px;display:flex;flex-direction:column;justify-content:center;text-align:center;
+  box-shadow:inset 0 0 0 8px var(--papier),inset 0 0 0 13px var(--c),0 14px 0 rgba(0,0,0,.35);
+  transform:rotate(var(--r,0deg));cursor:pointer}
+.deckel.pop{animation:pop .35s cubic-bezier(.2,1.4,.4,1)}
+@keyframes pop{from{transform:rotate(calc(var(--r,0deg) - 8deg)) scale(.85);opacity:0}to{transform:rotate(var(--r,0deg)) scale(1);opacity:1}}
+.deckel .typ{align-self:center;background:var(--c);color:#fff;border-radius:999px;padding:6px 16px;font-weight:800;font-size:16px}
+.deckel .txt{font-weight:800;font-size:clamp(24px,3.6vw,36px);line-height:1.2;margin:22px 0 0}
+.deckel .sub{font-size:clamp(17px,2.2vw,21px);margin-top:16px;opacity:.8}
+.deckel .nm{color:var(--c)}
+.deckel .sp{background:var(--senf);padding:0 8px;border-radius:8px;white-space:nowrap}
+.t-normal{--c:var(--rot)} .t-regel{--c:var(--lila)} .t-duell{--c:var(--orange)} .t-wer{--c:var(--tuerkis)} .t-nie{--c:#2f9e44} .t-ende{--c:#8a7f8e} .t-wasser{--c:var(--blau)}
+.t-ende .txt{text-decoration:line-through;text-decoration-thickness:3px;opacity:.7}
+.tapnote{opacity:.55;font-size:15px}
+.rules{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;padding:0 16px 10px;flex-shrink:0}
+.rule{background:var(--lila);color:#fff;border-radius:14px;padding:8px 12px;font-size:15px;max-width:440px;text-align:left;display:flex;gap:10px;align-items:center}
+.rule .nm{color:var(--senf)}
+.rule button{background:rgba(255,255,255,.2);color:#fff;border-radius:50%;width:28px;height:28px;flex-shrink:0}
+
+/* Bombe */
+.cat{font-family:var(--display);font-size:clamp(34px,6vw,64px);line-height:1.05;text-align:center;color:var(--senf);max-width:800px}
+.catlabel{opacity:.7;font-size:18px;text-align:center}
+.bomb{font-size:clamp(110px,20vw,180px);line-height:1;filter:drop-shadow(0 10px 0 rgba(0,0,0,.35))}
+.bomb.tick{animation:wobble var(--sp,.6s) ease-in-out infinite}
+@keyframes wobble{0%,100%{transform:rotate(-6deg) scale(1)}50%{transform:rotate(6deg) scale(1.08)}}
+.boom{position:fixed;inset:0;background:var(--rot);display:none;flex-direction:column;align-items:center;justify-content:center;gap:24px;
+  z-index:30;text-align:center;padding:30px}
+.boom.show{display:flex;animation:flash .5s}
+@keyframes flash{0%{background:#fff}100%{background:var(--rot)}}
+.boom h1{font-family:var(--display);font-weight:400;font-size:clamp(70px,14vw,150px);margin:0;line-height:1;color:var(--senf);text-shadow:5px 5px 0 var(--tinte)}
+.boom p{font-size:clamp(24px,3.5vw,34px);font-weight:800;margin:0}
+.boom .sp{background:var(--senf);color:var(--tinte);padding:0 10px;border-radius:10px}
+
+/* Minderheit */
+.vs{display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:stretch;width:min(900px,100%)}
+.opt{border-radius:28px;padding:28px 20px;text-align:center;display:flex;flex-direction:column;justify-content:center;gap:10px;min-height:210px;
+  box-shadow:0 8px 0 rgba(0,0,0,.35)}
+.opt .hand{font-size:60px;line-height:1}
+.opt b{font-family:var(--display);font-weight:400;font-size:clamp(26px,3.8vw,40px);line-height:1.1}
+.optA{background:var(--tuerkis);color:#fff} .optB{background:var(--senf);color:var(--tinte)}
+.oder{align-self:center;font-family:var(--display);font-size:28px;opacity:.7}
+.q{font-size:clamp(22px,3vw,30px);font-weight:800;text-align:center}
+.count{font-family:var(--display);font-size:clamp(120px,22vw,220px);line-height:1;color:var(--senf);text-shadow:6px 6px 0 var(--rot)}
+.count.go{font-size:clamp(70px,12vw,130px)}
+.result{background:var(--papier);color:var(--tinte);border-radius:24px;padding:20px 26px;text-align:center;font-size:clamp(19px,2.4vw,24px);font-weight:600;max-width:700px}
+.result .sp{background:var(--senf);padding:0 8px;border-radius:8px;white-space:nowrap}
+@media (max-width:620px){.vs{grid-template-columns:1fr}.oder{display:none}.opt{min-height:130px}}
+
+/* Quiz */
+.teams{display:grid;grid-template-columns:1fr 1fr;gap:14px;width:min(900px,100%)}
+.team{border-radius:22px;padding:14px 18px;display:flex;flex-direction:column;gap:6px;transition:box-shadow .2s}
+.team.fire{background:var(--rot);color:#fff}.team.ice{background:var(--blau);color:#fff}
+.team.turn{box-shadow:0 0 0 5px var(--senf)}
+.team .th{display:flex;justify-content:space-between;align-items:center;font-weight:800;font-size:20px}
+.team .score{font-family:var(--display);font-size:40px;line-height:1}
+.team .mem{font-size:15px;opacity:.9}
+.qcard{width:min(760px,100%);background:var(--papier);color:var(--tinte);border-radius:30px;padding:28px 30px;text-align:center;
+  box-shadow:0 12px 0 rgba(0,0,0,.35)}
+.qcard .typ{display:inline-block;background:var(--tinte);color:var(--papier);border-radius:999px;padding:6px 16px;font-weight:800;font-size:16px}
+.qcard .qq{font-weight:800;font-size:clamp(22px,3.2vw,32px);line-height:1.25;margin:18px 0 0}
+.qcard .ans{margin-top:18px;font-family:var(--display);font-size:clamp(26px,4vw,40px);color:var(--rot);display:none}
+.qcard .ans.show{display:block;animation:pop .35s}
+.qcard .res{margin-top:14px;font-weight:600;font-size:20px}
+.qcard .sp{background:var(--senf);padding:0 8px;border-radius:8px;white-space:nowrap}
+
+/* Editor */
+.ed{background:rgba(255,243,214,.08);border-radius:22px;padding:18px 20px;margin-bottom:18px}
+.ed h3{margin:0 0 6px;font-size:22px}
+.ed label{display:flex;gap:10px;align-items:center;font-weight:600;margin:10px 0}
+.ed input[type=checkbox]{width:26px;height:26px;accent-color:var(--senf)}
+.ed textarea{width:100%;min-height:150px;background:var(--papier);color:var(--tinte);border:0;border-radius:14px;padding:14px;font-size:17px;line-height:1.45;resize:vertical}
+.ed .fmt{font-size:15px;opacity:.75;margin:4px 0 10px}
+.ed code{background:rgba(255,243,214,.15);padding:1px 6px;border-radius:6px;font-family:var(--body);font-weight:600}
+.cnt{font-size:15px;opacity:.7;margin-top:8px}
+
+/* Joker-Overlay */
+.ov{position:fixed;inset:0;background:rgba(20,8,26,.85);display:none;align-items:center;justify-content:center;z-index:40;padding:20px}
+.ov.show{display:flex}
+.panel{background:var(--papier);color:var(--tinte);border-radius:28px;padding:24px;width:min(560px,100%);max-height:85vh;overflow-y:auto}
+.panel h3{font-family:var(--display);font-weight:400;font-size:30px;margin:0 0 4px}
+.jk{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:2px dashed rgba(35,16,43,.15);gap:10px}
+.jk b{font-size:19px}
+.jk .cards{font-size:22px;letter-spacing:2px}
+.jk button{padding:10px 16px;border-radius:999px;background:var(--lila);color:#fff;font-weight:700}
+.jk button:disabled{opacity:.3}
+.toast{position:fixed;left:50%;bottom:calc(30px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(150%);background:var(--senf);color:var(--tinte);
+  padding:14px 22px;border-radius:999px;font-weight:800;z-index:50;transition:transform .3s;max-width:90vw;text-align:center}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<!-- ============ SETUP ============ -->
+<section class="screen active" id="setup">
+  <div class="scroll"><div class="wrap">
+    <h1 class="logo">Partyzentrale</h1>
+    <p class="lead">Vier Trinkspiele für einen Abend. Namen eintragen, iPad in die Mitte, los.</p>
+
+    <div class="sec">Wer spielt mit? <span id="plcount" style="opacity:.6;font-weight:600"></span></div>
+    <div class="players" id="players"></div>
+    <div style="margin-top:10px"><button class="addpl" id="addPl">+ Person hinzufügen</button></div>
+
+    <div class="sec">Wie wild?</div>
+    <div class="seg" id="levelSeg">
+      <button data-v="1">Gemütlich</button><button data-v="2">Party</button><button data-v="3">Eskalation</button>
+    </div>
+    <p class="hint">Bestimmt, wie viele Schlucke die Karten verteilen.</p>
+
+    <div class="sec">Joker pro Person</div>
+    <div class="seg" id="jokerSeg">
+      <button data-v="0">Keine</button><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button>
+    </div>
+    <p class="hint">Mit einem Joker darf man eine Aufgabe oder einen Schluck auslassen.</p>
+
+    <div class="err" id="setupErr"></div>
+    <div class="row" style="margin-top:10px;justify-content:flex-start">
+      <button class="btn senf big" id="startBtn">Spiel starten</button>
+    </div>
+    <p class="hint" style="margin-top:26px">Tipp: In Safari „Teilen → Zum Home-Bildschirm“ – dann läuft die App im Vollbild. Und: Wasser zwischendurch zählt auch als Getränk.</p>
+  </div></div>
+</section>
+
+<!-- ============ HUB ============ -->
+<section class="screen" id="hub">
+  <div class="bar">
+    <button class="ic" data-go="setup" aria-label="Spieler und Einstellungen">👥</button>
+    <h2>Was spielen wir?</h2>
+    <button class="ic jokerBtn" aria-label="Joker">🃏</button>
+    <button class="ic" data-go="editor" aria-label="Inhalte bearbeiten">✏️</button>
+  </div>
+  <div class="scroll" style="padding-top:6px"><div class="wrap">
+    <p class="hubinfo" id="hubInfo"></p>
+    <div class="modes">
+      <button class="mode m1" data-mode="cards"><div class="em">🍻</div><div><b>Partykarten</b><span>Aufgaben, Duelle, Regeln – Karte antippen, vorlesen, trinken.</span></div></button>
+      <button class="mode m2" data-mode="bomb"><div class="em">💣</div><div><b>Tickende Bombe</b><span>Begriff nennen, iPad weiterreichen. Wer es beim Knall hält, trinkt.</span></div></button>
+      <button class="mode m3" data-mode="minority"><div class="em">👍👎</div><div><b>Minderheit trinkt</b><span>Alle stimmen gleichzeitig ab. Wer allein dasteht, trinkt.</span></div></button>
+      <button class="mode m4" data-mode="quiz"><div class="em">🔥🧊</div><div><b>Team-Quiz</b><span>Zwei Teams, Wissens- und Schätzfragen. Verlierer trinken.</span></div></button>
+    </div>
+  </div></div>
+</section>
+
+<!-- ============ PARTYKARTEN ============ -->
+<section class="screen" id="cards">
+  <div class="bar">
+    <button class="ic" data-go="hub" aria-label="Zurück">←</button>
+    <h2>Partykarten</h2>
+    <button class="ic jokerBtn" aria-label="Joker">🃏</button>
+  </div>
+  <div class="stage">
+    <div class="deckel t-normal" id="deckel" role="button" tabindex="0">
+      <span class="typ" id="dTyp">Los geht's</span>
+      <div class="txt" id="dTxt">Tippe auf die Karte, um die erste zu ziehen.</div>
+      <div class="sub" id="dSub"></div>
+    </div>
+    <div class="tapnote" id="dCount">Antippen für die nächste Karte</div>
+  </div>
+  <div class="rules" id="rules"></div>
+</section>
+
+<!-- ============ BOMBE ============ -->
+<section class="screen" id="bomb">
+  <div class="bar">
+    <button class="ic" data-go="hub" aria-label="Zurück">←</button>
+    <h2>Tickende Bombe</h2>
+    <button class="ic jokerBtn" aria-label="Joker">🃏</button>
+  </div>
+  <div class="stage">
+    <div class="catlabel" id="bLabel">Kategorie</div>
+    <div class="cat" id="bCat">…</div>
+    <div class="bomb" id="bIcon">💣</div>
+    <div class="row">
+      <button class="btn rot big" id="bStart">Zünden</button>
+      <button class="btn ghost" id="bSkip">Andere Kategorie</button>
+    </div>
+    <p class="hint" id="bHint" style="text-align:center;max-width:560px">Nach dem Zünden: Begriff zur Kategorie nennen, dann das iPad nach links weitergeben. Wiederholungen zählen nicht.</p>
+  </div>
+  <div class="boom" id="boom">
+    <h1>BUMM!</h1>
+    <p id="boomTxt"></p>
+    <button class="btn big" id="boomNext">Nächste Runde</button>
+  </div>
+</section>
+
+<!-- ============ MINDERHEIT ============ -->
+<section class="screen" id="minority">
+  <div class="bar">
+    <button class="ic" data-go="hub" aria-label="Zurück">←</button>
+    <h2>Minderheit trinkt</h2>
+    <button class="ic jokerBtn" aria-label="Joker">🃏</button>
+  </div>
+  <div class="stage" id="mStage"></div>
+</section>
+
+<!-- ============ QUIZ ============ -->
+<section class="screen" id="quiz">
+  <div class="bar">
+    <button class="ic" data-go="hub" aria-label="Zurück">←</button>
+    <h2>Team-Quiz</h2>
+    <button class="ic jokerBtn" aria-label="Joker">🃏</button>
+  </div>
+  <div class="stage" id="qStage" style="justify-content:flex-start;overflow-y:auto"></div>
+</section>
+
+<!-- ============ EDITOR ============ -->
+<section class="screen" id="editor">
+  <div class="bar">
+    <button class="ic" data-go="hub" aria-label="Zurück">←</button>
+    <h2>Eigene Inhalte</h2>
+  </div>
+  <div class="scroll" style="padding-top:6px"><div class="wrap">
+    <p class="hint" style="margin:0 0 18px">Eine Zeile pro Eintrag. Wird automatisch auf diesem Gerät gespeichert.</p>
+
+    <div class="ed">
+      <h3>🍻 Partykarten</h3>
+      <p class="fmt">Platzhalter: <code>{1}</code> <code>{2}</code> <code>{3}</code> = zufällige Personen, <code>{s}</code> = 1–3 Schlucke, <code>{S}</code> = 3–5 Schlucke.<br>
+      Kartentyp davor schreiben (optional): <code>regel:</code> <code>duell:</code> <code>wer würde:</code> <code>niemals:</code> <code>wasser:</code></p>
+      <label><input type="checkbox" data-def="cards"> Mitgelieferte Karten verwenden</label>
+      <textarea data-ed="cards" placeholder="{1} muss {2} einen Spitznamen geben. Weigerung: {s}.&#10;regel: Wer aufs Handy schaut, trinkt 1 Schluck.&#10;wer würde: im Urlaub das Hotel verwechseln&#10;niemals: einen Tanzkurs gemacht"></textarea>
+      <div class="cnt" data-cnt="cards"></div>
+    </div>
+
+    <div class="ed">
+      <h3>💣 Bomben-Kategorien</h3>
+      <p class="fmt">Einfach die Kategorie, z. B. <code>Biersorten</code></p>
+      <label><input type="checkbox" data-def="bomb"> Mitgelieferte Kategorien verwenden</label>
+      <textarea data-ed="bomb" placeholder="Dinge, die Bene immer sagt&#10;Orte in der Oberpfalz"></textarea>
+      <div class="cnt" data-cnt="bomb"></div>
+    </div>
+
+    <div class="ed">
+      <h3>👍👎 Minderheit-Fragen</h3>
+      <p class="fmt">Format: <code>Option A | Option B</code> oder mit eigener Frage: <code>Frage | Option A | Option B</code></p>
+      <label><input type="checkbox" data-def="minority"> Mitgelieferte Fragen verwenden</label>
+      <textarea data-ed="minority" placeholder="Weißbier | Helles&#10;Wer räumt morgen auf? | Ich | Die anderen"></textarea>
+      <div class="cnt" data-cnt="minority"></div>
+    </div>
+
+    <div class="ed">
+      <h3>🔥🧊 Quizfragen</h3>
+      <p class="fmt">Wissensfrage: <code>Frage | Antwort</code> · Schätzfrage: <code>schätz: Frage | Antwort</code></p>
+      <label><input type="checkbox" data-def="quiz"> Mitgelieferte Fragen verwenden</label>
+      <textarea data-ed="quiz" placeholder="Wie heißt der Hund von Lisa? | Bruno&#10;schätz: Wie viele Gäste waren auf Toms Hochzeit? | 120"></textarea>
+      <div class="cnt" data-cnt="quiz"></div>
+    </div>
+  </div></div>
+</section>
+
+<!-- Joker -->
+<div class="ov" id="jokerOv">
+  <div class="panel">
+    <h3>Joker</h3>
+    <p style="margin:0 0 10px;opacity:.7">Joker einsetzen = diese Aufgabe oder diesen Schluck auslassen.</p>
+    <div id="jokerList"></div>
+    <div class="row" style="margin-top:18px"><button class="btn senf" id="jokerClose">Schließen</button></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ================= STANDARD-INHALTE ================= */
+const DEF_CARDS = `
+{1}, verteile {s}.
+{1} und {2} trinken je {s}.
+{1}, nenne 5 Biersorten in 10 Sekunden. Nicht geschafft: {s}.
+Wer zuletzt im Urlaub war, trinkt {s}.
+{1}, mach {2} ein ehrliches Kompliment – oder trink {s}.
+{1}, deine beste Tierimitation! Die Runde entscheidet: überzeugend oder {s}.
+{1}, erzähl einen Witz. Lacht niemand: {S}.
+Die Person mit dem ältesten Handy trinkt {s}.
+Alle, die heute schon Kaffee hatten, trinken {s}.
+{1}, zeig das letzte Foto in deiner Galerie – oder trink {S}.
+{1}, rate das Lieblingsessen von {2}. Falsch: {s}.
+{1}, sag das Alphabet rückwärts ab M. Beim ersten Fehler: {s}.
+{1} gegen {2}: Schnick Schnack Schnuck. Wer verliert, trinkt {s}.
+Wasserfall! {1} fängt an, alle trinken mit. Aufhören darf man erst, wenn die Person davor aufhört.
+Kategorienrunde: {1} gibt eine Kategorie vor, reihum geht's weiter. Wer nichts mehr weiß, trinkt {s}.
+{1}, stell {2} eine Quizfrage. Falsch beantwortet: {s} für {2}. Richtig: {s} für dich.
+Die größte Person trinkt {s}, die kleinste verteilt {s}.
+Wer als Letztes den Finger auf die Nase legt, trinkt {s}!
+{1}, imitiere jemanden aus der Runde. Wird die Person erraten, trinkt sie {s}.
+Wer am weitesten weg wohnt, trinkt {s}.
+{1}, such dir jemanden aus, der mit dir anstößt. Ihr trinkt beide {s}.
+Reimrunde: {1} sagt ein Wort, reihum wird gereimt. Wer hängt, trinkt {s}.
+{1}, nenne drei Dinge, die du an {2} magst – oder trink {S}.
+Alle Singles trinken {s}. Alle Vergebenen stoßen an und trinken {s}.
+Akku-Check! Wer am meisten Akku hat, verteilt {s}. Wer am wenigsten hat, trinkt {s}.
+{1}, dreimal schnell: „Fischers Fritz fischt frische Fische.“ Verhaspelt: {s}.
+{1} und {2} tauschen die Plätze. Wer sich weigert, trinkt {S}.
+Themenrunde „Urlaub“: Reihum ein Wort sagen. Wer zögert, trinkt {s}.
+{1}, steh auf einem Bein, bis die nächste Karte gezogen ist. Umgekippt: {s}.
+Wer zuletzt eine Sprachnachricht geschickt hat, trinkt {s}.
+Alle, die eine Brille tragen, verteilen {s}.
+Prost! Alle trinken {s}.
+{1}, du bist jetzt DJ: Wähl den nächsten Song. Wer meckert, trinkt {s}.
+{1}, erzähl deine peinlichste Geschichte in 30 Sekunden – oder trink {S}.
+{1} und {2}: Wer von euch hat zuerst Geburtstag? Die andere Person trinkt {s}.
+Wer zuletzt gekommen ist, trinkt {s}.
+{1}, du darfst {2} und {3} je {s} geben – oder alles selbst trinken.
+{1}, singe den Refrain eines Liedes. Wer es als Erstes errät, verteilt {s}.
+Alle, die heute Sport gemacht haben, verteilen {s}. Alle anderen trinken {s}.
+{1}, schau {2} zehn Sekunden in die Augen. Wer zuerst lacht: {s}.
+wasser: Wasserrunde! Alle trinken ein Glas Wasser. Die Leber sagt danke.
+wasser: Pause: Alle holen sich ein Wasser. {1} darf die nächste Karte ziehen.
+duell: {1} gegen {2} – Starrduell! Wer zuerst blinzelt oder lacht, trinkt {S}.
+duell: {1} gegen {2} – Wer nennt in 15 Sekunden mehr Automarken? Verlierer trinkt {s}.
+duell: {1} gegen {2} – Daumencatchen! Verlierer trinkt {s}.
+duell: {1} gegen {2} – Armdrücken! Verlierer trinkt {S}.
+duell: {1} gegen {2} – Wer zuerst eine Flasche berührt, gewinnt. Verlierer trinkt {s}.
+duell: {1} gegen {2} – Wer kennt die Runde besser? Nennt abwechselnd Geburtsorte. Wer zuerst passt, trinkt {s}.
+duell: {1} gegen {2} – Wer kann länger einen Ton halten? Verlierer trinkt {s}.
+wer würde: nachts betrunken Pizza bestellen
+wer würde: bei einem Horrorfilm einschlafen
+wer würde: in einer Reality-Show mitmachen
+wer würde: im Zug einschlafen und an der Endstation aufwachen
+wer würde: aus Versehen das Ende einer Serie spoilern
+wer würde: sich auf einer Party mit dem DJ anfreunden
+wer würde: im Urlaub spontan heiraten
+wer würde: als Erstes auf der Tanzfläche stehen
+wer würde: beim Kochen den Rauchmelder auslösen
+wer würde: eine Nachricht an die falsche Person schicken
+wer würde: den ganzen Abend über die Arbeit reden
+wer würde: sich auf einem Festival verlaufen
+wer würde: einen Streit mit einem Automaten anfangen
+wer würde: als Letztes die Party verlassen
+wer würde: morgen früh als Erstes wach sein
+niemals: einen Flug verpasst
+niemals: vor Publikum gesungen
+niemals: jemanden geghostet
+niemals: eine Party verlassen, ohne mich zu verabschieden
+niemals: im Kino eingeschlafen
+niemals: mich ausgesperrt
+niemals: ein Geschenk weiterverschenkt
+niemals: auf einem Tisch getanzt
+niemals: eine ganze Serie an einem Wochenende geschaut
+niemals: etwas Peinliches in den Familienchat geschickt
+niemals: so getan, als hätte ich jemanden nicht gesehen
+niemals: eine Nacht komplett durchgemacht
+niemals: mich beim Namen von jemandem vertan
+regel: {1} ist Daumenmeister: Legt {1} den Daumen auf den Tisch, müssen alle nachziehen. Der Letzte trinkt 1 Schluck.
+regel: Niemand darf „Ja“ oder „Nein“ sagen. Verstoß: 1 Schluck.
+regel: {1} ist Fragenmeister: Wer eine Frage von {1} beantwortet, trinkt 1 Schluck.
+regel: Nur mit der linken Hand trinken! Verstoß: 1 Schluck.
+regel: Keine Vornamen mehr! Verstoß: 1 Schluck.
+regel: {1} und {2} sind Trinkpartner: Trinkt einer, trinkt der andere mit.
+regel: Vor jedem Schluck muss man „Prost, Majestät“ sagen. Vergessen: noch 1 Schluck.
+regel: {1} darf nur noch in der dritten Person von sich sprechen. Jeder Patzer: 1 Schluck.
+regel: {1} ist jetzt Chef: Alle müssen {1} mit „Chef“ ansprechen. Vergessen: 1 Schluck.
+regel: Wer flucht, trinkt 1 Schluck.
+regel: Wer aufs Handy schaut, trinkt 1 Schluck.
+`;
+
+const DEF_BOMB = `
+Automarken
+Biersorten und Biermarken
+Cocktails
+Länder in Europa
+Hauptstädte
+Obstsorten
+Gemüsesorten
+Fußballvereine
+Disney-Filme
+Serien
+Dinge im Badezimmer
+Berufe
+Sportarten
+Getränke ohne Alkohol
+Schnapssorten
+Pizzabeläge
+Städte in Bayern
+Musikinstrumente
+Vornamen mit A
+Wörter mit „Bier“ darin
+Superhelden
+Käsesorten
+Dinge am Strand
+Apps auf dem Handy
+Kleidungsstücke
+Körperteile
+Dinge in der Küche
+Brett- und Kartenspiele
+Bands und Sänger
+Weihnachtslieder
+Süßigkeiten
+Deutsche Städte
+Hunderassen
+Gewürze
+Wörter, die mit Z beginnen
+Partyspiele
+Dinge, die man im Supermarkt kauft
+Tiere im Zoo
+Filme mit Tom Hanks oder Leonardo DiCaprio
+Dinge, die rot sind
+Urlaubsländer
+Frühstück
+Dinge, die man auf einem Festival braucht
+`;
+
+const DEF_MIN = `
+Pizza | Burger
+Strand | Berge
+Hund | Katze
+Frühaufsteher | Nachteule
+Bier | Wein
+Netflix | Kino
+Sommer | Winter
+Süß | Salzig
+Kaffee | Tee
+Anrufen | Schreiben
+Stadt | Land
+Rotwein | Weißwein
+Ketchup | Mayo
+Hausparty | Club
+Camping | Hotel
+Immer zu warm | Immer zu kalt
+Tanzen | Karaoke
+Schokolade | Chips
+Serie am Stück | Eine Folge pro Woche
+Urlaub durchplanen | Spontan losfahren
+Nudeln | Reis
+Wecker einmal | Snoozen
+Gin Tonic | Aperol Spritz
+Döner | Pizza
+Selbst kochen | Bestellen
+Zug | Flugzeug
+Liebesfilm | Horrorfilm
+Duschen morgens | Duschen abends
+Was wäre schlimmer? | Handy vergessen | Geldbeutel vergessen
+Was wäre dir lieber? | Unsichtbar sein | Fliegen können
+Was wäre dir lieber? | In die Vergangenheit reisen | In die Zukunft reisen
+Was wäre dir lieber? | Nie wieder Musik | Nie wieder Filme
+Was wäre dir lieber? | Reich, aber unbekannt | Berühmt, aber pleite
+Wie kommst du meistens? | Zu früh | Zu spät
+Klopapier hängt… | Vorne | Hinten
+Was ist schlimmer? | Laut schnarchen | Im Schlaf reden
+Freitagabend… | Feiern gehen | Sofa
+Was wäre dir lieber? | Nur noch Flüstern | Nur noch Schreien
+Was wäre dir lieber? | Jeden Tag Regen | Jeden Tag 35 Grad
+Mehr als die Hälfte hier… | Wird morgen verkatert sein | Wird fit sein
+`;
+
+const DEF_QUIZ = `
+Wie viele Herzen hat ein Oktopus? | 3
+Wie heißt die Hauptstadt von Australien? | Canberra
+Welches ist das einzige Säugetier, das aktiv fliegen kann? | Die Fledermaus
+Aus welchem Land kommt die Band ABBA? | Schweden
+Welches chemische Element hat das Symbol Au? | Gold
+In welcher Stadt steht der Schiefe Turm? | Pisa
+Welcher Planet ist der Sonne am nächsten? | Merkur
+Welche Farbe hat die „Blackbox“ eines Flugzeugs? | Orange
+Welches Tier ist das Wappentier von Schottland? | Das Einhorn
+Aus welcher Pflanze wird Tequila hergestellt? | Agave
+Aus welchem Land stammt Aperol? | Italien
+Wie viele Minuten hat ein Tag? | 1440
+Welches ist das größte Organ des Menschen? | Die Haut
+Wer malte die Mona Lisa? | Leonardo da Vinci
+Wie viele Bundesländer hat Deutschland? | 16
+Wer wurde 2014 Fußball-Weltmeister? | Deutschland
+Wie heißt der höchste Berg Deutschlands? | Zugspitze
+In welchem Jahr fiel die Berliner Mauer? | 1989
+Welche Stadt nennt man „Big Apple“? | New York
+Was ist die Hauptzutat von Guacamole? | Avocado
+Welcher Ozean ist der größte? | Der Pazifik
+Welcher Cocktail besteht aus Rum, Limette, Minze, Zucker und Soda? | Mojito
+Welches Tier ist im Ferrari-Logo zu sehen? | Ein Pferd
+Wie heißt die Hauptstadt von Kanada? | Ottawa
+Wie viele Saiten hat eine normale Gitarre? | 6
+Welches Land hat die meisten Zeitzonen? | Frankreich (mit Überseegebieten)
+Aus welchem Getreide wird Single Malt Whisky gemacht? | Gerste
+Wie viele Länder grenzen an Deutschland? | 9
+Wie heißt der längste Fluss der Welt (klassische Angabe)? | Der Nil
+Welches Gas atmen Pflanzen bei der Photosynthese ein? | Kohlendioxid (CO₂)
+schätz: Wie hoch ist der Eiffelturm (mit Antenne) in Metern? | ca. 330 m
+schätz: Wie viele Knochen hat ein erwachsener Mensch? | 206
+schätz: In welchem Jahr kam das erste iPhone auf den Markt? | 2007
+schätz: Wie weit ist der Mond im Schnitt von der Erde entfernt (km)? | ca. 384.400 km
+schätz: Wie viele Länder gehören zur EU? | 27
+schätz: Wie hoch ist die Zugspitze (m)? | 2.962 m
+schätz: Wie viele Tasten hat ein Klavier? | 88
+schätz: Wie alt wurde Goethe? | 82 Jahre
+schätz: In welchem Jahr war die erste Mondlandung? | 1969
+schätz: Wie lang ist ein Marathon (km)? | 42,195 km
+schätz: Wie viele Folgen hat die Serie „Friends“? | 236
+schätz: Wie hoch ist der Burj Khalifa (m)? | 828 m
+schätz: In welchem Jahr fand das erste Oktoberfest statt? | 1810
+schätz: Wie viele Einwohner hat Deutschland (Millionen)? | rund 84 Millionen
+schätz: Wie viele Augen hat ein normaler Spielwürfel insgesamt? | 21
+schätz: Wie schnell kann ein Gepard maximal laufen (km/h)? | ca. 100–110 km/h
+`;
+
+/* ================= HILFSFUNKTIONEN ================= */
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const rand = (a,b) => Math.floor(Math.random()*(b-a+1))+a;
+const shuffle = a => { for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; };
+const esc = s => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const lines = t => (t||'').split('\n').map(l=>l.trim()).filter(Boolean);
+
+/* ================= SPEICHER ================= */
+const LS = 'partyzentrale_v1';
+function loadState(){ try{ return JSON.parse(localStorage.getItem(LS)) || {}; }catch(e){ return {}; } }
+function saveState(){ try{ localStorage.setItem(LS, JSON.stringify({settings, custom})); }catch(e){} }
+const saved = loadState();
+let settings = Object.assign({
+  players: ['Spieler 1','Spieler 2','Spieler 3','Spieler 4','Spieler 5','Spieler 6','Spieler 7','Spieler 8'],
+  level: 2, jokers: 1
+}, saved.settings || {});
+settings.useDef = Object.assign({cards:true,bomb:true,minority:true,quiz:true}, (saved.settings||{}).useDef || {});
+let custom = Object.assign({cards:'',bomb:'',minority:'',quiz:''}, saved.custom || {});
+
+let activePlayers = [];
+let jokersLeft = {};
+
+/* ================= SCHLUCKE ================= */
+const MULT = [0,1,1.5,2];
+function sips(big){
+  const base = big ? rand(3,5) : rand(1,3);
+  const n = Math.max(1, Math.round(base * MULT[settings.level]));
+  return n + (n===1 ? ' Schluck' : ' Schlucke');
+}
+function pickN(n){ return shuffle(activePlayers.slice()).slice(0,n); }
+function fill(t, names){
+  return esc(t)
+    .replace(/\{([123])\}/g,(m,i)=>`<b class="nm">${esc(names[i-1] || 'jemand')}</b>`)
+    .replace(/\{s\}/g,()=>`<b class="sp">${sips(false)}</b>`)
+    .replace(/\{S\}/g,()=>`<b class="sp">${sips(true)}</b>`);
+}
+
+/* ================= PARSER ================= */
+function parseCards(txt){
+  return lines(txt).map(l=>{
+    const m = l.match(/^(regel|duell|wer ?würde|wer ?wuerde|niemals|ich hab noch nie|wasser)\s*:\s*(.+)$/i);
+    if(!m) return {t:'normal', x:l};
+    const k = m[1].toLowerCase();
+    const t = k.startsWith('regel')?'regel' : k.startsWith('duell')?'duell' : k.startsWith('wer')?'werwuerde' : k.startsWith('wasser')?'wasser' : 'niemals';
+    return {t, x:m[2]};
+  });
+}
+function parseMin(txt){
+  return lines(txt).map(l=>{
+    const p = l.split('|').map(s=>s.trim()).filter(Boolean);
+    if(p.length>=3) return {q:p[0], a:p[1], b:p[2]};
+    if(p.length===2) return {q:'Was ist dir lieber?', a:p[0], b:p[1]};
+    return null;
+  }).filter(Boolean);
+}
+function parseQuiz(txt){
+  return lines(txt).map(l=>{
+    let t='w', s=l;
+    const m = l.match(/^sch(ä|ae)tz\s*:\s*(.+)$/i);
+    if(m){ t='s'; s=m[2]; }
+    const p = s.split('|').map(x=>x.trim());
+    if(p.length<2 || !p[0]) return null;
+    return {t, q:p[0], a:p.slice(1).join(' | ')};
+  }).filter(Boolean);
+}
+function pool(kind){
+  const P = {cards:[parseCards,DEF_CARDS], bomb:[lines,DEF_BOMB], minority:[parseMin,DEF_MIN], quiz:[parseQuiz,DEF_QUIZ]}[kind];
+  return (settings.useDef[kind] ? P[0](P[1]) : []).concat(P[0](custom[kind]));
+}
+const decks = {};
+function draw(kind){
+  if(!decks[kind] || !decks[kind].length){
+    decks[kind] = shuffle(pool(kind));
+    if(!decks[kind].length) return null;
+  }
+  return decks[kind].pop();
+}
+function resetDecks(){ for(const k in decks) delete decks[k]; }
+
+/* ================= NAVIGATION ================= */
+let current = 'setup';
+function show(id){
+  if(current==='bomb' && id!=='bomb') stopBomb(true);
+  if(current==='minority' && id!=='minority') clearTimeout(mTimer);
+  current = id;
+  $$('.screen').forEach(s=>s.classList.toggle('active', s.id===id));
+  if(id==='setup') renderSetup();
+  if(id==='hub') renderHub();
+  if(id==='editor') renderEditor();
+}
+$$('[data-go]').forEach(b=>b.onclick=()=>show(b.dataset.go));
+$$('[data-mode]').forEach(b=>b.onclick=()=>{
+  const m=b.dataset.mode; show(m);
+  if(m==='bomb') newBombRound();
+  if(m==='minority') mNew();
+  if(m==='quiz') qEnter();
+});
+
+function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'),2200); }
+
+/* ================= SETUP ================= */
+function renderSetup(){
+  const box=$('#players'); box.innerHTML='';
+  settings.players.forEach((name,i)=>{
+    const d=document.createElement('div'); d.className='pl';
+    d.innerHTML=`<input type="text" maxlength="18" placeholder="Name" value="${esc(name)}" aria-label="Name ${i+1}"><button aria-label="Entfernen">×</button>`;
+    d.querySelector('input').oninput=e=>{settings.players[i]=e.target.value; saveState(); updCount();};
+    d.querySelector('button').onclick=()=>{settings.players.splice(i,1); saveState(); renderSetup();};
+    box.appendChild(d);
+  });
+  updCount();
+  $$('#levelSeg button').forEach(b=>b.classList.toggle('on', +b.dataset.v===settings.level));
+  $$('#jokerSeg button').forEach(b=>b.classList.toggle('on', +b.dataset.v===settings.jokers));
+  $('#setupErr').textContent='';
+}
+function updCount(){ const n=settings.players.filter(p=>p.trim()).length; $('#plcount').textContent='('+n+')'; }
+$('#addPl').onclick=()=>{
+  if(settings.players.length>=20){toast('Mehr als 20 wird unübersichtlich.');return;}
+  settings.players.push(''); saveState(); renderSetup();
+  const ins=$$('#players input'); ins[ins.length-1].focus();
+};
+$$('#levelSeg button').forEach(b=>b.onclick=()=>{settings.level=+b.dataset.v; saveState(); renderSetup();});
+$$('#jokerSeg button').forEach(b=>b.onclick=()=>{settings.jokers=+b.dataset.v; saveState(); renderSetup();});
+$('#startBtn').onclick=()=>{
+  const names=settings.players.map(p=>p.trim()).filter(Boolean);
+  const uniq=[...new Set(names)];
+  if(uniq.length<2){ $('#setupErr').textContent='Tragt mindestens zwei Namen ein.'; return; }
+  if(uniq.length!==names.length){ $('#setupErr').textContent='Zwei Personen haben denselben Namen – bitte unterscheidbar machen.'; return; }
+  activePlayers=uniq;
+  jokersLeft={}; uniq.forEach(n=>jokersLeft[n]=settings.jokers);
+  rules=[]; cardCount=0; quiz=null; resetDecks();
+  audioInit(); wakeLock();
+  show('hub');
+};
+
+/* ================= HUB ================= */
+function renderHub(){
+  const lvl=['','Gemütlich','Party','Eskalation'][settings.level];
+  $('#hubInfo').textContent = activePlayers.length+' Personen, Stufe „'+lvl+'“';
+  $$('.jokerBtn').forEach(b=>b.style.display = settings.jokers>0 ? '' : 'none');
+}
+
+/* ================= JOKER ================= */
+function renderJokers(){
+  const L=$('#jokerList'); L.innerHTML='';
+  activePlayers.forEach(n=>{
+    const left=jokersLeft[n]||0;
+    const r=document.createElement('div'); r.className='jk';
+    r.innerHTML=`<b>${esc(n)}</b><span class="cards">${'🃏'.repeat(left)||'–'}</span><button ${left?'':'disabled'}>Einsetzen</button>`;
+    r.querySelector('button').onclick=()=>{jokersLeft[n]--; toast(n+' setzt einen Joker ein!'); renderJokers();};
+    L.appendChild(r);
+  });
+}
+$$('.jokerBtn').forEach(b=>b.onclick=()=>{renderJokers(); $('#jokerOv').classList.add('show');});
+$('#jokerClose').onclick=()=>$('#jokerOv').classList.remove('show');
+$('#jokerOv').onclick=e=>{ if(e.target.id==='jokerOv') $('#jokerOv').classList.remove('show'); };
+
+/* ================= PARTYKARTEN ================= */
+let rules=[], cardCount=0;
+const TYPES={
+  normal:['Partykarte','t-normal'], regel:['Neue Regel','t-regel'], duell:['Duell','t-duell'],
+  werwuerde:['Wer würde eher…?','t-wer'], niemals:['Ich hab noch nie…','t-nie'],
+  ende:['Regel aufgehoben','t-ende'], wasser:['Wasserrunde','t-wasser']
+};
+function showCard(t, body, sub){
+  const d=$('#deckel');
+  d.className='deckel '+TYPES[t][1];
+  d.style.setProperty('--r', (Math.random()*4-2).toFixed(1)+'deg');
+  void d.offsetWidth; d.classList.add('pop');
+  $('#dTyp').textContent=TYPES[t][0];
+  $('#dTxt').innerHTML=body;
+  $('#dSub').innerHTML=sub||'';
+  $('#dCount').textContent='Karte '+cardCount+' · Antippen für die nächste';
+}
+function nextCard(){
+  rules.forEach(r=>r.left--);
+  const exp=rules.find(r=>r.left<=0);
+  if(exp){
+    rules=rules.filter(r=>r!==exp);
+    showCard('ende', exp.html, 'Ab jetzt gilt diese Regel nicht mehr.');
+    renderRules(); return;
+  }
+  const c=draw('cards');
+  cardCount++;
+  if(!c){ showCard('normal','Keine Karten vorhanden.','Füge im Editor (✏️) eigene Karten hinzu.'); return; }
+  const names=pickN(3);
+  const x=c.x.replace(/[?.!]\s*$/,'');
+  let body, sub='';
+  if(c.t==='werwuerde'){
+    body='Wer würde eher '+fill(x,names)+'?';
+    sub=fill('Auf drei zeigen alle auf eine Person. Wer die meisten Stimmen bekommt, trinkt {s}.',names);
+  } else if(c.t==='niemals'){
+    body='Ich hab noch nie '+fill(x,names)+'.';
+    sub=fill('Wer es schon mal gemacht hat, trinkt {s}.',names);
+  } else if(c.t==='regel'){
+    body=fill(c.x,names);
+    rules.push({html:body, left:rand(6,12)});
+    sub='Gilt, bis eine Karte sie aufhebt.';
+  } else {
+    body=fill(c.x,names);
+  }
+  showCard(c.t, body, sub);
+  renderRules();
+}
+function renderRules(){
+  const box=$('#rules'); box.innerHTML='';
+  rules.forEach(r=>{
+    const d=document.createElement('div'); d.className='rule';
+    d.innerHTML=`<span>📜 ${r.html}</span><button aria-label="Regel beenden">×</button>`;
+    d.querySelector('button').onclick=()=>{rules=rules.filter(x=>x!==r); renderRules();};
+    box.appendChild(d);
+  });
+}
+$('#deckel').onclick=nextCard;
+$('#deckel').onkeydown=e=>{ if(e.key==='Enter'||e.key===' '){e.preventDefault(); nextCard();} };
+
+/* ================= AUDIO ================= */
+let actx=null;
+function audioInit(){
+  try{ if(!actx) actx=new (window.AudioContext||window.webkitAudioContext)(); if(actx.state==='suspended') actx.resume(); }catch(e){}
+}
+function beep(f,d,v=.2,type='square'){
+  if(!actx) return;
+  try{
+    const o=actx.createOscillator(), g=actx.createGain(), t=actx.currentTime;
+    o.type=type; o.frequency.value=f;
+    g.gain.setValueAtTime(v,t); g.gain.exponentialRampToValueAtTime(.001,t+d);
+    o.connect(g); g.connect(actx.destination); o.start(t); o.stop(t+d);
+  }catch(e){}
+}
+function boomSound(){
+  if(!actx) return;
+  try{
+    const len=actx.sampleRate*1.4, buf=actx.createBuffer(1,len,actx.sampleRate), data=buf.getChannelData(0);
+    for(let i=0;i<len;i++) data[i]=(Math.random()*2-1)*Math.pow(1-i/len,2.5);
+    const src=actx.createBufferSource(); src.buffer=buf;
+    const lp=actx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=900;
+    const g=actx.createGain(); g.gain.value=.9;
+    src.connect(lp); lp.connect(g); g.connect(actx.destination); src.start();
+    beep(60,1,.6,'sine');
+  }catch(e){}
+}
+let wl=null;
+async function wakeLock(){ try{ if('wakeLock' in navigator && !wl){ wl=await navigator.wakeLock.request('screen'); wl.addEventListener('release',()=>wl=null);} }catch(e){} }
+document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible' && activePlayers.length) wakeLock(); });
+
+/* ================= BOMBE ================= */
+let bRunning=false, bStartT=0, bDur=0, bTick=null;
+function newBombRound(){
+  stopBomb(true);
+  const c=draw('bomb');
+  $('#bCat').textContent = c || 'Keine Kategorien – füge im Editor welche hinzu.';
+  $('#bLabel').textContent='Kategorie';
+  $('#bStart').style.display=''; $('#bSkip').style.display=''; $('#bHint').style.display='';
+  $('#boom').classList.remove('show');
+}
+function startBomb(){
+  audioInit();
+  bRunning=true; bStartT=Date.now(); bDur=rand(15,45)*1000;
+  $('#bStart').style.display='none'; $('#bSkip').style.display='none';
+  $('#bLabel').textContent='Läuft! Begriff nennen, weitergeben:';
+  $('#bIcon').classList.add('tick');
+  tick();
+}
+function tick(){
+  if(!bRunning) return;
+  const el=Date.now()-bStartT;
+  if(el>=bDur){ explode(); return; }
+  const p=el/bDur;
+  beep(p>.75?1250:880,.05,.15);
+  const iv=Math.max(130, 750-p*620);
+  $('#bIcon').style.setProperty('--sp',(iv*2/1000).toFixed(2)+'s');
+  bTick=setTimeout(tick,iv);
+}
+function explode(){
+  bRunning=false; clearTimeout(bTick);
+  $('#bIcon').classList.remove('tick');
+  boomSound();
+  $('#boomTxt').innerHTML='Wer das iPad gerade hält, trinkt <span class="sp">'+sips(true)+'</span>';
+  $('#boom').classList.add('show');
+}
+function stopBomb(silent){
+  bRunning=false; clearTimeout(bTick);
+  $('#bIcon').classList.remove('tick');
+}
+$('#bStart').onclick=startBomb;
+$('#bSkip').onclick=newBombRound;
+$('#boomNext').onclick=newBombRound;
+
+/* ================= MINDERHEIT ================= */
+let mTimer=null, mCur=null;
+function mNew(){
+  clearTimeout(mTimer);
+  mCur=draw('minority');
+  const st=$('#mStage');
+  if(!mCur){ st.innerHTML='<div class="q">Keine Fragen vorhanden – füge im Editor welche hinzu.</div>'; return; }
+  st.innerHTML=`
+    <div class="q">${esc(mCur.q)}</div>
+    <div class="vs">
+      <div class="opt optA"><div class="hand">👍</div><b>${esc(mCur.a)}</b></div>
+      <div class="oder">oder</div>
+      <div class="opt optB"><div class="hand">👎</div><b>${esc(mCur.b)}</b></div>
+    </div>
+    <div class="row"><button class="btn senf big" id="mGo">Countdown</button><button class="btn ghost" id="mSkip">Andere Frage</button></div>
+    <p class="hint" style="text-align:center">Jeder entscheidet still. Beim „Jetzt!“ zeigen alle gleichzeitig Daumen hoch oder runter.</p>`;
+  $('#mGo').onclick=mCount; $('#mSkip').onclick=mNew;
+}
+function mCount(){
+  audioInit();
+  const st=$('#mStage'); let n=3;
+  const step=()=>{
+    if(n>0){ st.innerHTML=`<div class="count">${n}</div>`; beep(660,.12,.2); n--; mTimer=setTimeout(step,800); }
+    else { beep(1320,.3,.25); mResult(); }
+  };
+  step();
+}
+function mResult(){
+  const st=$('#mStage');
+  st.innerHTML=`
+    <div class="count go">Jetzt!</div>
+    <div class="vs">
+      <div class="opt optA" style="min-height:120px"><div class="hand">👍</div><b>${esc(mCur.a)}</b></div>
+      <div class="oder">oder</div>
+      <div class="opt optB" style="min-height:120px"><div class="hand">👎</div><b>${esc(mCur.b)}</b></div>
+    </div>
+    <div class="result">Die Minderheit trinkt <span class="sp">${sips(false)}</span><br>
+      Wer ganz allein dasteht: doppelt. Gleichstand: alle trinken <span class="sp">${sips(false)}</span></div>
+    <button class="btn senf big" id="mNext">Nächste Frage</button>`;
+  $('#mNext').onclick=mNew;
+}
+
+/* ================= TEAM-QUIZ ================= */
+let quiz=null;
+function makeTeams(){
+  const s=shuffle(activePlayers.slice()); const h=Math.ceil(s.length/2);
+  quiz={a:s.slice(0,h), b:s.slice(h), sa:0, sb:0, turn:'a', started:false, cur:null, phase:'q', round:0};
+}
+const TN={a:'Team Feuer 🔥', b:'Team Eis 🧊'};
+function teamsHTML(){
+  const t=k=>`<div class="team ${k==='a'?'fire':'ice'} ${quiz.started&&quiz.cur&&quiz.cur.t==='w'&&quiz.turn===k?'turn':''}">
+      <div class="th"><span>${TN[k]}</span><span class="score">${quiz['s'+k]}</span></div>
+      <div class="mem">${quiz[k].map(esc).join(', ')}</div></div>`;
+  return `<div class="teams">${t('a')}${t('b')}</div>`;
+}
+function qEnter(){
+  if(!quiz) makeTeams();
+  if(!quiz.started) qTeamScreen(); else qRender();
+}
+function qTeamScreen(){
+  $('#qStage').innerHTML = teamsHTML() + `
+    <p class="hint" style="text-align:center;max-width:560px">Wissensfragen beantwortet das Team, das dran ist. Bei Schätzfragen tippen beide – wer näher dran ist, punktet.</p>
+    <div class="row"><button class="btn ghost" id="qMix">Teams neu mischen</button><button class="btn senf big" id="qStart">Quiz starten</button></div>`;
+  $('#qMix').onclick=()=>{makeTeams(); qTeamScreen();};
+  $('#qStart').onclick=()=>{quiz.started=true; qNext();};
+}
+function qNext(){
+  quiz.cur=draw('quiz'); quiz.phase='q'; quiz.res=''; quiz.round++;
+  qRender();
+}
+function qRender(){
+  const c=quiz.cur, st=$('#qStage');
+  if(!c){ st.innerHTML=teamsHTML()+'<div class="q">Keine Quizfragen vorhanden – füge im Editor welche hinzu.</div>'; return; }
+  const label = c.t==='s' ? 'Schätzfrage – beide Teams' : 'Wissensfrage für '+TN[quiz.turn];
+  let btns='';
+  if(quiz.phase==='q') btns=`<button class="btn senf big" id="qShow">Antwort zeigen</button>`;
+  else if(quiz.phase==='a' && c.t==='w') btns=`<button class="btn tuerkis big" id="qR">Richtig</button><button class="btn rot big" id="qF">Falsch</button>`;
+  else if(quiz.phase==='a' && c.t==='s') btns=`<button class="btn rot big" id="qA">🔥 war näher</button><button class="btn big" style="background:var(--blau);color:#fff" id="qB">🧊 war näher</button>`;
+  else btns=`<button class="btn senf big" id="qN">Nächste Frage</button>`;
+  st.innerHTML = teamsHTML() + `
+    <div class="qcard">
+      <span class="typ">${label}</span>
+      <div class="qq">${esc(c.q)}</div>
+      <div class="ans ${quiz.phase!=='q'?'show':''}">${esc(c.a)}</div>
+      <div class="res">${quiz.res||''}</div>
+    </div>
+    <div class="row">${btns}</div>
+    <div class="row"><button class="btn ghost" id="qEnd">Quiz beenden</button></div>`;
+  const on=(id,f)=>{const e=$('#'+id); if(e) e.onclick=f;};
+  on('qShow',()=>{quiz.phase='a'; qRender();});
+  const other=k=>k==='a'?'b':'a';
+  on('qR',()=>{ quiz['s'+quiz.turn]++; quiz.res=`Punkt für ${TN[quiz.turn]}! ${TN[other(quiz.turn)]} trinkt <span class="sp">${sips(false)}</span>`; quiz.turn=other(quiz.turn); quiz.phase='r'; qRender(); });
+  on('qF',()=>{ quiz.res=`Daneben! ${TN[quiz.turn]} trinkt <span class="sp">${sips(false)}</span>`; quiz.turn=other(quiz.turn); quiz.phase='r'; qRender(); });
+  on('qA',()=>{ quiz.sa++; quiz.res=`Punkt für ${TN.a}! ${TN.b} trinkt <span class="sp">${sips(false)}</span>`; quiz.phase='r'; qRender(); });
+  on('qB',()=>{ quiz.sb++; quiz.res=`Punkt für ${TN.b}! ${TN.a} trinkt <span class="sp">${sips(false)}</span>`; quiz.phase='r'; qRender(); });
+  on('qN',qNext);
+  on('qEnd',qFinish);
+}
+function qFinish(){
+  const st=$('#qStage');
+  let msg;
+  if(quiz.sa===quiz.sb) msg=`Unentschieden ${quiz.sa}:${quiz.sb}! Alle trinken <span class="sp">${sips(false)}</span>`;
+  else { const w=quiz.sa>quiz.sb?'a':'b', l=w==='a'?'b':'a';
+    msg=`${TN[w]} gewinnt ${Math.max(quiz.sa,quiz.sb)}:${Math.min(quiz.sa,quiz.sb)}!<br>${TN[l]} trinkt <span class="sp">${sips(true)}</span>`; }
+  st.innerHTML = teamsHTML() + `<div class="qcard"><span class="typ">Endstand</span><div class="qq">${msg}</div></div>
+    <div class="row"><button class="btn ghost" id="qMix2">Neue Teams</button><button class="btn senf big" id="qAgain">Revanche</button></div>`;
+  $('#qMix2').onclick=()=>{makeTeams(); qTeamScreen();};
+  $('#qAgain').onclick=()=>{quiz.sa=0; quiz.sb=0; quiz.turn='a'; qNext();};
+}
+
+/* ================= EDITOR ================= */
+function renderEditor(){
+  $$('[data-ed]').forEach(t=>{ t.value=custom[t.dataset.ed]; });
+  $$('[data-def]').forEach(c=>{ c.checked=settings.useDef[c.dataset.def]; });
+  updCounts();
+}
+function updCounts(){
+  const counts={cards:parseCards(DEF_CARDS).length,bomb:lines(DEF_BOMB).length,minority:parseMin(DEF_MIN).length,quiz:parseQuiz(DEF_QUIZ).length};
+  $$('[data-cnt]').forEach(el=>{
+    const k=el.dataset.cnt;
+    const own=pool(k).length-(settings.useDef[k]?counts[k]:0);
+    el.textContent=`${own} eigene · insgesamt ${pool(k).length} im Spiel`;
+  });
+}
+$$('[data-ed]').forEach(t=>t.oninput=()=>{ custom[t.dataset.ed]=t.value; saveState(); delete decks[t.dataset.ed]; updCounts(); });
+$$('[data-def]').forEach(c=>c.onchange=()=>{ settings.useDef[c.dataset.def]=c.checked; saveState(); delete decks[c.dataset.def]; updCounts(); });
+
+/* ================= START ================= */
+renderSetup();
+</script>
+</body>
+</html>
