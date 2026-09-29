@@ -9,13 +9,14 @@
 //
 //  Nach einer Änderung an DIESER Datei VERSION erhöhen.
 // ═══════════════════════════════════════════════════════
-const VERSION = 'lernwelt-v19';  // v19: Kitchen-Chaos
+const VERSION = 'lernwelt-v20';  // v20: Entdecker-Expedition, Karten für Länder-Finder ausgelagert
 const START = ['./', 'index.html', 'config.json', 'manifest.webmanifest',
                'gemeinsam/shared.js', 'gemeinsam/config-api.js', 'gemeinsam/navbar.js', 'gemeinsam/pass.js',
                'gemeinsam/avatar3d.js', 'gemeinsam/fonts.css', 'gemeinsam/qrcode.js', 'daten/lernwelt-inhalte.json',
                'gemeinsam/dorf-kern.js', 'gemeinsam/dorf-szene.js', 'daten/dorf-inhalte.json', 'vendor/fflate.min.js',
                // Spiele: sollen auch offline laufen, ohne vorher einmal online geöffnet worden zu sein
-               'spiele/runner.html', 'spiele/burg-verteidigung.html', 'spiele/dorf.html', 'spiele/tauziehen.html', 'spiele/wort-des-tages.html', 'spiele/zauberwort.html', 'spiele/kitchen-chaos.html', 'gemeinsam/aufgaben.js', 'gemeinsam/spiel-hilfen.js',
+               'spiele/runner.html', 'spiele/burg-verteidigung.html', 'spiele/dorf.html', 'spiele/tauziehen.html', 'spiele/wort-des-tages.html', 'spiele/zauberwort.html', 'spiele/kitchen-chaos.html', 'spiele/expedition.html', 'gemeinsam/aufgaben.js', 'gemeinsam/spiel-hilfen.js',
+               'gemeinsam/karten-ansicht.js', 'daten/karten.json', 'daten/expedition.json',
                'daten/vokabeln5.json', 'daten/vokabeln6.json', 'daten/woerter-en.json', 'daten/kitchen-chaos.json',
                'vendor/three.min.js',
                'fonts/nunito-latin-wght-normal.woff2', 'fonts/nunito-latin-ext-wght-normal.woff2',
