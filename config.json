@@ -416,6 +416,17 @@
         }
       ],
       "aod": false
+    },
+    {
+      "name": "Entdecker-Expedition",
+      "datei": "spiele/expedition.html",
+      "fach": "GPG",
+      "emoji": "🧭",
+      "beschreibung": "",
+      "hidden": false,
+      "klassen": [],
+      "customTags": [],
+      "aod": false
     }
   ],
   "customTags": [
