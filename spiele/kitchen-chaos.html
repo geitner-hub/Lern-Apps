@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#0f0e1a">
+  <title>Kitchen-Chaos</title>
+  <!--
+  ═══════════════════════════════════════════════
+   KITCHEN-CHAOS  (spiele/kitchen-chaos.html)
+
+   Gäste bestellen auf Englisch („Two apples and a cup of tea, please!“).
+   Das Kind tippt die passenden Dinge aus dem Regal aufs Tablett und serviert.
+   Intrinsische Integration: Nur wer die Bestellung versteht (Wörter, Zahlen,
+   Mengenangaben wie „a cup of“, Plural), serviert richtig. Die Regale zeigen
+   nur Bilder, keine Wörter.
+
+   Falsch serviert → der Gast sagt auf Englisch, was nicht stimmt
+   („Where is my cup of tea?“), fehlende Dinge wackeln im Regal.
+   Geduld vorbei → der Gast geht, die Bestellung kommt in die Übungsliste.
+   Schauplätze: Café → Snack Bar → Market, je Stufe 1–4 (Inhalte in daten/kitchen-chaos.json).
+   Lesen (Sprechblase) oder Hören (Sprachausgabe des iPads, mit Kopfhörern).
+   XP: jede Schicht (8 Gäste) über LernApps.saveResult.
+   Braucht: navbar.js, spiel-hilfen.js, avatar3d.js (für die Gäste-Bilder)
+  ═══════════════════════════════════════════════
+  -->
+  <link rel="stylesheet" href="../gemeinsam/fonts.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f0e1a; --panel: rgba(27,25,41,.94); --panel2: #252238;
+      --accent: #e6a817; --accent2: #fde68a; --indigo: #6366f1; --indigo2: #818cf8;
+      --text: #f1f0fb; --text2: rgba(241,240,251,.72); --muted: rgba(241,240,251,.45);
+      --green: #4ade80; --red: #f87171; --orange: #fb923c;
+      --wand: #f3d9b1; --ort: #7c4a2d; --holz: #6b3f22; --holz2: #4a2a15;
+    }
+    html, body { height: 100%; overflow: hidden; }
+    body { font-family: 'Nunito', system-ui, sans-serif; background: var(--bg); color: var(--text);
+      -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+    button { font: inherit; color: inherit; border: 0; background: none; cursor: pointer; touch-action: manipulation; }
+    button:focus-visible, select:focus-visible { outline: 3px solid var(--indigo2); outline-offset: 2px; }
+    [hidden] { display: none !important; }
+
+    /* ── Spielfläche ─────────────────────── */
+    #spiel { position: fixed; inset: 0; display: grid; grid-template-rows: minmax(0, 42fr) auto minmax(0, 40fr); }
+    #szene { position: relative; overflow: hidden; background: var(--wand);
+      padding-top: env(safe-area-inset-top); }
+    #szene::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 78%;
+      background: repeating-linear-gradient(90deg, rgba(0,0,0,.035) 0 60px, transparent 60px 120px); pointer-events: none; }
+    .schild { position: absolute; left: 50%; top: max(.5rem, env(safe-area-inset-top)); transform: translateX(-50%); background: var(--ort); color: #fff;
+      font-family: 'Fredoka One', 'Nunito', sans-serif; font-size: clamp(1rem, 2.6vmin, 1.5rem); padding: .2rem 1.1rem; border-radius: 0 0 14px 14px;
+      box-shadow: 0 6px 16px rgba(0,0,0,.25); white-space: nowrap; }
+    .hud { position: absolute; top: max(.5rem, env(safe-area-inset-top)); left: .6rem; right: .6rem; display: flex; gap: .4rem; pointer-events: none; z-index: 3; }
+    .hud .rechts { margin-left: auto; display: flex; gap: .4rem; }
+    .chip { background: var(--panel); border-radius: 14px; padding: .35rem .7rem; font-weight: 900; font-size: .92rem; display: inline-flex; gap: .35rem;
+      align-items: center; box-shadow: 0 6px 18px rgba(0,0,0,.25); }
+    .pause { pointer-events: auto; width: 40px; height: 38px; justify-content: center; }
+    .gaeste { position: absolute; left: 0; right: 0; bottom: 4%; top: 12%; display: flex; align-items: flex-end; justify-content: center; gap: 1vw; }
+    /* Tresen vor den Gästen: sie stehen dahinter */
+    .tresen { position: absolute; left: 0; right: 0; bottom: 0; height: 21%; z-index: 1; pointer-events: none;
+      background: linear-gradient(180deg, #8a5530 0 16%, var(--holz) 16% 40%, var(--holz2) 40%); box-shadow: 0 -4px 10px rgba(0,0,0,.18); }
+    .gast { position: relative; height: 100%; display: flex; align-items: flex-end; transition: transform .45s ease, opacity .45s; }
+    .gast img, .gast .ersatz { height: 100%; max-height: 360px; display: block; filter: drop-shadow(0 8px 10px rgba(0,0,0,.25)); }
+    .gast .ersatz { font-size: 8rem; line-height: 1; display: grid; place-items: end center; }
+    .gast.wartet { height: 62%; opacity: .75; }
+    .gast.kommt { transform: translateX(40vw); opacity: 0; }
+    .gast.geht { transform: translateX(-45vw); opacity: 0; }
+    .gast.froh { animation: huepf .5s ease 2; }
+    @keyframes huepf { 40% { transform: translateY(-16px); } }
+    .gast.sauer { animation: stampf .25s linear 4; }
+    @keyframes stampf { 50% { transform: translateX(5px) rotate(2deg); } }
+    .blase { position: absolute; left: calc(100% - 3vw); top: 6%; min-width: min(46vw, 250px); max-width: min(48vw, 420px); background: #fff; color: #1c1917;
+      border-radius: 18px; padding: .6rem .9rem .55rem; box-shadow: 0 10px 24px rgba(0,0,0,.25); z-index: 2; }
+    .blase::before { content: ''; position: absolute; left: -12px; top: 26px; border: 8px solid transparent; border-right: 14px solid #fff; border-left: 0; }
+    .blase .text { font-family: 'Fredoka One', 'Nunito', sans-serif; font-size: clamp(1.05rem, 2.9vmin, 1.55rem); line-height: 1.18; }
+    .blase .zusatz { color: #b45309; }
+    .blase .antwort { font-weight: 900; font-size: .95rem; color: #b91c1c; margin-top: .3rem; }
+    .blase .antwort.gut { color: #15803d; }
+    .blase .hoeren { display: flex; gap: .4rem; align-items: center; flex-wrap: wrap; }
+    .blase .hbtn { background: #1c1917; color: #fff; border-radius: 12px; padding: .4rem .8rem; font-weight: 900; font-size: .95rem; min-height: 42px; }
+    .blase .hbtn.klein { background: #e7e5e4; color: #1c1917; }
+    .geduld { height: 9px; border-radius: 5px; background: #e7e5e4; margin-top: .45rem; overflow: hidden; }
+    .geduld i { display: block; height: 100%; width: 100%; background: #22c55e; transition: width .25s linear, background .3s; }
+
+    /* Theke mit Tablett */
+    #theke { background: linear-gradient(180deg, #2b2539, #221d30); display: flex; gap: .6rem; align-items: center;
+      padding: .55rem max(.7rem, env(safe-area-inset-right)) .55rem max(.7rem, env(safe-area-inset-left)); border-top: 3px solid #0000002e; }
+    .tablett { flex: 1; min-height: 72px; background: #d6d3d1; border-radius: 14px; border: 4px solid #a8a29e; box-shadow: inset 0 3px 8px rgba(0,0,0,.2);
+      display: flex; flex-wrap: wrap; gap: .3rem; align-items: center; padding: .3rem .5rem; }
+    .tablett .leer { color: #57534e; font-weight: 800; font-size: .9rem; padding-left: .3rem; }
+    .tablett button { position: relative; font-size: clamp(1.7rem, 4.4vmin, 2.4rem); line-height: 1; padding: .15rem .3rem; border-radius: 10px; }
+    .tablett button:active { background: rgba(0,0,0,.08); }
+    .tablett b { position: absolute; right: -4px; top: -6px; background: #1c1917; color: #fff; border-radius: 99px; font-size: .78rem; min-width: 1.4rem;
+      height: 1.4rem; display: grid; place-items: center; font-family: 'Nunito', sans-serif; font-weight: 900; }
+    .tbtn { min-height: 64px; border-radius: 16px; font-weight: 900; padding: .4rem 1rem; }
+    .tbtn.leeren { background: rgba(255,255,255,.08); font-size: 1.4rem; width: 64px; }
+    .tbtn.servieren { background: var(--accent); color: #231a02; font-family: 'Fredoka One', 'Nunito', sans-serif; font-size: clamp(1.1rem, 2.8vmin, 1.4rem); min-width: 150px; }
+    .tbtn:disabled { opacity: .4; }
+
+    /* Regal */
+    #regal { background: linear-gradient(180deg, #3a2a1c, #2b1f15); overflow-y: auto;
+      padding: .7rem max(.7rem, env(safe-area-inset-right)) calc(.7rem + env(safe-area-inset-bottom)) max(.7rem, env(safe-area-inset-left)); }
+    .faecher { display: grid; grid-template-columns: repeat(auto-fill, minmax(clamp(78px, 13.5vmin, 128px), 1fr)); gap: .6rem; max-width: 1150px; margin: 0 auto; }
+    .ware { aspect-ratio: 1; border-radius: 16px; background: linear-gradient(180deg, #fef3c7, #fde68a); box-shadow: inset 0 -6px 0 rgba(120,53,15,.25), 0 4px 10px rgba(0,0,0,.3);
+      font-size: clamp(2.3rem, 7.6vmin, 4rem); line-height: 1; display: grid; place-items: center; transition: transform .08s; }
+    .ware:active { transform: scale(.93); }
+    .ware.wackeln { animation: wackeln .5s ease 3; box-shadow: 0 0 0 4px var(--orange), 0 0 22px rgba(251,146,60,.7); }
+    @keyframes wackeln { 25% { transform: rotate(-9deg) scale(1.06); } 75% { transform: rotate(9deg) scale(1.06); } }
+
+    .flash { position: fixed; left: 50%; top: 40%; transform: translate(-50%, -50%); font-family: 'Fredoka One', 'Nunito', sans-serif;
+      font-size: clamp(1.4rem, 4.8vmin, 2.4rem); padding: .45rem 1.1rem; border-radius: 18px; background: var(--panel); opacity: 0;
+      transition: opacity .15s; text-align: center; white-space: nowrap; pointer-events: none; z-index: 6; }
+    .flash.show { opacity: 1; }
+    .flash.ok { color: var(--accent2); } .flash.bad { color: var(--red); }
+
+    /* ── Menü & Ergebnis ───────────────── */
+    .overlay { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(15,14,26,.7);
+      padding: 1rem 1rem calc(4.5rem + env(safe-area-inset-bottom)); overflow-y: auto; z-index: 10; }
+    .sheet { width: min(540px, 100%); background: #1b1929; border-radius: 22px; padding: 1.3rem; box-shadow: 0 20px 60px rgba(0,0,0,.45); margin: auto 0; }
+    h1 { font-family: 'Fredoka One', 'Nunito', sans-serif; font-weight: 400; color: var(--orange); font-size: 2.2rem; line-height: 1.05; }
+    h2 { font-family: 'Fredoka One', 'Nunito', sans-serif; font-weight: 400; color: var(--accent2); font-size: 1.9rem; text-align: center; }
+    .lead { color: var(--text2); font-size: .92rem; margin: .3rem 0 .6rem; }
+    .lbl { display: block; font-size: .78rem; font-weight: 900; color: var(--muted); margin: .9rem 0 .4rem; }
+    .orte { display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem; }
+    .ort { border-radius: 16px; background: rgba(255,255,255,.06); border: 3px solid transparent; padding: .6rem .3rem; text-align: center; font-weight: 900; }
+    .ort .em { font-size: 2rem; display: block; }
+    .ort small { display: block; font-size: .72rem; color: var(--muted); font-weight: 800; margin-top: .15rem; }
+    .ort.on { border-color: var(--orange); background: rgba(251,146,60,.14); }
+    .ort:disabled { opacity: .45; cursor: default; }
+    .tabs { display: flex; gap: .35rem; flex-wrap: wrap; }
+    .tabs button { padding: .45rem .9rem; border-radius: 99px; font-weight: 900; font-size: .88rem; background: rgba(255,255,255,.06); color: var(--text2); min-height: 42px; }
+    .tabs button.on { background: var(--indigo); color: #fff; }
+    .tabs button:disabled { opacity: .35; }
+    .note { font-size: .8rem; color: var(--muted); margin-top: .45rem; font-weight: 700; }
+    .unten { display: flex; gap: .6rem; margin-top: 1.1rem; }
+    .go { flex: 1; min-height: 56px; border-radius: 16px; background: var(--orange); color: #2a1203; font-family: 'Fredoka One', 'Nunito', sans-serif; font-size: 1.4rem; }
+    .go:disabled { opacity: .45; }
+    .ton { width: 56px; min-height: 56px; border-radius: 16px; background: rgba(255,255,255,.08); font-size: 1.3rem; }
+    .err { color: var(--red); font-weight: 800; font-size: .88rem; margin-top: .6rem; min-height: 1em; }
+    .res-zahl { text-align: center; font-family: 'Fredoka One', 'Nunito', sans-serif; font-size: 3rem; margin: .2rem 0; }
+    .res-sub { text-align: center; color: var(--text2); font-weight: 800; }
+    .aufstieg { text-align: center; margin-top: .6rem; font-weight: 900; color: var(--green); }
+    .ueben { margin-top: .8rem; background: rgba(255,255,255,.05); border-radius: 14px; padding: .6rem .8rem; font-size: .9rem; color: var(--text2); max-height: 13em; overflow-y: auto; }
+    .ueben p { margin: .35rem 0; }
+    .ueben b { color: #fff; }
+    .ueben span { color: var(--accent2); }
+    .btns { display: flex; gap: .6rem; justify-content: center; margin-top: 1rem; flex-wrap: wrap; }
+    .btn { min-height: 48px; padding: .5rem 1.1rem; border-radius: 14px; font-weight: 900; background: rgba(255,255,255,.08); }
+    .btn.primary { background: var(--orange); color: #2a1203; }
+    @media (prefers-reduced-motion: reduce) { .gast, .ware { transition: none; } .gast.froh, .gast.sauer, .ware.wackeln { animation: none; } }
+  </style>
+</head>
+<body>
+
+<div id="spiel" hidden>
+  <div id="szene">
+    <div class="schild" id="schild">☕ Café</div>
+    <div class="hud">
+      <span class="chip" id="muenzen">🪙 0</span>
+      <span class="chip" id="stand">🙂 0 / 8</span>
+      <span class="rechts"><button class="chip pause" id="pause-btn" type="button" aria-label="Pause">⏸</button></span>
+    </div>
+    <div class="gaeste" id="gaeste"></div>
+    <div class="tresen"></div>
+  </div>
+  <div id="theke">
+    <div class="tablett" id="tablett" aria-label="Tablett"></div>
+    <button class="tbtn leeren" id="leeren" type="button" aria-label="Tablett leeren">🗑️</button>
+    <button class="tbtn servieren" id="servieren" type="button">🛎️ Servieren</button>
+  </div>
+  <div id="regal"><div class="faecher" id="faecher"></div></div>
+</div>
+<div class="flash" id="flash"></div>
+
+<div class="overlay" id="menu">
+  <div class="sheet">
+    <h1>🍳 Kitchen-Chaos</h1>
+    <p class="lead">Deine Gäste bestellen auf Englisch. Hör oder lies genau hin, pack das Richtige aufs Tablett – und servier es, bevor sie ungeduldig werden!</p>
+    <span class="lbl">Wo arbeitest du heute?</span>
+    <div class="orte" id="orte"></div>
+    <span class="lbl">Stufe</span>
+    <div class="tabs" id="stufen"></div>
+    <p class="note" id="stufe-info"></p>
+    <span class="lbl">So bestellen die Gäste</span>
+    <div class="tabs" id="modus">
+      <button type="button" data-modus="lesen" class="on">📖 Lesen</button>
+      <button type="button" data-modus="hoeren">🎧 Hören</button>
+    </div>
+    <p class="note" id="hoer-note" hidden>Beim Hören spricht das iPad die Bestellung. Bitte mit Kopfhörern spielen.</p>
+    <div class="unten">
+      <button class="go" id="go" type="button" disabled>Schicht starten!</button>
+      <button class="ton" id="ton-btn" type="button" aria-label="Ton an oder aus">🔇</button>
+    </div>
+    <div class="err" id="menu-err"></div>
+  </div>
+</div>
+
+<div class="overlay" id="pause" hidden>
+  <div class="sheet" style="text-align:center">
+    <h2>Pause</h2>
+    <div class="btns"><button class="btn primary" id="weiter" type="button">Weiter</button><button class="btn" id="beenden" type="button">Beenden</button></div>
+  </div>
+</div>
+<div class="overlay" id="ergebnis" hidden><div class="sheet" id="ergebnis-body"></div></div>
+
+<script src="../gemeinsam/navbar.js"></script>
+<script src="../gemeinsam/spiel-hilfen.js"></script>
+<script src="../gemeinsam/avatar3d.js"></script>
+<script>
+'use strict';
+
+/* ═══════════════════════════════════════════════════════
+   EINSTELLUNGEN
+   ═══════════════════════════════════════════════════════ */
+const CFG = {
+  gaeste: 8,                 // Gäste pro Schicht
+  aufstiegAb: 6,             // so viele richtig → nächste Stufe freigeschaltet
+  maxStufe: 4,
+  fehlAbzug: .15,            // Geduld-Abzug bei falschem Servieren
+  autoHilfeUnter: .35,       // Stufe 1–2: unter diesem Rest-Geduld-Anteil leuchten die richtigen Dinge
+  nachbestellen: .3,         // Stufe 4: Wahrscheinlichkeit „Oh, and …“
+  maxJeDing: 9,
+};
+const APP_KEY = 'kitchen-chaos.html';
+const SPEICHER = 'lern-kitchen-chaos';
+const REDUCED = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const zufall = a => a[Math.floor(Math.random() * a.length)];
+const zwischen = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+
+let DATEN = null;
+function lade() {
+  let d = {};
+  try { d = JSON.parse(localStorage.getItem(SPEICHER) || '{}') || {}; } catch (e) {}
+  return Object.assign({ orte: {}, kasse: 0, wahl: { ort: 'cafe', stufe: 1, modus: 'lesen', ton: false } }, d);
+}
+let S = lade();
+function speichere() { try { localStorage.setItem(SPEICHER, JSON.stringify(S)); } catch (e) {} }
+const ortStand = id => (S.orte[id] = S.orte[id] || { stufe: 1, beste: 0 });
+
+/* ═══════════════════════════════════════════════════════
+   SPRACHE: Bestellungen bauen
+   ═══════════════════════════════════════════════════════ */
+function artikel(wort) { return /^[aeiou]/i.test(wort) ? 'an' : 'a'; }
+/** „a cup of tea“, „two apples“, „an orange“ */
+function phrase(id, q) {
+  const it = DATEN.items[id];
+  if (it.mass) return q === 1 ? `${it.mass} ${it.en}` : `${DATEN.zahlen[q]} ${it.massPl} ${it.en}`;
+  return q === 1 ? `${artikel(it.en)} ${it.en}` : `${DATEN.zahlen[q]} ${it.pl || it.en + 's'}`;
+}
+function liste(teile) {
+  const p = teile.map(t => phrase(t.id, t.q));
+  return p.length === 1 ? p[0] : p.slice(0, -1).join(', ') + ' and ' + p[p.length - 1];
+}
+const gross = s => s.charAt(0).toUpperCase() + s.slice(1);
+function satz(stufe, teile) {
+  const vorlage = zufall(DATEN.saetze[stufe] || DATEN.saetze[1]);
+  const o = liste(teile);
+  return vorlage.replace('{order}', o).replace('{Order}', gross(o));
+}
+function neueBestellung(stufe, verboten = []) {
+  const st = DATEN.stufen[stufe];
+  const waren = shuffle(ORT.items.filter(id => !verboten.includes(id)));
+  const n = zwischen(st.teile[0], st.teile[1]);
+  const teile = waren.slice(0, n).map(id => ({ id, q: zwischen(st.menge[0], st.menge[1]) }));
+  return { teile, text: satz(stufe, teile), zusatz: '' };
+}
+/** Deutsche Kurzform für die Übungsliste: „2 × Apfel, 1 × Tee“ */
+const deutsch = teile => teile.map(t => `${t.q} × ${DATEN.items[t.id].de}`).join(', ');
+const bilder = teile => teile.map(t => DATEN.items[t.id].emoji.repeat(t.q)).join(' ');
+
+/* ── Sprachausgabe ── */
+let STIMME = null;
+function stimmeWaehlen() {
+  if (!('speechSynthesis' in window)) return;
+  const v = speechSynthesis.getVoices();
+  STIMME = v.find(x => /en-GB/i.test(x.lang)) || v.find(x => /^en/i.test(x.lang)) || null;
+}
+if ('speechSynthesis' in window) { stimmeWaehlen(); speechSynthesis.onvoiceschanged = stimmeWaehlen; }
+function sprich(text) {
+  if (!('speechSynthesis' in window)) return false;
+  try {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = STIMME ? STIMME.lang : 'en-GB';
+    if (STIMME) u.voice = STIMME;
+    u.rate = .88;
+    speechSynthesis.speak(u);
+    return true;
+  } catch (e) { return false; }
+}
+
+/* ── Ton ── */
+let AC = null;
+function ton(f, d = .12, typ = 'triangle', vol = .06) {
+  if (!S.wahl.ton) return;
+  try {
+    AC = AC || new (window.AudioContext || window.webkitAudioContext)();
+    if (AC.state === 'suspended') AC.resume();
+    const o = AC.createOscillator(), g = AC.createGain(), t = AC.currentTime;
+    o.type = typ; o.frequency.setValueAtTime(f, t); g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(.0001, t + d);
+    o.connect(g); g.connect(AC.destination); o.start(t); o.stop(t + d + .02);
+  } catch (e) {}
+}
+
+/* ═══════════════════════════════════════════════════════
+   GÄSTE (Figuren wie im Pass, bunt gemischt)
+   ═══════════════════════════════════════════════════════ */
+const LOOK = {
+  frisur: ['kurz', 'seitenscheitel', 'stachelig', 'buzz', 'lockig', 'afro', 'bob', 'lang', 'wellen', 'pferdeschwanz', 'zoepfe', 'dutt'],
+  augen: ['normal', 'wimpern', 'gross', 'froehlich'], mund: ['laecheln', 'breit', 'frech', 'lippen-rosa'],
+  oberteil: ['o-shirt', 'o-shirt-gelb', 'o-hoodie', 'o-hoodie-mint', 'o-hoodie-lila', 'o-trikot', 'o-karohemd', 'o-kleid', 'o-fruehling'],
+  hose: ['h-jeans', 'h-shorts', 'h-jogging', 'h-rock', 'h-karo', 'h-leggings', 'h-latzhose'],
+  schuhe: ['s-sneaker', 's-stiefel', 's-ballerina', 's-hightop'],
+  kopf: ['k-cap', 'k-cap-blau', 'k-muetze', 'k-muetze-pink', 'k-schleife', 'k-haarreif', 'k-stirnband', 'k-cowboy', 'k-entdecker'],
+};
+let GAST_BILDER = [];
+function gaesteMalen(n = 12) {
+  if (!window.LernAvatar) return;
+  GAST_BILDER = [];
+  for (let i = 0; i < n; i++) {
+    const eq = { oberteil: zufall(LOOK.oberteil), schuhe: zufall(LOOK.schuhe) };
+    if (eq.oberteil !== 'o-kleid') eq.hose = zufall(LOOK.hose);
+    if (Math.random() < .4) eq.kopf = zufall(LOOK.kopf);
+    const look = { haut: i % 6, haarfarbe: zwischen(0, 8), frisur: zufall(LOOK.frisur), augen: zufall(LOOK.augen), mund: zufall(LOOK.mund), eq };
+    try { GAST_BILDER.push(LernAvatar.snapshot(look, { w: 200, h: 340 })); } catch (e) {}
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   MENÜ
+   ═══════════════════════════════════════════════════════ */
+function ortFrei(i) {
+  if (i === 0) return true;
+  return ortStand(DATEN.orte[i - 1].id).stufe >= 2;
+}
+function buildMenu() {
+  const w = S.wahl;
+  let idx = DATEN.orte.findIndex(o => o.id === w.ort);
+  if (idx < 0 || !ortFrei(idx)) { idx = 0; w.ort = DATEN.orte[0].id; }
+  $('orte').innerHTML = DATEN.orte.map((o, i) => {
+    const frei = ortFrei(i), st = ortStand(o.id);
+    return `<button type="button" class="ort ${o.id === w.ort ? 'on' : ''}" data-ort="${o.id}" ${frei ? '' : 'disabled'}>
+      <span class="em">${frei ? o.emoji : '🔒'}</span>${esc(o.name)}<small>${frei ? `Stufe ${st.stufe}` : `ab Stufe 2 im ${esc(DATEN.orte[i - 1].name)}`}</small></button>`;
+  }).join('');
+  const st = ortStand(w.ort);
+  if (!w.stufe || w.stufe > st.stufe) w.stufe = st.stufe;
+  $('stufen').innerHTML = [1, 2, 3, 4].map(n => `<button type="button" data-stufe="${n}" class="${n === w.stufe ? 'on' : ''}" ${n > st.stufe ? 'disabled' : ''}>${n > st.stufe ? '🔒 ' : ''}${n}</button>`).join('');
+  $('stufe-info').textContent = ['', 'Ein Ding pro Gast.', 'Ein Ding, aber mehrere davon.', 'Zwei verschiedene Dinge.', 'Bis zu drei Dinge – und manche bestellen noch etwas nach!'][w.stufe]
+    + (st.stufe < CFG.maxStufe ? `  Nächste Stufe: ${CFG.aufstiegAb} von ${CFG.gaeste} Gästen richtig bedienen.` : '');
+  document.querySelectorAll('#modus button').forEach(b => b.classList.toggle('on', b.dataset.modus === w.modus));
+  $('hoer-note').hidden = w.modus !== 'hoeren';
+  if (w.modus === 'hoeren' && !('speechSynthesis' in window)) $('hoer-note').textContent = 'Dieses Gerät kann nicht vorlesen – bitte „Lesen“ wählen.';
+  $('ton-btn').textContent = w.ton ? '🔊' : '🔇';
+  $('go').disabled = false;
+}
+$('menu').addEventListener('click', e => {
+  const t = e.target.closest('button');
+  if (!t || t.disabled) return;
+  const w = S.wahl;
+  if (t.dataset.ort) { w.ort = t.dataset.ort; w.stufe = ortStand(w.ort).stufe; }
+  else if (t.dataset.stufe) w.stufe = Number(t.dataset.stufe);
+  else if (t.dataset.modus) { w.modus = t.dataset.modus; if (w.modus === 'hoeren') sprich('Hello!'); }
+  else if (t.id === 'ton-btn') { w.ton = !w.ton; ton(660, .1); }
+  else if (t.id === 'go') { starteSchicht(); return; }
+  else return;
+  speichere(); buildMenu();
+});
+
+/* ═══════════════════════════════════════════════════════
+   SCHICHT
+   ═══════════════════════════════════════════════════════ */
+let ORT = null;
+const G = { zustand: 'menu', stufe: 1, nr: 0, richtig: 0, muenzen: 0, gast: null, warteschlange: [], tablett: {}, verpasst: [], start: 0, pauseT: 0, bildNr: 0 };
+
+function starteSchicht() {
+  // iPad: Die Sprachausgabe muss einmal direkt nach einem Tippen starten, sonst bleibt sie stumm
+  if (S.wahl.modus === 'hoeren') sprich(' ');
+  ORT = DATEN.orte.find(o => o.id === S.wahl.ort);
+  document.documentElement.style.setProperty('--wand', ORT.wand);
+  document.documentElement.style.setProperty('--ort', ORT.farbe);
+  $('schild').textContent = `${ORT.emoji} ${ORT.name}`;
+  Object.assign(G, { zustand: 'spiel', stufe: S.wahl.stufe, nr: 0, richtig: 0, muenzen: 0, gast: null, warteschlange: [], tablett: {}, verpasst: [], start: performance.now(), bildNr: Math.floor(Math.random() * 12) });
+  $('faecher').innerHTML = shuffle(ORT.items).map(id => `<button type="button" class="ware" data-id="${id}" aria-label="${esc(DATEN.items[id].en)}">${DATEN.items[id].emoji}</button>`).join('');
+  $('menu').hidden = true; $('ergebnis').hidden = true; $('spiel').hidden = false;
+  setNavbar(false);
+  tablettZeigen(); hud();
+  G.warteschlange = [neuerGast(), neuerGast()];
+  setTimeout(naechsterGast, 350);
+}
+function neuerGast() {
+  const bild = GAST_BILDER.length ? GAST_BILDER[G.bildNr++ % GAST_BILDER.length] : null;
+  return { bild, ersatz: zufall(['🧑', '👩', '👨', '🧒', '👧', '👦', '👩‍🦱', '👨‍🦱', '🧑‍🦰']) };
+}
+function naechsterGast() {
+  if (G.nr >= CFG.gaeste) { schichtEnde(); return; }
+  G.nr++;
+  const g = G.warteschlange.shift();
+  G.warteschlange.push(neuerGast());
+  const verboten = G.gast ? G.gast.b.teile.map(t => t.id) : [];
+  g.b = neueBestellung(G.stufe, verboten);
+  g.max = DATEN.stufen[G.stufe].geduld; g.geduld = g.max;
+  g.versuche = 0; g.hilfe = false; g.nachbestellt = false; g.textSichtbar = S.wahl.modus !== 'hoeren'; g.antwort = ''; g.antwortGut = false;
+  G.gast = g; G.tablett = {};
+  G.zustand = 'spiel';
+  gaesteZeigen(true);
+  tablettZeigen(); hud();
+  if (S.wahl.modus === 'hoeren') setTimeout(() => sprich(g.b.text), 500);
+  ton(880, .08); setTimeout(() => ton(1175, .1), 90);
+}
+
+function gaesteZeigen(neu) {
+  const g = G.gast;
+  const figur = x => x.bild ? `<img src="${x.bild}" alt="">` : `<span class="ersatz">${x.ersatz}</span>`;
+  const warte = G.warteschlange.slice(0, G.stufe >= 3 ? 2 : 1).map(x => `<div class="gast wartet">${figur(x)}</div>`).join('');
+  $('gaeste').innerHTML = `<div class="gast vorn${neu && !REDUCED ? ' kommt' : ''}" id="gast-vorn">${figur(g)}<div class="blase" id="blase"></div></div>${warte}`;
+  blaseZeigen();
+  if (neu && !REDUCED) requestAnimationFrame(() => requestAnimationFrame(() => { const el = $('gast-vorn'); if (el) el.classList.remove('kommt'); }));
+}
+function blaseZeigen() {
+  const g = G.gast, b = $('blase');
+  if (!b || !g) return;
+  const text = `${esc(g.b.text)}${g.b.zusatz ? ` <span class="zusatz">${esc(g.b.zusatz)}</span>` : ''}`;
+  const hoeren = S.wahl.modus === 'hoeren';
+  b.innerHTML = `${hoeren ? `<div class="hoeren"><button class="hbtn" type="button" id="nochmal-hoeren">🔊 Nochmal hören</button>${!g.textSichtbar ? '<button class="hbtn klein" type="button" id="text-zeigen">📖 Text</button>' : ''}</div>` : ''}
+    ${g.textSichtbar ? `<div class="text">${text}</div>` : ''}
+    ${g.antwort ? `<div class="antwort ${g.antwortGut ? 'gut' : ''}">${esc(g.antwort)}</div>` : ''}
+    <div class="geduld" aria-label="Geduld"><i id="geduld"></i></div>`;
+  const nh = $('nochmal-hoeren'); if (nh) nh.onclick = () => sprich(g.b.text + (g.b.zusatz ? ' ' + g.b.zusatz : ''));
+  const tz = $('text-zeigen'); if (tz) tz.onclick = () => { g.textSichtbar = true; blaseZeigen(); };
+  geduldZeigen();
+}
+function geduldZeigen() {
+  const g = G.gast, el = $('geduld');
+  if (!g || !el) return;
+  const f = Math.max(0, g.geduld / g.max);
+  el.style.width = (f * 100) + '%';
+  el.style.background = f > .5 ? '#22c55e' : f > .25 ? '#f59e0b' : '#ef4444';
+}
+
+/* ── Regal und Tablett ── */
+$('faecher').addEventListener('pointerdown', e => {
+  const b = e.target.closest('.ware');
+  if (!b || G.zustand !== 'spiel') return;
+  e.preventDefault();
+  const id = b.dataset.id;
+  G.tablett[id] = Math.min(CFG.maxJeDing, (G.tablett[id] || 0) + 1);
+  ton(520 + Object.values(G.tablett).reduce((a, x) => a + x, 0) * 40, .05);
+  tablettZeigen();
+});
+$('tablett').addEventListener('pointerdown', e => {
+  const b = e.target.closest('button[data-id]');
+  if (!b || G.zustand !== 'spiel') return;
+  e.preventDefault();
+  const id = b.dataset.id;
+  if (--G.tablett[id] <= 0) delete G.tablett[id];
+  ton(330, .05);
+  tablettZeigen();
+});
+$('leeren').onclick = () => { if (G.zustand === 'spiel') { G.tablett = {}; tablettZeigen(); } };
+$('servieren').onclick = () => serviere();
+function tablettZeigen() {
+  const ids = Object.keys(G.tablett);
+  $('tablett').innerHTML = ids.length
+    ? ids.map(id => `<button type="button" data-id="${id}" aria-label="${esc(DATEN.items[id].en)} wegnehmen">${DATEN.items[id].emoji}${G.tablett[id] > 1 ? `<b>${G.tablett[id]}</b>` : ''}</button>`).join('')
+    : '<span class="leer">Tippe im Regal auf das, was der Gast möchte.</span>';
+  $('servieren').disabled = !ids.length || G.zustand !== 'spiel';
+  $('leeren').disabled = !ids.length || G.zustand !== 'spiel';
+}
+
+/* ── Servieren: stimmt das Tablett mit der Bestellung überein? ── */
+function pruefe(teile, tablett) {
+  const soll = {}; teile.forEach(t => { soll[t.id] = (soll[t.id] || 0) + t.q; });
+  for (const t of teile) {
+    const ist = tablett[t.id] || 0;
+    if (!ist) return { ok: false, satz: t.q === 1 ? `Where is my ${phrase(t.id, 1).replace(/^(a|an) /, '')}?` : `Where are my ${phrase(t.id, t.q)}?`, fehlt: [t.id] };
+    if (ist !== t.q) return { ok: false, satz: `I said ${phrase(t.id, t.q)}, not ${DATEN.zahlen[ist] && ist > 1 ? DATEN.zahlen[ist] : ist === 1 ? 'one' : ist}!`, fehlt: [t.id] };
+  }
+  for (const id of Object.keys(tablett)) if (!soll[id]) return { ok: false, satz: `I didn't order ${phrase(id, tablett[id])}!`, fehlt: [] };
+  return { ok: true };
+}
+function alleTeile(g) { return g.b.teile.concat(g.b.extra ? [g.b.extra] : []); }
+
+function serviere() {
+  const g = G.gast;
+  if (G.zustand !== 'spiel' || !g || !Object.keys(G.tablett).length) return;
+  const r = pruefe(alleTeile(g), G.tablett);
+  if (r.ok) {
+    G.richtig++;
+    const tipp = Math.max(1, 1 + Math.round(4 * g.geduld / g.max) - g.versuche);
+    G.muenzen += tipp;
+    g.antwort = zufall(['Thank you!', 'Yummy, thanks!', 'Perfect, thank you!', 'Great, thanks a lot!']); g.antwortGut = true; g.textSichtbar = true;
+    blaseZeigen();
+    flash('ok', `+${tipp} 🪙`);
+    ton(784, .1); setTimeout(() => ton(1047, .16), 100);
+    const el = $('gast-vorn'); if (el && !REDUCED) el.classList.add('froh');
+    gastGeht(1300);
+  } else {
+    g.versuche++;
+    g.geduld = Math.max(0, g.geduld - g.max * CFG.fehlAbzug);
+    g.antwort = r.satz; g.antwortGut = false;
+    if (S.wahl.modus === 'hoeren') { g.textSichtbar = true; sprich(r.satz); }
+    blaseZeigen();
+    ton(200, .22, 'sawtooth', .05);
+    const el = $('gast-vorn'); if (el && !REDUCED) { el.classList.remove('sauer'); void el.offsetWidth; el.classList.add('sauer'); }
+    wackeln(r.fehlt);
+  }
+  hud();
+}
+function wackeln(ids) {
+  ids.forEach(id => {
+    const b = document.querySelector(`.ware[data-id="${id}"]`);
+    if (!b) return;
+    b.classList.remove('wackeln'); void b.offsetWidth; b.classList.add('wackeln');
+  });
+}
+function gastGeht(ms) {
+  G.zustand = 'wechsel';
+  tablettZeigen();
+  setTimeout(() => {
+    const el = $('gast-vorn'); if (el && !REDUCED) el.classList.add('geht');
+    setTimeout(() => { if (G.zustand === 'wechsel') naechsterGast(); }, REDUCED ? 50 : 450);
+  }, ms);
+}
+function geduldAus() {
+  const g = G.gast;
+  G.verpasst.push({ text: g.b.text + (g.b.zusatz ? ' ' + g.b.zusatz : ''), teile: alleTeile(g) });
+  g.antwort = 'I\'m leaving. Bye!'; g.antwortGut = false; g.textSichtbar = true;
+  blaseZeigen();
+  flash('bad', 'Zu langsam … 😤');
+  ton(160, .35, 'square', .05);
+  wackeln(alleTeile(g).map(t => t.id));
+  gastGeht(1900);
+}
+
+function schichtEnde() {
+  G.zustand = 'ende';
+  const st = ortStand(ORT.id);
+  let aufstieg = '';
+  if (G.richtig >= CFG.aufstiegAb && G.stufe === st.stufe && st.stufe < CFG.maxStufe) {
+    st.stufe++; S.wahl.stufe = st.stufe;
+    aufstieg = `🎉 Stufe ${st.stufe} ist frei!`;
+    const i = DATEN.orte.findIndex(o => o.id === ORT.id);
+    if (st.stufe === 2 && DATEN.orte[i + 1]) aufstieg += ` Und die ${DATEN.orte[i + 1].name} hat jetzt für dich geöffnet!`;
+  }
+  st.beste = Math.max(st.beste, G.richtig);
+  S.kasse += G.muenzen;
+  speichere();
+  LernSpiel.speichereRunde({ score: G.richtig, max: CFG.gaeste, titel: 'Gäste', skill: `kitchen-chaos:${ORT.id}:${G.stufe}` });
+  if (G.richtig >= CFG.aufstiegAb && window.LernPass) LernPass.celebrate('konfetti');
+  const titel = G.richtig === CFG.gaeste ? 'Perfekte Schicht! 👨‍🍳' : G.richtig >= CFG.aufstiegAb ? 'Super gearbeitet!' : 'Schicht geschafft!';
+  $('ergebnis-body').innerHTML = `<h2>${titel}</h2><div class="res-zahl">${G.richtig} / ${CFG.gaeste}</div>
+    <div class="res-sub">Gäste glücklich · +${G.muenzen} 🪙 Trinkgeld (Kasse: ${S.kasse} 🪙)</div>
+    ${aufstieg ? `<div class="aufstieg">${esc(aufstieg)}</div>` : ''}
+    ${G.verpasst.length ? `<div class="ueben"><b>Diese Bestellungen hast du verpasst:</b>${G.verpasst.map(v =>
+      `<p>„${esc(v.text)}“<br><span>${bilder(v.teile)}</span> · ${esc(deutsch(v.teile))}</p>`).join('')}</div>` : ''}
+    <div class="btns"><button class="btn primary" type="button" id="nochmal">🔄 Nächste Schicht</button><button class="btn" type="button" id="zum-menu">Menü</button></div>`;
+  $('ergebnis').hidden = false;
+  $('nochmal').onclick = starteSchicht;
+  $('zum-menu').onclick = zeigeMenu;
+}
+function zeigeMenu() {
+  G.zustand = 'menu';
+  if ('speechSynthesis' in window) speechSynthesis.cancel();
+  $('spiel').hidden = true; $('ergebnis').hidden = true; $('pause').hidden = true; $('menu').hidden = false;
+  setNavbar(true); buildMenu();
+}
+function setNavbar(an) { ['lern-home-btn', 'lern-result-badge'].forEach(id => { const el = $(id); if (el) el.style.visibility = an ? '' : 'hidden'; }); }
+
+let vorPause = null;
+$('pause-btn').onclick = () => { if (G.zustand !== 'spiel' && G.zustand !== 'wechsel') return; vorPause = G.zustand; G.zustand = 'pause'; $('pause').hidden = false; if ('speechSynthesis' in window) speechSynthesis.cancel(); };
+$('weiter').onclick = () => { $('pause').hidden = true; G.zustand = vorPause === 'wechsel' ? 'spiel' : (vorPause || 'spiel'); if (vorPause === 'wechsel') naechsterGast(); };
+$('beenden').onclick = () => { $('pause').hidden = true; zeigeMenu(); };
+document.addEventListener('visibilitychange', () => { if (document.hidden && G.zustand === 'spiel') $('pause-btn').click(); });
+
+function hud() {
+  $('muenzen').textContent = '🪙 ' + G.muenzen;
+  $('stand').textContent = `🙂 ${G.richtig} · Gast ${Math.min(G.nr, CFG.gaeste)}/${CFG.gaeste}`;
+}
+let flashT = 0;
+function flash(typ, text, ms = 1000) {
+  const el = $('flash'); el.className = 'flash show ' + typ; el.textContent = text;
+  clearTimeout(flashT); flashT = setTimeout(() => el.classList.remove('show'), ms);
+}
+
+/* ═══════════════════════════════════════════════════════
+   SCHLEIFE: Geduld, automatische Hilfe, Nachbestellung
+   ═══════════════════════════════════════════════════════ */
+let last = performance.now();
+function loop(now) {
+  requestAnimationFrame(loop);
+  const dt = Math.min(.1, (now - last) / 1000); last = now;
+  if (G.zustand !== 'spiel' || !G.gast) return;
+  const g = G.gast;
+  g.geduld -= dt;
+  const f = g.geduld / g.max;
+  // Stufe 1–2: wenn es knapp wird, leuchten die richtigen Dinge
+  if (G.stufe <= 2 && !g.hilfe && f < CFG.autoHilfeUnter) { g.hilfe = true; wackeln(alleTeile(g).map(t => t.id)); }
+  // Stufe 4: manche Gäste bestellen noch etwas nach
+  if (G.stufe >= 4 && !g.nachbestellt && f < .6) {
+    g.nachbestellt = true;
+    if (Math.random() < CFG.nachbestellen) {
+      const frei = ORT.items.filter(id => !g.b.teile.some(t => t.id === id));
+      const x = { id: zufall(frei), q: zwischen(1, 2) };
+      g.b.extra = x; g.b.zusatz = `Oh, and ${phrase(x.id, x.q)}, please!`;
+      g.geduld = Math.min(g.max, g.geduld + g.max * .2);
+      blaseZeigen();
+      if (S.wahl.modus === 'hoeren') sprich(g.b.zusatz);
+      ton(988, .08);
+    }
+  }
+  if (g.geduld <= 0) { g.geduld = 0; geduldZeigen(); geduldAus(); return; }
+  geduldZeigen();
+}
+
+/* ═══════════════════════════════════════════════════════
+   START
+   ═══════════════════════════════════════════════════════ */
+LernSpiel.whenPass(async () => {
+  try { DATEN = await fetch('../daten/kitchen-chaos.json').then(r => r.json()); }
+  catch (e) { $('menu-err').textContent = 'Die Küche konnte nicht geladen werden. Bist du online?'; return; }
+  buildMenu();
+  requestAnimationFrame(loop);
+  if (window.LernAvatar) LernAvatar.ready().then(() => gaesteMalen()).catch(() => {});
+});
+</script>
+</body>
+</html>
