@@ -34,6 +34,8 @@
 //    pass          – seasons, avatar (true/false), events { id: true/false }
 //    dorf          – plaetze, rerollsProTag, rerollsMax, kostenfaktor, wochen[], challenges[], challengeRotation (Mein Dorf)
 //    apps[].dorf   – nur false (App bekommt keine Dorf-Aufträge)
+//    apps[].dorfRunden – 1–10 Runden pro Dorf-Auftrag in dieser App
+//    dorf.lehrerZettel[] – { id, start, bis, app, text?, runden?, klassen? } (Lehrer-Zettel am Auftragsbrett)
 //
 //  Wartung & Fehlersuche: cloudflare/ANLEITUNG.md
 // ═══════════════════════════════════════════════════════
@@ -189,6 +191,7 @@ function validateConfig(cfg) {
     if (app.klassen !== undefined && (!Array.isArray(app.klassen) || !app.klassen.every(k => Number.isInteger(k) && k >= 1 && k <= 13))) p.push(w + ': klassen');
     if (app.customTags !== undefined && (!Array.isArray(app.customTags) || !app.customTags.every(isTag))) p.push(w + ': customTags');
     if (app.dorf !== undefined && app.dorf !== false)       p.push(w + ': dorf');
+    if (app.dorfRunden !== undefined && !(Number.isInteger(app.dorfRunden) && app.dorfRunden >= 1 && app.dorfRunden <= 10)) p.push(w + ': dorfRunden');
     if (app.aod) aodCount++;
   });
   if (aodCount > 1) p.push('mehr als eine App des Tages');
@@ -222,7 +225,14 @@ function validateConfig(cfg) {
         && Object.keys(c).every(k => ['id', 'start', 'klassen'].includes(k));
       if (dv.challenges !== undefined && (!Array.isArray(dv.challenges) || dv.challenges.length > 10 || !dv.challenges.every(cOk))) p.push('dorf: challenges');
       if (dv.challengeRotation !== undefined && dv.challengeRotation !== false) p.push('dorf: challengeRotation');
-      if (Object.keys(dv).some(k => !['plaetze', 'rerollsProTag', 'rerollsMax', 'kostenfaktor', 'wochen', 'challenges', 'challengeRotation'].includes(k))) p.push('dorf: unbekanntes Feld');
+      const datum = v => typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v);
+      const lOk = z => z && typeof z === 'object' && /^[a-z0-9_-]{1,40}$/i.test(z.id || '') && datum(z.start) && datum(z.bis) && z.bis >= z.start
+        && isStr(z.app, 120) && /^[^\s"'<>\\/]{1,120}$/.test(z.app) && (z.text === undefined || isStr(z.text, 120))
+        && (z.runden === undefined || (Number.isInteger(z.runden) && z.runden >= 1 && z.runden <= 10))
+        && (z.klassen === undefined || (Array.isArray(z.klassen) && z.klassen.length <= 13 && z.klassen.every(k => Number.isInteger(k) && k >= 1 && k <= 13)))
+        && Object.keys(z).every(k => ['id', 'start', 'bis', 'app', 'text', 'runden', 'klassen'].includes(k));
+      if (dv.lehrerZettel !== undefined && (!Array.isArray(dv.lehrerZettel) || dv.lehrerZettel.length > 12 || !dv.lehrerZettel.every(lOk))) p.push('dorf: lehrerZettel');
+      if (Object.keys(dv).some(k => !['plaetze', 'rerollsProTag', 'rerollsMax', 'kostenfaktor', 'wochen', 'challenges', 'challengeRotation', 'lehrerZettel'].includes(k))) p.push('dorf: unbekanntes Feld');
     }
   }
   return p;
