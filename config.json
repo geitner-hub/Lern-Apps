@@ -409,7 +409,12 @@
       "beschreibung": "",
       "hidden": false,
       "klassen": [],
-      "customTags": [],
+      "customTags": [
+        {
+          "name": "Spiele",
+          "color": 6
+        }
+      ],
       "aod": false
     }
   ],
