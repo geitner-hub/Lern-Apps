@@ -400,6 +400,17 @@
         }
       ],
       "aod": false
+    },
+    {
+      "name": "Kitchen-Chaos",
+      "datei": "spiele/kitchen-chaos.html",
+      "fach": "Englisch",
+      "emoji": "🍳",
+      "beschreibung": "",
+      "hidden": false,
+      "klassen": [],
+      "customTags": [],
+      "aod": false
     }
   ],
   "customTags": [
