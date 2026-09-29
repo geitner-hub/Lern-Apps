@@ -59,6 +59,9 @@ const SESSION_DAYS   = 7;           // so lange gilt ein Anmelde-Schlüssel
 const SAFE_LINK = /^(?:[A-Za-z0-9_-]+\/)*[A-Za-z0-9_.-]+\.html(?:\?[A-Za-z0-9_.~%=&+-]*)?(?:#[A-Za-z0-9_-]*)?$|^https:\/\/[^\s"'<>`]+$/;
 
 // ── Einstieg ───────────────────────────────────────────
+import { handleSync, syncAufraeumen } from './sync.js';
+
+// ── Einstieg ───────────────────────────────────────────
 export default {
   async fetch(request, env) {
     const origin = request.headers.get('Origin') || '';
@@ -77,6 +80,7 @@ export default {
 
     const url = new URL(request.url);
     try {
+      if (url.pathname.startsWith('/sync/'))                      return await handleSync(request, env, cors, url, { checkToken });
       if (request.method === 'GET' && url.pathname === '/')       return await handleGet(env, cors);
       if (request.method === 'POST' && url.pathname === '/login') return await handleLogin(request, env, cors);
       if (request.method === 'POST' && url.pathname === '/session') return await handleSession(request, env, cors);
@@ -87,6 +91,11 @@ export default {
       console.error(e);
       return json({ error: 'Interner Fehler' }, 500, cors);
     }
+  },
+
+  // Täglicher Cron: alte Pass-Stände löschen (siehe ANLEITUNG-SYNC.md)
+  async scheduled(event, env, ctx) {
+    ctx.waitUntil(syncAufraeumen(env));
   },
 };
 
