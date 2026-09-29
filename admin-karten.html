@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Lernwelt Admin · Sicherungskarten</title>
+<link rel="stylesheet" href="gemeinsam/fonts.css">
+<style>
+  :root {
+    --bg:#0f0e1a; --panel:#1a1830; --panel2:#221f3d; --line:#2e2b4d;
+    --text:#ecebf5; --text2:#c9c7e0; --muted:#9d9abf;
+    --gold:#e6a817; --indigo:#6366f1; --indigo2:#818cf8; --ok:#4ade80; --err:#f87171;
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font:15px/1.5 'Nunito', system-ui, sans-serif; }
+  button, input { font:inherit; }
+  :focus-visible { outline:3px solid var(--gold); outline-offset:2px; }
+
+  .topbar { display:flex; align-items:center; gap:1rem; flex-wrap:wrap; padding:.9rem 1.4rem; border-bottom:1px solid var(--line); }
+  .wordmark { font-family:'Fredoka One', 'Nunito', sans-serif; font-size:1.3rem; }
+  .wordmark em { font-style:normal; color:var(--gold); }
+  .wordmark small { font-family:'Nunito', sans-serif; font-size:.75rem; color:var(--muted); font-weight:700; margin-left:.3rem; }
+  .topbar .sp { flex:1; }
+
+  .btn { display:inline-flex; align-items:center; gap:.35rem; padding:.55rem .95rem; border-radius:10px; border:1px solid var(--line);
+         background:var(--panel); color:var(--text); font-weight:700; cursor:pointer; text-decoration:none; }
+  .btn:hover { border-color:var(--indigo2); }
+  .btn.primary { background:var(--indigo); border-color:var(--indigo); color:#fff; }
+  .btn.gold { background:var(--gold); border-color:var(--gold); color:#1a1300; }
+  .btn.danger { color:var(--err); }
+  .btn.small { padding:.3rem .6rem; font-size:.82rem; border-radius:8px; }
+  .btn:disabled { opacity:.5; cursor:default; }
+
+  main { max-width:900px; margin:0 auto; padding:1.6rem 1.2rem 4rem; }
+  h1 { font-size:1.35rem; margin:0 0 .3rem; }
+  h2 { font-size:1.05rem; margin:2rem 0 .8rem; color:var(--gold); }
+  .lead { color:var(--text2); margin:0 0 1.4rem; max-width:65ch; }
+  .card { background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:1.1rem 1.2rem; }
+
+  .form { display:flex; gap:.7rem; flex-wrap:wrap; align-items:flex-end; }
+  .field { display:flex; flex-direction:column; gap:.25rem; }
+  .field label { font-size:.8rem; font-weight:700; color:var(--muted); }
+  .field input { padding:.6rem .8rem; border-radius:10px; border:1px solid var(--line); background:var(--bg); color:var(--text); }
+  .field.name input { width:16rem; max-width:70vw; }
+  .field.anz input { width:6rem; }
+  .msg { margin-top:.7rem; font-size:.88rem; min-height:1.3em; color:var(--text2); }
+  .msg.err { color:var(--err); } .msg.ok { color:var(--ok); }
+
+  .gruppe { margin-bottom:1rem; }
+  .g-kopf { display:flex; align-items:center; gap:.6rem; flex-wrap:wrap; }
+  .g-name { font-weight:800; font-size:1.05rem; margin-right:auto; }
+  .g-sum { color:var(--muted); font-size:.85rem; margin:.25rem 0 .8rem; }
+  .bar { height:6px; border-radius:3px; background:var(--panel2); overflow:hidden; margin:.2rem 0 .9rem; }
+  .bar i { display:block; height:100%; background:var(--ok); }
+  table { width:100%; border-collapse:collapse; font-size:.87rem; }
+  th { text-align:left; color:var(--muted); font-weight:700; font-size:.78rem; padding:.35rem .5rem; border-bottom:1px solid var(--line); }
+  td { padding:.4rem .5rem; border-bottom:1px solid var(--line); }
+  tr:last-child td { border-bottom:0; }
+  td.nr { font-variant-numeric:tabular-nums; width:3rem; }
+  td.akt { text-align:right; width:1%; white-space:nowrap; }
+  .st-ok { color:var(--ok); font-weight:700; }
+  .st-no { color:var(--muted); }
+  .alt { color:var(--gold); }
+  .scroll { overflow-x:auto; }
+  details summary { cursor:pointer; color:var(--indigo2); font-weight:700; font-size:.88rem; }
+  .leer { color:var(--muted); text-align:center; padding:1.5rem; }
+
+  #login { max-width:380px; margin:12vh auto; }
+  #login p { color:var(--text2); margin:.3rem 0 1rem; }
+  #login input { width:100%; margin-bottom:.6rem; }
+
+  /* ── Druckansicht ── */
+  #druck { position:fixed; inset:0; background:#e9e7f3; color:#16142a; overflow:auto; z-index:50; display:none; }
+  #druck.offen { display:block; }
+  .d-leiste { position:sticky; top:0; background:var(--bg); color:var(--text); padding:.9rem 1.2rem; display:flex; gap:.7rem; align-items:center; flex-wrap:wrap; border-bottom:1px solid var(--line); }
+  .d-leiste .titel { font-weight:800; margin-right:auto; }
+  .d-hinweis { background:#fff4d6; border:1px solid #e6a817; color:#5a4300; border-radius:10px; padding:.7rem .9rem; margin:1rem auto; max-width:196mm; font-size:.9rem; }
+  .umschalter { display:inline-flex; border:1px solid var(--line); border-radius:10px; overflow:hidden; }
+  .umschalter button { border:0; background:var(--panel); color:var(--text2); padding:.5rem .9rem; font-weight:700; cursor:pointer; }
+  .umschalter button[aria-pressed="true"] { background:var(--indigo); color:#fff; }
+
+  #blatt { max-width:196mm; margin:0 auto 3rem; }
+  .karten { display:grid; grid-template-columns:repeat(2, 95mm); gap:4mm; justify-content:center; }
+  .k { width:95mm; height:66mm; background:#fff; border:.3mm solid #b9b6cf; border-radius:3mm; padding:4mm; display:grid;
+       grid-template-columns:34mm 1fr; grid-template-rows:auto 1fr auto; column-gap:4mm; break-inside:avoid; overflow:hidden; }
+  .k-kopf { grid-column:1 / -1; display:flex; align-items:baseline; justify-content:space-between; margin-bottom:2mm; }
+  .k-brand { font-family:'Fredoka One', 'Nunito', sans-serif; font-size:11pt; }
+  .k-brand em { font-style:normal; color:#c48d0a; }
+  .k-sub { font-size:7pt; color:#6b6890; font-weight:700; }
+  .k-nr { font-weight:900; font-size:10pt; color:#4f46e5; }
+  .k-qr { width:34mm; height:34mm; image-rendering:pixelated; }
+  .k-rechts { display:flex; flex-direction:column; gap:2mm; min-width:0; }
+  .k-name { font-size:7.5pt; color:#4a4766; border-bottom:.3mm solid #9d9abf; padding-bottom:4.5mm; }
+  .k-wie { font-size:7pt; line-height:1.4; color:#16142a; background:#f4f2fb; border-radius:1.5mm; padding:1.5mm 2mm; }
+  .k-code { grid-column:1 / -1; font-family:ui-monospace, 'SF Mono', Menlo, Consolas, monospace; font-size:13pt; font-weight:700;
+            letter-spacing:.06em; margin-top:2mm; display:flex; justify-content:space-between; align-items:baseline; }
+  .k-code small { font-family:'Nunito', sans-serif; font-size:6.5pt; font-weight:700; letter-spacing:0; color:#6b6890; }
+
+  .liste { background:#fff; border-radius:3mm; padding:8mm; }
+  .liste h3 { margin:0 0 1mm; font-size:14pt; }
+  .liste p { margin:0 0 5mm; font-size:9pt; color:#4a4766; }
+  .liste table { font-size:10pt; }
+  .liste th { color:#4a4766; border-bottom:.4mm solid #16142a; font-size:9pt; }
+  .liste td { border-bottom:.2mm solid #cfcde0; height:9mm; }
+  .liste td.code { font-family:ui-monospace, 'SF Mono', Menlo, Consolas, monospace; font-weight:700; letter-spacing:.05em; white-space:nowrap; }
+  .liste td.name { width:55%; }
+
+  @page { size:A4 portrait; margin:8mm; }
+  @media print {
+    body { background:#fff; }
+    body > *:not(#druck) { display:none !important; }
+    #druck { position:static; display:block; background:#fff; overflow:visible; }
+    .d-leiste, .d-hinweis, #lern-home-btn, #lern-result-badge { display:none !important; }
+    #blatt { margin:0; max-width:none; }
+    .karten { gap:3mm; }
+    .liste { padding:0; }
+  }
+  @media screen and (max-width:430px) { .karten { grid-template-columns:95mm; } }
+  @media (prefers-reduced-motion:no-preference) { .bar i { transition:width .4s ease; } }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wordmark">🧭 Lern<em>welt</em><small>Admin · Sicherungskarten</small></div>
+  <span class="sp"></span>
+  <a class="btn" href="admin.html">← Zum Admin</a>
+</div>
+
+<!-- ══ Anmeldung ══ -->
+<div id="login" class="card" hidden>
+  <h1>Anmelden</h1>
+  <p>Mit dem Admin-Passwort. Dieses Gerät bleibt danach 7 Tage angemeldet.</p>
+  <div class="field">
+    <label for="pw">Passwort</label>
+    <input id="pw" type="password" autocomplete="current-password">
+  </div>
+  <button type="button" class="btn primary" id="btn-login">Anmelden</button>
+  <div class="msg err" id="login-msg" role="alert"></div>
+</div>
+
+<!-- ══ Inhalt ══ -->
+<main id="inhalt" hidden>
+  <h1>Sicherungskarten</h1>
+  <p class="lead">Jedes Kind scannt einmal seine Karte. Ab dann wird sein Pass automatisch gesichert und lässt sich mit derselben Karte auf jedem iPad wiederherstellen. Der Server speichert nur verschlüsselte Stände ohne Namen – wer welche Karte hat, steht nur auf deiner Liste.</p>
+
+  <div class="card">
+    <div class="form">
+      <div class="field name">
+        <label for="neu-name">Gruppe</label>
+        <input id="neu-name" maxlength="40" placeholder="z. B. 5a oder 5b Gruppe Rot">
+      </div>
+      <div class="field anz">
+        <label for="neu-anzahl">Karten</label>
+        <input id="neu-anzahl" type="number" min="1" max="40" value="25">
+      </div>
+      <button type="button" class="btn primary" id="btn-neu">Karten erzeugen</button>
+    </div>
+    <div class="msg" id="neu-msg" role="status"></div>
+  </div>
+
+  <h2>Gruppen</h2>
+  <div id="gruppen"><div class="leer">Lädt …</div></div>
+</main>
+
+<!-- ══ Druckansicht (erscheint direkt nach dem Erzeugen) ══ -->
+<div id="druck" role="dialog" aria-modal="true" aria-labelledby="d-titel">
+  <div class="d-leiste">
+    <span class="titel" id="d-titel">Karten</span>
+    <div class="umschalter" role="group" aria-label="Ansicht">
+      <button type="button" data-ansicht="karten" aria-pressed="true">Karten</button>
+      <button type="button" data-ansicht="liste" aria-pressed="false">Liste</button>
+    </div>
+    <button type="button" class="btn gold" id="btn-drucken">🖨 Drucken / als PDF sichern</button>
+    <button type="button" class="btn" id="btn-fertig">Fertig</button>
+  </div>
+  <div class="d-hinweis"><b>Nur jetzt sichtbar:</b> Die Codes werden nirgends gespeichert. Drucke Karten und Liste oder sichere sie als PDF, bevor du diese Ansicht schließt. Wer eine Karte hat, kann den zugehörigen Pass öffnen – die Liste also sicher aufbewahren.</div>
+  <div id="blatt"></div>
+</div>
+
+<script src="gemeinsam/qrcode.js"></script>
+<script src="gemeinsam/shared.js"></script>
+<script src="gemeinsam/config-api.js"></script>
+<script src="gemeinsam/sync-code.js"></script>
+<script>
+'use strict';
+
+const W = ConfigAPI.WORKER_URL;
+const TOKEN_KEY = 'lernwelt-admin-schluessel';   // gleicher Schlüssel wie in config-api.js
+const MAX_PRO_GRUPPE = 60;
+
+let GRUPPEN = [];
+let druck = null;           // { gruppe, eintraege:[{ nr, code }], ansicht, gedruckt }
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const nr2 = n => String(n).padStart(2, '0');
+
+// ── Anmeldung ──────────────────────────────────────────
+function token() {
+  try { const t = JSON.parse(localStorage.getItem(TOKEN_KEY) || 'null'); return t && t.exp > Date.now() ? t.token : ''; }
+  catch (e) { return ''; }
+}
+function zeigeLogin(msg) {
+  $('inhalt').hidden = true; $('login').hidden = false;
+  $('login-msg').textContent = msg || '';
+  $('pw').focus();
+}
+function zeigeInhalt() {
+  $('login').hidden = true; $('inhalt').hidden = false;
+  ladeGruppen();
+}
+async function anmelden() {
+  const pw = $('pw').value;
+  if (!pw) { $('login-msg').textContent = 'Bitte Passwort eingeben'; return; }
+  $('btn-login').disabled = true;
+  const r = await ConfigAPI.login(pw);
+  $('btn-login').disabled = false; $('pw').value = '';
+  if (r.ok) zeigeInhalt();
+  else $('login-msg').textContent = r.status === 401 ? 'Falsches Passwort' : (r.error || 'Anmeldung nicht möglich');
+}
+$('btn-login').addEventListener('click', anmelden);
+$('pw').addEventListener('keydown', e => { if (e.key === 'Enter') anmelden(); });
+
+(async () => {
+  if (!ConfigAPI.hasSession()) return zeigeLogin();
+  const r = await ConfigAPI.checkSession();
+  if (r.ok) zeigeInhalt();
+  else zeigeLogin(r.status === 401 ? 'Anmeldung abgelaufen – bitte Passwort eingeben.' : (r.error || ''));
+})();
+
+// ── Worker-Aufrufe ─────────────────────────────────────
+async function api(pfad, body) {
+  let r;
+  try {
+    r = await fetch(W + pfad, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token() },
+      body: JSON.stringify(body || {}),
+    });
+  } catch (e) { throw new Error('Worker nicht erreichbar – Internetverbindung prüfen'); }
+  const d = await r.json().catch(() => ({}));
+  if (r.status === 401) { ConfigAPI.logout(); zeigeLogin('Anmeldung abgelaufen – bitte Passwort eingeben.'); throw new Error('Nicht angemeldet'); }
+  if (!r.ok) {
+    const e = new Error(d.error || ('Fehler ' + r.status));
+    e.status = r.status;
+    throw e;
+  }
+  return d;
+}
+
+// ── Gruppen laden und anzeigen ─────────────────────────
+async function ladeGruppen() {
+  try {
+    const d = await api('/sync/admin/gruppen');
+    GRUPPEN = d.gruppen || [];
+    zeichneGruppen();
+  } catch (e) {
+    if (e.message !== 'Nicht angemeldet') $('gruppen').innerHTML = `<div class="leer">⚠ ${esc(e.message)}</div>`;
+  }
+}
+
+function wann(ts) {
+  if (!ts) return '–';
+  const tage = Math.floor((startOfDay(Date.now()) - startOfDay(ts)) / 864e5);
+  if (tage <= 0) return 'heute';
+  if (tage === 1) return 'gestern';
+  if (tage < 30) return `vor ${tage} Tagen`;
+  return new Date(ts).toLocaleDateString('de-DE');
+}
+function startOfDay(ts) { const d = new Date(ts); d.setHours(0, 0, 0, 0); return d.getTime(); }
+const datum = ts => new Date(ts).toLocaleDateString('de-DE');
+
+function zeichneGruppen() {
+  const box = $('gruppen');
+  if (!GRUPPEN.length) {
+    box.innerHTML = '<div class="leer card">Noch keine Gruppe. Oben einen Namen eingeben und Karten erzeugen.</div>';
+    return;
+  }
+  box.innerHTML = GRUPPEN.map(g => {
+    const n = g.codes.length, v = g.codes.filter(c => c.verbundenAm).length;
+    const letzte = Math.max(0, ...g.codes.map(c => c.letzteSync || 0));
+    const pct = n ? Math.round(v / n * 100) : 0;
+    const zeilen = g.codes.map(c => {
+      const alt = c.letzteSync && Date.now() - c.letzteSync > 30 * 864e5;
+      return `<tr>
+        <td class="nr">${nr2(c.nr)}</td>
+        <td>${c.verbundenAm ? '<span class="st-ok">✓ verbunden</span>' : '<span class="st-no">noch nicht gescannt</span>'}</td>
+        <td class="${alt ? 'alt' : ''}">${wann(c.letzteSync)}</td>
+        <td>${c.groesse ? Math.max(1, Math.round(c.groesse / 1024)) + ' KB' : '–'}</td>
+        <td class="akt"><button type="button" class="btn small danger" data-code-loeschen="${esc(c.id)}" data-gruppe="${esc(g.id)}" data-nr="${c.nr}">Karte löschen</button></td>
+      </tr>`;
+    }).join('');
+    return `<div class="card gruppe">
+      <div class="g-kopf">
+        <span class="g-name">${esc(g.name)}</span>
+        <button type="button" class="btn small" data-nachlegen="${esc(g.id)}">+ Karten nachlegen</button>
+        <button type="button" class="btn small" data-umbenennen="${esc(g.id)}">Umbenennen</button>
+        <button type="button" class="btn small danger" data-gruppe-loeschen="${esc(g.id)}">Gruppe löschen</button>
+      </div>
+      <div class="g-sum">${v} von ${n} Karten verbunden · zuletzt gesichert: ${wann(letzte || null)} · angelegt am ${datum(g.erstellt)}</div>
+      <div class="bar" aria-hidden="true"><i style="width:${pct}%"></i></div>
+      <details>
+        <summary>Karten einzeln ansehen</summary>
+        <div class="scroll"><table>
+          <thead><tr><th>Nr.</th><th>Status</th><th>Letzte Sicherung</th><th>Größe</th><th></th></tr></thead>
+          <tbody>${zeilen || '<tr><td colspan="5" class="leer">Keine Karten</td></tr>'}</tbody>
+        </table></div>
+      </details>
+    </div>`;
+  }).join('');
+}
+
+$('gruppen').addEventListener('click', async e => {
+  const b = e.target.closest('button');
+  if (!b) return;
+  const g = GRUPPEN.find(x => x.id === (b.dataset.nachlegen || b.dataset.umbenennen || b.dataset.gruppeLoeschen || b.dataset.gruppe));
+  if (!g) return;
+  try {
+    if (b.dataset.nachlegen) {
+      const frei = MAX_PRO_GRUPPE - g.codes.length;
+      if (frei <= 0) return alert(`Diese Gruppe hat schon ${MAX_PRO_GRUPPE} Karten.`);
+      const n = parseInt(prompt(`Wie viele Karten für „${g.name}“ nachlegen? (höchstens ${Math.min(40, frei)})`, '1'), 10);
+      if (!n || n < 1) return;
+      if (n > Math.min(40, frei)) return alert(`Höchstens ${Math.min(40, frei)} auf einmal.`);
+      const start = Math.max(0, ...g.codes.map(c => c.nr)) + 1;
+      await erzeugeUndZeige(g.name, n, start, g.id);
+    } else if (b.dataset.umbenennen) {
+      const name = (prompt('Neuer Name der Gruppe:', g.name) || '').trim();
+      if (!name || name === g.name) return;
+      await api('/sync/admin/gruppe-umbenennen', { gruppeId: g.id, name: name.slice(0, 40) });
+      await ladeGruppen();
+    } else if (b.dataset.gruppeLoeschen) {
+      if (!confirm(`Gruppe „${g.name}“ mit allen ${g.codes.length} Karten löschen?\n\nDie gesicherten Stände werden gelöscht und die Karten funktionieren nicht mehr. Die Kinder behalten ihren Pass auf dem iPad, er wird aber nicht mehr gesichert.`)) return;
+      await api('/sync/admin/gruppe-loeschen', { gruppeId: g.id });
+      await ladeGruppen();
+    } else if (b.dataset.codeLoeschen) {
+      if (!confirm(`Karte ${nr2(b.dataset.nr)} aus „${g.name}“ löschen?\n\nDer gesicherte Stand wird gelöscht und die Karte funktioniert nicht mehr. Für ein anderes Kind danach eine neue Karte nachlegen.`)) return;
+      await api('/sync/admin/code-loeschen', { id: b.dataset.codeLoeschen });
+      await ladeGruppen();
+    }
+  } catch (err) {
+    if (err.message !== 'Nicht angemeldet') alert('⚠ ' + err.message);
+  }
+});
+
+// ── Karten erzeugen ────────────────────────────────────
+$('btn-neu').addEventListener('click', async () => {
+  const name = $('neu-name').value.trim();
+  const n = parseInt($('neu-anzahl').value, 10);
+  const msg = $('neu-msg');
+  msg.className = 'msg';
+  if (!name) { msg.className = 'msg err'; msg.textContent = 'Bitte einen Gruppennamen eingeben.'; $('neu-name').focus(); return; }
+  if (!n || n < 1 || n > 40) { msg.className = 'msg err'; msg.textContent = 'Bitte 1 bis 40 Karten wählen.'; return; }
+  if (GRUPPEN.some(g => g.name.toLowerCase() === name.toLowerCase())
+      && !confirm(`Es gibt schon eine Gruppe „${name}“. Trotzdem eine zweite anlegen?\n\n(Für weitere Karten in derselben Gruppe lieber „+ Karten nachlegen“ benutzen.)`)) return;
+  try {
+    await erzeugeUndZeige(name, n, 1, null);
+    $('neu-name').value = '';
+    msg.textContent = '';
+  } catch (err) {
+    if (err.message !== 'Nicht angemeldet') { msg.className = 'msg err'; msg.textContent = '⚠ ' + err.message; }
+  }
+});
+
+async function erzeugeUndZeige(gruppenName, anzahl, startNr, gruppeId) {
+  const knopf = $('btn-neu'), msg = $('neu-msg');
+  knopf.disabled = true;
+  try {
+    for (let versuch = 0; versuch < 2; versuch++) {
+      const eintraege = [];
+      for (let i = 0; i < anzahl; i++) {
+        msg.textContent = `Erzeuge Karte ${i + 1} von ${anzahl} …`;
+        const code = LernSyncCode.erzeugen();
+        const d = await LernSyncCode.ableiten(code);
+        eintraege.push({ nr: startNr + i, code, id: d.id, authHash: await LernSyncCode.authHash(d.auth) });
+      }
+      msg.textContent = 'Speichere …';
+      const body = { eintraege: eintraege.map(({ nr, id, authHash }) => ({ nr, id, authHash })) };
+      if (gruppeId) body.gruppeId = gruppeId; else body.name = gruppenName;
+      try {
+        await api('/sync/admin/gruppe-anlegen', body);
+      } catch (e) {
+        if (e.status === 409 && versuch === 0) continue;   // extrem seltene Code-Kollision → neu erzeugen
+        throw e;
+      }
+      msg.textContent = '';
+      oeffneDruck(gruppenName, eintraege.map(({ nr, code }) => ({ nr, code })));
+      ladeGruppen();
+      return;
+    }
+  } finally {
+    knopf.disabled = false;
+  }
+}
+
+// ── Druckansicht ───────────────────────────────────────
+function qrBild(text) {
+  const c = document.createElement('canvas');
+  return renderQR(c, text, 600) ? c.toDataURL('image/png') : '';
+}
+
+function oeffneDruck(gruppe, eintraege) {
+  druck = { gruppe, eintraege, ansicht: 'karten', gedruckt: false };
+  $('d-titel').textContent = `Karten für „${gruppe}“ (${eintraege.length})`;
+  zeichneDruck();
+  $('druck').classList.add('offen');
+  document.body.style.overflow = 'hidden';
+  $('btn-drucken').focus();
+}
+
+function zeichneDruck() {
+  document.querySelectorAll('[data-ansicht]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.ansicht === druck.ansicht)));
+  const heute = new Date().toLocaleDateString('de-DE');
+  if (druck.ansicht === 'karten') {
+    $('blatt').innerHTML = `<div class="karten">${druck.eintraege.map(e => {
+      const src = qrBild(LernSyncCode.url(e.code));
+      return `<div class="k">
+        <div class="k-kopf">
+          <div><div class="k-brand">🧭 Lern<em>welt</em>-Pass</div><div class="k-sub">Sicherungskarte</div></div>
+          <div class="k-nr">${esc(druck.gruppe)} · ${nr2(e.nr)}</div>
+        </div>
+        ${src ? `<img class="k-qr" src="${src}" alt="QR-Code">` : '<div class="k-qr"></div>'}
+        <div class="k-rechts">
+          <div class="k-name">Name:</div>
+          <div class="k-wie">📷 Im Lernwelt-Symbol auf <b>QR scannen</b> tippen und diese Karte scannen. Ab dann wird dein Pass automatisch gesichert.</div>
+        </div>
+        <div class="k-code">${esc(LernSyncCode.formatieren(e.code))}<small>Gut aufheben!</small></div>
+      </div>`;
+    }).join('')}</div>`;
+  } else {
+    $('blatt').innerHTML = `<div class="liste">
+      <h3>Sicherungskarten „${esc(druck.gruppe)}“</h3>
+      <p>Erzeugt am ${heute}. Diese Liste ist die einzige Zuordnung von Kindern zu Karten – sicher aufbewahren, nicht aushängen.</p>
+      <table>
+        <thead><tr><th>Nr.</th><th>Code</th><th>Name</th></tr></thead>
+        <tbody>${druck.eintraege.map(e => `<tr><td class="nr">${nr2(e.nr)}</td><td class="code">${esc(LernSyncCode.formatieren(e.code))}</td><td class="name"></td></tr>`).join('')}</tbody>
+      </table>
+    </div>`;
+  }
+}
+
+document.querySelectorAll('[data-ansicht]').forEach(b => b.addEventListener('click', () => {
+  druck.ansicht = b.dataset.ansicht;
+  zeichneDruck();
+}));
+$('btn-drucken').addEventListener('click', () => { druck.gedruckt = true; window.print(); });
+$('btn-fertig').addEventListener('click', () => {
+  if (!druck.gedruckt && !confirm('Du hast die Karten noch nicht gedruckt.\n\nDie Codes sind danach nicht mehr abrufbar. Nicht gedruckte Karten kannst du in der Übersicht löschen und neu nachlegen.\n\nAnsicht trotzdem schließen?')) return;
+  druck = null;
+  $('druck').classList.remove('offen');
+  $('blatt').innerHTML = '';
+  document.body.style.overflow = '';
+});
+window.addEventListener('beforeunload', e => {
+  if (druck && !druck.gedruckt) { e.preventDefault(); e.returnValue = ''; }
+});
+</script>
+</body>
+</html>
