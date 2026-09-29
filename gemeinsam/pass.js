@@ -13,7 +13,8 @@
 //
 //  Alle Daten bleiben im localStorage des Geräts ('lernwelt-pass').
 //  Sicherung/Umzug über einen Code bzw. QR (exportCode / parseCode).
-//  Der Code enthält auch den Spielstand von „Mein Dorf“ ('lernwelt-dorf').
+//  Der Code enthält auch den Spielstand von „Mein Dorf“ ('lernwelt-dorf')
+//  und die Stempel der Entdecker-Expedition ('lernwelt-expedition').
 //
 //  Jede gewertete Runde löst 'lernpass:gewertet' aus (für „Mein Dorf“).
 //
@@ -55,6 +56,7 @@
   const RESULTS_KEY = 'lern-apps-results';
   const CONFIG_KEY  = 'lernwelt-config-cache';
   const DORF_KEY    = 'lernwelt-dorf';               // Spielstand „Mein Dorf“ (gemeinsam/dorf-kern.js)
+  const EXPED_KEY   = 'lernwelt-expedition';         // Stempel der Entdecker-Expedition (spiele/expedition.html)
   const VERSION     = 1;
 
   // ── Regeln (hier anpassen) ──────────────────────────────
@@ -814,7 +816,8 @@
   //  Format:  LW3.<base64url(deflate(JSON))>.<Prüfsumme>   komprimiert (Standard)
   //           LW2.<base64url(JSON)>.<Prüfsumme>            wenn die Kompression fehlt
   //  LW1 und LW2 werden weiterhin gelesen. JSON-Version v: 3 enthält zusätzlich
-  //  d = Spielstand „Mein Dorf“ (so wie er in 'lernwelt-dorf' steht).
+  //  d = Spielstand „Mein Dorf“ (so wie er in 'lernwelt-dorf' steht),
+  //  ex = Expedition: { eu: [besuchte Länder], de: [Bundesländer], w: 'europa'|'deutschland' }.
   //  Die Prüfsumme erkennt Tippfehler und einfaches Herumbasteln –
   //  sie ist bewusst KEIN Kopierschutz (alles liegt ohnehin auf dem Gerät).
   function fnv(str) {
@@ -843,6 +846,25 @@
       const d = JSON.parse(s);
       return d && typeof d === 'object' && !Array.isArray(d) ? d : null;
     } catch (e) { return null; }
+  }
+
+  // Expedition kompakt lesen/schreiben (nur Kürzel der besuchten Länder)
+  const EX_ID = /^[A-Z]{3}$|^DE-[A-Z]{2}$/;
+  function expeditionLesen() {
+    try {
+      const d = JSON.parse(localStorage.getItem(EXPED_KEY) || 'null');
+      if (!d || typeof d !== 'object') return null;
+      const ids = x => (x && Array.isArray(x.besucht) ? x.besucht : []).filter(id => typeof id === 'string' && EX_ID.test(id)).slice(0, 80);
+      const ex = { eu: ids(d.europa), de: ids(d.deutschland), w: d.wahl === 'deutschland' ? 'deutschland' : 'europa' };
+      return ex.eu.length || ex.de.length ? ex : null;
+    } catch (e) { return null; }
+  }
+  function expeditionAusCode(ex) {
+    if (!ex || typeof ex !== 'object') return null;
+    const ids = a => (Array.isArray(a) ? a : []).filter(id => typeof id === 'string' && EX_ID.test(id)).slice(0, 80);
+    const eu = ids(ex.eu), de = ids(ex.de);
+    if (!eu.length && !de.length) return null;
+    return { wahl: ex.w === 'deutschland' ? 'deutschland' : 'europa', europa: { besucht: eu, ort: '' }, deutschland: { besucht: de, ort: '' } };
   }
 
   function exportCode() {
@@ -878,6 +900,8 @@
     if (Object.keys(ls).length) payload.ls = ls;
     const dorf = dorfLesen();
     if (dorf) payload.d = dorf;
+    const ex = expeditionLesen();
+    if (ex) payload.ex = ex;
     const json = JSON.stringify(payload);
     let prefix = 'LW3', body = '';
     if (kannKomprimieren()) {
@@ -920,6 +944,7 @@
       if (!d || ![1, 2, 3].includes(d.v) || !Array.isArray(d.p)) return { ok: false, error: 'Unbekanntes Code-Format.' };
       // Dorf nur grob prüfen – genau säubert dorf-kern.js beim Laden
       const dorf = d.d && typeof d.d === 'object' && !Array.isArray(d.d) && JSON.stringify(d.d).length <= 20000 ? d.d : null;
+      const expedition = expeditionAusCode(d.ex);
       const ymd = s => String(s).replace(/^(\d{4})(\d{2})(\d{2})$/, '$1-$2-$3');
       const restored = blank();
       const lk = Array.isArray(d.p[1]) ? Object.fromEntries(LOOK_KEYS.map((k, i) => [k, d.p[1][i]])) : null;
@@ -979,6 +1004,8 @@
           S = restored; save();
           // Dorf gehört zum Pass: mitersetzen (alter Code ohne Dorf → Dorf beginnt neu)
           try { if (dorf) localStorage.setItem(DORF_KEY, JSON.stringify(dorf)); else localStorage.removeItem(DORF_KEY); } catch (e) {}
+          // Expedition ebenso (alter Code ohne Stempel → Expedition beginnt neu)
+          try { if (expedition) localStorage.setItem(EXPED_KEY, JSON.stringify(expedition)); else localStorage.removeItem(EXPED_KEY); } catch (e) {}
           try { window.dispatchEvent(new CustomEvent('lernpass:wiederhergestellt')); } catch (e) {}
         },
       };
