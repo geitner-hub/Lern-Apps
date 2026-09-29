@@ -1,0 +1,831 @@
+{
+ "hinweis": "Entdecker-Expedition: Länder (n Name, h Hauptstadt, nb Nachbarn, m Kartenmitte aus daten/karten.json, iso2 für die Flagge) und Bundesländer (k Kürzel). Himmelsrichtungen werden aus den Kartenmitten berechnet.",
+ "karten": {
+  "europa": {
+   "name": "Europa",
+   "fahrzeug": "ballon",
+   "start": "DEU",
+   "laender": {
+    "DEU": {
+     "n": "Deutschland",
+     "h": "Berlin",
+     "iso2": "DE",
+     "nb": [
+      "DNK",
+      "POL",
+      "CZE",
+      "AUT",
+      "CHE",
+      "FRA",
+      "LUX",
+      "BEL",
+      "NLD"
+     ],
+     "m": [
+      1024,
+      882
+     ]
+    },
+    "FRA": {
+     "n": "Frankreich",
+     "h": "Paris",
+     "iso2": "FR",
+     "nb": [
+      "BEL",
+      "LUX",
+      "DEU",
+      "CHE",
+      "ITA",
+      "ESP"
+     ],
+     "m": [
+      861,
+      986
+     ]
+    },
+    "ITA": {
+     "n": "Italien",
+     "h": "Rom",
+     "iso2": "IT",
+     "nb": [
+      "FRA",
+      "CHE",
+      "AUT",
+      "SVN"
+     ],
+     "m": [
+      1058,
+      1122
+     ]
+    },
+    "ESP": {
+     "n": "Spanien",
+     "h": "Madrid",
+     "iso2": "ES",
+     "nb": [
+      "PRT",
+      "FRA"
+     ],
+     "m": [
+      738,
+      1128
+     ]
+    },
+    "PRT": {
+     "n": "Portugal",
+     "h": "Lissabon",
+     "iso2": "PT",
+     "nb": [
+      "ESP"
+     ],
+     "m": [
+      624,
+      1128
+     ]
+    },
+    "GBR": {
+     "n": "Vereinigtes Königreich",
+     "h": "London",
+     "iso2": "GB",
+     "nb": [
+      "IRL"
+     ],
+     "m": [
+      812,
+      754
+     ]
+    },
+    "IRL": {
+     "n": "Irland",
+     "h": "Dublin",
+     "iso2": "IE",
+     "nb": [
+      "GBR"
+     ],
+     "m": [
+      722,
+      760
+     ]
+    },
+    "NLD": {
+     "n": "Niederlande",
+     "h": "Amsterdam",
+     "iso2": "NL",
+     "nb": [
+      "BEL",
+      "DEU"
+     ],
+     "m": [
+      940,
+      849
+     ]
+    },
+    "BEL": {
+     "n": "Belgien",
+     "h": "Brüssel",
+     "iso2": "BE",
+     "nb": [
+      "NLD",
+      "DEU",
+      "LUX",
+      "FRA"
+     ],
+     "m": [
+      919,
+      890
+     ]
+    },
+    "CHE": {
+     "n": "Schweiz",
+     "h": "Bern",
+     "iso2": "CH",
+     "nb": [
+      "DEU",
+      "AUT",
+      "ITA",
+      "FRA"
+     ],
+     "m": [
+      974,
+      999
+     ]
+    },
+    "AUT": {
+     "n": "Österreich",
+     "h": "Wien",
+     "iso2": "AT",
+     "nb": [
+      "DEU",
+      "CZE",
+      "SVK",
+      "HUN",
+      "SVN",
+      "ITA",
+      "CHE"
+     ],
+     "m": [
+      1071,
+      979
+     ]
+    },
+    "POL": {
+     "n": "Polen",
+     "h": "Warschau",
+     "iso2": "PL",
+     "nb": [
+      "DEU",
+      "CZE",
+      "SVK",
+      "UKR",
+      "BLR",
+      "LTU",
+      "RUS"
+     ],
+     "m": [
+      1175,
+      858
+     ]
+    },
+    "CZE": {
+     "n": "Tschechien",
+     "h": "Prag",
+     "iso2": "CZ",
+     "nb": [
+      "DEU",
+      "POL",
+      "SVK",
+      "AUT"
+     ],
+     "m": [
+      1111,
+      921
+     ]
+    },
+    "DNK": {
+     "n": "Dänemark",
+     "h": "Kopenhagen",
+     "iso2": "DK",
+     "nb": [
+      "DEU"
+     ],
+     "m": [
+      1018,
+      740
+     ]
+    },
+    "NOR": {
+     "n": "Norwegen",
+     "h": "Oslo",
+     "iso2": "NO",
+     "nb": [
+      "SWE",
+      "FIN",
+      "RUS"
+     ],
+     "m": [
+      1110,
+      506
+     ]
+    },
+    "SWE": {
+     "n": "Schweden",
+     "h": "Stockholm",
+     "iso2": "SE",
+     "nb": [
+      "NOR",
+      "FIN"
+     ],
+     "m": [
+      1128,
+      578
+     ]
+    },
+    "FIN": {
+     "n": "Finnland",
+     "h": "Helsinki",
+     "iso2": "FI",
+     "nb": [
+      "SWE",
+      "NOR",
+      "RUS"
+     ],
+     "m": [
+      1234,
+      495
+     ]
+    },
+    "GRC": {
+     "n": "Griechenland",
+     "h": "Athen",
+     "iso2": "GR",
+     "nb": [
+      "ALB",
+      "MKD",
+      "BGR"
+     ],
+     "m": [
+      1276,
+      1204
+     ]
+    },
+    "HUN": {
+     "n": "Ungarn",
+     "h": "Budapest",
+     "iso2": "HU",
+     "nb": [
+      "AUT",
+      "SVK",
+      "UKR",
+      "ROU",
+      "SRB",
+      "HRV",
+      "SVN"
+     ],
+     "m": [
+      1186,
+      991
+     ]
+    },
+    "ROU": {
+     "n": "Rumänien",
+     "h": "Bukarest",
+     "iso2": "RO",
+     "nb": [
+      "HUN",
+      "UKR",
+      "MDA",
+      "BGR",
+      "SRB"
+     ],
+     "m": [
+      1295,
+      1012
+     ]
+    },
+    "UKR": {
+     "n": "Ukraine",
+     "h": "Kiew",
+     "iso2": "UA",
+     "nb": [
+      "POL",
+      "SVK",
+      "HUN",
+      "ROU",
+      "MDA",
+      "BLR",
+      "RUS"
+     ],
+     "m": [
+      1392,
+      916
+     ]
+    },
+    "RUS": {
+     "n": "Russland",
+     "h": "Moskau",
+     "iso2": "RU",
+     "nb": [
+      "NOR",
+      "FIN",
+      "EST",
+      "LVA",
+      "BLR",
+      "UKR",
+      "LTU",
+      "POL"
+     ],
+     "m": [
+      1734,
+      507
+     ]
+    },
+    "ISL": {
+     "n": "Island",
+     "h": "Reykjavík",
+     "iso2": "IS",
+     "nb": [],
+     "m": [
+      726,
+      399
+     ]
+    },
+    "HRV": {
+     "n": "Kroatien",
+     "h": "Zagreb",
+     "iso2": "HR",
+     "nb": [
+      "SVN",
+      "HUN",
+      "SRB",
+      "BIH",
+      "MNE"
+     ],
+     "m": [
+      1131,
+      1060
+     ]
+    },
+    "ALB": {
+     "n": "Albanien",
+     "h": "Tirana",
+     "iso2": "AL",
+     "nb": [
+      "MNE",
+      "MKD",
+      "GRC"
+     ],
+     "m": [
+      1210,
+      1156
+     ]
+    },
+    "BGR": {
+     "n": "Bulgarien",
+     "h": "Sofia",
+     "iso2": "BG",
+     "nb": [
+      "ROU",
+      "SRB",
+      "MKD",
+      "GRC"
+     ],
+     "m": [
+      1312,
+      1102
+     ]
+    },
+    "BIH": {
+     "n": "Bosnien und Herzegowina",
+     "h": "Sarajevo",
+     "iso2": "BA",
+     "nb": [
+      "HRV",
+      "SRB",
+      "MNE"
+     ],
+     "m": [
+      1156,
+      1082
+     ]
+    },
+    "BLR": {
+     "n": "Belarus",
+     "h": "Minsk",
+     "iso2": "BY",
+     "nb": [
+      "POL",
+      "LTU",
+      "LVA",
+      "RUS",
+      "UKR"
+     ],
+     "m": [
+      1316,
+      796
+     ]
+    },
+    "CYP": {
+     "n": "Zypern",
+     "h": "Nikosia",
+     "iso2": "CY",
+     "nb": [],
+     "m": [
+      1518,
+      1273
+     ]
+    },
+    "EST": {
+     "n": "Estland",
+     "h": "Tallinn",
+     "iso2": "EE",
+     "nb": [
+      "LVA",
+      "RUS"
+     ],
+     "m": [
+      1256,
+      666
+     ]
+    },
+    "LTU": {
+     "n": "Litauen",
+     "h": "Vilnius",
+     "iso2": "LT",
+     "nb": [
+      "LVA",
+      "BLR",
+      "POL",
+      "RUS"
+     ],
+     "m": [
+      1242,
+      764
+     ]
+    },
+    "LUX": {
+     "n": "Luxemburg",
+     "h": "Luxemburg",
+     "iso2": "LU",
+     "nb": [
+      "BEL",
+      "DEU",
+      "FRA"
+     ],
+     "m": [
+      944,
+      912
+     ]
+    },
+    "LVA": {
+     "n": "Lettland",
+     "h": "Riga",
+     "iso2": "LV",
+     "nb": [
+      "EST",
+      "LTU",
+      "BLR",
+      "RUS"
+     ],
+     "m": [
+      1249,
+      714
+     ]
+    },
+    "MDA": {
+     "n": "Moldau",
+     "h": "Chișinău",
+     "iso2": "MD",
+     "nb": [
+      "ROU",
+      "UKR"
+     ],
+     "m": [
+      1352,
+      978
+     ]
+    },
+    "MKD": {
+     "n": "Nordmazedonien",
+     "h": "Skopje",
+     "iso2": "MK",
+     "nb": [
+      "SRB",
+      "BGR",
+      "GRC",
+      "ALB"
+     ],
+     "m": [
+      1242,
+      1141
+     ]
+    },
+    "MNE": {
+     "n": "Montenegro",
+     "h": "Podgorica",
+     "iso2": "ME",
+     "nb": [
+      "HRV",
+      "BIH",
+      "SRB",
+      "ALB"
+     ],
+     "m": [
+      1192,
+      1114
+     ]
+    },
+    "SRB": {
+     "n": "Serbien",
+     "h": "Belgrad",
+     "iso2": "RS",
+     "nb": [
+      "HUN",
+      "ROU",
+      "BGR",
+      "MKD",
+      "MNE",
+      "BIH",
+      "HRV"
+     ],
+     "m": [
+      1220,
+      1072
+     ]
+    },
+    "SVK": {
+     "n": "Slowakei",
+     "h": "Bratislava",
+     "iso2": "SK",
+     "nb": [
+      "CZE",
+      "POL",
+      "UKR",
+      "HUN",
+      "AUT"
+     ],
+     "m": [
+      1188,
+      950
+     ]
+    },
+    "SVN": {
+     "n": "Slowenien",
+     "h": "Ljubljana",
+     "iso2": "SI",
+     "nb": [
+      "ITA",
+      "AUT",
+      "HUN",
+      "HRV"
+     ],
+     "m": [
+      1101,
+      1022
+     ]
+    }
+   }
+  },
+  "deutschland": {
+   "name": "Deutschland",
+   "fahrzeug": "zug",
+   "start": "DE-BY",
+   "laender": {
+    "DE-SH": {
+     "n": "Schleswig-Holstein",
+     "h": "Kiel",
+     "k": "SH",
+     "nb": [
+      "DE-HH",
+      "DE-NI",
+      "DE-MV"
+     ],
+     "m": [
+      1282,
+      446
+     ]
+    },
+    "DE-HH": {
+     "n": "Hamburg",
+     "h": "Hamburg",
+     "k": "HH",
+     "nb": [
+      "DE-SH",
+      "DE-NI"
+     ],
+     "m": [
+      1294,
+      516
+     ]
+    },
+    "DE-NI": {
+     "n": "Niedersachsen",
+     "h": "Hannover",
+     "k": "NI",
+     "nb": [
+      "DE-SH",
+      "DE-HH",
+      "DE-HB",
+      "DE-MV",
+      "DE-BB",
+      "DE-ST",
+      "DE-TH",
+      "DE-HE",
+      "DE-NW"
+     ],
+     "m": [
+      1225,
+      635
+     ]
+    },
+    "DE-HB": {
+     "n": "Bremen",
+     "h": "Bremen",
+     "k": "HB",
+     "nb": [
+      "DE-NI"
+     ],
+     "m": [
+      1198,
+      570
+     ]
+    },
+    "DE-MV": {
+     "n": "Mecklenburg-Vorpommern",
+     "h": "Schwerin",
+     "k": "MV",
+     "nb": [
+      "DE-SH",
+      "DE-NI",
+      "DE-BB"
+     ],
+     "m": [
+      1473,
+      487
+     ]
+    },
+    "DE-BB": {
+     "n": "Brandenburg",
+     "h": "Potsdam",
+     "k": "BB",
+     "nb": [
+      "DE-MV",
+      "DE-NI",
+      "DE-ST",
+      "DE-SN",
+      "DE-BE"
+     ],
+     "m": [
+      1517,
+      648
+     ]
+    },
+    "DE-BE": {
+     "n": "Berlin",
+     "h": "Berlin",
+     "k": "BE",
+     "nb": [
+      "DE-BB"
+     ],
+     "m": [
+      1546,
+      642
+     ]
+    },
+    "DE-ST": {
+     "n": "Sachsen-Anhalt",
+     "h": "Magdeburg",
+     "k": "ST",
+     "nb": [
+      "DE-NI",
+      "DE-BB",
+      "DE-SN",
+      "DE-TH"
+     ],
+     "m": [
+      1434,
+      708
+     ]
+    },
+    "DE-SN": {
+     "n": "Sachsen",
+     "h": "Dresden",
+     "k": "SN",
+     "nb": [
+      "DE-BB",
+      "DE-ST",
+      "DE-TH",
+      "DE-BY"
+     ],
+     "m": [
+      1556,
+      838
+     ]
+    },
+    "DE-TH": {
+     "n": "Thüringen",
+     "h": "Erfurt",
+     "k": "TH",
+     "nb": [
+      "DE-NI",
+      "DE-ST",
+      "DE-SN",
+      "DE-BY",
+      "DE-HE"
+     ],
+     "m": [
+      1386,
+      840
+     ]
+    },
+    "DE-HE": {
+     "n": "Hessen",
+     "h": "Wiesbaden",
+     "k": "HE",
+     "nb": [
+      "DE-NI",
+      "DE-TH",
+      "DE-BY",
+      "DE-BW",
+      "DE-RP",
+      "DE-NW"
+     ],
+     "m": [
+      1210,
+      888
+     ]
+    },
+    "DE-NW": {
+     "n": "Nordrhein-Westfalen",
+     "h": "Düsseldorf",
+     "k": "NW",
+     "nb": [
+      "DE-NI",
+      "DE-HE",
+      "DE-RP"
+     ],
+     "m": [
+      1110,
+      774
+     ]
+    },
+    "DE-RP": {
+     "n": "Rheinland-Pfalz",
+     "h": "Mainz",
+     "k": "RP",
+     "nb": [
+      "DE-NW",
+      "DE-HE",
+      "DE-BW",
+      "DE-SL"
+     ],
+     "m": [
+      1076,
+      956
+     ]
+    },
+    "DE-SL": {
+     "n": "Saarland",
+     "h": "Saarbrücken",
+     "k": "SL",
+     "nb": [
+      "DE-RP"
+     ],
+     "m": [
+      1039,
+      1024
+     ]
+    },
+    "DE-BW": {
+     "n": "Baden-Württemberg",
+     "h": "Stuttgart",
+     "k": "BW",
+     "nb": [
+      "DE-RP",
+      "DE-HE",
+      "DE-BY"
+     ],
+     "m": [
+      1205,
+      1116
+     ]
+    },
+    "DE-BY": {
+     "n": "Bayern",
+     "h": "München",
+     "k": "BY",
+     "nb": [
+      "DE-BW",
+      "DE-HE",
+      "DE-TH",
+      "DE-SN"
+     ],
+     "m": [
+      1402,
+      1086
+     ]
+    }
+   }
+  }
+ },
+ "auftraege": 10
+}
