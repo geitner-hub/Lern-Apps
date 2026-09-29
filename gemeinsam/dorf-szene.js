@@ -174,6 +174,8 @@
       let g = ['#3f8f47', '#4a9d4f', '#3a8440'][Math.floor(wahl * 3)];
       if (art === 'herbst') g = ['#d9731a', '#c2410c', '#e0a31a', '#4a9d4f'][Math.floor(wahl * 4)];
       if (art === 'schnee') g = ['#2f6b3a', '#356f40', '#2c6236'][Math.floor(wahl * 3)];
+      if (art === 'laub') g = ['#d9731a', '#e0a31a', '#4a9d4f', '#3f8f47', '#c2410c'][Math.floor(wahl * 5)];   // Herbst im Dorf: bunt gemischt
+      if (art === 'winter') g = ['#2f6b3a', '#6b5a45', '#3a6a45'][Math.floor(wahl * 3)];          // Nadelbäume und kahle Laubbäume
       if (art === 'bluete' && wahl < .55) g = wahl < .3 ? '#f9a8d4' : '#fbe4f0';
       b(p, 5, 3, 5, x, h - .6, z, g); b(p, 3.4, 2, 3.4, x, h + 2.2, z, g);
       if (art === 'schnee') { b(p, 5.1, .45, 5.1, x, h + 2.4, z, '#f8fafc'); b(p, 3.5, .45, 3.5, x, h + 4.2, z, '#f8fafc'); }
@@ -600,7 +602,7 @@
       const g = new T.Group();
       dekoPos.forEach(d => {
         if (d.art === 'baum') baum(g, d.x, d.z, d.h, seeded(d.s), art);
-        else if (art !== 'schnee') b(g, .6, .6, .6, d.x, 0, d.z, d.f);
+        else if (art !== 'schnee' && art !== 'winter') b(g, .6, .6, .6, d.x, 0, d.z, d.f);
       });
       baeume = backe(g);
       scene.add(baeume);
@@ -658,8 +660,11 @@
     let stimmungKey = null, ev = null, partikel = null, wimpel = null;
     function stimmungAnwenden() {
       const a = DORF.aktivesEvent();
-      const st = a && a.def && a.def.stimmung ? a.def.stimmung : null;
-      const key = a ? a.id + (st ? '' : ':wimpel') : '';
+      const festSt = a && a.def && a.def.stimmung ? a.def.stimmung : null;
+      // Ohne Fest-Stimmung: die Jahreszeit (JAHRESZEITEN in dorf-inhalte.json)
+      const jz = !festSt && typeof DORF.jahreszeit === 'function' ? DORF.jahreszeit() : null;
+      const st = festSt || (jz && Array.isArray(jz.boden) ? jz : null);
+      const key = (a ? a.id + (festSt ? '' : ':wimpel') : '') + '|' + (festSt ? '' : jz ? jz.id : '');
       ev = a;
       if (key === stimmungKey) return false;
       stimmungKey = key;
@@ -670,7 +675,7 @@
       hemi.color.set(farbe(hm[0], '#f2f6ff')); hemi.groundColor.set(farbe(hm[1], '#4d6b45')); hemi.intensity = Number(hm[2]) || .62;
       const so = st && Array.isArray(st.sonne) ? st.sonne : ['#fff1d6', .62];
       sonne.color.set(farbe(so[0], '#fff1d6')); sonne.intensity = Number(so[1]) || .62;
-      const fl = st && st.fenster ? farbe(st.fenster, null) : null;                        // warm leuchtende Fenster
+      const fl = festSt && festSt.fenster ? farbe(festSt.fenster, null) : null;                        // warm leuchtende Fenster
       fensterMat.color.set(fl || F.fenster); fensterMat.emissive.set(fl ? new T.Color(fl).multiplyScalar(.7) : '#000000');
       wieseMat.color.set(farben.wiese);
       festwieseMalen();

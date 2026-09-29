@@ -30,6 +30,11 @@
 //  Stand Etappe 6 (Teil 2): Challenges über zwei Wochen (rotierend oder von der Lehrkraft geplant,
 //  config.json → dorf.challenges / dorf.challengeRotation) mit Trophäen, Bonus-Gebäude für Trophäen,
 //  Tausch Holz ↔ Stein am Marktplatz.
+//  Stand Etappe 6c (UX und Erweiterungen): Rohstoff-Lenkung (Aufträge bringen eher, was fehlt),
+//  Runden je App (config.json → apps[].dorfRunden), Sparziel (zg), Lehrer-Zettel (config.json →
+//  dorf.lehrerZettel), Fleißzettel (einmal am Tag, wenn alle Tageszettel erledigt sind), Werkstatt-Bonus
+//  (Apps mit wenigen Meisterschafts-Sternen), Bewohner-Briefe auf Englisch, Liste aller offenen
+//  Aufträge für Startseite und Heute-Leiste (offeneAuftraege).
 //  Die 3D-Szene: gemeinsam/dorf-szene.js.
 // ═══════════════════════════════════════════════════════
 
@@ -88,7 +93,9 @@
   //    ls  bereits gemeldete Landschafts-Elemente · lk bereits gemeldete Dorf-Deko (für Neuigkeiten)
   //    ch  laufende Challenge { i: challengeId@Starttag, c: geschafft, d: Tag der letzten gezählten Runde (art tage),
   //                            l: geübte Apps (art apps), f: 1 = erledigt } · tr Trophäen { challengeId: wie oft geschafft }
-  //  Weitere Felder späterer Etappen (Sammelbuch, Bewohner …) bleiben beim
+  //    zg  Sparziel { p: Bauplatz, g: Gebäude-Id, s: Stufe } · lz Ids der schon vergebenen Lehrer-Zettel
+//    fz  Tag des letzten Fleißzettels · Aufträge zusätzlich: w: 1 = Werkstatt-Bonus, k: Id des Lehrer-Zettels
+//  Weitere Felder späterer Etappen (Sammelbuch, Bewohner …) bleiben beim
   //  Säubern erhalten, damit ältere Geräte nichts wegwerfen.
   function leer() {
     return { v: VERSION, s: heute(), r: { h: 0, s: 0, g: 0 }, q: [], rr: 0, rd: '', fd: '', b: {}, an: 0, e: 0, n: 0, l: [],
@@ -101,6 +108,8 @@
     const q = { i: zahl(a.i, 0, 1e9), p: zahl(a.p, 1, 9), a: a.a, n, c: zahl(a.c, 0, n), m: zahl(a.m, 0, 100),
                 r: a.r, b: zahl(a.b, 0, 10000), d: TAG.test(a.d) ? a.d : heute() };
     if (a.x) q.x = 1;
+    if (a.w) q.w = 1;
+    if (typeof a.k === 'string' && /^[a-z0-9_-]{1,40}$/i.test(a.k)) q.k = a.k;
     return q;
   }
 
@@ -151,6 +160,10 @@
       d.tr = {};
       Object.entries(raw.tr).slice(0, 50).forEach(([k, v]) => { if (istId(k)) d.tr[k] = zahl(v, 0, 999); });
     }
+    const zg = raw.zg;
+    if (zg && typeof zg === 'object' && !Array.isArray(zg) && Number.isInteger(zg.p) && istId(zg.g)) d.zg = { p: zahl(zg.p, 1, 999), g: zg.g, s: zahl(zg.s, 1, 20) };
+    if (Array.isArray(raw.lz)) d.lz = raw.lz.filter(x => typeof x === 'string' && /^[a-z0-9_-]{1,40}$/i.test(x)).slice(-10);
+    if (TAG.test(raw.fz)) d.fz = raw.fz;
     d.we = zahl(raw.we, 0, 1e5);
     if (Array.isArray(raw.pz)) d.pz = raw.pz.filter(x => Number.isInteger(x) && x > 0 && x < 10).slice(0, 10);
     if (typeof raw.dn === 'string') d.dn = raw.dn.replace(/[<>"'`\\]/g, '').replace(/\s+/g, ' ').trim().slice(0, 24);
@@ -269,9 +282,11 @@
       .filter(p => p && Number.isInteger(p.id) && (p.faecher === 'alle' || Array.isArray(p.faecher)))
       .sort((a, b) => a.id - b.id);
     // Plätze ohne Gebäude: Admin kann sie begrenzen. Plätze mit Gebäude (Bibliothek): nur, wenn es fertig steht.
-    let plaetze = alle.filter(p => !p.gebaeude);
+    let plaetze = alle.filter(p => !p.gebaeude && !p.extra);
     if (Number.isInteger(L.plaetze) && L.plaetze >= 1) plaetze = plaetze.slice(0, L.plaetze);
-    plaetze = plaetze.concat(alle.filter(p => p.gebaeude && steht(p.gebaeude)));
+    plaetze = plaetze.concat(alle.filter(p => p.gebaeude && !p.extra && steht(p.gebaeude)));
+    const fleiss = alle.find(p => p.extra === 'fleiss') || null;
+    const ws = A.werkstatt || {}, fl = A.fleiss || {};
     const rohstoffe = (Array.isArray(t.rohstoffe) ? t.rohstoffe : []).filter(r => /^[a-z]{1,4}$/.test(r));
     return {
       plaetze: plaetze.length ? plaetze : [
@@ -282,6 +297,10 @@
       schwelle: Math.round(wert(t.schwelle, 0, 100, 70)),
       belohnung: [Math.round(lo), Math.round(hi)],
       rohstoffe: rohstoffe.length ? rohstoffe : ['h', 's'],
+      lenkung:  wert(t.rohstoffLenkung, 0, 1, 0),
+      werkstatt: { bonus: wert(ws.bonus, 0, 5, 0), sterneBis: Math.round(wert(ws.sterneBis, 0, 3, 1)) },
+      fleiss: fleiss ? { platz: fleiss, anteil: wert(fl.anteil, 0, 1, .5) } : null,
+      lehrerPlatz: Math.round(wert((A.lehrer || {}).platz, 1, 9, 5)),
       rrProTag: Math.round(wert(rr.proTag, 0, 10, 1)),
       rrMax:    Math.round(wert(rr.max, 0, 20, 3)),
       lnTage:   Math.round(wert(ln.tage, 1, 365, 14)),
@@ -289,6 +308,7 @@
       bewohner: {
         runden:  Math.round(wert((A.bewohner || {}).runden, 1, 10, 2)),
         ansehen: Math.round(wert((A.bewohner || {}).ansehen, 0, 1000, 10)),
+        englisch: wert((A.bewohner || {}).englischAnteil, 0, 1, 0),
       },
       woche: {
         rohstoffe: Math.round(wert(wo.rohstoffe, 0, 1000, 60)),
@@ -333,7 +353,13 @@
         && !a.datei.startsWith('spiele/') && a.fach !== 'Allgemein'
         && a.hidden !== true && a.dorf !== false
         && Array.isArray(a.klassen) && a.klassen.includes(kl))
-      .map(a => ({ key: appKey(a.datei), name: a.name, fach: a.fach, emoji: a.emoji || '📱', datei: a.datei }));
+      .map(a => ({ key: appKey(a.datei), name: a.name, fach: a.fach, emoji: a.emoji || '📱', datei: a.datei,
+                   runden: Number.isInteger(a.dorfRunden) && a.dorfRunden >= 1 && a.dorfRunden <= 10 ? a.dorfRunden : 0 }));
+  }
+  /** Runden für einen Auftrag in dieser App: eigener Wert der App (Admin) oder der Standard. */
+  function rundenFuer(key, std) {
+    const a = (configApps() || []).find(x => x && appKey(x.datei) === key);
+    return a && Number.isInteger(a.dorfRunden) && a.dorfRunden >= 1 && a.dorfRunden <= 10 ? a.dorfRunden : std;
   }
   /** Anzeige-Daten einer App (auch wenn sie inzwischen versteckt ist). */
   function appInfo(key) {
@@ -359,22 +385,54 @@
     return eigene.length ? eigene : alle;
   }
 
-  function neuerAuftrag(platz, W, ausschluss) {
+  /** Welcher Rohstoff fehlt gerade am meisten? Erst fürs Sparziel, sonst der kleinere Vorrat (null = egal). */
+  function fehlenderRohstoff(W) {
+    const nur = W.rohstoffe.filter(r => r === 'h' || r === 's');
+    if (nur.length < 2) return null;
+    const z = zielInfo();
+    if (z && !z.genug) {
+      const f = nur.map(r => [r, z.fehlt[r] || 0]).sort((a, b) => b[1] - a[1]);
+      if (f[0][1] > f[1][1]) return f[0][0];
+    }
+    const v = nur.map(r => [r, D.r[r] || 0]).sort((a, b) => a[1] - b[1]);
+    return v[0][1] < v[1][1] ? v[0][0] : null;
+  }
+  function rohstoffWahl(W) {
+    const f = fehlenderRohstoff(W);
+    return f && Math.random() < W.lenkung ? f : zufall(W.rohstoffe);
+  }
+  function sterne(key) {
+    try { return window.LernPass && typeof window.LernPass.starsFor === 'function' ? window.LernPass.starsFor(key) : null; } catch (e) { return null; }
+  }
+  /** Neuer Auftrag für einen Platz. o.app: feste App (Lehrer-Zettel), o.anteil: Teil der Belohnung (Fleißzettel) */
+  function neuerAuftrag(platz, W, ausschluss, o = {}) {
     const kl = klasse();
     if (!kl) return null;
-    const liste = kandidaten(platz, kl, ausschluss);
-    if (!liste.length) return null;
-    const frisch = liste.filter(a => !D.l.includes(a.key));      // Abwechslung: nicht die zuletzt vergebenen
-    const app = zufall(frisch.length ? frisch : liste);
+    let app = null;
+    if (o.app) app = dorfApps(kl).find(a => a.key === o.app) || null;
+    else {
+      const liste = kandidaten(platz, kl, ausschluss);
+      if (!liste.length) return null;
+      const frisch = liste.filter(a => !D.l.includes(a.key));      // Abwechslung: nicht die zuletzt vergebenen
+      app = zufall(frisch.length ? frisch : liste);
+    }
+    if (!app) return null;
     const t = heute();
     let b = W.belohnung[0] + Math.floor(Math.random() * (W.belohnung[1] - W.belohnung[0] + 1));
     const zuletzt = zuletztGespielt(app.key);
     const lange = !!zuletzt && tageZwischen(zuletzt, t) >= W.lnTage;
+    const st = zuletzt && !lange ? sterne(app.key) : null;
+    const werkstatt = W.werkstatt.bonus > 0 && st !== null && st <= W.werkstatt.sterneBis;
     if (lange) b = Math.round(b * (1 + W.lnBonus));
+    else if (werkstatt) b = Math.round(b * (1 + W.werkstatt.bonus));
+    if (o.anteil !== undefined) b = Math.max(1, Math.round(b * o.anteil));
     D.n++;
-    D.l = [app.key, ...D.l.filter(k => k !== app.key)].slice(0, 3);
-    const q = { i: D.n, p: platz.id, a: app.key, n: W.runden, c: 0, m: W.schwelle, r: zufall(W.rohstoffe), b, d: t };
+    if (!o.app) D.l = [app.key, ...D.l.filter(k => k !== app.key)].slice(0, 3);
+    const n = o.runden || app.runden || W.runden;
+    const q = { i: D.n, p: platz.id, a: app.key, n, c: 0, m: W.schwelle, r: rohstoffWahl(W), b, d: t };
     if (lange) q.x = 1;
+    else if (werkstatt) q.w = 1;
+    if (o.k) q.k = o.k;
     return q;
   }
 
@@ -399,7 +457,7 @@
     if (kl && configApps()) {
       const erlaubt = new Set(dorfApps(kl).map(a => a.key));
       const ersetzen = new Set();
-      const aktiv = new Set(W.plaetze.map(p => p.id));
+      const aktiv = new Set(W.plaetze.map(p => p.id).concat(W.lehrerPlatz, W.fleiss ? [W.fleiss.platz.id] : []));
       D.q = D.q.filter(q => aktiv.has(q.p));                            // Platz im Admin abgeschaltet
       D.q = D.q.filter(q => { if (erlaubt.has(q.a)) return true; ersetzen.add(q.p); return false; });
       const neuerTag = D.fd !== t;
@@ -418,6 +476,9 @@
         geaendert = true;
       }
     }
+    if (lehrerCheck(W)) geaendert = true;
+    if (fleissCheck(W)) geaendert = true;
+    if (zielCheck()) geaendert = true;
     if (wocheCheck(W)) geaendert = true;
     if (bewohnerCheck()) geaendert = true;
     if (bewohnerAuftragCheck(W)) geaendert = true;
@@ -426,6 +487,134 @@
     if (meilensteinCheck()) geaendert = true;
     if (geaendert) speichern();
     return geaendert;
+  }
+
+  // ── Lehrer-Zettel ───────────────────────────────────────
+  //  Die Lehrkraft hängt im Admin eine App an das Brett (config.json → dorf.lehrerZettel:
+  //  [{ id, start 'JJJJ-MM-TT', bis 'JJJJ-MM-TT', app: Dateiname, text, runden, klassen }]).
+  //  Er gilt von start bis bis, jeder Zettel kommt pro Kind nur einmal. Belohnung wie ein Tagesauftrag.
+  function lehrerZettelListe() { const L = lehrkraft().lehrerZettel; return Array.isArray(L) ? L : []; }
+  function lehrerAktiv() {
+    const kl = klasse(), t = heute();
+    if (!kl) return null;
+    const erlaubt = new Set(dorfApps(kl).map(a => a.key));
+    return lehrerZettelListe().filter(x => x && typeof x === 'object' && /^[a-z0-9_-]{1,40}$/i.test(x.id || '')
+        && String(x.start || '').replace(/-/g, '') <= t && t <= String(x.bis || x.start || '').replace(/-/g, '')
+        && (!Array.isArray(x.klassen) || !x.klassen.length || x.klassen.includes(kl)) && erlaubt.has(x.app))
+      .sort((a, b) => (a.start < b.start ? 1 : -1))[0] || null;
+  }
+  function lehrerInfo(q) {
+    const x = q && q.k ? lehrerZettelListe().find(y => y && y.id === q.k) : null;
+    return x ? { text: typeof x.text === 'string' ? x.text.slice(0, 120) : '', bis: String(x.bis || x.start || '').replace(/-/g, '') } : { text: '', bis: '' };
+  }
+  function lehrerCheck(W) {
+    if (!klasse() || !configApps()) return false;
+    const lp = W.lehrerPlatz, akt = lehrerAktiv(), offen = D.q.find(q => q.p === lp);
+    let geaendert = false;
+    if (offen && (!akt || offen.k !== akt.id)) { D.q = D.q.filter(q => q !== offen); geaendert = true; }   // abgelaufen, entfernt, ersetzt
+    if (akt && !D.q.some(q => q.p === lp) && !(D.lz || []).includes(akt.id)) {
+      const q = neuerAuftrag({ id: lp, faecher: 'alle' }, W, [], { app: akt.app, k: akt.id,
+        runden: Number.isInteger(akt.runden) && akt.runden >= 1 && akt.runden <= 10 ? akt.runden : 0 });
+      if (q) { D.q.push(q); D.q.sort((a, b) => a.p - b.p); D.lz = [...(D.lz || []), akt.id].slice(-10); geaendert = true; }
+    }
+    return geaendert;
+  }
+
+  // ── Fleißzettel ─────────────────────────────────────────
+  //  Einmal am Tag: Sind alle Tageszettel erledigt, hängt ein Extra-Auftrag mit halber Belohnung.
+  function fleissCheck(W) {
+    const F = W.fleiss;
+    if (!F || !klasse() || !configApps() || !W.plaetze.length) return false;
+    if (D.fz === heute() || D.fd !== heute() || D.q.some(q => q.p === F.platz.id)) return false;
+    if (W.plaetze.some(p => D.q.some(q => q.p === p.id))) return false;
+    const q = neuerAuftrag(F.platz, W, D.q.map(x => x.a), { anteil: F.anteil });
+    if (!q) return false;
+    D.q.push(q); D.q.sort((a, b) => a.p - b.p);
+    D.fz = heute();
+    return true;
+  }
+
+  // ── Sparziel ────────────────────────────────────────────
+  //  Das Kind wählt ein Gebäude (oder die nächste Stufe) als Ziel. Anzeige im Dorf und in den Apps.
+  function zielSetzen(platzId, gebId) {
+    D = laden();
+    const i = platzInfo(platzId);
+    if (!i || i.gesperrt) return { ok: false };
+    if (i.eintrag) { if (!i.naechste) return { ok: false }; D.zg = { p: platzId, g: i.gebaeude.id, s: i.naechste }; }
+    else { if (!baubar(platzId).some(b => b.gebaeude.id === gebId)) return { ok: false }; D.zg = { p: platzId, g: gebId, s: 1 }; }
+    speichern();
+    return { ok: true };
+  }
+  function zielWeg() { D = laden(); if (!D.zg) return; delete D.zg; speichern(); }
+  /** Ist das Ziel erreicht oder nicht mehr möglich? Dann weg damit. */
+  function zielCheck() {
+    const z = D.zg;
+    if (!z || !C) return false;
+    const e = D.b[z.p];
+    const weg = e ? (e[0] !== z.g || e[1] >= z.s) : (z.s !== 1 || !baubar(z.p).some(b => b.gebaeude.id === z.g));
+    if (weg) { delete D.zg; return true; }
+    return false;
+  }
+  /** { platz, gebaeude, stufe, kosten, fehlt, genug, ansehen, ansehenFehlt, auftraege } oder null */
+  function zielInfo() {
+    const z = D.zg;
+    if (!z || !C) return null;
+    const g = gebaeude(z.g);
+    if (!g) return null;
+    const k = kosten(z.g, z.s), fehlt = {};
+    Object.entries(k).forEach(([r, n]) => { const f = n - (D.r[r] || 0); if (f > 0) fehlt[r] = f; });
+    const ansehen = z.s > 1 ? ansehenNoetig(z.g, z.s) : 0, ansehenFehlt = Math.max(0, ansehen - D.an);
+    const W = werte(), schnitt = (W.belohnung[0] + W.belohnung[1]) / 2;
+    const hs = (fehlt.h || 0) + (fehlt.s || 0);
+    const e = D.b[z.p];
+    return { platz: z.p, gebaeude: g, stufe: z.s, kosten: k, fehlt, genug: !Object.keys(fehlt).length, ansehen, ansehenFehlt,
+             auftraege: hs ? Math.max(1, Math.ceil(hs / schnitt)) : 0, imBau: !!e && !fertig(e) };
+  }
+  /** Was kann das Kind gerade bauen oder ausbauen? [{ platz, gebaeude, art: 'bauen'|'ausbauen', stufe }] */
+  function bauMoeglich() {
+    const aus = [];
+    plaetze().forEach(p => {
+      const i = platzInfo(p.id);
+      if (!i || i.gesperrt) return;
+      if (!i.eintrag) baubar(p.id).filter(b => b.genug).forEach(b => aus.push({ platz: p.id, gebaeude: b.gebaeude, art: 'bauen', stufe: 1 }));
+      else if (i.naechste && i.genug && i.ansehenOk) aus.push({ platz: p.id, gebaeude: i.gebaeude, art: 'ausbauen', stufe: i.naechste });
+    });
+    return aus;
+  }
+  /** Meldungs-Zeile fürs Ziel (in den Lern-Apps) */
+  function zielZeile() {
+    const z = zielInfo();
+    if (!z || z.imBau) return '';
+    const name = `${z.gebaeude.icon || '🏠'} ${z.gebaeude.name}${z.stufe > 1 ? ' Stufe ' + z.stufe : ''}`;
+    if (z.genug && !z.ansehenFehlt) return `🎯 Du hast genug für ${name}! Bau es im Dorf.`;
+    if (z.auftraege) return `🎯 ${name}: noch etwa ${z.auftraege} ${z.auftraege === 1 ? 'Auftrag' : 'Aufträge'}`;
+    if (z.fehlt.g) return `🎯 ${name}: dir fehlt noch Gold (Wochenauftrag)`;
+    return '';
+  }
+
+  /** Jahreszeit nach Datum (JAHRESZEITEN in dorf-inhalte.json, nur Optik) oder null */
+  function jahreszeit(d = new Date()) {
+    const L = C && Array.isArray(C.JAHRESZEITEN) ? C.JAHRESZEITEN.filter(j => j && istId(j.id) && /^\d{2}-\d{2}$/.test(j.ab || '')) : [];
+    if (!L.length) return null;
+    const md = String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    const sort = L.slice().sort((a, b) => a.ab.localeCompare(b.ab));
+    return sort.filter(j => j.ab <= md).pop() || sort[sort.length - 1];      // vor dem ersten Beginn: die letzte (Winter)
+  }
+
+  /** Alle offenen Aufträge mit App (für die Heute-Leiste und die Startseite) */
+  function offeneAuftraege() {
+    if (!gestartet()) return [];
+    const W = werte(), out = [];
+    D.q.forEach(q => out.push({ art: q.p === W.lehrerPlatz && q.k ? 'lehrer' : W.fleiss && q.p === W.fleiss.platz.id ? 'fleiss' : 'tag',
+      app: q.a, c: q.c, n: q.n, auftrag: q }));
+    const bi = bewohnerAuftragInfo();
+    if (bi) out.push({ art: 'bewohner', app: bi.auftrag.a, c: bi.auftrag.c, n: bi.auftrag.n, von: bi.bewohner });
+    const gi = gastAuftragInfo();
+    if (gi) out.push({ art: 'gast', app: gi.auftrag.a, c: gi.auftrag.c, n: gi.auftrag.n, von: gi.gast });
+    const w = D.w;
+    if (w && !w.f && (w.a === 'app' || w.p)) out.push({ art: 'woche', app: w.a === 'app' ? w.z : w.p, c: w.c, n: w.n });
+    const rang = { lehrer: 0, tag: 1, fleiss: 2, bewohner: 3, gast: 4, woche: 5 };
+    return out.sort((a, b) => rang[a.art] - rang[b.art]);
   }
 
   // ── Wochenauftrag ───────────────────────────────────────
@@ -537,9 +726,14 @@
     const offen = offeneGeschichten(b);
     const g = offen.length ? offen[0] : Math.floor(Math.random() * Math.max(1, (b.geschichten || []).length));
     const belegt = D.q.map(q => q.a).concat(gastApps());
-    const apps = erlaubt.filter(a => !belegt.includes(a.key));
+    let apps = erlaubt.filter(a => !belegt.includes(a.key));
+    if (!apps.length) apps = erlaubt;
+    const brief = (b.geschichten || [])[g] && b.geschichten[g].en;       // Brief auf Englisch → gern in einer Englisch-App
+    const en = apps.filter(a => a.fach === 'Englisch');
+    if (brief && en.length && Math.random() < W.bewohner.englisch) apps = en;
+    const app = zufall(apps);
     D.n++;
-    D.bq = { i: D.n, b: b.id, g, a: zufall(apps.length ? apps : erlaubt).key, n: W.bewohner.runden, c: 0, m: W.schwelle, d: heute() };
+    D.bq = { i: D.n, b: b.id, g, a: app.key, n: app.runden || W.bewohner.runden, c: 0, m: W.schwelle, d: heute() };
     return true;
   }
   function bewohnerAuftragInfo() {
@@ -548,7 +742,8 @@
     if (!b) return null;
     const gesch = (b.geschichten || [])[D.bq.g] || {};
     const st = gesch.stueck && !D.sa.includes(gesch.stueck.id) ? gesch.stueck : null;
-    return { auftrag: D.bq, bewohner: b, text: gesch.text || '', stueck: st, ansehen: werte().bewohner.ansehen };
+    const brief = appInfo(D.bq.a).fach === 'Englisch' && typeof gesch.en === 'string' && gesch.en ? gesch.en : '';
+    return { auftrag: D.bq, bewohner: b, text: gesch.text || '', brief, stueck: st, ansehen: werte().bewohner.ansehen };
   }
 
   // ── Meilensteine (landen im Sammelbuch) ─────────────────
@@ -640,7 +835,8 @@
   function kannTauschen(platzId) {
     const q = D.q.find(x => x.p === platzId), kl = klasse();
     if (!q || D.rr < 1 || !kl) return false;
-    const platz = werte().plaetze.find(p => p.id === platzId) || { id: platzId, faecher: 'alle' };
+    const platz = werte().plaetze.find(p => p.id === platzId);          // Lehrer- und Fleißzettel: kein Tausch
+    if (!platz) return false;
     return kandidaten(platz, kl, D.q.map(x => x.a)).length > 0;
   }
 
@@ -767,6 +963,7 @@
     D.an += ansehenFuer(gebId, 1);
     bewohnerCheck();
     meilensteinCheck();
+    zielCheck();
     speichern();
     return { ok: true, sofort: erster };
   }
@@ -782,6 +979,7 @@
     D.b[platzId] = [info.gebaeude.id, info.naechste, morgen()];
     D.an += ansehenFuer(info.gebaeude.id, info.naechste);
     meilensteinCheck();
+    zielCheck();
     speichern();
     return { ok: true };
   }
@@ -1013,7 +1211,8 @@
         const belegt = D.q.map(q => q.a).concat(D.bq ? [D.bq.a] : []);
         const apps = erlaubt.filter(x => !belegt.includes(x.key));
         D.n++;
-        z.q = { i: D.n, g: nr, a: zufall(apps.length ? apps : erlaubt).key, n: eventWerte().gast.runden, c: 0, m: W.schwelle, d: heute() };
+        const app = zufall(apps.length ? apps : erlaubt);
+        z.q = { i: D.n, g: nr, a: app.key, n: app.runden || eventWerte().gast.runden, c: 0, m: W.schwelle, d: heute() };
       }
     }
     return JSON.stringify(z) !== vorher;
@@ -1267,22 +1466,27 @@
     D = laden();                                       // anderer Tab (z. B. offenes Dorf) könnte geändert haben
     if (D.fd !== heute()) tagesCheck();
     if (runde.blocked) return;
-    const q = D.q.find(x => x.a === runde.app);
-    let meldung = null, wochenMeldung = null, erfuellt = false;
-    if (q) {
-      if (!zaehlt(runde, q.m)) meldung = 'zuwenig';
+    // Eine App kann gleichzeitig auf dem Brett und auf dem Lehrer-Zettel stehen: beide zählen
+    const passende = D.q.filter(x => x.a === runde.app);
+    let q = passende[0] || null, meldung = null, wochenMeldung = null, erfuellt = false, fleissNeu = false;
+    const rang = { zuwenig: 1, fortschritt: 2, erfuellt: 3 };
+    passende.forEach(x => {
+      let m;
+      if (!zaehlt(runde, x.m)) m = 'zuwenig';
       else {
-        q.c = Math.min(q.n, q.c + 1);
-        if (q.c >= q.n) {
-          q.b = lohn(q).gesamt;                        // Bonus von Sägewerk & Co. zum Zeitpunkt der Erfüllung
-          D.r[q.r] = (D.r[q.r] || 0) + q.b;
-          D.q = D.q.filter(x => x !== q);
+        x.c = Math.min(x.n, x.c + 1);
+        if (x.c >= x.n) {
+          x.b = lohn(x).gesamt;                        // Bonus von Sägewerk & Co. zum Zeitpunkt der Erfüllung
+          D.r[x.r] = (D.r[x.r] || 0) + x.b;
+          D.q = D.q.filter(y => y !== x);
           D.e++;
-          meldung = 'erfuellt'; erfuellt = true;
+          m = 'erfuellt'; erfuellt = true;
           if (D.w && !D.w.f && D.w.a === 'auftraege') wochenMeldung = wocheZaehlen();
-        } else meldung = 'fortschritt';
+        } else m = 'fortschritt';
       }
-    }
+      if (!meldung || rang[m] > rang[meldung]) { meldung = m; q = x; }
+    });
+    if (meldung === 'erfuellt') fleissNeu = fleissCheck(werte());
     if (passtZurWoche(runde)) wochenMeldung = wocheZaehlen();
     if (wochenMeldung === 'woche-erfuellt') erfuellt = true;
     let bewohnerMeldung = null;
@@ -1304,6 +1508,8 @@
     if (!meldung && !wochenMeldung && !bewohnerMeldung && !ev.gast && !ev.zeilen.length) return;
     meilensteinCheck();
     speichern();
+    if (fleissNeu) ev.zeilen.push('💪 Alle Tageszettel geschafft! Am Brett hängt ein Fleißzettel.');
+    if (erfuellt) { const zz = zielZeile(); if (zz) ev.zeilen.push(zz); }
     const extra = ev.zeilen.map(z => `<small class="ev">${z}</small>`).join('');
     const gross = meldung === 'erfuellt' || wochenMeldung === 'woche-erfuellt' || (bewohnerMeldung && bewohnerMeldung.art === 'bewohner-erfuellt') || (ev.gast && ev.gast.art === 'gast-erfuellt');
     if (chZeilen.geschafft && !gross) { toast('challenge-erfuellt', null, null, extra); return; }
@@ -1461,6 +1667,7 @@
     gastAuftragInfo, sucheInfo, gefunden, kalenderInfo, tuerOeffnen,
     landschaftListe, landschaftAktiv, dorfDekoListe, bedingungOk, bedingungText, gebaeudeStufe,
     challengeListe, challengeWerte, aktuelleChallenge, challengeInfo, trophaeen, marktInfo, marktTausch,
+    zielSetzen, zielWeg, zielInfo, bauMoeglich, jahreszeit, offeneAuftraege, lehrerInfo, rundenFuer, fehlenderRohstoff,
     onChange(fn) { listeners.push(fn); },
     onRunde(fn)  { rundenHandler.push(fn); },
     _saeubern: saeubern, _leer: leer, _tageZwischen: tageZwischen,
