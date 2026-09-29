@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Lernwelt · Sync-Test</title>
+<style>
+  :root { --bg:#0f0e1a; --panel:#1a1830; --line:#2e2b4d; --text:#ecebf5; --muted:#9d9abf; --gold:#e6a817; --indigo:#818cf8; --ok:#4ade80; --err:#f87171; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font:16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 680px; margin: 0 auto; padding: 2rem 1.2rem 4rem; }
+  h1 { font-size: 1.5rem; margin: 0 0 .3rem; color: var(--gold); }
+  p { color: var(--muted); margin: 0 0 1.4rem; }
+  .row { display:flex; gap:.6rem; flex-wrap:wrap; margin-bottom:1.2rem; }
+  input { flex:1 1 220px; padding:.7rem .9rem; border-radius:10px; border:1px solid var(--line); background:var(--panel); color:var(--text); font:inherit; }
+  button { padding:.7rem 1.2rem; border-radius:10px; border:0; background:var(--indigo); color:#0f0e1a; font:inherit; font-weight:700; cursor:pointer; }
+  button:disabled { opacity:.5; cursor:default; }
+  button:focus-visible, input:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+  ol { list-style:none; padding:0; margin:0; border:1px solid var(--line); border-radius:12px; overflow:hidden; }
+  li { display:grid; grid-template-columns: 1.6rem 1fr; gap:.6rem; padding:.65rem .9rem; border-top:1px solid var(--line); background:var(--panel); }
+  li:first-child { border-top:0; }
+  li .ic { font-weight:800; }
+  li.ok .ic { color:var(--ok); } li.err .ic { color:var(--err); } li.run .ic { color:var(--muted); }
+  li small { display:block; color:var(--muted); word-break:break-word; }
+  #fazit { margin-top:1.2rem; font-weight:700; }
+  #fazit.ok { color:var(--ok); } #fazit.err { color:var(--err); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Pass-Sicherung testen</h1>
+  <p>Prüft den Sync-Teil des Workers. Legt die Gruppe „Sync-Test“ mit einem Code an, spielt Speichern, Holen und Konflikte durch und löscht die Gruppe danach wieder.</p>
+
+  <div class="row">
+    <label for="pw" style="position:absolute;left:-9999px">Admin-Passwort</label>
+    <input id="pw" type="password" placeholder="Admin-Passwort" autocomplete="current-password">
+    <button type="button" id="start">Test starten</button>
+  </div>
+
+  <ol id="log" aria-live="polite"></ol>
+  <div id="fazit" role="status"></div>
+</main>
+
+<script>
+'use strict';
+const W = 'https://lern-apps-config.bennigeitner.workers.dev';
+const logEl = document.getElementById('log');
+
+const hex = b => Array.from(b, x => x.toString(16).padStart(2, '0')).join('');
+const zufall = n => crypto.getRandomValues(new Uint8Array(n));
+const fromHex = h => Uint8Array.from(h.match(/../g), x => parseInt(x, 16));
+const sha256hex = async b => hex(new Uint8Array(await crypto.subtle.digest('SHA-256', b)));
+const b64url = b => btoa(String.fromCharCode(...b)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+
+async function post(pfad, body, token) {
+  const headers = { 'Content-Type': 'application/json' };
+  if (token) headers.Authorization = 'Bearer ' + token;
+  const r = await fetch(W + pfad, { method: 'POST', headers, body: body === undefined ? undefined : JSON.stringify(body) });
+  let d = {}; try { d = await r.json(); } catch (e) {}
+  return { status: r.status, d };
+}
+
+function zeile(text) {
+  const li = document.createElement('li');
+  li.className = 'run';
+  li.innerHTML = '<span class="ic">…</span><span></span>';
+  li.lastChild.textContent = text;
+  logEl.appendChild(li);
+  return {
+    ok(info)  { li.className = 'ok';  li.firstChild.textContent = '✓'; if (info) add(info); },
+    err(info) { li.className = 'err'; li.firstChild.textContent = '✗'; if (info) add(info); },
+  };
+  function add(info) { const s = document.createElement('small'); s.textContent = info; li.lastChild.appendChild(s); }
+}
+
+async function schritt(text, fn) {
+  const z = zeile(text);
+  try {
+    const info = await fn();
+    z.ok(info);
+    return true;
+  } catch (e) {
+    z.err(e.message || String(e));
+    return false;
+  }
+}
+const pruef = (bed, msg) => { if (!bed) throw new Error(msg); };
+
+document.getElementById('start').addEventListener('click', async () => {
+  const btn = document.getElementById('start');
+  const fazit = document.getElementById('fazit');
+  logEl.innerHTML = ''; fazit.textContent = ''; fazit.className = '';
+  btn.disabled = true;
+
+  let token = '', gruppeId = '', fehler = 0;
+  const id = hex(zufall(16)), auth = hex(zufall(32));
+  const authHash = await sha256hex(fromHex(auth));
+  const blobA = b64url(zufall(300)), blobB = b64url(zufall(300));
+  const lauf = async (t, f) => { if (!await schritt(t, f)) fehler++; };
+
+  try {
+    const angemeldet = await schritt('Anmelden', async () => {
+      const r = await fetch(W + '/login', { method: 'POST', headers: { Authorization: 'Bearer ' + document.getElementById('pw').value } });
+      const d = await r.json().catch(() => ({}));
+      pruef(r.ok && d.token, d.error || 'HTTP ' + r.status);
+      token = d.token;
+    });
+    if (!angemeldet) { fehler++; return; }
+
+    const angelegt = await schritt('Gruppe „Sync-Test“ mit einem Code anlegen', async () => {
+      const { status, d } = await post('/sync/admin/gruppe-anlegen', { name: 'Sync-Test', eintraege: [{ nr: 1, id, authHash }] }, token);
+      pruef(status === 200 && d.gruppeId, d.error || 'HTTP ' + status);
+      gruppeId = d.gruppeId;
+    });
+    if (!angelegt) { fehler++; return; }
+
+    await lauf('Leere Karte holen → rev 0', async () => {
+      const { status, d } = await post('/sync/holen', { id, auth });
+      pruef(status === 200 && d.rev === 0 && d.blob === null, d.error || JSON.stringify(d));
+    });
+
+    await lauf('Ersten Stand speichern → rev 1', async () => {
+      const { status, d } = await post('/sync/speichern', { id, auth, baseRev: 0, score: 100, blob: blobA });
+      pruef(status === 200 && d.rev === 1, d.error || JSON.stringify(d));
+    });
+
+    await lauf('Holen liefert den gespeicherten Stand', async () => {
+      const { status, d } = await post('/sync/holen', { id, auth });
+      pruef(status === 200 && d.rev === 1 && d.blob === blobA && d.score === 100, d.error || 'Stand stimmt nicht');
+    });
+
+    await lauf('Holen mit gleicher rev → „unverändert“', async () => {
+      const { status, d } = await post('/sync/holen', { id, auth, seitRev: 1 });
+      pruef(status === 200 && d.unveraendert === true, JSON.stringify(d));
+    });
+
+    await lauf('Zu schnelles Speichern wird gebremst (429)', async () => {
+      const { status, d } = await post('/sync/speichern', { id, auth, baseRev: 1, score: 150, blob: blobB });
+      pruef(status === 429 && d.warteMs > 0, 'Erwartet 429, bekam ' + status);
+      return `warten: ${Math.ceil(d.warteMs / 1000)} s`;
+    });
+
+    await schritt('10 Sekunden warten …', () => new Promise(r => setTimeout(r, 10500)));
+
+    await lauf('Speichern mit veralteter rev → Konflikt mit Server-Stand', async () => {
+      const { status, d } = await post('/sync/speichern', { id, auth, baseRev: 0, score: 50, blob: blobB });
+      pruef(status === 409 && d.konflikt && d.rev === 1 && d.blob === blobA, 'Erwartet 409, bekam ' + status);
+    });
+
+    await lauf('Speichern mit aktueller rev → rev 2', async () => {
+      const { status, d } = await post('/sync/speichern', { id, auth, baseRev: 1, score: 150, blob: blobB });
+      pruef(status === 200 && d.rev === 2, d.error || JSON.stringify(d));
+    });
+
+    await lauf('Falsches Token wird abgelehnt (403)', async () => {
+      const { status } = await post('/sync/holen', { id, auth: hex(zufall(32)) });
+      pruef(status === 403, 'Erwartet 403, bekam ' + status);
+    });
+
+    await lauf('Unbekannter Code wird gleich abgelehnt (403)', async () => {
+      const { status } = await post('/sync/holen', { id: hex(zufall(16)), auth });
+      pruef(status === 403, 'Erwartet 403, bekam ' + status);
+    });
+
+    await lauf('Admin-Übersicht zeigt den Code als verbunden', async () => {
+      const { status, d } = await post('/sync/admin/gruppen', {}, token);
+      const g = (d.gruppen || []).find(x => x.id === gruppeId);
+      const c = g && g.codes.find(x => x.id === id);
+      pruef(status === 200 && c && c.verbundenAm && c.letzteSync, d.error || 'Code nicht gefunden');
+      return `${(d.gruppen || []).length} Gruppe(n) insgesamt`;
+    });
+
+    await lauf('Admin-Endpunkte ohne Anmeldung gesperrt (401)', async () => {
+      const { status } = await post('/sync/admin/gruppen', {});
+      pruef(status === 401, 'Erwartet 401, bekam ' + status);
+    });
+  } finally {
+    if (gruppeId) {
+      await lauf('Test-Gruppe löschen', async () => {
+        const { status, d } = await post('/sync/admin/gruppe-loeschen', { gruppeId }, token);
+        pruef(status === 200, d.error || 'HTTP ' + status);
+      });
+      await lauf('Gelöschter Code ist ungültig (403)', async () => {
+        const { status } = await post('/sync/holen', { id, auth });
+        pruef(status === 403, 'Erwartet 403, bekam ' + status);
+      });
+    }
+    fazit.className = fehler ? 'err' : 'ok';
+    fazit.textContent = fehler ? `${fehler} Prüfung(en) fehlgeschlagen.` : 'Alles in Ordnung – Etappe 1 abgenommen.';
+    btn.disabled = false;
+  }
+});
+</script>
+</body>
+</html>
