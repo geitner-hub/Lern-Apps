@@ -19,9 +19,10 @@ manifest.webmanifest  App-Symbol (Anleitung: APP-SYMBOL.md)
 apps/mathe/  apps/englisch/  apps/gpg/   Lern-Apps nach Fach
 apps/vorlage/app-template.html          Vorlage für neue Apps
 spiele/               RUN!, Tower Defense, Mein Dorf (dorf.html), Tauziehen-Duell (tauziehen.html), Wort des Tages (wort-des-tages.html),
-                      Zauberwort (zauberwort.html)
+                      Zauberwort (zauberwort.html), Kitchen-Chaos (kitchen-chaos.html)
 daten/                vokabeln5.json, vokabeln6.json, lernwelt-inhalte.json, dorf-inhalte.json,
                       woerter-en.json (Prüfliste fürs Wort des Tages, ENABLE-Wortliste, gemeinfrei)
+                      kitchen-chaos.json (Schauplätze, Zutaten, Satzrahmen, Stufen)
 gemeinsam/            Code, den alle Seiten nutzen (siehe unten)
 fonts/ icons/ vendor/ Schriften, Symbole, fremde Bibliotheken
 cloudflare/           Worker-Quelltext und Anleitung
