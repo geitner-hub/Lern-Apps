@@ -423,7 +423,7 @@
       "fach": "GPG",
       "emoji": "🧭",
       "beschreibung": "",
-      "hidden": false,
+      "hidden": true,
       "klassen": [
         6
       ],
