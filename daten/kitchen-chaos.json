@@ -1,0 +1,449 @@
+{
+ "hinweis": "Kitchen-Chaos: Schauplätze, Zutaten (emoji, en, pl = Plural, de, mass/massPl = Maßangabe für Unzählbares, buch = Vokabel aus dem Englischbuch), Satzrahmen und Stufen. {order} = Bestellung, {Order} = Bestellung mit großem Anfangsbuchstaben.",
+ "orte": [
+  {
+   "id": "cafe",
+   "name": "Café",
+   "emoji": "☕",
+   "farbe": "#7c4a2d",
+   "wand": "#f3d9b1",
+   "items": [
+    "tea",
+    "coffee",
+    "milk",
+    "juice",
+    "water",
+    "lemonade",
+    "cake",
+    "biscuit",
+    "icecream",
+    "chocolate",
+    "cupcake",
+    "doughnut",
+    "pancake",
+    "croissant"
+   ]
+  },
+  {
+   "id": "imbiss",
+   "name": "Snack Bar",
+   "emoji": "🍔",
+   "farbe": "#b91c1c",
+   "wand": "#fde2e2",
+   "items": [
+    "chips",
+    "soup",
+    "salad",
+    "burger",
+    "hotdog",
+    "sandwich",
+    "pizza",
+    "rice",
+    "noodles",
+    "popcorn",
+    "taco",
+    "egg",
+    "water",
+    "juice"
+   ]
+  },
+  {
+   "id": "markt",
+   "name": "Market",
+   "emoji": "🧺",
+   "farbe": "#15803d",
+   "wand": "#dcfce7",
+   "items": [
+    "apple",
+    "banana",
+    "orange",
+    "pear",
+    "lemon",
+    "strawberry",
+    "cherry",
+    "tomato",
+    "carrot",
+    "potato",
+    "cucumber",
+    "bread",
+    "cheese",
+    "eggs",
+    "corn",
+    "watermelon"
+   ]
+  }
+ ],
+ "items": {
+  "tea": {
+   "emoji": "🍵",
+   "en": "tea",
+   "de": "Tee",
+   "mass": "a cup of",
+   "massPl": "cups of",
+   "buch": "vok5:unit5"
+  },
+  "coffee": {
+   "emoji": "☕",
+   "en": "coffee",
+   "de": "Kaffee",
+   "mass": "a cup of",
+   "massPl": "cups of",
+   "buch": "vok5:unit5"
+  },
+  "milk": {
+   "emoji": "🥛",
+   "en": "milk",
+   "de": "Milch",
+   "mass": "a glass of",
+   "massPl": "glasses of",
+   "buch": "vok5:unit6"
+  },
+  "juice": {
+   "emoji": "🧃",
+   "en": "juice",
+   "de": "Saft",
+   "mass": "a glass of",
+   "massPl": "glasses of",
+   "buch": "vok5:unit5"
+  },
+  "water": {
+   "emoji": "💧",
+   "en": "water",
+   "de": "Wasser",
+   "mass": "a bottle of",
+   "massPl": "bottles of",
+   "buch": "vok5:unit5"
+  },
+  "lemonade": {
+   "emoji": "🥤",
+   "en": "lemonade",
+   "de": "Limonade",
+   "mass": "a glass of",
+   "massPl": "glasses of",
+   "buch": "vok6:unit2"
+  },
+  "cake": {
+   "emoji": "🍰",
+   "en": "cake",
+   "de": "Kuchen",
+   "mass": "a piece of",
+   "massPl": "pieces of",
+   "buch": "vok5:unit5"
+  },
+  "biscuit": {
+   "emoji": "🍪",
+   "en": "biscuit",
+   "de": "Keks",
+   "pl": "biscuits",
+   "buch": "vok6:unit2"
+  },
+  "icecream": {
+   "emoji": "🍦",
+   "en": "ice cream",
+   "de": "Eis",
+   "mass": "a scoop of",
+   "massPl": "scoops of",
+   "buch": "vok5:unit6"
+  },
+  "chocolate": {
+   "emoji": "🍫",
+   "en": "chocolate",
+   "de": "Schokolade",
+   "mass": "a bar of",
+   "massPl": "bars of",
+   "buch": "vok5:unit6"
+  },
+  "cupcake": {
+   "emoji": "🧁",
+   "en": "cupcake",
+   "de": "Törtchen",
+   "pl": "cupcakes"
+  },
+  "doughnut": {
+   "emoji": "🍩",
+   "en": "doughnut",
+   "de": "Donut",
+   "pl": "doughnuts"
+  },
+  "pancake": {
+   "emoji": "🥞",
+   "en": "pancake",
+   "de": "Pfannkuchen",
+   "pl": "pancakes"
+  },
+  "croissant": {
+   "emoji": "🥐",
+   "en": "croissant",
+   "de": "Croissant",
+   "pl": "croissants"
+  },
+  "chips": {
+   "emoji": "🍟",
+   "en": "chips",
+   "de": "Pommes frites",
+   "mass": "a portion of",
+   "massPl": "portions of",
+   "buch": "vok5:unit5"
+  },
+  "soup": {
+   "emoji": "🍲",
+   "en": "soup",
+   "de": "Suppe",
+   "mass": "a bowl of",
+   "massPl": "bowls of",
+   "buch": "vok5:unit5"
+  },
+  "salad": {
+   "emoji": "🥗",
+   "en": "salad",
+   "de": "Salat",
+   "pl": "salads",
+   "buch": "vok5:unit5"
+  },
+  "burger": {
+   "emoji": "🍔",
+   "en": "burger",
+   "de": "Burger",
+   "pl": "burgers"
+  },
+  "hotdog": {
+   "emoji": "🌭",
+   "en": "hot dog",
+   "de": "Hotdog",
+   "pl": "hot dogs"
+  },
+  "sandwich": {
+   "emoji": "🥪",
+   "en": "sandwich",
+   "de": "Sandwich",
+   "pl": "sandwiches"
+  },
+  "pizza": {
+   "emoji": "🍕",
+   "en": "pizza",
+   "de": "Pizza",
+   "mass": "a slice of",
+   "massPl": "slices of"
+  },
+  "rice": {
+   "emoji": "🍚",
+   "en": "rice",
+   "de": "Reis",
+   "mass": "a bowl of",
+   "massPl": "bowls of"
+  },
+  "noodles": {
+   "emoji": "🍜",
+   "en": "noodles",
+   "de": "Nudeln",
+   "mass": "a bowl of",
+   "massPl": "bowls of"
+  },
+  "popcorn": {
+   "emoji": "🍿",
+   "en": "popcorn",
+   "de": "Popcorn",
+   "mass": "a bag of",
+   "massPl": "bags of"
+  },
+  "taco": {
+   "emoji": "🌮",
+   "en": "taco",
+   "de": "Taco",
+   "pl": "tacos"
+  },
+  "egg": {
+   "emoji": "🍳",
+   "en": "fried egg",
+   "de": "Spiegelei",
+   "pl": "fried eggs"
+  },
+  "apple": {
+   "emoji": "🍎",
+   "en": "apple",
+   "de": "Apfel",
+   "pl": "apples",
+   "buch": "vok5:unit6"
+  },
+  "banana": {
+   "emoji": "🍌",
+   "en": "banana",
+   "de": "Banane",
+   "pl": "bananas",
+   "buch": "vok5:unit2"
+  },
+  "orange": {
+   "emoji": "🍊",
+   "en": "orange",
+   "de": "Orange",
+   "pl": "oranges",
+   "buch": "vok5:unit5"
+  },
+  "pear": {
+   "emoji": "🍐",
+   "en": "pear",
+   "de": "Birne",
+   "pl": "pears"
+  },
+  "lemon": {
+   "emoji": "🍋",
+   "en": "lemon",
+   "de": "Zitrone",
+   "pl": "lemons"
+  },
+  "strawberry": {
+   "emoji": "🍓",
+   "en": "strawberry",
+   "de": "Erdbeere",
+   "pl": "strawberries"
+  },
+  "cherry": {
+   "emoji": "🍒",
+   "en": "cherry",
+   "de": "Kirsche",
+   "pl": "cherries"
+  },
+  "tomato": {
+   "emoji": "🍅",
+   "en": "tomato",
+   "de": "Tomate",
+   "pl": "tomatoes"
+  },
+  "carrot": {
+   "emoji": "🥕",
+   "en": "carrot",
+   "de": "Möhre, Karotte",
+   "pl": "carrots",
+   "buch": "vok6:unit3"
+  },
+  "potato": {
+   "emoji": "🥔",
+   "en": "potato",
+   "de": "Kartoffel",
+   "pl": "potatoes",
+   "buch": "vok6:unit2"
+  },
+  "cucumber": {
+   "emoji": "🥒",
+   "en": "cucumber",
+   "de": "Gurke",
+   "pl": "cucumbers"
+  },
+  "bread": {
+   "emoji": "🍞",
+   "en": "bread",
+   "de": "Brot",
+   "mass": "a loaf of",
+   "massPl": "loaves of",
+   "buch": "vok6:unit2"
+  },
+  "cheese": {
+   "emoji": "🧀",
+   "en": "cheese",
+   "de": "Käse",
+   "mass": "a piece of",
+   "massPl": "pieces of",
+   "buch": "vok5:unit5"
+  },
+  "eggs": {
+   "emoji": "🥚",
+   "en": "egg",
+   "de": "Ei",
+   "pl": "eggs"
+  },
+  "corn": {
+   "emoji": "🌽",
+   "en": "corn cob",
+   "de": "Maiskolben",
+   "pl": "corn cobs"
+  },
+  "watermelon": {
+   "emoji": "🍉",
+   "en": "watermelon",
+   "de": "Wassermelone",
+   "pl": "watermelons"
+  }
+ },
+ "zahlen": [
+  "a",
+  "one",
+  "two",
+  "three",
+  "four",
+  "five",
+  "six"
+ ],
+ "saetze": {
+  "1": [
+   "{Order}, please.",
+   "Can I have {order}, please?",
+   "Hi! {Order}, please."
+  ],
+  "2": [
+   "Can I have {order}, please?",
+   "{Order}, please!",
+   "I'd like {order}, please."
+  ],
+  "3": [
+   "I'd like {order}, please.",
+   "Can I have {order}, please?",
+   "Hello! {Order} for me, please."
+  ],
+  "4": [
+   "Could I have {order}, please?",
+   "I'll have {order}, please.",
+   "Hi! I'd like {order}, please.",
+   "{Order}, please. Thank you!"
+  ]
+ },
+ "stufen": {
+  "1": {
+   "name": "Stufe 1",
+   "teile": [
+    1,
+    1
+   ],
+   "menge": [
+    1,
+    1
+   ],
+   "geduld": 45
+  },
+  "2": {
+   "name": "Stufe 2",
+   "teile": [
+    1,
+    1
+   ],
+   "menge": [
+    2,
+    4
+   ],
+   "geduld": 50
+  },
+  "3": {
+   "name": "Stufe 3",
+   "teile": [
+    2,
+    2
+   ],
+   "menge": [
+    1,
+    3
+   ],
+   "geduld": 60
+  },
+  "4": {
+   "name": "Stufe 4",
+   "teile": [
+    2,
+    3
+   ],
+   "menge": [
+    1,
+    4
+   ],
+   "geduld": 70
+  }
+ }
+}
