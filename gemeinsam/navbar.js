@@ -47,6 +47,20 @@
     sc.src = BASE + 'dorf-kern.js';
     document.head.appendChild(sc);
   })();
+      // Automatische Pass-Sicherung (Sicherungskarte): erst sync-code.js, dann sync.js
+    (function loadSync() {
+      if (window.LernSync || document.getElementById('lw-sync-code-script') || !BASE) return;
+      const a = document.createElement('script');
+      a.id = 'lw-sync-code-script';
+      a.src = BASE + 'sync-code.js';
+      a.onload = () => {
+        const b = document.createElement('script');
+        b.id = 'lw-sync-script';
+        b.src = BASE + 'sync.js';
+        document.head.appendChild(b);
+      };
+      document.head.appendChild(a);
+    })();
   if ('serviceWorker' in navigator && ROOT) {
     window.addEventListener('load', () => navigator.serviceWorker.register(ROOT + 'sw.js').catch(() => {}));
   }
