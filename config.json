@@ -437,7 +437,7 @@
       "fach": "Allgemein",
       "emoji": "🍺",
       "beschreibung": "",
-      "hidden": true,
+      "hidden": false,
       "klassen": [],
       "customTags": [],
       "aod": false
