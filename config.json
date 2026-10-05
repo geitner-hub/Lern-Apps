@@ -193,9 +193,9 @@
     {
       "name": "Rechen-Arena",
       "datei": "apps/mathe/rechen-arena.html",
-      "fach": "Mathematik",
+      "fach": "Allgemein",
       "emoji": "🧮",
-      "beschreibung": "Rechen-Spiele: Knacke deinen Rekord!",
+      "beschreibung": "Knacke deinen Rekord in verschiedenen Spielen!",
       "hidden": false,
       "klassen": [
         5,
