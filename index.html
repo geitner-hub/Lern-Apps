@@ -2,6 +2,7 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8"/>
+  <script src="gemeinsam/umgebung.js"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Lernwelt</title>
   <link rel="manifest" href="manifest.webmanifest">
@@ -1159,6 +1160,12 @@ function syncVerbindenHTML() {
     </details>`;
 }
 
+// Versionsanzeige (Infrastruktur Etappe 0): welcher Stand läuft auf diesem iPad?
+function versionZeile() {
+  const v = (window.LW && LW.versionText) ? LW.versionText() : '';
+  return v ? `<p class="lw-p" id="lw-version" style="margin-top:.8rem;color:var(--muted);font-size:.7rem;text-align:center">Lernwelt ${escHtml(v)}</p>` : '';
+}
+
 function passViewSicherung() {
   const s = syncInfo();
   if (s && s.verbunden && !s.ungueltig) {
@@ -1171,6 +1178,7 @@ function passViewSicherung() {
         <a class="lw-btn" href="sync-karte.html" style="text-decoration:none">🖨 Meine Karte drucken</a>
       </div>
       <div class="lw-msg" id="sync-msg"></div>
+      ${versionZeile()}
     </div>`;
   }
   return `
@@ -1183,6 +1191,7 @@ function passViewSicherung() {
         <p class="lw-p" style="margin-top:.6rem;color:var(--muted);font-size:.78rem">Noch keine Karte? Frag deine Lehrkraft.</p>
       </div>
       <p class="lw-p" style="margin-top:.4rem;color:var(--muted);font-size:.74rem">Tipp: Öffne die Lernwelt über das Symbol auf dem Home-Bildschirm – dort ist dein Pass am besten aufgehoben.</p>
+      ${versionZeile()}
     </div>`;
 }
 

@@ -2,6 +2,7 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8"/>
+  <script src="gemeinsam/umgebung.js"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Admin – Lernwelt</title>
   <link rel="stylesheet" href="gemeinsam/fonts.css">
@@ -303,7 +304,7 @@
 <!-- ══ APP ══ -->
 <div id="app">
   <div class="topbar">
-    <div class="topbar-wordmark">🧭 <span>Lern<em>welt</em></span> <span style="font-size:.7rem;color:var(--muted);font-family:'Nunito',sans-serif;font-weight:700;margin-left:.2rem">Admin</span></div>
+    <div class="topbar-wordmark">🧭 <span>Lern<em>welt</em></span> <span style="font-size:.7rem;color:var(--muted);font-family:'Nunito',sans-serif;font-weight:700;margin-left:.2rem">Admin</span> <span id="lw-version" title="Stand der Lernwelt (sw.js / umgebung.js)" style="font-size:.66rem;color:var(--muted);font-family:'Nunito',sans-serif;font-weight:700;margin-left:.35rem;padding:.1rem .45rem;border:1px solid var(--border, rgba(255,255,255,.15));border-radius:99px"></span></div>
     <div class="topbar-actions">
       <span id="sync-status">–</span>
       <a href="index.html" class="btn">← Zur Seite</a>
@@ -529,6 +530,10 @@
 <script src="gemeinsam/qrcode.js"></script>
 <script src="gemeinsam/shared.js"></script>
 <script src="gemeinsam/config-api.js"></script>
+<script>
+  // Versionsanzeige (Infrastruktur Etappe 0)
+  (function () { const el = document.getElementById('lw-version'); if (el) el.textContent = (window.LW && LW.versionText) ? LW.versionText() : 'Version ?'; })();
+</script>
 <script src="gemeinsam/pass.js"></script>
 <script src="gemeinsam/aufgaben.js"></script>
 <script src="gemeinsam/avatar3d.js"></script>

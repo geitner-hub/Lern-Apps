@@ -7,11 +7,18 @@
 //  gesehene Kopie verwendet. Große, unveränderliche Dateien
 //  (three.js, Schriften, Symbole) kommen direkt aus dem Speicher.
 //
-//  Nach einer Änderung an DIESER Datei VERSION erhöhen.
+//  Bei jeder Änderung an geladenen Dateien VERSION erhöhen –
+//  und LW.VERSION in gemeinsam/umgebung.js genauso (pruefen.py prüft das).
+//
+//  Live und Testumgebung (Lern-Apps-test) liegen unter derselben Adresse
+//  und teilen sich den Offline-Speicher. Deshalb hat jede Umgebung ihr
+//  eigenes Präfix und räumt nur ihre eigenen Speicher auf.
 // ═══════════════════════════════════════════════════════
-const VERSION = 'lernwelt-v21';  // v21: automatische Pass-Sicherung (sync-code.js, sync.js)
+const VERSION = 'v22';  // v22: Infrastruktur Etappe 0 (umgebung.js, getrennte Testumgebung)
+const PRAEFIX = /\/[^/]*-test\/$/i.test(new URL(self.registration.scope).pathname) ? 'lwtest-v' : 'lernwelt-v';
+const CACHE   = PRAEFIX + VERSION.replace(/^v/, '');        // z. B. 'lernwelt-v22' (Format wie bisher)
 const START = ['./', 'index.html', 'config.json', 'manifest.webmanifest',
-               'gemeinsam/shared.js', 'gemeinsam/config-api.js', 'gemeinsam/navbar.js', 'gemeinsam/pass.js',
+               'gemeinsam/umgebung.js', 'gemeinsam/shared.js', 'gemeinsam/config-api.js', 'gemeinsam/navbar.js', 'gemeinsam/pass.js',
                'gemeinsam/sync-code.js', 'gemeinsam/sync.js',
                'gemeinsam/avatar3d.js', 'gemeinsam/fonts.css', 'gemeinsam/qrcode.js', 'daten/lernwelt-inhalte.json',
                'gemeinsam/dorf-kern.js', 'gemeinsam/dorf-szene.js', 'daten/dorf-inhalte.json', 'vendor/fflate.min.js',
@@ -27,12 +34,13 @@ const WARTEN_MS = 4000;                        // so lange auf das Netz warten
 
 self.addEventListener('install', e => {
   self.skipWaiting();
-  e.waitUntil(caches.open(VERSION).then(c => Promise.all(START.map(u => c.add(u).catch(() => {})))));
+  e.waitUntil(caches.open(CACHE).then(c => Promise.all(START.map(u => c.add(u).catch(() => {})))));
 });
 
 self.addEventListener('activate', e => {
   e.waitUntil((async () => {
-    for (const k of await caches.keys()) if (k !== VERSION) await caches.delete(k);
+    // nur eigene, ältere Speicher löschen (nie die der anderen Umgebung)
+    for (const k of await caches.keys()) if (k.startsWith(PRAEFIX) && k !== CACHE) await caches.delete(k);
     await self.clients.claim();
   })());
 });
@@ -45,21 +53,22 @@ self.addEventListener('fetch', e => {
 });
 
 async function speicherZuerst(req) {
-  const hit = await caches.match(req, { ignoreSearch: true });
+  const cache = await caches.open(CACHE);
+  const hit = await cache.match(req, { ignoreSearch: true });
   if (hit) return hit;
   const res = await fetch(req);
-  if (res.ok) (await caches.open(VERSION)).put(req, res.clone());
+  if (res.ok) cache.put(req, res.clone());
   return res;
 }
 
 async function netzZuerst(req) {
-  const cache = await caches.open(VERSION);
+  const cache = await caches.open(CACHE);
   const netz = fetch(req).then(res => {
     if (res.ok) cache.put(req, res.clone());
     return res;
   });
-  const alt = () => caches.match(req, { ignoreSearch: true })
-    .then(hit => hit || (req.mode === 'navigate' ? caches.match('index.html') : null));
+  const alt = () => cache.match(req, { ignoreSearch: true })
+    .then(hit => hit || (req.mode === 'navigate' ? cache.match('index.html') : null));
   try {
     const zuLangsam = new Promise(r => setTimeout(r, WARTEN_MS, 'timeout'));
     const erst = await Promise.race([netz, zuLangsam]);

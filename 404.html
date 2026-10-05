@@ -46,7 +46,7 @@
     'vokabeltrainer5.html': 'apps/englisch/vokabeltrainer5.html',
     'vokabeltrainer6.html': 'apps/englisch/vokabeltrainer6.html'
     };
-    var m = location.pathname.match(/^(.*?\/Lern-Apps\/)(.*)$/i);
+    var m = location.pathname.match(/^(.*?\/Lern-Apps(?:-test)?\/)(.*)$/i);
     var root = m ? m[1] : '/';
     var rest = m ? m[2] : location.pathname.replace(/^\//, '');
     var name = rest.split('/').pop();

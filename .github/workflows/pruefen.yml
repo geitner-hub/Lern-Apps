@@ -1,0 +1,23 @@
+# Lernwelt – automatische Prüfung bei jedem Upload (Infrastruktur Etappe 0)
+# Ergebnis: grüner Haken / rotes Kreuz neben dem Commit, Details unter „Actions“.
+name: Lernwelt prüfen
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pruefen:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Prüfskript
+        run: python3 werkzeuge/pruefen.py

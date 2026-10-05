@@ -28,10 +28,14 @@ daten/                vokabeln5.json, vokabeln6.json, lernwelt-inhalte.json, dor
 gemeinsam/            Code, den alle Seiten nutzen (siehe unten)
 fonts/ icons/ vendor/ Schriften, Symbole, fremde Bibliotheken
 cloudflare/           Worker-Quelltext und Anleitung
+werkzeuge/            Prüfskript (pruefen.py), Inventar (inventar.py → INVENTAR.md),
+                      Rauchtest (RAUCHTEST.md), Testumgebung (TESTUMGEBUNG.md)
+.github/workflows/    pruefen.yml – lässt pruefen.py bei jedem Upload laufen (grüner Haken / rotes Kreuz)
 ```
 
 | Datei in `gemeinsam/` | Zweck |
 |---|---|
+| `umgebung.js` | **Erstes Skript jeder Seite.** Live/Test erkennen (`LW.UMGEBUNG`), Version (`LW.VERSION`), Speicher-Register aller Schlüssel, Trennung der Testumgebung |
 | `shared.js` | Gemeinsame Konstanten & Helfer (Fächer, Farben, `escHtml`, `isSafeLink`, QR) – **einzige Quelle** |
 | `config-api.js` | Laden (öffentlich/Admin) und Speichern über den Worker |
 | `navbar.js` | Home-Button + Ergebnisspeicherung, in jeder App am Ende von `<body>`; lädt `pass.js` automatisch |
@@ -58,7 +62,9 @@ in einen anderen Ordner umziehen, ohne dass Fortschritt verloren geht (dann `con
 
 1. Vorlage `apps/vorlage/app-template.html` in den Fach-Ordner kopieren, z. B.
    `apps/mathe/meine-app.html`. Einbinden (für `apps/<fach>/`):
-   im `<head>` `<link rel="stylesheet" href="../../gemeinsam/fonts.css">`,
+   im `<head>` als **erstes Skript** direkt nach `<meta charset>`
+   `<script src="../../gemeinsam/umgebung.js"></script>`,
+   dann `<link rel="stylesheet" href="../../gemeinsam/fonts.css">`,
    am Ende von `<body>` `<script src="../../gemeinsam/navbar.js"></script>`.
    Spiele liegen eine Ebene höher (`spiele/`) und nutzen `../gemeinsam/…`.
    Daten (JSON) aus `daten/` laden, z. B. `fetch('../../daten/vokabeln5.json')`.
@@ -67,6 +73,20 @@ in einen anderen Ordner umziehen, ohne dass Fortschritt verloren geht (dann `con
    (auch `…?parameter=wert` oder `https://…` möglich).
 3. Klassenstufe(n) und Tags über 🏷 setzen – fertig.
 4. Neues Fach mit eigenem Ordner? Einfach `apps/<fach>/` anlegen.
+
+## Sicher hochladen (Infrastruktur)
+
+- **Testumgebung:** Repo `Lern-Apps-test` (geitner-hub.github.io/Lern-Apps-test/). Neues zuerst dort
+  hochladen und prüfen, dann live. Einrichten: `werkzeuge/TESTUMGEBUNG.md`. Dort bekommt jeder
+  Speicherschlüssel automatisch das Präfix `lwtest-`; Admin-Speichern und Cloud-Sicherung sind gesperrt.
+- **Version:** bei jeder Änderung an geladenen Dateien `VERSION` in `sw.js` **und** in
+  `gemeinsam/umgebung.js` gleich erhöhen. Angezeigt im Admin (oben) und im Pass unter „Sicherung“.
+- **Prüfung:** `werkzeuge/pruefen.py` läuft bei jedem Upload (GitHub → Actions). Rot = ansehen, bevor die Kinder üben.
+- **Rauchtest:** nach jedem Upload die Checkliste `werkzeuge/RAUCHTEST.md` (ca. 5 Minuten).
+- **Speicher-Register:** jeder Schlüssel im Gerätespeicher steht in `gemeinsam/umgebung.js` (`SPEICHER`).
+  Neue Schlüssel beginnen mit `lernwelt-`; bestehende Namen nie ändern.
+- **Inventar:** `python3 werkzeuge/inventar.py` erzeugt `werkzeuge/INVENTAR.md` neu (Handspalten bleiben).
+- Upload nachmittags oder abends, nie kurz vor dem Unterricht.
 
 ## Ergebnisse speichern (in Apps)
 

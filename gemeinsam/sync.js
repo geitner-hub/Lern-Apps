@@ -45,6 +45,8 @@
   const MIN_ABSTAND = 11000;                  // Server erlaubt 1× pro 10 s
   const MAX_BLOB = 90000;
   const KEEPALIVE_MAX = 60000;
+  // Testumgebung (Lern-Apps-test): Cloud-Sicherung ist abgeschaltet (siehe umgebung.js)
+  const TEST = !!(window.LW && window.LW.TEST);
 
   const ROOT = new URL('../', (document.currentScript && document.currentScript.src) || location.href).href;   // Hauptordner
   const IST_STARTSEITE = () => !!document.getElementById('pass-section');
@@ -157,6 +159,10 @@
   // ── Worker ───────────────────────────────────────────
   async function post(pfad, body, keepalive) {
     let r;
+    if (TEST) {
+      laufzeit.fehler = 'Testumgebung: Sicherung ist hier abgeschaltet';
+      throw Object.assign(new Error('testumgebung'), { offline: true });
+    }
     try {
       r = await fetch(WORKER_URL + pfad, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -179,6 +185,7 @@
       ungueltig: !!(ST && ST.ungueltig),
       offline: laufzeit.offline,
       fehler: laufzeit.fehler,
+      test: TEST,
     };
   }
   function melden() {
