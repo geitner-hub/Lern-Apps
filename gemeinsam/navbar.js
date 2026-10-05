@@ -12,6 +12,9 @@
 //      skill: 'einmaleins-7', // Kompetenz-Kennung (optional, für später)
 //      inhalt: 'kopf5-mittel' // geübter Stoff für „Meine Themen“ in den Spielen
 //                             // (optional, String oder Array, z. B. 'vok5:unit1/theme1')
+//      thema: 'ma.5.kopf.mittel' // Themen-ID aus daten/katalog.json (optional, String oder Array).
+//                             // Neue Apps melden nur noch thema; alte Apps dürfen inhalt behalten –
+//                             // der Katalog ordnet beides demselben Thema zu.
 //    });
 //
 //  Das war's. Home-Button, Ergebnisanzeige und Lernwelt-Pass
@@ -118,6 +121,8 @@
         history,
         ...(result && result.skill ? { skill: String(result.skill).slice(0, 60) } : {}),
       };
+      const thema = normInhalt(result && result.thema);   // gleiche Prüfung wie inhalt
+      if (thema.length) all[key].thema = thema;
       try { localStorage.setItem(STORE_KEY, JSON.stringify(all)); } catch (e) {}
       updateBadge(all[key]);
       // Signal für Erweiterungen
@@ -131,10 +136,13 @@
         const entry = { key, score, max, seconds };
         const inhalt = normInhalt(result && result.inhalt);
         if (inhalt.length) entry.inhalt = inhalt;
+        if (thema.length) entry.thema = thema;
+        // „Meine Themen“: alte Inhalt-IDs, wenn die App welche schickt, sonst die Themen-IDs
+        const lern = inhalt.length ? inhalt : thema;
         if (window.LernPass) {
           const P = window.LernPass, res = P.award(entry);
           P.toast(res);
-          if (inhalt.length && P.lernstandMelden) P.lernstandMelden(inhalt, pct, max, res.blocked);
+          if (lern.length && P.lernstandMelden) P.lernstandMelden(lern, pct, max, res.blocked);
         }
         else { (window.__lernPassQueue = window.__lernPassQueue || []).push(entry); loadPass(); }
       }

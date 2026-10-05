@@ -41,6 +41,21 @@
   if (window.LernAufgaben) return;
 
   const here = (document.currentScript && document.currentScript.src) || location.href;
+
+  // Inhalts-Katalog mitladen (Themen-IDs → Pools), falls die Seite ihn nicht schon hat
+  (function () {
+    if (window.LernKatalog || document.getElementById('lw-katalog-script')) return;
+    const sc = document.createElement('script');
+    sc.id = 'lw-katalog-script';
+    sc.src = new URL('katalog.js', here).href;
+    document.head.appendChild(sc);
+  })();
+  /** Themen-ID ('ma.5.kopf.mittel') → alte Inhalt-ID ('kopf5-mittel'); alte IDs bleiben, wie sie sind. */
+  function alteForm(id) {
+    if (typeof id !== 'string' || !id.includes('.') || id.includes(':')) return id;
+    const K = window.LernKatalog;
+    return (K && K.inhaltFuer(id)) || id;
+  }
   const MAX_ANTWORT = 22;             // längere Antworten passen nicht aufs Tor
   const BRUECHE = false;              // Bruchaufgaben (Kl. 6) im Spiel? true = wieder einschalten
   const OPTIONEN = 3;
@@ -492,12 +507,12 @@
     const erlaubt = id => POOL_BY_ID[id] && (!k || POOL_BY_ID[id].klasse <= k);
     const ids = [], themen = {}, ganz = new Set();
     const pool = id => { if (!ids.includes(id)) ids.push(id); };
-    starterFuer(sp.starter, k).forEach(id => {
+    starterFuer(sp.starter, k).map(alteForm).forEach(id => {
       if (!erlaubt(id)) return;
       pool(id);
       if (POOL_BY_ID[id].typ === 'vokabeln') ganz.add(id);              // ganzes Vokabelbuch im Starter
     });
-    frei.forEach(fid => {
+    frei.map(alteForm).forEach(fid => {
       const m = /^(vok\d+):(.+)$/.exec(fid);
       if (m) {
         if (!erlaubt(m[1]) || POOL_BY_ID[m[1]].typ !== 'vokabeln') return;

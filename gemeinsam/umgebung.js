@@ -28,7 +28,7 @@
   'use strict';
   if (window.LW && window.LW.UMGEBUNG) return;          // doppeltes Laden verhindern
 
-  const VERSION = 'v22';                                 // ⚙ bei jedem Upload mit sw.js zusammen erhöhen
+  const VERSION = 'v23';                                 // ⚙ bei jedem Upload mit sw.js zusammen erhöhen
 
   // ── Umgebung erkennen ────────────────────────────────
   //  GitHub Pages: erster Pfadteil = Repo-Name (Lern-Apps bzw. Lern-Apps-test)
@@ -56,6 +56,7 @@
     ['lernwelt-sync-hinweis',       'session', 'gemeinsam/sync.js',        'Meldung „Pass wurde aktualisiert“ nach dem Neuladen', false],
     // Konfiguration und Admin
     ['lernwelt-config-cache',       'local',   'gemeinsam/config-api.js',  'Offline-Kopie von config.json', false],
+    ['lernwelt-katalog-cache',      'local',   'gemeinsam/katalog.js',     'Offline-Kopie von daten/katalog.json', false],
     ['lernwelt-config-cache-ts',    'local',   'gemeinsam/config-api.js',  'Zeitpunkt der Offline-Kopie von config.json', false],
     ['lernwelt-admin-schluessel',   'local',   'gemeinsam/config-api.js',  'Admin-Anmeldung (Schlüssel, 7 Tage gültig)', false],
     ['lernwelt-admin-pw',           'session', 'gemeinsam/config-api.js',  'ALT: früher Passwort im Tab, wird nur noch gelöscht', false],

@@ -542,6 +542,7 @@
       dauer:   isFinite(sec) ? Math.round(sec) : null,
       blocked: res.blocked || null,             // 'fast' = Durchklicken, 'invalid' = unbrauchbar
       inhalt:  Array.isArray(r.inhalt) ? r.inhalt.slice() : [],
+      thema:   Array.isArray(r.thema) ? r.thema.slice() : [],   // Themen-IDs (Katalog), falls die App sie schickt
       tag:     dayKey(),
     };
     if (!window.LernDorf) {
@@ -807,13 +808,247 @@
     return out;
   }
 
+
+  // ── Anzeige in Apps (Toast) ─────────────────────────────
+  function toast(res) {
+    if (!document.body || !res) return;
+    let el = document.getElementById('lw-pass-toast');
+    if (!el) {
+      const st = document.createElement('style');
+      st.textContent = `
+        #lw-pass-toast{position:fixed;top:1rem;left:50%;transform:translate(-50%,-140%);z-index:10001;
+          background:#1b1929;color:#f1f0fb;border:1px solid rgba(230,168,23,.45);border-radius:16px;
+          box-shadow:0 12px 40px rgba(0,0,0,.45);padding:.7rem 1.1rem;min-width:220px;max-width:min(92vw,380px);
+          font-family:'Nunito','Segoe UI',sans-serif;transition:transform .35s cubic-bezier(.2,.9,.3,1.2);text-align:center;}
+        #lw-pass-toast.show{transform:translate(-50%,0);}
+        #lw-pass-toast .t-xp{font-family:'Fredoka One','Nunito',sans-serif;font-size:1.5rem;color:#e6a817;line-height:1.1;}
+        #lw-pass-toast .t-lines{font-size:.74rem;color:rgba(241,240,251,.65);margin-top:.25rem;line-height:1.35;}
+        #lw-pass-toast .t-big{font-weight:900;font-size:.95rem;margin-top:.35rem;}
+        #lw-pass-toast .t-bar{height:6px;border-radius:99px;background:rgba(255,255,255,.1);margin-top:.45rem;overflow:hidden;}
+        #lw-pass-toast .t-fill{height:100%;background:linear-gradient(90deg,#6366f1,#e6a817);border-radius:99px;transition:width .6s ease;}
+        @media (prefers-reduced-motion: reduce){#lw-pass-toast{transition:none;}}`;
+      document.head.appendChild(st);
+      el = document.createElement('div');
+      el.id = 'lw-pass-toast';
+      el.setAttribute('role', 'status');
+      el.setAttribute('aria-live', 'polite');
+      document.body.appendChild(el);
+    }
+    const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    let html;
+    if (res.notice) {
+      html = (res.newBadges || []).map(n => `<div class="t-big">${esc(n.badge.icon)} Abzeichen „${esc(n.badge.name)}“!${n.items.length ? ' +' + n.items.length + ' Set-Teil' + (n.items.length > 1 ? 'e' : '') : ''}</div>`).join('');
+    } else if (res.blocked === 'fast') {
+      html = `<div class="t-xp" style="color:#f87171">0 XP</div>
+              <div class="t-lines">Das ging sehr schnell. Nimm dir Zeit für die Aufgaben – dann gibt es XP!</div>`;
+    } else {
+      const lv = res.level;
+      html = `<div class="t-xp">+${res.xp} XP</div>
+              <div class="t-lines">${res.lines.map(esc).join('<br>')}</div>
+              ${res.levelUp ? `<div class="t-big">🎉 Level ${lv.level}: ${esc(lv.title)}!</div>` : ''}
+              ${res.starUp ? `<div class="t-big">${['', '🥉 Bronze', '🥈 Silber', '🥇 Gold'][res.starUp]}-Stern verdient!</div>` : ''}
+              ${res.levelChest ? `<div class="t-big">🎁 Level-Truhe verdient!</div>` : ''}
+              ${res.chest ? `<div class="t-big">🎁 Neue Truhe verdient!</div>` : ''}
+              ${res.eventGift ? `<div class="t-big">${esc(res.eventGift.icon)} ${esc(res.eventGift.geschenk || res.eventGift.name + '-Geschenk')}: eine Truhe für dich!</div>` : ''}
+              ${(res.newBadges || []).map(n => `<div class="t-big">${esc(n.badge.icon)} Abzeichen „${esc(n.badge.name)}“!${n.items.length ? ' +' + n.items.length + ' Set-Teil' + (n.items.length > 1 ? 'e' : '') : ''}</div>`).join('')}
+              <div class="t-bar"><div class="t-fill" style="width:${lv.pct}%"></div></div>
+              <div class="t-lines">Level ${lv.level} · ${lv.into} / ${lv.need} XP</div>`;
+    }
+    el.innerHTML = html;
+    requestAnimationFrame(() => el.classList.add('show'));
+    clearTimeout(el._t);
+    const big = res.levelUp || res.starUp || res.chest || res.eventGift || (res.newBadges && res.newBadges.length);
+    el._t = setTimeout(() => el.classList.remove('show'), big ? 6500 : 4200);
+    avatarForResult(res);
+  }
+
+  // ── Avatar-Auftritt (avatar3d.js wird erst beim ersten Mal geladen) ──
+  let avatarLoad = null;
+  function loadAvatar() {
+    if (window.LernAvatar) return Promise.resolve(window.LernAvatar);
+    if (!avatarLoad) avatarLoad = new Promise((res, rej) => {
+      const s = document.createElement('script');
+      s.src = new URL('avatar3d.js', here).href;
+      s.onload = () => (window.LernAvatar ? res(window.LernAvatar) : rej());
+      s.onerror = () => { avatarLoad = null; rej(); };
+      document.head.appendChild(s);
+    });
+    return avatarLoad;
+  }
+  /** Figur unten rechts zeigen: { text, big, aktion: 'jubeln'|'winken' } */
+  function showAvatar(o) {
+    if (!readSettings().avatar || !S.profile || !S.profile.name) return;
+    loadAvatar().then(A => A.appear(o)).catch(() => {});
+  }
+  // ── Konfetti & Feuerwerk (Canvas, ohne 3D) ──────────────
+  const FARBEN = ['#e6a817', '#f43f5e', '#6366f1', '#22c55e', '#38bdf8', '#f472b6', '#facc15', '#ffffff'];
+  function celebrate(art) {
+    if (!document.body || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
+    const cv = document.createElement('canvas');
+    cv.setAttribute('aria-hidden', 'true');
+    cv.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:10003';
+    document.body.appendChild(cv);
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    const W = innerWidth, H = innerHeight;
+    cv.width = W * dpr; cv.height = H * dpr;
+    const x = cv.getContext('2d'); x.scale(dpr, dpr);
+    const parts = [], rnd = (a, b) => a + Math.random() * (b - a);
+    const scale = Math.min(1, W / 900) * .5 + .5;
+    function konfetti(ox, oy, dir, n) {
+      for (let i = 0; i < n; i++) {
+        const a = -Math.PI / 2 + dir * rnd(.15, .75), v = rnd(9, 17) * scale;
+        parts.push({ k: 'k', x: ox, y: oy, vx: Math.cos(a) * v, vy: Math.sin(a) * v, w: rnd(6, 10), h: rnd(3, 6), r: rnd(0, 6), vr: rnd(-.3, .3),
+                     c: FARBEN[i % FARBEN.length], life: rnd(2.2, 3), t: 0 });
+      }
+    }
+    function knall(ox, oy) {
+      const c = FARBEN[Math.floor(Math.random() * 7)], n = 46;
+      for (let i = 0; i < n; i++) {
+        const a = (i / n) * Math.PI * 2, v = rnd(2.5, 5.5) * scale;
+        parts.push({ k: 'f', x: ox, y: oy, vx: Math.cos(a) * v, vy: Math.sin(a) * v, c: Math.random() < .25 ? '#ffffff' : c, life: rnd(1.1, 1.6), t: 0 });
+      }
+    }
+    const rockets = [];
+    if (art === 'feuerwerk') {
+      for (let i = 0; i < 5; i++) rockets.push({ at: i * .38, x: rnd(W * .15, W * .85), ty: rnd(H * .15, H * .45), y: H + 10, fired: false });
+    } else {
+      konfetti(0, H * .75, 1, 70); konfetti(W, H * .75, -1, 70);
+    }
+    let t0 = performance.now(), last = t0;
+    (function frame(now) {
+      const dt = Math.min((now - last) / 16.7, 3), T = (now - t0) / 1000; last = now;
+      x.clearRect(0, 0, W, H);
+      rockets.forEach(r => {
+        if (r.done || T < r.at) return;
+        r.y -= (r.y - r.ty) * .09 * dt + 2 * dt;
+        x.fillStyle = '#fde68a'; x.fillRect(r.x - 1.5, r.y, 3, 10);
+        if (r.y <= r.ty + 4) { r.done = true; knall(r.x, r.ty); }
+      });
+      for (let i = parts.length - 1; i >= 0; i--) {
+        const p = parts[i];
+        p.t += dt / 60;
+        if (p.t > p.life) { parts.splice(i, 1); continue; }
+        const fade = Math.min(1, (p.life - p.t) * 2.5);
+        x.globalAlpha = fade;
+        if (p.k === 'k') {
+          p.vy += .32 * dt; p.vx *= .985; p.x += p.vx * dt; p.y += p.vy * dt; p.r += p.vr * dt;
+          x.save(); x.translate(p.x, p.y); x.rotate(p.r); x.fillStyle = p.c;
+          x.fillRect(-p.w / 2, -p.h / 2 * Math.abs(Math.cos(p.r * 2)), p.w, p.h * Math.abs(Math.cos(p.r * 2)) + .5); x.restore();
+        } else {
+          p.vy += .06 * dt; p.vx *= .97; p.vy *= .97; p.x += p.vx * dt; p.y += p.vy * dt;
+          x.fillStyle = p.c; x.beginPath(); x.arc(p.x, p.y, 2.2, 0, 6.283); x.fill();
+        }
+      }
+      x.globalAlpha = 1;
+      if (parts.length || rockets.some(r => !r.done)) requestAnimationFrame(frame); else cv.remove();
+    })(t0);
+  }
+
+  const pick = list => list[Math.floor(Math.random() * list.length)];
+  const LOB = {
+    top:  ['Super gemacht! 🌟', 'Wow, stark! 💪', 'Spitze! 🚀', 'Klasse Runde! ⭐'],
+    gut:  ['Toll gemacht! 👍', 'Gute Runde! 😄', 'Richtig gut! ✨'],
+    okay: ['Gut gemacht! 🙂', 'Weiter so! 👏', 'Das wird immer besser!'],
+    mut:  ['Dranbleiben – du schaffst das! 💪', 'Übung macht den Meister! 🙂', 'Probier es gleich nochmal!', 'Jeder Versuch hilft dir! 👍'],
+  };
+  function avatarForResult(res) {
+    if (!res || res.blocked) return;
+    const badges = res.newBadges || [];
+    const perfekt = !res.notice && !res.endless && Number(res.pct) === 100 && Number(res.xp) > 0;
+    if (readSettings().avatar) {
+      if (res.levelUp || badges.length) celebrate('feuerwerk');
+      else if (perfekt || res.starUp === 3 || res.chest || res.eventGift) celebrate('konfetti');
+    }
+    let text = '', big = true;
+    if (res.endless && !res.levelUp && !badges.length && !res.chest && !res.eventGift) {
+      text = res.newDayBest && res.correct > 0 ? pick(['Neuer Tagesrekord! 🏃', 'So weit warst du heute noch nie! 🚀', 'Stark gelaufen! 💪'])
+           : res.correct >= RULES.endlessGoodCorrect ? pick(LOB.gut) : pick(LOB.mut);
+      showAvatar({ text, big: false, aktion: res.correct >= RULES.endlessGoodCorrect ? 'jubeln' : 'winken' });
+      return;
+    }
+    if (res.levelUp) text = `Level ${res.levelUp.level}! 🎉` + (res.levelChest ? ' + Truhe 🎁' : '');
+    else if (badges.length) text = `Abzeichen: ${badges[0].badge.name}! ${badges[0].badge.icon}`;
+    else if (res.starUp) text = ['', 'Bronze-Stern! 🥉', 'Silber-Stern! 🥈', 'Gold-Stern! 🥇'][res.starUp];
+    else if (res.chest) text = 'Neue Truhe! 🎁';
+    else if (res.eventGift) text = `${res.eventGift.icon} Geschenk-Truhe!`;
+    else big = false;
+    if (res.notice && !big) return;
+    const pct = Number(res.pct) || 0;
+    if (!big) text = perfekt ? pick(['Perfekt – alles richtig! 💯', 'Null Fehler! 💯', 'Wahnsinn, alles richtig! 🏆']) : pick(pct >= 90 ? LOB.top : pct >= 70 ? LOB.gut : pct >= 50 ? LOB.okay : LOB.mut);
+    showAvatar({ text, big, aktion: big || pct >= 50 ? 'jubeln' : 'winken' });
+  }
+
+  // ── Darstellung ─────────────────────────────────────────
+  const escA = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  /** Avatar als Bild (wird von avatar3d.js gezeichnet und zwischengespeichert) */
+  function avatarHTML(opts = {}) {
+    let cached = '';
+    try { cached = localStorage.getItem('lernwelt-avatar-bild') || ''; } catch (e) {}
+    if (!/^data:image\/png;base64,[A-Za-z0-9+/=]+$/.test(cached)) cached = '';
+    const lvl = opts.level ? `<span class="pass-lvl">${escA(opts.level)}</span>` : '';
+    return `<div class="pass-avatar${opts.cls ? ' ' + opts.cls : ''}">` +
+      (cached ? `<img data-avatar-bild="portrait" alt="" src="${cached}">` : `<img data-avatar-bild="portrait" alt="" hidden><span class="pa-fb">🧭</span>`) +
+      lvl + `</div>`;
+  }
+  function cardBackground(preview) {
+    const bg = preview !== undefined ? preview : equippedItem('hintergrund');
+    return bg && bg.css ? bg.css : '';
+  }
+  /** Vorschau eines Teils. Hintergründe direkt, alles andere zeichnet avatar3d.js nach. */
+  function itemPreviewHTML(it) {
+    if (!it) return '';
+    if (it.slot === 'hintergrund') return `<span class="it-prev it-bg" style="background:${escA(it.css || '')}">${it.deko || ''}</span>`;
+    return `<span class="it-prev it-3d" data-avatar-thumb="${escA(it.id)}"></span>`;
+  }
+  function itemSourceText(it) {
+    if (it.quelle === 'truhe') return 'Aus Truhen';
+    if (it.quelle === 'start') return 'Startausstattung';
+    if (it.quelle === 'event') { const e = EVENTS.find(x => x.id === it.event); return e ? `${e.icon} Nur im ${e.titel || e.name + '-Event'}` : 'Event'; }
+    if (it.quelle === 'set')   { const b = BADGES.find(x => x.id === it.set); return b ? `${b.icon} Abzeichen „${b.name}“` : 'Abzeichen'; }
+    return '';
+  }
+  function pastSeasons() {
+    const cur = seasonId();
+    return Object.entries(S.seasons).filter(([k, v]) => k < cur && v > 0).sort((a, b) => b[0].localeCompare(a[0]))
+      .map(([k, v]) => ({ id: k, xp: v, ...levelInfo(v) }));
+  }
+
+  // ── Stand eines Themas (Katalog-ID) ─────────────────────
+  //  Liest beide Formen, ohne etwas umzuschreiben: Sterne aus den Ergebnis-Schlüsseln
+  //  der App (S.apps) und „Meine Themen“ aus alten Inhalt-IDs und neuen Themen-IDs.
+  //  Braucht gemeinsam/katalog.js (LernKatalog); ohne Katalog → null.
+  //  → { sterne, best, runden, frei }
+  function themaStand(id) {
+    const K = window.LernKatalog;
+    if (!K || !K.thema(id)) return null;
+    const dateien = K.ergebnisSchluessel(id);
+    let sterne = 0, best = 0, runden = 0, frei = false;
+    if (!K.thema(id).eltern) {                         // Sterne gibt es je App, also nur fürs ganze Thema
+      Object.keys(S.apps).forEach(k => {
+        if (!dateien.includes(k.split('?')[0])) return;
+        sterne = Math.max(sterne, starsFor(k));
+        best = Math.max(best, S.apps[k].best || 0);
+      });
+    }
+    const sp = readSettings().spiele;
+    Object.keys(S.lernstand).forEach(lid => {
+      const z = K.fuerInhalt(lid);
+      if (!z || (z !== id && K.thema(z).eltern !== id)) return;
+      const e = S.lernstand[lid];
+      best = Math.max(best, e.best || 0);
+      runden += e.n || 0;
+      if (erfuellt(e, sp)) frei = true;
+    });
+    return { sterne, best, runden, frei };
+  }
+
   // ── Öffentliche API ─────────────────────────────────────
   window.LernPass = {
     RULES, LEVEL_TITLES, ITEMS, ITEM_BY_ID, BADGES, EVENTS, RARITY, SLOTS, AVATAR,
     get state()   { return S; },
     get settings(){ return readSettings(); },
     get lernstand() { return S.lernstand; },
-    setSettings, setSpiele, lernstandMelden, freigeschaltet, activeEvents, seasonsOn, seasonId, levelXp, pastSeasons,
+    setSettings, setSpiele, lernstandMelden, freigeschaltet, themaStand, activeEvents, seasonsOn, seasonId, levelXp, pastSeasons,
     openChest, equip, equippedItem, owns, ownedCount, checkBadges, badgeProgress, setLook, look,
     avatarHTML, cardBackground, itemPreviewHTML, itemSourceText,
     hasProfile()  { return !!(S.profile && S.profile.name); },
@@ -864,7 +1099,8 @@
     q.splice(0).forEach(r => {
       const res = award(r);
       toast(res);
-      if (r.inhalt) lernstandMelden(r.inhalt, r.max > 0 ? (r.score / r.max) * 100 : 0, r.max, res.blocked);
+      const lern = (Array.isArray(r.inhalt) && r.inhalt.length) ? r.inhalt : r.thema;
+      if (lern) lernstandMelden(lern, r.max > 0 ? (r.score / r.max) * 100 : 0, r.max, res.blocked);
     });
   }
   try { window.dispatchEvent(new CustomEvent('lernpass:ready')); } catch (e) {}

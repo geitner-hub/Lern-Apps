@@ -21,8 +21,11 @@ const CAT_STYLES = {
   "Informatik": { icon: "💻", color: "#06b6d4", color2: "#22d3ee" },
   "GPG":        { icon: "🏛",  color: "#f97316", color2: "#fb923c" },
   "Allgemein":  { icon: "✨", color: "#84cc16", color2: "#a3e635" },
+  "Natur und Technik": { icon: "🔬", color: "#14b8a6", color2: "#2dd4bf" },
+  "DaZ":        { icon: "💬", color: "#ec4899", color2: "#f472b6" },
 };
 // Neues Fach? Nur hier eintragen – Admin (Auswahl, Filter) und Startseite übernehmen es automatisch.
+// Fächer mit Lerninhalten stehen zusätzlich in daten/katalog.json (gleicher Name, pruefen.py vergleicht).
 const FAECHER   = Object.keys(CAT_STYLES);
 const CAT_ICONS = Object.fromEntries(Object.entries(CAT_STYLES).map(([k, v]) => [k, v.icon]));
 const KLASSEN   = [5, 6, 7, 8, 9];
