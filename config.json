@@ -430,17 +430,6 @@
       ],
       "customTags": [],
       "aod": false
-    },
-    {
-      "name": "Trinken",
-      "datei": "partyzentrale/index.html",
-      "fach": "Allgemein",
-      "emoji": "🍺",
-      "beschreibung": "",
-      "hidden": true,
-      "klassen": [],
-      "customTags": [],
-      "aod": false
     }
   ],
   "customTags": [
