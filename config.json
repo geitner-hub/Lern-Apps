@@ -430,6 +430,17 @@
       ],
       "customTags": [],
       "aod": false
+    },
+    {
+      "name": "kopfrechnen neu",
+      "datei": "apps/mathe/kopfrechnen-neu.html?klasse=5",
+      "fach": "Mathematik",
+      "emoji": "📱",
+      "beschreibung": "",
+      "hidden": false,
+      "klassen": [],
+      "customTags": [],
+      "aod": false
     }
   ],
   "customTags": [
