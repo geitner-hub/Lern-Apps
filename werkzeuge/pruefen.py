@@ -207,6 +207,12 @@ if katalog is not None:
     for d in sorted(config_dateien):
         if d.startswith('apps/') and d not in app_themen:
             F(f'Katalog: {d} steht in config.json, hat aber kein Thema in daten/katalog.json')
+    # Etappe 3: Lehrplanbezug, Dauer, Einsatzidee (gelb, wenn ein Thema mit App keinen Lehrplanbezug hat)
+    for f in katalog.get('faecher', []):
+        for b in f.get('bereiche', []):
+            for th in b.get('themen', []):
+                if not str(th.get('lehrplan') or '').strip():
+                    H(f'Katalog: {th.get("id")} hat noch keinen Lehrplanbezug (Feld lehrplan)')
     I(f'Katalog: {len(ids)} Themen und Stufen, {len(app_themen)} Apps zugeordnet')
 
 # ── 7. Budgets ──────────────────────────────────────────

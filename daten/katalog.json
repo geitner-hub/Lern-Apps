@@ -22,9 +22,9 @@
        "ergebnis": [
         "kopfrechnen_kl1.html"
        ],
-       "lehrplan": "",
-       "dauer": null,
-       "einsatz": "",
+       "lehrplan": "Förderstufe – Grundschule M1/2: Zahlen und Operationen (Addition/Subtraktion bis 20 bzw. 100)",
+       "dauer": 5,
+       "einsatz": "Nur für einzelne Kinder mit großen Lücken; im Admin für diese Kinder freigeben",
        "stufen": [
         {
          "id": "ma.1.kopf.leicht",
@@ -51,9 +51,9 @@
        "ergebnis": [
         "kopfrechnen_kl2.html"
        ],
-       "lehrplan": "",
-       "dauer": null,
-       "einsatz": "",
+       "lehrplan": "Förderstufe – Grundschule M1/2: Zahlen und Operationen (Rechnen bis 100, Einmaleins)",
+       "dauer": 5,
+       "einsatz": "Förderung einzelner Kinder, z. B. in der Freiarbeit",
        "stufen": [
         {
          "id": "ma.2.kopf.leicht",
@@ -80,9 +80,9 @@
        "ergebnis": [
         "kopfrechnen_kl3.html"
        ],
-       "lehrplan": "",
-       "dauer": null,
-       "einsatz": "",
+       "lehrplan": "Förderstufe – Grundschule M3/4 1.2: Im Zahlenraum bis zur Million rechnen",
+       "dauer": 5,
+       "einsatz": "Förderung einzelner Kinder, z. B. in der Freiarbeit",
        "stufen": [
         {
          "id": "ma.3.kopf.leicht",
@@ -109,9 +109,9 @@
        "ergebnis": [
         "kopfrechnen_kl4.html"
        ],
-       "lehrplan": "",
-       "dauer": null,
-       "einsatz": "",
+       "lehrplan": "Grundschule M3/4 1.2 als Wiederholung zu M5 LB 1.2 (Grundrechenarten im Kopf)",
+       "dauer": 5,
+       "einsatz": "Wiederholung zu Schuljahresbeginn in Klasse 5; Aufwärmen",
        "stufen": [
         {
          "id": "ma.4.kopf.leicht",
@@ -140,9 +140,9 @@
        "ergebnis": [
         "kopfrechnen.html"
        ],
-       "lehrplan": "",
-       "dauer": null,
-       "einsatz": "",
+       "lehrplan": "M5 LB 1.2 Grundrechenarten im Bereich der natürlichen Zahlen: im Kopf rechnen, überschlagen",
+       "dauer": 5,
+       "einsatz": "Aufwärmen zu Stundenbeginn (eine Runde); Differenzierung über das Niveau",
        "stufen": [
         {
          "id": "ma.5.kopf.leicht",
@@ -171,14 +171,15 @@
        "ergebnis": [
         "kopfrechnen_kl6.html"
        ],
-       "lehrplan": "",
-       "dauer": null,
-       "einsatz": "",
+       "lehrplan": "M6 LB 1 Bruchzahlen und LB 2 Rationale Zahlen (Rechnen mit Brüchen und Dezimalbrüchen); M5 LB 2 Ganze Zahlen",
+       "dauer": 6,
+       "einsatz": "Aufwärmen in Klasse 6; leicht = Stoff der 5. Klasse zur Wiederholung",
        "stufen": [
         {
          "id": "ma.6.kopf.leicht",
          "titel": "leicht",
-         "inhalt": "kopf6-leicht"
+         "inhalt": "kopf6-leicht",
+         "lehrplan": "M5 LB 1.2 und LB 2 (Wiederholung Klasse 5) mit ersten Brüchen"
         },
         {
          "id": "ma.6.kopf.mittel",
@@ -202,9 +203,9 @@
        "ergebnis": [
         "rechen-arena.html"
        ],
-       "lehrplan": "",
-       "dauer": null,
-       "einsatz": ""
+       "lehrplan": "M5 LB 1.2 Grundrechenarten: Automatisierung des Grundschulstoffs (Kopfrechnen)",
+       "dauer": 8,
+       "einsatz": "Aufwärmen oder Belohnung am Stundenende; Zahlenmauern für ruhige Einzelarbeit"
       }
      ]
     },
@@ -222,19 +223,21 @@
        "ergebnis": [
         "einmaleins_tafel.html"
        ],
-       "lehrplan": "",
-       "dauer": null,
-       "einsatz": "",
+       "lehrplan": "Grundlage für M5 LB 1.2 (Einmaleins sicher abrufen); großes Einmaleins als Erweiterung",
+       "dauer": 6,
+       "einsatz": "Kurze tägliche Übung; Profi-Modus für schnelle Kinder",
        "stufen": [
         {
          "id": "ma.5.1x1.klein",
          "titel": "Kleines Einmaleins (1–10)",
-         "inhalt": "1x1-klein"
+         "inhalt": "1x1-klein",
+         "lehrplan": "Grundschule M3/4 (kleines Einmaleins) als Grundlage für M5 LB 1.2"
         },
         {
          "id": "ma.5.1x1.gross",
          "titel": "Großes Einmaleins (11–25)",
-         "inhalt": "1x1-gross"
+         "inhalt": "1x1-gross",
+         "lehrplan": "M5 LB 1.2 Kopfrechnen (großes Einmaleins als Erweiterung)"
         }
        ]
       }
@@ -254,9 +257,9 @@
        "ergebnis": [
         "laengeneinheiten.html"
        ],
-       "lehrplan": "",
-       "dauer": null,
-       "einsatz": ""
+       "lehrplan": "M5 LB 5 Größen im Alltag (Längen km, m, dm, cm, mm umrechnen) und LB 3 (Längeneinheiten beim Umfang)",
+       "dauer": 6,
+       "einsatz": "Übungsphase nach Einführung der Längeneinheiten; Hausaufgabe"
       },
       {
        "id": "ma.5.sachaufgaben-laengen",
@@ -268,9 +271,9 @@
        "ergebnis": [
         "sachaufgaben_laengen.html"
        ],
-       "lehrplan": "",
-       "dauer": null,
-       "einsatz": ""
+       "lehrplan": "M5 LB 5 Größen im Alltag: alltagsnahe Sachaufgaben, in benachbarte Einheiten umrechnen",
+       "dauer": 10,
+       "einsatz": "Anwendung nach dem Umrechnen; Partnerarbeit mit Lösungsweg im Heft"
       }
      ]
     },
@@ -288,9 +291,9 @@
        "ergebnis": [
         "vierecke_unterscheiden.html"
        ],
-       "lehrplan": "",
-       "dauer": null,
-       "einsatz": ""
+       "lehrplan": "M6 LB 3 Geometrische Figuren (Vierecke beschreiben, bestimmen und ordnen) – App ist als Klasse 5 angelegt",
+       "dauer": 12,
+       "einsatz": "Erarbeitung/Sicherung „Haus der Vierecke“ in Klasse 6"
       },
       {
        "id": "ma.5.rechteck",
@@ -302,9 +305,9 @@
        "ergebnis": [
         "rechteck-app.html"
        ],
-       "lehrplan": "",
-       "dauer": null,
-       "einsatz": ""
+       "lehrplan": "M5 LB 4 Flächeninhalt – Rechtecke und LB 3 (Umfang von Vierecken)",
+       "dauer": 12,
+       "einsatz": "Entdeckende Erarbeitung von Umfang und Flächeninhalt; Stationenarbeit"
       }
      ]
     }
@@ -328,9 +331,9 @@
        "ergebnis": [
         "vokabeltrainer5.html"
        ],
-       "lehrplan": "",
-       "dauer": null,
-       "einsatz": "",
+       "lehrplan": "E5 Verfügen über sprachliche Mittel – Wortschatz (Themen der Jahrgangsstufe 5, Lehrwerk Unit für Unit)",
+       "dauer": 8,
+       "einsatz": "Wortschatzarbeit nach jeder Unit; Wiederholung vor Tests; Hausaufgabe",
        "stufen": [
         {
          "id": "en.5.vok.intro",
@@ -376,9 +379,9 @@
        "quelle": {
         "app": "apps/englisch/vokabeltrainer5.html"
        },
-       "lehrplan": "",
-       "dauer": null,
-       "einsatz": "",
+       "lehrplan": "E5 Wortschatz: Wortschatz aus der Grundschule festigen (Zahlen, Farben, Wochentage, Monate, Fragewörter)",
+       "dauer": 5,
+       "einsatz": "Aufwärmen; Förderung bei Lücken aus der Grundschule",
        "stufen": [
         {
          "id": "en.5.wortlisten.numbers-1-14",
@@ -403,7 +406,8 @@
         {
          "id": "en.5.wortlisten.numbers-40-100",
          "titel": "Zahlen 40–100",
-         "inhalt": "vok5:liste/numbers_40_100"
+         "inhalt": "vok5:liste/numbers_40_100",
+         "lehrplan": "E5 Wortschatz: Zahlen bis 100"
         },
         {
          "id": "en.5.wortlisten.months",
@@ -432,9 +436,9 @@
        "ergebnis": [
         "vokabeltrainer6.html"
        ],
-       "lehrplan": "",
-       "dauer": null,
-       "einsatz": "",
+       "lehrplan": "E6 Verfügen über sprachliche Mittel – Wortschatz (Lehrwerk Highlight 6, Unit für Unit)",
+       "dauer": 8,
+       "einsatz": "Wortschatzarbeit nach jeder Unit; Wiederholung vor Tests",
        "stufen": [
         {
          "id": "en.6.vok.u1",
@@ -479,9 +483,9 @@
        "ergebnis": [
         "practice_simple_present.html"
        ],
-       "lehrplan": "",
-       "dauer": null,
-       "einsatz": ""
+       "lehrplan": "E5 Grammatik: simple present (Verbformen, he/she/it – s, Satzstellung)",
+       "dauer": 8,
+       "einsatz": "Übungsphase nach Einführung des simple present; ohne Schreiben, gut für schwächere Kinder"
       },
       {
        "id": "en.5.simple-past",
@@ -493,9 +497,9 @@
        "ergebnis": [
         "simple-past.html"
        ],
-       "lehrplan": "",
-       "dauer": null,
-       "einsatz": ""
+       "lehrplan": "E5 Grammatik: simple past (regular und irregular verbs); E6 Wiederholung",
+       "dauer": 8,
+       "einsatz": "Übungsphase; Verbenliste zum Nachschlagen; Klasse 6 zur Wiederholung"
       },
       {
        "id": "en.5.satzglieder",
@@ -507,9 +511,9 @@
        "ergebnis": [
         "satzglieder-erkennen.html"
        ],
-       "lehrplan": "",
-       "dauer": null,
-       "einsatz": ""
+       "lehrplan": "E5 Grammatik/Satzbau: Wortstellung im Aussagesatz (subject – verb – object, Ort vor Zeit)",
+       "dauer": 8,
+       "einsatz": "Sicherung der Satzstellung; Fortgeschrittene mit Zeit- und Ortsangaben"
       }
      ]
     },
@@ -527,9 +531,9 @@
        "ergebnis": [
         "english-dialog-vorlagen.html"
        ],
-       "lehrplan": "",
+       "lehrplan": "E5 Sprechen: einfache Dialoge (Arbeitsblatt-Vorlagen, keine Übungs-App)",
        "dauer": null,
-       "einsatz": ""
+       "einsatz": "Druckvorlagen für Partnerarbeit"
       }
      ]
     }
@@ -553,17 +557,19 @@
        "ergebnis": [
         "laender-finder.html"
        ],
-       "lehrplan": "",
-       "dauer": null,
-       "einsatz": "",
+       "lehrplan": "GPG 6 LB 1 Lebensraum Erde: topographische Orientierung in Europa; Bundesländer: GPG 5 LB 1 (Orientierung in Deutschland)",
+       "dauer": 5,
+       "einsatz": "Topographie-Training zu Stundenbeginn; Wettbewerb um die Bestzeit",
        "stufen": [
         {
          "id": "gpg.6.laender.europa",
-         "titel": "Europa"
+         "titel": "Europa",
+         "lehrplan": "GPG 6 LB 1 Lebensraum Erde: topographische Orientierung in Europa"
         },
         {
          "id": "gpg.6.laender.bundeslaender",
-         "titel": "Bundesländer"
+         "titel": "Bundesländer",
+         "lehrplan": "GPG 5 LB 1 Lebensraum Erde: Orientierung in Deutschland (Bundesländer)"
         }
        ]
       },
@@ -574,24 +580,27 @@
        "quelle": {
         "spiele": true
        },
-       "lehrplan": "",
+       "lehrplan": "GPG 5 LB 1 (Landeshauptstädte, Orientierung in Deutschland); GPG 6 LB 1 (Hauptstädte Europas)",
        "dauer": null,
-       "einsatz": "",
+       "einsatz": "Nur in den Spielen (RUN!, Tower Defense …)",
        "stufen": [
         {
          "id": "gpg.5.hauptstaedte.europa",
          "titel": "Hauptstädte Europas (Start)",
-         "inhalt": "hauptstaedte-europa"
+         "inhalt": "hauptstaedte-europa",
+         "lehrplan": "GPG 6 LB 1: topographische Orientierung in Europa (Hauptstädte)"
         },
         {
          "id": "gpg.5.hauptstaedte.europa-profi",
          "titel": "Hauptstädte Europas (Profi)",
-         "inhalt": "hauptstaedte-europa-profi"
+         "inhalt": "hauptstaedte-europa-profi",
+         "lehrplan": "GPG 6 LB 1: topographische Orientierung in Europa (Hauptstädte)"
         },
         {
          "id": "gpg.5.hauptstaedte.landes",
          "titel": "Landeshauptstädte",
-         "inhalt": "landeshauptstaedte"
+         "inhalt": "landeshauptstaedte",
+         "lehrplan": "GPG 5 LB 1: Orientierung in Deutschland (Landeshauptstädte)"
         }
        ]
       }
@@ -611,9 +620,9 @@
        "ergebnis": [
         "regeln-sortierer-gpg.html"
        ],
-       "lehrplan": "",
-       "dauer": null,
-       "einsatz": ""
+       "lehrplan": "GPG 5 LB 3 Politik und Gesellschaft: Regeln für das Zusammenleben in Familie, Schule und Gesellschaft",
+       "dauer": 10,
+       "einsatz": "Sicherung nach der Erarbeitung von Regeln und Ebenen (Familie, Schule, Gemeinde, Staat)"
       }
      ]
     }

@@ -87,6 +87,8 @@ in einen anderen Ordner umziehen, ohne dass Fortschritt verloren geht (dann `con
 - **Speicher-Register:** jeder Schlüssel im Gerätespeicher steht in `gemeinsam/umgebung.js` (`SPEICHER`).
   Neue Schlüssel beginnen mit `lernwelt-`; bestehende Namen nie ändern.
 - **Inventar:** `python3 werkzeuge/inventar.py` erzeugt `werkzeuge/INVENTAR.md` neu (Handspalten bleiben).
+- **App-Prüfung:** `werkzeuge/APP-PRUEFUNG.md` – Ergebnis der Prüfung aller Apps (Etappe 3), Anforderungen an
+  die Engines und die Lücken im Lehrplan (Startliste für neue Apps).
 - **Ein Commit pro Upload:** alle Dateien einer Etappe gemeinsam hochladen (github.dev), sonst wird jeder
   Zwischenstand einzeln geprüft und ist oft rot.
 - Upload nachmittags oder abends, nie kurz vor dem Unterricht.
