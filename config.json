@@ -291,7 +291,7 @@
       "fach": "Mathematik",
       "emoji": "🟦",
       "beschreibung": "Verändere die Seiten und beobachte, was passiert.",
-      "hidden": true,
+      "hidden": false,
       "klassen": [
         5
       ],
