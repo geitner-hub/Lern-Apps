@@ -2,7 +2,7 @@
 //  Lernwelt – pass.js   (Lernwelt-Pass: XP, Level, Serie, Sterne)
 //
 //  Wird geladen von:
-//    - index.html / admin.html / pass-karte.html
+//    - index.html / admin.html
 //    - jeder App automatisch über navbar.js
 //
 //  Inhalte (Titel, Abzeichen, Cosmetics, Events) stehen in der reinen
@@ -12,9 +12,7 @@
 //  die für die Spiele („Meine Themen“) aus config.json → "spiele".
 //
 //  Alle Daten bleiben im localStorage des Geräts ('lernwelt-pass').
-//  Sicherung/Umzug über einen Code bzw. QR (exportCode / parseCode).
-//  Der Code enthält auch den Spielstand von „Mein Dorf“ ('lernwelt-dorf')
-//  und die Stempel der Entdecker-Expedition ('lernwelt-expedition').
+//  Sicherung/Umzug: automatisch über die Sicherungskarte (gemeinsam/sync.js).
 //
 //  Jede gewertete Runde löst 'lernpass:gewertet' aus (für „Mein Dorf“).
 //
@@ -37,8 +35,8 @@
     .catch(() => { try { return JSON.parse(localStorage.getItem(CONTENT_CACHE) || '{}'); } catch (e) { return {}; } });
   Promise.all([inhalte, ladeKompression()]).then(([c]) => start(c));
 
-  // Kompression für den Sicherungscode (vendor/fflate.min.js). Fehlt sie
-  // (z. B. offline und nie geladen), entsteht ein längerer LW2-Code.
+  // Kompression (vendor/fflate.min.js): Ersatz für sync.js auf älteren iPads
+  // ohne CompressionStream. Fehlt sie, startet der Pass trotzdem (nach max. 4 s).
   function ladeKompression() {
     if (window.fflate) return Promise.resolve();
     return new Promise(fertig => {
@@ -81,8 +79,6 @@
     chestEveryXp:    250,   // alle X XP eine Truhe
     eventChestShare: 0.6,   // Anteil Event-Teile in Truhen während eines Events
     eventGiftChests: 1,     // Geschenk-Truhen je Event & Schuljahr (nach erster guter Runde)
-    backupRemindDays: 30,   // Erinnerung im Pass, wenn so lange nicht gesichert wurde
-    backupFirstXp: 100,     // … bzw. ab so vielen XP, wenn noch nie gesichert wurde
     starPct:         [60, 80, 90],  // Bronze, Silber, Gold
     starDays:        2,     // an so vielen verschiedenen Tagen erreicht
     // Endlos-Modus (z. B. Runner): XP für den besten Lauf des Tages, als Differenz ausgezahlt
@@ -167,7 +163,6 @@
       bonusChests: 0,            // Geschenk-Truhen (Events)
       levelChests: 0,            // Level-Truhen (je Level-Aufstieg eine)
       levelOpened: 0,            // davon geöffnet (zählen auch in chestsOpened)
-      lastBackup: '',            // Tag der letzten Sicherung (QR, Code, Karte)
       dust: 0,                   // Sternenstaub (wenn der Pool leer ist)
       inventory: [],             // Cosmetics (IDs)
       equipped: {},              // Slot → ID
@@ -812,412 +807,6 @@
     return out;
   }
 
-  // ── Sicherungs-Code ─────────────────────────────────────
-  //  Format:  LW3.<base64url(deflate(JSON))>.<Prüfsumme>   komprimiert (Standard)
-  //           LW2.<base64url(JSON)>.<Prüfsumme>            wenn die Kompression fehlt
-  //  LW1 und LW2 werden weiterhin gelesen. JSON-Version v: 3 enthält zusätzlich
-  //  d = Spielstand „Mein Dorf“ (so wie er in 'lernwelt-dorf' steht),
-  //  ex = Expedition: { eu: [besuchte Länder], de: [Bundesländer], w: 'europa'|'deutschland' }.
-  //  Die Prüfsumme erkennt Tippfehler und einfaches Herumbasteln –
-  //  sie ist bewusst KEIN Kopierschutz (alles liegt ohnehin auf dem Gerät).
-  function fnv(str) {
-    let h = 0x811c9dc5;
-    for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 0x01000193); }
-    return (h >>> 0).toString(36);
-  }
-  function bytesToB64url(bytes) {
-    let bin = ''; bytes.forEach(b => bin += String.fromCharCode(b));
-    return btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-  }
-  function b64urlToBytes(s) {
-    s = s.replace(/-/g, '+').replace(/_/g, '/');
-    while (s.length % 4) s += '=';
-    return Uint8Array.from(atob(s), c => c.charCodeAt(0));
-  }
-  function b64urlEncode(str) { return bytesToB64url(new TextEncoder().encode(str)); }
-  function b64urlDecode(s)   { return new TextDecoder().decode(b64urlToBytes(s)); }
-  function kannKomprimieren() { return !!(window.fflate && window.fflate.deflateSync && window.fflate.inflateSync); }
-
-  // Dorf-Spielstand roh lesen (pass.js braucht dorf-kern.js dafür nicht)
-  function dorfLesen() {
-    try {
-      const s = localStorage.getItem(DORF_KEY);
-      if (!s || s.length > 20000) return null;
-      const d = JSON.parse(s);
-      return d && typeof d === 'object' && !Array.isArray(d) ? d : null;
-    } catch (e) { return null; }
-  }
-
-  // Expedition kompakt lesen/schreiben (nur Kürzel der besuchten Länder)
-  const EX_ID = /^[A-Z]{3}$|^DE-[A-Z]{2}$/;
-  function expeditionLesen() {
-    try {
-      const d = JSON.parse(localStorage.getItem(EXPED_KEY) || 'null');
-      if (!d || typeof d !== 'object') return null;
-      const ids = x => (x && Array.isArray(x.besucht) ? x.besucht : []).filter(id => typeof id === 'string' && EX_ID.test(id)).slice(0, 80);
-      const ex = { eu: ids(d.europa), de: ids(d.deutschland), w: d.wahl === 'deutschland' ? 'deutschland' : 'europa' };
-      return ex.eu.length || ex.de.length ? ex : null;
-    } catch (e) { return null; }
-  }
-  function expeditionAusCode(ex) {
-    if (!ex || typeof ex !== 'object') return null;
-    const ids = a => (Array.isArray(a) ? a : []).filter(id => typeof id === 'string' && EX_ID.test(id)).slice(0, 80);
-    const eu = ids(ex.eu), de = ids(ex.de);
-    if (!eu.length && !de.length) return null;
-    return { wahl: ex.w === 'deutschland' ? 'deutschland' : 'europa', europa: { besucht: eu, ort: '' }, deutschland: { besucht: de, ort: '' } };
-  }
-
-  function exportCode() {
-    ensureProfile();
-    const apps = {};
-    Object.entries(S.apps).forEach(([k, a]) => {
-      const h = RULES.starPct.map(p => (a.h && a.h[p] ? a.h[p].length : 0)).join('');
-      if (h !== '000' || a.best) apps[k] = [h, a.best || 0, (a.last || '').replace(/-/g, '')];
-    });
-    const wkeys = Object.keys(S.weeks).sort().slice(-30);
-    const payload = {
-      v: 3,
-      p: [S.profile.name, LOOK_KEYS.map(k => S.profile.look[k]), S.profile.klasse || 0, S.profile.klasseSeason || ''],
-      x: S.xp, r: S.rounds, o: S.chestsOpened,
-      w: Object.fromEntries(wkeys.map(k => [k.replace(/-/g, ''), S.weeks[k]])),
-      a: apps,
-      i: S.inventory, e: S.equipped, b: S.badges,
-      z: S.seasons, g: S.goodRounds || 0, bc: S.bonusChests || 0, sd: S.dust || 0,
-      lc: S.levelChests || 0, lo: S.levelOpened || 0,
-      f: S.flags.comeback ? 1 : 0,
-      eg: Object.keys(S.eventGifts),
-      ed: Object.fromEntries(Object.entries(S.eventDays).map(([k, v]) => [k, v.length])),
-      t: dayKey().replace(/-/g, ''),
-    };
-    // Lernstand kompakt: freigeschaltet → 1, sonst die besten % (nur ab 50 %, sonst weglassen)
-    const ls = {};
-    Object.entries(S.lernstand || {}).forEach(([id, e]) => {
-      if (!e || !INHALT_ID.test(id)) return;
-      if (e.f === true) { ls[id] = 1; return; }
-      const p = (Array.isArray(e.p) ? e.p : []).filter(x => x >= 50);
-      if (p.length) ls[id] = p;
-    });
-    if (Object.keys(ls).length) payload.ls = ls;
-    const dorf = dorfLesen();
-    if (dorf) payload.d = dorf;
-    const ex = expeditionLesen();
-    if (ex) payload.ex = ex;
-    const json = JSON.stringify(payload);
-    let prefix = 'LW3', body = '';
-    if (kannKomprimieren()) {
-      try { body = bytesToB64url(window.fflate.deflateSync(new TextEncoder().encode(json), { level: 9 })); } catch (e) { body = ''; }
-    }
-    if (!body) { prefix = 'LW2'; body = b64urlEncode(json); }
-    // Wer einen Code/QR/Karte erzeugt, hat gesichert → für die Erinnerung im Pass merken
-    if (S.lastBackup !== dayKey()) { S.lastBackup = dayKey(); save(); }
-    return prefix + '.' + body + '.' + fnv('lernwelt|' + body);
-  }
-
-  /** Stand der Sicherung: { last: 'YYYY-MM-DD'|'', days: Tage seit letzter Sicherung|null, remind: bool } */
-  function backupInfo() {
-    const last = /^\d{4}-\d{2}-\d{2}$/.test(S.lastBackup || '') ? S.lastBackup : '';
-    const days = last ? Math.max(0, Math.round((parseDay(dayKey()) - parseDay(last)) / 864e5)) : null;
-    const remind = !!S.profile && (last ? days >= RULES.backupRemindDays : S.xp >= RULES.backupFirstXp);
-    return { last, days, remind };
-  }
-
-  function restoreUrl() {
-    return ROOT + '#pass=' + exportCode();
-  }
-
-  /** Prüft einen Code. Gibt { ok, error } oder { ok, preview, apply() } zurück. */
-  function parseCode(code) {
-    try {
-      code = String(code || '').trim();
-      const m = code.match(/#pass=([^\s]+)$/);          // ganze URL eingefügt?
-      if (m) code = decodeURIComponent(m[1]);
-      const parts = code.split('.');
-      if (parts.length !== 3 || !['LW1', 'LW2', 'LW3'].includes(parts[0])) return { ok: false, error: 'Das ist kein gültiger Lernwelt-Code.' };
-      if (fnv('lernwelt|' + parts[1]) !== parts[2]) return { ok: false, error: 'Der Code ist beschädigt oder unvollständig.' };
-      let json;
-      if (parts[0] === 'LW3') {
-        if (!kannKomprimieren()) return { ok: false, error: 'Der Code kann gerade nicht gelesen werden. Bitte kurz mit dem Internet verbinden und nochmal versuchen.' };
-        json = new TextDecoder().decode(window.fflate.inflateSync(b64urlToBytes(parts[1])));
-      } else json = b64urlDecode(parts[1]);
-      if (json.length > 200000) return { ok: false, error: 'Unbekanntes Code-Format.' };
-      const d = JSON.parse(json);
-      if (!d || ![1, 2, 3].includes(d.v) || !Array.isArray(d.p)) return { ok: false, error: 'Unbekanntes Code-Format.' };
-      // Dorf nur grob prüfen – genau säubert dorf-kern.js beim Laden
-      const dorf = d.d && typeof d.d === 'object' && !Array.isArray(d.d) && JSON.stringify(d.d).length <= 20000 ? d.d : null;
-      const expedition = expeditionAusCode(d.ex);
-      const ymd = s => String(s).replace(/^(\d{4})(\d{2})(\d{2})$/, '$1-$2-$3');
-      const restored = blank();
-      const lk = Array.isArray(d.p[1]) ? Object.fromEntries(LOOK_KEYS.map((k, i) => [k, d.p[1][i]])) : null;
-      restored.profile = { name: cleanName(d.p[0]), look: lk ? cleanLook(lk) : randomLook(),
-                           klasse: [5, 6, 7, 8, 9].includes(d.p[2]) ? d.p[2] : null,
-                           klasseSeason: /^\d{4}\/\d{2}$/.test(d.p[3] || '') ? d.p[3] : seasonId(), created: Date.now() };
-      restored.xp = Math.max(0, Math.min(1e6, Math.floor(Number(d.x) || 0)));
-      restored.rounds = Math.max(0, Math.floor(Number(d.r) || 0));
-      restored.chestsOpened = Math.max(0, Math.floor(Number(d.o) || 0));
-      Object.entries(d.w || {}).forEach(([k, n]) => { if (/^\d{8}$/.test(k)) restored.weeks[ymd(k)] = Math.max(0, Math.min(7, Number(n) || 0)); });
-      Object.entries(d.a || {}).forEach(([k, v]) => {
-        if (!Array.isArray(v) || typeof k !== 'string' || k.length > 120) return;
-        const h = {}; const last = ymd(v[2] || '');
-        RULES.starPct.forEach((p, i) => {
-          const n = Math.min(RULES.starDays, Number(String(v[0])[i]) || 0);
-          h[p] = Array.from({ length: n }, (_, j) => 'import-' + j);   // Tage als Platzhalter
-        });
-        restored.apps[k] = { h, best: Math.max(0, Math.min(100, Number(v[1]) || 0)), last: /^\d{4}-\d{2}-\d{2}$/.test(last) ? last : '', day: '', n: 0 };
-      });
-      restored.inventory = Array.isArray(d.i) ? [...new Set(d.i.filter(x => typeof x === 'string' && ITEM_BY_ID[x]))].slice(0, 500) : [];
-      restored.equipped  = {};
-      if (d.e && typeof d.e === 'object') Object.entries(d.e).forEach(([sl, id]) => {
-        if (SLOTS[sl] && ITEM_BY_ID[id] && ITEM_BY_ID[id].slot === sl && (restored.inventory.includes(id) || ITEM_BY_ID[id].quelle === 'start')) restored.equipped[sl] = id;
-      });
-      restored.badges    = Array.isArray(d.b) ? [...new Set(d.b.filter(x => typeof x === 'string' && BADGES.some(b => b.id === x)))] : [];
-      const num = (v, max) => Math.max(0, Math.min(max, Math.floor(Number(v) || 0)));
-      if (d.z && typeof d.z === 'object') Object.entries(d.z).forEach(([k, v]) => { if (/^\d{4}\/\d{2}$/.test(k)) restored.seasons[k] = num(v, 1e6); });
-      else restored.seasons[seasonId()] = restored.xp;             // alte Codes ohne Saison-Daten
-      restored.goodRounds = num(d.g, 1e6);
-      restored.bonusChests = num(d.bc, 1000);
-      restored.levelChests = num(d.lc, 1000);
-      restored.levelOpened = Math.min(num(d.lo, 1000), restored.levelChests);
-      restored.dust = num(d.sd, 1e5);
-      restored.flags = d.f ? { comeback: true } : {};
-      (Array.isArray(d.eg) ? d.eg : []).forEach(k => { if (typeof k === 'string' && /^[a-z-]+\|\d{4}\/\d{2}$/.test(k)) restored.eventGifts[k] = true; });
-      if (d.ed && typeof d.ed === 'object') Object.entries(d.ed).forEach(([k, n]) => {
-        if (/^[a-z-]+\|\d{4}\/\d{2}$/.test(k)) restored.eventDays[k] = Array.from({ length: num(n, 60) }, (_, j) => 'import-' + j);
-      });
-      if (d.ls && typeof d.ls === 'object' && !Array.isArray(d.ls)) Object.entries(d.ls).slice(0, 500).forEach(([id, v]) => {
-        if (!INHALT_ID.test(id)) return;
-        if (v === 1) { restored.lernstand[id] = { n: 1, best: 0, last: '', p: [], f: true }; return; }
-        if (!Array.isArray(v)) return;
-        const p = v.map(x => Math.max(0, Math.min(100, Math.round(Number(x) || 0)))).sort((a, b) => b - a).slice(0, 3);
-        if (p.length) restored.lernstand[id] = { n: p.length, best: p[0], last: '', p };
-      });
-      restored.chestsOpened = Math.min(restored.chestsOpened, Math.floor(restored.xp / RULES.chestEveryXp) + restored.bonusChests + restored.levelChests);
-      restored.levelOpened = Math.min(restored.levelOpened, restored.chestsOpened);
-      restored.lastBackup = dayKey();                              // der Code war ja eine Sicherung
-      restored.seenLevel = 1;
-      return {
-        ok: true,
-        preview: { name: restored.profile.name || 'Ohne Namen', look: Object.assign({}, restored.profile.look, { eq: Object.assign({}, restored.equipped) }),
-                   level: levelInfo(seasonsOn() ? (restored.seasons[seasonId()] || 0) : restored.xp).level,
-                   title: levelInfo(seasonsOn() ? (restored.seasons[seasonId()] || 0) : restored.xp).title, xp: restored.xp,
-                   date: ymd(d.t || ''), dorf: !!dorf },
-        apply() {
-          S = restored; save();
-          // Dorf gehört zum Pass: mitersetzen (alter Code ohne Dorf → Dorf beginnt neu)
-          try { if (dorf) localStorage.setItem(DORF_KEY, JSON.stringify(dorf)); else localStorage.removeItem(DORF_KEY); } catch (e) {}
-          // Expedition ebenso (alter Code ohne Stempel → Expedition beginnt neu)
-          try { if (expedition) localStorage.setItem(EXPED_KEY, JSON.stringify(expedition)); else localStorage.removeItem(EXPED_KEY); } catch (e) {}
-          try { window.dispatchEvent(new CustomEvent('lernpass:wiederhergestellt')); } catch (e) {}
-        },
-      };
-    } catch (e) {
-      return { ok: false, error: 'Der Code konnte nicht gelesen werden.' };
-    }
-  }
-
-  // ── Anzeige in Apps (Toast) ─────────────────────────────
-  function toast(res) {
-    if (!document.body || !res) return;
-    let el = document.getElementById('lw-pass-toast');
-    if (!el) {
-      const st = document.createElement('style');
-      st.textContent = `
-        #lw-pass-toast{position:fixed;top:1rem;left:50%;transform:translate(-50%,-140%);z-index:10001;
-          background:#1b1929;color:#f1f0fb;border:1px solid rgba(230,168,23,.45);border-radius:16px;
-          box-shadow:0 12px 40px rgba(0,0,0,.45);padding:.7rem 1.1rem;min-width:220px;max-width:min(92vw,380px);
-          font-family:'Nunito','Segoe UI',sans-serif;transition:transform .35s cubic-bezier(.2,.9,.3,1.2);text-align:center;}
-        #lw-pass-toast.show{transform:translate(-50%,0);}
-        #lw-pass-toast .t-xp{font-family:'Fredoka One','Nunito',sans-serif;font-size:1.5rem;color:#e6a817;line-height:1.1;}
-        #lw-pass-toast .t-lines{font-size:.74rem;color:rgba(241,240,251,.65);margin-top:.25rem;line-height:1.35;}
-        #lw-pass-toast .t-big{font-weight:900;font-size:.95rem;margin-top:.35rem;}
-        #lw-pass-toast .t-bar{height:6px;border-radius:99px;background:rgba(255,255,255,.1);margin-top:.45rem;overflow:hidden;}
-        #lw-pass-toast .t-fill{height:100%;background:linear-gradient(90deg,#6366f1,#e6a817);border-radius:99px;transition:width .6s ease;}
-        @media (prefers-reduced-motion: reduce){#lw-pass-toast{transition:none;}}`;
-      document.head.appendChild(st);
-      el = document.createElement('div');
-      el.id = 'lw-pass-toast';
-      el.setAttribute('role', 'status');
-      el.setAttribute('aria-live', 'polite');
-      document.body.appendChild(el);
-    }
-    const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-    let html;
-    if (res.notice) {
-      html = (res.newBadges || []).map(n => `<div class="t-big">${esc(n.badge.icon)} Abzeichen „${esc(n.badge.name)}“!${n.items.length ? ' +' + n.items.length + ' Set-Teil' + (n.items.length > 1 ? 'e' : '') : ''}</div>`).join('');
-    } else if (res.blocked === 'fast') {
-      html = `<div class="t-xp" style="color:#f87171">0 XP</div>
-              <div class="t-lines">Das ging sehr schnell. Nimm dir Zeit für die Aufgaben – dann gibt es XP!</div>`;
-    } else {
-      const lv = res.level;
-      html = `<div class="t-xp">+${res.xp} XP</div>
-              <div class="t-lines">${res.lines.map(esc).join('<br>')}</div>
-              ${res.levelUp ? `<div class="t-big">🎉 Level ${lv.level}: ${esc(lv.title)}!</div>` : ''}
-              ${res.starUp ? `<div class="t-big">${['', '🥉 Bronze', '🥈 Silber', '🥇 Gold'][res.starUp]}-Stern verdient!</div>` : ''}
-              ${res.levelChest ? `<div class="t-big">🎁 Level-Truhe verdient!</div>` : ''}
-              ${res.chest ? `<div class="t-big">🎁 Neue Truhe verdient!</div>` : ''}
-              ${res.eventGift ? `<div class="t-big">${esc(res.eventGift.icon)} ${esc(res.eventGift.geschenk || res.eventGift.name + '-Geschenk')}: eine Truhe für dich!</div>` : ''}
-              ${(res.newBadges || []).map(n => `<div class="t-big">${esc(n.badge.icon)} Abzeichen „${esc(n.badge.name)}“!${n.items.length ? ' +' + n.items.length + ' Set-Teil' + (n.items.length > 1 ? 'e' : '') : ''}</div>`).join('')}
-              <div class="t-bar"><div class="t-fill" style="width:${lv.pct}%"></div></div>
-              <div class="t-lines">Level ${lv.level} · ${lv.into} / ${lv.need} XP</div>`;
-    }
-    el.innerHTML = html;
-    requestAnimationFrame(() => el.classList.add('show'));
-    clearTimeout(el._t);
-    const big = res.levelUp || res.starUp || res.chest || res.eventGift || (res.newBadges && res.newBadges.length);
-    el._t = setTimeout(() => el.classList.remove('show'), big ? 6500 : 4200);
-    avatarForResult(res);
-  }
-
-  // ── Avatar-Auftritt (avatar3d.js wird erst beim ersten Mal geladen) ──
-  let avatarLoad = null;
-  function loadAvatar() {
-    if (window.LernAvatar) return Promise.resolve(window.LernAvatar);
-    if (!avatarLoad) avatarLoad = new Promise((res, rej) => {
-      const s = document.createElement('script');
-      s.src = new URL('avatar3d.js', here).href;
-      s.onload = () => (window.LernAvatar ? res(window.LernAvatar) : rej());
-      s.onerror = () => { avatarLoad = null; rej(); };
-      document.head.appendChild(s);
-    });
-    return avatarLoad;
-  }
-  /** Figur unten rechts zeigen: { text, big, aktion: 'jubeln'|'winken' } */
-  function showAvatar(o) {
-    if (!readSettings().avatar || !S.profile || !S.profile.name) return;
-    loadAvatar().then(A => A.appear(o)).catch(() => {});
-  }
-  // ── Konfetti & Feuerwerk (Canvas, ohne 3D) ──────────────
-  const FARBEN = ['#e6a817', '#f43f5e', '#6366f1', '#22c55e', '#38bdf8', '#f472b6', '#facc15', '#ffffff'];
-  function celebrate(art) {
-    if (!document.body || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
-    const cv = document.createElement('canvas');
-    cv.setAttribute('aria-hidden', 'true');
-    cv.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:10003';
-    document.body.appendChild(cv);
-    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-    const W = innerWidth, H = innerHeight;
-    cv.width = W * dpr; cv.height = H * dpr;
-    const x = cv.getContext('2d'); x.scale(dpr, dpr);
-    const parts = [], rnd = (a, b) => a + Math.random() * (b - a);
-    const scale = Math.min(1, W / 900) * .5 + .5;
-    function konfetti(ox, oy, dir, n) {
-      for (let i = 0; i < n; i++) {
-        const a = -Math.PI / 2 + dir * rnd(.15, .75), v = rnd(9, 17) * scale;
-        parts.push({ k: 'k', x: ox, y: oy, vx: Math.cos(a) * v, vy: Math.sin(a) * v, w: rnd(6, 10), h: rnd(3, 6), r: rnd(0, 6), vr: rnd(-.3, .3),
-                     c: FARBEN[i % FARBEN.length], life: rnd(2.2, 3), t: 0 });
-      }
-    }
-    function knall(ox, oy) {
-      const c = FARBEN[Math.floor(Math.random() * 7)], n = 46;
-      for (let i = 0; i < n; i++) {
-        const a = (i / n) * Math.PI * 2, v = rnd(2.5, 5.5) * scale;
-        parts.push({ k: 'f', x: ox, y: oy, vx: Math.cos(a) * v, vy: Math.sin(a) * v, c: Math.random() < .25 ? '#ffffff' : c, life: rnd(1.1, 1.6), t: 0 });
-      }
-    }
-    const rockets = [];
-    if (art === 'feuerwerk') {
-      for (let i = 0; i < 5; i++) rockets.push({ at: i * .38, x: rnd(W * .15, W * .85), ty: rnd(H * .15, H * .45), y: H + 10, fired: false });
-    } else {
-      konfetti(0, H * .75, 1, 70); konfetti(W, H * .75, -1, 70);
-    }
-    let t0 = performance.now(), last = t0;
-    (function frame(now) {
-      const dt = Math.min((now - last) / 16.7, 3), T = (now - t0) / 1000; last = now;
-      x.clearRect(0, 0, W, H);
-      rockets.forEach(r => {
-        if (r.done || T < r.at) return;
-        r.y -= (r.y - r.ty) * .09 * dt + 2 * dt;
-        x.fillStyle = '#fde68a'; x.fillRect(r.x - 1.5, r.y, 3, 10);
-        if (r.y <= r.ty + 4) { r.done = true; knall(r.x, r.ty); }
-      });
-      for (let i = parts.length - 1; i >= 0; i--) {
-        const p = parts[i];
-        p.t += dt / 60;
-        if (p.t > p.life) { parts.splice(i, 1); continue; }
-        const fade = Math.min(1, (p.life - p.t) * 2.5);
-        x.globalAlpha = fade;
-        if (p.k === 'k') {
-          p.vy += .32 * dt; p.vx *= .985; p.x += p.vx * dt; p.y += p.vy * dt; p.r += p.vr * dt;
-          x.save(); x.translate(p.x, p.y); x.rotate(p.r); x.fillStyle = p.c;
-          x.fillRect(-p.w / 2, -p.h / 2 * Math.abs(Math.cos(p.r * 2)), p.w, p.h * Math.abs(Math.cos(p.r * 2)) + .5); x.restore();
-        } else {
-          p.vy += .06 * dt; p.vx *= .97; p.vy *= .97; p.x += p.vx * dt; p.y += p.vy * dt;
-          x.fillStyle = p.c; x.beginPath(); x.arc(p.x, p.y, 2.2, 0, 6.283); x.fill();
-        }
-      }
-      x.globalAlpha = 1;
-      if (parts.length || rockets.some(r => !r.done)) requestAnimationFrame(frame); else cv.remove();
-    })(t0);
-  }
-
-  const pick = list => list[Math.floor(Math.random() * list.length)];
-  const LOB = {
-    top:  ['Super gemacht! 🌟', 'Wow, stark! 💪', 'Spitze! 🚀', 'Klasse Runde! ⭐'],
-    gut:  ['Toll gemacht! 👍', 'Gute Runde! 😄', 'Richtig gut! ✨'],
-    okay: ['Gut gemacht! 🙂', 'Weiter so! 👏', 'Das wird immer besser!'],
-    mut:  ['Dranbleiben – du schaffst das! 💪', 'Übung macht den Meister! 🙂', 'Probier es gleich nochmal!', 'Jeder Versuch hilft dir! 👍'],
-  };
-  function avatarForResult(res) {
-    if (!res || res.blocked) return;
-    const badges = res.newBadges || [];
-    const perfekt = !res.notice && !res.endless && Number(res.pct) === 100 && Number(res.xp) > 0;
-    if (readSettings().avatar) {
-      if (res.levelUp || badges.length) celebrate('feuerwerk');
-      else if (perfekt || res.starUp === 3 || res.chest || res.eventGift) celebrate('konfetti');
-    }
-    let text = '', big = true;
-    if (res.endless && !res.levelUp && !badges.length && !res.chest && !res.eventGift) {
-      text = res.newDayBest && res.correct > 0 ? pick(['Neuer Tagesrekord! 🏃', 'So weit warst du heute noch nie! 🚀', 'Stark gelaufen! 💪'])
-           : res.correct >= RULES.endlessGoodCorrect ? pick(LOB.gut) : pick(LOB.mut);
-      showAvatar({ text, big: false, aktion: res.correct >= RULES.endlessGoodCorrect ? 'jubeln' : 'winken' });
-      return;
-    }
-    if (res.levelUp) text = `Level ${res.levelUp.level}! 🎉` + (res.levelChest ? ' + Truhe 🎁' : '');
-    else if (badges.length) text = `Abzeichen: ${badges[0].badge.name}! ${badges[0].badge.icon}`;
-    else if (res.starUp) text = ['', 'Bronze-Stern! 🥉', 'Silber-Stern! 🥈', 'Gold-Stern! 🥇'][res.starUp];
-    else if (res.chest) text = 'Neue Truhe! 🎁';
-    else if (res.eventGift) text = `${res.eventGift.icon} Geschenk-Truhe!`;
-    else big = false;
-    if (res.notice && !big) return;
-    const pct = Number(res.pct) || 0;
-    if (!big) text = perfekt ? pick(['Perfekt – alles richtig! 💯', 'Null Fehler! 💯', 'Wahnsinn, alles richtig! 🏆']) : pick(pct >= 90 ? LOB.top : pct >= 70 ? LOB.gut : pct >= 50 ? LOB.okay : LOB.mut);
-    showAvatar({ text, big, aktion: big || pct >= 50 ? 'jubeln' : 'winken' });
-  }
-
-  // ── Darstellung ─────────────────────────────────────────
-  const escA = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-  /** Avatar als Bild (wird von avatar3d.js gezeichnet und zwischengespeichert) */
-  function avatarHTML(opts = {}) {
-    let cached = '';
-    try { cached = localStorage.getItem('lernwelt-avatar-bild') || ''; } catch (e) {}
-    if (!/^data:image\/png;base64,[A-Za-z0-9+/=]+$/.test(cached)) cached = '';
-    const lvl = opts.level ? `<span class="pass-lvl">${escA(opts.level)}</span>` : '';
-    return `<div class="pass-avatar${opts.cls ? ' ' + opts.cls : ''}">` +
-      (cached ? `<img data-avatar-bild="portrait" alt="" src="${cached}">` : `<img data-avatar-bild="portrait" alt="" hidden><span class="pa-fb">🧭</span>`) +
-      lvl + `</div>`;
-  }
-  function cardBackground(preview) {
-    const bg = preview !== undefined ? preview : equippedItem('hintergrund');
-    return bg && bg.css ? bg.css : '';
-  }
-  /** Vorschau eines Teils. Hintergründe direkt, alles andere zeichnet avatar3d.js nach. */
-  function itemPreviewHTML(it) {
-    if (!it) return '';
-    if (it.slot === 'hintergrund') return `<span class="it-prev it-bg" style="background:${escA(it.css || '')}">${it.deko || ''}</span>`;
-    return `<span class="it-prev it-3d" data-avatar-thumb="${escA(it.id)}"></span>`;
-  }
-  function itemSourceText(it) {
-    if (it.quelle === 'truhe') return 'Aus Truhen';
-    if (it.quelle === 'start') return 'Startausstattung';
-    if (it.quelle === 'event') { const e = EVENTS.find(x => x.id === it.event); return e ? `${e.icon} Nur im ${e.titel || e.name + '-Event'}` : 'Event'; }
-    if (it.quelle === 'set')   { const b = BADGES.find(x => x.id === it.set); return b ? `${b.icon} Abzeichen „${b.name}“` : 'Abzeichen'; }
-    return '';
-  }
-  function pastSeasons() {
-    const cur = seasonId();
-    return Object.entries(S.seasons).filter(([k, v]) => k < cur && v > 0).sort((a, b) => b[0].localeCompare(a[0]))
-      .map(([k, v]) => ({ id: k, xp: v, ...levelInfo(v) }));
-  }
-
   // ── Öffentliche API ─────────────────────────────────────
   window.LernPass = {
     RULES, LEVEL_TITLES, ITEMS, ITEM_BY_ID, BADGES, EVENTS, RARITY, SLOTS, AVATAR,
@@ -1225,12 +814,12 @@
     get settings(){ return readSettings(); },
     get lernstand() { return S.lernstand; },
     setSettings, setSpiele, lernstandMelden, freigeschaltet, activeEvents, seasonsOn, seasonId, levelXp, pastSeasons,
-    openChest, backupInfo, equip, equippedItem, owns, ownedCount, checkBadges, badgeProgress, setLook, look,
+    openChest, equip, equippedItem, owns, ownedCount, checkBadges, badgeProgress, setLook, look,
     avatarHTML, cardBackground, itemPreviewHTML, itemSourceText,
     hasProfile()  { return !!(S.profile && S.profile.name); },
     profile()     { return S.profile; },
     setProfile, needsClassCheck, suggestedClass, confirmClass, levelInfo, xpForLevel, starsFor, starProgress, starsSummary, weekInfo, chestInfo,
-    award, awardEndless, toast, showAvatar, celebrate, exportCode, restoreUrl, parseCode,
+    award, awardEndless, toast, showAvatar, celebrate,
     markLevelSeen() { S.seenLevel = levelInfo().level; save(); },
     onChange(fn)  { listeners.push(fn); },
     reset()       { S = blank(); save(); },
@@ -1241,7 +830,7 @@
   function safariHint() {
     const ios = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
     const app = (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
-    if (!ios || app || /(admin|pass-karte)\.html$/.test(location.pathname)) return;
+    if (!ios || app || /admin\.html$/.test(location.pathname)) return;
     const KEY = 'lernwelt-safari-hinweis';
     try { if (localStorage.getItem(KEY) === dayKey()) return; } catch (e) { return; }
     const st = document.createElement('style');
