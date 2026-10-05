@@ -1,0 +1,643 @@
+{
+ "version": 1,
+ "stand": "2026-10-05",
+ "hinweis": "Inhalts-Katalog der Lernwelt. IDs nie umbenennen oder neu vergeben – sie stehen in Spielständen und Freigaben. Die Klasse in der ID ist nur Teil des Namens, maßgeblich ist das Feld klasse. Aufbau und Felder: README → Inhalts-Katalog.",
+ "faecher": [
+  {
+   "id": "ma",
+   "name": "Mathematik",
+   "bereiche": [
+    {
+     "id": "ma.kopf",
+     "titel": "Kopfrechnen",
+     "themen": [
+      {
+       "id": "ma.1.kopf",
+       "titel": "Kopfrechnen Klasse 1",
+       "klasse": 1,
+       "foerder": true,
+       "quelle": {
+        "app": "apps/mathe/kopfrechnen_kl1.html"
+       },
+       "ergebnis": [
+        "kopfrechnen_kl1.html"
+       ],
+       "lehrplan": "",
+       "dauer": null,
+       "einsatz": "",
+       "stufen": [
+        {
+         "id": "ma.1.kopf.leicht",
+         "titel": "leicht"
+        },
+        {
+         "id": "ma.1.kopf.mittel",
+         "titel": "mittel"
+        },
+        {
+         "id": "ma.1.kopf.schwer",
+         "titel": "schwer"
+        }
+       ]
+      },
+      {
+       "id": "ma.2.kopf",
+       "titel": "Kopfrechnen Klasse 2",
+       "klasse": 2,
+       "foerder": true,
+       "quelle": {
+        "app": "apps/mathe/kopfrechnen_kl2.html"
+       },
+       "ergebnis": [
+        "kopfrechnen_kl2.html"
+       ],
+       "lehrplan": "",
+       "dauer": null,
+       "einsatz": "",
+       "stufen": [
+        {
+         "id": "ma.2.kopf.leicht",
+         "titel": "leicht"
+        },
+        {
+         "id": "ma.2.kopf.mittel",
+         "titel": "mittel"
+        },
+        {
+         "id": "ma.2.kopf.schwer",
+         "titel": "schwer"
+        }
+       ]
+      },
+      {
+       "id": "ma.3.kopf",
+       "titel": "Kopfrechnen Klasse 3",
+       "klasse": 3,
+       "foerder": true,
+       "quelle": {
+        "app": "apps/mathe/kopfrechnen_kl3.html"
+       },
+       "ergebnis": [
+        "kopfrechnen_kl3.html"
+       ],
+       "lehrplan": "",
+       "dauer": null,
+       "einsatz": "",
+       "stufen": [
+        {
+         "id": "ma.3.kopf.leicht",
+         "titel": "leicht"
+        },
+        {
+         "id": "ma.3.kopf.mittel",
+         "titel": "mittel"
+        },
+        {
+         "id": "ma.3.kopf.schwer",
+         "titel": "schwer"
+        }
+       ]
+      },
+      {
+       "id": "ma.4.kopf",
+       "titel": "Kopfrechnen Klasse 4 (Wiederholung)",
+       "klasse": 4,
+       "foerder": true,
+       "quelle": {
+        "app": "apps/mathe/kopfrechnen_kl4.html"
+       },
+       "ergebnis": [
+        "kopfrechnen_kl4.html"
+       ],
+       "lehrplan": "",
+       "dauer": null,
+       "einsatz": "",
+       "stufen": [
+        {
+         "id": "ma.4.kopf.leicht",
+         "titel": "leicht",
+         "inhalt": "kopf4-leicht"
+        },
+        {
+         "id": "ma.4.kopf.mittel",
+         "titel": "mittel",
+         "inhalt": "kopf4-mittel"
+        },
+        {
+         "id": "ma.4.kopf.schwer",
+         "titel": "schwer",
+         "inhalt": "kopf4-schwer"
+        }
+       ]
+      },
+      {
+       "id": "ma.5.kopf",
+       "titel": "Kopfrechnen Klasse 5",
+       "klasse": 5,
+       "quelle": {
+        "app": "apps/mathe/kopfrechnen.html"
+       },
+       "ergebnis": [
+        "kopfrechnen.html"
+       ],
+       "lehrplan": "",
+       "dauer": null,
+       "einsatz": "",
+       "stufen": [
+        {
+         "id": "ma.5.kopf.leicht",
+         "titel": "leicht",
+         "inhalt": "kopf5-leicht"
+        },
+        {
+         "id": "ma.5.kopf.mittel",
+         "titel": "mittel",
+         "inhalt": "kopf5-mittel"
+        },
+        {
+         "id": "ma.5.kopf.schwer",
+         "titel": "schwer",
+         "inhalt": "kopf5-schwer"
+        }
+       ]
+      },
+      {
+       "id": "ma.6.kopf",
+       "titel": "Kopfrechnen Klasse 6",
+       "klasse": 6,
+       "quelle": {
+        "app": "apps/mathe/kopfrechnen_kl6.html"
+       },
+       "ergebnis": [
+        "kopfrechnen_kl6.html"
+       ],
+       "lehrplan": "",
+       "dauer": null,
+       "einsatz": "",
+       "stufen": [
+        {
+         "id": "ma.6.kopf.leicht",
+         "titel": "leicht",
+         "inhalt": "kopf6-leicht"
+        },
+        {
+         "id": "ma.6.kopf.mittel",
+         "titel": "mittel",
+         "inhalt": "kopf6-mittel"
+        },
+        {
+         "id": "ma.6.kopf.schwer",
+         "titel": "schwer",
+         "inhalt": "kopf6-schwer"
+        }
+       ]
+      },
+      {
+       "id": "ma.5.rechen-arena",
+       "titel": "Rechen-Arena: Grundrechenarten",
+       "klasse": 5,
+       "quelle": {
+        "app": "apps/mathe/rechen-arena.html"
+       },
+       "ergebnis": [
+        "rechen-arena.html"
+       ],
+       "lehrplan": "",
+       "dauer": null,
+       "einsatz": ""
+      }
+     ]
+    },
+    {
+     "id": "ma.1x1",
+     "titel": "Einmaleins",
+     "themen": [
+      {
+       "id": "ma.5.1x1",
+       "titel": "Einmaleins",
+       "klasse": 5,
+       "quelle": {
+        "app": "apps/mathe/einmaleins_tafel.html"
+       },
+       "ergebnis": [
+        "einmaleins_tafel.html"
+       ],
+       "lehrplan": "",
+       "dauer": null,
+       "einsatz": "",
+       "stufen": [
+        {
+         "id": "ma.5.1x1.klein",
+         "titel": "Kleines Einmaleins (1–10)",
+         "inhalt": "1x1-klein"
+        },
+        {
+         "id": "ma.5.1x1.gross",
+         "titel": "Großes Einmaleins (11–25)",
+         "inhalt": "1x1-gross"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "ma.groessen",
+     "titel": "Größen",
+     "themen": [
+      {
+       "id": "ma.5.laengen",
+       "titel": "Längeneinheiten umrechnen",
+       "klasse": 5,
+       "quelle": {
+        "app": "apps/mathe/laengeneinheiten.html"
+       },
+       "ergebnis": [
+        "laengeneinheiten.html"
+       ],
+       "lehrplan": "",
+       "dauer": null,
+       "einsatz": ""
+      },
+      {
+       "id": "ma.5.sachaufgaben-laengen",
+       "titel": "Sachaufgaben Längen",
+       "klasse": 5,
+       "quelle": {
+        "app": "apps/mathe/sachaufgaben_laengen.html"
+       },
+       "ergebnis": [
+        "sachaufgaben_laengen.html"
+       ],
+       "lehrplan": "",
+       "dauer": null,
+       "einsatz": ""
+      }
+     ]
+    },
+    {
+     "id": "ma.geometrie",
+     "titel": "Geometrie",
+     "themen": [
+      {
+       "id": "ma.5.vierecke",
+       "titel": "Vierecke unterscheiden",
+       "klasse": 5,
+       "quelle": {
+        "app": "apps/mathe/vierecke_unterscheiden.html"
+       },
+       "ergebnis": [
+        "vierecke_unterscheiden.html"
+       ],
+       "lehrplan": "",
+       "dauer": null,
+       "einsatz": ""
+      },
+      {
+       "id": "ma.5.rechteck",
+       "titel": "Rechteck: Umfang und Fläche",
+       "klasse": 5,
+       "quelle": {
+        "app": "apps/mathe/rechteck-app.html"
+       },
+       "ergebnis": [
+        "rechteck-app.html"
+       ],
+       "lehrplan": "",
+       "dauer": null,
+       "einsatz": ""
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "en",
+   "name": "Englisch",
+   "bereiche": [
+    {
+     "id": "en.vok",
+     "titel": "Wortschatz",
+     "themen": [
+      {
+       "id": "en.5.vok",
+       "titel": "Vokabeln Klasse 5 (English G Access 1)",
+       "klasse": 5,
+       "quelle": {
+        "app": "apps/englisch/vokabeltrainer5.html"
+       },
+       "ergebnis": [
+        "vokabeltrainer5.html"
+       ],
+       "lehrplan": "",
+       "dauer": null,
+       "einsatz": "",
+       "stufen": [
+        {
+         "id": "en.5.vok.intro",
+         "titel": "Hi! What's your name?",
+         "inhalt": "vok5:intro"
+        },
+        {
+         "id": "en.5.vok.u1",
+         "titel": "Unit 1: Welcome to our school",
+         "inhalt": "vok5:unit1"
+        },
+        {
+         "id": "en.5.vok.u2",
+         "titel": "Unit 2: At home with Ellie",
+         "inhalt": "vok5:unit2"
+        },
+        {
+         "id": "en.5.vok.u3",
+         "titel": "Unit 3: Luca's birthday",
+         "inhalt": "vok5:unit3"
+        },
+        {
+         "id": "en.5.vok.u4",
+         "titel": "Unit 4: Berry's world",
+         "inhalt": "vok5:unit4"
+        },
+        {
+         "id": "en.5.vok.u5",
+         "titel": "Unit 5: All about Adam",
+         "inhalt": "vok5:unit5"
+        },
+        {
+         "id": "en.5.vok.u6",
+         "titel": "Unit 6: School is over",
+         "inhalt": "vok5:unit6"
+        }
+       ]
+      },
+      {
+       "id": "en.5.wortlisten",
+       "titel": "Wortlisten Klasse 5",
+       "klasse": 5,
+       "quelle": {
+        "app": "apps/englisch/vokabeltrainer5.html"
+       },
+       "lehrplan": "",
+       "dauer": null,
+       "einsatz": "",
+       "stufen": [
+        {
+         "id": "en.5.wortlisten.numbers-1-14",
+         "titel": "Zahlen 1–14",
+         "inhalt": "vok5:liste/numbers_1_14"
+        },
+        {
+         "id": "en.5.wortlisten.colors",
+         "titel": "Farben",
+         "inhalt": "vok5:liste/colors"
+        },
+        {
+         "id": "en.5.wortlisten.weekdays",
+         "titel": "Wochentage",
+         "inhalt": "vok5:liste/weekdays"
+        },
+        {
+         "id": "en.5.wortlisten.numbers-15-39",
+         "titel": "Zahlen 15–39",
+         "inhalt": "vok5:liste/numbers_15_39"
+        },
+        {
+         "id": "en.5.wortlisten.numbers-40-100",
+         "titel": "Zahlen 40–100",
+         "inhalt": "vok5:liste/numbers_40_100"
+        },
+        {
+         "id": "en.5.wortlisten.months",
+         "titel": "Monate",
+         "inhalt": "vok5:liste/months"
+        },
+        {
+         "id": "en.5.wortlisten.ordinals",
+         "titel": "Ordinalzahlen",
+         "inhalt": "vok5:liste/ordinals"
+        },
+        {
+         "id": "en.5.wortlisten.question-words",
+         "titel": "Fragewörter",
+         "inhalt": "vok5:liste/question_words"
+        }
+       ]
+      },
+      {
+       "id": "en.6.vok",
+       "titel": "Vokabeln Klasse 6 (Highlight 6)",
+       "klasse": 6,
+       "quelle": {
+        "app": "apps/englisch/vokabeltrainer6.html"
+       },
+       "ergebnis": [
+        "vokabeltrainer6.html"
+       ],
+       "lehrplan": "",
+       "dauer": null,
+       "einsatz": "",
+       "stufen": [
+        {
+         "id": "en.6.vok.u1",
+         "titel": "Unit 1: Together again",
+         "inhalt": "vok6:unit1"
+        },
+        {
+         "id": "en.6.vok.u2",
+         "titel": "Unit 2: Neighbours",
+         "inhalt": "vok6:unit2"
+        },
+        {
+         "id": "en.6.vok.u3",
+         "titel": "Unit 3: I'm feeling great!",
+         "inhalt": "vok6:unit3"
+        },
+        {
+         "id": "en.6.vok.u4",
+         "titel": "Unit 4: Teenage life",
+         "inhalt": "vok6:unit4"
+        },
+        {
+         "id": "en.6.vok.u5",
+         "titel": "Unit 5: Dartmoor adventures",
+         "inhalt": "vok6:unit5"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "en.grammatik",
+     "titel": "Grammatik",
+     "themen": [
+      {
+       "id": "en.5.simple-present",
+       "titel": "Simple Present",
+       "klasse": 5,
+       "quelle": {
+        "app": "apps/englisch/practice_simple_present.html"
+       },
+       "ergebnis": [
+        "practice_simple_present.html"
+       ],
+       "lehrplan": "",
+       "dauer": null,
+       "einsatz": ""
+      },
+      {
+       "id": "en.5.simple-past",
+       "titel": "Simple Past",
+       "klasse": 5,
+       "quelle": {
+        "app": "apps/englisch/simple-past.html"
+       },
+       "ergebnis": [
+        "simple-past.html"
+       ],
+       "lehrplan": "",
+       "dauer": null,
+       "einsatz": ""
+      },
+      {
+       "id": "en.5.satzglieder",
+       "titel": "Satzglieder ordnen",
+       "klasse": 5,
+       "quelle": {
+        "app": "apps/englisch/satzglieder-erkennen.html"
+       },
+       "ergebnis": [
+        "satzglieder-erkennen.html"
+       ],
+       "lehrplan": "",
+       "dauer": null,
+       "einsatz": ""
+      }
+     ]
+    },
+    {
+     "id": "en.sprechen",
+     "titel": "Sprechen",
+     "themen": [
+      {
+       "id": "en.5.dialoge",
+       "titel": "English Dialogue (Vorlagen)",
+       "klasse": 5,
+       "quelle": {
+        "app": "apps/englisch/english-dialog-vorlagen.html"
+       },
+       "ergebnis": [
+        "english-dialog-vorlagen.html"
+       ],
+       "lehrplan": "",
+       "dauer": null,
+       "einsatz": ""
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "gpg",
+   "name": "GPG",
+   "bereiche": [
+    {
+     "id": "gpg.raum",
+     "titel": "Orientierung im Raum",
+     "themen": [
+      {
+       "id": "gpg.6.laender",
+       "titel": "Länder finden",
+       "klasse": 6,
+       "quelle": {
+        "app": "apps/gpg/laender-finder.html"
+       },
+       "ergebnis": [
+        "laender-finder.html"
+       ],
+       "lehrplan": "",
+       "dauer": null,
+       "einsatz": "",
+       "stufen": [
+        {
+         "id": "gpg.6.laender.europa",
+         "titel": "Europa"
+        },
+        {
+         "id": "gpg.6.laender.bundeslaender",
+         "titel": "Bundesländer"
+        }
+       ]
+      },
+      {
+       "id": "gpg.5.hauptstaedte",
+       "titel": "Hauptstädte",
+       "klasse": 5,
+       "quelle": {
+        "spiele": true
+       },
+       "lehrplan": "",
+       "dauer": null,
+       "einsatz": "",
+       "stufen": [
+        {
+         "id": "gpg.5.hauptstaedte.europa",
+         "titel": "Hauptstädte Europas (Start)",
+         "inhalt": "hauptstaedte-europa"
+        },
+        {
+         "id": "gpg.5.hauptstaedte.europa-profi",
+         "titel": "Hauptstädte Europas (Profi)",
+         "inhalt": "hauptstaedte-europa-profi"
+        },
+        {
+         "id": "gpg.5.hauptstaedte.landes",
+         "titel": "Landeshauptstädte",
+         "inhalt": "landeshauptstaedte"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "gpg.gesellschaft",
+     "titel": "Zusammenleben",
+     "themen": [
+      {
+       "id": "gpg.5.regeln",
+       "titel": "Regeln in unserer Gesellschaft",
+       "klasse": 5,
+       "quelle": {
+        "app": "apps/gpg/regeln-sortierer-gpg.html"
+       },
+       "ergebnis": [
+        "regeln-sortierer-gpg.html"
+       ],
+       "lehrplan": "",
+       "dauer": null,
+       "einsatz": ""
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "de",
+   "name": "Deutsch",
+   "bereiche": []
+  },
+  {
+   "id": "nut",
+   "name": "Natur und Technik",
+   "bereiche": []
+  },
+  {
+   "id": "daz",
+   "name": "DaZ",
+   "bereiche": []
+  },
+  {
+   "id": "allg",
+   "name": "Allgemein",
+   "bereiche": []
+  }
+ ]
+}
