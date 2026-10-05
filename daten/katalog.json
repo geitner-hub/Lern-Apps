@@ -215,12 +215,12 @@
         },
         {
          "id": "ma.5.kopf.plusminus",
-         "titel": "Plus & Minus bis 1000",
+         "titel": "Plus & Minus bis 100",
          "lehrplan": "M5 LB 1.2: Summen und Differenzen im Kopf"
         },
         {
          "id": "ma.5.kopf.malgeteilt",
-         "titel": "Mal & Geteilt",
+         "titel": "Mal & Geteilt mit Zehnern",
          "lehrplan": "M5 LB 1.2: Produkte und Quotienten im Kopf"
         },
         {
@@ -322,7 +322,7 @@
         },
         {
          "id": "ma.6.kopf.plusminus",
-         "titel": "Plus & Minus bis 10 000",
+         "titel": "Plus & Minus bis 1000",
          "lehrplan": "Kopfrechnen: Grundrechenarten mit natürlichen Zahlen (Wiederholung M5 LB 1.2)"
         },
         {

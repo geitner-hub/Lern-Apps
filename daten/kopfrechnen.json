@@ -454,17 +454,17 @@
   },
   "ma.5.kopf.plusminus": {
    "titel": "Plus & Minus",
-   "kurz": "bis 1000, mit Übergang",
+   "kurz": "bis 100 · glatte Zehner bis 1000",
    "generatoren": [
     {
      "typ": "plusminus",
-     "bis": 1000
+     "stufe": "5"
     }
    ]
   },
   "ma.5.kopf.malgeteilt": {
-   "titel": "Mal & Geteilt",
-   "kurz": "30 × 4 · 23 × 4 · 84 ÷ 4 · 240 ÷ 6",
+   "titel": "Mal & Geteilt mit Zehnern",
+   "kurz": "3 × 40 · 240 ÷ 6 · × 10 · Doppelt/Hälfte",
    "generatoren": [
     {
      "typ": "malgeteilt",
@@ -477,47 +477,51 @@
    "kurz": "alle vier Rechenarten",
    "generatoren": [
     {
-     "typ": "1x1"
+     "typ": "1x1",
+     "gewicht": 2
     },
     {
      "typ": "plusminus",
-     "bis": 1000
+     "stufe": "5"
     },
     {
      "typ": "malgeteilt",
-     "stufe": "5",
-     "gewicht": 2
+     "stufe": "5"
     }
    ]
   },
   "ma.6.kopf.einmaleins": {
    "titel": "Einmaleins",
-   "kurz": "kleines und großes 1×1 (bis 20)",
+   "kurz": "kleines 1×1 · 11er, 12er, 15er, 20er, 25er",
    "generatoren": [
     {
      "typ": "1x1"
     },
     {
      "typ": "1x1",
-     "gross": true,
-     "bis": 20,
-     "gewicht": 2
+     "reihen": [
+      11,
+      12,
+      15,
+      20,
+      25
+     ]
     }
    ]
   },
   "ma.6.kopf.plusminus": {
    "titel": "Plus & Minus",
-   "kurz": "bis 10 000",
+   "kurz": "bis 1000 · 456 + 38 · 340 + 280",
    "generatoren": [
     {
      "typ": "plusminus",
-     "bis": 10000
+     "stufe": "6"
     }
    ]
   },
   "ma.6.kopf.malgeteilt": {
    "titel": "Mal & Geteilt",
-   "kurz": "12 × 15 · 360 ÷ 12 · 378 ÷ 6",
+   "kurz": "6 × 300 · 4200 ÷ 7 · 14 × 3 · 48 ÷ 3",
    "generatoren": [
     {
      "typ": "malgeteilt",
@@ -531,12 +535,20 @@
    "generatoren": [
     {
      "typ": "1x1",
-     "gross": true,
-     "bis": 20
+     "reihen": [
+      11,
+      12,
+      15,
+      20,
+      25
+     ]
+    },
+    {
+     "typ": "1x1"
     },
     {
      "typ": "plusminus",
-     "bis": 10000
+     "stufe": "6"
     },
     {
      "typ": "malgeteilt",

@@ -270,7 +270,12 @@
     const a = rand(2, 10), b = rand(2, 10);
     return rechen(`${a} × ${b}`, a * b, [a * (b + 1), a * (b - 1)]);
   }
-  function einmaleins(gross, bis) {
+  function einmaleins(gross, bis, reihen) {
+    if (Array.isArray(reihen) && reihen.length) {              // ausgewählte Reihen, z. B. 11er, 12er, 15er, 20er, 25er
+      const a = pick(reihen), b = rand(2, 10), ans = a * b;
+      if (Math.random() < .3) return rechen(`${ans} ÷ ${a}`, b, [b + 1, b - 1], false, { tipp: `Zähle in ${a}er-Schritten.`, erklaerung: `${a} × ${b} = ${ans}, also ${ans} ÷ ${a} = ${b}.` });
+      return rechen(`${b} × ${a}`, ans, [ans + a, ans - a], false, { tipp: `Zähle in ${a}er-Schritten: ${a}, ${2 * a}, ${3 * a} …`, erklaerung: `${a}er-Reihe: ${Array.from({ length: Math.min(b, 4) }, (_, i) => a * (b - Math.min(b, 4) + 1 + i)).join(', ')} → ${b} × ${a} = ${ans}.` });
+    }
     const [lo, hi] = gross ? [11, Math.min(25, Math.max(12, Number(bis) || 25))] : [1, 10];
     const a = rand(lo, hi), b = rand(gross ? lo : 2, hi);
     if (Math.random() < .25 && !gross) return rechen(`${a * b} ÷ ${a}`, b, [b + 1, b - 1], false, { erklaerung: `${a} × ${b} = ${a * b}, also ${a * b} ÷ ${a} = ${b}.` });
@@ -282,49 +287,65 @@
   // ═══════════════════════════════════════════════════════
   //  KOPFRECHNEN (nur Einmaleins und Grundrechenarten, ohne Rechenregeln)
   // ═══════════════════════════════════════════════════════
-  /** + und − bis 1000 bzw. 10 000, mit Übergang; Erklärung über Zerlegen */
-  function plusMinus(bis) {
-    const gross = bis > 1000, plus = Math.random() < .5;
-    const z = () => gross ? rand(12, 99) * 100 + pick([0, 0, 10, 50]) * (Math.random() < .5 ? 1 : 0) + (Math.random() < .3 ? rand(1, 9) * 10 : 0) : rand(101, 989);
-    let a = z(), b = gross ? rand(5, 60) * 100 + pick([0, 50, 20, 80]) : rand(12, 489);
-    if (plus && a + b > bis) a = bis - b - rand(1, 100);
-    if (!plus && b >= a) [a, b] = [b + a, a];
-    if (a < 1 || b < 1) return null;
+  //  Maßstab: was Kinder an der Mittelschule wirklich im Kopf rechnen. Größere Zahlen,
+  //  zweistellige Divisoren usw. gehören zum halbschriftlichen/schriftlichen Rechnen
+  //  (Mathe-Trainer bzw. Unterricht), nicht hierher.
+
+  /** Plus und Minus. Klasse 5: bis 100 (mit Übergang) und glatte Zehner bis 1000.
+   *  Klasse 6: zusätzlich dreistellig ± zweistellig (z. B. 456 + 38). */
+  function plusMinus(kl) {
+    const plus = Math.random() < .5;
+    const art = pick(kl === '6' ? ['100', 'zehner', 'drei', 'drei'] : ['100', '100', '100', 'zehner']);
+    let a, b;
+    if (art === '100') {                                         // 47 + 8, 63 − 27, 38 + 45
+      a = rand(12, 89); b = Math.random() < .5 ? rand(3, 9) : rand(11, 49);
+      if (plus && a + b > 100) return null;
+    } else if (art === 'zehner') {                               // 340 + 50, 700 − 60, 250 + 380
+      a = rand(11, 95) * 10; b = Math.random() < .5 ? rand(1, 9) * 10 : rand(11, 49) * 10;
+      if (plus && a + b > 1000) return null;
+    } else {                                                     // 456 + 38, 523 − 47
+      a = rand(120, 950); b = rand(12, 69);
+      if (plus && a + b > 1000) return null;
+    }
+    if (!plus && b >= a) return null;
     const ans = plus ? a + b : a - b;
-    if (ans < 1 || ans > bis) return null;
-    const teil = gross ? Math.floor(b / 1000) * 1000 || Math.floor(b / 100) * 100 : Math.floor(b / 100) * 100 || Math.floor(b / 10) * 10;
-    const rest = b - teil, zw = plus ? a + teil : a - teil;
-    const erkl = rest && teil ? `${zahl(a)} ${plus ? '+' : '−'} ${zahl(teil)} = ${zahl(zw)}, dann ${plus ? '+' : '−'} ${zahl(rest)} = ${zahl(ans)}.` : `${zahl(a)} ${plus ? '+' : '−'} ${zahl(b)} = ${zahl(ans)}.`;
-    return rechen(`${zahl(a)} ${plus ? '+' : '−'} ${zahl(b)}`, ans, [ans + 100, ans - 100, ans + 10, ans - 10], false,
-      { tipp: rest && teil ? `Zerlege ${zahl(b)} in ${zahl(teil)} und ${zahl(rest)}.` : '', erklaerung: erkl });
+    const st = art === 'zehner' ? 100 : 10;
+    const teil = Math.floor(b / st) * st, rest = b - teil, zw = plus ? a + teil : a - teil;
+    const zerlegt = teil && rest;
+    return rechen(`${a} ${plus ? '+' : '−'} ${b}`, ans, [ans + 10, ans - 10, ans + 1, ans - 1], false, {
+      tipp: zerlegt ? `Zerlege ${b} in ${teil} und ${rest}.` : '',
+      erklaerung: zerlegt ? `${a} ${plus ? '+' : '−'} ${teil} = ${zw}, dann ${plus ? '+' : '−'} ${rest} = ${ans}.` : `${a} ${plus ? '+' : '−'} ${b} = ${ans}.`,
+    });
   }
-  /** × und ÷ über das Einmaleins hinaus (Klasse 5: 30 × 4, 23 × 4, 84 ÷ 4; Klasse 6: 12 × 15, 360 ÷ 12, 378 ÷ 6) */
+  /** Mal und Geteilt, immer mit dem Einmaleins im Hintergrund.
+   *  Klasse 5: 3 × 40, 240 ÷ 6, × 10/100, ÷ 10, Verdoppeln/Halbieren bis 100.
+   *  Klasse 6: zusätzlich 6 × 300, 4200 ÷ 7, 14 × 3, 25 × 4, 48 ÷ 3. */
   function malGeteilt(kl) {
-    const t = pick(kl === '6' ? ['zz', 'zz', 'gz', 'de'] : ['ze', 'ze', 'ge', 'ge']);
-    if (t === 'ze') {                                   // Zehner × Einer bzw. zweistellig × einstellig
-      const a = rand(11, 99), b = rand(2, 9), z = a - a % 10, e = a % 10, ans = a * b;
-      if (Math.random() < .5) {
-        if (!e) return rechen(`${a} × ${b}`, ans, [ans + b, z / 10 * b], false, { tipp: `Rechne ${a / 10} × ${b} und hänge eine Null an.`, erklaerung: `${a / 10} × ${b} = ${a / 10 * b}, mit Null: ${ans}.` });
-        return rechen(`${a} × ${b}`, ans, [z * b + e, ans + b, ans - b], false, { tipp: `Zerlege: ${z} × ${b} und ${e} × ${b}.`, erklaerung: `${z} × ${b} = ${z * b}, ${e} × ${b} = ${e * b}, zusammen ${ans}.` });
-      }
-      return rechen(`${ans} ÷ ${b}`, a, [a + 1, a - 1, a + 10], false, { tipp: `Zerlege ${ans} in Zahlen, die durch ${b} gehen.`, erklaerung: `${z * b} ÷ ${b} = ${z}, ${e * b} ÷ ${b} = ${e}, zusammen ${a}.` });
+    const art = pick(kl === '6' ? ['zehner', 'hunderter', 'klein-zwei', 'klein-zwei', 'teilen-zwei'] : ['zehner', 'zehner', 'zehner', 'zehnmal', 'doppel']);
+    if (art === 'zehner' || art === 'hunderter') {
+      const f = art === 'zehner' ? 10 : 100, a = rand(2, 9), b = rand(2, 9), B = b * f, ans = a * B, w = f === 10 ? 'eine Null' : 'zwei Nullen';
+      if (Math.random() < .5) return rechen(`${a} × ${zahl(B)}`, ans, [a * b, ans * 10, ans + B], false,
+        { tipp: `Rechne ${a} × ${b} und hänge ${w} an.`, erklaerung: `${a} × ${b} = ${a * b}, dazu ${w}: ${zahl(ans)}.` });
+      return rechen(`${zahl(ans)} ÷ ${a}`, B, [b, B * 10, B + f], false,
+        { tipp: `Denk an ${a * b} ÷ ${a}.`, erklaerung: `${a * b} ÷ ${a} = ${b}, dazu ${w}: ${zahl(B)}.` });
     }
-    if (t === 'ge') {                                   // Umkehraufgaben mit Zehnern: 240 ÷ 6, 7 × 80
-      const a = rand(2, 9), b = rand(2, 9) * 10, ans = a * b;
-      if (Math.random() < .5) return rechen(`${a} × ${b}`, ans, [ans * 10, ans / 10, ans + b], false, { tipp: `Rechne ${a} × ${b / 10} und hänge eine Null an.`, erklaerung: `${a} × ${b / 10} = ${a * b / 10}, mit Null: ${ans}.` });
-      return rechen(`${ans} ÷ ${a}`, b, [b / 10, b + 10, b - 10], false, { tipp: `Denk an ${ans / 10} ÷ ${a}.`, erklaerung: `${ans / 10} ÷ ${a} = ${b / 10}, also ${ans} ÷ ${a} = ${b}.` });
+    if (art === 'zehnmal') {
+      const a = rand(3, 99), f = pick([10, 10, 100]);
+      if (Math.random() < .4 && f === 10) return rechen(`${a * 10} ÷ 10`, a, [a * 100, a + 10], false, { tipp: 'Durch 10: eine Null weg.', erklaerung: `${a * 10} ÷ 10 = ${a}.` });
+      return rechen(`${a} × ${f}`, a * f, [a * f * 10, a + f], false, { tipp: `Mal ${f}: ${f === 10 ? 'eine Null' : 'zwei Nullen'} anhängen.`, erklaerung: `${a} × ${f} = ${zahl(a * f)}.` });
     }
-    if (t === 'zz') {                                   // zweistellig × zweistellig (kopfgeeignet)
-      const a = rand(11, 19), b = pick([11, 12, 13, 14, 15, 20, 25]), ans = a * b, z = b - b % 10, e = b % 10;
-      return rechen(`${a} × ${b}`, ans, [a * z + e, ans + a, ans - a], false,
-        { tipp: e ? `Zerlege ${b} in ${z} und ${e}.` : `Rechne ${a} × ${b / 10} und hänge eine Null an.`, erklaerung: e ? `${a} × ${z} = ${a * z}, ${a} × ${e} = ${a * e}, zusammen ${ans}.` : `${a} × ${b / 10} = ${a * b / 10}, mit Null: ${ans}.` });
+    if (art === 'doppel') {
+      if (Math.random() < .5) { const a = rand(6, 49); return rechen(`Das Doppelte von ${a}`, 2 * a, [2 * a + 10, 2 * a - 1], false, { tipp: `${a} + ${a}`, erklaerung: `${a} + ${a} = ${2 * a}.` }); }
+      const a = rand(3, 49) * 2; return rechen(`Die Hälfte von ${a}`, a / 2, [a / 2 + 5, a / 2 - 1], false, { tipp: `${a} ÷ 2`, erklaerung: `${a} ÷ 2 = ${a / 2}.` });
     }
-    if (t === 'gz') {                                   // ÷ durch zweistellig, glatt: 360 ÷ 12
-      const d = rand(11, 25), q = rand(2, 9) * (Math.random() < .4 ? 10 : 1), A = d * q;
-      return rechen(`${A} ÷ ${d}`, q, [q + 1, q - 1, q * 10], false, { tipp: `${d} × ? = ${A}`, erklaerung: `${d} × ${q} = ${A}, also ${A} ÷ ${d} = ${q}.` });
+    if (art === 'klein-zwei') {                                  // 14 × 3, 25 × 4, 16 × 5
+      const a = pick([11, 12, 13, 14, 15, 16, 18, 20, 21, 25]), b = rand(2, a >= 20 ? 4 : 5), z = a - a % 10, e = a % 10, ans = a * b;
+      return rechen(`${a} × ${b}`, ans, [z * b + e, ans + b, ans - b], false,
+        { tipp: e ? `Zerlege: ${z} × ${b} und ${e} × ${b}.` : '', erklaerung: e ? `${z} × ${b} = ${z * b}, ${e} × ${b} = ${e * b}, zusammen ${ans}.` : `${a} × ${b} = ${ans}.` });
     }
-    const d = rand(3, 9), q = rand(21, 99), A = d * q, h = Math.floor(A / d / 10) * 10 * d;   // dreistellig ÷ einstellig
-    return rechen(`${A} ÷ ${d}`, q, [q + 1, q - 1, q + 10], false, { tipp: `Zerlege ${A} in ${h} und ${A - h}.`, erklaerung: `${h} ÷ ${d} = ${h / d}, ${A - h} ÷ ${d} = ${(A - h) / d}, zusammen ${q}.` });
+    const d = rand(2, 5), q = rand(11, 20), A = d * q, z = 10 * d;            // 48 ÷ 3, 65 ÷ 5
+    return rechen(`${A} ÷ ${d}`, q, [q + 1, q - 1, q + 10], false,
+      { tipp: `Zerlege ${A} in ${z} und ${A - z}.`, erklaerung: `${z} ÷ ${d} = 10, ${A - z} ÷ ${d} = ${q - 10}, zusammen ${q}.` });
   }
 
   // ═══════════════════════════════════════════════════════
@@ -499,8 +520,8 @@
     'alt1': s => alt1(s.stufe), 'alt2': s => alt2(s.stufe), 'alt3': s => alt3(s.stufe),
     'alt4': s => alt4(s.stufe), 'alt5': s => alt5(s.stufe),
     'alt6': s => alt6(pick(s.arten || ['int'])),
-    '1x1': s => einmaleins(!!s.gross, s.bis),
-    'plusminus': s => plusMinus(Number(s.bis) || 1000), 'malgeteilt': s => malGeteilt(String(s.stufe || '5')), 'ganze-zahlen': ganzeZahlen,
+    '1x1': s => einmaleins(!!s.gross, s.bis, s.reihen),
+    'plusminus': s => plusMinus(String(s.stufe || '5')), 'malgeteilt': s => malGeteilt(String(s.stufe || '5')), 'ganze-zahlen': ganzeZahlen,
     'gross-plusminus': grossPlusMinus, 'stufen-mal': stufenMal, 'punkt-vor-strich': punktVorStrich,
     'klammern': klammern, 'rechenvorteile': rechenvorteile, 'ueberschlag': ueberschlag,
     'teilbar': teilbar, 'kgv-ggt': kgvGgt, 'bruch-erweitern': bruchErweitern, 'bruch-kuerzen': bruchKuerzen,
