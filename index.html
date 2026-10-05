@@ -1041,7 +1041,7 @@ function renderPass(mode) {
         ${mode === 'edit' ? '<button type="button" class="lw-btn" data-mode="wardrobe">Abbrechen</button>' : ''}
       </div>
       <div class="lw-msg" id="pf-msg"></div>
-      ${mode === 'setup' ? `<div class="lw-sec"><details class="lw-details"><summary>Ich habe schon einen Pass (Sicherungs-Code)</summary>${restoreForm()}</details></div>` : ''}`;
+      ${mode === 'setup' ? syncSetupHTML() + `<div class="lw-sec"><details class="lw-details"><summary>Ich habe schon einen Pass (Sicherungs-Code)</summary>${restoreForm()}</details></div>` : ''}`;
     return;
   }
 
