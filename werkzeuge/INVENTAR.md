@@ -6,36 +6,36 @@ Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv
 
 ## Anbindung
 
-| Datei | Name | Art | Fach · Klassen | Sichtbar | Ergebnis | Pass-XP | liefert „Meine Themen“ | nutzt „Meine Themen“ | Dorf-Aufträge | Entscheidung | Notiz |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| `apps/englisch/english-dialog-vorlagen.html` | English Dialogue | Lern-App | Englisch · alle | versteckt | ⚠️ ohne navbar.js | – | – | – | nur wenn sichtbar |  |  |
-| `apps/englisch/practice_simple_present.html` | Simple present | Lern-App | Englisch · 5 | sichtbar | ja | ja | – | – | ja |  |  |
-| `apps/englisch/satzglieder-erkennen.html` | Satzglieder ordnen | Lern-App | Englisch · 5 | sichtbar | ja | ja | – | – | ja |  |  |
-| `apps/englisch/simple-past.html` | Simple Past | Lern-App | Englisch · 5, 6 | sichtbar | ja | ja | – | – | ja |  |  |
-| `apps/englisch/vokabeltrainer5.html` | Vokabeltrainer 5. Klasse | Lern-App | Englisch · 5 | sichtbar | ja | ja | ja | – | ja |  |  |
-| `apps/englisch/vokabeltrainer6.html` | Vokabeltrainer 6. Klasse | Lern-App | Englisch · 6 | sichtbar | ja | ja | ja | – | ja |  |  |
-| `apps/gpg/laender-finder.html` | Länder finden | Lern-App | GPG · 6 | sichtbar | ja | ja | – | – | ja |  |  |
-| `apps/gpg/regeln-sortierer-gpg.html` | Regeln in unserer Gesellschaft | Lern-App | GPG · alle | versteckt | ⚠️ altes Format | – | – | – | nur wenn sichtbar |  |  |
-| `apps/mathe/einmaleins_tafel.html` | Einmaleins 1x1 | Lern-App | Mathematik · 5, 6 | sichtbar | ja | ja | ja | – | ja (1 Runden) |  |  |
-| `apps/mathe/kopfrechnen.html` | Kopfrechnen Klasse 5 | Lern-App | Mathematik · 5 | sichtbar | ja | ja | ja | – | ja |  |  |
-| `apps/mathe/kopfrechnen_kl1.html` | Kopfrechnen Klasse 1 | Lern-App | Mathematik · alle | versteckt | ja | ja | – | – | nur wenn sichtbar |  |  |
-| `apps/mathe/kopfrechnen_kl2.html` | Kopfrechnen Klasse 2 | Lern-App | Mathematik · alle | versteckt | ja | ja | – | – | nur wenn sichtbar |  |  |
-| `apps/mathe/kopfrechnen_kl3.html` | Kopfrechnen Klasse 3 | Lern-App | Mathematik · alle | versteckt | ja | ja | – | – | nur wenn sichtbar |  |  |
-| `apps/mathe/kopfrechnen_kl4.html` | Kopfrechnen Klasse 4 | Lern-App | Mathematik · 5 | sichtbar | ja | ja | ja | – | ja |  |  |
-| `apps/mathe/kopfrechnen_kl6.html` | Kopfrechnen Klasse 6 | Lern-App | Mathematik · 6 | sichtbar | ja | ja | ja | – | ja |  |  |
-| `apps/mathe/laengeneinheiten.html` | Längeneinheiten umrechnen | Lern-App | Mathematik · 5, 6 | sichtbar | ja | ja | – | – | ja |  |  |
-| `apps/mathe/rechen-arena.html` | Rechen-Arena | Lern-App | Mathematik · 5, 6 | sichtbar | ja | ja | – | – | ja |  |  |
-| `apps/mathe/rechteck-app.html` | Rechteck-Werkstatt | Lern-App | Mathematik · 5 | versteckt | – | – | – | – | nur wenn sichtbar |  |  |
-| `apps/mathe/sachaufgaben_laengen.html` | Sachaufgaben Längen | Lern-App | Mathematik · 5 | versteckt | – | – | – | – | nur wenn sichtbar |  |  |
-| `apps/mathe/vierecke_unterscheiden.html` | Vierecke unterscheiden | Lern-App | Mathematik · 5 | versteckt | ⚠️ altes Format | – | – | – | nur wenn sichtbar |  |  |
-| `spiele/burg-verteidigung.html` | Tower Defense | Spiel | Allgemein · alle | sichtbar | ja | ja | – | ja | – (Spiel) |  |  |
-| `spiele/dorf.html` | Mein Dorf | Spiel | Allgemein · alle | sichtbar | – | – | – | – | Dorf selbst |  |  |
-| `spiele/expedition.html` | Entdecker-Expedition | Spiel | GPG · 6 | versteckt | über spiel-hilfen.js | ja | – | – | – (Spiel) |  |  |
-| `spiele/kitchen-chaos.html` | Kitchen-Chaos | Spiel | Allgemein · alle | sichtbar | über spiel-hilfen.js | ja | – | – | – (Spiel) |  |  |
-| `spiele/runner.html` | RUN! | Spiel | Allgemein · alle | sichtbar | ja | ja | – | ja | – (Spiel) |  |  |
-| `spiele/tauziehen.html` | Tauziehen | Spiel | Allgemein · alle | sichtbar | über spiel-hilfen.js | ja | – | ja | – (Spiel) |  |  |
-| `spiele/wort-des-tages.html` | Wort des Tages | Spiel | Allgemein · alle | versteckt | über spiel-hilfen.js | ja | – | ja | – (Spiel) |  |  |
-| `spiele/zauberwort.html` | Zauberwort | Spiel | Allgemein · alle | versteckt | über spiel-hilfen.js | ja | – | ja | – (Spiel) |  |  |
+| Datei | Name | Themen-ID | Art | Fach · Klassen | Sichtbar | Ergebnis | Pass-XP | liefert „Meine Themen“ | nutzt „Meine Themen“ | Dorf-Aufträge | Entscheidung | Notiz |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| `apps/englisch/english-dialog-vorlagen.html` | English Dialogue | `en.5.dialoge` | Lern-App | Englisch · alle | versteckt | ⚠️ ohne navbar.js | – | – | – | nur wenn sichtbar |  |  |
+| `apps/englisch/practice_simple_present.html` | Simple present | `en.5.simple-present` | Lern-App | Englisch · 5 | sichtbar | ja | ja | – | – | ja |  |  |
+| `apps/englisch/satzglieder-erkennen.html` | Satzglieder ordnen | `en.5.satzglieder` | Lern-App | Englisch · 5 | sichtbar | ja | ja | – | – | ja |  |  |
+| `apps/englisch/simple-past.html` | Simple Past | `en.5.simple-past` | Lern-App | Englisch · 5, 6 | sichtbar | ja | ja | – | – | ja |  |  |
+| `apps/englisch/vokabeltrainer5.html` | Vokabeltrainer 5. Klasse | `en.5.vok` (7 Stufen), `en.5.wortlisten` (8 Stufen) | Lern-App | Englisch · 5 | sichtbar | ja | ja | ja | – | ja |  |  |
+| `apps/englisch/vokabeltrainer6.html` | Vokabeltrainer 6. Klasse | `en.6.vok` (5 Stufen) | Lern-App | Englisch · 6 | sichtbar | ja | ja | ja | – | ja |  |  |
+| `apps/gpg/laender-finder.html` | Länder finden | `gpg.6.laender` (2 Stufen) | Lern-App | GPG · 6 | sichtbar | ja | ja | – | – | ja |  |  |
+| `apps/gpg/regeln-sortierer-gpg.html` | Regeln in unserer Gesellschaft | `gpg.5.regeln` | Lern-App | GPG · alle | versteckt | ⚠️ altes Format | – | – | – | nur wenn sichtbar |  |  |
+| `apps/mathe/einmaleins_tafel.html` | Einmaleins 1x1 | `ma.5.1x1` (2 Stufen) | Lern-App | Mathematik · 5, 6 | sichtbar | ja | ja | ja | – | ja (1 Runden) |  |  |
+| `apps/mathe/kopfrechnen.html` | Kopfrechnen Klasse 5 | `ma.5.kopf` (3 Stufen) | Lern-App | Mathematik · 5 | sichtbar | ja | ja | ja | – | ja |  |  |
+| `apps/mathe/kopfrechnen_kl1.html` | Kopfrechnen Klasse 1 | `ma.1.kopf` (3 Stufen) | Lern-App | Mathematik · alle | versteckt | ja | ja | – | – | nur wenn sichtbar |  |  |
+| `apps/mathe/kopfrechnen_kl2.html` | Kopfrechnen Klasse 2 | `ma.2.kopf` (3 Stufen) | Lern-App | Mathematik · alle | versteckt | ja | ja | – | – | nur wenn sichtbar |  |  |
+| `apps/mathe/kopfrechnen_kl3.html` | Kopfrechnen Klasse 3 | `ma.3.kopf` (3 Stufen) | Lern-App | Mathematik · alle | versteckt | ja | ja | – | – | nur wenn sichtbar |  |  |
+| `apps/mathe/kopfrechnen_kl4.html` | Kopfrechnen Klasse 4 | `ma.4.kopf` (3 Stufen) | Lern-App | Mathematik · 5 | sichtbar | ja | ja | ja | – | ja |  |  |
+| `apps/mathe/kopfrechnen_kl6.html` | Kopfrechnen Klasse 6 | `ma.6.kopf` (3 Stufen) | Lern-App | Mathematik · 6 | sichtbar | ja | ja | ja | – | ja |  |  |
+| `apps/mathe/laengeneinheiten.html` | Längeneinheiten umrechnen | `ma.5.laengen` | Lern-App | Mathematik · 5, 6 | sichtbar | ja | ja | – | – | ja |  |  |
+| `apps/mathe/rechen-arena.html` | Rechen-Arena | `ma.5.rechen-arena` | Lern-App | Mathematik · 5, 6 | sichtbar | ja | ja | – | – | ja |  |  |
+| `apps/mathe/rechteck-app.html` | Rechteck-Werkstatt | `ma.5.rechteck` | Lern-App | Mathematik · 5 | versteckt | – | – | – | – | nur wenn sichtbar |  |  |
+| `apps/mathe/sachaufgaben_laengen.html` | Sachaufgaben Längen | `ma.5.sachaufgaben-laengen` | Lern-App | Mathematik · 5 | versteckt | – | – | – | – | nur wenn sichtbar |  |  |
+| `apps/mathe/vierecke_unterscheiden.html` | Vierecke unterscheiden | `ma.5.vierecke` | Lern-App | Mathematik · 5 | versteckt | ⚠️ altes Format | – | – | – | nur wenn sichtbar |  |  |
+| `spiele/burg-verteidigung.html` | Tower Defense | – | Spiel | Allgemein · alle | sichtbar | ja | ja | – | ja | – (Spiel) |  |  |
+| `spiele/dorf.html` | Mein Dorf | – | Spiel | Allgemein · alle | sichtbar | – | – | – | – | Dorf selbst |  |  |
+| `spiele/expedition.html` | Entdecker-Expedition | – | Spiel | GPG · 6 | versteckt | über spiel-hilfen.js | ja | – | – | – (Spiel) |  |  |
+| `spiele/kitchen-chaos.html` | Kitchen-Chaos | – | Spiel | Allgemein · alle | sichtbar | über spiel-hilfen.js | ja | – | – | – (Spiel) |  |  |
+| `spiele/runner.html` | RUN! | – | Spiel | Allgemein · alle | sichtbar | ja | ja | – | ja | – (Spiel) |  |  |
+| `spiele/tauziehen.html` | Tauziehen | – | Spiel | Allgemein · alle | sichtbar | über spiel-hilfen.js | ja | – | ja | – (Spiel) |  |  |
+| `spiele/wort-des-tages.html` | Wort des Tages | – | Spiel | Allgemein · alle | versteckt | über spiel-hilfen.js | ja | – | ja | – (Spiel) |  |  |
+| `spiele/zauberwort.html` | Zauberwort | – | Spiel | Allgemein · alle | versteckt | über spiel-hilfen.js | ja | – | ja | – (Spiel) |  |  |
 
 ## Technik
 
@@ -72,6 +72,7 @@ Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv
 
 ## Legende
 
+- **Themen-ID**: Thema der App in `daten/katalog.json` (Etappe 1); Stufen = feinere IDs darunter.
 - **Ergebnis**: meldet Runden über `LernApps.saveResult({ score, max, … })` an navbar.js. „⚠️ altes Format“ = Aufruf ohne Objekt, „⚠️ ohne Punkte“ = Aufruf ohne `score`.
 - **Pass-XP**: über eine gültige Ergebnis-Meldung, `gemeinsam/spiel-hilfen.js` oder direkt über `LernPass`.
 - **liefert „Meine Themen“**: die Meldung enthält `inhalt` → der Stoff erscheint in den Spielen.

@@ -26,6 +26,20 @@ for a in config.get('apps', []):
     d = str(a.get('datei', '')).split('#')[0].split('?')[0]
     eintrag.setdefault(d, a)
 
+# Themen-IDs aus dem Katalog (Etappe 1): App-Datei → Themen (mit Anzahl Stufen)
+themen_je_app = {}
+try:
+    kat = json.loads(Path('daten/katalog.json').read_text(encoding='utf-8'))
+    for f in kat.get('faecher', []):
+        for b in f.get('bereiche', []):
+            for th in b.get('themen', []):
+                app = (th.get('quelle') or {}).get('app')
+                if app:
+                    n = len(th.get('stufen', []))
+                    themen_je_app.setdefault(app, []).append(f"`{th['id']}`" + (f' ({n} Stufen)' if n else ''))
+except Exception:
+    pass
+
 umg = Path('gemeinsam/umgebung.js').read_text(encoding='utf-8')
 REG = re.findall(r"\[\s*'([^']+)'\s*,\s*'(?:local|session)'\s*,\s*'([^']*)'", umg)
 
@@ -84,7 +98,7 @@ def pruefe(pfad):
     if navbar: speicher.append('+ über navbar.js')
     klassen = ', '.join(str(k) for k in a.get('klassen', [])) or 'alle'
     return {
-        'datei': pfad, 'name': a.get('name', '–'), 'art': 'Spiel' if ist_spiel else 'Lern-App',
+        'datei': pfad, 'name': a.get('name', '–'), 'themen': ', '.join(themen_je_app.get(pfad, [])) or '–', 'art': 'Spiel' if ist_spiel else 'Lern-App',
         'fach': f"{a.get('fach', '–')} · {klassen}" if a else '–',
         'sichtbar': ('versteckt' if a.get('hidden') else 'sichtbar') if a else 'nicht in config',
         'ergebnis': ergebnis, 'pass': pass_xp, 'liefert': themen_liefert, 'nutzt': themen_nutzt, 'dorf': dorf,
@@ -107,18 +121,19 @@ out = [
     '',
     '## Anbindung',
     '',
-    '| Datei | Name | Art | Fach · Klassen | Sichtbar | Ergebnis | Pass-XP | liefert „Meine Themen“ | nutzt „Meine Themen“ | Dorf-Aufträge | Entscheidung | Notiz |',
-    '|---|---|---|---|---|---|---|---|---|---|---|---|',
+    '| Datei | Name | Themen-ID | Art | Fach · Klassen | Sichtbar | Ergebnis | Pass-XP | liefert „Meine Themen“ | nutzt „Meine Themen“ | Dorf-Aufträge | Entscheidung | Notiz |',
+    '|---|---|---|---|---|---|---|---|---|---|---|---|---|',
 ]
 for z in zeilen:
     ent, notiz = alt.get(z['datei'], ('', ''))
-    out.append(f"| `{z['datei']}` | {z['name']} | {z['art']} | {z['fach']} | {z['sichtbar']} | {z['ergebnis']} | "
+    out.append(f"| `{z['datei']}` | {z['name']} | {z['themen']} | {z['art']} | {z['fach']} | {z['sichtbar']} | {z['ergebnis']} | "
                f"{z['pass']} | {z['liefert']} | {z['nutzt']} | {z['dorf']} | {ent} | {notiz} |")
 out += ['', '## Technik', '',
         '| Datei | KB | Skripte | Speicherschlüssel |', '|---|---|---|---|']
 for z in zeilen:
     out.append(f"| {z['datei']} | {z['kb']} | {z['skripte']} | {z['speicher']} |")
 out += ['', '## Legende', '',
+        '- **Themen-ID**: Thema der App in `daten/katalog.json` (Etappe 1); Stufen = feinere IDs darunter.',
         '- **Ergebnis**: meldet Runden über `LernApps.saveResult({ score, max, … })` an navbar.js. '
         '„⚠️ altes Format“ = Aufruf ohne Objekt, „⚠️ ohne Punkte“ = Aufruf ohne `score`.',
         '- **Pass-XP**: über eine gültige Ergebnis-Meldung, `gemeinsam/spiel-hilfen.js` oder direkt über `LernPass`.',

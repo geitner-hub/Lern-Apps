@@ -14,10 +14,12 @@
 #    5. LW.VERSION (umgebung.js) und VERSION (sw.js) sind gleich.
 #    6. Jeder Speicherschlüssel im Code steht im Speicher-Register (umgebung.js).
 #    7. Die Größenbudgets werden eingehalten (BUDGETS unten).
+#    8. Inhalts-Katalog (daten/katalog.json): IDs eindeutig und richtig gebaut, jedes Thema
+#       hat Fach und Klasse, jede Quelle existiert, jede Lern-App aus config.json hat ein Thema.
 #  HINWEISE (gelb) – nichts kaputt, aber ansehen:
 #    Apps im Ordner, die nicht in config.json stehen, u. Ä.
 #
-#  Spätere Etappen ergänzen hier: Katalog (Etappe 1), Budgets (Etappe 2),
+#  Spätere Etappen ergänzen hier: Budgets (Etappe 2),
 #  Inhaltsdateien (Etappe 9).
 # ═══════════════════════════════════════════════════════
 import json, os, re, sys
@@ -148,6 +150,53 @@ for k in register:
     if k not in im_code:
         H(f'Speicher-Register: „{k}“ wird im Code nicht (mehr) gefunden')
 I(f'Speicher-Register: {len(register)} Schlüssel')
+
+# ── 8. Inhalts-Katalog ──────────────────────────────────
+KID = re.compile(r'^[a-z]+(?:\.[a-z0-9-]+)+$')
+faecher_shared = set(re.findall(r'^\s*"([^"]+)"\s*:\s*\{\s*icon', lies('gemeinsam/shared.js'), re.M))
+try:
+    katalog = json.loads(lies('daten/katalog.json'))
+except Exception as e:
+    katalog = None
+    F(f'daten/katalog.json fehlt oder ist ungültig ({e})')
+if katalog is not None:
+    ids, inhalte, ergebnisse, app_themen = {}, {}, {}, set()
+    def neu_id(i, wo):
+        if not isinstance(i, str) or not KID.fullmatch(i): F(f'Katalog: ungültige ID „{i}“ ({wo}) – erlaubt: kleine Buchstaben, Ziffern, „-“, Teile mit „.“'); return False
+        if i in ids: F(f'Katalog: ID doppelt: {i}'); return False
+        ids[i] = wo; return True
+    for f in katalog.get('faecher', []):
+        fid, fname = f.get('id'), f.get('name')
+        if fname not in faecher_shared: F(f'Katalog: Fach „{fname}“ steht nicht in gemeinsam/shared.js (CAT_STYLES)')
+        for b in f.get('bereiche', []):
+            if not str(b.get('id', '')).startswith(f'{fid}.'): F(f'Katalog: Bereich {b.get("id")} beginnt nicht mit „{fid}.“')
+            for th in b.get('themen', []):
+                tid = th.get('id')
+                if not neu_id(tid, b.get('id')): continue
+                if not tid.startswith(f'{fid}.'): F(f'Katalog: {tid} beginnt nicht mit dem Fach „{fid}.“')
+                if not th.get('titel'): F(f'Katalog: {tid} hat keinen Titel')
+                if not isinstance(th.get('klasse'), int) or not 1 <= th['klasse'] <= 13: F(f'Katalog: {tid} hat keine gültige Klasse')
+                app = (th.get('quelle') or {}).get('app')
+                if app:
+                    if not Path(app).is_file(): F(f'Katalog: Quelle von {tid} fehlt: {app}')
+                    app_themen.add(app)
+                for e in th.get('ergebnis', []):
+                    if e in ergebnisse: F(f'Katalog: Ergebnis-Schlüssel {e} doppelt ({ergebnisse[e]} und {tid})')
+                    ergebnisse[e] = tid
+                    if not any(p.name == e for p in ROOT.glob('apps/*/*.html')): F(f'Katalog: Ergebnis-Schlüssel {e} ({tid}) ist keine App-Datei')
+                knoten = [(tid, th)] + [(s.get('id'), s) for s in th.get('stufen', [])]
+                for sid, s in knoten[1:]:
+                    if neu_id(sid, tid) and not sid.startswith(tid + '.'): F(f'Katalog: Stufe {sid} beginnt nicht mit „{tid}.“')
+                    if not s.get('titel'): F(f'Katalog: Stufe {sid} hat keinen Titel')
+                for sid, s in knoten:
+                    inh = s.get('inhalt')
+                    if inh:
+                        if inh in inhalte: F(f'Katalog: Inhalt-ID {inh} doppelt ({inhalte[inh]} und {sid})')
+                        inhalte[inh] = sid
+    for d in sorted(config_dateien):
+        if d.startswith('apps/') and d not in app_themen:
+            F(f'Katalog: {d} steht in config.json, hat aber kein Thema in daten/katalog.json')
+    I(f'Katalog: {len(ids)} Themen und Stufen, {len(app_themen)} Apps zugeordnet')
 
 # ── 7. Budgets ──────────────────────────────────────────
 def groesse(d):
