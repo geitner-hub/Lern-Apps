@@ -281,6 +281,17 @@
       "aod": false
     },
     {
+      "name": "kopfrechnen neu",
+      "datei": "apps/mathe/kopfrechnen-neu.html?klasse=5",
+      "fach": "Mathematik",
+      "emoji": "📱",
+      "beschreibung": "",
+      "hidden": false,
+      "klassen": [],
+      "customTags": [],
+      "aod": false
+    },
+    {
       "name": "Sachaufgaben Längen",
       "datei": "apps/mathe/sachaufgaben_laengen.html",
       "fach": "Mathematik",
@@ -320,17 +331,6 @@
           "color": 6
         }
       ],
-      "aod": false
-    },
-    {
-      "name": "kopfrechnen neu",
-      "datei": "apps/mathe/kopfrechnen-neu.html?klasse=5",
-      "fach": "Mathematik",
-      "emoji": "📱",
-      "beschreibung": "",
-      "hidden": false,
-      "klassen": [],
-      "customTags": [],
       "aod": false
     },
     {
