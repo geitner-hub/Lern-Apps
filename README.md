@@ -20,7 +20,7 @@ apps/vorlage/app-template.html          Vorlage für neue Apps
 spiele/               RUN!, Tower Defense, Mein Dorf (dorf.html), Tauziehen-Duell (tauziehen.html), Wort des Tages (wort-des-tages.html),
                       Zauberwort (zauberwort.html), Kitchen-Chaos (kitchen-chaos.html),
                       Entdecker-Expedition (expedition.html)
-daten/                vokabeln5.json, vokabeln6.json, lernwelt-inhalte.json, dorf-inhalte.json,
+daten/                katalog.json (Inhalts-Katalog mit Themen-IDs), vokabeln5.json, vokabeln6.json, lernwelt-inhalte.json, dorf-inhalte.json,
                       woerter-en.json (Prüfliste fürs Wort des Tages, ENABLE-Wortliste, gemeinfrei)
                       kitchen-chaos.json (Schauplätze, Zutaten, Satzrahmen, Stufen)
                       karten.json (Europa- und Deutschlandkarte, für Länder-Finder und Expedition)
@@ -44,6 +44,7 @@ werkzeuge/            Prüfskript (pruefen.py), Inventar (inventar.py → INVENT
 | `chest3d.js` | 3D-Truhe zum Öffnen |
 | `dorf-kern.js` | „Mein Dorf“: Spielstand, Aufträge, Bauen; von `navbar.js` in jeder App mitgeladen |
 | `dorf-szene.js` | „Mein Dorf“: 3D-Dorf (Voxel-Gebäude als Code, feste Iso-Kamera), nur in `spiele/dorf.html` |
+| `katalog.js` | Inhalts-Katalog laden und abfragen: Themen-IDs, Zuordnung alter Ergebnis- und Inhalt-Schlüssel (`LernKatalog`) |
 | `aufgaben.js` | Aufgaben-Pools für die Spiele („Meine Themen“), Wortquelle `woerter()` für Wort-Spiele |
 | `karten-ansicht.js` | Karten laden, zoomen, verschieben, antippen (Länder-Finder, Expedition) |
 | `spiel-hilfen.js` | Kleine Bausteine für die neuen Spiele: Runde melden, Endlos-XP, robuste Zeiger (mehrere Finger), wiederholbarer Zufall |
@@ -88,11 +89,37 @@ in einen anderen Ordner umziehen, ohne dass Fortschritt verloren geht (dann `con
 - **Inventar:** `python3 werkzeuge/inventar.py` erzeugt `werkzeuge/INVENTAR.md` neu (Handspalten bleiben).
 - Upload nachmittags oder abends, nie kurz vor dem Unterricht.
 
+## Inhalts-Katalog (daten/katalog.json)
+
+Jeder Lerninhalt hat eine feste **Themen-ID**. Aufbau: Fächer → Bereiche → Themen → (Stufen).
+
+```
+ma.5.kopf            Kopfrechnen Klasse 5          (Thema einer App)
+ma.5.kopf.mittel     … Stufe „mittel“              (Stufe: ID des Themas + „.“ + Name)
+en.5.vok.u3          Vokabeln Klasse 5, Unit 3
+gpg.5.hauptstaedte   Hauptstädte (nur in den Spielen)
+```
+
+- **IDs nie umbenennen oder neu vergeben** – sie werden in Spielständen und Freigaben stehen.
+  Nur kleine Buchstaben, Ziffern und „-“, Teile mit „.“, Anfang = Fach (`ma`, `en`, `gpg`, `de`, `nut`, `daz`, `allg`).
+  Die Klasse in der ID ist nur Teil des Namens; maßgeblich ist das Feld `klasse`.
+- Felder eines Themas: `id`, `titel`, `klasse`, optional `foerder` (Klassen 1–4), `quelle` (`app`),
+  `ergebnis` (Dateiname, unter dem navbar.js Ergebnisse und Sterne speichert), `inhalt` (alte Inhalt-ID
+  der Spiele, z. B. `kopf5-mittel`; `vok5:unit3` gilt auch für `vok5:unit3/theme1`), `stufen` (geordnet),
+  `lehrplan`, `dauer`, `einsatz` (werden in Etappe 3 gefüllt).
+- **Brücke:** Alte Ergebnisse, Sterne und „Meine Themen“ bleiben, wie sie sind. `gemeinsam/katalog.js`
+  ordnet sie über `ergebnis` und `inhalt` den neuen IDs zu (`LernKatalog.zuordnen()`), `LernPass.themaStand(id)`
+  liest beide Formen. Spiele übersetzen neue IDs automatisch in ihre Aufgaben-Pools.
+- **Neue App:** Thema im Katalog eintragen (sonst meldet `pruefen.py` rot) und in der App
+  `LernApps.saveResult({ …, thema: '<ID>' })` melden.
+- Neues Fach: in `gemeinsam/shared.js` (CAT_STYLES) **und** im Katalog unter `faecher` mit gleichem Namen.
+
 ## Ergebnisse speichern (in Apps)
 
 ```js
 LernApps.saveResult({ score: 8, max: 10 });                 // Minimum
 LernApps.saveResult({ score: 8, max: 10, label: '8 / 10', skill: 'einmaleins-7' });
+LernApps.saveResult({ score: 8, max: 10, thema: 'ma.5.kopf.mittel' });   // neue Apps: Themen-ID aus dem Katalog
 ```
 Gespeichert wird pro Gerät im `localStorage` (`lern-apps-results`), Schlüssel =
 Dateiname + URL-Parameter. Pro App: letztes Ergebnis, Bestwert, Anzahl Versuche,

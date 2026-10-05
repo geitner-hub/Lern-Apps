@@ -14,7 +14,7 @@
 //  und teilen sich den Offline-Speicher. Deshalb hat jede Umgebung ihr
 //  eigenes Präfix und räumt nur ihre eigenen Speicher auf.
 // ═══════════════════════════════════════════════════════
-const VERSION = 'v22';  // v22: Infrastruktur Etappe 0 (umgebung.js, getrennte Testumgebung)
+const VERSION = 'v23';  // v23: Infrastruktur Etappe 1 (Inhalts-Katalog, katalog.js)
 const PRAEFIX = /\/[^/]*-test\/$/i.test(new URL(self.registration.scope).pathname) ? 'lwtest-v' : 'lernwelt-v';
 const CACHE   = PRAEFIX + VERSION.replace(/^v/, '');        // z. B. 'lernwelt-v22' (Format wie bisher)
 const START = ['./', 'index.html', 'config.json', 'manifest.webmanifest',
@@ -25,6 +25,7 @@ const START = ['./', 'index.html', 'config.json', 'manifest.webmanifest',
                // Spiele: sollen auch offline laufen, ohne vorher einmal online geöffnet worden zu sein
                'spiele/runner.html', 'spiele/burg-verteidigung.html', 'spiele/dorf.html', 'spiele/tauziehen.html', 'spiele/wort-des-tages.html', 'spiele/zauberwort.html', 'spiele/kitchen-chaos.html', 'spiele/expedition.html', 'gemeinsam/aufgaben.js', 'gemeinsam/spiel-hilfen.js',
                'gemeinsam/karten-ansicht.js', 'daten/karten.json', 'daten/expedition.json',
+               'gemeinsam/katalog.js', 'daten/katalog.json',
                'daten/vokabeln5.json', 'daten/vokabeln6.json', 'daten/woerter-en.json', 'daten/kitchen-chaos.json',
                'vendor/three.min.js',
                'fonts/nunito-latin-wght-normal.woff2', 'fonts/nunito-latin-ext-wght-normal.woff2',
