@@ -118,6 +118,20 @@ Grundsatz: **Kern sofort, Rest bei Bedarf.** Die Budgets prüft `werkzeuge/pruef
   Weitergabe an den Worker ist vorbereitet (`FEHLER_SENDEN` in umgebung.js), aber aus, bis die
   Schulleitung zustimmt.
 
+## Übungs-Rahmen und Kopfrechnen mit Stufen (Infrastruktur Etappe 4)
+
+- **gemeinsam/ueben.js** (`LernUeben.start({...})`): Stufenwahl, Runde mit 10 Aufgaben, eigene Zifferntastatur
+  (keine iPad-Tastatur), Rückmeldung **mit Erklärung**, Tipp, Ergebnis mit Themen-ID, Meisterschaft
+  (2 Runden ≥ 70 % → ⭐). Angelegt, noch ohne Wirkung: `LernUeben.Freigabe.erlaubt(id)` (Etappe 7),
+  `LernUeben.Fehlerheft` (sammelt schon, Anzeige Etappe 8), Vorlesen `?vorlesen=1`, große Schrift `?gross=1`.
+- **gemeinsam/generatoren-mathe.js**: alle Rechenaufgaben – für die App **und** für die Spiele (aufgaben.js
+  hat keinen eigenen Rechen-Code mehr). Neuer Aufgabentyp = eine Funktion in `G`.
+- **daten/kopfrechnen.json**: Stufen je Klasse (Generatoren + Gewicht). Neue Stufe = Eintrag hier + Stufe im
+  Katalog. Jede Stufe ist automatisch ein Pool in den Spielen (ID = Themen-ID), sobald ein Kind sie gemeistert hat.
+- **apps/mathe/kopfrechnen-neu.html?klasse=1…6**: die neue App. Läuft zuerst **versteckt** neben den alten
+  Kopfrechen-Apps. Nach dem Test mit einer Klasse (Etappe 4b) werden `kopfrechnen.html` und
+  `kopfrechnen_kl1–6.html` zu Weiterleitungen, Ergebnisse und Sterne werden übernommen.
+
 ## Inhalts-Katalog (daten/katalog.json)
 
 Jeder Lerninhalt hat eine feste **Themen-ID**. Aufbau: Fächer → Bereiche → Themen → (Stufen).

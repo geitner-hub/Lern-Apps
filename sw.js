@@ -14,7 +14,7 @@
 //  und teilen sich den Offline-Speicher. Deshalb hat jede Umgebung ihr
 //  eigenes Präfix und räumt nur ihre eigenen Speicher auf.
 // ═══════════════════════════════════════════════════════
-const VERSION = 'v25';  // v25: Infrastruktur Etappe 3 (App-Prüfung, Katalog mit Lehrplanbezug)
+const VERSION = 'v26';  // v26: Infrastruktur Etappe 4 (Übungs-Rahmen, gemeinsame Rechen-Generatoren)
 const PRAEFIX = /\/[^/]*-test\/$/i.test(new URL(self.registration.scope).pathname) ? 'lwtest-v' : 'lernwelt-v';
 const CACHE   = PRAEFIX + VERSION.replace(/^v/, '');        // z. B. 'lernwelt-v24' (Format wie bisher)
 
@@ -24,7 +24,7 @@ const CACHE   = PRAEFIX + VERSION.replace(/^v/, '');        // z. B. 'lernwelt-v
 const START = ['./', 'index.html', 'config.json', 'manifest.webmanifest',
                'gemeinsam/umgebung.js', 'gemeinsam/shared.js', 'gemeinsam/config-api.js', 'gemeinsam/navbar.js',
                'gemeinsam/pass.js', 'gemeinsam/pass-extras.js', 'gemeinsam/sync-code.js', 'gemeinsam/sync.js',
-               'gemeinsam/katalog.js', 'gemeinsam/dorf-kern.js', 'gemeinsam/fonts.css', 'vendor/fflate.min.js',
+               'gemeinsam/katalog.js', 'gemeinsam/dorf-kern.js', 'gemeinsam/generatoren-mathe.js', 'daten/kopfrechnen.json', 'gemeinsam/fonts.css', 'vendor/fflate.min.js',
                'daten/lernwelt-inhalte.json', 'daten/katalog.json', 'daten/dorf-inhalte.json',
                'fonts/nunito-latin-wght-normal.woff2', 'fonts/nunito-latin-ext-wght-normal.woff2',
                'fonts/fredoka-one-latin-400-normal.woff2'];
@@ -35,7 +35,7 @@ const START = ['./', 'index.html', 'config.json', 'manifest.webmanifest',
 // ohne dass alle iPads beim Update gleichzeitig alles ziehen.
 const NACHLADEN = ['spiele/runner.html', 'spiele/burg-verteidigung.html', 'spiele/dorf.html', 'spiele/tauziehen.html',
                    'spiele/wort-des-tages.html', 'spiele/zauberwort.html', 'spiele/kitchen-chaos.html', 'spiele/expedition.html',
-                   'gemeinsam/aufgaben.js', 'gemeinsam/spiel-hilfen.js', 'gemeinsam/karten-ansicht.js',
+                   'gemeinsam/aufgaben.js', 'gemeinsam/spiel-hilfen.js', 'gemeinsam/ueben.js', 'apps/mathe/kopfrechnen-neu.html', 'gemeinsam/karten-ansicht.js',
                    'gemeinsam/avatar3d.js', 'gemeinsam/chest3d.js', 'gemeinsam/dorf-szene.js', 'gemeinsam/qrcode.js',
                    'vendor/three.min.js', 'vendor/jsQR.min.js',
                    'daten/vokabeln5.json', 'daten/vokabeln6.json', 'daten/woerter-en.json', 'daten/kitchen-chaos.json',

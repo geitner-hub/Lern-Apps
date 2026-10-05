@@ -20,6 +20,8 @@
 #    Apps im Ordner, die nicht in config.json stehen, u. Ä.
 #
 #    9. Ladekette (Etappe 2): jede Datei aus sw.js NACHLADEN und aus LW.laden('…') existiert.
+#   10. Kopfrechnen (Etappe 4): Stufen in daten/kopfrechnen.json stehen im Katalog und nutzen
+#       nur Generatoren, die es in gemeinsam/generatoren-mathe.js gibt.
 #
 #  Spätere Etappen ergänzen hier: Inhaltsdateien (Etappe 9).
 # ═══════════════════════════════════════════════════════
@@ -195,6 +197,11 @@ if katalog is not None:
                     if e in ergebnisse: F(f'Katalog: Ergebnis-Schlüssel {e} doppelt ({ergebnisse[e]} und {tid})')
                     ergebnisse[e] = tid
                     if not any(p.name == e for p in ROOT.glob('apps/*/*.html')): F(f'Katalog: Ergebnis-Schlüssel {e} ({tid}) ist keine App-Datei')
+                for s in th.get('stufen', []):                      # Etappe 4: Stufen können eine eigene Quelle haben
+                    sapp = (s.get('quelle') or {}).get('app')
+                    if sapp:
+                        if not Path(sapp).is_file(): F(f'Katalog: Quelle von {s.get("id")} fehlt: {sapp}')
+                        app_themen.add(sapp)
                 knoten = [(tid, th)] + [(s.get('id'), s) for s in th.get('stufen', [])]
                 for sid, s in knoten[1:]:
                     if neu_id(sid, tid) and not sid.startswith(tid + '.'): F(f'Katalog: Stufe {sid} beginnt nicht mit „{tid}.“')
@@ -214,6 +221,24 @@ if katalog is not None:
                 if not str(th.get('lehrplan') or '').strip():
                     H(f'Katalog: {th.get("id")} hat noch keinen Lehrplanbezug (Feld lehrplan)')
     I(f'Katalog: {len(ids)} Themen und Stufen, {len(app_themen)} Apps zugeordnet')
+
+# ── 10. Kopfrechnen-Stufen (Etappe 4) ───────────────────
+try:
+    kr = json.loads(lies('daten/kopfrechnen.json'))
+except Exception as e:
+    kr = None; F(f'daten/kopfrechnen.json fehlt oder ist ungültig ({e})')
+if kr is not None:
+    typen = set(re.findall(r"'([a-z0-9-]+)':", lies('gemeinsam/generatoren-mathe.js').split('const G = {')[1].split('};')[0]))
+    for sid, st in (kr.get('stufen') or {}).items():
+        if katalog is not None and sid not in ids: F(f'kopfrechnen.json: Stufe {sid} fehlt in daten/katalog.json')
+        gens = st.get('generatoren') or []
+        if not gens: F(f'kopfrechnen.json: Stufe {sid} hat keine Generatoren')
+        for g in gens:
+            if g.get('typ') not in typen: F(f'kopfrechnen.json: Stufe {sid} nutzt unbekannten Generator „{g.get("typ")}“ (gemeinsam/generatoren-mathe.js)')
+    for k, kl in (kr.get('klassen') or {}).items():
+        for sid in (kl.get('stufen') or []) + (kl.get('foerder') or []):
+            if sid not in (kr.get('stufen') or {}): F(f'kopfrechnen.json: Klasse {k} nennt unbekannte Stufe {sid}')
+    I(f'Kopfrechnen: {len(kr.get("stufen") or {})} Stufen, {len(typen)} Generatoren')
 
 # ── 7. Budgets ──────────────────────────────────────────
 def groesse(d):

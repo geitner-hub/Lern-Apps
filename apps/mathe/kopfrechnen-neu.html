@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<script src="../../gemeinsam/umgebung.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Kopfrechnen – Lernwelt</title>
+<!--
+  ═══════════════════════════════════════════════
+   Kopfrechnen mit Stufen (Infrastruktur Etappe 4)
+   Eine Datei für alle Klassen:  kopfrechnen-neu.html?klasse=5   (1–6, Standard 5)
+   Stufen:      daten/kopfrechnen.json        (neue Stufe = nur Daten)
+   Aufgaben:    gemeinsam/generatoren-mathe.js (dieselben wie in RUN!, Tower Defense …)
+   Rahmen:      gemeinsam/ueben.js             (Runde, Eingabe, Erklärung, Ergebnis)
+   Läuft zunächst versteckt neben den alten Kopfrechen-Apps. Nach dem Test mit
+   einer Klasse werden kopfrechnen.html und kopfrechnen_kl1–6.html zu Weiterleitungen.
+  ═══════════════════════════════════════════════
+-->
+<link rel="stylesheet" href="../../gemeinsam/fonts.css">
+<style>
+  html, body { margin: 0; background: #0f0e1a; }
+  #app { padding-top: env(safe-area-inset-top, 0px); }
+  .laden { color: rgba(241,240,251,.6); font: 800 1rem 'Nunito', system-ui, sans-serif; text-align: center; padding: 4rem 1rem; }
+</style>
+</head>
+<body>
+<div id="app"><p class="laden">⏳ Einen Moment …</p></div>
+
+<script src="../../gemeinsam/generatoren-mathe.js"></script>
+<script src="../../gemeinsam/ueben.js"></script>
+<script>
+(async function () {
+  'use strict';
+  const host = document.getElementById('app');
+  const p = new URLSearchParams(location.search);
+  const klasse = String(Math.min(6, Math.max(1, parseInt(p.get('klasse') || p.get('kl') || '5', 10) || 5)));
+  let D = null;
+  try {
+    const r = await fetch('../../daten/kopfrechnen.json', { cache: 'no-cache' });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    D = await r.json();
+  } catch (e) {
+    host.innerHTML = '<p class="laden">⚠️ Die Aufgaben konnten nicht geladen werden. Bitte mit Internet neu öffnen.</p>';
+    return;
+  }
+  const K = D.klassen[klasse] || D.klassen['5'];
+  const stufe = id => Object.assign({ id }, D.stufen[id] || {});
+  const G = window.LernGeneratoren;
+  host.innerHTML = '';
+  document.title = K.titel + ' – Lernwelt';
+  LernUeben.start({
+    host,
+    titel: '🧮 ' + K.titel,
+    untertitel: 'Wähle eine Stufe · 10 Aufgaben pro Runde',
+    stufen: (K.stufen || []).filter(id => D.stufen[id]).map(stufe),
+    foerder: (K.foerder || []).filter(id => D.stufen[id]).map(stufe),
+    erzeuge: st => G.ausStufe(st),
+    pruefe: (a, e) => G.pruefe(a, e),
+    runde: D.runde,
+    meisterschaft: D.meisterschaft,
+  });
+})();
+</script>
+<script src="../../gemeinsam/navbar.js"></script>
+</body>
+</html>

@@ -21,14 +21,8 @@
 //  Hintergrund-Laden: nach jedem Seitenaufruf bittet diese Datei sw.js, fehlende
 //  Spiele/Daten nachzuladen (zufällig verzögert, nicht alle iPads gleichzeitig).
 //
-//  Testumgebung (Repo „Lern-Apps-test“, gleiche Adresse geitner-hub.github.io):
-//    - Alle Repos unter geitner-hub.github.io teilen sich den Gerätespeicher.
-//      Deshalb bekommt in der Testumgebung JEDER Speicherschlüssel automatisch
-//      das Präfix 'lwtest-' (localStorage und sessionStorage). Der echte Pass,
-//      das Dorf usw. auf demselben iPad werden nie berührt.
-//    - Speichern im Admin, Sicherungskarten und Cloud-Sicherung sind gesperrt
-//      (Schreibzugriffe auf den Worker werden hier abgefangen).
-//    - Oben erscheint ein kleines Schild „🧪 TEST“.
+//  Testumgebung (…/Lern-Apps-test/): Präfix 'lwtest-' für jeden Speicherschlüssel,
+//  Schreibzugriffe auf den Worker gesperrt, Schild „🧪 TEST“ (werkzeuge/TESTUMGEBUNG.md).
 //  Live ändert sich NICHTS: kein Schlüssel wird umbenannt.
 // ═══════════════════════════════════════════════════════
 
@@ -36,7 +30,7 @@
   'use strict';
   if (window.LW && window.LW.UMGEBUNG) return;          // doppeltes Laden verhindern
 
-  const VERSION = 'v24';                                 // ⚙ bei jedem Upload mit sw.js zusammen erhöhen
+  const VERSION = 'v26';                                 // ⚙ bei jedem Upload mit sw.js zusammen erhöhen
 
   // ── Umgebung erkennen ────────────────────────────────
   //  GitHub Pages: erster Pfadteil = Repo-Name (Lern-Apps bzw. Lern-Apps-test)
@@ -65,6 +59,7 @@
     // Technik (Etappe 2)
     ['lernwelt-fehler',             'local',   'gemeinsam/umgebung.js',    'Fehlerprotokoll (letzte Abstürze, nur auf diesem Gerät)', false],
     ['lernwelt-wartung',            'local',   'gemeinsam/pass-extras.js', 'Speicher-Wartung: letzter Lauf und Belegung', false],
+    ['lernwelt-fehlerheft',         'local',   'gemeinsam/ueben.js',       'Fehlerheft: falsch gelöste Aufgaben (Etappe 8 zeigt sie an)', false],
     // Konfiguration und Admin
     ['lernwelt-config-cache',       'local',   'gemeinsam/config-api.js',  'Offline-Kopie von config.json', false],
     ['lernwelt-katalog-cache',      'local',   'gemeinsam/katalog.js',     'Offline-Kopie von daten/katalog.json', false],

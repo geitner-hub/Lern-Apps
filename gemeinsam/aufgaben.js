@@ -34,6 +34,8 @@
 //
 //  Neue Pools: unten in POOLS eintragen. Rechen-Pools brauchen eine
 //  Funktion gen() → { frage, antwort, falsch: [mind. 2 Ablenker] }.
+//  Rechen-Aufgaben kommen seit Etappe 4 aus gemeinsam/generatoren-mathe.js;
+//  jede Stufe aus daten/kopfrechnen.json ist automatisch ein Pool (ID = Themen-ID).
 // ═══════════════════════════════════════════════════════
 
 (function () {
@@ -68,203 +70,49 @@
   const zahl = n => String(n).replace('-', '−').replace('.', ',');
   const norm = s => String(s).toLowerCase().replace(/\s+/g, ' ').trim();
 
-  /** Ablenker für Zahlen: nahe Werte, typische Fehler; nie gleich der Lösung */
-  function zahlAblenker(ans, extra = [], erlaubtNegativ = false) {
-    const c = [...extra, ans + 1, ans - 1, ans + 2, ans - 2, ans + 10, ans - 10];
-    if (ans >= 10 && ans < 100) c.push(Number(String(ans).split('').reverse().join('')));   // Zahlendreher
-    const out = [];
-    shuffle(c.slice(0, extra.length)).concat(shuffle(c.slice(extra.length))).forEach(x => {
-      if (!Number.isFinite(x) || x === ans || out.includes(x)) return;
-      if (!erlaubtNegativ && x < 0) return;
-      out.push(x);
+  // ═══════════════════════════════════════════════════════
+  //  RECHEN-AUFGABEN (Etappe 4: aus gemeinsam/generatoren-mathe.js – dieselbe
+  //  Quelle wie der Übungs-Rahmen. Hier steht kein eigener Rechen-Code mehr.)
+  // ═══════════════════════════════════════════════════════
+  function laden(datei) {
+    return new Promise(ok => {
+      const sc = document.createElement('script');
+      sc.src = new URL(datei, here).href;
+      sc.onload = sc.onerror = () => ok();
+      document.head.appendChild(sc);
     });
-    return out;
   }
-
-  // ── Brüche (Klasse 6) ──────────────────────────────────
-  function gcd(a, b) { a = Math.abs(a); b = Math.abs(b); while (b) [a, b] = [b, a % b]; return a || 1; }
-  const lcm = (a, b) => (a * b) / gcd(a, b);
-  function kuerze(n, d) { if (d < 0) { n = -n; d = -d; } const g = gcd(n, d); return { n: n / g, d: d / g }; }
-  function bruchText(f) { const s = kuerze(f.n, f.d); return s.d === 1 ? zahl(s.n) : `${zahl(s.n)}/${s.d}`; }
-  function dezText(f, stellen) { return zahl((f.n / f.d).toFixed(stellen).replace(/\.?0+$/, '') || '0'); }
-
-  // ═══════════════════════════════════════════════════════
-  //  RECHEN-GENERATOREN (übernommen aus den Kopfrechen-Apps)
-  // ═══════════════════════════════════════════════════════
-
-  // Klasse 4 (Wiederholung) – wie kopfrechnen_kl4.html
-  function kopf4(level) {
-    for (let v = 0; v < 80; v++) {
-      if (level === 'leicht') {
-        const t = pick(['add', 'sub', 'mal', 'zehn']);
-        if (t === 'add') { const a = rand(10, 59), b = rand(10, 39); if (a + b > 100) continue; return rechen(`${a} + ${b}`, a + b); }
-        if (t === 'sub') { const a = rand(30, 99), b = rand(10, 30); if (b >= a) continue; return rechen(`${a} − ${b}`, a - b); }
-        if (t === 'mal') { const a = rand(2, 10), b = rand(2, 10); return rechen(`${a} × ${b}`, a * b, [a * (b + 1), a * (b - 1)]); }
-        const a = rand(2, 9);
-        return Math.random() < .5 ? rechen(`${a} × 10`, a * 10, [a * 100, a + 10]) : rechen(`${a * 10} ÷ 10`, a, [a * 100, a * 10 - 10]);
-      }
-      if (level === 'mittel') {
-        const t = pick(['add', 'sub', 'mal', 'div']);
-        if (t === 'add') { const a = rand(1, 7) * 100, b = rand(1, 9 - a / 100) * 100; return rechen(`${a} + ${b}`, a + b, [a + b + 100, a + b - 100]); }
-        if (t === 'sub') { const a = rand(2, 9) * 100, b = rand(1, a / 100 - 1) * 100; return rechen(`${a} − ${b}`, a - b, [a - b + 100, a - b - 100]); }
-        if (t === 'mal') { const a = rand(2, 9) * 10, b = rand(2, 9); return rechen(`${a} × ${b}`, a * b, [a * (b + 1), a * b / 10]); }
-        const a = rand(2, 10), b = rand(2, 10); return rechen(`${a * b} ÷ ${a}`, b, [b + 1, b - 1]);
-      }
-      const t = pick(['add', 'sub', 'mal', 'rest', 'term']);
-      if (t === 'add') { const a = rand(200, 700), b = rand(100, 400); if (a + b > 1000) continue; return rechen(`${a} + ${b}`, a + b, [a + b - 100, a + b + 10]); }
-      if (t === 'sub') { const a = rand(300, 999), b = rand(100, 300); if (b >= a) continue; return rechen(`${a} − ${b}`, a - b, [a - b + 100, a - b - 10]); }
-      if (t === 'mal') { const a = rand(11, 49), b = rand(2, 9); if (a % 10 === 0) continue; return rechen(`${a} × ${b}`, a * b, [a * (b + 1), (a - a % 10) * b + a % 10]); }
-      if (t === 'rest') {
-        const d = rand(2, 9), q = rand(3, 9), r = rand(1, d - 1);
-        const falsch = [`${q + 1} R ${r}`, `${q} R ${r === d - 1 ? r - 1 : r + 1}`, `${q - 1} R ${r}`].filter(x => x !== `${q} R ${r}` && !/R 0$|^0 /.test(x));
-        return { frage: `${d * q + r} ÷ ${d}`, antwort: `${q} R ${r}`, falsch, hinweis: 'R = Rest' };
-      }
-      const a = rand(2, 9), b = rand(2, 9), c = rand(1, 20), plus = Math.random() < .5;
-      if (!plus && a * b <= c) continue;
-      const ans = plus ? a * b + c : a * b - c;
-      return rechen(`${a} × ${b} ${plus ? '+' : '−'} ${c}`, ans, [plus ? a * (b + c) : a * (b - c), plus ? ans - c * 2 : ans + c * 2]);
-    }
-    return rechen('6 × 7', 42);
-  }
-
-  // Klasse 5 – wie kopfrechnen.html
-  function kopf5(level) {
-    const op = pick(['+', '-', '×', '÷']);
-    for (let v = 0; v < 50; v++) {
-      let a, b, ans, extra = [];
-      if (level === 'leicht') {
-        if (op === '+') { a = rand(1, 9); b = rand(1, 9); ans = a + b; }
-        else if (op === '-') { a = rand(10, 50); b = rand(1, 9); ans = a - b; }
-        else if (op === '×') { a = rand(1, 9); b = rand(1, 9); ans = a * b; extra = [a * (b + 1), (a + 1) * b]; }
-        else { b = rand(2, 9); ans = rand(1, 9); a = b * ans; }
-      } else if (level === 'mittel') {
-        if (op === '+') { a = rand(10, 49); b = rand(10, 49); ans = a + b; }
-        else if (op === '-') { a = rand(20, 99); b = rand(10, 49); ans = a - b; }
-        else if (op === '×') { a = rand(2, 10); b = rand(2, 12); ans = a * b; extra = [a * (b + 1), a * (b - 1)]; if (Math.random() < .5) [a, b] = [b, a]; }
-        else { b = rand(2, 12); ans = rand(2, 9); a = b * ans; }
-      } else {
-        if (op === '+') { a = rand(20, 199); b = rand(20, 199); ans = a + b; }
-        else if (op === '-') { a = rand(50, 299); b = rand(10, 150); ans = a - b; }
-        else if (op === '×') { a = rand(2, 12); b = rand(2, 12); ans = a * b; extra = [a * (b + 1), a * (b - 1)]; if (Math.random() < .5) [a, b] = [b, a]; }
-        else { b = rand(2, 12); ans = rand(2, 12); a = b * ans; }
-      }
-      if (ans < 1 || a < 1 || b < 1) continue;
-      return rechen(`${a} ${op === '-' ? '−' : op} ${b}`, ans, extra);
-    }
-    return rechen('3 + 4', 7);
-  }
-
-  // Klasse 6 – wie kopfrechnen_kl6.html (Brüche, Dezimalzahlen, negative Zahlen)
+  const KOPF_DATEI = new URL('../daten/kopfrechnen.json', here).href;
+  // Generatoren und Stufen (daten/kopfrechnen.json) gleich beim Laden holen
+  const matheBereit = Promise.all([
+    window.LernGeneratoren ? null : laden('generatoren-mathe.js'),
+    fetch(KOPF_DATEI, { cache: 'no-cache' }).then(r => r.ok ? r.json() : null).catch(() => null),
+  ]).then(([, d]) => { stufenPools(d); return !!window.LernGeneratoren; });
+  const G = () => window.LernGeneratoren;
+  /** Spiel-Aufgabe (Text-Antwort + Ablenker) aus einem Generator; ohne Generatoren null */
+  function spiel(spec) { return G() ? G().spielAufgabe(spec) : null; }
+  const kopf4 = s => spiel({ typ: 'alt4', stufe: s });
+  const kopf5 = s => spiel({ typ: 'alt5', stufe: s });
   function kopf6(level) {
-    let types = level === 'leicht' ? ['int', 'frac_same', 'dec1', 'mal']
+    let arten = level === 'leicht' ? ['int', 'frac_same', 'dec1', 'mal']
               : level === 'mittel' ? ['int_neg', 'frac_diff', 'dec2', 'mal']
               : ['rat', 'frac_mul', 'frac_div', 'neg_dec'];
-    if (!BRUECHE) types = types.filter(t => !t.startsWith('frac'));
-    for (let v = 0; v < 80; v++) {
-      const t = pick(types), r = kopf6Typ(t);
-      if (r) return r;
-    }
-    return rechen('7 × 8', 56);
+    if (!BRUECHE) arten = arten.filter(t => !t.startsWith('frac'));
+    return spiel({ typ: 'alt6', arten });
   }
-  function kopf6Typ(t) {
-    const bruchAufgabe = (frage, f, falschListe) => {
-      const antwort = bruchText(f);
-      const falsch = [...new Set(falschListe.filter(x => x.d > 0).map(bruchText))].filter(x => x !== antwort);
-      return falsch.length >= 2 ? { frage, antwort, falsch } : null;
-    };
-    const dezAufgabe = (frage, wert, stellen, schritt) => {
-      const antwort = dezText({ n: wert, d: 1 }, stellen);
-      const falsch = [wert + schritt, wert - schritt, wert + 1, wert - 1, wert + schritt * 10]
-        .map(x => dezText({ n: x, d: 1 }, stellen)).filter((x, i, l) => x !== antwort && l.indexOf(x) === i);
-      return { frage, antwort, falsch };
-    };
-    if (t === 'int') {
-      const a = rand(1, 50), b = rand(1, 20);
-      if (Math.random() < .5) return rechen(`${a} + ${b}`, a + b);
-      return a > b ? rechen(`${a} − ${b}`, a - b) : null;
-    }
-    if (t === 'int_neg') {
-      const a = rand(-20, 50), b = rand(-20, 30), plus = Math.random() < .5;
-      const ans = plus ? a + b : a - b;
-      return rechen(`${zahl(a)} ${plus ? '+' : '−'} ${b < 0 ? '(' + zahl(b) + ')' : b}`, ans, [plus ? a - b : a + b, -ans], true);
-    }
-    if (t === 'rat') {
-      const op = pick(['+', '-', '×', '÷']), a = rand(-20, 40), b = rand(-15, 30);
-      const B = b < 0 ? '(' + zahl(b) + ')' : String(b);
-      if (op === '÷') {
-        if (b === 0 || a % b !== 0) return null;             // im Runner nur glatte Ergebnisse
-        const ans = a / b; return rechen(`${zahl(a)} ÷ ${B}`, ans, [-ans, ans + 1], true);
-      }
-      if (op === '×') { const ans = a * b; if (Math.abs(ans) > 200) return null; return rechen(`${zahl(a)} × ${B}`, ans, [-ans, a * (b + 1)], true); }
-      const ans = op === '+' ? a + b : a - b;
-      return rechen(`${zahl(a)} ${op === '+' ? '+' : '−'} ${B}`, ans, [op === '+' ? a - b : a + b, -ans], true);
-    }
-    if (t === 'frac_same') {
-      const d = rand(2, 9), plus = Math.random() < .5;
-      let n1 = rand(1, d - 1), n2 = rand(1, d - 1);
-      if (!plus && n1 < n2) [n1, n2] = [n2, n1];                 // kein negatives Ergebnis bei „leicht“
-      const rn = plus ? n1 + n2 : n1 - n2;
-      if (rn === 0) return null;
-      return bruchAufgabe(`${n1}/${d} ${plus ? '+' : '−'} ${n2}/${d}`, { n: rn, d },
-        [{ n: plus ? n1 + n2 : n1 - n2, d: d * 2 }, { n: rn + 1, d }, { n: rn - 1 || rn + 2, d }, { n: plus ? n1 - n2 : n1 + n2, d }]);
-    }
-    if (t === 'frac_diff') {
-      const d1 = pick([2, 3, 4, 5, 6, 8]), d2 = pick([2, 3, 4, 5, 6, 8]);
-      if (d1 === d2) return null;
-      const n1 = rand(1, d1 - 1), n2 = rand(1, d2 - 1), plus = Math.random() < .5, L = lcm(d1, d2);
-      if (L > 24) return null;
-      const rn = plus ? n1 * (L / d1) + n2 * (L / d2) : n1 * (L / d1) - n2 * (L / d2);
-      if (rn === 0) return null;
-      return bruchAufgabe(`${n1}/${d1} ${plus ? '+' : '−'} ${n2}/${d2}`, { n: rn, d: L },
-        [{ n: plus ? n1 + n2 : n1 - n2, d: d1 + d2 }, { n: rn + 1, d: L }, { n: rn - 1 || rn + 2, d: L }]);   // typischer Fehler: Zähler+Zähler / Nenner+Nenner
-    }
-    if (t === 'frac_mul') {
-      const d1 = rand(2, 6), n1 = rand(1, d1 - 1), d2 = rand(2, 6), n2 = rand(1, d2 - 1);
-      return bruchAufgabe(`${n1}/${d1} × ${n2}/${d2}`, { n: n1 * n2, d: d1 * d2 },
-        [{ n: n1 * d2, d: d1 * n2 }, { n: n1 * n2, d: d1 + d2 }, { n: n1 + n2, d: d1 * d2 }]);
-    }
-    if (t === 'frac_div') {
-      const d1 = rand(2, 6), n1 = rand(1, d1 - 1), d2 = rand(2, 6), n2 = rand(1, d2 - 1);
-      const f = kuerze(n1 * d2, d1 * n2);
-      if (f.d > 20) return null;
-      return bruchAufgabe(`${n1}/${d1} ÷ ${n2}/${d2}`, f,
-        [{ n: n1 * n2, d: d1 * d2 }, { n: d1 * n2, d: n1 * d2 }, { n: f.n + 1, d: f.d }]);   // typischer Fehler: multipliziert statt Kehrwert
-    }
-    if (t === 'dec1') {
-      const a = rand(0, 500) / 10, b = rand(0, 209) / 10, plus = Math.random() < .5;
-      const ans = Math.round((plus ? a + b : a - b) * 10) / 10;
-      if (ans < 0) return null;
-      return dezAufgabe(`${zahl(a.toFixed(1))} ${plus ? '+' : '−'} ${zahl(b.toFixed(1))}`, ans, 1, 0.1);
-    }
-    if (t === 'dec2') {
-      const a = rand(0, 2099) / 100, b = rand(0, 1099) / 100, ans = Math.round((a + b) * 100) / 100;
-      return dezAufgabe(`${zahl(a.toFixed(2))} + ${zahl(b.toFixed(2))}`, ans, 2, 0.1);
-    }
-    if (t === 'neg_dec') {
-      const a = rand(-100, 209) / 10, b = rand(-100, 159) / 10, ans = Math.round((a + b) * 10) / 10;
-      const B = b < 0 ? '(' + zahl(b.toFixed(1)) + ')' : zahl(b.toFixed(1));
-      const r = dezAufgabe(`${zahl(a.toFixed(1))} + ${B}`, ans, 1, 0.1);
-      r.falsch.unshift(dezText({ n: Math.round((a - b) * 10) / 10, d: 1 }, 1));
-      r.falsch = r.falsch.filter((x, i, l) => x !== r.antwort && l.indexOf(x) === i);
-      return r;
-    }
-    const a = rand(2, 10), b = rand(2, 10);
-    return rechen(`${a} × ${b}`, a * b, [a * (b + 1), a * (b - 1)]);
-  }
+  const einmaleins = gross => spiel({ typ: '1x1', gross });
 
-  // Einmaleins – klein (1–10) und groß (11–25), wie einmaleins_tafel.html
-  function einmaleins(gross) {
-    const [lo, hi] = gross ? [11, 25] : [1, 10];
-    const a = rand(lo, hi), b = rand(gross ? lo : 2, hi);
-    if (Math.random() < .25 && !gross) {                    // auch mal rückwärts
-      return rechen(`${a * b} ÷ ${a}`, b, [b + 1, b - 1]);
-    }
-    return rechen(`${a} × ${b}`, a * b, [a * (b + 1), a * (b - 1), (a + 1) * b]);
-  }
-
-  /** Rechenaufgabe mit Zahl als Lösung */
-  function rechen(frage, ans, extra = [], negativ = false) {
-    return { frage, antwort: zahl(ans), falsch: zahlAblenker(ans, extra, negativ).map(zahl) };
+  /** Stufen der Kopfrechen-App als eigene Pools (ID = Themen-ID, z. B. ma.5.kopf.rechenregeln) */
+  function stufenPools(d) {
+    if (!d || !d.stufen || !d.klassen) return;
+    const klasseVon = {};
+    Object.entries(d.klassen).forEach(([k, kl]) => (kl.stufen || []).forEach(id => { if (!klasseVon[id] || +k < klasseVon[id]) klasseVon[id] = +k; }));
+    Object.entries(d.stufen).forEach(([id, st]) => {
+      if (POOL_BY_ID[id] || st.inhalt || !klasseVon[id]) return;      // alte Stufen (inhalt) laufen über ihre bisherigen Pools
+      const pool = { id, fach: 'Mathematik', gruppe: 'Kopfrechnen', klasse: Math.max(5, klasseVon[id]), titel: st.titel, gen: () => spiel(st) };
+      if (klasseVon[id] < 5) pool.klasse = klasseVon[id];
+      POOLS.push(pool); POOL_BY_ID[id] = pool;
+    });
   }
 
   // ═══════════════════════════════════════════════════════
@@ -328,6 +176,7 @@
       gen: () => paarAufgabe(LANDESHAUPTSTAEDTE, l => `${l}: Landeshauptstadt?`, s => `${s} ist Hauptstadt welches Bundeslands?`) },
   ];
   const POOL_BY_ID = Object.fromEntries(POOLS.map(p => [p.id, p]));
+  const STUFEN_ID = /^ma\.\d\.kopf\.[a-z0-9-]+$/;          // Stufen der Kopfrechen-App (Pools kommen aus daten/kopfrechnen.json)
 
   // ═══════════════════════════════════════════════════════
   //  VOKABELN (aus den JSON-Dateien der Vokabeltrainer)
@@ -425,7 +274,8 @@
    * Unbekannte Pools und Pools über der Passklasse (bei opts.klasse bzw. Pass) werden übergangen.
    */
   async function erzeuger(ids, opts = {}) {
-    ids = (Array.isArray(ids) ? ids : [ids]).filter(id => POOL_BY_ID[id]);
+    await matheBereit;
+    ids = (Array.isArray(ids) ? ids : [ids]).map(alteForm).filter(id => POOL_BY_ID[id]);
     const k = opts.klasse !== undefined ? opts.klasse : passKlasse();
     ids = ids.filter(id => !k || POOL_BY_ID[id].klasse <= k);
     if (!ids.length) throw new Error('Keine passenden Aufgaben gefunden.');
@@ -504,13 +354,14 @@
     const sp = (P && P.settings && P.settings.spiele) || { starter: STARTER_STANDARD };
     let frei = [];
     try { frei = P && P.freigeschaltet ? P.freigeschaltet() : []; } catch (e) {}
-    const erlaubt = id => POOL_BY_ID[id] && (!k || POOL_BY_ID[id].klasse <= k);
+    const erlaubt = id => POOL_BY_ID[id] ? (!k || POOL_BY_ID[id].klasse <= k)
+      : STUFEN_ID.test(id) && (!k || Number(id.split('.')[1]) <= k);     // Pool entsteht, sobald kopfrechnen.json geladen ist
     const ids = [], themen = {}, ganz = new Set();
     const pool = id => { if (!ids.includes(id)) ids.push(id); };
     starterFuer(sp.starter, k).map(alteForm).forEach(id => {
       if (!erlaubt(id)) return;
       pool(id);
-      if (POOL_BY_ID[id].typ === 'vokabeln') ganz.add(id);              // ganzes Vokabelbuch im Starter
+      if (POOL_BY_ID[id] && POOL_BY_ID[id].typ === 'vokabeln') ganz.add(id);   // ganzes Vokabelbuch im Starter
     });
     frei.map(alteForm).forEach(fid => {
       const m = /^(vok\d+):(.+)$/.exec(fid);

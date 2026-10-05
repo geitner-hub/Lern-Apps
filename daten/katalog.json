@@ -158,6 +158,46 @@
          "id": "ma.5.kopf.schwer",
          "titel": "schwer",
          "inhalt": "kopf5-schwer"
+        },
+        {
+         "id": "ma.5.kopf.grundlagen",
+         "titel": "Grundlagen (Wiederholung 4. Klasse)",
+         "lehrplan": "Grundschule M3/4 1.2 als Grundlage für M5 LB 1.2",
+         "quelle": {
+          "app": "apps/mathe/kopfrechnen-neu.html"
+         }
+        },
+        {
+         "id": "ma.5.kopf.grosse-zahlen",
+         "titel": "Große Zahlen",
+         "lehrplan": "M5 LB 1.2: Grundrechenarten im Kopf mit großen natürlichen Zahlen (Stufenzahlen)",
+         "quelle": {
+          "app": "apps/mathe/kopfrechnen-neu.html"
+         }
+        },
+        {
+         "id": "ma.5.kopf.rechenregeln",
+         "titel": "Punkt vor Strich & Klammern",
+         "lehrplan": "M5 LB 1.2: Rechengesetze (Punkt-vor-Strich, Klammern)",
+         "quelle": {
+          "app": "apps/mathe/kopfrechnen-neu.html"
+         }
+        },
+        {
+         "id": "ma.5.kopf.vorteile",
+         "titel": "Rechenvorteile & Überschlag",
+         "lehrplan": "M5 LB 1.2: Rechenvorteile (Assoziativ-, Kommutativgesetz), Überschlagsrechnung",
+         "quelle": {
+          "app": "apps/mathe/kopfrechnen-neu.html"
+         }
+        },
+        {
+         "id": "ma.5.kopf.profi",
+         "titel": "Profi (Klasse 5)",
+         "lehrplan": "M5 LB 1.2 (alles gemischt)",
+         "quelle": {
+          "app": "apps/mathe/kopfrechnen-neu.html"
+         }
         }
        ]
       },
@@ -190,6 +230,46 @@
          "id": "ma.6.kopf.schwer",
          "titel": "schwer",
          "inhalt": "kopf6-schwer"
+        },
+        {
+         "id": "ma.6.kopf.wiederholung",
+         "titel": "Stoff der 5. Klasse",
+         "lehrplan": "M5 LB 1.2 und LB 2 (Wiederholung)",
+         "quelle": {
+          "app": "apps/mathe/kopfrechnen-neu.html"
+         }
+        },
+        {
+         "id": "ma.6.kopf.teilbarkeit",
+         "titel": "Teilbarkeit",
+         "lehrplan": "M6: Teilbarkeitsregeln, Vielfache und Teiler (Grundlage für Brüche, LB 1)",
+         "quelle": {
+          "app": "apps/mathe/kopfrechnen-neu.html"
+         }
+        },
+        {
+         "id": "ma.6.kopf.brueche",
+         "titel": "Brüche",
+         "lehrplan": "M6 LB 1 Bruchzahlen: erweitern, kürzen, vergleichen, Bruchteile; LB 2 Addition/Subtraktion",
+         "quelle": {
+          "app": "apps/mathe/kopfrechnen-neu.html"
+         }
+        },
+        {
+         "id": "ma.6.kopf.dezimal",
+         "titel": "Dezimalzahlen",
+         "lehrplan": "M6 LB 1/2: Dezimalbrüche umwandeln und rechnen",
+         "quelle": {
+          "app": "apps/mathe/kopfrechnen-neu.html"
+         }
+        },
+        {
+         "id": "ma.6.kopf.profi",
+         "titel": "Profi (Klasse 6)",
+         "lehrplan": "M6 LB 1 und LB 2 (alles gemischt, auch Multiplikation/Division von Brüchen)",
+         "quelle": {
+          "app": "apps/mathe/kopfrechnen-neu.html"
+         }
         }
        ]
       },

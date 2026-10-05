@@ -1,0 +1,408 @@
+{
+ "version": 1,
+ "hinweis": "Stufen der Kopfrechen-App (apps/mathe/kopfrechnen-neu.html?klasse=X). Eine Stufe = Liste von Generatoren aus gemeinsam/generatoren-mathe.js (typ + Parameter, gewicht = wie oft). IDs stehen in daten/katalog.json und nie umbenennen. Neue Stufe: hier eintragen, im Katalog anlegen, fertig.",
+ "runde": 10,
+ "meisterschaft": {
+  "prozent": 70,
+  "runden": 2
+ },
+ "klassen": {
+  "1": {
+   "titel": "Kopfrechnen Klasse 1",
+   "stufen": [
+    "ma.1.kopf.leicht",
+    "ma.1.kopf.mittel",
+    "ma.1.kopf.schwer"
+   ]
+  },
+  "2": {
+   "titel": "Kopfrechnen Klasse 2",
+   "stufen": [
+    "ma.2.kopf.leicht",
+    "ma.2.kopf.mittel",
+    "ma.2.kopf.schwer"
+   ]
+  },
+  "3": {
+   "titel": "Kopfrechnen Klasse 3",
+   "stufen": [
+    "ma.3.kopf.leicht",
+    "ma.3.kopf.mittel",
+    "ma.3.kopf.schwer"
+   ]
+  },
+  "4": {
+   "titel": "Kopfrechnen Klasse 4",
+   "stufen": [
+    "ma.4.kopf.leicht",
+    "ma.4.kopf.mittel",
+    "ma.4.kopf.schwer"
+   ]
+  },
+  "5": {
+   "titel": "Kopfrechnen Klasse 5",
+   "stufen": [
+    "ma.5.kopf.grundlagen",
+    "ma.5.kopf.grosse-zahlen",
+    "ma.5.kopf.rechenregeln",
+    "ma.5.kopf.vorteile",
+    "ma.5.kopf.profi"
+   ],
+   "foerder": [
+    "ma.4.kopf.leicht",
+    "ma.4.kopf.mittel",
+    "ma.4.kopf.schwer",
+    "ma.3.kopf.mittel",
+    "ma.3.kopf.schwer",
+    "ma.2.kopf.schwer",
+    "ma.1.kopf.schwer"
+   ]
+  },
+  "6": {
+   "titel": "Kopfrechnen Klasse 6",
+   "stufen": [
+    "ma.6.kopf.wiederholung",
+    "ma.6.kopf.teilbarkeit",
+    "ma.6.kopf.brueche",
+    "ma.6.kopf.dezimal",
+    "ma.6.kopf.profi"
+   ],
+   "foerder": [
+    "ma.5.kopf.grundlagen",
+    "ma.5.kopf.grosse-zahlen",
+    "ma.5.kopf.rechenregeln",
+    "ma.5.kopf.vorteile",
+    "ma.4.kopf.schwer"
+   ]
+  }
+ },
+ "stufen": {
+  "ma.1.kopf.leicht": {
+   "titel": "Klasse 1 · leicht",
+   "kurz": "+ − bis 10",
+   "generatoren": [
+    {
+     "typ": "alt1",
+     "stufe": "leicht"
+    }
+   ]
+  },
+  "ma.1.kopf.mittel": {
+   "titel": "Klasse 1 · mittel",
+   "kurz": "bis 20, Zehner",
+   "generatoren": [
+    {
+     "typ": "alt1",
+     "stufe": "mittel"
+    }
+   ]
+  },
+  "ma.1.kopf.schwer": {
+   "titel": "Klasse 1 · schwer",
+   "kurz": "Zehnerübergang, Ergänzen",
+   "generatoren": [
+    {
+     "typ": "alt1",
+     "stufe": "schwer"
+    }
+   ]
+  },
+  "ma.2.kopf.leicht": {
+   "titel": "Klasse 2 · leicht",
+   "kurz": "bis 20, 2er/5er/10er",
+   "generatoren": [
+    {
+     "typ": "alt2",
+     "stufe": "leicht"
+    }
+   ]
+  },
+  "ma.2.kopf.mittel": {
+   "titel": "Klasse 2 · mittel",
+   "kurz": "Zehner bis 100, 1×1",
+   "generatoren": [
+    {
+     "typ": "alt2",
+     "stufe": "mittel"
+    }
+   ]
+  },
+  "ma.2.kopf.schwer": {
+   "titel": "Klasse 2 · schwer",
+   "kurz": "bis 100, Halbieren",
+   "generatoren": [
+    {
+     "typ": "alt2",
+     "stufe": "schwer"
+    }
+   ]
+  },
+  "ma.3.kopf.leicht": {
+   "titel": "Klasse 3 · leicht",
+   "kurz": "bis 20, kleines 1×1",
+   "generatoren": [
+    {
+     "typ": "alt3",
+     "stufe": "leicht"
+    }
+   ]
+  },
+  "ma.3.kopf.mittel": {
+   "titel": "Klasse 3 · mittel",
+   "kurz": "Zehner, 1×1 komplett",
+   "generatoren": [
+    {
+     "typ": "alt3",
+     "stufe": "mittel"
+    }
+   ]
+  },
+  "ma.3.kopf.schwer": {
+   "titel": "Klasse 3 · schwer",
+   "kurz": "Hunderter, 6×40, Punkt vor Strich",
+   "generatoren": [
+    {
+     "typ": "alt3",
+     "stufe": "schwer"
+    }
+   ]
+  },
+  "ma.4.kopf.leicht": {
+   "titel": "Klasse 4 · leicht",
+   "kurz": "bis 100, 1×1, ×10",
+   "generatoren": [
+    {
+     "typ": "alt4",
+     "stufe": "leicht"
+    }
+   ],
+   "inhalt": "kopf4-leicht"
+  },
+  "ma.4.kopf.mittel": {
+   "titel": "Klasse 4 · mittel",
+   "kurz": "Hunderter, 30×4",
+   "generatoren": [
+    {
+     "typ": "alt4",
+     "stufe": "mittel"
+    }
+   ],
+   "inhalt": "kopf4-mittel"
+  },
+  "ma.4.kopf.schwer": {
+   "titel": "Klasse 4 · schwer",
+   "kurz": "bis 1000, 23×4, Rest",
+   "generatoren": [
+    {
+     "typ": "alt4",
+     "stufe": "schwer"
+    }
+   ],
+   "inhalt": "kopf4-schwer"
+  },
+  "ma.5.kopf.grundlagen": {
+   "titel": "Grundlagen",
+   "kurz": "Wiederholung 4. Klasse: bis 1000, 1×1",
+   "generatoren": [
+    {
+     "typ": "alt4",
+     "stufe": "mittel"
+    },
+    {
+     "typ": "alt4",
+     "stufe": "schwer"
+    },
+    {
+     "typ": "1x1"
+    }
+   ]
+  },
+  "ma.5.kopf.grosse-zahlen": {
+   "titel": "Große Zahlen",
+   "kurz": "34 000 + 8 000 · 300 × 40 · 4 800 ÷ 60",
+   "generatoren": [
+    {
+     "typ": "gross-plusminus",
+     "gewicht": 3
+    },
+    {
+     "typ": "stufen-mal",
+     "gewicht": 2
+    }
+   ]
+  },
+  "ma.5.kopf.rechenregeln": {
+   "titel": "Punkt vor Strich & Klammern",
+   "kurz": "5 + 3 × 4 · (12 + 8) × 3",
+   "generatoren": [
+    {
+     "typ": "punkt-vor-strich",
+     "gewicht": 3
+    },
+    {
+     "typ": "klammern",
+     "gewicht": 2
+    }
+   ]
+  },
+  "ma.5.kopf.vorteile": {
+   "titel": "Rechenvorteile & Überschlag",
+   "kurz": "25 × 7 × 4 · 398 + 512 ≈ ?",
+   "generatoren": [
+    {
+     "typ": "rechenvorteile",
+     "gewicht": 3
+    },
+    {
+     "typ": "ueberschlag",
+     "gewicht": 2
+    }
+   ]
+  },
+  "ma.5.kopf.profi": {
+   "titel": "Profi",
+   "kurz": "alles gemischt",
+   "generatoren": [
+    {
+     "typ": "gross-plusminus"
+    },
+    {
+     "typ": "stufen-mal"
+    },
+    {
+     "typ": "punkt-vor-strich"
+    },
+    {
+     "typ": "klammern"
+    },
+    {
+     "typ": "rechenvorteile"
+    },
+    {
+     "typ": "ueberschlag"
+    }
+   ]
+  },
+  "ma.6.kopf.wiederholung": {
+   "titel": "Stoff der 5. Klasse",
+   "kurz": "große Zahlen, Rechenregeln, ganze Zahlen",
+   "generatoren": [
+    {
+     "typ": "gross-plusminus"
+    },
+    {
+     "typ": "stufen-mal"
+    },
+    {
+     "typ": "punkt-vor-strich"
+    },
+    {
+     "typ": "klammern"
+    },
+    {
+     "typ": "alt6",
+     "arten": [
+      "int_neg"
+     ]
+    }
+   ]
+  },
+  "ma.6.kopf.teilbarkeit": {
+   "titel": "Teilbarkeit",
+   "kurz": "Teilbarkeitsregeln, kgV, ggT",
+   "generatoren": [
+    {
+     "typ": "teilbar",
+     "gewicht": 3
+    },
+    {
+     "typ": "kgv-ggt",
+     "gewicht": 2
+    }
+   ]
+  },
+  "ma.6.kopf.brueche": {
+   "titel": "Brüche",
+   "kurz": "erweitern, kürzen, vergleichen, Bruchteile, + −",
+   "generatoren": [
+    {
+     "typ": "bruch-erweitern"
+    },
+    {
+     "typ": "bruch-kuerzen"
+    },
+    {
+     "typ": "bruch-vergleich"
+    },
+    {
+     "typ": "bruchteil"
+    },
+    {
+     "typ": "alt6",
+     "arten": [
+      "frac_same",
+      "frac_diff"
+     ]
+    }
+   ]
+  },
+  "ma.6.kopf.dezimal": {
+   "titel": "Dezimalzahlen",
+   "kurz": "umwandeln, + −, × und ÷ mit 10/100/1000",
+   "generatoren": [
+    {
+     "typ": "dez-umwandeln",
+     "gewicht": 2
+    },
+    {
+     "typ": "alt6",
+     "arten": [
+      "dec1",
+      "dec2"
+     ]
+    },
+    {
+     "typ": "dez-mal10",
+     "gewicht": 2
+    }
+   ]
+  },
+  "ma.6.kopf.profi": {
+   "titel": "Profi",
+   "kurz": "alles gemischt, auch Brüche mal und geteilt",
+   "generatoren": [
+    {
+     "typ": "teilbar"
+    },
+    {
+     "typ": "kgv-ggt"
+    },
+    {
+     "typ": "bruch-kuerzen"
+    },
+    {
+     "typ": "bruch-vergleich"
+    },
+    {
+     "typ": "bruchteil"
+    },
+    {
+     "typ": "dez-umwandeln"
+    },
+    {
+     "typ": "dez-mal10"
+    },
+    {
+     "typ": "alt6",
+     "arten": [
+      "frac_diff",
+      "frac_mul",
+      "frac_div",
+      "rat",
+      "neg_dec"
+     ]
+    }
+   ]
+  }
+ }
+}
