@@ -334,8 +334,8 @@
       <div class="form-card" id="aod-info" style="margin-bottom:1.5rem;font-size:.88rem;color:var(--text2);">–</div>
       <div class="sec-header"><span class="sec-title">🧭 Lernwelt-Pass</span></div>
       <div class="form-card" style="margin-bottom:1.5rem;font-size:.86rem;color:var(--text2);display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;">
-        <span style="flex:1;min-width:220px;">Sicherungskarten für die Klasse drucken (8 pro A4-Seite). Die Kinder schicken dir ihren Code aus „Mein Pass → Code kopieren“.<br><span id="pass-status" style="font-size:.78rem;color:var(--muted)"></span></span>
-        <a class="btn accent" href="pass-karte.html?sammel" target="_blank" rel="noopener">🖨 Sammelbogen öffnen</a>
+        <span style="flex:1;min-width:220px;">Sicherungskarten für die automatische Pass-Sicherung erzeugen, drucken und verwalten.<br><span id="pass-status" style="font-size:.78rem;color:var(--muted)"></span></span>
+        <a class="btn accent" href="admin-karten.html">🗂 Sicherungskarten</a>
       </div>
       <div class="sec-header"><span class="sec-title">📋 Letzte Aktionen</span></div>
       <div id="changelog-list" style="display:flex;flex-direction:column;gap:.4rem;"></div>
@@ -1240,7 +1240,6 @@ function buildPassOverview() {
     ['Sterne', `🥉 ${R.starPct[0]} % · 🥈 ${R.starPct[1]} % · 🥇 ${R.starPct[2]} % – jeweils an ${R.starDays} verschiedenen Tagen`],
     ['Truhen', `alle ${R.chestEveryXp} XP eine Truhe; bei aktivem Event ${Math.round(R.eventChestShare * 100)} % Event-Teile; ${R.eventGiftChests} Geschenk-Truhe je Event und Schuljahr`],
     ['Level-Truhen', 'bei jedem Level-Aufstieg eine Truhe (im Saison-Modus jedes Schuljahr neu); zieht nur aus dem normalen Truhen-Pool, ohne Event-Teile; wird vor den anderen Truhen geöffnet'],
-    ['Sicherungs-Erinnerung', `Hinweis im Pass nach ${R.backupRemindDays} Tagen ohne Sicherung bzw. ab ${R.backupFirstXp} XP, wenn noch nie gesichert wurde`],
   ].map(([a, b]) => `<tr><td><b>${escHtml(a)}</b></td><td>${escHtml(b)}</td></tr>`).join('');
 
   const chanceRows = rars.map(k => {

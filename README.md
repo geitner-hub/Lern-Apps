@@ -9,7 +9,6 @@ verwaltet über ein eigenes Admin-Panel.
 ```
 index.html            Startseite (bleibt im Hauptordner – Home-Bildschirm-Symbol!)
 admin.html            Verwaltung (Login wird im Cloudflare Worker geprüft)
-pass-karte.html       Druckbare Sicherungskarten (?sammel = 8 pro A4)
 aufgaben-check.html   Werkzeug: Beispielaufgaben aus aufgaben.js ansehen
 404.html              Leitet alte Links (vor der Ordnerstruktur) automatisch um
 config.json           Zentrale Konfiguration (nur diese Datei schreibt der Worker)
@@ -119,11 +118,9 @@ in `RULES` am Anfang von `pass.js` und können dort angepasst werden.
   Apps nur für niedrigere Klassen halbe XP.
 - **Sterne:** 🥉 60 % / 🥈 80 % / 🥇 90 % an jeweils 2 verschiedenen Tagen.
 - **Wochen-Serie:** Ziel 3 Tage mit ≥ 50 %; Wochen ganz ohne Übung pausieren die Serie.
-- **Sicherung:** QR/Code (`LW3.…` komprimiert mit `vendor/fflate.min.js`, ohne Kompression `LW2.…`;
-  alte `LW1`/`LW2`-Codes werden weiter gelesen) im Pass. Der Code enthält auch das Dorf (Feld `d`).
-  Scannen öffnet `index.html#pass=…` und stellt
-  den Pass nach Rückfrage wieder her. Die Prüfsumme erkennt Tipp-/Kopierfehler, ist aber
-  kein Schutz gegen gezieltes Manipulieren – der Pass ist ohnehin nur lokal.
+- **Sicherung:** nur noch automatisch über die Sicherungskarte (`gemeinsam/sync.js`, Anleitung
+  `SICHERUNGSKARTEN.md`). Der alte Sicherungs-QR/-Code (`LW1`–`LW3`, `#pass=…`) wurde entfernt;
+  alte Karten zeigen beim Scannen nur noch einen Hinweis auf die neue Karte.
 - **Truhen & Avatar-Teile:** alle 250 XP eine Truhe. Chancen 60/30/10 % (gewöhnlich/selten/episch),
   keine Dubletten; ist der Pool leer, gibt es Sternenstaub. Neun Plätze: Kopf, Gesicht, Oberteil,
   Hose, Schuhe, Rücken, In der Hand, Begleiter, Hintergrund. Die Figur selbst (Hautton, Frisur,
@@ -131,14 +128,14 @@ in `RULES` am Anfang von `pass.js` und können dort angepasst werden.
   Gesperrte Teile können in der Garderobe anprobiert werden.
 - **Level-Truhen:** jeder Level-Aufstieg gibt zusätzlich eine Truhe (nur ab Einführung, nicht rückwirkend).
   Sie zieht aus dem normalen Truhen-Pool (ohne Event-Anteil) und wird zuerst geöffnet. Zählung in
-  `levelChests`/`levelOpened`, beides steckt im Sicherungs-Code (`lc`/`lo`).
+  `levelChests`/`levelOpened`.
 - **Truhe öffnen** (`chest3d.js`): 3D-Truhe im Block-Stil, dreimal antippen (das Glühen wird stärker,
   bleibt aber neutral), dann wird das Teil gezogen und gespeichert, erst danach läuft die Animation
   (Deckel, Lichtsäule, Funken, das 3D-Teil steigt auf; Stärke je Seltenheit). Tippen überspringt.
   Varianten: normal, Level-Truhe, Halloween, Weihnachten (Geschenk), Ostern – neue Varianten in `SKINS`.
   Ohne WebGL: gezeichnete Truhe. Bei „Bewegung reduzieren“: ruhige Version.
-- **Pass-Reiter:** Garderobe (Start) · Truhen · Erfolge (Leiste + Abzeichen) · Sicherung (mit Stand der
-  letzten Sicherung; „!“ nach 30 Tagen ohne Sicherung bzw. ab 100 XP ohne jede Sicherung).
+- **Pass-Reiter:** Garderobe (Start) · Truhen · Erfolge (Leiste + Abzeichen) · Sicherung (Karte verbinden
+  bzw. Stand der automatischen Sicherung; „!“, wenn die verbundene Karte nicht mehr gilt).
 - **Abzeichen:** schalten legendäre Set-Teile frei (Liste in `lernwelt-inhalte.json`).
 - **Saison-Modus** (Admin → 🧭 Pass): Level/Titel zählen pro Schuljahr, Wechsel automatisch am
   1. August. Gesamt-XP, Sterne, Abzeichen, Truhen und Cosmetics bleiben.
@@ -166,12 +163,12 @@ in `RULES` am Anfang von `pass.js` und können dort angepasst werden.
 - **IDs nie ändern oder löschen** – sonst verlieren Kinder ihre Teile.
 - Speicher: `localStorage['lernwelt-pass']` (nur auf dem Gerät).
 - Schutz vor Datenverlust: Symbol auf dem Home-Bildschirm (`APP-SYMBOL.md`, eigener Speicher ohne
-  Safari-Löschregel), `navigator.storage.persist()`, Sicherungs-QR/-Karte. Achtung: App-Symbol und
-  Safari haben getrennte Speicher – Übernahme per „📷 QR scannen“ (Sicherungskarte) oder „Code kopieren“.
+  Safari-Löschregel), `navigator.storage.persist()`, Sicherungskarte. Achtung: App-Symbol und
+  Safari haben getrennte Speicher – Übernahme per „📷 QR scannen“ (Sicherungskarte).
 - **📷 QR scannen** (Startseite): öffnet gescannte Lernwelt-Apps innerhalb der Lernwelt (wichtig für das
   App-Symbol, weil die Kamera-App immer Safari öffnet), liest Sicherungskarten ein, lehnt fremde Codes ab.
 - **Safari-Hinweis:** Auf iPad/iPhone in Safari (nicht im App-Symbol) erscheint oben einmal pro Tag der
-  Hinweis, das Lernwelt-Symbol zu benutzen (nicht im Admin und auf der Druckkarte).
+  Hinweis, das Lernwelt-Symbol zu benutzen (nicht im Admin).
 
 ### Avatar-Teile (ohne Programmieren)
 

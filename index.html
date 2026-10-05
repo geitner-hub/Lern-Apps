@@ -1041,12 +1041,12 @@ function renderPass(mode) {
         ${mode === 'edit' ? '<button type="button" class="lw-btn" data-mode="wardrobe">Abbrechen</button>' : ''}
       </div>
       <div class="lw-msg" id="pf-msg"></div>
-      ${mode === 'setup' ? syncSetupHTML() + `<div class="lw-sec"><details class="lw-details"><summary>Ich habe schon einen Pass (Sicherungs-Code)</summary>${restoreForm()}</details></div>` : ''}`;
+      ${mode === 'setup' ? syncSetupHTML() : ''}`;
     return;
   }
 
   const pr = P.profile(), lv = P.levelInfo();
-  const ch = P.chestInfo(), bk = P.backupInfo();
+  const ch = P.chestInfo(), syncWarn = karteUngueltig();
   // Reihenfolge: Garderobe · Truhen · Erfolge · Sicherung (alte Namen werden umgeleitet)
   const alias = { view: 'wardrobe', badges: 'erfolge' };
   const tab = PASS_TABS.includes(alias[mode] || mode) ? (alias[mode] || mode) : 'wardrobe';
@@ -1065,7 +1065,7 @@ function renderPass(mode) {
       <button type="button" role="tab" data-mode="wardrobe" class="${tab === 'wardrobe' ? 'on' : ''}"><i>👕</i><span>Garderobe</span></button>
       <button type="button" role="tab" data-mode="chests" class="${tab === 'chests' ? 'on' : ''}">${chestTabInner(ch.available)}</button>
       <button type="button" role="tab" data-mode="erfolge" class="${tab === 'erfolge' ? 'on' : ''}"><i>🏆</i><span>Erfolge</span></button>
-      <button type="button" role="tab" data-mode="sicherung" class="${tab === 'sicherung' ? 'on' : ''}"><i>💾</i><span>Sicherung</span>${bk.remind ? '<span class="dot warn">!</span>' : ''}</button>
+      <button type="button" role="tab" data-mode="sicherung" class="${tab === 'sicherung' ? 'on' : ''}"><i>💾</i><span>Sicherung</span>${syncWarn ? '<span class="dot warn">!</span>' : ''}</button>
     </div>`;
   body.innerHTML = head + ({ wardrobe: passViewWardrobe, chests: passViewChests, erfolge: passViewErfolge, sicherung: passViewSicherung })[tab]();
   if (tab === 'wardrobe') wardStart();
@@ -1116,8 +1116,9 @@ function badgeTileHTML({ b, pr, has, pct }, near) {
 
 // ── Sicherung ──────────────────────────────────────────
 //  Mit Sicherungskarte (LernSync, gemeinsam/sync.js) sichert der Pass automatisch.
-//  Ohne Karte gibt es weiter den Sicherungs-QR / Code von früher (LW3).
+//  Der alte Sicherungs-QR / Code (LW1–LW3) wurde entfernt.
 function syncInfo() { return window.LernSync ? LernSync.status() : null; }
+function karteUngueltig() { const s = syncInfo(); return !!(s && s.verbunden && s.ungueltig); }
 function syncWann(ts) {
   if (!ts) return '';
   const min = Math.round((Date.now() - ts) / 60000);
@@ -1141,13 +1142,7 @@ function backupStateHTML() {
     if (s.fehler && !s.ungueltig) sub += ' · ' + s.fehler;
     return `<div class="backup-state ${cls}" id="backup-state"><span class="ic">${ic}</span><div><b>${escHtml(txt)}</b><span>${escHtml(sub)}</span></div></div>`;
   }
-  const bi = LernPass.backupInfo();
-  const when = bi.days === null ? '' : bi.days === 0 ? 'heute' : bi.days === 1 ? 'gestern' : `vor ${bi.days} Tagen`;
-  const cls = !bi.last ? (bi.remind ? 'warn' : '') : bi.remind ? 'warn' : 'ok';
-  const ic = !bi.last ? '💾' : bi.remind ? '⏰' : '✅';
-  const txt = !bi.last ? 'Noch nie gesichert' : `Zuletzt gesichert: ${when}`;
-  const sub = !bi.last ? 'Sichere deinen Pass, damit nichts verloren geht.' : bi.remind ? 'Zeit für eine neue Sicherung – zeig den QR oder kopiere den Code.' : 'Super, dein Pass ist gesichert.';
-  return `<div class="backup-state ${cls}" id="backup-state"><span class="ic">${ic}</span><div><b>${txt}</b><span>${sub}</span></div></div>`;
+  return '';
 }
 
 // Karte scannen oder Code eintippen (Sicherung und Einrichten)
@@ -1164,19 +1159,6 @@ function syncVerbindenHTML() {
     </details>`;
 }
 
-// Alte Sicherung per QR/Code – mit Karte nur noch unter „Weitere Möglichkeiten“
-function backupAltHTML() {
-  return `
-      <p class="lw-p" style="margin-top:.6rem">Mit deinem Sicherungs-QR kannst du den Pass auf ein anderes Gerät mitnehmen oder wiederherstellen. Er enthält nur den Stand von heute.</p>
-      <div class="lw-btns">
-        <button type="button" class="lw-btn" id="pass-qr">📲 Sicherungs-QR zeigen</button>
-        <a class="lw-btn" href="pass-karte.html" style="text-decoration:none">🖨 QR-Karte drucken</a>
-        <button type="button" class="lw-btn" id="pass-copy">🔗 Code kopieren</button>
-      </div>
-      <div class="lw-msg" id="pass-copy-msg"></div>
-      <div class="lw-sec"><details class="lw-details"><summary>Pass aus Code wiederherstellen</summary>${restoreForm()}</details></div>`;
-}
-
 function passViewSicherung() {
   const s = syncInfo();
   if (s && s.verbunden && !s.ungueltig) {
@@ -1189,7 +1171,6 @@ function passViewSicherung() {
         <a class="lw-btn" href="sync-karte.html" style="text-decoration:none">🖨 Meine Karte drucken</a>
       </div>
       <div class="lw-msg" id="sync-msg"></div>
-      <div class="lw-sec"><details class="lw-details"><summary>Weitere Möglichkeiten</summary>${backupAltHTML()}</details></div>
     </div>`;
   }
   return `
@@ -1199,11 +1180,7 @@ function passViewSicherung() {
         <h3>💳 Hast du eine Sicherungskarte?</h3>
         <p class="lw-p">Verbinde deinen Pass mit deiner Karte. Danach wird alles automatisch gesichert – du musst nichts mehr tun.</p>
         ${syncVerbindenHTML()}
-      </div>
-      <div class="lw-sec">
-        <h3>💾 Ohne Karte sichern</h3>
-        ${s && s.ungueltig ? '' : backupStateHTML()}
-        ${backupAltHTML()}
+        <p class="lw-p" style="margin-top:.6rem;color:var(--muted);font-size:.78rem">Noch keine Karte? Frag deine Lehrkraft.</p>
       </div>
       <p class="lw-p" style="margin-top:.4rem;color:var(--muted);font-size:.74rem">Tipp: Öffne die Lernwelt über das Symbol auf dem Home-Bildschirm – dort ist dein Pass am besten aufgehoben.</p>
     </div>`;
@@ -1249,13 +1226,12 @@ document.addEventListener('keydown', e => {
 window.addEventListener('lernsync:status', e => {
   const el = document.getElementById('backup-state');
   if (el && el.closest('.backup-wrap')) el.outerHTML = backupStateHTML();
-  // Mit Karte ist der Pass gesichert → keine Erinnerung an den alten Sicherungs-QR
-  const s = e.detail;
-  if (s && s.verbunden && !s.ungueltig && s.letzteSicherung && Date.now() - s.letzteSicherung < 7 * 864e5
-      && window.LernPass && LernPass.hasProfile() && LernPass.backupInfo().remind) {
-    LernPass.exportCode();
-    const d = document.querySelector('.lw-tabs [data-mode="sicherung"] .dot');
-    if (d) d.remove();
+  // „!“ am Reiter Sicherung nur, solange die Karte ungültig ist
+  const tab = document.querySelector('.lw-tabs [data-mode="sicherung"]');
+  if (tab) {
+    const d = tab.querySelector('.dot'), warn = karteUngueltig();
+    if (warn && !d) tab.insertAdjacentHTML('beforeend', '<span class="dot warn">!</span>');
+    if (!warn && d) d.remove();
   }
 });
 
@@ -1472,25 +1448,6 @@ function wardUpdate() {
   if (side) { const y = side.scrollTop; side.innerHTML = wardSideHTML(); side.scrollTop = y; }
 }
 
-function restoreForm() {
-  return `
-    <textarea class="lw-input" id="rs-code" rows="3" style="margin-top:.6rem;font-size:.75rem;resize:vertical" placeholder="Code hier einfügen (beginnt mit LW3. oder LW2.)"></textarea>
-    <div class="lw-btns"><button type="button" class="lw-btn" id="rs-check">Code prüfen</button></div>
-    <div class="lw-msg" id="rs-msg"></div>`;
-}
-
-function askRestore(code, msgEl) {
-  const res = LernPass.parseCode(code);
-  if (!res.ok) { if (msgEl) { msgEl.className = 'lw-msg err'; msgEl.textContent = res.error; } else alert(res.error); return; }
-  const pv = res.preview;
-  const cur = LernPass.hasProfile() ? `\n\nACHTUNG: Dein aktueller Pass (${LernPass.profile().name}, ${LernPass.state.xp} XP) wird ersetzt.` : '';
-  if (confirm(`Pass wiederherstellen?\n\n${pv.name} – Level ${pv.level} (${pv.title}), ${pv.xp} XP\nGesichert am ${pv.date}${cur}`)) {
-    res.apply();
-    closePass();
-    buildPage();
-  }
-}
-
 // Ereignisse im Modal
 document.getElementById('pass-modal').addEventListener('click', async e => {
   const t = e.target;
@@ -1551,26 +1508,6 @@ document.getElementById('pass-modal').addEventListener('click', async e => {
     renderPass('wardrobe');
     return;
   }
-  if (t.id === 'pass-qr') {
-    closePass();
-    openQR('Sicherung: ' + LernPass.profile().name, LernPass.restoreUrl());
-    document.querySelector('#qr-modal .qr-sub').textContent = 'Nur für dich! Mit der Kamera scannen, um den Pass wiederherzustellen.';
-    return;
-  }
-  if (t.id === 'pass-copy') {
-    const ok = await copyText(LernPass.exportCode());
-    const m = document.getElementById('pass-copy-msg');
-    m.className = 'lw-msg ' + (ok ? 'ok' : 'err');
-    m.textContent = ok ? '✓ Code kopiert – bewahre ihn gut auf.' : 'Kopieren nicht möglich.';
-    if (ok) {
-      const st = document.getElementById('backup-state');
-      if (st) st.outerHTML = backupStateHTML();
-      const d = document.querySelector('.lw-tabs [data-mode="sicherung"] .dot');
-      if (d) d.remove();
-    }
-    return;
-  }
-  if (t.id === 'rs-check') { askRestore(document.getElementById('rs-code').value, document.getElementById('rs-msg')); }
 });
 document.addEventListener('avatar:gedreht', () => { const h = document.getElementById('ward-hint'); if (h) h.hidden = true; });
 document.addEventListener('keydown', e => {
@@ -1586,51 +1523,12 @@ document.getElementById('pass-section').addEventListener('keydown', e => {
   if (c && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); openPass(LernPass.hasProfile() ? c.dataset.openPass : 'setup'); }
 });
 
-// Standard-Text im QR-Fenster nach Sicherungs-QR zurücksetzen
-document.getElementById('qr-close').addEventListener('click', () => {
-  document.querySelector('#qr-modal .qr-sub').textContent = 'Mit der Kamera scannen – öffnet die App direkt.';
-});
-
-// Wiederherstellen per gescanntem QR (…/#pass=CODE)
-function checkRestoreHash() {
-  const m = location.hash.match(/^#pass=(.+)$/);
-  if (!m) return;
-  const code = decodeURIComponent(m[1]);
+// Alte Sicherungs-QR-Karten (…/#pass=CODE) gelten nicht mehr → freundlicher Hinweis
+const ALTE_KARTE = 'Das ist eine alte Sicherungskarte. Sie funktioniert nicht mehr.\n\nBitte scanne deine neue Sicherungskarte – frag sonst deine Lehrkraft.';
+function checkAlteKarte() {
+  if (!/^#pass=/.test(location.hash)) return;
   try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {}
-  if (IS_APP) { setTimeout(() => askRestore(code, null), 300); return; }
-  setTimeout(() => showRestoreChoice(code), 300);
-}
-
-// QR-Code wurde mit der Kamera gescannt → öffnet Safari, nicht die Lernwelt-App.
-// Nutzt das Kind die App, kopiert es den Code hier und fügt ihn in der App ein.
-function showRestoreChoice(code) {
-  const res = LernPass.parseCode(code);
-  if (!res.ok) { alert(res.error); return; }
-  const pv = res.preview;
-  passLastFocus = document.activeElement;
-  document.querySelector('#pass-modal .lw-box').classList.remove('wide');
-  document.getElementById('pass-modal').classList.add('open');
-  document.body.classList.add('qr-open');
-  document.getElementById('pass-modal-body').innerHTML = `
-    <div class="lw-h" id="pass-modal-title">💾 Pass wiederherstellen</div>
-    <p class="lw-p"><b style="color:#fff">${escHtml(pv.name)}</b> – Level ${pv.level} (${escHtml(pv.title)}), ${pv.xp} XP, gesichert am ${escHtml(pv.date)}</p>
-    <div class="lw-sec" style="border-top:none;padding-top:.4rem">
-      <h3>📱 Du benutzt das Lernwelt-Symbol auf dem Home-Bildschirm?</h3>
-      <p class="lw-p">Am einfachsten: Lernwelt-Symbol öffnen → <b>📷 QR scannen</b> → diese Sicherungskarte scannen.<br>Oder: Code kopieren → im Lernwelt-Symbol den Pass öffnen → „Ich habe schon einen Pass“ → einfügen.</p>
-      <div class="lw-btns"><button type="button" class="lw-btn primary" id="rc-copy">📋 Code kopieren</button></div>
-      <div class="lw-msg" id="rc-msg"></div>
-    </div>
-    <div class="lw-sec">
-      <h3>🌐 Oder hier in Safari wiederherstellen</h3>
-      <div class="lw-btns"><button type="button" class="lw-btn" id="rc-here">Hier wiederherstellen</button></div>
-    </div>`;
-  document.getElementById('rc-copy').onclick = async () => {
-    const ok = await copyText(code);
-    const m = document.getElementById('rc-msg');
-    m.className = 'lw-msg ' + (ok ? 'ok' : 'err');
-    m.textContent = ok ? '✓ Kopiert – jetzt das Lernwelt-Symbol öffnen und einfügen.' : 'Kopieren nicht möglich.';
-  };
-  document.getElementById('rc-here').onclick = () => askRestore(code, null);
+  setTimeout(() => alert(ALTE_KARTE), 300);
 }
 
 
@@ -1704,12 +1602,12 @@ function closeScanner() {
 /** Was steckt im Code? Nur Lernwelt-Inhalte werden geöffnet. */
 function handleScan(text) {
   const again = '<button type="button" class="lw-btn" id="scan-again">Nochmal scannen</button>';
-  if (/^LW[12]\./.test(text)) { closeScanner(); askRestore(text, null); return; }
+  if (/^LW\d\./.test(text)) { scanMsg(ALTE_KARTE.replace('\n\n', ' '), 'err'); scanButtons(again); return; }
   let url = null;
   try { url = new URL(text); } catch (e) {}
   if (url) {
     const m = url.hash.match(/^#pass=(.+)$/);
-    if (m && url.href.startsWith(lwBaseUrl())) { closeScanner(); askRestore(decodeURIComponent(m[1]), null); return; }
+    if (m && url.href.startsWith(lwBaseUrl())) { scanMsg(ALTE_KARTE.replace('\n\n', ' '), 'err'); scanButtons(again); return; }
     if (url.href.startsWith(lwBaseUrl()) && /(\/|\.html)$/.test(url.pathname)) {
       const name = (CONFIG && CONFIG.apps || []).find(a => appUrl(a.datei) && url.href.startsWith(appUrl(a.datei).split('#')[0]));
       scanMsg('✓ ' + (name ? name.name : 'Lernwelt') + ' wird geöffnet …', 'ok');
@@ -1749,7 +1647,7 @@ buildKlassenChips();
 whenPassReady(() => {
   LernPass.onChange(() => { if (document.visibilityState === 'visible') buildPassCard(); });
   buildPassCard();
-  load().then(checkRestoreHash);
+  load().then(checkAlteKarte);
 });
 </script>
 </body>

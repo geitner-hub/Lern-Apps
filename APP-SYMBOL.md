@@ -59,10 +59,10 @@ lieber das Symbol zu benutzen (einmal pro Tag, mit „Verstanden“ ausblendbar)
 ## Wichtig beim Umstieg
 
 - Die App hat einen **eigenen Speicher**. Ein Pass, der vorher in Safari angelegt wurde,
-  erscheint in der App nicht von selbst. Übernahme: in Safari *Mein Pass* → *🔗 Code kopieren* →
-  Lernwelt-Symbol öffnen → Pass öffnen → *„Ich habe schon einen Pass“* → einfügen.
-- **Sicherungskarten** in der App mit „📷 QR scannen“ einlesen. Wurde die Karte doch mit der
-  Kamera gescannt (→ Safari), bietet die Seite „📋 Code kopieren“ zum Einfügen in der App an.
+  erscheint in der App nicht von selbst. Übernahme: in Safari den Pass mit der Sicherungskarte
+  verbinden → Lernwelt-Symbol öffnen → „📷 QR scannen“ → dieselbe Karte scannen → „Pass laden“.
+- **Sicherungskarten** in der App mit „📷 QR scannen“ einlesen (nicht mit der Kamera-App,
+  die öffnet Safari).
 - Kinder sollten danach **nur noch das Symbol** benutzen, nicht Safari.
 - Entfernt ein Kind das Symbol, wird auch der Speicher der App gelöscht → deshalb in der
   Geräteverwaltung „Entfernbar: aus“.
