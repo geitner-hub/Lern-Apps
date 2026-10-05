@@ -1115,7 +1115,32 @@ function badgeTileHTML({ b, pr, has, pct }, near) {
 }
 
 // ── Sicherung ──────────────────────────────────────────
+//  Mit Sicherungskarte (LernSync, gemeinsam/sync.js) sichert der Pass automatisch.
+//  Ohne Karte gibt es weiter den Sicherungs-QR / Code von früher (LW3).
+function syncInfo() { return window.LernSync ? LernSync.status() : null; }
+function syncWann(ts) {
+  if (!ts) return '';
+  const min = Math.round((Date.now() - ts) / 60000);
+  if (min < 1) return 'gerade eben';
+  if (min < 60) return `vor ${min} Min.`;
+  const d = new Date(ts);
+  const tage = Math.round((new Date(new Date().toDateString()) - new Date(d.toDateString())) / 864e5);
+  const uhr = d.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+  return tage === 0 ? `heute, ${uhr} Uhr` : tage === 1 ? `gestern, ${uhr} Uhr` : `vor ${tage} Tagen`;
+}
 function backupStateHTML() {
+  const s = syncInfo();
+  if (s && s.verbunden) {
+    let cls = 'ok', ic = '✅', txt = 'Automatisch gesichert', sub = s.letzteSicherung ? syncWann(s.letzteSicherung) + ' · mit deiner Sicherungskarte' : 'mit deiner Sicherungskarte';
+    if (s.ungueltig) { cls = 'warn'; ic = '⚠️'; txt = 'Deine Sicherungskarte gilt nicht mehr'; sub = 'Frag deine Lehrkraft nach einer neuen Karte und scanne sie.'; }
+    else if (s.ausstehend) {
+      cls = s.offline ? 'warn' : ''; ic = '⏳';
+      txt = s.offline ? 'Wird gesichert, sobald Internet da ist' : 'Wird gleich gesichert …';
+      sub = s.letzteSicherung ? 'Letzte Sicherung: ' + syncWann(s.letzteSicherung) : 'Die erste Sicherung folgt gleich.';
+    }
+    if (s.fehler && !s.ungueltig) sub += ' · ' + s.fehler;
+    return `<div class="backup-state ${cls}" id="backup-state"><span class="ic">${ic}</span><div><b>${escHtml(txt)}</b><span>${escHtml(sub)}</span></div></div>`;
+  }
   const bi = LernPass.backupInfo();
   const when = bi.days === null ? '' : bi.days === 0 ? 'heute' : bi.days === 1 ? 'gestern' : `vor ${bi.days} Tagen`;
   const cls = !bi.last ? (bi.remind ? 'warn' : '') : bi.remind ? 'warn' : 'ok';
@@ -1124,21 +1149,115 @@ function backupStateHTML() {
   const sub = !bi.last ? 'Sichere deinen Pass, damit nichts verloren geht.' : bi.remind ? 'Zeit für eine neue Sicherung – zeig den QR oder kopiere den Code.' : 'Super, dein Pass ist gesichert.';
   return `<div class="backup-state ${cls}" id="backup-state"><span class="ic">${ic}</span><div><b>${txt}</b><span>${sub}</span></div></div>`;
 }
-function passViewSicherung() {
+
+// Karte scannen oder Code eintippen (Sicherung und Einrichten)
+function syncVerbindenHTML() {
   return `
-    <div class="backup-wrap">
-      ${backupStateHTML()}
-      <p class="lw-p" style="margin-top:.9rem">Mit deinem Sicherungs-QR kannst du den Pass auf ein anderes Gerät mitnehmen oder wiederherstellen, falls er verloren geht. Scanne ihn einfach mit der Kamera – oder drucke dir eine Sicherungskarte aus.</p>
+    <div class="lw-btns">
+      <button type="button" class="lw-btn primary" id="sync-scan">📷 Karte scannen</button>
+    </div>
+    <details class="lw-details" style="margin-top:.5rem"><summary>Code von der Karte eintippen</summary>
+      <input class="lw-input" id="sync-eingabe" maxlength="20" autocomplete="off" autocapitalize="characters" spellcheck="false"
+             placeholder="z. B. K7QM-3HXP-9RT4" style="margin-top:.6rem;font-family:ui-monospace,Menlo,monospace;letter-spacing:.08em;text-transform:uppercase">
+      <div class="lw-btns"><button type="button" class="lw-btn" id="sync-ok">Verbinden</button></div>
+      <div class="lw-msg" id="sync-eingabe-msg"></div>
+    </details>`;
+}
+
+// Alte Sicherung per QR/Code – mit Karte nur noch unter „Weitere Möglichkeiten“
+function backupAltHTML() {
+  return `
+      <p class="lw-p" style="margin-top:.6rem">Mit deinem Sicherungs-QR kannst du den Pass auf ein anderes Gerät mitnehmen oder wiederherstellen. Er enthält nur den Stand von heute.</p>
       <div class="lw-btns">
-        <button type="button" class="lw-btn primary" id="pass-qr">📲 Sicherungs-QR zeigen</button>
-        <a class="lw-btn" href="pass-karte.html" style="text-decoration:none">🖨 Karte drucken</a>
+        <button type="button" class="lw-btn" id="pass-qr">📲 Sicherungs-QR zeigen</button>
+        <a class="lw-btn" href="pass-karte.html" style="text-decoration:none">🖨 QR-Karte drucken</a>
         <button type="button" class="lw-btn" id="pass-copy">🔗 Code kopieren</button>
       </div>
       <div class="lw-msg" id="pass-copy-msg"></div>
+      <div class="lw-sec"><details class="lw-details"><summary>Pass aus Code wiederherstellen</summary>${restoreForm()}</details></div>`;
+}
+
+function passViewSicherung() {
+  const s = syncInfo();
+  if (s && s.verbunden && !s.ungueltig) {
+    return `
+    <div class="backup-wrap">
+      ${backupStateHTML()}
+      <p class="lw-p" style="margin-top:.9rem">Dein Pass ist mit deiner Sicherungskarte verbunden. Alles, was du übst, wird automatisch gesichert – auch dein Dorf. Auf einem anderen iPad scannst du einfach deine Karte, dann ist alles wieder da.</p>
+      <div class="lw-btns">
+        <button type="button" class="lw-btn primary" id="sync-jetzt">🔄 Jetzt sichern</button>
+        <a class="lw-btn" href="sync-karte.html" style="text-decoration:none">🖨 Meine Karte drucken</a>
+      </div>
+      <div class="lw-msg" id="sync-msg"></div>
+      <div class="lw-sec"><details class="lw-details"><summary>Weitere Möglichkeiten</summary>${backupAltHTML()}</details></div>
+    </div>`;
+  }
+  return `
+    <div class="backup-wrap">
+      ${s && s.ungueltig ? backupStateHTML() : ''}
+      <div class="lw-sec" style="border-top:none;padding-top:.2rem">
+        <h3>💳 Hast du eine Sicherungskarte?</h3>
+        <p class="lw-p">Verbinde deinen Pass mit deiner Karte. Danach wird alles automatisch gesichert – du musst nichts mehr tun.</p>
+        ${syncVerbindenHTML()}
+      </div>
+      <div class="lw-sec">
+        <h3>💾 Ohne Karte sichern</h3>
+        ${s && s.ungueltig ? '' : backupStateHTML()}
+        ${backupAltHTML()}
+      </div>
       <p class="lw-p" style="margin-top:.4rem;color:var(--muted);font-size:.74rem">Tipp: Öffne die Lernwelt über das Symbol auf dem Home-Bildschirm – dort ist dein Pass am besten aufgehoben.</p>
-      <div class="lw-sec"><details class="lw-details"><summary>Pass aus Code wiederherstellen</summary>${restoreForm()}</details></div>
     </div>`;
 }
+
+// Einrichten: „Ich habe eine Sicherungskarte“
+function syncSetupHTML() {
+  const s = syncInfo();
+  if (!s) return '';
+  if (s.verbunden && !s.ungueltig) {
+    return `<div class="backup-state ok" style="margin-top:1rem"><span class="ic">💳</span><div><b>Sicherungskarte verbunden</b><span>Richte jetzt deinen Pass ein – ab dann wird er automatisch gesichert.</span></div></div>`;
+  }
+  return `<div class="lw-sec"><details class="lw-details"><summary>Ich habe eine Sicherungskarte</summary>
+    <p class="lw-p" style="margin-top:.6rem">Scanne deine Karte. Ist darauf schon ein Pass gesichert, wird er geladen.</p>${syncVerbindenHTML()}</details></div>`;
+}
+
+document.addEventListener('click', e => {
+  const t = e.target.closest('#sync-scan, #sync-ok, #sync-jetzt');
+  if (!t || !window.LernSync) return;
+  if (t.id === 'sync-scan') { closePass(); openScanner(); return; }
+  if (t.id === 'sync-ok') {
+    const v = document.getElementById('sync-eingabe').value;
+    if (!LernSyncCode.ausText(v)) {
+      const m = document.getElementById('sync-eingabe-msg');
+      m.className = 'lw-msg err'; m.textContent = 'Dieser Code stimmt nicht. Prüfe jedes Zeichen (0 und O sind gleich).';
+      return;
+    }
+    closePass(); LernSync.verbinden(v); return;
+  }
+  if (t.id === 'sync-jetzt') {
+    const m = document.getElementById('sync-msg');
+    m.className = 'lw-msg'; m.textContent = 'Sichere …';
+    LernSync.jetztSichern().then(() => {
+      const s = LernSync.status();
+      m.className = 'lw-msg' + (s.ausstehend ? '' : ' ok');
+      m.textContent = !s.ausstehend ? '✓ Gesichert' : s.offline ? 'Kein Internet – wird später gesichert.' : 'Wird gleich gesichert …';
+    });
+  }
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && e.target && e.target.id === 'sync-eingabe') document.getElementById('sync-ok').click();
+});
+window.addEventListener('lernsync:status', e => {
+  const el = document.getElementById('backup-state');
+  if (el && el.closest('.backup-wrap')) el.outerHTML = backupStateHTML();
+  // Mit Karte ist der Pass gesichert → keine Erinnerung an den alten Sicherungs-QR
+  const s = e.detail;
+  if (s && s.verbunden && !s.ungueltig && s.letzteSicherung && Date.now() - s.letzteSicherung < 7 * 864e5
+      && window.LernPass && LernPass.hasProfile() && LernPass.backupInfo().remind) {
+    LernPass.exportCode();
+    const d = document.querySelector('.lw-tabs [data-mode="sicherung"] .dot');
+    if (d) d.remove();
+  }
+});
 
 // ── Truhen ─────────────────────────────────────────────
 //  Die Truhe wird dreimal angeklopft (Glühen wird stärker, verrät aber nichts),
