@@ -234,10 +234,10 @@
       "aod": false
     },
     {
-      "name": "kopfrechnen neu",
+      "name": "Mathe Trainer Klasse 5",
       "datei": "apps/mathe/kopfrechnen-neu.html?klasse=5",
       "fach": "Mathematik",
-      "emoji": "📱",
+      "emoji": "🧮",
       "beschreibung": "",
       "hidden": false,
       "klassen": [],
