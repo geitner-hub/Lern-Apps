@@ -7,7 +7,7 @@
       "fach": "Englisch",
       "emoji": "📓",
       "beschreibung": "Practice simple present! he/she/it + -s",
-      "hidden": true,
+      "hidden": false,
       "klassen": [
         5
       ],
