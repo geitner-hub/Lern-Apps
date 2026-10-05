@@ -244,6 +244,7 @@
   function planeSenden(ms) {
     clearTimeout(laufzeit.timer);
     laufzeit.timer = setTimeout(() => senden(false), Math.max(ms, 0));
+    melden();                                          // Anzeige „Wird gleich gesichert …“
   }
 
   async function senden(beimVerlassen) {
