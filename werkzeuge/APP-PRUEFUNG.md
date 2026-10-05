@@ -66,3 +66,11 @@ Vernetzung (meldet sie Thema/Inhalt für Spiele, Dorf, Pass?) · Bedienung (ohne
 | GPG 5/6 | Zeit und Wandel (Zeitstrahl) | Typ Sortieren |
 
 Englisch und GPG: Lernbereich-Bezeichnungen vor Verwendung in Unterrichtsentwürfen im LehrplanPLUS gegenprüfen.
+
+## Umsetzung (Etappe 4b, 06.10.2026)
+
+- **Archiviert** (Ordner `archiv/`, aus dem Admin entfernt): English Dialogue, Rechteck-Werkstatt,
+  Sachaufgaben Längen, Vierecke unterscheiden.
+- **Kopfrechnen** ist jetzt eine App auf dem Übungs-Rahmen, nur Einmaleins und Grundrechenarten.
+- **Mathe-Trainer** (Klasse 5 und 6) deckt den Jahrgangsstoff ab; Befund 1 (Rechenregeln, Rechenvorteile,
+  Überschlag fehlten) ist dort umgesetzt, dazu ganze Zahlen (M5 LB 2).

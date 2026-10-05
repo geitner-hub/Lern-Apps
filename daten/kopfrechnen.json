@@ -1,79 +1,115 @@
 {
- "version": 1,
- "hinweis": "Stufen der Kopfrechen-App (apps/mathe/kopfrechnen-neu.html?klasse=X). Eine Stufe = Liste von Generatoren aus gemeinsam/generatoren-mathe.js (typ + Parameter, gewicht = wie oft). IDs stehen in daten/katalog.json und nie umbenennen. Neue Stufe: hier eintragen, im Katalog anlegen, fertig.",
+ "version": 2,
+ "hinweis": "Stufen der Mathe-Apps. apps.kopfrechnen = apps/mathe/kopfrechnen.html?klasse=X (nur Einmaleins und Grundrechenarten), apps.trainer = apps/mathe/mathe-trainer.html?klasse=X (Stoff der Jahrgangsstufe). Eine Stufe = Liste von Generatoren aus gemeinsam/generatoren-mathe.js (typ + Parameter, gewicht = wie oft). Stufen-IDs stehen in daten/katalog.json und werden nie umbenannt; der Titel darf sich ändern. Neue Stufe: unter stufen eintragen, bei einer App unter klassen nennen, im Katalog anlegen.",
  "runde": 10,
  "meisterschaft": {
   "prozent": 70,
   "runden": 2
  },
- "klassen": {
-  "1": {
-   "titel": "Kopfrechnen Klasse 1",
-   "stufen": [
-    "ma.1.kopf.leicht",
-    "ma.1.kopf.mittel",
-    "ma.1.kopf.schwer"
-   ]
+ "apps": {
+  "kopfrechnen": {
+   "untertitel": "Einmaleins und Grundrechenarten · 10 Aufgaben pro Runde",
+   "klassen": {
+    "1": {
+     "titel": "Kopfrechnen Klasse 1",
+     "stufen": [
+      "ma.1.kopf.leicht",
+      "ma.1.kopf.mittel",
+      "ma.1.kopf.schwer"
+     ]
+    },
+    "2": {
+     "titel": "Kopfrechnen Klasse 2",
+     "stufen": [
+      "ma.2.kopf.leicht",
+      "ma.2.kopf.mittel",
+      "ma.2.kopf.schwer"
+     ]
+    },
+    "3": {
+     "titel": "Kopfrechnen Klasse 3",
+     "stufen": [
+      "ma.3.kopf.leicht",
+      "ma.3.kopf.mittel",
+      "ma.3.kopf.schwer"
+     ]
+    },
+    "4": {
+     "titel": "Kopfrechnen Klasse 4",
+     "stufen": [
+      "ma.4.kopf.leicht",
+      "ma.4.kopf.mittel",
+      "ma.4.kopf.schwer"
+     ]
+    },
+    "5": {
+     "titel": "Kopfrechnen Klasse 5",
+     "stufen": [
+      "ma.5.kopf.einmaleins",
+      "ma.5.kopf.plusminus",
+      "ma.5.kopf.malgeteilt",
+      "ma.5.kopf.gemischt"
+     ],
+     "foerder": [
+      "ma.4.kopf.leicht",
+      "ma.4.kopf.mittel",
+      "ma.4.kopf.schwer",
+      "ma.3.kopf.mittel",
+      "ma.3.kopf.schwer",
+      "ma.2.kopf.schwer",
+      "ma.1.kopf.schwer"
+     ]
+    },
+    "6": {
+     "titel": "Kopfrechnen Klasse 6",
+     "stufen": [
+      "ma.6.kopf.einmaleins",
+      "ma.6.kopf.plusminus",
+      "ma.6.kopf.malgeteilt",
+      "ma.6.kopf.gemischt"
+     ],
+     "foerder": [
+      "ma.5.kopf.einmaleins",
+      "ma.5.kopf.plusminus",
+      "ma.5.kopf.malgeteilt",
+      "ma.4.kopf.schwer"
+     ]
+    }
+   }
   },
-  "2": {
-   "titel": "Kopfrechnen Klasse 2",
-   "stufen": [
-    "ma.2.kopf.leicht",
-    "ma.2.kopf.mittel",
-    "ma.2.kopf.schwer"
-   ]
-  },
-  "3": {
-   "titel": "Kopfrechnen Klasse 3",
-   "stufen": [
-    "ma.3.kopf.leicht",
-    "ma.3.kopf.mittel",
-    "ma.3.kopf.schwer"
-   ]
-  },
-  "4": {
-   "titel": "Kopfrechnen Klasse 4",
-   "stufen": [
-    "ma.4.kopf.leicht",
-    "ma.4.kopf.mittel",
-    "ma.4.kopf.schwer"
-   ]
-  },
-  "5": {
-   "titel": "Kopfrechnen Klasse 5",
-   "stufen": [
-    "ma.5.kopf.grundlagen",
-    "ma.5.kopf.grosse-zahlen",
-    "ma.5.kopf.rechenregeln",
-    "ma.5.kopf.vorteile",
-    "ma.5.kopf.profi"
-   ],
-   "foerder": [
-    "ma.4.kopf.leicht",
-    "ma.4.kopf.mittel",
-    "ma.4.kopf.schwer",
-    "ma.3.kopf.mittel",
-    "ma.3.kopf.schwer",
-    "ma.2.kopf.schwer",
-    "ma.1.kopf.schwer"
-   ]
-  },
-  "6": {
-   "titel": "Kopfrechnen Klasse 6",
-   "stufen": [
-    "ma.6.kopf.wiederholung",
-    "ma.6.kopf.teilbarkeit",
-    "ma.6.kopf.brueche",
-    "ma.6.kopf.dezimal",
-    "ma.6.kopf.profi"
-   ],
-   "foerder": [
-    "ma.5.kopf.grundlagen",
-    "ma.5.kopf.grosse-zahlen",
-    "ma.5.kopf.rechenregeln",
-    "ma.5.kopf.vorteile",
-    "ma.4.kopf.schwer"
-   ]
+  "trainer": {
+   "untertitel": "Der Stoff deiner Klasse · 10 Aufgaben pro Runde",
+   "klassen": {
+    "5": {
+     "titel": "Mathe-Trainer Klasse 5",
+     "stufen": [
+      "ma.5.kopf.grosse-zahlen",
+      "ma.5.kopf.rechenregeln",
+      "ma.5.kopf.vorteile",
+      "ma.5.kopf.ganze-zahlen",
+      "ma.5.kopf.profi"
+     ],
+     "foerder": [
+      "ma.5.kopf.grundlagen"
+     ]
+    },
+    "6": {
+     "titel": "Mathe-Trainer Klasse 6",
+     "stufen": [
+      "ma.6.kopf.wiederholung",
+      "ma.6.kopf.teilbarkeit",
+      "ma.6.kopf.brueche",
+      "ma.6.kopf.dezimal",
+      "ma.6.kopf.profi"
+     ],
+     "foerder": [
+      "ma.5.kopf.grosse-zahlen",
+      "ma.5.kopf.rechenregeln",
+      "ma.5.kopf.vorteile",
+      "ma.5.kopf.ganze-zahlen"
+     ]
+    }
+   }
   }
  },
  "stufen": {
@@ -202,7 +238,7 @@
   },
   "ma.5.kopf.grundlagen": {
    "titel": "Grundlagen",
-   "kurz": "Wiederholung 4. Klasse: bis 1000, 1×1",
+   "kurz": "Wiederholung 4. Klasse",
    "generatoren": [
     {
      "typ": "alt4",
@@ -280,6 +316,9 @@
     },
     {
      "typ": "ueberschlag"
+    },
+    {
+     "typ": "ganze-zahlen"
     }
    ]
   },
@@ -401,6 +440,117 @@
       "rat",
       "neg_dec"
      ]
+    }
+   ]
+  },
+  "ma.5.kopf.einmaleins": {
+   "titel": "Einmaleins",
+   "kurz": "kleines 1×1 und Geteilt-Aufgaben",
+   "generatoren": [
+    {
+     "typ": "1x1"
+    }
+   ]
+  },
+  "ma.5.kopf.plusminus": {
+   "titel": "Plus & Minus",
+   "kurz": "bis 1000, mit Übergang",
+   "generatoren": [
+    {
+     "typ": "plusminus",
+     "bis": 1000
+    }
+   ]
+  },
+  "ma.5.kopf.malgeteilt": {
+   "titel": "Mal & Geteilt",
+   "kurz": "30 × 4 · 23 × 4 · 84 ÷ 4 · 240 ÷ 6",
+   "generatoren": [
+    {
+     "typ": "malgeteilt",
+     "stufe": "5"
+    }
+   ]
+  },
+  "ma.5.kopf.gemischt": {
+   "titel": "Gemischt",
+   "kurz": "alle vier Rechenarten",
+   "generatoren": [
+    {
+     "typ": "1x1"
+    },
+    {
+     "typ": "plusminus",
+     "bis": 1000
+    },
+    {
+     "typ": "malgeteilt",
+     "stufe": "5",
+     "gewicht": 2
+    }
+   ]
+  },
+  "ma.6.kopf.einmaleins": {
+   "titel": "Einmaleins",
+   "kurz": "kleines und großes 1×1 (bis 20)",
+   "generatoren": [
+    {
+     "typ": "1x1"
+    },
+    {
+     "typ": "1x1",
+     "gross": true,
+     "bis": 20,
+     "gewicht": 2
+    }
+   ]
+  },
+  "ma.6.kopf.plusminus": {
+   "titel": "Plus & Minus",
+   "kurz": "bis 10 000",
+   "generatoren": [
+    {
+     "typ": "plusminus",
+     "bis": 10000
+    }
+   ]
+  },
+  "ma.6.kopf.malgeteilt": {
+   "titel": "Mal & Geteilt",
+   "kurz": "12 × 15 · 360 ÷ 12 · 378 ÷ 6",
+   "generatoren": [
+    {
+     "typ": "malgeteilt",
+     "stufe": "6"
+    }
+   ]
+  },
+  "ma.6.kopf.gemischt": {
+   "titel": "Gemischt",
+   "kurz": "alle vier Rechenarten",
+   "generatoren": [
+    {
+     "typ": "1x1",
+     "gross": true,
+     "bis": 20
+    },
+    {
+     "typ": "plusminus",
+     "bis": 10000
+    },
+    {
+     "typ": "malgeteilt",
+     "stufe": "6",
+     "gewicht": 2
+    }
+   ]
+  },
+  "ma.5.kopf.ganze-zahlen": {
+   "titel": "Ganze Zahlen",
+   "kurz": "−3 + 8 · Thermometer",
+   "generatoren": [
+    {
+     "typ": "ganze-zahlen"
     }
    ]
   }

@@ -4,16 +4,14 @@
 <meta charset="UTF-8" />
 <script src="../../gemeinsam/umgebung.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>Kopfrechnen – Lernwelt</title>
+<title>Mathe-Trainer – Lernwelt</title>
 <!--
   ═══════════════════════════════════════════════
-   Kopfrechnen (Infrastruktur Etappe 4b): nur Einmaleins und Grundrechenarten.
-   Eine Datei für alle Klassen:  kopfrechnen.html            → Klasse 5
-                                 kopfrechnen.html?klasse=6   → Klasse 6 (1–6 möglich)
-   Die alten Dateien kopfrechnen_kl1–6.html leiten hierher weiter; Ergebnisse,
-   Sterne und offene Dorf-Aufträge werden beim ersten Öffnen übernommen.
-   Stufen: daten/kopfrechnen.json (apps.kopfrechnen) · Aufgaben: gemeinsam/generatoren-mathe.js
-   Rechenregeln, Brüche usw. stehen im Mathe-Trainer (mathe-trainer.html).
+   Mathe-Trainer (Infrastruktur Etappe 4b): der Stoff der ganzen Jahrgangsstufe in Stufen.
+     mathe-trainer.html?klasse=5   Große Zahlen, Rechenregeln, Rechenvorteile, Ganze Zahlen …
+     mathe-trainer.html?klasse=6   Teilbarkeit, Brüche, Dezimalzahlen …
+   Neue Themen der Jahrgangsstufe = neue Stufe in daten/kopfrechnen.json (apps.trainer).
+   Früher: kopfrechnen-neu.html (leitet hierher weiter, Ergebnisse werden übernommen).
   ═══════════════════════════════════════════════
 -->
 <link rel="stylesheet" href="../../gemeinsam/fonts.css">
@@ -30,8 +28,8 @@
 <script src="../../gemeinsam/ueben.js"></script>
 <script>
   LernUeben.startMathe({
-    app: 'kopfrechnen', host: document.getElementById('app'), standardKlasse: 5, icon: '🧠',
-    umzug: kl => kl === '5' ? null : 'kopfrechnen_kl' + kl + '.html',   // bisherige App je Klasse
+    app: 'trainer', host: document.getElementById('app'), standardKlasse: 5, icon: '🧮',
+    umzug: kl => 'kopfrechnen-neu.html?klasse=' + kl,
   });
 </script>
 <script src="../../gemeinsam/navbar.js"></script>

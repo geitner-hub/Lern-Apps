@@ -106,7 +106,7 @@ SCRIPT_SRC = re.compile(r'<script\b[^>]*\bsrc\s*=\s*["\']([^"\']+)["\']', re.I)
 SCRIPT_ANY = re.compile(r'<script\b', re.I)
 for p in sorted(ROOT.rglob('*.html')):
     r = rel(p)
-    if '.git' in p.parts or r in OHNE_UMGEBUNG: continue
+    if '.git' in p.parts or r in OHNE_UMGEBUNG or r.startswith('archiv/'): continue   # archiv/: abgelegt, nicht verlinkt
     t = p.read_text(encoding='utf-8')
     tiefe = r.count('/')
     soll = '../' * tiefe + 'gemeinsam/umgebung.js'
@@ -114,7 +114,7 @@ for p in sorted(ROOT.rglob('*.html')):
     m1 = SCRIPT_SRC.search(t)
     if not erstes or not m1 or m1.start() != erstes.start() or m1.group(1) != soll:
         F(f'{r}: gemeinsam/umgebung.js fehlt oder ist nicht das erste Skript (erwartet: <script src="{soll}">)')
-    if (r.startswith('apps/') or r.startswith('spiele/')) and r not in OHNE_NAVBAR:
+    if (r.startswith('apps/') or r.startswith('spiele/')) and r not in OHNE_NAVBAR and 'LW-WEITERLEITUNG' not in t:
         # direkt per <script src> oder nachgeladen ('…/gemeinsam/navbar.js' im Code)
         if not re.search(r'["\'][^"\']*gemeinsam/navbar\.js["\']', t):
             F(f'{r}: bindet navbar.js nicht ein (Pass, Dorf, Ergebnisse fehlen)')
@@ -196,7 +196,7 @@ if katalog is not None:
                 for e in th.get('ergebnis', []):
                     if e in ergebnisse: F(f'Katalog: Ergebnis-Schlüssel {e} doppelt ({ergebnisse[e]} und {tid})')
                     ergebnisse[e] = tid
-                    if not any(p.name == e for p in ROOT.glob('apps/*/*.html')): F(f'Katalog: Ergebnis-Schlüssel {e} ({tid}) ist keine App-Datei')
+                    if not any(p.name == e for p in list(ROOT.glob('apps/*/*.html')) + list(ROOT.glob('archiv/*.html'))): F(f'Katalog: Ergebnis-Schlüssel {e} ({tid}) ist keine App-Datei')
                 for s in th.get('stufen', []):                      # Etappe 4: Stufen können eine eigene Quelle haben
                     sapp = (s.get('quelle') or {}).get('app')
                     if sapp:
@@ -235,9 +235,11 @@ if kr is not None:
         if not gens: F(f'kopfrechnen.json: Stufe {sid} hat keine Generatoren')
         for g in gens:
             if g.get('typ') not in typen: F(f'kopfrechnen.json: Stufe {sid} nutzt unbekannten Generator „{g.get("typ")}“ (gemeinsam/generatoren-mathe.js)')
-    for k, kl in (kr.get('klassen') or {}).items():
-        for sid in (kl.get('stufen') or []) + (kl.get('foerder') or []):
-            if sid not in (kr.get('stufen') or {}): F(f'kopfrechnen.json: Klasse {k} nennt unbekannte Stufe {sid}')
+    apps_kr = kr.get('apps') or {'kopfrechnen': {'klassen': kr.get('klassen') or {}}}
+    for an, ad in apps_kr.items():
+        for k, kl in (ad.get('klassen') or {}).items():
+            for sid in (kl.get('stufen') or []) + (kl.get('foerder') or []):
+                if sid not in (kr.get('stufen') or {}): F(f'kopfrechnen.json: {an} Klasse {k} nennt unbekannte Stufe {sid}')
     I(f'Kopfrechnen: {len(kr.get("stufen") or {})} Stufen, {len(typen)} Generatoren')
 
 # ── 7. Budgets ──────────────────────────────────────────
@@ -275,7 +277,7 @@ for p in ALLE:
 # ── Hinweise ────────────────────────────────────────────
 for p in sorted(list(ROOT.glob('apps/*/*.html')) + list(ROOT.glob('spiele/*.html'))):
     r = rel(p)
-    if r.startswith('apps/vorlage/'): continue
+    if r.startswith('apps/vorlage/') or 'LW-WEITERLEITUNG' in p.read_text(encoding='utf-8'): continue
     if r not in config_dateien: H(f'{r} steht nicht in config.json (nicht auf der Startseite)')
 
 # ── Ausgabe ─────────────────────────────────────────────

@@ -22,12 +22,17 @@
 //    LernUeben.Fehlerheft.merken(eintrag) → sammelt ab jetzt Fehler auf dem Gerät; angezeigt ab Etappe 8
 //    Vorlesen (🔊) und große Schrift: standardmäßig aus; an mit ?vorlesen=1 bzw. ?gross=1
 //    oder vorlesen/gross: true in der App (für DaZ und Förderung).
+//
+//  Mathe-Apps (Kopfrechnen, Mathe-Trainer) brauchen nur:
+//    LernUeben.startMathe({ app: 'kopfrechnen', host, umzug: kl => 'alter-schluessel.html' })
+//  Stufen kommen aus daten/kopfrechnen.json (apps.<app>.klassen), Aufgaben aus generatoren-mathe.js.
 // ═══════════════════════════════════════════════════════
 
 (function () {
   'use strict';
   if (window.LernUeben) return;
 
+  const HIER = (document.currentScript && document.currentScript.src) || location.href;
   const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const URLP = new URLSearchParams(location.search);
 
@@ -296,5 +301,53 @@
     return { neu: zeigeStart };
   }
 
-  window.LernUeben = { start, Freigabe, Fehlerheft };
+  // ── Umzug alter Apps: Ergebnisse, Sterne und Dorf-Aufträge mitnehmen ──
+  //  Läuft synchron beim Öffnen, BEVOR navbar.js den Pass lädt. Kopiert nur, wenn der
+  //  neue Schlüssel noch leer ist; der alte Eintrag bleibt (nichts geht verloren).
+  function uebernehme(alt, neu) {
+    if (!alt || !neu || alt === neu) return;
+    const lesen = k => { try { return JSON.parse(localStorage.getItem(k) || 'null'); } catch (e) { return null; } };
+    const schreiben = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+    const r = lesen('lern-apps-results');
+    if (r && r[alt] && !r[neu]) { r[neu] = r[alt]; schreiben('lern-apps-results', r); }
+    const p = lesen('lernwelt-pass');
+    if (p && p.apps && p.apps[alt] && !p.apps[neu]) { p.apps[neu] = p.apps[alt]; schreiben('lernwelt-pass', p); }
+    const d = lesen('lernwelt-dorf');
+    if (d && typeof d === 'object') {
+      let geaendert = false;
+      (Array.isArray(d.q) ? d.q : []).forEach(x => { if (x && x.a === alt) { x.a = neu; geaendert = true; } });
+      if (d.bq && d.bq.a === alt) { d.bq.a = neu; geaendert = true; }
+      if (geaendert) schreiben('lernwelt-dorf', d);
+    }
+  }
+
+  /**
+   * Mathe-App aus daten/kopfrechnen.json starten (Kopfrechnen bzw. Mathe-Trainer).
+   * o = { app: 'kopfrechnen'|'trainer', host, standardKlasse: 5, umzug: klasse → alter Ergebnis-Schlüssel }
+   */
+  function startMathe(o) {
+    const p = new URLSearchParams(location.search);
+    const klasse = String(Math.min(6, Math.max(1, parseInt(p.get('klasse') || p.get('kl') || o.standardKlasse || 5, 10) || 5)));
+    const hierKey = (location.pathname.split('/').pop() || '') + location.search;
+    if (o.umzug) uebernehme(o.umzug(klasse), hierKey);
+    const datei = new URL('../daten/kopfrechnen.json', HIER).href;
+    return fetch(datei, { cache: 'no-cache' }).then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); }).then(D => {
+      const A = (D.apps || {})[o.app] || {};
+      const K = (A.klassen || {})[klasse] || (A.klassen || {})['5'];
+      if (!K) throw new Error('Klasse fehlt');
+      const stufe = id => Object.assign({ id }, D.stufen[id] || {});
+      const G = window.LernGeneratoren;
+      o.host.innerHTML = '';
+      document.title = K.titel + ' – Lernwelt';
+      return start({
+        host: o.host, titel: (o.icon || '🧮') + ' ' + K.titel, untertitel: A.untertitel || 'Wähle eine Stufe',
+        stufen: (K.stufen || []).filter(id => D.stufen[id]).map(stufe),
+        foerder: (K.foerder || []).filter(id => D.stufen[id]).map(stufe),
+        erzeuge: st => G.ausStufe(st), pruefe: (a, e) => G.pruefe(a, e),
+        runde: D.runde, meisterschaft: D.meisterschaft,
+      });
+    }).catch(() => { o.host.innerHTML = '<p style="color:rgba(241,240,251,.7);font:800 1rem Nunito,system-ui,sans-serif;text-align:center;padding:4rem 1rem">⚠️ Die Aufgaben konnten nicht geladen werden. Bitte mit Internet neu öffnen.</p>'; });
+  }
+
+  window.LernUeben = { start, startMathe, uebernehme, Freigabe, Fehlerheft };
 })();

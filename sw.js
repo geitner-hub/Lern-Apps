@@ -14,7 +14,7 @@
 //  und teilen sich den Offline-Speicher. Deshalb hat jede Umgebung ihr
 //  eigenes Präfix und räumt nur ihre eigenen Speicher auf.
 // ═══════════════════════════════════════════════════════
-const VERSION = 'v26';  // v26: Infrastruktur Etappe 4 (Übungs-Rahmen, gemeinsame Rechen-Generatoren)
+const VERSION = 'v27';  // v27: Etappe 4b (Kopfrechnen + Mathe-Trainer, alte Kopfrechen-Apps leiten weiter, Archiv)
 const PRAEFIX = /\/[^/]*-test\/$/i.test(new URL(self.registration.scope).pathname) ? 'lwtest-v' : 'lernwelt-v';
 const CACHE   = PRAEFIX + VERSION.replace(/^v/, '');        // z. B. 'lernwelt-v24' (Format wie bisher)
 
@@ -35,7 +35,7 @@ const START = ['./', 'index.html', 'config.json', 'manifest.webmanifest',
 // ohne dass alle iPads beim Update gleichzeitig alles ziehen.
 const NACHLADEN = ['spiele/runner.html', 'spiele/burg-verteidigung.html', 'spiele/dorf.html', 'spiele/tauziehen.html',
                    'spiele/wort-des-tages.html', 'spiele/zauberwort.html', 'spiele/kitchen-chaos.html', 'spiele/expedition.html',
-                   'gemeinsam/aufgaben.js', 'gemeinsam/spiel-hilfen.js', 'gemeinsam/ueben.js', 'apps/mathe/kopfrechnen-neu.html', 'gemeinsam/karten-ansicht.js',
+                   'gemeinsam/aufgaben.js', 'gemeinsam/spiel-hilfen.js', 'gemeinsam/ueben.js', 'apps/mathe/kopfrechnen.html', 'apps/mathe/mathe-trainer.html', 'gemeinsam/karten-ansicht.js',
                    'gemeinsam/avatar3d.js', 'gemeinsam/chest3d.js', 'gemeinsam/dorf-szene.js', 'gemeinsam/qrcode.js',
                    'vendor/three.min.js', 'vendor/jsQR.min.js',
                    'daten/vokabeln5.json', 'daten/vokabeln6.json', 'daten/woerter-en.json', 'daten/kitchen-chaos.json',

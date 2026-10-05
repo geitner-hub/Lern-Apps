@@ -270,15 +270,65 @@
     const a = rand(2, 10), b = rand(2, 10);
     return rechen(`${a} × ${b}`, a * b, [a * (b + 1), a * (b - 1)]);
   }
-  function einmaleins(gross) {
-    const [lo, hi] = gross ? [11, 25] : [1, 10];
+  function einmaleins(gross, bis) {
+    const [lo, hi] = gross ? [11, Math.min(25, Math.max(12, Number(bis) || 25))] : [1, 10];
     const a = rand(lo, hi), b = rand(gross ? lo : 2, hi);
-    if (Math.random() < .25 && !gross) return rechen(`${a * b} ÷ ${a}`, b, [b + 1, b - 1]);
-    return rechen(`${a} × ${b}`, a * b, [a * (b + 1), a * (b - 1), (a + 1) * b]);
+    if (Math.random() < .25 && !gross) return rechen(`${a * b} ÷ ${a}`, b, [b + 1, b - 1], false, { erklaerung: `${a} × ${b} = ${a * b}, also ${a * b} ÷ ${a} = ${b}.` });
+    const z = b - b % 10, e = b % 10;
+    return rechen(`${a} × ${b}`, a * b, [a * (b + 1), a * (b - 1), (a + 1) * b], false,
+      { erklaerung: gross && z && e ? `${a} × ${z} = ${a * z}, ${a} × ${e} = ${a * e}, zusammen ${a * b}.` : `${a} × ${b} = ${a * b}. Reihe: ${Array.from({ length: Math.min(b, 4) }, (_, i) => a * (b - Math.min(b, 4) + 1 + i)).join(', ')}` });
   }
 
   // ═══════════════════════════════════════════════════════
-  //  KLASSE 5 (M5 LB 1.2: Grundrechenarten mit natürlichen Zahlen im Kopf)
+  //  KOPFRECHNEN (nur Einmaleins und Grundrechenarten, ohne Rechenregeln)
+  // ═══════════════════════════════════════════════════════
+  /** + und − bis 1000 bzw. 10 000, mit Übergang; Erklärung über Zerlegen */
+  function plusMinus(bis) {
+    const gross = bis > 1000, plus = Math.random() < .5;
+    const z = () => gross ? rand(12, 99) * 100 + pick([0, 0, 10, 50]) * (Math.random() < .5 ? 1 : 0) + (Math.random() < .3 ? rand(1, 9) * 10 : 0) : rand(101, 989);
+    let a = z(), b = gross ? rand(5, 60) * 100 + pick([0, 50, 20, 80]) : rand(12, 489);
+    if (plus && a + b > bis) a = bis - b - rand(1, 100);
+    if (!plus && b >= a) [a, b] = [b + a, a];
+    if (a < 1 || b < 1) return null;
+    const ans = plus ? a + b : a - b;
+    if (ans < 1 || ans > bis) return null;
+    const teil = gross ? Math.floor(b / 1000) * 1000 || Math.floor(b / 100) * 100 : Math.floor(b / 100) * 100 || Math.floor(b / 10) * 10;
+    const rest = b - teil, zw = plus ? a + teil : a - teil;
+    const erkl = rest && teil ? `${zahl(a)} ${plus ? '+' : '−'} ${zahl(teil)} = ${zahl(zw)}, dann ${plus ? '+' : '−'} ${zahl(rest)} = ${zahl(ans)}.` : `${zahl(a)} ${plus ? '+' : '−'} ${zahl(b)} = ${zahl(ans)}.`;
+    return rechen(`${zahl(a)} ${plus ? '+' : '−'} ${zahl(b)}`, ans, [ans + 100, ans - 100, ans + 10, ans - 10], false,
+      { tipp: rest && teil ? `Zerlege ${zahl(b)} in ${zahl(teil)} und ${zahl(rest)}.` : '', erklaerung: erkl });
+  }
+  /** × und ÷ über das Einmaleins hinaus (Klasse 5: 30 × 4, 23 × 4, 84 ÷ 4; Klasse 6: 12 × 15, 360 ÷ 12, 378 ÷ 6) */
+  function malGeteilt(kl) {
+    const t = pick(kl === '6' ? ['zz', 'zz', 'gz', 'de'] : ['ze', 'ze', 'ge', 'ge']);
+    if (t === 'ze') {                                   // Zehner × Einer bzw. zweistellig × einstellig
+      const a = rand(11, 99), b = rand(2, 9), z = a - a % 10, e = a % 10, ans = a * b;
+      if (Math.random() < .5) {
+        if (!e) return rechen(`${a} × ${b}`, ans, [ans + b, z / 10 * b], false, { tipp: `Rechne ${a / 10} × ${b} und hänge eine Null an.`, erklaerung: `${a / 10} × ${b} = ${a / 10 * b}, mit Null: ${ans}.` });
+        return rechen(`${a} × ${b}`, ans, [z * b + e, ans + b, ans - b], false, { tipp: `Zerlege: ${z} × ${b} und ${e} × ${b}.`, erklaerung: `${z} × ${b} = ${z * b}, ${e} × ${b} = ${e * b}, zusammen ${ans}.` });
+      }
+      return rechen(`${ans} ÷ ${b}`, a, [a + 1, a - 1, a + 10], false, { tipp: `Zerlege ${ans} in Zahlen, die durch ${b} gehen.`, erklaerung: `${z * b} ÷ ${b} = ${z}, ${e * b} ÷ ${b} = ${e}, zusammen ${a}.` });
+    }
+    if (t === 'ge') {                                   // Umkehraufgaben mit Zehnern: 240 ÷ 6, 7 × 80
+      const a = rand(2, 9), b = rand(2, 9) * 10, ans = a * b;
+      if (Math.random() < .5) return rechen(`${a} × ${b}`, ans, [ans * 10, ans / 10, ans + b], false, { tipp: `Rechne ${a} × ${b / 10} und hänge eine Null an.`, erklaerung: `${a} × ${b / 10} = ${a * b / 10}, mit Null: ${ans}.` });
+      return rechen(`${ans} ÷ ${a}`, b, [b / 10, b + 10, b - 10], false, { tipp: `Denk an ${ans / 10} ÷ ${a}.`, erklaerung: `${ans / 10} ÷ ${a} = ${b / 10}, also ${ans} ÷ ${a} = ${b}.` });
+    }
+    if (t === 'zz') {                                   // zweistellig × zweistellig (kopfgeeignet)
+      const a = rand(11, 19), b = pick([11, 12, 13, 14, 15, 20, 25]), ans = a * b, z = b - b % 10, e = b % 10;
+      return rechen(`${a} × ${b}`, ans, [a * z + e, ans + a, ans - a], false,
+        { tipp: e ? `Zerlege ${b} in ${z} und ${e}.` : `Rechne ${a} × ${b / 10} und hänge eine Null an.`, erklaerung: e ? `${a} × ${z} = ${a * z}, ${a} × ${e} = ${a * e}, zusammen ${ans}.` : `${a} × ${b / 10} = ${a * b / 10}, mit Null: ${ans}.` });
+    }
+    if (t === 'gz') {                                   // ÷ durch zweistellig, glatt: 360 ÷ 12
+      const d = rand(11, 25), q = rand(2, 9) * (Math.random() < .4 ? 10 : 1), A = d * q;
+      return rechen(`${A} ÷ ${d}`, q, [q + 1, q - 1, q * 10], false, { tipp: `${d} × ? = ${A}`, erklaerung: `${d} × ${q} = ${A}, also ${A} ÷ ${d} = ${q}.` });
+    }
+    const d = rand(3, 9), q = rand(21, 99), A = d * q, h = Math.floor(A / d / 10) * 10 * d;   // dreistellig ÷ einstellig
+    return rechen(`${A} ÷ ${d}`, q, [q + 1, q - 1, q + 10], false, { tipp: `Zerlege ${A} in ${h} und ${A - h}.`, erklaerung: `${h} ÷ ${d} = ${h / d}, ${A - h} ÷ ${d} = ${(A - h) / d}, zusammen ${q}.` });
+  }
+
+  // ═══════════════════════════════════════════════════════
+  //  MATHE-TRAINER KLASSE 5 (M5 LB 1.2 Rechengesetze, LB 2 Ganze Zahlen)
   // ═══════════════════════════════════════════════════════
   const STUFENZAHL = [10, 100, 1000];
   function grossPlusMinus() {
@@ -352,6 +402,20 @@
     if (!plus && ans <= 0) return null;
     return rechen(`Überschlag: ${a} ${plus ? '+' : '−'} ${b} ≈ ?`, ans, [plus ? a + b : a - b, ans + 100, ans - 100], false,
       { hinweis: 'auf Hunderter runden', tipp: 'Runde beide Zahlen auf Hunderter.', erklaerung: `${a} ≈ ${ra}, ${b} ≈ ${rb} → ${ra} ${plus ? '+' : '−'} ${rb} = ${ans}. (Genau: ${plus ? a + b : a - b})` });
+  }
+
+  /** M5 LB 2: Zustandsänderungen a ± b mit a ganz, b natürlich (Thermometer, Zahlengerade) */
+  function ganzeZahlen() {
+    const a = rand(-15, 15), b = rand(2, 18), plus = Math.random() < .5, ans = plus ? a + b : a - b;
+    if (a === 0 || (a > 0 && ans > 0 && Math.random() < .6)) return null;   // meist über die Null hinweg
+    const nullweg = plus ? (a < 0 && ans > 0) : (a > 0 && ans < 0);
+    const erkl = nullweg ? `Von ${zahl(a)} bis 0 sind es ${Math.abs(a)}, dann noch ${b - Math.abs(a)} weiter: ${zahl(ans)}.` : `Von ${zahl(a)} gehst du ${b} ${plus ? 'nach oben' : 'nach unten'}: ${zahl(ans)}.`;
+    if (Math.random() < .4) {
+      return rechen(`Es ist ${zahl(a)} °C. Es wird ${b} Grad ${plus ? 'wärmer' : 'kälter'}.`, ans, [plus ? a - b : a + b, -ans], true,
+        { hinweis: 'Wie warm ist es dann? (in °C)', tipp: `Stell dir das Thermometer vor: ${plus ? 'nach oben' : 'nach unten'}.`, erklaerung: erkl });
+    }
+    return rechen(`${zahl(a)} ${plus ? '+' : '−'} ${b}`, ans, [plus ? a - b : a + b, -ans], true,
+      { tipp: `Auf der Zahlengeraden ${b} Schritte nach ${plus ? 'rechts' : 'links'}.`, erklaerung: erkl });
   }
 
   // ═══════════════════════════════════════════════════════
@@ -435,7 +499,8 @@
     'alt1': s => alt1(s.stufe), 'alt2': s => alt2(s.stufe), 'alt3': s => alt3(s.stufe),
     'alt4': s => alt4(s.stufe), 'alt5': s => alt5(s.stufe),
     'alt6': s => alt6(pick(s.arten || ['int'])),
-    '1x1': s => einmaleins(!!s.gross),
+    '1x1': s => einmaleins(!!s.gross, s.bis),
+    'plusminus': s => plusMinus(Number(s.bis) || 1000), 'malgeteilt': s => malGeteilt(String(s.stufe || '5')), 'ganze-zahlen': ganzeZahlen,
     'gross-plusminus': grossPlusMinus, 'stufen-mal': stufenMal, 'punkt-vor-strich': punktVorStrich,
     'klammern': klammern, 'rechenvorteile': rechenvorteile, 'ueberschlag': ueberschlag,
     'teilbar': teilbar, 'kgv-ggt': kgvGgt, 'bruch-erweitern': bruchErweitern, 'bruch-kuerzen': bruchKuerzen,

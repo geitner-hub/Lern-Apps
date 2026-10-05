@@ -104,9 +104,10 @@
 
   /** Stufen der Kopfrechen-App als eigene Pools (ID = Themen-ID, z. B. ma.5.kopf.rechenregeln) */
   function stufenPools(d) {
-    if (!d || !d.stufen || !d.klassen) return;
+    if (!d || !d.stufen) return;
     const klasseVon = {};
-    Object.entries(d.klassen).forEach(([k, kl]) => (kl.stufen || []).forEach(id => { if (!klasseVon[id] || +k < klasseVon[id]) klasseVon[id] = +k; }));
+    const alleKlassen = d.apps ? Object.values(d.apps).map(a => a.klassen || {}) : [d.klassen || {}];   // Format 2: mehrere Apps
+    alleKlassen.forEach(K => Object.entries(K).forEach(([k, kl]) => (kl.stufen || []).forEach(id => { if (!klasseVon[id] || +k < klasseVon[id]) klasseVon[id] = +k; })));
     Object.entries(d.stufen).forEach(([id, st]) => {
       if (POOL_BY_ID[id] || st.inhalt || !klasseVon[id]) return;      // alte Stufen (inhalt) laufen über ihre bisherigen Pools
       const pool = { id, fach: 'Mathematik', gruppe: 'Kopfrechnen', klasse: Math.max(5, klasseVon[id]), titel: st.titel, gen: () => spiel(st) };

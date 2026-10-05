@@ -128,9 +128,21 @@ Grundsatz: **Kern sofort, Rest bei Bedarf.** Die Budgets prüft `werkzeuge/pruef
   hat keinen eigenen Rechen-Code mehr). Neuer Aufgabentyp = eine Funktion in `G`.
 - **daten/kopfrechnen.json**: Stufen je Klasse (Generatoren + Gewicht). Neue Stufe = Eintrag hier + Stufe im
   Katalog. Jede Stufe ist automatisch ein Pool in den Spielen (ID = Themen-ID), sobald ein Kind sie gemeistert hat.
-- **apps/mathe/kopfrechnen-neu.html?klasse=1…6**: die neue App. Läuft zuerst **versteckt** neben den alten
-  Kopfrechen-Apps. Nach dem Test mit einer Klasse (Etappe 4b) werden `kopfrechnen.html` und
-  `kopfrechnen_kl1–6.html` zu Weiterleitungen, Ergebnisse und Sterne werden übernommen.
+- **Zwei Apps auf demselben Rahmen (Etappe 4b):**
+  - `apps/mathe/kopfrechnen.html` (Klasse 5) bzw. `?klasse=1…6`: **nur Einmaleins und Grundrechenarten**
+    (Einmaleins · Plus & Minus · Mal & Geteilt · Gemischt; Klassen 1–4 als leichtere Stufen).
+  - `apps/mathe/mathe-trainer.html?klasse=5|6`: **Stoff der ganzen Jahrgangsstufe** (Kl. 5: große Zahlen,
+    Rechenregeln, Rechenvorteile, ganze Zahlen; Kl. 6: Teilbarkeit, Brüche, Dezimalzahlen). Neue Themen des
+    Schuljahres = neue Stufen in `daten/kopfrechnen.json` → `apps.trainer`.
+  - `kopfrechnen_kl1–6.html` und `kopfrechnen-neu.html` sind **Weiterleitungen** (Kennzeichen `LW-WEITERLEITUNG`).
+    Beim ersten Öffnen übernimmt `LernUeben.uebernehme(alt, neu)` Ergebnisse, Sterne und offene Dorf-Aufträge.
+  - Die Stufen-IDs des Trainers heißen aus historischen Gründen `ma.5.kopf.…` – IDs werden nie umbenannt.
+
+## Archiv (archiv/)
+
+Abgelegte Apps (Etappe 3/4b): English Dialogue (Vorlagen), Rechteck-Werkstatt, Sachaufgaben Längen,
+Vierecke unterscheiden. Nicht verlinkt, nicht im Admin, nicht geprüft; ihre Themen bleiben im Katalog
+(`"archiv": true`). Zurückholen: Datei zurück nach `apps/<fach>/`, Admin-Eintrag anlegen, im Katalog `archiv` entfernen.
 
 ## Inhalts-Katalog (daten/katalog.json)
 

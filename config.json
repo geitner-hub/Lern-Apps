@@ -28,19 +28,6 @@
       "aod": false
     },
     {
-      "name": "Vierecke unterscheiden",
-      "datei": "apps/mathe/vierecke_unterscheiden.html",
-      "fach": "Mathematik",
-      "emoji": "📐",
-      "beschreibung": "Quadrat, Rechteck & Co. – erkenne die Unterschiede!",
-      "hidden": false,
-      "klassen": [
-        5
-      ],
-      "customTags": [],
-      "aod": false
-    },
-    {
       "name": "Vokabeltrainer 5. Klasse",
       "datei": "apps/englisch/vokabeltrainer5.html",
       "fach": "Englisch",
@@ -103,7 +90,7 @@
     },
     {
       "name": "Kopfrechnen Klasse 1",
-      "datei": "apps/mathe/kopfrechnen_kl1.html",
+      "datei": "apps/mathe/kopfrechnen.html?klasse=1",
       "fach": "Mathematik",
       "emoji": "🧠",
       "beschreibung": "Übe deine Kopfrechenkünste!",
@@ -119,7 +106,7 @@
     },
     {
       "name": "Kopfrechnen Klasse 2",
-      "datei": "apps/mathe/kopfrechnen_kl2.html",
+      "datei": "apps/mathe/kopfrechnen.html?klasse=2",
       "fach": "Mathematik",
       "emoji": "🧠",
       "beschreibung": "Übe deine Kopfrechenkünste!",
@@ -135,7 +122,7 @@
     },
     {
       "name": "Kopfrechnen Klasse 3",
-      "datei": "apps/mathe/kopfrechnen_kl3.html",
+      "datei": "apps/mathe/kopfrechnen.html?klasse=3",
       "fach": "Mathematik",
       "emoji": "🧠",
       "beschreibung": "Übe deine Kopfrechenkünste!",
@@ -151,7 +138,7 @@
     },
     {
       "name": "Kopfrechnen Klasse 4",
-      "datei": "apps/mathe/kopfrechnen_kl4.html",
+      "datei": "apps/mathe/kopfrechnen.html?klasse=4",
       "fach": "Mathematik",
       "emoji": "🧠",
       "beschreibung": "Wiederholung 4. Klasse: + − × ÷",
@@ -187,7 +174,7 @@
     },
     {
       "name": "Kopfrechnen Klasse 6",
-      "datei": "apps/mathe/kopfrechnen_kl6.html",
+      "datei": "apps/mathe/kopfrechnen.html?klasse=6",
       "fach": "Mathematik",
       "emoji": "🧠",
       "beschreibung": "Übe deine Kopfrechenkünste!",
@@ -201,17 +188,6 @@
           "color": 5
         }
       ],
-      "aod": false
-    },
-    {
-      "name": "English Dialogue",
-      "datei": "apps/englisch/english-dialog-vorlagen.html",
-      "fach": "Englisch",
-      "emoji": "📱",
-      "beschreibung": "Choose one!",
-      "hidden": true,
-      "klassen": [],
-      "customTags": [],
       "aod": false
     },
     {
@@ -234,21 +210,29 @@
       "aod": false
     },
     {
-      "name": "Mathe Trainer Klasse 5",
-      "datei": "apps/mathe/kopfrechnen-neu.html?klasse=5",
+      "name": "Mathe-Trainer Klasse 5",
+      "datei": "apps/mathe/mathe-trainer.html?klasse=5",
       "fach": "Mathematik",
       "emoji": "🧮",
-      "beschreibung": "",
+      "beschreibung": "Der Mathe-Stoff der 5. Klasse in Stufen",
       "hidden": false,
       "klassen": [
         5
       ],
-      "customTags": [
-        {
-          "name": "Kopfrechnen",
-          "color": 5
-        }
+      "customTags": [],
+      "aod": false
+    },
+    {
+      "name": "Mathe-Trainer Klasse 6",
+      "datei": "apps/mathe/mathe-trainer.html?klasse=6",
+      "fach": "Mathematik",
+      "emoji": "🧮",
+      "beschreibung": "Der Mathe-Stoff der 6. Klasse in Stufen",
+      "hidden": true,
+      "klassen": [
+        6
       ],
+      "customTags": [],
       "aod": false
     },
     {
@@ -281,32 +265,6 @@
       "klassen": [
         5,
         6
-      ],
-      "customTags": [],
-      "aod": false
-    },
-    {
-      "name": "Rechteck-Werkstatt",
-      "datei": "apps/mathe/rechteck-app.html",
-      "fach": "Mathematik",
-      "emoji": "🟦",
-      "beschreibung": "Verändere die Seiten und beobachte, was passiert.",
-      "hidden": false,
-      "klassen": [
-        5
-      ],
-      "customTags": [],
-      "aod": false
-    },
-    {
-      "name": "Sachaufgaben Längen",
-      "datei": "apps/mathe/sachaufgaben_laengen.html",
-      "fach": "Mathematik",
-      "emoji": "📏",
-      "beschreibung": "Knifflige Textaufgaben mit Längeneinheiten",
-      "hidden": false,
-      "klassen": [
-        5
       ],
       "customTags": [],
       "aod": false
