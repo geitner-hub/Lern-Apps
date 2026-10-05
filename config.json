@@ -371,6 +371,17 @@
       "aod": false
     },
     {
+      "name": "kopfrechnen neu",
+      "datei": "apps/mathe/kopfrechnen-neu.html?klasse=5",
+      "fach": "Mathematik",
+      "emoji": "📱",
+      "beschreibung": "",
+      "hidden": false,
+      "klassen": [],
+      "customTags": [],
+      "aod": false
+    },
+    {
       "name": "Tauziehen",
       "datei": "spiele/tauziehen.html",
       "fach": "Allgemein",
@@ -428,17 +439,6 @@
       "klassen": [
         6
       ],
-      "customTags": [],
-      "aod": false
-    },
-    {
-      "name": "kopfrechnen neu",
-      "datei": "apps/mathe/kopfrechnen-neu.html?klasse=5",
-      "fach": "Mathematik",
-      "emoji": "📱",
-      "beschreibung": "",
-      "hidden": false,
-      "klassen": [],
       "customTags": [],
       "aod": false
     }
