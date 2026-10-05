@@ -228,7 +228,7 @@
       "fach": "Mathematik",
       "emoji": "🧮",
       "beschreibung": "Der Mathe-Stoff der 6. Klasse in Stufen",
-      "hidden": true,
+      "hidden": false,
       "klassen": [
         6
       ],
