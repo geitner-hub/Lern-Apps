@@ -542,16 +542,14 @@
   </div>
 </div>
 
-<!-- ── Gemeinsame Module ── -->
-<script src="gemeinsam/qrcode.js"></script>
+<!-- ── Gemeinsame Module ──
+     Etappe 2 (Ladekette): Hier steht nur, was die Startseite zum Anzeigen braucht.
+     Bei Bedarf über LW.laden(): qrcode.js (QR-Knopf), dorf-kern.js (wenn ein Dorf
+     existiert), sync-code.js + sync.js (gleich nach dem Aufbau), avatar3d.js und
+     chest3d.js (Garderobe, Truhen, Begrüßung). -->
 <script src="gemeinsam/shared.js"></script>
 <script src="gemeinsam/config-api.js"></script>
 <script src="gemeinsam/pass.js"></script>
-    <script src="gemeinsam/sync-code.js"></script>
-  <script src="gemeinsam/sync.js"></script>
-<script src="gemeinsam/dorf-kern.js"></script>
-<script src="gemeinsam/avatar3d.js"></script>
-<script src="gemeinsam/chest3d.js"></script>
 <script>
 'use strict';
 
@@ -693,9 +691,16 @@ function buildDorfStrip() {
   sec.innerHTML = `<div class="dorf-strip"><span class="dh">🏘️ Dorf-Aufträge</span>${chips || '<span class="leer">Alles erledigt – super! Morgen gibt es neue.</span>'}
     <a class="zum" href="spiele/dorf.html">Zum Dorf ›</a></div>`;
 }
-if (window.LernDorf) {
-  if (LernDorf.gestartet()) LernDorf.bereit().then(() => { if (CONFIG.apps && CONFIG.apps.length) buildPage(); });
-  LernDorf.onChange(() => { if (CONFIG.apps && CONFIG.apps.length) buildPage(); });
+// Der Dorf-Kern lädt nur, wenn auf diesem iPad schon ein Dorf gegründet wurde (Etappe 2)
+function dorfAnbinden() {
+  let da = false;
+  try { da = !!localStorage.getItem('lernwelt-dorf'); } catch (e) {}
+  if (!da) return;
+  LW.laden('gemeinsam/dorf-kern.js').then(() => {
+    if (!window.LernDorf) return;
+    LernDorf.onChange(() => { if (CONFIG.apps && CONFIG.apps.length) buildPage(); });
+    if (LernDorf.gestartet()) LernDorf.bereit().then(() => { if (CONFIG.apps && CONFIG.apps.length) buildPage(); });
+  }).catch(() => {});
 }
 
 function buildPage() {
@@ -835,8 +840,9 @@ function applyFilters() {
 // ── QR-Modal ─────────────────────────────────────────
 let qrLastFocus = null, qrFileName = 'qr';
 
-function openQR(title, url) {
+async function openQR(title, url) {
   if (!url) return;
+  try { await LW.laden('gemeinsam/qrcode.js'); } catch (e) {}
   const canvas = document.getElementById('qr-canvas');
   if (!renderQR(canvas, url, 680)) { alert('QR-Code konnte nicht erzeugt werden.'); return; }
   document.getElementById('qr-title').textContent = title;
@@ -985,13 +991,14 @@ function openPass(mode) {
   passDraft = { name: pr.name || '', klasse: pr.klasse || (fKl !== 'all' ? Number(fKl) : null) };
   if (mode === 'klasse') passDraft.klasse = LernPass.suggestedClass();
   ward.tryOn = {};
-  renderPass(mode);
   document.getElementById('pass-modal').classList.add('open');
+  renderPass(mode);
   const box = document.querySelector('#pass-modal .lw-box');
   if (box) box.scrollTop = 0;
   document.body.classList.add('qr-open');
 }
 function closePass() {
+  passModus = null;
   document.getElementById('pass-modal').classList.remove('open');
   wardStop();
   chestStop();
@@ -1008,7 +1015,36 @@ function profileForm() {
     <div class="kl-row">${KLASSEN.map(k => `<button type="button" data-kl="${k}" class="${k === passDraft.klasse ? 'sel' : ''}">${k}</button>`).join('')}</div>`;
 }
 
+// Etappe 2: Garderobe, Truhen und Sicherung brauchen Module, die erst jetzt laden
+let passModus = null;
+function passModulFehlt(mode) {
+  const P = LernPass;
+  let tab = mode;
+  if (P.hasProfile() && !['setup', 'edit', 'klasse'].includes(mode)) {
+    const alias = { view: 'wardrobe', badges: 'erfolge' };
+    tab = PASS_TABS.includes(alias[mode] || mode) ? (alias[mode] || mode) : 'wardrobe';
+  }
+  if (tab === 'wardrobe' && !window.LernAvatar) return LW.laden('gemeinsam/avatar3d.js');
+  if (tab === 'chests' && (!window.LernAvatar || !window.LernChest))
+    return LW.laden('gemeinsam/avatar3d.js').then(() => LW.laden('gemeinsam/chest3d.js'));
+  if ((tab === 'sicherung' || tab === 'setup') && !window.LernSync) return ladeSync();
+  return null;
+}
 function renderPass(mode) {
+  const body = document.getElementById('pass-modal-body');
+  const P = LernPass;
+  passModus = mode;
+  const fehlt = passModulFehlt(mode);
+  if (fehlt) {
+    wardStop(); chestStop();
+    body.innerHTML = '<p class="lw-p" style="text-align:center;padding:2.5rem 0">⏳ Einen Moment …</p>';
+    const weiter = () => { if (passModus === mode && document.getElementById('pass-modal').classList.contains('open')) renderPassJetzt(mode); };
+    fehlt.then(weiter, weiter);          // offline ohne Modul: trotzdem anzeigen (ohne 3D)
+    return;
+  }
+  renderPassJetzt(mode);
+}
+function renderPassJetzt(mode) {
   const body = document.getElementById('pass-modal-body');
   const P = LernPass;
   const isTabs = P.hasProfile() && !['setup', 'edit', 'klasse'].includes(mode);
@@ -1119,6 +1155,23 @@ function badgeTileHTML({ b, pr, has, pct }, near) {
 //  Mit Sicherungskarte (LernSync, gemeinsam/sync.js) sichert der Pass automatisch.
 //  Der alte Sicherungs-QR / Code (LW1–LW3) wurde entfernt.
 function syncInfo() { return window.LernSync ? LernSync.status() : null; }
+/** Sicherung laden (Etappe 2: nicht mehr beim Öffnen der Seite, sondern gleich danach) */
+let syncLaden = null;
+function ladeSync() {
+  if (window.LernSync) return Promise.resolve();
+  if (!syncLaden) syncLaden = LW.laden('gemeinsam/sync-code.js').then(() => LW.laden('gemeinsam/sync.js'))
+    .catch(e => { syncLaden = null; throw e; });
+  return syncLaden;
+}
+/** Speicher fast voll? Dann warnt die Sicherung (Etappe 2; Messung aus der täglichen Speicher-Wartung) */
+function speicherWarnungHTML() {
+  let w = null;
+  try { w = JSON.parse(localStorage.getItem('lernwelt-wartung') || 'null'); } catch (e) {}
+  const knapp = (w && w.knapp) || (window.LW && LW.speicher && LW.speicher.voll());
+  if (!knapp) return '';
+  return `<div class="backup-state warn" style="margin-bottom:.8rem"><span class="ic">⚠️</span><div><b>Der Speicher auf diesem iPad ist fast voll</b>
+    <span>Dein Pass kann vielleicht nicht mehr gespeichert werden. Sag bitte deiner Lehrkraft Bescheid.</span></div></div>`;
+}
 function karteUngueltig() { const s = syncInfo(); return !!(s && s.verbunden && s.ungueltig); }
 function syncWann(ts) {
   if (!ts) return '';
@@ -1163,14 +1216,25 @@ function syncVerbindenHTML() {
 // Versionsanzeige (Infrastruktur Etappe 0): welcher Stand läuft auf diesem iPad?
 function versionZeile() {
   const v = (window.LW && LW.versionText) ? LW.versionText() : '';
-  return v ? `<p class="lw-p" id="lw-version" style="margin-top:.8rem;color:var(--muted);font-size:.7rem;text-align:center">Lernwelt ${escHtml(v)}</p>` : '';
+  return v ? `<p class="lw-p" id="lw-version" style="margin-top:.8rem;color:var(--muted);font-size:.7rem;text-align:center;user-select:none">Lernwelt ${escHtml(v)}</p><div id="lw-diagnose"></div>` : '';
 }
+// Versteckte Diagnose (Etappe 2): fünfmal schnell auf die Versionszeile tippen
+let diagTaps = [];
+document.addEventListener('click', e => {
+  if (!e.target.closest || !e.target.closest('#lw-version')) return;
+  const jetzt = Date.now();
+  diagTaps = diagTaps.filter(t => jetzt - t < 3000).concat(jetzt);
+  if (diagTaps.length < 5) return;
+  diagTaps = [];
+  LernPass.extras().then(E => E.diagnose(document.getElementById('lw-diagnose'))).catch(() => {});
+});
 
 function passViewSicherung() {
   const s = syncInfo();
   if (s && s.verbunden && !s.ungueltig) {
     return `
     <div class="backup-wrap">
+      ${speicherWarnungHTML()}
       ${backupStateHTML()}
       <p class="lw-p" style="margin-top:.9rem">Dein Pass ist mit deiner Sicherungskarte verbunden. Alles, was du übst, wird automatisch gesichert – auch dein Dorf. Auf einem anderen iPad scannst du einfach deine Karte, dann ist alles wieder da.</p>
       <div class="lw-btns">
@@ -1183,6 +1247,7 @@ function passViewSicherung() {
   }
   return `
     <div class="backup-wrap">
+      ${speicherWarnungHTML()}
       ${s && s.ungueltig ? backupStateHTML() : ''}
       <div class="lw-sec" style="border-top:none;padding-top:.2rem">
         <h3>💳 Hast du eine Sicherungskarte?</h3>
@@ -1252,7 +1317,7 @@ const chest = { ctrl: null, taps: 0, opening: false, revealed: false, kind: null
 
 function chestVariante(kind) {
   if (kind === 'level') return 'level';
-  const ev = LernPass.activeEvents().find(e => LernChest.SKINS[e.id]);
+  const ev = window.LernChest ? LernPass.activeEvents().find(e => LernChest.SKINS[e.id]) : null;
   return ev ? ev.id : 'normal';
 }
 function chestLabel(kind, variante) {
@@ -1656,7 +1721,22 @@ buildKlassenChips();
 whenPassReady(() => {
   LernPass.onChange(() => { if (document.visibilityState === 'visible') buildPassCard(); });
   buildPassCard();
-  load().then(checkAlteKarte);
+  load().then(() => {
+    checkAlteKarte();
+    // Etappe 2: alles Weitere erst, wenn die Seite steht
+    dorfAnbinden();
+    ladeSync().then(() => {
+      if (passModus === 'sicherung' || passModus === 'setup') renderPass(passModus);
+    }).catch(() => {});
+    // Noch kein Bild der Figur gespeichert? Dann jetzt einmal zeichnen lassen.
+    let bild = '';
+    try { bild = localStorage.getItem('lernwelt-avatar-bild') || ''; } catch (e) {}
+    if (LernPass.hasProfile() && !bild) setTimeout(() => LW.laden('gemeinsam/avatar3d.js').catch(() => {}), 1500);
+    // Speicher-Wartung einmal am Tag
+    let w = null;
+    try { w = JSON.parse(localStorage.getItem('lernwelt-wartung') || 'null'); } catch (e) {}
+    if (!w || w.tag !== LernPass._dayKey()) setTimeout(() => LernPass.wartung(), 4000);
+  });
 });
 </script>
 </body>

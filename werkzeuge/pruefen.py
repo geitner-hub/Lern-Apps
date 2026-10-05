@@ -19,8 +19,9 @@
 #  HINWEISE (gelb) – nichts kaputt, aber ansehen:
 #    Apps im Ordner, die nicht in config.json stehen, u. Ä.
 #
-#  Spätere Etappen ergänzen hier: Budgets (Etappe 2),
-#  Inhaltsdateien (Etappe 9).
+#    9. Ladekette (Etappe 2): jede Datei aus sw.js NACHLADEN und aus LW.laden('…') existiert.
+#
+#  Spätere Etappen ergänzen hier: Inhaltsdateien (Etappe 9).
 # ═══════════════════════════════════════════════════════
 import json, os, re, sys
 from pathlib import Path
@@ -28,12 +29,11 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 os.chdir(ROOT)
 
-# ⚙ Größenbudgets in KB. Etappe 0: heutiger Stand + Luft, damit nichts unbemerkt wächst.
-#   Etappe 2 senkt sie auf die Zielwerte (Startseite < 200, Zusatz je App < 80).
+# ⚙ Größenbudgets in KB. Seit Etappe 2 die Zielwerte aus dem Aktionsplan.
 BUDGETS = {
-    'startseite_skript': 340,   # alle <script src> von index.html zusammen
-    'app_zusatz':        200,   # umgebung.js + navbar.js + was navbar.js nachlädt
-    'vorladen_sw':       2600,  # alle Dateien aus sw.js START zusammen
+    'startseite_skript': 200,   # alle <script src> von index.html zusammen (was beim Öffnen sofort lädt)
+    'app_zusatz':        80,    # umgebung.js + navbar.js + navbar.js SOFORT (was jede App sofort lädt)
+    'vorladen_sw':       800,   # alle Dateien aus sw.js START (Kern, lädt beim Update sofort)
     'einzeldatei':       160,   # jede eigene .html/.js (ohne vendor/)
     'datendatei':        400,   # jede .json in daten/
 }
@@ -87,6 +87,17 @@ if not start: F('sw.js: Liste START nicht gefunden')
 for d in start:
     if d in ('./',): continue
     if not Path(d).is_file(): F(f'sw.js START: Datei fehlt: {d}')
+
+# ── 9. Ladekette: NACHLADEN und LW.laden ────────────────
+m = re.search(r'const NACHLADEN\s*=\s*\[(.*?)\];', sw, re.S)
+nachladen = re.findall(r"'([^']+)'", m.group(1)) if m else []
+for d in nachladen:
+    if not Path(d).is_file(): F(f'sw.js NACHLADEN: Datei fehlt: {d}')
+    if d in start: H(f'sw.js: {d} steht in START und NACHLADEN')
+for p in ALLE:
+    if p.suffix not in ('.js', '.html') or rel(p).startswith('vendor/'): continue
+    for d in re.findall(r"LW\.laden\(\s*'([^']+)'", p.read_text(encoding='utf-8')):
+        if not Path(d).is_file(): F(f'{rel(p)}: LW.laden(\'{d}\') – Datei fehlt')
 
 # ── 3./4. umgebung.js und navbar.js ─────────────────────
 SCRIPT_SRC = re.compile(r'<script\b[^>]*\bsrc\s*=\s*["\']([^"\']+)["\']', re.I)
@@ -147,7 +158,7 @@ for k, wo in sorted(im_code.items()):
     if k not in register:
         F(f'Speicherschlüssel „{k}“ fehlt im Speicher-Register (gemeinsam/umgebung.js) – benutzt in: {", ".join(sorted(wo))}')
 for k in register:
-    if k not in im_code:
+    if k not in im_code and register[k] != 'gemeinsam/umgebung.js':   # umgebung.js nutzt seine Schlüssel selbst
         H(f'Speicher-Register: „{k}“ wird im Code nicht (mehr) gefunden')
 I(f'Speicher-Register: {len(register)} Schlüssel')
 
@@ -210,7 +221,9 @@ summe = sum(groesse(s) for s in start_js)
     f'Startseite: {kb(summe):.0f} KB Skript beim Öffnen (Budget {BUDGETS["startseite_skript"]} KB)')
 
 nav = lies('gemeinsam/navbar.js')
-nach = sorted(set(re.findall(r"BASE\s*\+\s*'([a-z0-9-]+\.js)'", nav)))
+m = re.search(r'const SOFORT\s*=\s*\[(.*?)\];', nav, re.S)
+nach = re.findall(r"'([a-z0-9-]+\.js)'", m.group(1)) if m else []
+if not m: F('navbar.js: Liste SOFORT nicht gefunden (Ladekette, Etappe 2)')
 zusatz = ['gemeinsam/umgebung.js', 'gemeinsam/navbar.js'] + ['gemeinsam/' + n for n in nach]
 summe = sum(groesse(s) for s in zusatz)
 (F if kb(summe) > BUDGETS['app_zusatz'] else I)(

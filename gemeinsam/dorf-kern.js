@@ -1,10 +1,12 @@
 // ═══════════════════════════════════════════════════════
 //  Lernwelt – dorf-kern.js   (Aufbauspiel „Mein Dorf“: Spielstand & Regeln)
 //
-//  Wird geladen von:
-//    - jeder App automatisch über navbar.js (damit Aufträge auch dann
-//      zählen, wenn das Dorf gerade nicht geöffnet ist)
-//    - spiele/dorf.html (ebenfalls über navbar.js)
+//  Wird geladen von (Etappe 2, Ladekette):
+//    - spiele/dorf.html (direkt per <script>)
+//    - index.html über LW.laden(), wenn ein Dorf gegründet ist
+//    - jeder App über navbar.js, aber erst nach der ersten gewerteten Runde
+//      und nur, wenn ein Dorf gegründet ist. Die Runde wartet so lange in
+//      window.__lernDorfQueue und wird beim Start unten nachgezählt.
 //
 //  Inhalte und Startwerte: daten/dorf-inhalte.json (wird erst geladen,
 //  wenn ein Kind das Dorf begonnen hat).
@@ -231,7 +233,7 @@
     return Object.assign({}, d, { ev });
   }
   function schreiben() {
-    try { localStorage.setItem(KEY, JSON.stringify(kompakt(D))); } catch (e) {}
+    try { localStorage.setItem(KEY, JSON.stringify(kompakt(D))); } catch (e) { if (window.LW && LW.speicher) LW.speicher.fehlgeschlagen(e); }
     melden();
   }
   /** Spielstand speichern – nur, wenn das Dorf schon begonnen wurde. */

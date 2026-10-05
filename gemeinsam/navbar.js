@@ -18,9 +18,9 @@
 //    });
 //
 //  Das war's. Home-Button, Ergebnisanzeige und Lernwelt-Pass
-//  (XP-Meldung) erscheinen automatisch. pass.js und dorf-kern.js
-//  („Mein Dorf“: Aufträge zählen mit) werden von hier nachgeladen –
-//  Apps müssen nichts weiter einbinden.
+//  (XP-Meldung) erscheinen automatisch. pass.js, dorf-kern.js
+//  („Mein Dorf“: Aufträge zählen mit) und die Sicherung werden von hier
+//  nachgeladen – Apps müssen nichts weiter einbinden (Ladekette: siehe unten).
 // ═══════════════════════════════════════════════════════
 
 (function () {
@@ -28,42 +28,56 @@
   const HISTORY_MAX = 30;
   let roundStart = Date.now();
 
-  // pass.js aus demselben Ordner wie navbar.js laden
+  // Skripte aus demselben Ordner wie navbar.js laden
   const BASE = (document.currentScript && document.currentScript.src)
     ? document.currentScript.src.replace(/[^/]*$/, '') : '';
   // Hauptordner der Lernwelt (navbar.js liegt in gemeinsam/)
   const ROOT = BASE ? new URL('../', BASE).href : '';
   const HOME = ROOT + 'index.html';
+  // ── Ladekette (Infrastruktur Etappe 2) ────────────────
+  //  SOFORT lädt jede App beim Öffnen; pruefen.py rechnet daraus das Budget
+  //  „Zusatz je Lern-App“ (umgebung.js + navbar.js + SOFORT, Ziel unter 80 KB).
+  //  BEI_BEDARF lädt nur, wenn es gebraucht wird:
+  //    dorf-kern.js   nach der ersten gewerteten Runde, und nur, wenn das Kind ein Dorf hat
+  //                   (pass.js legt die Runde bis dahin in window.__lernDorfQueue)
+  //    sync-code.js,  kurz nach dem Laden, und nur, wenn eine Sicherungskarte verbunden ist
+  //    sync.js
+  //  pass.js lädt selbst noch pass-extras.js (Anzeige), sobald etwas angezeigt wird.
+  const SOFORT     = ['pass.js'];
+  const BEI_BEDARF = ['dorf-kern.js', 'sync-code.js', 'sync.js'];
+  const geladen = {};
+  function lade(datei, id) {
+    if (!BASE) return Promise.reject(new Error('BASE'));
+    if (!geladen[datei]) geladen[datei] = new Promise((ok, fehl) => {
+      const sc = document.createElement('script');
+      if (id) sc.id = id;
+      sc.src = BASE + datei;
+      sc.onload = () => ok();
+      sc.onerror = () => { delete geladen[datei]; fehl(new Error(datei)); };
+      document.head.appendChild(sc);
+    });
+    return geladen[datei];
+  }
   function loadPass() {
     if (window.LernPass || document.getElementById('lw-pass-script')) return;
-    const sc = document.createElement('script');
-    sc.id = 'lw-pass-script';
-    sc.src = BASE + 'pass.js';
-    document.head.appendChild(sc);
+    lade(SOFORT[0], 'lw-pass-script').catch(() => {});
   }
   loadPass();
-  // „Mein Dorf“: zählt Runden für Aufträge mit, auch wenn das Dorf nicht offen ist
-  (function loadDorf() {
-    if (window.LernDorf || document.getElementById('lw-dorf-script') || !BASE) return;
-    const sc = document.createElement('script');
-    sc.id = 'lw-dorf-script';
-    sc.src = BASE + 'dorf-kern.js';
-    document.head.appendChild(sc);
-  })();
-      // Automatische Pass-Sicherung (Sicherungskarte): erst sync-code.js, dann sync.js
-    (function loadSync() {
-      if (window.LernSync || document.getElementById('lw-sync-code-script') || !BASE) return;
-      const a = document.createElement('script');
-      a.id = 'lw-sync-code-script';
-      a.src = BASE + 'sync-code.js';
-      a.onload = () => {
-        const b = document.createElement('script');
-        b.id = 'lw-sync-script';
-        b.src = BASE + 'sync.js';
-        document.head.appendChild(b);
-      };
-      document.head.appendChild(a);
-    })();
+
+  // „Mein Dorf“: Aufträge zählen auch, wenn das Dorf nicht offen ist
+  function dorfGestartet() { try { return !!localStorage.getItem('lernwelt-dorf'); } catch (e) { return false; } }
+  window.addEventListener('lernpass:gewertet', () => {
+    if (!window.LernDorf && dorfGestartet()) lade(BEI_BEDARF[0], 'lw-dorf-script').catch(() => {});
+  });
+
+  // Automatische Pass-Sicherung (Sicherungskarte): erst sync-code.js, dann sync.js
+  function syncVerbunden() {
+    try { const s = JSON.parse(localStorage.getItem('lernwelt-sync') || 'null'); return !!(s && s.code); } catch (e) { return false; }
+  }
+  if (syncVerbunden() && !window.LernSync) {
+    const los = () => setTimeout(() => lade(BEI_BEDARF[1], 'lw-sync-code-script').then(() => lade(BEI_BEDARF[2], 'lw-sync-script')).catch(() => {}), 800);
+    if (document.readyState === 'complete') los(); else window.addEventListener('load', los, { once: true });
+  }
   if ('serviceWorker' in navigator && ROOT) {
     window.addEventListener('load', () => navigator.serviceWorker.register(ROOT + 'sw.js').catch(() => {}));
   }
@@ -123,7 +137,7 @@
       };
       const thema = normInhalt(result && result.thema);   // gleiche Prüfung wie inhalt
       if (thema.length) all[key].thema = thema;
-      try { localStorage.setItem(STORE_KEY, JSON.stringify(all)); } catch (e) {}
+      try { localStorage.setItem(STORE_KEY, JSON.stringify(all)); } catch (e) { if (window.LW && LW.speicher) LW.speicher.fehlgeschlagen(e); }
       updateBadge(all[key]);
       // Signal für Erweiterungen
       try { window.dispatchEvent(new CustomEvent('lernapps:result', { detail: { key, ...all[key] } })); } catch (e) {}

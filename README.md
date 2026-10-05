@@ -87,7 +87,34 @@ in einen anderen Ordner umziehen, ohne dass Fortschritt verloren geht (dann `con
 - **Speicher-Register:** jeder Schlüssel im Gerätespeicher steht in `gemeinsam/umgebung.js` (`SPEICHER`).
   Neue Schlüssel beginnen mit `lernwelt-`; bestehende Namen nie ändern.
 - **Inventar:** `python3 werkzeuge/inventar.py` erzeugt `werkzeuge/INVENTAR.md` neu (Handspalten bleiben).
+- **Ein Commit pro Upload:** alle Dateien einer Etappe gemeinsam hochladen (github.dev), sonst wird jeder
+  Zwischenstand einzeln geprüft und ist oft rot.
 - Upload nachmittags oder abends, nie kurz vor dem Unterricht.
+
+## Ladekette (Infrastruktur Etappe 2)
+
+Grundsatz: **Kern sofort, Rest bei Bedarf.** Die Budgets prüft `werkzeuge/pruefen.py`.
+
+| Was | Lädt sofort | Lädt bei Bedarf | Budget |
+|---|---|---|---|
+| Startseite | umgebung.js, shared.js, config-api.js, pass.js | Sicherung (gleich nach dem Aufbau), Dorf-Kern (nur mit Dorf), QR (QR-Knopf), 3D-Figur und Truhe (Pass) | < 200 KB |
+| Jede Lern-App | umgebung.js, navbar.js, pass.js (`SOFORT` in navbar.js) | pass-extras.js (erste Meldung), Dorf-Kern (nach der ersten Runde, nur mit Dorf), Sicherung (nur mit Karte) | < 80 KB |
+| Offline-Speicher (sw.js) | `START` = Kern | `NACHLADEN` = Spiele, 3D, große Daten: gestaffelt im Hintergrund | < 800 KB |
+
+- **pass.js** rechnet und speichert nur noch. Anzeige (XP-Meldung, Lob, Konfetti), Safari-Hinweis,
+  Speicher-Wartung und Diagnose stehen in **gemeinsam/pass-extras.js**. Neue Funktionen, die nicht jede App
+  sofort braucht, gehören dorthin oder in ein eigenes Modul – nicht in den Kern (das Budget hat kaum Luft).
+- **Nachladen in Seiten:** `LW.laden('gemeinsam/datei.js')` → Promise, jede Datei nur einmal.
+- **Hintergrund-Laden:** Jede Seite bittet sw.js 5–25 s nach dem Öffnen (zufällig), fehlende Dateien aus
+  `NACHLADEN` zu holen, eine nach der anderen, höchstens 25 s am Stück. Nach einem Schultag ist alles offline da.
+  Bei einer neuen Version übernimmt sw.js, was das iPad schon hatte.
+- **Speicher-Wartung:** einmal am Tag von der Startseite. Alte Ergebnis-Einträge (über 60 Tage) werden zu
+  einem Eintrag pro Tag verdichtet; die Belegung wird gemessen. Ab 4 MB (oder wenn Speichern scheitert)
+  warnt der Pass unter „Sicherung“.
+- **Fehlerprotokoll und Diagnose:** Abstürze werden nur auf dem iPad gemerkt (höchstens 30). Ansehen:
+  Pass → Sicherung → **fünfmal auf die Versionszeile tippen** (Version, Speicher, Offline-Speicher, Fehler).
+  Weitergabe an den Worker ist vorbereitet (`FEHLER_SENDEN` in umgebung.js), aber aus, bis die
+  Schulleitung zustimmt.
 
 ## Inhalts-Katalog (daten/katalog.json)
 

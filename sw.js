@@ -14,22 +14,34 @@
 //  und teilen sich den Offline-Speicher. Deshalb hat jede Umgebung ihr
 //  eigenes Präfix und räumt nur ihre eigenen Speicher auf.
 // ═══════════════════════════════════════════════════════
-const VERSION = 'v23';  // v23: Infrastruktur Etappe 1 (Inhalts-Katalog, katalog.js)
+const VERSION = 'v24';  // v24: Infrastruktur Etappe 2 (Ladekette, Kern + gestaffeltes Nachladen)
 const PRAEFIX = /\/[^/]*-test\/$/i.test(new URL(self.registration.scope).pathname) ? 'lwtest-v' : 'lernwelt-v';
-const CACHE   = PRAEFIX + VERSION.replace(/^v/, '');        // z. B. 'lernwelt-v22' (Format wie bisher)
+const CACHE   = PRAEFIX + VERSION.replace(/^v/, '');        // z. B. 'lernwelt-v24' (Format wie bisher)
+
+// KERN: wird beim Update sofort geladen – alles, was die Startseite, jede Lern-App,
+// der Pass, die Sicherung und das Zählen der Dorf-Aufträge offline brauchen.
+// (pruefen.py: Budget „Offline-Vorladen“ gilt für diese Liste.)
 const START = ['./', 'index.html', 'config.json', 'manifest.webmanifest',
-               'gemeinsam/umgebung.js', 'gemeinsam/shared.js', 'gemeinsam/config-api.js', 'gemeinsam/navbar.js', 'gemeinsam/pass.js',
-               'gemeinsam/sync-code.js', 'gemeinsam/sync.js',
-               'gemeinsam/avatar3d.js', 'gemeinsam/fonts.css', 'gemeinsam/qrcode.js', 'daten/lernwelt-inhalte.json',
-               'gemeinsam/dorf-kern.js', 'gemeinsam/dorf-szene.js', 'daten/dorf-inhalte.json', 'vendor/fflate.min.js',
-               // Spiele: sollen auch offline laufen, ohne vorher einmal online geöffnet worden zu sein
-               'spiele/runner.html', 'spiele/burg-verteidigung.html', 'spiele/dorf.html', 'spiele/tauziehen.html', 'spiele/wort-des-tages.html', 'spiele/zauberwort.html', 'spiele/kitchen-chaos.html', 'spiele/expedition.html', 'gemeinsam/aufgaben.js', 'gemeinsam/spiel-hilfen.js',
-               'gemeinsam/karten-ansicht.js', 'daten/karten.json', 'daten/expedition.json',
-               'gemeinsam/katalog.js', 'daten/katalog.json',
-               'daten/vokabeln5.json', 'daten/vokabeln6.json', 'daten/woerter-en.json', 'daten/kitchen-chaos.json',
-               'vendor/three.min.js',
+               'gemeinsam/umgebung.js', 'gemeinsam/shared.js', 'gemeinsam/config-api.js', 'gemeinsam/navbar.js',
+               'gemeinsam/pass.js', 'gemeinsam/pass-extras.js', 'gemeinsam/sync-code.js', 'gemeinsam/sync.js',
+               'gemeinsam/katalog.js', 'gemeinsam/dorf-kern.js', 'gemeinsam/fonts.css', 'vendor/fflate.min.js',
+               'daten/lernwelt-inhalte.json', 'daten/katalog.json', 'daten/dorf-inhalte.json',
                'fonts/nunito-latin-wght-normal.woff2', 'fonts/nunito-latin-ext-wght-normal.woff2',
                'fonts/fredoka-one-latin-400-normal.woff2'];
+
+// NACHLADEN: Spiele, 3D und große Daten. Das iPad holt sie gestaffelt im Hintergrund,
+// eine Datei nach der anderen, wenn eine Seite darum bittet (umgebung.js, zufällig
+// 5–25 s nach dem Laden). So sind die Spiele nach einem Schultag auch offline da,
+// ohne dass alle iPads beim Update gleichzeitig alles ziehen.
+const NACHLADEN = ['spiele/runner.html', 'spiele/burg-verteidigung.html', 'spiele/dorf.html', 'spiele/tauziehen.html',
+                   'spiele/wort-des-tages.html', 'spiele/zauberwort.html', 'spiele/kitchen-chaos.html', 'spiele/expedition.html',
+                   'gemeinsam/aufgaben.js', 'gemeinsam/spiel-hilfen.js', 'gemeinsam/karten-ansicht.js',
+                   'gemeinsam/avatar3d.js', 'gemeinsam/chest3d.js', 'gemeinsam/dorf-szene.js', 'gemeinsam/qrcode.js',
+                   'vendor/three.min.js', 'vendor/jsQR.min.js',
+                   'daten/vokabeln5.json', 'daten/vokabeln6.json', 'daten/woerter-en.json', 'daten/kitchen-chaos.json',
+                   'daten/karten.json', 'daten/expedition.json'];
+const NACHLADEN_PAUSE_MS = 400;   // Pause zwischen zwei Dateien
+const NACHLADEN_MAX_MS   = 25000; // pro Anstoß höchstens so lange (iOS beendet Hintergrundarbeit sonst)
 const FEST = /\/(vendor|fonts|icons)\//;      // ändern sich (fast) nie
 const WARTEN_MS = 4000;                        // so lange auf das Netz warten
 
@@ -40,11 +52,46 @@ self.addEventListener('install', e => {
 
 self.addEventListener('activate', e => {
   e.waitUntil((async () => {
+    // Was das iPad schon hatte (nachgeladene Spiele, besuchte Apps), in den neuen Speicher
+    // übernehmen – sonst müsste nach jedem Update alles neu geladen werden. Ist Internet da,
+    // kommt trotzdem immer die aktuelle Datei („Internet zuerst“).
+    const nr = k => parseInt(k.slice(PRAEFIX.length), 10) || 0;
+    const alte = (await caches.keys()).filter(k => k.startsWith(PRAEFIX) && k !== CACHE).sort((a, b) => nr(a) - nr(b));
+    if (alte.length) {
+      try {
+        const neu = await caches.open(CACHE), alt = await caches.open(alte[alte.length - 1]);
+        for (const req of await alt.keys()) {
+          if (await neu.match(req)) continue;
+          const res = await alt.match(req);
+          if (res) await neu.put(req, res);
+        }
+      } catch (err) {}
+    }
     // nur eigene, ältere Speicher löschen (nie die der anderen Umgebung)
-    for (const k of await caches.keys()) if (k.startsWith(PRAEFIX) && k !== CACHE) await caches.delete(k);
+    for (const k of alte) await caches.delete(k);
     await self.clients.claim();
   })());
 });
+
+// ── Gestaffeltes Nachladen (Etappe 2) ───────────────────
+let nachladenLaeuft = null;
+self.addEventListener('message', e => {
+  if (!e.data || e.data.lw !== 'nachladen') return;
+  if (!nachladenLaeuft) nachladenLaeuft = nachladen().catch(() => {}).then(() => { nachladenLaeuft = null; });
+  e.waitUntil(nachladenLaeuft);
+});
+async function nachladen() {
+  const cache = await caches.open(CACHE), bis = Date.now() + NACHLADEN_MAX_MS;
+  for (const u of NACHLADEN) {
+    if (Date.now() > bis) return;
+    if (await cache.match(u, { ignoreSearch: true })) continue;
+    try {
+      const res = await fetch(u, { cache: 'no-cache' });
+      if (res.ok) await cache.put(u, res);
+    } catch (err) { return; }                       // offline → beim nächsten Anstoß weiter
+    await new Promise(r => setTimeout(r, NACHLADEN_PAUSE_MS));
+  }
+}
 
 self.addEventListener('fetch', e => {
   const req = e.request;

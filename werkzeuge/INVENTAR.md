@@ -62,7 +62,7 @@ Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv
 | apps/mathe/sachaufgaben_laengen.html | 34 | navbar.js | + über navbar.js |
 | apps/mathe/vierecke_unterscheiden.html | 43 | navbar.js | + über navbar.js |
 | spiele/burg-verteidigung.html | 85 | navbar.js, aufgaben.js, avatar3d.js | lern-burg-wahl, lern-burg-rekorde, + über navbar.js |
-| spiele/dorf.html | 88 | shared.js, config-api.js, avatar3d.js, dorf-szene.js, navbar.js | lernwelt-dorf, lernwelt-dorf-besuch, + über navbar.js |
+| spiele/dorf.html | 88 | shared.js, config-api.js, dorf-kern.js, avatar3d.js, dorf-szene.js, navbar.js | lernwelt-dorf, lernwelt-dorf-besuch, + über navbar.js |
 | spiele/expedition.html | 33 | navbar.js, spiel-hilfen.js, karten-ansicht.js | lernwelt-expedition, + über navbar.js |
 | spiele/kitchen-chaos.html | 38 | navbar.js, spiel-hilfen.js, avatar3d.js | lern-kitchen-chaos, + über navbar.js |
 | spiele/runner.html | 51 | navbar.js, aufgaben.js, avatar3d.js | lern-runner-wahl, lern-runner-rekorde, + über navbar.js |
