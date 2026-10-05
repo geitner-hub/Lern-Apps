@@ -234,6 +234,17 @@
       "aod": false
     },
     {
+      "name": "kopfrechnen neu",
+      "datei": "apps/mathe/kopfrechnen-neu.html?klasse=5",
+      "fach": "Mathematik",
+      "emoji": "📱",
+      "beschreibung": "",
+      "hidden": false,
+      "klassen": [],
+      "customTags": [],
+      "aod": false
+    },
+    {
       "name": "Einmaleins 1x1",
       "datei": "apps/mathe/einmaleins_tafel.html",
       "fach": "Mathematik",
@@ -277,17 +288,6 @@
       "klassen": [
         5
       ],
-      "customTags": [],
-      "aod": false
-    },
-    {
-      "name": "kopfrechnen neu",
-      "datei": "apps/mathe/kopfrechnen-neu.html?klasse=5",
-      "fach": "Mathematik",
-      "emoji": "📱",
-      "beschreibung": "",
-      "hidden": false,
-      "klassen": [],
       "customTags": [],
       "aod": false
     },
