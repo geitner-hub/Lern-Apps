@@ -54,7 +54,8 @@
   const IST_APP = (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
 
   // ── Zustand auf dem Gerät ────────────────────────────
-  //  { code, id, auth, rev, hash, serverScore, letzteSicherung, letztesHolen, ungueltig }
+  //  { code, id, auth, rev, hash, serverScore, letzteSicherung, letztesHolen, ungueltig, gruppe }
+  //  gruppe: Kennung der Kartengruppe vom Worker (Etappe 7, für Freigaben und Fokus; kein Name)
   function lesen() {
     try { const s = JSON.parse(localStorage.getItem(STATE_KEY) || 'null'); return s && s.code ? s : null; }
     catch (e) { return null; }
@@ -204,6 +205,13 @@
     location.reload();
   }
 
+  // Gruppe der Karte merken (Freigaben/Fokus, Etappe 7). Ältere Worker schicken keine → nichts tun.
+  function gruppeMerken(g) {
+    if (!ST || !/^[0-9a-f]{32}$/.test(String(g || '')) || ST.gruppe === g) return;
+    ST.gruppe = g; schreiben(ST);
+    try { window.dispatchEvent(new CustomEvent('lernfreigabe:neu')); } catch (e) {}
+  }
+
   // ── Holen ────────────────────────────────────────────
   async function holen(erzwingen) {
     if (!ST || ST.ungueltig) return;
@@ -217,6 +225,7 @@
     if (res.status !== 200) { laufzeit.fehler = res.d.error || ('Fehler ' + res.status); melden(); return; }
     laufzeit.fehler = '';
     const d = res.d;
+    gruppeMerken(d.gruppe);
     if (d.unveraendert || d.rev === (ST.rev || 0)) { melden(); return; }
     if (d.rev > (ST.rev || 0) && d.blob) {
       await fremdenStandPruefen(d.rev, d.score, d.blob, s.key);
@@ -326,6 +335,7 @@
     const eigenerPass = hatProfil(k);
     const andereKarte = ST && ST.code !== code && !ST.ungueltig;
     const neu = { code, id: s.id, auth: s.auth, rev: 0, hash: '', serverScore: 0, letzteSicherung: null, letztesHolen: Date.now() };
+    if (/^[0-9a-f]{32}$/.test(String(res.d.gruppe || ''))) neu.gruppe = res.d.gruppe;
     schluessel = s;
 
     // Karte ist noch leer

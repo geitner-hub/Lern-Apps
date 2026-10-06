@@ -26,6 +26,10 @@ Passwörtern ist das Gerät 15 Minuten gesperrt.
 
 - **Etappe 6 (Okt. 2026):** prüft zusätzlich `gruppen` (Regale: `id`, `fach`, `name`), `apps[].gruppe`
   (muss ein vorhandenes Regal sein) und `catOrder`. Erst den Worker aktualisieren, dann admin.html hochladen.
+- **Etappe 7 (Okt. 2026):** `worker.js` prüft zusätzlich `freigaben` (je Themen-ID: `alle`/`k5`/`g:<Gruppe>` →
+  `zu`, `offen` oder Datum) und `fokus[]` (`id`, `fuer`, `apps[]`, `ab?`, `bis`). `sync.js` schickt beim Holen die
+  Kennung der Kartengruppe mit (`gruppe`, zufällige ID, kein Name) – daran erkennt ein iPad seine Gruppe.
+  **Beide Dateien** bei Cloudflare ersetzen (*Edit code*: `worker.js` und `sync.js`), dann erst Freigaben speichern.
 
 ## Anmeldung im Admin
 

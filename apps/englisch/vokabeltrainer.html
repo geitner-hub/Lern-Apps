@@ -364,6 +364,7 @@ body.a11y-dyslexic, body.a11y-dyslexic * { font-family: 'Atkinson Hyperlegible',
 
 </div>
 
+<script src="../../gemeinsam/freigabe.js"></script>
 <script src="../../gemeinsam/ueben.js"></script>   <!-- nur Freigabe und Fehlerheft -->
 <script src="../../gemeinsam/navbar.js" onerror="console.log('navbar not found')"></script>
 <script>
@@ -509,6 +510,11 @@ function showOnly(id) {
   document.getElementById('screen-' + id).classList.remove('hidden');
 }
 function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+// Freigaben frisch geholt (Etappe 7) → Unit-Liste neu zeichnen, wenn sie gerade zu sehen ist
+window.addEventListener('lernfreigabe:neu', () => {
+  const el = document.getElementById('screen-units');
+  if (CONFIG && el && !el.classList.contains('hidden')) renderUnitList();
+});
 
 // ── SPRACHAUSGABE ────────────────────────────────────────────────
 function speak(text) {
@@ -619,9 +625,12 @@ function getSpecialWords(listKey) {
 }
 
 // Alle Wörter aus allen Units (ohne Sonderlisten) – Basis für Mix & Schwierige Wörter
+// Freigabe (Etappe 7): gesperrte Units und Listen zeigen 🔒 und fehlen im Mix
+function frei(eintrag) { return !eintrag || !eintrag.thema || !window.LernUeben || LernUeben.Freigabe.erlaubt(eintrag.thema); }
+
 function getAllUnitsOnlyWords() {
   let all = [];
-  Object.values(CONFIG.units).forEach(unit => Object.values(unit.themes).forEach(t => all = all.concat(t.words)));
+  Object.values(CONFIG.units).filter(frei).forEach(unit => Object.values(unit.themes).forEach(t => all = all.concat(t.words)));
   return all;
 }
 
@@ -689,8 +698,7 @@ function renderUnitList() {
     btn.className = 'unit-btn';
     const total = getUnitWords(key).length;
     btn.innerHTML = `<span>${unit.label}</span><span style="display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:#9ca3af;font-weight:600">${total} Wörter</span><span class="arrow">›</span></span>`;
-    const frei = !unit.thema || !window.LernUeben || LernUeben.Freigabe.erlaubt(unit.thema);
-    if (frei) btn.onclick = () => showThemes(key);
+    if (frei(unit)) btn.onclick = () => showThemes(key);
     else { btn.disabled = true; btn.style.opacity = '.5'; btn.innerHTML = `<span>🔒 ${unit.label}</span>`; }
     list.appendChild(btn);
   });
@@ -709,6 +717,7 @@ function showSpecialLists() {
     const btn = document.createElement('button');
     btn.className = 'theme-btn special';
     btn.innerHTML = `<span>${sl.label}</span><span class="word-count">${sl.words.length} Wörter</span>`;
+    if (!frei(sl)) { btn.disabled = true; btn.style.opacity = '.5'; btn.innerHTML = `<span>🔒 ${sl.label}</span>`; list.appendChild(btn); return; }
     btn.onclick = () => {
       currentUnit = null;
       currentTheme = key;

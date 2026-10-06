@@ -315,6 +315,23 @@
     .o-app button{background:none;border:0;color:inherit;cursor:pointer;font-size:.85rem;padding:0 .1rem}
     .sortable-ghost{opacity:.3}
     .sortable-chosen{box-shadow:0 0 0 2px var(--accent)}
+    /* Freigaben (Etappe 7) */
+    .fr-wer{cursor:pointer;font-family:'Nunito',sans-serif;font-weight:800;color:var(--text2);}
+    .fr-wer.an{background:var(--accent-dim);border-color:var(--accent);color:var(--accent);}
+    .fr-hinweis{font-size:.75rem;color:var(--muted);margin:.3rem 0 1rem;line-height:1.5;}
+    .fr-reihe{border-top:1px solid var(--border);padding:.6rem 0;}
+    .fr-reihe summary{cursor:pointer;font-weight:800;padding:.3rem 0;min-height:36px;display:list-item;}
+    .fr-punkt{color:var(--accent);font-size:.7rem;}
+    .fr-chips{display:flex;flex-wrap:wrap;gap:.4rem;margin:.5rem 0 .2rem;}
+    .fr-chip{min-height:40px;padding:.35rem .75rem;border-radius:10px;border:2px solid rgba(74,222,128,.45);background:var(--green-dim);color:var(--text);
+      font:700 .8rem 'Nunito',sans-serif;cursor:pointer;text-align:left;}
+    .fr-chip.zu{border-color:rgba(248,113,113,.5);background:var(--red-dim);}
+    .fr-chip.geerbt{border-style:dashed;opacity:.8;}
+    .fr-chip.offen{box-shadow:0 0 0 3px var(--indigo2);}
+    .fr-akt{background:var(--surface2);border-radius:10px;padding:.7rem .8rem;margin-top:.5rem;font-size:.85rem;}
+    .fr-knoepfe{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:.5rem;align-items:center;}
+    .fr-ab{display:inline-flex;gap:.35rem;align-items:center;}
+    .fr-ab input{width:auto;min-height:34px;}
   </style>
 </head>
 <body>
@@ -363,6 +380,7 @@
       <button class="tab" data-t="vokabeln">📚 Vokabeln</button>
       <button class="tab" data-t="pass">🧭 Pass</button>
       <button class="tab" data-t="dorf">🏘️ Dorf</button>
+      <button class="tab" data-t="freigaben">🔐 Freigaben</button>
     </div>
 
     <!-- DASHBOARD -->
@@ -527,6 +545,16 @@
       <div class="ov" id="dorf-overview"></div>
     </div>
 
+    <!-- ── FREIGABEN & FOKUS (Etappe 7, gemeinsam/admin/freigaben.js) ── -->
+    <div class="tab-panel" id="panel-freigaben">
+      <div class="sec-header"><span class="sec-title">🎯 Fokus</span></div>
+      <p style="font-size:.8rem;color:var(--muted);margin:-.4rem 0 .9rem;line-height:1.5;">„Für Gruppe 5a heute nur diese drei Apps“: Die Startseite zeigt dann nur die gewählten Apps, bis die Zeit um ist.</p>
+      <div class="form-card" id="fokus-inhalt" style="margin-bottom:1.5rem;"></div>
+      <div class="sec-header"><span class="sec-title">🔐 Freigaben in den Apps</span></div>
+      <p style="font-size:.8rem;color:var(--muted);margin:-.4rem 0 .9rem;line-height:1.5;">Welche Stufen und Units sind offen? Tippe eine Stufe an. Gesperrtes sehen die Kinder mit 🔒, ohne Erklärtext. Ohne Eintrag ist alles offen. Eine Sperre nimmt nie Fortschritt weg. Eine Stufe, die in mehreren Apps vorkommt, gilt überall. Braucht den aktuellen Worker (<code>cloudflare/worker.js</code>).</p>
+      <div class="form-card" id="freigaben-inhalt" style="margin-bottom:1.5rem;"></div>
+    </div>
+
     <div class="tab-panel" id="panel-vokabeln">
       <div class="sec-header"><span class="sec-title">📚 Vokabeln – vokabeln5.json</span></div>
       <div class="dash-grid" id="vok-stats" style="margin-bottom:1.5rem;"></div>
@@ -596,6 +624,7 @@
 <script src="gemeinsam/admin/ordnen.js"></script>
 <script src="gemeinsam/admin/tags.js"></script>
 <script src="gemeinsam/admin/werkzeuge.js"></script>
+<script src="gemeinsam/admin/freigaben.js"></script>
 <script src="gemeinsam/admin/start.js"></script>
 </body>
 </html>

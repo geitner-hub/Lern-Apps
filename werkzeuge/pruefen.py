@@ -16,6 +16,7 @@
 #    7. Die Größenbudgets werden eingehalten (BUDGETS unten, gemessen komprimiert).
 #    8. Inhalts-Katalog (daten/katalog.json): IDs eindeutig und richtig gebaut, jedes Thema
 #       hat Fach und Klasse, jede Quelle existiert, jede Lern-App aus config.json hat ein Thema.
+#       Freigaben (Etappe 7) mit unbekannter Themen-ID → gelber Hinweis.
 #  HINWEISE (gelb) – nichts kaputt, aber ansehen:
 #    Apps im Ordner, die nicht in config.json stehen, u. Ä.
 #
@@ -240,6 +241,9 @@ if katalog is not None:
                 if not str(th.get('lehrplan') or '').strip():
                     H(f'Katalog: {th.get("id")} hat noch keinen Lehrplanbezug (Feld lehrplan)')
     I(f'Katalog: {len(ids)} Themen und Stufen, {len(app_themen)} Apps zugeordnet')
+    # Etappe 7: Freigaben verweisen auf Katalog-IDs (gelb – ein Tippfehler sperrt nur nichts)
+    for t in (config.get('freigaben') or {}):
+        if t not in ids: H(f'config.json: Freigabe für unbekannte Themen-ID {t} (wirkt nicht)')
 
 # ── 10. Kopfrechnen-Stufen (Etappe 4) ───────────────────
 try:

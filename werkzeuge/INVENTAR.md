@@ -18,7 +18,7 @@ Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv
 | `apps/gpg/regeln-sortierer-gpg.html` | Regeln in unserer Gesellschaft | `gpg.5.regeln` | Lern-App | GPG · alle | versteckt | ⚠️ altes Format | – | – | – | nur wenn sichtbar | Engine (Etappe 9) | Typ Sortieren. Mängel: altes Ergebnis-Format (keine XP), Ziehen per Drag & Drop auf iPads unsicher, keine Erklärung |
 | `apps/mathe/einmaleins_tafel.html` | Einmaleins 1x1 | `ma.5.1x1` (2 Stufen) | Lern-App | Mathematik · 5, 6 | sichtbar | ja | ja | ja | – | ja (1 Runden) | Kern | Gut: Klassik/Profi, 3 Stufen, großes 1×1. Mängel: falsche Felder nur rot, ohne Hilfe (z. B. Nachbaraufgabe) |
 | `apps/mathe/kopfrechnen-neu.html` | – | – | Lern-App | – | nicht in config | – | – | – | – | – (nicht in config) | Weiterleitung | Test-Name des Mathe-Trainers → mathe-trainer.html (Ergebnisse werden übernommen) |
-| `apps/mathe/kopfrechnen.html` | Kopfrechnen Klasse 1 | `ma.1.kopf` (3 Stufen), `ma.2.kopf` (3 Stufen), `ma.3.kopf` (3 Stufen), `ma.4.kopf` (3 Stufen), `ma.5.kopf` (13 Stufen), `ma.6.kopf` (12 Stufen) | Lern-App | Mathematik · alle | versteckt | – | – | – | – | nur wenn sichtbar | Kern (Übungs-Rahmen) | Etappe 4b: nur Einmaleins und Grundrechenarten, Klassen 1–6 über ?klasse=; Ergebnisse über ueben.js (thema je Stufe) |
+| `apps/mathe/kopfrechnen.html` | Kopfrechnen Klasse 4 | `ma.1.kopf` (3 Stufen), `ma.2.kopf` (3 Stufen), `ma.3.kopf` (3 Stufen), `ma.4.kopf` (3 Stufen), `ma.5.kopf` (13 Stufen), `ma.6.kopf` (12 Stufen) | Lern-App | Mathematik · 5 | sichtbar | – | – | – | – | ja | Kern (Übungs-Rahmen) | Etappe 4b: nur Einmaleins und Grundrechenarten, Klassen 1–6 über ?klasse=; Ergebnisse über ueben.js (thema je Stufe) |
 | `apps/mathe/kopfrechnen_kl1.html` | – | – | Lern-App | – | nicht in config | – | – | – | – | – (nicht in config) | Weiterleitung | → kopfrechnen.html?klasse=1; Ergebnisse, Sterne und Dorf-Aufträge werden übernommen |
 | `apps/mathe/kopfrechnen_kl2.html` | – | – | Lern-App | – | nicht in config | – | – | – | – | – (nicht in config) | Weiterleitung | → kopfrechnen.html?klasse=2; Ergebnisse, Sterne und Dorf-Aufträge werden übernommen |
 | `apps/mathe/kopfrechnen_kl3.html` | – | – | Lern-App | – | nicht in config | – | – | – | – | – (nicht in config) | Weiterleitung | → kopfrechnen.html?klasse=3; Ergebnisse, Sterne und Dorf-Aufträge werden übernommen |
@@ -43,21 +43,21 @@ Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv
 | apps/englisch/practice_simple_present.html | 35 | navbar.js | + über navbar.js |
 | apps/englisch/satzglieder-erkennen.html | 35 | navbar.js | + über navbar.js |
 | apps/englisch/simple-past.html | 51 | navbar.js | + über navbar.js |
-| apps/englisch/vokabeltrainer.html | 60 | ueben.js, navbar.js | vokab-history-kl5, vokab-word-stats-kl5, vokab-a11y-kl5, vokab-history-kl6, vokab-word-stats-kl6, vokab-a11y-kl6, + über navbar.js |
+| apps/englisch/vokabeltrainer.html | 60 | freigabe.js, ueben.js, navbar.js | vokab-history-kl5, vokab-word-stats-kl5, vokab-a11y-kl5, vokab-history-kl6, vokab-word-stats-kl6, vokab-a11y-kl6, + über navbar.js |
 | apps/englisch/vokabeltrainer5.html | 51 | navbar.js | vokab-history-kl5, vokab-word-stats-kl5, vokab-a11y-kl5, + über navbar.js |
 | apps/englisch/vokabeltrainer6.html | 54 | navbar.js | vokab-history-kl6, vokab-word-stats-kl6, vokab-a11y-kl6, + über navbar.js |
 | apps/gpg/laender-finder.html | 26 | navbar.js, karten-ansicht.js | laender-finder-best, + über navbar.js |
 | apps/gpg/regeln-sortierer-gpg.html | 22 | navbar.js (nachgeladen) | + über navbar.js |
 | apps/mathe/einmaleins_tafel.html | 23 | navbar.js | + über navbar.js |
 | apps/mathe/kopfrechnen-neu.html | 1 | – | – |
-| apps/mathe/kopfrechnen.html | 2 | generatoren-mathe.js, ueben.js, navbar.js | + über navbar.js |
+| apps/mathe/kopfrechnen.html | 2 | generatoren-mathe.js, freigabe.js, ueben.js, navbar.js | + über navbar.js |
 | apps/mathe/kopfrechnen_kl1.html | 1 | – | – |
 | apps/mathe/kopfrechnen_kl2.html | 1 | – | – |
 | apps/mathe/kopfrechnen_kl3.html | 1 | – | – |
 | apps/mathe/kopfrechnen_kl4.html | 1 | – | – |
 | apps/mathe/kopfrechnen_kl6.html | 1 | – | – |
 | apps/mathe/laengeneinheiten.html | 25 | navbar.js | + über navbar.js |
-| apps/mathe/mathe-trainer.html | 2 | generatoren-mathe.js, ueben.js, navbar.js | + über navbar.js |
+| apps/mathe/mathe-trainer.html | 2 | generatoren-mathe.js, freigabe.js, ueben.js, navbar.js | + über navbar.js |
 | apps/mathe/rechen-arena.html | 52 | navbar.js | rechenArena_ballonHighscore, + über navbar.js |
 | spiele/burg-verteidigung.html | 85 | navbar.js, aufgaben.js, avatar3d.js | lern-burg-wahl, lern-burg-rekorde, + über navbar.js |
 | spiele/dorf.html | 88 | shared.js, config-api.js, dorf-kern.js, avatar3d.js, dorf-szene.js, navbar.js | lernwelt-dorf, lernwelt-dorf-besuch, + über navbar.js |

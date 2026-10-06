@@ -36,6 +36,9 @@
 //    apps[].dorf   – nur false (App bekommt keine Dorf-Aufträge)
 //    apps[].dorfRunden – 1–10 Runden pro Dorf-Auftrag in dieser App
 //    dorf.lehrerZettel[] – { id, start, bis, app, text?, runden?, klassen? } (Lehrer-Zettel am Auftragsbrett)
+//    gruppen[], apps[].gruppe – Regale auf der Startseite (Etappe 6)
+//    freigaben     – { themaId: { wer: 'zu'|'offen'|'JJJJ-MM-TT' } }, wer = alle | k5 | g:<32 hex> (Etappe 7)
+//    fokus[]       – { id, fuer, apps[], ab?, bis } „heute nur diese Apps“, endet von selbst (Etappe 7)
 //
 //  Wartung & Fehlersuche: cloudflare/ANLEITUNG.md
 // ═══════════════════════════════════════════════════════
@@ -253,6 +256,29 @@ function validateConfig(cfg) {
       if (dv.lehrerZettel !== undefined && (!Array.isArray(dv.lehrerZettel) || dv.lehrerZettel.length > 12 || !dv.lehrerZettel.every(lOk))) p.push('dorf: lehrerZettel');
       if (Object.keys(dv).some(k => !['plaetze', 'rerollsProTag', 'rerollsMax', 'kostenfaktor', 'wochen', 'challenges', 'challengeRotation', 'lehrerZettel'].includes(k))) p.push('dorf: unbekanntes Feld');
     }
+  }
+  // Freischaltung (Etappe 7): je Themen-ID, für wen was gilt
+  const WER = /^(alle|k([1-9]|1[0-3])|g:[0-9a-f]{32})$/;
+  const THEMA = /^[a-z]+(\.[a-z0-9-]+){1,5}$/;
+  const fg = cfg.freigaben;
+  if (fg !== undefined) {
+    if (!fg || typeof fg !== 'object' || Array.isArray(fg) || Object.keys(fg).length > 500) p.push('freigaben ungültig');
+    else Object.entries(fg).forEach(([t, e]) => {
+      if (t.length > 80 || !THEMA.test(t)) { p.push('freigaben: Themen-ID ' + t.slice(0, 80)); return; }
+      if (!e || typeof e !== 'object' || Array.isArray(e) || Object.keys(e).length > 40
+          || !Object.entries(e).every(([w, v]) => WER.test(w) && typeof v === 'string' && /^(zu|offen|\d{4}-\d{2}-\d{2})$/.test(v))) p.push('freigaben: ' + t);
+    });
+  }
+  // Fokus-Modus (Etappe 7): „für Gruppe X nur diese Apps“, mit Ende
+  const fk = cfg.fokus;
+  if (fk !== undefined) {
+    const ms = v => Number.isInteger(v) && v > 1.6e12 && v < 4e12;
+    const fOk = f => f && typeof f === 'object' && /^[a-z0-9_-]{1,40}$/i.test(f.id || '') && typeof f.fuer === 'string' && WER.test(f.fuer)
+      && Array.isArray(f.apps) && f.apps.length >= 1 && f.apps.length <= 12
+      && f.apps.every(a => isStr(a, 300) && SAFE_LINK.test(a) && !a.includes('..'))
+      && ms(f.bis) && (f.ab === undefined || (ms(f.ab) && f.ab < f.bis))
+      && Object.keys(f).every(k => ['id', 'fuer', 'apps', 'ab', 'bis'].includes(k));
+    if (!Array.isArray(fk) || fk.length > 10 || !fk.every(fOk)) p.push('fokus ungültig');
   }
   return p;
 }

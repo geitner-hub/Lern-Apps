@@ -18,7 +18,8 @@
 //  Aufgabe: { frage, art: 'zahl'|'bruch'|'rest'|'wahl', text, optionen?, negativ?, tipp?, erklaerung?, hinweis? }
 //
 //  Angelegte Anschlüsse (später eingeschaltet):
-//    LernUeben.Freigabe.erlaubt(themaId)  → bis Etappe 7 immer true (gesperrt = 🔒 ohne Erklärtext)
+//    LernUeben.Freigabe.erlaubt(themaId)  → seit Etappe 7 über gemeinsam/freigabe.js (gesperrt = 🔒 ohne Erklärtext);
+//                                           die App bindet freigabe.js VOR ueben.js ein, ohne sie ist alles offen
 //    LernUeben.Fehlerheft.merken(eintrag) → sammelt ab jetzt Fehler auf dem Gerät; angezeigt ab Etappe 8
 //    Vorlesen (🔊) und große Schrift: standardmäßig aus; an mit ?vorlesen=1 bzw. ?gross=1
 //    oder vorlesen/gross: true in der App (für DaZ und Förderung).
@@ -38,8 +39,8 @@
 
   // ── Anschlüsse ─────────────────────────────────────────
   const Freigabe = {
-    /** Etappe 7 wertet hier die Freigaben aus config.json aus. Bis dahin: alles offen. */
-    erlaubt(themaId) { return true; },
+    /** Freigaben aus config.json (Etappe 7, gemeinsam/freigabe.js). Ohne freigabe.js: alles offen. */
+    erlaubt(themaId) { return !window.LernFreigabe || LernFreigabe.erlaubt(themaId); },
   };
   const FEHLER_KEY = 'lernwelt-fehlerheft';
   const FEHLER_MAX = 200;
@@ -296,6 +297,8 @@
     });
     // Meisterschaft nachtragen, sobald der Pass geladen ist
     window.addEventListener('lernpass:ready', () => { if (!S.stufe && !root.querySelector('.erg')) zeigeStart(); });
+    // Freigaben frisch geholt (Etappe 7) → Stufenwahl neu zeichnen; eine laufende Runde bleibt
+    window.addEventListener('lernfreigabe:neu', () => { if (!S.stufe && !root.querySelector('.erg')) zeigeStart(); });
 
     zeigeStart();
     return { neu: zeigeStart };

@@ -20,6 +20,7 @@
 //       so viel wie ein Rechen-Pool (gleiches Gewicht je Inhalt).
 //    meineThemen({ klasse })    → { ids, opts, anzahl, inhalte } „Meine Themen“ für die Spiele:
 //                                 freigeschalteter Stoff aus dem Pass + Starter-Paket
+//                                 (ohne Starter-Inhalte, die die Lehrkraft gesperrt hat – freigabe.js, Etappe 7)
 //    ausLink(location.search)   → { ids, opts } aus ?pool=vok5&bis=unit3&richtung=en-de
 //    lesezeit(aufgabe)          → empfohlene Sekunden zum Lesen
 //    woerter(opts)              → Promise: englische Einzelwörter für Wort-Spiele
@@ -50,6 +51,14 @@
     const sc = document.createElement('script');
     sc.id = 'lw-katalog-script';
     sc.src = new URL('katalog.js', here).href;
+    document.head.appendChild(sc);
+  })();
+  // Freigaben mitladen (Etappe 7: Gesperrtes kommt nicht in „Meine Themen“), falls die Seite sie nicht schon hat
+  (function () {
+    if (window.LernFreigabe || document.getElementById('lw-freigabe-script')) return;
+    const sc = document.createElement('script');
+    sc.id = 'lw-freigabe-script';
+    sc.src = new URL('freigabe.js', here).href;
     document.head.appendChild(sc);
   })();
   /** Themen-ID ('ma.5.kopf.mittel') → alte Inhalt-ID ('kopf5-mittel'); alte IDs bleiben, wie sie sind. */
@@ -359,10 +368,22 @@
       : STUFEN_ID.test(id) && (!k || Number(id.split('.')[1]) <= k);     // Pool entsteht, sobald kopfrechnen.json geladen ist
     const ids = [], themen = {}, ganz = new Set();
     const pool = id => { if (!ids.includes(id)) ids.push(id); };
+    // Freigaben (Etappe 7): Gesperrtes kommt nicht neu dazu. Was schon freigeschaltet (geübt) ist, bleibt.
+    const F = window.LernFreigabe, K = window.LernKatalog;
+    const gesperrt = alt => { if (!F || !K || !K.fuerInhalt) return false; const t = K.fuerInhalt(alt); return !!t && !F.erlaubt(t); };
     starterFuer(sp.starter, k).map(alteForm).forEach(id => {
-      if (!erlaubt(id)) return;
+      if (!erlaubt(id) || gesperrt(id)) return;
+      if (POOL_BY_ID[id] && POOL_BY_ID[id].typ === 'vokabeln') {
+        // ganzes Vokabelbuch im Starter – sind Units gesperrt, nur die offenen
+        const units = F && K && K.themen ? K.themen({}).filter(t => t.inhalt && t.inhalt.startsWith(id + ':')) : [];
+        const offen = units.filter(t => F.erlaubt(t.id));
+        if (offen.length === units.length) { pool(id); ganz.add(id); return; }
+        if (!offen.length) return;
+        pool(id);
+        themen[id] = (themen[id] || []).concat(offen.map(t => t.inhalt.slice(id.length + 1)));
+        return;
+      }
       pool(id);
-      if (POOL_BY_ID[id] && POOL_BY_ID[id].typ === 'vokabeln') ganz.add(id);   // ganzes Vokabelbuch im Starter
     });
     frei.map(alteForm).forEach(fid => {
       const m = /^(vok\d+):(.+)$/.exec(fid);
