@@ -25,6 +25,7 @@ daten/                katalog.json (Inhalts-Katalog mit Themen-IDs), vokabeln5.j
                       woerter-en.json (Prüfliste fürs Wort des Tages, ENABLE-Wortliste, gemeinfrei)
                       kitchen-chaos.json (Schauplätze, Zutaten, Satzrahmen, Stufen)
                       karten.json (Europa- und Deutschlandkarte, für Länder-Finder und Expedition)
+                      welt.json (alle Länder in Längen-/Breitengraden, Kontinente, Länderlisten der Welt-Modi)
                       expedition.json (Hauptstädte, Nachbarn, Kartenmitten)
 daten/inhalte/<fach>/ Inhaltsdateien des Baukastens (<Themen-ID>.json) und ihre Bilder (SVG)
 gemeinsam/            Code, den alle Seiten nutzen (siehe unten)
@@ -51,10 +52,18 @@ werkzeuge/            Prüfskript (pruefen.py), Inventar (inventar.py → INVENT
 | `dorf-szene.js` | „Mein Dorf“: 3D-Dorf (Voxel-Gebäude als Code, feste Iso-Kamera), nur in `spiele/dorf.html` |
 | `katalog.js` | Inhalts-Katalog laden und abfragen: Themen-IDs, Zuordnung alter Ergebnis- und Inhalt-Schlüssel (`LernKatalog`) |
 | `aufgaben.js` | Aufgaben-Pools für die Spiele („Meine Themen“), Wortquelle `woerter()` für Wort-Spiele |
-| `karten-ansicht.js` | Karten laden, zoomen, verschieben, antippen (Länder-Finder, Expedition) |
+| `karten-ansicht.js` | Karten laden, zoomen, verschieben, antippen (Länder-Finder, Expedition); `LernKarte.markup` zeichnet Flächen, Linien (Flüsse) und Punkte (Städte) mit Tippzonen |
+| `welt-karte.js` | Weltkarte in **Equal Earth** (flächentreu) aus `daten/welt.json` über `vendor/d3-geo.min.js` (`LernWelt`) – Grundlage für alle Weltkarten und den Globus |
 | `spiel-hilfen.js` | Kleine Bausteine für die neuen Spiele: Runde melden, Endlos-XP, robuste Zeiger (mehrere Finger), wiederholbarer Zufall |
 | `qrcode.js` | QR-Code-Erzeugung im Browser (MIT-Lizenz, Kazuhiko Arase) |
 | `fonts.css` | Lokal gehostete Schriften aus `fonts/` (kein Google Fonts → DSGVO) |
+
+**Weltkarten:** Alle GPG-Apps, die eine Weltkarte brauchen, nutzen die Equal-Earth-Projektion über
+`gemeinsam/welt-karte.js`. Quelle: Natural Earth 1:50 Mio. (gemeinfrei, naturalearthdata.com), mit mapshaper
+vereinfacht (15 %, Grenzen bleiben deckungsgleich), Koordinaten in 1/100 Grad. Länderlisten, Ausschnitte und
+Lupen (z. B. Mittelamerika) je Modus stehen in `daten/welt.json` unter `modi` und lassen sich dort ohne Code
+ändern (IDs = ADM0_A3-Codes wie in `karten.json`). `vendor/d3-geo.min.js` enthält d3-array 3.2.4 und
+d3-geo 3.1.1 (ISC-Lizenz).
 
 Die Skripte in `gemeinsam/` finden den Hauptordner selbst (über ihren eigenen Ort).
 Deshalb funktionieren sie aus jeder Ordnertiefe – nur der Pfad beim Einbinden ändert sich.

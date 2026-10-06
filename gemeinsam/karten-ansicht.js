@@ -5,6 +5,10 @@
 //  Kartendaten: daten/karten.json (Natural Earth, gemeinfrei; vorbereitet & vereinfacht)
 //    { europa|deutschland: { w, h, v: Kernausschnitt [x,y,w,h], g: Gradnetz,
 //                            f: [{ id, n: Name, d: Pfad, c?: Kontext, h?: [[x,y,r],…] Tipphilfe }] } }
+//  Weltkarten (Equal Earth) baut gemeinsam/welt-karte.js im selben Format, dazu optional:
+//    s: Umriss der Erde (Hintergrund), f[].u: [[x,y,r],…] Tippzone im Meer (liegt UNTER den Flächen),
+//    l: [{ id, n, d }] Linien (Flüsse) – dicke unsichtbare Tippzone,
+//    p: [{ id, n, x, y }] Punkte (Städte) – Tippzone 44 Pixel, unabhängig vom Zoom
 //
 //  API (window.LernKarte):
 //    laden(url)                    → Promise: Kartendaten (einmal geladen, dann aus dem Speicher)
@@ -14,6 +18,8 @@
 //      Tippen, Ziehen (verschieben), zwei Finger (zoomen), Mausrad.
 //      Hängengebliebene Finger werden aufgeräumt (iPad: kein pointerup nach Systemgesten).
 //    mitte(pfad)                   → [x, y] Mitte des größten Teilstücks eines Kartenpfads
+//    markup(karte, pool?)          → SVG-Inhalt (Gradnetz, Flächen, Linien, Punkte, Tippzonen);
+//                                    Klassen: grat, kugel, land (+ ctx, pool), linie, punkt, hit
 // ═══════════════════════════════════════════════════════
 
 (function () {
@@ -42,6 +48,45 @@
       if (!best || flaeche > best.f) best = { f: flaeche, x: (minX + maxX) / 2, y: (minY + maxY) / 2 };
     });
     return best ? [best.x, best.y] : [0, 0];
+  }
+
+  const esc = t => String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+  /** SVG-Inhalt einer Karte; pool = IDs, die hervorgehoben werden (Vorschaubilder) */
+  function markup(M, pool) {
+    const inPool = new Set(pool || []);
+    const kreise = (liste, cls) => { let t = ''; (M.f || []).forEach(f => (f[liste] || []).forEach(h => {
+      t += `<circle class="${cls}" data-id="${esc(f.id)}" cx="${h[0]}" cy="${h[1]}" r="${h[2]}"/>`; })); return t; };
+    let s = (M.s ? `<path class="kugel" d="${M.s}"/>` : '') + (M.g ? `<path class="grat" d="${M.g}"/>` : '');
+    s += '<g class="hits-meer">' + kreise('u', 'hit') + '</g><g class="lands">';
+    (M.f || []).forEach(f => {
+      const cls = 'land' + (f.c ? ' ctx' : '') + (inPool.has(f.id) ? ' pool' : '');
+      s += `<path class="${cls}" data-id="${esc(f.id)}" d="${f.d}"/>`;
+    });
+    s += '</g><g class="linien">';
+    (M.l || []).forEach(l => {
+      s += `<path class="linie${inPool.has(l.id) ? ' pool' : ''}" data-id="${esc(l.id)}" d="${l.d}"/>` +
+           `<path class="hit-linie" data-id="${esc(l.id)}" d="${l.d}"/>`;
+    });
+    s += '</g><g class="punkte">';
+    (M.p || []).forEach(p => {
+      const d = `M${p.x} ${p.y}h0`;                 // runde Linienkappe = Kreis mit fester Bildschirmgröße
+      s += `<path class="punkt${inPool.has(p.id) ? ' pool' : ''}" data-id="${esc(p.id)}" d="${d}"/>` +
+           `<path class="hit-punkt" data-id="${esc(p.id)}" d="${d}"/>`;
+    });
+    return s + '</g><g class="hits">' + kreise('h', 'hit') + '</g>';
+  }
+  // Grundstil für Linien und Punkte (Seiten können ihn überschreiben)
+  if (!document.getElementById('lernkarte-stil')) {
+    const st = document.createElement('style');
+    st.id = 'lernkarte-stil';
+    st.textContent = '.linie{fill:none;stroke:#60a5fa;stroke-width:2.5px;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}' +
+      '.hit-linie{fill:none;stroke:transparent;stroke-width:24px;stroke-linecap:round;vector-effect:non-scaling-stroke;pointer-events:stroke}' +
+      '.punkt{fill:none;stroke:#fde68a;stroke-width:11px;stroke-linecap:round;vector-effect:non-scaling-stroke}' +
+      '.hit-punkt{fill:none;stroke:transparent;stroke-width:44px;stroke-linecap:round;vector-effect:non-scaling-stroke;pointer-events:stroke}' +
+      '.kugel{pointer-events:none}.hit{fill:transparent;pointer-events:all}';
+    const kopf = document.head || document.documentElement;
+    kopf.insertBefore(st, kopf.firstChild);       // zuerst einfügen: Stile der Seite gewinnen
   }
 
   function ansicht(o) {
@@ -161,5 +206,5 @@
     };
   }
 
-  window.LernKarte = { laden, ansicht, mitte };
+  window.LernKarte = { laden, ansicht, mitte, markup };
 })();
