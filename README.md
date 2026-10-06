@@ -270,6 +270,9 @@ Eine neue App = **Inhaltsdatei + Katalog-Eintrag + Admin-Eintrag**. Kein neuer C
    (14 Inhaltsdateien `en.5.*`/`en.6.*`) mit Fortschritt; „Mixed“, „Welche Zeit passt?“ und „Meine Themen“ sind
    Mix-Stufen in `en.5.knowing-english.json`. Strukturen über der Klasse aus dem Pass erscheinen nicht.
    Neue Struktur: Inhaltsdatei + Katalog + Eintrag in `STRUKTUREN` + in `aus` der Mixed-Stufen.
+   **Time, Dates and Numbers** (`apps/englisch/time-dates-numbers.html`, Etappe 8): eigene App auf `ueben.js` mit
+   Generatoren (Zahlwörter bis 999, Ordinalzahlen, britische Uhrzeit, Datum) und einer Uhr zum Stellen (Zeiger ziehen,
+   5-Minuten-Raster). Hör-Aufgaben (`tonAuto`) nur, wenn das iPad eine englische Stimme hat.
 
    Jede Aufgabe darf `tipp` und `erklaerung` haben (💡 und Erklärung nach falscher Antwort). Genaues Format: Kopf von
    `gemeinsam/typen/<typ>.js`. **Bilder:** Emojis (laufen überall, keine Lizenz) oder selbst gezeichnete SVG-Dateien
