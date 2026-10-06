@@ -162,7 +162,7 @@ das ist die Menge, die übers Schul-WLAN geht; komprimiert ≈ ein Drittel der D
 
 ## Freischaltung und Fokus-Modus (Infrastruktur Etappe 7)
 
-Admin → **🔐 Freigaben**. Ohne Accounts: ein iPad weiß, wer es ist, aus der **Klasse im Pass** und – falls eine
+Admin → **🎯 Unterricht** (Startseite, Fokus, Freigaben, Gruppen-Auswertung). Ohne Accounts: ein iPad weiß, wer es ist, aus der **Klasse im Pass** und – falls eine
 Sicherungskarte verbunden ist – aus der **Kartengruppe** (der Sync-Worker schickt deren Kennung mit).
 
 - **Freigaben** (`config.freigaben`): je Themen-ID, für wen was gilt.
@@ -199,10 +199,16 @@ Sicherungskarte verbunden ist – aus der **Kartengruppe** (der Sync-Worker schi
   Meisterschaft einer Stufe. Der Vokabeltrainer hat dafür weiter „Schwierige Wörter üben“.
 - **„Heute für dich“** (index.html, nur mit Pass): höchstens drei Karten – Lehrer-Zettel von heute, fällige
   Wiederholung, nächstes Ziel im Pass (Wochenziel bzw. nächstes Level). Abschaltbar im Admin unter
-  „🔐 Freigaben → Startseite“ (`config.heute = false`, der Worker prüft das Feld).
+  „🎯 Unterricht → Startseite“ (`config.heute = false`, der Worker prüft das Feld).
 - **Infokarten** (`infokarten.html`, ohne Passwort, Link im Admin oben): je App Fach, Klassen, Lehrplanbezug, Dauer,
   Einsatzidee, Stufen und QR-Code, erzeugt aus config.json und dem Katalog; filterbar, druckbar (helles Druckbild).
-- **Bewusst noch nicht:** anonyme Gruppenauswertung über den Worker – erst nach Zustimmung der Schulleitung.
+- **Gruppen-Auswertung** (Admin → „🎯 Unterricht“, Zustimmung der Schulleitung liegt vor): iPads **mit
+  Sicherungskarte in einer Gruppe** zählen je gewerteter Runde (ohne Durchklicken) Thema bzw. App und Woche mit
+  (`lernwelt-statistik`) und schicken die Summen gebündelt an `/sync/statistik` (gemeinsam/sync.js). Der Sync-Worker
+  prüft die Karte und addiert auf **Gruppe × Thema × Woche** (Tabelle `sync_statistik`) – welche Karte gemeldet hat,
+  wird nicht gespeichert; keine Namen, keine Einzelstände. Der Admin zeigt Runden, Aufgaben und % richtig, die
+  schwächsten Themen zuerst, mit Hinweis bei Gruppen unter 5 Karten. Wochen älter als 200 Tage löscht der Cron;
+  mit der Gruppe verschwinden auch ihre Zahlen. Ohne Karte wird nichts gemeldet.
 
 ## Vokabel-Engine (Infrastruktur Etappe 5)
 

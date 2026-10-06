@@ -8,6 +8,9 @@
 //
 //  Gesichert werden die Speicherstände UNVERÄNDERT (verlustfrei):
 //    'lernwelt-pass', 'lernwelt-dorf', 'lernwelt-expedition', 'lern-apps-results'
+//
+//  Gruppenauswertung (Etappe 8): Ist die Karte in einer Gruppe, gehen zusätzlich nur Zahlen
+//  je Thema und Woche an den Worker (Runden, Aufgaben, richtig) – siehe statMerken().
 //  komprimiert und mit AES-GCM verschlüsselt. Der Schlüssel entsteht aus dem
 //  Code der Karte und verlässt das Gerät nie.
 //
@@ -467,6 +470,62 @@
     verbinden(code);
   }
 
+  // ── Gruppenauswertung (Etappe 8) ─────────────────────
+  //  Nur iPads mit Sicherungskarte und bekannter Gruppe. Gesammelt wird je Thema (bzw. App)
+  //  und Woche: Runden, Aufgaben, richtig – in STAT_KEY, gebündelt gesendet (höchstens 1× pro Minute).
+  //  Der Worker addiert alles auf die Gruppe; welche Karte gemeldet hat, speichert er nicht.
+  const STAT_KEY = 'lernwelt-statistik', STAT_ABSTAND = 65000, STAT_MAX = 30;
+  const STAT_WAS = /^[a-z0-9][a-z0-9._:?=&-]{0,79}$/i;
+  let statTimer = null, statLetzte = 0;
+  function statLesen() { try { const l = JSON.parse(localStorage.getItem(STAT_KEY) || '{}'); return l && typeof l === 'object' && !Array.isArray(l) ? l : {}; } catch (e) { return {}; } }
+  function statSchreiben(l) { try { if (Object.keys(l).length) localStorage.setItem(STAT_KEY, JSON.stringify(l)); else localStorage.removeItem(STAT_KEY); } catch (e) {} }
+  function montag() {
+    const d = new Date(); d.setDate(d.getDate() - (d.getDay() + 6) % 7);
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  }
+  function statMerken(d) {
+    if (TEST || !ST || ST.ungueltig || !ST.gruppe || !d || d.blocked) return;
+    const n = Number(d.anzahl);
+    if (!(n >= 1 && n <= 200)) return;
+    const was = String((Array.isArray(d.thema) && d.thema[0]) || d.app || '');
+    if (!STAT_WAS.test(was)) return;
+    const l = statLesen(), k = was + '|' + montag();
+    if (!l[k] && Object.keys(l).length >= 60) return;            // Gerät war lange offline: nicht endlos sammeln
+    const e = l[k] || (l[k] = { r: 0, n: 0, k: 0 });
+    e.r++; e.n += n; e.k += Math.max(0, Math.min(n, Math.round((Number(d.prozent) || 0) * n / 100)));
+    statSchreiben(l);
+    planeStat(15000);
+  }
+  function planeStat(ms) {
+    clearTimeout(statTimer);
+    statTimer = setTimeout(() => statSenden(false), Math.max(ms, statLetzte + STAT_ABSTAND - Date.now()));
+  }
+  async function statSenden(beimVerlassen) {
+    if (TEST || !ST || ST.ungueltig || !ST.gruppe) return;
+    const l = statLesen(), keys = Object.keys(l).slice(0, STAT_MAX);
+    if (!keys.length || Date.now() - statLetzte < STAT_ABSTAND) return;
+    statLetzte = Date.now();
+    const eintraege = keys.map(k => {
+      const [was, woche] = k.split('|'), e = l[k] || {};
+      const aufgaben = Math.min(2000, Math.max(1, e.n | 0));
+      return { was, woche, runden: Math.min(50, Math.max(1, e.r | 0)), aufgaben, richtig: Math.min(aufgaben, Math.max(0, e.k | 0)) };
+    });
+    let res;
+    try { const s = await ableiten(ST.code); res = await post('/sync/statistik', { id: s.id, auth: s.auth, eintraege }, beimVerlassen); }
+    catch (e) { return; }                                         // offline: später nochmal
+    if (res.status === 200 || res.status === 400 || res.status === 403) {   // 400: zu alt/ungültig → verwerfen
+      const neu = statLesen();
+      keys.forEach(k => {                                         // Gesendetes abziehen (inzwischen Neues bleibt stehen)
+        const x = neu[k], g = l[k];
+        if (!x || !g) return;
+        x.r -= g.r; x.n -= g.n; x.k -= g.k;
+        if (x.r <= 0 || x.n <= 0) delete neu[k];
+      });
+      statSchreiben(neu);
+    }
+    if (Object.keys(statLesen()).length && !beimVerlassen) planeStat(res.status === 429 && res.d.warteMs ? res.d.warteMs : STAT_ABSTAND);
+  }
+
   // ── Start ────────────────────────────────────────────
   function start() {
     try { if (sessionStorage.getItem(HINWEIS_KEY)) { sessionStorage.removeItem(HINWEIS_KEY); toast('✅ Dein Pass wurde auf den neuesten Stand gebracht.'); } } catch (e) {}
@@ -489,7 +548,10 @@
       if (document.visibilityState === 'hidden') senden(true);
       else holen(false);
     });
-    window.addEventListener('pagehide', () => { if (ST) senden(true); });
+    window.addEventListener('pagehide', () => { if (ST) { senden(true); statSenden(true); } });
+    // Gruppenauswertung: jede gewertete Runde zählen, Liegengebliebenes bald senden
+    window.addEventListener('lernpass:gewertet', e => statMerken(e.detail));
+    if (ST && ST.gruppe) planeStat(20000);
     window.addEventListener('online', () => { if (ST) { laufzeit.offline = false; senden(false); } });
     melden();
   }

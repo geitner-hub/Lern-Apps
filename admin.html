@@ -254,25 +254,6 @@
     .color-chip.selected{border-color:#fff;transform:scale(1.15);}
     .ann-form{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.3rem;}
 
-    /* ── LINK CHECKER ── */
-    .checker-result{display:flex;flex-direction:column;gap:.45rem;margin-top:1rem;}
-    .check-item{display:flex;align-items:center;gap:.7rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.7rem 1rem;}
-    .check-item.ok{border-color:rgba(74,222,128,.25);}
-    .check-item.fail{border-color:rgba(248,113,113,.3);background:rgba(248,113,113,.04);}
-    .check-item.checking{opacity:.5;}
-    .check-status{font-size:.8rem;font-weight:800;flex-shrink:0;min-width:24px;text-align:center;}
-    .check-name{font-weight:800;font-size:.88rem;flex:1;}
-    .check-url{font-size:.72rem;color:var(--muted);}
-    .check-badge{font-size:.68rem;padding:.12rem .45rem;border-radius:99px;font-weight:800;flex-shrink:0;}
-    .check-badge.ok{background:var(--green-dim);color:var(--green);border:1px solid rgba(74,222,128,.25);}
-    .check-badge.fail{background:var(--red-dim);color:var(--red);border:1px solid rgba(248,113,113,.25);}
-    .check-badge.skip{background:rgba(255,255,255,.06);color:var(--muted);border:1px solid var(--border);}
-    .checker-summary{background:var(--surface2);border-radius:10px;padding:.8rem 1rem;font-size:.85rem;font-weight:700;margin-top:.8rem;display:none;}
-    .checker-summary.visible{display:block;}
-    .checker-progress{height:4px;background:rgba(255,255,255,.07);border-radius:99px;overflow:hidden;margin-top:.6rem;display:none;}
-    .checker-progress.visible{display:block;}
-    .checker-progress-fill{height:100%;background:linear-gradient(90deg,var(--indigo),var(--accent));border-radius:99px;transition:width .3s;}
-
     /* ── TOAST ── */
     #toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--surface);border:1px solid var(--green);color:var(--green);padding:.55rem 1.1rem;border-radius:10px;font-size:.83rem;font-weight:700;opacity:0;transition:opacity .3s;pointer-events:none;z-index:9999;}
     #toast.show{opacity:1;}
@@ -332,6 +313,13 @@
     .fr-knoepfe{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:.5rem;align-items:center;}
     .fr-ab{display:inline-flex;gap:.35rem;align-items:center;}
     .fr-ab input{width:auto;min-height:34px;}
+    .aw-tab{width:100%;border-collapse:collapse;font-size:.85rem;margin-top:.8rem;}
+    .aw-tab th{text-align:left;color:var(--muted);font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;padding:.35rem .4rem;border-bottom:1px solid var(--border);}
+    .aw-tab td{padding:.45rem .4rem;border-bottom:1px solid var(--border);vertical-align:middle;}
+    .aw-tab td.z{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;}
+    .aw-balken{height:8px;border-radius:99px;background:var(--surface2);min-width:80px;overflow:hidden;}
+    .aw-balken i{display:block;height:100%;border-radius:99px;}
+    .aw-wenig{opacity:.5;}
   </style>
 </head>
 <body>
@@ -377,11 +365,9 @@
       <button class="tab" data-t="visibility">🗂 Ordnen</button>
       <button class="tab" data-t="tags">🏷 Tags</button>
       <button class="tab" data-t="announcement">📢 Banner</button>
-      <button class="tab" data-t="checker">🔗 Link-Check</button>
-      <button class="tab" data-t="vokabeln">📚 Vokabeln</button>
       <button class="tab" data-t="pass">🧭 Pass</button>
       <button class="tab" data-t="dorf">🏘️ Dorf</button>
-      <button class="tab" data-t="freigaben">🔐 Freigaben</button>
+      <button class="tab" data-t="freigaben">🎯 Unterricht</button>
     </div>
 
     <!-- DASHBOARD -->
@@ -502,21 +488,6 @@
       </div>
     </div>
 
-    <!-- LINK CHECKER -->
-    <div class="tab-panel" id="panel-checker">
-      <div class="sec-header"><span class="sec-title">🔗 Broken-Link-Checker</span></div>
-      <p style="font-size:.84rem;color:var(--muted);margin-bottom:1.2rem;">Prüft ob alle App-Dateien auf GitHub erreichbar sind.</p>
-      <div style="display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;margin-bottom:1rem;">
-        <button class="btn accent" id="check-btn" onclick="runChecker()">🔍 Alle Links prüfen</button>
-        <span id="checker-info" style="font-size:.78rem;color:var(--muted);"></span>
-      </div>
-      <div class="checker-progress" id="checker-progress"><div class="checker-progress-fill" id="checker-fill" style="width:0%"></div></div>
-      <div class="checker-result" id="checker-result"></div>
-      <div class="checker-summary" id="checker-summary"></div>
-    </div>
-
-    <!-- VOKABELN -->
-
     <!-- ── PASS ── -->
     <div class="tab-panel" id="panel-pass">
       <div class="sec-header"><span class="sec-title">⚙️ Einstellungen</span></div>
@@ -556,20 +527,11 @@
       <div class="sec-header"><span class="sec-title">🔐 Freigaben in den Apps</span></div>
       <p style="font-size:.8rem;color:var(--muted);margin:-.4rem 0 .9rem;line-height:1.5;">Welche Stufen und Units sind offen? Tippe eine Stufe an. Gesperrtes sehen die Kinder mit 🔒, ohne Erklärtext. Ohne Eintrag ist alles offen. Eine Sperre nimmt nie Fortschritt weg. Eine Stufe, die in mehreren Apps vorkommt, gilt überall. Braucht den aktuellen Worker (<code>cloudflare/worker.js</code>).</p>
       <div class="form-card" id="freigaben-inhalt" style="margin-bottom:1.5rem;"></div>
+      <div class="sec-header"><span class="sec-title">📊 Gruppen-Auswertung</span></div>
+      <p style="font-size:.8rem;color:var(--muted);margin:-.4rem 0 .9rem;line-height:1.5;">Wie läuft es in einer Gruppe (Sicherungskarten)? Nur Summen je Thema – ohne Namen, ohne Einzelstände. Es melden nur iPads mit Karte. Die schwächsten Themen stehen oben.</p>
+      <div class="form-card" id="auswertung-inhalt" style="margin-bottom:1.5rem;"></div>
     </div>
 
-    <div class="tab-panel" id="panel-vokabeln">
-      <div class="sec-header"><span class="sec-title">📚 Vokabeln – vokabeln5.json</span></div>
-      <div class="dash-grid" id="vok-stats" style="margin-bottom:1.5rem;"></div>
-      <div class="filter-row-admin" style="margin-bottom:1rem;">
-        <input type="search" class="admin-search" id="vok-search" placeholder="Englisch oder Deutsch suchen …" oninput="vokSearch(this.value)" autocomplete="off"/>
-      </div>
-      <div id="vok-search-results" style="display:none;margin-bottom:1.2rem;"></div>
-      <div class="sec-header"><span class="sec-title">⭐ Sonderlisten</span></div>
-      <div id="vok-special" style="margin-bottom:1.5rem;"></div>
-      <div class="sec-header"><span class="sec-title">📖 Units &amp; Themen</span></div>
-      <div id="vok-units"></div>
-    </div>
   </div>
 </div>
 
