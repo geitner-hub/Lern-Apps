@@ -133,20 +133,6 @@
       "aod": false
     },
     {
-      "name": "Längeneinheiten umrechnen",
-      "datei": "apps/mathe/laengeneinheiten.html",
-      "fach": "Mathematik",
-      "emoji": "📏",
-      "beschreibung": "Umrechnen, rechnen, vergleichen: mm, cm, m, km",
-      "hidden": false,
-      "klassen": [
-        5,
-        6
-      ],
-      "customTags": [],
-      "aod": false
-    },
-    {
       "name": "Mathe-Trainer Klasse 5",
       "datei": "apps/mathe/mathe-trainer.html?klasse=5",
       "fach": "Mathematik",
@@ -173,24 +159,15 @@
       "aod": false
     },
     {
-      "name": "Einmaleins 1x1",
-      "datei": "apps/mathe/einmaleins_tafel.html",
+      "name": "Große Zahlen können",
+      "datei": "apps/mathe/stellenwerttafel.html",
       "fach": "Mathematik",
-      "emoji": "1️⃣",
-      "beschreibung": "Fülle die Lücken! Trainiere dein Einmaleins",
+      "emoji": "🧮",
+      "beschreibung": "",
       "hidden": false,
-      "klassen": [
-        5,
-        6
-      ],
-      "customTags": [
-        {
-          "name": "Kopfrechnen",
-          "color": 5
-        }
-      ],
-      "aod": false,
-      "dorfRunden": 1
+      "klassen": [],
+      "customTags": [],
+      "aod": false
     },
     {
       "name": "Kopfrechnen Klasse 4",
@@ -299,6 +276,99 @@
       ],
       "aod": false,
       "gruppe": "g-kopfrechnen"
+    },
+    {
+      "name": "Einmaleins 1x1",
+      "datei": "apps/mathe/einmaleins_tafel.html",
+      "fach": "Mathematik",
+      "emoji": "1️⃣",
+      "beschreibung": "Fülle die Lücken! Trainiere dein Einmaleins",
+      "hidden": false,
+      "klassen": [
+        5,
+        6
+      ],
+      "customTags": [
+        {
+          "name": "Kopfrechnen",
+          "color": 5
+        }
+      ],
+      "aod": false,
+      "dorfRunden": 1,
+      "gruppe": "g-kopfrechnen"
+    },
+    {
+      "name": "Geometrie-Training",
+      "datei": "apps/typen/uebung.html?inhalt=ma.5.geometrie",
+      "fach": "Mathematik",
+      "emoji": "📐",
+      "beschreibung": "",
+      "hidden": false,
+      "klassen": [],
+      "customTags": [],
+      "aod": false,
+      "gruppe": "g-geometrie"
+    },
+    {
+      "name": "Längeneinheiten umrechnen",
+      "datei": "apps/mathe/laengeneinheiten.html",
+      "fach": "Mathematik",
+      "emoji": "📏",
+      "beschreibung": "Umrechnen, rechnen, vergleichen: mm, cm, m, km",
+      "hidden": false,
+      "klassen": [
+        5,
+        6
+      ],
+      "customTags": [],
+      "aod": false,
+      "gruppe": "g-geometrie"
+    },
+    {
+      "name": "Der Zahlenstrahl",
+      "datei": "apps/mathe/zahlenstrahl.html",
+      "fach": "Mathematik",
+      "emoji": "📏",
+      "beschreibung": "Finde dich am Zahlenstrahl zurecht",
+      "hidden": false,
+      "klassen": [],
+      "customTags": [],
+      "aod": false,
+      "gruppe": "g-geometrie"
+    },
+    {
+      "name": "Knowing English",
+      "datei": "apps/englisch/knowing-english.html",
+      "fach": "Englisch",
+      "emoji": "🧩",
+      "beschreibung": "",
+      "hidden": false,
+      "klassen": [],
+      "customTags": [],
+      "aod": false
+    },
+    {
+      "name": "Time, Date and Numbers",
+      "datei": "apps/englisch/time-dates-numbers.html",
+      "fach": "Englisch",
+      "emoji": "🕒",
+      "beschreibung": "",
+      "hidden": false,
+      "klassen": [],
+      "customTags": [],
+      "aod": false
+    },
+    {
+      "name": "Practice \"To Be\"",
+      "datei": "apps/typen/uebung.html?inhalt=en.5.to-be",
+      "fach": "Englisch",
+      "emoji": "👋",
+      "beschreibung": "",
+      "hidden": false,
+      "klassen": [],
+      "customTags": [],
+      "aod": false
     },
     {
       "name": "Vokabeltrainer 5. Klasse",
@@ -417,72 +487,6 @@
       "klassen": [],
       "customTags": [],
       "aod": false
-    },
-    {
-      "name": "Knowing English",
-      "datei": "apps/englisch/knowing-english.html",
-      "fach": "Englisch",
-      "emoji": "🧩",
-      "beschreibung": "",
-      "hidden": false,
-      "klassen": [],
-      "customTags": [],
-      "aod": false
-    },
-    {
-      "name": "Time, Date and Numbers",
-      "datei": "apps/englisch/time-dates-numbers.html",
-      "fach": "Englisch",
-      "emoji": "🕒",
-      "beschreibung": "",
-      "hidden": false,
-      "klassen": [],
-      "customTags": [],
-      "aod": false
-    },
-    {
-      "name": "Der Zahlenstrahl",
-      "datei": "apps/mathe/zahlenstrahl.html",
-      "fach": "Mathematik",
-      "emoji": "📏",
-      "beschreibung": "Finde dich am Zahlenstrahl zurecht",
-      "hidden": false,
-      "klassen": [],
-      "customTags": [],
-      "aod": false
-    },
-    {
-      "name": "Große Zahlen können",
-      "datei": "apps/mathe/stellenwerttafel.html",
-      "fach": "Mathematik",
-      "emoji": "🧮",
-      "beschreibung": "",
-      "hidden": false,
-      "klassen": [],
-      "customTags": [],
-      "aod": false
-    },
-    {
-      "name": "Practice \"To Be\"",
-      "datei": "apps/typen/uebung.html?inhalt=en.5.to-be",
-      "fach": "Englisch",
-      "emoji": "👋",
-      "beschreibung": "",
-      "hidden": false,
-      "klassen": [],
-      "customTags": [],
-      "aod": false
-    },
-    {
-      "name": "Geometrie-Training",
-      "datei": "apps/typen/uebung.html?inhalt=ma.5.geometrie",
-      "fach": "Mathematik",
-      "emoji": "📐",
-      "beschreibung": "",
-      "hidden": false,
-      "klassen": [],
-      "customTags": [],
-      "aod": false
     }
   ],
   "customTags": [
@@ -562,6 +566,11 @@
       "id": "g-kopfrechnen",
       "fach": "Mathematik",
       "name": "Kopfrechnen"
+    },
+    {
+      "id": "g-geometrie",
+      "fach": "Mathematik",
+      "name": "Geometrie"
     },
     {
       "id": "g-vocabulary",
