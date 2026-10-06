@@ -8,6 +8,17 @@
   <!--
   ═══════════════════════════════════════════════
    LERNWELT – App-Template
+
+   ERST PRÜFEN: Reicht ein Aufgabentyp? (README → Aufgabentyp-Baukasten)
+     Zuordnen · Sortieren · Lückentext · Eingabe · Beschriften · Bild-Wort
+     → dann KEINE eigene App, sondern nur eine Inhaltsdatei
+       daten/inhalte/<fach>/<Themen-ID>.json + Katalog + Admin-Eintrag
+       apps/typen/uebung.html?inhalt=<Themen-ID>
+       (Vorlage für Claude: werkzeuge/INHALT-PROMPT.md)
+   Eine eigene App aus dieser Vorlage nur für Spiele und besondere Mechaniken
+   (Karte antippen, Zeichnen, Bewegung, Zeitdruck …). Dann Ergebnis mit Themen-ID melden:
+     LernApps.saveResult({ score, max, thema: 'fach.klasse.thema' })
+
    Kopiere diese Datei für jede neue App in den
    passenden Fach-Ordner, z. B. apps/mathe/meine-app.html
    (Dateiname muss in der ganzen Lernwelt eindeutig sein).

@@ -1,0 +1,237 @@
+{
+ "typ": "zuordnen",
+ "thema": "gpg.5.regeln-zuordnen",
+ "titel": "Wer macht die Regel?",
+ "emoji": "⚖️",
+ "klasse": 5,
+ "untertitel": "Familie, Schule, Gemeinde, Staat, Welt",
+ "anweisung": "Tippe eine Regel an, dann, wo sie gilt.",
+ "runde": 6,
+ "stufen": [
+  {
+   "id": "gpg.5.regeln-zuordnen.leicht",
+   "titel": "Familie, Schule, Staat",
+   "kurz": "Drei Ebenen",
+   "ziele": [
+    "Familie",
+    "Schule",
+    "Staat"
+   ],
+   "proAufgabe": 3,
+   "tipp": "Gesetze (z. B. Schulpflicht) macht der Staat.",
+   "paare": [
+    [
+     "🍽️ Wir essen gemeinsam zu Abend",
+     "Familie"
+    ],
+    [
+     "📵 Handyzeit ist nach 21 Uhr vorbei",
+     "Familie"
+    ],
+    [
+     "🧹 Wir helfen uns beim Aufräumen",
+     "Familie"
+    ],
+    [
+     "💬 Streit lösen wir durch Reden",
+     "Familie"
+    ],
+    [
+     "✋ Wir melden uns, bevor wir reden",
+     "Schule"
+    ],
+    [
+     "🚬 Auf dem Schulhof ist Rauchen verboten",
+     "Schule"
+    ],
+    [
+     "📚 Hausaufgaben werden täglich gemacht",
+     "Schule"
+    ],
+    [
+     "🤝 Mobbing wird nicht geduldet",
+     "Schule"
+    ],
+    [
+     "📖 Alle Kinder müssen zur Schule gehen",
+     "Staat"
+    ],
+    [
+     "⚖️ Stehlen ist verboten und wird bestraft",
+     "Staat"
+    ],
+    [
+     "🏳️ Alle Menschen sind vor dem Gesetz gleich",
+     "Staat"
+    ],
+    [
+     "🗳️ Wählen darf man ab 18 Jahren",
+     "Staat"
+    ]
+   ]
+  },
+  {
+   "id": "gpg.5.regeln-zuordnen.mittel",
+   "titel": "Mit Gemeinde",
+   "kurz": "Vier Ebenen",
+   "ziele": [
+    "Familie",
+    "Schule",
+    "Gemeinde",
+    "Staat"
+   ],
+   "proAufgabe": 4,
+   "tipp": "Die Gemeinde regelt, was im Ort gilt: Müll, Ruhezeiten, Hunde.",
+   "paare": [
+    [
+     "🍽️ Wir essen gemeinsam zu Abend",
+     "Familie"
+    ],
+    [
+     "📵 Handyzeit ist nach 21 Uhr vorbei",
+     "Familie"
+    ],
+    [
+     "🧹 Wir helfen uns beim Aufräumen",
+     "Familie"
+    ],
+    [
+     "💬 Streit lösen wir durch Reden",
+     "Familie"
+    ],
+    [
+     "✋ Wir melden uns, bevor wir reden",
+     "Schule"
+    ],
+    [
+     "🚬 Auf dem Schulhof ist Rauchen verboten",
+     "Schule"
+    ],
+    [
+     "📚 Hausaufgaben werden täglich gemacht",
+     "Schule"
+    ],
+    [
+     "🤝 Mobbing wird nicht geduldet",
+     "Schule"
+    ],
+    [
+     "♻️ Der Müll wird getrennt gesammelt",
+     "Gemeinde"
+    ],
+    [
+     "🌙 Nachts nach 22 Uhr ist Ruhezeit",
+     "Gemeinde"
+    ],
+    [
+     "🐕 Hunde müssen im Park angeleint sein",
+     "Gemeinde"
+    ],
+    [
+     "📖 Alle Kinder müssen zur Schule gehen",
+     "Staat"
+    ],
+    [
+     "⚖️ Stehlen ist verboten und wird bestraft",
+     "Staat"
+    ],
+    [
+     "🏳️ Alle Menschen sind vor dem Gesetz gleich",
+     "Staat"
+    ],
+    [
+     "🗳️ Wählen darf man ab 18 Jahren",
+     "Staat"
+    ]
+   ]
+  },
+  {
+   "id": "gpg.5.regeln-zuordnen.profi",
+   "titel": "Bis zur Welt",
+   "kurz": "Alle fünf Ebenen",
+   "ziele": [
+    "Familie",
+    "Schule",
+    "Gemeinde",
+    "Staat",
+    "Welt"
+   ],
+   "proAufgabe": 5,
+   "tipp": "Was viele Länder gemeinsam vereinbaren (UN), gilt weltweit.",
+   "paare": [
+    [
+     "🍽️ Wir essen gemeinsam zu Abend",
+     "Familie"
+    ],
+    [
+     "📵 Handyzeit ist nach 21 Uhr vorbei",
+     "Familie"
+    ],
+    [
+     "🧹 Wir helfen uns beim Aufräumen",
+     "Familie"
+    ],
+    [
+     "💬 Streit lösen wir durch Reden",
+     "Familie"
+    ],
+    [
+     "✋ Wir melden uns, bevor wir reden",
+     "Schule"
+    ],
+    [
+     "🚬 Auf dem Schulhof ist Rauchen verboten",
+     "Schule"
+    ],
+    [
+     "📚 Hausaufgaben werden täglich gemacht",
+     "Schule"
+    ],
+    [
+     "🤝 Mobbing wird nicht geduldet",
+     "Schule"
+    ],
+    [
+     "♻️ Der Müll wird getrennt gesammelt",
+     "Gemeinde"
+    ],
+    [
+     "🌙 Nachts nach 22 Uhr ist Ruhezeit",
+     "Gemeinde"
+    ],
+    [
+     "🐕 Hunde müssen im Park angeleint sein",
+     "Gemeinde"
+    ],
+    [
+     "📖 Alle Kinder müssen zur Schule gehen",
+     "Staat"
+    ],
+    [
+     "⚖️ Stehlen ist verboten und wird bestraft",
+     "Staat"
+    ],
+    [
+     "🏳️ Alle Menschen sind vor dem Gesetz gleich",
+     "Staat"
+    ],
+    [
+     "🗳️ Wählen darf man ab 18 Jahren",
+     "Staat"
+    ],
+    [
+     "☮️ Kinder dürfen nicht als Soldaten kämpfen",
+     "Welt"
+    ],
+    [
+     "🌐 Jeder Mensch hat das Recht, vor Krieg zu fliehen",
+     "Welt"
+    ],
+    [
+     "🕊️ Atomwaffen sollen weltweit abgebaut werden",
+     "Welt"
+    ]
+   ]
+  }
+ ]
+}

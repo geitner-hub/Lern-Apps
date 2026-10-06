@@ -235,6 +235,8 @@
 
 <script src="../../gemeinsam/navbar.js"></script>
 <script src="../../gemeinsam/karten-ansicht.js"></script>
+<script src="../../gemeinsam/freigabe.js"></script>
+<script src="../../gemeinsam/ueben.js"></script>   <!-- Etappe 9: Freigabe des Übungs-Rahmens (Modi = Stufen gpg.6.laender.*) -->
 <script>
 'use strict';
 
@@ -262,6 +264,9 @@ const MODI = {
                     desc: 'Alle 16 Bundesländer. Was nicht klappt, kommt am Ende noch einmal.' },
 };
 const WAIT_OK = 650, WAIT_BAD = 1800;
+// Anschluss an den Übungs-Rahmen (Etappe 9): Themen-ID je Modus → Freigabe, Ergebnis, Fehlerheft
+const THEMA = { 'europa-start': 'gpg.6.laender.europa', 'europa-profi': 'gpg.6.laender.europa', 'deutschland': 'gpg.6.laender.bundeslaender' };
+const frei = modus => !window.LernUeben || LernUeben.Freigabe.erlaubt(THEMA[modus]);
 const REDUCED = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /* ═══════════════════════════════════════════════════════
@@ -313,6 +318,7 @@ function buildStart() {
       <span class="mode-best">${best ? `Bestes Ergebnis: ${best.s} / ${best.m}` : ''}</span></div>`;
     b.querySelector('.mode-name').textContent = m.name;
     b.querySelector('.mode-desc').textContent = m.desc;
+    if (!frei(key)) { b.disabled = true; b.style.opacity = '.45'; b.querySelector('.mode-name').textContent = '🔒 ' + m.name; box.appendChild(b); return; }
     b.addEventListener('click', () => startGame(key));
     box.appendChild(b);
   });
@@ -327,6 +333,7 @@ const G = { modus: null, m: null, queue: [], cur: null, score: 0, max: 0, fehler
 function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 
 function startGame(modus) {
+  if (!frei(modus)) return showStart();
   const m = MODI[modus];
   clearTimeout(G.timer);
   Object.assign(G, { modus, m, score: 0, fehler: 0, daneben: new Set(), verpasst: [], frage: 0, locked: false });
@@ -466,9 +473,13 @@ function finish() {
     if (window.LernApps) LernApps.saveResult({
       score, max, label: `${score} / ${max} ${G.m.name}`,
       skill: G.modus === 'deutschland' ? 'bundeslaender' : 'europa-laender',
+      thema: THEMA[G.modus],
     });
   } catch (e) {}
 }
+
+// Freigaben frisch geholt → Modus-Auswahl neu zeichnen, wenn sie gerade zu sehen ist
+window.addEventListener('lernfreigabe:neu', () => { if (!$('start').hidden) buildStart(); });
 
 function showStart() {
   clearTimeout(G.timer);

@@ -27,6 +27,7 @@ Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv
 | `apps/mathe/laengeneinheiten.html` | Längeneinheiten umrechnen | `ma.5.laengen` | Lern-App | Mathematik · 5, 6 | sichtbar | ja | ja | – | – | ja | Kern → Typ Eingabe (Etappe 9) | Passt zu M5 LB 5. Mängel: kein `thema`/`inhalt` (fehlt in den Spielen), Hilfe nur auf Knopfdruck, keine anderen Größen (Masse, Zeit, Geld) |
 | `apps/mathe/mathe-trainer.html` | Mathe-Trainer Klasse 5 | – | Lern-App | Mathematik · 5 | sichtbar | – | – | – | – | ja | Kern (Übungs-Rahmen) | Etappe 4b: Stoff der Jahrgangsstufe 5/6 in Stufen (?klasse=5/6); neue Themen = neue Stufen in daten/kopfrechnen.json |
 | `apps/mathe/rechen-arena.html` | Rechen-Arena | `ma.5.rechen-arena` | Lern-App | Allgemein · 5, 6 | sichtbar | ja | ja | – | – | ja | Kern | Beliebt, vier Modi. Mängel: Startseite scrollt (iPad quer), kein `thema`/`inhalt`, Ballon-Pop hat keine Rückmeldung zum Fehler (bewusst schnell) |
+| `apps/typen/uebung.html` | – | `ma.5.laengen-eingabe` (3 Stufen), `en.5.essen-bildwort` (2 Stufen), `en.5.satzglieder-zuordnen` (2 Stufen), `en.5.satzbau` (2 Stufen), `en.5.simple-present-luecken` (3 Stufen), `gpg.5.regeln-zuordnen` (3 Stufen), `de.5.wortarten` (2 Stufen), `nut.5.pflanze` (2 Stufen) | Lern-App | – | nicht in config | – | – | – | – | – (nicht in config) |  |  |
 | `spiele/burg-verteidigung.html` | Tower Defense | – | Spiel | Allgemein · alle | sichtbar | ja | ja | – | ja | – (Spiel) |  |  |
 | `spiele/dorf.html` | Mein Dorf | – | Spiel | Allgemein · alle | sichtbar | – | – | – | – | Dorf selbst |  |  |
 | `spiele/expedition.html` | Entdecker-Expedition | – | Spiel | GPG · 6 | versteckt | über spiel-hilfen.js | ja | – | – | – (Spiel) |  |  |
@@ -46,7 +47,7 @@ Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv
 | apps/englisch/vokabeltrainer.html | 60 | freigabe.js, ueben.js, navbar.js | vokab-history-kl5, vokab-word-stats-kl5, vokab-a11y-kl5, vokab-history-kl6, vokab-word-stats-kl6, vokab-a11y-kl6, + über navbar.js |
 | apps/englisch/vokabeltrainer5.html | 51 | navbar.js | vokab-history-kl5, vokab-word-stats-kl5, vokab-a11y-kl5, + über navbar.js |
 | apps/englisch/vokabeltrainer6.html | 54 | navbar.js | vokab-history-kl6, vokab-word-stats-kl6, vokab-a11y-kl6, + über navbar.js |
-| apps/gpg/laender-finder.html | 26 | navbar.js, karten-ansicht.js | laender-finder-best, + über navbar.js |
+| apps/gpg/laender-finder.html | 27 | navbar.js, karten-ansicht.js, freigabe.js, ueben.js | laender-finder-best, + über navbar.js |
 | apps/gpg/regeln-sortierer-gpg.html | 22 | navbar.js (nachgeladen) | + über navbar.js |
 | apps/mathe/einmaleins_tafel.html | 23 | navbar.js | + über navbar.js |
 | apps/mathe/kopfrechnen-neu.html | 1 | – | – |
@@ -59,6 +60,7 @@ Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv
 | apps/mathe/laengeneinheiten.html | 25 | navbar.js | + über navbar.js |
 | apps/mathe/mathe-trainer.html | 2 | generatoren-mathe.js, freigabe.js, ueben.js, navbar.js | + über navbar.js |
 | apps/mathe/rechen-arena.html | 52 | navbar.js | rechenArena_ballonHighscore, + über navbar.js |
+| apps/typen/uebung.html | 2 | freigabe.js, ueben.js, typen.js, navbar.js | + über navbar.js |
 | spiele/burg-verteidigung.html | 85 | navbar.js, aufgaben.js, avatar3d.js | lern-burg-wahl, lern-burg-rekorde, + über navbar.js |
 | spiele/dorf.html | 88 | shared.js, config-api.js, dorf-kern.js, avatar3d.js, dorf-szene.js, navbar.js | lernwelt-dorf, lernwelt-dorf-besuch, + über navbar.js |
 | spiele/expedition.html | 33 | navbar.js, spiel-hilfen.js, karten-ansicht.js | lernwelt-expedition, + über navbar.js |

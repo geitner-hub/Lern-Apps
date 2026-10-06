@@ -1,0 +1,179 @@
+{
+ "typ": "zuordnen",
+ "thema": "de.5.wortarten",
+ "titel": "Wortarten",
+ "emoji": "🔤",
+ "klasse": 5,
+ "untertitel": "Nomen, Verb oder Adjektiv?",
+ "anweisung": "Tippe ein Wort an, dann seine Wortart.",
+ "runde": 8,
+ "stufen": [
+  {
+   "id": "de.5.wortarten.nomen-verben",
+   "titel": "Nomen und Verben",
+   "kurz": "Zwei Wortarten unterscheiden",
+   "ziele": [
+    "Nomen",
+    "Verb"
+   ],
+   "proAufgabe": 4,
+   "tipp": "Nomen kann man mit „der, die, das“ verbinden. Verben sagen, was jemand tut.",
+   "paare": [
+    [
+     "Hund",
+     "Nomen"
+    ],
+    [
+     "Schule",
+     "Nomen"
+    ],
+    [
+     "Fahrrad",
+     "Nomen"
+    ],
+    [
+     "Freundin",
+     "Nomen"
+    ],
+    [
+     "Pause",
+     "Nomen"
+    ],
+    [
+     "Baum",
+     "Nomen"
+    ],
+    [
+     "Heft",
+     "Nomen"
+    ],
+    [
+     "Wasser",
+     "Nomen"
+    ],
+    [
+     "laufen",
+     "Verb"
+    ],
+    [
+     "schreiben",
+     "Verb"
+    ],
+    [
+     "essen",
+     "Verb"
+    ],
+    [
+     "spielen",
+     "Verb"
+    ],
+    [
+     "lachen",
+     "Verb"
+    ],
+    [
+     "lesen",
+     "Verb"
+    ],
+    [
+     "schwimmen",
+     "Verb"
+    ],
+    [
+     "denken",
+     "Verb"
+    ]
+   ]
+  },
+  {
+   "id": "de.5.wortarten.drei",
+   "titel": "Nomen, Verben, Adjektive",
+   "kurz": "Drei Wortarten",
+   "ziele": [
+    "Nomen",
+    "Verb",
+    "Adjektiv"
+   ],
+   "proAufgabe": 5,
+   "tipp": "Adjektive sagen, wie etwas ist: groß, leise, rot …",
+   "paare": [
+    [
+     "Katze",
+     "Nomen"
+    ],
+    [
+     "Tisch",
+     "Nomen"
+    ],
+    [
+     "Lehrer",
+     "Nomen"
+    ],
+    [
+     "Sonne",
+     "Nomen"
+    ],
+    [
+     "Garten",
+     "Nomen"
+    ],
+    [
+     "Ball",
+     "Nomen"
+    ],
+    [
+     "rennen",
+     "Verb"
+    ],
+    [
+     "singen",
+     "Verb"
+    ],
+    [
+     "malen",
+     "Verb"
+    ],
+    [
+     "fragen",
+     "Verb"
+    ],
+    [
+     "bauen",
+     "Verb"
+    ],
+    [
+     "helfen",
+     "Verb"
+    ],
+    [
+     "groß",
+     "Adjektiv"
+    ],
+    [
+     "leise",
+     "Adjektiv"
+    ],
+    [
+     "schnell",
+     "Adjektiv"
+    ],
+    [
+     "rot",
+     "Adjektiv"
+    ],
+    [
+     "lustig",
+     "Adjektiv"
+    ],
+    [
+     "kalt",
+     "Adjektiv"
+    ],
+    [
+     "müde",
+     "Adjektiv"
+    ]
+   ]
+  }
+ ]
+}

@@ -419,6 +419,32 @@
        "dauer": 10,
        "einsatz": "Anwendung nach dem Umrechnen; Partnerarbeit mit Lösungsweg im Heft",
        "archiv": true
+      },
+      {
+       "id": "ma.5.laengen-eingabe",
+       "titel": "Längen umrechnen",
+       "klasse": 5,
+       "quelle": {
+        "app": "apps/typen/uebung.html",
+        "parameter": "inhalt=ma.5.laengen-eingabe"
+       },
+       "lehrplan": "M5 LB 5 Größen im Alltag: Längen in benachbarte und weitere Einheiten umrechnen",
+       "dauer": 6,
+       "einsatz": "Kurze Übungsphase oder Aufwärmen; ergänzt die App Längeneinheiten",
+       "stufen": [
+        {
+         "id": "ma.5.laengen-eingabe.nachbarn",
+         "titel": "Benachbarte Einheiten"
+        },
+        {
+         "id": "ma.5.laengen-eingabe.groesser",
+         "titel": "Größere Sprünge"
+        },
+        {
+         "id": "ma.5.laengen-eingabe.gemischt",
+         "titel": "Gemischte Angaben"
+        }
+       ]
       }
      ]
     },
@@ -613,6 +639,28 @@
          "inhalt": "vok6:unit5"
         }
        ]
+      },
+      {
+       "id": "en.5.essen-bildwort",
+       "titel": "Food – Bild und Wort",
+       "klasse": 5,
+       "quelle": {
+        "app": "apps/typen/uebung.html",
+        "parameter": "inhalt=en.5.essen-bildwort"
+       },
+       "lehrplan": "E5 Verfügen über sprachliche Mittel – Wortschatz: food and drinks; Hörverstehen einzelner Wörter",
+       "dauer": 5,
+       "einsatz": "Wortschatz Essen mit Bild und Ton; Aussprache über die Sprachausgabe des iPads",
+       "stufen": [
+        {
+         "id": "en.5.essen-bildwort.bild-wort",
+         "titel": "Bild → Wort"
+        },
+        {
+         "id": "en.5.essen-bildwort.hoeren",
+         "titel": "Hören → Bild"
+        }
+       ]
       }
      ]
     },
@@ -661,6 +709,76 @@
        "lehrplan": "E5 Grammatik/Satzbau: Wortstellung im Aussagesatz (subject – verb – object, Ort vor Zeit)",
        "dauer": 8,
        "einsatz": "Sicherung der Satzstellung; Fortgeschrittene mit Zeit- und Ortsangaben"
+      },
+      {
+       "id": "en.5.satzglieder-zuordnen",
+       "titel": "Satzglieder zuordnen",
+       "klasse": 5,
+       "quelle": {
+        "app": "apps/typen/uebung.html",
+        "parameter": "inhalt=en.5.satzglieder-zuordnen"
+       },
+       "lehrplan": "E5 Verfügen über sprachliche Mittel – Grammatik: Satzbau (Subject – Verb – Object, place before time)",
+       "dauer": 6,
+       "einsatz": "Nach der Einführung des Satzbaus; ergänzt „Satzglieder ordnen“",
+       "stufen": [
+        {
+         "id": "en.5.satzglieder-zuordnen.svo",
+         "titel": "S – V – O"
+        },
+        {
+         "id": "en.5.satzglieder-zuordnen.zeit-ort",
+         "titel": "Mit Zeit und Ort"
+        }
+       ]
+      },
+      {
+       "id": "en.5.satzbau",
+       "titel": "Sätze bauen",
+       "klasse": 5,
+       "quelle": {
+        "app": "apps/typen/uebung.html",
+        "parameter": "inhalt=en.5.satzbau"
+       },
+       "lehrplan": "E5 Verfügen über sprachliche Mittel – Grammatik: Wortstellung im Aussagesatz (S – V – O, Ort vor Zeit)",
+       "dauer": 6,
+       "einsatz": "Satzbau üben, auch als Hausaufgabe; zuerst S – V – O, dann mit Zeit und Ort",
+       "stufen": [
+        {
+         "id": "en.5.satzbau.svo",
+         "titel": "Subject – Verb – Object"
+        },
+        {
+         "id": "en.5.satzbau.zeit-ort",
+         "titel": "Mit Zeit und Ort"
+        }
+       ]
+      },
+      {
+       "id": "en.5.simple-present-luecken",
+       "titel": "Simple Present – Lücken",
+       "klasse": 5,
+       "quelle": {
+        "app": "apps/typen/uebung.html",
+        "parameter": "inhalt=en.5.simple-present-luecken"
+       },
+       "lehrplan": "E5 Verfügen über sprachliche Mittel – Grammatik: simple present (he/she/it-s, Aussagesätze)",
+       "dauer": 6,
+       "einsatz": "Festigung nach Einführung des simple present; Stufe „tippen“ für Schnellere",
+       "stufen": [
+        {
+         "id": "en.5.simple-present-luecken.waehlen",
+         "titel": "Verbform wählen"
+        },
+        {
+         "id": "en.5.simple-present-luecken.subjekt",
+         "titel": "Passendes Subjekt"
+        },
+        {
+         "id": "en.5.simple-present-luecken.tippen",
+         "titel": "Verbform tippen"
+        }
+       ]
       }
      ]
     },
@@ -771,6 +889,32 @@
        "lehrplan": "GPG 5 LB 3 Politik und Gesellschaft: Regeln für das Zusammenleben in Familie, Schule und Gesellschaft",
        "dauer": 10,
        "einsatz": "Sicherung nach der Erarbeitung von Regeln und Ebenen (Familie, Schule, Gemeinde, Staat)"
+      },
+      {
+       "id": "gpg.5.regeln-zuordnen",
+       "titel": "Wer macht die Regel?",
+       "klasse": 5,
+       "quelle": {
+        "app": "apps/typen/uebung.html",
+        "parameter": "inhalt=gpg.5.regeln-zuordnen"
+       },
+       "lehrplan": "GPG5 Lernbereich Zusammenleben: Regeln in Familie, Schule, Gemeinde, Staat und Welt unterscheiden",
+       "dauer": 6,
+       "einsatz": "Nach dem Gespräch über Regeln; Ebenen schrittweise erweitern (leicht → profi)",
+       "stufen": [
+        {
+         "id": "gpg.5.regeln-zuordnen.leicht",
+         "titel": "Familie, Schule, Staat"
+        },
+        {
+         "id": "gpg.5.regeln-zuordnen.mittel",
+         "titel": "Mit Gemeinde"
+        },
+        {
+         "id": "gpg.5.regeln-zuordnen.profi",
+         "titel": "Bis zur Welt"
+        }
+       ]
       }
      ]
     }
@@ -779,12 +923,70 @@
   {
    "id": "de",
    "name": "Deutsch",
-   "bereiche": []
+   "bereiche": [
+    {
+     "id": "de.grammatik",
+     "titel": "Grammatik",
+     "themen": [
+      {
+       "id": "de.5.wortarten",
+       "titel": "Wortarten",
+       "klasse": 5,
+       "quelle": {
+        "app": "apps/typen/uebung.html",
+        "parameter": "inhalt=de.5.wortarten"
+       },
+       "lehrplan": "D5 Sprachgebrauch und Sprache untersuchen: Wortarten (Nomen, Verb, Adjektiv) unterscheiden",
+       "dauer": 5,
+       "einsatz": "Einstieg oder Wiederholung Wortarten; Partnerarbeit; Beispielinhalt für den Aufgabentyp „Zuordnen“",
+       "stufen": [
+        {
+         "id": "de.5.wortarten.nomen-verben",
+         "titel": "Nomen und Verben"
+        },
+        {
+         "id": "de.5.wortarten.drei",
+         "titel": "Nomen, Verben, Adjektive"
+        }
+       ]
+      }
+     ]
+    }
+   ]
   },
   {
    "id": "nut",
    "name": "Natur und Technik",
-   "bereiche": []
+   "bereiche": [
+    {
+     "id": "nut.pflanzen",
+     "titel": "Pflanzen",
+     "themen": [
+      {
+       "id": "nut.5.pflanze",
+       "titel": "Aufbau einer Blütenpflanze",
+       "klasse": 5,
+       "quelle": {
+        "app": "apps/typen/uebung.html",
+        "parameter": "inhalt=nut.5.pflanze"
+       },
+       "lehrplan": "NT5 Lebewesen in ihrer Umwelt: Aufbau einer Blütenpflanze (Wurzel, Sprossachse, Blatt, Blüte) und Bau der Blüte",
+       "dauer": 5,
+       "einsatz": "Sicherung nach dem Betrachten echter Pflanzen; Wiederholung vor der Probe",
+       "stufen": [
+        {
+         "id": "nut.5.pflanze.teile",
+         "titel": "Die ganze Pflanze"
+        },
+        {
+         "id": "nut.5.pflanze.bluete",
+         "titel": "Die Blüte von innen"
+        }
+       ]
+      }
+     ]
+    }
+   ]
   },
   {
    "id": "daz",
