@@ -1,0 +1,501 @@
+{
+ "typ": "gemischt",
+ "thema": "en.5.fragen",
+ "titel": "Fragewörter",
+ "emoji": "🇬🇧",
+ "klasse": 5,
+ "sprache": "en-GB",
+ "runde": 8,
+ "untertitel": "What, where, when, who …",
+ "hilfe": [
+  {
+   "titel": "Fragewörter",
+   "tabelle": [
+    [
+     "Fragewort",
+     "fragt nach",
+     "Beispiel"
+    ],
+    [
+     "What",
+     "Ding",
+     "What is your name?"
+    ],
+    [
+     "Where",
+     "Ort",
+     "Where do you live?"
+    ],
+    [
+     "When",
+     "Zeit",
+     "When is your birthday?"
+    ],
+    [
+     "Who",
+     "Person",
+     "Who is that?"
+    ],
+    [
+     "Why",
+     "Grund",
+     "Why are you sad?"
+    ],
+    [
+     "How",
+     "Art und Weise",
+     "How are you?"
+    ],
+    [
+     "How old",
+     "Alter",
+     "How old are you?"
+    ],
+    [
+     "How many",
+     "Anzahl",
+     "How many brothers have you got?"
+    ],
+    [
+     "Which",
+     "Auswahl",
+     "Which colour do you like?"
+    ],
+    [
+     "Whose",
+     "Besitzer",
+     "Whose bag is this?"
+    ]
+   ]
+  }
+ ],
+ "stufen": [
+  {
+   "id": "en.5.fragen.fragewort",
+   "titel": "Welches Fragewort?",
+   "kurz": "Achte auf die Antwort",
+   "typ": "lueckentext",
+   "anweisung": "Welches Fragewort passt?",
+   "aufgaben": [
+    {
+     "text": "___ do you live? – In Munich.",
+     "antwort": "Where",
+     "optionen": [
+      "Where",
+      "Who",
+      "How many"
+     ],
+     "tipp": "Achte auf die Antwort: Ort → Where, Zeit → When, Person → Who, Grund → Why …"
+    },
+    {
+     "text": "___ is your name? – Anna.",
+     "antwort": "What",
+     "optionen": [
+      "What",
+      "How old",
+      "Where"
+     ],
+     "tipp": "Achte auf die Antwort: Ort → Where, Zeit → When, Person → Who, Grund → Why …"
+    },
+    {
+     "text": "___ is your birthday? – In May.",
+     "antwort": "When",
+     "optionen": [
+      "When",
+      "Whose",
+      "Who"
+     ],
+     "tipp": "Achte auf die Antwort: Ort → Where, Zeit → When, Person → Who, Grund → Why …"
+    },
+    {
+     "text": "___ is that boy? – My cousin.",
+     "antwort": "Who",
+     "optionen": [
+      "Who",
+      "How old",
+      "Why"
+     ],
+     "tipp": "Achte auf die Antwort: Ort → Where, Zeit → When, Person → Who, Grund → Why …"
+    },
+    {
+     "text": "___ are you sad? – Because I lost my cat.",
+     "antwort": "Why",
+     "optionen": [
+      "Why",
+      "Which",
+      "Whose"
+     ],
+     "tipp": "Achte auf die Antwort: Ort → Where, Zeit → When, Person → Who, Grund → Why …"
+    },
+    {
+     "text": "___ are you? – I'm fine, thanks.",
+     "antwort": "How",
+     "optionen": [
+      "How",
+      "Whose",
+      "Which"
+     ],
+     "tipp": "Achte auf die Antwort: Ort → Where, Zeit → When, Person → Who, Grund → Why …"
+    },
+    {
+     "text": "___ are you? – I'm eleven.",
+     "antwort": "How old",
+     "optionen": [
+      "How old",
+      "Whose",
+      "How"
+     ],
+     "tipp": "Achte auf die Antwort: Ort → Where, Zeit → When, Person → Who, Grund → Why …"
+    },
+    {
+     "text": "___ sisters have you got? – Two.",
+     "antwort": "How many",
+     "optionen": [
+      "How many",
+      "Where",
+      "Which"
+     ],
+     "tipp": "Achte auf die Antwort: Ort → Where, Zeit → When, Person → Who, Grund → Why …"
+    },
+    {
+     "text": "___ colour do you like? – Blue.",
+     "antwort": "Which",
+     "optionen": [
+      "Which",
+      "How",
+      "Where"
+     ],
+     "tipp": "Achte auf die Antwort: Ort → Where, Zeit → When, Person → Who, Grund → Why …"
+    },
+    {
+     "text": "___ bag is this? – It's Tom's.",
+     "antwort": "Whose",
+     "optionen": [
+      "Whose",
+      "Why",
+      "How many"
+     ],
+     "tipp": "Achte auf die Antwort: Ort → Where, Zeit → When, Person → Who, Grund → Why …"
+    },
+    {
+     "text": "___ is the cinema? – Next to the station.",
+     "antwort": "Where",
+     "optionen": [
+      "Where",
+      "Who",
+      "How many"
+     ],
+     "tipp": "Achte auf die Antwort: Ort → Where, Zeit → When, Person → Who, Grund → Why …"
+    },
+    {
+     "text": "___ time is it? – It's three o'clock.",
+     "antwort": "What",
+     "optionen": [
+      "What",
+      "How old",
+      "Where"
+     ],
+     "tipp": "Achte auf die Antwort: Ort → Where, Zeit → When, Person → Who, Grund → Why …"
+    },
+    {
+     "text": "___ do you go to bed? – At nine.",
+     "antwort": "When",
+     "optionen": [
+      "When",
+      "Whose",
+      "Who"
+     ],
+     "tipp": "Achte auf die Antwort: Ort → Where, Zeit → When, Person → Who, Grund → Why …"
+    },
+    {
+     "text": "___ is your teacher? – Mr Brown.",
+     "antwort": "Who",
+     "optionen": [
+      "Who",
+      "How old",
+      "Why"
+     ],
+     "tipp": "Achte auf die Antwort: Ort → Where, Zeit → When, Person → Who, Grund → Why …"
+    },
+    {
+     "text": "___ do you get to school? – By bus.",
+     "antwort": "How",
+     "optionen": [
+      "How",
+      "Whose",
+      "Which"
+     ],
+     "tipp": "Achte auf die Antwort: Ort → Where, Zeit → When, Person → Who, Grund → Why …"
+    },
+    {
+     "text": "___ pupils are in your class? – Twenty-six.",
+     "antwort": "How many",
+     "optionen": [
+      "How many",
+      "Where",
+      "Which"
+     ],
+     "tipp": "Achte auf die Antwort: Ort → Where, Zeit → When, Person → Who, Grund → Why …"
+    },
+    {
+     "text": "___ is your sister? – She's fourteen.",
+     "antwort": "How old",
+     "optionen": [
+      "How old",
+      "Whose",
+      "How"
+     ],
+     "tipp": "Achte auf die Antwort: Ort → Where, Zeit → When, Person → Who, Grund → Why …"
+    },
+    {
+     "text": "___ are you late? – I missed the bus.",
+     "antwort": "Why",
+     "optionen": [
+      "Why",
+      "Which",
+      "Whose"
+     ],
+     "tipp": "Achte auf die Antwort: Ort → Where, Zeit → When, Person → Who, Grund → Why …"
+    },
+    {
+     "text": "___ pencil is red? – Mine.",
+     "antwort": "Whose",
+     "optionen": [
+      "Whose",
+      "Why",
+      "How many"
+     ],
+     "tipp": "Achte auf die Antwort: Ort → Where, Zeit → When, Person → Who, Grund → Why …"
+    },
+    {
+     "text": "___ is your favourite food? – Pizza.",
+     "antwort": "What",
+     "optionen": [
+      "What",
+      "How old",
+      "Where"
+     ],
+     "tipp": "Achte auf die Antwort: Ort → Where, Zeit → When, Person → Who, Grund → Why …"
+    },
+    {
+     "text": "___ T-shirt do you want, the blue or the red one? – The red one.",
+     "antwort": "Which",
+     "optionen": [
+      "Which",
+      "How",
+      "Where"
+     ],
+     "tipp": "Achte auf die Antwort: Ort → Where, Zeit → When, Person → Who, Grund → Why …"
+    },
+    {
+     "text": "___ are my shoes? – Under your bed.",
+     "antwort": "Where",
+     "optionen": [
+      "Where",
+      "Who",
+      "How many"
+     ],
+     "tipp": "Achte auf die Antwort: Ort → Where, Zeit → When, Person → Who, Grund → Why …"
+    },
+    {
+     "text": "___ does the film start? – At six.",
+     "antwort": "When",
+     "optionen": [
+      "When",
+      "Whose",
+      "Who"
+     ],
+     "tipp": "Achte auf die Antwort: Ort → Where, Zeit → When, Person → Who, Grund → Why …"
+    },
+    {
+     "text": "___ can help me? – I can!",
+     "antwort": "Who",
+     "optionen": [
+      "Who",
+      "How old",
+      "Why"
+     ],
+     "tipp": "Achte auf die Antwort: Ort → Where, Zeit → When, Person → Who, Grund → Why …"
+    },
+    {
+     "text": "___ is your favourite colour? – Green.",
+     "antwort": "What",
+     "optionen": [
+      "What",
+      "How old",
+      "Where"
+     ],
+     "tipp": "Achte auf die Antwort: Ort → Where, Zeit → When, Person → Who, Grund → Why …"
+    },
+    {
+     "text": "___ is your mum? – She's forty.",
+     "antwort": "How old",
+     "optionen": [
+      "How old",
+      "Whose",
+      "How"
+     ],
+     "tipp": "Achte auf die Antwort: Ort → Where, Zeit → When, Person → Who, Grund → Why …"
+    },
+    {
+     "text": "___ do you feel? – Happy!",
+     "antwort": "How",
+     "optionen": [
+      "How",
+      "Whose",
+      "Which"
+     ],
+     "tipp": "Achte auf die Antwort: Ort → Where, Zeit → When, Person → Who, Grund → Why …"
+    },
+    {
+     "text": "___ is my ruler? – On your desk.",
+     "antwort": "Where",
+     "optionen": [
+      "Where",
+      "Who",
+      "How many"
+     ],
+     "tipp": "Achte auf die Antwort: Ort → Where, Zeit → When, Person → Who, Grund → Why …"
+    },
+    {
+     "text": "___ shoes are these? – They're mine.",
+     "antwort": "Whose",
+     "optionen": [
+      "Whose",
+      "Why",
+      "How many"
+     ],
+     "tipp": "Achte auf die Antwort: Ort → Where, Zeit → When, Person → Who, Grund → Why …"
+    },
+    {
+     "text": "___ brothers have you got? – One.",
+     "antwort": "How many",
+     "optionen": [
+      "How many",
+      "Where",
+      "Which"
+     ],
+     "tipp": "Achte auf die Antwort: Ort → Where, Zeit → When, Person → Who, Grund → Why …"
+    }
+   ]
+  },
+  {
+   "id": "en.5.fragen.satzbau",
+   "titel": "Fragen bauen",
+   "kurz": "Where do you …?",
+   "typ": "sortieren",
+   "anweisung": "Bau die Frage.",
+   "aufgaben": [
+    {
+     "teile": [
+      "Where",
+      "do",
+      "you",
+      "live"
+     ],
+     "loesung": "Where do you live?",
+     "tipp": "Fragewort – Hilfsverb – Subjekt – Verb …?"
+    },
+    {
+     "teile": [
+      "What",
+      "is",
+      "your",
+      "name"
+     ],
+     "loesung": "What is your name?",
+     "tipp": "Fragewort – Hilfsverb – Subjekt – Verb …?"
+    },
+    {
+     "teile": [
+      "How old",
+      "is",
+      "your",
+      "brother"
+     ],
+     "loesung": "How old is your brother?",
+     "tipp": "Fragewort – Hilfsverb – Subjekt – Verb …?"
+    },
+    {
+     "teile": [
+      "When",
+      "does",
+      "school",
+      "start"
+     ],
+     "loesung": "When does school start?",
+     "tipp": "Fragewort – Hilfsverb – Subjekt – Verb …?"
+    },
+    {
+     "teile": [
+      "Who",
+      "is",
+      "your",
+      "best friend"
+     ],
+     "loesung": "Who is your best friend?",
+     "tipp": "Fragewort – Hilfsverb – Subjekt – Verb …?"
+    },
+    {
+     "teile": [
+      "Why",
+      "are",
+      "you",
+      "laughing"
+     ],
+     "loesung": "Why are you laughing?",
+     "tipp": "Fragewort – Hilfsverb – Subjekt – Verb …?"
+    },
+    {
+     "teile": [
+      "How many",
+      "pets",
+      "have",
+      "you",
+      "got"
+     ],
+     "loesung": "How many pets have you got?",
+     "tipp": "Fragewort – Hilfsverb – Subjekt – Verb …?"
+    },
+    {
+     "teile": [
+      "What",
+      "do",
+      "you",
+      "do",
+      "after school"
+     ],
+     "loesung": "What do you do after school?",
+     "tipp": "Fragewort – Hilfsverb – Subjekt – Verb …?"
+    },
+    {
+     "teile": [
+      "Where",
+      "is",
+      "the",
+      "station"
+     ],
+     "loesung": "Where is the station?",
+     "tipp": "Fragewort – Hilfsverb – Subjekt – Verb …?"
+    },
+    {
+     "teile": [
+      "Whose",
+      "jacket",
+      "is",
+      "this"
+     ],
+     "loesung": "Whose jacket is this?",
+     "tipp": "Fragewort – Hilfsverb – Subjekt – Verb …?"
+    }
+   ]
+  },
+  {
+   "id": "en.5.fragen.mix",
+   "titel": "Mix",
+   "kurz": "Alles durcheinander",
+   "mix": true,
+   "runde": 10
+  }
+ ]
+}

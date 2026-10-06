@@ -1,0 +1,500 @@
+{
+ "typ": "gemischt",
+ "thema": "en.6.steigerung",
+ "titel": "Steigerung der Adjektive",
+ "emoji": "🇬🇧",
+ "klasse": 6,
+ "sprache": "en-GB",
+ "runde": 8,
+ "untertitel": "bigger, the best, more interesting",
+ "hilfe": [
+  {
+   "titel": "Steigerung",
+   "tabelle": [
+    [
+     "Regel",
+     "Grundform",
+     "Komparativ",
+     "Superlativ"
+    ],
+    [
+     "kurz: -er / -est",
+     "tall",
+     "taller",
+     "the tallest"
+    ],
+    [
+     "-e: -r / -st",
+     "nice",
+     "nicer",
+     "the nicest"
+    ],
+    [
+     "verdoppeln",
+     "big",
+     "bigger",
+     "the biggest"
+    ],
+    [
+     "-y → -ier",
+     "happy",
+     "happier",
+     "the happiest"
+    ],
+    [
+     "lang: more / most",
+     "beautiful",
+     "more beautiful",
+     "the most beautiful"
+    ],
+    [
+     "Ausnahme",
+     "good",
+     "better",
+     "the best"
+    ],
+    [
+     "Ausnahme",
+     "bad",
+     "worse",
+     "the worst"
+    ]
+   ]
+  },
+  {
+   "titel": "Vergleiche",
+   "text": "… -er than / more … than: größer als. as … as: genauso … wie.",
+   "beispiele": [
+    [
+     "An elephant is bigger than a mouse.",
+     "Ein Elefant ist größer als eine Maus."
+    ],
+    [
+     "Tom is as tall as Ben.",
+     "Tom ist genauso groß wie Ben."
+    ]
+   ]
+  }
+ ],
+ "stufen": [
+  {
+   "id": "en.6.steigerung.formen",
+   "titel": "Formen bilden",
+   "kurz": "taller, the tallest",
+   "typ": "eingabe",
+   "anweisung": "Schreibe die gesteigerte Form.",
+   "aufgaben": [
+    {
+     "frage": "tall → Komparativ?",
+     "antwort": [
+      "taller"
+     ],
+     "erklaerung": "tall – taller – the tallest",
+     "tipp": "kurz: -er/-est · lang: more/most · Ausnahmen: good – better – best, bad – worse – worst"
+    },
+    {
+     "frage": "small → Komparativ?",
+     "antwort": [
+      "smaller"
+     ],
+     "erklaerung": "small – smaller – the smallest",
+     "tipp": "kurz: -er/-est · lang: more/most · Ausnahmen: good – better – best, bad – worse – worst"
+    },
+    {
+     "frage": "old → Komparativ?",
+     "antwort": [
+      "older"
+     ],
+     "erklaerung": "old – older – the oldest",
+     "tipp": "kurz: -er/-est · lang: more/most · Ausnahmen: good – better – best, bad – worse – worst"
+    },
+    {
+     "frage": "young → Komparativ?",
+     "antwort": [
+      "younger"
+     ],
+     "erklaerung": "young – younger – the youngest",
+     "tipp": "kurz: -er/-est · lang: more/most · Ausnahmen: good – better – best, bad – worse – worst"
+    },
+    {
+     "frage": "fast → Komparativ?",
+     "antwort": [
+      "faster"
+     ],
+     "erklaerung": "fast – faster – the fastest",
+     "tipp": "kurz: -er/-est · lang: more/most · Ausnahmen: good – better – best, bad – worse – worst"
+    },
+    {
+     "frage": "big → Komparativ?",
+     "antwort": [
+      "bigger"
+     ],
+     "erklaerung": "big – bigger – the biggest",
+     "tipp": "kurz: -er/-est · lang: more/most · Ausnahmen: good – better – best, bad – worse – worst"
+    },
+    {
+     "frage": "hot → Komparativ?",
+     "antwort": [
+      "hotter"
+     ],
+     "erklaerung": "hot – hotter – the hottest",
+     "tipp": "kurz: -er/-est · lang: more/most · Ausnahmen: good – better – best, bad – worse – worst"
+    },
+    {
+     "frage": "happy → Komparativ?",
+     "antwort": [
+      "happier"
+     ],
+     "erklaerung": "happy – happier – the happiest",
+     "tipp": "kurz: -er/-est · lang: more/most · Ausnahmen: good – better – best, bad – worse – worst"
+    },
+    {
+     "frage": "easy → Komparativ?",
+     "antwort": [
+      "easier"
+     ],
+     "erklaerung": "easy – easier – the easiest",
+     "tipp": "kurz: -er/-est · lang: more/most · Ausnahmen: good – better – best, bad – worse – worst"
+    },
+    {
+     "frage": "funny → Komparativ?",
+     "antwort": [
+      "funnier"
+     ],
+     "erklaerung": "funny – funnier – the funniest",
+     "tipp": "kurz: -er/-est · lang: more/most · Ausnahmen: good – better – best, bad – worse – worst"
+    },
+    {
+     "frage": "nice → Komparativ?",
+     "antwort": [
+      "nicer"
+     ],
+     "erklaerung": "nice – nicer – the nicest",
+     "tipp": "kurz: -er/-est · lang: more/most · Ausnahmen: good – better – best, bad – worse – worst"
+    },
+    {
+     "frage": "large → Komparativ?",
+     "antwort": [
+      "larger"
+     ],
+     "erklaerung": "large – larger – the largest",
+     "tipp": "kurz: -er/-est · lang: more/most · Ausnahmen: good – better – best, bad – worse – worst"
+    },
+    {
+     "frage": "good → Komparativ?",
+     "antwort": [
+      "better"
+     ],
+     "erklaerung": "good – better – the best",
+     "tipp": "kurz: -er/-est · lang: more/most · Ausnahmen: good – better – best, bad – worse – worst"
+    },
+    {
+     "frage": "bad → Komparativ?",
+     "antwort": [
+      "worse"
+     ],
+     "erklaerung": "bad – worse – the worst",
+     "tipp": "kurz: -er/-est · lang: more/most · Ausnahmen: good – better – best, bad – worse – worst"
+    },
+    {
+     "frage": "beautiful → Komparativ?",
+     "antwort": [
+      "more beautiful"
+     ],
+     "erklaerung": "beautiful – more beautiful – the most beautiful",
+     "tipp": "kurz: -er/-est · lang: more/most · Ausnahmen: good – better – best, bad – worse – worst"
+    },
+    {
+     "frage": "interesting → Komparativ?",
+     "antwort": [
+      "more interesting"
+     ],
+     "erklaerung": "interesting – more interesting – the most interesting",
+     "tipp": "kurz: -er/-est · lang: more/most · Ausnahmen: good – better – best, bad – worse – worst"
+    },
+    {
+     "frage": "expensive → Komparativ?",
+     "antwort": [
+      "more expensive"
+     ],
+     "erklaerung": "expensive – more expensive – the most expensive",
+     "tipp": "kurz: -er/-est · lang: more/most · Ausnahmen: good – better – best, bad – worse – worst"
+    },
+    {
+     "frage": "dangerous → Komparativ?",
+     "antwort": [
+      "more dangerous"
+     ],
+     "erklaerung": "dangerous – more dangerous – the most dangerous",
+     "tipp": "kurz: -er/-est · lang: more/most · Ausnahmen: good – better – best, bad – worse – worst"
+    },
+    {
+     "frage": "long → Komparativ?",
+     "antwort": [
+      "longer"
+     ],
+     "erklaerung": "long – longer – the longest",
+     "tipp": "kurz: -er/-est · lang: more/most · Ausnahmen: good – better – best, bad – worse – worst"
+    },
+    {
+     "frage": "cheap → Komparativ?",
+     "antwort": [
+      "cheaper"
+     ],
+     "erklaerung": "cheap – cheaper – the cheapest",
+     "tipp": "kurz: -er/-est · lang: more/most · Ausnahmen: good – better – best, bad – worse – worst"
+    },
+    {
+     "frage": "tall → Superlativ?",
+     "antwort": [
+      "the tallest",
+      "tallest"
+     ],
+     "erklaerung": "tall – taller – the tallest",
+     "tipp": "kurz: -er/-est · lang: more/most · Ausnahmen: good – better – best, bad – worse – worst"
+    },
+    {
+     "frage": "small → Superlativ?",
+     "antwort": [
+      "the smallest",
+      "smallest"
+     ],
+     "erklaerung": "small – smaller – the smallest",
+     "tipp": "kurz: -er/-est · lang: more/most · Ausnahmen: good – better – best, bad – worse – worst"
+    },
+    {
+     "frage": "old → Superlativ?",
+     "antwort": [
+      "the oldest",
+      "oldest"
+     ],
+     "erklaerung": "old – older – the oldest",
+     "tipp": "kurz: -er/-est · lang: more/most · Ausnahmen: good – better – best, bad – worse – worst"
+    },
+    {
+     "frage": "young → Superlativ?",
+     "antwort": [
+      "the youngest",
+      "youngest"
+     ],
+     "erklaerung": "young – younger – the youngest",
+     "tipp": "kurz: -er/-est · lang: more/most · Ausnahmen: good – better – best, bad – worse – worst"
+    },
+    {
+     "frage": "fast → Superlativ?",
+     "antwort": [
+      "the fastest",
+      "fastest"
+     ],
+     "erklaerung": "fast – faster – the fastest",
+     "tipp": "kurz: -er/-est · lang: more/most · Ausnahmen: good – better – best, bad – worse – worst"
+    },
+    {
+     "frage": "big → Superlativ?",
+     "antwort": [
+      "the biggest",
+      "biggest"
+     ],
+     "erklaerung": "big – bigger – the biggest",
+     "tipp": "kurz: -er/-est · lang: more/most · Ausnahmen: good – better – best, bad – worse – worst"
+    },
+    {
+     "frage": "hot → Superlativ?",
+     "antwort": [
+      "the hottest",
+      "hottest"
+     ],
+     "erklaerung": "hot – hotter – the hottest",
+     "tipp": "kurz: -er/-est · lang: more/most · Ausnahmen: good – better – best, bad – worse – worst"
+    },
+    {
+     "frage": "happy → Superlativ?",
+     "antwort": [
+      "the happiest",
+      "happiest"
+     ],
+     "erklaerung": "happy – happier – the happiest",
+     "tipp": "kurz: -er/-est · lang: more/most · Ausnahmen: good – better – best, bad – worse – worst"
+    },
+    {
+     "frage": "easy → Superlativ?",
+     "antwort": [
+      "the easiest",
+      "easiest"
+     ],
+     "erklaerung": "easy – easier – the easiest",
+     "tipp": "kurz: -er/-est · lang: more/most · Ausnahmen: good – better – best, bad – worse – worst"
+    },
+    {
+     "frage": "funny → Superlativ?",
+     "antwort": [
+      "the funniest",
+      "funniest"
+     ],
+     "erklaerung": "funny – funnier – the funniest",
+     "tipp": "kurz: -er/-est · lang: more/most · Ausnahmen: good – better – best, bad – worse – worst"
+    },
+    {
+     "frage": "nice → Superlativ?",
+     "antwort": [
+      "the nicest",
+      "nicest"
+     ],
+     "erklaerung": "nice – nicer – the nicest",
+     "tipp": "kurz: -er/-est · lang: more/most · Ausnahmen: good – better – best, bad – worse – worst"
+    },
+    {
+     "frage": "large → Superlativ?",
+     "antwort": [
+      "the largest",
+      "largest"
+     ],
+     "erklaerung": "large – larger – the largest",
+     "tipp": "kurz: -er/-est · lang: more/most · Ausnahmen: good – better – best, bad – worse – worst"
+    },
+    {
+     "frage": "good → Superlativ?",
+     "antwort": [
+      "the best",
+      "best"
+     ],
+     "erklaerung": "good – better – the best",
+     "tipp": "kurz: -er/-est · lang: more/most · Ausnahmen: good – better – best, bad – worse – worst"
+    },
+    {
+     "frage": "bad → Superlativ?",
+     "antwort": [
+      "the worst",
+      "worst"
+     ],
+     "erklaerung": "bad – worse – the worst",
+     "tipp": "kurz: -er/-est · lang: more/most · Ausnahmen: good – better – best, bad – worse – worst"
+    },
+    {
+     "frage": "beautiful → Superlativ?",
+     "antwort": [
+      "the most beautiful",
+      "most beautiful"
+     ],
+     "erklaerung": "beautiful – more beautiful – the most beautiful",
+     "tipp": "kurz: -er/-est · lang: more/most · Ausnahmen: good – better – best, bad – worse – worst"
+    }
+   ]
+  },
+  {
+   "id": "en.6.steigerung.vergleiche",
+   "titel": "Vergleiche",
+   "kurz": "bigger than …",
+   "typ": "lueckentext",
+   "anweisung": "Setze die richtige Form ein.",
+   "aufgaben": [
+    {
+     "text": "An elephant is ___ than a mouse. (big)",
+     "antwort": "bigger",
+     "tipp": "Vergleich: -er than / more … than · as … as (gleich)"
+    },
+    {
+     "text": "My sister is ___ than me. (old)",
+     "antwort": "older",
+     "tipp": "Vergleich: -er than / more … than · as … as (gleich)"
+    },
+    {
+     "text": "This book is ___ than that one. (interesting)",
+     "antwort": "more interesting",
+     "tipp": "Vergleich: -er than / more … than · as … as (gleich)"
+    },
+    {
+     "text": "Maths is ___ than English for me. (easy)",
+     "antwort": "easier",
+     "tipp": "Vergleich: -er than / more … than · as … as (gleich)"
+    },
+    {
+     "text": "Mount Everest is ___ mountain in the world. (high)",
+     "antwort": "the highest",
+     "tipp": "Vergleich: -er than / more … than · as … as (gleich)"
+    },
+    {
+     "text": "Today is ___ than yesterday. (hot)",
+     "antwort": "hotter",
+     "tipp": "Vergleich: -er than / more … than · as … as (gleich)"
+    },
+    {
+     "text": "A Ferrari is ___ than a bike. (expensive)",
+     "antwort": "more expensive",
+     "tipp": "Vergleich: -er than / more … than · as … as (gleich)"
+    },
+    {
+     "text": "Pizza is ___ than salad! (good)",
+     "antwort": "better",
+     "tipp": "Vergleich: -er than / more … than · as … as (gleich)"
+    },
+    {
+     "text": "This is ___ day of my life! (good)",
+     "antwort": "the best",
+     "tipp": "Vergleich: -er than / more … than · as … as (gleich)"
+    },
+    {
+     "text": "Tom is as ___ as his brother. (tall)",
+     "antwort": "tall",
+     "tipp": "Vergleich: -er than / more … than · as … as (gleich)"
+    },
+    {
+     "text": "Lions are ___ than cats. (dangerous)",
+     "antwort": "more dangerous",
+     "tipp": "Vergleich: -er than / more … than · as … as (gleich)"
+    },
+    {
+     "text": "The weather is ___ than last week. (bad)",
+     "antwort": "worse",
+     "tipp": "Vergleich: -er than / more … than · as … as (gleich)"
+    }
+   ]
+  },
+  {
+   "id": "en.6.steigerung.fehler",
+   "titel": "Fehler finden",
+   "kurz": "Tippe den Fehler an",
+   "typ": "markieren",
+   "anweisung": "Ein Wort ist falsch. Tippe es an.",
+   "aufgaben": [
+    {
+     "satz": "My dog is [more big] than your dog.",
+     "richtig": "bigger",
+     "erklaerung": "kurze Adjektive: -er/-est · lange: more/most · good → better → best"
+    },
+    {
+     "satz": "This is the [goodest] cake.",
+     "richtig": "best",
+     "erklaerung": "kurze Adjektive: -er/-est · lange: more/most · good → better → best"
+    },
+    {
+     "satz": "English is [easyer] than maths.",
+     "richtig": "easier",
+     "erklaerung": "kurze Adjektive: -er/-est · lange: more/most · good → better → best"
+    },
+    {
+     "satz": "She is [more tall] than me.",
+     "richtig": "taller",
+     "erklaerung": "kurze Adjektive: -er/-est · lange: more/most · good → better → best"
+    },
+    {
+     "satz": "This film is [interestinger] than the book.",
+     "richtig": "more interesting",
+     "erklaerung": "kurze Adjektive: -er/-est · lange: more/most · good → better → best"
+    },
+    {
+     "satz": "He is the [most fast] runner.",
+     "richtig": "fastest",
+     "erklaerung": "kurze Adjektive: -er/-est · lange: more/most · good → better → best"
+    }
+   ]
+  },
+  {
+   "id": "en.6.steigerung.mix",
+   "titel": "Mix",
+   "kurz": "Alles durcheinander",
+   "mix": true,
+   "runde": 10
+  }
+ ]
+}

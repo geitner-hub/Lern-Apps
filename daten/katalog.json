@@ -725,6 +725,228 @@
        ]
       },
       {
+       "id": "en.5.have-got",
+       "titel": "have got / has got",
+       "klasse": 5,
+       "quelle": {
+        "app": "apps/typen/uebung.html",
+        "parameter": "inhalt=en.5.have-got"
+       },
+       "lehrplan": "E5 Grammatik: have got / has got (Aussage, Verneinung, Fragen, Kurzantworten)",
+       "dauer": 8,
+       "einsatz": "Über „Knowing English“ oder als eigene App im Admin; Fehler-Training zur Wiederholung",
+       "stufen": [
+        { "id": "en.5.have-got.formen", "titel": "have got oder has got?" },
+        { "id": "en.5.have-got.verneinung", "titel": "Verneinung" },
+        { "id": "en.5.have-got.fragen", "titel": "Fragen und Kurzantworten" },
+        { "id": "en.5.have-got.fehler", "titel": "Fehler finden" },
+        { "id": "en.5.have-got.mix", "titel": "Mix" }
+       ]
+      },
+      {
+       "id": "en.5.can",
+       "titel": "can / can't",
+       "klasse": 5,
+       "quelle": {
+        "app": "apps/typen/uebung.html",
+        "parameter": "inhalt=en.5.can"
+       },
+       "lehrplan": "E5 Grammatik: can / can't (Fähigkeit, Erlaubnis)",
+       "dauer": 8,
+       "einsatz": "Über „Knowing English“ oder als eigene App im Admin; Fehler-Training zur Wiederholung",
+       "stufen": [
+        { "id": "en.5.can.formen", "titel": "can oder can't?" },
+        { "id": "en.5.can.saetze", "titel": "Sätze bauen" },
+        { "id": "en.5.can.kurzantworten", "titel": "Kurzantworten" },
+        { "id": "en.5.can.fehler", "titel": "Fehler finden" },
+        { "id": "en.5.can.mix", "titel": "Mix" }
+       ]
+      },
+      {
+       "id": "en.5.present-progressive",
+       "titel": "Present Progressive",
+       "klasse": 5,
+       "quelle": {
+        "app": "apps/typen/uebung.html",
+        "parameter": "inhalt=en.5.present-progressive"
+       },
+       "lehrplan": "E5 Grammatik: present progressive (-ing-Form, Signalwörter, Fragen, Verneinung)",
+       "dauer": 8,
+       "einsatz": "Über „Knowing English“ oder als eigene App im Admin; Fehler-Training zur Wiederholung",
+       "stufen": [
+        { "id": "en.5.present-progressive.ing", "titel": "Die -ing-Form" },
+        { "id": "en.5.present-progressive.saetze", "titel": "Sätze" },
+        { "id": "en.5.present-progressive.fragen", "titel": "Fragen und Verneinung" },
+        { "id": "en.5.present-progressive.signalwoerter", "titel": "Signalwörter" },
+        { "id": "en.5.present-progressive.mix", "titel": "Mix" }
+       ]
+      },
+      {
+       "id": "en.5.nomen",
+       "titel": "Plural, a/an, this/that",
+       "klasse": 5,
+       "quelle": {
+        "app": "apps/typen/uebung.html",
+        "parameter": "inhalt=en.5.nomen"
+       },
+       "lehrplan": "E5 Grammatik: Plural der Nomen, unbestimmter Artikel a/an, this/that/these/those",
+       "dauer": 8,
+       "einsatz": "Über „Knowing English“ oder als eigene App im Admin; Fehler-Training zur Wiederholung",
+       "stufen": [
+        { "id": "en.5.nomen.plural", "titel": "Plural" },
+        { "id": "en.5.nomen.a-an", "titel": "a oder an?" },
+        { "id": "en.5.nomen.this-that", "titel": "this, that, these, those" },
+        { "id": "en.5.nomen.mix", "titel": "Mix" }
+       ]
+      },
+      {
+       "id": "en.5.pronomen",
+       "titel": "Pronomen und possessive 's",
+       "klasse": 5,
+       "quelle": {
+        "app": "apps/typen/uebung.html",
+        "parameter": "inhalt=en.5.pronomen"
+       },
+       "lehrplan": "E5 Grammatik: Personal- und Possessivpronomen, s-Genitiv",
+       "dauer": 8,
+       "einsatz": "Über „Knowing English“ oder als eigene App im Admin; Fehler-Training zur Wiederholung",
+       "stufen": [
+        { "id": "en.5.pronomen.objekt", "titel": "me, him, her …" },
+        { "id": "en.5.pronomen.possessiv", "titel": "my, his, their …" },
+        { "id": "en.5.pronomen.genitiv", "titel": "Tom's bike" },
+        { "id": "en.5.pronomen.fehler", "titel": "Fehler finden" },
+        { "id": "en.5.pronomen.mix", "titel": "Mix" }
+       ]
+      },
+      {
+       "id": "en.5.there-is",
+       "titel": "there is / there are",
+       "klasse": 5,
+       "quelle": {
+        "app": "apps/typen/uebung.html",
+        "parameter": "inhalt=en.5.there-is"
+       },
+       "lehrplan": "E5 Grammatik: there is / there are",
+       "dauer": 8,
+       "einsatz": "Über „Knowing English“ oder als eigene App im Admin; Fehler-Training zur Wiederholung",
+       "stufen": [
+        { "id": "en.5.there-is.formen", "titel": "There is oder There are?" },
+        { "id": "en.5.there-is.fragen", "titel": "Fragen und Verneinung" },
+        { "id": "en.5.there-is.saetze", "titel": "Sätze bauen" },
+        { "id": "en.5.there-is.fehler", "titel": "Fehler finden" },
+        { "id": "en.5.there-is.mix", "titel": "Mix" }
+       ]
+      },
+      {
+       "id": "en.5.fragen",
+       "titel": "Fragewörter",
+       "klasse": 5,
+       "quelle": {
+        "app": "apps/typen/uebung.html",
+        "parameter": "inhalt=en.5.fragen"
+       },
+       "lehrplan": "E5 Grammatik: Fragewörter und Fragesätze",
+       "dauer": 8,
+       "einsatz": "Über „Knowing English“ oder als eigene App im Admin; Fehler-Training zur Wiederholung",
+       "stufen": [
+        { "id": "en.5.fragen.fragewort", "titel": "Welches Fragewort?" },
+        { "id": "en.5.fragen.satzbau", "titel": "Fragen bauen" },
+        { "id": "en.5.fragen.mix", "titel": "Mix" }
+       ]
+      },
+      {
+       "id": "en.5.praepositionen",
+       "titel": "Präpositionen",
+       "klasse": 5,
+       "quelle": {
+        "app": "apps/typen/uebung.html",
+        "parameter": "inhalt=en.5.praepositionen"
+       },
+       "lehrplan": "E5 Grammatik: Präpositionen des Ortes und der Zeit",
+       "dauer": 8,
+       "einsatz": "Über „Knowing English“ oder als eigene App im Admin; Fehler-Training zur Wiederholung",
+       "stufen": [
+        { "id": "en.5.praepositionen.ort", "titel": "Wo ist es?" },
+        { "id": "en.5.praepositionen.zeit", "titel": "Wann?" },
+        { "id": "en.5.praepositionen.fehler", "titel": "Fehler finden" },
+        { "id": "en.5.praepositionen.mix", "titel": "Mix" }
+       ]
+      },
+      {
+       "id": "en.6.future",
+       "titel": "will-future und going to",
+       "klasse": 6,
+       "quelle": {
+        "app": "apps/typen/uebung.html",
+        "parameter": "inhalt=en.6.future"
+       },
+       "lehrplan": "E6 Grammatik: will-future und going to-future",
+       "dauer": 8,
+       "einsatz": "Über „Knowing English“ oder als eigene App im Admin; Fehler-Training zur Wiederholung",
+       "stufen": [
+        { "id": "en.6.future.will", "titel": "will" },
+        { "id": "en.6.future.going-to", "titel": "going to" },
+        { "id": "en.6.future.will-oder-going-to", "titel": "will oder going to?" },
+        { "id": "en.6.future.verneinung", "titel": "Verneinung" },
+        { "id": "en.6.future.saetze", "titel": "Sätze bauen" },
+        { "id": "en.6.future.mix", "titel": "Mix" }
+       ]
+      },
+      {
+       "id": "en.6.steigerung",
+       "titel": "Steigerung der Adjektive",
+       "klasse": 6,
+       "quelle": {
+        "app": "apps/typen/uebung.html",
+        "parameter": "inhalt=en.6.steigerung"
+       },
+       "lehrplan": "E6 Grammatik: Steigerung der Adjektive, Vergleiche",
+       "dauer": 8,
+       "einsatz": "Über „Knowing English“ oder als eigene App im Admin; Fehler-Training zur Wiederholung",
+       "stufen": [
+        { "id": "en.6.steigerung.formen", "titel": "Formen bilden" },
+        { "id": "en.6.steigerung.vergleiche", "titel": "Vergleiche" },
+        { "id": "en.6.steigerung.fehler", "titel": "Fehler finden" },
+        { "id": "en.6.steigerung.mix", "titel": "Mix" }
+       ]
+      },
+      {
+       "id": "en.6.some-any",
+       "titel": "some / any",
+       "klasse": 6,
+       "quelle": {
+        "app": "apps/typen/uebung.html",
+        "parameter": "inhalt=en.6.some-any"
+       },
+       "lehrplan": "E6 Grammatik: some / any und Zusammensetzungen",
+       "dauer": 8,
+       "einsatz": "Über „Knowing English“ oder als eigene App im Admin; Fehler-Training zur Wiederholung",
+       "stufen": [
+        { "id": "en.6.some-any.some-any", "titel": "some oder any?" },
+        { "id": "en.6.some-any.zusammensetzungen", "titel": "something, anybody …" },
+        { "id": "en.6.some-any.fehler", "titel": "Fehler finden" },
+        { "id": "en.6.some-any.mix", "titel": "Mix" }
+       ]
+      },
+      {
+       "id": "en.5.knowing-english",
+       "titel": "Knowing English: Mixed",
+       "klasse": 5,
+       "quelle": {
+        "app": "apps/englisch/knowing-english.html"
+       },
+       "lehrplan": "E5/E6 Grammatik: alle Strukturen gemischt, Zeitformen unterscheiden (Signalwörter)",
+       "dauer": 8,
+       "einsatz": "Übersicht aller Grammatik-Themen; Mixed als Wiederholung vor Schulaufgaben",
+       "stufen": [
+        { "id": "en.5.knowing-english.zeiten", "titel": "Welche Zeit passt?" },
+        { "id": "en.5.knowing-english.mixed-5", "titel": "Mixed (Klasse 5)" },
+        { "id": "en.5.knowing-english.zeiten-6", "titel": "Welche Zeit passt? (mit Zukunft)" },
+        { "id": "en.5.knowing-english.mixed-6", "titel": "Mixed (Klasse 6)" },
+        { "id": "en.5.knowing-english.meine", "titel": "Meine Themen" }
+       ]
+      },
+      {
        "id": "en.5.satzglieder",
        "titel": "Satzglieder ordnen",
        "klasse": 5,

@@ -1,0 +1,438 @@
+{
+ "typ": "gemischt",
+ "thema": "en.5.can",
+ "titel": "can / can't",
+ "emoji": "🇬🇧",
+ "klasse": 5,
+ "sprache": "en-GB",
+ "runde": 8,
+ "untertitel": "Fähigkeiten und Erlaubnis",
+ "hilfe": [
+  {
+   "titel": "can – können, dürfen",
+   "text": "can ist für alle Personen gleich (kein -s). Danach steht die Grundform ohne to. Verneinung: can't (cannot).",
+   "beispiele": [
+    [
+     "I can swim.",
+     "Ich kann schwimmen."
+    ],
+    [
+     "She can't drive.",
+     "Sie kann nicht Auto fahren."
+    ],
+    [
+     "Can I go out? – Yes, you can.",
+     "Darf ich rausgehen? – Ja."
+    ]
+   ]
+  }
+ ],
+ "stufen": [
+  {
+   "id": "en.5.can.formen",
+   "titel": "can oder can't?",
+   "kurz": "Was können Tiere?",
+   "typ": "lueckentext",
+   "anweisung": "can oder can't?",
+   "aufgaben": [
+    {
+     "text": "Fish ___ swim.",
+     "antwort": "can",
+     "optionen": [
+      "can",
+      "can't"
+     ],
+     "tipp": "can = kann · can't = kann nicht"
+    },
+    {
+     "text": "A dog ___ fly.",
+     "antwort": "can't",
+     "optionen": [
+      "can",
+      "can't"
+     ],
+     "tipp": "can = kann · can't = kann nicht"
+    },
+    {
+     "text": "Birds ___ fly.",
+     "antwort": "can",
+     "optionen": [
+      "can",
+      "can't"
+     ],
+     "tipp": "can = kann · can't = kann nicht"
+    },
+    {
+     "text": "A baby ___ drive a car.",
+     "antwort": "can't",
+     "optionen": [
+      "can",
+      "can't"
+     ],
+     "tipp": "can = kann · can't = kann nicht"
+    },
+    {
+     "text": "Cats ___ climb trees.",
+     "antwort": "can",
+     "optionen": [
+      "can",
+      "can't"
+     ],
+     "tipp": "can = kann · can't = kann nicht"
+    },
+    {
+     "text": "A snail ___ run fast.",
+     "antwort": "can't",
+     "optionen": [
+      "can",
+      "can't"
+     ],
+     "tipp": "can = kann · can't = kann nicht"
+    },
+    {
+     "text": "Penguins ___ fly.",
+     "antwort": "can't",
+     "optionen": [
+      "can",
+      "can't"
+     ],
+     "tipp": "can = kann · can't = kann nicht"
+    },
+    {
+     "text": "Kangaroos ___ jump very far.",
+     "antwort": "can",
+     "optionen": [
+      "can",
+      "can't"
+     ],
+     "tipp": "can = kann · can't = kann nicht"
+    },
+    {
+     "text": "A horse ___ read a book.",
+     "antwort": "can't",
+     "optionen": [
+      "can",
+      "can't"
+     ],
+     "tipp": "can = kann · can't = kann nicht"
+    },
+    {
+     "text": "Monkeys ___ climb.",
+     "antwort": "can",
+     "optionen": [
+      "can",
+      "can't"
+     ],
+     "tipp": "can = kann · can't = kann nicht"
+    },
+    {
+     "text": "Elephants ___ fly.",
+     "antwort": "can't",
+     "optionen": [
+      "can",
+      "can't"
+     ],
+     "tipp": "can = kann · can't = kann nicht"
+    },
+    {
+     "text": "Parrots ___ talk.",
+     "antwort": "can",
+     "optionen": [
+      "can",
+      "can't"
+     ],
+     "tipp": "can = kann · can't = kann nicht"
+    },
+    {
+     "text": "A tortoise ___ run fast.",
+     "antwort": "can't",
+     "optionen": [
+      "can",
+      "can't"
+     ],
+     "tipp": "can = kann · can't = kann nicht"
+    },
+    {
+     "text": "Dolphins ___ swim very fast.",
+     "antwort": "can",
+     "optionen": [
+      "can",
+      "can't"
+     ],
+     "tipp": "can = kann · can't = kann nicht"
+    },
+    {
+     "text": "A cow ___ play the guitar.",
+     "antwort": "can't",
+     "optionen": [
+      "can",
+      "can't"
+     ],
+     "tipp": "can = kann · can't = kann nicht"
+    },
+    {
+     "text": "Ducks ___ swim.",
+     "antwort": "can",
+     "optionen": [
+      "can",
+      "can't"
+     ],
+     "tipp": "can = kann · can't = kann nicht"
+    }
+   ]
+  },
+  {
+   "id": "en.5.can.saetze",
+   "titel": "Sätze bauen",
+   "kurz": "I can …",
+   "typ": "sortieren",
+   "anweisung": "Bring die Wörter in die richtige Reihenfolge.",
+   "aufgaben": [
+    {
+     "teile": [
+      "I",
+      "can",
+      "ride",
+      "a bike"
+     ],
+     "loesung": "I can ride a bike.",
+     "tipp": "can + Grundform (ohne to) · Fragen: Can + Subjekt + Grundform?"
+    },
+    {
+     "teile": [
+      "She",
+      "can",
+      "speak",
+      "English"
+     ],
+     "loesung": "She can speak English.",
+     "tipp": "can + Grundform (ohne to) · Fragen: Can + Subjekt + Grundform?"
+    },
+    {
+     "teile": [
+      "Can",
+      "you",
+      "swim"
+     ],
+     "loesung": "Can you swim?",
+     "tipp": "can + Grundform (ohne to) · Fragen: Can + Subjekt + Grundform?"
+    },
+    {
+     "teile": [
+      "We",
+      "can't",
+      "play",
+      "outside"
+     ],
+     "loesung": "We can't play outside.",
+     "tipp": "can + Grundform (ohne to) · Fragen: Can + Subjekt + Grundform?"
+    },
+    {
+     "teile": [
+      "Can",
+      "he",
+      "play",
+      "the piano"
+     ],
+     "loesung": "Can he play the piano?",
+     "tipp": "can + Grundform (ohne to) · Fragen: Can + Subjekt + Grundform?"
+    },
+    {
+     "teile": [
+      "My dog",
+      "can",
+      "catch",
+      "a ball"
+     ],
+     "loesung": "My dog can catch a ball.",
+     "tipp": "can + Grundform (ohne to) · Fragen: Can + Subjekt + Grundform?"
+    },
+    {
+     "teile": [
+      "They",
+      "can't",
+      "come",
+      "to the party"
+     ],
+     "loesung": "They can't come to the party.",
+     "tipp": "can + Grundform (ohne to) · Fragen: Can + Subjekt + Grundform?"
+    },
+    {
+     "teile": [
+      "What",
+      "can",
+      "you",
+      "do"
+     ],
+     "loesung": "What can you do?",
+     "tipp": "can + Grundform (ohne to) · Fragen: Can + Subjekt + Grundform?"
+    },
+    {
+     "teile": [
+      "Tom",
+      "can",
+      "run",
+      "very fast"
+     ],
+     "loesung": "Tom can run very fast.",
+     "tipp": "can + Grundform (ohne to) · Fragen: Can + Subjekt + Grundform?"
+    },
+    {
+     "teile": [
+      "Can",
+      "I",
+      "open",
+      "the window"
+     ],
+     "loesung": "Can I open the window?",
+     "tipp": "can + Grundform (ohne to) · Fragen: Can + Subjekt + Grundform?"
+    }
+   ]
+  },
+  {
+   "id": "en.5.can.kurzantworten",
+   "titel": "Kurzantworten",
+   "kurz": "Yes, I can.",
+   "typ": "lueckentext",
+   "anweisung": "Ergänze die Kurzantwort.",
+   "aufgaben": [
+    {
+     "text": "Can you swim? – Yes, I ___.",
+     "antwort": "can",
+     "optionen": [
+      "can",
+      "do",
+      "am"
+     ],
+     "tipp": "Kurzantwort: Yes, I can. / No, I can't."
+    },
+    {
+     "text": "Can she ski? – No, she ___.",
+     "antwort": "can't",
+     "optionen": [
+      "can't",
+      "doesn't",
+      "isn't"
+     ],
+     "tipp": "Kurzantwort: Yes, I can. / No, I can't."
+    },
+    {
+     "text": "Can they come? – Yes, they ___.",
+     "antwort": "can",
+     "optionen": [
+      "can",
+      "are",
+      "do"
+     ],
+     "tipp": "Kurzantwort: Yes, I can. / No, I can't."
+    },
+    {
+     "text": "Can he cook? – No, he ___.",
+     "antwort": "can't",
+     "optionen": [
+      "can't",
+      "don't",
+      "isn't"
+     ],
+     "tipp": "Kurzantwort: Yes, I can. / No, I can't."
+    },
+    {
+     "text": "Can your dog swim? – Yes, it ___.",
+     "antwort": "can",
+     "optionen": [
+      "can",
+      "is",
+      "does"
+     ],
+     "tipp": "Kurzantwort: Yes, I can. / No, I can't."
+    },
+    {
+     "text": "Can I help you? – Yes, you ___.",
+     "antwort": "can",
+     "optionen": [
+      "can",
+      "are",
+      "do"
+     ],
+     "tipp": "Kurzantwort: Yes, I can. / No, I can't."
+    },
+    {
+     "text": "Can you sing? – No, I ___.",
+     "antwort": "can't",
+     "optionen": [
+      "can't",
+      "don't",
+      "am not"
+     ],
+     "tipp": "Kurzantwort: Yes, I can. / No, I can't."
+    },
+    {
+     "text": "Can we go now? – Yes, we ___.",
+     "antwort": "can",
+     "optionen": [
+      "can",
+      "are",
+      "do"
+     ],
+     "tipp": "Kurzantwort: Yes, I can. / No, I can't."
+    }
+   ]
+  },
+  {
+   "id": "en.5.can.fehler",
+   "titel": "Fehler finden",
+   "kurz": "Tippe den Fehler an",
+   "typ": "markieren",
+   "anweisung": "Ein Wort ist falsch. Tippe es an.",
+   "aufgaben": [
+    {
+     "satz": "She [cans] swim very well.",
+     "richtig": "can",
+     "erklaerung": "can ist für alle gleich (kein -s) · danach Grundform ohne to"
+    },
+    {
+     "satz": "He can [swims] fast.",
+     "richtig": "swim",
+     "erklaerung": "can ist für alle gleich (kein -s) · danach Grundform ohne to"
+    },
+    {
+     "satz": "I can [to] dance.",
+     "richtig": "",
+     "erklaerung": "can ist für alle gleich (kein -s) · danach Grundform ohne to"
+    },
+    {
+     "satz": "[Do] you can play chess?",
+     "richtig": "Can",
+     "erklaerung": "can ist für alle gleich (kein -s) · danach Grundform ohne to"
+    },
+    {
+     "satz": "They can [plays] football.",
+     "richtig": "play",
+     "erklaerung": "can ist für alle gleich (kein -s) · danach Grundform ohne to"
+    },
+    {
+     "satz": "We [don't can] come.",
+     "richtig": "can't",
+     "erklaerung": "can ist für alle gleich (kein -s) · danach Grundform ohne to"
+    },
+    {
+     "satz": "Can she [speaks] French?",
+     "richtig": "speak",
+     "erklaerung": "can ist für alle gleich (kein -s) · danach Grundform ohne to"
+    },
+    {
+     "satz": "My brother [cann] read.",
+     "richtig": "can",
+     "erklaerung": "can ist für alle gleich (kein -s) · danach Grundform ohne to"
+    }
+   ]
+  },
+  {
+   "id": "en.5.can.mix",
+   "titel": "Mix",
+   "kurz": "Alles durcheinander",
+   "mix": true,
+   "runde": 10
+  }
+ ]
+}

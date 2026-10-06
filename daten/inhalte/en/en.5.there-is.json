@@ -1,0 +1,409 @@
+{
+ "typ": "gemischt",
+ "thema": "en.5.there-is",
+ "titel": "there is / there are",
+ "emoji": "🇬🇧",
+ "klasse": 5,
+ "sprache": "en-GB",
+ "runde": 8,
+ "untertitel": "Was gibt es wo?",
+ "hilfe": [
+  {
+   "titel": "there is / there are – es gibt",
+   "text": "Einzahl (und Dinge, die man nicht zählt: milk, water) → there is. Mehrzahl → there are. Verneinung: there isn't / there aren't. Fragen: Is there …? Are there …?",
+   "beispiele": [
+    [
+     "There is a cat on the sofa.",
+     "Auf dem Sofa ist eine Katze."
+    ],
+    [
+     "There are two books on the table.",
+     "Auf dem Tisch liegen zwei Bücher."
+    ],
+    [
+     "Is there a bank near here? – Yes, there is.",
+     "Gibt es hier eine Bank? – Ja."
+    ]
+   ]
+  }
+ ],
+ "stufen": [
+  {
+   "id": "en.5.there-is.formen",
+   "titel": "There is oder There are?",
+   "kurz": "Einzahl oder Mehrzahl",
+   "typ": "lueckentext",
+   "anweisung": "Was passt?",
+   "aufgaben": [
+    {
+     "text": "___ a cat on the sofa.",
+     "antwort": "There is",
+     "optionen": [
+      "There is",
+      "There are"
+     ],
+     "tipp": "Einzahl (und milk, snow …) → There is · Mehrzahl → There are"
+    },
+    {
+     "text": "___ two books on the table.",
+     "antwort": "There are",
+     "optionen": [
+      "There is",
+      "There are"
+     ],
+     "tipp": "Einzahl (und milk, snow …) → There is · Mehrzahl → There are"
+    },
+    {
+     "text": "___ a big tree in our garden.",
+     "antwort": "There is",
+     "optionen": [
+      "There is",
+      "There are"
+     ],
+     "tipp": "Einzahl (und milk, snow …) → There is · Mehrzahl → There are"
+    },
+    {
+     "text": "___ lots of children in the park.",
+     "antwort": "There are",
+     "optionen": [
+      "There is",
+      "There are"
+     ],
+     "tipp": "Einzahl (und milk, snow …) → There is · Mehrzahl → There are"
+    },
+    {
+     "text": "___ an apple in my bag.",
+     "antwort": "There is",
+     "optionen": [
+      "There is",
+      "There are"
+     ],
+     "tipp": "Einzahl (und milk, snow …) → There is · Mehrzahl → There are"
+    },
+    {
+     "text": "___ three bedrooms in our flat.",
+     "antwort": "There are",
+     "optionen": [
+      "There is",
+      "There are"
+     ],
+     "tipp": "Einzahl (und milk, snow …) → There is · Mehrzahl → There are"
+    },
+    {
+     "text": "___ a pencil under the chair.",
+     "antwort": "There is",
+     "optionen": [
+      "There is",
+      "There are"
+     ],
+     "tipp": "Einzahl (und milk, snow …) → There is · Mehrzahl → There are"
+    },
+    {
+     "text": "___ some milk in the fridge.",
+     "antwort": "There is",
+     "optionen": [
+      "There is",
+      "There are"
+     ],
+     "tipp": "Einzahl (und milk, snow …) → There is · Mehrzahl → There are"
+    },
+    {
+     "text": "___ twenty-five pupils in my class.",
+     "antwort": "There are",
+     "optionen": [
+      "There is",
+      "There are"
+     ],
+     "tipp": "Einzahl (und milk, snow …) → There is · Mehrzahl → There are"
+    },
+    {
+     "text": "___ a new shop in town.",
+     "antwort": "There is",
+     "optionen": [
+      "There is",
+      "There are"
+     ],
+     "tipp": "Einzahl (und milk, snow …) → There is · Mehrzahl → There are"
+    },
+    {
+     "text": "___ two cats in the garden.",
+     "antwort": "There are",
+     "optionen": [
+      "There is",
+      "There are"
+     ],
+     "tipp": "Einzahl (und milk, snow …) → There is · Mehrzahl → There are"
+    },
+    {
+     "text": "___ a bus stop near my house.",
+     "antwort": "There is",
+     "optionen": [
+      "There is",
+      "There are"
+     ],
+     "tipp": "Einzahl (und milk, snow …) → There is · Mehrzahl → There are"
+    },
+    {
+     "text": "___ many animals at the zoo.",
+     "antwort": "There are",
+     "optionen": [
+      "There is",
+      "There are"
+     ],
+     "tipp": "Einzahl (und milk, snow …) → There is · Mehrzahl → There are"
+    },
+    {
+     "text": "___ a computer in the classroom.",
+     "antwort": "There is",
+     "optionen": [
+      "There is",
+      "There are"
+     ],
+     "tipp": "Einzahl (und milk, snow …) → There is · Mehrzahl → There are"
+    },
+    {
+     "text": "___ some biscuits in the box.",
+     "antwort": "There are",
+     "optionen": [
+      "There is",
+      "There are"
+     ],
+     "tipp": "Einzahl (und milk, snow …) → There is · Mehrzahl → There are"
+    },
+    {
+     "text": "___ a lot of snow today.",
+     "antwort": "There is",
+     "optionen": [
+      "There is",
+      "There are"
+     ],
+     "tipp": "Einzahl (und milk, snow …) → There is · Mehrzahl → There are"
+    }
+   ]
+  },
+  {
+   "id": "en.5.there-is.fragen",
+   "titel": "Fragen und Verneinung",
+   "kurz": "Is there …?",
+   "typ": "lueckentext",
+   "anweisung": "Was passt?",
+   "aufgaben": [
+    {
+     "text": "___ a bank near here?",
+     "antwort": "Is there",
+     "optionen": [
+      "Is there",
+      "Are there"
+     ],
+     "tipp": "Frage: Is there …? / Are there …? · Kurzantwort: Yes, there is. / No, there aren't."
+    },
+    {
+     "text": "___ any shops in your street?",
+     "antwort": "Are there",
+     "optionen": [
+      "Is there",
+      "Are there"
+     ],
+     "tipp": "Frage: Is there …? / Are there …? · Kurzantwort: Yes, there is. / No, there aren't."
+    },
+    {
+     "text": "___ a garden behind the house?",
+     "antwort": "Is there",
+     "optionen": [
+      "Is there",
+      "Are there"
+     ],
+     "tipp": "Frage: Is there …? / Are there …? · Kurzantwort: Yes, there is. / No, there aren't."
+    },
+    {
+     "text": "___ any eggs in the fridge?",
+     "antwort": "Are there",
+     "optionen": [
+      "Is there",
+      "Are there"
+     ],
+     "tipp": "Frage: Is there …? / Are there …? · Kurzantwort: Yes, there is. / No, there aren't."
+    },
+    {
+     "text": "There ___ a cinema in my town.",
+     "antwort": "isn't",
+     "optionen": [
+      "isn't",
+      "aren't"
+     ],
+     "tipp": "Frage: Is there …? / Are there …? · Kurzantwort: Yes, there is. / No, there aren't."
+    },
+    {
+     "text": "There ___ any bananas left.",
+     "antwort": "aren't",
+     "optionen": [
+      "isn't",
+      "aren't"
+     ],
+     "tipp": "Frage: Is there …? / Are there …? · Kurzantwort: Yes, there is. / No, there aren't."
+    },
+    {
+     "text": "Is there a park? – Yes, there ___.",
+     "antwort": "is",
+     "optionen": [
+      "is",
+      "are"
+     ],
+     "tipp": "Frage: Is there …? / Are there …? · Kurzantwort: Yes, there is. / No, there aren't."
+    },
+    {
+     "text": "Are there any cats? – No, there ___.",
+     "antwort": "aren't",
+     "optionen": [
+      "isn't",
+      "aren't"
+     ],
+     "tipp": "Frage: Is there …? / Are there …? · Kurzantwort: Yes, there is. / No, there aren't."
+    },
+    {
+     "text": "Is there a pool? – No, there ___.",
+     "antwort": "isn't",
+     "optionen": [
+      "isn't",
+      "aren't"
+     ],
+     "tipp": "Frage: Is there …? / Are there …? · Kurzantwort: Yes, there is. / No, there aren't."
+    },
+    {
+     "text": "Are there any chairs? – Yes, there ___.",
+     "antwort": "are",
+     "optionen": [
+      "is",
+      "are"
+     ],
+     "tipp": "Frage: Is there …? / Are there …? · Kurzantwort: Yes, there is. / No, there aren't."
+    }
+   ]
+  },
+  {
+   "id": "en.5.there-is.saetze",
+   "titel": "Sätze bauen",
+   "kurz": "There is a …",
+   "typ": "sortieren",
+   "anweisung": "Bring die Wörter in die richtige Reihenfolge.",
+   "aufgaben": [
+    {
+     "teile": [
+      "There",
+      "is",
+      "a dog",
+      "in the garden"
+     ],
+     "loesung": "There is a dog in the garden.",
+     "tipp": "There is/are + Ding + Ort"
+    },
+    {
+     "teile": [
+      "There",
+      "are",
+      "two windows",
+      "in my room"
+     ],
+     "loesung": "There are two windows in my room.",
+     "tipp": "There is/are + Ding + Ort"
+    },
+    {
+     "teile": [
+      "Is",
+      "there",
+      "a café",
+      "near the station"
+     ],
+     "loesung": "Is there a café near the station?",
+     "tipp": "There is/are + Ding + Ort"
+    },
+    {
+     "teile": [
+      "Are",
+      "there",
+      "any apples",
+      "in the bag"
+     ],
+     "loesung": "Are there any apples in the bag?",
+     "tipp": "There is/are + Ding + Ort"
+    },
+    {
+     "teile": [
+      "There",
+      "isn't",
+      "a lift",
+      "in the building"
+     ],
+     "loesung": "There isn't a lift in the building.",
+     "tipp": "There is/are + Ding + Ort"
+    },
+    {
+     "teile": [
+      "There",
+      "are",
+      "five people",
+      "in my family"
+     ],
+     "loesung": "There are five people in my family.",
+     "tipp": "There is/are + Ding + Ort"
+    }
+   ]
+  },
+  {
+   "id": "en.5.there-is.fehler",
+   "titel": "Fehler finden",
+   "kurz": "Tippe den Fehler an",
+   "typ": "markieren",
+   "anweisung": "Ein Wort ist falsch. Tippe es an.",
+   "aufgaben": [
+    {
+     "satz": "There [is] two cats on the roof.",
+     "richtig": "are",
+     "erklaerung": "Einzahl → there is · Mehrzahl → there are"
+    },
+    {
+     "satz": "There [are] a book on the desk.",
+     "richtig": "is",
+     "erklaerung": "Einzahl → there is · Mehrzahl → there are"
+    },
+    {
+     "satz": "[Is] there any eggs?",
+     "richtig": "Are",
+     "erklaerung": "Einzahl → there is · Mehrzahl → there are"
+    },
+    {
+     "satz": "There [aren't] a school here.",
+     "richtig": "isn't",
+     "erklaerung": "Einzahl → there is · Mehrzahl → there are"
+    },
+    {
+     "satz": "[It is] a dog in the garden.",
+     "richtig": "There is",
+     "erklaerung": "Einzahl → there is · Mehrzahl → there are"
+    },
+    {
+     "satz": "There [is] three bedrooms.",
+     "richtig": "are",
+     "erklaerung": "Einzahl → there is · Mehrzahl → there are"
+    },
+    {
+     "satz": "[Are] there a park near here?",
+     "richtig": "Is",
+     "erklaerung": "Einzahl → there is · Mehrzahl → there are"
+    },
+    {
+     "satz": "There [are] some water in the glass.",
+     "richtig": "is",
+     "erklaerung": "Einzahl → there is · Mehrzahl → there are"
+    }
+   ]
+  },
+  {
+   "id": "en.5.there-is.mix",
+   "titel": "Mix",
+   "kurz": "Alles durcheinander",
+   "mix": true,
+   "runde": 10
+  }
+ ]
+}
