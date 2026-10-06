@@ -14,7 +14,7 @@
 //  und teilen sich den Offline-Speicher. Deshalb hat jede Umgebung ihr
 //  eigenes Präfix und räumt nur ihre eigenen Speicher auf.
 // ═══════════════════════════════════════════════════════
-const VERSION = 'v40';  // v40: Baukasten mit Typ je Stufe, Mix-Stufe, Typ „markieren“; Inhalt to be (en.5.to-be)
+const VERSION = 'v41';  // v41: Simple Present und Simple Past als Inhaltsdateien (alte Apps leiten weiter), Kachel „So geht's“
 const PRAEFIX = /\/[^/]*-test\/$/i.test(new URL(self.registration.scope).pathname) ? 'lwtest-v' : 'lernwelt-v';
 const CACHE   = PRAEFIX + VERSION.replace(/^v/, '');        // z. B. 'lernwelt-v24' (Format wie bisher)
 
@@ -49,7 +49,8 @@ const NACHLADEN = ['spiele/runner.html', 'spiele/burg-verteidigung.html', 'spiel
                    'apps/typen/uebung.html', 'gemeinsam/typen.js',
                    'gemeinsam/typen/zuordnen.js', 'gemeinsam/typen/sortieren.js', 'gemeinsam/typen/lueckentext.js',
                    'gemeinsam/typen/eingabe.js', 'gemeinsam/typen/beschriften.js', 'gemeinsam/typen/bildwort.js',
-                   'gemeinsam/typen/markieren.js', 'daten/inhalte/en/en.5.to-be.json'];
+                   'gemeinsam/typen/markieren.js', 'daten/inhalte/en/en.5.to-be.json',
+                   'daten/inhalte/en/en.5.simple-present.json', 'daten/inhalte/en/en.5.simple-past.json'];
 const NACHLADEN_PAUSE_MS = 400;   // Pause zwischen zwei Dateien
 const NACHLADEN_MAX_MS   = 25000; // pro Anstoß höchstens so lange (iOS beendet Hintergrundarbeit sonst)
 const FEST = /\/(vendor|fonts|icons)\//;      // ändern sich (fast) nie

@@ -22,6 +22,7 @@
 //    schluessel: gleiche Aufgabe in einer Runde nicht doppelt (sonst zählt die Frage)
 //    ton: Text für 🔊 (immer sichtbar), sprache: z. B. 'en-GB' für Vorlesen und ton
 //  Stufe: { …, runde? } – eigene Rundengröße (z. B. wenn eine Stufe nur 6 Aufgaben hat)
+//  cfg.hilfe: { html } – Kachel „📖 So geht's“ mit Erklärung (Neue Lern-Apps Etappe 7; html schon escaped)
 //
 //  Angelegte Anschlüsse (später eingeschaltet):
 //    LernUeben.Freigabe.erlaubt(themaId)  → seit Etappe 7 über gemeinsam/freigabe.js (gesperrt = 🔒 ohne Erklärtext);
@@ -144,7 +145,18 @@
   .lu .eigen{max-width:640px;margin:0 auto}
   .lu.gross .frage .q{font-size:clamp(2.2rem,8vw,3.4rem)} .lu.gross .fb .er{font-size:1.2rem}
   @media (max-height:700px){.lu .frage{padding:.8rem}.lu .pad button{min-height:3rem}}
-  @media (prefers-reduced-motion:reduce){.lu .tile,.lu .pad button{transition:none}}`;
+  @media (prefers-reduced-motion:reduce){.lu .tile,.lu .pad button{transition:none}}
+  .lu .tile.hilfe{margin-bottom:.8rem;width:100%}
+  .lu .hilfe-text{display:flex;flex-direction:column;gap:.8rem;margin:.6rem 0 1rem;-webkit-user-select:text;user-select:text}
+  .lu .hilfe-text section{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:.9rem 1rem}
+  .lu .hilfe-text h2{font-family:'Fredoka One','Nunito',sans-serif;font-weight:400;color:var(--ind2);font-size:1.25rem;margin:0 0 .4rem}
+  .lu .hilfe-text p{margin:.3rem 0;line-height:1.45}
+  .lu .hilfe-text .bsp{display:grid;grid-template-columns:1fr 1fr;gap:.2rem .8rem;margin:.4rem 0}
+  .lu .hilfe-text .bsp b{color:var(--gold)} .lu .hilfe-text .bsp span{color:var(--mut)}
+  .lu .hilfe-text table{border-collapse:collapse;width:100%;margin:.4rem 0;font-size:.95rem}
+  .lu .hilfe-text td,.lu .hilfe-text th{border-bottom:1px solid var(--line);padding:.3rem .4rem;text-align:left}
+  .lu .hilfe-text th{color:var(--gold)}
+  @media(max-width:560px){.lu .hilfe-text .bsp{grid-template-columns:1fr}}`;
 
   // ── Vorlesen ───────────────────────────────────────────
   function sprich(text, sprache) {
@@ -200,6 +212,8 @@
       root.innerHTML = `<h1>${esc(cfg.titel || 'Üben')}</h1><p class="sub">${esc(cfg.untertitel || 'Wähle eine Stufe')}</p>
         ${nf ? `<button type="button" class="tile ft" data-fehler><span class="nr">🎯</span>
           <span><b>Fehler-Training</b><small>${nf} ${nf === 1 ? 'Aufgabe' : 'Aufgaben'} von früher, die noch nicht saßen</small></span></button>` : ''}
+        ${cfg.hilfe ? `<button type="button" class="tile hilfe" data-hilfe><span class="nr">📖</span>
+          <span><b>So geht's</b><small>Erklärung mit Beispielen</small></span></button>` : ''}
         <div class="grid">${(cfg.stufen || []).map((st, i) => kachel(st, i, false)).join('')}</div>
         ${f.length ? `<button type="button" class="mehr" data-foerder>${S.foerderOffen ? '▾' : '▸'} Leichtere Stufen zum Wiederholen</button>
           ${S.foerderOffen ? `<div class="grid">${f.map((st, i) => kachel(st, i, true)).join('')}</div>` : ''}` : ''}`;
@@ -335,6 +349,12 @@
       if (t.hasAttribute('data-foerder')) { S.foerderOffen = !S.foerderOffen; return zeigeStart(); }
       if (t.hasAttribute('data-ende')) return zeigeStart();
       if (t.hasAttribute('data-fehler')) return starteFehlerTraining();
+      if (t.hasAttribute('data-hilfe')) {
+        root.innerHTML = `<div class="top"><button type="button" class="x" data-ende aria-label="Zur Stufenwahl">✕</button>
+          <span class="nm">So geht's</span></div><div class="hilfe-text">${cfg.hilfe.html}</div>
+          <div class="zeile"><button type="button" class="btn p" data-ende>Zu den Übungen ›</button></div>`;
+        return window.scrollTo(0, 0);
+      }
       if (t.hasAttribute('data-nochmal')) return root.dataset.letzte === '#fehler' ? starteFehlerTraining() : starteRunde(root.dataset.letzte);
       if (t.hasAttribute('data-weiter')) return weiter();
       if (t.hasAttribute('data-tipp')) { S.tipp = true; return zeigeAufgabe(); }

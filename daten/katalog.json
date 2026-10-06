@@ -680,28 +680,49 @@
        "titel": "Simple Present",
        "klasse": 5,
        "quelle": {
-        "app": "apps/englisch/practice_simple_present.html"
+        "app": "apps/typen/uebung.html",
+        "parameter": "inhalt=en.5.simple-present"
        },
        "ergebnis": [
         "practice_simple_present.html"
        ],
        "lehrplan": "E5 Grammatik: simple present (Verbformen, he/she/it – s, Satzstellung)",
        "dauer": 8,
-       "einsatz": "Übungsphase nach Einführung des simple present; ohne Schreiben, gut für schwächere Kinder"
+       "einsatz": "Übungsphase nach Einführung des simple present; Erklärung unter „So geht's“, Fehler-Training zur Wiederholung",
+       "stufen": [
+        { "id": "en.5.simple-present.formen", "titel": "Verbform wählen" },
+        { "id": "en.5.simple-present.schreibung", "titel": "-s, -es, -ies" },
+        { "id": "en.5.simple-present.verneinung", "titel": "Verneinung" },
+        { "id": "en.5.simple-present.fragen", "titel": "Fragen und Kurzantworten" },
+        { "id": "en.5.simple-present.satzbau", "titel": "Sätze bauen" },
+        { "id": "en.5.simple-present.signalwoerter", "titel": "Signalwörter" },
+        { "id": "en.5.simple-present.fehler", "titel": "Fehler finden" },
+        { "id": "en.5.simple-present.mix", "titel": "Mix" }
+       ]
       },
       {
        "id": "en.5.simple-past",
        "titel": "Simple Past",
        "klasse": 5,
        "quelle": {
-        "app": "apps/englisch/simple-past.html"
+        "app": "apps/typen/uebung.html",
+        "parameter": "inhalt=en.5.simple-past"
        },
        "ergebnis": [
         "simple-past.html"
        ],
        "lehrplan": "E5 Grammatik: simple past (regular und irregular verbs); E6 Wiederholung",
        "dauer": 8,
-       "einsatz": "Übungsphase; Verbenliste zum Nachschlagen; Klasse 6 zur Wiederholung"
+       "einsatz": "Übungsphase; Verbenliste zum Nachschlagen; Klasse 6 zur Wiederholung",
+       "stufen": [
+        { "id": "en.5.simple-past.regelmaessig", "titel": "Regelmäßige Verben" },
+        { "id": "en.5.simple-past.unregelmaessig", "titel": "Unregelmäßige Verben" },
+        { "id": "en.5.simple-past.saetze", "titel": "In Sätzen" },
+        { "id": "en.5.simple-past.verneinung", "titel": "Verneinung" },
+        { "id": "en.5.simple-past.fragen", "titel": "Fragen und Kurzantworten" },
+        { "id": "en.5.simple-past.fehler", "titel": "Fehler finden" },
+        { "id": "en.5.simple-past.mix", "titel": "Mix" }
+       ]
       },
       {
        "id": "en.5.satzglieder",

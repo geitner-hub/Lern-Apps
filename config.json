@@ -340,7 +340,7 @@
     },
     {
       "name": "Simple present",
-      "datei": "apps/englisch/practice_simple_present.html",
+      "datei": "apps/typen/uebung.html?inhalt=en.5.simple-present",
       "fach": "Englisch",
       "emoji": "📓",
       "beschreibung": "Practice simple present! he/she/it + -s",
@@ -354,7 +354,7 @@
     },
     {
       "name": "Simple Past",
-      "datei": "apps/englisch/simple-past.html",
+      "datei": "apps/typen/uebung.html?inhalt=en.5.simple-past",
       "fach": "Englisch",
       "emoji": "⏪",
       "beschreibung": "Regular and irregular verbs – übe die Vergangenheit!",

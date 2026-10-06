@@ -8,9 +8,9 @@ Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv
 
 | Datei | Name | Themen-ID | Art | Fach · Klassen | Sichtbar | Ergebnis | Pass-XP | liefert „Meine Themen“ | nutzt „Meine Themen“ | Dorf-Aufträge | Entscheidung | Notiz |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
-| `apps/englisch/practice_simple_present.html` | Simple present | `en.5.simple-present` | Lern-App | Englisch · 5 | sichtbar | ja | ja | – | – | ja | Kern | Gut: nur Antippen, Tipp-Knopf. Mängel: meldet kein `thema`; Satzstellung später Typ Sortieren (Etappe 9) |
+| `apps/englisch/practice_simple_present.html` | – | – | Lern-App | – | nicht in config | – | – | – | – | – (nicht in config) | Kern | Gut: nur Antippen, Tipp-Knopf. Mängel: meldet kein `thema`; Satzstellung später Typ Sortieren (Etappe 9) |
 | `apps/englisch/satzglieder-erkennen.html` | Satzglieder ordnen | `en.5.satzglieder` | Lern-App | Englisch · 5 | sichtbar | ja | ja | – | – | ja | Kern → Engine (Etappe 9) | Wird erste Überführung Typ Zuordnen. Mängel: Rückmeldung nur richtig/falsch ohne Erklärung, kein `thema` |
-| `apps/englisch/simple-past.html` | Simple Past | `en.5.simple-past` | Lern-App | Englisch · 5, 6 | sichtbar | ja | ja | – | – | ja | Kern | Gute Rückmeldung (Regel + Beispiel), Verbenliste, Kl. 5/6. Mängel: kein `thema`, keine Stufen im Katalog |
+| `apps/englisch/simple-past.html` | – | – | Lern-App | – | nicht in config | – | – | – | – | – (nicht in config) | Kern | Gute Rückmeldung (Regel + Beispiel), Verbenliste, Kl. 5/6. Mängel: kein `thema`, keine Stufen im Katalog |
 | `apps/englisch/vokabeltrainer.html` | Vokabeltrainer 5. Klasse | `en.5.vok` (7 Stufen), `en.5.wortlisten` (8 Stufen), `en.6.vok` (5 Stufen) | Lern-App | Englisch · 5 | sichtbar | ja | ja | ja | – | ja | Engine (Etappe 5, Testphase) | Ein Trainer für alle Wortlisten (?klasse=5/6, ?liste=NAME); ersetzt nach dem Test vokabeltrainer5/6 |
 | `apps/englisch/vokabeltrainer5.html` | – | – | Lern-App | – | nicht in config | – | – | – | – | – (nicht in config) | Engine (Etappe 5) | Mit vokabeltrainer6 zu einer Vokabel-Engine. Mängel: Startseite scrollt (iPad quer), ~100 Zeilen doppelt zu Kl. 6 |
 | `apps/englisch/vokabeltrainer6.html` | – | – | Lern-App | – | nicht in config | – | – | – | – | – (nicht in config) | Engine (Etappe 5) | Siehe vokabeltrainer5 |
@@ -27,7 +27,7 @@ Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv
 | `apps/mathe/laengeneinheiten.html` | Längeneinheiten umrechnen | `ma.5.laengen` (6 Stufen) | Lern-App | Mathematik · 5, 6 | sichtbar | – | – | – | – | ja | Kern → Typ Eingabe (Etappe 9) | Passt zu M5 LB 5. Mängel: kein `thema`/`inhalt` (fehlt in den Spielen), Hilfe nur auf Knopfdruck, keine anderen Größen (Masse, Zeit, Geld) |
 | `apps/mathe/mathe-trainer.html` | Mathe-Trainer Klasse 5 | – | Lern-App | Mathematik · 5 | sichtbar | – | – | – | – | ja | Kern (Übungs-Rahmen) | Etappe 4b: Stoff der Jahrgangsstufe 5/6 in Stufen (?klasse=5/6); neue Themen = neue Stufen in daten/kopfrechnen.json |
 | `apps/mathe/rechen-arena.html` | Rechen-Arena | `ma.5.rechen-arena` | Lern-App | Allgemein · 5, 6 | sichtbar | ja | ja | – | – | ja | Kern | Beliebt, vier Modi. Mängel: Startseite scrollt (iPad quer), kein `thema`/`inhalt`, Ballon-Pop hat keine Rückmeldung zum Fehler (bewusst schnell) |
-| `apps/typen/uebung.html` | – | `en.5.to-be` (6 Stufen) | Lern-App | – | nicht in config | – | – | – | – | – (nicht in config) |  |  |
+| `apps/typen/uebung.html` | Simple present | `en.5.to-be` (6 Stufen), `en.5.simple-present` (8 Stufen), `en.5.simple-past` (7 Stufen) | Lern-App | Englisch · 5 | sichtbar | – | – | – | – | ja |  |  |
 | `spiele/burg-verteidigung.html` | Tower Defense | – | Spiel | Allgemein · alle | sichtbar | ja | ja | – | ja | – (Spiel) |  |  |
 | `spiele/dorf.html` | Mein Dorf | – | Spiel | Allgemein · alle | sichtbar | – | – | – | – | Dorf selbst |  |  |
 | `spiele/expedition.html` | Entdecker-Expedition | – | Spiel | GPG · 6 | versteckt | über spiel-hilfen.js | ja | – | – | – (Spiel) |  |  |
@@ -41,9 +41,9 @@ Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv
 
 | Datei | KB | Skripte | Speicherschlüssel |
 |---|---|---|---|
-| apps/englisch/practice_simple_present.html | 35 | navbar.js | + über navbar.js |
+| apps/englisch/practice_simple_present.html | 1 | – | – |
 | apps/englisch/satzglieder-erkennen.html | 35 | navbar.js | + über navbar.js |
-| apps/englisch/simple-past.html | 51 | navbar.js | + über navbar.js |
+| apps/englisch/simple-past.html | 1 | – | – |
 | apps/englisch/vokabeltrainer.html | 61 | freigabe.js, ueben.js, navbar.js | vokab-history-kl5, vokab-word-stats-kl5, vokab-a11y-kl5, vokab-history-kl6, vokab-word-stats-kl6, vokab-a11y-kl6, + über navbar.js |
 | apps/englisch/vokabeltrainer5.html | 1 | – | – |
 | apps/englisch/vokabeltrainer6.html | 1 | – | – |

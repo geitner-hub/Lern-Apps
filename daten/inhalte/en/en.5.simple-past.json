@@ -1,0 +1,1520 @@
+{
+ "typ": "gemischt",
+ "thema": "en.5.simple-past",
+ "titel": "Simple Past",
+ "emoji": "🇬🇧",
+ "klasse": 5,
+ "sprache": "en-GB",
+ "runde": 8,
+ "untertitel": "regelmäßige und unregelmäßige Verben, Verneinung, Fragen",
+ "hilfe": [
+  {
+   "titel": "Wann benutzt man das Simple Past?",
+   "text": "Wenn etwas in der Vergangenheit passiert ist und abgeschlossen ist. Signalwörter: yesterday, last week, last summer, two days ago, in 2019, when I was ten.",
+   "beispiele": [
+    [
+     "Yesterday I played football.",
+     "Gestern habe ich Fußball gespielt."
+    ],
+    [
+     "We went to the seaside last summer.",
+     "Letzten Sommer sind wir ans Meer gefahren."
+    ]
+   ]
+  },
+  {
+   "titel": "Regular verbs: -ed",
+   "text": "Bei regelmäßigen Verben hängst du -ed an. Die Form ist für alle Personen gleich (kein -s).",
+   "tabelle": [
+    [
+     "Regel",
+     "Beispiel"
+    ],
+    [
+     "normal: + ed",
+     "walk → walked, play → played"
+    ],
+    [
+     "endet auf -e: + d",
+     "like → liked, dance → danced"
+    ],
+    [
+     "Konsonant + y: y → ied",
+     "study → studied, try → tried"
+    ],
+    [
+     "kurzer Vokal + ein Konsonant: verdoppeln",
+     "stop → stopped, plan → planned"
+    ]
+   ]
+  },
+  {
+   "titel": "Irregular verbs: eigene Form",
+   "text": [
+    "Unregelmäßige Verben haben eine eigene Form, die du lernen musst.",
+    "be hat zwei Formen: I/he/she/it → was, you/we/they → were. read schreibt man gleich, spricht es aber [red]."
+   ],
+   "tabelle": [
+    [
+     "Grundform",
+     "Simple past",
+     "Deutsch"
+    ],
+    [
+     "be",
+     "was / were",
+     "sein"
+    ],
+    [
+     "have",
+     "had",
+     "haben"
+    ],
+    [
+     "do",
+     "did",
+     "tun"
+    ],
+    [
+     "go",
+     "went",
+     "gehen"
+    ],
+    [
+     "come",
+     "came",
+     "kommen"
+    ],
+    [
+     "see",
+     "saw",
+     "sehen"
+    ],
+    [
+     "eat",
+     "ate",
+     "essen"
+    ],
+    [
+     "drink",
+     "drank",
+     "trinken"
+    ],
+    [
+     "get",
+     "got",
+     "bekommen"
+    ],
+    [
+     "make",
+     "made",
+     "machen"
+    ],
+    [
+     "take",
+     "took",
+     "nehmen"
+    ],
+    [
+     "give",
+     "gave",
+     "geben"
+    ],
+    [
+     "say",
+     "said",
+     "sagen"
+    ],
+    [
+     "run",
+     "ran",
+     "rennen"
+    ],
+    [
+     "sit",
+     "sat",
+     "sitzen"
+    ],
+    [
+     "stand",
+     "stood",
+     "stehen"
+    ],
+    [
+     "read",
+     "read",
+     "lesen"
+    ],
+    [
+     "write",
+     "wrote",
+     "schreiben"
+    ],
+    [
+     "buy",
+     "bought",
+     "kaufen"
+    ],
+    [
+     "find",
+     "found",
+     "finden"
+    ],
+    [
+     "fly",
+     "flew",
+     "fliegen"
+    ],
+    [
+     "swim",
+     "swam",
+     "schwimmen"
+    ],
+    [
+     "sing",
+     "sang",
+     "singen"
+    ],
+    [
+     "sleep",
+     "slept",
+     "schlafen"
+    ],
+    [
+     "think",
+     "thought",
+     "denken"
+    ],
+    [
+     "tell",
+     "told",
+     "erzählen"
+    ],
+    [
+     "leave",
+     "left",
+     "verlassen"
+    ],
+    [
+     "meet",
+     "met",
+     "treffen"
+    ],
+    [
+     "know",
+     "knew",
+     "wissen"
+    ],
+    [
+     "begin",
+     "began",
+     "beginnen"
+    ],
+    [
+     "break",
+     "broke",
+     "brechen"
+    ],
+    [
+     "bring",
+     "brought",
+     "bringen"
+    ],
+    [
+     "catch",
+     "caught",
+     "fangen"
+    ],
+    [
+     "drive",
+     "drove",
+     "fahren"
+    ],
+    [
+     "fall",
+     "fell",
+     "fallen"
+    ],
+    [
+     "feel",
+     "felt",
+     "fühlen"
+    ],
+    [
+     "forget",
+     "forgot",
+     "vergessen"
+    ],
+    [
+     "hear",
+     "heard",
+     "hören"
+    ],
+    [
+     "lose",
+     "lost",
+     "verlieren"
+    ],
+    [
+     "put",
+     "put",
+     "legen"
+    ],
+    [
+     "ride",
+     "rode",
+     "reiten, Rad fahren"
+    ],
+    [
+     "sell",
+     "sold",
+     "verkaufen"
+    ],
+    [
+     "send",
+     "sent",
+     "schicken"
+    ],
+    [
+     "speak",
+     "spoke",
+     "sprechen"
+    ],
+    [
+     "teach",
+     "taught",
+     "unterrichten"
+    ],
+    [
+     "throw",
+     "threw",
+     "werfen"
+    ],
+    [
+     "wear",
+     "wore",
+     "tragen (Kleidung)"
+    ],
+    [
+     "win",
+     "won",
+     "gewinnen"
+    ]
+   ]
+  },
+  {
+   "titel": "Verneinung: didn't + Grundform",
+   "text": "didn't zeigt schon die Vergangenheit – danach kommt die Grundform. Bei be: wasn't / weren't.",
+   "beispiele": [
+    [
+     "I didn't play football.",
+     "Ich habe nicht Fußball gespielt."
+    ],
+    [
+     "She didn't go to school.",
+     "Sie ist nicht zur Schule gegangen."
+    ],
+    [
+     "I wasn't at home.",
+     "Ich war nicht zu Hause."
+    ]
+   ]
+  },
+  {
+   "titel": "Fragen: Did + Subjekt + Grundform?",
+   "text": "Kurzantworten: Yes, I did. / No, I didn't. Bei be ohne did: Were you at home? – Yes, I was.",
+   "beispiele": [
+    [
+     "Did you watch TV?",
+     "Hast du ferngesehen?"
+    ],
+    [
+     "Where did you go?",
+     "Wohin bist du gegangen?"
+    ]
+   ]
+  }
+ ],
+ "stufen": [
+  {
+   "id": "en.5.simple-past.regelmaessig",
+   "titel": "Regelmäßige Verben",
+   "kurz": "-ed und Schreibregeln",
+   "typ": "eingabe",
+   "anweisung": "Schreibe das simple past.",
+   "aufgaben": [
+    {
+     "frage": "play → ?",
+     "antwort": [
+      "played"
+     ],
+     "tipp": "Regelmäßig: -ed (Schreibregeln beachten!)",
+     "erklaerung": "play → played: Vokal + y: einfach -ed."
+    },
+    {
+     "frage": "watch → ?",
+     "antwort": [
+      "watched"
+     ],
+     "tipp": "Regelmäßig: -ed (Schreibregeln beachten!)",
+     "erklaerung": "watch → watched: Einfach -ed anhängen."
+    },
+    {
+     "frage": "walk → ?",
+     "antwort": [
+      "walked"
+     ],
+     "tipp": "Regelmäßig: -ed (Schreibregeln beachten!)",
+     "erklaerung": "walk → walked: Einfach -ed anhängen."
+    },
+    {
+     "frage": "work → ?",
+     "antwort": [
+      "worked"
+     ],
+     "tipp": "Regelmäßig: -ed (Schreibregeln beachten!)",
+     "erklaerung": "work → worked: Einfach -ed anhängen."
+    },
+    {
+     "frage": "help → ?",
+     "antwort": [
+      "helped"
+     ],
+     "tipp": "Regelmäßig: -ed (Schreibregeln beachten!)",
+     "erklaerung": "help → helped: Einfach -ed anhängen."
+    },
+    {
+     "frage": "like → ?",
+     "antwort": [
+      "liked"
+     ],
+     "tipp": "Regelmäßig: -ed (Schreibregeln beachten!)",
+     "erklaerung": "like → liked: Endet auf -e: nur -d."
+    },
+    {
+     "frage": "live → ?",
+     "antwort": [
+      "lived"
+     ],
+     "tipp": "Regelmäßig: -ed (Schreibregeln beachten!)",
+     "erklaerung": "live → lived: Endet auf -e: nur -d."
+    },
+    {
+     "frage": "talk → ?",
+     "antwort": [
+      "talked"
+     ],
+     "tipp": "Regelmäßig: -ed (Schreibregeln beachten!)",
+     "erklaerung": "talk → talked: Einfach -ed anhängen."
+    },
+    {
+     "frage": "listen → ?",
+     "antwort": [
+      "listened"
+     ],
+     "tipp": "Regelmäßig: -ed (Schreibregeln beachten!)",
+     "erklaerung": "listen → listened: Einfach -ed anhängen."
+    },
+    {
+     "frage": "learn → ?",
+     "antwort": [
+      "learned",
+      "learnt"
+     ],
+     "tipp": "Regelmäßig: -ed (Schreibregeln beachten!)",
+     "erklaerung": "learn → learned: Einfach -ed anhängen."
+    },
+    {
+     "frage": "ask → ?",
+     "antwort": [
+      "asked"
+     ],
+     "tipp": "Regelmäßig: -ed (Schreibregeln beachten!)",
+     "erklaerung": "ask → asked: Einfach -ed anhängen."
+    },
+    {
+     "frage": "open → ?",
+     "antwort": [
+      "opened"
+     ],
+     "tipp": "Regelmäßig: -ed (Schreibregeln beachten!)",
+     "erklaerung": "open → opened: Einfach -ed anhängen."
+    },
+    {
+     "frage": "close → ?",
+     "antwort": [
+      "closed"
+     ],
+     "tipp": "Regelmäßig: -ed (Schreibregeln beachten!)",
+     "erklaerung": "close → closed: Endet auf -e: nur -d."
+    },
+    {
+     "frage": "start → ?",
+     "antwort": [
+      "started"
+     ],
+     "tipp": "Regelmäßig: -ed (Schreibregeln beachten!)",
+     "erklaerung": "start → started: Einfach -ed anhängen."
+    },
+    {
+     "frage": "stop → ?",
+     "antwort": [
+      "stopped"
+     ],
+     "tipp": "Regelmäßig: -ed (Schreibregeln beachten!)",
+     "erklaerung": "stop → stopped: Kurzer Vokal + ein Konsonant: Konsonant verdoppeln."
+    },
+    {
+     "frage": "clean → ?",
+     "antwort": [
+      "cleaned"
+     ],
+     "tipp": "Regelmäßig: -ed (Schreibregeln beachten!)",
+     "erklaerung": "clean → cleaned: Einfach -ed anhängen."
+    },
+    {
+     "frage": "cook → ?",
+     "antwort": [
+      "cooked"
+     ],
+     "tipp": "Regelmäßig: -ed (Schreibregeln beachten!)",
+     "erklaerung": "cook → cooked: Einfach -ed anhängen."
+    },
+    {
+     "frage": "jump → ?",
+     "antwort": [
+      "jumped"
+     ],
+     "tipp": "Regelmäßig: -ed (Schreibregeln beachten!)",
+     "erklaerung": "jump → jumped: Einfach -ed anhängen."
+    },
+    {
+     "frage": "climb → ?",
+     "antwort": [
+      "climbed"
+     ],
+     "tipp": "Regelmäßig: -ed (Schreibregeln beachten!)",
+     "erklaerung": "climb → climbed: Einfach -ed anhängen."
+    },
+    {
+     "frage": "visit → ?",
+     "antwort": [
+      "visited"
+     ],
+     "tipp": "Regelmäßig: -ed (Schreibregeln beachten!)",
+     "erklaerung": "visit → visited: Einfach -ed anhängen."
+    },
+    {
+     "frage": "dance → ?",
+     "antwort": [
+      "danced"
+     ],
+     "tipp": "Regelmäßig: -ed (Schreibregeln beachten!)",
+     "erklaerung": "dance → danced: Endet auf -e: nur -d."
+    },
+    {
+     "frage": "smile → ?",
+     "antwort": [
+      "smiled"
+     ],
+     "tipp": "Regelmäßig: -ed (Schreibregeln beachten!)",
+     "erklaerung": "smile → smiled: Endet auf -e: nur -d."
+    },
+    {
+     "frage": "want → ?",
+     "antwort": [
+      "wanted"
+     ],
+     "tipp": "Regelmäßig: -ed (Schreibregeln beachten!)",
+     "erklaerung": "want → wanted: Einfach -ed anhängen."
+    },
+    {
+     "frage": "wait → ?",
+     "antwort": [
+      "waited"
+     ],
+     "tipp": "Regelmäßig: -ed (Schreibregeln beachten!)",
+     "erklaerung": "wait → waited: Einfach -ed anhängen."
+    },
+    {
+     "frage": "paint → ?",
+     "antwort": [
+      "painted"
+     ],
+     "tipp": "Regelmäßig: -ed (Schreibregeln beachten!)",
+     "erklaerung": "paint → painted: Einfach -ed anhängen."
+    },
+    {
+     "frage": "finish → ?",
+     "antwort": [
+      "finished"
+     ],
+     "tipp": "Regelmäßig: -ed (Schreibregeln beachten!)",
+     "erklaerung": "finish → finished: Einfach -ed anhängen."
+    },
+    {
+     "frage": "study → ?",
+     "antwort": [
+      "studied"
+     ],
+     "tipp": "Regelmäßig: -ed (Schreibregeln beachten!)",
+     "erklaerung": "study → studied: Konsonant + y: y → ied."
+    },
+    {
+     "frage": "try → ?",
+     "antwort": [
+      "tried"
+     ],
+     "tipp": "Regelmäßig: -ed (Schreibregeln beachten!)",
+     "erklaerung": "try → tried: Konsonant + y: y → ied."
+    },
+    {
+     "frage": "carry → ?",
+     "antwort": [
+      "carried"
+     ],
+     "tipp": "Regelmäßig: -ed (Schreibregeln beachten!)",
+     "erklaerung": "carry → carried: Konsonant + y: y → ied."
+    },
+    {
+     "frage": "cry → ?",
+     "antwort": [
+      "cried"
+     ],
+     "tipp": "Regelmäßig: -ed (Schreibregeln beachten!)",
+     "erklaerung": "cry → cried: Konsonant + y: y → ied."
+    },
+    {
+     "frage": "enjoy → ?",
+     "antwort": [
+      "enjoyed"
+     ],
+     "tipp": "Regelmäßig: -ed (Schreibregeln beachten!)",
+     "erklaerung": "enjoy → enjoyed: Vokal + y: einfach -ed."
+    },
+    {
+     "frage": "stay → ?",
+     "antwort": [
+      "stayed"
+     ],
+     "tipp": "Regelmäßig: -ed (Schreibregeln beachten!)",
+     "erklaerung": "stay → stayed: Vokal + y: einfach -ed."
+    },
+    {
+     "frage": "plan → ?",
+     "antwort": [
+      "planned"
+     ],
+     "tipp": "Regelmäßig: -ed (Schreibregeln beachten!)",
+     "erklaerung": "plan → planned: Kurzer Vokal + ein Konsonant: Konsonant verdoppeln."
+    },
+    {
+     "frage": "travel → ?",
+     "antwort": [
+      "travelled",
+      "traveled"
+     ],
+     "tipp": "Regelmäßig: -ed (Schreibregeln beachten!)",
+     "erklaerung": "travel → travelled: Kurzer Vokal + ein Konsonant: Konsonant verdoppeln."
+    },
+    {
+     "frage": "hug → ?",
+     "antwort": [
+      "hugged"
+     ],
+     "tipp": "Regelmäßig: -ed (Schreibregeln beachten!)",
+     "erklaerung": "hug → hugged: Kurzer Vokal + ein Konsonant: Konsonant verdoppeln."
+    },
+    {
+     "frage": "drop → ?",
+     "antwort": [
+      "dropped"
+     ],
+     "tipp": "Regelmäßig: -ed (Schreibregeln beachten!)",
+     "erklaerung": "drop → dropped: Kurzer Vokal + ein Konsonant: Konsonant verdoppeln."
+    },
+    {
+     "frage": "shop → ?",
+     "antwort": [
+      "shopped"
+     ],
+     "tipp": "Regelmäßig: -ed (Schreibregeln beachten!)",
+     "erklaerung": "shop → shopped: Kurzer Vokal + ein Konsonant: Konsonant verdoppeln."
+    },
+    {
+     "frage": "practise → ?",
+     "antwort": [
+      "practised",
+      "practiced"
+     ],
+     "tipp": "Regelmäßig: -ed (Schreibregeln beachten!)",
+     "erklaerung": "practise → practised: Endet auf -e: nur -d."
+    }
+   ]
+  },
+  {
+   "id": "en.5.simple-past.unregelmaessig",
+   "titel": "Unregelmäßige Verben",
+   "kurz": "go → went, see → saw …",
+   "typ": "eingabe",
+   "anweisung": "Schreibe das simple past.",
+   "aufgaben": [
+    {
+     "frage": "be (I / he / she / it) → ?",
+     "antwort": [
+      "was"
+     ],
+     "tipp": "be: was / were"
+    },
+    {
+     "frage": "be (you / we / they) → ?",
+     "antwort": [
+      "were"
+     ],
+     "tipp": "be: was / were"
+    },
+    {
+     "frage": "have (haben) → ?",
+     "antwort": [
+      "had"
+     ],
+     "tipp": "Unregelmäßig: diese Form musst du lernen.",
+     "erklaerung": "have → had"
+    },
+    {
+     "frage": "do (tun) → ?",
+     "antwort": [
+      "did"
+     ],
+     "tipp": "Unregelmäßig: diese Form musst du lernen.",
+     "erklaerung": "do → did"
+    },
+    {
+     "frage": "go (gehen) → ?",
+     "antwort": [
+      "went"
+     ],
+     "tipp": "Unregelmäßig: diese Form musst du lernen.",
+     "erklaerung": "go → went"
+    },
+    {
+     "frage": "come (kommen) → ?",
+     "antwort": [
+      "came"
+     ],
+     "tipp": "Unregelmäßig: diese Form musst du lernen.",
+     "erklaerung": "come → came"
+    },
+    {
+     "frage": "see (sehen) → ?",
+     "antwort": [
+      "saw"
+     ],
+     "tipp": "Unregelmäßig: diese Form musst du lernen.",
+     "erklaerung": "see → saw"
+    },
+    {
+     "frage": "eat (essen) → ?",
+     "antwort": [
+      "ate"
+     ],
+     "tipp": "Unregelmäßig: diese Form musst du lernen.",
+     "erklaerung": "eat → ate"
+    },
+    {
+     "frage": "drink (trinken) → ?",
+     "antwort": [
+      "drank"
+     ],
+     "tipp": "Unregelmäßig: diese Form musst du lernen.",
+     "erklaerung": "drink → drank"
+    },
+    {
+     "frage": "get (bekommen) → ?",
+     "antwort": [
+      "got"
+     ],
+     "tipp": "Unregelmäßig: diese Form musst du lernen.",
+     "erklaerung": "get → got"
+    },
+    {
+     "frage": "make (machen) → ?",
+     "antwort": [
+      "made"
+     ],
+     "tipp": "Unregelmäßig: diese Form musst du lernen.",
+     "erklaerung": "make → made"
+    },
+    {
+     "frage": "take (nehmen) → ?",
+     "antwort": [
+      "took"
+     ],
+     "tipp": "Unregelmäßig: diese Form musst du lernen.",
+     "erklaerung": "take → took"
+    },
+    {
+     "frage": "give (geben) → ?",
+     "antwort": [
+      "gave"
+     ],
+     "tipp": "Unregelmäßig: diese Form musst du lernen.",
+     "erklaerung": "give → gave"
+    },
+    {
+     "frage": "say (sagen) → ?",
+     "antwort": [
+      "said"
+     ],
+     "tipp": "Unregelmäßig: diese Form musst du lernen.",
+     "erklaerung": "say → said"
+    },
+    {
+     "frage": "run (rennen) → ?",
+     "antwort": [
+      "ran"
+     ],
+     "tipp": "Unregelmäßig: diese Form musst du lernen.",
+     "erklaerung": "run → ran"
+    },
+    {
+     "frage": "sit (sitzen) → ?",
+     "antwort": [
+      "sat"
+     ],
+     "tipp": "Unregelmäßig: diese Form musst du lernen.",
+     "erklaerung": "sit → sat"
+    },
+    {
+     "frage": "stand (stehen) → ?",
+     "antwort": [
+      "stood"
+     ],
+     "tipp": "Unregelmäßig: diese Form musst du lernen.",
+     "erklaerung": "stand → stood"
+    },
+    {
+     "frage": "read (lesen) → ?",
+     "antwort": [
+      "read"
+     ],
+     "tipp": "Unregelmäßig: diese Form musst du lernen.",
+     "erklaerung": "read → read"
+    },
+    {
+     "frage": "write (schreiben) → ?",
+     "antwort": [
+      "wrote"
+     ],
+     "tipp": "Unregelmäßig: diese Form musst du lernen.",
+     "erklaerung": "write → wrote"
+    },
+    {
+     "frage": "buy (kaufen) → ?",
+     "antwort": [
+      "bought"
+     ],
+     "tipp": "Unregelmäßig: diese Form musst du lernen.",
+     "erklaerung": "buy → bought"
+    },
+    {
+     "frage": "find (finden) → ?",
+     "antwort": [
+      "found"
+     ],
+     "tipp": "Unregelmäßig: diese Form musst du lernen.",
+     "erklaerung": "find → found"
+    },
+    {
+     "frage": "fly (fliegen) → ?",
+     "antwort": [
+      "flew"
+     ],
+     "tipp": "Unregelmäßig: diese Form musst du lernen.",
+     "erklaerung": "fly → flew"
+    },
+    {
+     "frage": "swim (schwimmen) → ?",
+     "antwort": [
+      "swam"
+     ],
+     "tipp": "Unregelmäßig: diese Form musst du lernen.",
+     "erklaerung": "swim → swam"
+    },
+    {
+     "frage": "sing (singen) → ?",
+     "antwort": [
+      "sang"
+     ],
+     "tipp": "Unregelmäßig: diese Form musst du lernen.",
+     "erklaerung": "sing → sang"
+    },
+    {
+     "frage": "sleep (schlafen) → ?",
+     "antwort": [
+      "slept"
+     ],
+     "tipp": "Unregelmäßig: diese Form musst du lernen.",
+     "erklaerung": "sleep → slept"
+    },
+    {
+     "frage": "think (denken) → ?",
+     "antwort": [
+      "thought"
+     ],
+     "tipp": "Unregelmäßig: diese Form musst du lernen.",
+     "erklaerung": "think → thought"
+    },
+    {
+     "frage": "tell (erzählen) → ?",
+     "antwort": [
+      "told"
+     ],
+     "tipp": "Unregelmäßig: diese Form musst du lernen.",
+     "erklaerung": "tell → told"
+    },
+    {
+     "frage": "leave (verlassen) → ?",
+     "antwort": [
+      "left"
+     ],
+     "tipp": "Unregelmäßig: diese Form musst du lernen.",
+     "erklaerung": "leave → left"
+    },
+    {
+     "frage": "meet (treffen) → ?",
+     "antwort": [
+      "met"
+     ],
+     "tipp": "Unregelmäßig: diese Form musst du lernen.",
+     "erklaerung": "meet → met"
+    },
+    {
+     "frage": "know (wissen) → ?",
+     "antwort": [
+      "knew"
+     ],
+     "tipp": "Unregelmäßig: diese Form musst du lernen.",
+     "erklaerung": "know → knew"
+    },
+    {
+     "frage": "begin (beginnen) → ?",
+     "antwort": [
+      "began"
+     ],
+     "tipp": "Unregelmäßig: diese Form musst du lernen.",
+     "erklaerung": "begin → began"
+    },
+    {
+     "frage": "break (brechen) → ?",
+     "antwort": [
+      "broke"
+     ],
+     "tipp": "Unregelmäßig: diese Form musst du lernen.",
+     "erklaerung": "break → broke"
+    },
+    {
+     "frage": "bring (bringen) → ?",
+     "antwort": [
+      "brought"
+     ],
+     "tipp": "Unregelmäßig: diese Form musst du lernen.",
+     "erklaerung": "bring → brought"
+    },
+    {
+     "frage": "catch (fangen) → ?",
+     "antwort": [
+      "caught"
+     ],
+     "tipp": "Unregelmäßig: diese Form musst du lernen.",
+     "erklaerung": "catch → caught"
+    },
+    {
+     "frage": "drive (fahren) → ?",
+     "antwort": [
+      "drove"
+     ],
+     "tipp": "Unregelmäßig: diese Form musst du lernen.",
+     "erklaerung": "drive → drove"
+    },
+    {
+     "frage": "fall (fallen) → ?",
+     "antwort": [
+      "fell"
+     ],
+     "tipp": "Unregelmäßig: diese Form musst du lernen.",
+     "erklaerung": "fall → fell"
+    },
+    {
+     "frage": "feel (fühlen) → ?",
+     "antwort": [
+      "felt"
+     ],
+     "tipp": "Unregelmäßig: diese Form musst du lernen.",
+     "erklaerung": "feel → felt"
+    },
+    {
+     "frage": "forget (vergessen) → ?",
+     "antwort": [
+      "forgot"
+     ],
+     "tipp": "Unregelmäßig: diese Form musst du lernen.",
+     "erklaerung": "forget → forgot"
+    },
+    {
+     "frage": "hear (hören) → ?",
+     "antwort": [
+      "heard"
+     ],
+     "tipp": "Unregelmäßig: diese Form musst du lernen.",
+     "erklaerung": "hear → heard"
+    },
+    {
+     "frage": "lose (verlieren) → ?",
+     "antwort": [
+      "lost"
+     ],
+     "tipp": "Unregelmäßig: diese Form musst du lernen.",
+     "erklaerung": "lose → lost"
+    },
+    {
+     "frage": "put (legen) → ?",
+     "antwort": [
+      "put"
+     ],
+     "tipp": "Unregelmäßig: diese Form musst du lernen.",
+     "erklaerung": "put → put"
+    },
+    {
+     "frage": "ride (reiten, Rad fahren) → ?",
+     "antwort": [
+      "rode"
+     ],
+     "tipp": "Unregelmäßig: diese Form musst du lernen.",
+     "erklaerung": "ride → rode"
+    },
+    {
+     "frage": "sell (verkaufen) → ?",
+     "antwort": [
+      "sold"
+     ],
+     "tipp": "Unregelmäßig: diese Form musst du lernen.",
+     "erklaerung": "sell → sold"
+    },
+    {
+     "frage": "send (schicken) → ?",
+     "antwort": [
+      "sent"
+     ],
+     "tipp": "Unregelmäßig: diese Form musst du lernen.",
+     "erklaerung": "send → sent"
+    },
+    {
+     "frage": "speak (sprechen) → ?",
+     "antwort": [
+      "spoke"
+     ],
+     "tipp": "Unregelmäßig: diese Form musst du lernen.",
+     "erklaerung": "speak → spoke"
+    },
+    {
+     "frage": "teach (unterrichten) → ?",
+     "antwort": [
+      "taught"
+     ],
+     "tipp": "Unregelmäßig: diese Form musst du lernen.",
+     "erklaerung": "teach → taught"
+    },
+    {
+     "frage": "throw (werfen) → ?",
+     "antwort": [
+      "threw"
+     ],
+     "tipp": "Unregelmäßig: diese Form musst du lernen.",
+     "erklaerung": "throw → threw"
+    },
+    {
+     "frage": "wear (tragen (Kleidung)) → ?",
+     "antwort": [
+      "wore"
+     ],
+     "tipp": "Unregelmäßig: diese Form musst du lernen.",
+     "erklaerung": "wear → wore"
+    },
+    {
+     "frage": "win (gewinnen) → ?",
+     "antwort": [
+      "won"
+     ],
+     "tipp": "Unregelmäßig: diese Form musst du lernen.",
+     "erklaerung": "win → won"
+    }
+   ]
+  },
+  {
+   "id": "en.5.simple-past.saetze",
+   "titel": "In Sätzen",
+   "kurz": "Yesterday I …",
+   "typ": "lueckentext",
+   "anweisung": "Setze das Verb im simple past ein.",
+   "aufgaben": [
+    {
+     "text": "Yesterday I ___ football. (play)",
+     "antwort": [
+      "played"
+     ],
+     "tipp": "Signalwort für die Vergangenheit → simple past"
+    },
+    {
+     "text": "Last week he ___ a funny film. (watch)",
+     "antwort": [
+      "watched"
+     ],
+     "tipp": "Signalwort für die Vergangenheit → simple past"
+    },
+    {
+     "text": "Last summer she ___ to the cinema. (go)",
+     "antwort": [
+      "went"
+     ],
+     "tipp": "Signalwort für die Vergangenheit → simple past"
+    },
+    {
+     "text": "Two days ago we ___ a big pizza. (eat)",
+     "antwort": [
+      "ate"
+     ],
+     "tipp": "Signalwort für die Vergangenheit → simple past"
+    },
+    {
+     "text": "Last Monday they ___ my grandma. (visit)",
+     "antwort": [
+      "visited"
+     ],
+     "tipp": "Signalwort für die Vergangenheit → simple past"
+    },
+    {
+     "text": "Last night My friend ___ a big dog. (see)",
+     "antwort": [
+      "saw"
+     ],
+     "tipp": "Signalwort für die Vergangenheit → simple past"
+    },
+    {
+     "text": "Yesterday Tom ___ a new bike. (buy)",
+     "antwort": [
+      "bought"
+     ],
+     "tipp": "Signalwort für die Vergangenheit → simple past"
+    },
+    {
+     "text": "Last week The children ___ spaghetti. (cook)",
+     "antwort": [
+      "cooked"
+     ],
+     "tipp": "Signalwort für die Vergangenheit → simple past"
+    },
+    {
+     "text": "Last summer I ___ in the lake. (swim)",
+     "antwort": [
+      "swam"
+     ],
+     "tipp": "Signalwort für die Vergangenheit → simple past"
+    },
+    {
+     "text": "Two days ago he ___ a letter. (write)",
+     "antwort": [
+      "wrote"
+     ],
+     "tipp": "Signalwort für die Vergangenheit → simple past"
+    },
+    {
+     "text": "Last Monday she ___ at the traffic lights. (stop)",
+     "antwort": [
+      "stopped"
+     ],
+     "tipp": "Signalwort für die Vergangenheit → simple past"
+    },
+    {
+     "text": "Last night we ___ for the test. (study)",
+     "antwort": [
+      "studied"
+     ],
+     "tipp": "Signalwort für die Vergangenheit → simple past"
+    },
+    {
+     "text": "Yesterday they ___ my friends. (meet)",
+     "antwort": [
+      "met"
+     ],
+     "tipp": "Signalwort für die Vergangenheit → simple past"
+    },
+    {
+     "text": "Last week My friend ___ a great time. (have)",
+     "antwort": [
+      "had"
+     ],
+     "tipp": "Signalwort für die Vergangenheit → simple past"
+    },
+    {
+     "text": "Last summer Tom ___ a lot of photos. (take)",
+     "antwort": [
+      "took"
+     ],
+     "tipp": "Signalwort für die Vergangenheit → simple past"
+    },
+    {
+     "text": "Two days ago The children ___ at the party. (dance)",
+     "antwort": [
+      "danced"
+     ],
+     "tipp": "Signalwort für die Vergangenheit → simple past"
+    }
+   ]
+  },
+  {
+   "id": "en.5.simple-past.verneinung",
+   "titel": "Verneinung",
+   "kurz": "didn't + Grundform",
+   "typ": "lueckentext",
+   "anweisung": "Schreibe die Verneinung (Kurz- oder Langform).",
+   "aufgaben": [
+    {
+     "text": "We ___ football yesterday. (not / play)",
+     "antwort": [
+      "didn't play",
+      "did not play"
+     ],
+     "tipp": "didn't + Grundform",
+     "erklaerung": "Nach didn't steht immer die Grundform."
+    },
+    {
+     "text": "They ___ a funny film yesterday. (not / watch)",
+     "antwort": [
+      "didn't watch",
+      "did not watch"
+     ],
+     "tipp": "didn't + Grundform",
+     "erklaerung": "Nach didn't steht immer die Grundform."
+    },
+    {
+     "text": "My friend ___ to the cinema yesterday. (not / go)",
+     "antwort": [
+      "didn't go",
+      "did not go"
+     ],
+     "tipp": "didn't + Grundform",
+     "erklaerung": "Nach didn't steht immer die Grundform."
+    },
+    {
+     "text": "Tom ___ a big pizza yesterday. (not / eat)",
+     "antwort": [
+      "didn't eat",
+      "did not eat"
+     ],
+     "tipp": "didn't + Grundform",
+     "erklaerung": "Nach didn't steht immer die Grundform."
+    },
+    {
+     "text": "The children ___ my grandma yesterday. (not / visit)",
+     "antwort": [
+      "didn't visit",
+      "did not visit"
+     ],
+     "tipp": "didn't + Grundform",
+     "erklaerung": "Nach didn't steht immer die Grundform."
+    },
+    {
+     "text": "I ___ a big dog yesterday. (not / see)",
+     "antwort": [
+      "didn't see",
+      "did not see"
+     ],
+     "tipp": "didn't + Grundform",
+     "erklaerung": "Nach didn't steht immer die Grundform."
+    },
+    {
+     "text": "He ___ a new bike yesterday. (not / buy)",
+     "antwort": [
+      "didn't buy",
+      "did not buy"
+     ],
+     "tipp": "didn't + Grundform",
+     "erklaerung": "Nach didn't steht immer die Grundform."
+    },
+    {
+     "text": "She ___ spaghetti yesterday. (not / cook)",
+     "antwort": [
+      "didn't cook",
+      "did not cook"
+     ],
+     "tipp": "didn't + Grundform",
+     "erklaerung": "Nach didn't steht immer die Grundform."
+    },
+    {
+     "text": "We ___ in the lake yesterday. (not / swim)",
+     "antwort": [
+      "didn't swim",
+      "did not swim"
+     ],
+     "tipp": "didn't + Grundform",
+     "erklaerung": "Nach didn't steht immer die Grundform."
+    },
+    {
+     "text": "They ___ a letter yesterday. (not / write)",
+     "antwort": [
+      "didn't write",
+      "did not write"
+     ],
+     "tipp": "didn't + Grundform",
+     "erklaerung": "Nach didn't steht immer die Grundform."
+    },
+    {
+     "text": "My friend ___ at the traffic lights yesterday. (not / stop)",
+     "antwort": [
+      "didn't stop",
+      "did not stop"
+     ],
+     "tipp": "didn't + Grundform",
+     "erklaerung": "Nach didn't steht immer die Grundform."
+    },
+    {
+     "text": "Tom ___ for the test yesterday. (not / study)",
+     "antwort": [
+      "didn't study",
+      "did not study"
+     ],
+     "tipp": "didn't + Grundform",
+     "erklaerung": "Nach didn't steht immer die Grundform."
+    },
+    {
+     "text": "I ___ at home last night. (not / be)",
+     "antwort": [
+      "wasn't",
+      "was not"
+     ],
+     "tipp": "be: wasn't / weren't – ohne didn't"
+    },
+    {
+     "text": "They ___ at school yesterday. (not / be)",
+     "antwort": [
+      "weren't",
+      "were not"
+     ],
+     "tipp": "be: wasn't / weren't – ohne didn't"
+    }
+   ]
+  },
+  {
+   "id": "en.5.simple-past.fragen",
+   "titel": "Fragen und Kurzantworten",
+   "kurz": "Did you …?",
+   "typ": "sortieren",
+   "anweisung": "Bau die Frage.",
+   "aufgaben": [
+    {
+     "teile": [
+      "Did",
+      "you",
+      "watch",
+      "the film"
+     ],
+     "loesung": "Did you watch the film?",
+     "tipp": "Fragen: Did + Subjekt + Grundform? (bei be: Was/Were …?)"
+    },
+    {
+     "teile": [
+      "Did",
+      "she",
+      "go",
+      "to school"
+     ],
+     "loesung": "Did she go to school?",
+     "tipp": "Fragen: Did + Subjekt + Grundform? (bei be: Was/Were …?)"
+    },
+    {
+     "teile": [
+      "Where",
+      "did",
+      "you",
+      "go",
+      "last summer"
+     ],
+     "loesung": "Where did you go last summer?",
+     "tipp": "Fragen: Did + Subjekt + Grundform? (bei be: Was/Were …?)"
+    },
+    {
+     "teile": [
+      "What",
+      "did",
+      "he",
+      "eat"
+     ],
+     "loesung": "What did he eat?",
+     "tipp": "Fragen: Did + Subjekt + Grundform? (bei be: Was/Were …?)"
+    },
+    {
+     "teile": [
+      "Did",
+      "they",
+      "play",
+      "football",
+      "yesterday"
+     ],
+     "loesung": "Did they play football yesterday?",
+     "tipp": "Fragen: Did + Subjekt + Grundform? (bei be: Was/Were …?)"
+    },
+    {
+     "teile": [
+      "When",
+      "did",
+      "Tom",
+      "come",
+      "home"
+     ],
+     "loesung": "When did Tom come home?",
+     "tipp": "Fragen: Did + Subjekt + Grundform? (bei be: Was/Were …?)"
+    },
+    {
+     "teile": [
+      "Did",
+      "your dad",
+      "buy",
+      "a new car"
+     ],
+     "loesung": "Did your dad buy a new car?",
+     "tipp": "Fragen: Did + Subjekt + Grundform? (bei be: Was/Were …?)"
+    },
+    {
+     "teile": [
+      "Were",
+      "you",
+      "at home"
+     ],
+     "loesung": "Were you at home?",
+     "tipp": "Fragen: Did + Subjekt + Grundform? (bei be: Was/Were …?)"
+    },
+    {
+     "text": "Did you see Tom? – Yes, I ___.",
+     "antwort": "did",
+     "optionen": [
+      "did",
+      "do",
+      "was"
+     ],
+     "typ": "lueckentext",
+     "tipp": "Kurzantwort: Yes, I did. / No, she didn't. – bei be: was/were"
+    },
+    {
+     "text": "Did she like the film? – No, she ___.",
+     "antwort": "didn't",
+     "optionen": [
+      "didn't",
+      "doesn't",
+      "wasn't"
+     ],
+     "typ": "lueckentext",
+     "tipp": "Kurzantwort: Yes, I did. / No, she didn't. – bei be: was/were"
+    },
+    {
+     "text": "Were they at the party? – Yes, they ___.",
+     "antwort": "were",
+     "optionen": [
+      "did",
+      "were",
+      "was"
+     ],
+     "typ": "lueckentext",
+     "tipp": "Kurzantwort: Yes, I did. / No, she didn't. – bei be: was/were"
+    },
+    {
+     "text": "Was it cold? – No, it ___.",
+     "antwort": "wasn't",
+     "optionen": [
+      "didn't",
+      "wasn't",
+      "weren't"
+     ],
+     "typ": "lueckentext",
+     "tipp": "Kurzantwort: Yes, I did. / No, she didn't. – bei be: was/were"
+    }
+   ]
+  },
+  {
+   "id": "en.5.simple-past.fehler",
+   "titel": "Fehler finden",
+   "kurz": "Tippe den Fehler an",
+   "typ": "markieren",
+   "anweisung": "Ein Wort ist falsch. Tippe es an.",
+   "aufgaben": [
+    {
+     "satz": "Yesterday he [goed] to the cinema.",
+     "richtig": "went",
+     "erklaerung": "Simple past: -ed oder unregelmäßige Form · nach did/didn't: Grundform · be: was/were"
+    },
+    {
+     "satz": "Did she [went] home?",
+     "richtig": "go",
+     "erklaerung": "Simple past: -ed oder unregelmäßige Form · nach did/didn't: Grundform · be: was/were"
+    },
+    {
+     "satz": "I [didn't went] to school.",
+     "richtig": "didn't go",
+     "erklaerung": "Simple past: -ed oder unregelmäßige Form · nach did/didn't: Grundform · be: was/were"
+    },
+    {
+     "satz": "Last week we [play] football.",
+     "richtig": "played",
+     "erklaerung": "Simple past: -ed oder unregelmäßige Form · nach did/didn't: Grundform · be: was/were"
+    },
+    {
+     "satz": "They [was] at the zoo.",
+     "richtig": "were",
+     "erklaerung": "Simple past: -ed oder unregelmäßige Form · nach did/didn't: Grundform · be: was/were"
+    },
+    {
+     "satz": "She [buyed] a new bag.",
+     "richtig": "bought",
+     "erklaerung": "Simple past: -ed oder unregelmäßige Form · nach did/didn't: Grundform · be: was/were"
+    },
+    {
+     "satz": "He [stoped] at the corner.",
+     "richtig": "stopped",
+     "erklaerung": "Simple past: -ed oder unregelmäßige Form · nach did/didn't: Grundform · be: was/were"
+    },
+    {
+     "satz": "I [studyed] for the test.",
+     "richtig": "studied",
+     "erklaerung": "Simple past: -ed oder unregelmäßige Form · nach did/didn't: Grundform · be: was/were"
+    },
+    {
+     "satz": "We [eated] a lot of cake.",
+     "richtig": "ate",
+     "erklaerung": "Simple past: -ed oder unregelmäßige Form · nach did/didn't: Grundform · be: was/were"
+    },
+    {
+     "satz": "Did you [saw] the dog?",
+     "richtig": "see",
+     "erklaerung": "Simple past: -ed oder unregelmäßige Form · nach did/didn't: Grundform · be: was/were"
+    },
+    {
+     "satz": "My mum [writed] a letter.",
+     "richtig": "wrote",
+     "erklaerung": "Simple past: -ed oder unregelmäßige Form · nach did/didn't: Grundform · be: was/were"
+    },
+    {
+     "satz": "[Was] you at home last night?",
+     "richtig": "Were",
+     "erklaerung": "Simple past: -ed oder unregelmäßige Form · nach did/didn't: Grundform · be: was/were"
+    }
+   ]
+  },
+  {
+   "id": "en.5.simple-past.mix",
+   "titel": "Mix",
+   "kurz": "Alles durcheinander",
+   "mix": true,
+   "runde": 10
+  }
+ ]
+}

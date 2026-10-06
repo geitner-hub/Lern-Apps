@@ -14,6 +14,7 @@
 //      "thema": "de.5.wortarten", "titel": "Wortarten", "untertitel": "…", "klasse": 5,
 //      "sprache": "en-GB"   (optional: Vorlesen in dieser Sprache),
 //      "runde": 8           (optional, Aufgaben je Runde),
+//      "hilfe": [{ "titel", "text", "beispiele": [["en","de"]], "tabelle": [[…]] }]  (optional: Kachel „So geht's“),
 //      "stufen": [ { "id": "de.5.wortarten.nomen", "titel": "…", "kurz": "…", … je Typ … } ] }
 //  Was „je Typ“ in einer Stufe steht, beschreibt der Kopf der Typ-Datei.
 //
@@ -112,6 +113,24 @@
   }
 
   function typ(name, t) { TYPEN[name] = t; }
+
+  /** „So geht's“ aus der Inhaltsdatei: "hilfe": [{ titel, text?, beispiele?: [[en, de]], tabelle?: [[Kopf…], [Zeile…]] }] */
+  function hilfeHTML(liste) {
+    if (!Array.isArray(liste) || !liste.length) return '';
+    return liste.map(h => `<section>${h.titel ? `<h2>${esc(h.titel)}</h2>` : ''}
+      ${(Array.isArray(h.text) ? h.text : h.text ? [h.text] : []).map(t => `<p>${esc(t)}</p>`).join('')}
+      ${Array.isArray(h.beispiele) && h.beispiele.length ? `<div class="bsp">${h.beispiele.map(b => `<b>${esc(b[0])}</b><span>${esc(b[1] || '')}</span>`).join('')}</div>` : ''}
+      ${Array.isArray(h.tabelle) && h.tabelle.length ? `<table><tr>${h.tabelle[0].map(k => `<th>${esc(k)}</th>`).join('')}</tr>
+        ${h.tabelle.slice(1).map(z => `<tr>${z.map(k => `<td>${esc(k)}</td>`).join('')}</tr>`).join('')}</table>` : ''}</section>`).join('');
+  }
+
+  // Umzug alter Einzel-Apps (Neue Lern-Apps Etappe 7): Ergebnisse, Sterne und Dorf-Aufträge übernehmen.
+  // Läuft sofort beim Laden – vor navbar.js, das den Pass liest (uebung.html bindet typen.js davor ein).
+  const UMZUG = { 'en.5.simple-present': 'practice_simple_present.html', 'en.5.simple-past': 'simple-past.html' };
+  try {
+    const inh = new URLSearchParams(location.search).get('inhalt');
+    if (UMZUG[inh] && window.LernUeben) LernUeben.uebernehme(UMZUG[inh], (location.pathname.split('/').pop() || '') + location.search);
+  } catch (e) {}
 
   function fehler(host, text) {
     host.innerHTML = `<p style="color:rgba(241,240,251,.7);font:800 1rem Nunito,system-ui,sans-serif;text-align:center;padding:4rem 1rem">⚠️ ${esc(text)}</p>`;
@@ -243,6 +262,7 @@
     return LernUeben.start({
       host, titel: (D.emoji ? D.emoji + ' ' : '') + (D.titel || 'Übung'), untertitel: D.untertitel || 'Wähle eine Stufe',
       stufen, runde: Number(D.runde) || 8, meisterschaft: D.meisterschaft, vorlesen: !!D.vorlesen,
+      hilfe: D.hilfe ? { html: hilfeHTML(D.hilfe) } : null,
       erzeuge: st => { const nr = ziehe(st); return nr == null ? null : aufgabe(st, nr); },
       erzeugeTyp: (st, typ) => { const nr = Number(String(typ || '').slice(1)); return /^a\d+$/.test(typ) && nr < anzahl(st) ? aufgabe(st, nr) : null; },
       pruefe: (a, e) => { const T = TYPEN[a._typ]; return !!T && T.pruefe(a, e); },

@@ -1,0 +1,1130 @@
+{
+ "typ": "gemischt",
+ "thema": "en.5.simple-present",
+ "titel": "Simple Present",
+ "emoji": "🇬🇧",
+ "klasse": 5,
+ "sprache": "en-GB",
+ "runde": 8,
+ "untertitel": "he/she/it – s, Verneinung, Fragen, Signalwörter",
+ "hilfe": [
+  {
+   "titel": "Wann benutzt man das Simple Present?",
+   "text": "Für Dinge, die immer wieder oder regelmäßig passieren, und für Tatsachen. Signalwörter: always, often, usually, sometimes, never, every day, on Mondays.",
+   "beispiele": [
+    [
+     "I play football every Saturday.",
+     "Ich spiele jeden Samstag Fußball."
+    ],
+    [
+     "She always walks to school.",
+     "Sie geht immer zu Fuß zur Schule."
+    ]
+   ]
+  },
+  {
+   "titel": "he, she, it – das s muss mit!",
+   "text": "Nach he, she, it (und Namen wie Tom, the dog) bekommt das Verb ein -s.",
+   "tabelle": [
+    [
+     "Regel",
+     "Beispiel"
+    ],
+    [
+     "normal: + s",
+     "play → plays"
+    ],
+    [
+     "nach s, sh, ch, x, o: + es",
+     "watch → watches, go → goes"
+    ],
+    [
+     "Konsonant + y: y → ies",
+     "fly → flies, study → studies"
+    ],
+    [
+     "Vokal + y: + s",
+     "play → plays"
+    ],
+    [
+     "Ausnahme",
+     "have → has"
+    ]
+   ]
+  },
+  {
+   "titel": "Verneinung: don't / doesn't",
+   "text": "I/you/we/they → don't + Grundform. He/she/it → doesn't + Grundform (ohne -s!).",
+   "beispiele": [
+    [
+     "I don't like fish.",
+     "Ich mag keinen Fisch."
+    ],
+    [
+     "He doesn't play tennis.",
+     "Er spielt nicht Tennis."
+    ]
+   ]
+  },
+  {
+   "titel": "Fragen: Do / Does",
+   "text": "Do/Does + Subjekt + Grundform? Kurzantworten: Yes, I do. / No, he doesn't.",
+   "beispiele": [
+    [
+     "Do you like pizza? – Yes, I do.",
+     "Magst du Pizza? – Ja."
+    ],
+    [
+     "Does she live here? – No, she doesn't.",
+     "Wohnt sie hier? – Nein."
+    ],
+    [
+     "Where do you live?",
+     "Wo wohnst du?"
+    ]
+   ]
+  }
+ ],
+ "stufen": [
+  {
+   "id": "en.5.simple-present.formen",
+   "titel": "Verbform wählen",
+   "kurz": "play oder plays?",
+   "typ": "lueckentext",
+   "anweisung": "Welche Form passt?",
+   "aufgaben": [
+    {
+     "text": "He ___ football after school.",
+     "antwort": "plays",
+     "optionen": [
+      "play",
+      "plays"
+     ],
+     "tipp": "he → -s"
+    },
+    {
+     "text": "They ___ pizza on Friday.",
+     "antwort": "eat",
+     "optionen": [
+      "eat",
+      "eats"
+     ],
+     "tipp": "they → keine Änderung"
+    },
+    {
+     "text": "She ___ TV in the evening.",
+     "antwort": "watches",
+     "optionen": [
+      "watch",
+      "watches"
+     ],
+     "tipp": "she → -s"
+    },
+    {
+     "text": "The dog ___ in the garden.",
+     "antwort": "sleeps",
+     "optionen": [
+      "sleep",
+      "sleeps"
+     ],
+     "tipp": "The dog = he/she/it → -s"
+    },
+    {
+     "text": "I ___ milk every morning.",
+     "antwort": "drink",
+     "optionen": [
+      "drink",
+      "drinks"
+     ],
+     "tipp": "i → keine Änderung"
+    },
+    {
+     "text": "We ___ our homework at home.",
+     "antwort": "do",
+     "optionen": [
+      "do",
+      "does"
+     ],
+     "tipp": "we → keine Änderung"
+    },
+    {
+     "text": "He ___ a book every evening.",
+     "antwort": "reads",
+     "optionen": [
+      "read",
+      "reads"
+     ],
+     "tipp": "he → -s"
+    },
+    {
+     "text": "She ___ football at school.",
+     "antwort": "plays",
+     "optionen": [
+      "play",
+      "plays"
+     ],
+     "tipp": "she → -s"
+    },
+    {
+     "text": "They ___ English at school.",
+     "antwort": "learn",
+     "optionen": [
+      "learn",
+      "learns"
+     ],
+     "tipp": "they → keine Änderung"
+    },
+    {
+     "text": "The cat ___ on the sofa.",
+     "antwort": "sits",
+     "optionen": [
+      "sit",
+      "sits"
+     ],
+     "tipp": "The cat = he/she/it → -s"
+    },
+    {
+     "text": "My mum ___ to work by bus.",
+     "antwort": "goes",
+     "optionen": [
+      "go",
+      "goes"
+     ],
+     "tipp": "My mum = he/she/it → -s"
+    },
+    {
+     "text": "Tom ___ his bike on Sunday.",
+     "antwort": "washes",
+     "optionen": [
+      "wash",
+      "washes"
+     ],
+     "tipp": "Tom = he/she/it → -s"
+    },
+    {
+     "text": "You ___ chocolate.",
+     "antwort": "like",
+     "optionen": [
+      "like",
+      "likes"
+     ],
+     "tipp": "you → keine Änderung"
+    },
+    {
+     "text": "My brother ___ his kite in the park.",
+     "antwort": "flies",
+     "optionen": [
+      "fly",
+      "flies"
+     ],
+     "tipp": "My brother = he/she/it → -s"
+    },
+    {
+     "text": "We ___ in a small town.",
+     "antwort": "live",
+     "optionen": [
+      "live",
+      "lives"
+     ],
+     "tipp": "we → keine Änderung"
+    },
+    {
+     "text": "Anna ___ two sisters.",
+     "antwort": "has",
+     "optionen": [
+      "have",
+      "has"
+     ],
+     "tipp": "Anna = he/she/it → -s"
+    },
+    {
+     "text": "The children ___ to school.",
+     "antwort": "walk",
+     "optionen": [
+      "walk",
+      "walks"
+     ],
+     "tipp": "the children → keine Änderung"
+    },
+    {
+     "text": "My dad ___ dinner every day.",
+     "antwort": "cooks",
+     "optionen": [
+      "cook",
+      "cooks"
+     ],
+     "tipp": "My dad = he/she/it → -s"
+    },
+    {
+     "text": "It ___ a lot in April.",
+     "antwort": "rains",
+     "optionen": [
+      "rain",
+      "rains"
+     ],
+     "tipp": "it → -s"
+    },
+    {
+     "text": "Lisa ___ in the library.",
+     "antwort": "studies",
+     "optionen": [
+      "study",
+      "studies"
+     ],
+     "tipp": "Lisa = he/she/it → -s"
+    },
+    {
+     "text": "___ plays football in the park.",
+     "antwort": "He",
+     "optionen": [
+      "I",
+      "He",
+      "They"
+     ],
+     "typ": "lueckentext",
+     "tipp": "Verb mit -s → he / she / it; ohne -s → I / you / we / they"
+    },
+    {
+     "text": "___ watch TV in the evening.",
+     "antwort": "They",
+     "optionen": [
+      "She",
+      "He",
+      "They"
+     ],
+     "typ": "lueckentext",
+     "tipp": "Verb mit -s → he / she / it; ohne -s → I / you / we / they"
+    },
+    {
+     "text": "___ eats pizza on Friday.",
+     "antwort": "He",
+     "optionen": [
+      "He",
+      "We",
+      "They"
+     ],
+     "typ": "lueckentext",
+     "tipp": "Verb mit -s → he / she / it; ohne -s → I / you / we / they"
+    },
+    {
+     "text": "___ learn English at school.",
+     "antwort": "We",
+     "optionen": [
+      "He",
+      "She",
+      "We"
+     ],
+     "typ": "lueckentext",
+     "tipp": "Verb mit -s → he / she / it; ohne -s → I / you / we / they"
+    },
+    {
+     "text": "___ reads a book every day.",
+     "antwort": "She",
+     "optionen": [
+      "They",
+      "She",
+      "I"
+     ],
+     "typ": "lueckentext",
+     "tipp": "Verb mit -s → he / she / it; ohne -s → I / you / we / they"
+    },
+    {
+     "text": "___ drinks milk in the morning.",
+     "antwort": "He",
+     "optionen": [
+      "He",
+      "We",
+      "They"
+     ],
+     "typ": "lueckentext",
+     "tipp": "Verb mit -s → he / she / it; ohne -s → I / you / we / they"
+    },
+    {
+     "text": "___ do our homework at home.",
+     "antwort": "We",
+     "optionen": [
+      "She",
+      "We",
+      "He"
+     ],
+     "typ": "lueckentext",
+     "tipp": "Verb mit -s → he / she / it; ohne -s → I / you / we / they"
+    },
+    {
+     "text": "___ eats cake at the weekend.",
+     "antwort": "She",
+     "optionen": [
+      "They",
+      "She",
+      "We"
+     ],
+     "typ": "lueckentext",
+     "tipp": "Verb mit -s → he / she / it; ohne -s → I / you / we / they"
+    }
+   ]
+  },
+  {
+   "id": "en.5.simple-present.schreibung",
+   "titel": "-s, -es, -ies",
+   "kurz": "watches, flies, has",
+   "typ": "eingabe",
+   "anweisung": "Schreibe die Form für he / she / it.",
+   "aufgaben": [
+    {
+     "frage": "he / she / it + watch → ?",
+     "antwort": [
+      "watches"
+     ],
+     "tipp": "Nach s, sh, ch, x, o: -es · Konsonant + y: -ies"
+    },
+    {
+     "frage": "he / she / it + wash → ?",
+     "antwort": [
+      "washes"
+     ],
+     "tipp": "Nach s, sh, ch, x, o: -es · Konsonant + y: -ies"
+    },
+    {
+     "frage": "he / she / it + go → ?",
+     "antwort": [
+      "goes"
+     ],
+     "tipp": "Nach s, sh, ch, x, o: -es · Konsonant + y: -ies"
+    },
+    {
+     "frage": "he / she / it + do → ?",
+     "antwort": [
+      "does"
+     ],
+     "tipp": "Nach s, sh, ch, x, o: -es · Konsonant + y: -ies"
+    },
+    {
+     "frage": "he / she / it + fly → ?",
+     "antwort": [
+      "flies"
+     ],
+     "tipp": "Nach s, sh, ch, x, o: -es · Konsonant + y: -ies"
+    },
+    {
+     "frage": "he / she / it + study → ?",
+     "antwort": [
+      "studies"
+     ],
+     "tipp": "Nach s, sh, ch, x, o: -es · Konsonant + y: -ies"
+    },
+    {
+     "frage": "he / she / it + fix → ?",
+     "antwort": [
+      "fixes"
+     ],
+     "tipp": "Nach s, sh, ch, x, o: -es · Konsonant + y: -ies"
+    },
+    {
+     "frage": "he / she / it + kiss → ?",
+     "antwort": [
+      "kisses"
+     ],
+     "tipp": "Nach s, sh, ch, x, o: -es · Konsonant + y: -ies"
+    },
+    {
+     "frage": "he / she / it + try → ?",
+     "antwort": [
+      "tries"
+     ],
+     "tipp": "Nach s, sh, ch, x, o: -es · Konsonant + y: -ies"
+    },
+    {
+     "frage": "he / she / it + cry → ?",
+     "antwort": [
+      "cries"
+     ],
+     "tipp": "Nach s, sh, ch, x, o: -es · Konsonant + y: -ies"
+    },
+    {
+     "frage": "he / she / it + catch → ?",
+     "antwort": [
+      "catches"
+     ],
+     "tipp": "Nach s, sh, ch, x, o: -es · Konsonant + y: -ies"
+    },
+    {
+     "frage": "he / she / it + finish → ?",
+     "antwort": [
+      "finishes"
+     ],
+     "tipp": "Nach s, sh, ch, x, o: -es · Konsonant + y: -ies"
+    },
+    {
+     "frage": "he / she / it + carry → ?",
+     "antwort": [
+      "carries"
+     ],
+     "tipp": "Nach s, sh, ch, x, o: -es · Konsonant + y: -ies"
+    },
+    {
+     "frage": "he / she / it + teach → ?",
+     "antwort": [
+      "teaches"
+     ],
+     "tipp": "Nach s, sh, ch, x, o: -es · Konsonant + y: -ies"
+    },
+    {
+     "frage": "he / she / it + mix → ?",
+     "antwort": [
+      "mixes"
+     ],
+     "tipp": "Nach s, sh, ch, x, o: -es · Konsonant + y: -ies"
+    },
+    {
+     "frage": "he / she / it + push → ?",
+     "antwort": [
+      "pushes"
+     ],
+     "tipp": "Nach s, sh, ch, x, o: -es · Konsonant + y: -ies"
+    },
+    {
+     "frage": "he / she / it + tidy → ?",
+     "antwort": [
+      "tidies"
+     ],
+     "tipp": "Nach s, sh, ch, x, o: -es · Konsonant + y: -ies"
+    },
+    {
+     "frage": "he / she / it + miss → ?",
+     "antwort": [
+      "misses"
+     ],
+     "tipp": "Nach s, sh, ch, x, o: -es · Konsonant + y: -ies"
+    },
+    {
+     "frage": "he / she / it + play → ?",
+     "antwort": [
+      "plays"
+     ],
+     "tipp": "Vokal + y: einfach -s"
+    },
+    {
+     "frage": "he / she / it + say → ?",
+     "antwort": [
+      "says"
+     ],
+     "tipp": "Vokal + y: einfach -s"
+    },
+    {
+     "frage": "he / she / it + buy → ?",
+     "antwort": [
+      "buys"
+     ],
+     "tipp": "Vokal + y: einfach -s"
+    },
+    {
+     "frage": "he / she / it + enjoy → ?",
+     "antwort": [
+      "enjoys"
+     ],
+     "tipp": "Vokal + y: einfach -s"
+    },
+    {
+     "frage": "he / she / it + have → ?",
+     "antwort": [
+      "has"
+     ],
+     "tipp": "have ist eine Ausnahme: has"
+    }
+   ]
+  },
+  {
+   "id": "en.5.simple-present.verneinung",
+   "titel": "Verneinung",
+   "kurz": "don't / doesn't",
+   "typ": "lueckentext",
+   "anweisung": "Schreibe die Verneinung (Kurz- oder Langform).",
+   "aufgaben": [
+    {
+     "text": "He ___ fish. (not / like)",
+     "antwort": [
+      "doesn't like",
+      "does not like"
+     ],
+     "tipp": "he/she/it → doesn't + Grundform · sonst don't + Grundform",
+     "erklaerung": "Nach doesn't steht die Grundform ohne -s."
+    },
+    {
+     "text": "I ___ tennis. (not / play)",
+     "antwort": [
+      "don't play",
+      "do not play"
+     ],
+     "tipp": "he/she/it → doesn't + Grundform · sonst don't + Grundform",
+     "erklaerung": ""
+    },
+    {
+     "text": "She ___ TV in the morning. (not / watch)",
+     "antwort": [
+      "doesn't watch",
+      "does not watch"
+     ],
+     "tipp": "he/she/it → doesn't + Grundform · sonst don't + Grundform",
+     "erklaerung": "Nach doesn't steht die Grundform ohne -s."
+    },
+    {
+     "text": "We ___ to school on Sunday. (not / go)",
+     "antwort": [
+      "don't go",
+      "do not go"
+     ],
+     "tipp": "he/she/it → doesn't + Grundform · sonst don't + Grundform",
+     "erklaerung": ""
+    },
+    {
+     "text": "They ___ meat. (not / eat)",
+     "antwort": [
+      "don't eat",
+      "do not eat"
+     ],
+     "tipp": "he/she/it → doesn't + Grundform · sonst don't + Grundform",
+     "erklaerung": ""
+    },
+    {
+     "text": "My sister ___ comics. (not / read)",
+     "antwort": [
+      "doesn't read",
+      "does not read"
+     ],
+     "tipp": "he/she/it → doesn't + Grundform · sonst don't + Grundform",
+     "erklaerung": "Nach doesn't steht die Grundform ohne -s."
+    },
+    {
+     "text": "Tom ___ in London. (not / live)",
+     "antwort": [
+      "doesn't live",
+      "does not live"
+     ],
+     "tipp": "he/she/it → doesn't + Grundform · sonst don't + Grundform",
+     "erklaerung": "Nach doesn't steht die Grundform ohne -s."
+    },
+    {
+     "text": "You ___ a pencil. (not / need)",
+     "antwort": [
+      "don't need",
+      "do not need"
+     ],
+     "tipp": "he/she/it → doesn't + Grundform · sonst don't + Grundform",
+     "erklaerung": ""
+    },
+    {
+     "text": "The dog ___ in my bed. (not / sleep)",
+     "antwort": [
+      "doesn't sleep",
+      "does not sleep"
+     ],
+     "tipp": "he/she/it → doesn't + Grundform · sonst don't + Grundform",
+     "erklaerung": "Nach doesn't steht die Grundform ohne -s."
+    },
+    {
+     "text": "My parents ___ coffee. (not / drink)",
+     "antwort": [
+      "don't drink",
+      "do not drink"
+     ],
+     "tipp": "he/she/it → doesn't + Grundform · sonst don't + Grundform",
+     "erklaerung": ""
+    },
+    {
+     "text": "It ___ in summer. (not / rain)",
+     "antwort": [
+      "doesn't rain",
+      "does not rain"
+     ],
+     "tipp": "he/she/it → doesn't + Grundform · sonst don't + Grundform",
+     "erklaerung": "Nach doesn't steht die Grundform ohne -s."
+    },
+    {
+     "text": "Lisa ___ a cat. (not / have)",
+     "antwort": [
+      "doesn't have",
+      "does not have"
+     ],
+     "tipp": "he/she/it → doesn't + Grundform · sonst don't + Grundform",
+     "erklaerung": "Nach doesn't steht die Grundform ohne -s."
+    },
+    {
+     "text": "We ___ French. (not / speak)",
+     "antwort": [
+      "don't speak",
+      "do not speak"
+     ],
+     "tipp": "he/she/it → doesn't + Grundform · sonst don't + Grundform",
+     "erklaerung": ""
+    },
+    {
+     "text": "He ___ his homework after dinner. (not / do)",
+     "antwort": [
+      "doesn't do",
+      "does not do"
+     ],
+     "tipp": "he/she/it → doesn't + Grundform · sonst don't + Grundform",
+     "erklaerung": "Nach doesn't steht die Grundform ohne -s."
+    }
+   ]
+  },
+  {
+   "id": "en.5.simple-present.fragen",
+   "titel": "Fragen und Kurzantworten",
+   "kurz": "Do you …? Does she …?",
+   "typ": "sortieren",
+   "anweisung": "Bau die Frage.",
+   "aufgaben": [
+    {
+     "teile": [
+      "Do",
+      "you",
+      "play",
+      "football"
+     ],
+     "loesung": "Do you play football?",
+     "tipp": "Fragen: Do/Does + Subjekt + Grundform"
+    },
+    {
+     "teile": [
+      "Does",
+      "she",
+      "like",
+      "pizza"
+     ],
+     "loesung": "Does she like pizza?",
+     "tipp": "Fragen: Do/Does + Subjekt + Grundform"
+    },
+    {
+     "teile": [
+      "Do",
+      "they",
+      "live",
+      "in Munich"
+     ],
+     "loesung": "Do they live in Munich?",
+     "tipp": "Fragen: Do/Does + Subjekt + Grundform"
+    },
+    {
+     "teile": [
+      "Does",
+      "he",
+      "have",
+      "a dog"
+     ],
+     "loesung": "Does he have a dog?",
+     "tipp": "Fragen: Do/Does + Subjekt + Grundform"
+    },
+    {
+     "teile": [
+      "Where",
+      "do",
+      "you",
+      "live"
+     ],
+     "loesung": "Where do you live?",
+     "tipp": "Fragen: Do/Does + Subjekt + Grundform"
+    },
+    {
+     "teile": [
+      "What",
+      "does",
+      "Tom",
+      "eat",
+      "for breakfast"
+     ],
+     "loesung": "What does Tom eat for breakfast?",
+     "tipp": "Fragen: Do/Does + Subjekt + Grundform"
+    },
+    {
+     "teile": [
+      "When",
+      "do",
+      "we",
+      "go",
+      "home"
+     ],
+     "loesung": "When do we go home?",
+     "tipp": "Fragen: Do/Does + Subjekt + Grundform"
+    },
+    {
+     "teile": [
+      "Does",
+      "your sister",
+      "play",
+      "the guitar"
+     ],
+     "loesung": "Does your sister play the guitar?",
+     "tipp": "Fragen: Do/Does + Subjekt + Grundform"
+    },
+    {
+     "teile": [
+      "How",
+      "do",
+      "you",
+      "get",
+      "to school"
+     ],
+     "loesung": "How do you get to school?",
+     "tipp": "Fragen: Do/Does + Subjekt + Grundform"
+    },
+    {
+     "teile": [
+      "Do",
+      "your friends",
+      "like",
+      "football"
+     ],
+     "loesung": "Do your friends like football?",
+     "tipp": "Fragen: Do/Does + Subjekt + Grundform"
+    },
+    {
+     "text": "___ you like apples?",
+     "antwort": "Do",
+     "optionen": [
+      "Do",
+      "Does"
+     ],
+     "typ": "lueckentext",
+     "tipp": "he/she/it → Does · sonst Do"
+    },
+    {
+     "text": "___ she play tennis?",
+     "antwort": "Does",
+     "optionen": [
+      "Do",
+      "Does"
+     ],
+     "typ": "lueckentext",
+     "tipp": "he/she/it → Does · sonst Do"
+    },
+    {
+     "text": "___ they go to your school?",
+     "antwort": "Do",
+     "optionen": [
+      "Do",
+      "Does"
+     ],
+     "typ": "lueckentext",
+     "tipp": "he/she/it → Does · sonst Do"
+    },
+    {
+     "text": "___ your dad work in a bank?",
+     "antwort": "Does",
+     "optionen": [
+      "Do",
+      "Does"
+     ],
+     "typ": "lueckentext",
+     "tipp": "he/she/it → Does · sonst Do"
+    },
+    {
+     "text": "___ it rain a lot here?",
+     "antwort": "Does",
+     "optionen": [
+      "Do",
+      "Does"
+     ],
+     "typ": "lueckentext",
+     "tipp": "he/she/it → Does · sonst Do"
+    },
+    {
+     "text": "___ we have English today?",
+     "antwort": "Do",
+     "optionen": [
+      "Do",
+      "Does"
+     ],
+     "typ": "lueckentext",
+     "tipp": "he/she/it → Does · sonst Do"
+    },
+    {
+     "text": "Do you like music? – Yes, I ___.",
+     "antwort": "do",
+     "optionen": [
+      "do",
+      "does",
+      "am"
+     ],
+     "typ": "lueckentext",
+     "tipp": "Kurzantwort mit do/does: Yes, I do. / No, he doesn't."
+    },
+    {
+     "text": "Does he play football? – No, he ___.",
+     "antwort": "doesn't",
+     "optionen": [
+      "don't",
+      "doesn't",
+      "isn't"
+     ],
+     "typ": "lueckentext",
+     "tipp": "Kurzantwort mit do/does: Yes, I do. / No, he doesn't."
+    },
+    {
+     "text": "Do they live here? – Yes, they ___.",
+     "antwort": "do",
+     "optionen": [
+      "do",
+      "does",
+      "are"
+     ],
+     "typ": "lueckentext",
+     "tipp": "Kurzantwort mit do/does: Yes, I do. / No, he doesn't."
+    },
+    {
+     "text": "Does Anna have a pet? – No, she ___.",
+     "antwort": "doesn't",
+     "optionen": [
+      "don't",
+      "doesn't",
+      "hasn't"
+     ],
+     "typ": "lueckentext",
+     "tipp": "Kurzantwort mit do/does: Yes, I do. / No, he doesn't."
+    }
+   ]
+  },
+  {
+   "id": "en.5.simple-present.satzbau",
+   "titel": "Sätze bauen",
+   "kurz": "Subjekt – Verb – Objekt",
+   "typ": "sortieren",
+   "anweisung": "Bring die Wörter in die richtige Reihenfolge.",
+   "aufgaben": [
+    {
+     "teile": [
+      "I",
+      "play",
+      "football",
+      "in the park"
+     ],
+     "loesung": "I play football in the park.",
+     "tipp": "Wortstellung: Subjekt – Verb – Objekt – Ort – Zeit"
+    },
+    {
+     "teile": [
+      "She",
+      "often",
+      "watches",
+      "TV",
+      "in the evening"
+     ],
+     "loesung": "She often watches TV in the evening.",
+     "tipp": "Wortstellung: Subjekt – Verb – Objekt – Ort – Zeit"
+    },
+    {
+     "teile": [
+      "We",
+      "do",
+      "our homework",
+      "at home"
+     ],
+     "loesung": "We do our homework at home.",
+     "tipp": "Wortstellung: Subjekt – Verb – Objekt – Ort – Zeit"
+    },
+    {
+     "teile": [
+      "He",
+      "eats",
+      "pizza",
+      "on Friday"
+     ],
+     "loesung": "He eats pizza on Friday.",
+     "tipp": "Wortstellung: Subjekt – Verb – Objekt – Ort – Zeit"
+    },
+    {
+     "teile": [
+      "They",
+      "learn",
+      "English",
+      "at school"
+     ],
+     "loesung": "They learn English at school.",
+     "tipp": "Wortstellung: Subjekt – Verb – Objekt – Ort – Zeit"
+    },
+    {
+     "teile": [
+      "The dog",
+      "sleeps",
+      "in the garden"
+     ],
+     "loesung": "The dog sleeps in the garden.",
+     "tipp": "Wortstellung: Subjekt – Verb – Objekt – Ort – Zeit"
+    },
+    {
+     "teile": [
+      "She",
+      "reads",
+      "a book",
+      "every day"
+     ],
+     "loesung": "She reads a book every day.",
+     "tipp": "Wortstellung: Subjekt – Verb – Objekt – Ort – Zeit"
+    },
+    {
+     "teile": [
+      "We",
+      "play",
+      "football",
+      "on Saturday"
+     ],
+     "loesung": "We play football on Saturday.",
+     "tipp": "Wortstellung: Subjekt – Verb – Objekt – Ort – Zeit"
+    },
+    {
+     "teile": [
+      "He",
+      "drinks",
+      "milk",
+      "in the morning"
+     ],
+     "loesung": "He drinks milk in the morning.",
+     "tipp": "Wortstellung: Subjekt – Verb – Objekt – Ort – Zeit"
+    },
+    {
+     "teile": [
+      "They",
+      "eat",
+      "cake",
+      "at the weekend"
+     ],
+     "loesung": "They eat cake at the weekend.",
+     "tipp": "Wortstellung: Subjekt – Verb – Objekt – Ort – Zeit"
+    }
+   ]
+  },
+  {
+   "id": "en.5.simple-present.signalwoerter",
+   "titel": "Signalwörter",
+   "kurz": "always, often, every …",
+   "typ": "markieren",
+   "anweisung": "Tippe das Signalwort an.",
+   "aufgaben": [
+    {
+     "satz": "She [always] walks to school.",
+     "erklaerung": "Signalwörter für das simple present: always, often, usually, sometimes, never, every …"
+    },
+    {
+     "satz": "We [often] play cards.",
+     "erklaerung": "Signalwörter für das simple present: always, often, usually, sometimes, never, every …"
+    },
+    {
+     "satz": "I go swimming [every Monday].",
+     "erklaerung": "Signalwörter für das simple present: always, often, usually, sometimes, never, every …"
+    },
+    {
+     "satz": "He [never] eats fish.",
+     "erklaerung": "Signalwörter für das simple present: always, often, usually, sometimes, never, every …"
+    },
+    {
+     "satz": "They [usually] have lunch at one.",
+     "erklaerung": "Signalwörter für das simple present: always, often, usually, sometimes, never, every …"
+    },
+    {
+     "satz": "My mum [sometimes] works on Saturday.",
+     "erklaerung": "Signalwörter für das simple present: always, often, usually, sometimes, never, every …"
+    },
+    {
+     "satz": "[Every day] I feed my cat.",
+     "erklaerung": "Signalwörter für das simple present: always, often, usually, sometimes, never, every …"
+    },
+    {
+     "satz": "Tom [rarely] watches TV.",
+     "erklaerung": "Signalwörter für das simple present: always, often, usually, sometimes, never, every …"
+    },
+    {
+     "satz": "We visit our grandma [on Sundays].",
+     "erklaerung": "Signalwörter für das simple present: always, often, usually, sometimes, never, every …"
+    },
+    {
+     "satz": "She [usually] gets up at seven.",
+     "erklaerung": "Signalwörter für das simple present: always, often, usually, sometimes, never, every …"
+    },
+    {
+     "satz": "I brush my teeth [twice a day].",
+     "erklaerung": "Signalwörter für das simple present: always, often, usually, sometimes, never, every …"
+    },
+    {
+     "satz": "He [always] forgets his keys.",
+     "erklaerung": "Signalwörter für das simple present: always, often, usually, sometimes, never, every …"
+    }
+   ]
+  },
+  {
+   "id": "en.5.simple-present.fehler",
+   "titel": "Fehler finden",
+   "kurz": "Tippe den Fehler an",
+   "typ": "markieren",
+   "anweisung": "Ein Wort ist falsch. Tippe es an.",
+   "aufgaben": [
+    {
+     "satz": "He [play] tennis every week.",
+     "richtig": "plays",
+     "erklaerung": "he/she/it: Verb + s · nach do/does/doesn't/don't: Grundform"
+    },
+    {
+     "satz": "She [watchs] TV after dinner.",
+     "richtig": "watches",
+     "erklaerung": "he/she/it: Verb + s · nach do/does/doesn't/don't: Grundform"
+    },
+    {
+     "satz": "They [plays] in the garden.",
+     "richtig": "play",
+     "erklaerung": "he/she/it: Verb + s · nach do/does/doesn't/don't: Grundform"
+    },
+    {
+     "satz": "My dad [go] to work by car.",
+     "richtig": "goes",
+     "erklaerung": "he/she/it: Verb + s · nach do/does/doesn't/don't: Grundform"
+    },
+    {
+     "satz": "I [likes] ice cream.",
+     "richtig": "like",
+     "erklaerung": "he/she/it: Verb + s · nach do/does/doesn't/don't: Grundform"
+    },
+    {
+     "satz": "He [don't] like fish.",
+     "richtig": "doesn't",
+     "erklaerung": "he/she/it: Verb + s · nach do/does/doesn't/don't: Grundform"
+    },
+    {
+     "satz": "[Do] she live here?",
+     "richtig": "Does",
+     "erklaerung": "he/she/it: Verb + s · nach do/does/doesn't/don't: Grundform"
+    },
+    {
+     "satz": "Does he [plays] the piano?",
+     "richtig": "play",
+     "erklaerung": "he/she/it: Verb + s · nach do/does/doesn't/don't: Grundform"
+    },
+    {
+     "satz": "She doesn't [likes] carrots.",
+     "richtig": "like",
+     "erklaerung": "he/she/it: Verb + s · nach do/does/doesn't/don't: Grundform"
+    },
+    {
+     "satz": "The baby [crys] at night.",
+     "richtig": "cries",
+     "erklaerung": "he/she/it: Verb + s · nach do/does/doesn't/don't: Grundform"
+    },
+    {
+     "satz": "We [doesn't] go to school on Sunday.",
+     "richtig": "don't",
+     "erklaerung": "he/she/it: Verb + s · nach do/does/doesn't/don't: Grundform"
+    },
+    {
+     "satz": "Tom [have] a new bike.",
+     "richtig": "has",
+     "erklaerung": "he/she/it: Verb + s · nach do/does/doesn't/don't: Grundform"
+    }
+   ]
+  },
+  {
+   "id": "en.5.simple-present.mix",
+   "titel": "Mix",
+   "kurz": "Alles durcheinander",
+   "mix": true,
+   "runde": 10
+  }
+ ]
+}
