@@ -32,6 +32,9 @@ Passwörtern ist das Gerät 15 Minuten gesperrt.
   **Beide Dateien** bei Cloudflare ersetzen (*Edit code*: `worker.js` und `sync.js`), dann erst Freigaben speichern.
 - **Etappe 8 (Okt. 2026):** `worker.js` nimmt zusätzlich `heute: false` an (Startseite ohne „Heute für dich“).
   Nur `worker.js` ersetzen; `sync.js` ist unverändert.
+- **Gruppen-Auswertung (Okt. 2026):** `sync.js` hat zwei neue Endpunkte (`/sync/statistik` für die iPads,
+  `/sync/admin/statistik` für den Admin) und eine neue Tabelle `sync_statistik` (legt sich selbst an).
+  Gespeichert werden nur Summen je Gruppe, Thema und Woche – keine Karten-Kennung. Nur `sync.js` ersetzen.
 
 ## Anmeldung im Admin
 

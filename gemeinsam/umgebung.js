@@ -30,7 +30,7 @@
   'use strict';
   if (window.LW && window.LW.UMGEBUNG) return;          // doppeltes Laden verhindern
 
-  const VERSION = 'v32';                                 // ⚙ bei jedem Upload mit sw.js zusammen erhöhen
+  const VERSION = 'v33';                                 // ⚙ bei jedem Upload mit sw.js zusammen erhöhen
 
   // ── Umgebung erkennen ────────────────────────────────
   //  GitHub Pages: erster Pfadteil = Repo-Name (Lern-Apps bzw. Lern-Apps-test)
@@ -55,6 +55,7 @@
     ['lernwelt-safari-hinweis',     'local',   'gemeinsam/pass.js',        'Hinweis „im Home-Bildschirm öffnen“ heute schon gezeigt', false],
     ['lernwelt-avatar-bild',        'local',   'gemeinsam/avatar3d.js',    'Vorschaubild des Avatars (Porträt)', false],
     ['lernwelt-sync',               'local',   'gemeinsam/sync.js',        'Verbindung zur Sicherungskarte (Code, Stand)', false],
+    ['lernwelt-statistik',          'local',   'gemeinsam/sync.js',        'Gruppenauswertung: noch nicht gesendete Summen je Thema und Woche (nur mit Karte)', false],
     ['lernwelt-sync-hinweis',       'session', 'gemeinsam/sync.js',        'Meldung „Pass wurde aktualisiert“ nach dem Neuladen', false],
     // Technik (Etappe 2)
     ['lernwelt-fehler',             'local',   'gemeinsam/umgebung.js',    'Fehlerprotokoll (letzte Abstürze, nur auf diesem Gerät)', false],

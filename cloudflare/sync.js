@@ -21,6 +21,10 @@
 //        → 409 { konflikt: true, rev, score, blob }  (Server hat inzwischen neueren Stand)
 //        → 429 { warteMs }                           (zu schnell hintereinander)
 //        Unbekannter Code und falsches auth → beide 403 „Code ungültig“.
+//    /sync/statistik  { id, auth, eintraege:[{ was, woche, runden, aufgaben, richtig }] }   (Gruppenauswertung)
+//        → { ok }   Die Zahlen werden auf die GRUPPE der Karte aufaddiert; welche Karte sie
+//                   geschickt hat, wird nicht gespeichert. was = Themen-ID oder Datei der App,
+//                   woche = Montag 'JJJJ-MM-TT'. Höchstens alle SYNC_STAT_ABSTAND_MS je Karte.
 //   Admin (Header Authorization: Bearer <Anmelde-Schlüssel>)
 //    /sync/admin/gruppen            {}                          → { ok, gruppen:[{ id, name, erstellt, codes:[…] }] }
 //    /sync/admin/gruppe-anlegen     { name, eintraege:[{ nr, id, authHash }], gruppeId? }
@@ -28,9 +32,11 @@
 //    /sync/admin/gruppe-umbenennen  { gruppeId, name }
 //    /sync/admin/gruppe-loeschen    { gruppeId }                (samt allen Ständen)
 //    /sync/admin/code-loeschen      { id }                      (Karte ungültig machen)
+//    /sync/admin/statistik          { gruppeId?, wochen? }      → { ok, zeilen:[{ gruppe, was, woche, runden, aufgaben, richtig }] }
 //
 //  Aufräumen: syncAufraeumen(env) löscht Stände, die seit SYNC_AUFBEWAHRUNG_TAGE
-//  nicht gesichert wurden (Cron-Trigger, siehe ANLEITUNG-SYNC.md).
+//  nicht gesichert wurden, und Auswertungs-Wochen älter als SYNC_STAT_TAGE
+//  (Cron-Trigger, siehe ANLEITUNG-SYNC.md).
 //
 //  Hinweis: Alle Namen beginnen mit „sync“, damit das Modul notfalls auch
 //  direkt ans Ende von worker.js kopiert werden kann, ohne Namenskonflikte.
@@ -42,6 +48,9 @@ const SYNC_MIN_ABSTAND_MS    = 10_000;    // höchstens 1 Speichern pro Code all
 const SYNC_MAX_CODES_GRUPPE  = 60;
 const SYNC_MAX_CODES_AUFRUF  = 40;
 const SYNC_AUFBEWAHRUNG_TAGE = 730;       // 2 Jahre
+const SYNC_STAT_TAGE         = 200;       // Gruppenauswertung: Wochen so lange aufheben (≈ ein Schuljahr)
+const SYNC_STAT_ABSTAND_MS   = 60_000;    // höchstens 1 Meldung pro Karte und Minute (je Worker-Instanz)
+const SYNC_STAT_MAX          = 30;        // Einträge pro Meldung
 
 const SYNC_HEX32 = /^[0-9a-f]{32}$/;
 const SYNC_HEX64 = /^[0-9a-f]{64}$/;
@@ -63,6 +72,7 @@ export async function handleSync(request, env, cors, url, deps) {
 
   if (p === '/sync/holen')     return syncHolen(body, env, cors);
   if (p === '/sync/speichern') return syncSpeichern(body, env, cors);
+  if (p === '/sync/statistik') return syncStatistik(body, env, cors);
 
   if (p.startsWith('/sync/admin/')) {
     const auth = await deps.checkToken(request, env);
@@ -72,6 +82,7 @@ export async function handleSync(request, env, cors, url, deps) {
     if (p === '/sync/admin/gruppe-umbenennen') return syncAdminUmbenennen(body, env, cors);
     if (p === '/sync/admin/gruppe-loeschen')   return syncAdminGruppeLoeschen(body, env, cors);
     if (p === '/sync/admin/code-loeschen')     return syncAdminCodeLoeschen(body, env, cors);
+    if (p === '/sync/admin/statistik')         return syncAdminStatistik(body, env, cors);
   }
   return syncJson({ error: 'Nicht gefunden' }, 404, cors);
 }
@@ -90,6 +101,11 @@ async function syncSchema(env) {
       rev INTEGER NOT NULL DEFAULT 0, score INTEGER NOT NULL DEFAULT 0,
       groesse INTEGER NOT NULL DEFAULT 0, blob TEXT)`),
     env.SYNC_DB.prepare('CREATE INDEX IF NOT EXISTS sync_paesse_gruppe ON sync_paesse(gruppe_id)'),
+    // Gruppenauswertung: nur Summen je Gruppe, Thema und Woche – keine Karten-Kennung
+    env.SYNC_DB.prepare(`CREATE TABLE IF NOT EXISTS sync_statistik (
+      gruppe_id TEXT NOT NULL, was TEXT NOT NULL, woche TEXT NOT NULL,
+      runden INTEGER NOT NULL DEFAULT 0, aufgaben INTEGER NOT NULL DEFAULT 0, richtig INTEGER NOT NULL DEFAULT 0,
+      PRIMARY KEY (gruppe_id, was, woche))`),
   ]);
   syncSchemaOk = true;
 }
@@ -202,6 +218,46 @@ async function syncAdminAnlegen(body, env, cors) {
   return syncJson({ ok: true, gruppeId }, 200, cors);
 }
 
+// ── Gerät: Zahlen für die Gruppenauswertung melden ─────
+//  Die Karte beweist nur, dass das iPad zu einer Gruppe gehört. Gespeichert wird
+//  ausschließlich die Summe je Gruppe, Thema und Woche.
+const syncStatTakt = new Map();                // Karte → letzte Meldung (nur im Speicher dieser Instanz)
+const SYNC_STAT_WAS = /^[a-z0-9][a-z0-9._:?=&-]{0,79}$/i;
+async function syncStatistik(body, env, cors) {
+  const row = await syncPruefen(body, env);
+  if (!row) return syncJson({ error: 'Code ungültig' }, 403, cors);
+  const jetzt = Date.now(), letzte = syncStatTakt.get(row.id) || 0;
+  if (jetzt - letzte < SYNC_STAT_ABSTAND_MS) return syncJson({ error: 'Zu schnell', warteMs: SYNC_STAT_ABSTAND_MS - (jetzt - letzte) }, 429, cors);
+  const L = body.eintraege;
+  if (!Array.isArray(L) || !L.length || L.length > SYNC_STAT_MAX) return syncJson({ error: `1 bis ${SYNC_STAT_MAX} Einträge` }, 400, cors);
+  const frueh = new Date(jetzt - 35 * 864e5).toISOString().slice(0, 10), spaet = new Date(jetzt + 2 * 864e5).toISOString().slice(0, 10);
+  const ganz = (v, lo, hi) => Number.isInteger(v) && v >= lo && v <= hi;
+  const ok = L.every(e => e && typeof e === 'object' && SYNC_STAT_WAS.test(String(e.was || ''))
+    && /^\d{4}-\d{2}-\d{2}$/.test(String(e.woche || '')) && e.woche >= frueh && e.woche <= spaet
+    && ganz(e.runden, 1, 50) && ganz(e.aufgaben, 1, 2000) && ganz(e.richtig, 0, e.aufgaben));
+  if (!ok) return syncJson({ error: 'Einträge ungültig' }, 400, cors);
+  syncStatTakt.set(row.id, jetzt);
+  if (syncStatTakt.size > 5000) syncStatTakt.clear();
+  await env.SYNC_DB.batch(L.map(e => env.SYNC_DB.prepare(`INSERT INTO sync_statistik (gruppe_id, was, woche, runden, aufgaben, richtig)
+      VALUES (?, ?, ?, ?, ?, ?) ON CONFLICT (gruppe_id, was, woche) DO UPDATE SET
+      runden = runden + excluded.runden, aufgaben = aufgaben + excluded.aufgaben, richtig = richtig + excluded.richtig`)
+    .bind(row.gruppe_id, e.was, e.woche, e.runden, e.aufgaben, e.richtig)));
+  return syncJson({ ok: true }, 200, cors);
+}
+
+// ── Admin: Gruppenauswertung lesen ─────────────────────
+async function syncAdminStatistik(body, env, cors) {
+  const wochen = Number.isInteger(body.wochen) && body.wochen >= 1 && body.wochen <= 30 ? body.wochen : 4;
+  const ab = new Date(Date.now() - wochen * 7 * 864e5).toISOString().slice(0, 10);
+  const g = body.gruppeId === undefined ? null : String(body.gruppeId);
+  if (g !== null && !SYNC_HEX32.test(g)) return syncJson({ error: 'Gruppe ungültig' }, 400, cors);
+  const r = await (g
+    ? env.SYNC_DB.prepare('SELECT gruppe_id, was, woche, runden, aufgaben, richtig FROM sync_statistik WHERE gruppe_id = ? AND woche >= ? ORDER BY woche').bind(g, ab)
+    : env.SYNC_DB.prepare('SELECT gruppe_id, was, woche, runden, aufgaben, richtig FROM sync_statistik WHERE woche >= ? ORDER BY woche').bind(ab)).all();
+  const zeilen = (r.results || []).map(x => ({ gruppe: x.gruppe_id, was: x.was, woche: x.woche, runden: x.runden, aufgaben: x.aufgaben, richtig: x.richtig }));
+  return syncJson({ ok: true, zeilen }, 200, syncNoStore(cors));
+}
+
 // ── Admin: Gruppe umbenennen ───────────────────────────
 async function syncAdminUmbenennen(body, env, cors) {
   const name = syncName(body.name);
@@ -217,6 +273,7 @@ async function syncAdminGruppeLoeschen(body, env, cors) {
   if (!SYNC_HEX32.test(id)) return syncJson({ error: 'Gruppe ungültig' }, 400, cors);
   await env.SYNC_DB.batch([
     env.SYNC_DB.prepare('DELETE FROM sync_paesse WHERE gruppe_id = ?').bind(id),
+    env.SYNC_DB.prepare('DELETE FROM sync_statistik WHERE gruppe_id = ?').bind(id),
     env.SYNC_DB.prepare('DELETE FROM sync_gruppen WHERE id = ?').bind(id),
   ]);
   return syncJson({ ok: true }, 200, cors);
@@ -242,6 +299,9 @@ export async function syncAufraeumen(env) {
     env.SYNC_DB.prepare('DELETE FROM sync_paesse WHERE letzte_sync IS NULL AND erstellt < ?').bind(grenze),
     // leere, alte Gruppen
     env.SYNC_DB.prepare('DELETE FROM sync_gruppen WHERE erstellt < ? AND id NOT IN (SELECT gruppe_id FROM sync_paesse)').bind(grenze),
+    // alte Wochen der Gruppenauswertung und Zahlen gelöschter Gruppen
+    env.SYNC_DB.prepare('DELETE FROM sync_statistik WHERE woche < ?').bind(new Date(Date.now() - SYNC_STAT_TAGE * 864e5).toISOString().slice(0, 10)),
+    env.SYNC_DB.prepare('DELETE FROM sync_statistik WHERE gruppe_id NOT IN (SELECT id FROM sync_gruppen)'),
   ]);
 }
 

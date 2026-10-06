@@ -14,7 +14,7 @@
 //  und teilen sich den Offline-Speicher. Deshalb hat jede Umgebung ihr
 //  eigenes Präfix und räumt nur ihre eigenen Speicher auf.
 // ═══════════════════════════════════════════════════════
-const VERSION = 'v32';  // v32: Infrastruktur Etappe 8 (Wiederholung, Fehler-Training, Heute für dich, Infokarten)
+const VERSION = 'v33';  // v33: Gruppen-Auswertung, Admin ohne Link-Check und Vokabel-Tab
 const PRAEFIX = /\/[^/]*-test\/$/i.test(new URL(self.registration.scope).pathname) ? 'lwtest-v' : 'lernwelt-v';
 const CACHE   = PRAEFIX + VERSION.replace(/^v/, '');        // z. B. 'lernwelt-v24' (Format wie bisher)
 

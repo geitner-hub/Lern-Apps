@@ -1,6 +1,7 @@
 // ═══════════════════════════════════════════════════════
 //  Lernwelt-Admin – Freigaben und Fokus (Infrastruktur Etappe 7)
-//  Seit Etappe 8 auch der Schalter für „Heute für dich“ (config.heute = false schaltet ab).
+//  Seit Etappe 8 auch der Schalter für „Heute für dich“ (config.heute = false schaltet ab)
+//  und die Gruppen-Auswertung (nur lesen, Daten beim Sync-Worker). Tab heißt „🎯 Unterricht“.
 //  Teil von admin.html. Alle Module teilen sich die globalen Variablen aus kern.js (CONFIG, ghSha …)
 //  und werden in admin.html in fester Reihenfolge geladen.
 //
@@ -69,7 +70,8 @@ async function frGruppenLaden() {
     });
     const d = await r.json().catch(() => ({}));
     if (!r.ok) throw new Error(d.error || ('Fehler ' + r.status));
-    FR.gruppen = (d.gruppen || []).filter(g => /^[0-9a-f]{32}$/.test(g.id)).map(g => ({ id: g.id, name: String(g.name || 'ohne Namen') }));
+    FR.gruppen = (d.gruppen || []).filter(g => /^[0-9a-f]{32}$/.test(g.id))
+      .map(g => ({ id: g.id, name: String(g.name || 'ohne Namen'), karten: Array.isArray(g.codes) ? g.codes.length : 0 }));
   } catch (e) {
     FR.gruppen = FR.gruppen || [];
     FR.gruppenFehler = e.message || 'nicht erreichbar';
@@ -147,6 +149,7 @@ async function buildFreigaben() {
   box.innerHTML = kopf + (reihen || '<div class="empty-msg">Keine Inhalte gefunden.</div>');
   buildFokus();
   buildHeuteSchalter();
+  buildAuswertung();
 }
 
 function frAktionen(r, s, wer) {
@@ -266,6 +269,67 @@ function buildFokus() {
     saveConfig();
     buildFokus();
   });
+}
+
+// ── Gruppen-Auswertung (Etappe 8) ──────────────────────
+//  Liest beim Worker nur Summen je Gruppe, Thema und Woche (cloudflare/sync.js → sync_statistik).
+const AW = { gruppe: '', wochen: 4, zeilen: null, fehler: '', laedt: false };
+const AW_WENIG = 3;                                      // darunter: zu wenig Runden für eine Aussage
+function awTitel(was) {
+  const K = window.LernKatalog, t = K && K.geladen && K.geladen() ? K.thema(was) : null;
+  if (t) return t.titel;
+  const a = CONFIG.apps.find(x => resultKey(x.datei) === was);
+  return a ? (a.emoji || '📱') + ' ' + a.name : was;
+}
+function buildAuswertung() {
+  const box = document.getElementById('auswertung-inhalt');
+  if (!box) return;
+  const G = FR.gruppen || [];
+  if (!G.length) {
+    box.innerHTML = `<p style="font-size:.85rem;color:var(--text2);margin:0">${FR.gruppenFehler ? '⚠ Sync-Gruppen nicht geladen (' + frEsc(FR.gruppenFehler) + ').' : 'Noch keine Sync-Gruppen angelegt – die Auswertung braucht Sicherungskarten in einer Gruppe.'}</p>`;
+    return;
+  }
+  if (!G.some(g => g.id === AW.gruppe)) AW.gruppe = G[0].id;
+  const g = G.find(x => x.id === AW.gruppe);
+  let tabelle = '';
+  if (AW.laedt) tabelle = '<div class="empty-msg">Lade …</div>';
+  else if (AW.fehler) tabelle = `<p style="color:var(--red);font-size:.85rem">⚠ ${frEsc(AW.fehler)}</p>`;
+  else if (AW.zeilen) {
+    const sum = {};
+    AW.zeilen.forEach(z => { const x = sum[z.was] || (sum[z.was] = { was: z.was, runden: 0, aufgaben: 0, richtig: 0 }); x.runden += z.runden; x.aufgaben += z.aufgaben; x.richtig += z.richtig; });
+    const liste = Object.values(sum).map(x => ({ ...x, pct: x.aufgaben ? Math.round(x.richtig / x.aufgaben * 100) : 0 }))
+      .sort((a, b) => (a.runden < AW_WENIG) - (b.runden < AW_WENIG) || a.pct - b.pct);
+    const farbe = p => p >= 80 ? 'var(--green)' : p >= 60 ? 'var(--accent)' : 'var(--red)';
+    tabelle = liste.length ? `<table class="aw-tab"><thead><tr><th>Thema</th><th>Runden</th><th>Aufgaben</th><th colspan="2">richtig</th></tr></thead><tbody>
+      ${liste.map(x => `<tr class="${x.runden < AW_WENIG ? 'aw-wenig' : ''}"><td>${frEsc(awTitel(x.was))}</td><td class="z">${x.runden}</td><td class="z">${x.aufgaben}</td>
+        <td class="z"><b>${x.pct} %</b></td><td style="width:30%"><div class="aw-balken"><i style="width:${x.pct}%;background:${farbe(x.pct)}"></i></div></td></tr>`).join('')}
+      </tbody></table><p style="font-size:.72rem;color:var(--muted);margin:.6rem 0 0">Blass = weniger als ${AW_WENIG} Runden, noch keine Aussage.</p>`
+      : '<p style="font-size:.85rem;color:var(--text2);margin:.8rem 0 0">Für diesen Zeitraum hat die Gruppe noch nichts gemeldet.</p>';
+  }
+  box.innerHTML = `<div style="display:flex;gap:.6rem;flex-wrap:wrap;align-items:center">
+      <select id="aw-gruppe" style="width:auto" aria-label="Gruppe">${G.map(x => `<option value="${frEsc(x.id)}"${x.id === AW.gruppe ? ' selected' : ''}>${frEsc(x.name)}</option>`).join('')}</select>
+      <select id="aw-wochen" style="width:auto" aria-label="Zeitraum">${[[1, 'diese Woche'], [4, 'letzte 4 Wochen'], [8, 'letzte 8 Wochen'], [26, 'ganzes Halbjahr']].map(([w, t]) => `<option value="${w}"${w === AW.wochen ? ' selected' : ''}>${t}</option>`).join('')}</select>
+      <button class="btn accent" id="aw-laden">📊 Auswertung laden</button></div>
+    ${g && g.karten && g.karten < 5 ? `<p style="font-size:.75rem;color:var(--accent);margin:.6rem 0 0">Diese Gruppe hat nur ${g.karten} Karte${g.karten === 1 ? '' : 'n'} – die Zahlen lassen dann Rückschlüsse auf einzelne Kinder zu.</p>` : ''}
+    ${tabelle}`;
+  document.getElementById('aw-gruppe').onchange = e => { AW.gruppe = e.target.value; AW.zeilen = null; buildAuswertung(); };
+  document.getElementById('aw-wochen').onchange = e => { AW.wochen = Number(e.target.value); AW.zeilen = null; buildAuswertung(); };
+  document.getElementById('aw-laden').onclick = awLaden;
+}
+async function awLaden() {
+  AW.laedt = true; AW.fehler = ''; buildAuswertung();
+  try {
+    const t = JSON.parse(localStorage.getItem('lernwelt-admin-schluessel') || 'null');
+    const r = await fetch(ConfigAPI.WORKER_URL + '/sync/admin/statistik', {
+      method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + (t && t.token || '') },
+      body: JSON.stringify({ gruppeId: AW.gruppe, wochen: AW.wochen }),
+    });
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(r.status === 404 ? 'Der Worker kennt die Auswertung noch nicht – bitte cloudflare/sync.js bei Cloudflare ersetzen' : (d.error || 'Fehler ' + r.status));
+    AW.zeilen = Array.isArray(d.zeilen) ? d.zeilen : [];
+  } catch (e) { AW.fehler = e.message || 'Worker nicht erreichbar'; AW.zeilen = null; }
+  AW.laedt = false;
+  buildAuswertung();
 }
 
 // ── Bedienung ──────────────────────────────────────────
