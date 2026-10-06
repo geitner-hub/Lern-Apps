@@ -110,6 +110,35 @@
      ]
     }
    }
+  },
+  "laengen": {
+   "untertitel": "km, m, dm, cm, mm · 10 Aufgaben pro Runde",
+   "klassen": {
+    "5": {
+     "titel": "Längeneinheiten",
+     "stufen": [
+      "ma.5.laengen.nachbarn",
+      "ma.5.laengen.weit",
+      "ma.5.laengen.gemischt",
+      "ma.5.laengen.rechnen",
+      "ma.5.laengen.vergleichen",
+      "ma.5.laengen.profi"
+     ]
+    },
+    "6": {
+     "titel": "Längeneinheiten",
+     "stufen": [
+      "ma.5.laengen.weit",
+      "ma.5.laengen.gemischt",
+      "ma.5.laengen.rechnen",
+      "ma.5.laengen.vergleichen",
+      "ma.5.laengen.profi"
+     ],
+     "foerder": [
+      "ma.5.laengen.nachbarn"
+     ]
+    }
+   }
   }
  },
  "stufen": {
@@ -563,6 +592,75 @@
    "generatoren": [
     {
      "typ": "ganze-zahlen"
+    }
+   ]
+  },
+  "ma.5.laengen.nachbarn": {
+   "titel": "Benachbarte Einheiten",
+   "kurz": "km → m · m → dm · cm → mm",
+   "generatoren": [
+    {
+     "typ": "laenge-nachbar"
+    }
+   ]
+  },
+  "ma.5.laengen.weit": {
+   "titel": "Größere Sprünge",
+   "kurz": "m → cm · m → mm · 2,5 km → m",
+   "generatoren": [
+    {
+     "typ": "laenge-weit",
+     "halbe": true
+    }
+   ]
+  },
+  "ma.5.laengen.gemischt": {
+   "titel": "Gemischte Angaben",
+   "kurz": "5 m 40 cm = ? cm",
+   "generatoren": [
+    {
+     "typ": "laenge-gemischt"
+    }
+   ]
+  },
+  "ma.5.laengen.rechnen": {
+   "titel": "Rechnen mit Längen",
+   "kurz": "2 m + 30 cm · 1 km − 300 m",
+   "generatoren": [
+    {
+     "typ": "laenge-rechnen"
+    }
+   ]
+  },
+  "ma.5.laengen.vergleichen": {
+   "titel": "Vergleichen",
+   "kurz": "3 m ○ 250 cm: <, = oder >?",
+   "generatoren": [
+    {
+     "typ": "laenge-vergleich"
+    }
+   ]
+  },
+  "ma.5.laengen.profi": {
+   "titel": "Profi",
+   "kurz": "Alles gemischt",
+   "generatoren": [
+    {
+     "typ": "laenge-weit",
+     "halbe": true,
+     "gewicht": 2
+    },
+    {
+     "typ": "laenge-gemischt",
+     "gewicht": 2
+    },
+    {
+     "typ": "laenge-rechnen",
+     "gewicht": 2
+    },
+    {
+     "typ": "laenge-vergleich",
+     "gewicht": 1
     }
    ]
   }

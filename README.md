@@ -227,20 +227,23 @@ Eine neue App = **Inhaltsdatei + Katalog-Eintrag + Admin-Eintrag**. Kein neuer C
    `{ "typ", "thema", "titel", "emoji"?, "untertitel"?, "klasse", "anweisung"?, "sprache"?, "runde"?, "stufen": [ { "id", "titel", "kurz"?, … } ] }`.
    Stufen-IDs beginnen mit der Themen-ID (`de.5.wortarten.drei`). Was je Typ in einer Stufe steht:
 
-   | Typ | Stufe enthält | Bedienung | Beispiel |
-   |---|---|---|---|
-   | `zuordnen` | `aufgaben: [{ frage?, paare: [[links, rechts]] }]` **oder** Pool `paare` + `proAufgabe`; optional `ziele` | Teil antippen, dann Ziel | `de.5.wortarten`, `gpg.5.regeln-zuordnen`, `en.5.satzglieder-zuordnen` |
-   | `sortieren` | `aufgaben: [{ teile: [in richtiger Reihenfolge], loesung? }]`, optional `trenner` | Teile der Reihe nach antippen | `en.5.satzbau` |
-   | `lueckentext` | `aufgaben: [{ text: "He ___ …", antwort, optionen? }]` | Antippen (mit optionen) oder tippen | `en.5.simple-present-luecken` |
-   | `eingabe` | `aufgaben: [{ frage, antwort, einheit? }]` | Zahl → Zifferntastatur, sonst Textfeld | `ma.5.laengen-eingabe` |
-   | `beschriften` | `bild: "datei.svg"`, `marken: [{ x, y (Prozent), wort }]` | markierten Teil benennen (4 Begriffe) | `nut.5.pflanze` |
-   | `bildwort` | `woerter: [{ bild (Emoji oder Datei), wort, de? }]`, `richtung`: bild-wort · wort-bild · hoeren | Bild/Wort antippen, 🔊 in `sprache` | `en.5.essen-bildwort` |
+   | Typ | Stufe enthält | Bedienung |
+   |---|---|---|
+   | `zuordnen` | `aufgaben: [{ frage?, paare: [[links, rechts]] }]` **oder** Pool `paare` + `proAufgabe`; optional `ziele` | Teil antippen, dann Ziel |
+   | `sortieren` | `aufgaben: [{ teile: [in richtiger Reihenfolge], loesung? }]`, optional `trenner` | Teile der Reihe nach antippen |
+   | `lueckentext` | `aufgaben: [{ text: "He ___ …", antwort, optionen? }]` | Antippen (mit optionen) oder tippen |
+   | `eingabe` | `aufgaben: [{ frage, antwort, einheit? }]` | Zahl → Zifferntastatur, sonst Textfeld |
+   | `beschriften` | `bild: "datei.svg"`, `marken: [{ x, y (Prozent), wort }]` | markierten Teil benennen (4 Begriffe) |
+   | `bildwort` | `woerter: [{ bild (Emoji oder Datei), wort, de? }]`, `richtung`: bild-wort · wort-bild · hoeren | Bild/Wort antippen, 🔊 in `sprache` |
+
+   **Stand Okt. 2026: noch keine Inhalte** – die Beispielinhalte aus Etappe 9 wurden wieder entfernt (Entscheidung
+   Bene); neue Inhalte kommen mit der Erweiterung der Inhaltsbibliothek.
 
    Jede Aufgabe darf `tipp` und `erklaerung` haben (💡 und Erklärung nach falscher Antwort). Genaues Format: Kopf von
    `gemeinsam/typen/<typ>.js`. **Bilder:** Emojis (laufen überall, keine Lizenz) oder selbst gezeichnete SVG-Dateien
    neben der Inhaltsdatei; fremde Bilder nur mit freier Lizenz (CC0) und lokal, nie von fremden Servern.
 2. **Katalog:** Thema mit `quelle: { "app": "apps/typen/uebung.html", "parameter": "inhalt=<Themen-ID>" }` und allen
-   Stufen eintragen (wie die acht Beispiele in `daten/katalog.json`), mit `lehrplan`, `dauer`, `einsatz`.
+   Stufen eintragen, mit `lehrplan`, `dauer`, `einsatz`.
 3. **Admin:** neue App mit Datei `apps/typen/uebung.html?inhalt=<Themen-ID>`.
 4. `python3 werkzeuge/pruefen.py` prüft jede Inhaltsdatei gegen ihren Typ, gegen den Katalog und die Einträge in
    config.json. Neue Inhaltsdateien zusätzlich in `sw.js` → `NACHLADEN` eintragen (offline).
@@ -253,11 +256,12 @@ selbst im Admin unter „🎯 Unterricht“), Wiederholung, Fehler-Training, Inf
   Übungs-Rahmens (zeichnen ihre Bedienung selbst) bzw. `wahl`/`zahl`. Neuer Typ = neue Datei in `gemeinsam/typen/`
   + Name in `NAMEN` in typen.js + Prüfung in pruefen.py (Abschnitt 12).
 - **Inhalte von Claude erzeugen lassen:** Vorlage `werkzeuge/INHALT-PROMPT.md`.
-- **Überführt (alte Apps bleiben vorerst, bis die neuen getestet sind):** Regeln-Sortierer → `gpg.5.regeln-zuordnen`
-  (Zuordnen – inhaltlich eine Kategorien-Zuordnung), Satzglieder erkennen → `en.5.satzglieder-zuordnen` und
-  `en.5.satzbau` (Sortieren, mit den Satzbau-Aufgaben aus Simple Present), Simple Present → `en.5.simple-present-luecken`,
-  Längeneinheiten (Teil) → `ma.5.laengen-eingabe`. Neu: `de.5.wortarten` (Deutsch), `nut.5.pflanze` (Natur und Technik),
-  `en.5.essen-bildwort`. In den Satzglieder-Sätzen steht jetzt der Ort vor der Zeit („place before time“).
+- **Längeneinheiten** (`apps/mathe/laengeneinheiten.html`) läuft seit Okt. 2026 auf dem Übungs-Rahmen wie Kopfrechnen:
+  Stufen in `daten/kopfrechnen.json` → `apps.laengen` (Benachbarte Einheiten, Größere Sprünge, Gemischte Angaben,
+  Rechnen mit Längen, Vergleichen, Profi), Aufgaben aus `generatoren-mathe.js` (`laenge-…`). Dateiname unverändert,
+  Ergebnisse und Sterne der alten App zählen weiter.
+- **Entfernt (Okt. 2026):** „Regeln in unserer Gesellschaft“ (`apps/gpg/regeln-sortierer-gpg.html`, Datei und
+  config.json). Die Themen-ID `gpg.5.regeln` bleibt im Katalog reserviert (ohne Quelle).
 - **Länder-Finder** bleibt eigener Typ (Karte antippen) und ist an den Rahmen angeschlossen: Modi = Stufen
   `gpg.6.laender.europa` / `.bundeslaender` (Freigabe mit 🔒, Ergebnis mit Themen-ID).
 

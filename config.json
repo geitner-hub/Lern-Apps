@@ -382,17 +382,6 @@
       "gruppe": "g-grammar"
     },
     {
-      "name": "Regeln in unserer Gesellschaft",
-      "datei": "apps/gpg/regeln-sortierer-gpg.html",
-      "fach": "GPG",
-      "emoji": "⚖️",
-      "beschreibung": "Welche Regeln gibt es bei uns? Ordne zu!",
-      "hidden": true,
-      "klassen": [],
-      "customTags": [],
-      "aod": false
-    },
-    {
       "name": "Länder finden",
       "datei": "apps/gpg/laender-finder.html",
       "fach": "GPG",
