@@ -17,7 +17,8 @@
      meta.sprache ('en-GB', 'de-DE' …)  meta.untertitel  meta.vorne ('🇬🇧 English')  meta.hinten ('🇩🇪 Deutsch')
      je Wort: bild (Emoji oder Bilddatei in daten/bilder/), artikel ('der'|'die'|'das'), silben ('Ap-fel')
    Ergebnisse melden die Themen-ID der Unit; falsche Wörter landen im Fehlerheft (ueben.js).
-   Die alten Seiten vokabeltrainer5/6.html bleiben, bis diese Engine getestet ist.
+   Die alten Seiten vokabeltrainer5/6.html leiten hierher weiter; Ergebnisse, Sterne und Dorf-Aufträge
+   ziehen beim ersten Öffnen mit um (LernUeben.uebernehme).
   ═══════════════════════════════════════════════
 -->
 <link rel="stylesheet" href="../../gemeinsam/fonts.css">
@@ -398,6 +399,8 @@ const HISTORY_KEY = KL === '5' ? HISTORY_KEY5 : KL === '6' ? HISTORY_KEY6 : 'vok
 const STATS_KEY   = KL === '5' ? STATS_KEY5   : KL === '6' ? STATS_KEY6   : 'vokab-word-stats-' + LISTE;
 const A11Y_KEY    = KL === '5' ? A11Y_KEY5    : KL === '6' ? A11Y_KEY6    : 'vokab-a11y-' + LISTE;
 const DATEI = '../../daten/' + (LISTE || 'vokabeln' + KL) + '.json';
+// Umzug von den alten Seiten vokabeltrainer5/6.html: Ergebnisse, Sterne und offene Dorf-Aufträge übernehmen
+if (KL && window.LernUeben) LernUeben.uebernehme('vokabeltrainer' + KL + '.html', (location.pathname.split('/').pop() || '') + location.search);
 const modeNames = { flashcard: '🃏 Flashcards', quiz: '🧠 Quiz', memory: '🎴 Memory', fill: '✏️ Fill in', scramble: '🔀 Scramble', speed: '⚡ Speed' };
 
 // ── LOAD CONFIG ──────────────────────────────────────────────────

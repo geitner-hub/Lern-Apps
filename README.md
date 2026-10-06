@@ -278,7 +278,8 @@ selbst im Admin unter „🎯 Unterricht“), Wiederholung, Fehler-Training, Inf
 - Falsche Wörter landen im Fehlerheft; Units und Sonderlisten lassen sich über die Freigabe (Etappe 7) sperren
   (🔒, fehlen dann auch im „Mix aus allen Einheiten“).
 - Eine separate Vokabelabfrage-App ist bewusst nicht geplant.
-- **Testphase:** vokabeltrainer5/6.html bleiben, bis die Engine getestet ist; danach leiten sie weiter (wie Kopfrechnen).
+- `vokabeltrainer5/6.html` sind **Weiterleitungen** (`LW-WEITERLEITUNG`) auf `?klasse=5/6`; beim ersten Öffnen übernimmt
+  `LernUeben.uebernehme` Ergebnisse, Sterne und offene Dorf-Aufträge. Auf der Startseite steht je Klasse ein Trainer.
 
 ## Archiv (archiv/)
 
