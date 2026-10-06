@@ -1,0 +1,428 @@
+{
+ "typ": "gemischt",
+ "thema": "en.5.pronomen",
+ "titel": "Pronomen und possessive 's",
+ "emoji": "🇬🇧",
+ "klasse": 5,
+ "sprache": "en-GB",
+ "runde": 8,
+ "untertitel": "me, my, Tom's …",
+ "hilfe": [
+  {
+   "titel": "Pronomen",
+   "tabelle": [
+    [
+     "Subjekt",
+     "Objekt",
+     "Besitz"
+    ],
+    [
+     "I",
+     "me",
+     "my"
+    ],
+    [
+     "you",
+     "you",
+     "your"
+    ],
+    [
+     "he",
+     "him",
+     "his"
+    ],
+    [
+     "she",
+     "her",
+     "her"
+    ],
+    [
+     "it",
+     "it",
+     "its"
+    ],
+    [
+     "we",
+     "us",
+     "our"
+    ],
+    [
+     "they",
+     "them",
+     "their"
+    ]
+   ]
+  },
+  {
+   "titel": "Besitz mit 's",
+   "text": "Name + 's: Tom's bike. Plural auf -s: nur ': my parents' car. Unregelmäßiger Plural: the children's toys."
+  }
+ ],
+ "stufen": [
+  {
+   "id": "en.5.pronomen.objekt",
+   "titel": "me, him, her …",
+   "kurz": "Objektform",
+   "typ": "lueckentext",
+   "anweisung": "Welche Form passt?",
+   "aufgaben": [
+    {
+     "text": "Can you help ___? (I)",
+     "antwort": "me",
+     "optionen": [
+      "me",
+      "I",
+      "my"
+     ],
+     "tipp": "Objektform: me, you, him, her, it, us, them"
+    },
+    {
+     "text": "I like ___ very much. (she)",
+     "antwort": "her",
+     "optionen": [
+      "her",
+      "she"
+     ],
+     "tipp": "Objektform: me, you, him, her, it, us, them"
+    },
+    {
+     "text": "Please call ___ tomorrow. (we)",
+     "antwort": "us",
+     "optionen": [
+      "us",
+      "we",
+      "our"
+     ],
+     "tipp": "Objektform: me, you, him, her, it, us, them"
+    },
+    {
+     "text": "Give the ball to ___! (he)",
+     "antwort": "him",
+     "optionen": [
+      "him",
+      "he",
+      "his"
+     ],
+     "tipp": "Objektform: me, you, him, her, it, us, them"
+    },
+    {
+     "text": "Look at ___! They are funny. (they)",
+     "antwort": "them",
+     "optionen": [
+      "them",
+      "they",
+      "their"
+     ],
+     "tipp": "Objektform: me, you, him, her, it, us, them"
+    },
+    {
+     "text": "I can see ___. (you)",
+     "antwort": "you",
+     "optionen": [
+      "you",
+      "your"
+     ],
+     "tipp": "Objektform: me, you, him, her, it, us, them"
+    },
+    {
+     "text": "Where is the cat? I can't find ___. (it)",
+     "antwort": "it",
+     "optionen": [
+      "it",
+      "its"
+     ],
+     "tipp": "Objektform: me, you, him, her, it, us, them"
+    },
+    {
+     "text": "Our teacher gives ___ homework. (we)",
+     "antwort": "us",
+     "optionen": [
+      "us",
+      "we",
+      "our"
+     ],
+     "tipp": "Objektform: me, you, him, her, it, us, them"
+    },
+    {
+     "text": "Tell ___ the answer, please. (I)",
+     "antwort": "me",
+     "optionen": [
+      "me",
+      "I",
+      "my"
+     ],
+     "tipp": "Objektform: me, you, him, her, it, us, them"
+    },
+    {
+     "text": "This present is for ___. (she)",
+     "antwort": "her",
+     "optionen": [
+      "her",
+      "she"
+     ],
+     "tipp": "Objektform: me, you, him, her, it, us, them"
+    },
+    {
+     "text": "Do you know ___? He is my cousin. (he)",
+     "antwort": "him",
+     "optionen": [
+      "him",
+      "he",
+      "his"
+     ],
+     "tipp": "Objektform: me, you, him, her, it, us, them"
+    },
+    {
+     "text": "I often visit ___ at the weekend. (they)",
+     "antwort": "them",
+     "optionen": [
+      "them",
+      "they",
+      "their"
+     ],
+     "tipp": "Objektform: me, you, him, her, it, us, them"
+    }
+   ]
+  },
+  {
+   "id": "en.5.pronomen.possessiv",
+   "titel": "my, his, their …",
+   "kurz": "Besitz",
+   "typ": "lueckentext",
+   "anweisung": "Welche Form passt?",
+   "aufgaben": [
+    {
+     "text": "This is ___ bag. (I)",
+     "antwort": "my",
+     "optionen": [
+      "my",
+      "me",
+      "I"
+     ],
+     "tipp": "Besitz: my, your, his, her, its, our, their"
+    },
+    {
+     "text": "Tom is washing ___ car. (he)",
+     "antwort": "his",
+     "optionen": [
+      "his",
+      "him",
+      "he"
+     ],
+     "tipp": "Besitz: my, your, his, her, its, our, their"
+    },
+    {
+     "text": "Lisa and ___ brother are here. (she)",
+     "antwort": "her",
+     "optionen": [
+      "her",
+      "she"
+     ],
+     "tipp": "Besitz: my, your, his, her, its, our, their"
+    },
+    {
+     "text": "We love ___ new house. (we)",
+     "antwort": "our",
+     "optionen": [
+      "our",
+      "us",
+      "we"
+     ],
+     "tipp": "Besitz: my, your, his, her, its, our, their"
+    },
+    {
+     "text": "Is this ___ pencil? (you)",
+     "antwort": "your",
+     "optionen": [
+      "your",
+      "you"
+     ],
+     "tipp": "Besitz: my, your, his, her, its, our, their"
+    },
+    {
+     "text": "The dog is eating ___ food. (it)",
+     "antwort": "its",
+     "optionen": [
+      "its",
+      "it"
+     ],
+     "tipp": "Besitz: my, your, his, her, its, our, their"
+    },
+    {
+     "text": "They are doing ___ homework. (they)",
+     "antwort": "their",
+     "optionen": [
+      "their",
+      "them",
+      "they"
+     ],
+     "tipp": "Besitz: my, your, his, her, its, our, their"
+    },
+    {
+     "text": "I can't find ___ keys. (I)",
+     "antwort": "my",
+     "optionen": [
+      "my",
+      "me",
+      "I"
+     ],
+     "tipp": "Besitz: my, your, his, her, its, our, their"
+    },
+    {
+     "text": "She is talking to ___ mum. (she)",
+     "antwort": "her",
+     "optionen": [
+      "her",
+      "she"
+     ],
+     "tipp": "Besitz: my, your, his, her, its, our, their"
+    },
+    {
+     "text": "He forgot ___ lunch. (he)",
+     "antwort": "his",
+     "optionen": [
+      "his",
+      "him",
+      "he"
+     ],
+     "tipp": "Besitz: my, your, his, her, its, our, their"
+    },
+    {
+     "text": "We are visiting ___ grandparents. (we)",
+     "antwort": "our",
+     "optionen": [
+      "our",
+      "us",
+      "we"
+     ],
+     "tipp": "Besitz: my, your, his, her, its, our, their"
+    },
+    {
+     "text": "The children are playing with ___ toys. (they)",
+     "antwort": "their",
+     "optionen": [
+      "their",
+      "them",
+      "they"
+     ],
+     "tipp": "Besitz: my, your, his, her, its, our, their"
+    }
+   ]
+  },
+  {
+   "id": "en.5.pronomen.genitiv",
+   "titel": "Tom's bike",
+   "kurz": "'s und '",
+   "typ": "lueckentext",
+   "anweisung": "Schreibe mit 's oder '.",
+   "aufgaben": [
+    {
+     "text": "This is ___ bike. (Tom)",
+     "antwort": "Tom's",
+     "tipp": "Besitz: Name + 's (Tom's bike) · Plural mit s: nur ' (my parents' car)"
+    },
+    {
+     "text": "This is ___ room. (my sister)",
+     "antwort": "my sister's",
+     "tipp": "Besitz: Name + 's (Tom's bike) · Plural mit s: nur ' (my parents' car)"
+    },
+    {
+     "text": "This is ___ cat. (Anna)",
+     "antwort": "Anna's",
+     "tipp": "Besitz: Name + 's (Tom's bike) · Plural mit s: nur ' (my parents' car)"
+    },
+    {
+     "text": "These are ___ toys. (the children)",
+     "antwort": "the children's",
+     "tipp": "Besitz: Name + 's (Tom's bike) · Plural mit s: nur ' (my parents' car)"
+    },
+    {
+     "text": "This is ___ car. (my parents)",
+     "antwort": "my parents'",
+     "tipp": "Besitz: Name + 's (Tom's bike) · Plural mit s: nur ' (my parents' car)"
+    },
+    {
+     "text": "This is ___ house. (Mr Smith)",
+     "antwort": "Mr Smith's",
+     "tipp": "Besitz: Name + 's (Tom's bike) · Plural mit s: nur ' (my parents' car)"
+    },
+    {
+     "text": "This is ___ phone. (my brother)",
+     "antwort": "my brother's",
+     "tipp": "Besitz: Name + 's (Tom's bike) · Plural mit s: nur ' (my parents' car)"
+    },
+    {
+     "text": "These are ___ bikes. (the girls)",
+     "antwort": "the girls'",
+     "tipp": "Besitz: Name + 's (Tom's bike) · Plural mit s: nur ' (my parents' car)"
+    },
+    {
+     "text": "This is ___ dog. (Lisa)",
+     "antwort": "Lisa's",
+     "tipp": "Besitz: Name + 's (Tom's bike) · Plural mit s: nur ' (my parents' car)"
+    },
+    {
+     "text": "This is ___ desk. (the teacher)",
+     "antwort": "the teacher's",
+     "tipp": "Besitz: Name + 's (Tom's bike) · Plural mit s: nur ' (my parents' car)"
+    }
+   ]
+  },
+  {
+   "id": "en.5.pronomen.fehler",
+   "titel": "Fehler finden",
+   "kurz": "Tippe den Fehler an",
+   "typ": "markieren",
+   "anweisung": "Ein Wort ist falsch. Tippe es an.",
+   "aufgaben": [
+    {
+     "satz": "Can you help [I]?",
+     "richtig": "me",
+     "erklaerung": "Subjekt: I he she we they · Objekt: me him her us them · Besitz: my his her our their"
+    },
+    {
+     "satz": "This is [me] book.",
+     "richtig": "my",
+     "erklaerung": "Subjekt: I he she we they · Objekt: me him her us them · Besitz: my his her our their"
+    },
+    {
+     "satz": "[Him] is my brother.",
+     "richtig": "He",
+     "erklaerung": "Subjekt: I he she we they · Objekt: me him her us them · Besitz: my his her our their"
+    },
+    {
+     "satz": "I like [she].",
+     "richtig": "her",
+     "erklaerung": "Subjekt: I he she we they · Objekt: me him her us them · Besitz: my his her our their"
+    },
+    {
+     "satz": "[Us] are friends.",
+     "richtig": "We",
+     "erklaerung": "Subjekt: I he she we they · Objekt: me him her us them · Besitz: my his her our their"
+    },
+    {
+     "satz": "They love [they] dog.",
+     "richtig": "their",
+     "erklaerung": "Subjekt: I he she we they · Objekt: me him her us them · Besitz: my his her our their"
+    },
+    {
+     "satz": "This is [Toms] bike.",
+     "richtig": "Tom's",
+     "erklaerung": "Subjekt: I he she we they · Objekt: me him her us them · Besitz: my his her our their"
+    },
+    {
+     "satz": "Give it to [we], please.",
+     "richtig": "us",
+     "erklaerung": "Subjekt: I he she we they · Objekt: me him her us them · Besitz: my his her our their"
+    }
+   ]
+  },
+  {
+   "id": "en.5.pronomen.mix",
+   "titel": "Mix",
+   "kurz": "Alles durcheinander",
+   "mix": true,
+   "runde": 10
+  }
+ ]
+}

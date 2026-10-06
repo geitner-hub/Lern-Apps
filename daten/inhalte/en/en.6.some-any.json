@@ -1,0 +1,424 @@
+{
+ "typ": "gemischt",
+ "thema": "en.6.some-any",
+ "titel": "some / any",
+ "emoji": "🇬🇧",
+ "klasse": 6,
+ "sprache": "en-GB",
+ "runde": 8,
+ "untertitel": "some, any, something, anybody …",
+ "hilfe": [
+  {
+   "titel": "some oder any?",
+   "text": "some in Aussagen, Bitten und Angeboten (Can I have some …? Would you like some …?). any in Fragen und Verneinungen.",
+   "beispiele": [
+    [
+     "There is some milk.",
+     "Es gibt etwas Milch."
+    ],
+    [
+     "There isn't any milk.",
+     "Es gibt keine Milch."
+    ],
+    [
+     "Have you got any pets?",
+     "Hast du Haustiere?"
+    ]
+   ]
+  },
+  {
+   "titel": "something, anything, somebody, anybody",
+   "text": "Die gleiche Regel gilt für something/anything (etwas) und somebody/anybody (jemand)."
+  }
+ ],
+ "stufen": [
+  {
+   "id": "en.6.some-any.some-any",
+   "titel": "some oder any?",
+   "kurz": "Aussage, Frage, Verneinung",
+   "typ": "lueckentext",
+   "anweisung": "some oder any?",
+   "aufgaben": [
+    {
+     "text": "There is ___ milk in the fridge.",
+     "antwort": "some",
+     "optionen": [
+      "some",
+      "any"
+     ],
+     "tipp": "Aussage, Angebot, Bitte → some · Verneinung und Frage → any"
+    },
+    {
+     "text": "Have you got ___ brothers?",
+     "antwort": "any",
+     "optionen": [
+      "some",
+      "any"
+     ],
+     "tipp": "Aussage, Angebot, Bitte → some · Verneinung und Frage → any"
+    },
+    {
+     "text": "We haven't got ___ bread.",
+     "antwort": "any",
+     "optionen": [
+      "some",
+      "any"
+     ],
+     "tipp": "Aussage, Angebot, Bitte → some · Verneinung und Frage → any"
+    },
+    {
+     "text": "I would like ___ water, please.",
+     "antwort": "some",
+     "optionen": [
+      "some",
+      "any"
+     ],
+     "tipp": "Aussage, Angebot, Bitte → some · Verneinung und Frage → any"
+    },
+    {
+     "text": "Are there ___ apples left?",
+     "antwort": "any",
+     "optionen": [
+      "some",
+      "any"
+     ],
+     "tipp": "Aussage, Angebot, Bitte → some · Verneinung und Frage → any"
+    },
+    {
+     "text": "She has got ___ new friends.",
+     "antwort": "some",
+     "optionen": [
+      "some",
+      "any"
+     ],
+     "tipp": "Aussage, Angebot, Bitte → some · Verneinung und Frage → any"
+    },
+    {
+     "text": "There aren't ___ chairs in the room.",
+     "antwort": "any",
+     "optionen": [
+      "some",
+      "any"
+     ],
+     "tipp": "Aussage, Angebot, Bitte → some · Verneinung und Frage → any"
+    },
+    {
+     "text": "Can I have ___ biscuits?",
+     "antwort": "some",
+     "optionen": [
+      "some",
+      "any"
+     ],
+     "tipp": "Aussage, Angebot, Bitte → some · Verneinung und Frage → any"
+    },
+    {
+     "text": "Is there ___ cheese?",
+     "antwort": "any",
+     "optionen": [
+      "some",
+      "any"
+     ],
+     "tipp": "Aussage, Angebot, Bitte → some · Verneinung und Frage → any"
+    },
+    {
+     "text": "I need ___ help.",
+     "antwort": "some",
+     "optionen": [
+      "some",
+      "any"
+     ],
+     "tipp": "Aussage, Angebot, Bitte → some · Verneinung und Frage → any"
+    },
+    {
+     "text": "They didn't buy ___ presents.",
+     "antwort": "any",
+     "optionen": [
+      "some",
+      "any"
+     ],
+     "tipp": "Aussage, Angebot, Bitte → some · Verneinung und Frage → any"
+    },
+    {
+     "text": "Would you like ___ tea?",
+     "antwort": "some",
+     "optionen": [
+      "some",
+      "any"
+     ],
+     "tipp": "Aussage, Angebot, Bitte → some · Verneinung und Frage → any"
+    },
+    {
+     "text": "Have we got ___ eggs?",
+     "antwort": "any",
+     "optionen": [
+      "some",
+      "any"
+     ],
+     "tipp": "Aussage, Angebot, Bitte → some · Verneinung und Frage → any"
+    },
+    {
+     "text": "There are ___ birds in the tree.",
+     "antwort": "some",
+     "optionen": [
+      "some",
+      "any"
+     ],
+     "tipp": "Aussage, Angebot, Bitte → some · Verneinung und Frage → any"
+    },
+    {
+     "text": "I haven't got ___ money.",
+     "antwort": "any",
+     "optionen": [
+      "some",
+      "any"
+     ],
+     "tipp": "Aussage, Angebot, Bitte → some · Verneinung und Frage → any"
+    },
+    {
+     "text": "Let's buy ___ bananas.",
+     "antwort": "some",
+     "optionen": [
+      "some",
+      "any"
+     ],
+     "tipp": "Aussage, Angebot, Bitte → some · Verneinung und Frage → any"
+    },
+    {
+     "text": "Do you have ___ questions?",
+     "antwort": "any",
+     "optionen": [
+      "some",
+      "any"
+     ],
+     "tipp": "Aussage, Angebot, Bitte → some · Verneinung und Frage → any"
+    },
+    {
+     "text": "He put ___ sugar in his tea.",
+     "antwort": "some",
+     "optionen": [
+      "some",
+      "any"
+     ],
+     "tipp": "Aussage, Angebot, Bitte → some · Verneinung und Frage → any"
+    },
+    {
+     "text": "We didn't see ___ animals.",
+     "antwort": "any",
+     "optionen": [
+      "some",
+      "any"
+     ],
+     "tipp": "Aussage, Angebot, Bitte → some · Verneinung und Frage → any"
+    },
+    {
+     "text": "I've got ___ good news.",
+     "antwort": "some",
+     "optionen": [
+      "some",
+      "any"
+     ],
+     "tipp": "Aussage, Angebot, Bitte → some · Verneinung und Frage → any"
+    },
+    {
+     "text": "Is there ___ juice left?",
+     "antwort": "any",
+     "optionen": [
+      "some",
+      "any"
+     ],
+     "tipp": "Aussage, Angebot, Bitte → some · Verneinung und Frage → any"
+    },
+    {
+     "text": "Here are ___ photos of my holiday.",
+     "antwort": "some",
+     "optionen": [
+      "some",
+      "any"
+     ],
+     "tipp": "Aussage, Angebot, Bitte → some · Verneinung und Frage → any"
+    },
+    {
+     "text": "There isn't ___ snow.",
+     "antwort": "any",
+     "optionen": [
+      "some",
+      "any"
+     ],
+     "tipp": "Aussage, Angebot, Bitte → some · Verneinung und Frage → any"
+    },
+    {
+     "text": "Could I have ___ more cake?",
+     "antwort": "some",
+     "optionen": [
+      "some",
+      "any"
+     ],
+     "tipp": "Aussage, Angebot, Bitte → some · Verneinung und Frage → any"
+    }
+   ]
+  },
+  {
+   "id": "en.6.some-any.zusammensetzungen",
+   "titel": "something, anybody …",
+   "kurz": "etwas, jemand",
+   "typ": "lueckentext",
+   "anweisung": "Welches Wort passt?",
+   "aufgaben": [
+    {
+     "text": "There is ___ at the door.",
+     "antwort": "somebody",
+     "optionen": [
+      "somebody",
+      "anybody"
+     ],
+     "tipp": "something/somebody in Aussagen · anything/anybody in Fragen und Verneinungen (Ausnahme: Angebote mit Would you like …? → some)"
+    },
+    {
+     "text": "I can't see ___.",
+     "antwort": "anything",
+     "optionen": [
+      "something",
+      "anything"
+     ],
+     "tipp": "something/somebody in Aussagen · anything/anybody in Fragen und Verneinungen (Ausnahme: Angebote mit Would you like …? → some)"
+    },
+    {
+     "text": "Is there ___ in the box?",
+     "antwort": "anything",
+     "optionen": [
+      "something",
+      "anything"
+     ],
+     "tipp": "something/somebody in Aussagen · anything/anybody in Fragen und Verneinungen (Ausnahme: Angebote mit Would you like …? → some)"
+    },
+    {
+     "text": "___ has eaten my sandwich!",
+     "antwort": "Somebody",
+     "optionen": [
+      "Somebody",
+      "Anybody"
+     ],
+     "tipp": "something/somebody in Aussagen · anything/anybody in Fragen und Verneinungen (Ausnahme: Angebote mit Would you like …? → some)"
+    },
+    {
+     "text": "Did ___ call me?",
+     "antwort": "anybody",
+     "optionen": [
+      "somebody",
+      "anybody"
+     ],
+     "tipp": "something/somebody in Aussagen · anything/anybody in Fragen und Verneinungen (Ausnahme: Angebote mit Would you like …? → some)"
+    },
+    {
+     "text": "I want to eat ___ sweet.",
+     "antwort": "something",
+     "optionen": [
+      "something",
+      "anything"
+     ],
+     "tipp": "something/somebody in Aussagen · anything/anybody in Fragen und Verneinungen (Ausnahme: Angebote mit Would you like …? → some)"
+    },
+    {
+     "text": "There isn't ___ in the room.",
+     "antwort": "anybody",
+     "optionen": [
+      "somebody",
+      "anybody"
+     ],
+     "tipp": "something/somebody in Aussagen · anything/anybody in Fragen und Verneinungen (Ausnahme: Angebote mit Would you like …? → some)"
+    },
+    {
+     "text": "I heard ___ in the garden.",
+     "antwort": "something",
+     "optionen": [
+      "something",
+      "anything"
+     ],
+     "tipp": "something/somebody in Aussagen · anything/anybody in Fragen und Verneinungen (Ausnahme: Angebote mit Would you like …? → some)"
+    },
+    {
+     "text": "Have you got ___ to drink?",
+     "antwort": "anything",
+     "optionen": [
+      "something",
+      "anything"
+     ],
+     "tipp": "something/somebody in Aussagen · anything/anybody in Fragen und Verneinungen (Ausnahme: Angebote mit Would you like …? → some)"
+    },
+    {
+     "text": "___ left the door open.",
+     "antwort": "Somebody",
+     "optionen": [
+      "Somebody",
+      "Anybody"
+     ],
+     "tipp": "something/somebody in Aussagen · anything/anybody in Fragen und Verneinungen (Ausnahme: Angebote mit Would you like …? → some)"
+    },
+    {
+     "text": "We didn't buy ___.",
+     "antwort": "anything",
+     "optionen": [
+      "something",
+      "anything"
+     ],
+     "tipp": "something/somebody in Aussagen · anything/anybody in Fragen und Verneinungen (Ausnahme: Angebote mit Would you like …? → some)"
+    },
+    {
+     "text": "Would you like ___ to eat?",
+     "antwort": "something",
+     "optionen": [
+      "something",
+      "anything"
+     ],
+     "tipp": "something/somebody in Aussagen · anything/anybody in Fragen und Verneinungen (Ausnahme: Angebote mit Would you like …? → some)"
+    }
+   ]
+  },
+  {
+   "id": "en.6.some-any.fehler",
+   "titel": "Fehler finden",
+   "kurz": "Tippe den Fehler an",
+   "typ": "markieren",
+   "anweisung": "Ein Wort ist falsch. Tippe es an.",
+   "aufgaben": [
+    {
+     "satz": "I haven't got [some] time.",
+     "richtig": "any",
+     "erklaerung": "Aussage/Bitte → some · Frage/Verneinung → any"
+    },
+    {
+     "satz": "Have you got [some] pets?",
+     "richtig": "any",
+     "erklaerung": "Aussage/Bitte → some · Frage/Verneinung → any"
+    },
+    {
+     "satz": "There are [any] cookies on the plate.",
+     "richtig": "some",
+     "erklaerung": "Aussage/Bitte → some · Frage/Verneinung → any"
+    },
+    {
+     "satz": "We didn't see [somebody].",
+     "richtig": "anybody",
+     "erklaerung": "Aussage/Bitte → some · Frage/Verneinung → any"
+    },
+    {
+     "satz": "Can I have [any] water, please?",
+     "richtig": "some",
+     "erklaerung": "Aussage/Bitte → some · Frage/Verneinung → any"
+    },
+    {
+     "satz": "There is [anything] in my shoe.",
+     "richtig": "something",
+     "erklaerung": "Aussage/Bitte → some · Frage/Verneinung → any"
+    }
+   ]
+  },
+  {
+   "id": "en.6.some-any.mix",
+   "titel": "Mix",
+   "kurz": "Alles durcheinander",
+   "mix": true,
+   "runde": 10
+  }
+ ]
+}

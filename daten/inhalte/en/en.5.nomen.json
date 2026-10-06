@@ -1,0 +1,547 @@
+{
+ "typ": "gemischt",
+ "thema": "en.5.nomen",
+ "titel": "Plural, a/an, this/that",
+ "emoji": "🇬🇧",
+ "klasse": 5,
+ "sprache": "en-GB",
+ "runde": 8,
+ "untertitel": "Nomen richtig benutzen",
+ "hilfe": [
+  {
+   "titel": "Plural",
+   "tabelle": [
+    [
+     "Regel",
+     "Beispiel"
+    ],
+    [
+     "+ s",
+     "cat → cats, toy → toys"
+    ],
+    [
+     "s, x, sh, ch, o: + es",
+     "box → boxes, potato → potatoes"
+    ],
+    [
+     "Konsonant + y: -ies",
+     "baby → babies"
+    ],
+    [
+     "f/fe → ves",
+     "knife → knives, leaf → leaves"
+    ],
+    [
+     "Ausnahmen",
+     "child → children, man → men, foot → feet, mouse → mice, person → people, sheep → sheep"
+    ]
+   ]
+  },
+  {
+   "titel": "a oder an?",
+   "text": "Es zählt der LAUT, nicht der Buchstabe: an apple, an hour – aber a uniform, a university."
+  },
+  {
+   "titel": "this, that, these, those",
+   "tabelle": [
+    [
+     "",
+     "nah",
+     "weit weg"
+    ],
+    [
+     "Einzahl",
+     "this",
+     "that"
+    ],
+    [
+     "Mehrzahl",
+     "these",
+     "those"
+    ]
+   ]
+  }
+ ],
+ "stufen": [
+  {
+   "id": "en.5.nomen.plural",
+   "titel": "Plural",
+   "kurz": "cats, boxes, children",
+   "typ": "eingabe",
+   "anweisung": "Schreibe den Plural.",
+   "aufgaben": [
+    {
+     "frage": "one cat – two …?",
+     "antwort": [
+      "cats"
+     ],
+     "erklaerung": "cat → cats",
+     "tipp": "+s · nach s, x, sh, ch: +es · Konsonant + y: -ies · Ausnahmen lernen!"
+    },
+    {
+     "frage": "one box – two …?",
+     "antwort": [
+      "boxes"
+     ],
+     "erklaerung": "box → boxes",
+     "tipp": "+s · nach s, x, sh, ch: +es · Konsonant + y: -ies · Ausnahmen lernen!"
+    },
+    {
+     "frage": "one baby – two …?",
+     "antwort": [
+      "babies"
+     ],
+     "erklaerung": "baby → babies",
+     "tipp": "+s · nach s, x, sh, ch: +es · Konsonant + y: -ies · Ausnahmen lernen!"
+    },
+    {
+     "frage": "one child – two …?",
+     "antwort": [
+      "children"
+     ],
+     "erklaerung": "child → children",
+     "tipp": "+s · nach s, x, sh, ch: +es · Konsonant + y: -ies · Ausnahmen lernen!"
+    },
+    {
+     "frage": "one man – two …?",
+     "antwort": [
+      "men"
+     ],
+     "erklaerung": "man → men",
+     "tipp": "+s · nach s, x, sh, ch: +es · Konsonant + y: -ies · Ausnahmen lernen!"
+    },
+    {
+     "frage": "one woman – two …?",
+     "antwort": [
+      "women"
+     ],
+     "erklaerung": "woman → women",
+     "tipp": "+s · nach s, x, sh, ch: +es · Konsonant + y: -ies · Ausnahmen lernen!"
+    },
+    {
+     "frage": "one foot – two …?",
+     "antwort": [
+      "feet"
+     ],
+     "erklaerung": "foot → feet",
+     "tipp": "+s · nach s, x, sh, ch: +es · Konsonant + y: -ies · Ausnahmen lernen!"
+    },
+    {
+     "frage": "one tooth – two …?",
+     "antwort": [
+      "teeth"
+     ],
+     "erklaerung": "tooth → teeth",
+     "tipp": "+s · nach s, x, sh, ch: +es · Konsonant + y: -ies · Ausnahmen lernen!"
+    },
+    {
+     "frage": "one mouse – two …?",
+     "antwort": [
+      "mice"
+     ],
+     "erklaerung": "mouse → mice",
+     "tipp": "+s · nach s, x, sh, ch: +es · Konsonant + y: -ies · Ausnahmen lernen!"
+    },
+    {
+     "frage": "one sheep – two …?",
+     "antwort": [
+      "sheep"
+     ],
+     "erklaerung": "sheep → sheep",
+     "tipp": "+s · nach s, x, sh, ch: +es · Konsonant + y: -ies · Ausnahmen lernen!"
+    },
+    {
+     "frage": "one fish – two …?",
+     "antwort": [
+      "fish"
+     ],
+     "erklaerung": "fish → fish",
+     "tipp": "+s · nach s, x, sh, ch: +es · Konsonant + y: -ies · Ausnahmen lernen!"
+    },
+    {
+     "frage": "one bus – two …?",
+     "antwort": [
+      "buses"
+     ],
+     "erklaerung": "bus → buses",
+     "tipp": "+s · nach s, x, sh, ch: +es · Konsonant + y: -ies · Ausnahmen lernen!"
+    },
+    {
+     "frage": "one watch – two …?",
+     "antwort": [
+      "watches"
+     ],
+     "erklaerung": "watch → watches",
+     "tipp": "+s · nach s, x, sh, ch: +es · Konsonant + y: -ies · Ausnahmen lernen!"
+    },
+    {
+     "frage": "one knife – two …?",
+     "antwort": [
+      "knives"
+     ],
+     "erklaerung": "knife → knives",
+     "tipp": "+s · nach s, x, sh, ch: +es · Konsonant + y: -ies · Ausnahmen lernen!"
+    },
+    {
+     "frage": "one leaf – two …?",
+     "antwort": [
+      "leaves"
+     ],
+     "erklaerung": "leaf → leaves",
+     "tipp": "+s · nach s, x, sh, ch: +es · Konsonant + y: -ies · Ausnahmen lernen!"
+    },
+    {
+     "frage": "one wife – two …?",
+     "antwort": [
+      "wives"
+     ],
+     "erklaerung": "wife → wives",
+     "tipp": "+s · nach s, x, sh, ch: +es · Konsonant + y: -ies · Ausnahmen lernen!"
+    },
+    {
+     "frage": "one potato – two …?",
+     "antwort": [
+      "potatoes"
+     ],
+     "erklaerung": "potato → potatoes",
+     "tipp": "+s · nach s, x, sh, ch: +es · Konsonant + y: -ies · Ausnahmen lernen!"
+    },
+    {
+     "frage": "one tomato – two …?",
+     "antwort": [
+      "tomatoes"
+     ],
+     "erklaerung": "tomato → tomatoes",
+     "tipp": "+s · nach s, x, sh, ch: +es · Konsonant + y: -ies · Ausnahmen lernen!"
+    },
+    {
+     "frage": "one toy – two …?",
+     "antwort": [
+      "toys"
+     ],
+     "erklaerung": "toy → toys",
+     "tipp": "+s · nach s, x, sh, ch: +es · Konsonant + y: -ies · Ausnahmen lernen!"
+    },
+    {
+     "frage": "one day – two …?",
+     "antwort": [
+      "days"
+     ],
+     "erklaerung": "day → days",
+     "tipp": "+s · nach s, x, sh, ch: +es · Konsonant + y: -ies · Ausnahmen lernen!"
+    },
+    {
+     "frage": "one city – two …?",
+     "antwort": [
+      "cities"
+     ],
+     "erklaerung": "city → cities",
+     "tipp": "+s · nach s, x, sh, ch: +es · Konsonant + y: -ies · Ausnahmen lernen!"
+    },
+    {
+     "frage": "one family – two …?",
+     "antwort": [
+      "families"
+     ],
+     "erklaerung": "family → families",
+     "tipp": "+s · nach s, x, sh, ch: +es · Konsonant + y: -ies · Ausnahmen lernen!"
+    },
+    {
+     "frage": "one person – two …?",
+     "antwort": [
+      "people"
+     ],
+     "erklaerung": "person → people",
+     "tipp": "+s · nach s, x, sh, ch: +es · Konsonant + y: -ies · Ausnahmen lernen!"
+    },
+    {
+     "frage": "one glass – two …?",
+     "antwort": [
+      "glasses"
+     ],
+     "erklaerung": "glass → glasses",
+     "tipp": "+s · nach s, x, sh, ch: +es · Konsonant + y: -ies · Ausnahmen lernen!"
+    }
+   ]
+  },
+  {
+   "id": "en.5.nomen.a-an",
+   "titel": "a oder an?",
+   "kurz": "an apple, a banana",
+   "typ": "lueckentext",
+   "anweisung": "a oder an?",
+   "aufgaben": [
+    {
+     "text": "I eat ___ apple every day.",
+     "antwort": "an",
+     "optionen": [
+      "a",
+      "an"
+     ],
+     "tipp": "an vor einem Vokal-LAUT (an apple, an hour) · a vor Konsonant-LAUT (a uniform)"
+    },
+    {
+     "text": "Can I have ___ egg, please?",
+     "antwort": "an",
+     "optionen": [
+      "a",
+      "an"
+     ],
+     "tipp": "an vor einem Vokal-LAUT (an apple, an hour) · a vor Konsonant-LAUT (a uniform)"
+    },
+    {
+     "text": "She is eating ___ orange.",
+     "antwort": "an",
+     "optionen": [
+      "a",
+      "an"
+     ],
+     "tipp": "an vor einem Vokal-LAUT (an apple, an hour) · a vor Konsonant-LAUT (a uniform)"
+    },
+    {
+     "text": "Take ___ umbrella – it's raining!",
+     "antwort": "an",
+     "optionen": [
+      "a",
+      "an"
+     ],
+     "tipp": "an vor einem Vokal-LAUT (an apple, an hour) · a vor Konsonant-LAUT (a uniform)"
+    },
+    {
+     "text": "We waited for ___ hour.",
+     "antwort": "an",
+     "optionen": [
+      "a",
+      "an"
+     ],
+     "tipp": "an vor einem Vokal-LAUT (an apple, an hour) · a vor Konsonant-LAUT (a uniform)"
+    },
+    {
+     "text": "At my school we wear ___ uniform.",
+     "antwort": "a",
+     "optionen": [
+      "a",
+      "an"
+     ],
+     "tipp": "an vor einem Vokal-LAUT (an apple, an hour) · a vor Konsonant-LAUT (a uniform)"
+    },
+    {
+     "text": "I have got ___ banana in my bag.",
+     "antwort": "a",
+     "optionen": [
+      "a",
+      "an"
+     ],
+     "tipp": "an vor einem Vokal-LAUT (an apple, an hour) · a vor Konsonant-LAUT (a uniform)"
+    },
+    {
+     "text": "At the zoo we saw ___ elephant.",
+     "antwort": "an",
+     "optionen": [
+      "a",
+      "an"
+     ],
+     "tipp": "an vor einem Vokal-LAUT (an apple, an hour) · a vor Konsonant-LAUT (a uniform)"
+    },
+    {
+     "text": "Would you like ___ ice cream?",
+     "antwort": "an",
+     "optionen": [
+      "a",
+      "an"
+     ],
+     "tipp": "an vor einem Vokal-LAUT (an apple, an hour) · a vor Konsonant-LAUT (a uniform)"
+    },
+    {
+     "text": "I am reading ___ book.",
+     "antwort": "a",
+     "optionen": [
+      "a",
+      "an"
+     ],
+     "tipp": "an vor einem Vokal-LAUT (an apple, an hour) · a vor Konsonant-LAUT (a uniform)"
+    },
+    {
+     "text": "___ old man is sitting on the bench.",
+     "antwort": "An",
+     "optionen": [
+      "A",
+      "An"
+     ],
+     "tipp": "an vor einem Vokal-LAUT (an apple, an hour) · a vor Konsonant-LAUT (a uniform)"
+    },
+    {
+     "text": "My sister goes to ___ university.",
+     "antwort": "a",
+     "optionen": [
+      "a",
+      "an"
+     ],
+     "tipp": "an vor einem Vokal-LAUT (an apple, an hour) · a vor Konsonant-LAUT (a uniform)"
+    },
+    {
+     "text": "I have got ___ idea!",
+     "antwort": "an",
+     "optionen": [
+      "a",
+      "an"
+     ],
+     "tipp": "an vor einem Vokal-LAUT (an apple, an hour) · a vor Konsonant-LAUT (a uniform)"
+    },
+    {
+     "text": "We have got ___ dog.",
+     "antwort": "a",
+     "optionen": [
+      "a",
+      "an"
+     ],
+     "tipp": "an vor einem Vokal-LAUT (an apple, an hour) · a vor Konsonant-LAUT (a uniform)"
+    },
+    {
+     "text": "Mrs Green is ___ English teacher.",
+     "antwort": "an",
+     "optionen": [
+      "a",
+      "an"
+     ],
+     "tipp": "an vor einem Vokal-LAUT (an apple, an hour) · a vor Konsonant-LAUT (a uniform)"
+    },
+    {
+     "text": "My cousin has got ___ horse.",
+     "antwort": "a",
+     "optionen": [
+      "a",
+      "an"
+     ],
+     "tipp": "an vor einem Vokal-LAUT (an apple, an hour) · a vor Konsonant-LAUT (a uniform)"
+    }
+   ]
+  },
+  {
+   "id": "en.5.nomen.this-that",
+   "titel": "this, that, these, those",
+   "kurz": "nah oder weit weg?",
+   "typ": "lueckentext",
+   "anweisung": "Welches Wort passt?",
+   "aufgaben": [
+    {
+     "text": "___ book here is mine.",
+     "antwort": "This",
+     "optionen": [
+      "This",
+      "That",
+      "These",
+      "Those"
+     ],
+     "tipp": "nah: this / these · weit weg: that / those · Einzahl: this/that · Mehrzahl: these/those"
+    },
+    {
+     "text": "___ shoes over there are new.",
+     "antwort": "Those",
+     "optionen": [
+      "This",
+      "That",
+      "These",
+      "Those"
+     ],
+     "tipp": "nah: this / these · weit weg: that / those · Einzahl: this/that · Mehrzahl: these/those"
+    },
+    {
+     "text": "___ pencils on my desk are blue.",
+     "antwort": "These",
+     "optionen": [
+      "This",
+      "That",
+      "These",
+      "Those"
+     ],
+     "tipp": "nah: this / these · weit weg: that / those · Einzahl: this/that · Mehrzahl: these/those"
+    },
+    {
+     "text": "Look at ___ bird in the sky!",
+     "antwort": "that",
+     "optionen": [
+      "this",
+      "that",
+      "these",
+      "those"
+     ],
+     "tipp": "nah: this / these · weit weg: that / those · Einzahl: this/that · Mehrzahl: these/those"
+    },
+    {
+     "text": "I like ___ cake on my plate.",
+     "antwort": "this",
+     "optionen": [
+      "this",
+      "that",
+      "these",
+      "those"
+     ],
+     "tipp": "nah: this / these · weit weg: that / those · Einzahl: this/that · Mehrzahl: these/those"
+    },
+    {
+     "text": "___ houses over there are old.",
+     "antwort": "Those",
+     "optionen": [
+      "This",
+      "That",
+      "These",
+      "Those"
+     ],
+     "tipp": "nah: this / these · weit weg: that / those · Einzahl: this/that · Mehrzahl: these/those"
+    },
+    {
+     "text": "Can I have ___ apples here?",
+     "antwort": "these",
+     "optionen": [
+      "this",
+      "that",
+      "these",
+      "those"
+     ],
+     "tipp": "nah: this / these · weit weg: that / those · Einzahl: this/that · Mehrzahl: these/those"
+    },
+    {
+     "text": "___ is my friend Tom (next to me).",
+     "antwort": "This",
+     "optionen": [
+      "This",
+      "That",
+      "These",
+      "Those"
+     ],
+     "tipp": "nah: this / these · weit weg: that / those · Einzahl: this/that · Mehrzahl: these/those"
+    },
+    {
+     "text": "Who is ___ boy over there?",
+     "antwort": "that",
+     "optionen": [
+      "this",
+      "that",
+      "these",
+      "those"
+     ],
+     "tipp": "nah: this / these · weit weg: that / those · Einzahl: this/that · Mehrzahl: these/those"
+    },
+    {
+     "text": "___ cookies here are delicious.",
+     "antwort": "These",
+     "optionen": [
+      "This",
+      "That",
+      "These",
+      "Those"
+     ],
+     "tipp": "nah: this / these · weit weg: that / those · Einzahl: this/that · Mehrzahl: these/those"
+    }
+   ]
+  },
+  {
+   "id": "en.5.nomen.mix",
+   "titel": "Mix",
+   "kurz": "Alles durcheinander",
+   "mix": true,
+   "runde": 10
+  }
+ ]
+}

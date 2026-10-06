@@ -1,0 +1,614 @@
+{
+ "typ": "lueckentext",
+ "thema": "en.5.knowing-english",
+ "titel": "Knowing English: Mixed",
+ "emoji": "🧩",
+ "klasse": 5,
+ "sprache": "en-GB",
+ "runde": 10,
+ "untertitel": "Alle Strukturen durcheinander – und welche Zeit passt?",
+ "hilfe": [
+  {
+   "titel": "Welche Zeit passt?",
+   "tabelle": [
+    [
+     "Zeit",
+     "Signalwörter",
+     "Beispiel"
+    ],
+    [
+     "simple present",
+     "always, often, every day, never",
+     "She always walks to school."
+    ],
+    [
+     "present progressive",
+     "now, at the moment, Look!, Listen!",
+     "Look! It is raining."
+    ],
+    [
+     "simple past",
+     "yesterday, last week, two days ago, in 2020",
+     "We went to Italy last summer."
+    ],
+    [
+     "will (Klasse 6)",
+     "tomorrow, I think, maybe",
+     "I think it will rain."
+    ],
+    [
+     "going to (Klasse 6)",
+     "Plan, sichtbares Anzeichen",
+     "Look! It's going to rain."
+    ]
+   ]
+  }
+ ],
+ "stufen": [
+  {
+   "id": "en.5.knowing-english.zeiten",
+   "titel": "Welche Zeit passt?",
+   "kurz": "Signalwörter erkennen",
+   "anweisung": "Welche Form passt? Achte auf das Signalwort.",
+   "aufgaben": [
+    {
+     "text": "Every day she ___ to school by bus.",
+     "antwort": "goes",
+     "optionen": [
+      "goes",
+      "is going",
+      "went"
+     ],
+     "tipp": "Signalwörter: every day, always → simple present · Look!, now → present progressive · yesterday, last … → simple past"
+    },
+    {
+     "text": "Look! The dog ___ the ball.",
+     "antwort": "is catching",
+     "optionen": [
+      "catches",
+      "is catching",
+      "caught"
+     ],
+     "tipp": "Signalwörter: every day, always → simple present · Look!, now → present progressive · yesterday, last … → simple past"
+    },
+    {
+     "text": "Yesterday we ___ pizza.",
+     "antwort": "ate",
+     "optionen": [
+      "eat",
+      "are eating",
+      "ate"
+     ],
+     "tipp": "Signalwörter: every day, always → simple present · Look!, now → present progressive · yesterday, last … → simple past"
+    },
+    {
+     "text": "I usually ___ my homework after lunch.",
+     "antwort": "do",
+     "optionen": [
+      "do",
+      "am doing",
+      "did"
+     ],
+     "tipp": "Signalwörter: every day, always → simple present · Look!, now → present progressive · yesterday, last … → simple past"
+    },
+    {
+     "text": "Listen! Somebody ___ the piano.",
+     "antwort": "is playing",
+     "optionen": [
+      "plays",
+      "is playing",
+      "played"
+     ],
+     "tipp": "Signalwörter: every day, always → simple present · Look!, now → present progressive · yesterday, last … → simple past"
+    },
+    {
+     "text": "Last summer they ___ to Italy.",
+     "antwort": "went",
+     "optionen": [
+      "go",
+      "are going",
+      "went"
+     ],
+     "tipp": "Signalwörter: every day, always → simple present · Look!, now → present progressive · yesterday, last … → simple past"
+    },
+    {
+     "text": "My dad never ___ coffee.",
+     "antwort": "drinks",
+     "optionen": [
+      "drinks",
+      "is drinking",
+      "drank"
+     ],
+     "tipp": "Signalwörter: every day, always → simple present · Look!, now → present progressive · yesterday, last … → simple past"
+    },
+    {
+     "text": "At the moment I ___ a book.",
+     "antwort": "am reading",
+     "optionen": [
+      "read",
+      "am reading",
+      "was reading"
+     ],
+     "tipp": "Signalwörter: every day, always → simple present · Look!, now → present progressive · yesterday, last … → simple past"
+    },
+    {
+     "text": "Two days ago Tom ___ his arm.",
+     "antwort": "broke",
+     "optionen": [
+      "breaks",
+      "is breaking",
+      "broke"
+     ],
+     "tipp": "Signalwörter: every day, always → simple present · Look!, now → present progressive · yesterday, last … → simple past"
+    },
+    {
+     "text": "We often ___ football on Saturdays.",
+     "antwort": "play",
+     "optionen": [
+      "play",
+      "are playing",
+      "played"
+     ],
+     "tipp": "Signalwörter: every day, always → simple present · Look!, now → present progressive · yesterday, last … → simple past"
+    },
+    {
+     "text": "Be quiet! The baby ___.",
+     "antwort": "is sleeping",
+     "optionen": [
+      "sleeps",
+      "is sleeping",
+      "slept"
+     ],
+     "tipp": "Signalwörter: every day, always → simple present · Look!, now → present progressive · yesterday, last … → simple past"
+    },
+    {
+     "text": "In 2020 my sister ___ born.",
+     "antwort": "was",
+     "optionen": [
+      "is",
+      "is being",
+      "was"
+     ],
+     "tipp": "Signalwörter: every day, always → simple present · Look!, now → present progressive · yesterday, last … → simple past"
+    },
+    {
+     "text": "She always ___ her teeth before bed.",
+     "antwort": "brushes",
+     "optionen": [
+      "brushes",
+      "is brushing",
+      "brushed"
+     ],
+     "tipp": "Signalwörter: every day, always → simple present · Look!, now → present progressive · yesterday, last … → simple past"
+    },
+    {
+     "text": "Right now they ___ TV.",
+     "antwort": "are watching",
+     "optionen": [
+      "watch",
+      "are watching",
+      "watched"
+     ],
+     "tipp": "Signalwörter: every day, always → simple present · Look!, now → present progressive · yesterday, last … → simple past"
+    },
+    {
+     "text": "Last night I ___ a strange noise.",
+     "antwort": "heard",
+     "optionen": [
+      "hear",
+      "am hearing",
+      "heard"
+     ],
+     "tipp": "Signalwörter: every day, always → simple present · Look!, now → present progressive · yesterday, last … → simple past"
+    },
+    {
+     "text": "He sometimes ___ late for school.",
+     "antwort": "is",
+     "optionen": [
+      "is",
+      "is being",
+      "was"
+     ],
+     "tipp": "Signalwörter: every day, always → simple present · Look!, now → present progressive · yesterday, last … → simple past"
+    },
+    {
+     "text": "Look! It ___.",
+     "antwort": "is snowing",
+     "optionen": [
+      "snows",
+      "is snowing",
+      "snowed"
+     ],
+     "tipp": "Signalwörter: every day, always → simple present · Look!, now → present progressive · yesterday, last … → simple past"
+    },
+    {
+     "text": "When I was six, I ___ a red bike.",
+     "antwort": "had",
+     "optionen": [
+      "have",
+      "am having",
+      "had"
+     ],
+     "tipp": "Signalwörter: every day, always → simple present · Look!, now → present progressive · yesterday, last … → simple past"
+    },
+    {
+     "text": "My mum ___ in a hospital. She is a nurse.",
+     "antwort": "works",
+     "optionen": [
+      "works",
+      "is working",
+      "worked"
+     ],
+     "tipp": "Signalwörter: every day, always → simple present · Look!, now → present progressive · yesterday, last … → simple past"
+    },
+    {
+     "text": "Last week we ___ a museum.",
+     "antwort": "visited",
+     "optionen": [
+      "visit",
+      "are visiting",
+      "visited"
+     ],
+     "tipp": "Signalwörter: every day, always → simple present · Look!, now → present progressive · yesterday, last … → simple past"
+    }
+   ]
+  },
+  {
+   "id": "en.5.knowing-english.mixed-5",
+   "titel": "Mixed (Klasse 5)",
+   "kurz": "Alle Strukturen der 5. Klasse",
+   "mix": true,
+   "aus": [
+    "en.5.to-be",
+    "en.5.simple-present",
+    "en.5.simple-past",
+    "en.5.have-got",
+    "en.5.can",
+    "en.5.present-progressive",
+    "en.5.nomen",
+    "en.5.pronomen",
+    "en.5.there-is",
+    "en.5.fragen",
+    "en.5.praepositionen",
+    "en.5.knowing-english.zeiten"
+   ],
+   "runde": 12
+  },
+  {
+   "id": "en.5.knowing-english.zeiten-6",
+   "titel": "Welche Zeit passt? (mit Zukunft)",
+   "kurz": "auch will und going to",
+   "anweisung": "Welche Form passt? Achte auf das Signalwort.",
+   "aufgaben": [
+    {
+     "text": "Every day she ___ to school by bus.",
+     "antwort": "goes",
+     "optionen": [
+      "goes",
+      "is going",
+      "went"
+     ],
+     "tipp": "Signalwörter: every day, always → simple present · Look!, now → present progressive · yesterday, last … → simple past"
+    },
+    {
+     "text": "Look! The dog ___ the ball.",
+     "antwort": "is catching",
+     "optionen": [
+      "catches",
+      "is catching",
+      "caught"
+     ],
+     "tipp": "Signalwörter: every day, always → simple present · Look!, now → present progressive · yesterday, last … → simple past"
+    },
+    {
+     "text": "Yesterday we ___ pizza.",
+     "antwort": "ate",
+     "optionen": [
+      "eat",
+      "are eating",
+      "ate"
+     ],
+     "tipp": "Signalwörter: every day, always → simple present · Look!, now → present progressive · yesterday, last … → simple past"
+    },
+    {
+     "text": "I usually ___ my homework after lunch.",
+     "antwort": "do",
+     "optionen": [
+      "do",
+      "am doing",
+      "did"
+     ],
+     "tipp": "Signalwörter: every day, always → simple present · Look!, now → present progressive · yesterday, last … → simple past"
+    },
+    {
+     "text": "Listen! Somebody ___ the piano.",
+     "antwort": "is playing",
+     "optionen": [
+      "plays",
+      "is playing",
+      "played"
+     ],
+     "tipp": "Signalwörter: every day, always → simple present · Look!, now → present progressive · yesterday, last … → simple past"
+    },
+    {
+     "text": "Last summer they ___ to Italy.",
+     "antwort": "went",
+     "optionen": [
+      "go",
+      "are going",
+      "went"
+     ],
+     "tipp": "Signalwörter: every day, always → simple present · Look!, now → present progressive · yesterday, last … → simple past"
+    },
+    {
+     "text": "My dad never ___ coffee.",
+     "antwort": "drinks",
+     "optionen": [
+      "drinks",
+      "is drinking",
+      "drank"
+     ],
+     "tipp": "Signalwörter: every day, always → simple present · Look!, now → present progressive · yesterday, last … → simple past"
+    },
+    {
+     "text": "At the moment I ___ a book.",
+     "antwort": "am reading",
+     "optionen": [
+      "read",
+      "am reading",
+      "was reading"
+     ],
+     "tipp": "Signalwörter: every day, always → simple present · Look!, now → present progressive · yesterday, last … → simple past"
+    },
+    {
+     "text": "Two days ago Tom ___ his arm.",
+     "antwort": "broke",
+     "optionen": [
+      "breaks",
+      "is breaking",
+      "broke"
+     ],
+     "tipp": "Signalwörter: every day, always → simple present · Look!, now → present progressive · yesterday, last … → simple past"
+    },
+    {
+     "text": "We often ___ football on Saturdays.",
+     "antwort": "play",
+     "optionen": [
+      "play",
+      "are playing",
+      "played"
+     ],
+     "tipp": "Signalwörter: every day, always → simple present · Look!, now → present progressive · yesterday, last … → simple past"
+    },
+    {
+     "text": "Be quiet! The baby ___.",
+     "antwort": "is sleeping",
+     "optionen": [
+      "sleeps",
+      "is sleeping",
+      "slept"
+     ],
+     "tipp": "Signalwörter: every day, always → simple present · Look!, now → present progressive · yesterday, last … → simple past"
+    },
+    {
+     "text": "In 2020 my sister ___ born.",
+     "antwort": "was",
+     "optionen": [
+      "is",
+      "is being",
+      "was"
+     ],
+     "tipp": "Signalwörter: every day, always → simple present · Look!, now → present progressive · yesterday, last … → simple past"
+    },
+    {
+     "text": "She always ___ her teeth before bed.",
+     "antwort": "brushes",
+     "optionen": [
+      "brushes",
+      "is brushing",
+      "brushed"
+     ],
+     "tipp": "Signalwörter: every day, always → simple present · Look!, now → present progressive · yesterday, last … → simple past"
+    },
+    {
+     "text": "Right now they ___ TV.",
+     "antwort": "are watching",
+     "optionen": [
+      "watch",
+      "are watching",
+      "watched"
+     ],
+     "tipp": "Signalwörter: every day, always → simple present · Look!, now → present progressive · yesterday, last … → simple past"
+    },
+    {
+     "text": "Last night I ___ a strange noise.",
+     "antwort": "heard",
+     "optionen": [
+      "hear",
+      "am hearing",
+      "heard"
+     ],
+     "tipp": "Signalwörter: every day, always → simple present · Look!, now → present progressive · yesterday, last … → simple past"
+    },
+    {
+     "text": "He sometimes ___ late for school.",
+     "antwort": "is",
+     "optionen": [
+      "is",
+      "is being",
+      "was"
+     ],
+     "tipp": "Signalwörter: every day, always → simple present · Look!, now → present progressive · yesterday, last … → simple past"
+    },
+    {
+     "text": "Look! It ___.",
+     "antwort": "is snowing",
+     "optionen": [
+      "snows",
+      "is snowing",
+      "snowed"
+     ],
+     "tipp": "Signalwörter: every day, always → simple present · Look!, now → present progressive · yesterday, last … → simple past"
+    },
+    {
+     "text": "When I was six, I ___ a red bike.",
+     "antwort": "had",
+     "optionen": [
+      "have",
+      "am having",
+      "had"
+     ],
+     "tipp": "Signalwörter: every day, always → simple present · Look!, now → present progressive · yesterday, last … → simple past"
+    },
+    {
+     "text": "My mum ___ in a hospital. She is a nurse.",
+     "antwort": "works",
+     "optionen": [
+      "works",
+      "is working",
+      "worked"
+     ],
+     "tipp": "Signalwörter: every day, always → simple present · Look!, now → present progressive · yesterday, last … → simple past"
+    },
+    {
+     "text": "Last week we ___ a museum.",
+     "antwort": "visited",
+     "optionen": [
+      "visit",
+      "are visiting",
+      "visited"
+     ],
+     "tipp": "Signalwörter: every day, always → simple present · Look!, now → present progressive · yesterday, last … → simple past"
+    },
+    {
+     "text": "I think it ___ tomorrow.",
+     "antwort": "will rain",
+     "optionen": [
+      "rains",
+      "will rain",
+      "rained"
+     ],
+     "tipp": "tomorrow, I think, maybe → will · Plan / sichtbares Anzeichen → going to"
+    },
+    {
+     "text": "Look at those clouds! It ___.",
+     "antwort": "is going to rain",
+     "optionen": [
+      "rains",
+      "is going to rain",
+      "rained"
+     ],
+     "tipp": "tomorrow, I think, maybe → will · Plan / sichtbares Anzeichen → going to"
+    },
+    {
+     "text": "Next week we ___ our grandparents – we have planned it.",
+     "antwort": "are going to visit",
+     "optionen": [
+      "visit",
+      "are going to visit",
+      "visited"
+     ],
+     "tipp": "tomorrow, I think, maybe → will · Plan / sichtbares Anzeichen → going to"
+    },
+    {
+     "text": "Yesterday I ___ my keys.",
+     "antwort": "lost",
+     "optionen": [
+      "lose",
+      "will lose",
+      "lost"
+     ],
+     "tipp": "tomorrow, I think, maybe → will · Plan / sichtbares Anzeichen → going to"
+    },
+    {
+     "text": "Every morning he ___ the bus.",
+     "antwort": "takes",
+     "optionen": [
+      "takes",
+      "will take",
+      "took"
+     ],
+     "tipp": "tomorrow, I think, maybe → will · Plan / sichtbares Anzeichen → going to"
+    },
+    {
+     "text": "Maybe robots ___ cars in the future.",
+     "antwort": "will drive",
+     "optionen": [
+      "drive",
+      "will drive",
+      "drove"
+     ],
+     "tipp": "tomorrow, I think, maybe → will · Plan / sichtbares Anzeichen → going to"
+    },
+    {
+     "text": "Listen! The birds ___.",
+     "antwort": "are singing",
+     "optionen": [
+      "sing",
+      "are singing",
+      "will sing"
+     ],
+     "tipp": "tomorrow, I think, maybe → will · Plan / sichtbares Anzeichen → going to"
+    },
+    {
+     "text": "Last year she ___ to Spain.",
+     "antwort": "flew",
+     "optionen": [
+      "flies",
+      "will fly",
+      "flew"
+     ],
+     "tipp": "tomorrow, I think, maybe → will · Plan / sichtbares Anzeichen → going to"
+    }
+   ]
+  },
+  {
+   "id": "en.5.knowing-english.mixed-6",
+   "titel": "Mixed (Klasse 6)",
+   "kurz": "Alle Strukturen bis Klasse 6",
+   "mix": true,
+   "aus": [
+    "en.5.to-be",
+    "en.5.simple-present",
+    "en.5.simple-past",
+    "en.5.have-got",
+    "en.5.can",
+    "en.5.present-progressive",
+    "en.5.nomen",
+    "en.5.pronomen",
+    "en.5.there-is",
+    "en.5.fragen",
+    "en.5.praepositionen",
+    "en.6.future",
+    "en.6.steigerung",
+    "en.6.some-any",
+    "en.5.knowing-english.zeiten-6"
+   ],
+   "runde": 12
+  },
+  {
+   "id": "en.5.knowing-english.meine",
+   "titel": "Meine Themen",
+   "kurz": "Nur was du schon geübt hast",
+   "mix": true,
+   "aus": [
+    "en.5.to-be",
+    "en.5.simple-present",
+    "en.5.simple-past",
+    "en.5.have-got",
+    "en.5.can",
+    "en.5.present-progressive",
+    "en.5.nomen",
+    "en.5.pronomen",
+    "en.5.there-is",
+    "en.5.fragen",
+    "en.5.praepositionen",
+    "en.6.future",
+    "en.6.steigerung",
+    "en.6.some-any"
+   ],
+   "nurGeuebt": true,
+   "runde": 10
+  }
+ ]
+}

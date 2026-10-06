@@ -1,0 +1,480 @@
+{
+ "typ": "gemischt",
+ "thema": "en.5.praepositionen",
+ "titel": "Präpositionen",
+ "emoji": "🇬🇧",
+ "klasse": 5,
+ "sprache": "en-GB",
+ "runde": 8,
+ "untertitel": "Ort und Zeit",
+ "hilfe": [
+  {
+   "titel": "Präpositionen des Ortes",
+   "tabelle": [
+    [
+     "englisch",
+     "deutsch"
+    ],
+    [
+     "in",
+     "in"
+    ],
+    [
+     "on",
+     "auf"
+    ],
+    [
+     "under",
+     "unter"
+    ],
+    [
+     "next to",
+     "neben"
+    ],
+    [
+     "behind",
+     "hinter"
+    ],
+    [
+     "in front of",
+     "vor"
+    ],
+    [
+     "between",
+     "zwischen"
+    ]
+   ]
+  },
+  {
+   "titel": "Präpositionen der Zeit",
+   "tabelle": [
+    [
+     "",
+     "wann?",
+     "Beispiele"
+    ],
+    [
+     "at",
+     "Uhrzeit, Feste, night, the weekend",
+     "at 7 o'clock, at Christmas, at night"
+    ],
+    [
+     "on",
+     "Wochentage, Datum",
+     "on Monday, on 3rd May, on my birthday"
+    ],
+    [
+     "in",
+     "Monate, Jahre, Jahreszeiten, Tageszeiten",
+     "in May, in 2020, in summer, in the morning"
+    ]
+   ]
+  }
+ ],
+ "stufen": [
+  {
+   "id": "en.5.praepositionen.ort",
+   "titel": "Wo ist es?",
+   "kurz": "in, on, under …",
+   "typ": "lueckentext",
+   "anweisung": "Welche Präposition passt?",
+   "aufgaben": [
+    {
+     "text": "The cat is ___ the box. (in der Kiste)",
+     "antwort": "in",
+     "optionen": [
+      "in",
+      "behind",
+      "next to"
+     ],
+     "tipp": "in = in · on = auf · under = unter · next to = neben · behind = hinter · in front of = vor · between = zwischen"
+    },
+    {
+     "text": "The book is ___ the table. (auf dem Tisch)",
+     "antwort": "on",
+     "optionen": [
+      "on",
+      "between",
+      "in"
+     ],
+     "tipp": "in = in · on = auf · under = unter · next to = neben · behind = hinter · in front of = vor · between = zwischen"
+    },
+    {
+     "text": "The ball is ___ the bed. (unter dem Bett)",
+     "antwort": "under",
+     "optionen": [
+      "under",
+      "between",
+      "in front of"
+     ],
+     "tipp": "in = in · on = auf · under = unter · next to = neben · behind = hinter · in front of = vor · between = zwischen"
+    },
+    {
+     "text": "The chair is ___ the desk. (neben dem Schreibtisch)",
+     "antwort": "next to",
+     "optionen": [
+      "next to",
+      "under",
+      "in front of"
+     ],
+     "tipp": "in = in · on = auf · under = unter · next to = neben · behind = hinter · in front of = vor · between = zwischen"
+    },
+    {
+     "text": "The garden is ___ the house. (hinter dem Haus)",
+     "antwort": "behind",
+     "optionen": [
+      "behind",
+      "under",
+      "between"
+     ],
+     "tipp": "in = in · on = auf · under = unter · next to = neben · behind = hinter · in front of = vor · between = zwischen"
+    },
+    {
+     "text": "The car is ___ the garage. (vor der Garage)",
+     "antwort": "in front of",
+     "optionen": [
+      "in front of",
+      "between",
+      "next to"
+     ],
+     "tipp": "in = in · on = auf · under = unter · next to = neben · behind = hinter · in front of = vor · between = zwischen"
+    },
+    {
+     "text": "The lamp is ___ the bed and the window. (zwischen)",
+     "antwort": "between",
+     "optionen": [
+      "between",
+      "in front of",
+      "under"
+     ],
+     "tipp": "in = in · on = auf · under = unter · next to = neben · behind = hinter · in front of = vor · between = zwischen"
+    },
+    {
+     "text": "My keys are ___ my pocket. (in der Tasche)",
+     "antwort": "in",
+     "optionen": [
+      "in",
+      "between",
+      "next to"
+     ],
+     "tipp": "in = in · on = auf · under = unter · next to = neben · behind = hinter · in front of = vor · between = zwischen"
+    },
+    {
+     "text": "There is a picture ___ the wall. (an der Wand)",
+     "antwort": "on",
+     "optionen": [
+      "on",
+      "between",
+      "behind"
+     ],
+     "tipp": "in = in · on = auf · under = unter · next to = neben · behind = hinter · in front of = vor · between = zwischen"
+    },
+    {
+     "text": "The dog is sleeping ___ the table. (unter dem Tisch)",
+     "antwort": "under",
+     "optionen": [
+      "under",
+      "next to",
+      "between"
+     ],
+     "tipp": "in = in · on = auf · under = unter · next to = neben · behind = hinter · in front of = vor · between = zwischen"
+    },
+    {
+     "text": "Tom sits ___ me in class. (neben mir)",
+     "antwort": "next to",
+     "optionen": [
+      "next to",
+      "under",
+      "behind"
+     ],
+     "tipp": "in = in · on = auf · under = unter · next to = neben · behind = hinter · in front of = vor · between = zwischen"
+    },
+    {
+     "text": "The shop is ___ the bank and the café. (zwischen)",
+     "antwort": "between",
+     "optionen": [
+      "between",
+      "on",
+      "under"
+     ],
+     "tipp": "in = in · on = auf · under = unter · next to = neben · behind = hinter · in front of = vor · between = zwischen"
+    },
+    {
+     "text": "Hide ___ the tree! (hinter dem Baum)",
+     "antwort": "behind",
+     "optionen": [
+      "behind",
+      "between",
+      "in front of"
+     ],
+     "tipp": "in = in · on = auf · under = unter · next to = neben · behind = hinter · in front of = vor · between = zwischen"
+    },
+    {
+     "text": "Our teacher stands ___ the class. (vor der Klasse)",
+     "antwort": "in front of",
+     "optionen": [
+      "in front of",
+      "on",
+      "under"
+     ],
+     "tipp": "in = in · on = auf · under = unter · next to = neben · behind = hinter · in front of = vor · between = zwischen"
+    },
+    {
+     "text": "The milk is ___ the fridge. (im Kühlschrank)",
+     "antwort": "in",
+     "optionen": [
+      "in",
+      "in front of",
+      "between"
+     ],
+     "tipp": "in = in · on = auf · under = unter · next to = neben · behind = hinter · in front of = vor · between = zwischen"
+    },
+    {
+     "text": "The poster is ___ the door. (an der Tür)",
+     "antwort": "on",
+     "optionen": [
+      "on",
+      "behind",
+      "in"
+     ],
+     "tipp": "in = in · on = auf · under = unter · next to = neben · behind = hinter · in front of = vor · between = zwischen"
+    }
+   ]
+  },
+  {
+   "id": "en.5.praepositionen.zeit",
+   "titel": "Wann?",
+   "kurz": "at, on, in",
+   "typ": "lueckentext",
+   "anweisung": "at, on oder in?",
+   "aufgaben": [
+    {
+     "text": "I get up ___ seven o'clock.",
+     "antwort": "at",
+     "optionen": [
+      "in",
+      "on",
+      "at"
+     ],
+     "tipp": "at + Uhrzeit, night, the weekend, Christmas · on + Wochentag, Datum · in + Monat, Jahr, Jahreszeit, the morning"
+    },
+    {
+     "text": "My birthday is ___ May.",
+     "antwort": "in",
+     "optionen": [
+      "in",
+      "on",
+      "at"
+     ],
+     "tipp": "at + Uhrzeit, night, the weekend, Christmas · on + Wochentag, Datum · in + Monat, Jahr, Jahreszeit, the morning"
+    },
+    {
+     "text": "We have English ___ Monday.",
+     "antwort": "on",
+     "optionen": [
+      "in",
+      "on",
+      "at"
+     ],
+     "tipp": "at + Uhrzeit, night, the weekend, Christmas · on + Wochentag, Datum · in + Monat, Jahr, Jahreszeit, the morning"
+    },
+    {
+     "text": "I go swimming ___ the weekend.",
+     "antwort": "at",
+     "optionen": [
+      "in",
+      "on",
+      "at"
+     ],
+     "tipp": "at + Uhrzeit, night, the weekend, Christmas · on + Wochentag, Datum · in + Monat, Jahr, Jahreszeit, the morning"
+    },
+    {
+     "text": "The film starts ___ 8 pm.",
+     "antwort": "at",
+     "optionen": [
+      "in",
+      "on",
+      "at"
+     ],
+     "tipp": "at + Uhrzeit, night, the weekend, Christmas · on + Wochentag, Datum · in + Monat, Jahr, Jahreszeit, the morning"
+    },
+    {
+     "text": "It is cold ___ winter.",
+     "antwort": "in",
+     "optionen": [
+      "in",
+      "on",
+      "at"
+     ],
+     "tipp": "at + Uhrzeit, night, the weekend, Christmas · on + Wochentag, Datum · in + Monat, Jahr, Jahreszeit, the morning"
+    },
+    {
+     "text": "We play football ___ Saturday afternoon.",
+     "antwort": "on",
+     "optionen": [
+      "in",
+      "on",
+      "at"
+     ],
+     "tipp": "at + Uhrzeit, night, the weekend, Christmas · on + Wochentag, Datum · in + Monat, Jahr, Jahreszeit, the morning"
+    },
+    {
+     "text": "I was born ___ 2015.",
+     "antwort": "in",
+     "optionen": [
+      "in",
+      "on",
+      "at"
+     ],
+     "tipp": "at + Uhrzeit, night, the weekend, Christmas · on + Wochentag, Datum · in + Monat, Jahr, Jahreszeit, the morning"
+    },
+    {
+     "text": "I read ___ night.",
+     "antwort": "at",
+     "optionen": [
+      "in",
+      "on",
+      "at"
+     ],
+     "tipp": "at + Uhrzeit, night, the weekend, Christmas · on + Wochentag, Datum · in + Monat, Jahr, Jahreszeit, the morning"
+    },
+    {
+     "text": "I do my homework ___ the afternoon.",
+     "antwort": "in",
+     "optionen": [
+      "in",
+      "on",
+      "at"
+     ],
+     "tipp": "at + Uhrzeit, night, the weekend, Christmas · on + Wochentag, Datum · in + Monat, Jahr, Jahreszeit, the morning"
+    },
+    {
+     "text": "There is a party ___ my birthday.",
+     "antwort": "on",
+     "optionen": [
+      "in",
+      "on",
+      "at"
+     ],
+     "tipp": "at + Uhrzeit, night, the weekend, Christmas · on + Wochentag, Datum · in + Monat, Jahr, Jahreszeit, the morning"
+    },
+    {
+     "text": "We go skiing ___ February.",
+     "antwort": "in",
+     "optionen": [
+      "in",
+      "on",
+      "at"
+     ],
+     "tipp": "at + Uhrzeit, night, the weekend, Christmas · on + Wochentag, Datum · in + Monat, Jahr, Jahreszeit, the morning"
+    },
+    {
+     "text": "School starts ___ quarter to eight.",
+     "antwort": "at",
+     "optionen": [
+      "in",
+      "on",
+      "at"
+     ],
+     "tipp": "at + Uhrzeit, night, the weekend, Christmas · on + Wochentag, Datum · in + Monat, Jahr, Jahreszeit, the morning"
+    },
+    {
+     "text": "We open presents ___ Christmas Day.",
+     "antwort": "on",
+     "optionen": [
+      "in",
+      "on",
+      "at"
+     ],
+     "tipp": "at + Uhrzeit, night, the weekend, Christmas · on + Wochentag, Datum · in + Monat, Jahr, Jahreszeit, the morning"
+    },
+    {
+     "text": "We visit grandma ___ Christmas.",
+     "antwort": "at",
+     "optionen": [
+      "in",
+      "on",
+      "at"
+     ],
+     "tipp": "at + Uhrzeit, night, the weekend, Christmas · on + Wochentag, Datum · in + Monat, Jahr, Jahreszeit, the morning"
+    },
+    {
+     "text": "I have breakfast ___ the morning.",
+     "antwort": "in",
+     "optionen": [
+      "in",
+      "on",
+      "at"
+     ],
+     "tipp": "at + Uhrzeit, night, the weekend, Christmas · on + Wochentag, Datum · in + Monat, Jahr, Jahreszeit, the morning"
+    },
+    {
+     "text": "The test is ___ 3rd May.",
+     "antwort": "on",
+     "optionen": [
+      "in",
+      "on",
+      "at"
+     ],
+     "tipp": "at + Uhrzeit, night, the weekend, Christmas · on + Wochentag, Datum · in + Monat, Jahr, Jahreszeit, the morning"
+    },
+    {
+     "text": "Let's meet ___ noon.",
+     "antwort": "at",
+     "optionen": [
+      "in",
+      "on",
+      "at"
+     ],
+     "tipp": "at + Uhrzeit, night, the weekend, Christmas · on + Wochentag, Datum · in + Monat, Jahr, Jahreszeit, the morning"
+    }
+   ]
+  },
+  {
+   "id": "en.5.praepositionen.fehler",
+   "titel": "Fehler finden",
+   "kurz": "Tippe den Fehler an",
+   "typ": "markieren",
+   "anweisung": "Ein Wort ist falsch. Tippe es an.",
+   "aufgaben": [
+    {
+     "satz": "I get up [on] seven o'clock.",
+     "richtig": "at",
+     "erklaerung": "Zeit: at 7 o'clock · on Monday · in July · Ort: on the sofa (auf)"
+    },
+    {
+     "satz": "My birthday is [on] July.",
+     "richtig": "in",
+     "erklaerung": "Zeit: at 7 o'clock · on Monday · in July · Ort: on the sofa (auf)"
+    },
+    {
+     "satz": "We have music [in] Friday.",
+     "richtig": "on",
+     "erklaerung": "Zeit: at 7 o'clock · on Monday · in July · Ort: on the sofa (auf)"
+    },
+    {
+     "satz": "The cat is sleeping [in] the sofa.",
+     "richtig": "on",
+     "erklaerung": "Zeit: at 7 o'clock · on Monday · in July · Ort: on the sofa (auf)"
+    },
+    {
+     "satz": "I was born [at] 2014.",
+     "richtig": "in",
+     "erklaerung": "Zeit: at 7 o'clock · on Monday · in July · Ort: on the sofa (auf)"
+    },
+    {
+     "satz": "We meet [in] the weekend.",
+     "richtig": "at",
+     "erklaerung": "Zeit: at 7 o'clock · on Monday · in July · Ort: on the sofa (auf)"
+    }
+   ]
+  },
+  {
+   "id": "en.5.praepositionen.mix",
+   "titel": "Mix",
+   "kurz": "Alles durcheinander",
+   "mix": true,
+   "runde": 10
+  }
+ ]
+}

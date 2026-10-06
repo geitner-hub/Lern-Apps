@@ -5,7 +5,7 @@
 //  Stufe in der Inhaltsdatei:
 //    "aufgaben": [ { "satz": "She [go] to school every day.",
 //                    "frage": "Tippe das falsche Wort an." (optional, sonst "anweisung"),
-//                    "richtig": "goes" (optional: Verbesserung, erscheint in der Lösung),
+//                    "richtig": "goes" (optional: Verbesserung, erscheint in der Lösung; "" = Wort weglassen),
 //                    "tipp": "…", "erklaerung": "…" (optional) } ]
 //    "anweisung": "Tippe das Wort an, das falsch ist."
 //  Das gesuchte Wort steht in [eckigen Klammern] (genau eine Stelle; mehrere Wörter in einer
@@ -36,11 +36,14 @@
       if (!b) return null;
       const anweisung = st.anweisung || D.anweisung || 'Tippe das richtige Wort an.';
       const ohne = String(x.satz).replace(KLAMMER, '$1');
-      const loesung = x.richtig ? String(x.satz).replace(KLAMMER, x.richtig) : ohne;
+      const weg = x.richtig === '';                     // "richtig": "" → Wort muss weg (I can [to] dance.)
+      const loesung = weg ? String(x.satz).replace(KLAMMER, '').replace(/\s{2,}/g, ' ').trim()
+        : x.richtig ? String(x.satz).replace(KLAMMER, x.richtig) : ohne;
       return {
         art: 'eigen', teile: b.teile, ziel: b.ziel,
         frage: x.frage || anweisung, hinweis: x.frage ? anweisung : '',
-        text: x.richtig ? `${T.textOhneSatzzeichen(b.teile[b.ziel])} → ${x.richtig}: ${loesung}` : T.textOhneSatzzeichen(b.teile[b.ziel]),
+        text: weg ? `${T.textOhneSatzzeichen(b.teile[b.ziel])} → weglassen: ${loesung}`
+          : x.richtig ? `${T.textOhneSatzzeichen(b.teile[b.ziel])} → ${x.richtig}: ${loesung}` : T.textOhneSatzzeichen(b.teile[b.ziel]),
         tipp: x.tipp, erklaerung: x.erklaerung,
         eingabeText: i => (Number.isInteger(i) && b.teile[i] != null ? T.textOhneSatzzeichen(b.teile[i]) : ''),
         zeige(box, fertig) {

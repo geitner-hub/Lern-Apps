@@ -1,0 +1,513 @@
+{
+ "typ": "gemischt",
+ "thema": "en.5.have-got",
+ "titel": "have got / has got",
+ "emoji": "🇬🇧",
+ "klasse": 5,
+ "sprache": "en-GB",
+ "runde": 8,
+ "untertitel": "Besitz und Familie beschreiben",
+ "hilfe": [
+  {
+   "titel": "have got – haben, besitzen",
+   "text": "I/you/we/they → have got, he/she/it → has got. Kurzformen: I've got, she's got.",
+   "beispiele": [
+    [
+     "I've got a dog.",
+     "Ich habe einen Hund."
+    ],
+    [
+     "She's got long hair.",
+     "Sie hat lange Haare."
+    ]
+   ]
+  },
+  {
+   "titel": "Verneinung und Fragen",
+   "text": "haven't got / hasn't got. Fragen: Have you got …? – Yes, I have. / No, I haven't.",
+   "beispiele": [
+    [
+     "He hasn't got a bike.",
+     "Er hat kein Fahrrad."
+    ],
+    [
+     "Has she got a pet? – Yes, she has.",
+     "Hat sie ein Haustier? – Ja."
+    ]
+   ]
+  }
+ ],
+ "stufen": [
+  {
+   "id": "en.5.have-got.formen",
+   "titel": "have got oder has got?",
+   "kurz": "I have got / she has got",
+   "typ": "lueckentext",
+   "anweisung": "Welche Form passt?",
+   "aufgaben": [
+    {
+     "text": "I ___ a new bike.",
+     "antwort": "have got",
+     "optionen": [
+      "have got",
+      "has got"
+     ],
+     "tipp": "he/she/it → has got · I/you/we/they → have got"
+    },
+    {
+     "text": "My sister ___ long hair.",
+     "antwort": "has got",
+     "optionen": [
+      "have got",
+      "has got"
+     ],
+     "tipp": "he/she/it → has got · I/you/we/they → have got"
+    },
+    {
+     "text": "We ___ a big garden.",
+     "antwort": "have got",
+     "optionen": [
+      "have got",
+      "has got"
+     ],
+     "tipp": "he/she/it → has got · I/you/we/they → have got"
+    },
+    {
+     "text": "Tom ___ two brothers.",
+     "antwort": "has got",
+     "optionen": [
+      "have got",
+      "has got"
+     ],
+     "tipp": "he/she/it → has got · I/you/we/they → have got"
+    },
+    {
+     "text": "They ___ a red car.",
+     "antwort": "have got",
+     "optionen": [
+      "have got",
+      "has got"
+     ],
+     "tipp": "he/she/it → has got · I/you/we/they → have got"
+    },
+    {
+     "text": "The cat ___ green eyes.",
+     "antwort": "has got",
+     "optionen": [
+      "have got",
+      "has got"
+     ],
+     "tipp": "he/she/it → has got · I/you/we/they → have got"
+    },
+    {
+     "text": "You ___ a nice smile.",
+     "antwort": "have got",
+     "optionen": [
+      "have got",
+      "has got"
+     ],
+     "tipp": "he/she/it → has got · I/you/we/they → have got"
+    },
+    {
+     "text": "My dad ___ a blue jacket.",
+     "antwort": "has got",
+     "optionen": [
+      "have got",
+      "has got"
+     ],
+     "tipp": "he/she/it → has got · I/you/we/they → have got"
+    },
+    {
+     "text": "She ___ a lot of friends.",
+     "antwort": "has got",
+     "optionen": [
+      "have got",
+      "has got"
+     ],
+     "tipp": "he/she/it → has got · I/you/we/they → have got"
+    },
+    {
+     "text": "Our school ___ a swimming pool.",
+     "antwort": "has got",
+     "optionen": [
+      "have got",
+      "has got"
+     ],
+     "tipp": "he/she/it → has got · I/you/we/they → have got"
+    },
+    {
+     "text": "He ___ a cold.",
+     "antwort": "has got",
+     "optionen": [
+      "have got",
+      "has got"
+     ],
+     "tipp": "he/she/it → has got · I/you/we/they → have got"
+    },
+    {
+     "text": "My grandparents ___ a dog.",
+     "antwort": "have got",
+     "optionen": [
+      "have got",
+      "has got"
+     ],
+     "tipp": "he/she/it → has got · I/you/we/they → have got"
+    },
+    {
+     "text": "Lisa ___ a guinea pig.",
+     "antwort": "has got",
+     "optionen": [
+      "have got",
+      "has got"
+     ],
+     "tipp": "he/she/it → has got · I/you/we/they → have got"
+    },
+    {
+     "text": "I ___ three cousins.",
+     "antwort": "have got",
+     "optionen": [
+      "have got",
+      "has got"
+     ],
+     "tipp": "he/she/it → has got · I/you/we/they → have got"
+    },
+    {
+     "text": "The house ___ five rooms.",
+     "antwort": "has got",
+     "optionen": [
+      "have got",
+      "has got"
+     ],
+     "tipp": "he/she/it → has got · I/you/we/they → have got"
+    },
+    {
+     "text": "We ___ English on Monday.",
+     "antwort": "have got",
+     "optionen": [
+      "have got",
+      "has got"
+     ],
+     "tipp": "he/she/it → has got · I/you/we/they → have got"
+    }
+   ]
+  },
+  {
+   "id": "en.5.have-got.verneinung",
+   "titel": "Verneinung",
+   "kurz": "haven't got / hasn't got",
+   "typ": "lueckentext",
+   "anweisung": "Schreibe die Verneinung.",
+   "aufgaben": [
+    {
+     "text": "I ___ a new bike. (not)",
+     "antwort": [
+      "haven't got",
+      "have not got"
+     ],
+     "tipp": "haven't got / hasn't got"
+    },
+    {
+     "text": "My sister ___ long hair. (not)",
+     "antwort": [
+      "hasn't got",
+      "has not got"
+     ],
+     "tipp": "haven't got / hasn't got"
+    },
+    {
+     "text": "We ___ a big garden. (not)",
+     "antwort": [
+      "haven't got",
+      "have not got"
+     ],
+     "tipp": "haven't got / hasn't got"
+    },
+    {
+     "text": "Tom ___ two brothers. (not)",
+     "antwort": [
+      "hasn't got",
+      "has not got"
+     ],
+     "tipp": "haven't got / hasn't got"
+    },
+    {
+     "text": "They ___ a red car. (not)",
+     "antwort": [
+      "haven't got",
+      "have not got"
+     ],
+     "tipp": "haven't got / hasn't got"
+    },
+    {
+     "text": "The cat ___ green eyes. (not)",
+     "antwort": [
+      "hasn't got",
+      "has not got"
+     ],
+     "tipp": "haven't got / hasn't got"
+    },
+    {
+     "text": "You ___ a nice smile. (not)",
+     "antwort": [
+      "haven't got",
+      "have not got"
+     ],
+     "tipp": "haven't got / hasn't got"
+    },
+    {
+     "text": "My dad ___ a blue jacket. (not)",
+     "antwort": [
+      "hasn't got",
+      "has not got"
+     ],
+     "tipp": "haven't got / hasn't got"
+    },
+    {
+     "text": "She ___ a lot of friends. (not)",
+     "antwort": [
+      "hasn't got",
+      "has not got"
+     ],
+     "tipp": "haven't got / hasn't got"
+    },
+    {
+     "text": "Our school ___ a swimming pool. (not)",
+     "antwort": [
+      "hasn't got",
+      "has not got"
+     ],
+     "tipp": "haven't got / hasn't got"
+    },
+    {
+     "text": "He ___ a cold. (not)",
+     "antwort": [
+      "hasn't got",
+      "has not got"
+     ],
+     "tipp": "haven't got / hasn't got"
+    },
+    {
+     "text": "My grandparents ___ a dog. (not)",
+     "antwort": [
+      "haven't got",
+      "have not got"
+     ],
+     "tipp": "haven't got / hasn't got"
+    }
+   ]
+  },
+  {
+   "id": "en.5.have-got.fragen",
+   "titel": "Fragen und Kurzantworten",
+   "kurz": "Have you got …?",
+   "typ": "sortieren",
+   "anweisung": "Bau die Frage.",
+   "aufgaben": [
+    {
+     "teile": [
+      "Have",
+      "you",
+      "got",
+      "a pet"
+     ],
+     "loesung": "Have you got a pet?",
+     "tipp": "Fragen: Have/Has + Subjekt + got …?"
+    },
+    {
+     "teile": [
+      "Has",
+      "she",
+      "got",
+      "a brother"
+     ],
+     "loesung": "Has she got a brother?",
+     "tipp": "Fragen: Have/Has + Subjekt + got …?"
+    },
+    {
+     "teile": [
+      "Have",
+      "they",
+      "got",
+      "a car"
+     ],
+     "loesung": "Have they got a car?",
+     "tipp": "Fragen: Have/Has + Subjekt + got …?"
+    },
+    {
+     "teile": [
+      "Has",
+      "your dad",
+      "got",
+      "a bike"
+     ],
+     "loesung": "Has your dad got a bike?",
+     "tipp": "Fragen: Have/Has + Subjekt + got …?"
+    },
+    {
+     "teile": [
+      "What",
+      "have",
+      "you",
+      "got",
+      "in your bag"
+     ],
+     "loesung": "What have you got in your bag?",
+     "tipp": "Fragen: Have/Has + Subjekt + got …?"
+    },
+    {
+     "teile": [
+      "How many",
+      "sisters",
+      "has",
+      "Tom",
+      "got"
+     ],
+     "loesung": "How many sisters has Tom got?",
+     "tipp": "Fragen: Have/Has + Subjekt + got …?"
+    },
+    {
+     "teile": [
+      "Have",
+      "we",
+      "got",
+      "any milk"
+     ],
+     "loesung": "Have we got any milk?",
+     "tipp": "Fragen: Have/Has + Subjekt + got …?"
+    },
+    {
+     "teile": [
+      "Has",
+      "the hotel",
+      "got",
+      "a pool"
+     ],
+     "loesung": "Has the hotel got a pool?",
+     "tipp": "Fragen: Have/Has + Subjekt + got …?"
+    },
+    {
+     "text": "Have you got a pen? – Yes, I ___.",
+     "antwort": "have",
+     "optionen": [
+      "have",
+      "has",
+      "am"
+     ],
+     "typ": "lueckentext",
+     "tipp": "Kurzantwort ohne got: Yes, I have. / No, he hasn't."
+    },
+    {
+     "text": "Has he got a cat? – No, he ___.",
+     "antwort": "hasn't",
+     "optionen": [
+      "haven't",
+      "hasn't",
+      "isn't"
+     ],
+     "typ": "lueckentext",
+     "tipp": "Kurzantwort ohne got: Yes, I have. / No, he hasn't."
+    },
+    {
+     "text": "Have they got a garden? – Yes, they ___.",
+     "antwort": "have",
+     "optionen": [
+      "have",
+      "has",
+      "are"
+     ],
+     "typ": "lueckentext",
+     "tipp": "Kurzantwort ohne got: Yes, I have. / No, he hasn't."
+    },
+    {
+     "text": "Has she got a phone? – Yes, she ___.",
+     "antwort": "has",
+     "optionen": [
+      "have",
+      "has",
+      "is"
+     ],
+     "typ": "lueckentext",
+     "tipp": "Kurzantwort ohne got: Yes, I have. / No, he hasn't."
+    },
+    {
+     "text": "Have you got a dog? – No, I ___.",
+     "antwort": "haven't",
+     "optionen": [
+      "haven't",
+      "hasn't",
+      "don't"
+     ],
+     "typ": "lueckentext",
+     "tipp": "Kurzantwort ohne got: Yes, I have. / No, he hasn't."
+    },
+    {
+     "text": "Has your school got a gym? – Yes, it ___.",
+     "antwort": "has",
+     "optionen": [
+      "have",
+      "has",
+      "is"
+     ],
+     "typ": "lueckentext",
+     "tipp": "Kurzantwort ohne got: Yes, I have. / No, he hasn't."
+    }
+   ]
+  },
+  {
+   "id": "en.5.have-got.fehler",
+   "titel": "Fehler finden",
+   "kurz": "Tippe den Fehler an",
+   "typ": "markieren",
+   "anweisung": "Ein Wort ist falsch. Tippe es an.",
+   "aufgaben": [
+    {
+     "satz": "She [have] got a cat.",
+     "richtig": "has",
+     "erklaerung": "he/she/it → has got · I/you/we/they → have got"
+    },
+    {
+     "satz": "I [has] got two brothers.",
+     "richtig": "have",
+     "erklaerung": "he/she/it → has got · I/you/we/they → have got"
+    },
+    {
+     "satz": "[Have] he got a bike?",
+     "richtig": "Has",
+     "erklaerung": "he/she/it → has got · I/you/we/they → have got"
+    },
+    {
+     "satz": "We [hasn't] got a car.",
+     "richtig": "haven't",
+     "erklaerung": "he/she/it → has got · I/you/we/they → have got"
+    },
+    {
+     "satz": "Tom has [get] a new phone.",
+     "richtig": "got",
+     "erklaerung": "he/she/it → has got · I/you/we/they → have got"
+    },
+    {
+     "satz": "They [hasn't] got time.",
+     "richtig": "haven't",
+     "erklaerung": "he/she/it → has got · I/you/we/they → have got"
+    },
+    {
+     "satz": "[Has] you got a pen?",
+     "richtig": "Have",
+     "erklaerung": "he/she/it → has got · I/you/we/they → have got"
+    },
+    {
+     "satz": "My mum [have] got a new job.",
+     "richtig": "has",
+     "erklaerung": "he/she/it → has got · I/you/we/they → have got"
+    }
+   ]
+  },
+  {
+   "id": "en.5.have-got.mix",
+   "titel": "Mix",
+   "kurz": "Alles durcheinander",
+   "mix": true,
+   "runde": 10
+  }
+ ]
+}

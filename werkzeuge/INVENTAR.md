@@ -8,6 +8,7 @@ Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv
 
 | Datei | Name | Themen-ID | Art | Fach · Klassen | Sichtbar | Ergebnis | Pass-XP | liefert „Meine Themen“ | nutzt „Meine Themen“ | Dorf-Aufträge | Entscheidung | Notiz |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
+| `apps/englisch/knowing-english.html` | – | `en.5.knowing-english` (5 Stufen) | Lern-App | – | nicht in config | – | – | – | – | – (nicht in config) |  |  |
 | `apps/englisch/practice_simple_present.html` | – | – | Lern-App | – | nicht in config | – | – | – | – | – (nicht in config) | Kern | Gut: nur Antippen, Tipp-Knopf. Mängel: meldet kein `thema`; Satzstellung später Typ Sortieren (Etappe 9) |
 | `apps/englisch/satzglieder-erkennen.html` | Satzglieder ordnen | `en.5.satzglieder` | Lern-App | Englisch · 5 | sichtbar | ja | ja | – | – | ja | Kern → Engine (Etappe 9) | Wird erste Überführung Typ Zuordnen. Mängel: Rückmeldung nur richtig/falsch ohne Erklärung, kein `thema` |
 | `apps/englisch/simple-past.html` | – | – | Lern-App | – | nicht in config | – | – | – | – | – (nicht in config) | Kern | Gute Rückmeldung (Regel + Beispiel), Verbenliste, Kl. 5/6. Mängel: kein `thema`, keine Stufen im Katalog |
@@ -27,7 +28,7 @@ Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv
 | `apps/mathe/laengeneinheiten.html` | Längeneinheiten umrechnen | `ma.5.laengen` (6 Stufen) | Lern-App | Mathematik · 5, 6 | sichtbar | – | – | – | – | ja | Kern → Typ Eingabe (Etappe 9) | Passt zu M5 LB 5. Mängel: kein `thema`/`inhalt` (fehlt in den Spielen), Hilfe nur auf Knopfdruck, keine anderen Größen (Masse, Zeit, Geld) |
 | `apps/mathe/mathe-trainer.html` | Mathe-Trainer Klasse 5 | – | Lern-App | Mathematik · 5 | sichtbar | – | – | – | – | ja | Kern (Übungs-Rahmen) | Etappe 4b: Stoff der Jahrgangsstufe 5/6 in Stufen (?klasse=5/6); neue Themen = neue Stufen in daten/kopfrechnen.json |
 | `apps/mathe/rechen-arena.html` | Rechen-Arena | `ma.5.rechen-arena` | Lern-App | Allgemein · 5, 6 | sichtbar | ja | ja | – | – | ja | Kern | Beliebt, vier Modi. Mängel: Startseite scrollt (iPad quer), kein `thema`/`inhalt`, Ballon-Pop hat keine Rückmeldung zum Fehler (bewusst schnell) |
-| `apps/typen/uebung.html` | Simple present | `en.5.to-be` (6 Stufen), `en.5.simple-present` (8 Stufen), `en.5.simple-past` (7 Stufen) | Lern-App | Englisch · 5 | sichtbar | – | – | – | – | ja |  |  |
+| `apps/typen/uebung.html` | Simple present | `en.5.to-be` (6 Stufen), `en.5.simple-present` (8 Stufen), `en.5.simple-past` (7 Stufen), `en.5.have-got` (5 Stufen), `en.5.can` (5 Stufen), `en.5.present-progressive` (5 Stufen), `en.5.nomen` (4 Stufen), `en.5.pronomen` (5 Stufen), `en.5.there-is` (5 Stufen), `en.5.fragen` (3 Stufen), `en.5.praepositionen` (4 Stufen), `en.6.future` (6 Stufen), `en.6.steigerung` (4 Stufen), `en.6.some-any` (4 Stufen) | Lern-App | Englisch · 5 | sichtbar | – | – | – | – | ja |  |  |
 | `spiele/burg-verteidigung.html` | Tower Defense | – | Spiel | Allgemein · alle | sichtbar | ja | ja | – | ja | – (Spiel) |  |  |
 | `spiele/dorf.html` | Mein Dorf | – | Spiel | Allgemein · alle | sichtbar | – | – | – | – | Dorf selbst |  |  |
 | `spiele/expedition.html` | Entdecker-Expedition | – | Spiel | GPG · 6 | versteckt | über spiel-hilfen.js | ja | – | – | – (Spiel) |  |  |
@@ -41,6 +42,7 @@ Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv
 
 | Datei | KB | Skripte | Speicherschlüssel |
 |---|---|---|---|
+| apps/englisch/knowing-english.html | 8 | katalog.js, freigabe.js, navbar.js | lernwelt-pass, + über navbar.js |
 | apps/englisch/practice_simple_present.html | 1 | – | – |
 | apps/englisch/satzglieder-erkennen.html | 35 | navbar.js | + über navbar.js |
 | apps/englisch/simple-past.html | 1 | – | – |

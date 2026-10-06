@@ -1,0 +1,486 @@
+{
+ "typ": "gemischt",
+ "thema": "en.6.future",
+ "titel": "will-future und going to",
+ "emoji": "🇬🇧",
+ "klasse": 6,
+ "sprache": "en-GB",
+ "runde": 8,
+ "untertitel": "Über die Zukunft sprechen",
+ "hilfe": [
+  {
+   "titel": "will",
+   "text": "will + Grundform: Vermutungen (I think …, maybe), spontane Entscheidungen, Versprechen. Verneinung: won't.",
+   "beispiele": [
+    [
+     "I think it will rain.",
+     "Ich glaube, es wird regnen."
+    ],
+    [
+     "I'll help you!",
+     "Ich helfe dir!"
+    ]
+   ]
+  },
+  {
+   "titel": "going to",
+   "text": "am/is/are going to + Grundform: Pläne und Vorhersagen mit sichtbarem Anzeichen.",
+   "beispiele": [
+    [
+     "I'm going to visit my grandma.",
+     "Ich werde meine Oma besuchen (geplant)."
+    ],
+    [
+     "Look! It's going to rain.",
+     "Schau! Gleich regnet es."
+    ]
+   ]
+  }
+ ],
+ "stufen": [
+  {
+   "id": "en.6.future.will",
+   "titel": "will",
+   "kurz": "I think it will …",
+   "typ": "lueckentext",
+   "anweisung": "Schreibe die will-Form (Lang- oder Kurzform).",
+   "aufgaben": [
+    {
+     "text": "I think it ___ tomorrow. (rain)",
+     "antwort": [
+      "will rain",
+      "'ll rain"
+     ],
+     "tipp": "will + Grundform (Vorhersage, spontane Entscheidung, Versprechen)"
+    },
+    {
+     "text": "Maybe we ___ to the beach. (go)",
+     "antwort": [
+      "will go",
+      "'ll go"
+     ],
+     "tipp": "will + Grundform (Vorhersage, spontane Entscheidung, Versprechen)"
+    },
+    {
+     "text": "In 2050 cars ___. (fly)",
+     "antwort": [
+      "will fly"
+     ],
+     "tipp": "will + Grundform (Vorhersage, spontane Entscheidung, Versprechen)"
+    },
+    {
+     "text": "I'm sure you ___ the test. (pass)",
+     "antwort": [
+      "will pass",
+      "'ll pass"
+     ],
+     "tipp": "will + Grundform (Vorhersage, spontane Entscheidung, Versprechen)"
+    },
+    {
+     "text": "Wait, I ___ you. (help)",
+     "antwort": [
+      "will help",
+      "'ll help"
+     ],
+     "tipp": "will + Grundform (Vorhersage, spontane Entscheidung, Versprechen)"
+    },
+    {
+     "text": "She ___ twelve next year. (be)",
+     "antwort": [
+      "will be",
+      "'ll be"
+     ],
+     "tipp": "will + Grundform (Vorhersage, spontane Entscheidung, Versprechen)"
+    },
+    {
+     "text": "Perhaps they ___ late. (come)",
+     "antwort": [
+      "will come",
+      "'ll come"
+     ],
+     "tipp": "will + Grundform (Vorhersage, spontane Entscheidung, Versprechen)"
+    },
+    {
+     "text": "I promise I ___ my room. (tidy)",
+     "antwort": [
+      "will tidy",
+      "'ll tidy"
+     ],
+     "tipp": "will + Grundform (Vorhersage, spontane Entscheidung, Versprechen)"
+    },
+    {
+     "text": "It's cold. I ___ the window. (close)",
+     "antwort": [
+      "will close",
+      "'ll close"
+     ],
+     "tipp": "will + Grundform (Vorhersage, spontane Entscheidung, Versprechen)"
+    },
+    {
+     "text": "Robots ___ our homework one day. (do)",
+     "antwort": [
+      "will do"
+     ],
+     "tipp": "will + Grundform (Vorhersage, spontane Entscheidung, Versprechen)"
+    },
+    {
+     "text": "Don't worry, it ___ fine. (be)",
+     "antwort": [
+      "will be",
+      "'ll be"
+     ],
+     "tipp": "will + Grundform (Vorhersage, spontane Entscheidung, Versprechen)"
+    },
+    {
+     "text": "I think Tom ___ the race. (win)",
+     "antwort": [
+      "will win",
+      "'ll win"
+     ],
+     "tipp": "will + Grundform (Vorhersage, spontane Entscheidung, Versprechen)"
+    }
+   ]
+  },
+  {
+   "id": "en.6.future.going-to",
+   "titel": "going to",
+   "kurz": "I'm going to …",
+   "typ": "lueckentext",
+   "anweisung": "Schreibe die going-to-Form.",
+   "aufgaben": [
+    {
+     "text": "Look at the clouds! It ___. (rain)",
+     "antwort": [
+      "is going to rain",
+      "'s going to rain"
+     ],
+     "tipp": "am/is/are going to + Grundform (Plan, sichere Vorhersage)"
+    },
+    {
+     "text": "I ___ my grandma on Sunday. (visit)",
+     "antwort": [
+      "am going to visit",
+      "'m going to visit"
+     ],
+     "tipp": "am/is/are going to + Grundform (Plan, sichere Vorhersage)"
+    },
+    {
+     "text": "We ___ a cake for Mum. (bake)",
+     "antwort": [
+      "are going to bake",
+      "'re going to bake"
+     ],
+     "tipp": "am/is/are going to + Grundform (Plan, sichere Vorhersage)"
+    },
+    {
+     "text": "She ___ a new bike. (buy)",
+     "antwort": [
+      "is going to buy",
+      "'s going to buy"
+     ],
+     "tipp": "am/is/are going to + Grundform (Plan, sichere Vorhersage)"
+    },
+    {
+     "text": "They ___ football after school. (play)",
+     "antwort": [
+      "are going to play",
+      "'re going to play"
+     ],
+     "tipp": "am/is/are going to + Grundform (Plan, sichere Vorhersage)"
+    },
+    {
+     "text": "Be careful! You ___. (fall)",
+     "antwort": [
+      "are going to fall",
+      "'re going to fall"
+     ],
+     "tipp": "am/is/are going to + Grundform (Plan, sichere Vorhersage)"
+    },
+    {
+     "text": "He ___ a doctor when he grows up. (be)",
+     "antwort": [
+      "is going to be",
+      "'s going to be"
+     ],
+     "tipp": "am/is/are going to + Grundform (Plan, sichere Vorhersage)"
+    },
+    {
+     "text": "I ___ my homework tonight. (do)",
+     "antwort": [
+      "am going to do",
+      "'m going to do"
+     ],
+     "tipp": "am/is/are going to + Grundform (Plan, sichere Vorhersage)"
+    },
+    {
+     "text": "We ___ a film this evening. (watch)",
+     "antwort": [
+      "are going to watch",
+      "'re going to watch"
+     ],
+     "tipp": "am/is/are going to + Grundform (Plan, sichere Vorhersage)"
+    },
+    {
+     "text": "Tom ___ his friends at the park. (meet)",
+     "antwort": [
+      "is going to meet",
+      "'s going to meet"
+     ],
+     "tipp": "am/is/are going to + Grundform (Plan, sichere Vorhersage)"
+    },
+    {
+     "text": "My parents ___ a new car. (get)",
+     "antwort": [
+      "are going to get",
+      "'re going to get"
+     ],
+     "tipp": "am/is/are going to + Grundform (Plan, sichere Vorhersage)"
+    },
+    {
+     "text": "I ___ the guitar next year. (learn)",
+     "antwort": [
+      "am going to learn",
+      "'m going to learn"
+     ],
+     "tipp": "am/is/are going to + Grundform (Plan, sichere Vorhersage)"
+    }
+   ]
+  },
+  {
+   "id": "en.6.future.will-oder-going-to",
+   "titel": "will oder going to?",
+   "kurz": "Plan oder spontan?",
+   "typ": "lueckentext",
+   "anweisung": "Was passt besser?",
+   "aufgaben": [
+    {
+     "text": "Look at that ball! It ___ the window!",
+     "antwort": "is going to hit",
+     "optionen": [
+      "will hit",
+      "is going to hit"
+     ],
+     "tipp": "Plan oder sichtbares Anzeichen → going to · spontan, Vermutung, Versprechen → will"
+    },
+    {
+     "text": "The phone is ringing. I ___ it.",
+     "antwort": "'ll answer",
+     "optionen": [
+      "'ll answer",
+      "'m going to answer"
+     ],
+     "tipp": "Plan oder sichtbares Anzeichen → going to · spontan, Vermutung, Versprechen → will"
+    },
+    {
+     "text": "We have already bought the tickets. We ___ to London.",
+     "antwort": "are going to fly",
+     "optionen": [
+      "will fly",
+      "are going to fly"
+     ],
+     "tipp": "Plan oder sichtbares Anzeichen → going to · spontan, Vermutung, Versprechen → will"
+    },
+    {
+     "text": "I think it ___ sunny tomorrow.",
+     "antwort": "will be",
+     "optionen": [
+      "will be",
+      "is going to be"
+     ],
+     "tipp": "Plan oder sichtbares Anzeichen → going to · spontan, Vermutung, Versprechen → will"
+    },
+    {
+     "text": "My bag is heavy. – I ___ you.",
+     "antwort": "'ll help",
+     "optionen": [
+      "'ll help",
+      "'m going to help"
+     ],
+     "tipp": "Plan oder sichtbares Anzeichen → going to · spontan, Vermutung, Versprechen → will"
+    },
+    {
+     "text": "Next summer we ___ in Italy – we booked a hotel.",
+     "antwort": "are going to stay",
+     "optionen": [
+      "will stay",
+      "are going to stay"
+     ],
+     "tipp": "Plan oder sichtbares Anzeichen → going to · spontan, Vermutung, Versprechen → will"
+    },
+    {
+     "text": "Maybe robots ___ our teachers one day.",
+     "antwort": "will be",
+     "optionen": [
+      "will be",
+      "are going to be"
+     ],
+     "tipp": "Plan oder sichtbares Anzeichen → going to · spontan, Vermutung, Versprechen → will"
+    },
+    {
+     "text": "She is training every day. She ___ a marathon in May.",
+     "antwort": "is going to run",
+     "optionen": [
+      "will run",
+      "is going to run"
+     ],
+     "tipp": "Plan oder sichtbares Anzeichen → going to · spontan, Vermutung, Versprechen → will"
+    },
+    {
+     "text": "I'm hungry. – I ___ you a sandwich.",
+     "antwort": "'ll make",
+     "optionen": [
+      "'ll make",
+      "'m going to make"
+     ],
+     "tipp": "Plan oder sichtbares Anzeichen → going to · spontan, Vermutung, Versprechen → will"
+    },
+    {
+     "text": "Look at him! He ___ off his bike!",
+     "antwort": "is going to fall",
+     "optionen": [
+      "will fall",
+      "is going to fall"
+     ],
+     "tipp": "Plan oder sichtbares Anzeichen → going to · spontan, Vermutung, Versprechen → will"
+    }
+   ]
+  },
+  {
+   "id": "en.6.future.verneinung",
+   "titel": "Verneinung",
+   "kurz": "won't / isn't going to",
+   "typ": "lueckentext",
+   "anweisung": "Schreibe die Verneinung.",
+   "aufgaben": [
+    {
+     "text": "I ___ late, I promise. (not / be)",
+     "antwort": [
+      "won't be",
+      "will not be"
+     ],
+     "tipp": "won't = will not · isn't/aren't going to"
+    },
+    {
+     "text": "It ___ tomorrow. (not / snow)",
+     "antwort": [
+      "won't snow",
+      "will not snow"
+     ],
+     "tipp": "won't = will not · isn't/aren't going to"
+    },
+    {
+     "text": "We ___ the bus. (not / take)",
+     "antwort": [
+      "aren't going to take",
+      "are not going to take"
+     ],
+     "tipp": "won't = will not · isn't/aren't going to"
+    },
+    {
+     "text": "She ___ to the party. (not / come)",
+     "antwort": [
+      "isn't going to come",
+      "is not going to come"
+     ],
+     "tipp": "won't = will not · isn't/aren't going to"
+    },
+    {
+     "text": "Don't worry, it ___. (not / hurt)",
+     "antwort": [
+      "won't hurt",
+      "will not hurt"
+     ],
+     "tipp": "won't = will not · isn't/aren't going to"
+    },
+    {
+     "text": "I ___ TV tonight. (not / watch)",
+     "antwort": [
+      "'m not going to watch",
+      "am not going to watch"
+     ],
+     "tipp": "won't = will not · isn't/aren't going to"
+    }
+   ]
+  },
+  {
+   "id": "en.6.future.saetze",
+   "titel": "Sätze bauen",
+   "kurz": "Will you …?",
+   "typ": "sortieren",
+   "anweisung": "Bring die Wörter in die richtige Reihenfolge.",
+   "aufgaben": [
+    {
+     "teile": [
+      "Will",
+      "you",
+      "help",
+      "me"
+     ],
+     "loesung": "Will you help me?",
+     "tipp": "will + Grundform · am/is/are going to + Grundform"
+    },
+    {
+     "teile": [
+      "Are",
+      "you",
+      "going to",
+      "play",
+      "tennis"
+     ],
+     "loesung": "Are you going to play tennis?",
+     "tipp": "will + Grundform · am/is/are going to + Grundform"
+    },
+    {
+     "teile": [
+      "I",
+      "will",
+      "call",
+      "you",
+      "tomorrow"
+     ],
+     "loesung": "I will call you tomorrow.",
+     "tipp": "will + Grundform · am/is/are going to + Grundform"
+    },
+    {
+     "teile": [
+      "What",
+      "are",
+      "you",
+      "going to",
+      "do"
+     ],
+     "loesung": "What are you going to do?",
+     "tipp": "will + Grundform · am/is/are going to + Grundform"
+    },
+    {
+     "teile": [
+      "It",
+      "will",
+      "be",
+      "sunny"
+     ],
+     "loesung": "It will be sunny.",
+     "tipp": "will + Grundform · am/is/are going to + Grundform"
+    },
+    {
+     "teile": [
+      "We",
+      "are",
+      "going to",
+      "visit",
+      "London"
+     ],
+     "loesung": "We are going to visit London.",
+     "tipp": "will + Grundform · am/is/are going to + Grundform"
+    }
+   ]
+  },
+  {
+   "id": "en.6.future.mix",
+   "titel": "Mix",
+   "kurz": "Alles durcheinander",
+   "mix": true,
+   "runde": 10
+  }
+ ]
+}

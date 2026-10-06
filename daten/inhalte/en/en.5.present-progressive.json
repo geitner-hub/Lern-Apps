@@ -1,0 +1,554 @@
+{
+ "typ": "gemischt",
+ "thema": "en.5.present-progressive",
+ "titel": "Present Progressive",
+ "emoji": "🇬🇧",
+ "klasse": 5,
+ "sprache": "en-GB",
+ "runde": 8,
+ "untertitel": "Was passiert gerade?",
+ "hilfe": [
+  {
+   "titel": "Was passiert gerade?",
+   "text": "am/is/are + Verb mit -ing. Signalwörter: now, right now, at the moment, Look!, Listen!",
+   "beispiele": [
+    [
+     "Look! It is raining.",
+     "Schau! Es regnet (gerade)."
+    ],
+    [
+     "I'm reading a book now.",
+     "Ich lese gerade ein Buch."
+    ]
+   ]
+  },
+  {
+   "titel": "Die -ing-Form",
+   "tabelle": [
+    [
+     "Regel",
+     "Beispiel"
+    ],
+    [
+     "normal: + ing",
+     "play → playing"
+    ],
+    [
+     "-e fällt weg",
+     "ride → riding, dance → dancing"
+    ],
+    [
+     "kurzer Vokal + Konsonant: verdoppeln",
+     "swim → swimming, sit → sitting"
+    ],
+    [
+     "ie → y",
+     "lie → lying"
+    ]
+   ]
+  },
+  {
+   "titel": "Verneinung und Fragen",
+   "text": "I'm not / he isn't / we aren't + -ing. Fragen: Are you …ing? – Yes, I am. / No, I'm not."
+  }
+ ],
+ "stufen": [
+  {
+   "id": "en.5.present-progressive.ing",
+   "titel": "Die -ing-Form",
+   "kurz": "playing, riding, swimming",
+   "typ": "eingabe",
+   "anweisung": "Schreibe die -ing-Form.",
+   "aufgaben": [
+    {
+     "frage": "play → -ing-Form?",
+     "antwort": [
+      "playing"
+     ],
+     "erklaerung": "play → playing",
+     "tipp": "-e fällt weg (ride → riding) · kurzer Vokal + Konsonant: verdoppeln (swim → swimming) · ie → y (lie → lying)"
+    },
+    {
+     "frage": "read → -ing-Form?",
+     "antwort": [
+      "reading"
+     ],
+     "erklaerung": "read → reading",
+     "tipp": "-e fällt weg (ride → riding) · kurzer Vokal + Konsonant: verdoppeln (swim → swimming) · ie → y (lie → lying)"
+    },
+    {
+     "frage": "swim → -ing-Form?",
+     "antwort": [
+      "swimming"
+     ],
+     "erklaerung": "swim → swimming",
+     "tipp": "-e fällt weg (ride → riding) · kurzer Vokal + Konsonant: verdoppeln (swim → swimming) · ie → y (lie → lying)"
+    },
+    {
+     "frage": "ride → -ing-Form?",
+     "antwort": [
+      "riding"
+     ],
+     "erklaerung": "ride → riding",
+     "tipp": "-e fällt weg (ride → riding) · kurzer Vokal + Konsonant: verdoppeln (swim → swimming) · ie → y (lie → lying)"
+    },
+    {
+     "frage": "run → -ing-Form?",
+     "antwort": [
+      "running"
+     ],
+     "erklaerung": "run → running",
+     "tipp": "-e fällt weg (ride → riding) · kurzer Vokal + Konsonant: verdoppeln (swim → swimming) · ie → y (lie → lying)"
+    },
+    {
+     "frage": "write → -ing-Form?",
+     "antwort": [
+      "writing"
+     ],
+     "erklaerung": "write → writing",
+     "tipp": "-e fällt weg (ride → riding) · kurzer Vokal + Konsonant: verdoppeln (swim → swimming) · ie → y (lie → lying)"
+    },
+    {
+     "frage": "dance → -ing-Form?",
+     "antwort": [
+      "dancing"
+     ],
+     "erklaerung": "dance → dancing",
+     "tipp": "-e fällt weg (ride → riding) · kurzer Vokal + Konsonant: verdoppeln (swim → swimming) · ie → y (lie → lying)"
+    },
+    {
+     "frage": "sit → -ing-Form?",
+     "antwort": [
+      "sitting"
+     ],
+     "erklaerung": "sit → sitting",
+     "tipp": "-e fällt weg (ride → riding) · kurzer Vokal + Konsonant: verdoppeln (swim → swimming) · ie → y (lie → lying)"
+    },
+    {
+     "frage": "watch → -ing-Form?",
+     "antwort": [
+      "watching"
+     ],
+     "erklaerung": "watch → watching",
+     "tipp": "-e fällt weg (ride → riding) · kurzer Vokal + Konsonant: verdoppeln (swim → swimming) · ie → y (lie → lying)"
+    },
+    {
+     "frage": "make → -ing-Form?",
+     "antwort": [
+      "making"
+     ],
+     "erklaerung": "make → making",
+     "tipp": "-e fällt weg (ride → riding) · kurzer Vokal + Konsonant: verdoppeln (swim → swimming) · ie → y (lie → lying)"
+    },
+    {
+     "frage": "lie → -ing-Form?",
+     "antwort": [
+      "lying"
+     ],
+     "erklaerung": "lie → lying",
+     "tipp": "-e fällt weg (ride → riding) · kurzer Vokal + Konsonant: verdoppeln (swim → swimming) · ie → y (lie → lying)"
+    },
+    {
+     "frage": "cook → -ing-Form?",
+     "antwort": [
+      "cooking"
+     ],
+     "erklaerung": "cook → cooking",
+     "tipp": "-e fällt weg (ride → riding) · kurzer Vokal + Konsonant: verdoppeln (swim → swimming) · ie → y (lie → lying)"
+    },
+    {
+     "frage": "have → -ing-Form?",
+     "antwort": [
+      "having"
+     ],
+     "erklaerung": "have → having",
+     "tipp": "-e fällt weg (ride → riding) · kurzer Vokal + Konsonant: verdoppeln (swim → swimming) · ie → y (lie → lying)"
+    },
+    {
+     "frage": "stop → -ing-Form?",
+     "antwort": [
+      "stopping"
+     ],
+     "erklaerung": "stop → stopping",
+     "tipp": "-e fällt weg (ride → riding) · kurzer Vokal + Konsonant: verdoppeln (swim → swimming) · ie → y (lie → lying)"
+    },
+    {
+     "frage": "take → -ing-Form?",
+     "antwort": [
+      "taking"
+     ],
+     "erklaerung": "take → taking",
+     "tipp": "-e fällt weg (ride → riding) · kurzer Vokal + Konsonant: verdoppeln (swim → swimming) · ie → y (lie → lying)"
+    },
+    {
+     "frage": "come → -ing-Form?",
+     "antwort": [
+      "coming"
+     ],
+     "erklaerung": "come → coming",
+     "tipp": "-e fällt weg (ride → riding) · kurzer Vokal + Konsonant: verdoppeln (swim → swimming) · ie → y (lie → lying)"
+    },
+    {
+     "frage": "shop → -ing-Form?",
+     "antwort": [
+      "shopping"
+     ],
+     "erklaerung": "shop → shopping",
+     "tipp": "-e fällt weg (ride → riding) · kurzer Vokal + Konsonant: verdoppeln (swim → swimming) · ie → y (lie → lying)"
+    },
+    {
+     "frage": "sleep → -ing-Form?",
+     "antwort": [
+      "sleeping"
+     ],
+     "erklaerung": "sleep → sleeping",
+     "tipp": "-e fällt weg (ride → riding) · kurzer Vokal + Konsonant: verdoppeln (swim → swimming) · ie → y (lie → lying)"
+    },
+    {
+     "frage": "drive → -ing-Form?",
+     "antwort": [
+      "driving"
+     ],
+     "erklaerung": "drive → driving",
+     "tipp": "-e fällt weg (ride → riding) · kurzer Vokal + Konsonant: verdoppeln (swim → swimming) · ie → y (lie → lying)"
+    },
+    {
+     "frage": "get → -ing-Form?",
+     "antwort": [
+      "getting"
+     ],
+     "erklaerung": "get → getting",
+     "tipp": "-e fällt weg (ride → riding) · kurzer Vokal + Konsonant: verdoppeln (swim → swimming) · ie → y (lie → lying)"
+    },
+    {
+     "frage": "eat → -ing-Form?",
+     "antwort": [
+      "eating"
+     ],
+     "erklaerung": "eat → eating",
+     "tipp": "-e fällt weg (ride → riding) · kurzer Vokal + Konsonant: verdoppeln (swim → swimming) · ie → y (lie → lying)"
+    },
+    {
+     "frage": "go → -ing-Form?",
+     "antwort": [
+      "going"
+     ],
+     "erklaerung": "go → going",
+     "tipp": "-e fällt weg (ride → riding) · kurzer Vokal + Konsonant: verdoppeln (swim → swimming) · ie → y (lie → lying)"
+    }
+   ]
+  },
+  {
+   "id": "en.5.present-progressive.saetze",
+   "titel": "Sätze",
+   "kurz": "am/is/are + -ing",
+   "typ": "lueckentext",
+   "anweisung": "Schreibe die richtige Form (am/is/are + -ing).",
+   "aufgaben": [
+    {
+     "text": "Look! The baby ___ in the bedroom. (sleep)",
+     "antwort": [
+      "is sleeping",
+      "'s sleeping"
+     ],
+     "tipp": "am/is/are + -ing"
+    },
+    {
+     "text": "Look! I ___ a book. (read)",
+     "antwort": [
+      "am reading",
+      "'m reading"
+     ],
+     "tipp": "am/is/are + -ing"
+    },
+    {
+     "text": "Look! They ___ football in the park. (play)",
+     "antwort": [
+      "are playing",
+      "'re playing"
+     ],
+     "tipp": "am/is/are + -ing"
+    },
+    {
+     "text": "Look! She ___ a film. (watch)",
+     "antwort": [
+      "is watching",
+      "'s watching"
+     ],
+     "tipp": "am/is/are + -ing"
+    },
+    {
+     "text": "Look! We ___ lunch. (eat)",
+     "antwort": [
+      "are eating",
+      "'re eating"
+     ],
+     "tipp": "am/is/are + -ing"
+    },
+    {
+     "text": "Look! My parents ___ dinner. (cook)",
+     "antwort": [
+      "are cooking",
+      "'re cooking"
+     ],
+     "tipp": "am/is/are + -ing"
+    },
+    {
+     "text": "Look! Tom ___ his bike. (ride)",
+     "antwort": [
+      "is riding",
+      "'s riding"
+     ],
+     "tipp": "am/is/are + -ing"
+    },
+    {
+     "text": "Look! It ___ again. (rain)",
+     "antwort": [
+      "is raining",
+      "'s raining"
+     ],
+     "tipp": "am/is/are + -ing"
+    },
+    {
+     "text": "Look! The dog ___ after the ball. (run)",
+     "antwort": [
+      "is running",
+      "'s running"
+     ],
+     "tipp": "am/is/are + -ing"
+    },
+    {
+     "text": "Look! You ___ a lot of noise. (make)",
+     "antwort": [
+      "are making",
+      "'re making"
+     ],
+     "tipp": "am/is/are + -ing"
+    },
+    {
+     "text": "Look! The children ___ in the lake. (swim)",
+     "antwort": [
+      "are swimming",
+      "'re swimming"
+     ],
+     "tipp": "am/is/are + -ing"
+    },
+    {
+     "text": "Look! He ___ a message. (write)",
+     "antwort": [
+      "is writing",
+      "'s writing"
+     ],
+     "tipp": "am/is/are + -ing"
+    },
+    {
+     "text": "Look! I ___ in the garden. (sit)",
+     "antwort": [
+      "am sitting",
+      "'m sitting"
+     ],
+     "tipp": "am/is/are + -ing"
+    },
+    {
+     "text": "Look! She ___ in her room. (dance)",
+     "antwort": [
+      "is dancing",
+      "'s dancing"
+     ],
+     "tipp": "am/is/are + -ing"
+    }
+   ]
+  },
+  {
+   "id": "en.5.present-progressive.fragen",
+   "titel": "Fragen und Verneinung",
+   "kurz": "Are you …ing?",
+   "typ": "sortieren",
+   "anweisung": "Bau den Satz.",
+   "aufgaben": [
+    {
+     "teile": [
+      "Are",
+      "you",
+      "listening",
+      "to me"
+     ],
+     "loesung": "Are you listening to me?",
+     "tipp": "Fragen: Am/Is/Are + Subjekt + -ing? · Verneinung: am/is/are + not + -ing"
+    },
+    {
+     "teile": [
+      "Is",
+      "it",
+      "raining"
+     ],
+     "loesung": "Is it raining?",
+     "tipp": "Fragen: Am/Is/Are + Subjekt + -ing? · Verneinung: am/is/are + not + -ing"
+    },
+    {
+     "teile": [
+      "What",
+      "are",
+      "you",
+      "doing"
+     ],
+     "loesung": "What are you doing?",
+     "tipp": "Fragen: Am/Is/Are + Subjekt + -ing? · Verneinung: am/is/are + not + -ing"
+    },
+    {
+     "teile": [
+      "Is",
+      "Tom",
+      "playing",
+      "football"
+     ],
+     "loesung": "Is Tom playing football?",
+     "tipp": "Fragen: Am/Is/Are + Subjekt + -ing? · Verneinung: am/is/are + not + -ing"
+    },
+    {
+     "teile": [
+      "Where",
+      "are",
+      "they",
+      "going"
+     ],
+     "loesung": "Where are they going?",
+     "tipp": "Fragen: Am/Is/Are + Subjekt + -ing? · Verneinung: am/is/are + not + -ing"
+    },
+    {
+     "teile": [
+      "Why",
+      "is",
+      "the baby",
+      "crying"
+     ],
+     "loesung": "Why is the baby crying?",
+     "tipp": "Fragen: Am/Is/Are + Subjekt + -ing? · Verneinung: am/is/are + not + -ing"
+    },
+    {
+     "teile": [
+      "I",
+      "am",
+      "not",
+      "watching",
+      "TV"
+     ],
+     "loesung": "I am not watching TV.",
+     "tipp": "Fragen: Am/Is/Are + Subjekt + -ing? · Verneinung: am/is/are + not + -ing"
+    },
+    {
+     "teile": [
+      "She",
+      "is",
+      "not",
+      "sleeping"
+     ],
+     "loesung": "She is not sleeping.",
+     "tipp": "Fragen: Am/Is/Are + Subjekt + -ing? · Verneinung: am/is/are + not + -ing"
+    },
+    {
+     "text": "I ___ right now. (not / watch TV)",
+     "antwort": [
+      "'m not watching",
+      "am not watching"
+     ],
+     "typ": "lueckentext",
+     "tipp": "I'm not / isn't / aren't + -ing"
+    },
+    {
+     "text": "He ___ right now. (not / do his homework)",
+     "antwort": [
+      "isn't doing",
+      "is not doing"
+     ],
+     "typ": "lueckentext",
+     "tipp": "I'm not / isn't / aren't + -ing"
+    },
+    {
+     "text": "We ___ right now. (not / play outside)",
+     "antwort": [
+      "aren't playing",
+      "are not playing"
+     ],
+     "typ": "lueckentext",
+     "tipp": "I'm not / isn't / aren't + -ing"
+    },
+    {
+     "text": "She ___ right now. (not / sleep)",
+     "antwort": [
+      "isn't sleeping",
+      "is not sleeping"
+     ],
+     "typ": "lueckentext",
+     "tipp": "I'm not / isn't / aren't + -ing"
+    },
+    {
+     "text": "They ___ right now. (not / listen)",
+     "antwort": [
+      "aren't listening",
+      "are not listening"
+     ],
+     "typ": "lueckentext",
+     "tipp": "I'm not / isn't / aren't + -ing"
+    },
+    {
+     "text": "It ___ right now. (not / snow)",
+     "antwort": [
+      "isn't snowing",
+      "is not snowing"
+     ],
+     "typ": "lueckentext",
+     "tipp": "I'm not / isn't / aren't + -ing"
+    }
+   ]
+  },
+  {
+   "id": "en.5.present-progressive.signalwoerter",
+   "titel": "Signalwörter",
+   "kurz": "now, Look! …",
+   "typ": "markieren",
+   "anweisung": "Tippe das Signalwort an.",
+   "aufgaben": [
+    {
+     "satz": "[Look]! It is raining.",
+     "erklaerung": "Signalwörter: now, right now, at the moment, Look!, Listen!"
+    },
+    {
+     "satz": "I am reading a book [now].",
+     "erklaerung": "Signalwörter: now, right now, at the moment, Look!, Listen!"
+    },
+    {
+     "satz": "[Listen]! The baby is crying.",
+     "erklaerung": "Signalwörter: now, right now, at the moment, Look!, Listen!"
+    },
+    {
+     "satz": "We are having lunch [at the moment].",
+     "erklaerung": "Signalwörter: now, right now, at the moment, Look!, Listen!"
+    },
+    {
+     "satz": "She is playing the piano [right now].",
+     "erklaerung": "Signalwörter: now, right now, at the moment, Look!, Listen!"
+    },
+    {
+     "satz": "[Look]! Tom is climbing the tree.",
+     "erklaerung": "Signalwörter: now, right now, at the moment, Look!, Listen!"
+    },
+    {
+     "satz": "[At the moment] they are watching TV.",
+     "erklaerung": "Signalwörter: now, right now, at the moment, Look!, Listen!"
+    },
+    {
+     "satz": "[Be quiet]! Dad is sleeping.",
+     "erklaerung": "Signalwörter: now, right now, at the moment, Look!, Listen!"
+    }
+   ]
+  },
+  {
+   "id": "en.5.present-progressive.mix",
+   "titel": "Mix",
+   "kurz": "Alles durcheinander",
+   "mix": true,
+   "runde": 10
+  }
+ ]
+}
