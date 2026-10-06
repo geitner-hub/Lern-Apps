@@ -14,7 +14,7 @@
 //  und teilen sich den Offline-Speicher. Deshalb hat jede Umgebung ihr
 //  eigenes Präfix und räumt nur ihre eigenen Speicher auf.
 // ═══════════════════════════════════════════════════════
-const VERSION = 'v44';  // v44: neue Apps Zahlenstrahl und Stellenwerttafel mit gemeinsamem Ziffernblock
+const VERSION = 'v45';  // v45: Geometrie-Trainer im Baukasten (Vierecke, Lage, Würfelnetze, Körper)
 const PRAEFIX = /\/[^/]*-test\/$/i.test(new URL(self.registration.scope).pathname) ? 'lwtest-v' : 'lernwelt-v';
 const CACHE   = PRAEFIX + VERSION.replace(/^v/, '');        // z. B. 'lernwelt-v24' (Format wie bisher)
 
@@ -55,6 +55,7 @@ const NACHLADEN = ['spiele/runner.html', 'spiele/burg-verteidigung.html', 'spiel
                    'apps/englisch/knowing-english.html',
                    'apps/englisch/time-dates-numbers.html',  // Etappe 8
                    'apps/mathe/zahlenstrahl.html', 'apps/mathe/stellenwerttafel.html', 'gemeinsam/ziffernblock.js',  // Etappe 9
+                   'daten/inhalte/ma/ma.5.geometrie.json',  // Etappe 10 (Bilder lädt das iPad beim ersten Üben)
                    'daten/inhalte/en/en.5.can.json', 'daten/inhalte/en/en.5.fragen.json', 'daten/inhalte/en/en.5.have-got.json',
                    'daten/inhalte/en/en.5.knowing-english.json', 'daten/inhalte/en/en.5.nomen.json', 'daten/inhalte/en/en.5.praepositionen.json',
                    'daten/inhalte/en/en.5.present-progressive.json', 'daten/inhalte/en/en.5.pronomen.json', 'daten/inhalte/en/en.5.there-is.json',
