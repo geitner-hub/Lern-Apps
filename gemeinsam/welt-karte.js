@@ -15,6 +15,8 @@
 //                         c = Land außerhalb der Kontinente des Modus (dunkler),
 //                         u = Tippzone im Meer für kleine Länder der Liste (Inseln, Kleinstaaten)
 //      geo(id)          → GeoJSON eines Landes (für den Globus)
+//      zentrum(id)      → [Länge, Breite] Mitte des größten Teilstücks (Globus dreht dorthin)
+//      kontinent(id)    → Kontinent-Kürzel (eu, as, af, na, sa, oz, an)
 // ═══════════════════════════════════════════════════════
 
 (function () {
@@ -47,7 +49,7 @@
     const H = Math.ceil(y1 - y0);
     projektion.translate([projektion.translate()[0], projektion.translate()[1] - y0]);
 
-    const geo = {}, pfade = {}, boxen = {}, mitten = {};
+    const geo = {}, pfade = {}, boxen = {}, mitten = {}, zentren = {};
     daten.laender.forEach(l => {
       const g = { type: 'Feature', id: l.id, properties: { n: l.n, k: l.k }, geometry: geometrie(l.p) };
       geo[l.id] = g;
@@ -57,8 +59,9 @@
       let best = null;
       g.geometry.coordinates.forEach(poly => {
         const teil = { type: 'Polygon', coordinates: poly }, a = d3.geoArea(teil);
-        if (!best || a > best.a) best = { a, c: pfad.centroid(teil) };
+        if (!best || a > best.a) best = { a, c: pfad.centroid(teil), z: d3.geoCentroid(teil) };
       });
+      zentren[l.id] = best ? best.z : d3.geoCentroid(g);
       mitten[l.id] = best ? best.c : pfad.centroid(g);
     });
     const umriss = pfad(kugel);
@@ -103,13 +106,15 @@
       return (cache[modus] = { w: BREITE, h: H, v, s: umriss, g: gradnetz, f, lupen });
     }
 
-    const namen = {};
-    daten.laender.forEach(l => { namen[l.id] = l.n; });
+    const namen = {}, kont = {};
+    daten.laender.forEach(l => { namen[l.id] = l.n; kont[l.id] = l.k; });
     return {
       daten, projektion, pfad, karte,
       name: id => namen[id] || '',
       laender: modus => ((daten.modi[modus] || {}).liste || []).slice(),
       geo: id => geo[id] || null,
+      zentrum: id => zentren[id] || [0, 0],
+      kontinent: id => kont[id] || '',
     };
   }
 

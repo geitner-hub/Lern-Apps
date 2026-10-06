@@ -14,11 +14,15 @@
      Deutschland        – alle 16 Bundesländer; Fehler kommen am Ende wieder
      Europa             – 15 aus 39 Ländern, die bekannten kommen öfter dran
                           (ersetzt „Europa Start“ und „Europa Profi“, deren Bestwerte zählen weiter)
-     Asien und Ozeanien, Afrika, Amerika – je 15 Länder auf der Weltkarte (Equal Earth)
+     Asien und Ozeanien, Afrika, Amerika – je 15 Länder auf der Weltkarte (Equal Earth),
+                          Umschalter „Flach / Globus“
+     Kontinente und Ozeane – 7 Kontinente und 5 Ozeane auf dem Globus (Klasse 5)
+     Welt               – 15 Länder aus allen Kontinenten auf dem Globus; nach einem Fehler dreht er sich hin
 
    Kartendaten: Natural Earth (gemeinfrei, naturalearthdata.com), vereinfacht → läuft offline,
    keine externen Dienste. Europa/Deutschland: daten/karten.json. Weltkarte: daten/welt.json,
    Projektion Equal Earth über gemeinsam/welt-karte.js (d3-geo, lokal in vendor/).
+   Globus: gemeinsam/globus.js (SVG, orthografisch, kein WebGL), Ozeane aus daten/ozeane.json.
    Länderlisten: Europa unten im Skript (MODI), Kontinente in daten/welt.json (modi → liste).
   ═══════════════════════════════════════════════
   -->
@@ -121,7 +125,19 @@
       box-shadow: inset 0 0 0 1px rgba(129,140,248,.14);
       touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;
     }
-    #map { width: 100%; height: 100%; display: block; }
+    #map, #globus { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+    #map[hidden], #globus[hidden] { display: none; }
+    #globus .kugel { fill: var(--sea2); stroke: none; }
+    .kugel-rand { fill: none; stroke: rgba(129,140,248,.45); stroke-width: 1.5px; pointer-events: none; }
+    .grat.grat-haupt { stroke: rgba(230,168,23,.55); stroke-width: 1.6px; }
+    .land.meer { fill: transparent; stroke: none; }
+    .land.meer.ok, .land.meer.late, .land.meer.miss { fill-opacity: .55; }
+    .land.kont { stroke: var(--land); stroke-width: .8px; }   /* Ländergrenzen verschwinden, Kontinent wirkt als eine Fläche */
+    .land.kont.ok { stroke: var(--accent); } .land.kont.late { stroke: var(--late); } .land.kont.miss { stroke: var(--miss); }
+    .mode-map .land.meer { fill: transparent; }
+    .mode-map .land.kont { stroke: var(--indigo2); stroke-width: 1px; }
+    .zoom .z-an { background: rgba(99,102,241,.55); }
+    .zoom button[hidden] { display: none; }
     .kugel { fill: rgba(129,140,248,.07); stroke: rgba(129,140,248,.25); stroke-width: 1px; vector-effect: non-scaling-stroke; }
     .grat { fill: none; stroke: rgba(129,140,248,.13); stroke-width: 1px; vector-effect: non-scaling-stroke; pointer-events: none; }
     .land {
@@ -226,10 +242,13 @@
   </div>
   <div id="map-wrap">
     <svg id="map" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Karte"></svg>
+    <svg id="globus" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Globus" hidden></svg>
     <div class="zoom">
       <button type="button" id="z-in" aria-label="Größer">+</button>
       <button type="button" id="z-out" aria-label="Kleiner">−</button>
       <button type="button" id="z-reset" class="z-reset" aria-label="Ganze Karte">⤢</button>
+      <button type="button" id="z-ansicht" aria-label="Globus zeigen" hidden>🌍</button>
+      <button type="button" id="z-netz" class="z-an" aria-label="Gradnetz ein/aus" hidden>#</button>
     </div>
     <div class="tip" id="tip"></div>
     <div class="hint" id="hint">Zwei Finger: vergrößern · ein Finger: verschieben</div>
@@ -241,6 +260,7 @@
 <script src="../../gemeinsam/navbar.js"></script>
 <script src="../../gemeinsam/karten-ansicht.js"></script>
 <script src="../../gemeinsam/welt-karte.js"></script>
+<script src="../../gemeinsam/globus.js"></script>
 <script src="../../gemeinsam/freigabe.js"></script>
 <script src="../../gemeinsam/ueben.js"></script>   <!-- Etappe 9: Freigabe des Übungs-Rahmens (Modi = Stufen gpg.6.laender.*) -->
 <script>
@@ -264,23 +284,44 @@ const EUROPA_ALLE = EUROPA_BEKANNT.concat(['ALB','BGR','BIH','BLR','CYP','EST','
 let BUNDESLAENDER = [];   // nach dem Laden aus den Kartendaten
 
 // welt: true → Karte und Länderliste aus daten/welt.json (gleicher Schlüssel wie dort unter modi)
+// globus: 'nur' → nur auf dem Globus, 'umschalten' → flache Karte mit Umschalter „Flach / Globus“
 const MODI = {
+  'kontinente-ozeane': { name: 'Kontinente und Ozeane', globus: 'nur', karte: 'kontinente', pool: [], anzahl: 12, wiederholen: true,
+                    wort: 'Kontinente und Ozeane', mitte: [10, 20],
+                    desc: 'Alle 7 Kontinente und 5 Ozeane auf dem Globus. Was nicht klappt, kommt am Ende noch einmal.' },
   'deutschland':  { name: 'Deutschland', karte: 'deutschland', pool: [], anzahl: 16, wiederholen: true,
                     desc: 'Alle 16 Bundesländer. Was nicht klappt, kommt am Ende noch einmal.' },
   'europa':       { name: 'Europa', karte: 'europa', pool: EUROPA_ALLE, bekannt: EUROPA_BEKANNT, anzahl: 15, wiederholen: false,
                     desc: '15 Länder aus ganz Europa – die bekannten kommen öfter dran.' },
-  'asien-ozeanien': { name: 'Asien und Ozeanien', welt: true, karte: 'asien-ozeanien', pool: [], anzahl: 15, wiederholen: false,
+  'asien-ozeanien': { name: 'Asien und Ozeanien', welt: true, globus: 'umschalten', mitte: [100, 15], karte: 'asien-ozeanien', pool: [], anzahl: 15, wiederholen: false,
                     desc: '15 Länder von der Türkei bis Neuseeland.' },
-  'afrika':       { name: 'Afrika', welt: true, karte: 'afrika', pool: [], anzahl: 15, wiederholen: false,
+  'afrika':       { name: 'Afrika', welt: true, globus: 'umschalten', mitte: [18, 2], karte: 'afrika', pool: [], anzahl: 15, wiederholen: false,
                     desc: '15 Länder von Marokko bis Südafrika.' },
-  'amerika':      { name: 'Amerika', welt: true, karte: 'amerika', pool: [], anzahl: 15, wiederholen: false,
+  'amerika':      { name: 'Amerika', welt: true, globus: 'umschalten', mitte: [-80, 10], karte: 'amerika', pool: [], anzahl: 15, wiederholen: false,
                     desc: '15 Länder aus Nord-, Mittel- und Südamerika.' },
+  'welt':         { name: 'Welt', welt: true, globus: 'nur', mitte: [10, 30], karte: 'welt', pool: [], anzahl: 15, wiederholen: false,
+                    desc: '15 Länder aus allen Kontinenten auf dem Globus. Nach einem Fehler dreht er sich zum Land.' },
 };
 const WAIT_OK = 650, WAIT_BAD = 1800;
 // Anschluss an den Übungs-Rahmen (Etappe 9): Themen-ID je Modus → Freigabe, Ergebnis, Fehlerheft
 const THEMA = { 'deutschland': 'gpg.6.laender.bundeslaender', 'europa': 'gpg.6.laender.europa',
-                'asien-ozeanien': 'gpg.6.laender.asien-ozeanien', 'afrika': 'gpg.6.laender.afrika', 'amerika': 'gpg.6.laender.amerika' };
-const SKILL = { 'deutschland': 'bundeslaender', 'europa': 'europa-laender' };
+                'asien-ozeanien': 'gpg.6.laender.asien-ozeanien', 'afrika': 'gpg.6.laender.afrika', 'amerika': 'gpg.6.laender.amerika',
+                'welt': 'gpg.6.laender.welt', 'kontinente-ozeane': 'gpg.5.erde.kontinente-ozeane' };
+const SKILL = { 'deutschland': 'bundeslaender', 'europa': 'europa-laender', 'kontinente-ozeane': 'kontinente-ozeane' };
+
+// Kontinente und Ozeane (Globus): IDs, Namen, Blickrichtung nach einem Fehler
+const KONTINENTE = { eu: ['Europa', [15, 50]], as: ['Asien', [90, 40]], af: ['Afrika', [20, 3]], na: ['Nordamerika', [-100, 45]],
+                     sa: ['Südamerika', [-60, -15]], oz: ['Australien und Ozeanien', [140, -22]], an: ['Antarktis', [0, -80]] };
+const OZEAN_MITTE = { at: [-30, 15], pa: [-150, 0], in: [80, -20], ar: [0, 80], so: [20, -65] };
+// asiatischer Teil Russlands (östlich des Urals, ca. 60° O; dazu die Spitze jenseits von 180°)
+function gradBox(w, s, o, n) {          // Rechteck entlang der Breitenkreise, im Uhrzeigersinn (d3-Regel)
+  const r = [];
+  for (let x = w; x <= o; x += 5) r.push([x, s]);
+  for (let x = o; x >= w; x -= 5) r.push([x, n]);
+  r.reverse(); r.push(r[0]);
+  return [r];
+}
+const RUS_ASIEN = { type: 'MultiPolygon', coordinates: [gradBox(60, 30, 180, 85), gradBox(-180, 55, -160, 75)] };
 const frei = modus => !window.LernUeben || LernUeben.Freigabe.erlaubt(THEMA[modus]);
 const REDUCED = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -289,7 +330,7 @@ const REDUCED = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce
    ═══════════════════════════════════════════════════════ */
 const $ = id => document.getElementById(id);
 const NS = 'http://www.w3.org/2000/svg';
-function nameOf(karte, id) { const f = MAPS[karte].f.find(x => x.id === id); return f ? f.n : ''; }
+function nameKarte(karte, id) { const f = MAPS[karte].f.find(x => x.id === id); return f ? f.n : ''; }
 
 function mapMarkup(karte, pool) { return LernKarte.markup(MAPS[karte], pool); }
 
@@ -334,8 +375,15 @@ function buildStart() {
       box.appendChild(b);
       return;
     }
-    const [vx, vy, vw, vh] = M.v, sq = Math.max(vw, vh) * 1.04;
-    b.innerHTML = `<div class="mode-map"><svg viewBox="${vx + vw / 2 - sq / 2} ${vy + vh / 2 - sq / 2} ${sq} ${sq}" preserveAspectRatio="xMidYMid meet" aria-hidden="true">${mapMarkup(m.karte, m.pool)}</svg></div>
+    let bildSvg;
+    if (m.globus === 'nur') {
+      const el = globusElemente(key, true);
+      bildSvg = `<svg viewBox="0 0 200 200" preserveAspectRatio="xMidYMid meet" aria-hidden="true">${LernGlobus.bild(el, m.mitte, 200)}</svg>`;
+    } else {
+      const [vx, vy, vw, vh] = M.v, sq = Math.max(vw, vh) * 1.04;
+      bildSvg = `<svg viewBox="${vx + vw / 2 - sq / 2} ${vy + vh / 2 - sq / 2} ${sq} ${sq}" preserveAspectRatio="xMidYMid meet" aria-hidden="true">${mapMarkup(m.karte, m.pool)}</svg>`;
+    }
+    b.innerHTML = `<div class="mode-map">${bildSvg}</div>
       <div class="mode-txt"><span class="mode-name"></span><span class="mode-desc"></span>
       <span class="mode-best">${best ? `Bestes Ergebnis: ${best.s} / ${best.m}` : ''}</span></div>`;
     b.querySelector('.mode-name').textContent = m.name;
@@ -350,7 +398,25 @@ function buildStart() {
    SPIEL
    ═══════════════════════════════════════════════════════ */
 const G = { modus: null, m: null, queue: [], cur: null, score: 0, max: 0, fehler: 0,
-            daneben: new Set(), verpasst: [], dots: [], frage: 0, locked: true, timer: 0, lupe: null };
+            daneben: new Set(), verpasst: [], dots: [], frage: 0, locked: true, timer: 0, lupe: null, globus: false };
+let GLOBUS_WAHL = false;   // „Flach / Globus“ in den Kontinent-Modi: zuletzt gewählte Ansicht
+let OZEANE = null, Glob = null;
+
+/** Elemente für den Globus (vorschau: vereinfacht, Liste hervorgehoben) */
+function globusElemente(modus, vorschau) {
+  const m = MODI[modus], M = MAPS[m.karte], geo = g => vorschau ? LernGlobus.vereinfacht(g, 6) : g;
+  if (m.karte === 'kontinente') {
+    const el = OZEANE.map(o => ({ id: 'oz-' + o.id, cls: 'land meer', geo: geo(o.geo) }));
+    WELT.daten.laender.forEach(l => {
+      if (!KONTINENTE[l.k]) return;
+      el.push({ id: 'k-' + l.k, cls: 'land kont' + (vorschau ? ' pool' : ''), geo: geo(WELT.geo(l.id)) });
+      if (l.id === 'RUS') el.push({ id: 'k-as', cls: 'land kont' + (vorschau ? ' pool' : ''), geo: geo(WELT.geo(l.id)), clip: RUS_ASIEN });
+    });
+    return el;
+  }
+  const pool = new Set(vorschau ? m.pool : []);
+  return M.f.map(f => ({ id: f.id, cls: 'land' + (f.c ? ' ctx' : '') + (pool.has(f.id) ? ' pool' : ''), geo: geo(WELT.geo(f.id)) }));
+}
 
 function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 
@@ -372,7 +438,8 @@ function startGame(modus) {
   const m = MODI[modus];
   clearTimeout(G.timer);
   if (!MAPS[m.karte]) return showStart();
-  Object.assign(G, { modus, m, score: 0, fehler: 0, daneben: new Set(), verpasst: [], frage: 0, locked: false, lupe: null });
+  Object.assign(G, { modus, m, score: 0, fehler: 0, daneben: new Set(), verpasst: [], frage: 0, locked: false, lupe: null,
+                    globus: m.globus === 'nur' || (m.globus === 'umschalten' && GLOBUS_WAHL) });
   G.queue = ziehe(m);
   G.max = G.queue.length;
   G.dots = G.queue.map(() => '');
@@ -381,12 +448,44 @@ function startGame(modus) {
   $('game').hidden = false;
   $('result').hidden = true;
   $('show-result').hidden = true;
-  $('map').innerHTML = mapMarkup(m.karte);
-  View.init(MAPS[m.karte]);
+  $('map').innerHTML = m.globus === 'nur' ? '' : mapMarkup(m.karte);
+  $('hint').style.opacity = '';
+  zeigeAnsicht();
+  if (m.globus !== 'nur') View.init(MAPS[m.karte]);
+  if (m.globus) {
+    if (!Glob) Glob = LernGlobus.ansicht({ svg: $('globus'), wrap: $('map-wrap'),
+      onTap: (id, x, y) => handleTap(id, x, y), onGeste: () => { $('hint').style.opacity = 0; } });
+    Glob.setze(globusElemente(modus));
+    Glob.reset();
+    Glob.dreheZu(m.mitte, 1);
+  }
   next();
 }
 
-function pathOf(id) { return $('map').querySelector(`.land[data-id="${id}"]`); }
+/** Flache Karte oder Globus zeigen, Knöpfe passend */
+function zeigeAnsicht() {
+  const m = G.m;
+  $('map').toggleAttribute('hidden', G.globus);        // SVG kennt .hidden nicht → Attribut setzen
+  $('globus').toggleAttribute('hidden', !G.globus);
+  $('z-ansicht').hidden = m.globus !== 'umschalten';
+  $('z-ansicht').textContent = G.globus ? '🗺️' : '🌍';
+  $('z-ansicht').setAttribute('aria-label', G.globus ? 'Flache Karte zeigen' : 'Globus zeigen');
+  $('z-netz').hidden = !G.globus;
+  $('hint').textContent = G.globus ? 'Ein Finger: drehen · zwei Finger: vergrößern' : 'Zwei Finger: vergrößern · ein Finger: verschieben';
+  if (G.globus && Glob) Glob.groesse();
+}
+
+/** Alle Flächen eines Ziels – auf der flachen Karte und dem Globus (Kontinente: mehrere Länder) */
+function teile(id) { return [...document.querySelectorAll(`#map .land[data-id="${id}"], #globus .land[data-id="${id}"]`)]; }
+function nameOf(karte, id) {
+  if (karte === 'kontinente') return id.startsWith('oz-') ? (OZEANE.find(o => 'oz-' + o.id === id) || {}).n || '' : (KONTINENTE[id.slice(2)] || [''])[0];
+  return nameKarte(karte, id);
+}
+/** Wohin der Globus nach einem Fehler dreht */
+function zielMitte(id) {
+  if (G.m.karte === 'kontinente') return id.startsWith('oz-') ? OZEAN_MITTE[id.slice(3)] : KONTINENTE[id.slice(2)][1];
+  return WELT.zentrum(id);
+}
 
 function renderDots() {
   const box = $('dots');
@@ -409,6 +508,7 @@ function next() {
 
 /** Kleine Länder (z. B. Mittelamerika): Karte zoomt auf den Ausschnitt, danach wieder zurück */
 function lupe() {
+  if (G.globus) return;
   const lupen = MAPS[G.m.karte].lupen || [];
   const lu = lupen.find(l => l.ids.includes(G.cur));
   if (lu) { if (G.lupe !== lu) { View.zeige(...lu.v); G.lupe = lu; } }
@@ -418,14 +518,18 @@ function lupe() {
 function handleTap(id, cx, cy) {
   if (G.locked || !G.cur || !id) return;      // Meer oder gesperrt → nichts passiert
   G.locked = true;
-  const target = pathOf(G.cur);
+  const ziel = teile(G.cur);
 
   if (id === G.cur) {
     const ersterVersuch = !G.daneben.has(G.cur);
     if (ersterVersuch) G.score++;
-    target.classList.remove('miss');
-    target.classList.add(ersterVersuch ? 'ok' : 'late', 'pop');
-    target.addEventListener('animationend', () => target.classList.remove('pop'), { once: true });
+    ziel.forEach(target => {
+      target.classList.remove('miss');
+      target.classList.add(ersterVersuch ? 'ok' : 'late');
+      if (G.m.karte === 'kontinente') return;          // große Flächen nicht hüpfen lassen
+      target.classList.add('pop');
+      target.addEventListener('animationend', () => target.classList.remove('pop'), { once: true });
+    });
     markDot(ersterVersuch ? 'ok' : 'late');
     G.timer = setTimeout(next, WAIT_OK);
     return;
@@ -433,13 +537,15 @@ function handleTap(id, cx, cy) {
 
   // Daneben
   G.fehler++;
-  const tapped = pathOf(id);
-  if (tapped) { tapped.classList.add('bad'); setTimeout(() => tapped.classList.remove('bad'), 1100); }
+  teile(id).forEach(t => { t.classList.add('bad'); setTimeout(() => t.classList.remove('bad'), 1100); });
   showTip(nameOf(G.m.karte, id), cx, cy);
-  target.classList.remove('reveal'); void target.getBoundingClientRect(); target.classList.add('reveal');
+  if (G.globus) Glob.dreheZu(zielMitte(G.cur));       // Globus dreht zum richtigen Ort
+  ziel.forEach(target => { target.classList.remove('reveal'); void target.getBoundingClientRect(); target.classList.add('reveal'); });
   setTimeout(() => {
-    target.classList.remove('reveal');
-    if (!G.m.wiederholen) target.classList.add('miss');
+    ziel.forEach(target => {
+      target.classList.remove('reveal');
+      if (!G.m.wiederholen) target.classList.add('miss');
+    });
   }, 1500);
 
   if (G.m.wiederholen) {
@@ -489,7 +595,7 @@ function finish() {
             : pct >= 50 ? 'Gut gemacht – weiter so!'
             : 'Dranbleiben – beim nächsten Mal klappt mehr!';
   const sub = G.m.wiederholen
-    ? `Alle ${max} Bundesländer zugeordnet – ${score} davon beim ersten Versuch.`
+    ? `Alle ${max} ${G.m.wort || 'Bundesländer'} zugeordnet – ${score} davon beim ersten Versuch.`
     : `${score} von ${max} Ländern beim ersten Tippen gefunden.`;
   const liste = G.m.wiederholen ? [...G.daneben] : G.verpasst;
 
@@ -548,9 +654,21 @@ const View = LernKarte.ansicht({
 });
 const viewInit = View.init;
 View.init = map => { $('hint').style.opacity = ''; viewInit(map); };
-$('z-in').addEventListener('click', () => View.centerZoom(1.5));
-$('z-out').addEventListener('click', () => View.centerZoom(1 / 1.5));
-$('z-reset').addEventListener('click', () => View.reset());
+$('z-in').addEventListener('click', () => G.globus ? Glob.zoomen(1.5) : View.centerZoom(1.5));
+$('z-out').addEventListener('click', () => G.globus ? Glob.zoomen(1 / 1.5) : View.centerZoom(1 / 1.5));
+$('z-reset').addEventListener('click', () => { if (G.globus) { Glob.reset(); Glob.dreheZu(G.m.mitte, 1); } else View.reset(); });
+$('z-ansicht').addEventListener('click', () => {
+  if (!G.m || G.m.globus !== 'umschalten') return;
+  G.globus = GLOBUS_WAHL = !G.globus;
+  if (G.globus) { G.lupe = null; Glob.dreheZu(G.m.mitte, 1); }
+  zeigeAnsicht();
+  if (!G.globus) { View.fit(); lupe(); }
+});
+$('z-netz').addEventListener('click', () => {
+  const an = !$('z-netz').classList.contains('z-an');
+  $('z-netz').classList.toggle('z-an', an);
+  if (Glob) Glob.gradnetz(an);
+});
 
 LernKarte.laden('../../daten/karten.json').then(d => {
   MAPS = Object.assign({}, d);
@@ -564,6 +682,13 @@ LernKarte.laden('../../daten/karten.json').then(d => {
       if (!m.welt) return;
       MAPS[m.karte] = w.karte(m.karte);
       m.pool = w.laender(m.karte);
+    });
+    if (!$('start').hidden) buildStart();
+    // Ozeane für „Kontinente und Ozeane“ (klein, kommt gleich hinterher)
+    return LernGlobus.ozeane().then(oz => {
+      OZEANE = oz;
+      MODI['kontinente-ozeane'].pool = Object.keys(KONTINENTE).map(k => 'k-' + k).concat(oz.map(o => 'oz-' + o.id));
+      MAPS.kontinente = { f: [] };
     });
   }).catch(e => { console.error(e); WELT_FEHLER = true; })
     .then(() => { if (!$('start').hidden) buildStart(); });
