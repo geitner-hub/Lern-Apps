@@ -13,11 +13,10 @@
    die iPad-Tastatur öffnet sich nie. Läuft auf dem Übungs-Rahmen (ueben.js).
 
    Stufen (Katalog ma.5.stellenwert.*):
-     Eintragen    Zahl steht oben → Ziffer für Ziffer in die richtige Spalte
-     Ablesen      Tafel ist gefüllt → Zahl ins Zahlenfeld
      Zahlwort     „drei Millionen vierzigtausendfünf“ → in die Tafel; umgekehrt Zahlwort aus drei wählen
      Stellenwert  Welchen Wert hat die markierte Ziffer? (7 in 3 708 215 → 700 000)
      Nullen-Profi viele Nullen und leere Spalten, bis Milliarden
+   (Die Stufen Eintragen und Ablesen wurden herausgenommen; ihre Katalog-IDs bleiben für alte Ergebnisse.)
    Leere Spalten links dürfen leer bleiben, Nullen in der Mitte müssen eingetragen werden.
    Rückmeldung unterscheidet „Ziffer falsch“ und „Spalte verrutscht“.
    Kürzel der Spalten: KUERZEL unten (an das Schulbuch anpassen).
@@ -158,15 +157,6 @@ function eintragen(n, frage, hinweis, typ) {
       box.appendChild(t); box.appendChild(p); box.appendChild(tafel(soll));
     } };
 }
-function ablesen(n) {
-  return { typ: 'ablesen', art: 'eigen', frage: 'Welche Zahl steht in der Tafel?', hinweis: 'Tippe die Zahl ins Feld.', text: fmt(n),
-    zeige: (box, fertig) => {
-      box.appendChild(tafel(zuSpalten(n)));
-      const f = document.createElement('div'); f.className = 'sw-feld'; box.appendChild(f);
-      LernZiffernblock.erstelle({ box, felder: [f], einstellig: false, gruppieren: true, max: 12, fertig: w => { if (w[0]) fertig(Number(w[0])); } });
-    },
-    pruef: e => e === n, eingabeText: e => fmt(e) };
-}
 function wortWaehlen(n) {
   const w = zahlwort(n);
   // Fallen: eine Null weniger/mehr, Tausender und Millionen vertauscht
@@ -207,8 +197,6 @@ function stellenwert(n) {
 }
 
 const STUFEN = [
-  { id: 'ma.5.stellenwert.eintragen', titel: 'Eintragen', kurz: 'Zahl → Tafel', erzeuge: () => { const n = zahl(4, 9); return eintragen(n, fmt(n)); } },
-  { id: 'ma.5.stellenwert.ablesen', titel: 'Ablesen', kurz: 'Tafel → Zahl', erzeuge: () => ablesen(zahl(4, 10, .25)) },
   { id: 'ma.5.stellenwert.zahlwort', titel: 'Zahlwort', kurz: 'drei Millionen vierzigtausendfünf',
     erzeuge: () => { const n = zahl(4, 10, .35); return Math.random() < .55 ? eintragen(n, zahlwort(n), 'Trage das Zahlwort als Zahl in die Tafel ein.', 'wort-eintragen') : wortWaehlen(n); } },
   { id: 'ma.5.stellenwert.wert', titel: 'Stellenwert', kurz: 'Welchen Wert hat die Ziffer?', erzeuge: () => stellenwert(zahl(5, 10)) },

@@ -14,7 +14,7 @@
 //  und teilen sich den Offline-Speicher. Deshalb hat jede Umgebung ihr
 //  eigenes Präfix und räumt nur ihre eigenen Speicher auf.
 // ═══════════════════════════════════════════════════════
-const VERSION = 'v45';  // v45: Geometrie-Trainer im Baukasten (Vierecke, Lage, Würfelnetze, Körper)
+const VERSION = 'v46';  // v46: Stellenwerttafel ohne die Stufen Eintragen und Ablesen
 const PRAEFIX = /\/[^/]*-test\/$/i.test(new URL(self.registration.scope).pathname) ? 'lwtest-v' : 'lernwelt-v';
 const CACHE   = PRAEFIX + VERSION.replace(/^v/, '');        // z. B. 'lernwelt-v24' (Format wie bisher)
 
