@@ -20,7 +20,7 @@
 //    art 'eigen' (Etappe 9, Aufgabentypen): a.zeige(box, fertig) zeichnet die Bedienung selbst und ruft
 //      fertig(eingabe) auf; geprüft wird wie immer mit cfg.pruefe(a, eingabe). a.eingabeText(eingabe) → Anzeige.
 //    schluessel: gleiche Aufgabe in einer Runde nicht doppelt (sonst zählt die Frage)
-//    ton: Text für 🔊 (immer sichtbar), sprache: z. B. 'en-GB' für Vorlesen und ton
+//    ton: Text für 🔊 (immer sichtbar), sprache: z. B. 'en-GB' für Vorlesen und ton; tonAuto: ton gleich vorlesen
 //  Stufe: { …, runde? } – eigene Rundengröße (z. B. wenn eine Stufe nur 6 Aufgaben hat)
 //  cfg.hilfe: { html } – Kachel „📖 So geht's“ mit Erklärung (Neue Lern-Apps Etappe 7; html schon escaped)
 //
@@ -254,7 +254,9 @@
     function neueAufgabe() {
       S.eingabe = ''; S.rest = ['', '']; S.feld = 0; S.gesperrt = false; S.tipp = false;
       zeigeAufgabe();
-      if (VORLESEN) sprich(S.aufgaben[S.nr].frage, S.aufgaben[S.nr].sprache);
+      const a = S.aufgaben[S.nr];
+      if (VORLESEN) sprich(a.frage, a.sprache);
+      else if (a.tonAuto && a.ton) sprich(a.ton, a.sprache);     // Hör-Aufgaben (Etappe 8): gleich vorlesen
     }
     function punkte() {
       return S.aufgaben.map((_, i) => `<i class="${i < S.ergebnis.length ? (S.ergebnis[i].ok ? 'ok' : 'no') : i === S.nr ? 'jetzt' : ''}"></i>`).join('');

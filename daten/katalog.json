@@ -947,6 +947,27 @@
        ]
       },
       {
+       "id": "en.5.zeit",
+       "titel": "Time, Dates and Numbers",
+       "klasse": 5,
+       "quelle": {
+        "app": "apps/englisch/time-dates-numbers.html"
+       },
+       "ergebnis": [
+        "time-dates-numbers.html"
+       ],
+       "lehrplan": "E5 Wortschatz und Aussprache: Zahlen, Uhrzeit, Datum (Ordinalzahlen, Monate, Wochentage)",
+       "dauer": 8,
+       "einsatz": "Nach der Unit mit Uhrzeit und Datum; Hör-Aufgaben mit Kopfhörern",
+       "stufen": [
+        { "id": "en.5.zeit.zahlen", "titel": "Numbers" },
+        { "id": "en.5.zeit.uhr-start", "titel": "Time – Start" },
+        { "id": "en.5.zeit.uhr", "titel": "Time" },
+        { "id": "en.5.zeit.datum", "titel": "Dates" },
+        { "id": "en.5.zeit.mix", "titel": "Mixed" }
+       ]
+      },
+      {
        "id": "en.5.satzglieder",
        "titel": "Satzglieder ordnen",
        "klasse": 5,

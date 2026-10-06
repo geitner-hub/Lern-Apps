@@ -14,7 +14,7 @@
 //  und teilen sich den Offline-Speicher. Deshalb hat jede Umgebung ihr
 //  eigenes Präfix und räumt nur ihre eigenen Speicher auf.
 // ═══════════════════════════════════════════════════════
-const VERSION = 'v42';  // v42: Knowing English mit 11 weiteren Grammatik-Strukturen, Mixed und „Welche Zeit passt?“
+const VERSION = 'v43';  // v43: neue App Time, Dates and Numbers (Uhr zum Stellen, Hör-Aufgaben)
 const PRAEFIX = /\/[^/]*-test\/$/i.test(new URL(self.registration.scope).pathname) ? 'lwtest-v' : 'lernwelt-v';
 const CACHE   = PRAEFIX + VERSION.replace(/^v/, '');        // z. B. 'lernwelt-v24' (Format wie bisher)
 
@@ -53,6 +53,7 @@ const NACHLADEN = ['spiele/runner.html', 'spiele/burg-verteidigung.html', 'spiel
                    'daten/inhalte/en/en.5.simple-present.json', 'daten/inhalte/en/en.5.simple-past.json',
                    // Knowing English (Etappe 7): Übersicht und alle Strukturen
                    'apps/englisch/knowing-english.html',
+                   'apps/englisch/time-dates-numbers.html',  // Etappe 8
                    'daten/inhalte/en/en.5.can.json', 'daten/inhalte/en/en.5.fragen.json', 'daten/inhalte/en/en.5.have-got.json',
                    'daten/inhalte/en/en.5.knowing-english.json', 'daten/inhalte/en/en.5.nomen.json', 'daten/inhalte/en/en.5.praepositionen.json',
                    'daten/inhalte/en/en.5.present-progressive.json', 'daten/inhalte/en/en.5.pronomen.json', 'daten/inhalte/en/en.5.there-is.json',

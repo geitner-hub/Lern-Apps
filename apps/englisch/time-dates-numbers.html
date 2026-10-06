@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<script src="../../gemeinsam/umgebung.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Time, Dates and Numbers – Lernwelt</title>
+<!--
+  ═══════════════════════════════════════════════
+   LERNWELT – Time, Dates and Numbers (Englisch 5, Neue Lern-Apps Etappe 8)
+   Eigene App, weil die Uhr zum Stellen in keinen Baukasten-Typ passt. Läuft auf dem Übungs-Rahmen
+   (ueben.js): Stufen, Fehler-Training, Freigabe, Meisterschaft und Ergebnis kommen von dort.
+
+   Stufen (Katalog en.5.zeit.*):
+     Numbers      Zahlwort lesen/schreiben/wählen, Zahl hören, Hörfalle 13 ↔ 30
+     Time (Start) volle und halbe Stunden – Uhr lesen und Zeiger stellen
+     Time         alle 5 Minuten: o'clock, half past, quarter past/to, five past …
+     Dates        Ordinalzahlen (1st, 2nd, 21st), Datum sagen und schreiben, Wochentage und Monate
+     Mixed        alles gemischt, mit Alltagssätzen („My birthday is on …“)
+   Aufgaben kommen aus Generatoren unten (britisches Englisch: half past seven, the 3rd of May).
+   Hör-Aufgaben nur, wenn das iPad eine englische Stimme hat (sonst werden sie ausgelassen).
+  ═══════════════════════════════════════════════
+-->
+<link rel="stylesheet" href="../../gemeinsam/fonts.css">
+<style>
+  html, body { margin: 0; background: #0f0e1a; }
+  #app { padding-top: env(safe-area-inset-top, 0px); }
+  .uhr { display: block; width: min(62vw, 46vh, 300px); height: auto; margin: 0 auto .6rem; touch-action: none; -webkit-user-select: none; user-select: none; }
+  .uhr .ziffer { fill: #1b1300; font: 900 15px 'Nunito', sans-serif; text-anchor: middle; dominant-baseline: central; }
+  .uhr .zeiger-h { stroke: #1b1929; stroke-width: 7; stroke-linecap: round; }
+  .uhr .zeiger-m { stroke: #6366f1; stroke-width: 4.5; stroke-linecap: round; }
+  .uhr.stellen .zeiger-h, .uhr.stellen .zeiger-m { cursor: grab; }
+  .uhr .griff { fill: transparent; }
+  .digital { font: 900 clamp(2.4rem, 9vw, 3.6rem) 'Nunito', sans-serif; text-align: center; letter-spacing: .05em; color: #fde68a; margin: .2rem 0 .8rem; }
+  .tdn-knoepfe { display: flex; flex-wrap: wrap; gap: .5rem; justify-content: center; margin: .4rem 0 .6rem; }
+  .tdn-k { background: #252238; border: 2px solid rgba(255,255,255,.1); border-radius: 14px; color: #f1f0fb; font: 800 1.1rem 'Nunito', sans-serif;
+    padding: .65rem 1rem; min-height: 3rem; min-width: 6rem; cursor: pointer; touch-action: manipulation; }
+  .tdn-k.an { border-color: #e6a817; } .tdn-k.fertig { border-color: #818cf8; }
+  .tdn-k:active { transform: scale(.96); }
+  .tdn-feld { width: 100%; max-width: 420px; display: block; margin: .3rem auto .8rem; background: #0b0a14; border: 3px solid #6366f1; border-radius: 16px;
+    color: #f1f0fb; font: 800 1.5rem 'Nunito', sans-serif; text-align: center; padding: .6rem .8rem; box-sizing: border-box; }
+  .tdn-reihe { background: #0b0a14; border: 3px dashed rgba(129,140,248,.5); border-radius: 16px; min-height: 3.6rem; padding: .5rem;
+    display: flex; flex-wrap: wrap; gap: .4rem; justify-content: center; align-items: center; margin: .3rem 0 .7rem; }
+  .tdn-reihe:empty::after { content: 'Tippe der Reihe nach an'; color: rgba(255,255,255,.3); font-weight: 800; }
+  .tdn-zeile { display: flex; gap: .6rem; justify-content: center; }
+  @media (prefers-reduced-motion: reduce) { .tdn-k:active { transform: none; } }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script src="../../gemeinsam/freigabe.js"></script>
+<script src="../../gemeinsam/ueben.js"></script>
+<script>
+'use strict';
+const NS = 'http://www.w3.org/2000/svg';
+const SPRACHE = 'en-GB';
+const zufall = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+const wahl = l => l[Math.floor(Math.random() * l.length)];
+const mischen = l => { const a = l.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const esc = t => String(t == null ? '' : t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const norm = t => String(t || '').trim().toLowerCase().replace(/[’`´]/g, "'").replace(/[-‐–]/g, ' ').replace(/\s+/g, ' ').replace(/[.!]+$/, '');
+
+/* ═══════════════════════════════════════════════════════
+   SPRACHE: Zahlen, Ordinalzahlen, Uhrzeit, Datum (britisches Englisch)
+   ═══════════════════════════════════════════════════════ */
+const EINS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve',
+  'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
+const ZEHN = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+function zahlwort(n) {
+  if (n < 20) return EINS[n];
+  if (n < 100) return ZEHN[Math.floor(n / 10)] + (n % 10 ? '-' + EINS[n % 10] : '');
+  const h = Math.floor(n / 100), r = n % 100;
+  return EINS[h] + ' hundred' + (r ? ' and ' + zahlwort(r) : '');
+}
+const ORD_BES = { 1: 'first', 2: 'second', 3: 'third', 5: 'fifth', 8: 'eighth', 9: 'ninth', 12: 'twelfth' };
+function ordwort(n) {
+  if (n < 20) return ORD_BES[n] || EINS[n] + 'th';
+  if (n % 10 === 0) return ZEHN[n / 10].replace(/y$/, 'ieth');
+  return ZEHN[Math.floor(n / 10)] + '-' + ordwort(n % 10);
+}
+const endung = n => (n % 100 >= 11 && n % 100 <= 13) ? 'th' : ({ 1: 'st', 2: 'nd', 3: 'rd' }[n % 10] || 'th');
+const MONATE = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const TAGE = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+const TAGE_IM_MONAT = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+/** h 0–23, m 0–59 (Fünfer) → „quarter past seven“ */
+function uhrzeit(h, m) {
+  const std = x => zahlwort(((x % 12) + 12) % 12 || 12);
+  if (m === 0) return std(h) + " o'clock";
+  if (m === 15) return 'quarter past ' + std(h);
+  if (m === 30) return 'half past ' + std(h);
+  if (m === 45) return 'quarter to ' + std(h + 1);
+  if (m < 30) return zahlwort(m) + ' past ' + std(h);
+  return zahlwort(60 - m) + ' to ' + std(h + 1);
+}
+const digital = (h, m) => `${h}:${String(m).padStart(2, '0')}`;
+
+// Englische Stimme? (iPad: Einstellungen → Bedienungshilfen → Gesprochene Inhalte → Stimmen)
+let STIMME = false;
+function stimmePruefen() {
+  try { STIMME = !!window.speechSynthesis && speechSynthesis.getVoices().some(v => /^en/i.test(v.lang)); } catch (e) { STIMME = false; }
+}
+stimmePruefen();
+try { speechSynthesis.addEventListener('voiceschanged', stimmePruefen); } catch (e) {}
+
+/* ═══════════════════════════════════════════════════════
+   BEDIENELEMENTE (Uhr, Knöpfe, Textfeld, Reihenfolge)
+   ═══════════════════════════════════════════════════════ */
+function uhrSVG(h, m) {
+  let s = `<svg class="uhr" viewBox="0 0 200 200" aria-label="Uhr"><circle cx="100" cy="100" r="94" fill="#fff8e6" stroke="#e6a817" stroke-width="6"/>`;
+  for (let i = 0; i < 60; i++) {
+    const w = i * 6 * Math.PI / 180, lang = i % 5 === 0, r1 = lang ? 80 : 85;
+    s += `<line x1="${100 + Math.sin(w) * r1}" y1="${100 - Math.cos(w) * r1}" x2="${100 + Math.sin(w) * 89}" y2="${100 - Math.cos(w) * 89}" stroke="#1b1929" stroke-width="${lang ? 2.5 : 1}"/>`;
+  }
+  for (let z = 1; z <= 12; z++) { const w = z * 30 * Math.PI / 180; s += `<text class="ziffer" x="${100 + Math.sin(w) * 67}" y="${100 - Math.cos(w) * 67}">${z}</text>`; }
+  s += `<line class="zeiger-h" x1="100" y1="100" x2="100" y2="52"/><line class="zeiger-m" x1="100" y1="100" x2="100" y2="24"/><circle cx="100" cy="100" r="6" fill="#1b1929"/></svg>`;
+  const box = document.createElement('div'); box.innerHTML = s;
+  const svg = box.firstElementChild;
+  stelle(svg, h, m);
+  return svg;
+}
+function stelle(svg, h, m) {
+  svg.querySelector('.zeiger-h').setAttribute('transform', `rotate(${(h % 12) * 30 + m * 0.5} 100 100)`);
+  svg.querySelector('.zeiger-m').setAttribute('transform', `rotate(${m * 6} 100 100)`);
+}
+/** Uhr zum Stellen: Zeiger ziehen; Minutenzeiger rastet in schritt-Minuten ein, Stundenzeiger auf volle Stunden */
+function stellUhr(box, schritt, fertig) {
+  let h = 12, m = 0, aktiv = null;
+  const svg = uhrSVG(h, m); svg.classList.add('stellen');
+  box.appendChild(svg);
+  const winkel = e => {
+    const r = svg.getBoundingClientRect();
+    const x = e.clientX - (r.left + r.width / 2), y = e.clientY - (r.top + r.height / 2);
+    return (Math.atan2(x, -y) * 180 / Math.PI + 360) % 360;
+  };
+  const abstand = (a, b) => { const d = Math.abs(a - b) % 360; return Math.min(d, 360 - d); };
+  svg.addEventListener('pointerdown', e => {
+    const w = winkel(e), wh = ((h % 12) * 30 + m * 0.5), wm = m * 6;
+    const r = svg.getBoundingClientRect(), dist = Math.hypot(e.clientX - (r.left + r.width / 2), e.clientY - (r.top + r.height / 2)) / (r.width / 2);
+    // nahe der Mitte eher Stundenzeiger, außen eher Minutenzeiger; sonst der Zeiger, der näher liegt
+    aktiv = dist < .45 ? 'h' : abstand(w, wm) <= abstand(w, wh) + 10 ? 'm' : 'h';
+    try { svg.setPointerCapture(e.pointerId); } catch (_) {}
+    bewege(e);
+  });
+  function bewege(e) {
+    if (!aktiv) return;
+    const w = winkel(e);
+    if (aktiv === 'm') m = (Math.round(w / (6 * schritt)) * schritt) % 60;
+    else h = Math.round(w / 30) % 12 || 12;
+    stelle(svg, h, m);
+  }
+  svg.addEventListener('pointermove', bewege);
+  const ende = () => { aktiv = null; };
+  svg.addEventListener('pointerup', ende); svg.addEventListener('pointercancel', ende);
+  const z = document.createElement('div'); z.className = 'tdn-zeile';
+  z.innerHTML = '<button type="button" class="btn p">✓ Fertig</button>';
+  z.firstElementChild.addEventListener('click', () => fertig({ h, m }));
+  box.appendChild(z);
+}
+function knoepfe(box, optionen, fertig) {
+  const d = document.createElement('div'); d.className = 'tdn-knoepfe';
+  d.innerHTML = optionen.map((o, i) => `<button type="button" class="tdn-k" data-i="${i}">${esc(o)}</button>`).join('');
+  d.addEventListener('click', e => { const b = e.target.closest('[data-i]'); if (b) { b.classList.add('an'); fertig(optionen[Number(b.dataset.i)]); } });
+  box.appendChild(d);
+}
+function textfeld(box, fertig, platzhalter) {
+  const d = document.createElement('div');
+  d.innerHTML = `<input class="tdn-feld" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="done"
+    placeholder="${esc(platzhalter || 'Antwort')}" aria-label="Antwort"><div class="tdn-zeile"><button type="button" class="btn p">✓ Prüfen</button></div>`;
+  box.appendChild(d);
+  const f = d.querySelector('input'), los = () => { if (f.value.trim()) fertig(f.value.trim()); };
+  f.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); los(); } });
+  d.querySelector('button').addEventListener('click', los);
+  setTimeout(() => { try { f.focus(); } catch (e) {} }, 50);
+}
+function reihenfolge(box, teile, fertig) {
+  let rest = mischen(teile.map((t, i) => i)); const gelegt = [];
+  for (let v = 0; v < 5 && rest.every((t, i) => t === i); v++) rest = mischen(rest);
+  const zeichnen = () => {
+    box.innerHTML = `<div class="tdn-reihe">${gelegt.map((t, i) => `<button type="button" class="tdn-k fertig" data-z="${i}">${esc(teile[t])}</button>`).join('')}</div>
+      <div class="tdn-knoepfe">${rest.map((t, i) => `<button type="button" class="tdn-k" data-n="${i}">${esc(teile[t])}</button>`).join('')}</div>`;
+  };
+  box.addEventListener('click', e => {
+    const n = e.target.closest('[data-n]'), z = e.target.closest('[data-z]');
+    if (n) gelegt.push(rest.splice(Number(n.dataset.n), 1)[0]);
+    else if (z) rest.push(gelegt.splice(Number(z.dataset.z), 1)[0]);
+    else return;
+    zeichnen();
+    if (!rest.length) fertig(gelegt.map(t => teile[t]));
+  });
+  zeichnen();
+}
+
+/* ═══════════════════════════════════════════════════════
+   AUFGABEN-GENERATOREN – jede Aufgabe trägt ihre Prüfung (pruef)
+   ═══════════════════════════════════════════════════════ */
+const ZAHL_FALLEN = [[13, 30], [14, 40], [15, 50], [16, 60], [17, 70], [18, 80], [19, 90]];
+function zahlAufgabe(art) {
+  const n = Math.random() < .5 ? zufall(11, 99) : zufall(0, 20);
+  if (art === 'lesen') return { typ: 'lesen', art: 'zahl', wert: n, frage: zahlwort(n), hinweis: 'Schreibe die Zahl mit Ziffern.', text: String(n),
+    pruef: e => Number(String(e).replace(',', '.')) === n, sprache: SPRACHE, ton: zahlwort(n) };
+  if (art === 'schreiben') {
+    const w = zahlwort(n);
+    return { typ: 'schreiben', art: 'eigen', frage: String(n), hinweis: 'Schreibe die Zahl auf Englisch.', text: w, sprache: SPRACHE,
+      zeige: (box, fertig) => textfeld(box, fertig, 'z. B. forty-two'), pruef: e => norm(e) === norm(w),
+      erklaerung: n > 20 && n % 10 ? 'Zehner und Einer mit Bindestrich: ' + w : '' };
+  }
+  if (art === 'waehlen') {
+    const falle = ZAHL_FALLEN.find(p => p.includes(n));
+    const andere = falle ? [falle[0] === n ? falle[1] : falle[0]] : [];
+    while (andere.length < 2) { const x = Math.max(0, n + wahl([-11, -10, -2, -1, 1, 2, 9, 10, 11])); if (x !== n && !andere.includes(x) && x < 100) andere.push(x); }
+    const w = zahlwort(n);
+    return { typ: 'waehlen', art: 'wahl', frage: String(n), hinweis: 'Welches Zahlwort passt?', text: w,
+      optionen: mischen([w, ...andere.map(zahlwort)]), pruef: e => e === w, sprache: SPRACHE };
+  }
+  if (art === 'hoeren') return { typ: 'hoeren', art: 'zahl', wert: n, frage: '🔊 Hör gut zu!', hinweis: 'Tippe die Zahl, die du hörst.', text: String(n) + ' (' + zahlwort(n) + ')',
+    ton: zahlwort(n), tonAuto: true, sprache: SPRACHE, pruef: e => Number(String(e).replace(',', '.')) === n };
+  // Hörfalle 13 ↔ 30
+  const p = wahl(ZAHL_FALLEN), z = wahl(p);
+  return { typ: 'hoerfalle', art: 'wahl', frage: '🔊 Thirteen oder thirty?', hinweis: 'Welche Zahl hörst du? Achte auf die Betonung: thir-TEEN, THIR-ty.',
+    text: String(z), ton: zahlwort(z), tonAuto: true, sprache: SPRACHE, optionen: p.map(String), pruef: e => e === String(z) };
+}
+const zahlStufe = () => zahlAufgabe(wahl(STIMME ? ['lesen', 'schreiben', 'waehlen', 'hoeren', 'hoerfalle', 'lesen', 'waehlen'] : ['lesen', 'schreiben', 'waehlen', 'lesen', 'waehlen']));
+
+function zeitPaar(start) {
+  const h = zufall(1, 12), m = start ? wahl([0, 30]) : wahl([0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55]);
+  return { h, m };
+}
+function uhrAufgabe(art, start) {
+  const { h, m } = zeitPaar(start), wort = uhrzeit(h, m);
+  if (art === 'lesen') {
+    const andere = new Set();
+    while (andere.size < 2) { const x = zeitPaar(start); const w = uhrzeit(x.h, x.m); if (w !== wort) andere.add(w); }
+    // typische Falle: past ↔ to
+    if (m && m !== 30) andere.add(uhrzeit(m < 30 ? h - 1 : h + 1, 60 - m === 60 ? 0 : 60 - m));
+    const opt = mischen([wort, ...[...andere].filter(w => w !== wort).slice(0, 2)]);
+    return { typ: 'uhr-lesen', art: 'eigen', frage: 'What time is it?', hinweis: 'Lies die Uhr.', text: wort, sprache: SPRACHE,
+      zeige: (box, fertig) => { box.appendChild(uhrSVG(h, m)); knoepfe(box, opt, fertig); }, pruef: e => e === wort, eingabeText: e => e };
+  }
+  if (art === 'stellen' || art === 'hoeren') {
+    return { typ: art === 'hoeren' ? 'uhr-hoeren' : 'uhr-stellen', art: 'eigen',
+      frage: art === 'hoeren' ? '🔊 Hör gut zu!' : wort, hinweis: art === 'hoeren' ? 'Stell die Uhr auf die Zeit, die du hörst.' : 'Stell die Uhr. Zieh die Zeiger mit dem Finger.',
+      text: wort + ' (' + digital(h, m) + ')', ton: art === 'hoeren' ? 'It is ' + wort + '.' : wort, tonAuto: art === 'hoeren', sprache: SPRACHE,
+      zeige: (box, fertig) => stellUhr(box, start ? 30 : 5, fertig),
+      pruef: e => e && (e.h % 12) === (h % 12) && e.m === m, eingabeText: e => e ? uhrzeit(e.h, e.m) : '',
+      erklaerung: m > 30 ? `„to“: der Minutenzeiger zeigt auf ${m / 5}, der Stundenzeiger steht kurz vor der ${h % 12 + 1 === 13 ? 1 : (h % 12) + 1}.` : '' };
+  }
+  // digital ↔ Wort
+  const h24 = h + (Math.random() < .5 ? 12 : 0), dig = digital(h24 === 24 ? 12 : h24, m);
+  const andere = new Set();
+  while (andere.size < 2) { const x = zeitPaar(start); const w = uhrzeit(x.h, x.m); if (w !== wort) andere.add(w); }
+  return { typ: 'digital', art: 'wahl', frage: dig, hinweis: 'Wie sagt man das auf Englisch?', text: wort, sprache: SPRACHE,
+    optionen: mischen([wort, ...andere]), pruef: e => e === wort, erklaerung: h24 > 12 ? 'Im Englischen zählt man meist nur bis 12 (am = vormittags, pm = nachmittags).' : '' };
+}
+const uhrStufe = start => uhrAufgabe(wahl(STIMME ? ['lesen', 'stellen', 'digital', 'hoeren', 'lesen', 'stellen'] : ['lesen', 'stellen', 'digital', 'lesen', 'stellen']), start);
+
+function datumAufgabe(art) {
+  const tag = zufall(1, 31);
+  if (art === 'endung') return { typ: 'endung', art: 'wahl', frage: tag + ' __', hinweis: 'Welche Endung hat die Ordinalzahl?', text: tag + endung(tag),
+    optionen: ['st', 'nd', 'rd', 'th'], pruef: e => e === endung(tag),
+    erklaerung: tag % 100 >= 11 && tag % 100 <= 13 ? '11th, 12th, 13th – immer -th!' : '1st, 2nd, 3rd, 21st, 22nd, 23rd, 31st – sonst -th' };
+  if (art === 'ordwort') {
+    const w = ordwort(tag), andere = new Set();
+    andere.add(zahlwort(tag)); while (andere.size < 2) { const x = zufall(1, 31); if (x !== tag) andere.add(ordwort(x)); }
+    return { typ: 'ordwort', art: 'wahl', frage: tag + endung(tag), hinweis: 'Wie heißt die Ordinalzahl?', text: w, sprache: SPRACHE,
+      optionen: mischen([w, ...andere]), pruef: e => e === w };
+  }
+  const mon = zufall(0, 11), t = Math.min(tag, TAGE_IM_MONAT[mon]);
+  if (art === 'sagen') {
+    const w = `the ${ordwort(t)} of ${MONATE[mon]}`;
+    const andere = [`the ${zahlwort(t)} of ${MONATE[mon]}`, `the ${ordwort(t)} of ${MONATE[(mon + 1) % 12]}`];
+    return { typ: 'datum-sagen', art: 'wahl', frage: `${t}. ${mon + 1}.`, hinweis: 'Wie sagt man das Datum?', text: w, sprache: SPRACHE,
+      optionen: mischen([w, ...andere]), pruef: e => e === w, ton: w };
+  }
+  if (art === 'schreiben') {
+    const loes = [`${t}${endung(t)} ${MONATE[mon]}`, `${MONATE[mon]} ${t}${endung(t)}`, `the ${t}${endung(t)} of ${MONATE[mon]}`];
+    return { typ: 'datum-schreiben', art: 'eigen', frage: `the ${ordwort(t)} of ${MONATE[mon]}`, hinweis: `Schreibe kurz, z. B. 3rd May oder May 3rd.`, text: loes[0], sprache: SPRACHE,
+      zeige: (box, fertig) => textfeld(box, fertig, `z. B. 3rd May`), pruef: e => loes.some(l => norm(e) === norm(l)),
+      erklaerung: 'Monate schreibt man im Englischen immer groß.' };
+  }
+  if (art === 'folge') {
+    const liste = Math.random() < .5 ? TAGE : MONATE, s = zufall(0, liste.length - 4), teile = liste.slice(s, s + 4);
+    return { typ: 'folge', art: 'eigen', frage: liste === TAGE ? 'Days of the week' : 'Months of the year', hinweis: 'Tippe sie in der richtigen Reihenfolge an.',
+      text: teile.join(' → '), zeige: (box, fertig) => reihenfolge(box, teile, fertig), pruef: e => Array.isArray(e) && e.join() === teile.join(), eingabeText: e => (e || []).join(' → ') };
+  }
+  const liste = Math.random() < .5 ? TAGE : MONATE, i = zufall(0, liste.length - 1), weiter = Math.random() < .5;
+  const ziel = liste[(i + (weiter ? 1 : -1) + liste.length) % liste.length];
+  const andere = new Set(); while (andere.size < 2) { const x = wahl(liste); if (x !== ziel && x !== liste[i]) andere.add(x); }
+  return { typ: 'davor-danach', art: 'wahl', frage: `What comes ${weiter ? 'after' : 'before'} ${liste[i]}?`, hinweis: weiter ? 'after = danach' : 'before = davor',
+    text: ziel, sprache: SPRACHE, optionen: mischen([ziel, ...andere]), pruef: e => e === ziel, ton: `What comes ${weiter ? 'after' : 'before'} ${liste[i]}?` };
+}
+const datumStufe = () => datumAufgabe(wahl(['endung', 'ordwort', 'sagen', 'schreiben', 'folge', 'davor-danach', 'endung', 'sagen']));
+
+/** Alltagssätze (Mixed) */
+function satzAufgabe() {
+  const art = wahl(['geburtstag', 'bus', 'alter', 'tag']);
+  if (art === 'geburtstag') {
+    const mon = zufall(0, 11), t = zufall(1, TAGE_IM_MONAT[mon]), w = ordwort(t);
+    const andere = new Set([zahlwort(t)]); while (andere.size < 2) { const x = zufall(1, 28); if (x !== t) andere.add(ordwort(x)); }
+    return { typ: 'satz-geburtstag', art: 'wahl', frage: `My birthday is on the ___ of ${MONATE[mon]}. (${t}.)`, hinweis: 'Welches Wort passt in die Lücke?', text: w,
+      sprache: SPRACHE, optionen: mischen([w, ...andere]), pruef: e => e === w };
+  }
+  if (art === 'bus') {
+    const { h, m } = zeitPaar(false), w = uhrzeit(h, m), andere = new Set();
+    while (andere.size < 2) { const x = zeitPaar(false); const u = uhrzeit(x.h, x.m); if (u !== w) andere.add(u); }
+    return { typ: 'satz-bus', art: 'wahl', frage: `The bus leaves at ${digital(h, m)}.`, hinweis: 'Wie sagt man die Uhrzeit?', text: `The bus leaves at ${w}.`,
+      sprache: SPRACHE, optionen: mischen([w, ...andere]), pruef: e => e === w };
+  }
+  if (art === 'alter') {
+    const n = zufall(10, 99), w = zahlwort(n);
+    return { typ: 'satz-alter', art: 'eigen', frage: `My grandma is ${n} years old.`, hinweis: 'Schreibe die Zahl als Wort.', text: w, sprache: SPRACHE,
+      zeige: (box, fertig) => textfeld(box, fertig, 'z. B. seventy-two'), pruef: e => norm(e) === norm(w) };
+  }
+  const i = zufall(0, 6), w = TAGE[(i + 1) % 7];
+  return { typ: 'satz-tag', art: 'wahl', frage: `Today is ${TAGE[i]}. Tomorrow is ___.`, hinweis: 'Welcher Tag ist morgen?', text: w, sprache: SPRACHE,
+    optionen: mischen([w, TAGE[(i + 6) % 7], TAGE[(i + 2) % 7]]), pruef: e => e === w };
+}
+
+const STUFEN = [
+  { id: 'en.5.zeit.zahlen', titel: 'Numbers', kurz: 'Zahlen lesen, schreiben, hören', erzeuge: zahlStufe },
+  { id: 'en.5.zeit.uhr-start', titel: 'Time – Start', kurz: "o'clock und half past", erzeuge: () => uhrStufe(true) },
+  { id: 'en.5.zeit.uhr', titel: 'Time', kurz: 'quarter past, ten to …', erzeuge: () => uhrStufe(false) },
+  { id: 'en.5.zeit.datum', titel: 'Dates', kurz: '1st, 2nd, 3rd – the 3rd of May', erzeuge: datumStufe },
+  { id: 'en.5.zeit.mix', titel: 'Mixed', kurz: 'Alles gemischt mit Alltagssätzen',
+    erzeuge: () => wahl([zahlStufe, () => uhrStufe(false), datumStufe, satzAufgabe, satzAufgabe])() },
+];
+const HILFE = `<section><h2>Numbers</h2><p>13–19 enden auf <b>-teen</b> (Betonung hinten: thir-TEEN), die Zehner auf <b>-ty</b> (Betonung vorne: THIR-ty).
+  Zehner und Einer schreibt man mit Bindestrich: <b>forty-two</b>.</p></section>
+  <section><h2>Time</h2><p><b>o'clock</b> – volle Stunde · <b>half past</b> – halb (half past seven = 7:30, NICHT halb acht!) ·
+  <b>quarter past</b> – Viertel nach · <b>quarter to</b> – Viertel vor · <b>ten past / ten to</b> – zehn nach / vor.</p>
+  <p><b>am</b> = vormittags (0–12 Uhr), <b>pm</b> = nachmittags und abends.</p></section>
+  <section><h2>Dates</h2><p>Ordinalzahlen: 1st first, 2nd second, 3rd third, 4th fourth … 11th, 12th, 13th, 21st, 22nd, 23rd, 31st.</p>
+  <p>Sagen: <b>the third of May</b>. Schreiben (britisch): <b>3rd May</b>, oft auch <b>May 3rd</b>. Monate und Wochentage immer groß.</p></section>`;
+
+window.LernUeben && LernUeben.start({
+  host: document.getElementById('app'), titel: '🕒 Time, Dates and Numbers', untertitel: 'Zahlen, Uhrzeit und Datum auf Englisch',
+  stufen: STUFEN.map(s => ({ id: s.id, titel: s.titel, kurz: s.kurz })), runde: 10, hilfe: { html: HILFE },
+  erzeuge: st => {
+    const s = STUFEN.find(x => x.id === st.id);
+    const a = s && s.erzeuge();
+    if (a) a.schluessel = a.typ + '|' + a.frage + '|' + (a.text || '');
+    return a;
+  },
+  pruefe: (a, e) => { try { return !!a.pruef(e); } catch (err) { return false; } },
+});
+</script>
+<script src="../../gemeinsam/navbar.js"></script>
+</body>
+</html>
