@@ -66,7 +66,8 @@ und gelbe Hinweise. Manuelle Checkliste nach Uploads: `werkzeuge/RAUCHTEST.md`.
   Version, Speicher-Register, `LW.laden`), `LernApps` (navbar.js: Home-Button, `saveResult`), `LernPass`
   (pass.js: XP/Level/Sterne, Regeln in `RULES`), `LernKatalog` (katalog.js), `LernUeben` (ueben.js: Übungsrahmen
   mit Stufen), `LernFreigabe` (freigabe.js: Freigaben je Themen-ID und Fokus-Modus aus config.json),
-  `LernWiederholung` (wiederholung.js: fällige Wiederholungen aus dem Lernstand), `LernDorf` (dorf-kern.js). `shared.js` ist die einzige Quelle für Fächer/Farben/`escHtml`/`isSafeLink`.
+  `LernWiederholung` (wiederholung.js: fällige Wiederholungen aus dem Lernstand), `LernTypen` (typen.js:
+  Aufgabentyp-Baukasten), `LernDorf` (dorf-kern.js). `shared.js` ist die einzige Quelle für Fächer/Farben/`escHtml`/`isSafeLink`.
 - **Ergebnisfluss:** App → `LernApps.saveResult({ score, max, thema })` → `localStorage` (`lern-apps-results`,
   Schlüssel = **Dateiname** ohne Ordner + URL-Parameter) → Ereignis `lernapps:result` → pass.js wertet aus und
   feuert `lernpass:gewertet` → dorf-kern.js zählt Aufträge. Dateinamen müssen daher repo-weit eindeutig sein.
@@ -79,6 +80,11 @@ und gelbe Hinweise. Manuelle Checkliste nach Uploads: `werkzeuge/RAUCHTEST.md`.
   + `generatoren-mathe.js` (neuer Aufgabentyp = Funktion in `G`) + Stufen in `daten/kopfrechnen.json`;
   `apps/englisch/vokabeltrainer.html?klasse=5|6|liste=NAME` für alle Wortlisten. Alte Apps werden zu
   Weiterleitungen (Kennzeichen `LW-WEITERLEITUNG`, Übernahme per `LernUeben.uebernehme`).
+- **Aufgabentyp-Baukasten (bevorzugt für neue Apps):** `apps/typen/uebung.html?inhalt=<Themen-ID>` zeigt
+  `daten/inhalte/<fach>/<Themen-ID>.json` mit einem der Typen in `gemeinsam/typen/` (zuordnen, sortieren, lueckentext,
+  eingabe, beschriften, bildwort). Neue App = Inhaltsdatei + Katalog-Thema (quelle uebung.html, parameter
+  `inhalt=<ID>`) + Eintrag in `sw.js` NACHLADEN; Format: README → Aufgabentyp-Baukasten, Vorlage für Claude:
+  `werkzeuge/INHALT-PROMPT.md`. Eine eigene App nur, wenn kein Typ passt (Spiele, besondere Mechaniken).
 - **Backend:** nur ein Cloudflare Worker (`cloudflare/worker.js`, wird von Hand bei Cloudflare eingefügt). Er
   prüft Admin-Login und schreibt ausschließlich `config.json` per GitHub-API; jedes Feld wird validiert. Neue
   Config-Felder müssen auch im Worker erlaubt/geprüft werden. Sicherungskarten-Sync: `cloudflare/sync.js`,

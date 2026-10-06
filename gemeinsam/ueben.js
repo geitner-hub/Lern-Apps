@@ -15,7 +15,13 @@
 //      pruefe(aufgabe, eingabe) → true/false,
 //      runde: 10, meisterschaft: { prozent: 70, runden: 2 },
 //    });
-//  Aufgabe: { frage, art: 'zahl'|'bruch'|'rest'|'wahl', text, optionen?, negativ?, tipp?, erklaerung?, hinweis? }
+//  Aufgabe: { frage, art: 'zahl'|'bruch'|'rest'|'wahl'|'eigen', text, optionen?, negativ?, tipp?, erklaerung?, hinweis?,
+//             schluessel?, sprache?, ton? }
+//    art 'eigen' (Etappe 9, Aufgabentypen): a.zeige(box, fertig) zeichnet die Bedienung selbst und ruft
+//      fertig(eingabe) auf; geprüft wird wie immer mit cfg.pruefe(a, eingabe). a.eingabeText(eingabe) → Anzeige.
+//    schluessel: gleiche Aufgabe in einer Runde nicht doppelt (sonst zählt die Frage)
+//    ton: Text für 🔊 (immer sichtbar), sprache: z. B. 'en-GB' für Vorlesen und ton
+//  Stufe: { …, runde? } – eigene Rundengröße (z. B. wenn eine Stufe nur 6 Aufgaben hat)
 //
 //  Angelegte Anschlüsse (später eingeschaltet):
 //    LernUeben.Freigabe.erlaubt(themaId)  → seit Etappe 7 über gemeinsam/freigabe.js (gesperrt = 🔒 ohne Erklärtext);
@@ -134,14 +140,21 @@
   .lu .liste{text-align:left;max-width:560px;margin:1rem auto 0;font-size:.92rem}
   .lu .liste div{padding:.45rem 0;border-top:1px solid var(--line)}
   .lu .liste small{display:block;color:var(--mut);font-weight:700}
+  .lu .frage .q.lang{font-size:clamp(1.15rem,3.6vw,1.6rem);font-family:'Nunito',sans-serif;font-weight:800}
+  .lu .eigen{max-width:640px;margin:0 auto}
   .lu.gross .frage .q{font-size:clamp(2.2rem,8vw,3.4rem)} .lu.gross .fb .er{font-size:1.2rem}
   @media (max-height:700px){.lu .frage{padding:.8rem}.lu .pad button{min-height:3rem}}
   @media (prefers-reduced-motion:reduce){.lu .tile,.lu .pad button{transition:none}}`;
 
   // ── Vorlesen ───────────────────────────────────────────
-  function sprich(text) {
+  function sprich(text, sprache) {
     try {
       if (!window.speechSynthesis) return;
+      if (sprache && !/^de/i.test(sprache)) {             // fremde Sprache: Text unverändert
+        speechSynthesis.cancel();
+        const f = new SpeechSynthesisUtterance(String(text)); f.lang = sprache; f.rate = .85;
+        return speechSynthesis.speak(f);
+      }
       const t = String(text).replace(/×/g, ' mal ').replace(/÷/g, ' geteilt durch ').replace(/−/g, ' minus ').replace(/≈ \?/g, 'ungefähr wie viel')
         .replace(/(\d)\/(\d+)/g, '$1 durch $2').replace(/\?/g, ' wie viel ');
       speechSynthesis.cancel();
@@ -196,12 +209,13 @@
       const st = alle.find(x => x.id === id);
       if (!st || !Freigabe.erlaubt(id)) return;
       S.stufe = st; S.aufgaben = []; S.ergebnis = []; S.nr = 0; S.start = Date.now();
-      const fragen = new Set();
-      for (let v = 0; S.aufgaben.length < RUNDE && v < RUNDE * 8; v++) {
+      const fragen = new Set(), anzahl = Math.max(3, Math.min(RUNDE, Number(st.runde) || RUNDE));
+      for (let v = 0; S.aufgaben.length < anzahl && v < anzahl * 8; v++) {
         const a = cfg.erzeuge(st);
         if (!a) continue;
-        if (fragen.has(a.frage) && v < RUNDE * 5) continue;
-        fragen.add(a.frage); S.aufgaben.push(a);
+        const k = a.schluessel || a.frage;
+        if (fragen.has(k) && v < anzahl * 5) continue;
+        fragen.add(k); S.aufgaben.push(a);
       }
       if (!S.aufgaben.length) { zeigeStart(); return; }
       neueAufgabe();
@@ -226,7 +240,7 @@
     function neueAufgabe() {
       S.eingabe = ''; S.rest = ['', '']; S.feld = 0; S.gesperrt = false; S.tipp = false;
       zeigeAufgabe();
-      if (VORLESEN) sprich(S.aufgaben[S.nr].frage);
+      if (VORLESEN) sprich(S.aufgaben[S.nr].frage, S.aufgaben[S.nr].sprache);
     }
     function punkte() {
       return S.aufgaben.map((_, i) => `<i class="${i < S.ergebnis.length ? (S.ergebnis[i].ok ? 'ok' : 'no') : i === S.nr ? 'jetzt' : ''}"></i>`).join('');
@@ -247,20 +261,21 @@
       const a = S.aufgaben[S.nr];
       root.innerHTML = `<div class="top"><button type="button" class="x" data-ende aria-label="Zur Stufenwahl">✕</button>
           <span class="nm">${esc(S.stufe.titel)}</span><span class="dots">${punkte()}</span></div>
-        <div class="frage"><div class="q">${esc(a.frage)}</div>${a.hinweis ? `<div class="h">${esc(a.hinweis)}</div>` : ''}
-          ${VORLESEN ? '<button type="button" class="btn vor" data-vor aria-label="Vorlesen">🔊</button>' : ''}</div>
+        <div class="frage"><div class="q${String(a.frage).length > 28 ? ' lang' : ''}">${esc(a.frage)}</div>${a.hinweis ? `<div class="h">${esc(a.hinweis)}</div>` : ''}
+          ${VORLESEN || a.ton ? '<button type="button" class="btn vor" data-vor aria-label="Vorlesen">🔊</button>' : ''}</div>
         ${S.tipp && a.tipp && !fb ? `<div class="tipp">💡 ${esc(a.tipp)}</div>` : ''}
         ${fb || ''}
-        ${fb ? '' : a.art === 'wahl'
+        ${fb ? '' : a.art === 'eigen' ? '<div class="eigen"></div>' : a.art === 'wahl'
           ? `<div class="opts">${a.optionen.map(o => `<button type="button" class="opt" data-wahl="${esc(o)}">${esc(o)}</button>`).join('')}</div>`
           : `<div class="ant">${feldHTML(a)}</div>${tasten(a)}`}
         <div class="zeile">${fb ? '<button type="button" class="btn p" data-weiter>Weiter ›</button>'
           : a.tipp && !S.tipp ? '<button type="button" class="btn" data-tipp>💡 Tipp</button>' : ''}</div>`;
       if (fb) { const w = root.querySelector('[data-weiter]'); if (w) w.focus(); }
+      else if (a.art === 'eigen') a.zeige(root.querySelector('.eigen'), e => { if (!S.gesperrt) pruefen(e); });
     }
     function taste(k) {
       const a = S.aufgaben[S.nr];
-      if (S.gesperrt || !a || a.art === 'wahl') return;
+      if (S.gesperrt || !a || a.art === 'wahl' || a.art === 'eigen') return;
       if (k === 'ok') return pruefen();
       const max = 12;
       const aendern = alt => k === 'weg' ? alt.slice(0, -1)
@@ -271,12 +286,12 @@
     }
     function pruefen(wahlWert) {
       const a = S.aufgaben[S.nr];
-      const eingabe = a.art === 'wahl' ? wahlWert : a.art === 'rest' ? { q: S.rest[0], r: S.rest[1] } : S.eingabe;
-      if (a.art === 'rest' ? !S.rest[0] || !S.rest[1] : !String(eingabe || '').trim()) return;
+      const eingabe = a.art === 'wahl' || a.art === 'eigen' ? wahlWert : a.art === 'rest' ? { q: S.rest[0], r: S.rest[1] } : S.eingabe;
+      if (a.art === 'rest' ? !S.rest[0] || !S.rest[1] : a.art !== 'eigen' && !String(eingabe || '').trim()) return;
       S.gesperrt = true;
       const ok = cfg.pruefe(a, eingabe);
-      const eingabeText = a.art === 'rest' ? `${S.rest[0]} R ${S.rest[1]}` : String(eingabe);
-      S.ergebnis.push({ ok, frage: a.frage, loesung: a.text, eingabe: eingabeText, erklaerung: a.erklaerung || '' });
+      const eingabeText = a.art === 'rest' ? `${S.rest[0]} R ${S.rest[1]}` : a.eingabeText ? a.eingabeText(eingabe) : String(eingabe);
+      S.ergebnis.push({ ok, frage: a.frage, loesung: a.text, eingabe: eingabeText, erklaerung: a.erklaerung || '', eigen: a.art === 'eigen' });
       const thema = a._stufe || S.stufe.id;
       if (!ok && !S.stufe.training) Fehlerheft.merken({ thema, typ: a.typ, frage: a.frage, eingabe: eingabeText, loesung: a.text });
       if (ok && S.stufe.training) Fehlerheft.streichen(thema, a.typ);
@@ -306,7 +321,7 @@
       const lob = pct === 100 ? 'Alles richtig! 💯' : pct >= 80 ? 'Stark gerechnet! 💪' : pct >= MEIST.prozent ? 'Gut gemacht! 👍' : pct >= 40 ? 'Dranbleiben – das wird! 🙂' : 'Probier es gleich nochmal – oder eine leichtere Stufe.';
       root.innerHTML = `<div class="top"><button type="button" class="x" data-ende aria-label="Zur Stufenwahl">✕</button><span class="nm">${esc(st.titel)}</span></div>
         <div class="erg"><div class="gr">${r} / ${n}</div><div style="font-weight:900;font-size:1.15rem">${lob}</div>
-          ${falsch.length ? `<div class="liste">${falsch.map(x => `<div><b>${esc(x.frage)} = ${esc(x.loesung)}</b> <small>Du hattest: ${esc(x.eingabe)}${x.erklaerung ? ' · ' + esc(x.erklaerung) : ''}</small></div>`).join('')}</div>` : ''}
+          ${falsch.length ? `<div class="liste">${falsch.map(x => `<div><b>${esc(x.frage)}${x.eigen ? ' → ' : ' = '}${esc(x.loesung)}</b> <small>Du hattest: ${esc(x.eingabe)}${x.erklaerung ? ' · ' + esc(x.erklaerung) : ''}</small></div>`).join('')}</div>` : ''}
           <div class="zeile"><button type="button" class="btn p" data-nochmal>🔄 Nochmal</button><button type="button" class="btn" data-ende>Andere Stufe</button></div></div>`;
       S.stufe = null;
       root.dataset.letzte = st.training ? '#fehler' : st.id;
@@ -323,7 +338,7 @@
       if (t.hasAttribute('data-nochmal')) return root.dataset.letzte === '#fehler' ? starteFehlerTraining() : starteRunde(root.dataset.letzte);
       if (t.hasAttribute('data-weiter')) return weiter();
       if (t.hasAttribute('data-tipp')) { S.tipp = true; return zeigeAufgabe(); }
-      if (t.hasAttribute('data-vor')) return sprich(S.aufgaben[S.nr].frage);
+      if (t.hasAttribute('data-vor')) { const a = S.aufgaben[S.nr]; return sprich(a.ton || a.frage, a.sprache); }
       if (t.dataset.wahl !== undefined) { if (!S.gesperrt) pruefen(t.dataset.wahl); return; }
       if (t.dataset.feld !== undefined) { S.feld = Number(t.dataset.feld); const a = S.aufgaben[S.nr]; root.querySelector('.ant').innerHTML = feldHTML(a); return; }
       if (t.dataset.k) taste(t.dataset.k);
@@ -333,7 +348,7 @@
       const w = root.querySelector('[data-weiter]');
       if (w && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); return weiter(); }
       const a = S.aufgaben[S.nr];
-      if (!a || S.gesperrt) return;
+      if (!a || S.gesperrt || a.art === 'eigen' || /^(INPUT|TEXTAREA)$/.test((e.target || {}).tagName || '')) return;   // eigene Felder tippen selbst
       if (a.art === 'rest' && (e.key === 'Tab' || e.key === 'ArrowRight' || e.key === 'ArrowLeft')) { e.preventDefault(); S.feld = 1 - S.feld; root.querySelector('.ant').innerHTML = feldHTML(a); return; }
       const k = e.key === 'Enter' ? 'ok' : e.key === 'Backspace' ? 'weg' : e.key === '-' ? '−' : e.key === '.' ? ',' : e.key;
       if (/^[0-9]$/.test(k) || ['ok', 'weg', '−', ',', '/'].includes(k)) { e.preventDefault(); taste(k); }
@@ -346,7 +361,12 @@
     zeigeStart();
     // Direktstart (Etappe 8, z. B. aus „Heute für dich“): ?stufe=ID öffnet gleich eine Runde, wenn frei
     const direkt = URLP.get('stufe');
-    if (direkt && alle.some(x => x.id === direkt)) starteRunde(direkt);
+    if (direkt) {
+      // Parameter gleich wieder aus der Adresse nehmen – sonst speichert navbar.js das Ergebnis unter
+      // einem anderen Schlüssel (…&stufe=…) und Sterne/Dorf-Aufträge der App zählen nicht
+      try { const u = new URL(location.href); u.searchParams.delete('stufe'); history.replaceState(history.state, '', u.pathname + u.search + u.hash); } catch (e) {}
+      if (alle.some(x => x.id === direkt)) starteRunde(direkt);
+    }
     return { neu: zeigeStart };
   }
 

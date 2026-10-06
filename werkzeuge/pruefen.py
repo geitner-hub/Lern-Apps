@@ -25,7 +25,8 @@
 #   10. Kopfrechnen (Etappe 4): Stufen in daten/kopfrechnen.json stehen im Katalog und nutzen
 #       nur Generatoren, die es in gemeinsam/generatoren-mathe.js gibt.
 #
-#  Spätere Etappen ergänzen hier: Inhaltsdateien (Etappe 9).
+#   12. Inhaltsdateien (Etappe 9): daten/inhalte/<fach>/<Themen-ID>.json passen zu ihrem Typ und zum Katalog;
+#       Einträge in config.json für apps/typen/uebung.html?inhalt=… haben eine Inhaltsdatei.
 # ═══════════════════════════════════════════════════════
 import gzip, json, os, re, sys
 from pathlib import Path
@@ -275,6 +276,79 @@ for p in sorted(ROOT.glob('daten/vokabeln*.json')):
             if not t: H(f'{rel(p)}: {gruppe}.{k} hat keine Themen-ID (Feld thema)')
             elif katalog is not None and t not in ids: F(f'{rel(p)}: {gruppe}.{k} nennt unbekannte Themen-ID {t}')
 
+# ── 12. Inhaltsdateien des Aufgabentyp-Baukastens (Etappe 9) ──
+#  daten/inhalte/<fach>/<Themen-ID>.json, gezeigt von apps/typen/uebung.html?inhalt=<Themen-ID>.
+#  Format je Typ: Kopf der Datei gemeinsam/typen/<typ>.js.
+_tj = lies('gemeinsam/typen.js') if Path('gemeinsam/typen.js').is_file() else ''
+_m = re.search(r"const NAMEN = \[(.*?)\];", _tj)
+TYPEN = re.findall(r"'([a-z]+)'", _m.group(1)) if _m else []
+if _tj and not TYPEN: F('gemeinsam/typen.js: Liste NAMEN nicht gefunden')
+for t in TYPEN:
+    if not Path(f'gemeinsam/typen/{t}.js').is_file(): F(f'Aufgabentyp {t}: gemeinsam/typen/{t}.js fehlt')
+def _texte(l, n=1): return isinstance(l, list) and len(l) >= n and all(isinstance(x, str) and x.strip() for x in l)
+inhalt_ids = set()
+for p in sorted(ROOT.glob('daten/inhalte/*/*.json')):
+    r = rel(p)
+    try: d = json.loads(p.read_text(encoding='utf-8'))
+    except Exception: continue                                   # Gültigkeit prüft Abschnitt 1
+    tid, typ = d.get('thema'), d.get('typ')
+    def FI(msg): F(f'{r}: {msg}')
+    if typ not in TYPEN: FI(f'unbekannter Typ „{typ}“ (erlaubt: {", ".join(TYPEN)})')
+    if tid != p.stem: FI(f'thema „{tid}“ muss gleich dem Dateinamen sein')
+    if not str(tid or '').startswith(p.parent.name + '.'): FI(f'thema muss mit dem Ordner „{p.parent.name}.“ beginnen')
+    inhalt_ids.add(p.stem)
+    if katalog is not None and tid not in ids: FI(f'Themen-ID {tid} fehlt in daten/katalog.json')
+    if not d.get('titel'): FI('titel fehlt')
+    if not isinstance(d.get('klasse'), int): FI('klasse fehlt')
+    stufen = d.get('stufen')
+    if not isinstance(stufen, list) or not stufen: FI('keine stufen'); continue
+    for st in stufen:
+        sid = st.get('id') if isinstance(st, dict) else None
+        wo = f'Stufe {sid}'
+        if not sid or not str(sid).startswith(str(tid) + '.'): FI(f'{wo}: id muss mit „{tid}.“ beginnen'); continue
+        if katalog is not None and sid not in ids: FI(f'{wo} fehlt in daten/katalog.json')
+        if not st.get('titel'): FI(f'{wo}: titel fehlt')
+        auf = st.get('aufgaben')
+        if typ == 'zuordnen':
+            paare = [q for x in (auf or []) for q in (x.get('paare') or [])] if auf is not None else st.get('paare') or []
+            if auf is not None and not all(isinstance(x, dict) and len(x.get('paare') or []) >= 2 for x in auf): FI(f'{wo}: jede Aufgabe braucht mindestens 2 paare')
+            if len(paare) < 2 or not all(_texte(q, 2) and len(q) == 2 for q in paare): FI(f'{wo}: paare müssen [links, rechts] sein (mindestens 2)')
+            elif st.get('ziele') and any(q[1] not in st['ziele'] for q in paare): FI(f'{wo}: ein Paar zeigt auf ein Ziel, das nicht in ziele steht')
+        elif typ == 'sortieren':
+            if not auf or not all(isinstance(x, dict) and _texte(x.get('teile'), 2) for x in auf): FI(f'{wo}: aufgaben mit mindestens 2 teilen nötig')
+        elif typ == 'lueckentext':
+            for x in auf or [None]:
+                if not isinstance(x, dict) or not re.search(r'_{2,}', str(x.get('text', ''))) or not x.get('antwort'):
+                    FI(f'{wo}: jede Aufgabe braucht text mit ___ und antwort'); break
+                ant = x['antwort'] if isinstance(x['antwort'], list) else [x['antwort']]
+                if x.get('optionen') and not any(a in x['optionen'] for a in ant): FI(f'{wo}: Antwort „{ant[0]}“ fehlt in optionen')
+        elif typ == 'eingabe':
+            if not auf or not all(isinstance(x, dict) and x.get('frage') and x.get('antwort') not in (None, '', []) for x in auf): FI(f'{wo}: jede Aufgabe braucht frage und antwort')
+        elif typ == 'beschriften':
+            if not (p.parent / str(st.get('bild', ''))).is_file(): FI(f'{wo}: Bild {st.get("bild")} fehlt neben der Inhaltsdatei')
+            m_ = st.get('marken') or []
+            if len(m_) < 2 or not all(isinstance(x, dict) and x.get('wort') and 0 <= float(x.get('x', -1)) <= 100 and 0 <= float(x.get('y', -1)) <= 100 for x in m_):
+                FI(f'{wo}: mindestens 2 marken mit x, y (0–100) und wort')
+        elif typ == 'bildwort':
+            w_ = st.get('woerter') or []
+            if len(w_) < 4 or not all(isinstance(x, dict) and x.get('bild') and x.get('wort') for x in w_): FI(f'{wo}: mindestens 4 woerter mit bild und wort')
+# Katalog und config.json zeigen auf vorhandene Inhalte
+if katalog is not None:
+    for f in katalog.get('faecher', []):
+        for b in f.get('bereiche', []):
+            for th in b.get('themen', []):
+                q = th.get('quelle') or {}
+                if q.get('app') == 'apps/typen/uebung.html' and q.get('parameter') != 'inhalt=' + th['id']:
+                    F(f'Katalog: {th["id"]} – Quelle uebung.html braucht parameter „inhalt={th["id"]}“')
+                if q.get('app') == 'apps/typen/uebung.html' and th['id'] not in inhalt_ids:
+                    F(f'Katalog: {th["id"]} – Inhaltsdatei daten/inhalte/{th["id"].split(".")[0]}/{th["id"]}.json fehlt')
+for a in config.get('apps', []):
+    d = str(a.get('datei') or '')
+    if d.split('?')[0] == 'apps/typen/uebung.html':
+        m_ = re.search(r'[?&]inhalt=([a-z0-9.-]+)', d)
+        if not m_ or m_.group(1) not in inhalt_ids: F(f'config.json: „{a.get("name", "?")}“ – zu {d} gibt es keine Inhaltsdatei')
+I(f'Aufgabentypen: {len(TYPEN)} Typen, {len(inhalt_ids)} Inhaltsdateien')
+
 # ── 7. Budgets ──────────────────────────────────────────
 def groesse(d):
     p = Path(d)
@@ -309,7 +383,7 @@ for p in ALLE:
 # ── Hinweise ────────────────────────────────────────────
 for p in sorted(list(ROOT.glob('apps/*/*.html')) + list(ROOT.glob('spiele/*.html'))):
     r = rel(p)
-    if r.startswith('apps/vorlage/') or 'LW-WEITERLEITUNG' in p.read_text(encoding='utf-8'): continue
+    if r.startswith('apps/vorlage/') or r.startswith('apps/typen/') or 'LW-WEITERLEITUNG' in p.read_text(encoding='utf-8'): continue
     if r not in config_dateien: H(f'{r} steht nicht in config.json (nicht auf der Startseite)')
 
 # ── Ausgabe ─────────────────────────────────────────────

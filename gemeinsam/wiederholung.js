@@ -22,7 +22,7 @@
   if (window.LernWiederholung) return;
 
   // Engine-Apps, die mit ?stufe=ID direkt eine Runde starten (ueben.js)
-  const DIREKT = ['apps/mathe/kopfrechnen.html', 'apps/mathe/mathe-trainer.html'];
+  const DIREKT = ['apps/mathe/kopfrechnen.html', 'apps/mathe/mathe-trainer.html', 'apps/typen/uebung.html'];
 
   const tag = d => new Date(d + 'T12:00:00').getTime();
   function heute() {

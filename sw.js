@@ -14,7 +14,7 @@
 //  und teilen sich den Offline-Speicher. Deshalb hat jede Umgebung ihr
 //  eigenes Präfix und räumt nur ihre eigenen Speicher auf.
 // ═══════════════════════════════════════════════════════
-const VERSION = 'v33';  // v33: Gruppen-Auswertung, Admin ohne Link-Check und Vokabel-Tab
+const VERSION = 'v34';  // v34: Infrastruktur Etappe 9 (Aufgabentyp-Baukasten)
 const PRAEFIX = /\/[^/]*-test\/$/i.test(new URL(self.registration.scope).pathname) ? 'lwtest-v' : 'lernwelt-v';
 const CACHE   = PRAEFIX + VERSION.replace(/^v/, '');        // z. B. 'lernwelt-v24' (Format wie bisher)
 
@@ -39,7 +39,21 @@ const NACHLADEN = ['spiele/runner.html', 'spiele/burg-verteidigung.html', 'spiel
                    'gemeinsam/avatar3d.js', 'gemeinsam/chest3d.js', 'gemeinsam/dorf-szene.js', 'gemeinsam/qrcode.js',
                    'vendor/three.min.js', 'vendor/jsQR.min.js',
                    'daten/vokabeln5.json', 'daten/vokabeln6.json', 'daten/woerter-en.json', 'daten/kitchen-chaos.json',
-                   'daten/karten.json', 'daten/expedition.json'];
+                   'daten/karten.json', 'daten/expedition.json',
+                   // Aufgabentyp-Baukasten (Etappe 9): Seite, Rahmen, Typen, Inhalte
+                   'apps/typen/uebung.html', 'gemeinsam/typen.js',
+                   'gemeinsam/typen/zuordnen.js', 'gemeinsam/typen/sortieren.js', 'gemeinsam/typen/lueckentext.js',
+                   'gemeinsam/typen/eingabe.js', 'gemeinsam/typen/beschriften.js', 'gemeinsam/typen/bildwort.js',
+                   'daten/inhalte/de/de.5.wortarten.json',
+                   'daten/inhalte/en/en.5.essen-bildwort.json',
+                   'daten/inhalte/en/en.5.satzbau.json',
+                   'daten/inhalte/en/en.5.satzglieder-zuordnen.json',
+                   'daten/inhalte/en/en.5.simple-present-luecken.json',
+                   'daten/inhalte/gpg/gpg.5.regeln-zuordnen.json',
+                   'daten/inhalte/ma/ma.5.laengen-eingabe.json',
+                   'daten/inhalte/nut/bluete.svg',
+                   'daten/inhalte/nut/nut.5.pflanze.json',
+                   'daten/inhalte/nut/pflanze.svg'];
 const NACHLADEN_PAUSE_MS = 400;   // Pause zwischen zwei Dateien
 const NACHLADEN_MAX_MS   = 25000; // pro Anstoß höchstens so lange (iOS beendet Hintergrundarbeit sonst)
 const FEST = /\/(vendor|fonts|icons)\//;      // ändern sich (fast) nie

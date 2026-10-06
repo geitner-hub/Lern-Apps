@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<script src="../../gemeinsam/umgebung.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Übung – Lernwelt</title>
+<!--
+  ═══════════════════════════════════════════════
+   Aufgabentyp-Baukasten (Infrastruktur Etappe 9): EINE Seite für alle Inhaltsdateien.
+     uebung.html?inhalt=de.5.wortarten   → daten/inhalte/de/de.5.wortarten.json
+   Der Typ (zuordnen, sortieren, lueckentext, eingabe, beschriften, bildwort) steht in der Datei,
+   der Code des Typs in gemeinsam/typen/<typ>.js. Neue App = Inhaltsdatei + Katalog + Admin-Eintrag.
+  ═══════════════════════════════════════════════
+-->
+<link rel="stylesheet" href="../../gemeinsam/fonts.css">
+<style>
+  html, body { margin: 0; background: #0f0e1a; }
+  #app { padding-top: env(safe-area-inset-top, 0px); }
+  .laden { color: rgba(241,240,251,.6); font: 800 1rem 'Nunito', system-ui, sans-serif; text-align: center; padding: 4rem 1rem; }
+</style>
+</head>
+<body>
+<div id="app"><p class="laden">⏳ Einen Moment …</p></div>
+
+<script src="../../gemeinsam/freigabe.js"></script>
+<script src="../../gemeinsam/ueben.js"></script>
+<script src="../../gemeinsam/typen.js"></script>
+<script>
+  LernTypen.start(document.getElementById('app'));
+</script>
+<script src="../../gemeinsam/navbar.js"></script>
+</body>
+</html>

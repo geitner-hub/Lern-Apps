@@ -16,7 +16,8 @@ sw.js                 Offline-Speicher – muss im Hauptordner liegen
 manifest.webmanifest  App-Symbol (Anleitung: APP-SYMBOL.md)
 
 apps/mathe/  apps/englisch/  apps/gpg/   Lern-Apps nach Fach
-apps/vorlage/app-template.html          Vorlage für neue Apps
+apps/vorlage/app-template.html          Vorlage für eigene Apps (erst prüfen, ob ein Aufgabentyp reicht!)
+apps/typen/uebung.html                  Aufgabentyp-Baukasten: eine Seite für alle Inhaltsdateien (Etappe 9)
 spiele/               RUN!, Tower Defense, Mein Dorf (dorf.html), Tauziehen-Duell (tauziehen.html), Wort des Tages (wort-des-tages.html),
                       Zauberwort (zauberwort.html), Kitchen-Chaos (kitchen-chaos.html),
                       Entdecker-Expedition (expedition.html)
@@ -25,12 +26,15 @@ daten/                katalog.json (Inhalts-Katalog mit Themen-IDs), vokabeln5.j
                       kitchen-chaos.json (Schauplätze, Zutaten, Satzrahmen, Stufen)
                       karten.json (Europa- und Deutschlandkarte, für Länder-Finder und Expedition)
                       expedition.json (Hauptstädte, Nachbarn, Kartenmitten)
+daten/inhalte/<fach>/ Inhaltsdateien des Baukastens (<Themen-ID>.json) und ihre Bilder (SVG)
 gemeinsam/            Code, den alle Seiten nutzen (siehe unten)
 gemeinsam/admin/      Module des Admins (admin.html lädt sie in fester Reihenfolge, Etappe 6)
+gemeinsam/typen/      Die sechs Aufgabentypen (zuordnen, sortieren, lueckentext, eingabe, beschriften, bildwort)
 fonts/ icons/ vendor/ Schriften, Symbole, fremde Bibliotheken
 cloudflare/           Worker-Quelltext und Anleitung
 werkzeuge/            Prüfskript (pruefen.py), Inventar (inventar.py → INVENTAR.md),
-                      Rauchtest (RAUCHTEST.md), Testumgebung (TESTUMGEBUNG.md)
+                      Rauchtest (RAUCHTEST.md), Testumgebung (TESTUMGEBUNG.md),
+                      Vorlage für neue Inhalte (INHALT-PROMPT.md)
 .github/workflows/    pruefen.yml – lässt pruefen.py bei jedem Upload laufen (grüner Haken / rotes Kreuz)
 ```
 
@@ -61,6 +65,10 @@ in einen anderen Ordner umziehen, ohne dass Fortschritt verloren geht (dann `con
 über den Admin und die Liste in `404.html` anpassen).
 
 ## Neue App einpflegen
+
+**Zuerst prüfen, ob ein Aufgabentyp reicht** (Abschnitt „Aufgabentyp-Baukasten“): Zuordnen, Sortieren, Lückentext,
+Eingabe, Beschriften oder Bild-Wort. Dann ist eine neue App nur eine Inhaltsdatei. Eine eigene App lohnt sich nur
+für Spiele und besondere Mechaniken (Karte antippen, Zeichnen, Bewegung …):
 
 1. Vorlage `apps/vorlage/app-template.html` in den Fach-Ordner kopieren, z. B.
    `apps/mathe/meine-app.html`. Einbinden (für `apps/<fach>/`):
@@ -209,6 +217,49 @@ Sicherungskarte verbunden ist – aus der **Kartengruppe** (der Sync-Worker schi
   wird nicht gespeichert; keine Namen, keine Einzelstände. Der Admin zeigt Runden, Aufgaben und % richtig, die
   schwächsten Themen zuerst, mit Hinweis bei Gruppen unter 5 Karten. Wochen älter als 200 Tage löscht der Cron;
   mit der Gruppe verschwinden auch ihre Zahlen. Ohne Karte wird nichts gemeldet.
+
+## Aufgabentyp-Baukasten (Infrastruktur Etappe 9)
+
+Eine neue App = **Inhaltsdatei + Katalog-Eintrag + Admin-Eintrag**. Kein neuer Code.
+
+1. **Inhaltsdatei** `daten/inhalte/<fach>/<Themen-ID>.json` anlegen (Fach-Ordner = erster Teil der ID: `de`, `nut`,
+   `en`, `ma`, `gpg` …). Gleicher Kopf für alle Typen:
+   `{ "typ", "thema", "titel", "emoji"?, "untertitel"?, "klasse", "anweisung"?, "sprache"?, "runde"?, "stufen": [ { "id", "titel", "kurz"?, … } ] }`.
+   Stufen-IDs beginnen mit der Themen-ID (`de.5.wortarten.drei`). Was je Typ in einer Stufe steht:
+
+   | Typ | Stufe enthält | Bedienung | Beispiel |
+   |---|---|---|---|
+   | `zuordnen` | `aufgaben: [{ frage?, paare: [[links, rechts]] }]` **oder** Pool `paare` + `proAufgabe`; optional `ziele` | Teil antippen, dann Ziel | `de.5.wortarten`, `gpg.5.regeln-zuordnen`, `en.5.satzglieder-zuordnen` |
+   | `sortieren` | `aufgaben: [{ teile: [in richtiger Reihenfolge], loesung? }]`, optional `trenner` | Teile der Reihe nach antippen | `en.5.satzbau` |
+   | `lueckentext` | `aufgaben: [{ text: "He ___ …", antwort, optionen? }]` | Antippen (mit optionen) oder tippen | `en.5.simple-present-luecken` |
+   | `eingabe` | `aufgaben: [{ frage, antwort, einheit? }]` | Zahl → Zifferntastatur, sonst Textfeld | `ma.5.laengen-eingabe` |
+   | `beschriften` | `bild: "datei.svg"`, `marken: [{ x, y (Prozent), wort }]` | markierten Teil benennen (4 Begriffe) | `nut.5.pflanze` |
+   | `bildwort` | `woerter: [{ bild (Emoji oder Datei), wort, de? }]`, `richtung`: bild-wort · wort-bild · hoeren | Bild/Wort antippen, 🔊 in `sprache` | `en.5.essen-bildwort` |
+
+   Jede Aufgabe darf `tipp` und `erklaerung` haben (💡 und Erklärung nach falscher Antwort). Genaues Format: Kopf von
+   `gemeinsam/typen/<typ>.js`. **Bilder:** Emojis (laufen überall, keine Lizenz) oder selbst gezeichnete SVG-Dateien
+   neben der Inhaltsdatei; fremde Bilder nur mit freier Lizenz (CC0) und lokal, nie von fremden Servern.
+2. **Katalog:** Thema mit `quelle: { "app": "apps/typen/uebung.html", "parameter": "inhalt=<Themen-ID>" }` und allen
+   Stufen eintragen (wie die acht Beispiele in `daten/katalog.json`), mit `lehrplan`, `dauer`, `einsatz`.
+3. **Admin:** neue App mit Datei `apps/typen/uebung.html?inhalt=<Themen-ID>`.
+4. `python3 werkzeuge/pruefen.py` prüft jede Inhaltsdatei gegen ihren Typ, gegen den Katalog und die Einträge in
+   config.json. Neue Inhaltsdateien zusätzlich in `sw.js` → `NACHLADEN` eintragen (offline).
+
+**Was jeder Inhalt automatisch hat:** Stufenwahl, Rückmeldung mit Erklärung, Meisterschaft (⭐), Freigabe (erscheint
+selbst im Admin unter „🎯 Unterricht“), Wiederholung, Fehler-Training, Infokarte, Dorf-Aufträge, Gruppen-Auswertung.
+
+- **Technik:** `apps/typen/uebung.html?inhalt=ID` → `gemeinsam/typen.js` (`LernTypen`) lädt die Inhaltsdatei und den
+  Typ (`LW.laden('gemeinsam/typen/<typ>.js')`) und startet `LernUeben.start`. Typen nutzen die Aufgabenart `eigen` des
+  Übungs-Rahmens (zeichnen ihre Bedienung selbst) bzw. `wahl`/`zahl`. Neuer Typ = neue Datei in `gemeinsam/typen/`
+  + Name in `NAMEN` in typen.js + Prüfung in pruefen.py (Abschnitt 12).
+- **Inhalte von Claude erzeugen lassen:** Vorlage `werkzeuge/INHALT-PROMPT.md`.
+- **Überführt (alte Apps bleiben vorerst, bis die neuen getestet sind):** Regeln-Sortierer → `gpg.5.regeln-zuordnen`
+  (Zuordnen – inhaltlich eine Kategorien-Zuordnung), Satzglieder erkennen → `en.5.satzglieder-zuordnen` und
+  `en.5.satzbau` (Sortieren, mit den Satzbau-Aufgaben aus Simple Present), Simple Present → `en.5.simple-present-luecken`,
+  Längeneinheiten (Teil) → `ma.5.laengen-eingabe`. Neu: `de.5.wortarten` (Deutsch), `nut.5.pflanze` (Natur und Technik),
+  `en.5.essen-bildwort`. In den Satzglieder-Sätzen steht jetzt der Ort vor der Zeit („place before time“).
+- **Länder-Finder** bleibt eigener Typ (Karte antippen) und ist an den Rahmen angeschlossen: Modi = Stufen
+  `gpg.6.laender.europa` / `.bundeslaender` (Freigabe mit 🔒, Ergebnis mit Themen-ID).
 
 ## Vokabel-Engine (Infrastruktur Etappe 5)
 

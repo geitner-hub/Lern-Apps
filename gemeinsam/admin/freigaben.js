@@ -12,11 +12,12 @@
 //
 //  Reihen = Inhalte, deren App die Freigabe schon auswertet (Übungs-Rahmen): Stufen aus
 //  daten/kopfrechnen.json und die Units/Listen des Vokabeltrainers aus dem Katalog.
-//  Neue Engine-Apps (Etappe 9) kommen in FR_KATALOG_REIHEN dazu.
+//  Inhalte des Aufgabentyp-Baukastens (Etappe 9) erscheinen automatisch; andere Apps mit Stufen in FR_KATALOG_REIHEN.
 // ═══════════════════════════════════════════════════════
 'use strict';
 
-const FR_KATALOG_REIHEN = ['en.5.vok', 'en.5.wortlisten', 'en.6.vok'];
+const FR_KATALOG_REIHEN = ['en.5.vok', 'en.5.wortlisten', 'en.6.vok', 'gpg.6.laender'];
+const FR_BAUKASTEN = 'apps/typen/uebung.html';          // Etappe 9: jeder Inhalt des Baukastens ist automatisch eine Reihe
 const FR_APP_NAMEN = { kopfrechnen: '🧮', trainer: '📐' };
 const FR = { wer: 'alle', offen: '', reihen: null, gruppen: null, gruppenFehler: '' };
 
@@ -92,9 +93,11 @@ async function frReihenLaden() {
     const K = window.LernKatalog;
     if (K) {
       await Promise.race([K.bereit, new Promise(r => setTimeout(r, 4000))]);
-      FR_KATALOG_REIHEN.forEach(id => {
+      const baukasten = K.themen({ nurOben: true }).filter(t => t.quelle && t.quelle.app === FR_BAUKASTEN).map(t => t.id);
+      FR_KATALOG_REIHEN.concat(baukasten).forEach(id => {
         const t = K.thema(id);
-        if (t) reihen.push({ id, titel: '🇬🇧 ' + t.titel, klasse: t.klasse, stufen: K.stufen(id).map(s => ({ id: s.id, titel: String(s.titel).replace(t.titel + ' – ', ''), kurz: '' })) });
+        const ic = { en: '🇬🇧', gpg: '🌍', de: '📝', nut: '🌱', ma: '📏' }[id.split('.')[0]] || '📘';
+        if (t) reihen.push({ id, titel: ic + ' ' + t.titel, klasse: t.klasse, stufen: K.stufen(id).map(s => ({ id: s.id, titel: String(s.titel).replace(t.titel + ' – ', ''), kurz: '' })) });
       });
     }
   } catch (e) { console.warn('[Freigaben] Katalog', e); }

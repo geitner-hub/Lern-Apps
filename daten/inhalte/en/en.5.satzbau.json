@@ -1,0 +1,168 @@
+{
+ "typ": "sortieren",
+ "thema": "en.5.satzbau",
+ "titel": "Sätze bauen",
+ "emoji": "🧱",
+ "klasse": 5,
+ "untertitel": "Bring die Wörter in die richtige Reihenfolge",
+ "anweisung": "Tippe die Satzteile in der richtigen Reihenfolge an.",
+ "runde": 6,
+ "stufen": [
+  {
+   "id": "en.5.satzbau.svo",
+   "titel": "Subject – Verb – Object",
+   "kurz": "Kurze Sätze",
+   "tipp": "Im Englischen: Subject – Verb – Object.",
+   "aufgaben": [
+    {
+     "teile": [
+      "Tom",
+      "eats",
+      "pizza"
+     ],
+     "loesung": "Tom eats pizza."
+    },
+    {
+     "teile": [
+      "she",
+      "reads",
+      "a book"
+     ],
+     "loesung": "She reads a book."
+    },
+    {
+     "teile": [
+      "they",
+      "play",
+      "football"
+     ],
+     "loesung": "They play football."
+    },
+    {
+     "teile": [
+      "the cat",
+      "drinks",
+      "milk"
+     ],
+     "loesung": "The cat drinks milk."
+    },
+    {
+     "teile": [
+      "my sister",
+      "likes",
+      "music"
+     ],
+     "loesung": "My sister likes music."
+    },
+    {
+     "teile": [
+      "we",
+      "do",
+      "our homework"
+     ],
+     "loesung": "We do our homework."
+    }
+   ]
+  },
+  {
+   "id": "en.5.satzbau.zeit-ort",
+   "titel": "Mit Zeit und Ort",
+   "kurz": "Längere Sätze",
+   "tipp": "Place (wo?) kommt vor Time (wann?).",
+   "aufgaben": [
+    {
+     "teile": [
+      "I",
+      "play",
+      "football",
+      "in the park"
+     ],
+     "loesung": "I play football in the park."
+    },
+    {
+     "teile": [
+      "she",
+      "often",
+      "watches",
+      "TV",
+      "in the evening"
+     ],
+     "loesung": "She often watches TV in the evening."
+    },
+    {
+     "teile": [
+      "we",
+      "do",
+      "our homework",
+      "at home"
+     ],
+     "loesung": "We do our homework at home."
+    },
+    {
+     "teile": [
+      "he",
+      "eats",
+      "pizza",
+      "on Friday"
+     ],
+     "loesung": "He eats pizza on Friday."
+    },
+    {
+     "teile": [
+      "they",
+      "learn",
+      "English",
+      "at school"
+     ],
+     "loesung": "They learn English at school."
+    },
+    {
+     "teile": [
+      "the dog",
+      "sleeps",
+      "in the garden"
+     ],
+     "loesung": "The dog sleeps in the garden."
+    },
+    {
+     "teile": [
+      "she",
+      "reads",
+      "a book",
+      "every day"
+     ],
+     "loesung": "She reads a book every day."
+    },
+    {
+     "teile": [
+      "he",
+      "drinks",
+      "milk",
+      "in the morning"
+     ],
+     "loesung": "He drinks milk in the morning."
+    },
+    {
+     "teile": [
+      "Tom",
+      "plays",
+      "basketball",
+      "in the park",
+      "on Saturdays"
+     ],
+     "loesung": "Tom plays basketball in the park on Saturdays."
+    },
+    {
+     "teile": [
+      "the family",
+      "visits",
+      "grandma",
+      "in the village",
+      "on Sundays"
+     ],
+     "loesung": "The family visits grandma in the village on Sundays."
+    }
+   ]
+  }
+ ]
+}
