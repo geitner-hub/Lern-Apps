@@ -14,7 +14,7 @@
 //  und teilen sich den Offline-Speicher. Deshalb hat jede Umgebung ihr
 //  eigenes Präfix und räumt nur ihre eigenen Speicher auf.
 // ═══════════════════════════════════════════════════════
-const VERSION = 'v36';  // v36: je ein Vokabeltrainer pro Klasse (Engine), vokabeltrainer5/6 leiten weiter
+const VERSION = 'v37';  // v37: Länder-Finder mit Weltkarte (Equal Earth): Asien/Ozeanien, Afrika, Amerika; ein Europa-Modus
 const PRAEFIX = /\/[^/]*-test\/$/i.test(new URL(self.registration.scope).pathname) ? 'lwtest-v' : 'lernwelt-v';
 const CACHE   = PRAEFIX + VERSION.replace(/^v/, '');        // z. B. 'lernwelt-v24' (Format wie bisher)
 
@@ -40,6 +40,8 @@ const NACHLADEN = ['spiele/runner.html', 'spiele/burg-verteidigung.html', 'spiel
                    'vendor/three.min.js', 'vendor/jsQR.min.js',
                    'daten/vokabeln5.json', 'daten/vokabeln6.json', 'daten/woerter-en.json', 'daten/kitchen-chaos.json',
                    'daten/karten.json', 'daten/expedition.json',
+                   // Weltkarte in Equal Earth (Neue Lern-Apps Etappe 1–2): Daten, Projektion, d3-geo
+                   'daten/welt.json', 'gemeinsam/welt-karte.js', 'vendor/d3-geo.min.js',
                    'apps/mathe/laengeneinheiten.html',
                    // Aufgabentyp-Baukasten (Etappe 9): Seite, Rahmen, Typen (Inhalte aus daten/inhalte/ hier ergänzen)
                    'apps/typen/uebung.html', 'gemeinsam/typen.js',

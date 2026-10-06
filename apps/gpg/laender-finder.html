@@ -8,16 +8,18 @@
   <!--
   ═══════════════════════════════════════════════
    LERNWELT – Länder-Finder (GPG)
-   Länder Europas bzw. Bundesländer auf der Karte finden.
+   Bundesländer, Länder Europas und Länder der anderen Kontinente auf der Karte finden.
 
    Modi (Auswahl in der App):
-     Europa Start  – 15 aus 24 bekannten Ländern
-     Europa Profi  – 15 aus allen 39 Ländern
-     Deutschland     – alle 16 Bundesländer; Fehler kommen am Ende wieder
+     Deutschland        – alle 16 Bundesländer; Fehler kommen am Ende wieder
+     Europa             – 15 aus 39 Ländern, die bekannten kommen öfter dran
+                          (ersetzt „Europa Start“ und „Europa Profi“, deren Bestwerte zählen weiter)
+     Asien und Ozeanien, Afrika, Amerika – je 15 Länder auf der Weltkarte (Equal Earth)
 
-   Kartendaten: Natural Earth (gemeinfrei, naturalearthdata.com),
-   vereinfacht und direkt eingebettet → läuft offline, keine externen Dienste.
-   Länderlisten anpassen: siehe MODI unten im Skript.
+   Kartendaten: Natural Earth (gemeinfrei, naturalearthdata.com), vereinfacht → läuft offline,
+   keine externen Dienste. Europa/Deutschland: daten/karten.json. Weltkarte: daten/welt.json,
+   Projektion Equal Earth über gemeinsam/welt-karte.js (d3-geo, lokal in vendor/).
+   Länderlisten: Europa unten im Skript (MODI), Kontinente in daten/welt.json (modi → liste).
   ═══════════════════════════════════════════════
   -->
   <link rel="stylesheet" href="../../gemeinsam/fonts.css">
@@ -84,6 +86,8 @@
     .mode-map .land { fill: var(--land); stroke: var(--land-st); stroke-width: .6px; vector-effect: non-scaling-stroke; }
     .mode-map .land.pool { fill: var(--indigo2); }
     .mode-map .land.ctx { fill: var(--ctx); }
+    .mode-map .kugel { fill: rgba(129,140,248,.08); }
+    .mode-laedt { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); font-weight: 800; font-size: .85rem; }
     .mode-map .grat { display: none; }
     .mode-txt { padding: .9rem 1rem 1.05rem; display: flex; flex-direction: column; gap: .25rem; justify-content: center; }
     .mode-name { font-family: 'Fredoka One', 'Nunito', sans-serif; font-size: 1.35rem; color: var(--text); }
@@ -118,6 +122,7 @@
       touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;
     }
     #map { width: 100%; height: 100%; display: block; }
+    .kugel { fill: rgba(129,140,248,.07); stroke: rgba(129,140,248,.25); stroke-width: 1px; vector-effect: non-scaling-stroke; }
     .grat { fill: none; stroke: rgba(129,140,248,.13); stroke-width: 1px; vector-effect: non-scaling-stroke; pointer-events: none; }
     .land {
       fill: var(--land); stroke: var(--land-st); stroke-width: .9px; vector-effect: non-scaling-stroke;
@@ -235,6 +240,7 @@
 
 <script src="../../gemeinsam/navbar.js"></script>
 <script src="../../gemeinsam/karten-ansicht.js"></script>
+<script src="../../gemeinsam/welt-karte.js"></script>
 <script src="../../gemeinsam/freigabe.js"></script>
 <script src="../../gemeinsam/ueben.js"></script>   <!-- Etappe 9: Freigabe des Übungs-Rahmens (Modi = Stufen gpg.6.laender.*) -->
 <script>
@@ -244,28 +250,37 @@
    KARTENDATEN in daten/karten.json (Natural Earth, gemeinfrei; vorbereitet & vereinfacht)
    Format: { w, h, v: Kernausschnitt [x,y,w,h], g: Gradnetz, f: [{ id, n: Name, d: Pfad, c?: Kontext, h?: [[x,y,r],…] Tipphilfe }] }
    ═══════════════════════════════════════════════════════ */
-let MAPS = null;   // wird aus ../../daten/karten.json geladen (gemeinsam mit der Entdecker-Expedition)
+let MAPS = null;   // wird aus ../../daten/karten.json geladen (gemeinsam mit der Entdecker-Expedition);
+                   // die Weltkarten der Kontinent-Modi kommen danach aus LernWelt (daten/welt.json) dazu
+let WELT = null, WELT_FEHLER = false;
 
 /* ═══════════════════════════════════════════════════════
    MODI – hier Länderlisten anpassen (IDs = ISO-Codes aus den Kartendaten)
    ═══════════════════════════════════════════════════════ */
-const EUROPA_START = ['DEU','FRA','ITA','ESP','PRT','GBR','IRL','NLD','BEL','CHE','AUT','POL',
-                      'CZE','DNK','NOR','SWE','FIN','GRC','HUN','ROU','UKR','RUS','ISL','HRV'];
-const EUROPA_PROFI = EUROPA_START.concat(['ALB','BGR','BIH','BLR','CYP','EST','LTU','LUX','LVA',
+const EUROPA_BEKANNT = ['DEU','FRA','ITA','ESP','PRT','GBR','IRL','NLD','BEL','CHE','AUT','POL',
+                        'CZE','DNK','NOR','SWE','FIN','GRC','HUN','ROU','UKR','RUS','ISL','HRV'];
+const EUROPA_ALLE = EUROPA_BEKANNT.concat(['ALB','BGR','BIH','BLR','CYP','EST','LTU','LUX','LVA',
                       'MDA','MKD','MNE','SRB','SVK','SVN']);
 let BUNDESLAENDER = [];   // nach dem Laden aus den Kartendaten
 
+// welt: true → Karte und Länderliste aus daten/welt.json (gleicher Schlüssel wie dort unter modi)
 const MODI = {
-  'europa-start': { name: 'Europa Start', karte: 'europa', pool: EUROPA_START, anzahl: 15, wiederholen: false,
-                    desc: '15 Länder – die bekanntesten Länder Europas.' },
-  'europa-profi': { name: 'Europa Profi', karte: 'europa', pool: EUROPA_PROFI, anzahl: 15, wiederholen: false,
-                    desc: '15 Länder aus ganz Europa – auch die kleinen.' },
   'deutschland':  { name: 'Deutschland', karte: 'deutschland', pool: [], anzahl: 16, wiederholen: true,
                     desc: 'Alle 16 Bundesländer. Was nicht klappt, kommt am Ende noch einmal.' },
+  'europa':       { name: 'Europa', karte: 'europa', pool: EUROPA_ALLE, bekannt: EUROPA_BEKANNT, anzahl: 15, wiederholen: false,
+                    desc: '15 Länder aus ganz Europa – die bekannten kommen öfter dran.' },
+  'asien-ozeanien': { name: 'Asien und Ozeanien', welt: true, karte: 'asien-ozeanien', pool: [], anzahl: 15, wiederholen: false,
+                    desc: '15 Länder von der Türkei bis Neuseeland.' },
+  'afrika':       { name: 'Afrika', welt: true, karte: 'afrika', pool: [], anzahl: 15, wiederholen: false,
+                    desc: '15 Länder von Marokko bis Südafrika.' },
+  'amerika':      { name: 'Amerika', welt: true, karte: 'amerika', pool: [], anzahl: 15, wiederholen: false,
+                    desc: '15 Länder aus Nord-, Mittel- und Südamerika.' },
 };
 const WAIT_OK = 650, WAIT_BAD = 1800;
 // Anschluss an den Übungs-Rahmen (Etappe 9): Themen-ID je Modus → Freigabe, Ergebnis, Fehlerheft
-const THEMA = { 'europa-start': 'gpg.6.laender.europa', 'europa-profi': 'gpg.6.laender.europa', 'deutschland': 'gpg.6.laender.bundeslaender' };
+const THEMA = { 'deutschland': 'gpg.6.laender.bundeslaender', 'europa': 'gpg.6.laender.europa',
+                'asien-ozeanien': 'gpg.6.laender.asien-ozeanien', 'afrika': 'gpg.6.laender.afrika', 'amerika': 'gpg.6.laender.amerika' };
+const SKILL = { 'deutschland': 'bundeslaender', 'europa': 'europa-laender' };
 const frei = modus => !window.LernUeben || LernUeben.Freigabe.erlaubt(THEMA[modus]);
 const REDUCED = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -276,29 +291,27 @@ const $ = id => document.getElementById(id);
 const NS = 'http://www.w3.org/2000/svg';
 function nameOf(karte, id) { const f = MAPS[karte].f.find(x => x.id === id); return f ? f.n : ''; }
 
-function mapMarkup(karte, pool) {
-  const M = MAPS[karte], inPool = new Set(pool || []);
-  let s = `<path class="grat" d="${M.g}"/><g class="lands">`;
-  M.f.forEach(f => {
-    const cls = 'land' + (f.c ? ' ctx' : '') + (inPool.has(f.id) ? ' pool' : '');
-    s += `<path class="${cls}" data-id="${f.id}" d="${f.d}"/>`;
-  });
-  s += '</g><g class="hits">';
-  M.f.forEach(f => (f.h || []).forEach(h => { s += `<circle class="hit" data-id="${f.id}" cx="${h[0]}" cy="${h[1]}" r="${h[2]}"/>`; }));
-  return s + '</g>';
-}
+function mapMarkup(karte, pool) { return LernKarte.markup(MAPS[karte], pool); }
 
 /* ═══════════════════════════════════════════════════════
    STARTSEITE
    ═══════════════════════════════════════════════════════ */
 function bestFor(modus) {
-  try { const b = JSON.parse(localStorage.getItem('laender-finder-best') || '{}')[modus]; return b || null; }
+  try {
+    const all = JSON.parse(localStorage.getItem('laender-finder-best') || '{}');
+    if (all[modus]) return all[modus];
+    if (modus !== 'europa') return null;
+    // früher zwei Europa-Modi: der bessere Bestwert zählt weiter
+    const alt = ['europa-start', 'europa-profi'].map(k => all[k]).filter(Boolean)
+      .sort((a, b) => b.s / b.m - a.s / a.m);
+    return alt[0] || null;
+  }
   catch (e) { return null; }
 }
 function saveBest(modus, score, max) {
   try {
     const all = JSON.parse(localStorage.getItem('laender-finder-best') || '{}');
-    const prev = all[modus];
+    const prev = all[modus] || bestFor(modus);
     if (!prev || score / max > prev.s / prev.m) all[modus] = { s: score, m: max };
     localStorage.setItem('laender-finder-best', JSON.stringify(all));
   } catch (e) {}
@@ -312,6 +325,15 @@ function buildStart() {
     b.type = 'button';
     b.className = 'mode';
     const best = bestFor(key);
+    if (!M) {                                          // Weltkarte lädt noch (oder fehlt offline)
+      b.disabled = true;
+      b.innerHTML = `<div class="mode-map"><span class="mode-laedt">${WELT_FEHLER ? 'Weltkarte fehlt – bitte mit dem Internet verbinden' : 'Weltkarte lädt …'}</span></div>
+        <div class="mode-txt"><span class="mode-name"></span><span class="mode-desc"></span><span class="mode-best"></span></div>`;
+      b.querySelector('.mode-name').textContent = m.name;
+      b.querySelector('.mode-desc').textContent = m.desc;
+      box.appendChild(b);
+      return;
+    }
     const [vx, vy, vw, vh] = M.v, sq = Math.max(vw, vh) * 1.04;
     b.innerHTML = `<div class="mode-map"><svg viewBox="${vx + vw / 2 - sq / 2} ${vy + vh / 2 - sq / 2} ${sq} ${sq}" preserveAspectRatio="xMidYMid meet" aria-hidden="true">${mapMarkup(m.karte, m.pool)}</svg></div>
       <div class="mode-txt"><span class="mode-name"></span><span class="mode-desc"></span>
@@ -328,16 +350,30 @@ function buildStart() {
    SPIEL
    ═══════════════════════════════════════════════════════ */
 const G = { modus: null, m: null, queue: [], cur: null, score: 0, max: 0, fehler: 0,
-            daneben: new Set(), verpasst: [], dots: [], frage: 0, locked: true, timer: 0 };
+            daneben: new Set(), verpasst: [], dots: [], frage: 0, locked: true, timer: 0, lupe: null };
 
 function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+
+/** Länder einer Runde ziehen; „bekannt“ zählt doppelt (kommt öfter dran) */
+function ziehe(m) {
+  if (!m.bekannt) return shuffle(m.pool.slice()).slice(0, m.anzahl);
+  const bek = new Set(m.bekannt), rest = m.pool.slice(), out = [];
+  while (out.length < m.anzahl && rest.length) {
+    const gew = rest.map(id => bek.has(id) ? 2 : 1);
+    let r = Math.random() * gew.reduce((a, b) => a + b, 0), i = 0;
+    while (i < rest.length - 1 && (r -= gew[i]) >= 0) i++;
+    out.push(rest.splice(i, 1)[0]);
+  }
+  return out;
+}
 
 function startGame(modus) {
   if (!frei(modus)) return showStart();
   const m = MODI[modus];
   clearTimeout(G.timer);
-  Object.assign(G, { modus, m, score: 0, fehler: 0, daneben: new Set(), verpasst: [], frage: 0, locked: false });
-  G.queue = shuffle(m.pool.slice()).slice(0, m.anzahl);
+  if (!MAPS[m.karte]) return showStart();
+  Object.assign(G, { modus, m, score: 0, fehler: 0, daneben: new Set(), verpasst: [], frage: 0, locked: false, lupe: null });
+  G.queue = ziehe(m);
   G.max = G.queue.length;
   G.dots = G.queue.map(() => '');
 
@@ -367,7 +403,16 @@ function next() {
   const el = $('prompt-name');
   el.textContent = nameOf(G.m.karte, G.cur);
   el.classList.remove('in'); void el.offsetWidth; el.classList.add('in');
+  lupe();
   renderDots();
+}
+
+/** Kleine Länder (z. B. Mittelamerika): Karte zoomt auf den Ausschnitt, danach wieder zurück */
+function lupe() {
+  const lupen = MAPS[G.m.karte].lupen || [];
+  const lu = lupen.find(l => l.ids.includes(G.cur));
+  if (lu) { if (G.lupe !== lu) { View.zeige(...lu.v); G.lupe = lu; } }
+  else if (G.lupe) { View.reset(); G.lupe = null; }
 }
 
 function handleTap(id, cx, cy) {
@@ -472,7 +517,7 @@ function finish() {
   try {
     if (window.LernApps) LernApps.saveResult({
       score, max, label: `${score} / ${max} ${G.m.name}`,
-      skill: G.modus === 'deutschland' ? 'bundeslaender' : 'europa-laender',
+      skill: SKILL[G.modus] || 'welt-laender',
       thema: THEMA[G.modus],
     });
   } catch (e) {}
@@ -508,10 +553,20 @@ $('z-out').addEventListener('click', () => View.centerZoom(1 / 1.5));
 $('z-reset').addEventListener('click', () => View.reset());
 
 LernKarte.laden('../../daten/karten.json').then(d => {
-  MAPS = d;
+  MAPS = Object.assign({}, d);
   BUNDESLAENDER = MAPS.deutschland.f.filter(f => !f.c).map(f => f.id);
   MODI.deutschland.pool = BUNDESLAENDER;
   buildStart();
+  // Weltkarte (Equal Earth) danach – Europa und Deutschland gehen auch ohne sie
+  LernWelt.laden().then(w => {
+    WELT = w;
+    Object.entries(MODI).forEach(([key, m]) => {
+      if (!m.welt) return;
+      MAPS[m.karte] = w.karte(m.karte);
+      m.pool = w.laender(m.karte);
+    });
+  }).catch(e => { console.error(e); WELT_FEHLER = true; })
+    .then(() => { if (!$('start').hidden) buildStart(); });
 }).catch(() => {
   $('modes').innerHTML = '<p style="color:var(--red);font-weight:800">Die Karten konnten nicht geladen werden. Bitte einmal mit dem Internet verbinden und neu laden.</p>';
 });

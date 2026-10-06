@@ -740,7 +740,7 @@
        "ergebnis": [
         "laender-finder.html"
        ],
-       "lehrplan": "GPG 6 LB 1 Lebensraum Erde: topographische Orientierung in Europa; Bundesländer: GPG 5 LB 1 (Orientierung in Deutschland)",
+       "lehrplan": "GPG 6 LB 1 Lebensraum Erde: topographische Orientierung in Europa und auf der Erde; Bundesländer: GPG 5 LB 1 (Orientierung in Deutschland)",
        "dauer": 5,
        "einsatz": "Topographie-Training zu Stundenbeginn; Wettbewerb um die Bestzeit",
        "stufen": [
@@ -753,6 +753,21 @@
          "id": "gpg.6.laender.bundeslaender",
          "titel": "Bundesländer",
          "lehrplan": "GPG 5 LB 1 Lebensraum Erde: Orientierung in Deutschland (Bundesländer)"
+        },
+        {
+         "id": "gpg.6.laender.asien-ozeanien",
+         "titel": "Asien und Ozeanien",
+         "lehrplan": "GPG 6 LB 1 Lebensraum Erde: topographische Orientierung auf der Erde (Asien, Ozeanien)"
+        },
+        {
+         "id": "gpg.6.laender.afrika",
+         "titel": "Afrika",
+         "lehrplan": "GPG 6 LB 1 Lebensraum Erde: topographische Orientierung auf der Erde (Afrika)"
+        },
+        {
+         "id": "gpg.6.laender.amerika",
+         "titel": "Amerika",
+         "lehrplan": "GPG 6 LB 1 Lebensraum Erde: topographische Orientierung auf der Erde (Nord-, Mittel- und Südamerika)"
         }
        ]
       },
