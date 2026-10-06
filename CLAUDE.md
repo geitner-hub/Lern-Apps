@@ -47,9 +47,10 @@ und gelbe Hinweise. Manuelle Checkliste nach Uploads: `werkzeuge/RAUCHTEST.md`.
 - `VERSION` in `sw.js` und `gemeinsam/umgebung.js` sind gleich.
 - **Speicher-Register:** jeder `localStorage`-Schlüssel muss in `SPEICHER` in `gemeinsam/umgebung.js` stehen.
   Neue Schlüssel beginnen mit `lernwelt-`; bestehende Schlüssel nie umbenennen.
-- **Größenbudgets** (`BUDGETS` in pruefen.py): Zusatz je Lern-App (umgebung.js + navbar.js + pass.js) < 80 KB –
-  steht schon bei ~79 KB. Neue Funktionen nicht in `pass.js`/`navbar.js`, sondern in `pass-extras.js` oder ein
-  eigenes Modul und per `LW.laden('gemeinsam/datei.js')` nachladen. Einzeldatei < 160 KB, Datendatei < 400 KB.
+- **Größenbudgets** (`BUDGETS` in pruefen.py, gemessen **komprimiert**/gzip): Zusatz je Lern-App
+  (umgebung.js + navbar.js + pass.js) < 35 KB – steht bei ~27 KB. Trotzdem: neue Funktionen nicht in
+  `pass.js`/`navbar.js`, sondern in `pass-extras.js` oder ein eigenes Modul und per `LW.laden('gemeinsam/datei.js')`
+  nachladen. Startseite < 65 KB, sw.js-`START` < 300 KB, Einzeldatei < 55 KB, Datendatei < 130 KB.
 - Alle Dateien aus `config.json`, `sw.js` (`START`, `NACHLADEN`) und `LW.laden(…)` müssen existieren.
 - **Inhalts-Katalog** (`daten/katalog.json`): jede Lern-App aus `config.json` braucht ein Thema; IDs eindeutig,
   Format `fach.klasse.thema[.stufe]` (klein, Ziffern, `-`). Stufen in `daten/kopfrechnen.json` und Units in
