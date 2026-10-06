@@ -1,0 +1,659 @@
+{
+ "typ": "gemischt",
+ "thema": "en.5.to-be",
+ "titel": "to be: am, is, are",
+ "emoji": "🇬🇧",
+ "untertitel": "Formen, Kurzformen, Verneinung, Fragen – wähle eine Stufe",
+ "klasse": 5,
+ "sprache": "en-GB",
+ "runde": 8,
+ "stufen": [
+  {
+   "id": "en.5.to-be.formen",
+   "titel": "am, is, are",
+   "kurz": "Die richtige Form wählen",
+   "typ": "lueckentext",
+   "anweisung": "Welche Form von „to be“ passt?",
+   "aufgaben": [
+    {
+     "text": "I ___ eleven years old.",
+     "antwort": "am",
+     "optionen": [
+      "am",
+      "is",
+      "are"
+     ],
+     "tipp": "I → am"
+    },
+    {
+     "text": "My sister ___ in Year 7.",
+     "antwort": "is",
+     "optionen": [
+      "am",
+      "is",
+      "are"
+     ],
+     "tipp": "my sister = she → is"
+    },
+    {
+     "text": "We ___ from Germany.",
+     "antwort": "are",
+     "optionen": [
+      "am",
+      "is",
+      "are"
+     ]
+    },
+    {
+     "text": "The cat ___ under the table.",
+     "antwort": "is",
+     "optionen": [
+      "am",
+      "is",
+      "are"
+     ]
+    },
+    {
+     "text": "You ___ my best friend.",
+     "antwort": "are",
+     "optionen": [
+      "am",
+      "is",
+      "are"
+     ]
+    },
+    {
+     "text": "Tom and Lisa ___ at school.",
+     "antwort": "are",
+     "optionen": [
+      "am",
+      "is",
+      "are"
+     ],
+     "tipp": "Tom and Lisa = they → are"
+    },
+    {
+     "text": "It ___ cold today.",
+     "antwort": "is",
+     "optionen": [
+      "am",
+      "is",
+      "are"
+     ]
+    },
+    {
+     "text": "I ___ hungry.",
+     "antwort": "am",
+     "optionen": [
+      "am",
+      "is",
+      "are"
+     ]
+    },
+    {
+     "text": "They ___ in the garden.",
+     "antwort": "are",
+     "optionen": [
+      "am",
+      "is",
+      "are"
+     ]
+    },
+    {
+     "text": "Mr Smith ___ our English teacher.",
+     "antwort": "is",
+     "optionen": [
+      "am",
+      "is",
+      "are"
+     ]
+    },
+    {
+     "text": "My parents ___ at work.",
+     "antwort": "are",
+     "optionen": [
+      "am",
+      "is",
+      "are"
+     ]
+    },
+    {
+     "text": "The book ___ on the shelf.",
+     "antwort": "is",
+     "optionen": [
+      "am",
+      "is",
+      "are"
+     ]
+    },
+    {
+     "text": "He ___ twelve.",
+     "antwort": "is",
+     "optionen": [
+      "am",
+      "is",
+      "are"
+     ]
+    },
+    {
+     "text": "She ___ very funny.",
+     "antwort": "is",
+     "optionen": [
+      "am",
+      "is",
+      "are"
+     ]
+    },
+    {
+     "text": "My dogs ___ black and white.",
+     "antwort": "are",
+     "optionen": [
+      "am",
+      "is",
+      "are"
+     ],
+     "tipp": "dogs = mehr als einer → are"
+    },
+    {
+     "text": "I ___ in the kitchen.",
+     "antwort": "am",
+     "optionen": [
+      "am",
+      "is",
+      "are"
+     ]
+    },
+    {
+     "text": "Our classroom ___ big.",
+     "antwort": "is",
+     "optionen": [
+      "am",
+      "is",
+      "are"
+     ]
+    },
+    {
+     "text": "You and I ___ in the same class.",
+     "antwort": "are",
+     "optionen": [
+      "am",
+      "is",
+      "are"
+     ],
+     "tipp": "you and I = we → are"
+    }
+   ]
+  },
+  {
+   "id": "en.5.to-be.kurzformen",
+   "titel": "Kurzformen",
+   "kurz": "I'm, you're, he's …",
+   "typ": "eingabe",
+   "anweisung": "Schreibe die Kurzform.",
+   "aufgaben": [
+    {
+     "frage": "I am → ?",
+     "antwort": [
+      "I'm"
+     ],
+     "tipp": "Der Apostroph ' ersetzt den weggelassenen Buchstaben."
+    },
+    {
+     "frage": "you are → ?",
+     "antwort": [
+      "you're"
+     ],
+     "tipp": "Der Apostroph ' ersetzt den weggelassenen Buchstaben."
+    },
+    {
+     "frage": "he is → ?",
+     "antwort": [
+      "he's"
+     ],
+     "tipp": "Der Apostroph ' ersetzt den weggelassenen Buchstaben."
+    },
+    {
+     "frage": "she is → ?",
+     "antwort": [
+      "she's"
+     ],
+     "tipp": "Der Apostroph ' ersetzt den weggelassenen Buchstaben."
+    },
+    {
+     "frage": "it is → ?",
+     "antwort": [
+      "it's"
+     ],
+     "tipp": "Der Apostroph ' ersetzt den weggelassenen Buchstaben."
+    },
+    {
+     "frage": "we are → ?",
+     "antwort": [
+      "we're"
+     ],
+     "tipp": "Der Apostroph ' ersetzt den weggelassenen Buchstaben."
+    },
+    {
+     "frage": "they are → ?",
+     "antwort": [
+      "they're"
+     ],
+     "tipp": "Der Apostroph ' ersetzt den weggelassenen Buchstaben."
+    },
+    {
+     "frage": "is not → ?",
+     "antwort": [
+      "isn't"
+     ],
+     "tipp": "Der Apostroph ' ersetzt den weggelassenen Buchstaben."
+    },
+    {
+     "frage": "are not → ?",
+     "antwort": [
+      "aren't"
+     ],
+     "tipp": "Der Apostroph ' ersetzt den weggelassenen Buchstaben."
+    },
+    {
+     "frage": "I am not → ?",
+     "antwort": [
+      "I'm not"
+     ],
+     "tipp": "Der Apostroph ' ersetzt den weggelassenen Buchstaben."
+    },
+    {
+     "frage": "Tom is → ?",
+     "antwort": [
+      "Tom's"
+     ],
+     "tipp": "Auch nach Namen: ’s"
+    },
+    {
+     "frage": "what is → ?",
+     "antwort": [
+      "what's"
+     ],
+     "tipp": "Der Apostroph ' ersetzt den weggelassenen Buchstaben."
+    }
+   ]
+  },
+  {
+   "id": "en.5.to-be.verneinung",
+   "titel": "Verneinung",
+   "kurz": "I'm not, isn't, aren't",
+   "typ": "lueckentext",
+   "anweisung": "Schreibe die verneinte Form (Kurzform oder Langform).",
+   "aufgaben": [
+    {
+     "text": "I ___ tired. (not)",
+     "antwort": [
+      "'m not",
+      "am not"
+     ],
+     "erklaerung": "I am not = I'm not",
+     "tipp": "Verneinung: am not – isn't – aren't"
+    },
+    {
+     "text": "He ___ at home. (not)",
+     "antwort": [
+      "isn't",
+      "is not"
+     ],
+     "tipp": "Verneinung: am not – isn't – aren't"
+    },
+    {
+     "text": "We ___ late. (not)",
+     "antwort": [
+      "aren't",
+      "are not"
+     ],
+     "tipp": "Verneinung: am not – isn't – aren't"
+    },
+    {
+     "text": "The shop ___ open. (not)",
+     "antwort": [
+      "isn't",
+      "is not"
+     ],
+     "tipp": "Verneinung: am not – isn't – aren't"
+    },
+    {
+     "text": "My friends ___ here. (not)",
+     "antwort": [
+      "aren't",
+      "are not"
+     ],
+     "tipp": "Verneinung: am not – isn't – aren't"
+    },
+    {
+     "text": "It ___ my bag. (not)",
+     "antwort": [
+      "isn't",
+      "is not"
+     ],
+     "tipp": "Verneinung: am not – isn't – aren't"
+    },
+    {
+     "text": "You ___ in Year 6. (not)",
+     "antwort": [
+      "aren't",
+      "are not"
+     ],
+     "tipp": "Verneinung: am not – isn't – aren't"
+    },
+    {
+     "text": "She ___ ten. (not)",
+     "antwort": [
+      "isn't",
+      "is not"
+     ],
+     "tipp": "Verneinung: am not – isn't – aren't"
+    },
+    {
+     "text": "They ___ brothers. (not)",
+     "antwort": [
+      "aren't",
+      "are not"
+     ],
+     "tipp": "Verneinung: am not – isn't – aren't"
+    },
+    {
+     "text": "I ___ from London. (not)",
+     "antwort": [
+      "'m not",
+      "am not"
+     ],
+     "tipp": "Verneinung: am not – isn't – aren't"
+    },
+    {
+     "text": "The milk ___ in the fridge. (not)",
+     "antwort": [
+      "isn't",
+      "is not"
+     ],
+     "tipp": "Verneinung: am not – isn't – aren't"
+    },
+    {
+     "text": "Lena and Max ___ at the park. (not)",
+     "antwort": [
+      "aren't",
+      "are not"
+     ],
+     "tipp": "Verneinung: am not – isn't – aren't"
+    }
+   ]
+  },
+  {
+   "id": "en.5.to-be.fragen",
+   "titel": "Fragen und Kurzantworten",
+   "kurz": "Are you …? – Yes, I am.",
+   "typ": "sortieren",
+   "anweisung": "Bau die Frage.",
+   "aufgaben": [
+    {
+     "teile": [
+      "Are",
+      "you",
+      "eleven"
+     ],
+     "loesung": "Are you eleven?",
+     "tipp": "Bei Fragen steht am/is/are vorne (nach dem Fragewort)."
+    },
+    {
+     "teile": [
+      "Is",
+      "she",
+      "your",
+      "sister"
+     ],
+     "loesung": "Is she your sister?",
+     "tipp": "Bei Fragen steht am/is/are vorne (nach dem Fragewort)."
+    },
+    {
+     "teile": [
+      "Are",
+      "they",
+      "at",
+      "home"
+     ],
+     "loesung": "Are they at home?",
+     "tipp": "Bei Fragen steht am/is/are vorne (nach dem Fragewort)."
+    },
+    {
+     "teile": [
+      "Is",
+      "it",
+      "a",
+      "dog"
+     ],
+     "loesung": "Is it a dog?",
+     "tipp": "Bei Fragen steht am/is/are vorne (nach dem Fragewort)."
+    },
+    {
+     "teile": [
+      "Where",
+      "is",
+      "my",
+      "pencil"
+     ],
+     "loesung": "Where is my pencil?",
+     "tipp": "Bei Fragen steht am/is/are vorne (nach dem Fragewort)."
+    },
+    {
+     "teile": [
+      "How",
+      "old",
+      "are",
+      "you"
+     ],
+     "loesung": "How old are you?",
+     "tipp": "Bei Fragen steht am/is/are vorne (nach dem Fragewort)."
+    },
+    {
+     "teile": [
+      "Is",
+      "Tom",
+      "in",
+      "your",
+      "class"
+     ],
+     "loesung": "Is Tom in your class?",
+     "tipp": "Bei Fragen steht am/is/are vorne (nach dem Fragewort)."
+    },
+    {
+     "teile": [
+      "Are",
+      "we",
+      "late"
+     ],
+     "loesung": "Are we late?",
+     "tipp": "Bei Fragen steht am/is/are vorne (nach dem Fragewort)."
+    },
+    {
+     "teile": [
+      "What",
+      "is",
+      "your",
+      "name"
+     ],
+     "loesung": "What is your name?",
+     "tipp": "Bei Fragen steht am/is/are vorne (nach dem Fragewort)."
+    },
+    {
+     "teile": [
+      "Where",
+      "are",
+      "the",
+      "keys"
+     ],
+     "loesung": "Where are the keys?",
+     "tipp": "Bei Fragen steht am/is/are vorne (nach dem Fragewort)."
+    },
+    {
+     "text": "Are you eleven? – Yes, I ___.",
+     "antwort": "am",
+     "optionen": [
+      "am",
+      "is",
+      "are"
+     ],
+     "typ": "lueckentext",
+     "tipp": "Kurzantwort: Yes, I am. / No, she isn't. – mit derselben Form wie in der Frage."
+    },
+    {
+     "text": "Is she your sister? – No, she ___.",
+     "antwort": "isn't",
+     "optionen": [
+      "isn't",
+      "aren't",
+      "am not"
+     ],
+     "typ": "lueckentext",
+     "tipp": "Kurzantwort: Yes, I am. / No, she isn't. – mit derselben Form wie in der Frage."
+    },
+    {
+     "text": "Are they at home? – Yes, they ___.",
+     "antwort": "are",
+     "optionen": [
+      "am",
+      "is",
+      "are"
+     ],
+     "typ": "lueckentext",
+     "tipp": "Kurzantwort: Yes, I am. / No, she isn't. – mit derselben Form wie in der Frage."
+    },
+    {
+     "text": "Is it a dog? – No, it ___.",
+     "antwort": "isn't",
+     "optionen": [
+      "isn't",
+      "aren't",
+      "'m not"
+     ],
+     "typ": "lueckentext",
+     "tipp": "Kurzantwort: Yes, I am. / No, she isn't. – mit derselben Form wie in der Frage."
+    },
+    {
+     "text": "Are you hungry? – No, I'm ___.",
+     "antwort": "not",
+     "optionen": [
+      "not",
+      "isn't",
+      "aren't"
+     ],
+     "typ": "lueckentext",
+     "tipp": "Kurzantwort: Yes, I am. / No, she isn't. – mit derselben Form wie in der Frage."
+    },
+    {
+     "text": "Is Tom in your class? – Yes, he ___.",
+     "antwort": "is",
+     "optionen": [
+      "am",
+      "is",
+      "are"
+     ],
+     "typ": "lueckentext",
+     "tipp": "Kurzantwort: Yes, I am. / No, she isn't. – mit derselben Form wie in der Frage."
+    },
+    {
+     "text": "Are we late? – No, we ___.",
+     "antwort": "aren't",
+     "optionen": [
+      "isn't",
+      "aren't",
+      "am not"
+     ],
+     "typ": "lueckentext",
+     "tipp": "Kurzantwort: Yes, I am. / No, she isn't. – mit derselben Form wie in der Frage."
+    },
+    {
+     "text": "Is your dad a teacher? – Yes, he ___.",
+     "antwort": "is",
+     "optionen": [
+      "is",
+      "are",
+      "am"
+     ],
+     "typ": "lueckentext",
+     "tipp": "Kurzantwort: Yes, I am. / No, she isn't. – mit derselben Form wie in der Frage."
+    }
+   ]
+  },
+  {
+   "id": "en.5.to-be.fehler",
+   "titel": "Fehler finden",
+   "kurz": "Tippe die falsche Form an",
+   "typ": "markieren",
+   "anweisung": "Ein Wort ist falsch. Tippe es an.",
+   "aufgaben": [
+    {
+     "satz": "She [are] my best friend.",
+     "richtig": "is",
+     "erklaerung": "I → am · he/she/it → is · we/you/they → are"
+    },
+    {
+     "satz": "I [is] twelve years old.",
+     "richtig": "am",
+     "erklaerung": "I → am · he/she/it → is · we/you/they → are"
+    },
+    {
+     "satz": "We [is] in the classroom.",
+     "richtig": "are",
+     "erklaerung": "I → am · he/she/it → is · we/you/they → are"
+    },
+    {
+     "satz": "My brothers [is] at the football club.",
+     "richtig": "are",
+     "erklaerung": "I → am · he/she/it → is · we/you/they → are"
+    },
+    {
+     "satz": "The weather [are] nice today.",
+     "richtig": "is",
+     "erklaerung": "I → am · he/she/it → is · we/you/they → are"
+    },
+    {
+     "satz": "You [am] very clever.",
+     "richtig": "are",
+     "erklaerung": "I → am · he/she/it → is · we/you/they → are"
+    },
+    {
+     "satz": "[Is] they from Spain?",
+     "richtig": "Are",
+     "erklaerung": "I → am · he/she/it → is · we/you/they → are"
+    },
+    {
+     "satz": "He [aren't] at home.",
+     "richtig": "isn't",
+     "erklaerung": "I → am · he/she/it → is · we/you/they → are"
+    },
+    {
+     "satz": "I [isn't] tired.",
+     "richtig": "'m not",
+     "erklaerung": "I → am · he/she/it → is · we/you/they → are"
+    },
+    {
+     "satz": "[Are] your sister ten?",
+     "richtig": "Is",
+     "erklaerung": "I → am · he/she/it → is · we/you/they → are"
+    },
+    {
+     "satz": "It [are] Monday today.",
+     "richtig": "is",
+     "erklaerung": "I → am · he/she/it → is · we/you/they → are"
+    },
+    {
+     "satz": "Max and I [am] friends.",
+     "richtig": "are",
+     "erklaerung": "I → am · he/she/it → is · we/you/they → are"
+    }
+   ]
+  },
+  {
+   "id": "en.5.to-be.mix",
+   "titel": "Mix",
+   "kurz": "Alles durcheinander",
+   "mix": true,
+   "runde": 10
+  }
+ ]
+}

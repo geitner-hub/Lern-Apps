@@ -32,7 +32,7 @@ daten/                katalog.json (Inhalts-Katalog mit Themen-IDs), vokabeln5.j
 daten/inhalte/<fach>/ Inhaltsdateien des Baukastens (<Themen-ID>.json) und ihre Bilder (SVG)
 gemeinsam/            Code, den alle Seiten nutzen (siehe unten)
 gemeinsam/admin/      Module des Admins (admin.html lädt sie in fester Reihenfolge, Etappe 6)
-gemeinsam/typen/      Die sechs Aufgabentypen (zuordnen, sortieren, lueckentext, eingabe, beschriften, bildwort)
+gemeinsam/typen/      Die sieben Aufgabentypen (zuordnen, sortieren, lueckentext, eingabe, beschriften, bildwort, markieren)
 fonts/ icons/ vendor/ Schriften, Symbole, fremde Bibliotheken
 cloudflare/           Worker-Quelltext und Anleitung
 werkzeuge/            Prüfskript (pruefen.py), Inventar (inventar.py → INVENTAR.md),
@@ -254,9 +254,15 @@ Eine neue App = **Inhaltsdatei + Katalog-Eintrag + Admin-Eintrag**. Kein neuer C
    | `eingabe` | `aufgaben: [{ frage, antwort, einheit? }]` | Zahl → Zifferntastatur, sonst Textfeld |
    | `beschriften` | `bild: "datei.svg"`, `marken: [{ x, y (Prozent), wort }]` | markierten Teil benennen (4 Begriffe) |
    | `bildwort` | `woerter: [{ bild (Emoji oder Datei), wort, de? }]`, `richtung`: bild-wort · wort-bild · hoeren | Bild/Wort antippen, 🔊 in `sprache` |
+   | `markieren` | `aufgaben: [{ satz: "She [go] to school.", richtig?, frage? }]` | das Wort in [ ] im Satz antippen (Fehler, Signalwort …) |
 
-   **Stand Okt. 2026: noch keine Inhalte** – die Beispielinhalte aus Etappe 9 wurden wieder entfernt (Entscheidung
-   Bene); neue Inhalte kommen mit der Erweiterung der Inhaltsbibliothek.
+   **Mehrere Typen in einer Datei** (Neue Lern-Apps Etappe 6): `"typ": "gemischt"` im Kopf und `"typ"` je Stufe –
+   oder `"typ"` an einer einzelnen Aufgabe (lueckentext, sortieren, eingabe, markieren), z. B. Kurzantworten als
+   Lückentext in einer Satzbau-Stufe. **Mix-Stufe:** `{ "id", "titel", "mix": true, "aus"?: [Stufen- oder Themen-IDs,
+   auch aus anderen Inhaltsdateien], "nurGeuebt"?: true }` zieht Aufgaben aus anderen Stufen; ohne `aus` aus allen
+   Stufen der Datei, mit `nurGeuebt` nur aus schon geübten („Meine Themen“). Beispiel: `daten/inhalte/en/en.5.to-be.json`.
+
+   **Inhalte:** `en.5.to-be` (Neue Lern-Apps Etappe 6). Die Beispielinhalte aus Etappe 9 wurden entfernt.
 
    Jede Aufgabe darf `tipp` und `erklaerung` haben (💡 und Erklärung nach falscher Antwort). Genaues Format: Kopf von
    `gemeinsam/typen/<typ>.js`. **Bilder:** Emojis (laufen überall, keine Lizenz) oder selbst gezeichnete SVG-Dateien
