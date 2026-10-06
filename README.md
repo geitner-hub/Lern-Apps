@@ -27,6 +27,7 @@ daten/                katalog.json (Inhalts-Katalog mit Themen-IDs), vokabeln5.j
                       karten.json (Europa- und Deutschlandkarte, für Länder-Finder und Expedition)
                       welt.json (alle Länder in Längen-/Breitengraden, Kontinente, Länderlisten der Welt-Modi)
                       ozeane.json (die fünf Ozeane für den Globus, Natural Earth, gemeinfrei)
+                      bayern.json (Bayernkarte: Bezirke © GeoBasis-DE / BKG, dl-de/by-2-0; Flüsse, Seen, Städte, Gebirge)
                       expedition.json (Hauptstädte, Nachbarn, Kartenmitten)
 daten/inhalte/<fach>/ Inhaltsdateien des Baukastens (<Themen-ID>.json) und ihre Bilder (SVG)
 gemeinsam/            Code, den alle Seiten nutzen (siehe unten)
@@ -66,6 +67,13 @@ vereinfacht (15 %, Grenzen bleiben deckungsgleich), Koordinaten in 1/100 Grad. L
 Lupen (z. B. Mittelamerika) je Modus stehen in `daten/welt.json` unter `modi` und lassen sich dort ohne Code
 ändern (IDs = ADM0_A3-Codes wie in `karten.json`). `vendor/d3-geo.min.js` enthält d3-array 3.2.4 und
 d3-geo 3.1.1 (ISC-Lizenz).
+
+**Bayernkarte** (`apps/gpg/bayern.html`, `daten/bayern.json`): schon projiziert (transversale Mercator, 11,4° O).
+Regierungsbezirke aus VG250 des BKG (**© GeoBasis-DE / BKG**, Datenlizenz Deutschland – Namensnennung – 2.0;
+Quellenvermerk steht in der App), Nachbarländer, Donau, Main, Inn, Isar und die drei Seen aus Natural Earth.
+Lech, Altmühl, Naab und Regen sowie die Gebirge sind schematisch über Ortskoordinaten gezeichnet (kein freier
+Datensatz in dieser Genauigkeit erreichbar). Listen je Modus und der Heimatbezirk (`heimat`, golden umrandet)
+stehen in `bayern.json`.
 
 Die Skripte in `gemeinsam/` finden den Hauptordner selbst (über ihren eigenen Ort).
 Deshalb funktionieren sie aus jeder Ordnertiefe – nur der Pfad beim Einbinden ändert sich.
