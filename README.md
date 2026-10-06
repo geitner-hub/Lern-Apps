@@ -262,7 +262,10 @@ Eine neue App = **Inhaltsdatei + Katalog-Eintrag + Admin-Eintrag**. Kein neuer C
    auch aus anderen Inhaltsdateien], "nurGeuebt"?: true }` zieht Aufgaben aus anderen Stufen; ohne `aus` aus allen
    Stufen der Datei, mit `nurGeuebt` nur aus schon geübten („Meine Themen“). Beispiel: `daten/inhalte/en/en.5.to-be.json`.
 
-   **Inhalte:** `en.5.to-be` (Neue Lern-Apps Etappe 6). Die Beispielinhalte aus Etappe 9 wurden entfernt.
+   **Inhalte:** `en.5.to-be` (Etappe 6), `en.5.simple-present`, `en.5.simple-past` (Etappe 7; die alten Apps
+   `practice_simple_present.html` und `simple-past.html` leiten weiter, `typen.js` übernimmt ihre Ergebnisse über die
+   Tabelle `UMZUG`). **„So geht's“:** `"hilfe": [{ titel, text, beispiele: [[en, de]], tabelle: [[…]] }]` im Kopf
+   einer Inhaltsdatei zeigt eine Erklär-Kachel vor den Stufen.
 
    Jede Aufgabe darf `tipp` und `erklaerung` haben (💡 und Erklärung nach falscher Antwort). Genaues Format: Kopf von
    `gemeinsam/typen/<typ>.js`. **Bilder:** Emojis (laufen überall, keine Lizenz) oder selbst gezeichnete SVG-Dateien
