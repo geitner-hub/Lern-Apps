@@ -406,6 +406,17 @@
       ],
       "customTags": [],
       "aod": false
+    },
+    {
+      "name": "Vokabeltrainer",
+      "datei": "apps/englisch/vokabeltrainer.html",
+      "fach": "Englisch",
+      "emoji": "📖",
+      "beschreibung": "",
+      "hidden": false,
+      "klassen": [],
+      "customTags": [],
+      "aod": false
     }
   ],
   "customTags": [
