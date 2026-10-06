@@ -513,6 +513,55 @@
       { tipp: `Das Komma wandert ${st} Stelle${st > 1 ? 'n' : ''} nach ${mal ? 'rechts' : 'links'}.`, erklaerung: `Komma ${st} Stelle${st > 1 ? 'n' : ''} nach ${mal ? 'rechts' : 'links'}: ${zahl(ans)}.` });
   }
 
+  // ── Längen (M5 LB 5 Größen; App Längeneinheiten, seit Okt. 2026 auf dem Übungs-Rahmen) ──
+  const LE = { km: 1000000, m: 1000, dm: 100, cm: 10, mm: 1 };          // in mm
+  const LE_NACHBAR = [['km', 'm'], ['m', 'dm'], ['dm', 'cm'], ['cm', 'mm']];
+  const LE_WEIT = [['m', 'cm'], ['m', 'mm'], ['dm', 'mm'], ['km', 'm'], ['m', 'cm']];
+  const faktor = (gross, klein) => LE[gross] / LE[klein];
+  /** Umrechnen: weit = auch über mehrere Stufen (m → cm), halbe = auch Kommazahlen wie 2,5 m */
+  function laengeUmrechnen(weit, halbe) {
+    const [gross, klein] = pick(weit ? LE_WEIT : LE_NACHBAR), f = faktor(gross, klein);
+    const k = f >= 1000 ? rand(1, 9) : rand(2, f >= 100 ? 9 : 19);
+    const wert = halbe && Math.random() < .35 ? k + .5 : k;
+    if (Math.random() < .55) {                                   // groß → klein: mal
+      const ans = genau(wert * f);
+      return rechen(`${zahl(wert)} ${gross} = ? ${klein}`, ans, [genau(ans / 10), genau(ans * 10)], false,
+        { hinweis: 'Antwort in ' + klein, tipp: `1 ${gross} = ${zahl(f)} ${klein}`, erklaerung: `${zahl(wert)} × ${zahl(f)} = ${zahl(ans)} ${klein}` });
+    }
+    const vorher = genau(wert * f);                              // klein → groß: geteilt
+    return rechen(`${zahl(vorher)} ${klein} = ? ${gross}`, wert, [genau(wert * 10), genau(wert / 10)], false,
+      { hinweis: 'Antwort in ' + gross, tipp: `${zahl(f)} ${klein} = 1 ${gross}`, erklaerung: `${zahl(vorher)} ÷ ${zahl(f)} = ${zahl(wert)} ${gross}` });
+  }
+  /** Gemischte Angabe in eine Einheit: 5 m 40 cm = ? cm */
+  function laengeGemischt() {
+    const [gross, klein] = pick([['m', 'cm'], ['km', 'm'], ['dm', 'cm'], ['cm', 'mm'], ['m', 'dm'], ['m', 'mm']]), f = faktor(gross, klein);
+    // Kopfrechnen: meist runde Reste (5 m 40 cm, 2 km 300 m), manchmal krumme (5 m 47 cm)
+    const a = rand(1, 9), b = f >= 1000 ? pick([rand(1, 9) * 100, rand(1, 99) * 10]) : f >= 100 ? pick([rand(1, 9) * 10, rand(1, 99)]) : rand(1, f - 1);
+    const ans = a * f + b;
+    return rechen(`${a} ${gross} ${zahl(b)} ${klein} = ? ${klein}`, ans, [a * 10 + b, a * f, ans + f], false,
+      { hinweis: 'Antwort in ' + klein, tipp: `Erst ${a} ${gross} in ${klein} umrechnen.`, erklaerung: `${a} ${gross} = ${zahl(a * f)} ${klein}; ${zahl(a * f)} + ${zahl(b)} = ${zahl(ans)} ${klein}` });
+  }
+  /** Rechnen mit Längen: 2 m + 30 cm = ? cm, 1 km − 300 m = ? m */
+  function laengeRechnen() {
+    const [gross, klein] = pick([['m', 'cm'], ['km', 'm'], ['m', 'dm'], ['cm', 'mm'], ['dm', 'cm']]), f = faktor(gross, klein);
+    const a = rand(1, 9), b = f >= 1000 ? rand(1, 9) * 100 : f >= 100 ? rand(1, 19) * 5 : rand(1, 9);
+    const plus = Math.random() < .5, ans = plus ? a * f + b : a * f - b;
+    return rechen(`${a} ${gross} ${plus ? '+' : '−'} ${zahl(b)} ${klein} = ? ${klein}`, ans, [plus ? a * f - b : a * f + b, plus ? a + b : f - b], false,
+      { hinweis: 'Antwort in ' + klein, tipp: `${a} ${gross} = ${zahl(a * f)} ${klein}`, erklaerung: `${zahl(a * f)} ${plus ? '+' : '−'} ${zahl(b)} = ${zahl(ans)} ${klein}` });
+  }
+  /** Vergleichen: 3 m ○ 250 cm */
+  function laengeVergleich() {
+    const [gross, klein] = pick([['m', 'cm'], ['km', 'm'], ['dm', 'cm'], ['cm', 'mm'], ['m', 'dm'], ['m', 'mm']]), f = faktor(gross, klein);
+    const a = rand(1, 9), b = pick([a * f, a * f + pick([1, 5, 10]) * (f >= 100 ? 10 : 1), a * f - pick([1, 5]) * (f >= 100 ? 10 : 1), (a + 1) * f, (a - 1 || 1) * f + f / 2]);
+    if (b <= 0) return null;
+    const v = a * f - b, r = v > 0 ? '>' : v < 0 ? '<' : '=';
+    const links = Math.random() < .5;
+    const frage = links ? `${a} ${gross}  ○  ${zahl(b)} ${klein}` : `${zahl(b)} ${klein}  ○  ${a} ${gross}`;
+    const rr = links ? r : r === '>' ? '<' : r === '<' ? '>' : '=';
+    return wahl(frage, rr, ['<', '=', '>'],
+      { hinweis: 'größer (>), kleiner (<) oder gleich (=)?', tipp: 'Rechne beide Längen in dieselbe Einheit um.', erklaerung: `${a} ${gross} = ${zahl(a * f)} ${klein}` });
+  }
+
   // ═══════════════════════════════════════════════════════
   //  ALLE TYPEN
   // ═══════════════════════════════════════════════════════
@@ -526,6 +575,8 @@
     'klammern': klammern, 'rechenvorteile': rechenvorteile, 'ueberschlag': ueberschlag,
     'teilbar': teilbar, 'kgv-ggt': kgvGgt, 'bruch-erweitern': bruchErweitern, 'bruch-kuerzen': bruchKuerzen,
     'bruch-vergleich': bruchVergleich, 'bruchteil': bruchteil, 'dez-umwandeln': dezUmwandeln, 'dez-mal10': dezMal10,
+    'laenge-nachbar': s => laengeUmrechnen(false, !!s.halbe), 'laenge-weit': s => laengeUmrechnen(true, !!s.halbe),
+    'laenge-gemischt': laengeGemischt, 'laenge-rechnen': laengeRechnen, 'laenge-vergleich': laengeVergleich,
   };
 
   function erzeuge(spec) {

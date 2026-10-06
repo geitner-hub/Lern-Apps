@@ -18,7 +18,7 @@
 
 const FR_KATALOG_REIHEN = ['en.5.vok', 'en.5.wortlisten', 'en.6.vok', 'gpg.6.laender'];
 const FR_BAUKASTEN = 'apps/typen/uebung.html';          // Etappe 9: jeder Inhalt des Baukastens ist automatisch eine Reihe
-const FR_APP_NAMEN = { kopfrechnen: '🧮', trainer: '📐' };
+const FR_APP_NAMEN = { kopfrechnen: '🧮', trainer: '📐', laengen: '📏' };
 const FR = { wer: 'alle', offen: '', reihen: null, gruppen: null, gruppenFehler: '' };
 
 const frEsc = s => escHtml(String(s == null ? '' : s));

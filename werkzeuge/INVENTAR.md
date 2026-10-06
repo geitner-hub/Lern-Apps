@@ -15,7 +15,6 @@ Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv
 | `apps/englisch/vokabeltrainer5.html` | Vokabeltrainer 5. Klasse | `en.5.vok` (7 Stufen), `en.5.wortlisten` (8 Stufen) | Lern-App | Englisch · 5 | sichtbar | ja | ja | ja | – | ja | Engine (Etappe 5) | Mit vokabeltrainer6 zu einer Vokabel-Engine. Mängel: Startseite scrollt (iPad quer), ~100 Zeilen doppelt zu Kl. 6 |
 | `apps/englisch/vokabeltrainer6.html` | Vokabeltrainer 6. Klasse | `en.6.vok` (5 Stufen) | Lern-App | Englisch · 6 | sichtbar | ja | ja | ja | – | ja | Engine (Etappe 5) | Siehe vokabeltrainer5 |
 | `apps/gpg/laender-finder.html` | Länder finden | `gpg.6.laender` (2 Stufen) | Lern-App | GPG · 6 | sichtbar | ja | ja | – | – | ja | Kern | Stark: Karte, Profi-Modus, Fehler kommen wieder. Bundesländer = GPG 5, Europa = GPG 6. Mängel: kein `thema`/`inhalt` |
-| `apps/gpg/regeln-sortierer-gpg.html` | Regeln in unserer Gesellschaft | `gpg.5.regeln` | Lern-App | GPG · alle | versteckt | ⚠️ altes Format | – | – | – | nur wenn sichtbar | Engine (Etappe 9) | Typ Sortieren. Mängel: altes Ergebnis-Format (keine XP), Ziehen per Drag & Drop auf iPads unsicher, keine Erklärung |
 | `apps/mathe/einmaleins_tafel.html` | Einmaleins 1x1 | `ma.5.1x1` (2 Stufen) | Lern-App | Mathematik · 5, 6 | sichtbar | ja | ja | ja | – | ja (1 Runden) | Kern | Gut: Klassik/Profi, 3 Stufen, großes 1×1. Mängel: falsche Felder nur rot, ohne Hilfe (z. B. Nachbaraufgabe) |
 | `apps/mathe/kopfrechnen-neu.html` | – | – | Lern-App | – | nicht in config | – | – | – | – | – (nicht in config) | Weiterleitung | Test-Name des Mathe-Trainers → mathe-trainer.html (Ergebnisse werden übernommen) |
 | `apps/mathe/kopfrechnen.html` | Kopfrechnen Klasse 4 | `ma.1.kopf` (3 Stufen), `ma.2.kopf` (3 Stufen), `ma.3.kopf` (3 Stufen), `ma.4.kopf` (3 Stufen), `ma.5.kopf` (13 Stufen), `ma.6.kopf` (12 Stufen) | Lern-App | Mathematik · 5 | sichtbar | – | – | – | – | ja | Kern (Übungs-Rahmen) | Etappe 4b: nur Einmaleins und Grundrechenarten, Klassen 1–6 über ?klasse=; Ergebnisse über ueben.js (thema je Stufe) |
@@ -24,10 +23,10 @@ Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv
 | `apps/mathe/kopfrechnen_kl3.html` | – | – | Lern-App | – | nicht in config | – | – | – | – | – (nicht in config) | Weiterleitung | → kopfrechnen.html?klasse=3; Ergebnisse, Sterne und Dorf-Aufträge werden übernommen |
 | `apps/mathe/kopfrechnen_kl4.html` | – | – | Lern-App | – | nicht in config | – | – | – | – | – (nicht in config) | Weiterleitung | → kopfrechnen.html?klasse=4; Ergebnisse, Sterne und Dorf-Aufträge werden übernommen |
 | `apps/mathe/kopfrechnen_kl6.html` | – | – | Lern-App | – | nicht in config | – | – | – | – | – (nicht in config) | Weiterleitung | → kopfrechnen.html?klasse=6; Ergebnisse, Sterne und Dorf-Aufträge werden übernommen |
-| `apps/mathe/laengeneinheiten.html` | Längeneinheiten umrechnen | `ma.5.laengen` | Lern-App | Mathematik · 5, 6 | sichtbar | ja | ja | – | – | ja | Kern → Typ Eingabe (Etappe 9) | Passt zu M5 LB 5. Mängel: kein `thema`/`inhalt` (fehlt in den Spielen), Hilfe nur auf Knopfdruck, keine anderen Größen (Masse, Zeit, Geld) |
+| `apps/mathe/laengeneinheiten.html` | Längeneinheiten umrechnen | `ma.5.laengen` (6 Stufen) | Lern-App | Mathematik · 5, 6 | sichtbar | – | – | – | – | ja | Kern → Typ Eingabe (Etappe 9) | Passt zu M5 LB 5. Mängel: kein `thema`/`inhalt` (fehlt in den Spielen), Hilfe nur auf Knopfdruck, keine anderen Größen (Masse, Zeit, Geld) |
 | `apps/mathe/mathe-trainer.html` | Mathe-Trainer Klasse 5 | – | Lern-App | Mathematik · 5 | sichtbar | – | – | – | – | ja | Kern (Übungs-Rahmen) | Etappe 4b: Stoff der Jahrgangsstufe 5/6 in Stufen (?klasse=5/6); neue Themen = neue Stufen in daten/kopfrechnen.json |
 | `apps/mathe/rechen-arena.html` | Rechen-Arena | `ma.5.rechen-arena` | Lern-App | Allgemein · 5, 6 | sichtbar | ja | ja | – | – | ja | Kern | Beliebt, vier Modi. Mängel: Startseite scrollt (iPad quer), kein `thema`/`inhalt`, Ballon-Pop hat keine Rückmeldung zum Fehler (bewusst schnell) |
-| `apps/typen/uebung.html` | – | `ma.5.laengen-eingabe` (3 Stufen), `en.5.essen-bildwort` (2 Stufen), `en.5.satzglieder-zuordnen` (2 Stufen), `en.5.satzbau` (2 Stufen), `en.5.simple-present-luecken` (3 Stufen), `gpg.5.regeln-zuordnen` (3 Stufen), `de.5.wortarten` (2 Stufen), `nut.5.pflanze` (2 Stufen) | Lern-App | – | nicht in config | – | – | – | – | – (nicht in config) |  |  |
+| `apps/typen/uebung.html` | – | – | Lern-App | – | nicht in config | – | – | – | – | – (nicht in config) |  |  |
 | `spiele/burg-verteidigung.html` | Tower Defense | – | Spiel | Allgemein · alle | sichtbar | ja | ja | – | ja | – (Spiel) |  |  |
 | `spiele/dorf.html` | Mein Dorf | – | Spiel | Allgemein · alle | sichtbar | – | – | – | – | Dorf selbst |  |  |
 | `spiele/expedition.html` | Entdecker-Expedition | – | Spiel | GPG · 6 | versteckt | über spiel-hilfen.js | ja | – | – | – (Spiel) |  |  |
@@ -48,7 +47,6 @@ Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv
 | apps/englisch/vokabeltrainer5.html | 51 | navbar.js | vokab-history-kl5, vokab-word-stats-kl5, vokab-a11y-kl5, + über navbar.js |
 | apps/englisch/vokabeltrainer6.html | 54 | navbar.js | vokab-history-kl6, vokab-word-stats-kl6, vokab-a11y-kl6, + über navbar.js |
 | apps/gpg/laender-finder.html | 27 | navbar.js, karten-ansicht.js, freigabe.js, ueben.js | laender-finder-best, + über navbar.js |
-| apps/gpg/regeln-sortierer-gpg.html | 22 | navbar.js (nachgeladen) | + über navbar.js |
 | apps/mathe/einmaleins_tafel.html | 23 | navbar.js | + über navbar.js |
 | apps/mathe/kopfrechnen-neu.html | 1 | – | – |
 | apps/mathe/kopfrechnen.html | 2 | generatoren-mathe.js, freigabe.js, ueben.js, navbar.js | + über navbar.js |
@@ -57,7 +55,7 @@ Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv
 | apps/mathe/kopfrechnen_kl3.html | 1 | – | – |
 | apps/mathe/kopfrechnen_kl4.html | 1 | – | – |
 | apps/mathe/kopfrechnen_kl6.html | 1 | – | – |
-| apps/mathe/laengeneinheiten.html | 25 | navbar.js | + über navbar.js |
+| apps/mathe/laengeneinheiten.html | 2 | generatoren-mathe.js, freigabe.js, ueben.js, navbar.js | + über navbar.js |
 | apps/mathe/mathe-trainer.html | 2 | generatoren-mathe.js, freigabe.js, ueben.js, navbar.js | + über navbar.js |
 | apps/mathe/rechen-arena.html | 52 | navbar.js | rechenArena_ballonHighscore, + über navbar.js |
 | apps/typen/uebung.html | 2 | freigabe.js, ueben.js, typen.js, navbar.js | + über navbar.js |
