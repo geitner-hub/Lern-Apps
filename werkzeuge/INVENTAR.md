@@ -29,6 +29,8 @@ Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv
 | `apps/mathe/laengeneinheiten.html` | Längeneinheiten umrechnen | `ma.5.laengen` (6 Stufen) | Lern-App | Mathematik · 5, 6 | sichtbar | – | – | – | – | ja | Kern → Typ Eingabe (Etappe 9) | Passt zu M5 LB 5. Mängel: kein `thema`/`inhalt` (fehlt in den Spielen), Hilfe nur auf Knopfdruck, keine anderen Größen (Masse, Zeit, Geld) |
 | `apps/mathe/mathe-trainer.html` | Mathe-Trainer Klasse 5 | – | Lern-App | Mathematik · 5 | sichtbar | – | – | – | – | ja | Kern (Übungs-Rahmen) | Etappe 4b: Stoff der Jahrgangsstufe 5/6 in Stufen (?klasse=5/6); neue Themen = neue Stufen in daten/kopfrechnen.json |
 | `apps/mathe/rechen-arena.html` | Rechen-Arena | `ma.5.rechen-arena` | Lern-App | Allgemein · 5, 6 | sichtbar | ja | ja | – | – | ja | Kern | Beliebt, vier Modi. Mängel: Startseite scrollt (iPad quer), kein `thema`/`inhalt`, Ballon-Pop hat keine Rückmeldung zum Fehler (bewusst schnell) |
+| `apps/mathe/stellenwerttafel.html` | – | `ma.5.stellenwert` (5 Stufen) | Lern-App | – | nicht in config | – | – | – | – | – (nicht in config) |  |  |
+| `apps/mathe/zahlenstrahl.html` | – | `ma.5.zahlenstrahl` (5 Stufen) | Lern-App | – | nicht in config | – | – | – | – | – (nicht in config) |  |  |
 | `apps/typen/uebung.html` | Simple present | `en.5.to-be` (6 Stufen), `en.5.simple-present` (8 Stufen), `en.5.simple-past` (7 Stufen), `en.5.have-got` (5 Stufen), `en.5.can` (5 Stufen), `en.5.present-progressive` (5 Stufen), `en.5.nomen` (4 Stufen), `en.5.pronomen` (5 Stufen), `en.5.there-is` (5 Stufen), `en.5.fragen` (3 Stufen), `en.5.praepositionen` (4 Stufen), `en.6.future` (6 Stufen), `en.6.steigerung` (4 Stufen), `en.6.some-any` (4 Stufen) | Lern-App | Englisch · 5 | sichtbar | – | – | – | – | ja |  |  |
 | `spiele/burg-verteidigung.html` | Tower Defense | – | Spiel | Allgemein · alle | sichtbar | ja | ja | – | ja | – (Spiel) |  |  |
 | `spiele/dorf.html` | Mein Dorf | – | Spiel | Allgemein · alle | sichtbar | – | – | – | – | Dorf selbst |  |  |
@@ -64,6 +66,8 @@ Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv
 | apps/mathe/laengeneinheiten.html | 2 | generatoren-mathe.js, freigabe.js, ueben.js, navbar.js | + über navbar.js |
 | apps/mathe/mathe-trainer.html | 2 | generatoren-mathe.js, freigabe.js, ueben.js, navbar.js | + über navbar.js |
 | apps/mathe/rechen-arena.html | 52 | navbar.js | rechenArena_ballonHighscore, + über navbar.js |
+| apps/mathe/stellenwerttafel.html | 16 | freigabe.js, ueben.js, ziffernblock.js, navbar.js | + über navbar.js |
+| apps/mathe/zahlenstrahl.html | 17 | freigabe.js, ueben.js, ziffernblock.js, navbar.js | + über navbar.js |
 | apps/typen/uebung.html | 2 | freigabe.js, ueben.js, typen.js, navbar.js | + über navbar.js |
 | spiele/burg-verteidigung.html | 85 | navbar.js, aufgaben.js, avatar3d.js | lern-burg-wahl, lern-burg-rekorde, + über navbar.js |
 | spiele/dorf.html | 88 | shared.js, config-api.js, dorf-kern.js, avatar3d.js, dorf-szene.js, navbar.js | lernwelt-dorf, lernwelt-dorf-besuch, + über navbar.js |

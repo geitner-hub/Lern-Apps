@@ -455,6 +455,54 @@
      ]
     },
     {
+     "id": "ma.zahlen",
+     "titel": "Zahlen und Stellenwerte",
+     "themen": [
+      {
+       "id": "ma.5.zahlenstrahl",
+       "titel": "Zahlenstrahl",
+       "klasse": 5,
+       "quelle": {
+        "app": "apps/mathe/zahlenstrahl.html"
+       },
+       "ergebnis": [
+        "zahlenstrahl.html"
+       ],
+       "lehrplan": "M5 LB 1 Natürliche Zahlen: Zahlen am Zahlenstrahl darstellen und ablesen, große Zahlen",
+       "dauer": 8,
+       "einsatz": "Einstieg in große Zahlen; Lupe als Differenzierung für schnelle Kinder",
+       "stufen": [
+        { "id": "ma.5.zahlenstrahl.ablesen", "titel": "Ablesen" },
+        { "id": "ma.5.zahlenstrahl.einzeichnen", "titel": "Einzeichnen" },
+        { "id": "ma.5.zahlenstrahl.skala", "titel": "Skala erkennen" },
+        { "id": "ma.5.zahlenstrahl.gross", "titel": "Große Zahlen" },
+        { "id": "ma.5.zahlenstrahl.lupe", "titel": "Lupe" }
+       ]
+      },
+      {
+       "id": "ma.5.stellenwert",
+       "titel": "Stellenwerttafel",
+       "klasse": 5,
+       "quelle": {
+        "app": "apps/mathe/stellenwerttafel.html"
+       },
+       "ergebnis": [
+        "stellenwerttafel.html"
+       ],
+       "lehrplan": "M5 LB 1 Natürliche Zahlen: Stellenwertsystem, große Zahlen lesen und schreiben (bis Milliarden)",
+       "dauer": 8,
+       "einsatz": "Große Zahlen lesen und schreiben; Nullen-Profi zur Vorbereitung auf die Probe",
+       "stufen": [
+        { "id": "ma.5.stellenwert.eintragen", "titel": "Eintragen" },
+        { "id": "ma.5.stellenwert.ablesen", "titel": "Ablesen" },
+        { "id": "ma.5.stellenwert.zahlwort", "titel": "Zahlwort" },
+        { "id": "ma.5.stellenwert.wert", "titel": "Stellenwert" },
+        { "id": "ma.5.stellenwert.profi", "titel": "Nullen-Profi" }
+       ]
+      }
+     ]
+    },
+    {
      "id": "ma.geometrie",
      "titel": "Geometrie",
      "themen": [
