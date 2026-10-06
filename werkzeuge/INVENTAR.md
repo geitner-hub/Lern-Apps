@@ -27,7 +27,7 @@ Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv
 | `apps/mathe/laengeneinheiten.html` | Längeneinheiten umrechnen | `ma.5.laengen` (6 Stufen) | Lern-App | Mathematik · 5, 6 | sichtbar | – | – | – | – | ja | Kern → Typ Eingabe (Etappe 9) | Passt zu M5 LB 5. Mängel: kein `thema`/`inhalt` (fehlt in den Spielen), Hilfe nur auf Knopfdruck, keine anderen Größen (Masse, Zeit, Geld) |
 | `apps/mathe/mathe-trainer.html` | Mathe-Trainer Klasse 5 | – | Lern-App | Mathematik · 5 | sichtbar | – | – | – | – | ja | Kern (Übungs-Rahmen) | Etappe 4b: Stoff der Jahrgangsstufe 5/6 in Stufen (?klasse=5/6); neue Themen = neue Stufen in daten/kopfrechnen.json |
 | `apps/mathe/rechen-arena.html` | Rechen-Arena | `ma.5.rechen-arena` | Lern-App | Allgemein · 5, 6 | sichtbar | ja | ja | – | – | ja | Kern | Beliebt, vier Modi. Mängel: Startseite scrollt (iPad quer), kein `thema`/`inhalt`, Ballon-Pop hat keine Rückmeldung zum Fehler (bewusst schnell) |
-| `apps/typen/uebung.html` | – | – | Lern-App | – | nicht in config | – | – | – | – | – (nicht in config) |  |  |
+| `apps/typen/uebung.html` | – | `en.5.to-be` (6 Stufen) | Lern-App | – | nicht in config | – | – | – | – | – (nicht in config) |  |  |
 | `spiele/burg-verteidigung.html` | Tower Defense | – | Spiel | Allgemein · alle | sichtbar | ja | ja | – | ja | – (Spiel) |  |  |
 | `spiele/dorf.html` | Mein Dorf | – | Spiel | Allgemein · alle | sichtbar | – | – | – | – | Dorf selbst |  |  |
 | `spiele/expedition.html` | Entdecker-Expedition | – | Spiel | GPG · 6 | versteckt | über spiel-hilfen.js | ja | – | – | – (Spiel) |  |  |

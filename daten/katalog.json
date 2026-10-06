@@ -656,6 +656,26 @@
      "titel": "Grammatik",
      "themen": [
       {
+       "id": "en.5.to-be",
+       "titel": "to be: am, is, are",
+       "klasse": 5,
+       "quelle": {
+        "app": "apps/typen/uebung.html",
+        "parameter": "inhalt=en.5.to-be"
+       },
+       "lehrplan": "E5 Grammatik: to be (am/is/are, Kurzformen, Verneinung, Fragen und Kurzantworten)",
+       "dauer": 10,
+       "einsatz": "Grammatik-Übung nach der Einführung von to be; Fehler-Training zur Wiederholung",
+       "stufen": [
+        { "id": "en.5.to-be.formen", "titel": "am, is, are" },
+        { "id": "en.5.to-be.kurzformen", "titel": "Kurzformen" },
+        { "id": "en.5.to-be.verneinung", "titel": "Verneinung" },
+        { "id": "en.5.to-be.fragen", "titel": "Fragen und Kurzantworten" },
+        { "id": "en.5.to-be.fehler", "titel": "Fehler finden" },
+        { "id": "en.5.to-be.mix", "titel": "Mix" }
+       ]
+      },
+      {
        "id": "en.5.simple-present",
        "titel": "Simple Present",
        "klasse": 5,

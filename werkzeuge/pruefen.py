@@ -286,6 +286,22 @@ if _tj and not TYPEN: F('gemeinsam/typen.js: Liste NAMEN nicht gefunden')
 for t in TYPEN:
     if not Path(f'gemeinsam/typen/{t}.js').is_file(): F(f'Aufgabentyp {t}: gemeinsam/typen/{t}.js fehlt')
 def _texte(l, n=1): return isinstance(l, list) and len(l) >= n and all(isinstance(x, str) and x.strip() for x in l)
+def pruefe_aufgaben(FI, wo, typ, auf):
+    """Typen mit einer Liste "aufgaben" (auch für Aufgaben mit eigenem Typ)"""
+    if typ == 'sortieren':
+        if not auf or not all(isinstance(x, dict) and _texte(x.get('teile'), 2) for x in auf): FI(f'{wo}: aufgaben mit mindestens 2 teilen nötig')
+    elif typ == 'lueckentext':
+        for x in auf or [None]:
+            if not isinstance(x, dict) or not re.search(r'_{2,}', str(x.get('text', ''))) or not x.get('antwort'):
+                FI(f'{wo}: jede Aufgabe braucht text mit ___ und antwort'); break
+            ant = x['antwort'] if isinstance(x['antwort'], list) else [x['antwort']]
+            if x.get('optionen') and not any(a in x['optionen'] for a in ant): FI(f'{wo}: Antwort „{ant[0]}“ fehlt in optionen')
+    elif typ == 'eingabe':
+        if not auf or not all(isinstance(x, dict) and x.get('frage') and x.get('antwort') not in (None, '', []) for x in auf): FI(f'{wo}: jede Aufgabe braucht frage und antwort')
+    elif typ == 'markieren':
+        for x in auf or [None]:
+            if not isinstance(x, dict) or len(re.findall(r'\[[^\]]+\]', str(x.get('satz', '')))) != 1:
+                FI(f'{wo}: jede Aufgabe braucht einen satz mit genau einer [Markierung]'); break
 inhalt_ids = set()
 for p in sorted(ROOT.glob('daten/inhalte/*/*.json')):
     r = rel(p)
@@ -293,7 +309,7 @@ for p in sorted(ROOT.glob('daten/inhalte/*/*.json')):
     except Exception: continue                                   # Gültigkeit prüft Abschnitt 1
     tid, typ = d.get('thema'), d.get('typ')
     def FI(msg): F(f'{r}: {msg}')
-    if typ not in TYPEN: FI(f'unbekannter Typ „{typ}“ (erlaubt: {", ".join(TYPEN)})')
+    if typ not in TYPEN and typ != 'gemischt': FI(f'unbekannter Typ „{typ}“ (erlaubt: {", ".join(TYPEN)}, gemischt)')
     if tid != p.stem: FI(f'thema „{tid}“ muss gleich dem Dateinamen sein')
     if not str(tid or '').startswith(p.parent.name + '.'): FI(f'thema muss mit dem Ordner „{p.parent.name}.“ beginnen')
     inhalt_ids.add(p.stem)
@@ -308,28 +324,34 @@ for p in sorted(ROOT.glob('daten/inhalte/*/*.json')):
         if not sid or not str(sid).startswith(str(tid) + '.'): FI(f'{wo}: id muss mit „{tid}.“ beginnen'); continue
         if katalog is not None and sid not in ids: FI(f'{wo} fehlt in daten/katalog.json')
         if not st.get('titel'): FI(f'{wo}: titel fehlt')
+        if st.get('mix'):                                        # Neue Lern-Apps Etappe 6: Mix-Stufe
+            for a_ in st.get('aus') or []:
+                if not isinstance(a_, str) or not KID.fullmatch(a_): FI(f'{wo}: aus enthält ungültige ID „{a_}“')
+                elif katalog is not None and a_ not in ids: FI(f'{wo}: aus nennt {a_}, das nicht im Katalog steht')
+            continue
+        styp = st.get('typ') or typ
+        if styp not in TYPEN: FI(f'{wo}: unbekannter Typ „{styp}“'); continue
         auf = st.get('aufgaben')
-        if typ == 'zuordnen':
+        if isinstance(auf, list):                                # Typ je Aufgabe: einzeln prüfen
+            eigen = [x for x in auf if isinstance(x, dict) and x.get('typ') and x.get('typ') != styp]
+            for x in eigen:
+                if x['typ'] not in ('lueckentext', 'sortieren', 'eingabe', 'markieren'): FI(f'{wo}: Typ je Aufgabe nur lueckentext, sortieren, eingabe, markieren (nicht „{x["typ"]}“)')
+                else: pruefe_aufgaben(FI, wo, x['typ'], [x])
+            auf = [x for x in auf if x not in eigen]
+            if not auf and eigen: continue
+        typ_ = styp
+        if typ_ in ('lueckentext', 'sortieren', 'eingabe', 'markieren'): pruefe_aufgaben(FI, wo, typ_, auf); continue
+        if typ_ == 'zuordnen':
             paare = [q for x in (auf or []) for q in (x.get('paare') or [])] if auf is not None else st.get('paare') or []
             if auf is not None and not all(isinstance(x, dict) and len(x.get('paare') or []) >= 2 for x in auf): FI(f'{wo}: jede Aufgabe braucht mindestens 2 paare')
             if len(paare) < 2 or not all(_texte(q, 2) and len(q) == 2 for q in paare): FI(f'{wo}: paare müssen [links, rechts] sein (mindestens 2)')
             elif st.get('ziele') and any(q[1] not in st['ziele'] for q in paare): FI(f'{wo}: ein Paar zeigt auf ein Ziel, das nicht in ziele steht')
-        elif typ == 'sortieren':
-            if not auf or not all(isinstance(x, dict) and _texte(x.get('teile'), 2) for x in auf): FI(f'{wo}: aufgaben mit mindestens 2 teilen nötig')
-        elif typ == 'lueckentext':
-            for x in auf or [None]:
-                if not isinstance(x, dict) or not re.search(r'_{2,}', str(x.get('text', ''))) or not x.get('antwort'):
-                    FI(f'{wo}: jede Aufgabe braucht text mit ___ und antwort'); break
-                ant = x['antwort'] if isinstance(x['antwort'], list) else [x['antwort']]
-                if x.get('optionen') and not any(a in x['optionen'] for a in ant): FI(f'{wo}: Antwort „{ant[0]}“ fehlt in optionen')
-        elif typ == 'eingabe':
-            if not auf or not all(isinstance(x, dict) and x.get('frage') and x.get('antwort') not in (None, '', []) for x in auf): FI(f'{wo}: jede Aufgabe braucht frage und antwort')
-        elif typ == 'beschriften':
+        elif typ_ == 'beschriften':
             if not (p.parent / str(st.get('bild', ''))).is_file(): FI(f'{wo}: Bild {st.get("bild")} fehlt neben der Inhaltsdatei')
             m_ = st.get('marken') or []
             if len(m_) < 2 or not all(isinstance(x, dict) and x.get('wort') and 0 <= float(x.get('x', -1)) <= 100 and 0 <= float(x.get('y', -1)) <= 100 for x in m_):
                 FI(f'{wo}: mindestens 2 marken mit x, y (0–100) und wort')
-        elif typ == 'bildwort':
+        elif typ_ == 'bildwort':
             w_ = st.get('woerter') or []
             if len(w_) < 4 or not all(isinstance(x, dict) and x.get('bild') and x.get('wort') for x in w_): FI(f'{wo}: mindestens 4 woerter mit bild und wort')
 # Katalog und config.json zeigen auf vorhandene Inhalte

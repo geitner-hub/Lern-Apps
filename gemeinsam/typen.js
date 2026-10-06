@@ -9,12 +9,22 @@
 //  Meisterschaft, Ergebnis mit Themen-ID, Infokarte und Dorf-Aufträge gibt es dadurch automatisch.
 //
 //  Inhaltsdatei (gleicher Kopf für alle Typen; pruefen.py prüft das Format):
-//    { "typ": "zuordnen" | "sortieren" | "lueckentext" | "eingabe" | "beschriften" | "bildwort",
+//    { "typ": "zuordnen" | "sortieren" | "lueckentext" | "eingabe" | "beschriften" | "bildwort" | "markieren"
+//             | "gemischt" (dann trägt jede Stufe ihren eigenen "typ"),
 //      "thema": "de.5.wortarten", "titel": "Wortarten", "untertitel": "…", "klasse": 5,
 //      "sprache": "en-GB"   (optional: Vorlesen in dieser Sprache),
 //      "runde": 8           (optional, Aufgaben je Runde),
 //      "stufen": [ { "id": "de.5.wortarten.nomen", "titel": "…", "kurz": "…", … je Typ … } ] }
 //  Was „je Typ“ in einer Stufe steht, beschreibt der Kopf der Typ-Datei.
+//
+//  Typ je Stufe und je Aufgabe (Neue Lern-Apps Etappe 6) – so mischt eine Grammatik-App Lückentext,
+//  Satzbau und Eingabe:
+//    Stufe:   { "id": …, "typ": "sortieren", … }               überschreibt "typ" der Datei
+//    Aufgabe: { "typ": "eingabe", "frage": …, "antwort": … }  (nur bei Typen mit "aufgaben")
+//  Mix-Stufe: { "id": "en.5.to-be.mix", "titel": "Mix", "mix": true,
+//               "aus": ["en.5.to-be.formen", "en.5.simple-present"]   (optional; Stufen-IDs dieser oder anderer
+//                       Inhaltsdateien oder ganze Inhaltsdateien; ohne "aus": alle anderen Stufen dieser Datei),
+//               "nurGeuebt": true   (optional: nur Stufen, die das Kind schon geübt hat – „Meine Themen“) }
 //
 //  Ein Typ meldet sich so an:
 //    LernTypen.typ('name', {
@@ -23,7 +33,7 @@
 //      pruefe(aufgabe, eingabe) → true/false
 //    });
 //  Hilfen für Typen: LernTypen.mischen(liste), .gleich(a, b) (Text ohne Groß/klein, Leerzeichen, Satzzeichen
-//  am Ende), .esc(text), .knopf(text, attr), .knoepfe(box, optionen, fertig), .textfeld(box, fertig),
+//  am Ende), .textOhneSatzzeichen(wort), .esc(text), .knopf(text, attr), .knoepfe(box, optionen, fertig), .textfeld(box, fertig),
 //  .bildHTML(bild, D) – und das gemeinsame Aussehen (.lt-…).
 // ═══════════════════════════════════════════════════════
 
@@ -34,12 +44,13 @@
   const HIER = (document.currentScript && document.currentScript.src) || location.href;
   const ROOT = new URL('../', HIER).href;
   const TYPEN = {};
-  const NAMEN = ['zuordnen', 'sortieren', 'lueckentext', 'eingabe', 'beschriften', 'bildwort'];
+  const NAMEN = ['zuordnen', 'sortieren', 'lueckentext', 'eingabe', 'beschriften', 'bildwort', 'markieren'];
 
   const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   function mischen(l) { const a = l.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
   const norm = s => String(s == null ? '' : s).trim().toLowerCase().replace(/[’`´]/g, "'").replace(/\s+/g, ' ').replace(/[.!?]+$/, '');
   const gleich = (a, b) => norm(a) === norm(b);
+  const textOhneSatzzeichen = t => String(t == null ? '' : t).replace(/^[„"'(¿¡]+|[.,!?;:"“”')]+$/g, '');
 
   // Gemeinsames Aussehen der Typen (Bausteine, Ziele, Felder) – passt zu ueben.js
   const CSS = `
@@ -106,53 +117,137 @@
     host.innerHTML = `<p style="color:rgba(241,240,251,.7);font:800 1rem Nunito,system-ui,sans-serif;text-align:center;padding:4rem 1rem">⚠️ ${esc(text)}</p>`;
   }
 
-  /** Seite starten: liest ?inhalt=<Themen-ID>, lädt Inhalt und Typ, startet den Übungs-Rahmen */
+  /** Inhaltsdatei laden (einmal je ID) */
+  const dateien = {};
+  function ladeInhalt(id) {
+    if (!dateien[id]) {
+      const fach = id.split('.')[0];
+      dateien[id] = fetch(new URL('daten/inhalte/' + fach + '/' + id + '.json', ROOT).href, { cache: 'no-cache' })
+        .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+        .then(D => {
+          if (!D || !Array.isArray(D.stufen) || !(NAMEN.includes(D.typ) || D.typ === 'gemischt')) throw new Error('fehlerhaft');
+          D.basis = new URL('daten/inhalte/' + fach + '/', ROOT).href;    // für Bilder neben der Inhaltsdatei
+          return D;
+        })
+        .catch(e => { delete dateien[id]; throw e; });
+    }
+    return dateien[id];
+  }
+  const typVon = (D, st, x) => (x && NAMEN.includes(x.typ) && x.typ) || st.typ || D.typ;
+  /** alle Typen einer Datei (Datei, Stufen, einzelne Aufgaben) */
+  function typenIn(D) {
+    const t = new Set();
+    D.stufen.forEach(st => {
+      if (!st || st.mix) return;
+      t.add(typVon(D, st));
+      (Array.isArray(st.aufgaben) ? st.aufgaben : []).forEach(x => { if (x && NAMEN.includes(x.typ)) t.add(x.typ); });
+    });
+    return [...t].filter(n => NAMEN.includes(n));
+  }
+  /** Eine echte Stufe als Quelle: anzahl, aufgabe(nr) */
+  function quelle(D, st) {
+    const T = TYPEN[typVon(D, st)];
+    if (!T) return null;
+    return {
+      D, st, n: T.anzahl(st) || 0,
+      aufgabe(nr) {
+        const x = Array.isArray(st.aufgaben) ? st.aufgaben[nr] : null;
+        const name = typVon(D, st, x), T2 = TYPEN[name];
+        if (!T2) return null;
+        const eigen = x && x.typ && x.typ !== typVon(D, st);
+        const a = eigen ? T2.aufgabe(Object.assign({}, st, { aufgaben: [x] }), 0, D) : T2.aufgabe(st, nr, D);
+        if (!a) return null;
+        a._typ = name;
+        if (D.sprache && !a.sprache) a.sprache = D.sprache;
+        return a;
+      },
+    };
+  }
+
+  /** Seite starten: liest ?inhalt=<Themen-ID>, lädt Inhalt und Typen, startet den Übungs-Rahmen */
   async function start(host) {
     stil();
     const id = new URLSearchParams(location.search).get('inhalt') || '';
     if (!/^[a-z]+(\.[a-z0-9-]+){1,5}$/.test(id)) return fehler(host, 'Diese Übung gibt es nicht.');
     let D;
-    try {
-      const r = await fetch(new URL('daten/inhalte/' + id.split('.')[0] + '/' + id + '.json', ROOT).href, { cache: 'no-cache' });
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      D = await r.json();
-    } catch (e) { return fehler(host, 'Die Aufgaben konnten nicht geladen werden. Bitte mit Internet neu öffnen.'); }
-    if (!D || !NAMEN.includes(D.typ) || !Array.isArray(D.stufen)) return fehler(host, 'Diese Übung ist fehlerhaft.');
-    D.basis = new URL('daten/inhalte/' + id.split('.')[0] + '/', ROOT).href;     // für Bilder neben der Inhaltsdatei
-    const typDatei = 'gemeinsam/typen/' + D.typ + '.js';             // NAMEN oben = Dateien in gemeinsam/typen/ (pruefen.py)
-    try { await (window.LW && LW.laden ? LW.laden(typDatei) : Promise.reject(new Error('LW'))); }
-    catch (e) { return fehler(host, 'Der Aufgabentyp konnte nicht geladen werden.'); }
-    const T = TYPEN[D.typ];
-    if (!T) return fehler(host, 'Unbekannter Aufgabentyp.');
+    try { D = await ladeInhalt(id); }
+    catch (e) { return fehler(host, e.message === 'fehlerhaft' ? 'Diese Übung ist fehlerhaft.' : 'Die Aufgaben konnten nicht geladen werden. Bitte mit Internet neu öffnen.'); }
 
+    // Mix-Stufen: Quellen sammeln (auch aus anderen Inhaltsdateien)
+    const fremd = new Set();
+    D.stufen.forEach(st => { if (st && st.mix) (st.aus || []).forEach(a => { const datei = String(a).split('.').slice(0, 3).join('.'); if (datei !== id) fremd.add(datei); }); });
+    const andere = {};
+    await Promise.all([...fremd].map(f => ladeInhalt(f).then(x => { andere[f] = x; }).catch(() => {})));
+    const typen = new Set(typenIn(D));
+    Object.values(andere).forEach(x => typenIn(x).forEach(t => typen.add(t)));
+    const typDatei = t => 'gemeinsam/typen/' + t + '.js';
+    try { await Promise.all([...typen].map(t => window.LW && LW.laden ? LW.laden(typDatei(t)) : Promise.reject(new Error('LW')))); }
+    catch (e) { return fehler(host, 'Der Aufgabentyp konnte nicht geladen werden.'); }
+    // (NAMEN oben = Dateien in gemeinsam/typen/, pruefen.py prüft das)
+
+    const quellen = {};                                   // Stufen-ID → Quelle
+    const sammle = (Dx) => Dx.stufen.forEach(st => { if (st && st.id && !st.mix) { const q = quelle(Dx, st); if (q && q.n) quellen[st.id] = q; } });
+    sammle(D); Object.values(andere).forEach(sammle);
+    function mixQuellen(st) {
+      const aus = Array.isArray(st.aus) && st.aus.length ? st.aus : D.stufen.filter(x => x && !x.mix).map(x => x.id);
+      const ids = [];
+      aus.forEach(a => {
+        if (quellen[a]) ids.push(a);
+        else Object.keys(quellen).forEach(k => { if (k.startsWith(a + '.')) ids.push(k); });   // ganze Datei
+      });
+      return [...new Set(ids)].map(k => quellen[k]);
+    }
+    const mixe = {};                                      // Stufen-ID → [Quelle …]
+    D.stufen.forEach(st => { if (st && st.id && st.mix) mixe[st.id] = mixQuellen(st); });
+    const anzahl = st => st.mix ? (mixe[st.id] || []).reduce((n, q) => n + q.n, 0) : quellen[st.id] ? quellen[st.id].n : 0;
+
+    /** Aufgabe nr einer Stufe (bei Mix: fortlaufend über alle Quellen) */
+    function aufgabe(st, nr) {
+      let q = quellen[st.id], i = nr;
+      if (st.mix) { q = null; for (const x of mixe[st.id] || []) { if (i < x.n) { q = x; break; } i -= x.n; } }
+      if (!q) return null;
+      const a = q.aufgabe(i);
+      if (!a) return null;
+      a.typ = 'a' + nr;                                  // Fehler-Training holt genau diese Aufgabe wieder
+      a.schluessel = st.id + '#' + nr;
+      return a;
+    }
+    /** „Meine Themen“: nur schon geübte Stufen (ohne Lernstand: alle) */
+    function geuebt(q) {
+      const P = window.LernPass, ls = P && P.state && P.state.lernstand;
+      return !!(ls && ls[q.st.id]);
+    }
     // Jede Stufe zieht ihre Aufgaben aus einem gemischten Stapel – keine Wiederholung, bis alle dran waren
     const stapel = {};
     function ziehe(st) {
-      const n = T.anzahl(st);
+      if (st.mix) {
+        const alle = mixe[st.id] || [];
+        let erlaubt = alle;
+        if (st.nurGeuebt) { const g = alle.filter(geuebt); if (g.length) erlaubt = g; }
+        const nummern = [];
+        let basis = 0;
+        alle.forEach(q => { if (erlaubt.includes(q)) for (let k = 0; k < q.n; k++) nummern.push(basis + k); basis += q.n; });
+        if (!nummern.length) return null;
+        if (!stapel[st.id] || !stapel[st.id].length) stapel[st.id] = mischen(nummern);
+        return stapel[st.id].pop();
+      }
+      const n = anzahl(st);
       if (!n) return null;
       if (!stapel[st.id] || !stapel[st.id].length) stapel[st.id] = mischen([...Array(n).keys()]);
       return stapel[st.id].pop();
     }
-    function aufgabe(st, nr) {
-      const a = T.aufgabe(st, nr, D);
-      if (!a) return null;
-      a.typ = 'a' + nr;                                  // Fehler-Training holt genau diese Aufgabe wieder
-      a.schluessel = st.id + '#' + nr;
-      if (D.sprache && !a.sprache) a.sprache = D.sprache;
-      return a;
-    }
-    const stufen = D.stufen.filter(st => st && st.id && T.anzahl(st) > 0)
-      .map(st => Object.assign({}, st, { runde: st.runde || Math.min(Number(D.runde) || 8, T.anzahl(st)) }));
+    const stufen = D.stufen.filter(st => st && st.id && anzahl(st) > 0)
+      .map(st => Object.assign({}, st, { runde: st.runde || Math.min(Number(D.runde) || 8, anzahl(st)) }));
     document.title = (D.titel || 'Übung') + ' – Lernwelt';
     host.innerHTML = '';
     return LernUeben.start({
       host, titel: (D.emoji ? D.emoji + ' ' : '') + (D.titel || 'Übung'), untertitel: D.untertitel || 'Wähle eine Stufe',
-      stufen, runde: Number(D.runde) || 8, meisterschaft: D.meisterschaft,
+      stufen, runde: Number(D.runde) || 8, meisterschaft: D.meisterschaft, vorlesen: !!D.vorlesen,
       erzeuge: st => { const nr = ziehe(st); return nr == null ? null : aufgabe(st, nr); },
-      erzeugeTyp: (st, typ) => { const nr = Number(String(typ || '').slice(1)); return /^a\d+$/.test(typ) && nr < T.anzahl(st) ? aufgabe(st, nr) : null; },
-      pruefe: (a, e) => T.pruefe(a, e),
+      erzeugeTyp: (st, typ) => { const nr = Number(String(typ || '').slice(1)); return /^a\d+$/.test(typ) && nr < anzahl(st) ? aufgabe(st, nr) : null; },
+      pruefe: (a, e) => { const T = TYPEN[a._typ]; return !!T && T.pruefe(a, e); },
     });
   }
 
-  window.LernTypen = { start, typ, mischen, gleich, norm, esc, knopf, knoepfe, textfeld, bildHTML, NAMEN };
+  window.LernTypen = { start, typ, mischen, gleich, norm, esc, textOhneSatzzeichen, knopf, knoepfe, textfeld, bildHTML, NAMEN };
 })();

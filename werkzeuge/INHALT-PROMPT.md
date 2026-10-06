@@ -21,7 +21,7 @@ Erstelle eine Inhaltsdatei für den Aufgabentyp-Baukasten der „Lernwelt“ (Mi
 - Fach: **[Deutsch / Englisch / Mathematik / GPG / Natur und Technik]** (Ordner/ID-Anfang: de / en / ma / gpg / nut)
 - Klasse: **[5]**
 - Thema und Lehrplanbezug: **[z. B. „Groß- und Kleinschreibung: Nomen erkennen“, LB …]**
-- Typ: **[zuordnen / sortieren / lueckentext / eingabe / beschriften / bildwort]** – oder schlage den passenden vor
+- Typ: **[zuordnen / sortieren / lueckentext / eingabe / beschriften / bildwort / markieren / gemischt]** – oder schlage den passenden vor
 - Stufen: **[z. B. leicht → mittel → schwer, 2–3 Stufen]**, je Stufe **[8–12]** Aufgaben
 - Grundlage: **[Schulbuchseite / Wortliste / eigene Stichpunkte]**
 
@@ -40,6 +40,9 @@ Regeln:
   - beschriften: `"bild": "datei.svg"`, `"marken": [{ "x": 0–100, "y": 0–100, "wort": "…" }]` (Prozent) –
     dazu eine einfache, selbst gezeichnete SVG-Datei
   - bildwort: `"woerter": [{ "bild": "Emoji", "wort": "…", "de": "…" }]`, `"richtung": "bild-wort" | "wort-bild" | "hoeren"`
+  - markieren: `"aufgaben": [{ "satz": "She [go] to school.", "richtig": "goes" }]` – genau ein Wort in [ ]
+  - gemischt: `"typ": "gemischt"` im Kopf, dann `"typ"` je Stufe; einzelne Aufgaben dürfen einen eigenen `"typ"` haben
+    (lueckentext, sortieren, eingabe, markieren). Mix-Stufe: `{ "id", "titel", "mix": true }`
 - Jede Aufgabe gern mit `"tipp"` (kurzer Hinweis) und `"erklaerung"` (warum es so richtig ist, ein Satz).
 - Sprache kindgerecht für die Mittelschule, kurze Sätze, keine Fachwörter ohne Erklärung.
   Mathe-Aufgaben müssen im Kopf lösbar sein.
