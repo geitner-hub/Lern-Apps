@@ -1,0 +1,41 @@
+# Lernwelt – automatische Sicherung
+# Jede Nacht: Hat sich seit der letzten Sicherung etwas geändert, entsteht ein Release
+# „sicherung-JJJJ-MM-TT“ mit dem kompletten Stand als ZIP (unter „Releases“ im Repo).
+# Von Hand: Actions → „Lernwelt sichern“ → „Run workflow“.
+# Zurückholen: werkzeuge/SICHERUNG.md
+name: Lernwelt sichern
+
+on:
+  schedule:
+    - cron: '17 1 * * *'     # täglich ca. 3:17 Uhr deutscher Zeit (Angabe in UTC)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sichern:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Sicherung anlegen (nur bei Änderungen)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          letzte=$(git tag -l 'sicherung-*' --sort=-creatordate | head -n1)
+          if [ -n "$letzte" ] && [ "$(git rev-list -n1 "$letzte")" = "$(git rev-parse HEAD)" ]; then
+            echo "Keine Änderung seit $letzte – nichts zu tun."
+            exit 0
+          fi
+          name="sicherung-$(TZ=Europe/Berlin date +%Y-%m-%d)"
+          if git rev-parse -q --verify "refs/tags/$name" >/dev/null; then
+            name="$name-$(TZ=Europe/Berlin date +%H%M)"
+          fi
+          git archive --format=zip --prefix=Lern-Apps/ -o "Lern-Apps-$name.zip" HEAD
+          gh release create "$name" "Lern-Apps-$name.zip" \
+            --target "$(git rev-parse HEAD)" \
+            --title "Sicherung $(TZ=Europe/Berlin date +%d.%m.%Y)" \
+            --notes "Automatische Sicherung. Stand: $(git log -1 --format='%h – %s')"

@@ -87,6 +87,8 @@ in einen anderen Ordner umziehen, ohne dass Fortschritt verloren geht (dann `con
 - **Rauchtest:** nach jedem Upload die Checkliste `werkzeuge/RAUCHTEST.md` (ca. 5 Minuten).
 - **Speicher-Register:** jeder Schlüssel im Gerätespeicher steht in `gemeinsam/umgebung.js` (`SPEICHER`).
   Neue Schlüssel beginnen mit `lernwelt-`; bestehende Namen nie ändern.
+- **Sicherung:** jede Nacht automatisch als Release `sicherung-JJJJ-MM-TT` (nur bei Änderungen);
+  Zurückholen: `werkzeuge/SICHERUNG.md`.
 - **Inventar:** `python3 werkzeuge/inventar.py` erzeugt `werkzeuge/INVENTAR.md` neu (Handspalten bleiben).
 - **App-Prüfung:** `werkzeuge/APP-PRUEFUNG.md` – Ergebnis der Prüfung aller Apps (Etappe 3), Anforderungen an
   die Engines und die Lücken im Lehrplan (Startliste für neue Apps).

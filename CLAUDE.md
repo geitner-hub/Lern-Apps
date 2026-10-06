@@ -10,6 +10,25 @@ ohne Frameworks. Code, Kommentare, Bezeichner und Doku sind auf **Deutsch** – 
 `README.md` ist die ausführliche Referenz (Pass-Regeln, Dorf, Avatar-Teile, Katalog); vor größeren Änderungen
 den passenden Abschnitt dort lesen.
 
+## Lernwelt – feste Regeln
+
+- **Bestehende Apps müssen jederzeit funktionsfähig bleiben.**
+- **„Mein Dorf“ und Pass:** Änderungen nur aufbauend, niemals Fortschritt zurücksetzen (siehe IDs unter Architektur).
+- **Ordnerstruktur:** `apps/<fach>/`, `spiele/`, `daten/`, `gemeinsam/`. `index.html`, `admin.html`, `config.json`
+  und `sw.js` bleiben im Hauptordner. Neue Apps immer in diese Struktur: Datei aus der Vorlage anlegen, Thema in
+  `daten/katalog.json` eintragen, mit `thema` melden; der Eintrag in `config.json` erfolgt über den Admin. Beim
+  Verschieben einer App die Weiterleitungsliste in `404.html` anpassen. Neues Fach: in `shared.js` (`CAT_STYLES`)
+  **und** im Katalog unter `faecher` mit gleichem Namen.
+- **Design:** dunkles Schema, Akzente Gold `#e6a817` und Indigo `#6366f1`/`#818cf8`, Schriftzug „Fredoka One“.
+- **Zielgerät:** Schul-iPads (Safari, Touch, ältere Hardware). `prefers-reduced-motion` respektieren, ohne WebGL
+  eine Ersatzanzeige bieten.
+- **Kopfrechen-Aufgaben** müssen für Mittelschüler im Kopf lösbar sein.
+- **Datenschutz (DSGVO):** keine personenbezogenen Daten speichern oder übertragen. Keine externen Dienste, CDNs
+  oder Google Fonts: Schriften aus `fonts/` über `gemeinsam/fonts.css`, Bibliotheken in `vendor/`.
+- **Sicherheit:** Texte aus der Config immer escapen (`escHtml`), Links über `isSafeLink` prüfen.
+- **Version:** nach Änderungen an ausgelieferten Dateien `VERSION` in `sw.js` **und** in
+  `gemeinsam/umgebung.js` gleich erhöhen (pruefen.py prüft das).
+
 ## Befehle
 
 ```bash
@@ -25,8 +44,7 @@ und gelbe Hinweise. Manuelle Checkliste nach Uploads: `werkzeuge/RAUCHTEST.md`.
 
 - Jede Seite (außer `404.html`) bindet `gemeinsam/umgebung.js` als **erstes Skript** direkt nach `<meta charset>` ein;
   jede Lern-App und jedes Spiel bindet `gemeinsam/navbar.js` am Ende von `<body>` ein (Ausnahmen: `OHNE_NAVBAR`).
-- **Version:** bei jeder Änderung an ausgelieferten Dateien `VERSION` in `sw.js` **und** in `gemeinsam/umgebung.js`
-  gleich erhöhen.
+- `VERSION` in `sw.js` und `gemeinsam/umgebung.js` sind gleich.
 - **Speicher-Register:** jeder `localStorage`-Schlüssel muss in `SPEICHER` in `gemeinsam/umgebung.js` stehen.
   Neue Schlüssel beginnen mit `lernwelt-`; bestehende Schlüssel nie umbenennen.
 - **Größenbudgets** (`BUDGETS` in pruefen.py): Zusatz je Lern-App (umgebung.js + navbar.js + pass.js) < 80 KB –
@@ -67,25 +85,3 @@ und gelbe Hinweise. Manuelle Checkliste nach Uploads: `werkzeuge/RAUCHTEST.md`.
   Änderungen landen als Entwurf (`lernwelt-admin-entwurf`) und werden gesammelt veröffentlicht.
 - **Testumgebung:** Kopie im Repo `Lern-Apps-test`; umgebung.js erkennt das am Repo-Namen, setzt das
   Präfix `lwtest-` vor alle Speicherschlüssel und sperrt Schreibzugriffe auf den Worker.
-
-## Konventionen
-
-- Keine externen Dienste/CDNs/Google Fonts (DSGVO): Schriften aus `fonts/` über `gemeinsam/fonts.css`,
-  Bibliotheken liegen in `vendor/`.
-- Texte aus der Config immer escapen (`escHtml`), Links über `isSafeLink` prüfen.
-- Zielgerät iPad/Safari: Touch, ältere Hardware, `prefers-reduced-motion` respektieren, ohne WebGL eine
-  Ersatzanzeige bieten.
-- Neue App: Datei aus der Vorlage anlegen, Thema in `daten/katalog.json` eintragen, mit `thema` melden; Eintrag in
-  `config.json` erfolgt über den Admin. Beim Verschieben einer App die Weiterleitungsliste in `404.html` anpassen.
-- Neues Fach: in `shared.js` (`CAT_STYLES`) **und** im Katalog unter `faecher` mit gleichem Namen.
-
-## Lernwelt – feste Regeln
-- Ordnerstruktur: apps/<fach>/, spiele/, daten/, gemeinsam/. index.html, admin.html,
-  config.json und sw.js bleiben im Hauptordner. Neue Apps immer in diese Struktur.
-- Design: dunkles Schema, Akzente Gold #e6a817 und Indigo #6366f1/#818cf8,
-  Schriftzug "Fredoka One". Zielgerät: Schul-iPads (Safari, Touch).
-- Bestehende Apps müssen jederzeit funktionsfähig bleiben.
-- "Mein Dorf" und Pass: Änderungen nur aufbauend, niemals Fortschritt zurücksetzen.
-- Kopfrechen-Aufgaben müssen für Mittelschüler im Kopf lösbar sein.
-- Datenschutz (DSGVO): keine personenbezogenen Daten speichern oder übertragen.
-- Nach Änderungen an Dateien: Cache-Version in sw.js prüfen/erhöhen.
