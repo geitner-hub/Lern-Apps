@@ -78,3 +78,14 @@ und gelbe Hinweise. Manuelle Checkliste nach Uploads: `werkzeuge/RAUCHTEST.md`.
 - Neue App: Datei aus der Vorlage anlegen, Thema in `daten/katalog.json` eintragen, mit `thema` melden; Eintrag in
   `config.json` erfolgt über den Admin. Beim Verschieben einer App die Weiterleitungsliste in `404.html` anpassen.
 - Neues Fach: in `shared.js` (`CAT_STYLES`) **und** im Katalog unter `faecher` mit gleichem Namen.
+
+## Lernwelt – feste Regeln
+- Ordnerstruktur: apps/<fach>/, spiele/, daten/, gemeinsam/. index.html, admin.html,
+  config.json und sw.js bleiben im Hauptordner. Neue Apps immer in diese Struktur.
+- Design: dunkles Schema, Akzente Gold #e6a817 und Indigo #6366f1/#818cf8,
+  Schriftzug "Fredoka One". Zielgerät: Schul-iPads (Safari, Touch).
+- Bestehende Apps müssen jederzeit funktionsfähig bleiben.
+- "Mein Dorf" und Pass: Änderungen nur aufbauend, niemals Fortschritt zurücksetzen.
+- Kopfrechen-Aufgaben müssen für Mittelschüler im Kopf lösbar sein.
+- Datenschutz (DSGVO): keine personenbezogenen Daten speichern oder übertragen.
+- Nach Änderungen an Dateien: Cache-Version in sw.js prüfen/erhöhen.
