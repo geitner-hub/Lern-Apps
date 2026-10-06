@@ -7,6 +7,7 @@
   "units": {
     "unit1": {
       "label": "Unit 1: Together again",
+      "thema": "en.6.vok.u1",
       "themes": {
         "grundwortschatz": {
           "label": "Grundwortschatz",
@@ -390,6 +391,7 @@
     },
     "unit2": {
       "label": "Unit 2: Neighbours",
+      "thema": "en.6.vok.u2",
       "themes": {
         "grundwortschatz": {
           "label": "Grundwortschatz",
@@ -765,6 +767,7 @@
     },
     "unit3": {
       "label": "Unit 3: I'm feeling great!",
+      "thema": "en.6.vok.u3",
       "themes": {
         "grundwortschatz": {
           "label": "Grundwortschatz",
@@ -1105,6 +1108,7 @@
     },
     "unit4": {
       "label": "Unit 4: Teenage life",
+      "thema": "en.6.vok.u4",
       "themes": {
         "grundwortschatz": {
           "label": "Grundwortschatz",
@@ -1462,6 +1466,7 @@
     },
     "unit5": {
       "label": "Unit 5: Dartmoor adventures",
+      "thema": "en.6.vok.u5",
       "themes": {
         "grundwortschatz": {
           "label": "Grundwortschatz",

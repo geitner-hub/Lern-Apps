@@ -1,6 +1,6 @@
 # Inventar der Lern-Apps und Spiele
 
-Automatisch erzeugt am 05.10.2026 mit `python3 werkzeuge/inventar.py` (Angaben aus dem Code). Nur die Spalten **Entscheidung** und **Notiz** von Hand pflegen – sie bleiben beim Neu-Erzeugen erhalten.
+Automatisch erzeugt am 06.10.2026 mit `python3 werkzeuge/inventar.py` (Angaben aus dem Code). Nur die Spalten **Entscheidung** und **Notiz** von Hand pflegen – sie bleiben beim Neu-Erzeugen erhalten.
 
 Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv**
 
@@ -11,6 +11,7 @@ Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv
 | `apps/englisch/practice_simple_present.html` | Simple present | `en.5.simple-present` | Lern-App | Englisch · 5 | sichtbar | ja | ja | – | – | ja | Kern | Gut: nur Antippen, Tipp-Knopf. Mängel: meldet kein `thema`; Satzstellung später Typ Sortieren (Etappe 9) |
 | `apps/englisch/satzglieder-erkennen.html` | Satzglieder ordnen | `en.5.satzglieder` | Lern-App | Englisch · 5 | sichtbar | ja | ja | – | – | ja | Kern → Engine (Etappe 9) | Wird erste Überführung Typ Zuordnen. Mängel: Rückmeldung nur richtig/falsch ohne Erklärung, kein `thema` |
 | `apps/englisch/simple-past.html` | Simple Past | `en.5.simple-past` | Lern-App | Englisch · 5, 6 | sichtbar | ja | ja | – | – | ja | Kern | Gute Rückmeldung (Regel + Beispiel), Verbenliste, Kl. 5/6. Mängel: kein `thema`, keine Stufen im Katalog |
+| `apps/englisch/vokabeltrainer.html` | – | – | Lern-App | – | nicht in config | ja | ja | ja | – | – (nicht in config) | Engine (Etappe 5, Testphase) | Ein Trainer für alle Wortlisten (?klasse=5/6, ?liste=NAME); ersetzt nach dem Test vokabeltrainer5/6 |
 | `apps/englisch/vokabeltrainer5.html` | Vokabeltrainer 5. Klasse | `en.5.vok` (7 Stufen), `en.5.wortlisten` (8 Stufen) | Lern-App | Englisch · 5 | sichtbar | ja | ja | ja | – | ja | Engine (Etappe 5) | Mit vokabeltrainer6 zu einer Vokabel-Engine. Mängel: Startseite scrollt (iPad quer), ~100 Zeilen doppelt zu Kl. 6 |
 | `apps/englisch/vokabeltrainer6.html` | Vokabeltrainer 6. Klasse | `en.6.vok` (5 Stufen) | Lern-App | Englisch · 6 | sichtbar | ja | ja | ja | – | ja | Engine (Etappe 5) | Siehe vokabeltrainer5 |
 | `apps/gpg/laender-finder.html` | Länder finden | `gpg.6.laender` (2 Stufen) | Lern-App | GPG · 6 | sichtbar | ja | ja | – | – | ja | Kern | Stark: Karte, Profi-Modus, Fehler kommen wieder. Bundesländer = GPG 5, Europa = GPG 6. Mängel: kein `thema`/`inhalt` |
@@ -25,7 +26,7 @@ Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv
 | `apps/mathe/kopfrechnen_kl6.html` | – | – | Lern-App | – | nicht in config | – | – | – | – | – (nicht in config) | Weiterleitung | → kopfrechnen.html?klasse=6; Ergebnisse, Sterne und Dorf-Aufträge werden übernommen |
 | `apps/mathe/laengeneinheiten.html` | Längeneinheiten umrechnen | `ma.5.laengen` | Lern-App | Mathematik · 5, 6 | sichtbar | ja | ja | – | – | ja | Kern → Typ Eingabe (Etappe 9) | Passt zu M5 LB 5. Mängel: kein `thema`/`inhalt` (fehlt in den Spielen), Hilfe nur auf Knopfdruck, keine anderen Größen (Masse, Zeit, Geld) |
 | `apps/mathe/mathe-trainer.html` | Mathe-Trainer Klasse 5 | – | Lern-App | Mathematik · 5 | sichtbar | – | – | – | – | ja | Kern (Übungs-Rahmen) | Etappe 4b: Stoff der Jahrgangsstufe 5/6 in Stufen (?klasse=5/6); neue Themen = neue Stufen in daten/kopfrechnen.json |
-| `apps/mathe/rechen-arena.html` | Rechen-Arena | `ma.5.rechen-arena` | Lern-App | Mathematik · 5, 6 | sichtbar | ja | ja | – | – | ja | Kern | Beliebt, vier Modi. Mängel: Startseite scrollt (iPad quer), kein `thema`/`inhalt`, Ballon-Pop hat keine Rückmeldung zum Fehler (bewusst schnell) |
+| `apps/mathe/rechen-arena.html` | Rechen-Arena | `ma.5.rechen-arena` | Lern-App | Allgemein · 5, 6 | sichtbar | ja | ja | – | – | ja | Kern | Beliebt, vier Modi. Mängel: Startseite scrollt (iPad quer), kein `thema`/`inhalt`, Ballon-Pop hat keine Rückmeldung zum Fehler (bewusst schnell) |
 | `spiele/burg-verteidigung.html` | Tower Defense | – | Spiel | Allgemein · alle | sichtbar | ja | ja | – | ja | – (Spiel) |  |  |
 | `spiele/dorf.html` | Mein Dorf | – | Spiel | Allgemein · alle | sichtbar | – | – | – | – | Dorf selbst |  |  |
 | `spiele/expedition.html` | Entdecker-Expedition | – | Spiel | GPG · 6 | versteckt | über spiel-hilfen.js | ja | – | – | – (Spiel) |  |  |
@@ -42,6 +43,7 @@ Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv
 | apps/englisch/practice_simple_present.html | 35 | navbar.js | + über navbar.js |
 | apps/englisch/satzglieder-erkennen.html | 35 | navbar.js | + über navbar.js |
 | apps/englisch/simple-past.html | 51 | navbar.js | + über navbar.js |
+| apps/englisch/vokabeltrainer.html | 60 | ueben.js, navbar.js | vokab-history-kl5, vokab-word-stats-kl5, vokab-a11y-kl5, vokab-history-kl6, vokab-word-stats-kl6, vokab-a11y-kl6, + über navbar.js |
 | apps/englisch/vokabeltrainer5.html | 51 | navbar.js | vokab-history-kl5, vokab-word-stats-kl5, vokab-a11y-kl5, + über navbar.js |
 | apps/englisch/vokabeltrainer6.html | 54 | navbar.js | vokab-history-kl6, vokab-word-stats-kl6, vokab-a11y-kl6, + über navbar.js |
 | apps/gpg/laender-finder.html | 26 | navbar.js, karten-ansicht.js | laender-finder-best, + über navbar.js |

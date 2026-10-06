@@ -7,6 +7,7 @@
   "specialLists": {
     "numbers_1_14": {
       "label": "Zahlen 1–14",
+      "thema": "en.5.wortlisten.numbers-1-14",
       "unit": "intro",
       "type": "random_numbers",
       "words": [
@@ -28,6 +29,7 @@
     },
     "colors": {
       "label": "Farben",
+      "thema": "en.5.wortlisten.colors",
       "unit": "intro",
       "words": [
         { "en": "red",    "de": "rot"    },
@@ -43,6 +45,7 @@
     },
     "weekdays": {
       "label": "Wochentage",
+      "thema": "en.5.wortlisten.weekdays",
       "unit": "unit1",
       "words": [
         { "en": "Monday",    "de": "Montag"    },
@@ -56,6 +59,7 @@
     },
     "numbers_15_39": {
       "label": "Zahlen 15–39",
+      "thema": "en.5.wortlisten.numbers-15-39",
       "unit": "unit1",
       "type": "random_numbers",
       "words": [
@@ -74,6 +78,7 @@
     },
     "numbers_40_100": {
       "label": "Zahlen 40–100",
+      "thema": "en.5.wortlisten.numbers-40-100",
       "unit": "unit3",
       "type": "random_numbers",
       "words": [
@@ -88,6 +93,7 @@
     },
     "months": {
       "label": "Monate",
+      "thema": "en.5.wortlisten.months",
       "unit": "unit3",
       "words": [
         { "en": "January",   "de": "Januar"    },
@@ -106,6 +112,7 @@
     },
     "ordinals": {
       "label": "Ordinalzahlen",
+      "thema": "en.5.wortlisten.ordinals",
       "unit": "unit3",
       "type": "random_numbers",
       "words": [
@@ -132,6 +139,7 @@
     },
     "question_words": {
       "label": "Fragewörter",
+      "thema": "en.5.wortlisten.question-words",
       "unit": "unit4",
       "words": [
         { "en": "what",  "de": "was"        },
@@ -146,6 +154,7 @@
   "units": {
     "intro": {
       "label": "Hi! What's your name?",
+      "thema": "en.5.vok.intro",
       "themes": {
         "intro": {
           "label": "Einführung",
@@ -222,6 +231,7 @@
     },
     "unit1": {
       "label": "Unit 1: Welcome to our school",
+      "thema": "en.5.vok.u1",
       "themes": {
         "intro": {
           "label": "Einführung",
@@ -375,6 +385,7 @@
     },
     "unit2": {
       "label": "Unit 2: At home with Ellie",
+      "thema": "en.5.vok.u2",
       "themes": {
         "intro": {
           "label": "Einführung",
@@ -500,6 +511,7 @@
     },
     "unit3": {
       "label": "Unit 3: Luca's birthday",
+      "thema": "en.5.vok.u3",
       "themes": {
         "intro": {
           "label": "Einführung",
@@ -605,6 +617,7 @@
     },
     "unit4": {
       "label": "Unit 4: Berry's world",
+      "thema": "en.5.vok.u4",
       "themes": {
         "intro": {
           "label": "Einführung",
@@ -720,6 +733,7 @@
     },
     "unit5": {
       "label": "Unit 5: All about Adam",
+      "thema": "en.5.vok.u5",
       "themes": {
         "intro": {
           "label": "Einführung",
@@ -828,6 +842,7 @@
     },
     "unit6": {
       "label": "Unit 6: School is over",
+      "thema": "en.5.vok.u6",
       "themes": {
         "intro": {
           "label": "Einführung",

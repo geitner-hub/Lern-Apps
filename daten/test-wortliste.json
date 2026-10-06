@@ -1,0 +1,32 @@
+{
+  "meta": {
+    "titel": "🧪 Test-Wortliste",
+    "untertitel": "Beispiel für Bilder, Artikel und Silben (Etappe 5)",
+    "sprache": "en-GB"
+  },
+  "units": {
+    "essen": {
+      "label": "Essen und Trinken",
+      "themes": {
+        "obst": {
+          "label": "Obst",
+          "words": [
+            { "en": "apple",  "de": "Apfel",   "artikel": "der", "bild": "🍎", "silben": "Ap-fel" },
+            { "en": "banana", "de": "Banane",  "artikel": "die", "bild": "🍌", "silben": "Ba-na-ne" },
+            { "en": "pear",   "de": "Birne",   "artikel": "die", "bild": "🍐", "silben": "Bir-ne" },
+            { "en": "lemon",  "de": "Zitrone", "artikel": "die", "bild": "🍋", "silben": "Zi-tro-ne" }
+          ]
+        },
+        "mehr": {
+          "label": "Mehr",
+          "words": [
+            { "en": "bread",  "de": "Brot",    "artikel": "das", "bild": "🍞", "silben": "Brot" },
+            { "en": "cheese", "de": "Käse",    "artikel": "der", "bild": "🧀", "silben": "Kä-se" },
+            { "en": "egg",    "de": "Ei",      "artikel": "das", "bild": "🥚", "silben": "Ei" },
+            { "en": "milk",   "de": "Milch",   "artikel": "die", "bild": "🥛", "silben": "Milch" }
+          ]
+        }
+      }
+    }
+  }
+}

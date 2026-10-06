@@ -138,6 +138,20 @@ Grundsatz: **Kern sofort, Rest bei Bedarf.** Die Budgets prüft `werkzeuge/pruef
     Beim ersten Öffnen übernimmt `LernUeben.uebernehme(alt, neu)` Ergebnisse, Sterne und offene Dorf-Aufträge.
   - Die Stufen-IDs des Trainers heißen aus historischen Gründen `ma.5.kopf.…` – IDs werden nie umbenannt.
 
+## Vokabel-Engine (Infrastruktur Etappe 5)
+
+- **apps/englisch/vokabeltrainer.html** – ein Trainer für alle Wortlisten, alle Modi wie bisher
+  (Flashcards, Quiz, Memory, Fill in, Scramble, Speed, schwierige Wörter, Lese-Einstellungen):
+  `?klasse=5` → `daten/vokabeln5.json`, `?klasse=6` → `daten/vokabeln6.json`, `?liste=NAME` → `daten/NAME.json`.
+- Format unverändert, ergänzt um `thema` je Unit/Sonderliste (Themen-ID aus dem Katalog; pruefen.py prüft das).
+  Optional: `meta.sprache`, `meta.titel`, `meta.untertitel`, `meta.vorne`/`meta.hinten`; je Wort `bild` (Emoji oder
+  Datei in `daten/bilder/`), `artikel` (der/die/das, farbig), `silben` (`Ap-fel`). Beispiel: `daten/test-wortliste.json`.
+- Verlauf und Statistik nutzen für Klasse 5/6 die bisherigen Schlüssel (`vokab-…-kl5/kl6`); weitere Listen
+  bekommen `vokab-…-NAME` (bei Bedarf im Speicher-Register ergänzen).
+- Falsche Wörter landen im Fehlerheft; Units lassen sich später über die Freigabe (Etappe 7) sperren.
+- Eine separate Vokabelabfrage-App ist bewusst nicht geplant.
+- **Testphase:** vokabeltrainer5/6.html bleiben, bis die Engine getestet ist; danach leiten sie weiter (wie Kopfrechnen).
+
 ## Archiv (archiv/)
 
 Abgelegte Apps (Etappe 3/4b): English Dialogue (Vorlagen), Rechteck-Werkstatt, Sachaufgaben Längen,

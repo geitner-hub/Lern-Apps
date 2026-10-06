@@ -20,6 +20,7 @@
 #    Apps im Ordner, die nicht in config.json stehen, u. Ä.
 #
 #    9. Ladekette (Etappe 2): jede Datei aus sw.js NACHLADEN und aus LW.laden('…') existiert.
+#   11. Wortlisten (Etappe 5): jede Unit/Sonderliste in daten/vokabeln*.json hat eine Themen-ID aus dem Katalog.
 #   10. Kopfrechnen (Etappe 4): Stufen in daten/kopfrechnen.json stehen im Katalog und nutzen
 #       nur Generatoren, die es in gemeinsam/generatoren-mathe.js gibt.
 #
@@ -241,6 +242,16 @@ if kr is not None:
             for sid in (kl.get('stufen') or []) + (kl.get('foerder') or []):
                 if sid not in (kr.get('stufen') or {}): F(f'kopfrechnen.json: {an} Klasse {k} nennt unbekannte Stufe {sid}')
     I(f'Kopfrechnen: {len(kr.get("stufen") or {})} Stufen, {len(typen)} Generatoren')
+
+# ── 11. Wortlisten (Etappe 5) ───────────────────────────
+for p in sorted(ROOT.glob('daten/vokabeln*.json')):
+    try: v = json.loads(p.read_text(encoding='utf-8'))
+    except Exception: continue                      # Gültigkeit prüft Abschnitt 1
+    for gruppe in ('units', 'specialLists'):
+        for k, u in (v.get(gruppe) or {}).items():
+            t = u.get('thema')
+            if not t: H(f'{rel(p)}: {gruppe}.{k} hat keine Themen-ID (Feld thema)')
+            elif katalog is not None and t not in ids: F(f'{rel(p)}: {gruppe}.{k} nennt unbekannte Themen-ID {t}')
 
 # ── 7. Budgets ──────────────────────────────────────────
 def groesse(d):
