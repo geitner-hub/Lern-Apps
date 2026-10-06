@@ -165,7 +165,9 @@
       "emoji": "🧮",
       "beschreibung": "",
       "hidden": false,
-      "klassen": [],
+      "klassen": [
+        5
+      ],
       "customTags": [],
       "aod": false
     },
@@ -305,7 +307,10 @@
       "emoji": "📐",
       "beschreibung": "",
       "hidden": false,
-      "klassen": [],
+      "klassen": [
+        5,
+        6
+      ],
       "customTags": [],
       "aod": false,
       "gruppe": "g-geometrie"
@@ -332,7 +337,9 @@
       "emoji": "📏",
       "beschreibung": "Finde dich am Zahlenstrahl zurecht",
       "hidden": false,
-      "klassen": [],
+      "klassen": [
+        5
+      ],
       "customTags": [],
       "aod": false,
       "gruppe": "g-geometrie"
@@ -355,7 +362,10 @@
       "emoji": "🕒",
       "beschreibung": "",
       "hidden": false,
-      "klassen": [],
+      "klassen": [
+        5,
+        6
+      ],
       "customTags": [],
       "aod": false
     },
@@ -366,7 +376,9 @@
       "emoji": "👋",
       "beschreibung": "",
       "hidden": false,
-      "klassen": [],
+      "klassen": [
+        5
+      ],
       "customTags": [],
       "aod": false
     },
@@ -484,7 +496,10 @@
       "emoji": "🦁",
       "beschreibung": "",
       "hidden": false,
-      "klassen": [],
+      "klassen": [
+        5,
+        6
+      ],
       "customTags": [],
       "aod": false
     }
