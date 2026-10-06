@@ -2,195 +2,6 @@
   "version": 1,
   "apps": [
     {
-      "name": "Simple present",
-      "datei": "apps/englisch/practice_simple_present.html",
-      "fach": "Englisch",
-      "emoji": "📓",
-      "beschreibung": "Practice simple present! he/she/it + -s",
-      "hidden": false,
-      "klassen": [
-        5
-      ],
-      "customTags": [],
-      "aod": false
-    },
-    {
-      "name": "Satzglieder ordnen",
-      "datei": "apps/englisch/satzglieder-erkennen.html",
-      "fach": "Englisch",
-      "emoji": "🔤",
-      "beschreibung": "Erkenne und ordne die Satzglieder im Satz.",
-      "hidden": false,
-      "klassen": [
-        5
-      ],
-      "customTags": [],
-      "aod": false
-    },
-    {
-      "name": "Vokabeltrainer 5. Klasse",
-      "datei": "apps/englisch/vokabeltrainer5.html",
-      "fach": "Englisch",
-      "emoji": "📖",
-      "beschreibung": "Übe Vokabeln aus dem Schulbuch",
-      "hidden": false,
-      "klassen": [
-        5
-      ],
-      "customTags": [
-        {
-          "name": "Vokabeln",
-          "color": 4
-        }
-      ],
-      "aod": false
-    },
-    {
-      "name": "Vokabeltrainer 6. Klasse",
-      "datei": "apps/englisch/vokabeltrainer6.html",
-      "fach": "Englisch",
-      "emoji": "📖",
-      "beschreibung": "Übe Vokabeln aus dem Schulbuch",
-      "hidden": false,
-      "klassen": [
-        6
-      ],
-      "customTags": [
-        {
-          "name": "Vokabeln",
-          "color": 4
-        }
-      ],
-      "aod": false
-    },
-    {
-      "name": "Längeneinheiten umrechnen",
-      "datei": "apps/mathe/laengeneinheiten.html",
-      "fach": "Mathematik",
-      "emoji": "📏",
-      "beschreibung": "Umrechnen, rechnen, vergleichen: mm, cm, m, km",
-      "hidden": false,
-      "klassen": [
-        5,
-        6
-      ],
-      "customTags": [],
-      "aod": false
-    },
-    {
-      "name": "Regeln in unserer Gesellschaft",
-      "datei": "apps/gpg/regeln-sortierer-gpg.html",
-      "fach": "GPG",
-      "emoji": "⚖️",
-      "beschreibung": "Welche Regeln gibt es bei uns? Ordne zu!",
-      "hidden": true,
-      "klassen": [],
-      "customTags": [],
-      "aod": false
-    },
-    {
-      "name": "Kopfrechnen Klasse 1",
-      "datei": "apps/mathe/kopfrechnen.html?klasse=1",
-      "fach": "Mathematik",
-      "emoji": "🧠",
-      "beschreibung": "Übe deine Kopfrechenkünste!",
-      "hidden": true,
-      "klassen": [],
-      "customTags": [
-        {
-          "name": "Kopfrechnen",
-          "color": 5
-        }
-      ],
-      "aod": false
-    },
-    {
-      "name": "Kopfrechnen Klasse 2",
-      "datei": "apps/mathe/kopfrechnen.html?klasse=2",
-      "fach": "Mathematik",
-      "emoji": "🧠",
-      "beschreibung": "Übe deine Kopfrechenkünste!",
-      "hidden": true,
-      "klassen": [],
-      "customTags": [
-        {
-          "name": "Kopfrechnen",
-          "color": 5
-        }
-      ],
-      "aod": false
-    },
-    {
-      "name": "Kopfrechnen Klasse 3",
-      "datei": "apps/mathe/kopfrechnen.html?klasse=3",
-      "fach": "Mathematik",
-      "emoji": "🧠",
-      "beschreibung": "Übe deine Kopfrechenkünste!",
-      "hidden": true,
-      "klassen": [],
-      "customTags": [
-        {
-          "name": "Kopfrechnen",
-          "color": 5
-        }
-      ],
-      "aod": false
-    },
-    {
-      "name": "Kopfrechnen Klasse 4",
-      "datei": "apps/mathe/kopfrechnen.html?klasse=4",
-      "fach": "Mathematik",
-      "emoji": "🧠",
-      "beschreibung": "Wiederholung 4. Klasse: + − × ÷",
-      "hidden": false,
-      "klassen": [
-        5
-      ],
-      "customTags": [
-        {
-          "name": "Kopfrechnen",
-          "color": 5
-        }
-      ],
-      "aod": false
-    },
-    {
-      "name": "Kopfrechnen Klasse 5",
-      "datei": "apps/mathe/kopfrechnen.html",
-      "fach": "Mathematik",
-      "emoji": "🧠",
-      "beschreibung": "Übe deine Kopfrechenkünste!",
-      "hidden": false,
-      "klassen": [
-        5
-      ],
-      "customTags": [
-        {
-          "name": "Kopfrechnen",
-          "color": 5
-        }
-      ],
-      "aod": false
-    },
-    {
-      "name": "Kopfrechnen Klasse 6",
-      "datei": "apps/mathe/kopfrechnen.html?klasse=6",
-      "fach": "Mathematik",
-      "emoji": "🧠",
-      "beschreibung": "Übe deine Kopfrechenkünste!",
-      "hidden": false,
-      "klassen": [
-        6
-      ],
-      "customTags": [
-        {
-          "name": "Kopfrechnen",
-          "color": 5
-        }
-      ],
-      "aod": false
-    },
-    {
       "name": "Rechen-Arena",
       "datei": "apps/mathe/rechen-arena.html",
       "fach": "Allgemein",
@@ -207,79 +18,6 @@
           "color": 6
         }
       ],
-      "aod": false
-    },
-    {
-      "name": "Mathe-Trainer Klasse 5",
-      "datei": "apps/mathe/mathe-trainer.html?klasse=5",
-      "fach": "Mathematik",
-      "emoji": "🧮",
-      "beschreibung": "Der Mathe-Stoff der 5. Klasse in Stufen",
-      "hidden": false,
-      "klassen": [
-        5
-      ],
-      "customTags": [],
-      "aod": false
-    },
-    {
-      "name": "Mathe-Trainer Klasse 6",
-      "datei": "apps/mathe/mathe-trainer.html?klasse=6",
-      "fach": "Mathematik",
-      "emoji": "🧮",
-      "beschreibung": "Der Mathe-Stoff der 6. Klasse in Stufen",
-      "hidden": false,
-      "klassen": [
-        6
-      ],
-      "customTags": [],
-      "aod": false
-    },
-    {
-      "name": "Einmaleins 1x1",
-      "datei": "apps/mathe/einmaleins_tafel.html",
-      "fach": "Mathematik",
-      "emoji": "1️⃣",
-      "beschreibung": "Fülle die Lücken! Trainiere dein Einmaleins",
-      "hidden": false,
-      "klassen": [
-        5,
-        6
-      ],
-      "customTags": [
-        {
-          "name": "Kopfrechnen",
-          "color": 5
-        }
-      ],
-      "aod": false,
-      "dorfRunden": 1
-    },
-    {
-      "name": "Simple Past",
-      "datei": "apps/englisch/simple-past.html",
-      "fach": "Englisch",
-      "emoji": "⏪",
-      "beschreibung": "Regular and irregular verbs – übe die Vergangenheit!",
-      "hidden": false,
-      "klassen": [
-        5,
-        6
-      ],
-      "customTags": [],
-      "aod": false
-    },
-    {
-      "name": "Länder finden",
-      "datei": "apps/gpg/laender-finder.html",
-      "fach": "GPG",
-      "emoji": "🗺️",
-      "beschreibung": "Wie gut kennst du dich in Deutschland und Europa aus?",
-      "hidden": false,
-      "klassen": [
-        6
-      ],
-      "customTags": [],
       "aod": false
     },
     {
@@ -395,6 +133,279 @@
       "aod": false
     },
     {
+      "name": "Längeneinheiten umrechnen",
+      "datei": "apps/mathe/laengeneinheiten.html",
+      "fach": "Mathematik",
+      "emoji": "📏",
+      "beschreibung": "Umrechnen, rechnen, vergleichen: mm, cm, m, km",
+      "hidden": false,
+      "klassen": [
+        5,
+        6
+      ],
+      "customTags": [],
+      "aod": false
+    },
+    {
+      "name": "Mathe-Trainer Klasse 5",
+      "datei": "apps/mathe/mathe-trainer.html?klasse=5",
+      "fach": "Mathematik",
+      "emoji": "🧮",
+      "beschreibung": "Der Mathe-Stoff der 5. Klasse in Stufen",
+      "hidden": false,
+      "klassen": [
+        5
+      ],
+      "customTags": [],
+      "aod": false
+    },
+    {
+      "name": "Mathe-Trainer Klasse 6",
+      "datei": "apps/mathe/mathe-trainer.html?klasse=6",
+      "fach": "Mathematik",
+      "emoji": "🧮",
+      "beschreibung": "Der Mathe-Stoff der 6. Klasse in Stufen",
+      "hidden": false,
+      "klassen": [
+        6
+      ],
+      "customTags": [],
+      "aod": false
+    },
+    {
+      "name": "Einmaleins 1x1",
+      "datei": "apps/mathe/einmaleins_tafel.html",
+      "fach": "Mathematik",
+      "emoji": "1️⃣",
+      "beschreibung": "Fülle die Lücken! Trainiere dein Einmaleins",
+      "hidden": false,
+      "klassen": [
+        5,
+        6
+      ],
+      "customTags": [
+        {
+          "name": "Kopfrechnen",
+          "color": 5
+        }
+      ],
+      "aod": false,
+      "dorfRunden": 1
+    },
+    {
+      "name": "Kopfrechnen Klasse 4",
+      "datei": "apps/mathe/kopfrechnen.html?klasse=4",
+      "fach": "Mathematik",
+      "emoji": "🧠",
+      "beschreibung": "Wiederholung 4. Klasse: + − × ÷",
+      "hidden": false,
+      "klassen": [
+        5
+      ],
+      "customTags": [
+        {
+          "name": "Kopfrechnen",
+          "color": 5
+        }
+      ],
+      "aod": false,
+      "gruppe": "g-kopfrechnen"
+    },
+    {
+      "name": "Kopfrechnen Klasse 5",
+      "datei": "apps/mathe/kopfrechnen.html",
+      "fach": "Mathematik",
+      "emoji": "🧠",
+      "beschreibung": "Übe deine Kopfrechenkünste!",
+      "hidden": false,
+      "klassen": [
+        5
+      ],
+      "customTags": [
+        {
+          "name": "Kopfrechnen",
+          "color": 5
+        }
+      ],
+      "aod": false,
+      "gruppe": "g-kopfrechnen"
+    },
+    {
+      "name": "Kopfrechnen Klasse 2",
+      "datei": "apps/mathe/kopfrechnen.html?klasse=2",
+      "fach": "Mathematik",
+      "emoji": "🧠",
+      "beschreibung": "Übe deine Kopfrechenkünste!",
+      "hidden": true,
+      "klassen": [],
+      "customTags": [
+        {
+          "name": "Kopfrechnen",
+          "color": 5
+        }
+      ],
+      "aod": false,
+      "gruppe": "g-kopfrechnen"
+    },
+    {
+      "name": "Kopfrechnen Klasse 1",
+      "datei": "apps/mathe/kopfrechnen.html?klasse=1",
+      "fach": "Mathematik",
+      "emoji": "🧠",
+      "beschreibung": "Übe deine Kopfrechenkünste!",
+      "hidden": true,
+      "klassen": [],
+      "customTags": [
+        {
+          "name": "Kopfrechnen",
+          "color": 5
+        }
+      ],
+      "aod": false,
+      "gruppe": "g-kopfrechnen"
+    },
+    {
+      "name": "Kopfrechnen Klasse 6",
+      "datei": "apps/mathe/kopfrechnen.html?klasse=6",
+      "fach": "Mathematik",
+      "emoji": "🧠",
+      "beschreibung": "Übe deine Kopfrechenkünste!",
+      "hidden": false,
+      "klassen": [
+        6
+      ],
+      "customTags": [
+        {
+          "name": "Kopfrechnen",
+          "color": 5
+        }
+      ],
+      "aod": false,
+      "gruppe": "g-kopfrechnen"
+    },
+    {
+      "name": "Kopfrechnen Klasse 3",
+      "datei": "apps/mathe/kopfrechnen.html?klasse=3",
+      "fach": "Mathematik",
+      "emoji": "🧠",
+      "beschreibung": "Übe deine Kopfrechenkünste!",
+      "hidden": true,
+      "klassen": [],
+      "customTags": [
+        {
+          "name": "Kopfrechnen",
+          "color": 5
+        }
+      ],
+      "aod": false,
+      "gruppe": "g-kopfrechnen"
+    },
+    {
+      "name": "Vokabeltrainer 5. Klasse",
+      "datei": "apps/englisch/vokabeltrainer5.html",
+      "fach": "Englisch",
+      "emoji": "📖",
+      "beschreibung": "Übe Vokabeln aus dem Schulbuch",
+      "hidden": false,
+      "klassen": [
+        5
+      ],
+      "customTags": [
+        {
+          "name": "Vokabeln",
+          "color": 4
+        }
+      ],
+      "aod": false,
+      "gruppe": "g-vocabulary"
+    },
+    {
+      "name": "Vokabeltrainer 6. Klasse",
+      "datei": "apps/englisch/vokabeltrainer6.html",
+      "fach": "Englisch",
+      "emoji": "📖",
+      "beschreibung": "Übe Vokabeln aus dem Schulbuch",
+      "hidden": false,
+      "klassen": [
+        6
+      ],
+      "customTags": [
+        {
+          "name": "Vokabeln",
+          "color": 4
+        }
+      ],
+      "aod": false,
+      "gruppe": "g-vocabulary"
+    },
+    {
+      "name": "Simple present",
+      "datei": "apps/englisch/practice_simple_present.html",
+      "fach": "Englisch",
+      "emoji": "📓",
+      "beschreibung": "Practice simple present! he/she/it + -s",
+      "hidden": false,
+      "klassen": [
+        5
+      ],
+      "customTags": [],
+      "aod": false,
+      "gruppe": "g-grammar"
+    },
+    {
+      "name": "Simple Past",
+      "datei": "apps/englisch/simple-past.html",
+      "fach": "Englisch",
+      "emoji": "⏪",
+      "beschreibung": "Regular and irregular verbs – übe die Vergangenheit!",
+      "hidden": false,
+      "klassen": [
+        5,
+        6
+      ],
+      "customTags": [],
+      "aod": false,
+      "gruppe": "g-grammar"
+    },
+    {
+      "name": "Satzglieder ordnen",
+      "datei": "apps/englisch/satzglieder-erkennen.html",
+      "fach": "Englisch",
+      "emoji": "🔤",
+      "beschreibung": "Erkenne und ordne die Satzglieder im Satz.",
+      "hidden": false,
+      "klassen": [
+        5
+      ],
+      "customTags": [],
+      "aod": false,
+      "gruppe": "g-grammar"
+    },
+    {
+      "name": "Regeln in unserer Gesellschaft",
+      "datei": "apps/gpg/regeln-sortierer-gpg.html",
+      "fach": "GPG",
+      "emoji": "⚖️",
+      "beschreibung": "Welche Regeln gibt es bei uns? Ordne zu!",
+      "hidden": true,
+      "klassen": [],
+      "customTags": [],
+      "aod": false
+    },
+    {
+      "name": "Länder finden",
+      "datei": "apps/gpg/laender-finder.html",
+      "fach": "GPG",
+      "emoji": "🗺️",
+      "beschreibung": "Wie gut kennst du dich in Deutschland und Europa aus?",
+      "hidden": false,
+      "klassen": [
+        6
+      ],
+      "customTags": [],
+      "aod": false
+    },
+    {
       "name": "Entdecker-Expedition",
       "datei": "spiele/expedition.html",
       "fach": "GPG",
@@ -475,5 +486,22 @@
         "runden": 4
       }
     ]
-  }
+  },
+  "gruppen": [
+    {
+      "id": "g-kopfrechnen",
+      "fach": "Mathematik",
+      "name": "Kopfrechnen"
+    },
+    {
+      "id": "g-vocabulary",
+      "fach": "Englisch",
+      "name": "Vocabulary"
+    },
+    {
+      "id": "g-grammar",
+      "fach": "Englisch",
+      "name": "Grammar"
+    }
+  ]
 }
