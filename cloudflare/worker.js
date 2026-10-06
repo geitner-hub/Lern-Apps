@@ -39,6 +39,7 @@
 //    gruppen[], apps[].gruppe – Regale auf der Startseite (Etappe 6)
 //    freigaben     – { themaId: { wer: 'zu'|'offen'|'JJJJ-MM-TT' } }, wer = alle | k5 | g:<32 hex> (Etappe 7)
 //    fokus[]       – { id, fuer, apps[], ab?, bis } „heute nur diese Apps“, endet von selbst (Etappe 7)
+//    heute         – nur false: Startseite ohne „Heute für dich“ (Etappe 8)
 //
 //  Wartung & Fehlersuche: cloudflare/ANLEITUNG.md
 // ═══════════════════════════════════════════════════════
@@ -280,6 +281,8 @@ function validateConfig(cfg) {
       && Object.keys(f).every(k => ['id', 'fuer', 'apps', 'ab', 'bis'].includes(k));
     if (!Array.isArray(fk) || fk.length > 10 || !fk.every(fOk)) p.push('fokus ungültig');
   }
+  // „Heute für dich“ (Etappe 8): nur abschaltbar
+  if (cfg.heute !== undefined && cfg.heute !== false) p.push('heute ungültig');
   return p;
 }
 

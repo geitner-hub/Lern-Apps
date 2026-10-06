@@ -92,6 +92,8 @@
     endlessGoodCorrect: 10, // ab so vielen richtigen Antworten zählt der Lauf als „guter Tag“ (Wochenziel)
     // Schuljahreswechsel: nach dem 1. August einmal nach der neuen Klasse fragen
     klassenAbfrage:  true,
+    // Wiederholung mit Abstand (Etappe 8): gemeistert → nach so vielen Tagen fällig; Auswertung in wiederholung.js
+    wiederholung:    [7, 21, 60],
   };
 
   C = C && typeof C === 'object' ? C : {};
@@ -775,7 +777,8 @@
   //  geübt wurde (z. B. 'vok5:unit1/theme1', 'kopf5-mittel'). Gemerkt werden je Inhalt:
   //  n = gezählte Runden, best = beste %, last = Tag, p = die drei besten % (reicht für
   //  runden ≤ 3 und wirkt so auch rückwirkend, wenn die Lehrkraft die Schwelle ändert),
-  //  f = freigeschaltet (bleibt dauerhaft).
+  //  f = freigeschaltet (bleibt dauerhaft). Wiederholung (Etappe 8): m = Tag der Meisterschaft,
+  //  r = letzte gute Runde, w = geschaffte Wiederholungen (fällig nach RULES.wiederholung[w] Tagen ab r).
   const LERN_MIN_AUFGABEN = 5;
   function erfuellt(e, sp) { return !!e && (e.f === true || (Array.isArray(e.p) && e.p.filter(x => x >= sp.schwelle).length >= sp.runden)); }
   /** Runde melden. ids: String oder Array, pct: 0–100, anzahl: Aufgaben der Runde, blocked: aus award() */
@@ -795,6 +798,14 @@
       e.last = day;
       e.p = (Array.isArray(e.p) ? e.p : []).concat(pct).sort((a, b) => b - a).slice(0, 3);
       if (erfuellt(e, sp)) e.f = true;
+      if (e.f) {
+        if (!e.m) e.m = day;
+        if (pct >= sp.schwelle) {
+          const w = e.w || 0, ab = e.r || e.m || e.last, I = RULES.wiederholung;
+          if (w < I.length && ab && (parseDay(day) - parseDay(ab)) / 864e5 >= I[w]) e.w = w + 1;   // fällige Wiederholung geschafft
+          e.r = day;
+        }
+      }
     });
     save();
     return true;

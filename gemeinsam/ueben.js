@@ -20,7 +20,11 @@
 //  Angelegte Anschlüsse (später eingeschaltet):
 //    LernUeben.Freigabe.erlaubt(themaId)  → seit Etappe 7 über gemeinsam/freigabe.js (gesperrt = 🔒 ohne Erklärtext);
 //                                           die App bindet freigabe.js VOR ueben.js ein, ohne sie ist alles offen
-//    LernUeben.Fehlerheft.merken(eintrag) → sammelt ab jetzt Fehler auf dem Gerät; angezeigt ab Etappe 8
+//    LernUeben.Fehlerheft.merken(eintrag) → sammelt Fehler auf dem Gerät (höchstens 200)
+//    Fehler-Training (Etappe 8): Kachel „🎯 Fehler-Training“, sobald es Fehler aus den Stufen dieser App gibt.
+//      Übt gezielt die falsch gelösten Aufgabentypen; jede richtige Antwort streicht einen Eintrag.
+//      Optional cfg.erzeugeTyp(stufe, typ) → Aufgabe genau dieses Typs (Mathe: aus generatoren-mathe.js).
+//    Direktstart: ?stufe=<Themen-ID> beginnt gleich eine Runde (Etappe 8, „Heute für dich“)
 //    Vorlesen (🔊) und große Schrift: standardmäßig aus; an mit ?vorlesen=1 bzw. ?gross=1
 //    oder vorlesen/gross: true in der App (für DaZ und Förderung).
 //
@@ -56,6 +60,15 @@
       } catch (err) { if (window.LW && LW.speicher) LW.speicher.fehlgeschlagen(err); }
     },
     leeren() { try { localStorage.removeItem(FEHLER_KEY); } catch (e) {} },
+    /** Ältesten Eintrag mit diesem Thema und Typ streichen (nach richtiger Antwort im Fehler-Training) */
+    streichen(thema, typ) {
+      try {
+        const l = this.liste(), i = l.findIndex(x => x.thema === thema && (x.typ || '') === (typ || ''));
+        if (i < 0) return;
+        l.splice(i, 1);
+        localStorage.setItem(FEHLER_KEY, JSON.stringify(l));
+      } catch (e) {}
+    },
   };
 
   // ── Aussehen ───────────────────────────────────────────
@@ -79,6 +92,8 @@
   .lu .tile small{display:block;color:var(--mut);font-weight:700;font-size:.78rem;margin-top:.15rem}
   .lu .tile .st{position:absolute;top:.45rem;right:.6rem;font-size:.75rem;font-weight:900;color:var(--gold)}
   .lu .tile.zu{opacity:.45;cursor:default}
+  .lu .tile.ft{border-color:rgba(230,168,23,.55);margin-bottom:.7rem}
+  .lu .tile.ft .nr{background:linear-gradient(135deg,var(--gold),#f59e0b)}
   .lu .mehr{margin:1rem 0 .6rem;background:none;border:0;color:var(--ind2);font-weight:800;font-size:.95rem;font-family:inherit;cursor:pointer;padding:.3rem 0}
   .lu .top{display:flex;align-items:center;gap:.6rem;margin-bottom:.8rem}
   .lu .top .nm{font-weight:900;color:var(--mut);font-size:.9rem;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -162,10 +177,16 @@
         <span><b>${esc(st.titel)}</b><small>${esc(st.kurz || '')}</small></span>
         ${meister ? '<span class="st">⭐ geschafft</span>' : s.best ? `<span class="st" style="color:var(--mut)">${s.best} %</span>` : ''}</button>`;
     }
+    // Fehler-Training (Etappe 8): Fehler aus den (freien) Stufen dieser App
+    function meineFehler() {
+      return Fehlerheft.liste().filter(x => alle.some(st => st.id === x.thema) && Freigabe.erlaubt(x.thema));
+    }
     function zeigeStart() {
       S.stufe = null;
-      const f = cfg.foerder || [];
+      const f = cfg.foerder || [], nf = meineFehler().length;
       root.innerHTML = `<h1>${esc(cfg.titel || 'Üben')}</h1><p class="sub">${esc(cfg.untertitel || 'Wähle eine Stufe')}</p>
+        ${nf ? `<button type="button" class="tile ft" data-fehler><span class="nr">🎯</span>
+          <span><b>Fehler-Training</b><small>${nf} ${nf === 1 ? 'Aufgabe' : 'Aufgaben'} von früher, die noch nicht saßen</small></span></button>` : ''}
         <div class="grid">${(cfg.stufen || []).map((st, i) => kachel(st, i, false)).join('')}</div>
         ${f.length ? `<button type="button" class="mehr" data-foerder>${S.foerderOffen ? '▾' : '▸'} Leichtere Stufen zum Wiederholen</button>
           ${S.foerderOffen ? `<div class="grid">${f.map((st, i) => kachel(st, i, true)).join('')}</div>` : ''}` : ''}`;
@@ -183,6 +204,23 @@
         fragen.add(a.frage); S.aufgaben.push(a);
       }
       if (!S.aufgaben.length) { zeigeStart(); return; }
+      neueAufgabe();
+    }
+    function starteFehlerTraining() {
+      const fehler = meineFehler().reverse();            // neueste zuerst
+      const arten = [], gesehen = new Set();
+      fehler.forEach(x => { const k = x.thema + '|' + (x.typ || ''); if (!gesehen.has(k)) { gesehen.add(k); arten.push(x); } });
+      if (!arten.length) return zeigeStart();
+      S.stufe = { id: '', titel: '🎯 Fehler-Training', training: true };
+      S.aufgaben = []; S.ergebnis = []; S.nr = 0; S.start = Date.now();
+      const anzahl = Math.min(RUNDE, Math.max(5, arten.length));
+      for (let i = 0, v = 0; S.aufgaben.length < anzahl && v < anzahl * 8; v++, i++) {
+        const x = arten[i % arten.length], st = alle.find(y => y.id === x.thema);
+        let a = x.typ && cfg.erzeugeTyp ? cfg.erzeugeTyp(st, x.typ) : null;
+        for (let t = 0; !a && t < 12; t++) { const b = cfg.erzeuge(st); if (b && (!x.typ || b.typ === x.typ || t >= 8)) a = b; }
+        if (a) { a._stufe = st.id; S.aufgaben.push(a); }
+      }
+      if (!S.aufgaben.length) return zeigeStart();
       neueAufgabe();
     }
     function neueAufgabe() {
@@ -239,7 +277,9 @@
       const ok = cfg.pruefe(a, eingabe);
       const eingabeText = a.art === 'rest' ? `${S.rest[0]} R ${S.rest[1]}` : String(eingabe);
       S.ergebnis.push({ ok, frage: a.frage, loesung: a.text, eingabe: eingabeText, erklaerung: a.erklaerung || '' });
-      if (!ok) Fehlerheft.merken({ thema: S.stufe.id, typ: a.typ, frage: a.frage, eingabe: eingabeText, loesung: a.text });
+      const thema = a._stufe || S.stufe.id;
+      if (!ok && !S.stufe.training) Fehlerheft.merken({ thema, typ: a.typ, frage: a.frage, eingabe: eingabeText, loesung: a.text });
+      if (ok && S.stufe.training) Fehlerheft.streichen(thema, a.typ);
       if (ok) {
         zeigeAufgabe(`<div class="fb ok"><div class="gr">✓ Richtig!</div></div>`);
         root.querySelector('.zeile').innerHTML = '';
@@ -258,7 +298,9 @@
     function ende() {
       const st = S.stufe, n = S.aufgaben.length, r = S.ergebnis.filter(x => x.ok).length, pct = Math.round(r / n * 100);
       try {
-        if (window.LernApps) LernApps.saveResult({ score: r, max: n, label: `${r} / ${n} · ${st.titel}`, thema: st.id, ...(st.inhalt ? { inhalt: st.inhalt } : {}) });
+        // Fehler-Training: XP ja, aber ohne Thema – es zählt nicht für die Meisterschaft einer Stufe
+        if (window.LernApps) LernApps.saveResult(st.training ? { score: r, max: n, label: `${r} / ${n} · Fehler-Training` }
+          : { score: r, max: n, label: `${r} / ${n} · ${st.titel}`, thema: st.id, ...(st.inhalt ? { inhalt: st.inhalt } : {}) });
       } catch (e) {}
       const falsch = S.ergebnis.filter(x => !x.ok);
       const lob = pct === 100 ? 'Alles richtig! 💯' : pct >= 80 ? 'Stark gerechnet! 💪' : pct >= MEIST.prozent ? 'Gut gemacht! 👍' : pct >= 40 ? 'Dranbleiben – das wird! 🙂' : 'Probier es gleich nochmal – oder eine leichtere Stufe.';
@@ -267,7 +309,7 @@
           ${falsch.length ? `<div class="liste">${falsch.map(x => `<div><b>${esc(x.frage)} = ${esc(x.loesung)}</b> <small>Du hattest: ${esc(x.eingabe)}${x.erklaerung ? ' · ' + esc(x.erklaerung) : ''}</small></div>`).join('')}</div>` : ''}
           <div class="zeile"><button type="button" class="btn p" data-nochmal>🔄 Nochmal</button><button type="button" class="btn" data-ende>Andere Stufe</button></div></div>`;
       S.stufe = null;
-      root.dataset.letzte = st.id;
+      root.dataset.letzte = st.training ? '#fehler' : st.id;
     }
 
     // ── Bedienung ──
@@ -277,7 +319,8 @@
       if (t.dataset.stufe) return starteRunde(t.dataset.stufe);
       if (t.hasAttribute('data-foerder')) { S.foerderOffen = !S.foerderOffen; return zeigeStart(); }
       if (t.hasAttribute('data-ende')) return zeigeStart();
-      if (t.hasAttribute('data-nochmal')) return starteRunde(root.dataset.letzte);
+      if (t.hasAttribute('data-fehler')) return starteFehlerTraining();
+      if (t.hasAttribute('data-nochmal')) return root.dataset.letzte === '#fehler' ? starteFehlerTraining() : starteRunde(root.dataset.letzte);
       if (t.hasAttribute('data-weiter')) return weiter();
       if (t.hasAttribute('data-tipp')) { S.tipp = true; return zeigeAufgabe(); }
       if (t.hasAttribute('data-vor')) return sprich(S.aufgaben[S.nr].frage);
@@ -301,6 +344,9 @@
     window.addEventListener('lernfreigabe:neu', () => { if (!S.stufe && !root.querySelector('.erg')) zeigeStart(); });
 
     zeigeStart();
+    // Direktstart (Etappe 8, z. B. aus „Heute für dich“): ?stufe=ID öffnet gleich eine Runde, wenn frei
+    const direkt = URLP.get('stufe');
+    if (direkt && alle.some(x => x.id === direkt)) starteRunde(direkt);
     return { neu: zeigeStart };
   }
 
@@ -347,6 +393,7 @@
         stufen: (K.stufen || []).filter(id => D.stufen[id]).map(stufe),
         foerder: (K.foerder || []).filter(id => D.stufen[id]).map(stufe),
         erzeuge: st => G.ausStufe(st), pruefe: (a, e) => G.pruefe(a, e),
+        erzeugeTyp: (st, typ) => { const g = (st.generatoren || []).find(x => x.typ === typ); return g ? G.erzeuge(g) : null; },
         runde: D.runde, meisterschaft: D.meisterschaft,
       });
     }).catch(() => { o.host.innerHTML = '<p style="color:rgba(241,240,251,.7);font:800 1rem Nunito,system-ui,sans-serif;text-align:center;padding:4rem 1rem">⚠️ Die Aufgaben konnten nicht geladen werden. Bitte mit Internet neu öffnen.</p>'; });
