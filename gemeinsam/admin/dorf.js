@@ -10,7 +10,7 @@
 //  { plaetze, rerollsProTag, rerollsMax, kostenfaktor, wochen: [{ id, start, art, ziel, name, app, runden, klassen }] }
 //  Ausschluss einzelner Apps: "dorf": false im App-Eintrag. Logik bei den Kindern: gemeinsam/dorf-kern.js
 let DORF_INHALT = null, DORF_THEMEN = null;
-const THEMA_APP = { vok5: 'vokabeltrainer5.html', vok6: 'vokabeltrainer6.html', kopf4: 'kopfrechnen.html?klasse=4',
+const THEMA_APP = { vok5: 'vokabeltrainer.html?klasse=5', vok6: 'vokabeltrainer.html?klasse=6', kopf4: 'kopfrechnen.html?klasse=4',
                     kopf5: 'kopfrechnen.html', kopf6: 'kopfrechnen.html?klasse=6', '1x1': 'einmaleins_tafel.html' };   // Etappe 4b: neue Adressen
 function dorfCfg() {
   const d = CONFIG.dorf && typeof CONFIG.dorf === 'object' ? CONFIG.dorf : {};

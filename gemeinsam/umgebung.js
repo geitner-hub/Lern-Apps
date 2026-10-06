@@ -30,7 +30,7 @@
   'use strict';
   if (window.LW && window.LW.UMGEBUNG) return;          // doppeltes Laden verhindern
 
-  const VERSION = 'v35';                                 // ⚙ bei jedem Upload mit sw.js zusammen erhöhen
+  const VERSION = 'v36';                                 // ⚙ bei jedem Upload mit sw.js zusammen erhöhen
 
   // ── Umgebung erkennen ────────────────────────────────
   //  GitHub Pages: erster Pfadteil = Repo-Name (Lern-Apps bzw. Lern-Apps-test)
@@ -90,12 +90,12 @@
     // Lern-Apps mit eigenem Speicher
     ['laender-finder-best',         'local',   'apps/gpg/laender-finder.html', 'Länder-Finder: Bestzeiten je Modus', false],
     ['rechenArena_ballonHighscore', 'local',   'apps/mathe/rechen-arena.html', 'Rechen-Arena: Highscore Ballon-Pop', false],
-    ['vokab-history-kl5',           'local',   'apps/englisch/vokabeltrainer5.html', 'Vokabeltrainer 5: Verlauf', false],
-    ['vokab-word-stats-kl5',        'local',   'apps/englisch/vokabeltrainer5.html', 'Vokabeltrainer 5: Statistik je Wort', false],
-    ['vokab-a11y-kl5',              'local',   'apps/englisch/vokabeltrainer5.html', 'Vokabeltrainer 5: Lese-Einstellungen', false],
-    ['vokab-history-kl6',           'local',   'apps/englisch/vokabeltrainer6.html', 'Vokabeltrainer 6: Verlauf', false],
-    ['vokab-word-stats-kl6',        'local',   'apps/englisch/vokabeltrainer6.html', 'Vokabeltrainer 6: Statistik je Wort', false],
-    ['vokab-a11y-kl6',              'local',   'apps/englisch/vokabeltrainer6.html', 'Vokabeltrainer 6: Lese-Einstellungen', false],
+    ['vokab-history-kl5',           'local',   'apps/englisch/vokabeltrainer.html?klasse=5', 'Vokabeltrainer 5: Verlauf', false],
+    ['vokab-word-stats-kl5',        'local',   'apps/englisch/vokabeltrainer.html?klasse=5', 'Vokabeltrainer 5: Statistik je Wort', false],
+    ['vokab-a11y-kl5',              'local',   'apps/englisch/vokabeltrainer.html?klasse=5', 'Vokabeltrainer 5: Lese-Einstellungen', false],
+    ['vokab-history-kl6',           'local',   'apps/englisch/vokabeltrainer.html?klasse=6', 'Vokabeltrainer 6: Verlauf', false],
+    ['vokab-word-stats-kl6',        'local',   'apps/englisch/vokabeltrainer.html?klasse=6', 'Vokabeltrainer 6: Statistik je Wort', false],
+    ['vokab-a11y-kl6',              'local',   'apps/englisch/vokabeltrainer.html?klasse=6', 'Vokabeltrainer 6: Lese-Einstellungen', false],
   ].map(([key, art, datei, zweck, sync]) => ({ key, art, datei, zweck, sync }));
 
   // ── Testumgebung: Speicher trennen ───────────────────

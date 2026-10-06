@@ -505,7 +505,8 @@
        "titel": "Vokabeln Klasse 5 (English G Access 1)",
        "klasse": 5,
        "quelle": {
-        "app": "apps/englisch/vokabeltrainer5.html"
+        "app": "apps/englisch/vokabeltrainer.html",
+        "parameter": "klasse=5"
        },
        "ergebnis": [
         "vokabeltrainer5.html"
@@ -556,7 +557,8 @@
        "titel": "Wortlisten Klasse 5",
        "klasse": 5,
        "quelle": {
-        "app": "apps/englisch/vokabeltrainer5.html"
+        "app": "apps/englisch/vokabeltrainer.html",
+        "parameter": "klasse=5"
        },
        "lehrplan": "E5 Wortschatz: Wortschatz aus der Grundschule festigen (Zahlen, Farben, Wochentage, Monate, Fragewörter)",
        "dauer": 5,
@@ -610,7 +612,8 @@
        "titel": "Vokabeln Klasse 6 (Highlight 6)",
        "klasse": 6,
        "quelle": {
-        "app": "apps/englisch/vokabeltrainer6.html"
+        "app": "apps/englisch/vokabeltrainer.html",
+        "parameter": "klasse=6"
        },
        "ergebnis": [
         "vokabeltrainer6.html"

@@ -302,7 +302,7 @@
     },
     {
       "name": "Vokabeltrainer 5. Klasse",
-      "datei": "apps/englisch/vokabeltrainer5.html",
+      "datei": "apps/englisch/vokabeltrainer.html?klasse=5",
       "fach": "Englisch",
       "emoji": "📖",
       "beschreibung": "Übe Vokabeln aus dem Schulbuch",
@@ -321,7 +321,7 @@
     },
     {
       "name": "Vokabeltrainer 6. Klasse",
-      "datei": "apps/englisch/vokabeltrainer6.html",
+      "datei": "apps/englisch/vokabeltrainer.html?klasse=6",
       "fach": "Englisch",
       "emoji": "📖",
       "beschreibung": "Übe Vokabeln aus dem Schulbuch",
@@ -404,17 +404,6 @@
       "klassen": [
         6
       ],
-      "customTags": [],
-      "aod": false
-    },
-    {
-      "name": "Vokabeltrainer",
-      "datei": "apps/englisch/vokabeltrainer.html",
-      "fach": "Englisch",
-      "emoji": "📖",
-      "beschreibung": "",
-      "hidden": false,
-      "klassen": [],
       "customTags": [],
       "aod": false
     }
