@@ -406,6 +406,83 @@
       ],
       "customTags": [],
       "aod": false
+    },
+    {
+      "name": "Kennst du dich in Bayern aus?",
+      "datei": "apps/gpg/bayern.html",
+      "fach": "GPG",
+      "emoji": "🦁",
+      "beschreibung": "",
+      "hidden": false,
+      "klassen": [],
+      "customTags": [],
+      "aod": false
+    },
+    {
+      "name": "Knowing English",
+      "datei": "apps/englisch/knowing-english.html",
+      "fach": "Englisch",
+      "emoji": "🧩",
+      "beschreibung": "",
+      "hidden": false,
+      "klassen": [],
+      "customTags": [],
+      "aod": false
+    },
+    {
+      "name": "Time, Date and Numbers",
+      "datei": "apps/englisch/time-dates-numbers.html",
+      "fach": "Englisch",
+      "emoji": "🕒",
+      "beschreibung": "",
+      "hidden": false,
+      "klassen": [],
+      "customTags": [],
+      "aod": false
+    },
+    {
+      "name": "Der Zahlenstrahl",
+      "datei": "apps/mathe/zahlenstrahl.html",
+      "fach": "Mathematik",
+      "emoji": "📏",
+      "beschreibung": "Finde dich am Zahlenstrahl zurecht",
+      "hidden": false,
+      "klassen": [],
+      "customTags": [],
+      "aod": false
+    },
+    {
+      "name": "Große Zahlen können",
+      "datei": "apps/mathe/stellenwerttafel.html",
+      "fach": "Mathematik",
+      "emoji": "🧮",
+      "beschreibung": "",
+      "hidden": false,
+      "klassen": [],
+      "customTags": [],
+      "aod": false
+    },
+    {
+      "name": "Practice \"To Be\"",
+      "datei": "apps/typen/uebung.html?inhalt=en.5.to-be",
+      "fach": "Englisch",
+      "emoji": "👋",
+      "beschreibung": "",
+      "hidden": false,
+      "klassen": [],
+      "customTags": [],
+      "aod": false
+    },
+    {
+      "name": "Geometrie-Training",
+      "datei": "apps/typen/uebung.html?inhalt=ma.5.geometrie",
+      "fach": "Mathematik",
+      "emoji": "📐",
+      "beschreibung": "",
+      "hidden": false,
+      "klassen": [],
+      "customTags": [],
+      "aod": false
     }
   ],
   "customTags": [
