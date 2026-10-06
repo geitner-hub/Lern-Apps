@@ -768,6 +768,29 @@
          "id": "gpg.6.laender.amerika",
          "titel": "Amerika",
          "lehrplan": "GPG 6 LB 1 Lebensraum Erde: topographische Orientierung auf der Erde (Nord-, Mittel- und Südamerika)"
+        },
+        {
+         "id": "gpg.6.laender.welt",
+         "titel": "Welt (Globus)",
+         "lehrplan": "GPG 6 LB 1 Lebensraum Erde: topographische Orientierung auf der Erde"
+        }
+       ]
+      },
+      {
+       "id": "gpg.5.erde",
+       "titel": "Kontinente und Ozeane",
+       "klasse": 5,
+       "quelle": {
+        "app": "apps/gpg/laender-finder.html"
+       },
+       "lehrplan": "GPG 5 LB 1 Lebensraum Erde: Orientierung auf der Erde (Kontinente, Ozeane, Gradnetz)",
+       "dauer": 5,
+       "einsatz": "Globus drehen und Kontinente und Ozeane antippen; Gradnetz mit Äquator und Nullmeridian einblendbar",
+       "stufen": [
+        {
+         "id": "gpg.5.erde.kontinente-ozeane",
+         "titel": "Kontinente und Ozeane (Globus)",
+         "lehrplan": "GPG 5 LB 1 Lebensraum Erde: die sieben Kontinente und fünf Ozeane"
         }
        ]
       },
