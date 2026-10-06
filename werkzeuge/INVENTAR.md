@@ -14,6 +14,7 @@ Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv
 | `apps/englisch/vokabeltrainer.html` | Vokabeltrainer 5. Klasse | `en.5.vok` (7 Stufen), `en.5.wortlisten` (8 Stufen), `en.6.vok` (5 Stufen) | Lern-App | Englisch · 5 | sichtbar | ja | ja | ja | – | ja | Engine (Etappe 5, Testphase) | Ein Trainer für alle Wortlisten (?klasse=5/6, ?liste=NAME); ersetzt nach dem Test vokabeltrainer5/6 |
 | `apps/englisch/vokabeltrainer5.html` | – | – | Lern-App | – | nicht in config | – | – | – | – | – (nicht in config) | Engine (Etappe 5) | Mit vokabeltrainer6 zu einer Vokabel-Engine. Mängel: Startseite scrollt (iPad quer), ~100 Zeilen doppelt zu Kl. 6 |
 | `apps/englisch/vokabeltrainer6.html` | – | – | Lern-App | – | nicht in config | – | – | – | – | – (nicht in config) | Engine (Etappe 5) | Siehe vokabeltrainer5 |
+| `apps/gpg/bayern.html` | – | `gpg.5.bayern` (5 Stufen) | Lern-App | – | nicht in config | ja | ja | – | – | – (nicht in config) |  |  |
 | `apps/gpg/laender-finder.html` | Länder finden | `gpg.6.laender` (6 Stufen), `gpg.5.erde` (1 Stufen) | Lern-App | GPG · 6 | sichtbar | ja | ja | – | – | ja | Kern | Stark: Karte, Profi-Modus, Fehler kommen wieder. Bundesländer = GPG 5, Europa = GPG 6. Mängel: kein `thema`/`inhalt` |
 | `apps/mathe/einmaleins_tafel.html` | Einmaleins 1x1 | `ma.5.1x1` (2 Stufen) | Lern-App | Mathematik · 5, 6 | sichtbar | ja | ja | ja | – | ja (1 Runden) | Kern | Gut: Klassik/Profi, 3 Stufen, großes 1×1. Mängel: falsche Felder nur rot, ohne Hilfe (z. B. Nachbaraufgabe) |
 | `apps/mathe/kopfrechnen-neu.html` | – | – | Lern-App | – | nicht in config | – | – | – | – | – (nicht in config) | Weiterleitung | Test-Name des Mathe-Trainers → mathe-trainer.html (Ergebnisse werden übernommen) |
@@ -46,6 +47,7 @@ Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv
 | apps/englisch/vokabeltrainer.html | 61 | freigabe.js, ueben.js, navbar.js | vokab-history-kl5, vokab-word-stats-kl5, vokab-a11y-kl5, vokab-history-kl6, vokab-word-stats-kl6, vokab-a11y-kl6, + über navbar.js |
 | apps/englisch/vokabeltrainer5.html | 1 | – | – |
 | apps/englisch/vokabeltrainer6.html | 1 | – | – |
+| apps/gpg/bayern.html | 32 | navbar.js, karten-ansicht.js, freigabe.js, ueben.js | lernwelt-bayern-best, + über navbar.js |
 | apps/gpg/laender-finder.html | 38 | navbar.js, karten-ansicht.js, welt-karte.js, globus.js, freigabe.js, ueben.js | laender-finder-best, + über navbar.js |
 | apps/mathe/einmaleins_tafel.html | 23 | navbar.js | + über navbar.js |
 | apps/mathe/kopfrechnen-neu.html | 1 | – | – |

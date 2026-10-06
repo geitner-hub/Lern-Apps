@@ -777,6 +777,27 @@
        ]
       },
       {
+       "id": "gpg.5.bayern",
+       "titel": "Auskennen in Bayern",
+       "klasse": 5,
+       "quelle": {
+        "app": "apps/gpg/bayern.html"
+       },
+       "ergebnis": [
+        "bayern.html"
+       ],
+       "lehrplan": "GPG 5 LB 1 Lebensraum Erde: Orientierung in Bayern (Regierungsbezirke, Städte, Gewässer, Gebirge)",
+       "dauer": 5,
+       "einsatz": "Topographie Bayerns zu Stundenbeginn; Kombiniert als Wiederholung vor der Probe",
+       "stufen": [
+        { "id": "gpg.5.bayern.bezirke", "titel": "Regierungsbezirke", "lehrplan": "GPG 5 LB 1: Orientierung in Bayern (Regierungsbezirke)" },
+        { "id": "gpg.5.bayern.staedte", "titel": "Städte", "lehrplan": "GPG 5 LB 1: Orientierung in Bayern (Städte)" },
+        { "id": "gpg.5.bayern.gewaesser", "titel": "Gewässer", "lehrplan": "GPG 5 LB 1: Orientierung in Bayern (Flüsse und Seen)" },
+        { "id": "gpg.5.bayern.gebirge", "titel": "Gebirge", "lehrplan": "GPG 5 LB 1: Orientierung in Bayern (Gebirge)" },
+        { "id": "gpg.5.bayern.mix", "titel": "Kombiniert", "lehrplan": "GPG 5 LB 1: Orientierung in Bayern" }
+       ]
+      },
+      {
        "id": "gpg.5.erde",
        "titel": "Kontinente und Ozeane",
        "klasse": 5,

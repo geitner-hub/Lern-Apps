@@ -30,7 +30,7 @@
   'use strict';
   if (window.LW && window.LW.UMGEBUNG) return;          // doppeltes Laden verhindern
 
-  const VERSION = 'v38';                                 // ⚙ bei jedem Upload mit sw.js zusammen erhöhen
+  const VERSION = 'v39';                                 // ⚙ bei jedem Upload mit sw.js zusammen erhöhen
 
   // ── Umgebung erkennen ────────────────────────────────
   //  GitHub Pages: erster Pfadteil = Repo-Name (Lern-Apps bzw. Lern-Apps-test)
@@ -89,6 +89,7 @@
     ['lern-zauberwort-rekord',      'local',   'spiele/zauberwort.html',   'Zauberwort: Rekord', false],
     // Lern-Apps mit eigenem Speicher
     ['laender-finder-best',         'local',   'apps/gpg/laender-finder.html', 'Länder-Finder: Bestzeiten je Modus', false],
+    ['lernwelt-bayern-best',        'local',   'apps/gpg/bayern.html',     'Auskennen in Bayern: Bestwerte je Modus', false],
     ['rechenArena_ballonHighscore', 'local',   'apps/mathe/rechen-arena.html', 'Rechen-Arena: Highscore Ballon-Pop', false],
     ['vokab-history-kl5',           'local',   'apps/englisch/vokabeltrainer.html?klasse=5', 'Vokabeltrainer 5: Verlauf', false],
     ['vokab-word-stats-kl5',        'local',   'apps/englisch/vokabeltrainer.html?klasse=5', 'Vokabeltrainer 5: Statistik je Wort', false],

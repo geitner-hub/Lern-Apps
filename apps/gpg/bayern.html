@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8"/>
+  <script src="../../gemeinsam/umgebung.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>Auskennen in Bayern – Lernwelt</title>
+  <!--
+  ═══════════════════════════════════════════════
+   LERNWELT – Auskennen in Bayern (GPG 5, Neue Lern-Apps Etappen 4–5)
+   Regierungsbezirke, Städte, Gewässer und Gebirge auf der Bayernkarte finden.
+
+   Modi (Katalog-Stufen gpg.5.bayern.*):
+     Bezirke     – alle 7 Regierungsbezirke; Fehler kommen am Ende wieder
+     Städte      – 15 Städte als Punkte (Tippzone 44 Pixel, der nächste Punkt zählt)
+     Gewässer    – 8 Flüsse (Linien) und 3 Seen
+     Gebirge     – 7 Gebirge als weiche Bereiche, großzügige Tippzone
+     Kombiniert  – gemischte Runde aus allen vier Bereichen, dazu Umkehr-Aufgaben
+                   („Was ist markiert?“ mit drei Antworten); Ergebnis je Bereich
+
+   Karte: daten/bayern.json (schon projiziert, Format siehe dort unter quelle).
+   Inhalte (Listen je Modus, Heimatbezirk) dort ändern. Heimat (Oberpfalz) ist in allen Modi
+   außer „Bezirke“ golden umrandet.
+   Lizenz: Bezirksgrenzen © GeoBasis-DE / BKG (VG250), Datenlizenz Deutschland – Namensnennung 2.0;
+   Natural Earth (gemeinfrei).
+  ═══════════════════════════════════════════════
+  -->
+  <link rel="stylesheet" href="../../gemeinsam/fonts.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f0e1a; --surface: #1b1929; --accent: #e6a817; --accent2: #fde68a;
+      --indigo: #6366f1; --indigo2: #818cf8; --text: #f1f0fb; --text2: rgba(241,240,251,.65);
+      --muted: rgba(241,240,251,.38); --green: #4ade80; --red: #f87171;
+      --sea: #121a3a; --sea2: #1b2656; --land: #4b4f70; --land-st: #141a3a; --ctx: #272c47;
+      --late: #818cf8; --miss: #7a3b50; --wasser: #60a5fa; --berg: #b08968;
+    }
+    html, body { height: 100%; }
+    body { font-family: 'Nunito', system-ui, sans-serif; background: var(--bg); color: var(--text);
+      overflow: hidden; -webkit-tap-highlight-color: transparent; }
+    button { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; }
+    button:focus-visible { outline: 3px solid var(--indigo2); outline-offset: 2px; }
+    .screen { position: fixed; inset: 0; display: flex; flex-direction: column;
+      padding: max(.9rem, env(safe-area-inset-top)) 1rem calc(4.4rem + env(safe-area-inset-bottom)); }
+    .screen[hidden] { display: none; }
+
+    /* ── Start ── */
+    #start { overflow-y: auto; align-items: center; }
+    .start-inner { width: 100%; max-width: 980px; margin: auto 0; padding: 1rem 0; }
+    h1 { font-family: 'Fredoka One', 'Nunito', sans-serif; font-weight: 400; font-size: clamp(2rem, 5vw, 3rem);
+      color: var(--accent); line-height: 1.05; margin-bottom: .35rem; }
+    .start-sub { color: var(--text2); margin-bottom: 1.6rem; max-width: 60ch; }
+    .modes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    @media (max-width: 760px) { .modes { grid-template-columns: 1fr; } }
+    .mode { display: flex; flex-direction: column; text-align: left; background: var(--surface); border-radius: 18px;
+      overflow: hidden; border: 1px solid rgba(255,255,255,.07); transition: transform .15s ease, border-color .15s ease; }
+    .mode:hover, .mode:focus-visible { transform: translateY(-3px); border-color: rgba(230,168,23,.55); }
+    .mode:active { transform: scale(.98); }
+    .mode-icon { font-size: 2.6rem; padding: 1rem 1rem 0; }
+    .mode-txt { padding: .5rem 1rem 1.05rem; display: flex; flex-direction: column; gap: .25rem; }
+    .mode-name { font-family: 'Fredoka One', 'Nunito', sans-serif; font-size: 1.35rem; }
+    .mode-desc { font-size: .88rem; color: var(--text2); line-height: 1.4; }
+    .mode-best { font-size: .78rem; font-weight: 800; color: var(--accent); margin-top: .2rem; min-height: 1em; }
+    .quelle { margin-top: 1.4rem; font-size: .72rem; color: var(--muted); max-width: 80ch; }
+
+    /* ── Spiel ── */
+    #game { gap: .6rem; }
+    .topbar { display: flex; align-items: center; gap: .8rem; }
+    .quit { font-weight: 800; font-size: .85rem; color: var(--text2); padding: .45rem .8rem; border-radius: 99px;
+      background: rgba(255,255,255,.06); flex-shrink: 0; }
+    .dots { display: flex; flex-wrap: wrap; gap: 5px; flex: 1; justify-content: center; }
+    .dot { width: 11px; height: 11px; border-radius: 50%; background: rgba(255,255,255,.12); transition: background .25s; }
+    .dot.now { box-shadow: 0 0 0 2px var(--indigo2); } .dot.ok { background: var(--accent); }
+    .dot.late { background: var(--late); } .dot.bad { background: var(--red); }
+    .count { font-weight: 800; font-size: .9rem; color: var(--text2); flex-shrink: 0; min-width: 4.5rem; text-align: right; }
+    .prompt { display: flex; align-items: baseline; justify-content: center; gap: .6rem; flex-wrap: wrap; text-align: center; min-height: 3.1rem; }
+    .prompt-q { font-size: 1.05rem; color: var(--text2); font-weight: 700; }
+    .prompt-name { font-family: 'Fredoka One', 'Nunito', sans-serif; font-size: clamp(1.7rem, 4.5vw, 2.5rem); color: var(--accent2); line-height: 1.1; }
+    .prompt-name.in { animation: nameIn .35s cubic-bezier(.2,.9,.3,1.25); }
+    @keyframes nameIn { from { opacity: 0; transform: translateY(8px) scale(.96); } to { opacity: 1; transform: none; } }
+    .antworten { display: flex; gap: .6rem; justify-content: center; flex-wrap: wrap; }
+    .antworten[hidden] { display: none; }
+    .antwort { min-width: 9rem; min-height: 48px; padding: .6rem 1rem; border-radius: 14px; font-weight: 900; font-size: 1.05rem;
+      background: var(--surface); border: 2px solid rgba(129,140,248,.35); }
+    .antwort.richtig { background: var(--accent); color: #231a02; border-color: var(--accent); }
+    .antwort.falsch { background: var(--miss); border-color: var(--red); }
+
+    #map-wrap { position: relative; flex: 1; min-height: 0; border-radius: 20px; overflow: hidden;
+      background: radial-gradient(ellipse at 50% 35%, var(--sea2), var(--sea) 70%);
+      box-shadow: inset 0 0 0 1px rgba(129,140,248,.14);
+      touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+    #map { width: 100%; height: 100%; display: block; }
+    .ctx { fill: var(--ctx); stroke: var(--land-st); stroke-width: .8px; vector-effect: non-scaling-stroke; pointer-events: none; }
+    .bodensee { fill: #2b4a8a; pointer-events: none; }
+    .bez { fill: var(--land); stroke: var(--land-st); stroke-width: 1.2px; vector-effect: non-scaling-stroke;
+      stroke-linejoin: round; transition: fill .3s ease; }
+    .bez.heimat-rand { fill: none; stroke: var(--accent); stroke-width: 2.5px; stroke-dasharray: 6 4; pointer-events: none; opacity: 0; }
+    .geb { fill: var(--berg); opacity: .5; filter: url(#weich); pointer-events: none; transition: fill .3s, opacity .3s; }
+    .hit-geb { fill: transparent; stroke: transparent; stroke-width: 16px; vector-effect: non-scaling-stroke; }
+    .linie { stroke: var(--wasser); stroke-width: 2.6px; opacity: .85; transition: stroke .3s; pointer-events: none; }
+    .linie.schema { stroke-dasharray: none; }
+    .see { fill: var(--wasser); stroke: none; pointer-events: none; transition: fill .3s; }
+    .punkt { stroke: var(--accent2); stroke-width: 12px; pointer-events: none; transition: stroke .3s; }
+    .punkt-rand { fill: none; stroke: var(--land-st); stroke-width: 16px; stroke-linecap: round; vector-effect: non-scaling-stroke; pointer-events: none; }
+
+    /* Was ist gerade sichtbar/antippbar? (Klasse am <svg>: ziel-bezirke | ziel-staedte | ziel-gewaesser | ziel-gebirge) */
+    #map [data-id] { pointer-events: none; }
+    #map.ziel-bezirke .bez[data-id], #map.ziel-gebirge .hit-geb, #map.ziel-gewaesser .hit-linie,
+    #map.ziel-gewaesser .hit-punkt { pointer-events: all; }
+    #map.ziel-gewaesser .hit-linie { pointer-events: stroke; }
+    #map.ziel-gewaesser .hit-punkt { pointer-events: stroke; }
+    #map.ziel-staedte .hit-punkt, #map.ziel-gebirge .hit-punkt { pointer-events: none; }
+    #map:not(.ziel-bezirke) .bez:not(.heimat-rand) { fill: #3d4160; }
+    #map:not(.ziel-bezirke) .bez.heimat-rand { opacity: .9; }
+    #map:not(.ziel-staedte) .g-staedte { display: none; }
+    #map:not(.ziel-gebirge) .g-gebirge { display: none; }
+    #map:not(.ziel-gewaesser) .linie { opacity: .35; }
+    #map:not(.ziel-gewaesser) .see { opacity: .45; }
+    #map.ziel-staedte .linie, #map.ziel-gebirge .linie { opacity: .25; }
+
+    /* Rückmeldung */
+    .bez.ok, .geb.ok { fill: var(--accent); } .bez.late, .geb.late { fill: var(--late); } .bez.miss, .geb.miss { fill: var(--miss); }
+    .geb.ok, .geb.late, .geb.miss { opacity: .85; }
+    .linie.ok { stroke: var(--accent); stroke-width: 5px; opacity: 1 !important; }
+    .linie.late { stroke: var(--late); stroke-width: 5px; } .linie.miss { stroke: var(--red); stroke-width: 4px; }
+    .see.ok { fill: var(--accent); opacity: 1 !important; } .see.late { fill: var(--late); } .see.miss { fill: var(--red); }
+    .punkt.ok { stroke: var(--accent); stroke-width: 18px; } .punkt.late { stroke: var(--late); } .punkt.miss { stroke: var(--red); }
+    /* Umkehr-Aufgabe: eigene Farbe (Pink), pulsiert */
+    .markiert { animation: puls 1.2s ease-in-out infinite; }
+    .bez.markiert { fill: #f472b6; } .geb.markiert { fill: #f472b6; opacity: .9; }
+    .linie.markiert { stroke: #f472b6; stroke-width: 6px; opacity: 1 !important; }
+    .see.markiert { fill: #f472b6; opacity: 1 !important; } .punkt.markiert { stroke: #f472b6; stroke-width: 20px; }
+    @keyframes puls { 50% { opacity: .55; } }
+    .bad { animation: bad 1s ease; }
+    @keyframes bad { 0%, 60% { opacity: 1; filter: drop-shadow(0 0 6px rgba(248,113,113,.9)); } 100% { filter: none; } }
+    .bez.bad { fill: var(--red) !important; }
+    .reveal { animation: reveal 1.5s ease-in-out; }
+    .bez.reveal, .geb.reveal, .see.reveal { fill: var(--accent); }
+    .linie.reveal { stroke: var(--accent); stroke-width: 6px; opacity: 1 !important; }
+    .punkt.reveal { stroke: var(--accent); stroke-width: 20px; }
+    @keyframes reveal { 0%, 50%, 100% { opacity: 1; } 25%, 75% { opacity: .3; } }
+
+    .tip { position: absolute; z-index: 5; pointer-events: none; background: var(--surface); color: var(--text);
+      font-weight: 800; font-size: .95rem; padding: .45rem .8rem; border-radius: 12px; white-space: nowrap;
+      border: 1px solid rgba(248,113,113,.55); box-shadow: 0 8px 24px rgba(0,0,0,.45);
+      transform: translate(-50%, calc(-100% - 14px)); opacity: 0; transition: opacity .15s; }
+    .tip.show { opacity: 1; }
+    .tip b { color: var(--red); font-weight: 900; }
+    .zoom { position: absolute; top: .7rem; right: .7rem; z-index: 4; display: flex; flex-direction: column; gap: .4rem; }
+    .zoom button { width: 44px; height: 44px; border-radius: 12px; background: rgba(27,25,41,.85);
+      border: 1px solid rgba(255,255,255,.1); font-size: 1.35rem; font-weight: 900; display: grid; place-items: center; }
+    .hint { position: absolute; left: .8rem; bottom: .7rem; z-index: 3; font-size: .78rem; color: var(--muted); pointer-events: none; transition: opacity .6s; }
+
+    .result { position: absolute; z-index: 6; left: 50%; top: 50%; transform: translate(-50%, -50%);
+      width: min(440px, calc(100% - 2rem)); max-height: calc(100% - 2rem); overflow-y: auto;
+      background: rgba(27,25,41,.96); border: 1px solid rgba(230,168,23,.35); border-radius: 20px;
+      padding: 1.4rem 1.4rem 1.2rem; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,.55); }
+    .result[hidden] { display: none; }
+    .res-score { font-family: 'Fredoka One', 'Nunito', sans-serif; font-size: 3.2rem; color: var(--accent); line-height: 1; }
+    .res-score small { font-size: 1.6rem; color: var(--text2); }
+    .res-msg { font-weight: 800; font-size: 1.05rem; margin: .45rem 0 .2rem; }
+    .res-sub { color: var(--text2); font-size: .88rem; }
+    .res-bereiche { margin-top: .8rem; display: grid; grid-template-columns: 1fr 1fr; gap: .4rem; text-align: left; }
+    .res-bereiche div { background: rgba(255,255,255,.05); border-radius: 10px; padding: .4rem .6rem; font-size: .85rem; font-weight: 800; }
+    .res-missed { margin-top: .9rem; text-align: left; background: rgba(255,255,255,.04); border-radius: 12px; padding: .7rem .85rem; }
+    .res-missed h3 { font-size: .85rem; color: var(--text2); font-weight: 800; margin-bottom: .35rem; }
+    .res-missed ul { list-style: none; display: flex; flex-wrap: wrap; gap: .35rem; }
+    .res-missed li { font-size: .85rem; font-weight: 700; padding: .2rem .6rem; border-radius: 99px;
+      background: rgba(122,59,80,.5); border: 1px solid rgba(248,113,113,.3); }
+    .res-btns { display: flex; gap: .6rem; margin-top: 1.1rem; flex-wrap: wrap; }
+    .btn { flex: 1; min-width: 8rem; padding: .8rem 1rem; border-radius: 14px; font-weight: 900; font-size: 1rem; }
+    .btn.primary { background: var(--accent); color: #231a02; } .btn.ghost { background: rgba(255,255,255,.07); }
+    @media (prefers-reduced-motion: reduce) {
+      .prompt-name.in, .reveal, .bad, .markiert { animation: none; }
+      .bez, .geb, .linie, .see, .punkt, .dot { transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+<section id="start" class="screen">
+  <div class="start-inner">
+    <h1>🦁 Auskennen in Bayern</h1>
+    <p class="start-sub">Bezirke, Städte, Flüsse, Seen und Gebirge – tippe auf der Karte an, wo sie liegen. Mit zwei Fingern kannst du die Karte größer ziehen.</p>
+    <div class="modes" id="modes"></div>
+    <p class="quelle" id="quelle"></p>
+  </div>
+</section>
+
+<section id="game" class="screen" hidden>
+  <div class="topbar">
+    <button class="quit" id="quit" type="button">✕ Beenden</button>
+    <div class="dots" id="dots" aria-hidden="true"></div>
+    <div class="count" id="count"></div>
+  </div>
+  <div class="prompt" aria-live="polite">
+    <span class="prompt-q" id="prompt-q"></span>
+    <span class="prompt-name" id="prompt-name"></span>
+  </div>
+  <div class="antworten" id="antworten" hidden></div>
+  <div id="map-wrap">
+    <svg id="map" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Karte von Bayern"></svg>
+    <div class="zoom">
+      <button type="button" id="z-in" aria-label="Größer">+</button>
+      <button type="button" id="z-out" aria-label="Kleiner">−</button>
+      <button type="button" id="z-reset" aria-label="Ganze Karte" style="font-size:1rem">⤢</button>
+    </div>
+    <div class="tip" id="tip"></div>
+    <div class="hint" id="hint">Zwei Finger: vergrößern · ein Finger: verschieben</div>
+    <div class="result" id="result" hidden></div>
+  </div>
+</section>
+
+<script src="../../gemeinsam/navbar.js"></script>
+<script src="../../gemeinsam/karten-ansicht.js"></script>
+<script src="../../gemeinsam/freigabe.js"></script>
+<script src="../../gemeinsam/ueben.js"></script>
+<script>
+'use strict';
+
+/* ═══════════════════════════════════════════════════════
+   MODI
+   ═══════════════════════════════════════════════════════ */
+const MODI = {
+  bezirke:   { name: 'Bezirke', icon: '🗺️', art: 'bezirke', wiederholen: true,
+               desc: 'Alle 7 Regierungsbezirke. Was nicht klappt, kommt am Ende noch einmal.' },
+  staedte:   { name: 'Städte', icon: '🏙️', art: 'staedte', anzahl: 12,
+               desc: '12 Städte von Würzburg bis Passau – tippe auf den richtigen Punkt.' },
+  gewaesser: { name: 'Gewässer', icon: '🌊', art: 'gewaesser', anzahl: 11,
+               desc: 'Donau, Main, Isar & Co. und die großen Seen.' },
+  gebirge:   { name: 'Gebirge', icon: '⛰️', art: 'gebirge', wiederholen: true,
+               desc: 'Von den Alpen bis zur Rhön – 7 Gebirge. Fehler kommen am Ende noch einmal.' },
+  mix:       { name: 'Kombiniert', icon: '🧭', art: 'mix', anzahl: 16, wiederholen: true,
+               desc: 'Alles gemischt – auch „Was ist markiert?“. Am Ende siehst du jeden Bereich.' },
+};
+const THEMA = { bezirke: 'gpg.5.bayern.bezirke', staedte: 'gpg.5.bayern.staedte', gewaesser: 'gpg.5.bayern.gewaesser',
+                gebirge: 'gpg.5.bayern.gebirge', mix: 'gpg.5.bayern.mix' };
+const BEREICH = { bezirke: 'Bezirke', staedte: 'Städte', gewaesser: 'Gewässer', gebirge: 'Gebirge' };
+// Artikel für die Frage („Wo fließt die Donau?“)
+const ART = { donau: 'die', main: 'der', inn: 'der', isar: 'die', lech: 'der', altmuehl: 'die', naab: 'die', regen: 'der',
+  chiemsee: 'der', 'starnberger-see': 'der', ammersee: 'der',
+  alpen: 'die', 'bayerischer-wald': 'der', 'oberpfaelzer-wald': 'der', fichtelgebirge: 'das', frankenalb: 'die', spessart: 'der', rhoen: 'die' };
+const BEST_KEY = 'lernwelt-bayern-best';
+const WAIT_OK = 650, WAIT_BAD = 1800, STADT_RADIUS = 30;   // Pixel: so weit darf man neben einen Stadtpunkt tippen
+const frei = modus => !window.LernUeben || LernUeben.Freigabe.erlaubt(THEMA[modus]);
+const $ = id => document.getElementById(id);
+const esc = t => String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+let K = null;            // Kartendaten (daten/bayern.json)
+let ZIELE = {};          // id → { id, n, art, el? }
+
+/* ═══════════════════════════════════════════════════════
+   KARTE
+   ═══════════════════════════════════════════════════════ */
+function baueKarte() {
+  const zu = (id, n, art, extra) => { ZIELE[id] = Object.assign({ id, n, art }, extra || {}); };
+  K.f.forEach(b => zu(b.id, b.n, 'bezirke'));
+  K.staedte.forEach(s => zu(s.id, s.n, 'staedte', { x: s.x, y: s.y }));
+  K.fluesse.forEach(f => zu(f.id, f.n, 'gewaesser', { fluss: true }));
+  K.seen.forEach(s => zu(s.id, s.n, 'gewaesser'));
+  K.gebirge.forEach(g => zu(g.id, g.n, 'gebirge'));
+
+  let s = `<defs><filter id="weich" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="7"/></filter>
+    <clipPath id="bayern-clip"><path d="${K.umriss}"/></clipPath></defs>`;
+  K.kontext.forEach(c => { s += `<path class="ctx" d="${c.d}"/>`; });
+  if (K.bodensee) s += `<path class="bodensee" d="${K.bodensee}"/>`;
+  s += '<g class="g-bezirke">';
+  K.f.forEach(b => { s += `<path class="bez" data-id="${esc(b.id)}" d="${b.d}"/>`; });
+  const heimat = K.f.find(b => b.id === K.heimat);
+  if (heimat) s += `<path class="bez heimat-rand" d="${heimat.d}"/>`;
+  s += '</g><g class="g-gebirge"><g clip-path="url(#bayern-clip)">';
+  K.gebirge.forEach(g => { s += `<path class="geb" data-ziel="${esc(g.id)}" d="${g.d}"/>`; });
+  s += '</g>';
+  K.gebirge.forEach(g => { s += `<path class="hit-geb" data-id="${esc(g.id)}" d="${g.d}"/>`; });
+  s += '</g><g class="g-gewaesser">';
+  K.seen.forEach(w => { s += `<path class="see" data-ziel="${esc(w.id)}" d="${w.d}"/>`; });
+  K.fluesse.forEach(f => { s += `<path class="linie" data-ziel="${esc(f.id)}" d="${f.d}"/>`; });
+  K.fluesse.forEach(f => { s += `<path class="hit-linie" data-id="${esc(f.id)}" d="${f.d}"/>`; });
+  K.seen.forEach(w => { s += `<path class="hit-punkt" data-id="${esc(w.id)}" d="M${w.m[0]} ${w.m[1]}h0"/>`; });
+  s += '</g><g class="g-staedte">';
+  K.staedte.forEach(p => { s += `<path class="punkt-rand" d="M${p.x} ${p.y}h0"/><path class="punkt" data-ziel="${esc(p.id)}" d="M${p.x} ${p.y}h0"/>`; });
+  s += '</g>';
+  $('map').innerHTML = s;
+  $('map').querySelectorAll('.punkt, .linie').forEach(p => {
+    p.style.fill = 'none'; p.style.strokeLinecap = 'round'; p.style.strokeLinejoin = 'round'; p.style.vectorEffect = 'non-scaling-stroke';
+  });
+}
+/** sichtbare Elemente eines Ziels (Fläche, Linie, Punkt) */
+function teile(id) { return [...$('map').querySelectorAll(`.bez[data-id="${id}"], [data-ziel="${id}"]`)]; }
+
+/* ═══════════════════════════════════════════════════════
+   STARTSEITE
+   ═══════════════════════════════════════════════════════ */
+function bestFor(modus) { try { return JSON.parse(localStorage.getItem(BEST_KEY) || '{}')[modus] || null; } catch (e) { return null; } }
+function saveBest(modus, score, max) {
+  try {
+    const all = JSON.parse(localStorage.getItem(BEST_KEY) || '{}'), prev = all[modus];
+    if (!prev || score / max > prev.s / prev.m) all[modus] = { s: score, m: max };
+    localStorage.setItem(BEST_KEY, JSON.stringify(all));
+  } catch (e) {}
+}
+function buildStart() {
+  const box = $('modes');
+  box.innerHTML = '';
+  Object.entries(MODI).forEach(([key, m]) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'mode';
+    const best = bestFor(key);
+    b.innerHTML = `<div class="mode-icon" aria-hidden="true"></div><div class="mode-txt"><span class="mode-name"></span>
+      <span class="mode-desc"></span><span class="mode-best">${best ? `Bestes Ergebnis: ${best.s} / ${best.m}` : ''}</span></div>`;
+    b.querySelector('.mode-icon').textContent = m.icon;
+    b.querySelector('.mode-name').textContent = (frei(key) ? '' : '🔒 ') + m.name;
+    b.querySelector('.mode-desc').textContent = m.desc;
+    if (!K || !frei(key)) { b.disabled = true; b.style.opacity = '.45'; }
+    else b.addEventListener('click', () => startGame(key));
+    box.appendChild(b);
+  });
+}
+
+/* ═══════════════════════════════════════════════════════
+   SPIEL
+   ═══════════════════════════════════════════════════════ */
+const G = { modus: null, m: null, queue: [], cur: null, score: 0, max: 0, daneben: new Set(), verpasst: [],
+            dots: [], frage: 0, locked: true, timer: 0, bereiche: {} };
+function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+
+/** Aufgaben einer Runde: { id, umkehr? } */
+function runde(modus) {
+  const m = MODI[modus];
+  if (m.art !== 'mix') {
+    const liste = shuffle(K.modi[m.art].liste.slice());
+    return liste.slice(0, m.anzahl || liste.length).map(id => ({ id }));
+  }
+  // Kombiniert: 4 je Bereich, davon eine Umkehr-Aufgabe („Was ist markiert?“)
+  const out = [];
+  Object.keys(BEREICH).forEach(art => {
+    shuffle(K.modi[art].liste.slice()).slice(0, 4).forEach((id, i) => out.push({ id, umkehr: i === 0 }));
+  });
+  return shuffle(out);
+}
+
+function startGame(modus) {
+  if (!frei(modus)) return showStart();
+  const m = MODI[modus];
+  clearTimeout(G.timer);
+  Object.assign(G, { modus, m, score: 0, daneben: new Set(), verpasst: [], frage: 0, locked: false, bereiche: {} });
+  G.queue = runde(modus);
+  G.max = G.queue.length;
+  G.dots = G.queue.map(() => '');
+  $('start').hidden = true; $('game').hidden = false; $('result').hidden = true;
+  $('hint').style.opacity = '';
+  baueKarte();
+  View.init(K);
+  next();
+}
+
+function renderDots() {
+  $('dots').innerHTML = G.dots.map((d, i) => `<span class="dot ${d}${!d && i === G.frage && !G.m.wiederholen && !G.locked ? ' now' : ''}"></span>`).join('');
+  $('count').textContent = G.m.wiederholen ? `${G.dots.filter(Boolean).length} / ${G.max}` : `${Math.min(G.frage + (G.locked ? 0 : 1), G.max)} / ${G.max}`;
+}
+function frageText(z) {
+  if (z.art === 'gewaesser') return z.fluss ? 'Wo fließt' : 'Wo liegt';
+  if (z.art === 'gebirge') return z.id === 'alpen' ? 'Wo liegen' : 'Wo liegt';
+  return 'Wo liegt';
+}
+const mitArtikel = z => (ART[z.id] ? ART[z.id] + ' ' : '') + z.n;
+
+function next() {
+  if (!G.queue.length) return finish();
+  G.aufgabe = G.queue.shift();
+  G.cur = G.aufgabe.id;
+  G.locked = false;
+  const z = ZIELE[G.cur];
+  $('map').setAttribute('class', 'ziel-' + z.art);
+  $('map').querySelectorAll('.markiert').forEach(e => e.classList.remove('markiert'));
+  // Kombiniert: Farben der letzten Aufgabe weg, damit „markiert“ eindeutig bleibt
+  if (G.m.art === 'mix') $('map').querySelectorAll('.ok, .late, .miss').forEach(e => e.classList.remove('ok', 'late', 'miss'));
+  const el = $('prompt-name');
+  if (G.aufgabe.umkehr) {
+    $('prompt-q').textContent = 'Was ist markiert?';
+    el.textContent = '';
+    teile(G.cur).forEach(t => t.classList.add('markiert'));
+    zeigeAntworten(z);
+  } else {
+    $('antworten').hidden = true;
+    $('prompt-q').textContent = frageText(z);
+    el.textContent = mitArtikel(z) + '?';
+  }
+  el.classList.remove('in'); void el.offsetWidth; el.classList.add('in');
+  renderDots();
+}
+
+/** Umkehr-Aufgabe: drei Antworten aus demselben Bereich */
+function zeigeAntworten(z) {
+  const andere = shuffle(K.modi[z.art].liste.filter(id => id !== z.id)).slice(0, 2);
+  const box = $('antworten');
+  box.innerHTML = '';
+  shuffle([z.id, ...andere]).forEach(id => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'antwort'; b.textContent = ZIELE[id].n; b.dataset.id = id;
+    b.addEventListener('click', () => antwort(id, b));
+    box.appendChild(b);
+  });
+  box.hidden = false;
+}
+function antwort(id, knopf) {
+  if (G.locked) return;
+  G.locked = true;
+  const richtig = id === G.cur;
+  $('antworten').querySelectorAll('.antwort').forEach(b => { if (b.dataset.id === G.cur) b.classList.add('richtig'); });
+  if (!richtig) knopf.classList.add('falsch');
+  werte(richtig);
+  G.timer = setTimeout(next, richtig ? WAIT_OK + 300 : WAIT_BAD);
+}
+
+/** Ergebnis einer Aufgabe zählen (gemeinsam für Tippen und Umkehr-Aufgaben) */
+function werte(richtig) {
+  const z = ZIELE[G.cur], ersterVersuch = !G.daneben.has(G.cur + (G.aufgabe.umkehr ? '?' : ''));
+  const b = G.bereiche[z.art] || (G.bereiche[z.art] = { s: 0, m: 0 });
+  const ziel = teile(G.cur);
+  if (richtig) {
+    if (ersterVersuch) { G.score++; b.s++; }
+    if (ersterVersuch || !G.m.wiederholen) b.m++;
+    ziel.forEach(t => { t.classList.remove('miss', 'markiert'); t.classList.add(ersterVersuch ? 'ok' : 'late'); });
+    markDot(ersterVersuch ? 'ok' : 'late');
+    return;
+  }
+  ziel.forEach(t => { t.classList.remove('reveal'); void t.getBoundingClientRect(); t.classList.add('reveal'); });
+  setTimeout(() => ziel.forEach(t => { t.classList.remove('reveal', 'markiert'); if (!G.m.wiederholen) t.classList.add('miss'); }), 1500);
+  if (G.m.wiederholen) {
+    if (ersterVersuch) b.m++;
+    G.daneben.add(G.cur + (G.aufgabe.umkehr ? '?' : ''));
+    G.queue.push(G.aufgabe);                 // kommt am Ende noch einmal
+  } else {
+    b.m++;
+    G.verpasst.push(G.cur);
+    markDot('bad');
+  }
+}
+
+/** Städte: der nächste Punkt im Umkreis zählt (Nürnberg, Fürth und Erlangen liegen eng beieinander) */
+function naechsteStadt(cx, cy) {
+  const a = View.zuMap(cx, cy), b = View.zuMap(cx + STADT_RADIUS, cy);
+  const r = Math.abs(b.x - a.x);
+  let best = null;
+  K.staedte.forEach(s => { const d = Math.hypot(s.x - a.x, s.y - a.y); if (d <= r && (!best || d < best.d)) best = { d, id: s.id }; });
+  return best && best.id;
+}
+
+function handleTap(id, cx, cy) {
+  if (G.locked || !G.cur || G.aufgabe.umkehr) return;
+  if (ZIELE[G.cur].art === 'staedte') id = naechsteStadt(cx, cy);
+  if (!id || !ZIELE[id]) return;              // daneben ins Leere → nichts passiert
+  G.locked = true;
+  if (id === G.cur) { werte(true); G.timer = setTimeout(next, WAIT_OK); return; }
+  teile(id).forEach(t => { t.classList.add('bad'); setTimeout(() => t.classList.remove('bad'), 1000); });
+  showTip(ZIELE[id], cx, cy);
+  werte(false);
+  G.timer = setTimeout(next, WAIT_BAD);
+}
+
+function markDot(kind) {
+  if (G.m.wiederholen) { const i = G.dots.indexOf(''); if (i >= 0) G.dots[i] = kind; }
+  else { G.dots[G.frage] = kind; G.frage++; }
+  renderDots();
+}
+
+let tipT = 0;
+function showTip(z, cx, cy) {
+  const tip = $('tip'), r = $('map-wrap').getBoundingClientRect();
+  tip.innerHTML = '';
+  tip.append('Das ist ' + (ART[z.id] ? ART[z.id] + ' ' : ''));
+  const b = document.createElement('b'); b.textContent = z.n; tip.append(b);
+  let x = cx - r.left, y = cy - r.top;
+  tip.style.left = x + 'px'; tip.style.top = y + 'px';
+  tip.classList.add('show');
+  const tr = tip.getBoundingClientRect();
+  if (tr.left < r.left + 6) x += r.left + 6 - tr.left;
+  if (tr.right > r.right - 6) x -= tr.right - (r.right - 6);
+  if (tr.top < r.top + 6) y += tr.height + 28;
+  tip.style.left = x + 'px'; tip.style.top = y + 'px';
+  clearTimeout(tipT);
+  tipT = setTimeout(() => tip.classList.remove('show'), 1600);
+}
+
+function finish() {
+  G.locked = true; G.cur = null;
+  $('antworten').hidden = true;
+  $('hint').style.opacity = 0;
+  $('prompt-q').textContent = '';
+  $('prompt-name').textContent = G.m.name;
+  $('map').setAttribute('class', 'ziel-' + (G.m.art === 'mix' ? 'gewaesser' : G.m.art));
+  renderDots();
+  const { score, max } = G, pct = Math.round(score / max * 100);
+  const msg = pct === 100 ? 'Perfekt – alles beim ersten Versuch!' : pct >= 80 ? 'Super, du kennst dich in Bayern richtig gut aus!'
+            : pct >= 50 ? 'Gut gemacht – weiter so!' : 'Dranbleiben – beim nächsten Mal klappt mehr!';
+  const liste = G.m.wiederholen ? [...new Set([...G.daneben].map(k => k.replace('?', '')))] : G.verpasst;
+  const box = $('result');
+  box.innerHTML = `<div class="res-score">${score}<small> / ${max}</small></div><div class="res-msg"></div>
+    <div class="res-sub"></div>
+    ${G.m.art === 'mix' ? '<div class="res-bereiche"></div>' : ''}
+    ${liste.length ? '<div class="res-missed"><h3>Das übst du am besten noch einmal:</h3><ul></ul></div>' : ''}
+    <div class="res-btns"><button type="button" class="btn primary" id="again">🔄 Nochmal</button>
+    <button type="button" class="btn ghost" id="other">Anderer Bereich</button></div>`;
+  box.querySelector('.res-msg').textContent = msg;
+  box.querySelector('.res-sub').textContent = `${score} von ${max} beim ersten Versuch richtig.`;
+  const rb = box.querySelector('.res-bereiche');
+  if (rb) Object.entries(BEREICH).forEach(([art, n]) => {
+    const b = G.bereiche[art]; if (!b) return;
+    const d = document.createElement('div'); d.textContent = `${n}: ${b.s} / ${b.m}`; rb.appendChild(d);
+  });
+  const ul = box.querySelector('ul');
+  if (ul) liste.forEach(id => { const li = document.createElement('li'); li.textContent = ZIELE[id].n; ul.appendChild(li); });
+  box.querySelector('#again').onclick = () => startGame(G.modus);
+  box.querySelector('#other').onclick = showStart;
+  box.hidden = false;
+  saveBest(G.modus, score, max);
+  try { if (window.LernApps) LernApps.saveResult({ score, max, label: `${score} / ${max} ${G.m.name}`, skill: 'bayern-' + G.modus, thema: THEMA[G.modus] }); } catch (e) {}
+}
+
+function showStart() {
+  clearTimeout(G.timer); G.locked = true;
+  $('game').hidden = true; $('start').hidden = false;
+  buildStart();
+}
+$('quit').addEventListener('click', showStart);
+window.addEventListener('lernfreigabe:neu', () => { if (!$('start').hidden) buildStart(); });
+
+const View = LernKarte.ansicht({
+  svg: $('map'), wrap: $('map-wrap'), maxZoom: 6,
+  onTap: (id, x, y) => handleTap(id, x, y),
+  onGeste: () => { $('hint').style.opacity = 0; },
+});
+$('z-in').addEventListener('click', () => View.centerZoom(1.5));
+$('z-out').addEventListener('click', () => View.centerZoom(1 / 1.5));
+$('z-reset').addEventListener('click', () => View.reset());
+
+buildStart();
+LernKarte.laden('../../daten/bayern.json').then(d => {
+  K = d;
+  $('quelle').textContent = 'Kartengrundlage: ' + K.quelle;
+  buildStart();
+}).catch(() => {
+  $('modes').innerHTML = '<p style="color:var(--red);font-weight:800">Die Karte konnte nicht geladen werden. Bitte einmal mit dem Internet verbinden und neu laden.</p>';
+});
+</script>
+</body>
+</html>
