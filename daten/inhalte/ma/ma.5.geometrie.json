@@ -1,0 +1,773 @@
+{
+ "typ": "gemischt",
+ "thema": "ma.5.geometrie",
+ "titel": "Geometrie-Trainer",
+ "emoji": "📐",
+ "klasse": 5,
+ "runde": 8,
+ "untertitel": "Vierecke, Linien, Würfelnetze und Körper",
+ "hilfe": [
+  {
+   "titel": "Vierecke",
+   "tabelle": [
+    [
+     "Viereck",
+     "Merkmal"
+    ],
+    [
+     "Quadrat",
+     "4 gleich lange Seiten, 4 rechte Winkel"
+    ],
+    [
+     "Rechteck",
+     "4 rechte Winkel, gegenüberliegende Seiten gleich lang"
+    ],
+    [
+     "Raute",
+     "4 gleich lange Seiten, keine rechten Winkel"
+    ],
+    [
+     "Parallelogramm",
+     "2 Paare paralleler Seiten"
+    ],
+    [
+     "Trapez",
+     "genau 1 Paar paralleler Seiten"
+    ],
+    [
+     "Drachen",
+     "2 Paare gleich langer Nachbarseiten"
+    ]
+   ],
+   "text": "In den Bildern zeigen kleine Quadrate rechte Winkel, gleiche Striche gleich lange Seiten."
+  },
+  {
+   "titel": "Parallel und senkrecht",
+   "text": "Parallel: gleicher Abstand überall, kein Schnittpunkt. Senkrecht: Schnitt im rechten Winkel (90°)."
+  },
+  {
+   "titel": "Würfelnetze",
+   "text": [
+    "Es gibt genau 11 verschiedene Würfelnetze.",
+    "Gegenüber im Würfel liegen Flächen, zwischen denen im Netz in einer Reihe genau eine Fläche liegt."
+   ]
+  },
+  {
+   "titel": "Körper",
+   "tabelle": [
+    [
+     "Körper",
+     "Ecken",
+     "Kanten",
+     "Flächen"
+    ],
+    [
+     "Würfel",
+     "8",
+     "12",
+     "6"
+    ],
+    [
+     "Quader",
+     "8",
+     "12",
+     "6"
+    ],
+    [
+     "Pyramide (quadratisch)",
+     "5",
+     "8",
+     "5"
+    ],
+    [
+     "Zylinder",
+     "0",
+     "2",
+     "3"
+    ],
+    [
+     "Kegel",
+     "–",
+     "1",
+     "2"
+    ],
+    [
+     "Kugel",
+     "0",
+     "0",
+     "1"
+    ]
+   ]
+  }
+ ],
+ "stufen": [
+  {
+   "id": "ma.5.geometrie.vierecke",
+   "titel": "Vierecke benennen",
+   "kurz": "Quadrat, Raute, Drachen …",
+   "typ": "bildwort",
+   "anweisung": "Kleine Quadrate zeigen rechte Winkel, gleiche Striche gleich lange Seiten.",
+   "woerter": [
+    {
+     "bild": "geo-viereck-quadrat-1.svg",
+     "wort": "Quadrat",
+     "erklaerung": "Ein Quadrat hat vier gleich lange Seiten UND vier rechte Winkel."
+    },
+    {
+     "bild": "geo-viereck-quadrat-2.svg",
+     "wort": "Quadrat",
+     "erklaerung": "Ein Quadrat hat vier gleich lange Seiten UND vier rechte Winkel."
+    },
+    {
+     "bild": "geo-viereck-quadrat-3.svg",
+     "wort": "Quadrat",
+     "erklaerung": "Ein Quadrat hat vier gleich lange Seiten UND vier rechte Winkel."
+    },
+    {
+     "bild": "geo-viereck-quadrat-4.svg",
+     "wort": "Quadrat",
+     "erklaerung": "Ein Quadrat hat vier gleich lange Seiten UND vier rechte Winkel."
+    },
+    {
+     "bild": "geo-viereck-rechteck-1.svg",
+     "wort": "Rechteck",
+     "erklaerung": "Ein Rechteck hat vier rechte Winkel; gegenüberliegende Seiten sind gleich lang."
+    },
+    {
+     "bild": "geo-viereck-rechteck-2.svg",
+     "wort": "Rechteck",
+     "erklaerung": "Ein Rechteck hat vier rechte Winkel; gegenüberliegende Seiten sind gleich lang."
+    },
+    {
+     "bild": "geo-viereck-rechteck-3.svg",
+     "wort": "Rechteck",
+     "erklaerung": "Ein Rechteck hat vier rechte Winkel; gegenüberliegende Seiten sind gleich lang."
+    },
+    {
+     "bild": "geo-viereck-rechteck-4.svg",
+     "wort": "Rechteck",
+     "erklaerung": "Ein Rechteck hat vier rechte Winkel; gegenüberliegende Seiten sind gleich lang."
+    },
+    {
+     "bild": "geo-viereck-raute-1.svg",
+     "wort": "Raute",
+     "erklaerung": "Eine Raute hat vier gleich lange Seiten, aber keine rechten Winkel."
+    },
+    {
+     "bild": "geo-viereck-raute-2.svg",
+     "wort": "Raute",
+     "erklaerung": "Eine Raute hat vier gleich lange Seiten, aber keine rechten Winkel."
+    },
+    {
+     "bild": "geo-viereck-raute-3.svg",
+     "wort": "Raute",
+     "erklaerung": "Eine Raute hat vier gleich lange Seiten, aber keine rechten Winkel."
+    },
+    {
+     "bild": "geo-viereck-raute-4.svg",
+     "wort": "Raute",
+     "erklaerung": "Eine Raute hat vier gleich lange Seiten, aber keine rechten Winkel."
+    },
+    {
+     "bild": "geo-viereck-parallelogramm-1.svg",
+     "wort": "Parallelogramm",
+     "erklaerung": "Beim Parallelogramm sind gegenüberliegende Seiten parallel und gleich lang – ohne rechte Winkel."
+    },
+    {
+     "bild": "geo-viereck-parallelogramm-2.svg",
+     "wort": "Parallelogramm",
+     "erklaerung": "Beim Parallelogramm sind gegenüberliegende Seiten parallel und gleich lang – ohne rechte Winkel."
+    },
+    {
+     "bild": "geo-viereck-parallelogramm-3.svg",
+     "wort": "Parallelogramm",
+     "erklaerung": "Beim Parallelogramm sind gegenüberliegende Seiten parallel und gleich lang – ohne rechte Winkel."
+    },
+    {
+     "bild": "geo-viereck-parallelogramm-4.svg",
+     "wort": "Parallelogramm",
+     "erklaerung": "Beim Parallelogramm sind gegenüberliegende Seiten parallel und gleich lang – ohne rechte Winkel."
+    },
+    {
+     "bild": "geo-viereck-trapez-1.svg",
+     "wort": "Trapez",
+     "erklaerung": "Ein Trapez hat genau ein Paar paralleler Seiten."
+    },
+    {
+     "bild": "geo-viereck-trapez-2.svg",
+     "wort": "Trapez",
+     "erklaerung": "Ein Trapez hat genau ein Paar paralleler Seiten."
+    },
+    {
+     "bild": "geo-viereck-trapez-3.svg",
+     "wort": "Trapez",
+     "erklaerung": "Ein Trapez hat genau ein Paar paralleler Seiten."
+    },
+    {
+     "bild": "geo-viereck-trapez-4.svg",
+     "wort": "Trapez",
+     "erklaerung": "Ein Trapez hat genau ein Paar paralleler Seiten."
+    },
+    {
+     "bild": "geo-viereck-drachen-1.svg",
+     "wort": "Drachen",
+     "erklaerung": "Ein Drachen hat zwei Paare gleich langer Nachbarseiten (oben gleich, unten gleich)."
+    },
+    {
+     "bild": "geo-viereck-drachen-2.svg",
+     "wort": "Drachen",
+     "erklaerung": "Ein Drachen hat zwei Paare gleich langer Nachbarseiten (oben gleich, unten gleich)."
+    },
+    {
+     "bild": "geo-viereck-drachen-3.svg",
+     "wort": "Drachen",
+     "erklaerung": "Ein Drachen hat zwei Paare gleich langer Nachbarseiten (oben gleich, unten gleich)."
+    },
+    {
+     "bild": "geo-viereck-drachen-4.svg",
+     "wort": "Drachen",
+     "erklaerung": "Ein Drachen hat zwei Paare gleich langer Nachbarseiten (oben gleich, unten gleich)."
+    }
+   ],
+   "frage": "Welches Viereck ist das?"
+  },
+  {
+   "id": "ma.5.geometrie.eigenschaften",
+   "titel": "Eigenschaften",
+   "kurz": "Merkmal → Viereck",
+   "typ": "zuordnen",
+   "anweisung": "Welches Viereck passt zu der Beschreibung?",
+   "paare": [
+    [
+     "4 gleich lange Seiten und 4 rechte Winkel",
+     "Quadrat"
+    ],
+    [
+     "Alle Seiten gleich lang, alle Winkel 90°",
+     "Quadrat"
+    ],
+    [
+     "4 rechte Winkel, aber nicht alle Seiten gleich lang",
+     "Rechteck"
+    ],
+    [
+     "Gegenüberliegende Seiten gleich lang, 4 rechte Winkel, lang und schmal",
+     "Rechteck"
+    ],
+    [
+     "4 gleich lange Seiten, keine rechten Winkel",
+     "Raute"
+    ],
+    [
+     "Alle Seiten gleich lang, schräg „gekippt“",
+     "Raute"
+    ],
+    [
+     "2 Paare paralleler Seiten, Nachbarseiten verschieden lang, keine rechten Winkel",
+     "Parallelogramm"
+    ],
+    [
+     "Gegenüberliegende Seiten parallel, aber kein rechter Winkel und nicht alle Seiten gleich",
+     "Parallelogramm"
+    ],
+    [
+     "Genau 1 Paar paralleler Seiten",
+     "Trapez"
+    ],
+    [
+     "Nur zwei Seiten sind parallel",
+     "Trapez"
+    ],
+    [
+     "2 Paare gleich langer Nachbarseiten",
+     "Drachen"
+    ],
+    [
+     "Diagonalen stehen senkrecht, nur eine Diagonale wird halbiert",
+     "Drachen"
+    ]
+   ],
+   "proAufgabe": 3,
+   "ziele": [
+    "Quadrat",
+    "Rechteck",
+    "Raute",
+    "Parallelogramm",
+    "Trapez",
+    "Drachen"
+   ]
+  },
+  {
+   "id": "ma.5.geometrie.lage",
+   "titel": "Parallel und senkrecht",
+   "kurz": "parallel, senkrecht oder keins",
+   "typ": "bildwort",
+   "anweisung": "parallel, senkrecht oder weder noch?",
+   "woerter": [
+    {
+     "bild": "geo-lage-parallel-1.svg",
+     "wort": "parallel",
+     "erklaerung": "Parallele Linien haben überall den gleichen Abstand und schneiden sich nie."
+    },
+    {
+     "bild": "geo-lage-parallel-2.svg",
+     "wort": "parallel",
+     "erklaerung": "Parallele Linien haben überall den gleichen Abstand und schneiden sich nie."
+    },
+    {
+     "bild": "geo-lage-parallel-3.svg",
+     "wort": "parallel",
+     "erklaerung": "Parallele Linien haben überall den gleichen Abstand und schneiden sich nie."
+    },
+    {
+     "bild": "geo-lage-parallel-4.svg",
+     "wort": "parallel",
+     "erklaerung": "Parallele Linien haben überall den gleichen Abstand und schneiden sich nie."
+    },
+    {
+     "bild": "geo-lage-parallel-5.svg",
+     "wort": "parallel",
+     "erklaerung": "Parallele Linien haben überall den gleichen Abstand und schneiden sich nie."
+    },
+    {
+     "bild": "geo-lage-parallel-6.svg",
+     "wort": "parallel",
+     "erklaerung": "Parallele Linien haben überall den gleichen Abstand und schneiden sich nie."
+    },
+    {
+     "bild": "geo-lage-senkrecht-1.svg",
+     "wort": "senkrecht",
+     "erklaerung": "Senkrechte Linien bilden einen rechten Winkel (90°) – prüfe mit dem Geodreieck."
+    },
+    {
+     "bild": "geo-lage-senkrecht-2.svg",
+     "wort": "senkrecht",
+     "erklaerung": "Senkrechte Linien bilden einen rechten Winkel (90°) – prüfe mit dem Geodreieck."
+    },
+    {
+     "bild": "geo-lage-senkrecht-3.svg",
+     "wort": "senkrecht",
+     "erklaerung": "Senkrechte Linien bilden einen rechten Winkel (90°) – prüfe mit dem Geodreieck."
+    },
+    {
+     "bild": "geo-lage-senkrecht-4.svg",
+     "wort": "senkrecht",
+     "erklaerung": "Senkrechte Linien bilden einen rechten Winkel (90°) – prüfe mit dem Geodreieck."
+    },
+    {
+     "bild": "geo-lage-senkrecht-5.svg",
+     "wort": "senkrecht",
+     "erklaerung": "Senkrechte Linien bilden einen rechten Winkel (90°) – prüfe mit dem Geodreieck."
+    },
+    {
+     "bild": "geo-lage-senkrecht-6.svg",
+     "wort": "senkrecht",
+     "erklaerung": "Senkrechte Linien bilden einen rechten Winkel (90°) – prüfe mit dem Geodreieck."
+    },
+    {
+     "bild": "geo-lage-weder-noch-1.svg",
+     "wort": "weder noch",
+     "erklaerung": "Die Linien schneiden sich (oder würden sich schneiden), aber nicht im rechten Winkel."
+    },
+    {
+     "bild": "geo-lage-weder-noch-2.svg",
+     "wort": "weder noch",
+     "erklaerung": "Die Linien schneiden sich (oder würden sich schneiden), aber nicht im rechten Winkel."
+    },
+    {
+     "bild": "geo-lage-weder-noch-3.svg",
+     "wort": "weder noch",
+     "erklaerung": "Die Linien schneiden sich (oder würden sich schneiden), aber nicht im rechten Winkel."
+    },
+    {
+     "bild": "geo-lage-weder-noch-4.svg",
+     "wort": "weder noch",
+     "erklaerung": "Die Linien schneiden sich (oder würden sich schneiden), aber nicht im rechten Winkel."
+    },
+    {
+     "bild": "geo-lage-weder-noch-5.svg",
+     "wort": "weder noch",
+     "erklaerung": "Die Linien schneiden sich (oder würden sich schneiden), aber nicht im rechten Winkel."
+    },
+    {
+     "bild": "geo-lage-weder-noch-6.svg",
+     "wort": "weder noch",
+     "erklaerung": "Die Linien schneiden sich (oder würden sich schneiden), aber nicht im rechten Winkel."
+    }
+   ],
+   "frage": "Wie liegen die Linien zueinander?"
+  },
+  {
+   "id": "ma.5.geometrie.netz",
+   "titel": "Würfelnetz ja/nein",
+   "kurz": "Lässt es sich falten?",
+   "typ": "bildwort",
+   "anweisung": "Stell dir vor, du faltest es zusammen.",
+   "woerter": [
+    {
+     "bild": "geo-netz-ja-1.svg",
+     "wort": "ja",
+     "erklaerung": "Ja – dieses Netz lässt sich zu einem Würfel falten (es ist eines der 11 Würfelnetze)."
+    },
+    {
+     "bild": "geo-netz-ja-2.svg",
+     "wort": "ja",
+     "erklaerung": "Ja – dieses Netz lässt sich zu einem Würfel falten (es ist eines der 11 Würfelnetze)."
+    },
+    {
+     "bild": "geo-netz-ja-3.svg",
+     "wort": "ja",
+     "erklaerung": "Ja – dieses Netz lässt sich zu einem Würfel falten (es ist eines der 11 Würfelnetze)."
+    },
+    {
+     "bild": "geo-netz-ja-4.svg",
+     "wort": "ja",
+     "erklaerung": "Ja – dieses Netz lässt sich zu einem Würfel falten (es ist eines der 11 Würfelnetze)."
+    },
+    {
+     "bild": "geo-netz-ja-5.svg",
+     "wort": "ja",
+     "erklaerung": "Ja – dieses Netz lässt sich zu einem Würfel falten (es ist eines der 11 Würfelnetze)."
+    },
+    {
+     "bild": "geo-netz-ja-6.svg",
+     "wort": "ja",
+     "erklaerung": "Ja – dieses Netz lässt sich zu einem Würfel falten (es ist eines der 11 Würfelnetze)."
+    },
+    {
+     "bild": "geo-netz-ja-7.svg",
+     "wort": "ja",
+     "erklaerung": "Ja – dieses Netz lässt sich zu einem Würfel falten (es ist eines der 11 Würfelnetze)."
+    },
+    {
+     "bild": "geo-netz-ja-8.svg",
+     "wort": "ja",
+     "erklaerung": "Ja – dieses Netz lässt sich zu einem Würfel falten (es ist eines der 11 Würfelnetze)."
+    },
+    {
+     "bild": "geo-netz-ja-9.svg",
+     "wort": "ja",
+     "erklaerung": "Ja – dieses Netz lässt sich zu einem Würfel falten (es ist eines der 11 Würfelnetze)."
+    },
+    {
+     "bild": "geo-netz-ja-10.svg",
+     "wort": "ja",
+     "erklaerung": "Ja – dieses Netz lässt sich zu einem Würfel falten (es ist eines der 11 Würfelnetze)."
+    },
+    {
+     "bild": "geo-netz-ja-11.svg",
+     "wort": "ja",
+     "erklaerung": "Ja – dieses Netz lässt sich zu einem Würfel falten (es ist eines der 11 Würfelnetze)."
+    },
+    {
+     "bild": "geo-netz-nein-1.svg",
+     "wort": "nein",
+     "erklaerung": "Nein – beim Falten würden zwei Flächen übereinander liegen und eine Seite bliebe offen."
+    },
+    {
+     "bild": "geo-netz-nein-2.svg",
+     "wort": "nein",
+     "erklaerung": "Nein – beim Falten würden zwei Flächen übereinander liegen und eine Seite bliebe offen."
+    },
+    {
+     "bild": "geo-netz-nein-3.svg",
+     "wort": "nein",
+     "erklaerung": "Nein – beim Falten würden zwei Flächen übereinander liegen und eine Seite bliebe offen."
+    },
+    {
+     "bild": "geo-netz-nein-4.svg",
+     "wort": "nein",
+     "erklaerung": "Nein – beim Falten würden zwei Flächen übereinander liegen und eine Seite bliebe offen."
+    },
+    {
+     "bild": "geo-netz-nein-5.svg",
+     "wort": "nein",
+     "erklaerung": "Nein – beim Falten würden zwei Flächen übereinander liegen und eine Seite bliebe offen."
+    },
+    {
+     "bild": "geo-netz-nein-6.svg",
+     "wort": "nein",
+     "erklaerung": "Nein – beim Falten würden zwei Flächen übereinander liegen und eine Seite bliebe offen."
+    },
+    {
+     "bild": "geo-netz-nein-7.svg",
+     "wort": "nein",
+     "erklaerung": "Nein – beim Falten würden zwei Flächen übereinander liegen und eine Seite bliebe offen."
+    },
+    {
+     "bild": "geo-netz-nein-8.svg",
+     "wort": "nein",
+     "erklaerung": "Nein – beim Falten würden zwei Flächen übereinander liegen und eine Seite bliebe offen."
+    },
+    {
+     "bild": "geo-netz-nein-9.svg",
+     "wort": "nein",
+     "erklaerung": "Nein – beim Falten würden zwei Flächen übereinander liegen und eine Seite bliebe offen."
+    },
+    {
+     "bild": "geo-netz-nein-10.svg",
+     "wort": "nein",
+     "erklaerung": "Nein – beim Falten würden zwei Flächen übereinander liegen und eine Seite bliebe offen."
+    },
+    {
+     "bild": "geo-netz-nein-11.svg",
+     "wort": "nein",
+     "erklaerung": "Nein – beim Falten würden zwei Flächen übereinander liegen und eine Seite bliebe offen."
+    }
+   ],
+   "frage": "Ist das ein Würfelnetz?"
+  },
+  {
+   "id": "ma.5.geometrie.gegenueber",
+   "titel": "Gegenüber",
+   "kurz": "Welche Fläche liegt gegenüber?",
+   "typ": "bildwort",
+   "anweisung": "Stell dir den gefalteten Würfel vor.",
+   "woerter": [
+    {
+     "bild": "geo-gegen-1.svg",
+     "wort": "C",
+     "erklaerung": "Beim Falten liegt C gegenüber von A. Tipp: In einer geraden Reihe aus drei Flächen liegen die beiden äußeren gegenüber."
+    },
+    {
+     "bild": "geo-gegen-2.svg",
+     "wort": "E",
+     "erklaerung": "Beim Falten liegt E gegenüber von C. Tipp: In einer geraden Reihe aus drei Flächen liegen die beiden äußeren gegenüber."
+    },
+    {
+     "bild": "geo-gegen-3.svg",
+     "wort": "A",
+     "erklaerung": "Beim Falten liegt A gegenüber von B. Tipp: In einer geraden Reihe aus drei Flächen liegen die beiden äußeren gegenüber."
+    },
+    {
+     "bild": "geo-gegen-4.svg",
+     "wort": "F",
+     "erklaerung": "Beim Falten liegt F gegenüber von A. Tipp: In einer geraden Reihe aus drei Flächen liegen die beiden äußeren gegenüber."
+    },
+    {
+     "bild": "geo-gegen-5.svg",
+     "wort": "B",
+     "erklaerung": "Beim Falten liegt B gegenüber von D. Tipp: In einer geraden Reihe aus drei Flächen liegen die beiden äußeren gegenüber."
+    },
+    {
+     "bild": "geo-gegen-6.svg",
+     "wort": "C",
+     "erklaerung": "Beim Falten liegt C gegenüber von B. Tipp: In einer geraden Reihe aus drei Flächen liegen die beiden äußeren gegenüber."
+    },
+    {
+     "bild": "geo-gegen-7.svg",
+     "wort": "B",
+     "erklaerung": "Beim Falten liegt B gegenüber von C. Tipp: In einer geraden Reihe aus drei Flächen liegen die beiden äußeren gegenüber."
+    },
+    {
+     "bild": "geo-gegen-8.svg",
+     "wort": "C",
+     "erklaerung": "Beim Falten liegt C gegenüber von B. Tipp: In einer geraden Reihe aus drei Flächen liegen die beiden äußeren gegenüber."
+    },
+    {
+     "bild": "geo-gegen-9.svg",
+     "wort": "C",
+     "erklaerung": "Beim Falten liegt C gegenüber von E. Tipp: In einer geraden Reihe aus drei Flächen liegen die beiden äußeren gegenüber."
+    },
+    {
+     "bild": "geo-gegen-10.svg",
+     "wort": "B",
+     "erklaerung": "Beim Falten liegt B gegenüber von C. Tipp: In einer geraden Reihe aus drei Flächen liegen die beiden äußeren gegenüber."
+    },
+    {
+     "bild": "geo-gegen-11.svg",
+     "wort": "E",
+     "erklaerung": "Beim Falten liegt E gegenüber von F. Tipp: In einer geraden Reihe aus drei Flächen liegen die beiden äußeren gegenüber."
+    },
+    {
+     "bild": "geo-gegen-12.svg",
+     "wort": "E",
+     "erklaerung": "Beim Falten liegt E gegenüber von F. Tipp: In einer geraden Reihe aus drei Flächen liegen die beiden äußeren gegenüber."
+    }
+   ],
+   "frage": "Was liegt gegenüber der gelben Fläche?"
+  },
+  {
+   "id": "ma.5.geometrie.koerper",
+   "titel": "Körper erkennen",
+   "kurz": "Würfel, Zylinder, Kegel …",
+   "typ": "bildwort",
+   "anweisung": "Gestrichelte Linien sind verdeckte Kanten.",
+   "woerter": [
+    {
+     "bild": "geo-koerper-wuerfel-1.svg",
+     "wort": "Würfel",
+     "erklaerung": "Würfel: 6 gleich große Quadrate."
+    },
+    {
+     "bild": "geo-koerper-wuerfel-2.svg",
+     "wort": "Würfel",
+     "erklaerung": "Würfel: 6 gleich große Quadrate."
+    },
+    {
+     "bild": "geo-koerper-quader-1.svg",
+     "wort": "Quader",
+     "erklaerung": "Quader: 6 Rechtecke, gegenüberliegende sind gleich."
+    },
+    {
+     "bild": "geo-koerper-quader-2.svg",
+     "wort": "Quader",
+     "erklaerung": "Quader: 6 Rechtecke, gegenüberliegende sind gleich."
+    },
+    {
+     "bild": "geo-koerper-zylinder-1.svg",
+     "wort": "Zylinder",
+     "erklaerung": "Zylinder: 2 Kreise oben und unten, dazu eine gebogene Mantelfläche."
+    },
+    {
+     "bild": "geo-koerper-zylinder-2.svg",
+     "wort": "Zylinder",
+     "erklaerung": "Zylinder: 2 Kreise oben und unten, dazu eine gebogene Mantelfläche."
+    },
+    {
+     "bild": "geo-koerper-kugel-1.svg",
+     "wort": "Kugel",
+     "erklaerung": "Kugel: ganz rund, nur eine gebogene Fläche."
+    },
+    {
+     "bild": "geo-koerper-kugel-2.svg",
+     "wort": "Kugel",
+     "erklaerung": "Kugel: ganz rund, nur eine gebogene Fläche."
+    },
+    {
+     "bild": "geo-koerper-pyramide-1.svg",
+     "wort": "Pyramide",
+     "erklaerung": "Pyramide: Grundfläche (hier ein Quadrat), Dreiecke treffen sich in der Spitze."
+    },
+    {
+     "bild": "geo-koerper-pyramide-2.svg",
+     "wort": "Pyramide",
+     "erklaerung": "Pyramide: Grundfläche (hier ein Quadrat), Dreiecke treffen sich in der Spitze."
+    },
+    {
+     "bild": "geo-koerper-kegel-1.svg",
+     "wort": "Kegel",
+     "erklaerung": "Kegel: ein Kreis als Grundfläche und eine Spitze."
+    },
+    {
+     "bild": "geo-koerper-kegel-2.svg",
+     "wort": "Kegel",
+     "erklaerung": "Kegel: ein Kreis als Grundfläche und eine Spitze."
+    }
+   ],
+   "frage": "Wie heißt der Körper?"
+  },
+  {
+   "id": "ma.5.geometrie.koerper-zaehlen",
+   "titel": "Ecken, Kanten, Flächen",
+   "kurz": "zählen",
+   "typ": "eingabe",
+   "anweisung": "Zähle.",
+   "aufgaben": [
+    {
+     "frage": "Wie viele Ecken hat ein Würfel?",
+     "antwort": 8,
+     "erklaerung": "Würfel: 8 Ecken, 12 Kanten, 6 Flächen",
+     "tipp": "Stell dir den Körper vor oder nimm ein Modell in die Hand."
+    },
+    {
+     "frage": "Wie viele Kanten hat ein Würfel?",
+     "antwort": 12,
+     "erklaerung": "Würfel: 8 Ecken, 12 Kanten, 6 Flächen",
+     "tipp": "Stell dir den Körper vor oder nimm ein Modell in die Hand."
+    },
+    {
+     "frage": "Wie viele Flächen hat ein Würfel?",
+     "antwort": 6,
+     "erklaerung": "Würfel: 8 Ecken, 12 Kanten, 6 Flächen",
+     "tipp": "Stell dir den Körper vor oder nimm ein Modell in die Hand."
+    },
+    {
+     "frage": "Wie viele Ecken hat ein Quader?",
+     "antwort": 8,
+     "erklaerung": "Quader: 8 Ecken, 12 Kanten, 6 Flächen",
+     "tipp": "Stell dir den Körper vor oder nimm ein Modell in die Hand."
+    },
+    {
+     "frage": "Wie viele Kanten hat ein Quader?",
+     "antwort": 12,
+     "erklaerung": "Quader: 8 Ecken, 12 Kanten, 6 Flächen",
+     "tipp": "Stell dir den Körper vor oder nimm ein Modell in die Hand."
+    },
+    {
+     "frage": "Wie viele Flächen hat ein Quader?",
+     "antwort": 6,
+     "erklaerung": "Quader: 8 Ecken, 12 Kanten, 6 Flächen",
+     "tipp": "Stell dir den Körper vor oder nimm ein Modell in die Hand."
+    },
+    {
+     "frage": "Wie viele Ecken hat eine quadratische Pyramide?",
+     "antwort": 5,
+     "erklaerung": "4 Ecken unten und die Spitze = 5",
+     "tipp": "Stell dir den Körper vor oder nimm ein Modell in die Hand."
+    },
+    {
+     "frage": "Wie viele Kanten hat eine quadratische Pyramide?",
+     "antwort": 8,
+     "erklaerung": "4 Kanten unten, 4 zur Spitze = 8",
+     "tipp": "Stell dir den Körper vor oder nimm ein Modell in die Hand."
+    },
+    {
+     "frage": "Wie viele Flächen hat eine quadratische Pyramide?",
+     "antwort": 5,
+     "erklaerung": "1 Quadrat + 4 Dreiecke = 5",
+     "tipp": "Stell dir den Körper vor oder nimm ein Modell in die Hand."
+    },
+    {
+     "frage": "Wie viele Flächen hat ein Zylinder?",
+     "antwort": 3,
+     "erklaerung": "2 Kreise + 1 gebogene Mantelfläche = 3",
+     "tipp": "Stell dir den Körper vor oder nimm ein Modell in die Hand."
+    },
+    {
+     "frage": "Wie viele Kanten hat ein Zylinder?",
+     "antwort": 2,
+     "erklaerung": "Die zwei Kreislinien oben und unten",
+     "tipp": "Stell dir den Körper vor oder nimm ein Modell in die Hand."
+    },
+    {
+     "frage": "Wie viele Flächen hat ein Kegel?",
+     "antwort": 2,
+     "erklaerung": "1 Kreis + 1 gebogene Mantelfläche = 2",
+     "tipp": "Stell dir den Körper vor oder nimm ein Modell in die Hand."
+    },
+    {
+     "frage": "Wie viele Kanten hat ein Kegel?",
+     "antwort": 1,
+     "erklaerung": "Die Kreislinie unten",
+     "tipp": "Stell dir den Körper vor oder nimm ein Modell in die Hand."
+    },
+    {
+     "frage": "Wie viele Flächen hat eine Kugel?",
+     "antwort": 1,
+     "erklaerung": "Nur eine gebogene Fläche",
+     "tipp": "Stell dir den Körper vor oder nimm ein Modell in die Hand."
+    },
+    {
+     "frage": "Wie viele Ecken hat eine Kugel?",
+     "antwort": 0,
+     "erklaerung": "Eine Kugel hat keine Ecken und keine Kanten.",
+     "tipp": "Stell dir den Körper vor oder nimm ein Modell in die Hand."
+    },
+    {
+     "frage": "Wie viele Ecken hat ein Zylinder?",
+     "antwort": 0,
+     "erklaerung": "Ein Zylinder hat keine Ecken.",
+     "tipp": "Stell dir den Körper vor oder nimm ein Modell in die Hand."
+    }
+   ]
+  },
+  {
+   "id": "ma.5.geometrie.mix",
+   "titel": "Mix",
+   "kurz": "Alles gemischt",
+   "mix": true,
+   "runde": 10
+  }
+ ]
+}

@@ -271,6 +271,9 @@ Eine neue App = **Inhaltsdatei + Katalog-Eintrag + Admin-Eintrag**. Kein neuer C
    (14 Inhaltsdateien `en.5.*`/`en.6.*`) mit Fortschritt; „Mixed“, „Welche Zeit passt?“ und „Meine Themen“ sind
    Mix-Stufen in `en.5.knowing-english.json`. Strukturen über der Klasse aus dem Pass erscheinen nicht.
    Neue Struktur: Inhaltsdatei + Katalog + Eintrag in `STRUKTUREN` + in `aus` der Mixed-Stufen.
+   **Geometrie-Trainer** (`daten/inhalte/ma/ma.5.geometrie.json`, Etappe 10): 88 SVG-Bilder `geo-*.svg` daneben, einmalig per
+   Skript erzeugt (Vierecke in vielen Lagen mit Winkel- und Seitenmarken; Würfelnetze durch Falten geprüft: genau die 11 Netze,
+   Fallen nur aus den 24 übrigen Hexominos). Die archivierte App `ma.5.vierecke` bleibt unangetastet.
    **Time, Dates and Numbers** (`apps/englisch/time-dates-numbers.html`, Etappe 8): eigene App auf `ueben.js` mit
    Generatoren (Zahlwörter bis 999, Ordinalzahlen, britische Uhrzeit, Datum) und einer Uhr zum Stellen (Zeiger ziehen,
    5-Minuten-Raster). Hör-Aufgaben (`tonAuto`) nur, wenn das iPad eine englische Stimme hat.

@@ -2,8 +2,9 @@
 //  Lernwelt – Aufgabentyp „bildwort“ (Etappe 9): Wortschatz mit Bild und Ton
 //
 //  Stufe in der Inhaltsdatei:
-//    "woerter": [ { "bild": "🍎", "wort": "apple", "de": "Apfel" (optional) } ]
+//    "woerter": [ { "bild": "🍎", "wort": "apple", "de": "Apfel" (optional), "erklaerung", "tipp" (optional) } ]
 //              bild = Emoji oder Dateiname neben der Inhaltsdatei (z. B. "apfel.svg")
+//    "frage": "Welches Viereck ist das?"  (optional, sonst „Was ist das?“)
 //    "richtung": "bild-wort" (Bild sehen → Wort wählen, Standard)
 //              | "wort-bild" (Wort lesen und hören → Bild wählen)
 //              | "hoeren"    (nur hören → Bild wählen)
@@ -21,8 +22,8 @@
       const auswahl = T.mischen([w, ...andere]);
       const bildWahl = richtung !== 'bild-wort';
       return {
-        art: 'eigen', wort: w.wort, text: w.wort + (w.de ? ' (' + w.de + ')' : ''),
-        frage: richtung === 'hoeren' ? '🔊 Hör genau hin!' : richtung === 'wort-bild' ? w.wort : 'Was ist das?',
+        art: 'eigen', wort: w.wort, text: w.wort + (w.de ? ' (' + w.de + ')' : ''), erklaerung: w.erklaerung, tipp: w.tipp,
+        frage: richtung === 'hoeren' ? '🔊 Hör genau hin!' : richtung === 'wort-bild' ? w.wort : st.frage || 'Was ist das?',
         hinweis: st.anweisung || D.anweisung || (bildWahl ? 'Tippe das passende Bild an.' : 'Tippe das passende Wort an.'),
         ton: bildWahl ? w.wort : '',                        // bei „Bild → Wort“ würde der Ton die Lösung verraten
         eingabeText: e => e,

@@ -507,6 +507,28 @@
      "titel": "Geometrie",
      "themen": [
       {
+       "id": "ma.5.geometrie",
+       "titel": "Geometrie-Trainer",
+       "klasse": 5,
+       "quelle": {
+        "app": "apps/typen/uebung.html",
+        "parameter": "inhalt=ma.5.geometrie"
+       },
+       "lehrplan": "M5 LB 4 Geometrie: Vierecke und ihre Eigenschaften, parallel und senkrecht, Würfelnetze, geometrische Körper",
+       "dauer": 8,
+       "einsatz": "Wiederholung der Geometrie-Grundbegriffe; Würfelnetze mit echtem Würfel nachprüfen",
+       "stufen": [
+        { "id": "ma.5.geometrie.vierecke", "titel": "Vierecke benennen" },
+        { "id": "ma.5.geometrie.eigenschaften", "titel": "Eigenschaften" },
+        { "id": "ma.5.geometrie.lage", "titel": "Parallel und senkrecht" },
+        { "id": "ma.5.geometrie.netz", "titel": "Würfelnetz ja/nein" },
+        { "id": "ma.5.geometrie.gegenueber", "titel": "Gegenüber" },
+        { "id": "ma.5.geometrie.koerper", "titel": "Körper erkennen" },
+        { "id": "ma.5.geometrie.koerper-zaehlen", "titel": "Ecken, Kanten, Flächen" },
+        { "id": "ma.5.geometrie.mix", "titel": "Mix" }
+       ]
+      },
+      {
        "id": "ma.5.vierecke",
        "titel": "Vierecke unterscheiden",
        "klasse": 5,
