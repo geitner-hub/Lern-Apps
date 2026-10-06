@@ -13,9 +13,10 @@
 #    4. Jede Lern-App und jedes Spiel bindet navbar.js ein.
 #    5. LW.VERSION (umgebung.js) und VERSION (sw.js) sind gleich.
 #    6. Jeder Speicherschlüssel im Code steht im Speicher-Register (umgebung.js).
-#    7. Die Größenbudgets werden eingehalten (BUDGETS unten).
+#    7. Die Größenbudgets werden eingehalten (BUDGETS unten, gemessen komprimiert).
 #    8. Inhalts-Katalog (daten/katalog.json): IDs eindeutig und richtig gebaut, jedes Thema
 #       hat Fach und Klasse, jede Quelle existiert, jede Lern-App aus config.json hat ein Thema.
+#       Freigaben (Etappe 7) mit unbekannter Themen-ID → gelber Hinweis.
 #  HINWEISE (gelb) – nichts kaputt, aber ansehen:
 #    Apps im Ordner, die nicht in config.json stehen, u. Ä.
 #
@@ -26,19 +27,22 @@
 #
 #  Spätere Etappen ergänzen hier: Inhaltsdateien (Etappe 9).
 # ═══════════════════════════════════════════════════════
-import json, os, re, sys
+import gzip, json, os, re, sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 os.chdir(ROOT)
 
-# ⚙ Größenbudgets in KB. Seit Etappe 2 die Zielwerte aus dem Aktionsplan.
+# ⚙ Größenbudgets in KB, gemessen KOMPRIMIERT (gzip) – so liefert GitHub Pages aus, das ist
+#   die Menge, die wirklich übers Schul-WLAN geht. Kommentare kosten dadurch fast nichts.
+#   Bis v30 wurde die Dateigröße gemessen (alte Werte: 200 / 80 / 800 / 160 / 400 KB).
+#   Faustregel: komprimiert ≈ ein Drittel der Dateigröße.
 BUDGETS = {
-    'startseite_skript': 200,   # alle <script src> von index.html zusammen (was beim Öffnen sofort lädt)
-    'app_zusatz':        80,    # umgebung.js + navbar.js + navbar.js SOFORT (was jede App sofort lädt)
-    'vorladen_sw':       800,   # alle Dateien aus sw.js START (Kern, lädt beim Update sofort)
-    'einzeldatei':       160,   # jede eigene .html/.js (ohne vendor/)
-    'datendatei':        400,   # jede .json in daten/
+    'startseite_skript': 65,    # alle <script src> von index.html zusammen (was beim Öffnen sofort lädt)
+    'app_zusatz':        35,    # umgebung.js + navbar.js + navbar.js SOFORT (was jede App sofort lädt)
+    'vorladen_sw':       300,   # alle Dateien aus sw.js START (Kern, lädt beim Update sofort)
+    'einzeldatei':       55,    # jede eigene .html/.js (ohne vendor/)
+    'datendatei':        130,   # jede .json in daten/
 }
 # Seiten ohne umgebung.js (liegen an beliebiger Adresse, relative Pfade gehen nicht)
 OHNE_UMGEBUNG = {'404.html'}
@@ -57,6 +61,14 @@ def lies(p):
 
 def kb(n):
     return n / 1024
+
+_gz = {}
+def gz(p):
+    """Komprimierte Größe in Bytes (gzip, Stufe 9 – wie ein Webserver ungefähr ausliefert)."""
+    p = Path(p)
+    if not p.is_file(): return 0
+    if p not in _gz: _gz[p] = len(gzip.compress(p.read_bytes(), 9))
+    return _gz[p]
 
 ALLE = [p for p in ROOT.rglob('*') if p.is_file() and '.git' not in p.parts and 'node_modules' not in p.parts]
 def rel(p): return p.relative_to(ROOT).as_posix()
@@ -229,6 +241,9 @@ if katalog is not None:
                 if not str(th.get('lehrplan') or '').strip():
                     H(f'Katalog: {th.get("id")} hat noch keinen Lehrplanbezug (Feld lehrplan)')
     I(f'Katalog: {len(ids)} Themen und Stufen, {len(app_themen)} Apps zugeordnet')
+    # Etappe 7: Freigaben verweisen auf Katalog-IDs (gelb – ein Tippfehler sperrt nur nichts)
+    for t in (config.get('freigaben') or {}):
+        if t not in ids: H(f'config.json: Freigabe für unbekannte Themen-ID {t} (wirkt nicht)')
 
 # ── 10. Kopfrechnen-Stufen (Etappe 4) ───────────────────
 try:
@@ -265,32 +280,31 @@ def groesse(d):
     p = Path(d)
     return p.stat().st_size if p.is_file() else 0
 
+def budget(name, dateien, text):
+    """Prüft eine Gruppe von Dateien gegen ihr Budget (komprimiert); Dateigröße steht dabei."""
+    z, r = kb(sum(gz(d) for d in dateien)), kb(sum(groesse(d) for d in dateien))
+    (F if z > BUDGETS[name] else I)(f'{text}: {z:.0f} KB komprimiert, {r:.0f} KB Dateigröße (Budget {BUDGETS[name]} KB)')
+
 idx = lies('index.html')
 start_js = [s for s in SCRIPT_SRC.findall(idx) if not s.startswith('http')]
-summe = sum(groesse(s) for s in start_js)
-(F if kb(summe) > BUDGETS['startseite_skript'] else I)(
-    f'Startseite: {kb(summe):.0f} KB Skript beim Öffnen (Budget {BUDGETS["startseite_skript"]} KB)')
+budget('startseite_skript', start_js, 'Startseite, Skript beim Öffnen')
 
 nav = lies('gemeinsam/navbar.js')
 m = re.search(r'const SOFORT\s*=\s*\[(.*?)\];', nav, re.S)
 nach = re.findall(r"'([a-z0-9-]+\.js)'", m.group(1)) if m else []
 if not m: F('navbar.js: Liste SOFORT nicht gefunden (Ladekette, Etappe 2)')
 zusatz = ['gemeinsam/umgebung.js', 'gemeinsam/navbar.js'] + ['gemeinsam/' + n for n in nach]
-summe = sum(groesse(s) for s in zusatz)
-(F if kb(summe) > BUDGETS['app_zusatz'] else I)(
-    f'Zusatz je Lern-App: {kb(summe):.0f} KB ({", ".join(Path(z).name for z in zusatz)}; Budget {BUDGETS["app_zusatz"]} KB)')
+budget('app_zusatz', zusatz, f'Zusatz je Lern-App ({", ".join(Path(z).name for z in zusatz)})')
 
-summe = sum(groesse(s) for s in start if s != './')
-(F if kb(summe) > BUDGETS['vorladen_sw'] else I)(
-    f'Offline-Vorladen (sw.js): {len(start)} Dateien, {kb(summe):.0f} KB pro iPad (Budget {BUDGETS["vorladen_sw"]} KB)')
+budget('vorladen_sw', [s for s in start if s != './'], f'Offline-Vorladen (sw.js), {len(start)} Dateien pro iPad')
 
 for p in ALLE:
     r = rel(p)
     if r.startswith('vendor/') or r.startswith('.github/'): continue
-    if p.suffix in ('.html', '.js') and kb(p.stat().st_size) > BUDGETS['einzeldatei']:
-        F(f'{r}: {kb(p.stat().st_size):.0f} KB – größer als das Budget für Einzeldateien ({BUDGETS["einzeldatei"]} KB)')
-    if p.suffix == '.json' and r.startswith('daten/') and kb(p.stat().st_size) > BUDGETS['datendatei']:
-        F(f'{r}: {kb(p.stat().st_size):.0f} KB – größer als das Budget für Datendateien ({BUDGETS["datendatei"]} KB)')
+    if p.suffix in ('.html', '.js') and kb(gz(p)) > BUDGETS['einzeldatei']:
+        F(f'{r}: {kb(gz(p)):.0f} KB komprimiert – größer als das Budget für Einzeldateien ({BUDGETS["einzeldatei"]} KB)')
+    if p.suffix == '.json' and r.startswith('daten/') and kb(gz(p)) > BUDGETS['datendatei']:
+        F(f'{r}: {kb(gz(p)):.0f} KB komprimiert – größer als das Budget für Datendateien ({BUDGETS["datendatei"]} KB)')
 
 # ── Hinweise ────────────────────────────────────────────
 for p in sorted(list(ROOT.glob('apps/*/*.html')) + list(ROOT.glob('spiele/*.html'))):

@@ -98,17 +98,18 @@ in einen anderen Ordner umziehen, ohne dass Fortschritt verloren geht (dann `con
 
 ## Ladekette (Infrastruktur Etappe 2)
 
-Grundsatz: **Kern sofort, Rest bei Bedarf.** Die Budgets prüft `werkzeuge/pruefen.py`.
+Grundsatz: **Kern sofort, Rest bei Bedarf.** Die Budgets prüft `werkzeuge/pruefen.py`, gemessen **komprimiert** (gzip, so liefert GitHub Pages aus –
+das ist die Menge, die übers Schul-WLAN geht; komprimiert ≈ ein Drittel der Dateigröße).
 
-| Was | Lädt sofort | Lädt bei Bedarf | Budget |
+| Was | Lädt sofort | Lädt bei Bedarf | Budget (komprimiert) |
 |---|---|---|---|
-| Startseite | umgebung.js, shared.js, config-api.js, pass.js | Sicherung (gleich nach dem Aufbau), Dorf-Kern (nur mit Dorf), QR (QR-Knopf), 3D-Figur und Truhe (Pass) | < 200 KB |
-| Jede Lern-App | umgebung.js, navbar.js, pass.js (`SOFORT` in navbar.js) | pass-extras.js (erste Meldung), Dorf-Kern (nach der ersten Runde, nur mit Dorf), Sicherung (nur mit Karte) | < 80 KB |
-| Offline-Speicher (sw.js) | `START` = Kern | `NACHLADEN` = Spiele, 3D, große Daten: gestaffelt im Hintergrund | < 800 KB |
+| Startseite | umgebung.js, shared.js, config-api.js, pass.js | Sicherung (gleich nach dem Aufbau), Dorf-Kern (nur mit Dorf), QR (QR-Knopf), 3D-Figur und Truhe (Pass) | < 65 KB |
+| Jede Lern-App | umgebung.js, navbar.js, pass.js (`SOFORT` in navbar.js) | pass-extras.js (erste Meldung), Dorf-Kern (nach der ersten Runde, nur mit Dorf), Sicherung (nur mit Karte) | < 35 KB |
+| Offline-Speicher (sw.js) | `START` = Kern | `NACHLADEN` = Spiele, 3D, große Daten: gestaffelt im Hintergrund | < 300 KB |
 
 - **pass.js** rechnet und speichert nur noch. Anzeige (XP-Meldung, Lob, Konfetti), Safari-Hinweis,
   Speicher-Wartung und Diagnose stehen in **gemeinsam/pass-extras.js**. Neue Funktionen, die nicht jede App
-  sofort braucht, gehören dorthin oder in ein eigenes Modul – nicht in den Kern (das Budget hat kaum Luft).
+  sofort braucht, gehören dorthin oder in ein eigenes Modul – nicht in den Kern (das Budget ist ein Polster, kein Freifahrtschein).
 - **Nachladen in Seiten:** `LW.laden('gemeinsam/datei.js')` → Promise, jede Datei nur einmal.
 - **Hintergrund-Laden:** Jede Seite bittet sw.js 5–25 s nach dem Öffnen (zufällig), fehlende Dateien aus
   `NACHLADEN` zu holen, eine nach der anderen, höchstens 25 s am Stück. Nach einem Schultag ist alles offline da.
@@ -125,8 +126,9 @@ Grundsatz: **Kern sofort, Rest bei Bedarf.** Die Budgets prüft `werkzeuge/pruef
 
 - **gemeinsam/ueben.js** (`LernUeben.start({...})`): Stufenwahl, Runde mit 10 Aufgaben, eigene Zifferntastatur
   (keine iPad-Tastatur), Rückmeldung **mit Erklärung**, Tipp, Ergebnis mit Themen-ID, Meisterschaft
-  (2 Runden ≥ 70 % → ⭐). Angelegt, noch ohne Wirkung: `LernUeben.Freigabe.erlaubt(id)` (Etappe 7),
-  `LernUeben.Fehlerheft` (sammelt schon, Anzeige Etappe 8), Vorlesen `?vorlesen=1`, große Schrift `?gross=1`.
+  (2 Runden ≥ 70 % → ⭐). `LernUeben.Freigabe.erlaubt(id)` fragt seit Etappe 7 `gemeinsam/freigabe.js`
+  (die App bindet sie **vor** ueben.js ein). Angelegt: `LernUeben.Fehlerheft` (sammelt schon, Anzeige Etappe 8),
+  Vorlesen `?vorlesen=1`, große Schrift `?gross=1`.
 - **gemeinsam/generatoren-mathe.js**: alle Rechenaufgaben – für die App **und** für die Spiele (aufgaben.js
   hat keinen eigenen Rechen-Code mehr). Neuer Aufgabentyp = eine Funktion in `G`.
 - **daten/kopfrechnen.json**: Stufen je Klasse (Generatoren + Gewicht). Neue Stufe = Eintrag hier + Stufe im
@@ -154,10 +156,31 @@ Grundsatz: **Kern sofort, Rest bei Bedarf.** Die Budgets prüft `werkzeuge/pruef
   (`index.html?vorschau=5`, liest `lernwelt-admin-vorschau`).
 - **Suche und Filter** in der App-Liste: Name, Fach, Klasse, Sichtbarkeit.
 - **Module:** `gemeinsam/admin/` – kern (Anmeldung, Laden, Entwurf), pass, spiele, dorf, uebersicht, apps,
-  sichtbarkeit (alt), ordnen, tags, werkzeuge, start (immer zuletzt). Etappe 7 ergänzt „Freigaben“ und „Fokus“
-  als eigene Module.
+  sichtbarkeit (alt), ordnen, tags, werkzeuge, freigaben (Etappe 7), start (immer zuletzt).
 - **Worker zuerst:** Der Worker prüft seit Etappe 6 `gruppen`, `apps[].gruppe` und `catOrder`
   (`cloudflare/worker.js` bei Cloudflare einfügen, bevor der neue Admin Regale speichert).
+
+## Freischaltung und Fokus-Modus (Infrastruktur Etappe 7)
+
+Admin → **🔐 Freigaben**. Ohne Accounts: ein iPad weiß, wer es ist, aus der **Klasse im Pass** und – falls eine
+Sicherungskarte verbunden ist – aus der **Kartengruppe** (der Sync-Worker schickt deren Kennung mit).
+
+- **Freigaben** (`config.freigaben`): je Themen-ID, für wen was gilt.
+  `{ "en.5.vok.u5": { "alle": "2026-11-10" }, "ma.6.kopf.brueche": { "k6": "zu", "g:<Gruppe>": "offen" } }`.
+  Wer: `alle`, `k5` … `k13`, `g:<32 hex>`. Wert: `zu`, `offen` oder Datum (gesperrt bis zu diesem Tag).
+  Es entscheidet der genaueste Eintrag: Stufe vor Thema darüber, Gruppe vor Klasse vor „Alle“.
+  **Ohne Eintrag ist alles offen.** Gesperrtes erscheint mit 🔒 ohne Erklärtext.
+- **Wo es wirkt:** Kopfrechnen, Mathe-Trainer und Vokabeltrainer (über ueben.js), „Meine Themen“ der Spiele
+  (gesperrte Starter-Inhalte kommen nicht neu dazu). Dorf-Aufträge gelten je App – dort kann ein Kind ohnehin nur
+  Freies üben. Neue Engine-Apps: Reihe in `FR_KATALOG_REIHEN` (`gemeinsam/admin/freigaben.js`) ergänzen.
+- **Eine Sperre nimmt nie Fortschritt weg:** Ergebnisse, Sterne und gemeisterte Themen bleiben.
+- **Fokus** (`config.fokus[]`): „für Klasse 6 / Gruppe 5a bis 13 Uhr nur diese Apps“. Die Startseite zeigt dann nur
+  diese Apps mit dem Hinweis „🎯 Heute im Fokus“ und wird am Ende von selbst wieder normal. Direkte Links und
+  QR-Codes funktionieren weiter.
+- **gemeinsam/freigabe.js** (`window.LernFreigabe`): `erlaubt(id)`, `status(id)`, `wer()`, `fokus()`, `imFokus(datei)`.
+  Liest die Offline-Kopie von config.json; ist sie älter als 5 Minuten, holt sie config.json im Hintergrund.
+- **Reihenfolge beim Hochladen:** zuerst `cloudflare/worker.js` **und** `cloudflare/sync.js` bei Cloudflare
+  ersetzen, dann die Dateien hochladen, dann erst Freigaben speichern.
 
 ## Vokabel-Engine (Infrastruktur Etappe 5)
 
@@ -169,7 +192,8 @@ Grundsatz: **Kern sofort, Rest bei Bedarf.** Die Budgets prüft `werkzeuge/pruef
   Datei in `daten/bilder/`), `artikel` (der/die/das, farbig), `silben` (`Ap-fel`). Beispiel: `daten/test-wortliste.json`.
 - Verlauf und Statistik nutzen für Klasse 5/6 die bisherigen Schlüssel (`vokab-…-kl5/kl6`); weitere Listen
   bekommen `vokab-…-NAME` (bei Bedarf im Speicher-Register ergänzen).
-- Falsche Wörter landen im Fehlerheft; Units lassen sich später über die Freigabe (Etappe 7) sperren.
+- Falsche Wörter landen im Fehlerheft; Units und Sonderlisten lassen sich über die Freigabe (Etappe 7) sperren
+  (🔒, fehlen dann auch im „Mix aus allen Einheiten“).
 - Eine separate Vokabelabfrage-App ist bewusst nicht geplant.
 - **Testphase:** vokabeltrainer5/6.html bleiben, bis die Engine getestet ist; danach leiten sie weiter (wie Kopfrechnen).
 

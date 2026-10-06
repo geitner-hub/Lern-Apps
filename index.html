@@ -189,6 +189,9 @@
     #ann-banner{display:none;max-width:980px;margin:1.2rem auto;padding:0 1.4rem;}
     #ann-banner .ann-inner{display:flex;align-items:center;gap:.7rem;padding:.8rem 1.1rem;border-radius:14px;font-weight:800;font-size:.93rem;line-height:1.4;}
     #ann-banner .ann-emoji{font-size:1.4rem;flex-shrink:0;}
+    #fokus-banner{max-width:980px;margin:1.2rem auto;padding:0 1.4rem;}
+    #fokus-banner .ann-inner{display:flex;align-items:center;gap:.7rem;padding:.8rem 1.1rem;border-radius:14px;font-weight:800;font-size:.93rem;line-height:1.4;}
+    #fokus-banner .ann-emoji{font-size:1.4rem;flex-shrink:0;}
 
     /* ── KARTEN-FUSS & QR-BUTTON ── */
     .app-foot{display:flex;align-items:center;justify-content:space-between;gap:.5rem;margin-top:.15rem;position:relative;}
@@ -557,6 +560,7 @@
 <script src="gemeinsam/shared.js"></script>
 <script src="gemeinsam/config-api.js"></script>
 <script src="gemeinsam/pass.js"></script>
+<script src="gemeinsam/freigabe.js"></script>
 <script>
 'use strict';
 
@@ -612,6 +616,7 @@ async function load() {
     setTimeout(() => syncStatus('', ''), 2500);
   }
   LernPass.setSettings(CONFIG.pass);
+  if (window.LernFreigabe) LernFreigabe.neu(CONFIG, true);   // Fokus und Freigaben aus der frischen config.json
   loadResults();
   const fresh = LernPass.hasProfile() ? LernPass.checkBadges() : [];
   buildPage();
@@ -636,8 +641,28 @@ function loadResults() {
 }
 
 function visibleApps() {
-  return CONFIG.apps.filter(a => !a.hidden && !CONFIG.hiddenCats.includes(a.fach) && isSafeLink(a.datei));
+  return CONFIG.apps.filter(a => !a.hidden && !CONFIG.hiddenCats.includes(a.fach) && isSafeLink(a.datei)
+    && (!window.LernFreigabe || LernFreigabe.imFokus(a.datei)));      // Fokus-Modus (Etappe 7): nur die gewählten Apps
 }
+
+// ── Fokus-Modus (Etappe 7): Hinweis oben, endet von selbst ──
+let fokusTimer = null;
+function buildFokusBanner() {
+  let el = document.getElementById('fokus-banner');
+  const f = window.LernFreigabe && LernFreigabe.fokus();
+  clearTimeout(fokusTimer);
+  if (!f) { if (el) el.remove(); return; }
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'fokus-banner'; el.setAttribute('role', 'status');
+    document.getElementById('ann-banner').insertAdjacentElement('afterend', el);
+  }
+  const bis = new Date(f.bis).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+  el.innerHTML = `<div class="ann-inner" style="background:rgba(99,102,241,.16);color:#c7d2fe;border:1px solid rgba(129,140,248,.45);">
+      <span class="ann-emoji">🎯</span><span>Heute im Fokus – bis ${escHtml(bis)} Uhr</span></div>`;
+  fokusTimer = setTimeout(buildPage, Math.min(f.bis - Date.now() + 1000, 2147483000));
+}
+window.addEventListener('lernfreigabe:neu', () => { if (CONFIG && CONFIG.apps && CONFIG.apps.length) buildPage(); });
 
 function updateHeaderStats() {
   const apps = visibleApps();
@@ -767,6 +792,7 @@ function buildPage() {
   buildPassCard();
   buildDorfStrip();
   buildAnnouncement();
+  buildFokusBanner();
   buildAod();
   buildKlassenChips();
   refreshTagChips();
