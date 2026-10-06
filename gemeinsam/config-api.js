@@ -64,6 +64,9 @@ const ConfigAPI = (() => {
     if (!Array.isArray(cfg.hiddenCats)) cfg.hiddenCats = [];
     if (!Array.isArray(cfg.catOrder))   cfg.catOrder = [];
     cfg.catOrder = cfg.catOrder.filter(f => typeof f === 'string');
+    // Regale (Etappe 6): [{ id, fach, name }]; Apps verweisen mit app.gruppe darauf
+    cfg.gruppen = (Array.isArray(cfg.gruppen) ? cfg.gruppen : [])
+      .filter(g => g && typeof g.id === 'string' && typeof g.fach === 'string' && typeof g.name === 'string');
     cfg.customTags = cfg.customTags.map(t => typeof t === 'string' ? { name: t, color: 0 } : t);
     cfg.announcement = { ...d.announcement, ...(cfg.announcement || {}) };
     cfg.apps = cfg.apps.filter(a => a && typeof a === 'object').map(a => ({

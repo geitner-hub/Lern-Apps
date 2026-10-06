@@ -22,6 +22,11 @@ GitHub Pages. Fällt der Worker aus, funktioniert nur das Speichern im Admin nic
 Nur Anfragen von `https://geitner-hub.github.io` werden angenommen. Nach 5 falschen
 Passwörtern ist das Gerät 15 Minuten gesperrt.
 
+## Änderungen am Worker
+
+- **Etappe 6 (Okt. 2026):** prüft zusätzlich `gruppen` (Regale: `id`, `fach`, `name`), `apps[].gruppe`
+  (muss ein vorhandenes Regal sein) und `catOrder`. Erst den Worker aktualisieren, dann admin.html hochladen.
+
 ## Anmeldung im Admin
 
 - Das Passwort wird nur beim Anmelden gesendet und **nirgends gespeichert**. Das Gerät

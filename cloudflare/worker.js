@@ -180,6 +180,15 @@ function validateConfig(cfg) {
   if (!Array.isArray(cfg.apps) || cfg.apps.length > 500) p.push('apps fehlt/zu lang');
   if (cfg.customTags !== undefined && (!Array.isArray(cfg.customTags) || !cfg.customTags.every(isTag))) p.push('customTags ungültig');
   if (cfg.hiddenCats !== undefined && (!Array.isArray(cfg.hiddenCats) || !cfg.hiddenCats.every(c => isStr(c, 40)))) p.push('hiddenCats ungültig');
+  if (cfg.catOrder !== undefined && (!Array.isArray(cfg.catOrder) || cfg.catOrder.length > 40 || !cfg.catOrder.every(c => isStr(c, 40)))) p.push('catOrder ungültig');
+  // Regale (Etappe 6): [{ id, fach, name }], Apps verweisen mit app.gruppe darauf
+  const gruppenIds = new Set();
+  if (cfg.gruppen !== undefined) {
+    const gOk = g => g && typeof g === 'object' && typeof g.id === 'string' && /^[a-z0-9-]{1,40}$/.test(g.id) && isStr(g.fach, 40) && isStr(g.name, 40) && g.name.trim()
+      && Object.keys(g).every(k => ['id', 'fach', 'name'].includes(k));
+    if (!Array.isArray(cfg.gruppen) || cfg.gruppen.length > 100 || !cfg.gruppen.every(gOk)) p.push('gruppen ungültig');
+    else cfg.gruppen.forEach(g => { if (gruppenIds.has(g.id)) p.push('gruppen: doppelte id ' + g.id); gruppenIds.add(g.id); });
+  }
 
   const a = cfg.announcement;
   if (a !== undefined && (typeof a !== 'object' || a === null || !isBool(a.active) || !isStr(a.text ?? '', 300)
@@ -201,6 +210,7 @@ function validateConfig(cfg) {
     if (app.customTags !== undefined && (!Array.isArray(app.customTags) || !app.customTags.every(isTag))) p.push(w + ': customTags');
     if (app.dorf !== undefined && app.dorf !== false)       p.push(w + ': dorf');
     if (app.dorfRunden !== undefined && !(Number.isInteger(app.dorfRunden) && app.dorfRunden >= 1 && app.dorfRunden <= 10)) p.push(w + ': dorfRunden');
+    if (app.gruppe !== undefined && !(typeof app.gruppe === 'string' && gruppenIds.has(app.gruppe))) p.push(w + ': gruppe unbekannt');
     if (app.aod) aodCount++;
   });
   if (aodCount > 1) p.push('mehr als eine App des Tages');

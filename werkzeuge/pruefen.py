@@ -82,6 +82,13 @@ for a in config.get('apps', []):
     if not d: continue
     config_dateien.add(d)
     if not Path(d).is_file(): F(f'config.json: Datei fehlt: {d} („{a.get("name", "?")}“)')
+# Regale (Etappe 6): jede App-Gruppe existiert und gehört zum selben Fach
+_gr = {g.get('id'): g for g in (config.get('gruppen') or []) if isinstance(g, dict)}
+for a in config.get('apps', []):
+    g = a.get('gruppe')
+    if g is not None:
+        if g not in _gr: H(f'config.json: „{a.get("name", "?")}“ steht in unbekanntem Regal {g} (erscheint ohne Regal)')
+        elif _gr[g].get('fach') != a.get('fach'): H(f'config.json: „{a.get("name", "?")}“ ist im Regal {g} eines anderen Fachs')
 
 sw = lies('sw.js')
 m = re.search(r'const START\s*=\s*\[(.*?)\];', sw, re.S)

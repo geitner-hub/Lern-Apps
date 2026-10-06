@@ -30,7 +30,7 @@
   'use strict';
   if (window.LW && window.LW.UMGEBUNG) return;          // doppeltes Laden verhindern
 
-  const VERSION = 'v28';                                 // ⚙ bei jedem Upload mit sw.js zusammen erhöhen
+  const VERSION = 'v30';                                 // ⚙ bei jedem Upload mit sw.js zusammen erhöhen
 
   // ── Umgebung erkennen ────────────────────────────────
   //  GitHub Pages: erster Pfadteil = Repo-Name (Lern-Apps bzw. Lern-Apps-test)
@@ -59,6 +59,8 @@
     // Technik (Etappe 2)
     ['lernwelt-fehler',             'local',   'gemeinsam/umgebung.js',    'Fehlerprotokoll (letzte Abstürze, nur auf diesem Gerät)', false],
     ['lernwelt-wartung',            'local',   'gemeinsam/pass-extras.js', 'Speicher-Wartung: letzter Lauf und Belegung', false],
+    ['lernwelt-admin-entwurf',      'local',   'gemeinsam/admin/kern.js',  'Admin: unveröffentlichter Entwurf der config.json', false],
+    ['lernwelt-admin-vorschau',     'local',   'gemeinsam/admin/ordnen.js','Admin: Stand für die Schülervorschau der Startseite', false],
     ['lernwelt-fehlerheft',         'local',   'gemeinsam/ueben.js',       'Fehlerheft: falsch gelöste Aufgaben (Etappe 8 zeigt sie an)', false],
     // Konfiguration und Admin
     ['lernwelt-config-cache',       'local',   'gemeinsam/config-api.js',  'Offline-Kopie von config.json', false],

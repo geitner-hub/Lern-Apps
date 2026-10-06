@@ -440,7 +440,14 @@
     .chest-box .ic{font-size:2rem;}
     details.lw-details summary{cursor:pointer;font-size:.8rem;font-weight:800;color:var(--text2);}
     @media (max-width:480px){.lw-grid{grid-template-columns:repeat(2,1fr);}}
-  </style>
+    /* Regale (Etappe 6): eine Zeile, seitlich wischen */
+  .regal { margin-top: 1rem; }
+  .regal-kopf { font-weight: 800; font-size: .92rem; opacity: .85; margin: 0 0 .5rem .2rem; }
+  .regal-zeile { display: grid; grid-auto-flow: column; grid-template-columns: none; grid-auto-columns: minmax(220px, 260px);
+    overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x proximity; padding-bottom: .5rem; -webkit-overflow-scrolling: touch; }
+  .regal-zeile > .app-card { scroll-snap-align: start; }
+  body.list-view .regal-zeile { grid-auto-flow: row; grid-auto-columns: auto; grid-template-columns: 1fr; overflow-x: visible; }
+</style>
 </head>
 <body>
 
@@ -589,6 +596,14 @@ async function load() {
   syncStatus('syncing', 'Wird geladen …');
   const { config, fromCache, empty } = await ConfigAPI.loadPublic();
   CONFIG = config;
+  // Schülervorschau aus dem Admin (Etappe 6): index.html?vorschau=5 zeigt den Admin-Stand für Klasse 5
+  const vorschau = new URLSearchParams(location.search).get('vorschau');
+  if (vorschau) {
+    try { const v = JSON.parse(localStorage.getItem('lernwelt-admin-vorschau') || 'null'); if (v && Array.isArray(v.apps)) CONFIG = ConfigAPI.migrate(v); } catch (e) {}
+    fKl = /^\d+$/.test(vorschau) ? vorschau : 'all';
+    if (!document.getElementById('vorschau-hinweis')) document.body.insertAdjacentHTML('afterbegin',
+      `<div id="vorschau-hinweis" style="position:sticky;top:0;z-index:50;background:#e6a817;color:#1b1300;font:800 .9rem Nunito,system-ui,sans-serif;text-align:center;padding:.45rem .8rem">👁 Vorschau ${fKl === 'all' ? 'für alle Klassen' : 'für Klasse ' + escHtml(fKl)} – so wie im Admin gerade eingestellt (auch Unveröffentlichtes)</div>`);
+  }
   if (fromCache) {
     syncStatus(empty ? 'error' : 'cached', empty ? '⚠ Apps konnten nicht geladen werden – bitte neu laden' : '📦 Offline-Modus (gespeicherte Daten)');
     if (!empty) setTimeout(() => syncStatus('', ''), 4000);
@@ -703,39 +718,8 @@ function dorfAnbinden() {
   }).catch(() => {});
 }
 
-function buildPage() {
-  buildPassCard();
-  buildDorfStrip();
-  buildAnnouncement();
-  buildAod();
-  buildKlassenChips();
-  refreshTagChips();
-  updateHeaderStats();
-
-  const main = document.getElementById('main');
-  main.querySelectorAll('.category').forEach(e => e.remove());
-  const noR = document.getElementById('no-results');
-  const apps = visibleApps();
-  const alleFaecher = [...new Set(apps.map(a => a.fach).filter(Boolean))];
-  // Reihenfolge aus dem Admin (Fallback, falls offline noch ein altes shared.js im Speicher liegt)
-  const faecher = typeof sortFaecher === 'function' ? sortFaecher(alleFaecher, CONFIG.catOrder) : alleFaecher;
-
-  faecher.forEach(fach => {
-    const kat = CAT_STYLES[fach] || { icon: '📚', color: '#6366f1', color2: '#818cf8' };
-    const sec = document.createElement('section');
-    sec.className = 'category';
-    sec.dataset.cat = fach;
-    sec.style.cssText = `--cat-color:${kat.color};--cat-color2:${kat.color2}`;
-    sec.innerHTML = `
-      <div class="cat-header">
-        <div class="cat-icon">${kat.icon}</div>
-        <span class="cat-title">${escHtml(fach)}</span>
-        <span class="cat-count"></span>
-      </div>
-      <div class="apps-grid"></div>`;
-    const grid = sec.querySelector('.apps-grid');
-
-    apps.filter(a => a.fach === fach).forEach(app => {
+/** Eine App-Karte (Startseite) */
+function appKarte(app, fach) {
       const idx = CONFIG.apps.indexOf(app);
       const kl = app.klassen || [], ct = app.customTags || [];
 
@@ -776,7 +760,54 @@ function buildPage() {
           <button type="button" class="qr-btn" data-qr="${idx}" title="QR-Code anzeigen" aria-label="QR-Code für ${escHtml(app.name)} anzeigen">${QR_SVG}QR</button>
           <span class="app-arrow" aria-hidden="true">→</span>
         </div>`;
-      grid.appendChild(card);
+      return card;
+}
+
+function buildPage() {
+  buildPassCard();
+  buildDorfStrip();
+  buildAnnouncement();
+  buildAod();
+  buildKlassenChips();
+  refreshTagChips();
+  updateHeaderStats();
+
+  const main = document.getElementById('main');
+  main.querySelectorAll('.category').forEach(e => e.remove());
+  const noR = document.getElementById('no-results');
+  const apps = visibleApps();
+  const alleFaecher = [...new Set(apps.map(a => a.fach).filter(Boolean))];
+  // Reihenfolge aus dem Admin (Fallback, falls offline noch ein altes shared.js im Speicher liegt)
+  const faecher = typeof sortFaecher === 'function' ? sortFaecher(alleFaecher, CONFIG.catOrder) : alleFaecher;
+
+  faecher.forEach(fach => {
+    const kat = CAT_STYLES[fach] || { icon: '📚', color: '#6366f1', color2: '#818cf8' };
+    const sec = document.createElement('section');
+    sec.className = 'category';
+    sec.dataset.cat = fach;
+    sec.style.cssText = `--cat-color:${kat.color};--cat-color2:${kat.color2}`;
+    sec.innerHTML = `
+      <div class="cat-header">
+        <div class="cat-icon">${kat.icon}</div>
+        <span class="cat-title">${escHtml(fach)}</span>
+        <span class="cat-count"></span>
+      </div>
+      <div class="apps-grid"></div>`;
+    const grid = sec.querySelector('.apps-grid');
+
+    // Regale (Etappe 6): Apps ohne Regal wie bisher, darunter je Regal eine Zeile
+    const fachApps = apps.filter(a => a.fach === fach);
+    const regale = (CONFIG.gruppen || []).filter(g => g && g.fach === fach);
+    const regalIds = new Set(regale.map(g => g.id));
+    fachApps.filter(a => !a.gruppe || !regalIds.has(a.gruppe)).forEach(app => grid.appendChild(appKarte(app, fach)));
+    regale.forEach(g => {
+      const liste = fachApps.filter(a => a.gruppe === g.id);
+      if (!liste.length) return;
+      const reg = document.createElement('div');
+      reg.className = 'regal';
+      reg.innerHTML = `<div class="regal-kopf">📂 ${escHtml(g.name)}</div><div class="apps-grid regal-zeile"></div>`;
+      liste.forEach(app => reg.querySelector('.regal-zeile').appendChild(appKarte(app, fach)));
+      sec.appendChild(reg);
     });
 
     const ph = document.createElement('div');
@@ -826,7 +857,12 @@ function applyFilters() {
     card.classList.toggle('fhide', !ok);
     if (ok) n++;
   });
+  document.querySelectorAll('#main .regal').forEach(r => {
+    r.style.display = r.querySelector('.app-card:not(.fhide)') ? '' : 'none';
+  });
   document.querySelectorAll('#main .category').forEach(cat => {
+    const g = cat.querySelector(':scope > .apps-grid');
+    if (g) g.style.display = g.querySelector('.app-card:not(.placeholder):not(.fhide)') ? '' : 'none';
     const v = cat.querySelectorAll('.app-card:not(.placeholder):not(.fhide)').length;
     cat.style.display = v ? '' : 'none';
     const cnt = cat.querySelector('.cat-count');

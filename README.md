@@ -26,6 +26,7 @@ daten/                katalog.json (Inhalts-Katalog mit Themen-IDs), vokabeln5.j
                       karten.json (Europa- und Deutschlandkarte, für Länder-Finder und Expedition)
                       expedition.json (Hauptstädte, Nachbarn, Kartenmitten)
 gemeinsam/            Code, den alle Seiten nutzen (siehe unten)
+gemeinsam/admin/      Module des Admins (admin.html lädt sie in fester Reihenfolge, Etappe 6)
 fonts/ icons/ vendor/ Schriften, Symbole, fremde Bibliotheken
 cloudflare/           Worker-Quelltext und Anleitung
 werkzeuge/            Prüfskript (pruefen.py), Inventar (inventar.py → INVENTAR.md),
@@ -137,6 +138,24 @@ Grundsatz: **Kern sofort, Rest bei Bedarf.** Die Budgets prüft `werkzeuge/pruef
   - `kopfrechnen_kl1–6.html` und `kopfrechnen-neu.html` sind **Weiterleitungen** (Kennzeichen `LW-WEITERLEITUNG`).
     Beim ersten Öffnen übernimmt `LernUeben.uebernehme(alt, neu)` Ergebnisse, Sterne und offene Dorf-Aufträge.
   - Die Stufen-IDs des Trainers heißen aus historischen Gründen `ma.5.kopf.…` – IDs werden nie umbenannt.
+
+## Admin: Ordnen, Regale, Entwurf → Veröffentlichen (Infrastruktur Etappe 6)
+
+- **Entwurf → Veröffentlichen:** Jede Änderung im Admin landet zuerst als Entwurf auf dem Gerät
+  (`lernwelt-admin-entwurf`). Unten erscheint eine Leiste „✏️ n Änderungen noch nicht veröffentlicht“ mit
+  **🚀 Veröffentlichen** (ein Commit für alles), **Verwerfen** und der Liste der letzten Veröffentlichungen.
+  Der Entwurf überlebt Neuladen; wurde config.json inzwischen woanders geändert, fragt der Admin nach.
+- **🗂 Ordnen** (ersetzt „Sichtbarkeit“): Fächer, Regale und Apps per Finger ziehen (SortableJS in `vendor/`,
+  MIT-Lizenz). **Regale** = Untergruppen eines Fachs (`config.gruppen: [{ id, fach, name }]`, `apps[].gruppe`).
+  Die Startseite zeigt Apps ohne Regal wie bisher und jedes Regal als eine wischbare Zeile.
+- **Schülervorschau:** „👁 Vorschau öffnen“ zeigt die Startseite mit dem aktuellen Admin-Stand für eine Klasse
+  (`index.html?vorschau=5`, liest `lernwelt-admin-vorschau`).
+- **Suche und Filter** in der App-Liste: Name, Fach, Klasse, Sichtbarkeit.
+- **Module:** `gemeinsam/admin/` – kern (Anmeldung, Laden, Entwurf), pass, spiele, dorf, uebersicht, apps,
+  sichtbarkeit (alt), ordnen, tags, werkzeuge, start (immer zuletzt). Etappe 7 ergänzt „Freigaben“ und „Fokus“
+  als eigene Module.
+- **Worker zuerst:** Der Worker prüft seit Etappe 6 `gruppen`, `apps[].gruppe` und `catOrder`
+  (`cloudflare/worker.js` bei Cloudflare einfügen, bevor der neue Admin Regale speichert).
 
 ## Vokabel-Engine (Infrastruktur Etappe 5)
 
