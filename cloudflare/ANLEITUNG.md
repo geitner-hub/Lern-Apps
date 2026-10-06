@@ -30,6 +30,8 @@ Passwörtern ist das Gerät 15 Minuten gesperrt.
   `zu`, `offen` oder Datum) und `fokus[]` (`id`, `fuer`, `apps[]`, `ab?`, `bis`). `sync.js` schickt beim Holen die
   Kennung der Kartengruppe mit (`gruppe`, zufällige ID, kein Name) – daran erkennt ein iPad seine Gruppe.
   **Beide Dateien** bei Cloudflare ersetzen (*Edit code*: `worker.js` und `sync.js`), dann erst Freigaben speichern.
+- **Etappe 8 (Okt. 2026):** `worker.js` nimmt zusätzlich `heute: false` an (Startseite ohne „Heute für dich“).
+  Nur `worker.js` ersetzen; `sync.js` ist unverändert.
 
 ## Anmeldung im Admin
 

@@ -223,6 +223,19 @@
     /* ── MEIN DORF: offene Aufträge (gemeinsam/dorf-kern.js) ── */
     #dorf-section{max-width:980px;margin:-.4rem auto 1.2rem;padding:0 1.4rem;}
     #dorf-section:empty{display:none;}
+    /* „Heute für dich“ (Etappe 8): höchstens drei Karten */
+    #heute-section{max-width:980px;margin:-.4rem auto 1.2rem;padding:0 1.4rem;}
+    #heute-section:empty{display:none;}
+    #heute-section h2{font:400 1.05rem 'Fredoka One','Nunito',sans-serif;color:#e6a817;margin:0 0 .55rem;}
+    .heute-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.7rem;}
+    .heute-karte{display:flex;gap:.75rem;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:.8rem .95rem;
+      color:var(--text);text-decoration:none;font:inherit;text-align:left;cursor:pointer;min-height:72px;transition:transform .15s,border-color .15s;}
+    .heute-karte:hover{border-color:#818cf8;transform:translateY(-2px);}
+    .heute-karte .hk-ic{font-size:1.6rem;flex-shrink:0;}
+    .heute-karte b{display:block;font-size:.95rem;line-height:1.25;}
+    .heute-karte small{display:block;color:var(--muted,rgba(241,240,251,.6));font-weight:700;font-size:.78rem;margin-top:.15rem;}
+    .heute-karte.lk{border-color:rgba(230,168,23,.55);}
+    @media (prefers-reduced-motion:reduce){.heute-karte{transition:none;}.heute-karte:hover{transform:none;}}
     .dorf-strip{display:flex;align-items:center;gap:.55rem;flex-wrap:wrap;background:linear-gradient(110deg,#2a1d12,#1f1a2e);border:1px solid rgba(154,101,56,.55);border-radius:16px;padding:.6rem .7rem;}
     .dorf-strip .dh{font-weight:900;font-size:.9rem;color:#fde7c4;margin-right:.2rem;white-space:nowrap;}
     .dorf-chip{display:inline-flex;align-items:center;gap:.4rem;background:#f6ecd2;color:#3b2a1a;text-decoration:none;border-radius:10px;padding:.35rem .6rem;font-weight:800;font-size:.85rem;box-shadow:0 3px 0 rgba(0,0,0,.35);}
@@ -477,6 +490,7 @@
 <div id="ann-banner" role="status" aria-live="polite"></div>
 
 <div id="pass-section"></div>
+<div id="heute-section" aria-label="Heute für dich"></div>
 <div id="dorf-section"></div>
 
 <div class="filter-bar">
@@ -645,6 +659,46 @@ function visibleApps() {
     && (!window.LernFreigabe || LernFreigabe.imFokus(a.datei)));      // Fokus-Modus (Etappe 7): nur die gewählten Apps
 }
 
+// ── „Heute für dich“ (Etappe 8): Auftrag der Lehrkraft · fällige Wiederholung · nächstes Pass-Ziel ──
+//  Abschaltbar im Admin (config.heute = false). Katalog und wiederholung.js laden erst bei Bedarf.
+let heuteLaden = null;
+function heuteIso() { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+function buildHeute() {
+  const sec = document.getElementById('heute-section');
+  if (!sec) return;
+  if (CONFIG.heute === false || !LernPass.hasProfile() || new URLSearchParams(location.search).get('vorschau')) { sec.innerHTML = ''; return; }
+  if (!window.LernWiederholung && !heuteLaden) {
+    heuteLaden = LW.laden('gemeinsam/katalog.js').then(() => LW.laden('gemeinsam/wiederholung.js'))
+      .then(() => window.LernKatalog && LernKatalog.bereit).then(buildHeute).catch(() => {});
+  }
+  const sichtbar = visibleApps(), ohneParam = d => String(d || '').split('#')[0].split('?')[0];
+  const karten = [];
+  // 1. Lehrer-Zettel von heute (für die eigene Klasse)
+  const kl = (LernPass.profile() || {}).klasse, h = heuteIso();
+  const zettel = ((CONFIG.dorf || {}).lehrerZettel || []).filter(z => z && z.start <= h && h <= z.bis
+    && (!Array.isArray(z.klassen) || !z.klassen.length || z.klassen.includes(kl)));
+  for (const z of zettel) {
+    const a = sichtbar.find(x => resultKey(x.datei) === z.app);
+    if (!a) continue;
+    karten.push(`<a class="heute-karte lk" href="${escHtml(a.datei)}"><span class="hk-ic">📣</span>
+      <span><b>Von deiner Lehrkraft: ${escHtml(a.name)}</b><small>${escHtml(z.text || 'Übung für heute')}</small></span></a>`);
+    break;
+  }
+  // 2. Fällige Wiederholung (nur Apps, die auf der Startseite zu sehen sind)
+  const w = window.LernWiederholung ? LernWiederholung.faellig().find(x => x.link && sichtbar.some(a => ohneParam(a.datei) === ohneParam(x.link))) : null;
+  if (w) karten.push(`<a class="heute-karte" href="${escHtml(w.link)}"><span class="hk-ic">🔁</span>
+      <span><b>Wiederholen: ${escHtml(w.titel)}</b><small>${w.tage > 0 ? 'Seit ' + w.tage + (w.tage === 1 ? ' Tag' : ' Tagen') + ' fällig' : 'Heute fällig'} – damit es nicht verblasst</small></span></a>`);
+  // 3. Nächstes Ziel im Pass
+  const wk = LernPass.weekInfo(), li = LernPass.levelInfo();
+  const ziel = !wk.done
+    ? { ic: '📅', t: `Wochenziel: noch ${wk.goal - wk.goodDays} ${wk.goal - wk.goodDays === 1 ? 'Tag' : 'Tage'} üben`, k: `${wk.goodDays} von ${wk.goal} Tagen geschafft` }
+    : { ic: '⭐', t: `Noch ${li.need - li.into} XP bis Level ${li.level + 1}`, k: 'Wochenziel geschafft! 🎉' };
+  karten.push(`<button type="button" class="heute-karte" data-heute-pass><span class="hk-ic">${ziel.ic}</span>
+      <span><b>${escHtml(ziel.t)}</b><small>${escHtml(ziel.k)}</small></span></button>`);
+  sec.innerHTML = `<h2>Heute für dich</h2><div class="heute-grid">${karten.slice(0, 3).join('')}</div>`;
+}
+document.addEventListener('click', e => { if (e.target.closest('[data-heute-pass]')) openPass(''); });
+
 // ── Fokus-Modus (Etappe 7): Hinweis oben, endet von selbst ──
 let fokusTimer = null;
 function buildFokusBanner() {
@@ -736,7 +790,10 @@ function dorfAnbinden() {
   let da = false;
   try { da = !!localStorage.getItem('lernwelt-dorf'); } catch (e) {}
   if (!da) return;
-  LW.laden('gemeinsam/dorf-kern.js').then(() => {
+  // Wiederholung zuerst (Etappe 8): fällige Themen kommen bevorzugt auf Platz 3 – höchstens 1,5 s warten
+  const wdh = LW.laden('gemeinsam/katalog.js').then(() => LW.laden('gemeinsam/wiederholung.js')).then(() => window.LernKatalog && LernKatalog.bereit);
+  Promise.race([wdh.catch(() => {}), new Promise(r => setTimeout(r, 1500))])
+    .then(() => LW.laden('gemeinsam/dorf-kern.js')).then(() => {
     if (!window.LernDorf) return;
     LernDorf.onChange(() => { if (CONFIG.apps && CONFIG.apps.length) buildPage(); });
     if (LernDorf.gestartet()) LernDorf.bereit().then(() => { if (CONFIG.apps && CONFIG.apps.length) buildPage(); });
@@ -790,6 +847,7 @@ function appKarte(app, fach) {
 
 function buildPage() {
   buildPassCard();
+  buildHeute();
   buildDorfStrip();
   buildAnnouncement();
   buildFokusBanner();

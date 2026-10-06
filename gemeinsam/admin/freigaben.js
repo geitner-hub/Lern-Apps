@@ -1,5 +1,6 @@
 // ═══════════════════════════════════════════════════════
 //  Lernwelt-Admin – Freigaben und Fokus (Infrastruktur Etappe 7)
+//  Seit Etappe 8 auch der Schalter für „Heute für dich“ (config.heute = false schaltet ab).
 //  Teil von admin.html. Alle Module teilen sich die globalen Variablen aus kern.js (CONFIG, ghSha …)
 //  und werden in admin.html in fester Reihenfolge geladen.
 //
@@ -145,6 +146,7 @@ async function buildFreigaben() {
 
   box.innerHTML = kopf + (reihen || '<div class="empty-msg">Keine Inhalte gefunden.</div>');
   buildFokus();
+  buildHeuteSchalter();
 }
 
 function frAktionen(r, s, wer) {
@@ -198,6 +200,22 @@ function frAktion(akt) {
   logChange(msg);
   saveConfig();
   buildFreigaben();
+}
+
+// ── „Heute für dich“ auf der Startseite (Etappe 8) ─────
+function buildHeuteSchalter() {
+  const box = document.getElementById('heute-inhalt');
+  if (!box) return;
+  box.innerHTML = `<div class="sw-row"><span class="sw-ic">🗓</span>
+    <div class="sw-txt"><div class="sw-name">„Heute für dich“</div>
+      <div class="sw-desc">Oben auf der Startseite höchstens drei Karten: der Lehrer-Zettel von heute, eine fällige Wiederholung
+        (gemeisterte Themen nach 7, 21 und 60 Tagen) und das nächste Ziel im Pass. Nur für Kinder mit Pass.</div></div>
+    <label class="switch"><input type="checkbox" id="heute-an" ${CONFIG.heute === false ? '' : 'checked'} aria-label="Heute für dich anzeigen"><span></span></label></div>`;
+  document.getElementById('heute-an').onchange = e => {
+    if (e.target.checked) delete CONFIG.heute; else CONFIG.heute = false;
+    logChange(`🗓 „Heute für dich“ ${e.target.checked ? 'an' : 'aus'}`);
+    saveConfig();
+  };
 }
 
 // ── Fokus-Modus ────────────────────────────────────────

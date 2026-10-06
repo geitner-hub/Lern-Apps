@@ -363,6 +363,7 @@
       <span id="sync-status">–</span>
       <a href="index.html" class="btn">← Zur Seite</a>
         <a href="admin-karten.html" class="btn">🗂 Sicherungskarten</a>
+        <a href="infokarten.html" class="btn" title="Infokarten zu allen Apps – auch für Kolleg:innen ohne Passwort">🪪 Infokarten</a>
       <span id="session-info" class="session-info"></span>
       <button class="btn" onclick="logout()" title="Nur dieses Gerät abmelden">🔒 Abmelden</button>
       <button class="btn btn-danger-soft" onclick="logoutAllDevices()" title="Alle Geräte abmelden – danach braucht jedes Gerät wieder das Passwort">🚫 Alle Geräte abmelden</button>
@@ -547,6 +548,8 @@
 
     <!-- ── FREIGABEN & FOKUS (Etappe 7, gemeinsam/admin/freigaben.js) ── -->
     <div class="tab-panel" id="panel-freigaben">
+      <div class="sec-header"><span class="sec-title">🗓 Startseite</span></div>
+      <div class="form-card" id="heute-inhalt" style="margin-bottom:1.5rem;padding:.4rem 1.2rem;"></div>
       <div class="sec-header"><span class="sec-title">🎯 Fokus</span></div>
       <p style="font-size:.8rem;color:var(--muted);margin:-.4rem 0 .9rem;line-height:1.5;">„Für Gruppe 5a heute nur diese drei Apps“: Die Startseite zeigt dann nur die gewählten Apps, bis die Zeit um ist.</p>
       <div class="form-card" id="fokus-inhalt" style="margin-bottom:1.5rem;"></div>

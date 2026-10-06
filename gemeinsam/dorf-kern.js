@@ -377,7 +377,8 @@
   }
 
   // ── Aufträge ────────────────────────────────────────────
-  //  Platz-Regeln: Platz 1 Mathematik, Platz 2 Englisch/GPG, Platz 3 alle Lern-Apps.
+  //  Platz-Regeln: Platz 1 Mathematik, Platz 2 Englisch/GPG, Platz 3 alle Lern-Apps
+  //  (dort zuerst eine App mit fälliger Wiederholung, Etappe 8).
   //  Eine App steht nie auf zwei Plätzen. Ist die Kategorie leer (oder alle ihre
   //  Apps stehen schon auf anderen Plätzen), springt der Platz auf „alle Lern-Apps“.
   function kandidaten(platz, kl, ausschluss) {
@@ -406,6 +407,20 @@
   function sterne(key) {
     try { return window.LernPass && typeof window.LernPass.starsFor === 'function' ? window.LernPass.starsFor(key) : null; } catch (e) { return null; }
   }
+  // Wiederholung (Etappe 8): Apps mit fälligen Themen – kommen bevorzugt auf den Platz „alle Lern-Apps“.
+  //  Nur wenn wiederholung.js geladen ist (Startseite); sonst wie bisher zufällig.
+  function faelligeApps() {
+    try {
+      const R = window.LernWiederholung;
+      if (!R) return [];
+      return R.faellig().filter(x => x.link).map(x => {
+        const [pfad, q] = x.link.split('?'), p = new URLSearchParams(q || '');
+        p.delete('stufe');
+        const s = p.toString();
+        return appKey(pfad) + (s ? '?' + s : '');
+      });
+    } catch (e) { return []; }
+  }
   /** Neuer Auftrag für einen Platz. o.app: feste App (Lehrer-Zettel), o.anteil: Teil der Belohnung (Fleißzettel) */
   function neuerAuftrag(platz, W, ausschluss, o = {}) {
     const kl = klasse();
@@ -416,7 +431,8 @@
       const liste = kandidaten(platz, kl, ausschluss);
       if (!liste.length) return null;
       const frisch = liste.filter(a => !D.l.includes(a.key));      // Abwechslung: nicht die zuletzt vergebenen
-      app = zufall(frisch.length ? frisch : liste);
+      const wdh = platz.faecher === 'alle' ? faelligeApps().filter(k => liste.some(a => a.key === k)) : [];
+      app = wdh.length ? liste.find(a => a.key === wdh[0]) : zufall(frisch.length ? frisch : liste);
     }
     if (!app) return null;
     const t = heute();

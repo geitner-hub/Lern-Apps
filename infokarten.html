@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<script src="gemeinsam/umgebung.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Lernwelt · Infokarten für Lehrkräfte</title>
+<link rel="stylesheet" href="gemeinsam/fonts.css">
+<!--
+  Lernwelt – infokarten.html   (Lehrer-Infokarten, Infrastruktur Etappe 8)
+  Eine Karte je App auf der Startseite: Fach, Klassen, Lehrplanbezug, Dauer, Einsatzidee,
+  Stufen und QR-Code. Alles kommt aus config.json und daten/katalog.json – nichts muss
+  von Hand gepflegt werden. Öffentlich (kein Passwort), druckbar (helles Druckbild).
+-->
+<style>
+  :root { --bg:#0f0e1a; --card:#1b1929; --card2:#252238; --line:rgba(255,255,255,.1); --text:#f1f0fb; --muted:rgba(241,240,251,.62);
+          --gold:#e6a817; --indigo:#6366f1; --indigo2:#818cf8; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font:15px/1.5 'Nunito', system-ui, sans-serif; }
+  button, select { font:inherit; }
+  :focus-visible { outline:3px solid var(--gold); outline-offset:2px; }
+  header { max-width:1100px; margin:0 auto; padding:1.2rem 1rem .4rem; display:flex; flex-wrap:wrap; gap:.8rem; align-items:center; }
+  h1 { font:400 1.6rem 'Fredoka One', 'Nunito', sans-serif; margin:0; flex:1; min-width:240px; }
+  h1 em { font-style:normal; color:var(--gold); }
+  .hinweis { max-width:1100px; margin:0 auto; padding:0 1rem; color:var(--muted); font-size:.85rem; }
+  .leiste { display:flex; gap:.5rem; flex-wrap:wrap; }
+  select, .btn { background:var(--card2); color:var(--text); border:1px solid var(--line); border-radius:10px; padding:.5rem .8rem; min-height:40px; }
+  .btn { cursor:pointer; font-weight:800; text-decoration:none; display:inline-flex; align-items:center; }
+  .btn.p { background:var(--gold); border-color:var(--gold); color:#1b1300; }
+  main { max-width:1100px; margin:0 auto; padding:1rem; display:grid; grid-template-columns:repeat(auto-fill, minmax(330px, 1fr)); gap:1rem; }
+  .karte { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:1rem 1.1rem;
+           break-inside:avoid; page-break-inside:avoid; border-top:4px solid var(--fc, var(--indigo)); }
+  .karte .kopf { display:flex; gap:1rem; align-items:flex-start; }
+  .karte .kopf > div:first-child { flex:1; min-width:0; }
+  .karte h2 { margin:0; font:400 1.2rem 'Fredoka One', 'Nunito', sans-serif; }
+  .karte .meta { color:var(--muted); font-weight:700; font-size:.82rem; }
+  .karte .qr { text-align:center; font-size:.7rem; color:var(--muted); flex-shrink:0; }
+  .karte canvas { width:96px; height:96px; border-radius:6px; display:block; }
+  .karte dl { margin:.6rem 0 0; display:grid; grid-template-columns:auto 1fr; gap:.3rem .7rem; font-size:.88rem; }
+  .karte dt { color:var(--gold); font-weight:800; }
+  .karte dd { margin:0; }
+  .karte .stufen { margin:0; padding-left:1.1rem; }
+  .leer { color:var(--muted); grid-column:1 / -1; text-align:center; padding:3rem 0; }
+  @media print {
+    @page { margin:12mm; }
+    body { background:#fff; color:#111; font-size:11pt; }
+    header .leiste, .hinweis { display:none; }
+    h1, h1 em { color:#111; }
+    main { display:block; padding:0; max-width:none; }
+    .karte { background:#fff; color:#111; border:1px solid #999; border-top:4px solid var(--fc, #6366f1); margin:0 0 6mm; }
+    .karte .meta, .karte .qr { color:#444; }
+    .karte dt { color:#7a5600; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>🧭 Lernwelt · <em>Infokarten</em></h1>
+  <div class="leiste">
+    <select id="f-fach" aria-label="Fach"><option value="">Alle Fächer</option></select>
+    <select id="f-klasse" aria-label="Klasse"><option value="">Alle Klassen</option></select>
+    <button type="button" class="btn p" id="drucken">🖨 Drucken</button>
+    <a class="btn" href="index.html">← Lernwelt</a>
+  </div>
+</header>
+<p class="hinweis">Für Kolleginnen und Kollegen: Was steckt in welcher App, wofür passt sie, wie lange dauert eine Runde?
+  Den QR-Code können die Kinder mit dem iPad scannen. Die Angaben kommen aus dem Inhalts-Katalog der Lernwelt.</p>
+<main id="karten"><div class="leer">Lade …</div></main>
+
+<script src="gemeinsam/qrcode.js"></script>
+<script src="gemeinsam/shared.js"></script>
+<script src="gemeinsam/katalog.js"></script>
+<script>
+'use strict';
+let APPS = [];
+
+// Katalog-Einträge einer App: Thema oben und Stufen, deren Quelle genau diese App (mit Parametern) ist
+function quellePasst(q, datei) {
+  if (!q || !q.app) return false;
+  const [pfad, param] = String(datei).split('#')[0].split('?');
+  const a = new URLSearchParams(param || ''), b = new URLSearchParams(q.parameter || '');
+  return q.app === pfad && [...a.keys(), ...b.keys()].every(k => a.get(k) === b.get(k));
+}
+function infoFuer(app) {
+  const K = window.LernKatalog;
+  if (!K || !K.geladen()) return null;
+  const alle = K.themen({});
+  const oben = alle.find(t => !t.eltern && quellePasst(t.quelle, app.datei));
+  let stufen = alle.filter(t => t.eltern && quellePasst(t.quelle, app.datei));
+  const basis = oben || (stufen[0] && K.thema(stufen[0].eltern)) || (K.fuerErgebnis(resultKey(app.datei)) && K.thema(K.fuerErgebnis(resultKey(app.datei))));
+  if (!basis) return null;
+  if (!stufen.length && !oben) stufen = K.stufen(basis.id);
+  const lehrplan = oben && oben.lehrplan ? [oben.lehrplan] : [...new Set(stufen.map(s => s.lehrplan).filter(Boolean))];
+  if (!lehrplan.length && basis.lehrplan) lehrplan.push(basis.lehrplan);
+  return { lehrplan, dauer: (oben || basis).dauer, einsatz: (oben || basis).einsatz, stufen: stufen.map(s => String(s.titel).replace(basis.titel + ' – ', '')) };
+}
+
+function zeichnen() {
+  const fach = document.getElementById('f-fach').value, kl = Number(document.getElementById('f-klasse').value) || 0;
+  const liste = APPS.filter(a => (!fach || a.fach === fach) && (!kl || (a.klassen || []).includes(kl)));
+  const box = document.getElementById('karten');
+  if (!liste.length) { box.innerHTML = '<div class="leer">Keine Apps für diese Auswahl.</div>'; return; }
+  box.innerHTML = liste.map((a, i) => {
+    const info = infoFuer(a) || {}, st = CAT_STYLES[a.fach] || {};
+    const zeile = (t, v) => v ? `<dt>${t}</dt><dd>${v}</dd>` : '';
+    return `<article class="karte" style="--fc:${escHtml(st.color || '#6366f1')}">
+      <div class="kopf"><div><h2>${escHtml(a.emoji || '📱')} ${escHtml(a.name)}</h2>
+        <div class="meta">${escHtml(a.fach)}${(a.klassen || []).length ? ' · Klasse ' + a.klassen.map(Number).join(', ') : ''}${a.beschreibung ? ' · ' + escHtml(a.beschreibung) : ''}</div></div>
+        <div class="qr"><canvas data-qr="${i}" aria-label="QR-Code zu ${escHtml(a.name)}"></canvas>scannen &amp; los</div></div>
+      <dl>
+        ${zeile('Lehrplan', (info.lehrplan || []).map(escHtml).join('<br>'))}
+        ${zeile('Dauer', info.dauer ? 'ca. ' + escHtml(String(info.dauer)) + ' Minuten' : '')}
+        ${zeile('Einsatz', info.einsatz ? escHtml(info.einsatz) : '')}
+        ${zeile('Stufen', (info.stufen || []).length ? '<ol class="stufen">' + info.stufen.map(s => '<li>' + escHtml(s) + '</li>').join('') + '</ol>' : '')}
+      </dl></article>`;
+  }).join('');
+  box.querySelectorAll('canvas[data-qr]').forEach(c => renderQR(c, appUrl(liste[Number(c.dataset.qr)].datei), 192));
+}
+
+(async () => {
+  let cfg = {};
+  try { cfg = await (await fetch('config.json', { cache: 'no-cache' })).json(); } catch (e) {
+    try { cfg = JSON.parse(localStorage.getItem('lernwelt-config-cache') || '{}') || {}; } catch (e2) {}
+  }
+  const versteckt = Array.isArray(cfg.hiddenCats) ? cfg.hiddenCats : [];
+  APPS = (Array.isArray(cfg.apps) ? cfg.apps : []).filter(a => a && !a.hidden && !versteckt.includes(a.fach) && isSafeLink(a.datei) && !/^https?:/i.test(a.datei));
+  const faecher = typeof sortFaecher === 'function' ? sortFaecher([...new Set(APPS.map(a => a.fach))], cfg.catOrder) : [...new Set(APPS.map(a => a.fach))];
+  document.getElementById('f-fach').insertAdjacentHTML('beforeend', faecher.map(f => `<option>${escHtml(f)}</option>`).join(''));
+  const klassen = [...new Set(APPS.flatMap(a => a.klassen || []))].map(Number).filter(Boolean).sort((a, b) => a - b);
+  document.getElementById('f-klasse').insertAdjacentHTML('beforeend', klassen.map(k => `<option value="${k}">Klasse ${k}</option>`).join(''));
+  zeichnen();
+  if (window.LernKatalog) LernKatalog.bereit.then(zeichnen).catch(() => {});
+})();
+document.getElementById('f-fach').onchange = zeichnen;
+document.getElementById('f-klasse').onchange = zeichnen;
+document.getElementById('drucken').onclick = () => window.print();
+</script>
+</body>
+</html>

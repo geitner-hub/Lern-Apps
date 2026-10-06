@@ -13,7 +13,7 @@
 //    klasse()                   → Klasse aus dem Pass (oder null)
 //    einheiten(poolId)          → Promise: [{ id, label }] (nur Vokabel-Pools)
 //    erzeuger(ids, opts)        → Promise: { next() → Aufgabe }
-//       opts: { bis: 'unit3', einheiten: ['unit1', …], richtung: 'de-en' | 'en-de',
+//       opts: { bis: 'unit3', einheiten: ['unit1', …], richtung: 'de-en' | 'en-de', bevorzugt: [Inhalt-IDs, doppelt gewichtet],
 //               themen: { vok5: ['unit1/theme1', 'unit2', 'liste/colors'] } }
 //       Mit opts.themen kommen aus dem Vokabel-Pool nur diese Themen dran
 //       (Eintrag ohne „/“ = ganze Unit). Jedes Thema zählt dann beim Mischen
@@ -53,14 +53,15 @@
     sc.src = new URL('katalog.js', here).href;
     document.head.appendChild(sc);
   })();
-  // Freigaben mitladen (Etappe 7: Gesperrtes kommt nicht in „Meine Themen“), falls die Seite sie nicht schon hat
-  (function () {
-    if (window.LernFreigabe || document.getElementById('lw-freigabe-script')) return;
+  // Freigaben (Etappe 7) und Wiederholung (Etappe 8) mitladen, falls die Seite sie nicht schon hat
+  [['LernFreigabe', 'freigabe.js'], ['LernWiederholung', 'wiederholung.js']].forEach(([glob, datei]) => {
+    const id = 'lw-' + datei.replace('.js', '') + '-script';
+    if (window[glob] || document.getElementById(id)) return;
     const sc = document.createElement('script');
-    sc.id = 'lw-freigabe-script';
-    sc.src = new URL('freigabe.js', here).href;
+    sc.id = id;
+    sc.src = new URL(datei, here).href;
     document.head.appendChild(sc);
-  })();
+  });
   /** Themen-ID ('ma.5.kopf.mittel') → alte Inhalt-ID ('kopf5-mittel'); alte IDs bleiben, wie sie sind. */
   function alteForm(id) {
     if (typeof id !== 'string' || !id.includes('.') || id.includes(':')) return id;
@@ -314,6 +315,12 @@
       }
     }
     if (!quellen.length) throw new Error('In dieser Auswahl sind zu wenige Aufgaben.');
+    // Fällige Wiederholungen (Etappe 8, opts.bevorzugt) kommen doppelt so oft dran
+    const bev = (Array.isArray(opts.bevorzugt) ? opts.bevorzugt : []).map(alteForm);
+    if (bev.length) {
+      const passt = x => bev.some(b => x === b || x.startsWith(b + '/') || b.startsWith(x + '/') || b.startsWith(x + ':'));
+      quellen.slice().forEach(q => { if (passt(q.inhalt || q.id)) quellen.push(q); });
+    }
 
     const zuletzt = [];                                          // keine Wiederholung der letzten Fragen
     return {
@@ -396,7 +403,9 @@
     ganz.forEach(id => { delete themen[id]; });
     Object.keys(themen).forEach(id => { themen[id] = reduziereThemen(themen[id]); });
     const inhalte = ids.flatMap(id => themen[id] ? themen[id].map(t => id + ':' + t) : [id]);
-    return { ids, opts: { klasse: k, themen, richtung: 'de-en' }, anzahl: inhalte.length, inhalte };
+    // Wiederholung (Etappe 8): fällige Inhalte bevorzugen (wiederholung.js lädt aufgaben.js selbst nach)
+    const bevorzugt = window.LernWiederholung ? LernWiederholung.inhalte() : [];
+    return { ids, opts: { klasse: k, themen, richtung: 'de-en', ...(bevorzugt.length ? { bevorzugt } : {}) }, anzahl: inhalte.length, inhalte };
   }
 
   /** ?pool=vok5,1x1-klein&bis=unit3&richtung=en-de  →  { ids, opts } */

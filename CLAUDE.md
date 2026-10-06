@@ -65,7 +65,8 @@ und gelbe Hinweise. Manuelle Checkliste nach Uploads: `werkzeuge/RAUCHTEST.md`.
 - **gemeinsam/** – geteilter Code, globale Objekte statt Module: `LW` (umgebung.js: Umgebung live/test/lokal,
   Version, Speicher-Register, `LW.laden`), `LernApps` (navbar.js: Home-Button, `saveResult`), `LernPass`
   (pass.js: XP/Level/Sterne, Regeln in `RULES`), `LernKatalog` (katalog.js), `LernUeben` (ueben.js: Übungsrahmen
-  mit Stufen), `LernFreigabe` (freigabe.js: Freigaben je Themen-ID und Fokus-Modus aus config.json), `LernDorf` (dorf-kern.js). `shared.js` ist die einzige Quelle für Fächer/Farben/`escHtml`/`isSafeLink`.
+  mit Stufen), `LernFreigabe` (freigabe.js: Freigaben je Themen-ID und Fokus-Modus aus config.json),
+  `LernWiederholung` (wiederholung.js: fällige Wiederholungen aus dem Lernstand), `LernDorf` (dorf-kern.js). `shared.js` ist die einzige Quelle für Fächer/Farben/`escHtml`/`isSafeLink`.
 - **Ergebnisfluss:** App → `LernApps.saveResult({ score, max, thema })` → `localStorage` (`lern-apps-results`,
   Schlüssel = **Dateiname** ohne Ordner + URL-Parameter) → Ereignis `lernapps:result` → pass.js wertet aus und
   feuert `lernpass:gewertet` → dorf-kern.js zählt Aufträge. Dateinamen müssen daher repo-weit eindeutig sein.

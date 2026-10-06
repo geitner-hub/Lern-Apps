@@ -182,6 +182,28 @@ Sicherungskarte verbunden ist – aus der **Kartengruppe** (der Sync-Worker schi
 - **Reihenfolge beim Hochladen:** zuerst `cloudflare/worker.js` **und** `cloudflare/sync.js` bei Cloudflare
   ersetzen, dann die Dateien hochladen, dann erst Freigaben speichern.
 
+## Ökosystem: Wiederholung, Fehler-Training, „Heute für dich“, Infokarten (Infrastruktur Etappe 8)
+
+- **Wiederholung mit Abstand:** pass.js merkt sich je gemeistertem Inhalt im Lernstand `m` (gemeistert am),
+  `r` (letzte gute Runde) und `w` (geschaffte Wiederholungen). Fällig nach `RULES.wiederholung` = 7, 21, 60 Tagen ab `r`;
+  eine gute Runde (ab der Spiele-Schwelle) in einem fälligen Inhalt zählt als Wiederholung, nach der dritten gilt er als
+  gefestigt. Auswertung: **gemeinsam/wiederholung.js** (`LernWiederholung.faellig()`, `.inhalte()`), gesperrte
+  Themen (Etappe 7) werden nie fällig.
+- **Wo Fälliges auftaucht:** „Heute für dich“ auf der Startseite (Link startet die Stufe direkt, `?stufe=ID` in
+  ueben.js), Dorf-Auftragsplatz 3 („Freie Wahl“) nimmt zuerst eine App mit fälliger Wiederholung, und in den Spielen
+  kommen fällige Inhalte aus „Meine Themen“ doppelt so oft dran (`opts.bevorzugt` in aufgaben.js).
+  Die Regeln von Dorf und Spielen ändern sich nicht – nur die Auswahl.
+- **Fehler-Training** (ueben.js): Gibt es im Fehlerheft Fehler aus den Stufen einer App, erscheint oben die Kachel
+  „🎯 Fehler-Training“. Sie übt genau die falsch gelösten Aufgabentypen (Mathe: `erzeugeTyp` über
+  generatoren-mathe.js); jede richtige Antwort streicht einen Eintrag. Die Runde bringt XP, zählt aber nicht für die
+  Meisterschaft einer Stufe. Der Vokabeltrainer hat dafür weiter „Schwierige Wörter üben“.
+- **„Heute für dich“** (index.html, nur mit Pass): höchstens drei Karten – Lehrer-Zettel von heute, fällige
+  Wiederholung, nächstes Ziel im Pass (Wochenziel bzw. nächstes Level). Abschaltbar im Admin unter
+  „🔐 Freigaben → Startseite“ (`config.heute = false`, der Worker prüft das Feld).
+- **Infokarten** (`infokarten.html`, ohne Passwort, Link im Admin oben): je App Fach, Klassen, Lehrplanbezug, Dauer,
+  Einsatzidee, Stufen und QR-Code, erzeugt aus config.json und dem Katalog; filterbar, druckbar (helles Druckbild).
+- **Bewusst noch nicht:** anonyme Gruppenauswertung über den Worker – erst nach Zustimmung der Schulleitung.
+
 ## Vokabel-Engine (Infrastruktur Etappe 5)
 
 - **apps/englisch/vokabeltrainer.html** – ein Trainer für alle Wortlisten, alle Modi wie bisher
