@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<script src="../../gemeinsam/umgebung.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Stellenwerttafel – Lernwelt</title>
+<!--
+  ═══════════════════════════════════════════════
+   LERNWELT – Stellenwerttafel (Mathe 5, Neue Lern-Apps Etappe 9b)
+   Eine echte Tafel in Dreiergruppen (Milliarden, Millionen, Tausender, Einer; je H Z E),
+   in die die Kinder Ziffern selbst eintippen – mit dem gemeinsamen Ziffernblock (gemeinsam/ziffernblock.js),
+   die iPad-Tastatur öffnet sich nie. Läuft auf dem Übungs-Rahmen (ueben.js).
+
+   Stufen (Katalog ma.5.stellenwert.*):
+     Eintragen    Zahl steht oben → Ziffer für Ziffer in die richtige Spalte
+     Ablesen      Tafel ist gefüllt → Zahl ins Zahlenfeld
+     Zahlwort     „drei Millionen vierzigtausendfünf“ → in die Tafel; umgekehrt Zahlwort aus drei wählen
+     Stellenwert  Welchen Wert hat die markierte Ziffer? (7 in 3 708 215 → 700 000)
+     Nullen-Profi viele Nullen und leere Spalten, bis Milliarden
+   Leere Spalten links dürfen leer bleiben, Nullen in der Mitte müssen eingetragen werden.
+   Rückmeldung unterscheidet „Ziffer falsch“ und „Spalte verrutscht“.
+   Kürzel der Spalten: KUERZEL unten (an das Schulbuch anpassen).
+  ═══════════════════════════════════════════════
+-->
+<link rel="stylesheet" href="../../gemeinsam/fonts.css">
+<style>
+  html, body { margin: 0; background: #0f0e1a; }
+  #app { padding-top: env(safe-area-inset-top, 0px); }
+  .lu .eigen { max-width: 980px; }
+  .lu .fb.mit-bild { max-width: 900px; }
+  .swt { border-collapse: separate; border-spacing: 0; margin: .3rem auto .4rem; font-family: 'Nunito', sans-serif; }
+  .swt th, .swt td { text-align: center; padding: 0; }
+  .swt .gruppe th { font-size: .8rem; font-weight: 900; padding: .25rem .2rem; color: #0f0e1a; border-radius: 10px 10px 0 0; }
+  .swt .kopf th { font-size: clamp(.7rem, 1.6vw, .9rem); font-weight: 900; color: rgba(241,240,251,.75); padding: .2rem 0; }
+  .swt td div { width: clamp(1.9rem, 6.6vw, 3.3rem); height: clamp(2.6rem, 8vw, 3.6rem); display: grid; place-items: center;
+    font: 900 clamp(1.3rem, 4vw, 2rem) 'Nunito', sans-serif; color: #f1f0fb; border: 2px solid rgba(255,255,255,.12); margin: 0 1px; border-radius: 8px; background: #151324; }
+  .swt td.g0 div { background: rgba(244,114,182,.12); } .swt td.g1 div { background: rgba(129,140,248,.14); }
+  .swt td.g2 div { background: rgba(74,222,128,.10); } .swt td.g3 div { background: rgba(230,168,23,.12); }
+  .swt th.g0 { background: #f472b6; } .swt th.g1 { background: #818cf8; } .swt th.g2 { background: #4ade80; } .swt th.g3 { background: #e6a817; }
+  .swt td.grenze div { margin-left: 6px; }
+  .swt td.richtig div { border-color: #4ade80; } .swt td.falsch div { border-color: #f87171; background: rgba(248,113,113,.2); }
+  .swt td.markiert div { border-color: #e6a817; box-shadow: 0 0 0 3px rgba(230,168,23,.45); color: #fde68a; }
+  .zahl-gross { font: 900 clamp(1.8rem, 6vw, 2.6rem) 'Nunito', sans-serif; text-align: center; color: #fde68a; letter-spacing: .03em; margin: .1rem 0 .5rem; }
+  .zahl-gross mark { background: rgba(230,168,23,.3); color: #fff; border-radius: 6px; padding: 0 .1em; }
+  .zahlwort { font: 800 clamp(1.1rem, 3.4vw, 1.5rem) 'Nunito', sans-serif; text-align: center; color: #fde68a; margin: .1rem 0 .5rem; }
+  .sw-feld { min-width: 10ch; min-height: 3.4rem; margin: .3rem auto .2rem; display: flex; align-items: center; justify-content: center; width: fit-content;
+    background: #0b0a14; border: 3px solid #6366f1; border-radius: 16px; color: #f1f0fb; font: 900 2rem 'Nunito', sans-serif; padding: .2rem 1rem; }
+  .sw-feld.zb-leer::before { content: '?'; color: rgba(255,255,255,.3); }
+  .sw-wahl { display: flex; flex-direction: column; gap: .5rem; max-width: 640px; margin: .4rem auto; }
+  .sw-wahl button { background: #252238; border: 2px solid rgba(255,255,255,.1); border-radius: 14px; color: #f1f0fb; font: 800 1.05rem 'Nunito', sans-serif;
+    padding: .7rem 1rem; min-height: 3rem; cursor: pointer; text-align: left; }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script src="../../gemeinsam/freigabe.js"></script>
+<script src="../../gemeinsam/ueben.js"></script>
+<script src="../../gemeinsam/ziffernblock.js"></script>
+<script>
+'use strict';
+const fmt = n => LernZiffernblock.format(n);
+const zufall = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+const wahl = l => l[Math.floor(Math.random() * l.length)];
+const mischen = l => { const a = l.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const esc = t => String(t == null ? '' : t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+/* ═══════════════════════════════════════════════════════
+   TAFEL – Gruppen und Kürzel (hier an das Schulbuch anpassen)
+   ═══════════════════════════════════════════════════════ */
+const GRUPPEN = ['Milliarden', 'Millionen', 'Tausender', 'Einer'];
+const KUERZEL = ['HMrd', 'ZMrd', 'Mrd', 'HMio', 'ZMio', 'Mio', 'HT', 'ZT', 'T', 'H', 'Z', 'E'];
+const STELLEN = 12;                                // Spalten (bis 999 Milliarden)
+
+/* ═══════════════════════════════════════════════════════
+   ZAHLWÖRTER (deutsch)
+   ═══════════════════════════════════════════════════════ */
+const EIN = ['', 'ein', 'zwei', 'drei', 'vier', 'fünf', 'sechs', 'sieben', 'acht', 'neun', 'zehn', 'elf', 'zwölf',
+  'dreizehn', 'vierzehn', 'fünfzehn', 'sechzehn', 'siebzehn', 'achtzehn', 'neunzehn'];
+const ZEHNER = ['', '', 'zwanzig', 'dreißig', 'vierzig', 'fünfzig', 'sechzig', 'siebzig', 'achtzig', 'neunzig'];
+function unter1000(n) {
+  const h = Math.floor(n / 100), r = n % 100;
+  let s = h ? EIN[h] + 'hundert' : '';
+  if (r < 20) s += EIN[r];
+  else s += (r % 10 ? EIN[r % 10] + 'und' : '') + ZEHNER[Math.floor(r / 10)];
+  return s;
+}
+function zahlwort(n) {
+  if (n === 0) return 'null';
+  const teile = [];
+  const mrd = Math.floor(n / 1e9), mio = Math.floor(n / 1e6) % 1000, tsd = Math.floor(n / 1000) % 1000, rest = n % 1000;
+  if (mrd) teile.push(mrd === 1 ? 'eine Milliarde' : unter1000(mrd) + ' Milliarden');
+  if (mio) teile.push(mio === 1 ? 'eine Million' : unter1000(mio) + ' Millionen');
+  let klein = (tsd ? unter1000(tsd) + 'tausend' : '') + (rest ? (rest === 1 ? 'eins' : unter1000(rest)) : '');
+  if (rest % 100 === 1 && rest !== 1) klein = klein.replace(/ein$/, 'eins');      // einhunderteins
+  if (klein) teile.push(klein);
+  return teile.join(' ');
+}
+
+/* ═══════════════════════════════════════════════════════
+   TAFEL ZEICHNEN
+   ═══════════════════════════════════════════════════════ */
+/** Tafel; ziffern: Array(12) mit '' oder Ziffer; markiert: Spalte */
+function tafel(ziffern, markiert) {
+  const t = document.createElement('table'); t.className = 'swt';
+  t.innerHTML = `<tr class="gruppe">${GRUPPEN.map((g, i) => `<th colspan="3" class="g${i}">${g}</th>`).join('')}</tr>
+    <tr class="kopf">${KUERZEL.map(k => `<th>${k}</th>`).join('')}</tr>
+    <tr>${KUERZEL.map((k, i) => `<td class="g${Math.floor(i / 3)}${i % 3 === 0 && i ? ' grenze' : ''}${i === markiert ? ' markiert' : ''}"><div>${esc((ziffern || [])[i] || '')}</div></td>`).join('')}</tr>`;
+  return t;
+}
+const zuSpalten = n => String(n).padStart(STELLEN, ' ').split('').map(c => c.trim());
+const felderVon = t => [...t.querySelectorAll('td div')];
+
+/** Tafel zum Ausfüllen; startet in der ersten Spalte, die die Zahl braucht (frei wählbar) */
+function tafelEingabe(box, n, fertig) {
+  const t = tafel(); box.appendChild(t);
+  const start = STELLEN - String(n).length;
+  LernZiffernblock.erstelle({ box, felder: felderVon(t), einstellig: true, start: Math.max(0, start),
+    fertig: w => fertig(w) });
+}
+/** Vergleich: Ziffer falsch oder Spalte verrutscht? */
+function bewerte(n, w) {
+  const soll = zuSpalten(n);
+  const ist = (w || []).map(x => x || '');
+  // links vor der ersten Ziffer darf leer oder 0 sein
+  const erste = soll.findIndex(c => c !== '');
+  const ok = soll.every((c, i) => i < erste ? (ist[i] === '' || ist[i] === '0') : ist[i] === c);
+  if (ok) return { ok: true };
+  const istZahl = ist.join('').replace(/^0+/, ''), sollZahl = String(n);
+  if (istZahl === sollZahl) return { ok: false, grund: 'verrutscht' };
+  if (istZahl.length === sollZahl.length - (sollZahl.match(/0/g) || []).length && sollZahl.replace(/0/g, '') === istZahl.replace(/0/g, '')) return { ok: false, grund: 'nullen' };
+  return { ok: false, grund: 'ziffer' };
+}
+const GRUND = { verrutscht: 'Die Ziffern stimmen, aber sie stehen in den falschen Spalten – die Einer gehören ganz rechts in E.',
+  nullen: 'Achtung: Nullen in der Mitte musst du eintragen! Jede Spalte zwischen den Ziffern braucht eine Ziffer.',
+  ziffer: 'Mindestens eine Ziffer ist falsch. Lies die Zahl in Dreiergruppen von rechts.' };
+
+/* ═══════════════════════════════════════════════════════
+   ZAHLEN ERZEUGEN
+   ═══════════════════════════════════════════════════════ */
+function zahl(stellenMin, stellenMax, nullen) {
+  const len = zufall(stellenMin, stellenMax);
+  let s = String(zufall(1, 9));
+  for (let i = 1; i < len; i++) s += Math.random() < (nullen || .15) ? '0' : String(zufall(0, 9));
+  return Number(s);
+}
+
+function eintragen(n, frage, hinweis, typ) {
+  return { typ: typ || 'eintragen', art: 'eigen', frage, hinweis: hinweis || 'Tippe die Ziffern in die richtigen Spalten.',
+    text: fmt(n), tipp: 'Fang hinten an: Die letzte Ziffer gehört in E (Einer).',
+    zeige: (box, fertig) => tafelEingabe(box, n, fertig),
+    pruef: w => bewerte(n, w).ok, eingabeText: w => (w || []).join('').replace(/^0+/, '') ? fmt((w || []).join('')) : '(leer)',
+    loesungZeige: (box, w) => {
+      const r = bewerte(n, w), soll = zuSpalten(n), t = tafel((w || []).map(x => x || ''));
+      felderVon(t).forEach((f, i) => { const td = f.parentNode; if ((w[i] || '') === soll[i] || (!soll[i] && (w[i] === '' || w[i] === '0'))) { if (soll[i]) td.classList.add('richtig'); } else td.classList.add('falsch'); });
+      const p = document.createElement('p'); p.textContent = GRUND[r.grund] || ''; p.style.cssText = 'font-weight:800;color:#fca5a5;margin:.4rem 0';
+      box.appendChild(t); box.appendChild(p); box.appendChild(tafel(soll));
+    } };
+}
+function ablesen(n) {
+  return { typ: 'ablesen', art: 'eigen', frage: 'Welche Zahl steht in der Tafel?', hinweis: 'Tippe die Zahl ins Feld.', text: fmt(n),
+    zeige: (box, fertig) => {
+      box.appendChild(tafel(zuSpalten(n)));
+      const f = document.createElement('div'); f.className = 'sw-feld'; box.appendChild(f);
+      LernZiffernblock.erstelle({ box, felder: [f], einstellig: false, gruppieren: true, max: 12, fertig: w => { if (w[0]) fertig(Number(w[0])); } });
+    },
+    pruef: e => e === n, eingabeText: e => fmt(e) };
+}
+function wortWaehlen(n) {
+  const w = zahlwort(n);
+  // Fallen: eine Null weniger/mehr, Tausender und Millionen vertauscht
+  const fallen = new Set();
+  const s = String(n);
+  const ohneNull = s.includes('0') ? Number(s.replace('0', '')) : n * 10;
+  [ohneNull, n + (n >= 1e6 ? 1e6 : 1000) * wahl([1, -1]), Number(s + '0') / (s.endsWith('0') ? 10 : 1) === n ? n * 10 : Number(s.slice(0, -1) + '0' + s.slice(-1))]
+    .forEach(x => { if (x > 0 && x !== n && Number.isSafeInteger(x)) fallen.add(zahlwort(x)); });
+  for (let k = 1; fallen.size < 2 && k < 20; k++) { const x = n + Math.pow(10, k % 9) * (k % 2 ? 1 : -1); if (x > 0 && x !== n) fallen.add(zahlwort(x)); }
+  const opt = mischen([w, ...[...fallen].filter(x => x !== w).slice(0, 2)]);
+  return { typ: 'wort-waehlen', art: 'eigen', frage: 'Welches Zahlwort passt?', hinweis: '', text: w,
+    zeige: (box, fertig) => {
+      const d = document.createElement('div'); d.className = 'zahl-gross'; d.textContent = fmt(n); box.appendChild(d);
+      const c = document.createElement('div'); c.className = 'sw-wahl';
+      c.innerHTML = opt.map((o, i) => `<button type="button" data-i="${i}">${esc(o)}</button>`).join('');
+      c.addEventListener('click', e => { const b = e.target.closest('[data-i]'); if (b) fertig(opt[Number(b.dataset.i)]); });
+      box.appendChild(c);
+    },
+    pruef: e => e === w, eingabeText: e => e };
+}
+function stellenwert(n) {
+  const s = String(n);
+  let i; do { i = zufall(0, s.length - 1); } while (s[i] === '0');
+  const loes = Number(s[i]) * Math.pow(10, s.length - 1 - i);
+  const spalte = STELLEN - s.length + i;
+  return { typ: 'stellenwert', art: 'eigen', frage: 'Welchen Wert hat die markierte Ziffer?', hinweis: `Die ${s[i]} steht in der Spalte ${KUERZEL[spalte]}.`, text: fmt(loes),
+    erklaerung: `${s[i]} ${KUERZEL[spalte]} = ${fmt(loes)}`,
+    zeige: (box, fertig) => {
+      const d = document.createElement('div'); d.className = 'zahl-gross';
+      const g = fmt(n); let k = -1;
+      d.innerHTML = [...g].map(c => { if (/\d/.test(c)) k++; return k === i && /\d/.test(c) ? `<mark>${c}</mark>` : esc(c); }).join('');
+      box.appendChild(d);
+      if (Math.random() < .5) box.appendChild(tafel(zuSpalten(n), spalte));
+      const f = document.createElement('div'); f.className = 'sw-feld'; box.appendChild(f);
+      LernZiffernblock.erstelle({ box, felder: [f], einstellig: false, gruppieren: true, max: 12, fertig: w => { if (w[0]) fertig(Number(w[0])); } });
+    },
+    pruef: e => e === loes, eingabeText: e => fmt(e) };
+}
+
+const STUFEN = [
+  { id: 'ma.5.stellenwert.eintragen', titel: 'Eintragen', kurz: 'Zahl → Tafel', erzeuge: () => { const n = zahl(4, 9); return eintragen(n, fmt(n)); } },
+  { id: 'ma.5.stellenwert.ablesen', titel: 'Ablesen', kurz: 'Tafel → Zahl', erzeuge: () => ablesen(zahl(4, 10, .25)) },
+  { id: 'ma.5.stellenwert.zahlwort', titel: 'Zahlwort', kurz: 'drei Millionen vierzigtausendfünf',
+    erzeuge: () => { const n = zahl(4, 10, .35); return Math.random() < .55 ? eintragen(n, zahlwort(n), 'Trage das Zahlwort als Zahl in die Tafel ein.', 'wort-eintragen') : wortWaehlen(n); } },
+  { id: 'ma.5.stellenwert.wert', titel: 'Stellenwert', kurz: 'Welchen Wert hat die Ziffer?', erzeuge: () => stellenwert(zahl(5, 10)) },
+  { id: 'ma.5.stellenwert.profi', titel: 'Nullen-Profi', kurz: 'viele Nullen, bis Milliarden',
+    erzeuge: () => { const n = zahl(7, 12, .55); return Math.random() < .5 ? eintragen(n, zahlwort(n), 'Trage das Zahlwort als Zahl in die Tafel ein.', 'profi-wort') : eintragen(n, fmt(n), '', 'profi'); } },
+];
+const HILFE = `<section><h2>Die Stellenwerttafel</h2><p>Von rechts nach links: Einer (E), Zehner (Z), Hunderter (H) – dann wiederholt sich das für
+  Tausender (T, ZT, HT), Millionen (Mio, ZMio, HMio) und Milliarden (Mrd, ZMrd, HMrd). Jede Gruppe hat drei Spalten.</p>
+  <p>Große Zahlen liest du in Dreiergruppen von rechts: 3 040 005 = drei Millionen vierzigtausendfünf.</p></section>
+  <section><h2>Nullen nicht vergessen!</h2><p>Leere Spalten links vor der ersten Ziffer bleiben leer. Aber eine Lücke in der Mitte bekommt eine 0:
+  vierzigtausendfünf = 40 005 (nicht 405).</p></section>`;
+
+LernUeben.start({
+  host: document.getElementById('app'), titel: '🧮 Stellenwerttafel', untertitel: 'Große Zahlen bis zu den Milliarden',
+  stufen: STUFEN.map(s => ({ id: s.id, titel: s.titel, kurz: s.kurz })), runde: 8, hilfe: { html: HILFE },
+  erzeuge: st => { const s = STUFEN.find(x => x.id === st.id); const a = s && s.erzeuge(); if (a) a.schluessel = a.typ + a.text; return a; },
+  pruefe: (a, e) => { try { return !!a.pruef(e); } catch (err) { return false; } },
+});
+</script>
+<script src="../../gemeinsam/navbar.js"></script>
+</body>
+</html>

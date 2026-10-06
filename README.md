@@ -54,6 +54,7 @@ werkzeuge/            Prüfskript (pruefen.py), Inventar (inventar.py → INVENT
 | `dorf-szene.js` | „Mein Dorf“: 3D-Dorf (Voxel-Gebäude als Code, feste Iso-Kamera), nur in `spiele/dorf.html` |
 | `katalog.js` | Inhalts-Katalog laden und abfragen: Themen-IDs, Zuordnung alter Ergebnis- und Inhalt-Schlüssel (`LernKatalog`) |
 | `aufgaben.js` | Aufgaben-Pools für die Spiele („Meine Themen“), Wortquelle `woerter()` für Wort-Spiele |
+| `ziffernblock.js` | Großer Ziffernblock für Mathe-Apps (`LernZiffernblock`): Felder antippen, Ziffer springt weiter, iPad-Tastatur bleibt zu (Zahlenstrahl, Stellenwerttafel) |
 | `karten-ansicht.js` | Karten laden, zoomen, verschieben, antippen (Länder-Finder, Expedition); `LernKarte.markup` zeichnet Flächen, Linien (Flüsse) und Punkte (Städte) mit Tippzonen |
 | `globus.js` | Drehbarer Globus als SVG (orthografisch, kein WebGL) mit Gradnetz, Äquator und Nullmeridian (`LernGlobus`); Ozeane aus `daten/ozeane.json` |
 | `welt-karte.js` | Weltkarte in **Equal Earth** (flächentreu) aus `daten/welt.json` über `vendor/d3-geo.min.js` (`LernWelt`) – Grundlage für alle Weltkarten und den Globus |

@@ -21,6 +21,7 @@
 //      fertig(eingabe) auf; geprüft wird wie immer mit cfg.pruefe(a, eingabe). a.eingabeText(eingabe) → Anzeige.
 //    schluessel: gleiche Aufgabe in einer Runde nicht doppelt (sonst zählt die Frage)
 //    ton: Text für 🔊 (immer sichtbar), sprache: z. B. 'en-GB' für Vorlesen und ton; tonAuto: ton gleich vorlesen
+//    loesungZeige(box, eingabe): bei falscher Antwort die Lösung zeichnen (z. B. Zahlenstrahl mit beiden Stellen)
 //  Stufe: { …, runde? } – eigene Rundengröße (z. B. wenn eine Stufe nur 6 Aufgaben hat)
 //  cfg.hilfe: { html } – Kachel „📖 So geht's“ mit Erklärung (Neue Lern-Apps Etappe 7; html schon escaped)
 //
@@ -317,7 +318,8 @@
         setTimeout(weiter, 650);
       } else {
         zeigeAufgabe(`<div class="fb no"><div class="gr">Richtig ist: ${esc(a.text)}</div>
-          <div class="er">${esc(a.erklaerung || a.tipp || '')}</div></div>`);
+          <div class="er">${esc(a.erklaerung || a.tipp || '')}</div>${a.loesungZeige ? '<div class="loesbild"></div>' : ''}</div>`);
+        if (a.loesungZeige) try { const lb = root.querySelector('.loesbild'); lb.parentNode.classList.add('mit-bild'); a.loesungZeige(lb, eingabe); } catch (e) {}
       }
     }
     function weiter() {
