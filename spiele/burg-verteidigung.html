@@ -14,6 +14,8 @@
 
    Modi:   Kampagne (10 Stationen: Karte + Wellen + Sonderregel; Kronen schalten
            Stationen und Türme frei – Daten in tower-defense.json → kampagne)
+           Heute (Karte des Tages: Karte, Landschaft, Wellen und Regel aus dem Datum –
+           alle Kinder haben dieselbe; eigener Tagesrekord in lern-burg-rekorde → #tag)
            Runde (6 Wellen, XP wie jede App, Burg fällt nicht)
            Endlos (bis die Burg fällt, Rekord = erreichte Welle,
            XP über LernPass.awardEndless)
@@ -21,7 +23,7 @@
    Themen: „⭐ Meine Themen“ = in den Lern-Apps freigeschalteter Stoff + Starter-Paket
            (aufgaben.js → meineThemen, Einstellungen im Admin: config.json → spiele)
    Links:  burg-verteidigung.html?pool=vok5&bis=unit3  (haben Vorrang)
-           burg-verteidigung.html?pool=1x1-klein&modus=endlos&karte=engpass
+           burg-verteidigung.html?pool=1x1-klein&modus=endlos&karte=engpass   (modus: runde|endlos|kampagne|tag)
    Daten:  daten/tower-defense.json (Karten, Landschaften, Wellen, Türme, Gegner).
            Fehlt die Datei, läuft das Spiel mit der eingebauten Burgwiese (EINGEBAUT).
            Neuer Turm/Gegner = Werte in der JSON + Eintrag in TURM_TYPEN/GEGNER_TYPEN.
@@ -185,6 +187,11 @@
     .kamp-info { margin-top: .6rem; background: rgba(255,255,255,.05); border-radius: 12px; padding: .55rem .75rem; font-size: .88rem; font-weight: 700; color: var(--text2); }
     .kamp-info b { color: var(--accent2); font-size: .98rem; }
     .kamp-info .regel { color: var(--text); }
+    .tag-karte { display: grid; grid-template-columns: 110px 1fr; gap: .6rem; align-items: center; }
+    .tag-karte svg { width: 100%; height: auto; border-radius: 10px; display: block; }
+    .tag-karte .kamp-info { margin-top: 0; }
+    .seg button { padding-left: .25rem; padding-right: .25rem; }
+    @media (max-width: 420px) { .seg button { font-size: .86rem; } .seg button small { font-size: .66rem; } }
     @media (prefers-reduced-motion: reduce) { .karten button:active { transform: none; } }
     .row { display: flex; gap: .6rem; flex-wrap: wrap; align-items: center; }
     select { font: inherit; font-weight: 800; font-size: .9rem; background: #252238; color: var(--text); border: 1px solid rgba(255,255,255,.12);
@@ -283,6 +290,7 @@
 
     <div class="seg" id="mode-seg">
       <button type="button" data-mode="kampagne" hidden>Kampagne<small>10 Stationen</small></button>
+      <button type="button" data-mode="tag" hidden>Heute<small>Karte des Tages</small></button>
       <button type="button" data-mode="runde" class="on">Runde<small>6 Wellen</small></button>
       <button type="button" data-mode="endlos">Endlos<small>bis die Burg fällt</small></button>
     </div>
@@ -296,6 +304,11 @@
       <span class="lbl" id="kamp-titel">Kampagne</span>
       <div class="kamp" id="kamp-weg"></div>
       <div class="kamp-info" id="kamp-info"></div>
+    </div>
+
+    <div id="tag-box" hidden>
+      <span class="lbl" id="tag-titel">Karte des Tages</span>
+      <div class="tag-karte"><div id="tag-bild"></div><div class="kamp-info" id="tag-info"></div></div>
     </div>
 
     <div id="klasse-box" hidden>
@@ -410,9 +423,13 @@ const CFG = {
     anzahlBasis: 8, anzahlProWelle: 2,
     bossAlle: 5,                     // jede 5. Welle ein Boss
     herzenNachBoss: 2,               // Belohnung nach einer Boss-Welle (höchstens bis burgHerzen)
+    ereignisAlle: 7,                 // Ereignis-Welle höchstens jede 7. Welle (nie zusammen mit einem Boss)
+    nebelReichweite: .75,            // Nebel: Türme sehen nur 75 % so weit
   },
 
   abrissAnteil: .5,                  // Abreißen gibt diesen Anteil der investierten Münzen zurück
+  rodenPreis: 40,                    // zugewachsenen Bauplatz roden (Karten mit abWelle)
+  weicheExtra: 6,                    // vor einem Weichenwechsel so viele Sekunden mehr Bauzeit
 
   // ── Technik ───────────────────────────────────────
   figurGroesse: .72,                 // Größe der eigenen Figur auf der Burg
@@ -441,6 +458,9 @@ const pick = l => l[Math.random() * l.length | 0];
      tuerme: ['bogen', …] erlaubte Turmtypen (fehlt es: alle; höchstens 5, sonst wird das Baumenü zu voll)
      rahmen: [x0, y0, x1, y1] Bereich für die Kamera   staerke: Lebenspunkte × (Standard 1)
      wellen: Name eines Wellensatzes (Standard 'standard')
+     weiche: [3, 5] Karten mit zwei Wegen: vor diesen Wellen stellt die Weiche um (alle Monster
+             nehmen dann den anderen Weg; eine Bauphase vorher angekündigt, Abriss gibt 100 %)
+     abWelle (bei plaetze): Platz ist zugewachsen und kann ab dieser Welle gerodet werden
    IDs von Karten, Türmen, Gegnern und Biomen nie umbenennen oder löschen.
    ═══════════════════════════════════════════════════════ */
 const TILE = 16;
@@ -503,6 +523,7 @@ async function ladeDaten() {
     biome: Object.assign({}, EINGEBAUT.biome, j.biome),
     karten: [],
     kampagne: j.kampagne && typeof j.kampagne === 'object' ? j.kampagne : null,
+    tag: j.tag && Array.isArray(j.tag.regeln) && j.tag.regeln.length ? j.tag : null,
   };
   (Array.isArray(j.karten) ? j.karten : []).forEach(k => {
     if (k && k.id && D.biome[k.biom] && Array.isArray(k.wege) && k.wege.length && Array.isArray(k.plaetze) && Array.isArray(k.burg)
@@ -521,7 +542,8 @@ function bereiteKarte(k) {
     plaetze: k.plaetze.map(p => Array.isArray(p) ? { x: p[0], y: p[1], ab: 0 } : { x: p.x, y: p.y, ab: p.abWelle || 0 }),
     tuerme: Array.isArray(k.tuerme) ? k.tuerme : null,
     rahmen: k.rahmen || [-.9, -.2, k.spalten || 14, (k.zeilen || 9) + .1],
-    staerke: k.staerke || 1, wellen: k.wellen || 'standard',
+    staerke: k.staerke || 1, wellen: k.wellen || 'standard', biomId: k.biom,
+    weiche: Array.isArray(k.weiche) && k.wege.length > 1 ? k.weiche : null,
   };
 }
 /** Türme, die es auf dieser Karte gibt (Werte in den Daten UND Eintrag im Register) – ohne Rücksicht aufs Freischalten */
@@ -584,18 +606,54 @@ function kampWerten(st, kronen) {
 function karteFrei(id) {
   const l = stationen();
   if (!l.length || id === DATEN.karten[0].id || id === LINK_KARTE) return true;
+  const ab = (DATEN.kampagne.karten || {})[id];
+  if (ab !== undefined && kampKronen() >= ab) return true;
   if (l.some((st, i) => st.karte === id && stationFrei(i))) return true;
+  if (ab === undefined && !l.some(st => st.karte === id)) return true;   // Karte ohne Station und ohne Schwelle: frei
   if (besteKronen(id) > 0) return true;
   return Object.keys(rekorde()).some(k => k.startsWith(id + '|'));
 }
-/** Welche Karte gerade gebaut sein soll */
-function aktKarteId() { return W.modus === 'kampagne' && stationen().length ? station().karte : W.karte; }
-function weltPruefen() { if (gl && (!KARTE || KARTE.id !== karteDaten(aktKarteId()).id)) baueWelt(); }
+/* ── Karte des Tages: aus dem Datum gewählt, für alle Kinder gleich ── */
+function tagSchluessel(d = new Date()) { const z = n => String(n).padStart(2, '0'); return `${d.getFullYear()}-${z(d.getMonth() + 1)}-${z(d.getDate())}`; }
+/** Wiederholbarer Zufall aus einem Text (wie LernSpiel.zufall in spiel-hilfen.js) */
+function zufall(seed) {
+  let h = 2166136261 >>> 0; const str = String(seed);
+  for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); }
+  let a = h >>> 0;
+  return () => { a |= 0; a = (a + 0x6D2B79F5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+}
+let TAG = null;
+function tagesKarte() {
+  const tag = tagSchluessel();
+  if (TAG && TAG.tag === tag) return TAG;
+  if (!DATEN.tag) return null;
+  const r = zufall('lernwelt-td|' + tag), aus = l => l[Math.floor(r() * l.length)];
+  // Wellen: die eigenen der Karte oder die Standard-Wellen – so passen die Monster zu den Türmen der Karte
+  const k = aus(DATEN.karten), wl = [...new Set([k.wellen || 'standard', 'standard'])];
+  TAG = { tag, karte: k.id, biom: aus(Object.keys(DATEN.biome)), wellen: aus(wl), regel: aus(DATEN.tag.regeln) };
+  return TAG;
+}
+function tagesBest() { const t = rekorde()['#tag']; return t && t.tag === tagSchluessel() ? t.kronen || 0 : -1; }
+
+/** Welche Karte (und Landschaft) gerade gebaut sein soll */
+function aktKarteId() {
+  if (W.modus === 'kampagne' && stationen().length) return station().karte;
+  if (W.modus === 'tag' && tagesKarte()) return tagesKarte().karte;
+  return W.karte;
+}
+function aktBiomId() { const k = karteDaten(aktKarteId()); return W.modus === 'tag' && tagesKarte() && DATEN.biome[tagesKarte().biom] ? tagesKarte().biom : k.biom; }
+function weltPruefen() { if (gl && (!KARTE || KARTE.id !== karteDaten(aktKarteId()).id || KARTE.biomId !== aktBiomId())) baueWelt(); }
 /** Vor jedem Start: Werte der Karte zurücksetzen, in der Kampagne die Sonderregel anwenden */
 function regelnSetzen() {
   const basis = bereiteKarte(karteDaten(KARTE.id));
   Object.assign(KARTE, { wellen: basis.wellen, tuerme: basis.tuerme, staerke: basis.staerke });
   G.regel = null; G.station = null;
+  if (W.modus === 'tag' && tagesKarte()) {
+    const T0 = tagesKarte(); G.regel = T0.regel;
+    if (DATEN.wellen[T0.wellen]) KARTE.wellen = T0.wellen;
+    KARTE.staerke *= (DATEN.tag.staerke || 1) * (G.regel.staerke || 1);
+    return;
+  }
   if (W.modus !== 'kampagne' || !stationen().length) return;
   const st = station(), R = st.regel || {};
   G.station = st; G.regel = R;
@@ -667,12 +725,14 @@ function buildMenu() {
   updateVok();
   baueKartenWahl();
   baueKampagne();
+  baueTag();
   const rk = rekorde()[rekordKey()];
   $('rekord-note').hidden = W.modus !== 'endlos' || !bereit;
   const wo = DATEN.karten.length > 1 ? 'auf dieser Karte' : 'bei diesem Thema';
   $('rekord-note').innerHTML = rk ? `Dein Rekord ${wo}: <b>Welle ${rk}</b>` : `Noch kein Rekord ${wo} – leg los!`;
   $('go').disabled = !bereit || !gl;
   $('go').textContent = W.modus === 'kampagne' && stationen().length ? `Los geht's! (Station ${stationen().indexOf(station()) + 1})`
+    : W.modus === 'tag' && tagesKarte() ? "Los geht's! (Karte des Tages)"
     : q === 'frei' && W.pools.length > 1 ? `Los geht's! (Mix aus ${W.pools.length})` : "Los geht's!";
   CAM.dirty = true;
 }
@@ -690,7 +750,7 @@ function kartenVorschau(k) {
 }
 function baueKartenWahl() {
   const liste = DATEN.karten;
-  $('karten-box').hidden = liste.length < 2 || W.modus === 'kampagne';
+  $('karten-box').hidden = liste.length < 2 || W.modus === 'kampagne' || W.modus === 'tag';
   if (liste.length < 2) return;
   if (!karteFrei(W.karte)) W.karte = liste[0].id;
   const aktiv = karteDaten(W.karte).id, runde = W.modus === 'runde', rk = rekorde(), basis = rekordKey().replace(/^[^|]*\|/, '');
@@ -711,6 +771,22 @@ function waehleKarte(id) {
   if (!karteFrei(id)) return;
   W.karte = karteDaten(id).id;
   weltPruefen();
+}
+
+/* ── Karte des Tages im Menü ── */
+function baueTag() {
+  const T0 = tagesKarte();
+  document.querySelector('#mode-seg [data-mode="tag"]').hidden = !T0;
+  if (!T0 && W.modus === 'tag' && DATEN_FERTIG) W.modus = 'runde';
+  $('tag-box').hidden = !(T0 && W.modus === 'tag');
+  if (!T0 || W.modus !== 'tag') return;
+  const k = karteDaten(T0.karte), b = DATEN.biome[T0.biom] || {}, best = tagesBest();
+  const datum = new Date().toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' });
+  $('tag-titel').textContent = `Karte des Tages · ${datum}`;
+  $('tag-bild').innerHTML = kartenVorschau(Object.assign({}, k, { biom: T0.biom }));
+  $('tag-info').innerHTML = `<b>${esc(k.name || k.id)}</b> · ${esc(b.name || T0.biom)}<br>
+    <span class="regel">⚑ ${esc(T0.regel.text || 'Ohne Sonderregel')}</span><br>
+    ${best >= 0 ? `Dein Bestes heute: ${[0, 1, 2].map(i => i < best ? '👑' : '').join('') || '–'}` : 'Heute noch nicht gespielt'}`;
 }
 
 /* ── Kampagnenkarte: 10 Stationen als Weg, Kronen je Station ── */
@@ -915,9 +991,11 @@ function baueWelt() {
     if (WELT.boden) { scene.remove(WELT.boden); WELT.boden.geometry.dispose(); }
     WELT.frei.forEach(x => x.dispose());
     if (burg) { scene.remove(burg); wegwerfen(burg.userData.gebacken); }
-    plaetze.forEach(p => scene.remove(p.m)); plaetze.length = 0;
+    plaetze.forEach(p => { scene.remove(p.m); if (p.busch) scene.remove(p.busch); }); plaetze.length = 0;
+    (WELT.leuchten || []).forEach(l => scene.remove(l));
   }
   KARTE = bereiteKarte(karteDaten(aktKarteId()));
+  if (DATEN.biome[aktBiomId()]) { KARTE.biom = DATEN.biome[aktBiomId()]; KARTE.biomId = aktBiomId(); }
   WELT = { frei: [] };
   const B = KARTE.biom;
   if (scene.background) scene.background.dispose();
@@ -1003,12 +1081,29 @@ function baueWelt() {
   burg = baueBurg();
   scene.add(burg);
 
-  // Bauplätze
+  // Bauplätze (zugewachsene bekommen ein Gebüsch obendrauf)
   KARTE.plaetze.forEach(({ x: gx, y: gy, ab }, i) => {
     const [x, z] = gw(gx, gy);
     const m = mesh(box(12.5, 1.6, 12.5), matPlatz, x, .8, z, scene);
-    plaetze.push({ i, x, z, m, turm: null, ab });
+    let busch = null;
+    if (ab > 0) {
+      busch = new T.Group(); busch.position.set(x, 1.6, z); scene.add(busch);
+      [[0, 0, 9, 5], [-2.5, 2, 5, 4], [3, -2, 5, 6]].forEach(([a, b, w, h]) => mesh(box(w, h, w), lam('#5aa04f'), a, h / 2, b, busch));
+      mesh(box(4, 7, 4), lam('#3f7a3a'), -1, 3.5, -2, busch);
+    }
+    plaetze.push({ i, x, z, m, turm: null, ab, zu: ab > 0, busch });
   });
+  // Weiche: leuchtender Streifen je Weg (zeigt in der Bauphase, welchen Weg die nächste Welle nimmt)
+  WELT.leuchten = KARTE.weiche ? WEGE.map(w => {
+    const g = new T.Group(), mat = new T.MeshBasicMaterial({ color: 0xfde68a, transparent: true, opacity: .4, depthWrite: false });
+    WELT.frei.push(mat);
+    for (let i = 1; i < w.punkte.length; i++) {
+      const a = w.punkte[i - 1], b = w.punkte[i], quer = Math.abs(b.x - a.x) > Math.abs(b.z - a.z), len = a.distanceTo(b) + 6;
+      mesh(box(quer ? len : 6, .3, quer ? 6 : len), mat, (a.x + b.x) / 2, 1.1, (a.z + b.z) / 2, g);
+    }
+    g.visible = false; g.userData.mat = mat; scene.add(g);
+    return g;
+  }) : [];
   CAM.drehFuer = null; CAM.dirty = true;
 }
 /** Brücke, wo ein Wegabschnitt (waagrecht/senkrecht) über Wasser führt */
@@ -1336,7 +1431,7 @@ function turmWert(t, feld) { const v = DATEN.tuerme[t.typ][feld]; return Array.i
 function bauen(platz, typ) {
   if (!turmIds().includes(typ)) return;
   const preis = DATEN.tuerme[typ].preis[0];
-  if (platz.turm || G.muenzen < preis) return;
+  if (platz.turm || platz.zu || G.muenzen < preis) return;
   G.muenzen -= preis;
   platz.turm = { typ, stufe: 1, cd: .3, investiert: preis, platz };
   stellTurm(platz);
@@ -1354,9 +1449,22 @@ function aufwerten(platz) {
   ton(660, .08); ton(990, .12);
   schliesseMenu(); updateHud();
 }
+/** Zugewachsenen Platz roden (ab seiner Welle, kostet Münzen) */
+function roden(platz) {
+  if (!platz.zu || !rodbar(platz) || G.muenzen < CFG.rodenPreis) return;
+  G.muenzen -= CFG.rodenPreis; platz.zu = false;
+  if (platz.busch) platz.busch.visible = false;
+  funken(platz.x, 6, platz.z, '#86efac', 14); ton(440, .08); ton(660, .1);
+  updateHud(); oeffneMenu(platz);
+}
+/** Roden geht ab der Bauphase vor der Welle abWelle */
+function rodbar(p) { return G.welle + (G.phase === 'bau' ? 1 : 0) >= p.ab; }
+/** Plätze für eine neue Runde zurücksetzen (zugewachsene wachsen wieder zu) */
+function plaetzeZuruecksetzen() { plaetze.forEach(p => { p.zu = p.ab > 0; if (p.busch) p.busch.visible = p.zu; }); }
+const abrissAnteil = () => G.weicheBau ? 1 : CFG.abrissAnteil;   // vor einem Weichenwechsel: Abriss gibt alles zurück
 function abreissen(platz) {
   const t = platz.turm; if (!t) return;
-  G.muenzen += Math.round(t.investiert * CFG.abrissAnteil);
+  G.muenzen += Math.round(t.investiert * abrissAnteil());
   scene.remove(t.g); platz.turm = null;
   funken(platz.x, 6, platz.z, '#a4a9b8', 12);
   schliesseMenu(); updateHud();
@@ -1383,7 +1491,7 @@ function tuermeUpdate(dt) {
     if (TURM_TYPEN[t.typ].passiv) return;
     t.cd -= dt;
     if (t.cd > 0) return;
-    const r = turmWert(t, 'reichweite') * TILE, boden = DATEN.tuerme[t.typ].nurBoden;
+    const r = turmWert(t, 'reichweite') * TILE * reichweiteFaktor(), boden = DATEN.tuerme[t.typ].nurBoden;
     let ziel = null, zielRest = 0;
     for (const e of gegner) {
       if (!e.alive || (boden && fliegt(e))) continue;
@@ -1807,7 +1915,9 @@ async function startGame() {
   } catch (e) { $('menu-err').textContent = e.message; return; }
   weltPruefen();
   aufraeumen();
+  plaetzeZuruecksetzen();
   regelnSetzen();
+  G.weg = 0; G.weicheBau = false; G.ereignis = null; G.ereignisNaechste = null;
   Object.assign(G, { t: 0, start: performance.now(), countT: 3.2, endeT: 0, phase: 'bau', bauT: CFG.pauseErste, welle: 0, queue: [], welleT: 0,
     herzen: CFG.burgHerzen, muenzen: (G.regel && G.regel.startMuenzen) || CFG.startMuenzen, reparaturen: 0, verdient: 0, treffer: 0, wankt: false, shake: 0, jubelT: -1, jubelLang: 0, schreckT: -1, menu: null, spielStart: 0 });
   Object.assign(Q, { a: null, sperreBis: 0, naechsteBei: 0, falsch: false, beantwortet: 0, richtig: 0, serie: 0, besteSerie: 0, fehler: [] });
@@ -1823,6 +1933,7 @@ function aufraeumen() {
   gegner.slice().forEach(entferneGegner);
   geschosse.forEach(g => { scene.remove(g.m); pool.geschoss[g.typ].push(g); }); geschosse.length = 0;
   strahlen.forEach(s => { s.m.visible = false; });
+  if (scene && scene.fog) scene.fog = null;
   plaetze.forEach(p => { if (p.turm) { scene.remove(p.turm.g); p.turm = null; } });
   schliesseMenu();
 }
@@ -1921,11 +2032,14 @@ function starteWelle() {
     vMul = G.tempoLesen * Math.min(E.tempoMax, 1 + E.tempoProWelle * (G.welle - 1));
   }
   zeigeNeueGegner(def.map(d => d[0]));
+  if (G.weicheBau) { G.weg = naechsterWeg(); G.weicheBau = false; }
+  if (G.ereignisNaechste) ereignisStart(def);
   G.queue = []; let t = 0;
-  // Mehrere Wege: die Gruppen einer Welle kommen abwechselnd aus den Höhlen
-  def.forEach(([typ, n, iv], gi) => { const wi = (gi + G.welle - 1) % WEGE.length; for (let i = 0; i < n; i++) { G.queue.push({ typ, t, wi }); t += iv / vMul; } t += CFG.gruppenAbstand; });
+  // Mehrere Wege: die Gruppen einer Welle kommen abwechselnd aus den Höhlen – mit Weiche alle auf dem gestellten Weg
+  def.forEach(([typ, n, iv], gi) => { const wi = KARTE.weiche ? G.weg : (gi + G.welle - 1) % WEGE.length; for (let i = 0; i < n; i++) { G.queue.push({ typ, t, wi }); t += iv / vMul; } t += CFG.gruppenAbstand; });
   G.welleHp = hpMul; G.welleV = vMul;
-  blitz(def.some(d => DATEN.gegner[d[0]].boss) ? `Welle ${G.welle} – ein Boss kommt! 👑` : `Welle ${G.welle}!`, 'info');
+  blitz(def.some(d => DATEN.gegner[d[0]].boss) ? `Welle ${G.welle} – ein Boss kommt! 👑`
+    : G.ereignis ? `Welle ${G.welle}: ${EREIGNISSE[G.ereignis].name}! ${EREIGNISSE[G.ereignis].icon}` : `Welle ${G.welle}!`, 'info');
   ton(392, .12); ton(523, .16);
   updateHud();
 }
@@ -1939,8 +2053,39 @@ function wellenUpdate(dt) {
   while (G.queue.length && G.queue[0].t <= G.welleT) { const q = G.queue.shift(); spawne(q.typ, G.welleHp, G.welleV, q.wi); }
   if (!G.queue.length && !gegner.length) welleGeschafft();
 }
+/* ── Ereignis-Wellen (nur Endlos, selten und eine Bauphase vorher angekündigt) ── */
+const EREIGNISSE = {
+  nebel:   { icon: '🌫️', name: 'Nebel', text: 'Nebel zieht auf – deine Türme sehen nicht so weit!' },
+  ansturm: { icon: '💨', name: 'Ansturm', text: 'Ein Ansturm kommt – viele Flitzer!' },
+  gold:    { icon: '✨', name: 'Goldene Welle', text: 'Goldene Welle: Lässt du keinen durch, bekommst du ein Herz zurück!' },
+};
+function ereignisFuer(n) {
+  const E = CFG.endlos, l = Object.keys(EREIGNISSE);
+  if (W.modus !== 'endlos' || n % E.ereignisAlle || n % E.bossAlle === 0) return null;
+  return l[(n / E.ereignisAlle - 1) % l.length];
+}
+function ereignisStart(def) {
+  G.ereignis = G.ereignisNaechste; G.ereignisNaechste = null;
+  if (G.ereignis === 'nebel') {
+    const d = CAM.cur ? CAM.cur.d : 400;
+    scene.fog = new T.Fog(0xd6dde6, d * .8, d * 1.35);
+  } else if (G.ereignis === 'ansturm') def.push(['flitzer', 6 + G.welle, .45]);
+  else if (G.ereignis === 'gold') G.goldTreffer = G.treffer;
+}
+function ereignisEnde() {
+  if (G.ereignis === 'gold' && G.treffer === G.goldTreffer && G.herzen < CFG.burgHerzen) {
+    G.herzen++; blitz('Goldene Welle geschafft: +1 ❤️', 'ok', 1600); funken(burg.position.x, 24, burg.position.z, '#fde68a', 16);
+  }
+  G.ereignis = null;
+  if (scene && scene.fog) scene.fog = null;
+}
+const reichweiteFaktor = () => G.ereignis === 'nebel' ? CFG.endlos.nebelReichweite : 1;
+
+/** Weg, den die nächste Welle nimmt (Weiche) */
+function naechsterWeg() { return G.weicheBau ? (G.weg + 1) % WEGE.length : G.weg; }
 function welleGeschafft() {
   const runde = W.modus !== 'endlos';
+  if (G.ereignis) ereignisEnde();
   if (!runde && G.welle % CFG.endlos.bossAlle === 0 && G.herzen < CFG.burgHerzen) {
     G.herzen = Math.min(CFG.burgHerzen, G.herzen + CFG.endlos.herzenNachBoss);
   }
@@ -1951,8 +2096,16 @@ function welleGeschafft() {
     G.zustand = 'ende'; G.endeT = 2; schliesseMenu();
     return;
   }
-  blitz('Welle geschafft! 🎉', 'ok');
   G.phase = 'bau'; G.bauT = CFG.pauseZwischen;
+  if (KARTE.weiche && KARTE.weiche.includes(G.welle + 1)) {
+    // Weichenwechsel eine Bauphase vorher ankündigen; jetzt umbauen kostet nichts
+    G.weicheBau = true; G.bauT += CFG.weicheExtra;
+    blitz('Die Weiche stellt um! Der leuchtende Weg ist gleich dran – Abreißen gibt jetzt alles zurück.', 'info', 4500);
+    ton(330, .15); ton(494, .2);
+  } else if ((G.ereignisNaechste = ereignisFuer(G.welle + 1))) {
+    const E = EREIGNISSE[G.ereignisNaechste];
+    blitz(`${E.icon} ${E.text}`, 'info', 4000);
+  } else blitz('Welle geschafft! 🎉', 'ok');
   updateHud();
 }
 $('naechste-btn').onclick = () => { if (G.zustand === 'play' && G.phase === 'bau') G.bauT = 0; };
@@ -1973,12 +2126,12 @@ $('neu-ok').onclick = () => weiter();
 
 /* ── HUD ─────────────────────────────────────────── */
 let blitzT = 0;
-function blitz(text, art) {
+function blitz(text, art, ms) {
   const f = $('flash');
   f.className = 'flash show ' + art;
   f.textContent = text;
   clearTimeout(blitzT);
-  blitzT = setTimeout(() => f.classList.remove('show'), art === 'bad' ? 1700 : art === 'info' ? 1600 : 900);
+  blitzT = setTimeout(() => f.classList.remove('show'), ms || (art === 'bad' ? 1700 : art === 'info' ? 1600 : 900));
 }
 let hudMerk = '';
 function updateHud() {
@@ -2009,7 +2162,8 @@ function bauHud() {
   const n = $('naechste');
   if (zeigen !== !n.hidden) { n.hidden = !zeigen; CAM.dirty = true; }
   if (zeigen) {
-    const txt = `⏳ Welle ${G.welle + 1} in ${Math.ceil(G.bauT)} s`;
+    const E = G.ereignisNaechste && EREIGNISSE[G.ereignisNaechste];
+    const txt = `⏳ Welle ${G.welle + 1} in ${Math.ceil(G.bauT)} s${E ? ' · ' + E.icon + ' ' + E.name : ''}${G.weicheBau ? ' · 🔀 Weiche' : ''}`;
     if (txt !== hudMerk) { $('naechste-text').textContent = txt; hudMerk = txt; }
   }
 }
@@ -2018,7 +2172,13 @@ function bauHud() {
 function oeffneMenu(platz) {
   G.menu = platz;
   const m = $('baumenu');
-  if (!platz.turm) {
+  if (platz.zu) {
+    const bereit = rodbar(platz);
+    m.innerHTML = `<div class="titel">🌿 Zugewachsen</div><div class="reihe">
+      <button type="button" data-roden="1" ${bereit ? '' : 'disabled'}><span class="i">🪓</span><b>Roden</b><small>${bereit ? '🪙 ' + CFG.rodenPreis : 'ab Welle ' + platz.ab}</small></button>
+      <button type="button" class="zu" data-zu="1" aria-label="Schließen">✕</button></div>`;
+    ring.visible = false;
+  } else if (!platz.turm) {
     m.innerHTML = `<div class="titel">Turm bauen</div><div class="reihe">${turmIdsKarte().map(k => [k, DATEN.tuerme[k]]).map(([k, d]) => turmFrei(k)
       ? `<button type="button" data-bau="${k}"><span class="i">${d.icon}</span><b>${esc(d.name)}</b><small>🪙 ${d.preis[0]}</small></button>`
       : `<button type="button" class="gesperrt" disabled><span class="i">🔒</span><b>${esc(d.name)}</b><small>ab ${turmSchwellen()[k]} 👑</small></button>`).join('')}</div>`;
@@ -2031,9 +2191,9 @@ function oeffneMenu(platz) {
     m.innerHTML = `<div class="titel">${d.icon} ${esc(d.name)} · Stufe ${t.stufe}${info}</div><div class="reihe">
       ${t.stufe < 3 ? `<button type="button" data-auf="1"><span class="i">⬆️</span><b>Stufe ${t.stufe + 1}</b><small>🪙 ${preis}</small></button>`
                     : `<button type="button" disabled><span class="i">⭐</span><b>Maximum</b></button>`}
-      <button type="button" data-weg="1"><span class="i">🗑️</span><b>Abreißen</b><small>+${Math.round(t.investiert * CFG.abrissAnteil)}</small></button>
+      <button type="button" data-weg="1"><span class="i">🗑️</span><b>Abreißen</b><small>+${Math.round(t.investiert * abrissAnteil())}</small></button>
       <button type="button" class="zu" data-zu="1" aria-label="Schließen">✕</button></div>`;
-    const r = turmWert(t, 'reichweite') * TILE;
+    const r = turmWert(t, 'reichweite') * TILE * (TURM_TYPEN[t.typ].passiv ? 1 : reichweiteFaktor());
     ring.scale.set(r, r, 1); ring.position.x = platz.x; ring.position.z = platz.z; ring.visible = true;
   }
   m.hidden = false;
@@ -2048,6 +2208,8 @@ function menuKnoepfe() {
     const ok = G.muenzen >= DATEN.tuerme[b.dataset.bau].preis[0];
     b.disabled = !ok; b.classList.toggle('kaufbar', ok);
   });
+  const rod = $('baumenu').querySelector('button[data-roden]');
+  if (rod && G.menu.zu) { const ok = rodbar(G.menu) && G.muenzen >= CFG.rodenPreis; rod.disabled = !ok; rod.classList.toggle('kaufbar', ok); }
   const auf = $('baumenu').querySelector('button[data-auf]');
   if (auf && t) { const ok = G.muenzen >= DATEN.tuerme[t.typ].preis[t.stufe]; auf.disabled = !ok; auf.classList.toggle('kaufbar', ok); }
 }
@@ -2073,6 +2235,7 @@ $('baumenu').addEventListener('click', e => {
   if (b.dataset.bau) bauen(G.menu, b.dataset.bau);
   else if (b.dataset.auf) aufwerten(G.menu);
   else if (b.dataset.weg) abreissen(G.menu);
+  else if (b.dataset.roden) roden(G.menu);
   else if (b.dataset.zu) schliesseMenu();
 });
 
@@ -2159,13 +2322,21 @@ function ende() {
     const kronen = G.herzen >= CFG.burgHerzen * .8 ? 3 : G.herzen >= CFG.burgHerzen * .4 ? 2 : G.herzen > 0 ? 1 : 0;
     G.ergebnisGut = kronen >= 1;
     if (kampagne && n > 0) kw = kampWerten(G.station, kronen);
-    G.neueKronen = !kampagne && n > 0 && kronen > besteKronen(KARTE.id);
+    const heute = W.modus === 'tag' && n > 0;
+    let tagNeu = false;
+    if (heute && kronen > tagesBest()) {
+      tagNeu = true;
+      const rk = rekorde(); rk['#tag'] = { tag: tagSchluessel(), kronen };   // nur der heutige Tag wird gespeichert
+      try { localStorage.setItem(REKORD_KEY, JSON.stringify(rk)); } catch (e) {}
+    }
+    G.neueKronen = !kampagne && !heute && n > 0 && kronen > besteKronen(KARTE.id);
     if (G.neueKronen) { const rk = rekorde(); rk[KRONEN_FELD] = Object.assign({}, rk[KRONEN_FELD], { [KARTE.id]: kronen }); try { localStorage.setItem(REKORD_KEY, JSON.stringify(rk)); } catch (e) {} }
     html = `<div class="big">${s}<small> / ${n} richtig</small></div>
       <div class="kronen" aria-label="${kronen} von 3 Kronen">${[0, 1, 2].map(i => `<span class="${i < kronen ? '' : 'off'}">👑</span>`).join('')}</div>
       <div class="rmsg">${G.herzen >= CFG.burgHerzen ? 'Die Burg ist unversehrt!' : G.herzen > 0 ? `Burg verteidigt – noch ${G.herzen} ❤️` : 'Die Burg hat gewankt – beim nächsten Mal früher Türme bauen!'}</div>
       <div class="rsub">${kampagne ? `Station ${stationen().indexOf(G.station) + 1}: ${esc(G.station.name)}` : esc(KARTE.name)} · ${esc(titel)} · beste Serie 🔥${Q.besteSerie}</div>
       ${G.neueKronen && DATEN.karten.length > 1 ? `<span class="record">Neue Bestleistung auf dieser Karte!</span>` : ''}
+      ${tagNeu ? `<span class="record">Neuer Tagesrekord! 📅</span>` : ''}
       ${kw && kw.besser && kw.neueStation < 0 ?`<span class="record">Neue Bestleistung bei dieser Station!</span>` : ''}
       ${kw && kw.neueStation >= 0 ? `<span class="record">Station ${kw.neueStation + 1} ist jetzt frei! 🗺️</span>` : ''}
       ${kw ? kw.neueTuerme.map(id => `<span class="record">Neuer Turm frei: ${esc(DATEN.tuerme[id].icon)} ${esc(DATEN.tuerme[id].name)}!</span>`).join(' ') : ''}`;
@@ -2357,7 +2528,12 @@ function loop(now) {
   const glow = (Z === 'play' || Z === 'countdown') && G.muenzen >= billig;
   const k = REDUCED ? .7 : .45 + .35 * Math.sin(G.t * 4);
   matPlatzGlow.emissive.setRGB(.42 * k, .3 * k, 0);
-  plaetze.forEach(p => { p.m.material = glow && !p.turm ? matPlatzGlow : matPlatz; p.m.visible = !p.turm; });
+  plaetze.forEach(p => { p.m.material = glow && !p.turm && !p.zu ? matPlatzGlow : matPlatz; p.m.visible = !p.turm; });
+  // Weiche: der Weg der nächsten Welle leuchtet in der Bauphase
+  if (WELT && WELT.leuchten.length) {
+    const zeig = (Z === 'play' || Z === 'countdown') && G.phase === 'bau' ? naechsterWeg() : -1;
+    WELT.leuchten.forEach((l, i) => { l.visible = i === zeig; if (l.visible) l.userData.mat.opacity = REDUCED ? .45 : .3 + .2 * Math.sin(G.t * 5); });
+  }
 
   figurUpdate(dt || rdt * .0001);
   kamera(rdt);
@@ -2382,8 +2558,8 @@ loadWahl();
   const L = LernAufgaben.ausLink(location.search);
   if (L.ids.length) { W.pools = L.ids; W.bis = L.opts.bis || ''; W.richtung = L.opts.richtung || 'de-en'; W.lehrer = true; W.fach = null; }
   const P = new URLSearchParams(location.search), m = P.get('modus');
-  if (m === 'endlos' || m === 'runde' || m === 'kampagne') W.modus = m;
-  if (P.get('karte')) { W.karte = LINK_KARTE = P.get('karte'); if (W.modus === 'kampagne') W.modus = 'runde'; }   // z. B. ?karte=engpass (unbekannt → Burgwiese; auch wenn noch gesperrt)
+  if (['endlos', 'runde', 'kampagne', 'tag'].includes(m)) W.modus = m;
+  if (P.get('karte')) { W.karte = LINK_KARTE = P.get('karte'); if (W.modus === 'kampagne' || W.modus === 'tag') W.modus = 'runde'; }   // z. B. ?karte=engpass (unbekannt → Burgwiese; auch wenn noch gesperrt)
 })();
 
 whenPass(() => {

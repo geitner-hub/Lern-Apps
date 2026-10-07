@@ -1519,6 +1519,248 @@
     "gift"
    ],
    "wellen": "sumpf"
+  },
+  {
+   "id": "kreuzung",
+   "name": "Kreuzung",
+   "biom": "wueste",
+   "spalten": 14,
+   "zeilen": 9,
+   "wege": [
+    [
+     [
+      -2,
+      1.2
+     ],
+     [
+      3,
+      1.2
+     ],
+     [
+      12.5,
+      1.2
+     ],
+     [
+      12.5,
+      4.2
+     ],
+     [
+      8,
+      4.2
+     ],
+     [
+      8,
+      6.95
+     ]
+    ],
+    [
+     [
+      -2,
+      1.2
+     ],
+     [
+      3,
+      1.2
+     ],
+     [
+      3,
+      6.6
+     ],
+     [
+      5.6,
+      6.6
+     ],
+     [
+      5.6,
+      4.2
+     ],
+     [
+      8,
+      4.2
+     ],
+     [
+      8,
+      6.95
+     ]
+    ]
+   ],
+   "weiche": [
+    4,
+    5
+   ],
+   "plaetze": [
+    [
+     8,
+     2.7
+    ],
+    [
+     10.5,
+     2.7
+    ],
+    [
+     5.6,
+     2.7
+    ],
+    [
+     1.3,
+     3.6
+    ],
+    [
+     4.3,
+     5.4
+    ],
+    [
+     10,
+     5.9
+    ],
+    [
+     5.6,
+     8.0
+    ],
+    [
+     13.4,
+     2.7
+    ]
+   ],
+   "burg": [
+    8,
+    8.2
+   ],
+   "rahmen": [
+    -0.9,
+    -0.2,
+    14.2,
+    9.6
+   ],
+   "sperren": [
+    [
+     -99,
+     -99,
+     1,
+     3
+    ],
+    [
+     5,
+     8.6,
+     11,
+     99
+    ]
+   ],
+   "staerke": 0.55,
+   "tuerme": [
+    "bogen",
+    "kanone",
+    "frost",
+    "blitz",
+    "ballista"
+   ],
+   "wellen": "wueste"
+  },
+  {
+   "id": "lichtung",
+   "name": "Lichtung",
+   "biom": "herbst",
+   "spalten": 14,
+   "zeilen": 9,
+   "wege": [
+    [
+     [
+      -2,
+      1.8
+     ],
+     [
+      5,
+      1.8
+     ],
+     [
+      5,
+      6.6
+     ],
+     [
+      10,
+      6.6
+     ],
+     [
+      10,
+      3.2
+     ],
+     [
+      11.6,
+      3.2
+     ]
+    ]
+   ],
+   "plaetze": [
+    [
+     3,
+     3.7
+    ],
+    [
+     7.5,
+     4.3
+    ],
+    [
+     12,
+     5.4
+    ],
+    {
+     "x": 7.5,
+     "y": 0.2,
+     "abWelle": 2
+    },
+    [
+     3,
+     6.6
+    ],
+    {
+     "x": 7.5,
+     "y": 8.4,
+     "abWelle": 3
+    },
+    {
+     "x": 12,
+     "y": 7.4,
+     "abWelle": 3
+    },
+    {
+     "x": 12.3,
+     "y": 0.9,
+     "abWelle": 4
+    }
+   ],
+   "burg": [
+    12.85,
+    3.2
+   ],
+   "rahmen": [
+    -0.9,
+    -0.4,
+    14.2,
+    9.2
+   ],
+   "sperren": [
+    [
+     -99,
+     -99,
+     1,
+     3
+    ],
+    [
+     11.3,
+     4.3,
+     99,
+     99
+    ]
+   ],
+   "staerke": 0.75,
+   "tuerme": [
+    "bogen",
+    "kanone",
+    "frost",
+    "gift",
+    "banner"
+   ],
+   "wellen": "herbst"
   }
  ],
  "kampagne": {
@@ -1615,6 +1857,35 @@
      "text": "Monster sind 10 % stärker",
      "staerke": 1.1
     }
+   }
+  ],
+  "karten": {
+   "kreuzung": 12,
+   "lichtung": 15
+  }
+ },
+ "tag": {
+  "staerke": 0.85,
+  "regeln": [
+   {
+    "text": "Ohne Sonderregel"
+   },
+   {
+    "text": "Start mit 100 Münzen",
+    "startMuenzen": 100
+   },
+   {
+    "text": "Monster sind etwas schneller",
+    "tempo": 1.05
+   },
+   {
+    "text": "Ein Boss schon in Welle 4",
+    "bossWelle": 4
+   },
+   {
+    "text": "Monster sind schwächer, aber schneller",
+    "staerke": 0.9,
+    "tempo": 1.1
    }
   ]
  }
