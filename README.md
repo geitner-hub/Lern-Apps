@@ -29,6 +29,7 @@ daten/                katalog.json (Inhalts-Katalog mit Themen-IDs), vokabeln5.j
                       ozeane.json (die fünf Ozeane für den Globus, Natural Earth, gemeinfrei)
                       bayern.json (Bayernkarte: Bezirke © GeoBasis-DE / BKG, dl-de/by-2-0; Flüsse, Seen, Städte, Gebirge)
                       expedition.json (Hauptstädte, Nachbarn, Kartenmitten)
+                      tower-defense.json (Tower Defense: Karten, Landschaften, Wellen, Türme, Gegner)
 daten/inhalte/<fach>/ Inhaltsdateien des Baukastens (<Themen-ID>.json) und ihre Bilder (SVG)
 gemeinsam/            Code, den alle Seiten nutzen (siehe unten)
 gemeinsam/admin/      Module des Admins (admin.html lädt sie in fester Reihenfolge, Etappe 6)
@@ -491,6 +492,25 @@ Jedes Teil in `ITEMS` beschreibt seine Form als Liste von Blöcken in `modell`. 
 - **Hintergründe** haben `css` (Bühnenfarbe), `deko` (SVG) und `boden` (Farbe der Plattform).
 - **Figur-Optionen** (`AVATAR.FRISUREN`, `AUGEN`, `MUENDER`, `HAUT`, `HAARFARBEN`) funktionieren genauso.
 - Tipp: neues Teil zuerst im Admin unter 🧭 Pass → Avatar-Teile ansehen – dort erscheint die Vorschau.
+
+## Tower Defense (spiele/burg-verteidigung.html)
+
+Plan: Claude Doc „Aktionsplan: Tower Defense erweitern“. Seit Etappe 1–2 kommen Karten, Landschaften, Wellen,
+Türme und Gegner aus `daten/tower-defense.json`. Fehlt die Datei (offline, Fehler), läuft das Spiel mit der
+eingebauten Burgwiese (`EINGEBAUT` im Spiel).
+
+- **Karten** (`karten`): `wege` (eine Liste je Höhle, Punkte in Feldern, nur waagrecht/senkrecht; alle Wege enden
+  1,25 Felder vor der Burg), `plaetze`, `burg`, optional `wasser` (Fluss → Brücken entstehen automatisch),
+  `sperren` (keine Deko: Höhle, Sicht auf die Burg), `tuerme` (erlaubte Türme), `rahmen` (Kamera),
+  `staerke` (Lebenspunkte ×), `wellen` (Name eines Wellensatzes). Mehrere Wege: Gegnergruppen kommen abwechselnd.
+- **Landschaften** (`biome`): Farben für Boden, Weg, Himmel, Licht und eine Deko-Liste. Die Deko-Namen
+  (`tanne`, `kaktus`, `schilf` …) sind Funktionen in `DEKO` im Spiel.
+- **Neuer Turm / Gegner:** Werte in die JSON, Aussehen und Verhalten als Eintrag in `TURM_TYPEN` bzw.
+  `GEGNER_TYPEN` im Spiel. Ohne Register-Eintrag wird ein Turm/Gegner aus der JSON ignoriert.
+- **IDs** von Karten, Türmen, Gegnern und Landschaften nie umbenennen oder löschen.
+- **Speicher:** `lern-burg-rekorde` – Burgwiese mit den alten Schlüsseln, andere Karten mit `<karten-id>|` davor,
+  beste Kronen je Karte im Feld `#kronen`. `lern-burg-wahl` merkt sich zusätzlich die Karte.
+- **Link:** `burg-verteidigung.html?karte=engpass` öffnet direkt diese Karte.
 
 ## Mein Dorf (im Aufbau)
 
