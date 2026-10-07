@@ -507,6 +507,15 @@ eingebauten Burgwiese (`EINGEBAUT` im Spiel).
   (`tanne`, `kaktus`, `schilf` …) sind Funktionen in `DEKO` im Spiel.
 - **Neuer Turm / Gegner:** Werte in die JSON, Aussehen und Verhalten als Eintrag in `TURM_TYPEN` bzw.
   `GEGNER_TYPEN` im Spiel. Ohne Register-Eintrag wird ein Turm/Gegner aus der JSON ignoriert.
+- **Türme (Etappe 3):** Bogen, Kanone, Frost, Blitz (springt auf 3–4 Gegner), Ballista (großer Einzelschaden,
+  bricht Schilde, weite Reichweite), Giftkessel (Schaden über 4 s, stapelt nicht), Banner (kein Schaden,
+  Nachbartürme +25–35 %, mehrere Banner stapeln nicht). Kanone und Frost haben `nurBoden` (treffen keine
+  Fledermäuse). Jede Karte erlaubt höchstens 5 Turmtypen (`tuerme`), damit das Baumenü auf dem iPad passt.
+- **Gegner (Etappe 3):** Schildträger (`schild`: so viele Treffer prallen ab), Heiler (`heilung`, heilt keine
+  vergifteten), Riesenschleim (`teilt`: zerfällt in 3 kleine Schleime), Fledermaus (`fliegt`). Gegner mit `info`
+  bekommen beim ersten Auftauchen eine Bildkarte (Name, Satz, Tipp); gemerkt in `lern-burg-wahl` → `gesehen`.
+  Runden-Wellen je Karte über `wellen` (Wellensätze `winter`, `wueste`, `herbst`, `sumpf`); die Burgwiese
+  behält `standard`. Endlos mischt die neuen Monster der Karte ab Welle 4 ein (Burgwiese: unverändert).
 - **IDs** von Karten, Türmen, Gegnern und Landschaften nie umbenennen oder löschen.
 - **Speicher:** `lern-burg-rekorde` – Burgwiese mit den alten Schlüsseln, andere Karten mit `<karten-id>|` davor,
   beste Kronen je Karte im Feld `#kronen`. `lern-burg-wahl` merkt sich zusätzlich die Karte.
