@@ -1,0 +1,951 @@
+{
+ "tuerme": {
+  "bogen": {
+   "name": "Bogen",
+   "icon": "🏹",
+   "art": "pfeil",
+   "preis": [
+    50,
+    40,
+    70
+   ],
+   "schaden": [
+    10,
+    15,
+    22
+   ],
+   "rate": [
+    1.2,
+    1.4,
+    1.6
+   ],
+   "reichweite": [
+    3.0,
+    3.3,
+    3.6
+   ]
+  },
+  "kanone": {
+   "name": "Kanone",
+   "icon": "💣",
+   "preis": [
+    80,
+    60,
+    100
+   ],
+   "schaden": [
+    22,
+    34,
+    50
+   ],
+   "rate": [
+    0.5,
+    0.55,
+    0.6
+   ],
+   "reichweite": [
+    2.6,
+    2.8,
+    3.0
+   ],
+   "flaeche": 1.1
+  },
+  "frost": {
+   "name": "Frost",
+   "icon": "❄️",
+   "preis": [
+    60,
+    50,
+    80
+   ],
+   "schaden": [
+    3,
+    5,
+    8
+   ],
+   "rate": [
+    1,
+    1.1,
+    1.2
+   ],
+   "reichweite": [
+    2.6,
+    2.9,
+    3.2
+   ],
+   "flaeche": 0.8,
+   "bremse": [
+    0.4,
+    0.5,
+    0.6
+   ],
+   "bremsDauer": 1.5
+  }
+ },
+ "gegner": {
+  "schleim": {
+   "name": "Schleim",
+   "hp": 40,
+   "tempo": 1.0,
+   "schaden": 1
+  },
+  "flitzer": {
+   "name": "Flitzer",
+   "hp": 24,
+   "tempo": 1.8,
+   "schaden": 1
+  },
+  "ritter": {
+   "name": "Ritter",
+   "hp": 115,
+   "tempo": 0.6,
+   "schaden": 2,
+   "ruestung": 0.5
+  },
+  "boss": {
+   "name": "Boss",
+   "hp": 520,
+   "tempo": 0.5,
+   "schaden": 3,
+   "frostHalb": true,
+   "boss": true
+  }
+ },
+ "wellen": {
+  "standard": [
+   [
+    [
+     "schleim",
+     8,
+     2.0
+    ]
+   ],
+   [
+    [
+     "schleim",
+     8,
+     1.6
+    ],
+    [
+     "flitzer",
+     5,
+     1.0
+    ]
+   ],
+   [
+    [
+     "schleim",
+     6,
+     1.5
+    ],
+    [
+     "ritter",
+     3,
+     2.6
+    ],
+    [
+     "flitzer",
+     5,
+     0.9
+    ]
+   ],
+   [
+    [
+     "flitzer",
+     7,
+     0.9
+    ],
+    [
+     "ritter",
+     4,
+     2.3
+    ],
+    [
+     "schleim",
+     8,
+     1.3
+    ]
+   ],
+   [
+    [
+     "ritter",
+     5,
+     2.1
+    ],
+    [
+     "schleim",
+     10,
+     1.1
+    ],
+    [
+     "flitzer",
+     8,
+     0.8
+    ]
+   ],
+   [
+    [
+     "schleim",
+     8,
+     1.2
+    ],
+    [
+     "ritter",
+     4,
+     2.0
+    ],
+    [
+     "boss",
+     1,
+     0
+    ]
+   ]
+  ]
+ },
+ "biome": {
+  "wiese": {
+   "name": "Wiese",
+   "hintergrund": "#7fc27f",
+   "himmel": [
+    "#6fb6ff",
+    "#a9d8ff",
+    "#e9f5ff"
+   ],
+   "licht": [
+    "#f2f6ff",
+    "#4d6b45"
+   ],
+   "boden": [
+    "#6cc56f",
+    "#5fb862",
+    "#79cf78",
+    "#64bd66"
+   ],
+   "weg": [
+    "#e8cf9f",
+    "#dcbf8b",
+    "#f1dcb2",
+    "#d5b682"
+   ],
+   "wegRand": "#c9ad7a",
+   "hoehle": "#7d8196",
+   "deko": {
+    "innen": [
+     "baum",
+     "baum",
+     "busch",
+     "stein"
+    ],
+    "aussen": [
+     "baum",
+     "baum"
+    ],
+    "dichte": [
+     0.22,
+     0.5
+    ]
+   }
+  },
+  "winter": {
+   "name": "Winterwald",
+   "hintergrund": "#dfe9f2",
+   "himmel": [
+    "#8fb2d8",
+    "#c4d8ec",
+    "#f0f5fa"
+   ],
+   "licht": [
+    "#f4f8ff",
+    "#8796a8"
+   ],
+   "boden": [
+    "#e9f0f6",
+    "#dbe5ee",
+    "#f6f9fc",
+    "#d3dfe9"
+   ],
+   "weg": [
+    "#b9a68a",
+    "#ab977b",
+    "#c7b59a",
+    "#a18e72"
+   ],
+   "wegRand": "#8f7d64",
+   "hoehle": "#8a94a8",
+   "deko": {
+    "innen": [
+     "tanne",
+     "tanne",
+     "schneehuegel",
+     "eisblock"
+    ],
+    "aussen": [
+     "tanne",
+     "tanne",
+     "tanne",
+     "schneehuegel"
+    ],
+    "dichte": [
+     0.22,
+     0.5
+    ]
+   }
+  },
+  "wueste": {
+   "name": "Wüste",
+   "hintergrund": "#e8cf94",
+   "himmel": [
+    "#4fa8ee",
+    "#99cff4",
+    "#fbe7c2"
+   ],
+   "licht": [
+    "#fff6e6",
+    "#8a6b3d"
+   ],
+   "boden": [
+    "#ecd49a",
+    "#e2c787",
+    "#f3dfae",
+    "#dcbf7c"
+   ],
+   "weg": [
+    "#bfb6a6",
+    "#aea493",
+    "#cfc7b8",
+    "#a69c8b"
+   ],
+   "wegRand": "#8f8676",
+   "hoehle": "#b58a5c",
+   "deko": {
+    "innen": [
+     "kaktus",
+     "fels",
+     "kaktus",
+     "fels",
+     "palme",
+     "kaktus",
+     "fels",
+     "oase"
+    ],
+    "aussen": [
+     "fels",
+     "palme",
+     "kaktus",
+     "fels"
+    ],
+    "dichte": [
+     0.17,
+     0.42
+    ]
+   }
+  },
+  "herbst": {
+   "name": "Herbstwald",
+   "hintergrund": "#a8b462",
+   "himmel": [
+    "#7aa6d8",
+    "#b8d0ea",
+    "#f6e3ca"
+   ],
+   "licht": [
+    "#fff3e2",
+    "#6b5a35"
+   ],
+   "boden": [
+    "#a3b45e",
+    "#94a752",
+    "#b2c06c",
+    "#b8a453"
+   ],
+   "weg": [
+    "#d9b98a",
+    "#cba977",
+    "#e4c89c",
+    "#c19f6d"
+   ],
+   "wegRand": "#a8875a",
+   "hoehle": "#857b72",
+   "ufer": "#8d7a4f",
+   "wasser": "#4f9fd8",
+   "deko": {
+    "innen": [
+     "herbstbaum",
+     "herbstbaum",
+     "pilz",
+     "laubhaufen"
+    ],
+    "aussen": [
+     "herbstbaum",
+     "herbstbaum"
+    ],
+    "dichte": [
+     0.22,
+     0.5
+    ]
+   }
+  },
+  "sumpf": {
+   "name": "Sumpf",
+   "hintergrund": "#5c7a48",
+   "himmel": [
+    "#7f9a8e",
+    "#a9bdb2",
+    "#d8e2d6"
+   ],
+   "licht": [
+    "#eef4ea",
+    "#3e4d33"
+   ],
+   "boden": [
+    "#62824b",
+    "#587842",
+    "#6d8d56",
+    "#516e3e"
+   ],
+   "weg": [
+    "#9a7a52",
+    "#8b6c46",
+    "#a8875d",
+    "#7f623f"
+   ],
+   "wegRand": "#5e4a33",
+   "hoehle": "#5f6458",
+   "deko": {
+    "innen": [
+     "krummbaum",
+     "schilf",
+     "schilf",
+     "tuempel"
+    ],
+    "aussen": [
+     "krummbaum",
+     "krummbaum",
+     "schilf"
+    ],
+    "dichte": [
+     0.22,
+     0.5
+    ]
+   }
+  }
+ },
+ "karten": [
+  {
+   "id": "burgwiese",
+   "name": "Burgwiese",
+   "biom": "wiese",
+   "spalten": 14,
+   "zeilen": 9,
+   "wege": [
+    [
+     [
+      -2,
+      1.5
+     ],
+     [
+      9.5,
+      1.5
+     ],
+     [
+      9.5,
+      4.5
+     ],
+     [
+      2.5,
+      4.5
+     ],
+     [
+      2.5,
+      7.5
+     ],
+     [
+      11.35,
+      7.5
+     ]
+    ]
+   ],
+   "plaetze": [
+    [
+     4,
+     3
+    ],
+    [
+     7,
+     3
+    ],
+    [
+     11.5,
+     3
+    ],
+    [
+     4.6,
+     6
+    ],
+    [
+     7.5,
+     6
+    ],
+    [
+     0.9,
+     6
+    ],
+    [
+     5.5,
+     8.5
+    ],
+    [
+     9,
+     8.5
+    ]
+   ],
+   "burg": [
+    12.6,
+    7.4
+   ],
+   "sperren": [
+    [
+     -99,
+     -99,
+     1,
+     3
+    ],
+    [
+     7.6,
+     8.2,
+     17.6,
+     99
+    ]
+   ]
+  },
+  {
+   "id": "schlangenpfad",
+   "name": "Schlangenpfad",
+   "biom": "winter",
+   "spalten": 14,
+   "zeilen": 9,
+   "wege": [
+    [
+     [
+      -2,
+      1.2
+     ],
+     [
+      11.6,
+      1.2
+     ],
+     [
+      11.6,
+      3.4
+     ],
+     [
+      2.2,
+      3.4
+     ],
+     [
+      2.2,
+      5.6
+     ],
+     [
+      11.6,
+      5.6
+     ],
+     [
+      11.6,
+      7.7
+     ],
+     [
+      3.35,
+      7.7
+     ]
+    ]
+   ],
+   "plaetze": [
+    [
+     4,
+     2.3
+    ],
+    [
+     7.5,
+     2.3
+    ],
+    [
+     10.3,
+     2.3
+    ],
+    [
+     12.9,
+     2.3
+    ],
+    [
+     0.8,
+     4.5
+    ],
+    [
+     4.6,
+     4.5
+    ],
+    [
+     8,
+     4.5
+    ],
+    [
+     5.6,
+     6.65
+    ],
+    [
+     9,
+     6.65
+    ],
+    [
+     12.9,
+     6.6
+    ]
+   ],
+   "burg": [
+    2.1,
+    7.7
+   ],
+   "sperren": [
+    [
+     -99,
+     -99,
+     1,
+     2.4
+    ],
+    [
+     -3,
+     8.3,
+     7,
+     99
+    ]
+   ]
+  },
+  {
+   "id": "engpass",
+   "name": "Engpass",
+   "biom": "wueste",
+   "spalten": 14,
+   "zeilen": 9,
+   "wege": [
+    [
+     [
+      -2,
+      1.8
+     ],
+     [
+      10,
+      1.8
+     ],
+     [
+      10,
+      5.4
+     ],
+     [
+      2,
+      5.4
+     ],
+     [
+      2,
+      6.95
+     ]
+    ]
+   ],
+   "plaetze": [
+    [
+     3.5,
+     3.6
+    ],
+    [
+     6.2,
+     3.6
+    ],
+    [
+     8.6,
+     3.6
+    ],
+    [
+     11.4,
+     3.6
+    ],
+    [
+     4.5,
+     7.2
+    ],
+    [
+     7.5,
+     7.2
+    ]
+   ],
+   "burg": [
+    2,
+    8.2
+   ],
+   "rahmen": [
+    -0.9,
+    -0.2,
+    14,
+    9.6
+   ],
+   "sperren": [
+    [
+     -99,
+     -99,
+     1,
+     3
+    ],
+    [
+     -3,
+     8.6,
+     7,
+     99
+    ]
+   ],
+   "staerke": 0.85
+  },
+  {
+   "id": "bruecke",
+   "name": "Brücke",
+   "biom": "herbst",
+   "spalten": 14,
+   "zeilen": 9,
+   "wege": [
+    [
+     [
+      -2,
+      1.8
+     ],
+     [
+      10.8,
+      1.8
+     ],
+     [
+      10.8,
+      5.6
+     ],
+     [
+      3,
+      5.6
+     ],
+     [
+      3,
+      6.85
+     ]
+    ]
+   ],
+   "wasser": [
+    [
+     6.2,
+     -8,
+     7.2,
+     18
+    ]
+   ],
+   "plaetze": [
+    [
+     2.8,
+     3.7
+    ],
+    [
+     4.9,
+     3.7
+    ],
+    [
+     8.4,
+     3.7
+    ],
+    [
+     12.3,
+     3.7
+    ],
+    [
+     5,
+     7.2
+    ],
+    [
+     8.6,
+     7.2
+    ],
+    [
+     4.4,
+     0.4
+    ],
+    [
+     9.2,
+     0.4
+    ],
+    [
+     1.2,
+     6.8
+    ]
+   ],
+   "burg": [
+    3,
+    8.1
+   ],
+   "rahmen": [
+    -0.9,
+    -0.6,
+    14,
+    9.5
+   ],
+   "sperren": [
+    [
+     -99,
+     -99,
+     1,
+     3.2
+    ],
+    [
+     -2,
+     8.7,
+     8,
+     99
+    ]
+   ],
+   "staerke": 0.9
+  },
+  {
+   "id": "zwei-tore",
+   "name": "Zwei Tore",
+   "biom": "sumpf",
+   "spalten": 14,
+   "zeilen": 9,
+   "wege": [
+    [
+     [
+      -2,
+      1.2
+     ],
+     [
+      4.5,
+      1.2
+     ],
+     [
+      4.5,
+      3.4
+     ],
+     [
+      1.2,
+      3.4
+     ],
+     [
+      1.2,
+      5.6
+     ],
+     [
+      7,
+      5.6
+     ],
+     [
+      7,
+      6.95
+     ]
+    ],
+    [
+     [
+      16,
+      1.2
+     ],
+     [
+      9.5,
+      1.2
+     ],
+     [
+      9.5,
+      3.4
+     ],
+     [
+      12.8,
+      3.4
+     ],
+     [
+      12.8,
+      5.6
+     ],
+     [
+      7,
+      5.6
+     ],
+     [
+      7,
+      6.95
+     ]
+    ]
+   ],
+   "plaetze": [
+    [
+     7,
+     3.2
+    ],
+    [
+     7,
+     1.2
+    ],
+    [
+     2.9,
+     2.3
+    ],
+    [
+     11.1,
+     2.3
+    ],
+    [
+     2.9,
+     4.5
+    ],
+    [
+     11.1,
+     4.5
+    ],
+    [
+     5.6,
+     4.4
+    ],
+    [
+     8.4,
+     4.4
+    ],
+    [
+     4.3,
+     7
+    ],
+    [
+     9.7,
+     7
+    ]
+   ],
+   "burg": [
+    7,
+    8.2
+   ],
+   "rahmen": [
+    -0.9,
+    -0.2,
+    14.9,
+    9.6
+   ],
+   "sperren": [
+    [
+     -99,
+     -99,
+     1,
+     2.5
+    ],
+    [
+     13,
+     -99,
+     99,
+     2.5
+    ],
+    [
+     2,
+     8.6,
+     12,
+     99
+    ]
+   ],
+   "staerke": 0.6
+  }
+ ]
+}
