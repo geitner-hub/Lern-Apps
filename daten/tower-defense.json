@@ -1570,7 +1570,11 @@
    {
     "id": "s6",
     "name": "Sumpfland",
-    "karte": "zwei-tore"
+    "karte": "zwei-tore",
+    "regel": {
+     "text": "Start mit 100 Münzen",
+     "startMuenzen": 100
+    }
    },
    {
     "id": "s7",
@@ -1608,8 +1612,8 @@
     "name": "Die letzte Schlacht",
     "karte": "zwei-tore",
     "regel": {
-     "text": "Monster sind 20 % stärker",
-     "staerke": 1.2
+     "text": "Monster sind 10 % stärker",
+     "staerke": 1.1
     }
    }
   ]
