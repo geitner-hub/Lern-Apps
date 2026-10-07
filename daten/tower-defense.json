@@ -1752,7 +1752,7 @@
      99
     ]
    ],
-   "staerke": 0.75,
+   "staerke": 0.7,
    "tuerme": [
     "bogen",
     "kanone",
@@ -1876,7 +1876,8 @@
    },
    {
     "text": "Monster sind etwas schneller",
-    "tempo": 1.05
+    "tempo": 1.05,
+    "staerke": 0.92
    },
    {
     "text": "Ein Boss schon in Welle 4",
@@ -1884,7 +1885,7 @@
    },
    {
     "text": "Monster sind schwächer, aber schneller",
-    "staerke": 0.9,
+    "staerke": 0.85,
     "tempo": 1.1
    }
   ]
