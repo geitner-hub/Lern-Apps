@@ -23,8 +23,11 @@
    Daten:  daten/tower-defense.json (Karten, Landschaften, Wellen, Türme, Gegner).
            Fehlt die Datei, läuft das Spiel mit der eingebauten Burgwiese (EINGEBAUT).
            Neuer Turm/Gegner = Werte in der JSON + Eintrag in TURM_TYPEN/GEGNER_TYPEN.
+           Türme: Bogen, Kanone, Frost, Blitz, Ballista, Giftkessel, Banner (je Karte höchstens 5)
+           Gegner: Schleim, Flitzer, Ritter, Boss, Schildträger, Heiler, Riesenschleim, Fledermaus
    Braucht: navbar.js, aufgaben.js, avatar3d.js, vendor/three.min.js
    Speicher: lern-burg-wahl, lern-burg-rekorde (localStorage)
+             lern-burg-wahl merkt sich auch, welche neuen Monster schon vorgestellt wurden (gesehen)
              Rekorde: Burgwiese wie bisher, andere Karten mit „<karten-id>|“ davor,
              beste Kronen je Karte unter „#kronen“
   ═══════════════════════════════════════════════
@@ -106,7 +109,7 @@
     #baumenu { position: absolute; left: 0; top: 0; pointer-events: auto; background: var(--panel); border-radius: 18px; padding: .45rem;
       box-shadow: 0 12px 34px rgba(0,0,0,.4); border: 2px solid rgba(230,168,23,.45); display: flex; flex-direction: column; gap: .35rem; }
     #baumenu .titel { font-weight: 900; font-size: .85rem; color: var(--text2); text-align: center; padding: 0 .3rem; }
-    #baumenu .reihe { display: flex; gap: .4rem; }
+    #baumenu .reihe { display: flex; gap: .4rem; flex-wrap: wrap; justify-content: center; max-width: calc(100vw - 16px); }
     #baumenu button { min-width: 72px; min-height: 72px; border-radius: 14px; background: rgba(255,255,255,.08); display: flex; flex-direction: column;
       align-items: center; justify-content: center; gap: .05rem; padding: .3rem .45rem; font-weight: 900; line-height: 1.1; border: 2px solid transparent; }
     #baumenu button .i { font-size: 1.6rem; }
@@ -116,6 +119,17 @@
     #baumenu button.kaufbar { border-color: var(--accent); background: rgba(230,168,23,.16); }
     #baumenu button:disabled { opacity: .42; cursor: default; }
     #baumenu button.zu { min-width: 44px; min-height: 44px; }
+    #baumenu .bonus { color: var(--accent2); }
+
+    /* ── Neues Monster (Bildkarte, einmalig) ── */
+    #neu { position: fixed; inset: 0; display: grid; place-items: center; background: rgba(15,14,26,.55); padding: 1rem; }
+    #neu .sheet { text-align: center; width: min(400px, 94vw); }
+    .neu-karte { display: flex; gap: .9rem; align-items: center; text-align: left; margin: .7rem 0; }
+    .neu-karte .bild { font-size: 3rem; line-height: 1; width: 4.4rem; height: 4.4rem; display: grid; place-items: center; flex: none;
+      border-radius: 18px; background: rgba(230,168,23,.14); border: 2px solid rgba(230,168,23,.45); }
+    .neu-karte b { display: block; font-family: 'Fredoka One', 'Nunito', sans-serif; font-weight: 400; font-size: 1.35rem; color: var(--accent2); }
+    .neu-karte p { font-weight: 800; font-size: .98rem; }
+    .neu-karte small { display: block; color: var(--text2); font-weight: 700; font-size: .86rem; margin-top: .2rem; }
 
     /* ── Menü & Ergebnis ─────────────────── */
     .overlay { position: fixed; inset: 0; display: flex; align-items: center; padding: 1rem 1rem calc(4.5rem + env(safe-area-inset-bottom)); overflow-y: auto; }
@@ -303,6 +317,15 @@
   <div class="sheet" id="result-body"></div>
 </div>
 
+<!-- ── Neues Monster ───────────────────────────── -->
+<div id="neu" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="neu-titel">
+    <h1 id="neu-titel" style="font-size:1.7rem">Neues Monster!</h1>
+    <div id="neu-liste"></div>
+    <div class="btns" style="grid-template-columns:1fr"><button class="btn primary" id="neu-ok" type="button">Verstanden – los!</button></div>
+  </div>
+</div>
+
 <!-- ── Pause ───────────────────────────────────── -->
 <div id="pause" hidden>
   <div class="sheet">
@@ -386,7 +409,7 @@ const pick = l => l[Math.random() * l.length | 0];
      plaetze: [[x, y] | { x, y, abWelle }]   abWelle: erst später nutzbar (Etappe 5)
      burg: [x, y]   sperren: [[x0, y0, x1, y1]] keine Deko darin (Höhle, Sicht auf die Burg)
      wasser: [[x0, y0, x1, y1]] Fluss/See, Wege darüber bekommen eine Brücke
-     tuerme: ['bogen', …] erlaubte Turmtypen (fehlt es: alle)
+     tuerme: ['bogen', …] erlaubte Turmtypen (fehlt es: alle; höchstens 5, sonst wird das Baumenü zu voll)
      rahmen: [x0, y0, x1, y1] Bereich für die Kamera   staerke: Lebenspunkte × (Standard 1)
      wellen: Name eines Wellensatzes (Standard 'standard')
    IDs von Karten, Türmen, Gegnern und Biomen nie umbenennen oder löschen.
@@ -395,9 +418,10 @@ const TILE = 16;
 const EINGEBAUT = {
   tuerme: {   // je Stufe 1 / 2 / 3; preis[0] = Bauen, preis[1..2] = Aufwerten
     bogen:  { name: 'Bogen',  icon: '🏹', art: 'pfeil', preis: [50, 40, 70],  schaden: [10, 15, 22], rate: [1.2, 1.4, 1.6], reichweite: [3.0, 3.3, 3.6] },
-    kanone: { name: 'Kanone', icon: '💣', preis: [80, 60, 100], schaden: [22, 34, 50], rate: [.5, .55, .6],  reichweite: [2.6, 2.8, 3.0], flaeche: 1.1 },
+    kanone: { name: 'Kanone', icon: '💣', preis: [80, 60, 100], schaden: [22, 34, 50], rate: [.5, .55, .6],  reichweite: [2.6, 2.8, 3.0], flaeche: 1.1, nurBoden: true },
     frost:  { name: 'Frost',  icon: '❄️', preis: [60, 50, 80],  schaden: [3, 5, 8],    rate: [1, 1.1, 1.2],  reichweite: [2.6, 2.9, 3.2], flaeche: .8,
-              bremse: [.4, .5, .6], bremsDauer: 1.5 },
+              bremse: [.4, .5, .6], bremsDauer: 1.5, nurBoden: true },
+    // weitere Türme (Blitz, Ballista, Giftkessel, Banner) nur in tower-defense.json
   },
   gegner: {
     schleim: { name: 'Schleim', hp: 40,  tempo: 1.0, schaden: 1 },
@@ -483,8 +507,8 @@ const gw = (gx, gy) => [(gx - KARTE.spalten / 2) * TILE, (gy - KARTE.zeilen / 2)
    AUSWAHL (Menü) – wie im Runner
    ═══════════════════════════════════════════════════════ */
 const WAHL_KEY = 'lern-burg-wahl', REKORD_KEY = 'lern-burg-rekorde';
-const W = { modus: 'runde', pools: [], bis: '', richtung: 'de-en', tempo: 'normal', fach: null, klasse: null, lehrer: false, mix: false, ton: false, karte: 'burgwiese' };
-function loadWahl() { try { Object.assign(W, JSON.parse(localStorage.getItem(WAHL_KEY) || '{}')); } catch (e) {} W.lehrer = false; W.quelle = 'meine'; }
+const W = { modus: 'runde', pools: [], bis: '', richtung: 'de-en', tempo: 'normal', fach: null, klasse: null, lehrer: false, mix: false, ton: false, karte: 'burgwiese', gesehen: [] };
+function loadWahl() { try { Object.assign(W, JSON.parse(localStorage.getItem(WAHL_KEY) || '{}')); } catch (e) {} W.lehrer = false; W.quelle = 'meine'; if (!Array.isArray(W.gesehen)) W.gesehen = []; }
 function saveWahl() { try { const { lehrer, quelle, ...w } = W; localStorage.setItem(WAHL_KEY, JSON.stringify(w)); } catch (e) {} }
 // „Meine Themen“ (Einstellung der Lehrkraft im Admin: config.json → spiele.auswahl)
 function spielAuswahl() { try { return LernPass.settings.spiele.auswahl || 'auto+frei'; } catch (e) { return 'auto+frei'; } }
@@ -1011,7 +1035,12 @@ function wegPos(s, out, w = WEGE[0]) {
      geschoss()             Mesh des Geschosses
      flug: 'folgen' (fliegt dem Ziel nach, tempo) | 'wurf' (Bogen, dauer, zielt vor)
      einschlag(g, x, z)     was beim Ankommen passiert
+     sofort(t, ziel, schaden)  statt Geschoss: wirkt sofort (Blitz)
+     passiv: true           schießt nicht (Banner)
      schussTon()            optional
+   Werte in den Daten: nurBoden (trifft keine Fledermäuse), durchschlag (bricht Schilde),
+   gift/giftDauer (Schaden pro Sekunde, stapelt nicht), sprung/sprungWeite (Blitz),
+   bonus (Banner: Nachbartürme in Reichweite machen mehr Schaden, mehrere Banner stapeln nicht)
    ═══════════════════════════════════════════════════════ */
 const TURM_TYPEN = {
   bogen: {
@@ -1060,6 +1089,81 @@ const TURM_TYPEN = {
     geschoss: () => mesh(box(2.4, 2.4, 2.4), lam('#a5f3fc', { emissive: 0x0e7490 })),
     flug: 'folgen', tempo: 170,
     einschlag(g) { if (g.ziel && g.ziel.alive) { funken(g.ziel.x, 4, g.ziel.z, '#a5f3fc', 8); flaechenTreffer(g, g.ziel.x, g.ziel.z); } },
+  },
+  blitz: {
+    modell(stufe, g, kopf) {
+      const w = 8, h = 7 + stufe * 2.5;
+      mesh(box(w, h, w), lam('#6d6a8c'), 0, h / 2 + 1.6, 0, g);
+      kopf.position.y = h + 1.6;
+      mesh(box(1.6, 5, 1.6), lam('#c7c9d6'), 0, 2.5, 0, kopf);
+      [[-1, 0], [1, 0], [0, -1], [0, 1]].forEach(([a, b]) => mesh(box(1.2, 1.2, 1.2), lam('#c7c9d6'), a * 2.4, 3.6, b * 2.4, kopf));
+      const k = mesh(box(3.6, 3.6, 3.6), lam('#fde047', { emissive: 0x8a6d00 }), 0, 6.8, 0, kopf);
+      k.rotation.set(.62, 0, .62);
+      kopf.userData.dreh = k;
+      return { w, h };
+    },
+    sofort(t, ziel, schaden) {
+      // Schlag springt auf weitere Gegner in der Nähe (jeder nur einmal)
+      const n = turmWert(t, 'sprung'), weit = (DATEN.tuerme.blitz.sprungWeite || 1.7) * TILE, getroffen = [ziel];
+      let von = { x: t.platz.x, y: t.hoehe + 6, z: t.platz.z }, e = ziel;
+      while (e) {
+        strahl(von.x, von.y, von.z, e.x, e.mitte, e.z);
+        von = { x: e.x, y: e.mitte, z: e.z };
+        treffer(e, schaden, 'blitz');
+        let naechster = null, nd = weit * weit;
+        if (getroffen.length < n) for (const o of gegner) {
+          if (!o.alive || getroffen.includes(o)) continue;
+          const d = (o.x - von.x) ** 2 + (o.z - von.z) ** 2;
+          if (d < nd) { nd = d; naechster = o; }
+        }
+        if (naechster) getroffen.push(naechster);
+        e = naechster;
+      }
+      ton(1200, .05, 'sawtooth', .025);
+    },
+  },
+  ballista: {
+    modell(stufe, g, kopf) {
+      const w = 10, h = 5 + stufe * 2;
+      mesh(box(w, h, w), lam('#a77b4f'), 0, h / 2 + 1.6, 0, g);
+      kopf.position.y = h + 1.6;
+      mesh(box(6, 1.6, 9), lam('#6b4423'), 0, 1.2, 0, kopf);
+      mesh(box(1.4, 1.4, 12 + stufe), lam('#5b3a1f'), 0, 2.6, 1.5, kopf);
+      mesh(box(13 + stufe, 1.2, 1.2), lam('#7a5230'), 0, 2.8, 4.5, kopf);
+      mesh(box(.8, .8, 6), lam('#cbd5e1'), 0, 3.6, 4, kopf);
+      return { w, h };
+    },
+    geschoss: () => mesh(box(1, 1, 9), lam('#cbd5e1')),
+    flug: 'folgen', tempo: 320,
+    einschlag(g) { if (g.ziel && g.ziel.alive) { funken(g.ziel.x, g.ziel.mitte, g.ziel.z, '#e2e8f0', 6); treffer(g.ziel, g.schaden, g.typ); } },
+    schussTon() { ton(260, .1, 'square', .04); },
+  },
+  gift: {
+    modell(stufe, g, kopf) {
+      const w = 9, h = 4 + stufe * 2;
+      mesh(box(w, h, w), lam('#7c8a5a'), 0, h / 2 + 1.6, 0, g);
+      kopf.position.y = h + 1.6;
+      mesh(box(8, 5, 8), lam('#3b3d4a'), 0, 2.5, 0, kopf);
+      mesh(box(6.4, .8, 6.4), lam('#84cc16', { emissive: 0x2f4a05 }), 0, 5.2, 0, kopf);
+      [[-1.4, .8], [1.2, -1]].forEach(([a, b]) => mesh(box(1.4, 1.4, 1.4), lam('#bef264', { emissive: 0x2f4a05 }), a, 6.2, b, kopf));
+      return { w, h };
+    },
+    geschoss: () => mesh(box(2.6, 2.6, 2.6), lam('#84cc16', { emissive: 0x2f4a05 })),
+    flug: 'wurf', dauer: .7,
+    einschlag(g, x, z) { funken(x, 3, z, '#a3e635', 10); ton(150, .12, 'triangle', .04); flaechenTreffer(g, x, z); },
+  },
+  banner: {
+    passiv: true,
+    modell(stufe, g, kopf) {
+      const w = 7, h = 3 + stufe;
+      mesh(box(w, h, w), lam('#c3bdd3'), 0, h / 2 + 1.6, 0, g);
+      kopf.position.y = h + 1.6;
+      mesh(box(1, 16 + stufe * 2, 1), lam('#7a5230'), 0, 8 + stufe, 0, kopf);
+      const f = mesh(box(.5, 6, 8), lam('#e6a817', { emissive: 0x3a2a00 }), 0, 13 + stufe * 2, 4.2, kopf);
+      kopf.userData.fahne = f;
+      mesh(box(.6, 2.2, 2.2), lam('#4f4ba8'), .3, 13 + stufe * 2, 4.2, kopf);
+      return { w, h };
+    },
   },
 };
 
@@ -1113,17 +1217,31 @@ function abreissen(platz) {
   schliesseMenu(); updateHud();
 }
 
+/** Banner in Reichweite: Schaden × (1 + bester Bonus) – mehrere Banner stapeln nicht */
+function bannerFaktor(t) {
+  let b = 0;
+  plaetze.forEach(pl => {
+    const o = pl.turm;
+    if (!o || o === t || !TURM_TYPEN[o.typ].passiv || !DATEN.tuerme[o.typ].bonus || TURM_TYPEN[t.typ].passiv) return;
+    const r = turmWert(o, 'reichweite') * TILE;
+    if ((pl.x - t.platz.x) ** 2 + (pl.z - t.platz.z) ** 2 <= r * r) b = Math.max(b, turmWert(o, 'bonus'));
+  });
+  return 1 + b;
+}
+const fliegt = e => !!DATEN.gegner[e.typ].fliegt;
 const _p = { x: 0, z: 0, dx: 0, dz: 0 };
 function tuermeUpdate(dt) {
   plaetze.forEach(pl => {
     const t = pl.turm; if (!t) return;
     if (t.kopf.userData.dreh && !REDUCED) t.kopf.userData.dreh.rotation.y += dt * 1.5;
+    if (t.kopf.userData.fahne && !REDUCED) t.kopf.userData.fahne.rotation.y = Math.sin(G.t * 3 + pl.i) * .25;
+    if (TURM_TYPEN[t.typ].passiv) return;
     t.cd -= dt;
     if (t.cd > 0) return;
-    const r = turmWert(t, 'reichweite') * TILE;
+    const r = turmWert(t, 'reichweite') * TILE, boden = DATEN.tuerme[t.typ].nurBoden;
     let ziel = null, zielRest = 0;
     for (const e of gegner) {
-      if (!e.alive) continue;
+      if (!e.alive || (boden && fliegt(e))) continue;
       if ((e.x - pl.x) ** 2 + (e.z - pl.z) ** 2 > r * r) continue;
       const rest = e.weg.gesamt - e.s;                          // der Burg am nächsten zuerst
       if (!ziel || rest < zielRest) { ziel = e; zielRest = rest; }
@@ -1143,17 +1261,19 @@ function holeGeschoss(typ) {
   return { typ, m: TURM_TYPEN[typ].geschoss(), von: new T.Vector3(), nach: new T.Vector3(), pos: new T.Vector3() };
 }
 function schiesse(t, ziel) {
-  const g = holeGeschoss(t.typ), R = TURM_TYPEN[t.typ];
+  const R = TURM_TYPEN[t.typ];
+  if (R.sofort) { R.sofort(t, ziel, turmWert(t, 'schaden') * bannerFaktor(t)); return; }
+  const g = holeGeschoss(t.typ);
   g.von.set(t.platz.x, t.hoehe + 1.6, t.platz.z);
   g.pos.copy(g.von);
   g.ziel = ziel; g.t = 0;
-  g.schaden = turmWert(t, 'schaden'); g.turm = t;
+  g.schaden = turmWert(t, 'schaden') * bannerFaktor(t); g.turm = t;
   if (R.flug === 'wurf') {
     // Vorhalten: dorthin zielen, wo der Gegner gleich sein wird
     wegPos(ziel.s + ziel.vAkt * R.dauer, _p, ziel.weg);
     g.nach.set(_p.x, 1, _p.z); g.dauer = R.dauer;
   } else {
-    g.nach.set(ziel.x, ziel.h * .5, ziel.z);
+    g.nach.set(ziel.x, ziel.mitte, ziel.z);
   }
   g.m.position.copy(g.pos); g.m.visible = true;
   scene.add(g.m); geschosse.push(g);
@@ -1170,7 +1290,7 @@ function geschosseUpdate(dt) {
       g.pos.y += Math.sin(u * Math.PI) * 16;
       if (u >= 1) { fertig = true; R.einschlag(g, g.nach.x, g.nach.z); }
     } else {
-      if (g.ziel && g.ziel.alive) g.nach.set(g.ziel.x, g.ziel.h * .5, g.ziel.z);
+      if (g.ziel && g.ziel.alive) g.nach.set(g.ziel.x, g.ziel.mitte, g.ziel.z);
       const d = g.nach.clone().sub(g.pos), dist = d.length(), weit = R.tempo * dt;
       if (dist <= weit + 1) {
         fertig = true;
@@ -1188,11 +1308,16 @@ function geschosseUpdate(dt) {
     }
   }
 }
-/** Schaden in einem Kreis (Turmwert flaeche in Feldern); mit „bremse“ werden Gegner langsamer */
+/** Schaden in einem Kreis (Turmwert flaeche in Feldern); mit „bremse“ werden Gegner langsamer, mit „gift“ vergiftet */
 function flaechenTreffer(g, x, z) {
   const def = DATEN.tuerme[g.typ], r = def.flaeche * TILE;
   gegner.slice().forEach(e => {
-    if (!e.alive || (e.x - x) ** 2 + (e.z - z) ** 2 > r * r) return;
+    if (!e.alive || (e.x - x) ** 2 + (e.z - z) ** 2 > r * r || (def.nurBoden && fliegt(e))) return;
+    if (def.gift) {
+      // Gift stapelt nicht: der stärkere Wert gilt, die Dauer beginnt neu
+      e.giftDps = Math.max(e.giftT > 0 ? e.giftDps : 0, turmWert(g.turm, 'gift') * (g.schaden / turmWert(g.turm, 'schaden')));
+      e.giftT = def.giftDauer || 4;
+    }
     if (def.bremse) {
       const b = turmWert(g.turm, 'bremse') * (DATEN.gegner[e.typ].frostHalb ? .5 : 1);
       e.bremse = Math.max(e.slowT > 0 ? e.bremse : 0, b);
@@ -1203,8 +1328,15 @@ function flaechenTreffer(g, x, z) {
 }
 function treffer(e, schaden, turmTyp) {
   if (!e.alive) return;
-  const def = DATEN.gegner[e.typ];
-  if (def.ruestung && (DATEN.tuerme[turmTyp] || {}).art === 'pfeil') schaden *= def.ruestung;
+  const def = DATEN.gegner[e.typ], td = DATEN.tuerme[turmTyp] || {};
+  if (e.schild > 0) {
+    // Schild fängt den Treffer ab; Durchschlag (Ballista) bricht ihn ganz
+    e.schild = td.durchschlag ? 0 : e.schild - 1;
+    funken(e.x, e.mitte, e.z, '#cbd5e1', e.schild ? 3 : 10);
+    if (e.k.userData.schild) e.k.userData.schild.visible = e.schild > 0;
+    if (!td.durchschlag) { e.blinkT = .08; return; }
+  }
+  if (def.ruestung && td.art === 'pfeil') schaden *= def.ruestung;
   e.hp -= schaden;
   e.blinkT = .12;
   if (e.hp <= 0) stirb(e);
@@ -1213,9 +1345,14 @@ function treffer(e, schaden, turmTyp) {
 /* ═══════════════════════════════════════════════════════
    GEGNER – Register: Aussehen und Bewegung je Gegnertyp.
    Werte (Lebenspunkte, Tempo, Schaden …) stehen in DATEN.gegner.
-     modell(k)      baut das Modell in die Gruppe k, gibt { h, barW } zurück
+     modell(k)      baut das Modell in die Gruppe k, gibt { h, barW, mitte? } zurück
+                    (k.userData.schild = Schild-Mesh, verschwindet, wenn der Schild bricht)
      update(e, dt)  kleine Laufbewegung (nur ohne „Bewegung reduzieren“)
      takt, farbe    Schrittgeschwindigkeit, Farbe der Funken
+     flugHoehe      fliegende Gegner: Höhe über dem Weg, Schatten am Boden
+   Werte in den Daten: ruestung, frostHalb, boss, schild (Treffer, die abprallen),
+   heilung/heilWeite (heilt Nachbarn, aber keine vergifteten), teilt { typ, anzahl, hp },
+   fliegt (Kanone und Frost treffen nicht), info/tipp/icon (Bildkarte beim ersten Auftauchen)
    ═══════════════════════════════════════════════════════ */
 const AUGE = () => lam('#1f1b2e'), WEISS = () => lam('#ffffff');
 const wackeln = e => { e.k.position.y = Math.abs(Math.sin(e.phase)) * 1.1; e.k.rotation.z = Math.sin(e.phase) * .06; };
@@ -1270,25 +1407,91 @@ const GEGNER_TYPEN = {
     },
     update(e) { e.k.position.y = Math.abs(Math.sin(e.phase)) * 1.4; },
   },
+  schild: {
+    farbe: '#cbd5e1', takt: 5,
+    modell(k) {
+      [-1.4, 1.4].forEach(x => mesh(box(2, 4, 2.2), lam('#7c4a2a'), x, 2, 0, k));
+      mesh(box(6.4, 6, 4.4), lam('#a16207'), 0, 7, 0, k);
+      mesh(box(4.8, 4.8, 4.8), lam('#e9b791'), 0, 12.4, 0, k);
+      mesh(box(5.4, 1.6, 5.4), lam('#64748b'), 0, 15.2, 0, k);
+      [-1.1, 1.1].forEach(x => mesh(box(.8, .8, .4), AUGE(), x, 12.8, 2.5, k));
+      const sch = new T.Group(); sch.position.set(0, 7.5, 4); k.add(sch);
+      mesh(box(9, 10, 1.2), lam('#94a3b8'), 0, 0, 0, sch);
+      mesh(box(7, 8, .4), lam('#4f4ba8'), 0, 0, .7, sch);
+      mesh(box(2, 2, .4), lam('#e6a817', { emissive: 0x4a3400 }), 0, 0, .95, sch);
+      k.userData.schild = sch;
+      return { h: 16, barW: 10 };
+    },
+    update: wackeln,
+  },
+  heiler: {
+    farbe: '#4ade80', takt: 6,
+    modell(k) {
+      mesh(box(6, 9, 5), lam('#f1f5f9'), 0, 4.5, 0, k);
+      mesh(box(4.4, 4.4, 4.4), lam('#e9b791'), 0, 11.2, 0, k);
+      mesh(box(5.4, 2.2, 5.4), lam('#16a34a'), 0, 13.8, 0, k);
+      [-1, 1].forEach(x => mesh(box(.8, .8, .4), AUGE(), x * 1.1, 11.6, 2.3, k));
+      mesh(box(1.2, 4, .4), lam('#22c55e', { emissive: 0x0b4a20 }), 0, 6, 2.7, k);
+      mesh(box(4, 1.2, .4), lam('#22c55e', { emissive: 0x0b4a20 }), 0, 6.4, 2.7, k);
+      mesh(box(.8, 13, .8), lam('#7a5230'), 4, 6.5, 1, k);
+      mesh(box(2.2, 2.2, 2.2), lam('#86efac', { emissive: 0x166534 }), 4, 13.6, 1, k);
+      return { h: 15, barW: 10 };
+    },
+    update: wackeln,
+  },
+  teiler: {
+    farbe: '#22c55e', takt: 4,
+    modell(k) {
+      mesh(box(14, 11, 14), lam('#22c55e'), 0, 5.5, 0, k);
+      mesh(box(10, 2, 10), lam('#86efac'), 0, 12, 0, k);
+      [-3, 3].forEach(x => { mesh(box(3, 3, .5), WEISS(), x, 7.4, 7.1, k); mesh(box(1.5, 1.5, .4), AUGE(), x, 7.1, 7.4, k); });
+      [[-4, -4], [4, 3], [-2, 5]].forEach(([x, z]) => mesh(box(2, 2, 2), lam('#15803d'), x, 10.6, z * .9, k));
+      return { h: 13, barW: 14 };
+    },
+    update(e) { const s = Math.abs(Math.sin(e.phase)); e.k.position.y = s * 1.6; e.k.scale.set(1 + (1 - s) * .1, 1 - (1 - s) * .1, 1 + (1 - s) * .1); },
+  },
+  flieger: {
+    farbe: '#7c3aed', takt: 14, flugHoehe: 15,
+    modell(k) {
+      const f = new T.Group(); f.position.y = 15; k.add(f);
+      mesh(box(4, 4, 5), lam('#4c1d95'), 0, 0, 0, f);
+      [-1, 1].forEach(x => { mesh(box(1, 2, 1), lam('#4c1d95'), x * 1.3, 2.6, 1, f); mesh(box(.9, .9, .4), lam('#facc15'), x * 1, .6, 2.6, f); });
+      const fl = [-1, 1].map(x => { const w = new T.Group(); w.position.set(x * 2, .6, 0); f.add(w); mesh(box(7, .5, 4), lam('#6d28d9'), x * 3.5, 0, 0, w); return w; });
+      k.userData.fluegel = fl;
+      return { h: 19, barW: 8, mitte: 15 };
+    },
+    update(e) {
+      const [l, r] = e.k.userData.fluegel, a = Math.sin(e.phase) * .6;
+      l.rotation.z = -a; r.rotation.z = a;
+      e.k.position.y = Math.sin(e.phase * .25) * 1.5;
+    },
+  },
 };
 function baueGegner(typ) {
   const g = new T.Group(), k = new T.Group(); g.add(k);
-  const { h, barW } = GEGNER_TYPEN[typ].modell(k);
-  // Eis unter gebremsten Gegnern
+  const R = GEGNER_TYPEN[typ], { h, barW, mitte } = R.modell(k);
+  // Eis unter gebremsten, grüne Blasen unter vergifteten Gegnern
   const eis = mesh(box(barW, .6, barW), new T.MeshBasicMaterial({ color: 0xa5f3fc, transparent: true, opacity: .55 }), 0, .4, 0, g);
   eis.visible = false;
+  const gift = mesh(box(barW * .8, .6, barW * .8), new T.MeshBasicMaterial({ color: 0x84cc16, transparent: true, opacity: .6 }), 0, (R.flugHoehe || 0) + .5, 0, g);
+  gift.visible = false;
+  // Fliegende Gegner: Schatten am Boden, damit man sieht, dass sie fliegen
+  if (R.flugHoehe) mesh(box(barW * .9, .3, barW * .6), new T.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: .25, depthWrite: false }), 0, .5, 0, g);
   // Lebensbalken (schaut immer zur Kamera)
   const bar = new T.Group(); bar.position.y = h + 4; g.add(bar);
   const bg = mesh(new T.PlaneGeometry(barW + .8, 2), new T.MeshBasicMaterial({ color: 0x1b1929, depthTest: false }), 0, 0, 0, bar);
   const fill = mesh(new T.PlaneGeometry(1, 1.2), new T.MeshBasicMaterial({ color: 0x4ade80, depthTest: false }), 0, 0, .05, bar);
   bg.renderOrder = 10; fill.renderOrder = 11;
-  return { typ, g, k, h, barW, bar, fill, eis };
+  return { typ, g, k, h, barW, bar, fill, eis, gift, mitte: mitte || h * .5 };
 }
-function spawne(typ, hpMul, vMul, wi = 0) {
+/** Gegner auf Weg wi setzen; s0 = Start auf dem Weg, klein = Größe (Teile eines Riesenschleims) */
+function spawne(typ, hpMul, vMul, wi = 0, s0 = 0, klein = 1) {
   const e = (pool.gegner[typ] || (pool.gegner[typ] = [])).pop() || baueGegner(typ);
   const def = DATEN.gegner[typ];
-  Object.assign(e, { alive: true, s: 0, hp: def.hp * hpMul, max: def.hp * hpMul, v: CFG.grundTempo * def.tempo * vMul, vAkt: 0,
-    slowT: 0, bremse: 0, blinkT: 0, phase: Math.random() * 6, x: 0, z: 0, weg: WEGE[wi % WEGE.length] });
+  Object.assign(e, { alive: true, s: s0, hp: def.hp * hpMul, max: def.hp * hpMul, v: CFG.grundTempo * def.tempo * vMul, vAkt: 0, hpMul, vMul,
+    slowT: 0, bremse: 0, blinkT: 0, giftT: 0, giftDps: 0, heilT: 1, schild: def.schild || 0, phase: Math.random() * 6, x: 0, z: 0, weg: WEGE[wi % WEGE.length] });
+  if (e.k.userData.schild) e.k.userData.schild.visible = e.schild > 0;
+  e.g.scale.setScalar(klein);
   e.fill.material.color.set(0x4ade80);
   e.g.visible = true;
   scene.add(e.g);
@@ -1307,6 +1510,12 @@ function gegnerUpdate(dt) {
   for (let i = gegner.length - 1; i >= 0; i--) {
     const e = gegner[i], R = GEGNER_TYPEN[e.typ];
     if (e.slowT > 0) { e.slowT -= dt; if (e.slowT <= 0) e.bremse = 0; }
+    if (e.giftT > 0) {
+      e.giftT -= dt; e.hp -= e.giftDps * Math.min(dt, e.giftT + dt);
+      if (e.hp <= 0) { stirb(e); continue; }
+    }
+    e.gift.visible = e.giftT > 0;
+    if (DATEN.gegner[e.typ].heilung) heile(e, dt);
     e.vAkt = e.v * (1 - e.bremse);
     e.s += e.vAkt * dt;
     gegnerPos(e, dt);
@@ -1326,9 +1535,28 @@ function gegnerUpdate(dt) {
     if (e.s >= e.weg.gesamt) { burgTreffer(e); entferneGegner(e); }
   }
 }
+/** Heiler: einmal pro Sekunde Nachbarn heilen – vergiftete nicht, vergiftet heilt er selbst nicht */
+function heile(e, dt) {
+  e.heilT -= dt;
+  if (e.heilT > 0) return;
+  e.heilT = 1;
+  if (e.giftT > 0) return;
+  const def = DATEN.gegner[e.typ], r = (def.heilWeite || 1.8) * TILE;
+  let n = 0;
+  for (const o of gegner) {
+    if (o === e || !o.alive || o.giftT > 0 || o.hp >= o.max || (o.x - e.x) ** 2 + (o.z - e.z) ** 2 > r * r) continue;
+    o.hp = Math.min(o.max, o.hp + o.max * def.heilung); n++;
+  }
+  if (n) funken(e.x, e.mitte + 6, e.z, '#4ade80', 3);
+}
 function stirb(e) {
   e.alive = false;
-  const boss = DATEN.gegner[e.typ].boss;
+  const def = DATEN.gegner[e.typ], boss = def.boss, teilt = def.teilt;
+  // Riesenschleim zerfällt in kleine Schleime (gleicher Weg, etwas versetzt)
+  if (teilt && DATEN.gegner[teilt.typ] && GEGNER_TYPEN[teilt.typ]) {
+    const wi = WEGE.indexOf(e.weg);
+    for (let i = 0; i < teilt.anzahl; i++) spawne(teilt.typ, e.hpMul * (teilt.hp || .5), e.vMul, wi, Math.max(0, e.s - i * 6), .7);
+  }
   funken(e.x, e.h * .5, e.z, GEGNER_TYPEN[e.typ].farbe || '#e6a817', boss ? 30 : 10);
   if (boss) { blitz('Boss besiegt! 👑', 'ok'); jubel(1.6); }
   ton(boss ? 330 : 440, .08, 'square', .03);
@@ -1370,7 +1598,23 @@ function funken(x, y, z, farbe, n = 12) {
     p.t = 0; p.life = rnd(.45, .8); n--;
   }
 }
+/** Blitz-Strahl zwischen zwei Punkten (kurz sichtbar, aus einem kleinen Vorrat) */
+const strahlen = [];
+function strahl(x0, y0, z0, x1, y1, z1) {
+  let s = strahlen.find(o => !o.m.visible);
+  if (!s) {
+    if (strahlen.length >= 16) return;
+    s = { m: mesh(box(1, 1, 1), new T.MeshBasicMaterial({ color: 0xfef08a })), t: 0 };
+    scene.add(s.m); strahlen.push(s);
+  }
+  const len = Math.hypot(x1 - x0, y1 - y0, z1 - z0);
+  s.m.position.set((x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2);
+  s.m.scale.set(1.1, 1.1, Math.max(1, len));
+  s.m.lookAt(x1, y1, z1);
+  s.m.visible = true; s.t = REDUCED ? .1 : .16;
+}
 function teileUpdate(dt) {
+  strahlen.forEach(s => { if (s.m.visible && (s.t -= dt) <= 0) s.m.visible = false; });
   teile.forEach(p => {
     if (!p.m.visible) return;
     p.t += dt;
@@ -1431,6 +1675,7 @@ async function startGame() {
 function aufraeumen() {
   gegner.slice().forEach(entferneGegner);
   geschosse.forEach(g => { scene.remove(g.m); pool.geschoss[g.typ].push(g); }); geschosse.length = 0;
+  strahlen.forEach(s => { s.m.visible = false; });
   plaetze.forEach(p => { if (p.turm) { scene.remove(p.turm.g); p.turm = null; } });
   schliesseMenu();
 }
@@ -1497,10 +1742,16 @@ function welleEndlos(n) {
   const E = CFG.endlos, anz = E.anzahlBasis + E.anzahlProWelle * (n - 1);
   const ritter = n >= 3 ? Math.floor(anz * Math.min(.35, .06 * n)) : 0;
   const flitzer = n >= 2 ? Math.floor(anz * .3) : 0;
-  const schleim = anz - ritter - flitzer;
+  // Neue Monster der Karte (aus ihren Runden-Wellen) ab Welle 4, ab Welle 8 zwei Sorten
+  const neu = [...new Set(wellenListe().flat().map(d => d[0]))].filter(t => DATEN.gegner[t].info);
+  const extra = n >= 4 && neu.length ? [neu[(n - 4) % neu.length]] : [];
+  if (n >= 8 && neu.length > 1) extra.push(neu[(n - 3) % neu.length]);
+  const jeExtra = Math.max(2, Math.floor(anz * .12));
+  const schleim = Math.max(2, anz - ritter - flitzer - jeExtra * extra.length);
   const iv = Math.max(.7, 1.6 - n * .05);
   const w = [['schleim', schleim, iv]];
   if (flitzer) w.push(['flitzer', flitzer, iv * .6]);
+  extra.forEach(t => w.push([t, jeExtra, iv * 1.3]));
   if (ritter) w.push(['ritter', ritter, iv * 1.5]);
   if (n % E.bossAlle === 0) w.push(['boss', 1, 0]);
   return w;
@@ -1522,6 +1773,7 @@ function starteWelle() {
     hpMul = Math.pow(E.hpFaktor, G.welle - 1) * KARTE.staerke;
     vMul = G.tempoLesen * Math.min(E.tempoMax, 1 + E.tempoProWelle * (G.welle - 1));
   }
+  zeigeNeueGegner(def.map(d => d[0]));
   G.queue = []; let t = 0;
   // Mehrere Wege: die Gruppen einer Welle kommen abwechselnd aus den Höhlen
   def.forEach(([typ, n, iv], gi) => { const wi = (gi + G.welle - 1) % WEGE.length; for (let i = 0; i < n; i++) { G.queue.push({ typ, t, wi }); t += iv / vMul; } t += CFG.gruppenAbstand; });
@@ -1557,6 +1809,20 @@ function welleGeschafft() {
   updateHud();
 }
 $('naechste-btn').onclick = () => { if (G.zustand === 'play' && G.phase === 'bau') G.bauT = 0; };
+
+/* ── Neues Monster: Bildkarte beim ersten Auftauchen (danach nie wieder) ── */
+function zeigeNeueGegner(typen) {
+  const neu = [...new Set(typen)].filter(t => DATEN.gegner[t] && DATEN.gegner[t].info && !W.gesehen.includes(t));
+  if (!neu.length || G.zustand !== 'play') return;
+  W.gesehen.push(...neu); saveWahl();
+  $('neu-titel').textContent = neu.length > 1 ? 'Neue Monster!' : 'Neues Monster!';
+  $('neu-liste').innerHTML = neu.map(t => { const d = DATEN.gegner[t]; return `<div class="neu-karte"><span class="bild" aria-hidden="true">${esc(d.icon || '👾')}</span>
+    <div><b>${esc(d.name)}</b><p>${esc(d.info)}</p>${d.tipp ? `<small>💡 ${esc(d.tipp)}</small>` : ''}</div></div>`; }).join('');
+  G.vorPause = 'play'; G.zustand = 'pause'; schliesseMenu();
+  $('neu').hidden = false;
+  $('neu-ok').focus();
+}
+$('neu-ok').onclick = () => weiter();
 
 /* ── HUD ─────────────────────────────────────────── */
 let blitzT = 0;
@@ -1612,7 +1878,9 @@ function oeffneMenu(platz) {
   } else {
     const t = platz.turm, d = DATEN.tuerme[t.typ];
     const preis = t.stufe < 3 ? d.preis[t.stufe] : 0;
-    m.innerHTML = `<div class="titel">${d.icon} ${esc(d.name)} · Stufe ${t.stufe}</div><div class="reihe">
+    const bf = TURM_TYPEN[t.typ].passiv ? 0 : Math.round((bannerFaktor(t) - 1) * 100);
+    const info = TURM_TYPEN[t.typ].passiv ? ` · <span class="bonus">+${Math.round(turmWert(t, 'bonus') * 100)} % für Nachbarn</span>` : bf ? ` · <span class="bonus">🚩 +${bf} %</span>` : '';
+    m.innerHTML = `<div class="titel">${d.icon} ${esc(d.name)} · Stufe ${t.stufe}${info}</div><div class="reihe">
       ${t.stufe < 3 ? `<button type="button" data-auf="1"><span class="i">⬆️</span><b>Stufe ${t.stufe + 1}</b><small>🪙 ${preis}</small></button>`
                     : `<button type="button" disabled><span class="i">⭐</span><b>Maximum</b></button>`}
       <button type="button" data-weg="1"><span class="i">🗑️</span><b>Abreißen</b><small>+${Math.round(t.investiert * CFG.abrissAnteil)}</small></button>
@@ -1714,10 +1982,10 @@ function figurUpdate(dt) {
 
 /* ── Pause ───────────────────────────────────────── */
 function pause() { if (G.zustand !== 'play' && G.zustand !== 'countdown') return; G.vorPause = G.zustand; G.zustand = 'pause'; $('pause').hidden = false; schliesseMenu(); }
-function weiter() { if (G.zustand !== 'pause') return; G.zustand = G.vorPause; $('pause').hidden = true; }
+function weiter() { if (G.zustand !== 'pause') return; G.zustand = G.vorPause; $('pause').hidden = true; $('neu').hidden = true; }
 $('pause-btn').onclick = pause;
 $('resume').onclick = weiter;
-$('quit').onclick = () => { $('pause').hidden = true; zeigeMenu(); };
+$('quit').onclick = () => { $('pause').hidden = true; $('neu').hidden = true; zeigeMenu(); };
 document.addEventListener('visibilitychange', () => { if (document.hidden) pause(); });
 document.addEventListener('keydown', e => {
   if (['1', '2', '3'].includes(e.key)) antworte(Number(e.key) - 1);

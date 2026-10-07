@@ -48,7 +48,8 @@
     2.8,
     3.0
    ],
-   "flaeche": 1.1
+   "flaeche": 1.1,
+   "nurBoden": true
   },
   "frost": {
    "name": "Frost",
@@ -79,7 +80,113 @@
     0.5,
     0.6
    ],
-   "bremsDauer": 1.5
+   "bremsDauer": 1.5,
+   "nurBoden": true
+  },
+  "blitz": {
+   "name": "Blitz",
+   "icon": "⚡",
+   "preis": [
+    90,
+    70,
+    110
+   ],
+   "schaden": [
+    14,
+    20,
+    27
+   ],
+   "rate": [
+    0.7,
+    0.75,
+    0.8
+   ],
+   "reichweite": [
+    2.7,
+    3.0,
+    3.3
+   ],
+   "sprung": [
+    3,
+    4,
+    5
+   ],
+   "sprungWeite": 1.7
+  },
+  "ballista": {
+   "name": "Ballista",
+   "icon": "🎯",
+   "preis": [
+    100,
+    80,
+    120
+   ],
+   "schaden": [
+    55,
+    80,
+    115
+   ],
+   "rate": [
+    0.4,
+    0.45,
+    0.5
+   ],
+   "reichweite": [
+    4.2,
+    4.6,
+    5.0
+   ],
+   "durchschlag": true
+  },
+  "gift": {
+   "name": "Giftkessel",
+   "icon": "🧪",
+   "preis": [
+    70,
+    55,
+    90
+   ],
+   "schaden": [
+    3,
+    5,
+    7
+   ],
+   "rate": [
+    0.55,
+    0.6,
+    0.7
+   ],
+   "reichweite": [
+    2.6,
+    2.9,
+    3.2
+   ],
+   "flaeche": 0.9,
+   "gift": [
+    8,
+    13,
+    19
+   ],
+   "giftDauer": 4
+  },
+  "banner": {
+   "name": "Banner",
+   "icon": "🚩",
+   "preis": [
+    70,
+    60,
+    90
+   ],
+   "reichweite": [
+    2.4,
+    2.7,
+    3.0
+   ],
+   "bonus": [
+    0.25,
+    0.35,
+    0.45
+   ]
   }
  },
  "gegner": {
@@ -109,6 +216,52 @@
    "schaden": 3,
    "frostHalb": true,
    "boss": true
+  },
+  "schild": {
+   "name": "Schildträger",
+   "icon": "🛡️",
+   "hp": 70,
+   "tempo": 0.75,
+   "schaden": 2,
+   "schild": 4,
+   "info": "Sein Schild fängt die ersten Treffer ab.",
+   "tipp": "Die Ballista bricht ihn mit einem Schuss, der Blitz trifft viele Schilde auf einmal."
+  },
+  "heiler": {
+   "name": "Heiler",
+   "icon": "💚",
+   "hp": 60,
+   "tempo": 0.85,
+   "schaden": 1,
+   "heilung": 0.06,
+   "heilWeite": 1.8,
+   "info": "Er heilt andere Monster in seiner Nähe.",
+   "tipp": "Vergiftete Monster heilt er nicht – Giftkessel hilft."
+  },
+  "teiler": {
+   "name": "Riesenschleim",
+   "icon": "🟢",
+   "hp": 120,
+   "tempo": 0.65,
+   "schaden": 2,
+   "ruestung": 0.5,
+   "teilt": {
+    "typ": "schleim",
+    "anzahl": 3,
+    "hp": 0.4
+   },
+   "info": "Pfeile machen ihm nur halben Schaden. Besiegt zerfällt er in drei kleine Schleime.",
+   "tipp": "Der Blitz trifft ihn und die kleinen Schleime auf einmal, die Kanone hilft gegen die Kleinen."
+  },
+  "flieger": {
+   "name": "Fledermaus",
+   "icon": "🦇",
+   "hp": 30,
+   "tempo": 1.25,
+   "schaden": 1,
+   "fliegt": true,
+   "info": "Sie fliegt – Kanone und Frost treffen sie nicht.",
+   "tipp": "Bogen, Ballista und Blitz holen sie herunter."
   }
  },
  "wellen": {
@@ -187,6 +340,387 @@
     [
      "schleim",
      8,
+     1.2
+    ],
+    [
+     "ritter",
+     4,
+     2.0
+    ],
+    [
+     "boss",
+     1,
+     0
+    ]
+   ]
+  ],
+  "winter": [
+   [
+    [
+     "schleim",
+     8,
+     2.0
+    ]
+   ],
+   [
+    [
+     "schleim",
+     8,
+     1.6
+    ],
+    [
+     "flieger",
+     4,
+     1.4
+    ]
+   ],
+   [
+    [
+     "schleim",
+     6,
+     1.5
+    ],
+    [
+     "schild",
+     3,
+     2.4
+    ],
+    [
+     "flitzer",
+     5,
+     0.9
+    ]
+   ],
+   [
+    [
+     "flieger",
+     6,
+     1.1
+    ],
+    [
+     "ritter",
+     3,
+     2.3
+    ],
+    [
+     "schleim",
+     8,
+     1.3
+    ]
+   ],
+   [
+    [
+     "schild",
+     4,
+     2.0
+    ],
+    [
+     "schleim",
+     10,
+     1.1
+    ],
+    [
+     "flieger",
+     6,
+     1.0
+    ]
+   ],
+   [
+    [
+     "schleim",
+     8,
+     1.2
+    ],
+    [
+     "schild",
+     3,
+     2.0
+    ],
+    [
+     "boss",
+     1,
+     0
+    ]
+   ]
+  ],
+  "wueste": [
+   [
+    [
+     "schleim",
+     8,
+     2.0
+    ]
+   ],
+   [
+    [
+     "schleim",
+     6,
+     1.6
+    ],
+    [
+     "flitzer",
+     5,
+     1.0
+    ]
+   ],
+   [
+    [
+     "teiler",
+     3,
+     3.0
+    ],
+    [
+     "schleim",
+     6,
+     1.4
+    ]
+   ],
+   [
+    [
+     "flitzer",
+     8,
+     0.9
+    ],
+    [
+     "ritter",
+     3,
+     2.3
+    ],
+    [
+     "teiler",
+     3,
+     2.6
+    ]
+   ],
+   [
+    [
+     "teiler",
+     4,
+     2.4
+    ],
+    [
+     "schleim",
+     8,
+     1.1
+    ],
+    [
+     "flitzer",
+     8,
+     0.8
+    ]
+   ],
+   [
+    [
+     "schleim",
+     8,
+     1.2
+    ],
+    [
+     "teiler",
+     3,
+     2.2
+    ],
+    [
+     "boss",
+     1,
+     0
+    ]
+   ]
+  ],
+  "herbst": [
+   [
+    [
+     "schleim",
+     8,
+     2.0
+    ]
+   ],
+   [
+    [
+     "schleim",
+     8,
+     1.6
+    ],
+    [
+     "flitzer",
+     5,
+     1.0
+    ]
+   ],
+   [
+    [
+     "schleim",
+     6,
+     1.5
+    ],
+    [
+     "ritter",
+     3,
+     2.6
+    ],
+    [
+     "heiler",
+     2,
+     2.6
+    ]
+   ],
+   [
+    [
+     "flitzer",
+     7,
+     0.9
+    ],
+    [
+     "schild",
+     3,
+     2.3
+    ],
+    [
+     "heiler",
+     2,
+     2.5
+    ],
+    [
+     "schleim",
+     8,
+     1.3
+    ]
+   ],
+   [
+    [
+     "ritter",
+     4,
+     2.1
+    ],
+    [
+     "heiler",
+     3,
+     2.2
+    ],
+    [
+     "schleim",
+     10,
+     1.1
+    ],
+    [
+     "schild",
+     3,
+     2.0
+    ]
+   ],
+   [
+    [
+     "schleim",
+     8,
+     1.2
+    ],
+    [
+     "schild",
+     3,
+     2.0
+    ],
+    [
+     "boss",
+     1,
+     0
+    ],
+    [
+     "heiler",
+     2,
+     2.0
+    ]
+   ]
+  ],
+  "sumpf": [
+   [
+    [
+     "schleim",
+     8,
+     2.0
+    ]
+   ],
+   [
+    [
+     "schleim",
+     8,
+     1.6
+    ],
+    [
+     "flieger",
+     4,
+     1.4
+    ]
+   ],
+   [
+    [
+     "teiler",
+     3,
+     3.0
+    ],
+    [
+     "flitzer",
+     5,
+     0.9
+    ],
+    [
+     "schleim",
+     6,
+     1.5
+    ]
+   ],
+   [
+    [
+     "ritter",
+     3,
+     2.3
+    ],
+    [
+     "flieger",
+     4,
+     1.2
+    ],
+    [
+     "heiler",
+     2,
+     2.5
+    ],
+    [
+     "schleim",
+     8,
+     1.3
+    ]
+   ],
+   [
+    [
+     "teiler",
+     3,
+     2.6
+    ],
+    [
+     "flitzer",
+     8,
+     0.8
+    ],
+    [
+     "heiler",
+     2,
+     2.4
+    ],
+    [
+     "flieger",
+     5,
+     1.1
+    ]
+   ],
+   [
+    [
+     "schleim",
+     8,
+     1.2
+    ],
+    [
+     "flieger",
+     4,
      1.2
     ],
     [
@@ -516,6 +1050,13 @@
      17.6,
      99
     ]
+   ],
+   "tuerme": [
+    "bogen",
+    "kanone",
+    "frost",
+    "ballista",
+    "banner"
    ]
   },
   {
@@ -619,7 +1160,15 @@
      7,
      99
     ]
-   ]
+   ],
+   "tuerme": [
+    "bogen",
+    "frost",
+    "blitz",
+    "ballista",
+    "banner"
+   ],
+   "wellen": "winter"
   },
   {
    "id": "engpass",
@@ -701,7 +1250,15 @@
      99
     ]
    ],
-   "staerke": 0.85
+   "staerke": 0.85,
+   "tuerme": [
+    "bogen",
+    "kanone",
+    "frost",
+    "blitz",
+    "gift"
+   ],
+   "wellen": "wueste"
   },
   {
    "id": "bruecke",
@@ -803,7 +1360,15 @@
      99
     ]
    ],
-   "staerke": 0.9
+   "staerke": 0.9,
+   "tuerme": [
+    "bogen",
+    "kanone",
+    "frost",
+    "ballista",
+    "gift"
+   ],
+   "wellen": "herbst"
   },
   {
    "id": "zwei-tore",
@@ -945,7 +1510,15 @@
      99
     ]
    ],
-   "staerke": 0.6
+   "staerke": 0.6,
+   "tuerme": [
+    "bogen",
+    "kanone",
+    "blitz",
+    "ballista",
+    "gift"
+   ],
+   "wellen": "sumpf"
   }
  ]
 }
