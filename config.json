@@ -600,5 +600,21 @@
       "fach": "Englisch",
       "name": "Grammar"
     }
+  ],
+  "fokus": [
+    {
+      "id": "fk-muxrpi7z",
+      "fuer": "k6",
+      "apps": [
+        "spiele/dorf.html",
+        "apps/englisch/knowing-english.html",
+        "apps/englisch/time-dates-numbers.html",
+        "apps/typen/uebung.html?inhalt=en.5.to-be",
+        "apps/englisch/vokabeltrainer.html?klasse=5",
+        "apps/typen/uebung.html?inhalt=en.5.simple-present",
+        "apps/typen/uebung.html?inhalt=en.5.simple-past"
+      ],
+      "bis": 1791359703647
+    }
   ]
 }
