@@ -516,6 +516,13 @@ eingebauten Burgwiese (`EINGEBAUT` im Spiel).
   bekommen beim ersten Auftauchen eine Bildkarte (Name, Satz, Tipp); gemerkt in `lern-burg-wahl` → `gesehen`.
   Runden-Wellen je Karte über `wellen` (Wellensätze `winter`, `wueste`, `herbst`, `sumpf`); die Burgwiese
   behält `standard`. Endlos mischt die neuen Monster der Karte ab Welle 4 ein (Burgwiese: unverändert).
+- **Kampagne (Etappe 4):** Modus „Kampagne“ mit 10 Stationen (`kampagne.stationen`: `id`, `name`, `karte`,
+  optional `wellen` und `regel` mit `text`, `startMuenzen`, `tempo`, `staerke`, `tuerme`, `bossWelle`). Nächste Station
+  ab 1 Krone in der vorherigen. Türme in `kampagne.tuerme` werden ab so vielen Kronen (Summe) frei – auch in Runde und
+  Endlos; Türme, die dort nicht stehen (Bogen, Kanone, Frost), sind immer frei. Die freie Kartenwahl zeigt Burgwiese,
+  Karten erreichter Stationen und Karten mit eigenem Rekord; `?karte=` öffnet jede Karte. Wer schon Runden gespielt
+  hat, hat Station 1 geschafft. Speicher: `lernwelt-td-kampagne` (`{ v, k: { <stations-id>: Kronen }, t: [Türme] }`),
+  reist mit der Sicherungskarte. Stations-IDs nie umbenennen.
 - **IDs** von Karten, Türmen, Gegnern und Landschaften nie umbenennen oder löschen.
 - **Speicher:** `lern-burg-rekorde` – Burgwiese mit den alten Schlüsseln, andere Karten mit `<karten-id>|` davor,
   beste Kronen je Karte im Feld `#kronen`. `lern-burg-wahl` merkt sich zusätzlich die Karte.

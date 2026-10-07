@@ -30,7 +30,7 @@
   'use strict';
   if (window.LW && window.LW.UMGEBUNG) return;          // doppeltes Laden verhindern
 
-  const VERSION = 'v48';                                 // ⚙ bei jedem Upload mit sw.js zusammen erhöhen
+  const VERSION = 'v49';                                 // ⚙ bei jedem Upload mit sw.js zusammen erhöhen
 
   // ── Umgebung erkennen ────────────────────────────────
   //  GitHub Pages: erster Pfadteil = Repo-Name (Lern-Apps bzw. Lern-Apps-test)
@@ -84,6 +84,7 @@
     ['lern-runner-rekorde',         'local',   'spiele/runner.html',       'RUN!: Rekorde', false],
     ['lern-burg-wahl',              'local',   'spiele/burg-verteidigung.html', 'Tower Defense: zuletzt gewählte Einstellungen', false],
     ['lern-burg-rekorde',           'local',   'spiele/burg-verteidigung.html', 'Tower Defense: Rekorde', false],
+    ['lernwelt-td-kampagne',        'local',   'spiele/burg-verteidigung.html', 'Tower Defense: Kampagne (Kronen je Station, freie Türme)', true],
     ['lern-tauziehen-wahl',         'local',   'spiele/tauziehen.html',    'Tauziehen-Duell: zuletzt gewählte Einstellungen', false],
     ['lern-zauberwort-wahl',        'local',   'spiele/zauberwort.html',   'Zauberwort: zuletzt gewählte Einstellungen', false],
     ['lern-zauberwort-rekord',      'local',   'spiele/zauberwort.html',   'Zauberwort: Rekord', false],

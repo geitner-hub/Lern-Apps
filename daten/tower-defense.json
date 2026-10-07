@@ -1520,5 +1520,98 @@
    ],
    "wellen": "sumpf"
   }
- ]
+ ],
+ "kampagne": {
+  "tuerme": {
+   "blitz": 6,
+   "ballista": 10,
+   "gift": 14,
+   "banner": 18
+  },
+  "stationen": [
+   {
+    "id": "s1",
+    "name": "Erste Schritte",
+    "karte": "burgwiese"
+   },
+   {
+    "id": "s2",
+    "name": "Winterweg",
+    "karte": "schlangenpfad",
+    "regel": {
+     "text": "Start mit 80 Münzen",
+     "startMuenzen": 80
+    }
+   },
+   {
+    "id": "s3",
+    "name": "Am Fluss",
+    "karte": "bruecke",
+    "regel": {
+     "text": "Start mit 90 Münzen",
+     "startMuenzen": 90
+    }
+   },
+   {
+    "id": "s4",
+    "name": "Wüstentor",
+    "karte": "engpass"
+   },
+   {
+    "id": "s5",
+    "name": "Nachtflug",
+    "karte": "burgwiese",
+    "wellen": "winter",
+    "regel": {
+     "text": "Monster sind 10 % schneller",
+     "tempo": 1.1
+    }
+   },
+   {
+    "id": "s6",
+    "name": "Sumpfland",
+    "karte": "zwei-tore"
+   },
+   {
+    "id": "s7",
+    "name": "Eisiger Pass",
+    "karte": "schlangenpfad",
+    "regel": {
+     "text": "Nur Bogen, Frost und Blitz",
+     "tuerme": [
+      "bogen",
+      "frost",
+      "blitz"
+     ]
+    }
+   },
+   {
+    "id": "s8",
+    "name": "Brückenkopf",
+    "karte": "bruecke",
+    "regel": {
+     "text": "Ein Boss schon in Welle 4",
+     "bossWelle": 4
+    }
+   },
+   {
+    "id": "s9",
+    "name": "Knappe Kasse",
+    "karte": "engpass",
+    "regel": {
+     "text": "Start mit nur 30 Münzen",
+     "startMuenzen": 30
+    }
+   },
+   {
+    "id": "s10",
+    "name": "Die letzte Schlacht",
+    "karte": "zwei-tore",
+    "regel": {
+     "text": "Monster sind 20 % stärker",
+     "staerke": 1.2
+    }
+   }
+  ]
+ }
 }

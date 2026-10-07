@@ -7,7 +7,8 @@
 //  Braucht: sync-code.js (LernSyncCode). pass.js ist hilfreich, aber nicht nötig.
 //
 //  Gesichert werden die Speicherstände UNVERÄNDERT (verlustfrei):
-//    'lernwelt-pass', 'lernwelt-dorf', 'lernwelt-expedition', 'lern-apps-results'
+//    'lernwelt-pass', 'lernwelt-dorf', 'lernwelt-expedition', 'lern-apps-results', 'lernwelt-td-kampagne'
+//  Ein Schlüssel, den ein älterer Stand noch nicht kennt, bleibt beim Übernehmen unangetastet.
 //
 //  Gruppenauswertung (Etappe 8): Ist die Karte in einer Gruppe, gehen zusätzlich nur Zahlen
 //  je Thema und Woche an den Worker (Runden, Aufgaben, richtig) – siehe statMerken().
@@ -40,7 +41,7 @@
   const WORKER_URL = 'https://lern-apps-config.bennigeitner.workers.dev';   // wie in config-api.js
   const STATE_KEY  = 'lernwelt-sync';
   const HINWEIS_KEY = 'lernwelt-sync-hinweis';
-  const KEYS = ['lernwelt-pass', 'lernwelt-dorf', 'lernwelt-expedition', 'lern-apps-results'];
+  const KEYS = ['lernwelt-pass', 'lernwelt-dorf', 'lernwelt-expedition', 'lern-apps-results', 'lernwelt-td-kampagne'];
   const PASS_KEY = 'lernwelt-pass';
   const SENDEN_VERZOEGERUNG = 20000;
   const PRUEF_INTERVALL = 60000;
@@ -156,7 +157,8 @@
     const d = JSON.parse(await entpacken(klar[0], klar.slice(1)));
     if (!d || d.v !== 1 || !d.k || typeof d.k !== 'object') throw new Error('Unbekanntes Format');
     const k = {};
-    KEYS.forEach(key2 => { k[key2] = typeof d.k[key2] === 'string' ? d.k[key2] : null; });
+    // fehlt ein Schlüssel ganz (Stand von einer älteren Version) → undefined: beim Übernehmen nicht löschen
+    KEYS.forEach(key2 => { k[key2] = typeof d.k[key2] === 'string' ? d.k[key2] : (key2 in d.k ? null : undefined); });
     return k;
   }
 
@@ -199,6 +201,7 @@
   // ── Fremden Stand übernehmen (nur Startseite) ────────
   function uebernehmen(k, rev, score) {
     KEYS.forEach(key => {
+      if (k[key] === undefined) return;
       try { if (k[key] === null) localStorage.removeItem(key); else localStorage.setItem(key, k[key]); } catch (e) {}
     });
     ST.rev = rev; ST.hash = standHash(standLesen()); ST.serverScore = score;
