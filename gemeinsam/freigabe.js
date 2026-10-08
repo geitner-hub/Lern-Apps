@@ -17,6 +17,11 @@
 //    [{ id, fuer: "alle"|"k5"|"g:…", apps: ["apps/mathe/kopfrechnen.html", …], ab?: ms, bis: ms }]
 //    Endet von selbst (bis). Gilt mehr als einer, gewinnt der genaueste (Gruppe vor Klasse vor alle).
 //
+//  spielsperre – Spiele (spiele/…, außer Mein Dorf) erst nach so vielen guten Lern-App-Runden heute:
+//    { schwelle: 60, runden: { "alle": [Mo, Di, Mi, Do, Fr, Sa, So], "k5": […], "g:<gruppe>": […] } }
+//    Es gilt die genaueste Liste (Gruppe vor Klasse vor „alle“); 0 = an diesem Tag keine Sperre.
+//    Gezählt wird im Pass (lernwelt-pass → today.lr: Lern-App-Runden ab schwelle %, ohne Durchklicken).
+//
 //  Eine Sperre nimmt nie Fortschritt weg: Ergebnisse, Sterne und gemeisterte Themen bleiben.
 //
 //  Quelle: die Offline-Kopie von config.json (schreibt die Startseite). Ist sie älter als
@@ -29,6 +34,8 @@
 //    wer()              → ['g:…', 'k5', 'alle'] (was für dieses iPad gilt)
 //    fokus()            → { id, apps, bis } oder null
 //    imFokus(datei)     → true, wenn kein Fokus aktiv ist oder die App dazugehört
+//    spielSperre()      → null (heute keine Sperre) oder { noetig, geschafft, frei }
+//    spielGesperrt(datei) → true, wenn diese Datei ein Spiel ist und heute noch gesperrt
 //    neu(config, leise) → mit frischer config.json neu auswerten (Startseite; leise = ohne Ereignis)
 //  Ereignis 'lernfreigabe:neu', wenn sich die Grundlage geändert hat.
 // ═══════════════════════════════════════════════════════
@@ -109,6 +116,24 @@
     return f.apps.some(a => a === datei || ohneOrdner(a) === ohneOrdner(datei));
   }
 
+  // ── Spielsperre: Spiele erst nach guten Lern-Runden (je Wochentag und Gruppe/Klasse) ──
+  function spielSperre() {
+    const S = CFG && CFG.spielsperre, R = S && S.runden;
+    if (!R || typeof R !== 'object') return null;
+    const liste = wer().map(w => R[w]).find(l => Array.isArray(l) && l.length === 7);
+    const noetig = liste ? Number(liste[(new Date().getDay() + 6) % 7]) || 0 : 0;   // Montag = 0
+    if (noetig <= 0) return null;
+    const p = lies(PASS_KEY), t = p && p.today;
+    const geschafft = t && t.day === heute() ? Number(t.lr) || 0 : 0;
+    return { noetig, geschafft: Math.min(geschafft, noetig), frei: geschafft >= noetig };
+  }
+  const istGesperrtesSpiel = d => /(^|\/)spiele\//.test(String(d || '')) && !/(^|\/)dorf\.html/.test(String(d || ''));
+  function spielGesperrt(datei) {
+    if (!istGesperrtesSpiel(datei)) return false;
+    const s = spielSperre();
+    return !!s && !s.frei;
+  }
+
   function melden() { try { window.dispatchEvent(new CustomEvent('lernfreigabe:neu')); } catch (e) {} }
   let bekommen = false;
   function neu(config, leise) {
@@ -125,11 +150,11 @@
     if (bekommen || Date.now() - ts < FRISCH_MS || !window.fetch || !navigator.onLine) return;
     fetch(root + 'config.json', { cache: 'no-cache' }).then(r => r.ok ? r.json() : null).then(c => {
       if (!c || bekommen) return;
-      const vorher = JSON.stringify([CFG.freigaben, CFG.fokus]);
+      const vorher = JSON.stringify([CFG.freigaben, CFG.fokus, CFG.spielsperre]);
       CFG = c;
-      if (JSON.stringify([c.freigaben, c.fokus]) !== vorher) melden();
+      if (JSON.stringify([c.freigaben, c.fokus, c.spielsperre]) !== vorher) melden();
     }).catch(() => {});
   }, 1500);
 
-  window.LernFreigabe = { erlaubt, status, wer, fokus, imFokus, neu };
+  window.LernFreigabe = { erlaubt, status, wer, fokus, imFokus, spielSperre, spielGesperrt, neu };
 })();

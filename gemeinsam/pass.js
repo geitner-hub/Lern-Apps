@@ -439,6 +439,18 @@
   }
 
   // ── Klassenstufe der App (aus der zwischengespeicherten Config) ──
+  /** Spiel (spiele/…) statt Lern-App? – laut config.json */
+  function istSpiel(key) {
+    try {
+      const cfg = JSON.parse(localStorage.getItem(CONFIG_KEY) || 'null');
+      const app = cfg && Array.isArray(cfg.apps) && cfg.apps.find(a => String(a.datei || '').split('#')[0].split('/').pop() === key);
+      return !!app && String(app.datei).startsWith('spiele/');
+    } catch (e) { return false; }
+  }
+  /** Schwelle für „gute Runde“ der Spielsperre (config.json → spielsperre.schwelle) */
+  function sperrSchwelle() {
+    try { const s = (readConfigCache() || {}).spielsperre; return s && Number.isFinite(s.schwelle) ? s.schwelle : 60; } catch (e) { return 60; }
+  }
   function appClasses(key) {
     try {
       const cfg = JSON.parse(localStorage.getItem(CONFIG_KEY) || 'null');
@@ -588,6 +600,9 @@
       save();
       return { xp: 0, lines: [], blocked: 'fast', pct };
     }
+
+    // Spielsperre (freigabe.js): gute Runden in Lern-Apps heute → today.lr
+    if (!istSpiel(key) && pct >= sperrSchwelle()) S.today.lr = (S.today.lr || 0) + 1;
 
     // 2) Runden pro App und Tag
     if (a.day !== day) { a.day = day; a.n = 0; }

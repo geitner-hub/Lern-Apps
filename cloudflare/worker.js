@@ -39,6 +39,7 @@
 //    gruppen[], apps[].gruppe – Regale auf der Startseite (Etappe 6)
 //    freigaben     – { themaId: { wer: 'zu'|'offen'|'JJJJ-MM-TT' } }, wer = alle | k5 | g:<32 hex> (Etappe 7)
 //    fokus[]       – { id, fuer, apps[], ab?, bis } „heute nur diese Apps“, endet von selbst (Etappe 7)
+//    spielsperre   – { schwelle: 50–100, runden: { wer: [7 Zahlen 0–20, Mo–So] } } Spiele erst nach Lern-Runden
 //    heute         – nur false: Startseite ohne „Heute für dich“ (Etappe 8)
 //
 //  Wartung & Fehlersuche: cloudflare/ANLEITUNG.md
@@ -280,6 +281,16 @@ function validateConfig(cfg) {
       && ms(f.bis) && (f.ab === undefined || (ms(f.ab) && f.ab < f.bis))
       && Object.keys(f).every(k => ['id', 'fuer', 'apps', 'ab', 'bis'].includes(k));
     if (!Array.isArray(fk) || fk.length > 10 || !fk.every(fOk)) p.push('fokus ungültig');
+  }
+  // Spielsperre: Spiele erst nach guten Lern-Runden, je Wochentag und wer
+  const ss = cfg.spielsperre;
+  if (ss !== undefined) {
+    const lOk = l => Array.isArray(l) && l.length === 7 && l.every(n => Number.isInteger(n) && n >= 0 && n <= 20);
+    if (!ss || typeof ss !== 'object' || Array.isArray(ss)
+        || !(Number.isInteger(ss.schwelle) && ss.schwelle >= 50 && ss.schwelle <= 100)
+        || !ss.runden || typeof ss.runden !== 'object' || Array.isArray(ss.runden) || Object.keys(ss.runden).length > 40
+        || !Object.entries(ss.runden).every(([w, l]) => WER.test(w) && lOk(l))
+        || Object.keys(ss).some(k => !['schwelle', 'runden'].includes(k))) p.push('spielsperre ungültig');
   }
   // „Heute für dich“ (Etappe 8): nur abschaltbar
   if (cfg.heute !== undefined && cfg.heute !== false) p.push('heute ungültig');

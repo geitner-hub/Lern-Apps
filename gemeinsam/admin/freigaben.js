@@ -7,6 +7,7 @@
 //
 //  Schreibt zwei Felder in config.json (Format und Auswertung: gemeinsam/freigabe.js):
 //    freigaben – { themaId: { wer: 'zu' | 'offen' | 'JJJJ-MM-TT' } }   wer = alle | k5 | g:<Sync-Gruppe>
+//    spielsperre – { schwelle, runden: { wer: [Mo, Di, Mi, Do, Fr, Sa, So] } }  Spiele erst nach guten Lern-Runden
 //    fokus[]   – { id, fuer, apps[], ab?, bis }
 //  Der Worker prüft beide Felder (cloudflare/worker.js) – er muss VOR dem ersten Speichern aktualisiert sein.
 //
@@ -19,7 +20,7 @@
 const FR_KATALOG_REIHEN = ['en.5.vok', 'en.5.wortlisten', 'en.6.vok', 'gpg.6.laender', 'gpg.5.erde', 'gpg.5.bayern'];
 const FR_BAUKASTEN = 'apps/typen/uebung.html';          // Etappe 9: jeder Inhalt des Baukastens ist automatisch eine Reihe
 const FR_APP_NAMEN = { kopfrechnen: '🧮', trainer: '📐', laengen: '📏' };
-const FR = { wer: 'alle', offen: '', reihen: null, gruppen: null, gruppenFehler: '' };
+const FR = { wer: 'alle', offen: '', reihen: null, gruppen: null, gruppenFehler: '', spWer: null };
 
 const frEsc = s => escHtml(String(s == null ? '' : s));
 function frHeute() { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
@@ -58,6 +59,7 @@ function frWerListe() {
   // Gruppen, die in der Config stehen, aber (noch) nicht geladen sind
   Object.values(CONFIG.freigaben || {}).forEach(e => Object.keys(e || {}).forEach(w => { if (!liste.includes(w)) liste.push(w); }));
   (CONFIG.fokus || []).forEach(f => { if (f && f.fuer && !liste.includes(f.fuer)) liste.push(f.fuer); });
+  Object.keys((CONFIG.spielsperre || {}).runden || {}).forEach(w => { if (!liste.includes(w)) liste.push(w); });
   return liste;
 }
 
@@ -151,6 +153,7 @@ async function buildFreigaben() {
 
   box.innerHTML = kopf + (reihen || '<div class="empty-msg">Keine Inhalte gefunden.</div>');
   buildFokus();
+  buildSpielsperre();
   buildHeuteSchalter();
   buildAuswertung();
 }
@@ -206,6 +209,62 @@ function frAktion(akt) {
   logChange(msg);
   saveConfig();
   buildFreigaben();
+}
+
+// ── Spielsperre: Spiele erst nach guten Lern-Runden (je Wochentag, je Gruppe/Klasse) ──
+const SP_TAGE = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
+function spCfg() {
+  const s = CONFIG.spielsperre && typeof CONFIG.spielsperre === 'object' ? CONFIG.spielsperre : {};
+  return { schwelle: Number.isFinite(s.schwelle) ? s.schwelle : 60, runden: s.runden && typeof s.runden === 'object' ? s.runden : {} };
+}
+/** Was gilt für „wer“? Eigene Liste, sonst die von „Alle“, sonst nichts */
+function spStand(wer) {
+  const R = spCfg().runden;
+  if (Array.isArray(R[wer])) return { l: R[wer], eigen: true };
+  if (wer !== 'alle' && Array.isArray(R.alle)) return { l: R.alle, eigen: false };
+  return { l: [0, 0, 0, 0, 0, 0, 0], eigen: wer === 'alle' };
+}
+function spSpeichern(sp, msg) {
+  Object.keys(sp.runden).forEach(w => { if (!Array.isArray(sp.runden[w]) || (w === 'alle' && sp.runden[w].every(n => !n))) delete sp.runden[w]; });
+  if (Object.keys(sp.runden).length) CONFIG.spielsperre = sp; else delete CONFIG.spielsperre;
+  logChange(msg);
+  saveConfig();
+  buildSpielsperre();
+}
+function buildSpielsperre() {
+  const box = document.getElementById('spielsperre-inhalt');
+  if (!box) return;
+  const werListe = frWerListe();
+  if (!FR.spWer || !werListe.includes(FR.spWer)) FR.spWer = werListe.includes(FR.wer) ? FR.wer : 'alle';
+  const wer = FR.spWer, sp = spCfg(), st = spStand(wer);
+  const heute = (new Date().getDay() + 6) % 7;
+  const tage = SP_TAGE.map((t, i) => `<label style="display:grid;gap:.25rem;text-align:center;font-size:.78rem;font-weight:800;color:${i === heute ? 'var(--accent)' : 'var(--text2)'}">${t}${i === heute ? ' (heute)' : ''}
+      <select data-sp-tag="${i}" aria-label="${t}: gute Runden vor den Spielen" style="width:auto;${st.eigen ? '' : 'border-style:dashed;'}">${Array.from({ length: 11 }, (_, n) =>
+        `<option value="${n}"${n === Number(st.l[i] || 0) ? ' selected' : ''}>${n === 0 ? '–' : n}</option>`).join('')}</select></label>`).join('');
+  const aktiv = Object.entries(sp.runden).map(([w, l]) => `${frEsc(frWerName(w))}: ${l.map((n, i) => n ? SP_TAGE[i] + ' ' + n : '').filter(Boolean).join(', ') || 'keine Sperre'}`);
+  box.innerHTML = `<div style="display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin-bottom:.8rem">
+      <select id="sp-wer" style="width:auto" aria-label="Für wen?">${werListe.map(w => `<option value="${frEsc(w)}"${w === wer ? ' selected' : ''}>${frEsc(frWerName(w))}</option>`).join('')}</select>
+      <label style="font-size:.85rem;color:var(--text2)">gute Runde ab
+        <select id="sp-schwelle" style="width:auto" aria-label="Gute Runde ab Prozent">${[50, 60, 70, 80, 90].map(v => `<option value="${v}"${v === sp.schwelle ? ' selected' : ''}>${v} %</option>`).join('')}</select></label>
+      ${wer !== 'alle' && st.eigen ? '<button class="btn sm" id="sp-erben">↺ wie „Alle“</button>' : ''}
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:.4rem;max-width:520px">${tage}</div>
+    <p style="font-size:.75rem;color:var(--muted);margin:.8rem 0 0;line-height:1.5">${st.eigen ? '' : 'Gestrichelt = übernommen von „Alle“. Eine Änderung legt eigene Werte für ' + frEsc(frWerName(wer)) + ' an. '}
+      Gezählt werden Runden in Lern-Apps (nicht in Spielen) ab der Prozent-Schwelle, ohne Durchklicken – ab Mitternacht neu. Die Schwelle gilt für alle.
+      ${aktiv.length ? '<br>Eingestellt: ' + aktiv.join(' · ') : '<br>Zurzeit ist keine Sperre eingestellt.'}</p>`;
+  document.getElementById('sp-wer').onchange = e => { FR.spWer = e.target.value; buildSpielsperre(); };
+  document.getElementById('sp-schwelle').onchange = e => {
+    const s = spCfg(); s.schwelle = Number(e.target.value);
+    spSpeichern(s, `🎮 Spielsperre: gute Runde ab ${s.schwelle} %`);
+  };
+  box.querySelectorAll('[data-sp-tag]').forEach(sel => sel.onchange = () => {
+    const s = spCfg(), l = spStand(wer).l.slice();
+    l[Number(sel.dataset.spTag)] = Number(sel.value);
+    s.runden[wer] = l.map(n => Number(n) || 0);
+    spSpeichern(s, `🎮 Spielsperre ${frWerName(wer)}: ${SP_TAGE[Number(sel.dataset.spTag)]} ${sel.value === '0' ? 'ohne Sperre' : sel.value + (sel.value === '1' ? ' Runde' : ' Runden')}`);
+  });
+  const erb = document.getElementById('sp-erben');
+  if (erb) erb.onclick = () => { const s = spCfg(); delete s.runden[wer]; spSpeichern(s, `🎮 Spielsperre ${frWerName(wer)}: wie „Alle“`); };
 }
 
 // ── „Heute für dich“ auf der Startseite (Etappe 8) ─────
