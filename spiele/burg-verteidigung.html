@@ -12,7 +12,9 @@
    Türme halten die Monster von der Burg fern. Die eigene
    Figur steht als Burgherr/Burgherrin auf der Burg.
 
-   Modi:   Runde (6 Wellen, XP wie jede App, Burg fällt nicht)
+   Modi:   Kampagne (10 Stationen: Karte + Wellen + Sonderregel; Kronen schalten
+           Stationen und Türme frei – Daten in tower-defense.json → kampagne)
+           Runde (6 Wellen, XP wie jede App, Burg fällt nicht)
            Endlos (bis die Burg fällt, Rekord = erreichte Welle,
            XP über LernPass.awardEndless)
    Fragen: aufgaben.js (Klassenfilter über den Pass)
@@ -28,6 +30,8 @@
    Braucht: navbar.js, aufgaben.js, avatar3d.js, vendor/three.min.js
    Speicher: lern-burg-wahl, lern-burg-rekorde (localStorage)
              lern-burg-wahl merkt sich auch, welche neuen Monster schon vorgestellt wurden (gesehen)
+             lernwelt-td-kampagne: { v: 1, k: { <stations-id>: Kronen }, t: [freigeschaltete Türme] }
+             (reist mit der Sicherungskarte; freigeschaltete Türme gehen nie wieder verloren)
              Rekorde: Burgwiese wie bisher, andere Karten mit „<karten-id>|“ davor,
              beste Kronen je Karte unter „#kronen“
   ═══════════════════════════════════════════════
@@ -118,6 +122,7 @@
     #baumenu button:not(:disabled):active { transform: scale(.96); }
     #baumenu button.kaufbar { border-color: var(--accent); background: rgba(230,168,23,.16); }
     #baumenu button:disabled { opacity: .42; cursor: default; }
+    #baumenu button.gesperrt small { color: var(--text2); }
     #baumenu button.zu { min-width: 44px; min-height: 44px; }
     #baumenu .bonus { color: var(--accent2); }
 
@@ -140,7 +145,7 @@
     h1 { font-family: 'Fredoka One', 'Nunito', sans-serif; font-weight: 400; color: var(--accent); font-size: 2.1rem; line-height: 1.05; }
     .lead { color: var(--text2); font-size: .92rem; margin: .3rem 0 .9rem; }
     .lbl { display: block; font-size: .8rem; font-weight: 900; color: var(--muted); margin: .85rem 0 .4rem; }
-    .seg { display: grid; grid-template-columns: 1fr 1fr; background: rgba(255,255,255,.06); border-radius: 14px; padding: 4px; gap: 4px; }
+    .seg { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; background: rgba(255,255,255,.06); border-radius: 14px; padding: 4px; gap: 4px; }
     .seg button { border-radius: 11px; padding: .55rem .5rem; min-height: 52px; font-weight: 900; font-size: .98rem; color: var(--text2); }
     .seg button small { display: block; font-size: .74rem; font-weight: 800; color: var(--muted); }
     .seg button.on { background: var(--accent); color: #231a02; }
@@ -163,6 +168,23 @@
     .karten button.on { border-color: var(--accent); background: rgba(230,168,23,.14); }
     .karten button.on b { color: var(--accent2); }
     .karten button:active { transform: scale(.97); }
+    .karten button:disabled { opacity: .45; cursor: default; }
+    .karten button:disabled:active { transform: none; }
+    /* Kampagne: Weg mit 10 Stationen (Schlange: oben links → rechts, unten rechts → links) */
+    .kamp { position: relative; display: grid; grid-template-columns: repeat(5, 1fr); grid-template-rows: auto auto; gap: .55rem .4rem; }
+    .kamp svg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+    .kamp button { position: relative; justify-self: center; width: 60px; min-height: 60px; border-radius: 16px; border: 3px solid rgba(15,14,26,.55);
+      display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.05; box-shadow: 0 4px 12px rgba(0,0,0,.25); }
+    .kamp button b { font-family: 'Fredoka One', 'Nunito', sans-serif; font-weight: 400; font-size: 1.3rem; color: #1b1929; }
+    .kamp button small { font-size: .62rem; font-weight: 900; color: #1b1929; letter-spacing: -.02em; }
+    .kamp button small .off { filter: grayscale(1); opacity: .35; }
+    .kamp button.on { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(230,168,23,.45), 0 4px 12px rgba(0,0,0,.25); }
+    .kamp button:disabled { filter: grayscale(.85) brightness(.6); cursor: default; }
+    .kamp button:not(:disabled):active { transform: scale(.95); }
+    @media (prefers-reduced-motion: reduce) { .kamp button:not(:disabled):active { transform: none; } }
+    .kamp-info { margin-top: .6rem; background: rgba(255,255,255,.05); border-radius: 12px; padding: .55rem .75rem; font-size: .88rem; font-weight: 700; color: var(--text2); }
+    .kamp-info b { color: var(--accent2); font-size: .98rem; }
+    .kamp-info .regel { color: var(--text); }
     @media (prefers-reduced-motion: reduce) { .karten button:active { transform: none; } }
     .row { display: flex; gap: .6rem; flex-wrap: wrap; align-items: center; }
     select { font: inherit; font-weight: 800; font-size: .9rem; background: #252238; color: var(--text); border: 1px solid rgba(255,255,255,.12);
@@ -260,6 +282,7 @@
     </div>
 
     <div class="seg" id="mode-seg">
+      <button type="button" data-mode="kampagne" hidden>Kampagne<small>10 Stationen</small></button>
       <button type="button" data-mode="runde" class="on">Runde<small>6 Wellen</small></button>
       <button type="button" data-mode="endlos">Endlos<small>bis die Burg fällt</small></button>
     </div>
@@ -267,6 +290,12 @@
     <div id="karten-box" hidden>
       <span class="lbl">Karte</span>
       <div class="karten" id="karten-list"></div>
+    </div>
+
+    <div id="kampagne-box" hidden>
+      <span class="lbl" id="kamp-titel">Kampagne</span>
+      <div class="kamp" id="kamp-weg"></div>
+      <div class="kamp-info" id="kamp-info"></div>
     </div>
 
     <div id="klasse-box" hidden>
@@ -452,7 +481,7 @@ const EINGEBAUT = {
       burg: [12.6, 7.4], sperren: [[-99, -99, 1, 3], [7.6, 8.2, 17.6, 99]] },
   ],
 };
-let DATEN = EINGEBAUT;
+let DATEN = EINGEBAUT, DATEN_FERTIG = false;   // DATEN_FERTIG: Laden abgeschlossen (mit oder ohne Datei)
 let KARTE = null;   // die aktuelle Karte (aufbereitet durch bereiteKarte)
 
 /** tower-defense.json laden und mit EINGEBAUT zusammenführen – scheitert nie */
@@ -465,6 +494,7 @@ async function ladeDaten() {
     if (uhr) clearTimeout(uhr);
     if (r.ok) j = await r.json();
   } catch (e) {}
+  DATEN_FERTIG = true;
   if (!j || typeof j !== 'object') return;
   const D = {
     tuerme: Object.assign({}, EINGEBAUT.tuerme, j.tuerme),
@@ -472,6 +502,7 @@ async function ladeDaten() {
     wellen: Object.assign({}, EINGEBAUT.wellen, j.wellen),
     biome: Object.assign({}, EINGEBAUT.biome, j.biome),
     karten: [],
+    kampagne: j.kampagne && typeof j.kampagne === 'object' ? j.kampagne : null,
   };
   (Array.isArray(j.karten) ? j.karten : []).forEach(k => {
     if (k && k.id && D.biome[k.biom] && Array.isArray(k.wege) && k.wege.length && Array.isArray(k.plaetze) && Array.isArray(k.burg)
@@ -493,13 +524,84 @@ function bereiteKarte(k) {
     staerke: k.staerke || 1, wellen: k.wellen || 'standard',
   };
 }
-/** Türme, die es auf dieser Karte gibt (Werte in den Daten UND Eintrag im Register) */
-function turmIds() { return Object.keys(DATEN.tuerme).filter(id => TURM_TYPEN[id] && turmErlaubt(id)); }
-function turmErlaubt(id) { return !KARTE || !KARTE.tuerme || KARTE.tuerme.includes(id); }
-/** Wellen der aktuellen Karte (Runde); unbekannte Gegner werden übersprungen */
+/** Türme, die es auf dieser Karte gibt (Werte in den Daten UND Eintrag im Register) – ohne Rücksicht aufs Freischalten */
+function turmIdsKarte() { return Object.keys(DATEN.tuerme).filter(id => TURM_TYPEN[id] && (!KARTE || !KARTE.tuerme || KARTE.tuerme.includes(id))); }
+/** … davon die freigeschalteten (die kann man bauen) */
+function turmIds() { return turmIdsKarte().filter(turmFrei); }
+/** Wellen der aktuellen Karte (Runde/Kampagne); unbekannte Gegner werden übersprungen */
 function wellenListe() {
-  const l = DATEN.wellen[KARTE && KARTE.wellen] || DATEN.wellen.standard || EINGEBAUT.wellen.standard;
-  return l.map(w => w.filter(([typ]) => DATEN.gegner[typ] && GEGNER_TYPEN[typ]));
+  const l = (DATEN.wellen[KARTE && KARTE.wellen] || DATEN.wellen.standard || EINGEBAUT.wellen.standard)
+    .map(w => w.filter(([typ]) => DATEN.gegner[typ] && GEGNER_TYPEN[typ]));
+  // Sonderregel der Kampagne: Boss schon in Welle n
+  const b = G.regel && G.regel.bossWelle;
+  if (b && l[b - 1] && !l[b - 1].some(([typ]) => DATEN.gegner[typ].boss)) l[b - 1] = [...l[b - 1], ['boss', 1, 0]];
+  return l;
+}
+
+/* ═══════════════════════════════════════════════════════
+   KAMPAGNE – Stationen, Kronen, Freischalten
+   Daten: tower-defense.json → kampagne { tuerme: { <turm>: Kronen }, stationen: [
+     { id, name, karte, wellen?, regel?: { text, startMuenzen, tempo, staerke, tuerme, bossWelle } } ] }
+   Nächste Station ab 1 Krone in der vorherigen. Türme aus kampagne.tuerme werden ab so
+   vielen Kronen (Summe aller Stationen) frei – auch für Runde und Endlos. Türme, die dort
+   nicht stehen, sind immer frei. Stations-IDs nie umbenennen (stehen im Spielstand).
+   ═══════════════════════════════════════════════════════ */
+const KAMP_KEY = 'lernwelt-td-kampagne';
+let KAMP = null, LINK_KARTE = null;
+function stationen() { return (DATEN.kampagne && Array.isArray(DATEN.kampagne.stationen)) ? DATEN.kampagne.stationen.filter(st => st && st.id && DATEN.karten.some(k => k.id === st.karte)) : []; }
+function turmSchwellen() { return (DATEN.kampagne && DATEN.kampagne.tuerme) || {}; }
+function kamp() {
+  if (KAMP) return KAMP;
+  if (!stationen().length) return { v: 1, k: {}, t: [] };   // Daten noch nicht geladen: nichts merken
+  try { const k = JSON.parse(localStorage.getItem(KAMP_KEY) || 'null'); if (k && k.k && typeof k.k === 'object') KAMP = { v: 1, k: k.k, t: Array.isArray(k.t) ? k.t : [] }; } catch (e) {}
+  if (!KAMP) {
+    KAMP = { v: 1, k: {}, t: [] };
+    // Wer schon Runden auf der Burgwiese gespielt hat, hat Station 1 geschafft (gespeichert wird erst beim nächsten Ergebnis)
+    let alt = besteKronen('burgwiese') > 0;
+    try { alt = alt || !!JSON.parse(localStorage.getItem('lern-apps-results') || '{}')[APP_KEY]; } catch (e) {}
+    const s1 = stationen()[0];
+    if (alt && s1 && s1.karte === 'burgwiese') KAMP.k[s1.id] = 1;
+  }
+  return KAMP;
+}
+function kampSpeichern() { try { localStorage.setItem(KAMP_KEY, JSON.stringify(kamp())); } catch (e) {} }
+function stationKronen(st) { return (st && kamp().k[st.id]) || 0; }
+function kampKronen() { return stationen().reduce((n, st) => n + stationKronen(st), 0); }
+function stationFrei(i) { const l = stationen(); return i === 0 || (i > 0 && i < l.length && stationKronen(l[i - 1]) >= 1); }
+function station() { const l = stationen(); return l[clamp(W.station | 0, 0, Math.max(0, l.length - 1))]; }
+function turmFrei(id) { return !(id in turmSchwellen()) || kamp().t.includes(id); }
+/** Neue Kronen eintragen → { besser, neueStation, neueTuerme } */
+function kampWerten(st, kronen) {
+  const K = kamp(), i = stationen().indexOf(st), vorherFrei = stationFrei(i + 1);
+  const besser = kronen > stationKronen(st);
+  if (besser) K.k[st.id] = kronen;
+  const summe = kampKronen(), neueTuerme = [];
+  Object.entries(turmSchwellen()).forEach(([id, n]) => { if (summe >= n && !K.t.includes(id) && DATEN.tuerme[id]) { K.t.push(id); neueTuerme.push(id); } });
+  if (besser || neueTuerme.length) kampSpeichern();
+  return { besser, neueStation: !vorherFrei && stationFrei(i + 1) ? i + 1 : -1, neueTuerme };
+}
+/** Karten der freien Wahl: Burgwiese, Karten erreichter Stationen, Karten mit eigenem Rekord, Lehrer-Link */
+function karteFrei(id) {
+  const l = stationen();
+  if (!l.length || id === DATEN.karten[0].id || id === LINK_KARTE) return true;
+  if (l.some((st, i) => st.karte === id && stationFrei(i))) return true;
+  if (besteKronen(id) > 0) return true;
+  return Object.keys(rekorde()).some(k => k.startsWith(id + '|'));
+}
+/** Welche Karte gerade gebaut sein soll */
+function aktKarteId() { return W.modus === 'kampagne' && stationen().length ? station().karte : W.karte; }
+function weltPruefen() { if (gl && (!KARTE || KARTE.id !== karteDaten(aktKarteId()).id)) baueWelt(); }
+/** Vor jedem Start: Werte der Karte zurücksetzen, in der Kampagne die Sonderregel anwenden */
+function regelnSetzen() {
+  const basis = bereiteKarte(karteDaten(KARTE.id));
+  Object.assign(KARTE, { wellen: basis.wellen, tuerme: basis.tuerme, staerke: basis.staerke });
+  G.regel = null; G.station = null;
+  if (W.modus !== 'kampagne' || !stationen().length) return;
+  const st = station(), R = st.regel || {};
+  G.station = st; G.regel = R;
+  if (st.wellen && DATEN.wellen[st.wellen]) KARTE.wellen = st.wellen;
+  if (Array.isArray(R.tuerme)) KARTE.tuerme = (KARTE.tuerme || Object.keys(DATEN.tuerme)).filter(t => R.tuerme.includes(t));
+  if (R.staerke) KARTE.staerke *= R.staerke;
 }
 const gw = (gx, gy) => [(gx - KARTE.spalten / 2) * TILE, (gy - KARTE.zeilen / 2) * TILE];
 
@@ -507,7 +609,7 @@ const gw = (gx, gy) => [(gx - KARTE.spalten / 2) * TILE, (gy - KARTE.zeilen / 2)
    AUSWAHL (Menü) – wie im Runner
    ═══════════════════════════════════════════════════════ */
 const WAHL_KEY = 'lern-burg-wahl', REKORD_KEY = 'lern-burg-rekorde';
-const W = { modus: 'runde', pools: [], bis: '', richtung: 'de-en', tempo: 'normal', fach: null, klasse: null, lehrer: false, mix: false, ton: false, karte: 'burgwiese', gesehen: [] };
+const W = { modus: 'runde', pools: [], bis: '', richtung: 'de-en', tempo: 'normal', fach: null, klasse: null, lehrer: false, mix: false, ton: false, karte: 'burgwiese', gesehen: [], station: null };
 function loadWahl() { try { Object.assign(W, JSON.parse(localStorage.getItem(WAHL_KEY) || '{}')); } catch (e) {} W.lehrer = false; W.quelle = 'meine'; if (!Array.isArray(W.gesehen)) W.gesehen = []; }
 function saveWahl() { try { const { lehrer, quelle, ...w } = W; localStorage.setItem(WAHL_KEY, JSON.stringify(w)); } catch (e) {} }
 // „Meine Themen“ (Einstellung der Lehrkraft im Admin: config.json → spiele.auswahl)
@@ -559,17 +661,19 @@ function buildMenu() {
   $('mix-btn').classList.toggle('on', W.mix);
   document.querySelectorAll('#mode-seg button').forEach(b => b.classList.toggle('on', b.dataset.mode === W.modus));
   document.querySelectorAll('#tempo-tabs button').forEach(b => b.classList.toggle('on', b.dataset.tempo === W.tempo));
-  $('tempo-box').hidden = W.modus !== 'runde';
+  $('tempo-box').hidden = W.modus === 'endlos';
   $('vok-richtung').value = W.richtung;
   $('ton-btn').textContent = W.ton ? '🔊' : '🔇';
   updateVok();
   baueKartenWahl();
+  baueKampagne();
   const rk = rekorde()[rekordKey()];
   $('rekord-note').hidden = W.modus !== 'endlos' || !bereit;
   const wo = DATEN.karten.length > 1 ? 'auf dieser Karte' : 'bei diesem Thema';
   $('rekord-note').innerHTML = rk ? `Dein Rekord ${wo}: <b>Welle ${rk}</b>` : `Noch kein Rekord ${wo} – leg los!`;
   $('go').disabled = !bereit || !gl;
-  $('go').textContent = q === 'frei' && W.pools.length > 1 ? `Los geht's! (Mix aus ${W.pools.length})` : "Los geht's!";
+  $('go').textContent = W.modus === 'kampagne' && stationen().length ? `Los geht's! (Station ${stationen().indexOf(station()) + 1})`
+    : q === 'frei' && W.pools.length > 1 ? `Los geht's! (Mix aus ${W.pools.length})` : "Los geht's!";
   CAM.dirty = true;
 }
 
@@ -586,21 +690,61 @@ function kartenVorschau(k) {
 }
 function baueKartenWahl() {
   const liste = DATEN.karten;
-  $('karten-box').hidden = liste.length < 2;
+  $('karten-box').hidden = liste.length < 2 || W.modus === 'kampagne';
   if (liste.length < 2) return;
+  if (!karteFrei(W.karte)) W.karte = liste[0].id;
   const aktiv = karteDaten(W.karte).id, runde = W.modus === 'runde', rk = rekorde(), basis = rekordKey().replace(/^[^|]*\|/, '');
   $('karten-list').innerHTML = liste.map(k => {
     let info;
     if (runde) { const n = besteKronen(k.id); info = [0, 1, 2].map(i => `<span class="${i < n ? '' : 'off'}">👑</span>`).join(''); }
     else { const r = rk[k.id === 'burgwiese' ? basis : k.id + '|' + basis]; info = r ? `🌊 ${r}` : '–'; }
+    if (!karteFrei(k.id)) {
+      const i = stationen().findIndex(st => st.karte === k.id);
+      return `<button type="button" disabled aria-label="${esc(k.name || k.id)}: gesperrt">${kartenVorschau(k)}<b>${esc(k.name || k.id)}</b><small>🔒 ${i >= 0 ? 'Station ' + (i + 1) : ''}</small></button>`;
+    }
     return `<button type="button" data-karte="${esc(k.id)}" class="${k.id === aktiv ? 'on' : ''}" aria-pressed="${k.id === aktiv}">
       ${kartenVorschau(k)}<b>${esc(k.name || k.id)}</b><small>${info}</small></button>`;
   }).join('');
 }
 /** Andere Karte wählen: merken und die 3D-Welt neu bauen */
 function waehleKarte(id) {
+  if (!karteFrei(id)) return;
   W.karte = karteDaten(id).id;
-  if (gl && (!KARTE || KARTE.id !== W.karte)) baueWelt();
+  weltPruefen();
+}
+
+/* ── Kampagnenkarte: 10 Stationen als Weg, Kronen je Station ── */
+function baueKampagne() {
+  const l = stationen(), an = W.modus === 'kampagne' && l.length > 0;
+  document.querySelector('#mode-seg [data-mode="kampagne"]').hidden = !l.length;
+  if (!l.length && W.modus === 'kampagne' && DATEN_FERTIG) W.modus = 'runde';   // ohne Kampagnendaten (offline, alte Datei)
+  $('kampagne-box').hidden = !an;
+  if (!an) return;
+  // Station vorwählen: die erste freie ohne Krone, sonst die letzte freie
+  if (W.station === null || W.station === undefined || !stationFrei(W.station | 0)) {
+    const offen = l.findIndex((st, i) => stationFrei(i) && !stationKronen(st));
+    let letzte = 0; l.forEach((st, i) => { if (stationFrei(i)) letzte = i; });
+    W.station = offen >= 0 ? offen : letzte;
+  }
+  const n = l.length, proReihe = Math.ceil(n / 2), aktiv = W.station | 0;
+  const pos = i => { const r = i < proReihe ? 0 : 1, c = r ? proReihe - 1 - (i - proReihe) : i; return { r, c }; };
+  const pkt = i => { const { r, c } = pos(i); return `${(c + .5) * 100 / proReihe},${r ? 75 : 25}`; };
+  $('kamp-weg').style.gridTemplateColumns = `repeat(${proReihe}, 1fr)`;
+  $('kamp-weg').innerHTML = `<svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><polyline points="${l.map((s, i) => pkt(i)).join(' ')}"
+      fill="none" stroke="rgba(253,230,138,.45)" stroke-width="3" stroke-dasharray="4 3" vector-effect="non-scaling-stroke"/></svg>` +
+    l.map((st, i) => {
+      const { r, c } = pos(i), frei = stationFrei(i), kr = stationKronen(st), k = DATEN.karten.find(x => x.id === st.karte);
+      const farbe = ((DATEN.biome[k.biom] || DATEN.biome.wiese).boden || ['#6cc56f'])[0];
+      return `<button type="button" data-station="${i}" style="grid-row:${r + 1};grid-column:${c + 1};background:${esc(farbe)}" class="${i === aktiv ? 'on' : ''}"
+        ${frei ? '' : 'disabled'} aria-label="Station ${i + 1}: ${esc(st.name)}${frei ? `, ${kr} von 3 Kronen` : ', gesperrt'}" aria-pressed="${i === aktiv}">
+        <b>${i + 1}</b><small>${frei ? [0, 1, 2].map(j => `<span class="${j < kr ? '' : 'off'}">👑</span>`).join('') : '🔒'}</small></button>`;
+    }).join('');
+  const st = station(), k = karteDaten(st.karte), summe = kampKronen();
+  const naechster = Object.entries(turmSchwellen()).filter(([id]) => !turmFrei(id) && DATEN.tuerme[id]).sort((a, b) => a[1] - b[1])[0];
+  $('kamp-titel').textContent = `Kampagne · 👑 ${summe} von ${n * 3}`;
+  $('kamp-info').innerHTML = `<b>Station ${aktiv + 1}: ${esc(st.name)}</b> · ${esc(k.name || k.id)}<br>
+    <span class="regel">${st.regel && st.regel.text ? '⚑ ' + esc(st.regel.text) : 'Ohne Sonderregel'}</span>
+    ${naechster ? `<br>Nächster Turm: ${esc(DATEN.tuerme[naechster[0]].icon)} ${esc(DATEN.tuerme[naechster[0]].name)} ab ${naechster[1]} 👑` : ''}`;
 }
 
 let vokFuer = null;
@@ -634,10 +778,11 @@ $('menu').addEventListener('click', e => {
   else if (t.id === 'mix-btn') { W.mix = !W.mix; if (!W.mix) W.pools = W.pools.slice(-1); }
   else if (t.dataset.tempo) { W.tempo = t.dataset.tempo; }
   else if (t.dataset.karte) { waehleKarte(t.dataset.karte); }
+  else if (t.dataset.station) { if (stationFrei(Number(t.dataset.station))) W.station = Number(t.dataset.station); }
   else if (t.id === 'ton-btn') { W.ton = !W.ton; if (W.ton) ton(660, .1); }
   else if (t.id === 'go') { startGame(); return; }
   else return;
-  saveWahl(); buildMenu();
+  saveWahl(); buildMenu(); weltPruefen();
 });
 $('vok-bis').onchange = () => { W.bis = $('vok-bis').value; saveWahl(); buildMenu(); };
 $('vok-richtung').onchange = () => { W.richtung = $('vok-richtung').value; saveWahl(); buildMenu(); };
@@ -772,7 +917,7 @@ function baueWelt() {
     if (burg) { scene.remove(burg); wegwerfen(burg.userData.gebacken); }
     plaetze.forEach(p => scene.remove(p.m)); plaetze.length = 0;
   }
-  KARTE = bereiteKarte(karteDaten(W.karte));
+  KARTE = bereiteKarte(karteDaten(aktKarteId()));
   WELT = { frei: [] };
   const B = KARTE.biom;
   if (scene.background) scene.background.dispose();
@@ -1660,9 +1805,11 @@ async function startGame() {
     const L = CFG.lesezeit;
     G.tempoLesen = n ? clamp(L.referenz / (summe / n), L.min, L.max) : 1;
   } catch (e) { $('menu-err').textContent = e.message; return; }
+  weltPruefen();
   aufraeumen();
+  regelnSetzen();
   Object.assign(G, { t: 0, start: performance.now(), countT: 3.2, endeT: 0, phase: 'bau', bauT: CFG.pauseErste, welle: 0, queue: [], welleT: 0,
-    herzen: CFG.burgHerzen, muenzen: CFG.startMuenzen, reparaturen: 0, verdient: 0, treffer: 0, wankt: false, shake: 0, jubelT: -1, jubelLang: 0, schreckT: -1, menu: null, spielStart: 0 });
+    herzen: CFG.burgHerzen, muenzen: (G.regel && G.regel.startMuenzen) || CFG.startMuenzen, reparaturen: 0, verdient: 0, treffer: 0, wankt: false, shake: 0, jubelT: -1, jubelLang: 0, schreckT: -1, menu: null, spielStart: 0 });
   Object.assign(Q, { a: null, sperreBis: 0, naechsteBei: 0, falsch: false, beantwortet: 0, richtig: 0, serie: 0, besteSerie: 0, fehler: [] });
   $('menu').hidden = true; $('result').hidden = true; $('hud').hidden = false;
   setNavbar(false);
@@ -1758,7 +1905,7 @@ function welleEndlos(n) {
 }
 function starteWelle() {
   G.welle++; G.phase = 'welle'; G.welleT = 0;
-  const runde = W.modus === 'runde';
+  const runde = W.modus !== 'endlos';
   const def = runde ? wellenListe()[G.welle - 1] : welleEndlos(G.welle);
   let hpMul, vMul;
   if (runde) {
@@ -1766,7 +1913,7 @@ function starteWelle() {
     const A = CFG.anpassung, min = (G.t - G.spielStart) / 60;
     if (A.an && G.welle > 1 && min > .3) anpass = clamp(G.verdient / (A.erwartetProMin * min), A.min, A.max);
     hpMul = (1 + CFG.hpProWelle * (G.welle - 1)) * anpass * KARTE.staerke;
-    vMul = (CFG.tempo[W.tempo] || 1) * G.tempoLesen;
+    vMul = (CFG.tempo[W.tempo] || 1) * G.tempoLesen * ((G.regel && G.regel.tempo) || 1);
     G.anpassung = anpass;
   } else {
     const E = CFG.endlos;
@@ -1793,7 +1940,7 @@ function wellenUpdate(dt) {
   if (!G.queue.length && !gegner.length) welleGeschafft();
 }
 function welleGeschafft() {
-  const runde = W.modus === 'runde';
+  const runde = W.modus !== 'endlos';
   if (!runde && G.welle % CFG.endlos.bossAlle === 0 && G.herzen < CFG.burgHerzen) {
     G.herzen = Math.min(CFG.burgHerzen, G.herzen + CFG.endlos.herzenNachBoss);
   }
@@ -1835,7 +1982,7 @@ function blitz(text, art) {
 }
 let hudMerk = '';
 function updateHud() {
-  const runde = W.modus === 'runde';
+  const runde = W.modus !== 'endlos';
   $('hud-welle').textContent = runde ? `🌊 Welle ${Math.max(1, G.welle)} / ${wellenListe().length}` : `🌊 Welle ${Math.max(1, G.welle)}`;
   $('hud-herzen').textContent = `❤️ ${G.herzen}`;
   $('hud-coins').innerHTML = `🪙 ${G.muenzen}${Q.serie >= 3 ? ` <span class="serie">🔥${Q.serie}</span>` : ''}`;
@@ -1872,8 +2019,9 @@ function oeffneMenu(platz) {
   G.menu = platz;
   const m = $('baumenu');
   if (!platz.turm) {
-    m.innerHTML = `<div class="titel">Turm bauen</div><div class="reihe">${turmIds().map(k => [k, DATEN.tuerme[k]]).map(([k, d]) =>
-      `<button type="button" data-bau="${k}"><span class="i">${d.icon}</span><b>${esc(d.name)}</b><small>🪙 ${d.preis[0]}</small></button>`).join('')}</div>`;
+    m.innerHTML = `<div class="titel">Turm bauen</div><div class="reihe">${turmIdsKarte().map(k => [k, DATEN.tuerme[k]]).map(([k, d]) => turmFrei(k)
+      ? `<button type="button" data-bau="${k}"><span class="i">${d.icon}</span><b>${esc(d.name)}</b><small>🪙 ${d.preis[0]}</small></button>`
+      : `<button type="button" class="gesperrt" disabled><span class="i">🔒</span><b>${esc(d.name)}</b><small>ab ${turmSchwellen()[k]} 👑</small></button>`).join('')}</div>`;
     ring.visible = false;
   } else {
     const t = platz.turm, d = DATEN.tuerme[t.typ];
@@ -2002,19 +2150,26 @@ function ende() {
   $('hud').hidden = true;
   setNavbar(true);
   const sek = (performance.now() - G.start) / 1000;
+  const kampagne = W.modus === 'kampagne' && G.station;
   const titel = G.meine ? 'Meine Themen' : W.pools.length === 1 ? (LernAufgaben.pools({ klasse: 9 }).find(p => p.id === W.pools[0]) || {}).titel || '' : 'Mix';
   let html;
-  if (W.modus === 'runde') {
+  let kw = null;
+  if (W.modus !== 'endlos') {
     const n = Q.beantwortet, s = Q.richtig;
     const kronen = G.herzen >= CFG.burgHerzen * .8 ? 3 : G.herzen >= CFG.burgHerzen * .4 ? 2 : G.herzen > 0 ? 1 : 0;
     G.ergebnisGut = kronen >= 1;
-    G.neueKronen = n > 0 && kronen > besteKronen(KARTE.id);
+    if (kampagne && n > 0) kw = kampWerten(G.station, kronen);
+    G.neueKronen = !kampagne && n > 0 && kronen > besteKronen(KARTE.id);
     if (G.neueKronen) { const rk = rekorde(); rk[KRONEN_FELD] = Object.assign({}, rk[KRONEN_FELD], { [KARTE.id]: kronen }); try { localStorage.setItem(REKORD_KEY, JSON.stringify(rk)); } catch (e) {} }
     html = `<div class="big">${s}<small> / ${n} richtig</small></div>
       <div class="kronen" aria-label="${kronen} von 3 Kronen">${[0, 1, 2].map(i => `<span class="${i < kronen ? '' : 'off'}">👑</span>`).join('')}</div>
       <div class="rmsg">${G.herzen >= CFG.burgHerzen ? 'Die Burg ist unversehrt!' : G.herzen > 0 ? `Burg verteidigt – noch ${G.herzen} ❤️` : 'Die Burg hat gewankt – beim nächsten Mal früher Türme bauen!'}</div>
-      <div class="rsub">${esc(KARTE.name)} · ${esc(titel)} · beste Serie 🔥${Q.besteSerie}</div>
-      ${G.neueKronen && DATEN.karten.length > 1 ? `<span class="record">Neue Bestleistung auf dieser Karte!</span>` : ''}`;
+      <div class="rsub">${kampagne ? `Station ${stationen().indexOf(G.station) + 1}: ${esc(G.station.name)}` : esc(KARTE.name)} · ${esc(titel)} · beste Serie 🔥${Q.besteSerie}</div>
+      ${G.neueKronen && DATEN.karten.length > 1 ? `<span class="record">Neue Bestleistung auf dieser Karte!</span>` : ''}
+      ${kw && kw.besser && kw.neueStation < 0 ?`<span class="record">Neue Bestleistung bei dieser Station!</span>` : ''}
+      ${kw && kw.neueStation >= 0 ? `<span class="record">Station ${kw.neueStation + 1} ist jetzt frei! 🗺️</span>` : ''}
+      ${kw ? kw.neueTuerme.map(id => `<span class="record">Neuer Turm frei: ${esc(DATEN.tuerme[id].icon)} ${esc(DATEN.tuerme[id].name)}!</span>`).join(' ') : ''}`;
+    if (kw && kw.neueTuerme.length && window.LernPass) LernPass.celebrate('konfetti');
     if (n > 0) speichereRunde(s, n, titel);
     if (kronen === 3 && window.LernPass) LernPass.celebrate('konfetti');
   } else {
@@ -2033,11 +2188,16 @@ function ende() {
     html += `<div class="fehler"><h3>Das übst du am besten noch einmal:</h3><ul>${
       Q.fehler.slice(-10).map(f => `<li>${esc(f.frage)} → <b>${esc(f.antwort)}</b></li>`).join('')}</ul></div>`;
   }
+  const naechste = kampagne ? stationen().indexOf(G.station) + 1 : -1;
+  if (naechste > 0 && naechste < stationen().length && stationFrei(naechste)) {
+    html += `<div class="btns" style="grid-template-columns:1fr"><button class="btn primary" id="next-st" type="button">▶ Weiter zu Station ${naechste + 1}</button></div>`;
+  }
   html += `<div class="btns"><button class="btn primary" id="again" type="button">🔄 Nochmal</button>
     <button class="btn" id="to-menu" type="button">${G.meine ? 'Menü' : 'Anderes Thema'}</button></div>`;
   $('result-body').innerHTML = html;
   $('result').hidden = false;
   $('again').onclick = startGame;
+  if ($('next-st')) $('next-st').onclick = () => { W.station = naechste; saveWahl(); startGame(); };
   $('to-menu').onclick = zeigeMenu;
   CAM.dirty = true;
 }
@@ -2222,8 +2382,8 @@ loadWahl();
   const L = LernAufgaben.ausLink(location.search);
   if (L.ids.length) { W.pools = L.ids; W.bis = L.opts.bis || ''; W.richtung = L.opts.richtung || 'de-en'; W.lehrer = true; W.fach = null; }
   const P = new URLSearchParams(location.search), m = P.get('modus');
-  if (m === 'endlos' || m === 'runde') W.modus = m;
-  if (P.get('karte')) W.karte = P.get('karte');   // z. B. ?karte=engpass (unbekannt → Burgwiese)
+  if (m === 'endlos' || m === 'runde' || m === 'kampagne') W.modus = m;
+  if (P.get('karte')) { W.karte = LINK_KARTE = P.get('karte'); if (W.modus === 'kampagne') W.modus = 'runde'; }   // z. B. ?karte=engpass (unbekannt → Burgwiese; auch wenn noch gesperrt)
 })();
 
 whenPass(() => {
