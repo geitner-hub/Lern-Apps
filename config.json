@@ -529,10 +529,10 @@
     "GPG"
   ],
   "announcement": {
-    "active": false,
-    "text": "NEU: Schalte im Lernwelt-Pass neue Gegenstände frei und gestalte deinen Avatar damit! Viel Spaß!",
+    "active": true,
+    "text": "Spiele sind jeden Tag versteckt, bis du mehrere Runden gut geübt hast! Viel Spaß beim Üben!",
     "emoji": "📢",
-    "color": 4
+    "color": 3
   },
   "pass": {
     "seasons": true,
