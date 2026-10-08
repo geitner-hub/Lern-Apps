@@ -206,7 +206,15 @@ Sicherungskarte verbunden ist – aus der **Kartengruppe** (der Sync-Worker schi
 - **Fokus** (`config.fokus[]`): „für Klasse 6 / Gruppe 5a bis 13 Uhr nur diese Apps“. Die Startseite zeigt dann nur
   diese Apps mit dem Hinweis „🎯 Heute im Fokus“ und wird am Ende von selbst wieder normal. Direkte Links und
   QR-Codes funktionieren weiter.
-- **gemeinsam/freigabe.js** (`window.LernFreigabe`): `erlaubt(id)`, `status(id)`, `wer()`, `fokus()`, `imFokus(datei)`.
+- **Spielsperre** (`config.spielsperre`, Admin → 🎯 Unterricht → „🎮 Spiele erst nach Lern-Runden“): Spiele
+  (`spiele/…`, **außer Mein Dorf**) gehen erst auf, wenn das Kind heute so viele gute Runden in Lern-Apps geschafft hat.
+  `{ schwelle: 60, runden: { "alle": [Mo, Di, Mi, Do, Fr, Sa, So], "k5": […], "g:<gruppe>": […] } }` – genaueste Liste
+  gilt (Gruppe vor Klasse vor alle), 0 = keine Sperre. Gezählt im Pass (`lernwelt-pass` → `today.lr`: Lern-App-Runden ab
+  `schwelle` %, ohne Durchklicken; reist mit der Sicherungskarte). Startseite: 🔒-Kacheln und eine Anzeige im Kopf
+  der Kategorie mit den Spielen („🎮 Spiele: 1 von 3 Runden“). Direkt geöffnete Spiele zeigen einen Hinweis
+  (`gemeinsam/spielsperre.js`, lädt navbar.js nur auf Spielseiten und nur, wenn eine Sperre eingestellt ist).
+- **gemeinsam/freigabe.js** (`window.LernFreigabe`): `erlaubt(id)`, `status(id)`, `wer()`, `fokus()`, `imFokus(datei)`,
+  `spielSperre()`, `spielGesperrt(datei)`.
   Liest die Offline-Kopie von config.json; ist sie älter als 5 Minuten, holt sie config.json im Hintergrund.
 - **Reihenfolge beim Hochladen:** zuerst `cloudflare/worker.js` **und** `cloudflare/sync.js` bei Cloudflare
   ersetzen, dann die Dateien hochladen, dann erst Freigaben speichern.

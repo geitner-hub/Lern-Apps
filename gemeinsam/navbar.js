@@ -78,6 +78,11 @@
     const los = () => setTimeout(() => lade(BEI_BEDARF[1], 'lw-sync-code-script').then(() => lade(BEI_BEDARF[2], 'lw-sync-script')).catch(() => {}), 800);
     if (document.readyState === 'complete') los(); else window.addEventListener('load', los, { once: true });
   }
+  // Spielsperre (config.json → spielsperre): Spiele außer Mein Dorf erst nach guten Lern-Runden
+  try {
+    if (/\/spiele\/(?!dorf\.html)[^/]+$/.test(location.pathname) && (localStorage.getItem('lernwelt-config-cache') || '').includes('"spielsperre"'))
+      lade('freigabe.js').then(() => lade('spielsperre.js')).catch(() => {});
+  } catch (e) {}
   if ('serviceWorker' in navigator && ROOT) {
     window.addEventListener('load', () => navigator.serviceWorker.register(ROOT + 'sw.js').catch(() => {}));
   }

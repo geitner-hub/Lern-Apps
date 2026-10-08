@@ -245,6 +245,12 @@
     .dorf-strip .zum{margin-left:auto;color:#fde7c4;font-weight:800;font-size:.85rem;text-decoration:none;white-space:nowrap;}
     .dorf-strip .leer{color:rgba(253,231,196,.8);font-weight:700;font-size:.85rem;}
     .app-tag.dorf{background:#f6ecd2;color:#3b2a1a;border-color:#9a6538;font-weight:900;}
+    .app-card.gesperrt{filter:grayscale(.7);opacity:.6;}
+    .app-tag.sperre{background:rgba(230,168,23,.16);color:#fde68a;border-color:rgba(230,168,23,.5);font-weight:900;}
+    .spiel-pill{font-size:.76rem;font-weight:800;padding:3px 11px;border-radius:99px;white-space:nowrap;background:rgba(230,168,23,.14);color:#fde68a;border:1px solid rgba(230,168,23,.4);}
+    .spiel-pill.frei{background:rgba(74,222,128,.12);color:#86efac;border-color:rgba(74,222,128,.4);}
+    .spiel-pill + .cat-count{margin-left:.5rem;}
+    .cat-header .spiel-pill{margin-left:auto;}
 
     /* ── LERNWELT-PASS ── */
     #pass-section{max-width:980px;margin:1.2rem auto 1.2rem;padding:0 1.4rem;}
@@ -698,6 +704,18 @@ function buildHeute() {
   sec.innerHTML = `<h2>Heute für dich</h2><div class="heute-grid">${karten.slice(0, 3).join('')}</div>`;
 }
 document.addEventListener('click', e => { if (e.target.closest('[data-heute-pass]')) openPass(''); });
+// Gesperrtes Spiel angetippt: nicht öffnen, sondern sagen, was noch fehlt (QR-Knopf geht weiter)
+document.addEventListener('click', e => {
+  const k = e.target.closest('a.app-card[data-gesperrt]');
+  if (!k || e.target.closest('.qr-btn')) return;
+  e.preventDefault();
+  const sp = window.LernFreigabe && LernFreigabe.spielSperre();
+  if (!sp || sp.frei) { location.href = k.getAttribute('href'); return; }
+  const rest = sp.noetig - sp.geschafft;
+  const text = `Erst noch ${rest} gute ${rest === 1 ? 'Runde' : 'Runden'} in den Lern-Apps – dann geht's los! 🎮`;
+  if (LernPass.hasProfile()) LernPass.showAvatar({ text, aktion: 'winken', dauer: 3800 });
+  else alert(text);
+}, true);
 
 // ── Fokus-Modus (Etappe 7): Hinweis oben, endet von selbst ──
 let fokusTimer = null;
@@ -818,8 +836,13 @@ function appKarte(app, fach) {
       const dorfTag = dp ? `<span class="app-tag dorf" title="Diese App hat einen Auftrag für dein Dorf">📌 Dorf ${dp.c}/${dp.n}</span>` : '';
       const starTag = st ? `<span class="app-tag star" title="Meisterschafts-Stern">${['', '🥉 Bronze', '🥈 Silber', '🥇 Gold'][st]}</span>` : '';
 
+      // Spielsperre (freigabe.js): Spiele erst nach guten Lern-Runden heute – Mein Dorf nie
+      const sperre = window.LernFreigabe && LernFreigabe.spielGesperrt(app.datei) ? LernFreigabe.spielSperre() : null;
+      const sperrTag = sperre ? `<span class="app-tag sperre" title="Erst Lern-Apps üben">🔒 noch ${sperre.noetig - sperre.geschafft} ${sperre.noetig - sperre.geschafft === 1 ? 'Runde' : 'Runden'}</span>` : '';
+
       const card = document.createElement('a');
-      card.className = 'app-card';
+      card.className = 'app-card' + (sperre ? ' gesperrt' : '');
+      if (sperre) card.dataset.gesperrt = '1';
       card.href = app.datei;
       card.dataset.name = app.name;
       card.dataset.fach = fach;
@@ -831,7 +854,7 @@ function appKarte(app, fach) {
         <span class="app-name">${escHtml(app.name)}</span>
         <span class="app-desc">${escHtml(app.beschreibung || '')}</span>
         <div class="app-meta">
-          ${dorfTag}${starTag}
+          ${sperrTag}${dorfTag}${starTag}
           ${kl.map(k => `<span class="app-tag tk">Kl.${escHtml(k)}</span>`).join('')}
           ${ct.map(t => {
             const col = tagColor(t);
@@ -878,6 +901,14 @@ function buildPage() {
       </div>
       <div class="apps-grid"></div>`;
     const grid = sec.querySelector('.apps-grid');
+
+    // Kleine Anzeige der Spielsperre im Kopf der Kategorie mit den Spielen (meist „Allgemein“)
+    const sp = window.LernFreigabe && LernFreigabe.spielSperre();
+    if (sp && apps.some(a => a.fach === fach && /^spiele\//.test(a.datei) && !/dorf\.html/.test(a.datei))) {
+      sec.querySelector('.cat-count').insertAdjacentHTML('beforebegin', sp.frei
+        ? '<span class="spiel-pill frei" role="status">🎮 Spiele frei!</span>'
+        : `<span class="spiel-pill" role="status" title="Gute Runden (ab ${Number((CONFIG.spielsperre || {}).schwelle) || 60} %) in den Lern-Apps">🎮 Spiele: ${sp.geschafft} von ${sp.noetig} Runden</span>`);
+    }
 
     // Regale (Etappe 6): Apps ohne Regal wie bisher, darunter je Regal eine Zeile
     const fachApps = apps.filter(a => a.fach === fach);
