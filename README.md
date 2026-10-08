@@ -523,6 +523,18 @@ eingebauten Burgwiese (`EINGEBAUT` im Spiel).
   Karten erreichter Stationen und Karten mit eigenem Rekord; `?karte=` öffnet jede Karte. Wer schon Runden gespielt
   hat, hat Station 1 geschafft. Speicher: `lernwelt-td-kampagne` (`{ v, k: { <stations-id>: Kronen }, t: [Türme] }`),
   reist mit der Sicherungskarte. Stations-IDs nie umbenennen.
+- **Abwechslung (Etappe 5):**
+  - **Karte des Tages** (Modus „Heute“): Karte, Landschaft, Wellensatz und eine Regel aus `tag.regeln` werden aus dem
+    Datum gewählt – alle Kinder haben am selben Tag dieselbe. Tagesrekord in `lern-burg-rekorde` → `#tag`
+    (nur der heutige Tag). Türme wie sonst nach Freischaltung.
+  - **Rodung:** Plätze mit `abWelle` sind zugewachsen und lassen sich ab der Bauphase vor dieser Welle für
+    40 Münzen roden (`CFG.rodenPreis`). Karte „Lichtung“.
+  - **Weiche:** Karten mit zwei Wegen und `weiche: [3, 5]` – vor diesen Wellen stellt die Weiche um, alle Monster
+    nehmen den anderen Weg. In der Bauphase leuchtet der Weg der nächsten Welle; vor einem Wechsel gibt Abreißen
+    100 % zurück. Karte „Kreuzung“.
+  - **Ereignis-Wellen** (nur Endlos, jede 7. Welle, nie mit Boss, eine Bauphase vorher angekündigt): Nebel
+    (Reichweite 75 %), Ansturm (viele Flitzer), Goldene Welle (kein Monster durch → +1 Herz).
+  - Neue Karten werden über Kronen frei: `kampagne.karten` (Kreuzung ab 12, Lichtung ab 15).
 - **IDs** von Karten, Türmen, Gegnern und Landschaften nie umbenennen oder löschen.
 - **Speicher:** `lern-burg-rekorde` – Burgwiese mit den alten Schlüsseln, andere Karten mit `<karten-id>|` davor,
   beste Kronen je Karte im Feld `#kronen`. `lern-burg-wahl` merkt sich zusätzlich die Karte.
