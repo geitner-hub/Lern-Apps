@@ -1,0 +1,87 @@
+{
+ "hinweis": "Room Detective: Gegenstände (emoji, en, de, pl = Mehrzahl), Möbel (en, de, w = Breite in der Szene), Namen der Kunden, Satzrahmen je Stufe ({o} Gegenstand, {p} Präposition, {r} Möbel), Fälle für den Detektiv-Modus und die Wörter für die Merkmale der Verdächtigen. IDs nie umbenennen.",
+ "gegenstaende": {
+  "cat":        { "emoji": "🐈", "en": "cat",        "de": "Katze" },
+  "dog":        { "emoji": "🐕", "en": "dog",        "de": "Hund" },
+  "ball":       { "emoji": "⚽", "en": "ball",       "de": "Ball" },
+  "bag":        { "emoji": "🎒", "en": "bag",        "de": "Tasche" },
+  "book":       { "emoji": "📕", "en": "book",       "de": "Buch" },
+  "guitar":     { "emoji": "🎸", "en": "guitar",     "de": "Gitarre" },
+  "clock":      { "emoji": "⏰", "en": "clock",      "de": "Uhr" },
+  "apple":      { "emoji": "🍎", "en": "apple",      "de": "Apfel" },
+  "phone":      { "emoji": "📱", "en": "phone",      "de": "Handy" },
+  "pencil":     { "emoji": "✏️", "en": "pencil",     "de": "Bleistift" },
+  "bird":       { "emoji": "🐦", "en": "bird",       "de": "Vogel" },
+  "rabbit":     { "emoji": "🐇", "en": "rabbit",     "de": "Kaninchen" },
+  "hamster":    { "emoji": "🐹", "en": "hamster",    "de": "Hamster" },
+  "hat":        { "emoji": "👒", "en": "hat",        "de": "Hut" },
+  "jacket":     { "emoji": "🧥", "en": "jacket",     "de": "Jacke" },
+  "trainers":   { "emoji": "👟", "en": "trainers",   "de": "Turnschuhe", "pl": true },
+  "sunglasses": { "emoji": "🕶️", "en": "sunglasses", "de": "Sonnenbrille", "pl": true },
+  "cake":       { "emoji": "🎂", "en": "cake",       "de": "Kuchen" }
+ },
+ "moebel": {
+  "bed":      { "en": "bed",      "de": "Bett",          "w": 230 },
+  "table":    { "en": "table",    "de": "Tisch",         "w": 170 },
+  "desk":     { "en": "desk",     "de": "Schreibtisch",  "w": 170 },
+  "chair":    { "en": "chair",    "de": "Stuhl",         "w": 85 },
+  "sofa":     { "en": "sofa",     "de": "Sofa",          "w": 210 },
+  "box":      { "en": "box",      "de": "Kiste",         "w": 105 },
+  "wardrobe": { "en": "wardrobe", "de": "Kleiderschrank","w": 145 }
+ },
+ "praepositionen": {
+  "on":          { "de": "auf",      "stufe": 1 },
+  "under":       { "de": "unter",    "stufe": 1 },
+  "in":          { "de": "in",       "stufe": 1 },
+  "next to":     { "de": "neben",    "stufe": 2 },
+  "in front of": { "de": "vor",      "stufe": 2 },
+  "behind":      { "de": "hinter",   "stufe": 3 },
+  "between":     { "de": "zwischen", "stufe": 3 }
+ },
+ "kunden": ["Emma", "Leon", "Aisha", "Mehmet", "Sofia", "Noah", "Mia", "Ali", "Lena", "Yusuf", "Hannah", "Kenji", "Zoe", "Amir", "Lucy", "Mateo"],
+ "zimmer": [
+  { "id": "zimmer-blau",  "en": "my new room",     "wand": "#c7d7f0", "boden": "#b07a4a" },
+  { "id": "zimmer-gruen", "en": "my room",      "wand": "#cfe6cf", "boden": "#a5683f" },
+  { "id": "zimmer-gelb",  "en": "my big room", "wand": "#f3e2b0", "boden": "#8f5a34" },
+  { "id": "zimmer-rosa",  "en": "my little room",  "wand": "#f1cfd8", "boden": "#b8875a" }
+ ],
+ "saetze": {
+  "1": ["Put the {o} {p} the {r}, please."],
+  "2": ["Put the {o} {p} the {r}, please.", "Can you put the {o} {p} the {r}, please?", "I want the {o} {p} the {r}."],
+  "3": ["Can you put the {o} {p} the {r}, please?", "I want the {o} {p} the {r}.", "Please put the {o} {p} the {r}.", "And the {o}? {P} the {r}, please!"]
+ },
+ "faelle": [
+  { "emoji": "🎂", "en": "The birthday cake is gone!" },
+  { "emoji": "💎", "en": "Somebody has taken the big diamond!" },
+  { "emoji": "⚽", "en": "The school football is gone!" },
+  { "emoji": "🐹", "en": "Where is the class hamster?" },
+  { "emoji": "🎸", "en": "Somebody has taken the teacher's guitar!" },
+  { "emoji": "🍫", "en": "All the chocolate is gone!" },
+  { "emoji": "🏆", "en": "The football cup is gone!" },
+  { "emoji": "🕶️", "en": "Somebody has taken Grandma's sunglasses!" }
+ ],
+ "merkmale": {
+  "haarfarben": { "black": "#1f1b18", "brown": "#6b3f22", "red": "#c2410c", "blond": "#e9c46a" },
+  "farben": { "red": "#ef4444", "blue": "#3b82f6", "green": "#22c55e", "yellow": "#facc15", "pink": "#f472b6", "orange": "#fb923c" },
+  "tiere": { "dog": "🐕", "cat": "🐈", "bird": "🐦", "rabbit": "🐇", "hamster": "🐹" },
+  "koennen": {
+   "swim":              { "emoji": "🏊", "de": "schwimmen" },
+   "ride a bike":       { "emoji": "🚲", "de": "Rad fahren" },
+   "sing":              { "emoji": "🎤", "de": "singen" },
+   "play the guitar":   { "emoji": "🎸", "de": "Gitarre spielen" },
+   "play football":     { "emoji": "⚽", "de": "Fußball spielen" }
+  }
+ },
+ "stufen": {
+  "zimmer": {
+   "1": { "auftraege": 2, "extra": 2, "moebel": 3, "text": "Auf, unter, in – zwei Dinge pro Zimmer." },
+   "2": { "auftraege": 3, "extra": 3, "moebel": 4, "text": "Dazu: next to und in front of." },
+   "3": { "auftraege": 4, "extra": 3, "moebel": 5, "text": "Dazu: behind und between – vier Dinge pro Zimmer." }
+  },
+  "detektiv": {
+   "1": { "verdaechtige": 4, "text": "„has got“: Haare, Hut, Sonnenbrille, Haustier." },
+   "2": { "verdaechtige": 6, "text": "Dazu: „can“ und „is wearing“." },
+   "3": { "verdaechtige": 8, "text": "Dazu: Verneinungen (hasn't got, can't, isn't wearing)." }
+  }
+ }
+}

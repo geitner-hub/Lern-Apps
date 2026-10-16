@@ -30,7 +30,7 @@
   'use strict';
   if (window.LW && window.LW.UMGEBUNG) return;          // doppeltes Laden verhindern
 
-  const VERSION = 'v51';                                 // ⚙ bei jedem Upload mit sw.js zusammen erhöhen
+  const VERSION = 'v52';                                 // ⚙ bei jedem Upload mit sw.js zusammen erhöhen
 
   // ── Umgebung erkennen ────────────────────────────────
   //  GitHub Pages: erster Pfadteil = Repo-Name (Lern-Apps bzw. Lern-Apps-test)
@@ -88,6 +88,7 @@
     ['lern-tauziehen-wahl',         'local',   'spiele/tauziehen.html',    'Tauziehen-Duell: zuletzt gewählte Einstellungen', false],
     ['lern-zauberwort-wahl',        'local',   'spiele/zauberwort.html',   'Zauberwort: zuletzt gewählte Einstellungen', false],
     ['lern-zauberwort-rekord',      'local',   'spiele/zauberwort.html',   'Zauberwort: Rekord', false],
+    ['lernwelt-room-detective',     'local',   'spiele/room-detective.html', 'Room Detective: Stufen, Zähler und letzte Wahl', false],
     // Lern-Apps mit eigenem Speicher
     ['laender-finder-best',         'local',   'apps/gpg/laender-finder.html', 'Länder-Finder: Bestzeiten je Modus', false],
     ['lernwelt-bayern-best',        'local',   'apps/gpg/bayern.html',     'Auskennen in Bayern: Bestwerte je Modus', false],

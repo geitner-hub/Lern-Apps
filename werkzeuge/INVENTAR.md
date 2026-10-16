@@ -1,6 +1,6 @@
 # Inventar der Lern-Apps und Spiele
 
-Automatisch erzeugt am 06.10.2026 mit `python3 werkzeuge/inventar.py` (Angaben aus dem Code). Nur die Spalten **Entscheidung** und **Notiz** von Hand pflegen – sie bleiben beim Neu-Erzeugen erhalten.
+Automatisch erzeugt am 16.10.2026 mit `python3 werkzeuge/inventar.py` (Angaben aus dem Code). Nur die Spalten **Entscheidung** und **Notiz** von Hand pflegen – sie bleiben beim Neu-Erzeugen erhalten.
 
 Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv**
 
@@ -8,15 +8,15 @@ Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv
 
 | Datei | Name | Themen-ID | Art | Fach · Klassen | Sichtbar | Ergebnis | Pass-XP | liefert „Meine Themen“ | nutzt „Meine Themen“ | Dorf-Aufträge | Entscheidung | Notiz |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
-| `apps/englisch/knowing-english.html` | – | `en.5.knowing-english` (5 Stufen) | Lern-App | – | nicht in config | – | – | – | – | – (nicht in config) |  |  |
+| `apps/englisch/knowing-english.html` | Knowing English | `en.5.knowing-english` (5 Stufen) | Lern-App | Englisch · 5, 6 | sichtbar | – | – | – | – | ja |  |  |
 | `apps/englisch/practice_simple_present.html` | – | – | Lern-App | – | nicht in config | – | – | – | – | – (nicht in config) | Kern | Gut: nur Antippen, Tipp-Knopf. Mängel: meldet kein `thema`; Satzstellung später Typ Sortieren (Etappe 9) |
 | `apps/englisch/satzglieder-erkennen.html` | Satzglieder ordnen | `en.5.satzglieder` | Lern-App | Englisch · 5 | sichtbar | ja | ja | – | – | ja | Kern → Engine (Etappe 9) | Wird erste Überführung Typ Zuordnen. Mängel: Rückmeldung nur richtig/falsch ohne Erklärung, kein `thema` |
 | `apps/englisch/simple-past.html` | – | – | Lern-App | – | nicht in config | – | – | – | – | – (nicht in config) | Kern | Gute Rückmeldung (Regel + Beispiel), Verbenliste, Kl. 5/6. Mängel: kein `thema`, keine Stufen im Katalog |
-| `apps/englisch/time-dates-numbers.html` | – | `en.5.zeit` (5 Stufen) | Lern-App | – | nicht in config | – | – | – | – | – (nicht in config) |  |  |
+| `apps/englisch/time-dates-numbers.html` | Time, Date and Numbers | `en.5.zeit` (5 Stufen) | Lern-App | Englisch · 5, 6 | sichtbar | – | – | – | – | ja |  |  |
 | `apps/englisch/vokabeltrainer.html` | Vokabeltrainer 5. Klasse | `en.5.vok` (7 Stufen), `en.5.wortlisten` (8 Stufen), `en.6.vok` (5 Stufen) | Lern-App | Englisch · 5 | sichtbar | ja | ja | ja | – | ja | Engine (Etappe 5, Testphase) | Ein Trainer für alle Wortlisten (?klasse=5/6, ?liste=NAME); ersetzt nach dem Test vokabeltrainer5/6 |
 | `apps/englisch/vokabeltrainer5.html` | – | – | Lern-App | – | nicht in config | – | – | – | – | – (nicht in config) | Engine (Etappe 5) | Mit vokabeltrainer6 zu einer Vokabel-Engine. Mängel: Startseite scrollt (iPad quer), ~100 Zeilen doppelt zu Kl. 6 |
 | `apps/englisch/vokabeltrainer6.html` | – | – | Lern-App | – | nicht in config | – | – | – | – | – (nicht in config) | Engine (Etappe 5) | Siehe vokabeltrainer5 |
-| `apps/gpg/bayern.html` | – | `gpg.5.bayern` (5 Stufen) | Lern-App | – | nicht in config | ja | ja | – | – | – (nicht in config) |  |  |
+| `apps/gpg/bayern.html` | Kennst du dich in Bayern aus? | `gpg.5.bayern` (5 Stufen) | Lern-App | GPG · 5, 6 | sichtbar | ja | ja | – | – | ja |  |  |
 | `apps/gpg/laender-finder.html` | Länder finden | `gpg.6.laender` (6 Stufen), `gpg.5.erde` (1 Stufen) | Lern-App | GPG · 6 | sichtbar | ja | ja | – | – | ja | Kern | Stark: Karte, Profi-Modus, Fehler kommen wieder. Bundesländer = GPG 5, Europa = GPG 6. Mängel: kein `thema`/`inhalt` |
 | `apps/mathe/einmaleins_tafel.html` | Einmaleins 1x1 | `ma.5.1x1` (2 Stufen) | Lern-App | Mathematik · 5, 6 | sichtbar | ja | ja | ja | – | ja (1 Runden) | Kern | Gut: Klassik/Profi, 3 Stufen, großes 1×1. Mängel: falsche Felder nur rot, ohne Hilfe (z. B. Nachbaraufgabe) |
 | `apps/mathe/kopfrechnen-neu.html` | – | – | Lern-App | – | nicht in config | – | – | – | – | – (nicht in config) | Weiterleitung | Test-Name des Mathe-Trainers → mathe-trainer.html (Ergebnisse werden übernommen) |
@@ -29,13 +29,14 @@ Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv
 | `apps/mathe/laengeneinheiten.html` | Längeneinheiten umrechnen | `ma.5.laengen` (6 Stufen) | Lern-App | Mathematik · 5, 6 | sichtbar | – | – | – | – | ja | Kern → Typ Eingabe (Etappe 9) | Passt zu M5 LB 5. Mängel: kein `thema`/`inhalt` (fehlt in den Spielen), Hilfe nur auf Knopfdruck, keine anderen Größen (Masse, Zeit, Geld) |
 | `apps/mathe/mathe-trainer.html` | Mathe-Trainer Klasse 5 | – | Lern-App | Mathematik · 5 | sichtbar | – | – | – | – | ja | Kern (Übungs-Rahmen) | Etappe 4b: Stoff der Jahrgangsstufe 5/6 in Stufen (?klasse=5/6); neue Themen = neue Stufen in daten/kopfrechnen.json |
 | `apps/mathe/rechen-arena.html` | Rechen-Arena | `ma.5.rechen-arena` | Lern-App | Allgemein · 5, 6 | sichtbar | ja | ja | – | – | ja | Kern | Beliebt, vier Modi. Mängel: Startseite scrollt (iPad quer), kein `thema`/`inhalt`, Ballon-Pop hat keine Rückmeldung zum Fehler (bewusst schnell) |
-| `apps/mathe/stellenwerttafel.html` | – | `ma.5.stellenwert` (5 Stufen) | Lern-App | – | nicht in config | – | – | – | – | – (nicht in config) |  |  |
-| `apps/mathe/zahlenstrahl.html` | – | `ma.5.zahlenstrahl` (5 Stufen) | Lern-App | – | nicht in config | – | – | – | – | – (nicht in config) |  |  |
-| `apps/typen/uebung.html` | Simple present | `ma.5.geometrie` (8 Stufen), `en.5.to-be` (6 Stufen), `en.5.simple-present` (8 Stufen), `en.5.simple-past` (7 Stufen), `en.5.have-got` (5 Stufen), `en.5.can` (5 Stufen), `en.5.present-progressive` (5 Stufen), `en.5.nomen` (4 Stufen), `en.5.pronomen` (5 Stufen), `en.5.there-is` (5 Stufen), `en.5.fragen` (3 Stufen), `en.5.praepositionen` (4 Stufen), `en.6.future` (6 Stufen), `en.6.steigerung` (4 Stufen), `en.6.some-any` (4 Stufen) | Lern-App | Englisch · 5 | sichtbar | – | – | – | – | ja |  |  |
+| `apps/mathe/stellenwerttafel.html` | Große Zahlen können | `ma.5.stellenwert` (5 Stufen) | Lern-App | Mathematik · 5 | sichtbar | – | – | – | – | ja |  |  |
+| `apps/mathe/zahlenstrahl.html` | Der Zahlenstrahl | `ma.5.zahlenstrahl` (5 Stufen) | Lern-App | Mathematik · 5 | sichtbar | – | – | – | – | ja |  |  |
+| `apps/typen/uebung.html` | Geometrie-Training | `ma.5.geometrie` (8 Stufen), `en.5.to-be` (6 Stufen), `en.5.simple-present` (8 Stufen), `en.5.simple-past` (7 Stufen), `en.5.have-got` (5 Stufen), `en.5.can` (5 Stufen), `en.5.present-progressive` (5 Stufen), `en.5.nomen` (4 Stufen), `en.5.pronomen` (5 Stufen), `en.5.there-is` (5 Stufen), `en.5.fragen` (3 Stufen), `en.5.praepositionen` (4 Stufen), `en.6.future` (6 Stufen), `en.6.steigerung` (4 Stufen), `en.6.some-any` (4 Stufen) | Lern-App | Mathematik · 5, 6 | sichtbar | – | – | – | – | ja |  |  |
 | `spiele/burg-verteidigung.html` | Tower Defense | – | Spiel | Allgemein · alle | sichtbar | ja | ja | – | ja | – (Spiel) |  |  |
 | `spiele/dorf.html` | Mein Dorf | – | Spiel | Allgemein · alle | sichtbar | – | – | – | – | Dorf selbst |  |  |
 | `spiele/expedition.html` | Entdecker-Expedition | – | Spiel | GPG · 6 | versteckt | über spiel-hilfen.js | ja | – | – | – (Spiel) |  |  |
 | `spiele/kitchen-chaos.html` | Kitchen-Chaos | – | Spiel | Allgemein · alle | sichtbar | über spiel-hilfen.js | ja | – | – | – (Spiel) |  |  |
+| `spiele/room-detective.html` | – | – | Spiel | – | nicht in config | über spiel-hilfen.js | ja | – | – | – (Spiel) |  |  |
 | `spiele/runner.html` | RUN! | – | Spiel | Allgemein · alle | sichtbar | ja | ja | – | ja | – (Spiel) |  |  |
 | `spiele/tauziehen.html` | Tauziehen | – | Spiel | Allgemein · alle | sichtbar | über spiel-hilfen.js | ja | – | ja | – (Spiel) |  |  |
 | `spiele/wort-des-tages.html` | Wort des Tages | – | Spiel | Allgemein · alle | versteckt | über spiel-hilfen.js | ja | – | ja | – (Spiel) |  |  |
@@ -66,13 +67,14 @@ Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv
 | apps/mathe/laengeneinheiten.html | 2 | generatoren-mathe.js, freigabe.js, ueben.js, navbar.js | + über navbar.js |
 | apps/mathe/mathe-trainer.html | 2 | generatoren-mathe.js, freigabe.js, ueben.js, navbar.js | + über navbar.js |
 | apps/mathe/rechen-arena.html | 52 | navbar.js | rechenArena_ballonHighscore, + über navbar.js |
-| apps/mathe/stellenwerttafel.html | 16 | freigabe.js, ueben.js, ziffernblock.js, navbar.js | + über navbar.js |
+| apps/mathe/stellenwerttafel.html | 15 | freigabe.js, ueben.js, ziffernblock.js, navbar.js | + über navbar.js |
 | apps/mathe/zahlenstrahl.html | 17 | freigabe.js, ueben.js, ziffernblock.js, navbar.js | + über navbar.js |
 | apps/typen/uebung.html | 2 | freigabe.js, ueben.js, typen.js, navbar.js | + über navbar.js |
-| spiele/burg-verteidigung.html | 85 | navbar.js, aufgaben.js, avatar3d.js | lern-burg-wahl, lern-burg-rekorde, + über navbar.js |
+| spiele/burg-verteidigung.html | 143 | navbar.js, aufgaben.js, avatar3d.js | lern-apps-results, lern-burg-wahl, lern-burg-rekorde, lernwelt-td-kampagne, + über navbar.js |
 | spiele/dorf.html | 88 | shared.js, config-api.js, dorf-kern.js, avatar3d.js, dorf-szene.js, navbar.js | lernwelt-dorf, lernwelt-dorf-besuch, + über navbar.js |
 | spiele/expedition.html | 33 | navbar.js, spiel-hilfen.js, karten-ansicht.js | lernwelt-expedition, + über navbar.js |
 | spiele/kitchen-chaos.html | 38 | navbar.js, spiel-hilfen.js, avatar3d.js | lern-kitchen-chaos, + über navbar.js |
+| spiele/room-detective.html | 59 | navbar.js, spiel-hilfen.js | lernwelt-room-detective, + über navbar.js |
 | spiele/runner.html | 51 | navbar.js, aufgaben.js, avatar3d.js | lern-runner-wahl, lern-runner-rekorde, + über navbar.js |
 | spiele/tauziehen.html | 44 | navbar.js, aufgaben.js, spiel-hilfen.js, avatar3d.js | lern-tauziehen-wahl, + über navbar.js |
 | spiele/wort-des-tages.html | 27 | navbar.js, aufgaben.js, spiel-hilfen.js | lern-wort-des-tages, + über navbar.js |

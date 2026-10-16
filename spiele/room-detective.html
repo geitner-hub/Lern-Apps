@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <script src="../gemeinsam/umgebung.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#0f0e1a">
+  <title>Room Detective</title>
+  <!--
+  ═══════════════════════════════════════════════
+   ROOM DETECTIVE  (spiele/room-detective.html)
+
+   Zwei Modi, beide auf Englisch, Lesen oder Hören:
+
+   🏠 Zimmer einrichten – Ein Kunde schreibt einen Brief („Put the cat under
+      the bed, please.“). Das Kind zieht die Dinge an die richtige Stelle im
+      Zimmer. Gegenstände und Möbel tragen keine Wörter, nur Bilder.
+      Intrinsische Integration: Nur wer Präpositionen und Wörter versteht,
+      richtet das Zimmer richtig ein. Geprüft wird über die Lage im Zimmer:
+      jeder Platz weiß selbst, was über ihn stimmt (der Platz zwischen Bett
+      und Tisch ist „next to the bed“, „next to the table“ und „between …“).
+      Stufe 1: on, under, in · 2: + next to, in front of · 3: + behind, between.
+
+   🕵️ Detektiv – Ein Dieb versteckt sich unter den Verdächtigen. Hinweise
+      („The thief has got a dog.“, „The thief can't swim.“) – das Kind streicht
+      alle aus, auf die der Hinweis NICHT passt. Verstehen IST das Ausschließen.
+      Falsch gestrichen → die Person widerspricht auf Englisch („But I can swim!“).
+      Stufe 1: has got · 2: + can, is wearing · 3: + Verneinungen, mehr Merkmale.
+
+   Gewertet wird nur der erste Versuch je Satz bzw. Hinweis (kein Durchprobieren).
+   Inhalte: daten/room-detective.json. Verdächtige sind eigene SVG-Figuren
+   (ohne WebGL, mit genau den Merkmalen, die die Hinweise brauchen).
+   Fortschritt: 'lernwelt-room-detective' (Stufen, Zähler) – nur auf dem Gerät,
+   XP und Sterne laufen wie immer über die Lernwelt (gesichert).
+   XP: jede Runde über LernSpiel.speichereRunde.
+   Braucht: navbar.js, spiel-hilfen.js
+  ═══════════════════════════════════════════════
+  -->
+  <link rel="stylesheet" href="../gemeinsam/fonts.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f0e1a; --panel: rgba(27,25,41,.94); --panel2: #252238;
+      --accent: #e6a817; --accent2: #fde68a; --indigo: #6366f1; --indigo2: #818cf8;
+      --text: #f1f0fb; --text2: rgba(241,240,251,.72); --muted: rgba(241,240,251,.45);
+      --green: #4ade80; --red: #f87171; --orange: #fb923c;
+      --papier: #fffbeb; --tinte: #1c1917;
+    }
+    html, body { height: 100%; overflow: hidden; }
+    body { font-family: 'Nunito', system-ui, sans-serif; background: var(--bg); color: var(--text);
+      -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+    button { font: inherit; color: inherit; border: 0; background: none; cursor: pointer; touch-action: manipulation; }
+    button:focus-visible { outline: 3px solid var(--indigo2); outline-offset: 2px; }
+    [hidden] { display: none !important; }
+    .fredoka { font-family: 'Fredoka One', 'Nunito', sans-serif; font-weight: 400; }
+
+    /* ── Gemeinsame Kopfzeile ─────────────── */
+    .kopf { display: flex; gap: .5rem; align-items: flex-start;
+      padding: max(.55rem, env(safe-area-inset-top)) max(.7rem, env(safe-area-inset-right)) .5rem max(.7rem, env(safe-area-inset-left)); }
+    .chip { background: var(--panel2); border-radius: 14px; padding: .35rem .7rem; font-weight: 900; font-size: .92rem; display: inline-flex; gap: .35rem;
+      align-items: center; white-space: nowrap; min-height: 38px; }
+    .pause { width: 44px; justify-content: center; }
+    .seite { display: flex; flex-direction: column; gap: .4rem; align-items: flex-end; }
+
+    /* ── Brief (Zimmer) ───────────────────── */
+    #zimmer-spiel, #detektiv-spiel { position: fixed; inset: 0; display: grid; grid-template-rows: auto minmax(0, 1fr) auto; }
+    .brief { flex: 1; background: var(--papier); color: var(--tinte); border-radius: 16px; padding: .55rem .9rem .6rem; box-shadow: 0 8px 22px rgba(0,0,0,.35);
+      position: relative; min-width: 0; }
+    .brief .von { font-weight: 900; font-size: .82rem; color: #92400e; display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
+    .brief .zeile { font-family: 'Fredoka One', 'Nunito', sans-serif; font-size: clamp(1rem, 2.6vmin, 1.4rem); line-height: 1.22; display: flex; gap: .45rem; align-items: baseline; margin-top: .18rem; }
+    .brief .zeile .st { flex: 0 0 1.3em; text-align: center; font-family: 'Nunito', sans-serif; }
+    .brief .zeile.ok { color: #15803d; }
+    .brief .zeile.falsch { color: #b91c1c; }
+    .brief .antwort { font-weight: 900; color: #b91c1c; margin-top: .3rem; font-size: clamp(.95rem, 2.3vmin, 1.15rem); }
+    .brief .antwort.gut { color: #15803d; }
+    .hbtn { background: #1c1917; color: #fff; border-radius: 12px; padding: .3rem .75rem; font-weight: 900; font-size: .88rem; min-height: 38px; }
+    .hbtn.klein { background: #e7e5e4; color: #1c1917; }
+    .fertig { min-height: 56px; border-radius: 16px; background: var(--accent); color: #231a02; font-family: 'Fredoka One', 'Nunito', sans-serif;
+      font-size: clamp(1.05rem, 2.6vmin, 1.3rem); padding: .3rem 1rem; white-space: nowrap; }
+    .fertig:disabled { opacity: .4; }
+
+    #szene-box { position: relative; min-height: 0; display: flex; align-items: center; justify-content: center; background: #1a1726; }
+    #szene { width: 100%; height: 100%; display: block; touch-action: none; }
+    #szene text.ding { cursor: grab; }
+    #szene .platz { fill: rgba(99,102,241,.22); stroke: var(--indigo2); stroke-width: 3; stroke-dasharray: 7 6; opacity: 0; transition: opacity .15s; }
+    body.ziehen #szene .platz, body.waehlen #szene .platz { opacity: .9; }
+    #szene .platz.ziel { fill: rgba(230,168,23,.45); stroke: var(--accent); opacity: 1; stroke-dasharray: none; }
+    #szene .falsch-ring { fill: none; stroke: #ef4444; stroke-width: 5; }
+    #szene .ok-ring { fill: none; stroke: #22c55e; stroke-width: 5; }
+
+    #ablage { background: linear-gradient(180deg, #2b2539, #221d30); border-top: 3px solid #0000002e;
+      padding: .5rem max(.7rem, env(safe-area-inset-right)) calc(.5rem + env(safe-area-inset-bottom)) max(.7rem, env(safe-area-inset-left));
+      display: flex; gap: .5rem; align-items: center; justify-content: center; flex-wrap: wrap; min-height: 86px; touch-action: none; }
+    #ablage .leer { color: var(--muted); font-weight: 800; font-size: .9rem; }
+    .ding-btn { width: clamp(62px, 10vmin, 84px); height: clamp(62px, 10vmin, 84px); border-radius: 16px; background: linear-gradient(180deg, #fef3c7, #fde68a);
+      box-shadow: inset 0 -5px 0 rgba(120,53,15,.25), 0 4px 10px rgba(0,0,0,.3); font-size: clamp(2.1rem, 6vmin, 2.9rem); line-height: 1; display: grid; place-items: center; touch-action: none; }
+    .ding-btn.gewaehlt { box-shadow: 0 0 0 4px var(--indigo2), 0 0 18px rgba(129,140,248,.8); transform: translateY(-4px); }
+    .ding-btn.weg { opacity: .25; }
+    #geist { position: fixed; left: 0; top: 0; font-size: clamp(3rem, 9vmin, 4.4rem); line-height: 1; pointer-events: none; z-index: 20;
+      transform: translate(-50%, -90%); filter: drop-shadow(0 8px 10px rgba(0,0,0,.4)); }
+
+    /* ── Akte (Detektiv) ──────────────────── */
+    .akte { flex: 1; background: #f5f0e6; color: var(--tinte); border-radius: 16px; padding: .5rem .9rem .6rem; box-shadow: 0 8px 22px rgba(0,0,0,.35); min-width: 0;
+      border-left: 10px solid #b45309; }
+    .akte .fall { font-weight: 900; font-size: .85rem; color: #92400e; display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
+    .akte .hinweis { font-family: 'Fredoka One', 'Nunito', sans-serif; font-size: clamp(1.15rem, 3.1vmin, 1.7rem); line-height: 1.2; margin-top: .2rem; }
+    .akte .alt { font-size: .85rem; color: #57534e; font-weight: 800; margin-top: .25rem; }
+    .akte .alt span { white-space: nowrap; }
+    .akte .tipp { font-size: .85rem; color: #6b7280; font-weight: 800; margin-top: .2rem; }
+
+    #verdaechtige { min-height: 0; display: grid; gap: clamp(.4rem, 1.2vmin, .8rem);
+      padding: .3rem max(.7rem, env(safe-area-inset-right)) .5rem max(.7rem, env(safe-area-inset-left)); }
+    .person { position: relative; min-height: 0; min-width: 0; border-radius: 18px; background: linear-gradient(180deg, #34304a, #26223a);
+      box-shadow: 0 6px 16px rgba(0,0,0,.35); display: grid; grid-template-rows: minmax(0, 1fr) auto; overflow: visible; transition: transform .1s, filter .2s; }
+    .person:active { transform: scale(.97); }
+    .person svg { width: 100%; height: 100%; display: block; }
+    .person .tier { position: absolute; right: 6%; bottom: 26%; font-size: clamp(1.6rem, 5vmin, 2.8rem); line-height: 1; filter: drop-shadow(0 3px 4px rgba(0,0,0,.4)); }
+    .person .kann { display: flex; gap: .25rem; justify-content: center; padding: .2rem .3rem .4rem; }
+    .person .kann span { background: rgba(255,255,255,.12); border-radius: 10px; font-size: clamp(1rem, 3vmin, 1.5rem); padding: .1rem .3rem; line-height: 1.1; }
+    .person.raus { filter: grayscale(1) brightness(.55); }
+    .person.raus::after { content: '✖'; position: absolute; inset: 0; display: grid; place-items: center; color: #ef4444; font-size: clamp(3rem, 12vmin, 6rem);
+      font-weight: 900; text-shadow: 0 4px 12px rgba(0,0,0,.6); pointer-events: none; }
+    .person.fest { pointer-events: none; }
+    .person.fest.raus { filter: grayscale(1) brightness(.35); }
+    .person.dieb { box-shadow: 0 0 0 5px var(--accent), 0 0 30px rgba(230,168,23,.7); animation: huepf .5s ease 3; }
+    .person.fehler { box-shadow: 0 0 0 4px #ef4444; animation: wackeln .45s ease 2; }
+    .blase { position: absolute; left: 50%; top: 4%; transform: translateX(-50%); background: #fff; color: #1c1917; border-radius: 14px; padding: .35rem .6rem;
+      font-weight: 900; font-size: clamp(.8rem, 2.1vmin, 1.05rem); line-height: 1.15; width: max-content; max-width: 150%; text-align: center; z-index: 3;
+      box-shadow: 0 8px 18px rgba(0,0,0,.35); pointer-events: none; }
+    .blase::after { content: ''; position: absolute; left: 50%; bottom: -10px; margin-left: -8px; border: 8px solid transparent; border-top: 10px solid #fff; border-bottom: 0; }
+    #det-unten { padding: .3rem max(.7rem, env(safe-area-inset-right)) calc(.55rem + env(safe-area-inset-bottom)) max(.7rem, env(safe-area-inset-left));
+      display: flex; justify-content: center; gap: .6rem; }
+    #det-unten .fertig { min-width: min(320px, 70vw); }
+    @keyframes huepf { 40% { transform: translateY(-14px); } }
+    @keyframes wackeln { 25% { transform: rotate(-3deg); } 75% { transform: rotate(3deg); } }
+
+    .flash { position: fixed; left: 50%; top: 42%; transform: translate(-50%, -50%); font-family: 'Fredoka One', 'Nunito', sans-serif;
+      font-size: clamp(1.4rem, 4.8vmin, 2.4rem); padding: .45rem 1.1rem; border-radius: 18px; background: var(--panel); opacity: 0;
+      transition: opacity .15s; text-align: center; white-space: nowrap; pointer-events: none; z-index: 15; }
+    .flash.show { opacity: 1; }
+    .flash.ok { color: var(--accent2); } .flash.bad { color: var(--red); }
+
+    /* ── Menü & Ergebnis ───────────────── */
+    .overlay { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(15,14,26,.75);
+      padding: 1rem 1rem calc(4.5rem + env(safe-area-inset-bottom)); overflow-y: auto; z-index: 10; }
+    .sheet { width: min(560px, 100%); background: #1b1929; border-radius: 22px; padding: 1.3rem; box-shadow: 0 20px 60px rgba(0,0,0,.45); margin: auto 0; }
+    h1 { font-family: 'Fredoka One', 'Nunito', sans-serif; font-weight: 400; color: var(--accent); font-size: 2.2rem; line-height: 1.05; }
+    h2 { font-family: 'Fredoka One', 'Nunito', sans-serif; font-weight: 400; color: var(--accent2); font-size: 1.9rem; text-align: center; }
+    .lead { color: var(--text2); font-size: .92rem; margin: .3rem 0 .6rem; }
+    .lbl { display: block; font-size: .78rem; font-weight: 900; color: var(--muted); margin: .9rem 0 .4rem; }
+    .modi { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; }
+    .modus { border-radius: 18px; background: rgba(255,255,255,.06); border: 3px solid transparent; padding: .7rem .5rem; text-align: center; font-weight: 900; }
+    .modus .em { font-size: 2.3rem; display: block; line-height: 1.1; }
+    .modus small { display: block; font-size: .74rem; color: var(--muted); font-weight: 800; margin-top: .2rem; }
+    .modus.on { border-color: var(--accent); background: rgba(230,168,23,.13); }
+    .tabs { display: flex; gap: .35rem; flex-wrap: wrap; }
+    .tabs button { padding: .45rem .9rem; border-radius: 99px; font-weight: 900; font-size: .88rem; background: rgba(255,255,255,.06); color: var(--text2); min-height: 42px; }
+    .tabs button.on { background: var(--indigo); color: #fff; }
+    .tabs button:disabled { opacity: .35; }
+    .note { font-size: .8rem; color: var(--muted); margin-top: .45rem; font-weight: 700; }
+    .statistik { font-size: .82rem; color: var(--text2); font-weight: 800; margin-top: .8rem; text-align: center; }
+    .unten { display: flex; gap: .6rem; margin-top: 1.1rem; }
+    .go { flex: 1; min-height: 56px; border-radius: 16px; background: var(--accent); color: #231a02; font-family: 'Fredoka One', 'Nunito', sans-serif; font-size: 1.4rem; }
+    .go:disabled { opacity: .45; }
+    .ton { width: 56px; min-height: 56px; border-radius: 16px; background: rgba(255,255,255,.08); font-size: 1.3rem; }
+    .err { color: var(--red); font-weight: 800; font-size: .88rem; margin-top: .6rem; min-height: 1em; }
+    .res-zahl { text-align: center; font-family: 'Fredoka One', 'Nunito', sans-serif; font-size: 3rem; margin: .2rem 0; }
+    .res-sub { text-align: center; color: var(--text2); font-weight: 800; }
+    .aufstieg { text-align: center; margin-top: .6rem; font-weight: 900; color: var(--green); }
+    .ueben { margin-top: .8rem; background: rgba(255,255,255,.05); border-radius: 14px; padding: .6rem .8rem; font-size: .9rem; color: var(--text2); max-height: 13em; overflow-y: auto; }
+    .ueben p { margin: .35rem 0; }
+    .ueben b { color: #fff; }
+    .ueben span { color: var(--accent2); }
+    .btns { display: flex; gap: .6rem; justify-content: center; margin-top: 1rem; flex-wrap: wrap; }
+    .btn { min-height: 48px; padding: .5rem 1.1rem; border-radius: 14px; font-weight: 900; background: rgba(255,255,255,.08); }
+    .btn.primary { background: var(--accent); color: #231a02; }
+    @media (prefers-reduced-motion: reduce) {
+      .person.dieb, .person.fehler { animation: none; }
+      .ding-btn.gewaehlt { transform: none; }
+      #szene .platz { transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Modus: Zimmer einrichten ─────────────── -->
+<div id="zimmer-spiel" hidden>
+  <div class="kopf">
+    <div class="brief" id="brief"></div>
+    <div class="seite">
+      <button class="chip pause" id="z-pause" type="button" aria-label="Pause">⏸</button>
+      <span class="chip" id="z-stand">🏠 1/3</span>
+      <button class="fertig" type="button" id="z-fertig">✓ Fertig</button>
+    </div>
+  </div>
+  <div id="szene-box"><svg id="szene" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid meet" aria-label="Zimmer"></svg></div>
+  <div id="ablage" aria-label="Kiste mit Dingen"></div>
+</div>
+
+<!-- ── Modus: Detektiv ──────────────────────── -->
+<div id="detektiv-spiel" hidden>
+  <div class="kopf">
+    <div class="akte" id="akte"></div>
+    <div class="seite">
+      <button class="chip pause" id="d-pause" type="button" aria-label="Pause">⏸</button>
+      <span class="chip" id="d-stand">🗂️ 1/3</span>
+    </div>
+  </div>
+  <div id="verdaechtige"></div>
+  <div id="det-unten"><button class="fertig" id="d-pruefen" type="button">🔎 Hinweis prüfen</button></div>
+</div>
+
+<div id="geist" hidden></div>
+<div class="flash" id="flash"></div>
+
+<div class="overlay" id="menu">
+  <div class="sheet">
+    <h1>🕵️ Room Detective</h1>
+    <p class="lead">Lies (oder hör) genau hin: Richte Zimmer nach Briefen ein oder finde mit Hinweisen den Dieb – alles auf Englisch!</p>
+    <span class="lbl">Was machst du heute?</span>
+    <div class="modi" id="modi">
+      <button type="button" class="modus" data-modus="zimmer"><span class="em">🏠</span>Zimmer einrichten<small>on, under, next to …</small></button>
+      <button type="button" class="modus" data-modus="detektiv"><span class="em">🕵️</span>Detektiv<small>has got, can, is wearing …</small></button>
+    </div>
+    <span class="lbl">Stufe</span>
+    <div class="tabs" id="stufen"></div>
+    <p class="note" id="stufe-info"></p>
+    <span class="lbl">So kommen die Sätze</span>
+    <div class="tabs" id="lesart">
+      <button type="button" data-lesart="lesen" class="on">📖 Lesen</button>
+      <button type="button" data-lesart="hoeren">🎧 Hören</button>
+    </div>
+    <p class="note" id="hoer-note" hidden>Beim Hören spricht das iPad die Sätze. Bitte mit Kopfhörern spielen.</p>
+    <div class="unten">
+      <button class="go" id="go" type="button" disabled>Los geht's!</button>
+      <button class="ton" id="ton-btn" type="button" aria-label="Ton an oder aus">🔇</button>
+    </div>
+    <p class="statistik" id="statistik"></p>
+    <div class="err" id="menu-err"></div>
+  </div>
+</div>
+
+<div class="overlay" id="pause" hidden>
+  <div class="sheet" style="text-align:center">
+    <h2>Pause</h2>
+    <div class="btns"><button class="btn primary" id="weiter" type="button">Weiter</button><button class="btn" id="beenden" type="button">Beenden</button></div>
+  </div>
+</div>
+<div class="overlay" id="ergebnis" hidden><div class="sheet" id="ergebnis-body"></div></div>
+
+<script src="../gemeinsam/navbar.js"></script>
+<script src="../gemeinsam/spiel-hilfen.js"></script>
+<script>
+'use strict';
+
+/* ═══════════════════════════════════════════════════════
+   EINSTELLUNGEN
+   ═══════════════════════════════════════════════════════ */
+const CFG = {
+  zimmerJeRunde: 3,          // Zimmer pro Runde
+  faelleJeRunde: 3,          // Fälle pro Runde
+  aufstiegAb: .8,            // Anteil richtig (erster Versuch) → nächste Stufe frei
+  maxStufe: 3,
+  luecke: 105,               // Abstand zwischen Möbeln (dort ist ein „next to“-Platz)
+  fangRadius: 120,           // so nah (Szenen-Einheiten) muss ein Ding an einem Platz losgelassen werden
+  maxHinweise: 5,
+};
+const APP_KEY = 'room-detective.html';
+const SPEICHER = 'lernwelt-room-detective';
+const W = 1200, BODEN = 450, VORN_Y = 565;
+const REDUCED = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const zufall = a => a[Math.floor(Math.random() * a.length)];
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const gross = s => s.charAt(0).toUpperCase() + s.slice(1);
+
+let DATEN = null;
+function lade() {
+  let d = {};
+  try { d = JSON.parse(localStorage.getItem(SPEICHER) || '{}') || {}; } catch (e) {}
+  const s = Object.assign({ stufe: {}, zimmer: 0, faelle: 0, wahl: {} }, d);
+  s.stufe = Object.assign({ zimmer: 1, detektiv: 1 }, s.stufe);
+  s.wahl = Object.assign({ modus: 'zimmer', stufe: 1, lesart: 'lesen', ton: false }, s.wahl);
+  return s;
+}
+let S = lade();
+function speichere() { try { localStorage.setItem(SPEICHER, JSON.stringify(S)); } catch (e) {} }
+
+/* ── Sprachausgabe (wie Kitchen-Chaos) ── */
+let STIMME = null;
+function stimmeWaehlen() {
+  if (!('speechSynthesis' in window)) return;
+  const v = speechSynthesis.getVoices();
+  STIMME = v.find(x => /en-GB/i.test(x.lang)) || v.find(x => /^en/i.test(x.lang)) || null;
+}
+if ('speechSynthesis' in window) { stimmeWaehlen(); speechSynthesis.onvoiceschanged = stimmeWaehlen; }
+function sprich(text) {
+  if (!('speechSynthesis' in window) || !text) return false;
+  try {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = STIMME ? STIMME.lang : 'en-GB';
+    if (STIMME) u.voice = STIMME;
+    u.rate = .88;
+    speechSynthesis.speak(u);
+    return true;
+  } catch (e) { return false; }
+}
+const hoeren = () => S.wahl.lesart === 'hoeren';
+
+/* ── Ton ── */
+let AC = null;
+function ton(f, d = .12, typ = 'triangle', vol = .06) {
+  if (!S.wahl.ton) return;
+  try {
+    AC = AC || new (window.AudioContext || window.webkitAudioContext)();
+    if (AC.state === 'suspended') AC.resume();
+    const o = AC.createOscillator(), g = AC.createGain(), t = AC.currentTime;
+    o.type = typ; o.frequency.setValueAtTime(f, t); g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(.0001, t + d);
+    o.connect(g); g.connect(AC.destination); o.start(t); o.stop(t + d + .02);
+  } catch (e) {}
+}
+const tonGut = () => { ton(784, .1); setTimeout(() => ton(1047, .16), 100); };
+const tonSchlecht = () => ton(200, .22, 'sawtooth', .05);
+
+let flashT = 0;
+function flash(typ, text, ms = 1100) {
+  const el = $('flash'); el.className = 'flash show ' + typ; el.textContent = text;
+  clearTimeout(flashT); flashT = setTimeout(() => el.classList.remove('show'), ms);
+}
+function setNavbar(an) { ['lern-home-btn', 'lern-result-badge'].forEach(id => { const el = $(id); if (el) el.style.visibility = an ? '' : 'hidden'; }); }
+
+/* ═══════════════════════════════════════════════════════
+   MENÜ
+   ═══════════════════════════════════════════════════════ */
+function buildMenu() {
+  const w = S.wahl;
+  const frei = S.stufe[w.modus] || 1;
+  if (!w.stufe || w.stufe > frei) w.stufe = frei;
+  document.querySelectorAll('#modi .modus').forEach(b => b.classList.toggle('on', b.dataset.modus === w.modus));
+  $('stufen').innerHTML = [1, 2, 3].map(n => `<button type="button" data-stufe="${n}" class="${n === w.stufe ? 'on' : ''}" ${n > frei ? 'disabled' : ''}>${n > frei ? '🔒 ' : ''}${n}</button>`).join('');
+  const st = DATEN.stufen[w.modus][w.stufe];
+  $('stufe-info').textContent = st.text + (frei < CFG.maxStufe ? `  Nächste Stufe: ${Math.round(CFG.aufstiegAb * 100)} % beim ersten Versuch richtig.` : '');
+  document.querySelectorAll('#lesart button').forEach(b => b.classList.toggle('on', b.dataset.lesart === w.lesart));
+  $('hoer-note').hidden = w.lesart !== 'hoeren';
+  if (w.lesart === 'hoeren' && !('speechSynthesis' in window)) $('hoer-note').textContent = 'Dieses Gerät kann nicht vorlesen – bitte „Lesen“ wählen.';
+  $('ton-btn').textContent = w.ton ? '🔊' : '🔇';
+  $('statistik').textContent = (S.zimmer || S.faelle) ? `🏠 ${S.zimmer} Zimmer eingerichtet · 🗂️ ${S.faelle} Fälle gelöst` : '';
+  $('go').disabled = false;
+}
+$('menu').addEventListener('click', e => {
+  const t = e.target.closest('button');
+  if (!t || t.disabled) return;
+  const w = S.wahl;
+  if (t.dataset.modus) { w.modus = t.dataset.modus; w.stufe = S.stufe[w.modus]; }
+  else if (t.dataset.stufe) w.stufe = Number(t.dataset.stufe);
+  else if (t.dataset.lesart) { w.lesart = t.dataset.lesart; if (hoeren()) sprich('Hello!'); }
+  else if (t.id === 'ton-btn') { w.ton = !w.ton; ton(660, .1); }
+  else if (t.id === 'go') { starteRunde(); return; }
+  else return;
+  speichere(); buildMenu();
+});
+
+/* ═══════════════════════════════════════════════════════
+   RUNDE (für beide Modi)
+   ═══════════════════════════════════════════════════════ */
+const G = { zustand: 'menu', modus: 'zimmer', stufe: 1, nr: 0, punkte: 0, max: 0, uebung: [] };
+
+function starteRunde() {
+  if (hoeren()) sprich(' ');   // iPad: Sprachausgabe einmal direkt nach dem Tippen starten
+  $('flash').classList.remove('show');
+  Object.assign(G, { zustand: 'spiel', modus: S.wahl.modus, stufe: S.wahl.stufe, nr: 0, punkte: 0, max: 0, uebung: [] });
+  $('menu').hidden = true; $('ergebnis').hidden = true; $('pause').hidden = true;
+  setNavbar(false);
+  $('zimmer-spiel').hidden = G.modus !== 'zimmer';
+  $('detektiv-spiel').hidden = G.modus !== 'detektiv';
+  if (G.modus === 'zimmer') naechstesZimmer(); else naechsterFall();
+}
+
+function rundeEnde() {
+  G.zustand = 'ende';
+  if ('speechSynthesis' in window) speechSynthesis.cancel();
+  const anteil = G.max ? G.punkte / G.max : 0;
+  let aufstieg = '';
+  if (anteil >= CFG.aufstiegAb && G.stufe === S.stufe[G.modus] && G.stufe < CFG.maxStufe) {
+    S.stufe[G.modus]++; S.wahl.stufe = S.stufe[G.modus];
+    aufstieg = `🎉 Stufe ${S.stufe[G.modus]} ist frei!`;
+  }
+  speichere();
+  LernSpiel.speichereRunde({ score: G.punkte, max: G.max, titel: 'richtig', skill: `room-detective:${G.modus}:${G.stufe}` });
+  if (anteil >= CFG.aufstiegAb && window.LernPass) LernPass.celebrate('konfetti');
+  const zimmer = G.modus === 'zimmer';
+  const titel = anteil === 1 ? (zimmer ? 'Perfekt eingerichtet! 🏠' : 'Meisterdetektiv! 🕵️') : anteil >= CFG.aufstiegAb ? 'Super gemacht!' : 'Geschafft!';
+  $('ergebnis-body').innerHTML = `<h2>${titel}</h2><div class="res-zahl">${G.punkte} / ${G.max}</div>
+    <div class="res-sub">${zimmer ? 'Sätze' : 'Hinweise'} beim ersten Versuch richtig</div>
+    ${aufstieg ? `<div class="aufstieg">${esc(aufstieg)}</div>` : ''}
+    ${G.uebung.length ? `<div class="ueben"><b>Das schau dir nochmal an:</b>${G.uebung.slice(0, 8).map(u => `<p>„${esc(u.en)}“<br><span>${esc(u.de)}</span></p>`).join('')}</div>` : ''}
+    <div class="btns"><button class="btn primary" type="button" id="nochmal">🔄 Nochmal</button><button class="btn" type="button" id="zum-menu">Menü</button></div>`;
+  $('ergebnis').hidden = false;
+  $('nochmal').onclick = starteRunde;
+  $('zum-menu').onclick = zeigeMenu;
+}
+function zeigeMenu() {
+  G.zustand = 'menu';
+  if ('speechSynthesis' in window) speechSynthesis.cancel();
+  zieheAb();
+  $('zimmer-spiel').hidden = true; $('detektiv-spiel').hidden = true; $('ergebnis').hidden = true; $('pause').hidden = true; $('menu').hidden = false;
+  setNavbar(true); buildMenu();
+}
+
+let vorPause = null;
+function pausiere() {
+  if (G.zustand !== 'spiel' && G.zustand !== 'wechsel') return;
+  vorPause = G.zustand; G.zustand = 'pause'; zieheAb();
+  $('pause').hidden = false;
+  if ('speechSynthesis' in window) speechSynthesis.cancel();
+}
+$('z-pause').onclick = pausiere;
+$('d-pause').onclick = pausiere;
+$('weiter').onclick = () => { $('pause').hidden = true; G.zustand = vorPause || 'spiel'; if (G.zustand === 'wechsel') G.weiterNach && G.weiterNach(); };
+$('beenden').onclick = () => { $('pause').hidden = true; zeigeMenu(); };
+document.addEventListener('visibilitychange', () => { if (document.hidden && (G.zustand === 'spiel' || G.zustand === 'wechsel')) pausiere(); });
+/** Nach kurzer Pause weitermachen – auch wenn zwischendurch pausiert wurde */
+function spaeter(ms, fn) {
+  G.zustand = 'wechsel';
+  G.weiterNach = () => { G.weiterNach = null; fn(); };
+  setTimeout(() => { if (G.zustand === 'wechsel' && G.weiterNach) G.weiterNach(); }, ms);
+}
+
+/* ═══════════════════════════════════════════════════════
+   🏠 ZIMMER EINRICHTEN
+   ═══════════════════════════════════════════════════════ */
+
+/* ── Möbel zeichnen: koerper (normal) und front (vor Dingen „in“ der Kiste) ── */
+const MOEBEL_SVG = {
+  bed(x, w) {
+    return { koerper: `<rect x="${x + 8}" y="400" width="12" height="50" rx="3" fill="#5b3418"/><rect x="${x + w - 20}" y="400" width="12" height="50" rx="3" fill="#5b3418"/>
+      <rect x="${x - 4}" y="300" width="20" height="150" rx="7" fill="#6b3f22"/>
+      <rect x="${x}" y="380" width="${w}" height="26" rx="6" fill="#8b5a2b"/>
+      <rect x="${x + 6}" y="362" width="${w - 12}" height="22" rx="9" fill="#f8fafc"/>
+      <ellipse cx="${x + w * .17}" cy="360" rx="${w * .12}" ry="12" fill="#fff" stroke="#e2e8f0" stroke-width="2"/>
+      <rect x="${x + w * .36}" y="359" width="${w * .64 - 6}" height="28" rx="9" fill="#6366f1"/><rect x="${x + w * .36}" y="359" width="${w * .64 - 6}" height="7" rx="3" fill="#818cf8"/>` };
+  },
+  table(x, w) {
+    return { koerper: `<rect x="${x + 12}" y="342" width="12" height="108" rx="3" fill="#7c4a24"/><rect x="${x + w - 24}" y="342" width="12" height="108" rx="3" fill="#7c4a24"/>
+      <rect x="${x}" y="330" width="${w}" height="15" rx="5" fill="#a0602d"/><rect x="${x}" y="330" width="${w}" height="5" rx="2" fill="#c07a3e"/>` };
+  },
+  desk(x, w) {
+    const dx = x + w * .6, dw = w * .4 - 4;
+    return { koerper: `<rect x="${x + 8}" y="342" width="12" height="108" rx="3" fill="#475569"/>
+      <rect x="${dx}" y="342" width="${dw}" height="108" rx="4" fill="#64748b"/>
+      <line x1="${dx + 4}" y1="378" x2="${dx + dw - 4}" y2="378" stroke="#334155" stroke-width="3"/><line x1="${dx + 4}" y1="414" x2="${dx + dw - 4}" y2="414" stroke="#334155" stroke-width="3"/>
+      <circle cx="${dx + dw / 2}" cy="360" r="4" fill="#e2e8f0"/><circle cx="${dx + dw / 2}" cy="396" r="4" fill="#e2e8f0"/><circle cx="${dx + dw / 2}" cy="432" r="4" fill="#e2e8f0"/>
+      <rect x="${x}" y="330" width="${w}" height="14" rx="4" fill="#94a3b8"/>` };
+  },
+  chair(x, w) {
+    return { koerper: `<rect x="${x + 4}" y="392" width="10" height="58" rx="3" fill="#9a3412"/><rect x="${x + w - 14}" y="392" width="10" height="58" rx="3" fill="#9a3412"/>
+      <rect x="${x + 2}" y="292" width="13" height="100" rx="5" fill="#c2410c"/><rect x="${x + 2}" y="300" width="${w * .45}" height="10" rx="4" fill="#c2410c"/>
+      <rect x="${x}" y="380" width="${w}" height="13" rx="5" fill="#ea580c"/>` };
+  },
+  sofa(x, w) {
+    return { koerper: `<rect x="${x + 14}" y="438" width="10" height="12" fill="#134e4a"/><rect x="${x + w - 24}" y="438" width="10" height="12" fill="#134e4a"/>
+      <rect x="${x + 16}" y="328" width="${w - 32}" height="74" rx="20" fill="#0f766e"/>
+      <rect x="${x + 6}" y="398" width="${w - 12}" height="42" rx="10" fill="#115e59"/>
+      <rect x="${x + 22}" y="386" width="${w / 2 - 25}" height="26" rx="10" fill="#14b8a6"/><rect x="${x + w / 2 + 3}" y="386" width="${w / 2 - 25}" height="26" rx="10" fill="#14b8a6"/>
+      <rect x="${x}" y="360" width="30" height="80" rx="13" fill="#0d9488"/><rect x="${x + w - 30}" y="360" width="30" height="80" rx="13" fill="#0d9488"/>` };
+  },
+  box(x, w) {
+    return { koerper: `<polygon points="${x + 4},382 ${x + 16},356 ${x + w - 16},356 ${x + w - 4},382" fill="#78350f"/>`,
+      front: `<rect x="${x}" y="380" width="${w}" height="70" rx="4" fill="#ca8a04"/><rect x="${x + w / 2 - 9}" y="380" width="18" height="70" fill="#fde68a" opacity=".55"/>
+      <polygon points="${x - 10},372 ${x + 4},380 ${x + w - 4},380 ${x + w + 10},372 ${x + w},386 ${x},386" fill="#a16207"/>` };
+  },
+  wardrobe(x, w) {
+    const h = w / 2;
+    return { koerper: `<rect x="${x}" y="190" width="${w}" height="260" rx="6" fill="#8a5a32"/>
+      <rect x="${x + 6}" y="197" width="${h - 9}" height="246" rx="4" fill="#b07d4f"/><circle cx="${x + h - 12}" cy="320" r="5" fill="#fde68a"/>
+      <rect x="${x + h + 3}" y="197" width="${h - 9}" height="246" rx="4" fill="#3b2617"/>
+      <line x1="${x + h + 6}" y1="214" x2="${x + w - 9}" y2="214" stroke="#a8a29e" stroke-width="4"/>
+      <path d="M${x + h + 20} 214 l-10 22 h20 z M${x + w - 24} 214 l-10 22 h20 z" fill="none" stroke="#a8a29e" stroke-width="3"/>
+      <rect x="${x + h + 3}" y="330" width="${h - 9}" height="7" fill="#a0602d"/>
+      <rect x="${x + h + 3}" y="400" width="${h - 9}" height="7" fill="#a0602d"/>` };
+  },
+};
+
+/** Plätze eines Möbelstücks: [x, y (Unterkante des Dings), Größe, Ebene, Präposition] */
+function moebelPlaetze(typ, x, w) {
+  const m = x + w / 2, P = [];
+  const p = (px, py, gr, ebene, prep) => P.push({ x: px, y: py, gr, ebene, aussagen: [{ p: prep, r: [typ] }] });
+  switch (typ) {
+    case 'bed':      p(m + w * .12, 362, 1, 'normal', 'on'); p(m, BODEN, .72, 'normal', 'under'); break;
+    case 'table':    p(m, 331, 1, 'normal', 'on'); p(m, BODEN, .95, 'normal', 'under'); break;
+    case 'desk':     p(x + w * .22, 331, 1, 'normal', 'on'); p(x + w * .32, BODEN, .9, 'normal', 'under'); break;
+    case 'chair':    p(m + 6, 381, .85, 'normal', 'on'); p(m, BODEN, .72, 'normal', 'under'); break;
+    case 'sofa':     p(m, 390, 1, 'normal', 'on'); p(m, 345, 1, 'hinten', 'behind'); break;
+    case 'box':      p(m, 398, .95, 'drin', 'in'); p(m, 362, 1, 'hinten', 'behind'); break;
+    case 'wardrobe': p(x + w * .75, 330, .8, 'normal', 'in'); p(m, 191, .9, 'normal', 'on'); break;
+  }
+  p(m, VORN_Y, 1.05, 'vorn', 'in front of');
+  return P;
+}
+
+/** Zimmer bauen: Möbel nebeneinander, dazwischen „next to“/„between“-Plätze */
+function bauZimmer(anzahl) {
+  const typen = Object.keys(DATEN.moebel);
+  for (let versuch = 0; versuch < 60; versuch++) {
+    const wahl = shuffle(typen).slice(0, anzahl);
+    const breite = wahl.reduce((a, t) => a + DATEN.moebel[t].w, 0) + (anzahl - 1) * CFG.luecke;
+    if (breite > W - 40) continue;
+    // Stufe 1 braucht ein „in“ (Kiste oder Schrank) – sonst gibt es zu wenig Abwechslung
+    if (!wahl.includes('box') && !wahl.includes('wardrobe') && versuch < 40) continue;
+    const rand = (W - breite) / 2;
+    let x = rand;
+    const moebel = wahl.map(t => { const m = { typ: t, x, w: DATEN.moebel[t].w }; x += m.w + CFG.luecke; return m; });
+    const plaetze = [];
+    moebel.forEach(m => plaetze.push(...moebelPlaetze(m.typ, m.x, m.w)));
+    for (let i = 0; i < moebel.length - 1; i++) {
+      const a = moebel[i], b = moebel[i + 1];
+      plaetze.push({ x: a.x + a.w + CFG.luecke / 2, y: BODEN, gr: .95, ebene: 'normal',
+        aussagen: [{ p: 'next to', r: [a.typ] }, { p: 'next to', r: [b.typ] }, { p: 'between', r: [a.typ, b.typ] }] });
+    }
+    if (rand >= 100) {
+      plaetze.push({ x: moebel[0].x - 58, y: BODEN, gr: .95, ebene: 'normal', aussagen: [{ p: 'next to', r: [moebel[0].typ] }] });
+      const l = moebel[moebel.length - 1];
+      plaetze.push({ x: l.x + l.w + 58, y: BODEN, gr: .95, ebene: 'normal', aussagen: [{ p: 'next to', r: [l.typ] }] });
+    }
+    plaetze.forEach((pl, i) => { pl.id = 'p' + i; });
+    return { moebel, plaetze };
+  }
+  return null;
+}
+
+const ding = id => DATEN.gegenstaende[id];
+const istPl = id => !!ding(id).pl;
+const ort = a => `${a.p} the ${a.r.map(r => DATEN.moebel[r].en).join(' and the ')}`;
+const ortDe = a => `${DATEN.praepositionen[a.p].de} ${a.r.map(r => DATEN.moebel[r].de).join(' und ')}`;
+const gleicheAussage = (a, b) => a.p === b.p && a.r.join('|') === b.r.join('|');
+
+/** Aufträge: echte Plätze auswählen, daraus die Sätze bauen (immer lösbar) */
+function bauAuftraege(Z, stufe) {
+  const st = DATEN.stufen.zimmer[stufe];
+  const erlaubt = a => DATEN.praepositionen[a.p].stufe <= stufe;
+  const neu = a => DATEN.praepositionen[a.p].stufe === stufe;
+  const dinge = shuffle(Object.keys(DATEN.gegenstaende));
+  const auftraege = [], benutzt = [];
+  const kandidaten = shuffle(Z.plaetze.filter(pl => pl.aussagen.some(erlaubt)));
+  // neue Präpositionen der Stufe zuerst
+  kandidaten.sort((a, b) => (b.aussagen.some(neu) ? 1 : 0) - (a.aussagen.some(neu) ? 1 : 0));
+  const preps = new Set();
+  for (const pl of kandidaten) {
+    if (auftraege.length >= st.auftraege) break;
+    const moegl = shuffle(pl.aussagen.filter(erlaubt)).sort((a, b) => (neu(b) ? 1 : 0) - (neu(a) ? 1 : 0));
+    const a = moegl.find(x => !benutzt.some(y => gleicheAussage(x, y)) && (!preps.has(x.p) || preps.size >= 3));
+    if (!a) continue;
+    benutzt.push(a); preps.add(a.p);
+    const id = dinge[auftraege.length];
+    const vorlage = zufall(DATEN.saetze[stufe] || DATEN.saetze[1]);
+    const text = vorlage.replace('{o}', ding(id).en).replace('{P}', gross(a.p)).replace('{p}', a.p).replace('{r}', a.r.map(r => DATEN.moebel[r].en).join(' and the '));
+    auftraege.push({ id, aussage: a, text, status: '', erster: null });
+  }
+  const extra = dinge.slice(auftraege.length, auftraege.length + st.extra);
+  return { auftraege, ablage: shuffle(auftraege.map(a => a.id).concat(extra)) };
+}
+
+let Z = null;   // aktuelles Zimmer
+function naechstesZimmer() {
+  if (G.nr >= CFG.zimmerJeRunde) { rundeEnde(); return; }
+  G.nr++;
+  const st = DATEN.stufen.zimmer[G.stufe];
+  const raum = bauZimmer(st.moebel) || bauZimmer(st.moebel - 1);
+  const zimmerart = zufall(DATEN.zimmer);
+  Z = Object.assign(raum, bauAuftraege(raum, G.stufe), { art: zimmerart, kunde: zufall(DATEN.kunden), platz: {}, antwort: '', antwortGut: false,
+    textSichtbar: !hoeren(), versuche: 0, fertig: false, deko: Math.random() });
+  G.max += Z.auftraege.length;
+  G.zustand = 'spiel';
+  $('z-stand').textContent = `🏠 ${G.nr}/${CFG.zimmerJeRunde}`;
+  zeichneZimmer(); zeigeBrief(); zeigeAblage();
+  if (hoeren()) setTimeout(() => sprich(briefText()), 400);
+  ton(880, .08); setTimeout(() => ton(1175, .1), 90);
+}
+function briefText() { return `Hi! I'm ${Z.kunde}. This is ${Z.art.en}. ` + Z.auftraege.map(a => a.text).join(' '); }
+
+function zeigeBrief() {
+  const h = hoeren();
+  $('brief').innerHTML = `<div class="von"><span>✉️ Brief von ${esc(Z.kunde)}</span>
+      ${h ? `<button class="hbtn" type="button" id="z-hoeren">🔊 Nochmal hören</button>${!Z.textSichtbar ? '<button class="hbtn klein" type="button" id="z-text">📖 Text</button>' : ''}` : ''}</div>
+    ${Z.textSichtbar ? `<div class="zeile"><span class="st">👋</span><span>Hi! This is ${esc(Z.art.en)}.</span></div>` + Z.auftraege.map(a =>
+      `<div class="zeile ${a.status}"><span class="st">${a.status === 'ok' ? '✅' : a.status === 'falsch' ? '❌' : '•'}</span><span>${esc(a.text)}</span></div>`).join('') : ''}
+    ${Z.antwort ? `<div class="antwort ${Z.antwortGut ? 'gut' : ''}">${esc(Z.antwort)}</div>` : ''}`;
+  $('z-fertig').disabled = Z.fertig;
+  const zh = $('z-hoeren'); if (zh) zh.onclick = () => sprich(briefText());
+  const zt = $('z-text'); if (zt) zt.onclick = () => { Z.textSichtbar = true; zeigeBrief(); };
+}
+$('z-fertig').onclick = () => pruefeZimmer();
+
+function zeigeAblage() {
+  const frei = Z.ablage.filter(id => !Z.platz[id]);
+  $('ablage').innerHTML = frei.length
+    ? frei.map(id => `<button type="button" class="ding-btn ${AUSWAHL === id ? 'gewaehlt' : ''}" data-ding="${id}" aria-label="${esc(ding(id).en)}">${ding(id).emoji}</button>`).join('')
+    : '<span class="leer">Alles im Zimmer! Prüfe mit „✓ Fertig“.</span>';
+  if (frei.length && !Object.keys(Z.platz).length) $('ablage').insertAdjacentHTML('beforeend', '<span class="leer">Ziehe die Dinge ins Zimmer – oder tippe ein Ding und dann einen Platz an.</span>');
+}
+
+function zeichneZimmer(markierungen = {}) {
+  const deko = Z.deko;
+  const wand = Z.art.wand, boden = Z.art.boden;
+  // Fenster in eine Lücke über den Möbeln, Bild an die Wand
+  const fx = 120 + deko * (W - 360);
+  let s = `<rect x="0" y="0" width="${W}" height="440" fill="${wand}"/>
+    <rect x="0" y="0" width="${W}" height="440" fill="url(#rd-tapete)" opacity=".5"/>
+    <rect x="${fx}" y="60" width="140" height="120" rx="6" fill="#bae6fd" stroke="#fff" stroke-width="10"/>
+    <line x1="${fx + 70}" y1="60" x2="${fx + 70}" y2="180" stroke="#fff" stroke-width="6"/><line x1="${fx}" y1="120" x2="${fx + 140}" y2="120" stroke="#fff" stroke-width="6"/>
+    <rect x="0" y="428" width="${W}" height="172" fill="${boden}"/>
+    <rect x="0" y="428" width="${W}" height="14" fill="#00000022"/>`;
+  for (let i = 0; i < 8; i++) s += `<line x1="${i * 170 - 60}" y1="600" x2="${i * 150 + 40}" y2="442" stroke="#0000001f" stroke-width="3"/>`;
+  s += `<line x1="0" y1="520" x2="${W}" y2="520" stroke="#00000014" stroke-width="3"/>`;
+  Z.moebel.forEach(m => { s += `<ellipse cx="${m.x + m.w / 2}" cy="${BODEN + 4}" rx="${m.w / 2 + 8}" ry="10" fill="#00000030"/>`; });
+  const dingSvg = (id, pl) => {
+    const gr = 62 * pl.gr;
+    return `<text class="ding" data-ding="${id}" x="${pl.x}" y="${pl.y - 7 * pl.gr}" font-size="${gr}" text-anchor="middle">${ding(id).emoji}</text>`;
+  };
+  const inEbene = e => Object.keys(Z.platz).map(id => [id, platzVon(Z.platz[id])]).filter(([, pl]) => pl.ebene === e).map(([id, pl]) => dingSvg(id, pl)).join('');
+  s += inEbene('hinten');
+  Z.moebel.forEach(m => { s += MOEBEL_SVG[m.typ](m.x, m.w).koerper; });
+  s += inEbene('drin');
+  Z.moebel.forEach(m => { const f = MOEBEL_SVG[m.typ](m.x, m.w).front; if (f) s += f; });
+  // Plätze (sichtbar nur beim Ziehen bzw. nach Antippen eines Dings)
+  Z.plaetze.forEach(pl => { s += `<ellipse class="platz" data-platz="${pl.id}" cx="${pl.x}" cy="${pl.y - 28 * pl.gr}" rx="${36 * pl.gr}" ry="${30 * pl.gr}"/>`; });
+  s += inEbene('normal') + inEbene('vorn');
+  Object.entries(markierungen).forEach(([id, art]) => {
+    const pl = platzVon(Z.platz[id]); if (!pl) return;
+    s += `<circle class="${art}-ring" cx="${pl.x}" cy="${pl.y - 28 * pl.gr}" r="${44 * pl.gr}"/>`;
+  });
+  $('szene').innerHTML = `<defs><pattern id="rd-tapete" width="60" height="60" patternUnits="userSpaceOnUse"><circle cx="30" cy="30" r="4" fill="#fff"/></pattern></defs>` + s;
+}
+const platzVon = id => Z && Z.plaetze.find(p => p.id === id);
+
+/* ── Ziehen und Ablegen (oder: antippen, dann Platz antippen) ── */
+let AUSWAHL = null, ZUG = null;
+function svgPunkt(cx, cy) {
+  const svg = $('szene'), m = svg.getScreenCTM();
+  if (!m) return { x: -9999, y: -9999 };
+  const p = svg.createSVGPoint(); p.x = cx; p.y = cy;
+  const r = p.matrixTransform(m.inverse());
+  return { x: r.x, y: r.y };
+}
+function naechsterPlatz(cx, cy, ohne) {
+  const p = svgPunkt(cx, cy);
+  let best = null, bd = CFG.fangRadius;
+  Z.plaetze.forEach(pl => {
+    const belegt = Object.keys(Z.platz).find(id => Z.platz[id] === pl.id);
+    if (belegt && belegt !== ohne) return;
+    const d = Math.hypot(pl.x - p.x, (pl.y - 28 * pl.gr) - p.y);
+    if (d < bd) { bd = d; best = pl; }
+  });
+  return best;
+}
+function zielMarkieren(pl) {
+  document.querySelectorAll('#szene .platz.ziel').forEach(e => e.classList.remove('ziel'));
+  if (pl) { const e = document.querySelector(`#szene .platz[data-platz="${pl.id}"]`); if (e) e.classList.add('ziel'); }
+}
+function zieheAb() {
+  ZUG = null; AUSWAHL = null;
+  $('geist').hidden = true;
+  document.body.classList.remove('ziehen', 'waehlen');
+}
+function lege(id, pl) {
+  if (pl) Z.platz[id] = pl.id; else delete Z.platz[id];
+  ton(pl ? 620 : 330, .05);
+  Z.antwort = ''; Z.auftraege.forEach(a => { if (a.status === 'falsch') a.status = ''; });
+  zeichneZimmer(); zeigeAblage(); zeigeBrief();
+}
+
+LernSpiel.zeiger($('zimmer-spiel'), {
+  down(p, e) {
+    if (G.zustand !== 'spiel' || G.modus !== 'zimmer' || Z.fertig) return false;
+    const t = e.target.closest('[data-ding]');
+    const pt = e.target.closest('[data-platz]');
+    if (!t && !(pt && AUSWAHL)) {
+      if (!e.target.closest('button') && AUSWAHL) { AUSWAHL = null; document.body.classList.remove('waehlen'); zeigeAblage(); }
+      return false;
+    }
+    p.daten.id = t ? t.dataset.ding : null;
+    p.daten.imZimmer = !!(t && t.closest('#szene'));
+    p.daten.platzEl = !t && pt ? pt.dataset.platz : null;
+    return true;
+  },
+  move(p) {
+    if (!p.daten.id) return;
+    if (!ZUG && Math.hypot(p.x - p.startX, p.y - p.startY) > 12) {
+      ZUG = { id: p.daten.id };
+      AUSWAHL = null; document.body.classList.remove('waehlen');
+      document.body.classList.add('ziehen');
+      const g = $('geist'); g.textContent = ding(ZUG.id).emoji; g.hidden = false;
+      const b = document.querySelector(`.ding-btn[data-ding="${ZUG.id}"]`); if (b) b.classList.add('weg');
+      const txt = document.querySelector(`#szene text[data-ding="${ZUG.id}"]`); if (txt) txt.style.opacity = '.25';
+    }
+    if (ZUG) {
+      const g = $('geist'); g.style.left = p.x + 'px'; g.style.top = p.y + 'px';
+      zielMarkieren(naechsterPlatz(p.x, p.y - 30, ZUG.id));
+    }
+  },
+  up(p) {
+    if (ZUG) {
+      const pl = naechsterPlatz(p.x, p.y - 30, ZUG.id);
+      const id = ZUG.id;
+      zieheAb();
+      lege(id, pl);
+      return;
+    }
+    // Antippen: Ding auswählen bzw. auf den angetippten Platz legen
+    if (p.daten.platzEl && AUSWAHL) {
+      const pl = platzVon(p.daten.platzEl), id = AUSWAHL;
+      const belegt = Object.keys(Z.platz).find(k => Z.platz[k] === pl.id);
+      zieheAb();
+      if (!belegt || belegt === id) lege(id, pl); else zeigeAblage();
+      return;
+    }
+    if (p.daten.imZimmer) {
+      // Ding im Zimmer angetippt → zurück in die Kiste
+      zieheAb(); lege(p.daten.id, null);
+    } else if (p.daten.id) {
+      AUSWAHL = AUSWAHL === p.daten.id ? null : p.daten.id;
+      document.body.classList.toggle('waehlen', !!AUSWAHL);
+      zeigeAblage();
+    }
+  },
+  cancel() {
+    if (ZUG) { zieheAb(); zeichneZimmer(); zeigeAblage(); }
+  },
+});
+
+/* ── Prüfen: Jeder Platz kennt seine Aussagen ── */
+function pruefeZimmer() {
+  if (G.zustand !== 'spiel' || Z.fertig) return;
+  zieheAb();
+  const erstes = Z.versuche === 0;
+  Z.versuche++;
+  const mark = {};
+  let fehlerSatz = '';
+  Z.auftraege.forEach(a => {
+    const pl = platzVon(Z.platz[a.id]);
+    const ok = !!pl && pl.aussagen.some(x => gleicheAussage(x, a.aussage));
+    a.status = ok ? 'ok' : 'falsch';
+    if (erstes) { a.erster = ok; if (ok) G.punkte++; else G.uebung.push({ en: a.text, de: `${ding(a.id).de} → ${ortDe(a.aussage)}` }); }
+    if (pl) mark[a.id] = ok ? 'ok' : 'falsch';
+    if (!ok && !fehlerSatz) {
+      const o = ding(a.id).en;
+      fehlerSatz = pl ? `Oh no! The ${o} ${istPl(a.id) ? "aren't" : "isn't"} ${ort(a.aussage)}.` : `Where ${istPl(a.id) ? 'are' : 'is'} the ${o}?`;
+    }
+  });
+  const extra = Object.keys(Z.platz).filter(id => !Z.auftraege.some(a => a.id === id));
+  extra.forEach(id => { mark[id] = 'falsch'; });
+  if (!fehlerSatz && extra.length) fehlerSatz = `I didn't ask for the ${ding(extra[0]).en}!`;
+  if (!fehlerSatz) {
+    Z.fertig = true; S.zimmer++; speichere();
+    Z.antwort = zufall(['Wow, thank you! I love my room!', 'Perfect! Thank you so much!', 'Great! My room looks super now!']); Z.antwortGut = true; Z.textSichtbar = true;
+    zeichneZimmer(mark); zeigeBrief();
+    flash('ok', erstes ? '⭐ Perfekt!' : '✅ Geschafft!');
+    tonGut();
+    if (hoeren()) sprich(Z.antwort);
+    spaeter(2000, naechstesZimmer);
+  } else {
+    Z.antwort = fehlerSatz; Z.antwortGut = false;
+    if (hoeren()) { Z.textSichtbar = true; sprich(fehlerSatz); }
+    zeichneZimmer(mark); zeigeBrief();
+    tonSchlecht();
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   🕵️ DETEKTIV
+   ═══════════════════════════════════════════════════════ */
+const HAUT = ['#f9d7b9', '#eec39a', '#d6a77a', '#b07d56', '#8a5a3b', '#5e3b26'];
+
+/** Verdächtige mit sichtbaren Merkmalen */
+function neuePerson(i) {
+  const M = DATEN.merkmale;
+  const tiere = Object.keys(M.tiere), kann = Object.keys(M.koennen);
+  return {
+    id: 'v' + i, haut: zufall(HAUT), haar: zufall(Object.keys(M.haarfarben)), lang: Math.random() < .5,
+    hut: Math.random() < .35, brille: Math.random() < .35, shirt: zufall(Object.keys(M.farben)),
+    tier: Math.random() < .55 ? zufall(tiere) : null, kann: shuffle(kann).slice(0, 2),
+  };
+}
+
+/**
+ * Aussagen über Personen. Jede hat: test(person), dritte (über den Dieb), erste (die Person über sich).
+ * Stufe 1: has got · Stufe 2: + can, is wearing · Stufe 3: + Verneinungen, Haarlänge, Kombinationen
+ */
+function aussagen(stufe) {
+  const M = DATEN.merkmale, A = [];
+  const neu = (st, kat, test, d, dn, e, en) => A.push({ st, kat, test, d, dn, e, en });
+  Object.keys(M.haarfarben).forEach(c => neu(1, 'has got', p => p.haar === c, `has got ${c} hair`, `hasn't got ${c} hair`, `I've got ${c} hair`, `I haven't got ${c} hair`));
+  neu(1, 'has got', p => p.hut, 'has got a hat', "hasn't got a hat", "I've got a hat", "I haven't got a hat");
+  neu(1, 'has got', p => p.brille, 'has got sunglasses', "hasn't got sunglasses", "I've got sunglasses", "I haven't got sunglasses");
+  Object.keys(M.tiere).forEach(t => neu(1, 'has got', p => p.tier === t, `has got a ${t}`, `hasn't got a ${t}`, `I've got a ${t}`, `I haven't got a ${t}`));
+  Object.keys(M.koennen).forEach(k => neu(2, 'can', p => p.kann.includes(k), `can ${k}`, `can't ${k}`, `I can ${k}`, `I can't ${k}`));
+  Object.keys(M.farben).forEach(c => neu(2, 'is wearing', p => p.shirt === c, `is wearing a ${c} T-shirt`, `isn't wearing a ${c} T-shirt`, `I'm wearing a ${c} T-shirt`, `I'm not wearing a ${c} T-shirt`));
+  neu(2, 'is wearing', p => p.hut, 'is wearing a hat', "isn't wearing a hat", "I'm wearing a hat", "I'm not wearing a hat");
+  neu(2, 'is wearing', p => p.brille, 'is wearing sunglasses', "isn't wearing sunglasses", "I'm wearing sunglasses", "I'm not wearing sunglasses");
+  neu(3, 'has got', p => p.lang, 'has got long hair', "hasn't got long hair", "I've got long hair", "I haven't got long hair");
+  neu(3, 'has got', p => !p.lang, 'has got short hair', "hasn't got short hair", "I've got short hair", "I haven't got short hair");
+  neu(3, 'has got', p => !!p.tier, 'has got a pet', "hasn't got a pet", "I've got a pet", "I haven't got a pet");
+  Object.keys(M.haarfarben).forEach(c => neu(3, 'has got', p => p.haar === c && p.lang, `has got long ${c} hair`, `hasn't got long ${c} hair`, `I've got long ${c} hair`, `I haven't got long ${c} hair`));
+  const erlaubt = A.filter(a => a.st <= stufe);
+  // Hinweise: positiv; ab Stufe 3 auch verneint
+  const H = erlaubt.map(a => ({ test: a.test, text: a.d, wahrSatz: a.e, falschSatz: a.en, st: a.st, kat: a.kat }));
+  if (stufe >= 3) erlaubt.filter(a => a.st <= 2).forEach(a => H.push({ test: p => !a.test(p), text: a.dn, wahrSatz: a.en, falschSatz: a.e, st: 3, kat: a.kat + ' (not)' }));
+  return H;
+}
+
+/** Ein Fall: Verdächtige, Dieb und Hinweise, die genau den Dieb übrig lassen */
+function bauFall(stufe) {
+  const n = DATEN.stufen.detektiv[stufe].verdaechtige;
+  const H = aussagen(stufe);
+  for (let versuch = 0; versuch < 200; versuch++) {
+    const leute = Array.from({ length: n }, (_, i) => neuePerson(i));
+    const dieb = zufall(leute);
+    let rest = leute.slice();
+    const hinweise = [];
+    while (rest.length > 1 && hinweise.length < CFG.maxHinweise) {
+      const pass = H.filter(h => h.test(dieb) && !hinweise.includes(h)).map(h => ({ h, weg: rest.filter(p => !h.test(p)).length })).filter(x => x.weg > 0);
+      if (!pass.length) break;
+      // möglichst „die Hälfte raus“ – nicht alles auf einmal; neue Grammatik der Stufe bevorzugen
+      const ziel = Math.max(1, Math.round((rest.length - 1) / 2));
+      pass.forEach(x => { x.wert = Math.abs(x.weg - ziel) + (x.weg === rest.length - 1 && rest.length > 2 ? 2 : 0) - (x.h.st === stufe ? .6 : 0) + Math.random() * .8; });
+      pass.sort((a, b) => a.wert - b.wert);
+      const h = pass[0].h;
+      hinweise.push(h);
+      rest = rest.filter(p => h.test(p));
+    }
+    if (rest.length === 1 && hinweise.length >= 2) return { leute, dieb, hinweise, fall: zufall(DATEN.faelle) };
+  }
+  return null;
+}
+
+/** Verdächtige als kleine SVG-Figur (ohne WebGL, alle Merkmale klar sichtbar) */
+function figurSvg(p) {
+  const M = DATEN.merkmale, haar = M.haarfarben[p.haar], shirt = M.farben[p.shirt];
+  let s = `<svg viewBox="0 0 120 140" preserveAspectRatio="xMidYMax meet" aria-hidden="true">`;
+  if (p.lang) s += `<path d="M30 58 Q28 112 40 120 L80 120 Q92 112 90 58 Z" fill="${haar}"/>`;
+  s += `<path d="M22 140 Q22 102 60 100 Q98 102 98 140 Z" fill="${shirt}"/>
+    <path d="M48 100 Q60 112 72 100" fill="none" stroke="#00000030" stroke-width="3"/>
+    <rect x="53" y="86" width="14" height="16" rx="4" fill="${p.haut}"/>
+    <circle cx="60" cy="62" r="28" fill="${p.haut}"/>
+    <circle cx="32" cy="64" r="5" fill="${p.haut}"/><circle cx="88" cy="64" r="5" fill="${p.haut}"/>`;
+  s += p.lang
+    ? `<path d="M31 62 Q30 30 60 31 Q90 30 89 62 Q84 44 72 42 Q60 50 40 44 Q34 50 31 62 Z" fill="${haar}"/>`
+    : `<path d="M32 58 Q30 30 60 31 Q90 30 88 58 Q86 44 78 42 Q66 46 52 41 Q38 44 32 58 Z" fill="${haar}"/>`;
+  if (p.brille) s += `<rect x="40" y="57" width="17" height="11" rx="4" fill="#111827"/><rect x="63" y="57" width="17" height="11" rx="4" fill="#111827"/>
+    <line x1="57" y1="61" x2="63" y2="61" stroke="#111827" stroke-width="3"/><line x1="44" y1="59" x2="49" y2="59" stroke="#ffffff70" stroke-width="2"/>`;
+  else s += `<circle cx="50" cy="63" r="3.4" fill="#1f2937"/><circle cx="70" cy="63" r="3.4" fill="#1f2937"/>`;
+  s += `<path d="M51 76 Q60 83 69 76" fill="none" stroke="#7f1d1d" stroke-width="3" stroke-linecap="round"/>`;
+  if (p.hut) s += `<ellipse cx="60" cy="37" rx="40" ry="8" fill="#7c3a12"/><path d="M38 37 Q38 12 60 12 Q82 12 82 37 Z" fill="#9a4a18"/><rect x="38" y="29" width="44" height="6" fill="#facc15"/>`;
+  return s + '</svg>';
+}
+
+let F = null;   // aktueller Fall
+function naechsterFall() {
+  if (G.nr >= CFG.faelleJeRunde) { rundeEnde(); return; }
+  G.nr++;
+  F = bauFall(G.stufe) || bauFall(Math.max(1, G.stufe - 1));
+  if (!F) { rundeEnde(); return; }
+  Object.assign(F, { schritt: 0, raus: new Set(), fest: new Set(), versuche: 0, blasen: {}, textSichtbar: !hoeren(), geloest: false });
+  G.max += F.hinweise.length;
+  G.zustand = 'spiel';
+  $('d-stand').textContent = `🗂️ ${G.nr}/${CFG.faelleJeRunde}`;
+  zeigeAkte(); zeigeLeute();
+  if (hoeren()) setTimeout(() => sprich(`${F.fall.en} Clue 1: The thief ${F.hinweise[0].text}.`), 400);
+  ton(880, .08); setTimeout(() => ton(1175, .1), 90);
+}
+const hinweisSatz = h => `The thief ${h.text}.`;
+
+function zeigeAkte() {
+  const h = F.hinweise[F.schritt];
+  const alt = F.hinweise.slice(0, F.schritt).map((x, i) => `<span>✅ ${i + 1}. ${esc(hinweisSatz(x))}</span>`).join(' &nbsp; ');
+  let haupt;
+  if (F.geloest) haupt = `<div class="hinweis">🚔 Case closed! You found the thief.</div>`;
+  else if (F.textSichtbar) haupt = `<div class="hinweis">🔎 Clue ${F.schritt + 1}/${F.hinweise.length}: ${esc(hinweisSatz(h))}</div>`;
+  else haupt = `<div class="hinweis">🔎 Clue ${F.schritt + 1}/${F.hinweise.length}: 🎧 …</div>`;
+  $('akte').innerHTML = `<div class="fall"><span>${F.fall.emoji} Fall ${G.nr}: ${esc(F.fall.en)}</span>
+      ${hoeren() && !F.geloest ? `<button class="hbtn" type="button" id="d-hoeren">🔊 Nochmal</button>${!F.textSichtbar ? '<button class="hbtn klein" type="button" id="d-text">📖 Text</button>' : ''}` : ''}</div>
+    ${haupt}
+    ${!F.geloest && F.schritt === 0 && F.versuche === 0 ? '<div class="tipp">Tippe alle an, auf die der Hinweis NICHT passt – sie sind unschuldig.</div>' : ''}
+    ${alt ? `<div class="alt">${alt}</div>` : ''}`;
+  const dh = $('d-hoeren'); if (dh) dh.onclick = () => sprich(hinweisSatz(F.hinweise[F.schritt]));
+  const dt = $('d-text'); if (dt) dt.onclick = () => { F.textSichtbar = true; zeigeAkte(); };
+  $('d-pruefen').textContent = F.geloest ? '🚔 Festgenommen!' : '🔎 Hinweis prüfen';
+  $('d-pruefen').disabled = F.geloest || G.zustand !== 'spiel';
+}
+
+function spalten(n) {
+  const quer = innerWidth > innerHeight * 1.05;
+  if (n <= 4) return quer ? 4 : 2;
+  if (n <= 6) return 3;
+  return 4;
+}
+function zeigeLeute() {
+  const el = $('verdaechtige'), n = F.leute.length, sp = spalten(n);
+  el.style.gridTemplateColumns = `repeat(${sp}, minmax(0, 1fr))`;
+  el.style.gridTemplateRows = `repeat(${Math.ceil(n / sp)}, minmax(0, 1fr))`;
+  const M = DATEN.merkmale;
+  el.innerHTML = F.leute.map(p => {
+    const kl = ['person'];
+    if (F.raus.has(p.id)) kl.push('raus');
+    if (F.fest.has(p.id)) kl.push('fest');
+    if (F.geloest && p.id === F.dieb.id) kl.push('dieb');
+    if (F.blasen[p.id]) kl.push('fehler');
+    const kann = G.stufe >= 2 ? `<div class="kann">${p.kann.map(k => `<span title="${esc(k)}">${M.koennen[k].emoji}</span>`).join('')}</div>` : '<div class="kann"></div>';
+    return `<button type="button" class="${kl.join(' ')}" data-person="${p.id}" aria-label="Verdächtige Person">
+      ${figurSvg(p)}${p.tier ? `<span class="tier">${M.tiere[p.tier]}</span>` : ''}${kann}
+      ${F.blasen[p.id] ? `<span class="blase">${esc(F.blasen[p.id])}</span>` : ''}</button>`;
+  }).join('');
+}
+addEventListener('resize', () => { if (F && G.modus === 'detektiv' && !$('detektiv-spiel').hidden) zeigeLeute(); });
+
+$('verdaechtige').addEventListener('click', e => {
+  const b = e.target.closest('[data-person]');
+  if (!b || G.zustand !== 'spiel' || F.geloest) return;
+  const id = b.dataset.person;
+  if (F.fest.has(id)) return;
+  if (F.raus.has(id)) F.raus.delete(id); else F.raus.add(id);
+  F.blasen = {};
+  ton(F.raus.has(id) ? 420 : 560, .05);
+  zeigeLeute();
+});
+
+$('d-pruefen').onclick = () => {
+  if (G.zustand !== 'spiel' || F.geloest) return;
+  const h = F.hinweise[F.schritt];
+  const offen = F.leute.filter(p => !F.fest.has(p.id));
+  const zuViel = offen.filter(p => F.raus.has(p.id) && h.test(p));     // gestrichen, obwohl der Hinweis passt
+  const fehlt = offen.filter(p => !F.raus.has(p.id) && !h.test(p));    // nicht gestrichen, obwohl er nicht passt
+  if (!zuViel.length && !fehlt.length) {
+    if (F.versuche === 0) G.punkte++;
+    hinweisGeschafft(F.versuche === 0 ? '✅ Richtig!' : '👍 Jetzt stimmt’s!');
+    return;
+  }
+  // Fehler: die Personen widersprechen auf Englisch
+  if (F.versuche === 0) G.uebung.push({ en: hinweisSatz(h), de: 'Lies den Hinweis genau: Wer passt dazu, wer nicht?' });
+  F.versuche++;
+  F.blasen = {};
+  zuViel.forEach(p => { F.blasen[p.id] = `But ${h.wahrSatz}!`; });
+  fehlt.forEach(p => { F.blasen[p.id] = `${h.falschSatz}!`; });
+  tonSchlecht();
+  if (hoeren()) sprich((zuViel[0] ? `But ${h.wahrSatz}!` : `${h.falschSatz}!`));
+  zeigeLeute();
+  if (F.versuche >= 2) {
+    // nach dem zweiten Fehlversuch: richtig stellen und weiter (Hinweis zählt nicht)
+    flash('bad', 'So wäre es richtig');
+    G.zustand = 'wechsel';
+    $('d-pruefen').disabled = true;
+    spaeter(2300, () => {
+      F.raus = new Set(F.leute.filter(p => F.fest.has(p.id) || !h.test(p)).map(p => p.id));
+      F.blasen = {};
+      G.zustand = 'spiel';
+      hinweisGeschafft('');
+    });
+  }
+};
+
+function hinweisGeschafft(text) {
+  const h = F.hinweise[F.schritt];
+  F.leute.forEach(p => { if (!h.test(p)) { F.raus.add(p.id); F.fest.add(p.id); } });
+  F.blasen = {};
+  F.schritt++; F.versuche = 0;
+  if (text) { flash('ok', text, 800); tonGut(); }
+  if (F.schritt >= F.hinweise.length) {
+    F.geloest = true; S.faelle++; speichere();
+    zeigeLeute(); zeigeAkte();
+    flash('ok', '🚔 Case closed!', 1500);
+    if (hoeren()) sprich('Case closed! You found the thief.');
+    spaeter(2600, naechsterFall);
+    return;
+  }
+  G.zustand = 'spiel';
+  zeigeLeute(); zeigeAkte();
+  if (hoeren()) setTimeout(() => sprich(`Clue ${F.schritt + 1}: ${hinweisSatz(F.hinweise[F.schritt])}`), 600);
+}
+
+/* ═══════════════════════════════════════════════════════
+   START
+   ═══════════════════════════════════════════════════════ */
+LernSpiel.whenPass(async () => {
+  try { DATEN = await fetch('../daten/room-detective.json').then(r => r.json()); }
+  catch (e) { $('menu-err').textContent = 'Das Spiel konnte nicht geladen werden. Bist du online?'; return; }
+  buildMenu();
+});
+</script>
+</body>
+</html>
