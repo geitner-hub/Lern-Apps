@@ -505,6 +505,17 @@
       ],
       "customTags": [],
       "aod": false
+    },
+    {
+      "name": "Room Detective",
+      "datei": "spiele/room-detective.html",
+      "fach": "Englisch",
+      "emoji": "🕵️",
+      "beschreibung": "",
+      "hidden": false,
+      "klassen": [],
+      "customTags": [],
+      "aod": false
     }
   ],
   "customTags": [
