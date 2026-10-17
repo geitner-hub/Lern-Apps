@@ -20,10 +20,11 @@ apps/vorlage/app-template.html          Vorlage für eigene Apps (erst prüfen, 
 apps/typen/uebung.html                  Aufgabentyp-Baukasten: eine Seite für alle Inhaltsdateien (Etappe 9)
 spiele/               RUN!, Tower Defense, Mein Dorf (dorf.html), Tauziehen-Duell (tauziehen.html), Wort des Tages (wort-des-tages.html),
                       Zauberwort (zauberwort.html), Kitchen-Chaos (kitchen-chaos.html),
-                      Entdecker-Expedition (expedition.html)
+                      Entdecker-Expedition (expedition.html), Room Detective (room-detective.html)
 daten/                katalog.json (Inhalts-Katalog mit Themen-IDs), vokabeln5.json, vokabeln6.json, lernwelt-inhalte.json, dorf-inhalte.json,
                       woerter-en.json (Prüfliste fürs Wort des Tages, ENABLE-Wortliste, gemeinfrei)
                       kitchen-chaos.json (Schauplätze, Zutaten, Satzrahmen, Stufen)
+                      room-detective.json (Gegenstände, Möbel, Präpositionen, Fälle, Merkmale der Verdächtigen, Stufen)
                       karten.json (Europa- und Deutschlandkarte, für Länder-Finder und Expedition)
                       welt.json (alle Länder in Längen-/Breitengraden, Kontinente, Länderlisten der Welt-Modi)
                       ozeane.json (die fünf Ozeane für den Globus, Natural Earth, gemeinfrei)
@@ -652,3 +653,21 @@ Plan und Stand: Claude-Doc „Aktionsplan: Aufbauspiel „Mein Dorf““.
     einer Englisch-App → kurzer Brief auf Englisch mit aufklappbarer deutscher Fassung.
   - **Jahreszeiten** (`JAHRESZEITEN` in `dorf-inhalte.json`, nur Optik): Frühling, Sommer, Herbst, Winter nach Datum;
     ein Fest mit eigener Stimmung hat Vorrang.
+
+## Room Detective (spiele/room-detective.html)
+
+Englisch-Spiel mit zwei Modi, je Runde 3 Zimmer bzw. 3 Fälle, Lesen oder Hören (Sprachausgabe des iPads):
+
+- **🏠 Zimmer einrichten:** Ein Kunde schreibt, wohin die Dinge sollen („Put the cat under the bed, please.“). Das Kind
+  zieht die Dinge aus der Kiste ins Zimmer (oder: Ding antippen, dann Platz antippen; Ding im Zimmer antippen → zurück).
+  Gegenstände und Möbel zeigen nur Bilder. Jeder Platz im Zimmer kennt seine Aussagen (der Platz zwischen Bett und Tisch
+  ist „next to the bed“, „next to the table“ und „between the bed and the table“) – die Aufträge werden aus echten Plätzen
+  gebaut, sind also immer lösbar. Stufe 1: on, under, in · 2: + next to, in front of · 3: + behind, between.
+- **🕵️ Detektiv:** 4/6/8 Verdächtige als SVG-Figuren (ohne WebGL). Hinweise wie „The thief has got a dog.“ – das Kind
+  streicht alle, auf die der Hinweis nicht passt. Falsch gestrichen → die Person widerspricht („But I can swim!“); nach dem
+  zweiten Fehlversuch wird richtiggestellt. Stufe 1: has got · 2: + can, is wearing · 3: + Verneinungen, Haarlänge.
+- **Wertung:** nur der erste Versuch je Satz bzw. Hinweis zählt (`LernSpiel.speichereRunde`, skill `room-detective:<modus>:<stufe>`).
+  Ab 80 % wird die nächste Stufe frei. Spielstand `lernwelt-room-detective` (nur Stufen und Zähler, nicht im Sicherungscode –
+  XP und Sterne laufen wie immer über den Pass).
+- **Inhalte erweitern:** `daten/room-detective.json` – neue Gegenstände (Emoji + Wort aus dem Buch), Kundennamen, Fälle,
+  Satzrahmen je Stufe. Neue Möbel brauchen zusätzlich eine Zeichnung und Plätze im Code (`MOEBEL_SVG`, `moebelPlaetze`).

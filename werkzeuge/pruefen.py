@@ -167,7 +167,7 @@ MUSTER = [
     re.compile(r",\s*[A-Z0-9_]*(?:KEY|SPEICHER|STORE)[A-Z0-9_]*\s*=\s*['\"]([^'\"]+)['\"]"),
     re.compile(r"\b(?:const|let|var)\s+CONTENT_CACHE\s*=\s*['\"]([^'\"]+)['\"]"),
 ]
-NICHT_SPEICHER = {'expedition.html', 'kitchen-chaos.html', 'tauziehen.html', 'wort-des-tages.html', 'zauberwort.html'}  # APP_KEY = Dateiname
+NICHT_SPEICHER = {'expedition.html', 'kitchen-chaos.html', 'tauziehen.html', 'wort-des-tages.html', 'zauberwort.html', 'room-detective.html'}  # APP_KEY = Dateiname
 for p in ALLE:
     r = rel(p)
     if p.suffix not in ('.js', '.html') or r.startswith('vendor/') or r.startswith('cloudflare/') or r == 'gemeinsam/umgebung.js' or r == 'sw.js':

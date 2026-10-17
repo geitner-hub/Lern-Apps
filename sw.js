@@ -14,7 +14,7 @@
 //  und teilen sich den Offline-Speicher. Deshalb hat jede Umgebung ihr
 //  eigenes Präfix und räumt nur ihre eigenen Speicher auf.
 // ═══════════════════════════════════════════════════════
-const VERSION = 'v51';  // v51: Spiele erst nach guten Lern-Runden (Spielsperre je Wochentag und Gruppe)
+const VERSION = 'v52';  // v52: neues Spiel Room Detective. v51: Spiele erst nach guten Lern-Runden (Spielsperre je Wochentag und Gruppe)
 const PRAEFIX = /\/[^/]*-test\/$/i.test(new URL(self.registration.scope).pathname) ? 'lwtest-v' : 'lernwelt-v';
 const CACHE   = PRAEFIX + VERSION.replace(/^v/, '');        // z. B. 'lernwelt-v24' (Format wie bisher)
 
@@ -34,11 +34,11 @@ const START = ['./', 'index.html', 'config.json', 'manifest.webmanifest',
 // 5–25 s nach dem Laden). So sind die Spiele nach einem Schultag auch offline da,
 // ohne dass alle iPads beim Update gleichzeitig alles ziehen.
 const NACHLADEN = ['spiele/runner.html', 'spiele/burg-verteidigung.html', 'spiele/dorf.html', 'spiele/tauziehen.html',
-                   'spiele/wort-des-tages.html', 'spiele/zauberwort.html', 'spiele/kitchen-chaos.html', 'spiele/expedition.html',
+                   'spiele/wort-des-tages.html', 'spiele/zauberwort.html', 'spiele/kitchen-chaos.html', 'spiele/expedition.html', 'spiele/room-detective.html',
                    'gemeinsam/aufgaben.js', 'gemeinsam/spiel-hilfen.js', 'gemeinsam/ueben.js', 'apps/mathe/kopfrechnen.html', 'apps/mathe/mathe-trainer.html', 'apps/englisch/vokabeltrainer.html', 'gemeinsam/karten-ansicht.js',
                    'gemeinsam/avatar3d.js', 'gemeinsam/chest3d.js', 'gemeinsam/dorf-szene.js', 'gemeinsam/qrcode.js',
                    'vendor/three.min.js', 'vendor/jsQR.min.js',
-                   'daten/vokabeln5.json', 'daten/vokabeln6.json', 'daten/woerter-en.json', 'daten/kitchen-chaos.json',
+                   'daten/vokabeln5.json', 'daten/vokabeln6.json', 'daten/woerter-en.json', 'daten/kitchen-chaos.json', 'daten/room-detective.json',
                    'daten/karten.json', 'daten/expedition.json',
                    'daten/tower-defense.json',  // Tower Defense: Karten, Landschaften, Wellen, Türme, Gegner
                    'gemeinsam/spielsperre.js',  // Hinweis auf Spielseiten: erst Lern-Runden (nur mit config.spielsperre)
