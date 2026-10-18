@@ -27,6 +27,8 @@
 #
 #   12. Inhaltsdateien (Etappe 9): daten/inhalte/<fach>/<Themen-ID>.json passen zu ihrem Typ und zum Katalog;
 #       Einträge in config.json für apps/typen/uebung.html?inhalt=… haben eine Inhaltsdatei.
+#   13. Die Insel: alle Insel-Dateien (spiele/insel.html, gemeinsam/insel-*.js, daten/insel*.json)
+#       stehen in sw.js NACHLADEN (sonst fehlen sie offline).
 # ═══════════════════════════════════════════════════════
 import gzip, json, os, re, sys
 from pathlib import Path
@@ -117,6 +119,9 @@ nachladen = re.findall(r"'([^']+)'", m.group(1)) if m else []
 for d in nachladen:
     if not Path(d).is_file(): F(f'sw.js NACHLADEN: Datei fehlt: {d}')
     if d in start: H(f'sw.js: {d} steht in START und NACHLADEN')
+# 13. Die Insel: jede Insel-Datei muss offline da sein
+for p in [ROOT / 'spiele/insel.html'] + sorted(ROOT.glob('gemeinsam/insel-*.js')) + sorted(ROOT.glob('daten/insel*.json')):
+    if p.is_file() and rel(p) not in nachladen: F(f'sw.js NACHLADEN: Insel-Datei fehlt in der Liste: {rel(p)}')
 for p in ALLE:
     if p.suffix not in ('.js', '.html') or rel(p).startswith('vendor/'): continue
     for d in re.findall(r"LW\.laden\(\s*'([^']+)'", p.read_text(encoding='utf-8')):

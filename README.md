@@ -20,7 +20,8 @@ apps/vorlage/app-template.html          Vorlage für eigene Apps (erst prüfen, 
 apps/typen/uebung.html                  Aufgabentyp-Baukasten: eine Seite für alle Inhaltsdateien (Etappe 9)
 spiele/               RUN!, Tower Defense, Mein Dorf (dorf.html), Tauziehen-Duell (tauziehen.html), Wort des Tages (wort-des-tages.html),
                       Zauberwort (zauberwort.html), Kitchen-Chaos (kitchen-chaos.html),
-                      Entdecker-Expedition (expedition.html), Room Detective (room-detective.html)
+                      Entdecker-Expedition (expedition.html), Room Detective (room-detective.html),
+                      Die Insel (insel.html, im Aufbau: Probelauf)
 daten/                katalog.json (Inhalts-Katalog mit Themen-IDs), vokabeln5.json, vokabeln6.json, lernwelt-inhalte.json, dorf-inhalte.json,
                       woerter-en.json (Prüfliste fürs Wort des Tages, ENABLE-Wortliste, gemeinfrei)
                       kitchen-chaos.json (Schauplätze, Zutaten, Satzrahmen, Stufen)
@@ -60,6 +61,8 @@ werkzeuge/            Prüfskript (pruefen.py), Inventar (inventar.py → INVENT
 | `karten-ansicht.js` | Karten laden, zoomen, verschieben, antippen (Länder-Finder, Expedition); `LernKarte.markup` zeichnet Flächen, Linien (Flüsse) und Punkte (Städte) mit Tippzonen |
 | `globus.js` | Drehbarer Globus als SVG (orthografisch, kein WebGL) mit Gradnetz, Äquator und Nullmeridian (`LernGlobus`); Ozeane aus `daten/ozeane.json` |
 | `welt-karte.js` | Weltkarte in **Equal Earth** (flächentreu) aus `daten/welt.json` über `vendor/d3-geo.min.js` (`LernWelt`) – Grundlage für alle Weltkarten und den Globus |
+| `insel-welt.js` | „Die Insel“: Welt aus Blöcken, Testinsel, Weltstücke (16 × 16 × 24) zu je einem Mesh gebacken (`LernInselWelt`), nur in `spiele/insel.html` |
+| `insel-steuerung.js` | „Die Insel“: Joystick, Kamera (dritte Person), Kollision mit dem Blockgitter, Hochsteigen (`LernInselSteuerung`) |
 | `spiel-hilfen.js` | Kleine Bausteine für die neuen Spiele: Runde melden, Endlos-XP, robuste Zeiger (mehrere Finger), wiederholbarer Zufall |
 | `qrcode.js` | QR-Code-Erzeugung im Browser (MIT-Lizenz, Kazuhiko Arase) |
 | `fonts.css` | Lokal gehostete Schriften aus `fonts/` (kein Google Fonts → DSGVO) |
@@ -671,3 +674,30 @@ Englisch-Spiel mit zwei Modi, je Runde 3 Zimmer bzw. 3 Fälle, Lesen oder Hören
   XP und Sterne laufen wie immer über den Pass).
 - **Inhalte erweitern:** `daten/room-detective.json` – neue Gegenstände (Emoji + Wort aus dem Buch), Kundennamen, Fälle,
   Satzrahmen je Stufe. Neue Möbel brauchen zusätzlich eine Zeichnung und Plätze im Code (`MOEBEL_SVG`, `moebelPlaetze`).
+
+## Die Insel (spiele/insel.html, im Aufbau)
+
+Kleine, offene 3D-Welt im Klötzchen-Stil: Die Kinder laufen mit ihrer Pass-Figur per Joystick über eine Insel; das
+Gelernte verändert später die Welt (Hinkommen, Bauen, Handeln – nie eingeblendete Fragen). Plan: Aktionsplan „Die
+Insel“ (8 Etappen). Noch nicht in `config.json` – erreichbar über den direkten Link `spiele/insel.html`.
+
+- **Stand: Etappe 1 – Probelauf.** Testinsel aus festem Zufallswert (`LernInselWelt.erzeuge`, 96 × 96 Blöcke, 24 hoch):
+  Gras, Sand, Meer, Bäume, Dorfplatz mit Brunnen, vier Häuser. Pass-Figur mit Laufanimation, drei Bewohner vor ihren
+  Häusern, die beim Aktionsknopf 💬 einen englischen Satz sagen (Sprechblase + Vorlesen). Noch kein Spielstand, keine XP.
+- **Steuerung:** Joystick erscheint links unter dem Daumen (Totzone, ab 70 % Auslenkung rennen, Richtung relativ zur
+  Kamera); rechts wischen dreht die Kamera, beim Vorwärtslaufen schwenkt sie langsam hinter die Figur. Stufen von einem
+  Block steigt die Figur von selbst hoch, an Wänden gleitet sie entlang; Wasser und Inselrand sind gesperrt. Steht eine
+  Wand hinter der Figur, weicht die Kamera nach oben aus. Pausenmenü: Seiten tauschen (Linkshänder), Vorlesen.
+  Lehrer-PC: WASD/Pfeiltasten, Q/E Kamera, Leertaste Aktion, Esc Pause.
+- **Grafik für ältere iPads:** je Weltstück ein Mesh mit Vertex-Farben (`MeshLambertMaterial`, keine Texturen, keine
+  echten Schatten, nur Schattenflecken), Meer als eine Fläche, Bewohner gebacken (`LernInselWelt.backe`), Sichtweite
+  32 Blöcke mit Nebel, höchstens 30 Bilder pro Sekunde, Pixel-Ratio höchstens 1,5, Pause bei verdeckter Seite. Bei
+  „Bewegung reduzieren“ keine Kamerafahrten. Ohne WebGL: Ersatzanzeige mit Link zu den anderen Spielen.
+- **Probelauf auf dem ältesten Schul-iPad:** `spiele/insel.html?debug=1` zeigt Bildrate, Draw-Calls, Dreiecke,
+  Startzeit und Position. Go: mindestens 30 Bilder pro Sekunde, Start unter 5 Sekunden (aus dem Offline-Speicher),
+  2–3 Kinder laufen ohne Erklärung los, keine hängenden Finger. 20–30 Bilder → nachbessern (Sichtweite `SICHTWEITE`,
+  Pixel-Ratio, Weltgröße); unter 20 → No-Go (Gebiete als feste isometrische Szenen wie im Dorf).
+  `?seed=TEXT` erzeugt zum Ausprobieren eine andere Insel.
+- **Dateien:** alle Insel-Dateien (`spiele/insel.html`, `gemeinsam/insel-*.js`, später `daten/insel*.json`) stehen in
+  `sw.js` NACHLADEN – `pruefen.py` prüft das. Block-, Gebiets-, Auftrags- und Sammelstück-IDs nie umbenennen (ab
+  Etappe 2 im Spielstand `lernwelt-insel`).

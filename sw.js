@@ -14,7 +14,7 @@
 //  und teilen sich den Offline-Speicher. Deshalb hat jede Umgebung ihr
 //  eigenes Präfix und räumt nur ihre eigenen Speicher auf.
 // ═══════════════════════════════════════════════════════
-const VERSION = 'v52';  // v52: neues Spiel Room Detective. v51: Spiele erst nach guten Lern-Runden (Spielsperre je Wochentag und Gruppe)
+const VERSION = 'v53';  // v53: Die Insel – Etappe 1 (Probelauf). v52: neues Spiel Room Detective. v51: Spiele erst nach guten Lern-Runden (Spielsperre je Wochentag und Gruppe)
 const PRAEFIX = /\/[^/]*-test\/$/i.test(new URL(self.registration.scope).pathname) ? 'lwtest-v' : 'lernwelt-v';
 const CACHE   = PRAEFIX + VERSION.replace(/^v/, '');        // z. B. 'lernwelt-v24' (Format wie bisher)
 
@@ -41,6 +41,7 @@ const NACHLADEN = ['spiele/runner.html', 'spiele/burg-verteidigung.html', 'spiel
                    'daten/vokabeln5.json', 'daten/vokabeln6.json', 'daten/woerter-en.json', 'daten/kitchen-chaos.json', 'daten/room-detective.json',
                    'daten/karten.json', 'daten/expedition.json',
                    'daten/tower-defense.json',  // Tower Defense: Karten, Landschaften, Wellen, Türme, Gegner
+                   'spiele/insel.html', 'gemeinsam/insel-welt.js', 'gemeinsam/insel-steuerung.js',  // Die Insel (Etappe 1: Probelauf)
                    'gemeinsam/spielsperre.js',  // Hinweis auf Spielseiten: erst Lern-Runden (nur mit config.spielsperre)
                    // Weltkarte in Equal Earth (Neue Lern-Apps Etappe 1–2): Daten, Projektion, d3-geo
                    'daten/welt.json', 'gemeinsam/welt-karte.js', 'vendor/d3-geo.min.js',
