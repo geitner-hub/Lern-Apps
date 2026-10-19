@@ -513,8 +513,16 @@
       "emoji": "🕵️",
       "beschreibung": "",
       "hidden": false,
-      "klassen": [],
-      "customTags": [],
+      "klassen": [
+        5,
+        6
+      ],
+      "customTags": [
+        {
+          "name": "Spiele",
+          "color": 6
+        }
+      ],
       "aod": false
     },
     {
@@ -524,8 +532,16 @@
       "emoji": "🏝️",
       "beschreibung": "Löse Quests und baue auf deiner eigenen Insel",
       "hidden": false,
-      "klassen": [],
-      "customTags": [],
+      "klassen": [
+        5,
+        6
+      ],
+      "customTags": [
+        {
+          "name": "Spiele",
+          "color": 6
+        }
+      ],
       "aod": false
     }
   ],
