@@ -29,8 +29,10 @@
 #       Einträge in config.json für apps/typen/uebung.html?inhalt=… haben eine Inhaltsdatei.
 #   13. Die Insel: alle Insel-Dateien (spiele/insel.html, gemeinsam/insel-*.js, daten/insel*.json)
 #       stehen in sw.js NACHLADEN (sonst fehlen sie offline).
+#   14. Die Insel: daten/insel.json ist gültig (Karten, Gebiete, Vorlagen, IDs), und Bewohner-Plätze
+#       stehen mindestens INSEL_ABSTAND (20) Blöcke auseinander.
 # ═══════════════════════════════════════════════════════
-import gzip, json, os, re, sys
+import gzip, json, math, os, re, sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -122,6 +124,81 @@ for d in nachladen:
 # 13. Die Insel: jede Insel-Datei muss offline da sein
 for p in [ROOT / 'spiele/insel.html'] + sorted(ROOT.glob('gemeinsam/insel-*.js')) + sorted(ROOT.glob('daten/insel*.json')):
     if p.is_file() and rel(p) not in nachladen: F(f'sw.js NACHLADEN: Insel-Datei fehlt in der Liste: {rel(p)}')
+# 14. Die Insel: Weltdaten (daten/insel.json)
+INSEL_ABSTAND = 20   # Mindestabstand der Bewohner-Plätze in Blöcken (Aktionsplan: Laufweg statt Durchprobieren)
+if Path('daten/insel.json').is_file():
+    try:
+        insel = json.loads(lies('daten/insel.json'))
+    except Exception as e:
+        insel = None
+        F(f'daten/insel.json ist kein gültiges JSON ({e})')
+    if insel is not None:
+        n, hoch = insel.get('groesse', 96), insel.get('hoehe', 24)
+        bloecke = set(re.findall(r'\b([A-Z_]+):\s*\d+', (re.search(r'const BLOCK = \{(.*?)\};', lies('gemeinsam/insel-welt.js'), re.S) or [None, ''])[1]))
+        hk, gk = insel.get('hoehen') or [], insel.get('gebietskarte') or []
+        if len(hk) != n or any(len(z) != n or any(c not in '0123456789abcdefghijklmn'[:hoch] for c in z) for z in hk):
+            F(f'daten/insel.json: "hoehen" braucht {n} Zeilen mit je {n} Zeichen 0–9/a–n')
+        geb = insel.get('gebiete') or []
+        gids = [g.get('id') for g in geb]
+        zeichen = {g.get('zeichen') for g in geb}
+        if len(set(gids)) != len(gids) or not all(isinstance(i, str) and re.fullmatch(r'[a-z0-9-]+', i) for i in gids):
+            F('daten/insel.json: Gebiets-IDs fehlen, sind doppelt oder ungültig (klein, Ziffern, „-“)')
+        if len(gk) != n or any(len(z) != n or any(c != '.' and c not in zeichen for c in z) for z in gk):
+            F(f'daten/insel.json: "gebietskarte" braucht {n} Zeilen mit je {n} Zeichen (Gebietszeichen oder „.“)')
+        if 'hafen' not in gids: F('daten/insel.json: Startgebiet „hafen“ fehlt')
+        def im_feld(o, wo):
+            if not all(isinstance(o.get(k), (int, float)) and 0 <= o.get(k) < n for k in ('x', 'z')):
+                F(f'daten/insel.json: {wo} liegt nicht auf der Insel (x, z zwischen 0 und {n - 1})'); return False
+            return True
+        vorl = insel.get('vorlagen') or {}
+        for name, v in vorl.items():
+            for k in ('wand', 'ecke', 'dach', 'boden'):
+                if k in v and v[k] not in bloecke: F(f'daten/insel.json: Vorlage „{name}“: unbekannter Block {v[k]}')
+        alle_ids = {}
+        def neue_id(art, i):
+            if not isinstance(i, str) or not re.fullmatch(r'[a-z0-9-]+', i): F(f'daten/insel.json: {art}: ungültige ID „{i}“'); return
+            if (art, i) in alle_ids: F(f'daten/insel.json: {art}: ID doppelt: {i}')
+            alle_ids[(art, i)] = 1
+        bau = {}
+        for g in insel.get('gebaeude') or []:
+            neue_id('Gebäude', g.get('id')); im_feld(g, f'Gebäude {g.get("id")}')
+            if g.get('vorlage') not in vorl: F(f'daten/insel.json: Gebäude {g.get("id")}: Vorlage „{g.get("vorlage")}“ fehlt')
+            for k in ('wand', 'ecke', 'dach', 'boden'):
+                if k in g and g[k] not in bloecke: F(f'daten/insel.json: Gebäude {g.get("id")}: unbekannter Block {g[k]}')
+            if g.get('tuer', 'sued') not in ('nord', 'sued', 'west', 'ost'): F(f'daten/insel.json: Gebäude {g.get("id")}: tuer nord/sued/west/ost')
+            bau[g.get('id')] = g
+        orte = []
+        for p_ in insel.get('plaetze') or []:
+            neue_id('Platz', p_.get('id'))
+            if p_.get('gebaeude'):
+                g = bau.get(p_['gebaeude'])
+                if not g: F(f'daten/insel.json: Platz {p_.get("id")}: Gebäude „{p_["gebaeude"]}“ fehlt'); continue
+                v = vorl.get(g.get('vorlage'), {})
+                b, tf = v.get('breite', 5), v.get('tiefe', 5)
+                ax, az = {'nord': (0, -1), 'sued': (0, 1), 'west': (-1, 0), 'ost': (1, 0)}.get(g.get('tuer', 'sued'), (0, 1))
+                x, z = g['x'] + ax * ((b - 1) / 2 + 2.2), g['z'] + az * ((tf - 1) / 2 + 2.2)
+            elif im_feld(p_, f'Platz {p_.get("id")}'):
+                x, z = p_['x'], p_['z']
+            else: continue
+            orte.append((p_.get('id'), x, z))
+        for i in range(len(orte)):
+            for j in range(i + 1, len(orte)):
+                d = math.hypot(orte[i][1] - orte[j][1], orte[i][2] - orte[j][2])
+                if d < INSEL_ABSTAND:
+                    F(f'daten/insel.json: Bewohner-Plätze „{orte[i][0]}“ und „{orte[j][0]}“ nur {d:.0f} Blöcke auseinander (mindestens {INSEL_ABSTAND})')
+        for art, liste in (('Bauplatz', insel.get('bauplaetze')), ('Schild', insel.get('schilder')), ('Steg', insel.get('stege'))):
+            for o in liste or []:
+                neue_id(art, o.get('id'))
+                if art != 'Steg': im_feld(o, f'{art} {o.get("id")}')
+                if art == 'Bauplatz' and o.get('gebiet') not in gids: F(f'daten/insel.json: Bauplatz {o.get("id")}: unbekanntes Gebiet „{o.get("gebiet")}“')
+                if art == 'Schild' and not str(o.get('text', '')).strip(): F(f'daten/insel.json: Schild {o.get("id")}: Text fehlt')
+        for a in insel.get('absperrungen') or []:
+            if a.get('gebiet') not in gids: F(f'daten/insel.json: Absperrung mit unbekanntem Gebiet „{a.get("gebiet")}“')
+        st = insel.get('start') or {}
+        if im_feld(st, 'Start') and len(gk) == n:
+            zg = gk[int(st['z'])][int(st['x'])]
+            if not any(g.get('zeichen') == zg and g.get('offen') for g in geb): F('daten/insel.json: Start liegt nicht in einem offenen Gebiet')
+        I(f'Die Insel: {len(geb)} Gebiete, {len(orte)} Bewohner-Plätze (Abstand ≥ {INSEL_ABSTAND}), {len(insel.get("bauplaetze") or [])} Bauplätze')
 for p in ALLE:
     if p.suffix not in ('.js', '.html') or rel(p).startswith('vendor/'): continue
     for d in re.findall(r"LW\.laden\(\s*'([^']+)'", p.read_text(encoding='utf-8')):

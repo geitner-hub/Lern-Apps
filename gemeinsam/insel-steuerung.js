@@ -20,6 +20,8 @@
 //      welt      aus LernInselWelt (fest, kamera, nass, boden)
 //      spieler   { x, y, z, blick } – wird verändert (y = Füße; blick = Drehung der Figur)
 //      aktion()  wird bei Leertaste/Enter aufgerufen
+//      darf(x, z) → false: dort nicht hineinlaufen (geschlossenes Gebiet, ab Etappe 2)
+//      gesperrt(x, z)  wird aufgerufen, wenn darf() den Weg versperrt (Hinweis zeigen)
 //      optionen  { seitenTauschen, joystickGroesse (1 = 60 px), kameraTempo (1), reduce }
 //    → { update(dt) → { lauf 0–1, rennt, bewegt }, kamera(cam, dt) → Abstand, yaw, setzeOptionen(o),
 //        stopp(), destroy(), aktiv() }
@@ -135,9 +137,18 @@
         if (welt.fest(bx, by, bz)) return true;
       return false;
     }
+    /** Auf Zäune (Absperrungen) steigt die Figur nie, auch nicht von einem höheren Ufer aus */
+    function steigbar(x, y, z) {
+      if (!welt.steigbar) return true;
+      for (let bz = Math.floor(z - BREITE); bz <= Math.floor(z + BREITE - 1e-4); bz++)
+        for (let bx = Math.floor(x - BREITE); bx <= Math.floor(x + BREITE - 1e-4); bx++)
+          if (!welt.steigbar(bx, y, bz)) return false;
+      return true;
+    }
     /** Darf die Figur hier stehen? Wasser (auch nach einem Sturz) sperrt. */
     function betretbar(x, z, y) {
       if (x < .5 || z < .5 || x > welt.N - .5 || z > welt.N - .5) return false;
+      if (o.darf && !o.darf(x, z)) { if (o.gesperrt) o.gesperrt(x, z); return false; }   // geschlossenes Gebiet
       const bx = Math.floor(x), bz = Math.floor(z);
       for (let by = Math.floor(y + 1e-4) - 1; by >= 0; by--) {
         if (welt.nass(bx, by, bz)) return false;
@@ -151,7 +162,7 @@
       if (!stoesst(nx, spieler.y, nz)) { spieler.x = nx; spieler.z = nz; return true; }
       if (amBoden) {
         const hoch = Math.floor(spieler.y + 1e-4) + 1;
-        if (!stoesst(spieler.x, hoch, spieler.z) && !stoesst(nx, hoch, nz)) {
+        if (!stoesst(spieler.x, hoch, spieler.z) && !stoesst(nx, hoch, nz) && steigbar(nx, hoch - 1, nz)) {
           spieler.x = nx; spieler.z = nz; spieler.y = hoch; vy = 0;
           return true;
         }

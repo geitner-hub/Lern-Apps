@@ -1,0 +1,636 @@
+{
+ "version": 1,
+ "groesse": 96,
+ "hoehe": 24,
+ "wasser": 5,
+ "start": {
+  "x": 46,
+  "z": 74,
+  "blick": 3.1416
+ },
+ "gebiete": [
+  {
+   "id": "hafen",
+   "name": "Hafendorf",
+   "zeichen": "h",
+   "fach": "Englisch",
+   "offen": true
+  },
+  {
+   "id": "tal",
+   "name": "Baumeister-Tal",
+   "zeichen": "t",
+   "fach": "Mathe",
+   "oeffnet": "faehre",
+   "hinweis": "Ins Baumeister-Tal kommst du bald mit der Fähre."
+  },
+  {
+   "id": "hochland",
+   "name": "Kartenleser-Hochland",
+   "zeichen": "k",
+   "fach": "GPG",
+   "oeffnet": "bruecke",
+   "hinweis": "Ins Hochland führt bald eine Brücke aus dem Baumeister-Tal."
+  }
+ ],
+ "vorlagen": {
+  "haus": {
+   "typ": "haus",
+   "breite": 5,
+   "tiefe": 5,
+   "hoehe": 3,
+   "wand": "PUTZ",
+   "ecke": "STAMM",
+   "dach": "DACH",
+   "boden": "PLANKE"
+  },
+  "haus-gross": {
+   "typ": "haus",
+   "breite": 7,
+   "tiefe": 5,
+   "hoehe": 3,
+   "wand": "PUTZ",
+   "ecke": "STAMM",
+   "dach": "DACH",
+   "boden": "PLANKE"
+  },
+  "laden": {
+   "typ": "haus",
+   "breite": 7,
+   "tiefe": 5,
+   "hoehe": 3,
+   "wand": "PLANKE",
+   "ecke": "STAMM",
+   "dach": "DACH_GRUEN",
+   "boden": "PLANKE"
+  },
+  "brunnen": {
+   "typ": "brunnen",
+   "breite": 3,
+   "tiefe": 3
+  }
+ },
+ "gebaeude": [
+  {
+   "id": "brunnen",
+   "vorlage": "brunnen",
+   "x": 46,
+   "z": 68
+  },
+  {
+   "id": "haus-tom",
+   "vorlage": "haus",
+   "x": 28,
+   "z": 78,
+   "tuer": "ost",
+   "dach": "DACH"
+  },
+  {
+   "id": "haus-mia",
+   "vorlage": "haus",
+   "x": 66,
+   "z": 58,
+   "tuer": "west",
+   "dach": "DACH_BLAU"
+  },
+  {
+   "id": "haus-brown",
+   "vorlage": "haus-gross",
+   "x": 38,
+   "z": 86,
+   "tuer": "ost",
+   "dach": "DACH_GRUEN"
+  },
+  {
+   "id": "haus-gelb",
+   "vorlage": "haus",
+   "x": 56,
+   "z": 76,
+   "tuer": "nord",
+   "dach": "DACH_GELB"
+  },
+  {
+   "id": "laden",
+   "vorlage": "laden",
+   "x": 80,
+   "z": 78,
+   "tuer": "west"
+  },
+  {
+   "id": "faehrhaus",
+   "vorlage": "haus",
+   "x": 13,
+   "z": 60,
+   "tuer": "ost",
+   "wand": "PLANKE",
+   "dach": "DACH_BLAU"
+  }
+ ],
+ "plaetze": [
+  {
+   "id": "tom",
+   "gebaeude": "haus-tom"
+  },
+  {
+   "id": "mia",
+   "gebaeude": "haus-mia"
+  },
+  {
+   "id": "brown",
+   "x": 53,
+   "z": 86,
+   "blick": 0
+  },
+  {
+   "id": "haendler",
+   "gebaeude": "laden"
+  },
+  {
+   "id": "faehrmann",
+   "x": 21,
+   "z": 56,
+   "blick": 3.1416
+  },
+  {
+   "id": "baumeister",
+   "x": 26,
+   "z": 34,
+   "blick": 0
+  },
+  {
+   "id": "holzfaeller",
+   "x": 10,
+   "z": 18,
+   "blick": 1.5708
+  },
+  {
+   "id": "kartenleserin",
+   "x": 62,
+   "z": 34,
+   "blick": 0
+  },
+  {
+   "id": "turmwaechterin",
+   "x": 80,
+   "z": 16,
+   "blick": 0
+  }
+ ],
+ "wege": [
+  {
+   "punkte": [
+    [
+     44,
+     69
+    ],
+    [
+     36,
+     73
+    ],
+    [
+     33,
+     78
+    ]
+   ],
+   "breite": 2
+  },
+  {
+   "punkte": [
+    [
+     48,
+     67
+    ],
+    [
+     56,
+     62
+    ],
+    [
+     62,
+     58
+    ]
+   ],
+   "breite": 2
+  },
+  {
+   "punkte": [
+    [
+     48,
+     70
+    ],
+    [
+     62,
+     75
+    ],
+    [
+     74,
+     78
+    ]
+   ],
+   "breite": 2
+  },
+  {
+   "punkte": [
+    [
+     46,
+     70
+    ],
+    [
+     49,
+     79
+    ],
+    [
+     50,
+     86
+    ]
+   ],
+   "breite": 2
+  },
+  {
+   "punkte": [
+    [
+     44,
+     67
+    ],
+    [
+     32,
+     62
+    ],
+    [
+     22,
+     57
+    ],
+    [
+     18,
+     56
+    ]
+   ],
+   "breite": 2
+  },
+  {
+   "punkte": [
+    [
+     56,
+     73
+    ],
+    [
+     55,
+     75
+    ]
+   ],
+   "breite": 2
+  },
+  {
+   "punkte": [
+    [
+     42,
+     86
+    ],
+    [
+     49,
+     82
+    ]
+   ],
+   "breite": 2
+  }
+ ],
+ "stege": [
+  {
+   "id": "steg-hafen",
+   "von": [
+    50,
+    87
+   ],
+   "bis": [
+    50,
+    95
+   ],
+   "breite": 2
+  },
+  {
+   "id": "steg-faehre",
+   "von": [
+    18,
+    55
+   ],
+   "bis": [
+    18,
+    52
+   ],
+   "breite": 2
+  },
+  {
+   "id": "steg-tal",
+   "von": [
+    18,
+    45
+   ],
+   "bis": [
+    18,
+    47
+   ],
+   "breite": 2
+  }
+ ],
+ "bauplaetze": [
+  {
+   "id": "weide",
+   "gebiet": "tal",
+   "art": "zaun",
+   "x": 18,
+   "z": 28,
+   "breite": 8,
+   "tiefe": 6
+  },
+  {
+   "id": "lager",
+   "gebiet": "tal",
+   "art": "lager",
+   "x": 33,
+   "z": 18,
+   "breite": 6,
+   "tiefe": 6
+  },
+  {
+   "id": "felder",
+   "gebiet": "tal",
+   "art": "felder",
+   "x": 14,
+   "z": 40,
+   "breite": 7,
+   "tiefe": 5
+  },
+  {
+   "id": "bruecke-hochland",
+   "gebiet": "tal",
+   "art": "bruecke",
+   "x": 45,
+   "z": 22,
+   "breite": 9,
+   "tiefe": 3,
+   "ebnen": false
+  }
+ ],
+ "schilder": [
+  {
+   "id": "willkommen",
+   "x": 49,
+   "z": 71,
+   "text": "Willkommen im Hafendorf!"
+  },
+  {
+   "id": "faehre-hafen",
+   "x": 21,
+   "z": 54,
+   "text": "Fähre zum Baumeister-Tal. Der Fährmann bringt dich bald hinüber."
+  },
+  {
+   "id": "hochland-kante",
+   "x": 62,
+   "z": 55,
+   "text": "Da oben liegt das Kartenleser-Hochland. Der Weg dorthin führt über eine Brücke im Baumeister-Tal."
+  },
+  {
+   "id": "faehre-tal",
+   "x": 20,
+   "z": 44,
+   "text": "Fähre zum Hafendorf."
+  },
+  {
+   "id": "bruecke",
+   "x": 39,
+   "z": 25,
+   "text": "Hier soll eine Brücke ins Hochland entstehen."
+  }
+ ],
+ "absperrungen": [
+  {
+   "gebiet": "tal",
+   "punkte": [
+    [
+     17,
+     52
+    ],
+    [
+     19,
+     52
+    ]
+   ]
+  }
+ ],
+ "frei": [
+  {
+   "x": 46,
+   "z": 68,
+   "r": 7
+  },
+  {
+   "x": 50,
+   "z": 90,
+   "r": 4
+  }
+ ],
+ "baeume": {
+  "seed": "insel-baeume-1",
+  "dichte": {
+   "hafen": 0.026,
+   "tal": 0.022,
+   "hochland": 0.018
+  }
+ },
+ "hoehen": [
+  "222222222222222222222222222222222223345676543333333233444433222222222222222222222222222222222222",
+  "222222222222222222222222222222233334567898643333544445566654433322222222222222222222222222222222",
+  "22222222222222222222222222223334455678aaa9843333666667788876655443222222222222222222222222222222",
+  "222222222222222222222222333334567789abbccb6433346888999aa999877665443222222222222222222222222222",
+  "222222222222222222222233445556899abbccdddb63333499aabbbbbbbba99887765433222222222222222222222222",
+  "222222222222222223333445667789abccdddddddc633334bbcccdddddcccbbaa9888765432222222222222222222222",
+  "222222222222222234556666789abcddddddddddcb633335dddeeeeeddddddcbbaaaa998764322222222222222222222",
+  "22222222222222234577887789acddddddddddddcb533335eeeeeeeeeeeeddddccbbbbbaa97532222222222222222222",
+  "2222222222222234578999999abcddddddddddddcb533335eeeeeeeeeeeeeddddddddddccb9753222222222222222222",
+  "22222222222222356899aaaaabcccccdddddddddcb533336eeeeeeeeeeeeedddddddddddddca75322222222222222222",
+  "22222222222223467899aaaabbccccccccddddddcb433336eeeeeeeeeeeeeedddddddddddddca8642222222222222222",
+  "2222222222222356789999aabbbbbbbbcccdddddcb433336eeeeeeeeeeeeeedddddddddddddddb975322222222222222",
+  "2222222222223456788999aaaaaaaabbbbcccdddca433346eeefffeeeeeeeeeeddddddddddddddca8643222222222222",
+  "2222222222233456788999aa9999aaaaabbcccddcb433336eeefffffeeeeeeeeedddddddddddddddb975322222222222",
+  "22222222223345667889999999999999aabbcccccb533335eeeffffffeeeeeeeddddddddddddddeedc96422222222222",
+  "222222222234556778899999888889999aabbbcccb533335eeeeefffffeeeeeeddddddddddddddeeedb8532222222222",
+  "22222222234566678899888888888888999aabbccb633334eeeeefffffeeeeeeddddddddddddddeeeec9632222222222",
+  "222222222345677788988888888888888999aabccb633334eeefffffffeeeeeedddddddddddddeeeeedb742222222222",
+  "2222222224567778889988888888888888899abbcba433336eefffffffeeeeeedddddddddddddeeeeeec963222222222",
+  "2222222224567788899998888888888888899aabbbb433336eeffffffeeeeeeeddddddddddddeeeeeeeeb74222222222",
+  "22222222235677888889988888888888888899abbbb533335eefffffeeeeeeeeddddddddddddeeeeeeeec95322222222",
+  "22222222235678888888888888888888888889aabbb633334eeeffffeeeeeeedddddddddddddeeeeeeeed96322222222",
+  "222222222356788888888888888888888888899abbb633334eeeffffeeeeeeedddddddddddddeeeeeeeeda7422222222",
+  "222222222456788888888888888888888888889aabba433336eeeffeeeeeeeeddddddddddddddeeeeeeeeb8532222222",
+  "222222223467888888888888888888888888889aabba433336eeeeeeeeeeeeedddddddddddddeeeeeeeeec9632222222",
+  "2222222235678888888888888888888888888899abbb533335eeeeeeeeeeeeeddddddddddddeeeeeeeeeec9642222222",
+  "2222222345788888888888888888888888888899abbb533335eeeeeeeeeeeeeeddddddeeeeeeeeeeeeeeeca753222222",
+  "2222222356788888888888888888888888888899abbb633334eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeca853222222",
+  "2222223467888888888888888888888888888899abbb633334eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeca864322222",
+  "2222223567888888888888888888888888888899abbb633334eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeedb964322222",
+  "222223457888888888888888888888888888899aabbb533335eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeedb864322222",
+  "222223567898888888888888888888888888899aabbb533335eeeeeeeeeeeeeeffffffeeeeeeeeeeeeeeedb864222222",
+  "222234578998888888888888888888888888999abbba433336eeeeeeeeeeeeeffffffffeeeeeeeeeeeeeedb864222222",
+  "222234678999888888888888888888888888999abbb633334eeeeeeeeeeeeeffffffffffeeeeeeeeeeeeeec964322222",
+  "222235689a9988888888888888888888888899aabbb633334eeeeeeeeeeeeeffffffffffffeeeeeeeeeeeeca75432222",
+  "22234579aaa988888888888888888888888999abbbb533335eeeeeeeeeeeefffffffffffffeeeeeeeeeeeedb86543222",
+  "2223468abba99888888888888888888888999aabbbb433336eeeeeeeeeeeeffffffffffffeeeeeeeeeeeeedca7653222",
+  "2223579abbaa998888888888888888889999aabbcbb433336eeeeeeeeeeefffffffffffeeeeeeeeeeeeeeeeca8753222",
+  "2234579bcbba99988888888888888889999aabbccc633334eeeeeeeeeeeefffffffffeeeeeeeeeeeeeeeeeedb9753222",
+  "2234689bccbba999888888888888888999aabbcccb533335eeeeeeeeeeffffffffffeeeeeeeeeeeeeeeeeeedb9753222",
+  "223568abcccbbaa998888888888889999aabbccdcb533335eeeeeeeeeffffffffffeeeeeeeeeeeeeeeeeeeedca753222",
+  "224568abccccbbaa9998888888889999aabbccddcb433336eeeeeeeefffffffffffeeeeeeeeeeeeeeeeeeeedca853222",
+  "223579acddcccbbaaa999888889999aaabbcccddcb433336eeeeeeefffffffffffeeeeeeeeeeeeeeeeeeeeedca753222",
+  "223579acdddcccbbbaa999999999aaaabbcccdddcb43334eeeeeefffffffffffeeeeeeeeeeeeeeeeeeeeeeedca753222",
+  "2235566666cccccbbbaaaaaaaaaaaabbbcccddddcb43334ffffffffffffffffeeeeeeeeeeeeeeeeeeeeeeeedc9743222",
+  "2233344444555556666aaaaaaaabbbbccccdddddcb43334ffffffffffffffffeeeeeeedddddeeeeeeeeeeeedb9643222",
+  "223333333333333444455556666bbbccccccc6666643334ffffffffffffffffeeeeeeddddddddeeeeeeeeeedb9643222",
+  "223333333333333333333334444555555555544444433346fffffffffffffffeeeeedddddddddeeeeeeeeeedb9753222",
+  "2233333333333333333333333333333333333333333333356ffffffffffffffeeeeeddddddddddeeeeeeeeedb9754222",
+  "2333333333333333333333333333333333333333333333346ffffffffffffffeeeeeddddddddddeeeeeeeeedc9754222",
+  "2333333333333333333333333333333333333333333333336fffffffffffffeeeeeddddddddddddeeeeeeeeec9753222",
+  "2344333333333333333333333333333333333333333333346fffffffffffffeeeeedddddddddddddeeeeeeeeca753222",
+  "2345555554444433333333333333333333333333333333356ffffffffffffeeeeeedddddddddddddeeeeeeeeca753222",
+  "233456667666665555444433333333333333333333333456888888888888777777766666666666677777777765433222",
+  "233455667777777777666655554444344444445555556668888888888888777776666666666666777777777765433222",
+  "233455566777777777777777776666666666667777777778888888888888777766666666666667777777777665433222",
+  "233455566777777777777777777777777777777777777778888888888887777766666666666677777777777665432222",
+  "233455566777777777777777777777777777777777777778888888888887777766666666666677777777777665432222",
+  "223455567777777777777777777777777777777777777778888888888887777766666666666677777777777765432222",
+  "223445667777777777766666677777777777777777777777888888888887777776666666666777777777777765432222",
+  "223445667777777776666666666777777777777777777777788888888887777777666666667777777777777765432222",
+  "223455677777777766666666666677777777777777777777788888888887777777666777777777777777777764322222",
+  "223456677777777766666666666667777777777777777777788888888887777777767777777777777777777654322222",
+  "223456777777777766666666666666777777777777777777888888888887777777777777777777777777877643222222",
+  "223456777777777766666666666666777777777777777777788888888887777777777777777777777778876543222222",
+  "223456777777777766666666666666677777777777777777788888888887777777777777777777777778876543222222",
+  "223345677777777766666666666666677777777777777777778888888887777777777777777777777778876432222222",
+  "222345677777777766666666666666677777777777777777778888888877777777767777777777777778775432222222",
+  "222345677777777776666666666667777777777777777777778888877777777777666777777777777777765322222222",
+  "222345667777777777666666666677777777777777777777778887777777777777666677777777777777764322222222",
+  "222345566666666777766667777777777777777777777777887777777777777776666677777777777777754222222222",
+  "222345566666666667777777777777777777777777777777887777777777777766666677777777777777653222222222",
+  "222344556666666666777777777777777777777777777778887777777777777766666677777777777777643222222222",
+  "222234455555555666777777777777777777777777777777887777777777777766666677777777777777643222222222",
+  "222233444445555566777777777777777777777777777777887777777777777766666677777777777777543222222222",
+  "222223333334445556677777777777777777777777777777777777777777777766666677777777777776543222222222",
+  "222222222333344556677766677777777777777777777777777777777777777766666777777777777776432222222222",
+  "222222222223334455677766667777777777777777777777777777777777777766666777777777777665432222222222",
+  "222222222222334455667666666777777777777777777777777777777777777766677777777777776654332222222222",
+  "222222222222233445566766666777777777777777777777777777777777777777777777777777665543322222222222",
+  "222222222222223344556776667777777777777777777777777777777777777777777777777776655443322222222222",
+  "222222222222222334456677777777777777777777777777777777777777777666677777777766655433222222222222",
+  "222222222222222223345567777777777777777777777777777777777777766666677777777666554433222222222222",
+  "222222222222222222234456677777777777777777777777777777777776666666667777666665554332222222222222",
+  "222222222222222222223345566666777777777777777777777777777776666666666666665555544332222222222222",
+  "222222222222222222222233445556677777777777777777777777667666666666666665555555444332222222222222",
+  "222222222222222222222222333445667777777777777777777666666666666666666555444444443322222222222222",
+  "222222222222222222222222222334566677777777666666666555555566666556665554444333333322222222222222",
+  "222222222222222222222222222223445566666666655555554444444445555555555444333333333222222222222222",
+  "222222222222222222222222222222334455555555444444433333333333444444444333322222222222222222222222",
+  "222222222222222222222222222222223334444433333333322222233333333333333322222222222222222222222222",
+  "222222222222222222222222222222222223333322222222222222222222222222222222222222222222222222222222",
+  "222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222",
+  "222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222",
+  "222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222",
+  "222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222"
+ ],
+ "gebietskarte": [
+  "......................................ttttt.....................................................",
+  "....................................ttttttt.....k....kkkkkk.....................................",
+  ".................................tttttttttt.....kkkkkkkkkkkkkkk.................................",
+  "..............................ttttttttttttt.....kkkkkkkkkkkkkkkkkk..............................",
+  "..........................ttttttttttttttttt.....kkkkkkkkkkkkkkkkkkkkk...........................",
+  ".......................tttttttttttttttttttt.....kkkkkkkkkkkkkkkkkkkkkkkk........................",
+  "..................ttttttttttttttttttttttttt....kkkkkkkkkkkkkkkkkkkkkkkkkkk......................",
+  ".................tttttttttttttttttttttttttt....kkkkkkkkkkkkkkkkkkkkkkkkkkkkk....................",
+  "................ttttttttttttttttttttttttttt....kkkkkkkkkkkkkkkkkkkkkkkkkkkkkk...................",
+  "...............tttttttttttttttttttttttttttt....kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk..................",
+  "...............ttttttttttttttttttttttttttt.....kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk.................",
+  "..............tttttttttttttttttttttttttttt.....kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk...............",
+  "..............tttttttttttttttttttttttttttt.....kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk..............",
+  "..............tttttttttttttttttttttttttttt.....kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk............",
+  ".............tttttttttttttttttttttttttttttt....kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk............",
+  "............ttttttttttttttttttttttttttttttt....kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk...........",
+  "...........tttttttttttttttttttttttttttttttt.....kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk...........",
+  "...........tttttttttttttttttttttttttttttttt.....kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk...........",
+  "..........ttttttttttttttttttttttttttttttttt.....kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk..........",
+  "..........ttttttttttttttttttttttttttttttttt.....kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk..........",
+  "..........tttttttttttttttttttttttttttttttttt....kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk.........",
+  "..........tttttttttttttttttttttttttttttttttt.....kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk.........",
+  "..........tttttttttttttttttttttttttttttttttt.....kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk.........",
+  "..........tttttttttttttttttttttttttttttttttt.....kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk........",
+  "..........tttttttttttttttttttttttttttttttttt.....kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk........",
+  ".........tttttttttttttttttttttttttttttttttttt....kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk........",
+  ".........tttttttttttttttttttttttttttttttttttt....kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk.......",
+  "........ttttttttttttttttttttttttttttttttttttt.....kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk.......",
+  "........ttttttttttttttttttttttttttttttttttttt.....kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk.......",
+  ".......tttttttttttttttttttttttttttttttttttttt.....kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk.......",
+  ".......tttttttttttttttttttttttttttttttttttttt....kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk.......",
+  "......ttttttttttttttttttttttttttttttttttttttt....kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk.......",
+  "......tttttttttttttttttttttttttttttttttttttt.....kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk.......",
+  "......tttttttttttttttttttttttttttttttttttttt.....kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk.......",
+  ".....ttttttttttttttttttttttttttttttttttttttt.....kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk......",
+  ".....ttttttttttttttttttttttttttttttttttttttt....kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk.....",
+  ".....tttttttttttttttttttttttttttttttttttttt.....kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk....",
+  "....ttttttttttttttttttttttttttttttttttttttt.....kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk....",
+  "....ttttttttttttttttttttttttttttttttttttttt.....kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk....",
+  "....ttttttttttttttttttttttttttttttttttttttt....kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk....",
+  "...tttttttttttttttttttttttttttttttttttttttt....kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk....",
+  "...ttttttttttttttttttttttttttttttttttttttt.....kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk....",
+  "...ttttttttttttttttttttttttttttttttttttttt.....kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk....",
+  "...ttttttttttttttttttttttttttttttttttttttt.....kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk....",
+  "...ttttttttttttttttttttttttttttttttttttttt.....kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk.....",
+  "..........tttttttttttttttttttttttttttttttt.....kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk.....",
+  "...................ttttttttttttttttttttttt.....kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk.....",
+  "...........................tttttttttt..........kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk....",
+  "...............................................kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk....",
+  "................................................kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk....",
+  "................................................kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk....",
+  "................................................kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk....",
+  "...hhhhhh......................................kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk....",
+  "....hhhhhhhhhhhhhh............................hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh......",
+  "....hhhhhhhhhhhhhhhhhhhhhh............hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh......",
+  "....hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh......",
+  "....hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh......",
+  "....hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh......",
+  "....hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh......",
+  ".....hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh......",
+  ".....hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh......",
+  "....hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh.......",
+  "....hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh.......",
+  "....hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh........",
+  "....hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh........",
+  "....hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh........",
+  ".....hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh.........",
+  ".....hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh.........",
+  ".....hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh.........",
+  ".....hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh..........",
+  ".....hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh..........",
+  ".....hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh..........",
+  "......hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh...........",
+  ".......hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh...........",
+  "...........hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh...........",
+  "..............hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh...........",
+  "...............hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh............",
+  "................hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh............",
+  "................hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh.............",
+  ".................hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh..............",
+  "..................hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh...............",
+  "...................hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh...............",
+  "....................hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh................",
+  "......................hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh................",
+  ".......................hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh.................",
+  "..........................hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh..................",
+  ".............................hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh........................",
+  "..............................hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh.........................",
+  "................................hhhhhhhhhhhhhhhhhh.........hhhhhhhhhh...........................",
+  "..................................hhhhhhhh......................................................",
+  "................................................................................................",
+  "................................................................................................",
+  "................................................................................................",
+  "................................................................................................",
+  "................................................................................................",
+  "................................................................................................"
+ ]
+}
