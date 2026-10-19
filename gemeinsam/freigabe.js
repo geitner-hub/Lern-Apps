@@ -21,6 +21,10 @@
 //    { schwelle: 60, runden: { "alle": [Mo, Di, Mi, Do, Fr, Sa, So], "k5": […], "g:<gruppe>": […] } }
 //    Es gilt die genaueste Liste (Gruppe vor Klasse vor „alle“); 0 = an diesem Tag keine Sperre.
 //    Gezählt wird im Pass (lernwelt-pass → today.lr: Lern-App-Runden ab schwelle %, ohne Durchklicken).
+//    ausnahmen (freiwillig): [{ id, wer, runden: 0–20, ab?: "JJJJ-MM-TT", bis?: "JJJJ-MM-TT" }]
+//    Eine laufende Ausnahme geht den Wochentag-Listen vor (ohne bis = dauerhaft, ab/bis einschließlich).
+//    Gilt mehr als eine, gewinnt die genaueste (Gruppe vor Klasse vor „alle“), bei gleichem „wer“ die,
+//    die am frühesten endet (so schlägt „heute frei“ eine dauerhafte Ausnahme). 0 Runden = Spiele frei.
 //
 //  Eine Sperre nimmt nie Fortschritt weg: Ergebnisse, Sterne und gemeisterte Themen bleiben.
 //
@@ -133,11 +137,28 @@
   }
 
   // ── Spielsperre: Spiele erst nach guten Lern-Runden (je Wochentag und Gruppe/Klasse) ──
+  /** Laufende Ausnahme für dieses iPad (genaueste; bei gleichem „wer“ die, die am frühesten endet) */
+  function spielAusnahme(S) {
+    const A = S && Array.isArray(S.ausnahmen) ? S.ausnahmen : [];
+    if (!A.length) return null;
+    const h = heute();
+    const laeuft = a => a && typeof a === 'object' && Number.isFinite(Number(a.runden))
+      && (!a.ab || !DATUM.test(a.ab) || a.ab <= h) && (!a.bis || !DATUM.test(a.bis) || h <= a.bis);
+    for (const w of wer()) {
+      const passend = A.filter(a => laeuft(a) && a.wer === w)
+        .sort((x, y) => (x.bis && DATUM.test(x.bis) ? x.bis : '9999') < (y.bis && DATUM.test(y.bis) ? y.bis : '9999') ? -1 : 1);
+      if (passend.length) return passend[0];
+    }
+    return null;
+  }
   function spielSperre() {
-    const S = CFG && CFG.spielsperre, R = S && S.runden;
-    if (!R || typeof R !== 'object') return null;
-    const liste = wer().map(w => R[w]).find(l => Array.isArray(l) && l.length === 7);
-    const noetig = liste ? Number(liste[(new Date().getDay() + 6) % 7]) || 0 : 0;   // Montag = 0
+    const S = CFG && CFG.spielsperre;
+    if (!S || typeof S !== 'object') return null;
+    const R = S.runden && typeof S.runden === 'object' ? S.runden : {};
+    const aus = spielAusnahme(S);
+    const liste = aus ? null : wer().map(w => R[w]).find(l => Array.isArray(l) && l.length === 7);
+    const noetig = aus ? Math.max(0, Number(aus.runden) || 0)
+      : liste ? Number(liste[(new Date().getDay() + 6) % 7]) || 0 : 0;   // Montag = 0
     if (noetig <= 0) return null;
     const p = lies(PASS_KEY), t = p && p.today;
     const geschafft = t && t.day === heute() ? Number(t.lr) || 0 : 0;

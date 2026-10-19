@@ -39,7 +39,8 @@
 //    gruppen[], apps[].gruppe – Regale auf der Startseite (Etappe 6)
 //    freigaben     – { themaId: { wer: 'zu'|'offen'|'JJJJ-MM-TT' } }, wer = alle | k5 | g:<32 hex> (Etappe 7)
 //    fokus[]       – { id, fuer, apps[], ab?, bis } „heute nur diese Apps“, endet von selbst (Etappe 7)
-//    spielsperre   – { schwelle: 50–100, runden: { wer: [7 Zahlen 0–20, Mo–So] } } Spiele erst nach Lern-Runden
+//    spielsperre   – { schwelle: 50–100, runden: { wer: [7 Zahlen 0–20, Mo–So] },
+//                      ausnahmen?: [{ id, wer, runden: 0–20, ab?: Datum, bis?: Datum }] } Spiele erst nach Lern-Runden
 //    heute         – nur false: Startseite ohne „Heute für dich“ (Etappe 8)
 //
 //  Wartung & Fehlersuche: cloudflare/ANLEITUNG.md
@@ -286,11 +287,18 @@ function validateConfig(cfg) {
   const ss = cfg.spielsperre;
   if (ss !== undefined) {
     const lOk = l => Array.isArray(l) && l.length === 7 && l.every(n => Number.isInteger(n) && n >= 0 && n <= 20);
+    const D = /^\d{4}-\d{2}-\d{2}$/;
+    const aOk = a => a && typeof a === 'object' && !Array.isArray(a) && /^[a-z0-9_-]{1,40}$/i.test(a.id || '')
+      && typeof a.wer === 'string' && WER.test(a.wer) && Number.isInteger(a.runden) && a.runden >= 0 && a.runden <= 20
+      && (a.ab === undefined || D.test(a.ab)) && (a.bis === undefined || D.test(a.bis))
+      && (a.ab === undefined || a.bis === undefined || a.ab <= a.bis)
+      && Object.keys(a).every(k => ['id', 'wer', 'runden', 'ab', 'bis'].includes(k));
     if (!ss || typeof ss !== 'object' || Array.isArray(ss)
         || !(Number.isInteger(ss.schwelle) && ss.schwelle >= 50 && ss.schwelle <= 100)
         || !ss.runden || typeof ss.runden !== 'object' || Array.isArray(ss.runden) || Object.keys(ss.runden).length > 40
         || !Object.entries(ss.runden).every(([w, l]) => WER.test(w) && lOk(l))
-        || Object.keys(ss).some(k => !['schwelle', 'runden'].includes(k))) p.push('spielsperre ungültig');
+        || (ss.ausnahmen !== undefined && !(Array.isArray(ss.ausnahmen) && ss.ausnahmen.length <= 40 && ss.ausnahmen.every(aOk)))
+        || Object.keys(ss).some(k => !['schwelle', 'runden', 'ausnahmen'].includes(k))) p.push('spielsperre ungültig');
   }
   // „Heute für dich“ (Etappe 8): nur abschaltbar
   if (cfg.heute !== undefined && cfg.heute !== false) p.push('heute ungültig');

@@ -7,7 +7,8 @@
 //
 //  Schreibt zwei Felder in config.json (Format und Auswertung: gemeinsam/freigabe.js):
 //    freigaben – { themaId: { wer: 'zu' | 'offen' | 'JJJJ-MM-TT' } }   wer = alle | k5 | g:<Sync-Gruppe>
-//    spielsperre – { schwelle, runden: { wer: [Mo, Di, Mi, Do, Fr, Sa, So] } }  Spiele erst nach guten Lern-Runden
+//    spielsperre – { schwelle, runden: { wer: [Mo, Di, Mi, Do, Fr, Sa, So] }, ausnahmen?: [{ id, wer, runden, ab?, bis? }] }
+//                  Spiele erst nach guten Lern-Runden; Ausnahmen gehen den Wochentagen vor
 //    fokus[]   – { id, fuer, apps[], ab?, bis }
 //  Der Worker prüft beide Felder (cloudflare/worker.js) – er muss VOR dem ersten Speichern aktualisiert sein.
 //
@@ -65,6 +66,7 @@ function frWerListe() {
   Object.values(CONFIG.freigaben || {}).forEach(e => Object.keys(e || {}).forEach(w => { if (!liste.includes(w)) liste.push(w); }));
   (CONFIG.fokus || []).forEach(f => { if (f && f.fuer && !liste.includes(f.fuer)) liste.push(f.fuer); });
   Object.keys((CONFIG.spielsperre || {}).runden || {}).forEach(w => { if (!liste.includes(w)) liste.push(w); });
+  ((CONFIG.spielsperre || {}).ausnahmen || []).forEach(a => { if (a && a.wer && !liste.includes(a.wer)) liste.push(a.wer); });
   return liste;
 }
 
@@ -339,7 +341,9 @@ document.addEventListener('click', e => {
 const SP_TAGE = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
 function spCfg() {
   const s = CONFIG.spielsperre && typeof CONFIG.spielsperre === 'object' ? CONFIG.spielsperre : {};
-  return { schwelle: Number.isFinite(s.schwelle) ? s.schwelle : 60, runden: s.runden && typeof s.runden === 'object' ? s.runden : {} };
+  const h = frHeute();
+  return { schwelle: Number.isFinite(s.schwelle) ? s.schwelle : 60, runden: s.runden && typeof s.runden === 'object' ? s.runden : {},
+    ausnahmen: (Array.isArray(s.ausnahmen) ? s.ausnahmen : []).filter(a => a && (!a.bis || a.bis >= h)) };   // Abgelaufenes fällt weg
 }
 /** Was gilt für „wer“? Eigene Liste, sonst die von „Alle“, sonst nichts */
 function spStand(wer) {
@@ -350,7 +354,9 @@ function spStand(wer) {
 }
 function spSpeichern(sp, msg) {
   Object.keys(sp.runden).forEach(w => { if (!Array.isArray(sp.runden[w]) || (w === 'alle' && sp.runden[w].every(n => !n))) delete sp.runden[w]; });
-  if (Object.keys(sp.runden).length) CONFIG.spielsperre = sp; else delete CONFIG.spielsperre;
+  const neu = { schwelle: sp.schwelle, runden: sp.runden };
+  if (sp.ausnahmen && sp.ausnahmen.length) neu.ausnahmen = sp.ausnahmen;
+  if (Object.keys(sp.runden).length || neu.ausnahmen) CONFIG.spielsperre = neu; else delete CONFIG.spielsperre;
   logChange(msg);
   saveConfig();
   buildSpielsperre();
@@ -375,7 +381,8 @@ function buildSpielsperre() {
     <div style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:.4rem;max-width:520px">${tage}</div>
     <p style="font-size:.75rem;color:var(--muted);margin:.8rem 0 0;line-height:1.5">${st.eigen ? '' : 'Gestrichelt = übernommen von „Alle“. Eine Änderung legt eigene Werte für ' + frEsc(frWerName(wer)) + ' an. '}
       Gezählt werden Runden in Lern-Apps (nicht in Spielen) ab der Prozent-Schwelle, ohne Durchklicken – ab Mitternacht neu. Die Schwelle gilt für alle.
-      ${aktiv.length ? '<br>Eingestellt: ' + aktiv.join(' · ') : '<br>Zurzeit ist keine Sperre eingestellt.'}</p>`;
+      ${aktiv.length ? '<br>Eingestellt: ' + aktiv.join(' · ') : '<br>Zurzeit ist keine Sperre eingestellt.'}</p>
+    ${spAusnahmenHtml(sp, wer)}`;
   document.getElementById('sp-wer').onchange = e => { FR.spWer = e.target.value; buildSpielsperre(); };
   document.getElementById('sp-schwelle').onchange = e => {
     const s = spCfg(); s.schwelle = Number(e.target.value);
@@ -389,6 +396,79 @@ function buildSpielsperre() {
   });
   const erb = document.getElementById('sp-erben');
   if (erb) erb.onclick = () => { const s = spCfg(); delete s.runden[wer]; spSpeichern(s, `🎮 Spielsperre ${frWerName(wer)}: wie „Alle“`); };
+  spAusnahmenBinden(box, wer);
+}
+
+// ── Ausnahmen von der Spielsperre (gehen den Wochentagen vor) ──
+const spIso = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+function spPlusTage(n) { const d = new Date(); d.setDate(d.getDate() + n); return spIso(d); }
+const spRundenText = n => n ? `${n} ${n === 1 ? 'Runde' : 'Runden'} vor den Spielen` : 'Spiele frei';
+function spZeitText(a) {
+  const h = frHeute(), tag = iso => iso === h ? 'heute' : iso === spPlusTage(1) ? 'morgen' : frDatum(iso);
+  if (!a.ab && !a.bis) return 'dauerhaft, bis du sie beendest';
+  if (a.ab && a.ab === a.bis) return a.ab === h ? 'nur heute' : 'nur ' + tag(a.ab);
+  if (!a.ab || a.ab <= h) return a.bis ? 'bis einschließlich ' + tag(a.bis) : 'dauerhaft';
+  return a.bis ? `vom ${tag(a.ab)} bis ${tag(a.bis)}` : `ab ${tag(a.ab)}, dauerhaft`;
+}
+function spAusnahmenHtml(sp, wer) {
+  const h = frHeute();
+  const liste = sp.ausnahmen.slice().sort((x, y) => (x.ab || '') < (y.ab || '') ? -1 : 1);
+  const zeilen = liste.map(a => {
+    const geplant = a.ab && a.ab > h;
+    return `<div class="sw-row"><span class="sw-ic">${a.runden ? '🎮' : '🎉'}</span>
+      <div class="sw-txt"><div class="sw-name">${frEsc(frWerName(a.wer))}: ${frEsc(spRundenText(a.runden))}</div>
+        <div class="sw-desc">${geplant ? 'geplant · ' : ''}${frEsc(spZeitText(a))}</div></div>
+      <button class="btn sm danger" data-sp-aus-weg="${frEsc(a.id)}">${geplant ? 'Löschen' : 'Beenden'}</button></div>`;
+  }).join('');
+  const werListe = frWerListe();
+  return `<div style="border-top:1px solid var(--border);margin-top:1rem;padding-top:1rem">
+    <div style="font-weight:800;margin-bottom:.35rem">⭐ Ausnahmen</div>
+    <p style="font-size:.75rem;color:var(--muted);margin:0 0 .7rem;line-height:1.5">Zum Beispiel „Gruppe 5a heute Spiele frei“ oder „Klasse 6 diese Woche nur 2 Runden“.
+      Eine Ausnahme geht den Wochentagen oben vor und endet von selbst. Gibt es mehrere, gilt die genaueste (Gruppe vor Klasse vor Alle).</p>
+    ${zeilen || '<p style="font-size:.85rem;color:var(--text2);margin:.2rem 0 .8rem">Gerade gibt es keine Ausnahme.</p>'}
+    <div style="display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin-top:.6rem">
+      <select id="sp-aus-wer" style="width:auto" aria-label="Ausnahme für wen?">${werListe.map(w => `<option value="${frEsc(w)}"${w === wer ? ' selected' : ''}>${frEsc(frWerName(w))}</option>`).join('')}</select>
+      <select id="sp-aus-runden" style="width:auto" aria-label="Wie viele Runden?">${Array.from({ length: 11 }, (_, n) => `<option value="${n}">${n ? n + (n === 1 ? ' Runde' : ' Runden') : '🎉 Spiele frei'}</option>`).join('')}</select>
+      <select id="sp-aus-dauer" style="width:auto" aria-label="Wie lange?">
+        <option value="heute">nur heute</option><option value="morgen">nur morgen</option><option value="woche">bis Sonntag</option>
+        <option value="zeitraum">Zeitraum wählen …</option><option value="dauerhaft">dauerhaft (bis ich sie beende)</option></select>
+      <span id="sp-aus-zeitraum" hidden style="display:inline-flex;gap:.4rem;align-items:center;font-size:.85rem;color:var(--text2)">
+        von <input type="date" id="sp-aus-ab" min="${h}" value="${h}" style="width:auto" aria-label="Ausnahme ab">
+        bis <input type="date" id="sp-aus-bis" min="${h}" value="${h}" style="width:auto" aria-label="Ausnahme bis"></span>
+      <button class="btn accent" id="sp-aus-neu">⭐ Ausnahme anlegen</button>
+    </div></div>`;
+}
+function spAusnahmenBinden(box, wer) {
+  const dauer = document.getElementById('sp-aus-dauer'), zr = document.getElementById('sp-aus-zeitraum');
+  if (!dauer) return;
+  dauer.onchange = () => { zr.hidden = dauer.value !== 'zeitraum'; zr.style.display = zr.hidden ? 'none' : 'inline-flex'; };
+  dauer.onchange();
+  document.getElementById('sp-aus-neu').onclick = () => {
+    const s = spCfg(), h = frHeute();
+    const fuer = document.getElementById('sp-aus-wer').value, runden = Number(document.getElementById('sp-aus-runden').value) || 0;
+    const a = { id: 'sa-' + Date.now().toString(36), wer: fuer, runden };
+    const sonntag = spPlusTage((7 - new Date().getDay()) % 7);
+    if (dauer.value === 'heute') { a.ab = h; a.bis = h; }
+    else if (dauer.value === 'morgen') { a.ab = a.bis = spPlusTage(1); }
+    else if (dauer.value === 'woche') { a.ab = h; a.bis = sonntag; }
+    else if (dauer.value === 'zeitraum') {
+      a.ab = document.getElementById('sp-aus-ab').value; a.bis = document.getElementById('sp-aus-bis').value;
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(a.ab) || !/^\d{4}-\d{2}-\d{2}$/.test(a.bis)) { showToast('⚠ Bitte beide Daten wählen', true); return; }
+      if (a.bis < a.ab) { showToast('⚠ „bis“ liegt vor „von“', true); return; }
+      if (a.bis < h) { showToast('⚠ Der Zeitraum liegt in der Vergangenheit', true); return; }
+    }
+    // gleiche Gruppe, gleicher Zeitraum → ersetzen statt doppelt
+    s.ausnahmen = s.ausnahmen.filter(x => !(x.wer === a.wer && (x.ab || '') === (a.ab || '') && (x.bis || '') === (a.bis || '')));
+    if (s.ausnahmen.length >= 40) { showToast('⚠ Höchstens 40 Ausnahmen – bitte alte beenden', true); return; }
+    s.ausnahmen.push(a);
+    spSpeichern(s, `⭐ Spielsperre-Ausnahme ${frWerName(fuer)}: ${spRundenText(runden)}, ${spZeitText(a)}`);
+    showToast('⭐ Ausnahme angelegt – jetzt veröffentlichen');
+  };
+  box.querySelectorAll('[data-sp-aus-weg]').forEach(b => b.onclick = () => {
+    const s = spCfg(), a = s.ausnahmen.find(x => x.id === b.dataset.spAusWeg);
+    s.ausnahmen = s.ausnahmen.filter(x => x.id !== b.dataset.spAusWeg);
+    spSpeichern(s, `⭐ Spielsperre-Ausnahme beendet${a ? ' (' + frWerName(a.wer) + ': ' + spRundenText(a.runden) + ')' : ''}`);
+  });
 }
 
 // ── „Heute für dich“ auf der Startseite (Etappe 8) ─────
