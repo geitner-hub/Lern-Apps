@@ -642,7 +642,19 @@
         0,
         0
       ]
-    }
+    },
+    "ausnahmen": [
+      {
+        "id": "sa-mvf722rg",
+        "wer": "g:8dee44b8c52b30c944370c3911111187",
+        "runden": 0
+      },
+      {
+        "id": "sa-mvf72ag9",
+        "wer": "g:43fea0c90548442b2dbfe27a1fa67848",
+        "runden": 0
+      }
+    ]
   },
   "freigaben": {
     "en.6.lernweg-u1": {
