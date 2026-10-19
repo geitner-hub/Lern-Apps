@@ -66,6 +66,7 @@ werkzeuge/            Prüfskript (pruefen.py), Inventar (inventar.py → INVENT
 | `insel-welt.js` | „Die Insel“: Welt aus Blöcken nach `daten/insel.json` (Gebiete, Gebäude-Vorlagen, Wege, Absperrungen), Testinsel, Weltstücke (16 × 16 × 24) zu je einem Mesh gebacken (`LernInselWelt`), nur in `spiele/insel.html` |
 | `insel-figuren.js` | „Die Insel“: Pass-Figur und Bewohner (Looks, gebacken), Warenkisten, Pakete, Vorlesen (`LernInselFiguren`) |
 | `insel-auftraege.js` | „Die Insel“: Auftragsrahmen – Aufträge aus Bausteinen, Prüfung durch die Welt, erster Versuch (`LernInselAuftraege`) |
+| `insel-bauen.js` | „Die Insel“: Bauen auf Bauplätzen – Raster, Antippen, Inventar, Bauplan prüfen, Spielstand (`LernInselBauen`) |
 | `insel-steuerung.js` | „Die Insel“: Joystick, Kamera (dritte Person), Kollision mit dem Blockgitter, Hochsteigen, Sperre geschlossener Gebiete (`LernInselSteuerung`) |
 | `spiel-hilfen.js` | Kleine Bausteine für die neuen Spiele: Runde melden, Endlos-XP, robuste Zeiger (mehrere Finger), wiederholbarer Zufall |
 | `qrcode.js` | QR-Code-Erzeugung im Browser (MIT-Lizenz, Kazuhiko Arase) |
@@ -735,7 +736,7 @@ Kleine, offene 3D-Welt im Klötzchen-Stil: Die Kinder laufen mit ihrer Pass-Figu
 Gelernte verändert später die Welt (Hinkommen, Bauen, Handeln – nie eingeblendete Fragen). Plan: Aktionsplan „Die
 Insel“ (8 Etappen). Auf der Startseite als „Meine Insel“ (Eintrag über den Admin).
 
-- **Stand: Etappe 3 – Hafendorf (Englisch).** Welt mit drei Gebieten aus `daten/insel.json`: **Hafendorf** (Süden,
+- **Stand: Etappe 4 – Bauen (Technik).** Welt mit drei Gebieten aus `daten/insel.json`: **Hafendorf** (Süden,
   Startgebiet, offen), **Baumeister-Tal** (Nordwesten, hinter einem Meeresarm – öffnet in Etappe 5 die Fähre) und
   **Kartenleser-Hochland** (Nordosten, hinter Fluss und Steilkante – öffnet die Brücke aus dem Tal). Geschlossene Gebiete
   sperren den Weg (Wasser, Steilkante, Zaun am Fährsteg, Hinweis beim Anlaufen); beim Betreten eines Gebiets erscheint
@@ -753,6 +754,16 @@ Insel“ (8 Etappen). Auf der Startseite als „Meine Insel“ (Eintrag über de
   (beim Hören steht der Auftrag nicht da, 🔊 spielt ihn ab), Auftrag überspringen (zählt nicht).
   Bewohner, Warenkisten und Paket-Orte stehen je mindestens 20 Blöcke auseinander, und Ziele liegen nie beim
   Auftraggeber – Durchprobieren kostet Laufweg. Je Stufe entstehen mehrere Hundert verschiedene Aufträge.
+- **Bauen** (`gemeinsam/insel-bauen.js`): nur auf festen Bauplätzen (`bauplaetze` in `insel.json`). Wer auf einem
+  Bauplatz steht (oder 1 Block daneben), bekommt 🧱 „Bauen“: Raster über dem Platz, die Kamera schaut steiler von oben,
+  Antippen setzt einen Block (➕) bzw. entfernt ihn (➖); Material aus der Leiste (Holz, Stein, Zaun, Dach). Joystick und
+  Kamera bleiben aktiv; kurzes Antippen ohne Wischen zählt als „Tippen“. Nur das betroffene Weltstück wird neu gebaut
+  (≈ 1 ms). Auf den Platz, auf dem die Figur steht, kommt kein Block; Zäune kann man nicht besteigen.
+  **Bauplan** am Bauplatz (`plan`): `rand` (Rand aus `block`, höchstens `tor` Lücken), `flaeche` (ganze Fläche) oder
+  `muster` (`bloecke: [[dx, dy, dz, 'BLOCK'], …]`); ✅ „Prüfen“ zeigt fehlende oder falsche Stellen kurz rot.
+  `vorrat: "frei"` = Material ohne Ende, sonst zählt das Inventar (`stand.inventar`, ab Etappe 5 vom Händler und aus
+  Aufträgen). **Werkstatt** im Hafendorf (neben dem blauen Haus): Übungs-Bauplatz mit freiem Material und dem Bauplan
+  „Zaun mit Tor“ – ohne XP. Die Bauplätze im Baumeister-Tal folgen in Etappe 5.
 - **Auftrags-Bausteine erweitern** (`daten/insel-auftraege.json`): `bewohner` (Platz-ID aus `insel.json`, Look aus den
   Avatar-Teilen, `merkmale` – müssen zum Look passen und dürfen bei keinem anderen Bewohner vorkommen –, `ort`, `saetze`
   für Small Talk), `quellen` (Warenkisten: Wort `eins`/`viele`, Emoji, Farbe, Ortsangabe je Stufe), `suchorte`
@@ -769,7 +780,8 @@ Insel“ (8 Etappen). Auf der Startseite als „Meine Insel“ (Eintrag über de
   Durchprobieren); `pruefen.py` prüft das und die übrigen Angaben.
 - **Spielstand `lernwelt-insel`** (in der Sicherungskarte, `gemeinsam/sync.js`): `{ v, pos, gebiete, auftraege, stufen,
   bau, funde, opt, t }` – `auftraege.hafen = { aktiv, runde: { n, richtig }, verlauf, korb, runden }`,
-  `stufen.hafen = { frei, wahl }`, `opt = { seiten, vorlesen, lesart }`. Gespeichert wird nach jedem Schritt (Position höchstens alle 5 s), beim Pausieren und beim
+  `stufen.hafen = { frei, wahl }`, `opt = { seiten, vorlesen, lesart }`, `bau = { <platz-id>: [[dx, dy, dz, block], …] }`
+  (nur das Gebaute, relativ zur Ecke des Bauplatzes), `inventar = { <block>: Anzahl }`. Gespeichert wird nach jedem Schritt (Position höchstens alle 5 s), beim Pausieren und beim
   Verlassen; nur Abweichungen von der Grundwelt (Bauplätze ab Etappe 4). Freischaltungen werden nie entfernt, unbekannte
   Felder bleiben erhalten; höchstens 20 000 Zeichen. Startbildschirm „Weiterspielen“ setzt an der gespeicherten Stelle
   fort (ist sie nicht mehr begehbar, geht es am Startpunkt los). Pausenmenü: offene und geschlossene Gebiete,

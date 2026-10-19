@@ -38,6 +38,11 @@
      Ab 4 von 5 wird die nächste Stufe frei (3 Stufen). Lesen oder Hören (Pausenmenü).
      Spielstand zusätzlich: auftraege.hafen { aktiv, runde, verlauf, korb, runden },
      stufen.hafen { frei, wahl }, opt.lesart.
+   Etappe 4 – Bauen (insel-bauen.js): Auf Bauplätzen 🧱 antippen → Baumodus mit Raster;
+     Antippen setzt (➕) bzw. entfernt (➖) einen Block, Material aus der Leiste,
+     ✅ prüft den Bauplan (fehlende Stellen rot). Joystick und Kamera bleiben aktiv.
+     Werkstatt im Hafendorf: Übungs-Bauplatz mit freiem Material. Spielstand:
+     bau { <platz-id>: [[dx, dy, dz, block], …] }, inventar { <block>: Anzahl }.
 
    Link-Parameter:
      ?debug=1     Bildrate, Draw-Calls, Dreiecke, Startzeit, Position, Gebiet;
@@ -134,6 +139,18 @@
       #auftrag.neu, #korb.neu { animation: blasePop2 .3s ease-out; }
       @keyframes blasePop2 { from { opacity: 0; transform: scale(.94); } }
     }
+    /* Baumodus: Leiste unten in der Mitte */
+    #baubar { position: fixed; z-index: 20; left: 50%; transform: translateX(-50%); bottom: max(1rem, env(safe-area-inset-bottom));
+      width: min(560px, calc(100vw - 1.4rem)); background: var(--panel); border: 2px solid rgba(255,255,255,.12); border-radius: 20px;
+      padding: .55rem .6rem .6rem; box-shadow: 0 6px 22px rgba(0,0,0,.35); }
+    #baubar .plan { font-weight: 800; font-size: .88rem; color: var(--text2); margin: 0 .2rem .45rem; }
+    #baubar .reihe { display: flex; gap: .35rem; flex-wrap: wrap; }
+    #baubar button { flex: 1; min-width: 64px; padding: .45rem .3rem; border-radius: 14px; background: var(--panel2); font-weight: 900;
+      font-size: .82rem; border: 2px solid transparent; display: flex; flex-direction: column; align-items: center; gap: .1rem; }
+    #baubar button .e { font-size: 1.35rem; line-height: 1.1; }
+    #baubar button.an { border-color: var(--accent); color: var(--accent2); }
+    #baubar .trenner { width: 2px; background: rgba(255,255,255,.1); margin: .2rem .1rem; flex: none; }
+    #baubar .fertig { background: var(--accent); color: var(--tinte); }
     .wahl { display: flex; gap: .4rem; margin-top: .55rem; }
     .wahl button { flex: 1; padding: .55rem .4rem; border-radius: 12px; background: var(--panel2); font-weight: 900; border: 2px solid transparent; }
     .wahl button.an { border-color: var(--accent); color: var(--accent2); }
@@ -144,6 +161,7 @@
     #toast { position: fixed; z-index: 19; left: 50%; bottom: max(8.5rem, calc(env(safe-area-inset-bottom) + 8rem)); transform: translateX(-50%);
       background: var(--panel); border: 2px solid rgba(255,255,255,.12); border-radius: 16px; padding: .6rem 1rem;
       font-weight: 800; max-width: min(460px, 88vw); text-align: center; pointer-events: none; }
+    body.baut #toast { bottom: calc(max(1rem, env(safe-area-inset-bottom)) + 12.5rem); }
     #gebietsname { position: fixed; z-index: 16; left: 50%; top: 22%; transform: translateX(-50%);
       font-size: 1.7rem; color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,.55); pointer-events: none; white-space: nowrap;
       transition: opacity .8s; }
@@ -195,6 +213,16 @@
   <div class="zeile"><span class="sym" id="auftrag-sym">💬</span><span id="auftrag-text"></span><button id="auftrag-hoeren" aria-label="Auftrag anhören">🔊</button></div>
 </div>
 <button id="korb" hidden aria-label="Korb leeren"></button>
+<div id="baubar" hidden>
+  <div class="plan" id="bau-plan"></div>
+  <div class="reihe" id="bau-material"></div>
+  <div class="reihe" style="margin-top:.35rem">
+    <button data-m="setzen" class="an"><span class="e">➕</span>Setzen</button>
+    <button data-m="entfernen"><span class="e">➖</span>Entfernen</button>
+    <button id="bau-pruefen"><span class="e">✅</span>Prüfen</button>
+    <button id="bau-fertig" class="fertig"><span class="e">✔</span>Fertig</button>
+  </div>
+</div>
 <div id="toast" hidden></div>
 <div id="gebietsname" class="fredoka weg" aria-live="polite"></div>
 <div id="debug" hidden></div>
@@ -254,6 +282,7 @@
 <script src="../gemeinsam/insel-steuerung.js"></script>
 <script src="../gemeinsam/insel-figuren.js"></script>
 <script src="../gemeinsam/insel-auftraege.js"></script>
+<script src="../gemeinsam/insel-bauen.js"></script>
 <script>
 'use strict';
 const $ = id => document.getElementById(id);
@@ -276,6 +305,7 @@ let fpsBilder = 0, fpsUhr = 0, fps = 0, startMs = 0, gesprochen = null, hinweisW
 const spieler = { x: 0, y: 0, z: 0, blick: 0, anzeigeY: 0 };
 let stand = null, offen = new Set(['hafen']), testOffen = false, letztesSpeichern = 0, posGespeichert = null, aktGebiet = null;
 let AD = null, rahmen = null;                        // Bausteine (insel-auftraege.json) und Auftragsrahmen
+let bauen = null;                                    // Bauen auf Bauplätzen (Etappe 4)
 
 function webglOk() {
   try { const c = document.createElement('canvas'); return !!(c.getContext('webgl') || c.getContext('experimental-webgl')); }
@@ -305,6 +335,9 @@ function standLesen() {
   if (!s.gebiete.includes('hafen')) s.gebiete.unshift('hafen');
   ['auftraege', 'stufen', 'bau'].forEach(k => { if (!istObjekt(s[k])) s[k] = {}; });
   if (!Array.isArray(s.funde)) s.funde = [];
+  // Inventar fürs Bauen: { <blocknr>: Anzahl } (ab Etappe 5 gefüllt durch Händler und Aufträge)
+  s.inventar = istObjekt(s.inventar) ? s.inventar : {};
+  Object.keys(s.inventar).forEach(k => { const n = Math.floor(s.inventar[k]); if (!/^\d{1,3}$/.test(k) || !(n >= 0)) delete s.inventar[k]; else s.inventar[k] = Math.min(999, n); });
   s.opt = Object.assign({ seiten: false, vorlesen: true, lesart: 'lesen' }, istObjekt(s.opt) ? s.opt : {});
   const p = s.pos;
   s.pos = p && [p.x, p.y, p.z].every(n => typeof n === 'number' && isFinite(n)) ? { x: p.x, y: p.y, z: p.z, b: Number(p.b) || 0 } : null;
@@ -402,6 +435,9 @@ async function aufbauen() {
   offen = new Set(stand.gebiete);
   const frei = AD ? [...(AD.quellen || []), ...(AD.suchorte || [])].map(o => ({ x: o.x, z: o.z, r: 2 })) : [];
   welt = TESTINSEL ? LernInselWelt.erzeuge(TESTINSEL) : LernInselWelt.ausDaten(daten, { offen, frei });
+  bauen = LernInselBauen.erstelle({ T, welt, scene, camera, leinwand: renderer.domElement, szene: () => weltSzene,
+    plaetze: welt.orte.bauplaetze || [], bau: stand.bau, inventar: stand.inventar, spieler, speichern });
+  bauen.anwenden();                                  // Gebautes aus dem Spielstand, bevor die Weltstücke entstehen
   weltSzene = LernInselWelt.szene(T, welt);
   scene.add(weltSzene.gruppe);
   schilder = welt.orte.schilder || [];
@@ -431,12 +467,14 @@ async function aufbauen() {
     flaeche: $('buehne'), welt, spieler, aktion,
     darf: (x, z) => { const g = welt.gebiet(x, z); return !g || offen.has(g); },
     gesperrt: gesperrtHinweis,
+    tippen: bauTippen,
     optionen: { reduce: REDUCE, seitenTauschen: !!stand.opt.seiten },
   });
   $('opt-seiten').checked = !!stand.opt.seiten;
   document.body.classList.toggle('links', !!stand.opt.seiten);
   $('opt-vorlesen').checked = stand.opt.vorlesen !== false;
   $('debug-gebiete').hidden = !DEBUG || !!TESTINSEL;
+  bauleisteBauen();
 
   groesse();
   window.addEventListener('resize', groesse);
@@ -488,6 +526,7 @@ function pausieren() {
   gebieteZeigen();
   menueZeigen();
   $('pause').hidden = false; $('pause-knopf').hidden = true; $('aktion').hidden = true; aktionZiel = null;
+  if (bauen && bauen.aktiv) bauEnde();
   homeZeigen(true);
 }
 function schleife(t) {
@@ -543,7 +582,9 @@ function zeichneBild(dt) {
     const d = Math.hypot(s.x - spieler.x, s.z - spieler.z);
     if (d < LESE_ABSTAND && d < nd) { nd = d; naechster = { art: 'schild', s, x: s.x, y: s.y + .6, z: s.z, kopf: 1.2 }; }
   });
-  aktionZeigen(naechster);
+  if (bauen && bauen.aktiv && !bauen.platzBei(spieler.x, spieler.z)) bauEnde();    // vom Bauplatz weggelaufen
+  if (!naechster && bauen && !bauen.aktiv) { const bp = bauen.platzBei(spieler.x, spieler.z); if (bp) naechster = { art: 'bauplatz', bp, x: spieler.x, y: spieler.y, z: spieler.z }; }
+  aktionZeigen(bauen && bauen.aktiv ? null : naechster);
   if (gesprochen && Math.hypot(gesprochen.x - spieler.x, gesprochen.z - spieler.z) > 5) blaseWeg();
 
   // Kamera, Sichtweite
@@ -687,6 +728,7 @@ function aktionArt(z) {
   if (z.art === 'schild') return ['📜', 'Lesen'];
   if (z.art === 'kiste') return ['✋', 'Nehmen'];
   if (z.art === 'paket') return ['📦', 'Öffnen'];
+  if (z.art === 'bauplatz') return ['🧱', 'Bauen'];
   const a = rahmen && hafen().aktiv, id = z.def.id;
   if (a && a.art === 'finden' && id !== a.geber) return ['🔍', 'Bist du es?'];
   if (a && a.art === 'bringen' && hafen().korb) return ['🎁', 'Geben'];
@@ -694,7 +736,7 @@ function aktionArt(z) {
 }
 function aktionZeigen(z) {
   const art = aktionArt(z);
-  const schluessel = art ? art.join('') + (z.def ? z.def.id : z.art === 'schild' ? z.s.id : z.o.id) : '';
+  const schluessel = art ? art.join('') + (z.def ? z.def.id : z.art === 'schild' ? z.s.id : z.art === 'bauplatz' ? z.bp.id : z.o.id) : '';
   aktionZiel = z;
   if (schluessel === aktionSchluessel) return;
   aktionSchluessel = schluessel;
@@ -709,6 +751,7 @@ function aktion() {
   const z = aktionZiel;
   if (z.art === 'schild') { blase(z, z.s.text, false, '📜 Schild'); return; }
   if (z.art === 'kiste') { nehmen(z); return; }
+  if (z.art === 'bauplatz') { bauStart(z.bp); return; }
   if (z.art === 'paket') { versuch(rahmen.oeffnen(hafen().aktiv, z.o.id), z) || blase(z, 'Oh, this parcel is empty.', true); return; }
   sprechenMit(z);
   aktionSchluessel = '';                            // Beschriftung neu bestimmen (Auftrag kann sich geändert haben)
@@ -775,6 +818,58 @@ function blaseSetzen() {
 }
 
 /* ═══════════════════════════════════════════════════════
+   BAUEN (Etappe 4): Baumodus, Leiste, Antippen, Bauplan prüfen
+   ═══════════════════════════════════════════════════════ */
+const BAU_GRUND = { 'nicht auf dem Bauplatz': 'Nur auf dem Bauplatz bauen (im Raster).', 'zu hoch': 'Höher geht es hier nicht.',
+  besetzt: 'Da ist schon ein Block.', 'du stehst dort': 'Da stehst du gerade – geh einen Schritt zur Seite.', 'kein Material': 'Davon hast du nichts mehr.' };
+function bauleisteBauen() {
+  const box = $('bau-material');
+  box.textContent = '';
+  LernInselBauen.MATERIAL.forEach((m, i) => {
+    const b = document.createElement('button');
+    b.dataset.block = LernInselWelt.BLOCK[m.block];
+    b.innerHTML = '<span class="e"></span><span class="n"></span>';
+    b.querySelector('.e').textContent = m.emoji;
+    if (i === 0) b.classList.add('an');
+    box.appendChild(b);
+  });
+}
+function bauleisteZeigen() {
+  if (!bauen || !bauen.aktiv) return;
+  $('bau-material').querySelectorAll('button').forEach(b => {
+    const n = bauen.vorrat(+b.dataset.block), m = LernInselBauen.MATERIAL.find(x => LernInselWelt.BLOCK[x.block] === +b.dataset.block);
+    b.querySelector('.n').textContent = m.name + (n === Infinity ? '' : ` · ${n}`);
+  });
+  const plan = bauen.aktiv.plan;
+  $('bau-plan').textContent = plan && plan.text ? plan.text : (bauen.aktiv.name || 'Bauplatz') + ': Tippe auf ein Feld im Raster.';
+  $('bau-pruefen').hidden = !plan;
+}
+function bauStart(bp) {
+  bauen.start(bp);
+  steuerung.setzeOptionen({ kameraHoch: true });
+  document.body.classList.add('baut');
+  $('baubar').hidden = false;
+  $('auftrag').hidden = true; $('korb').hidden = true;
+  bauleisteZeigen();
+  toast('🧱 Tippe auf ein Feld im Raster, um einen Block zu setzen.', 2600);
+}
+function bauEnde() {
+  if (!bauen || !bauen.aktiv) return;
+  bauen.ende();
+  steuerung.setzeOptionen({ kameraHoch: false });
+  document.body.classList.remove('baut');
+  $('baubar').hidden = true;
+  aktionSchluessel = '';
+  auftragZeigen();
+}
+function bauTippen(x, y) {
+  if (!laeuft || !bauen || !bauen.aktiv) return;
+  const r = bauen.tippen(x, y);
+  if (!r.ok && BAU_GRUND[r.grund]) toast(BAU_GRUND[r.grund], 2000);
+  bauleisteZeigen();
+}
+
+/* ═══════════════════════════════════════════════════════
    PAUSENMENÜ: Stufe, Lesen/Hören, Auftrag überspringen
    ═══════════════════════════════════════════════════════ */
 function menueZeigen() {
@@ -822,6 +917,24 @@ $('lesart').addEventListener('click', e => {
   if (!b || !stand) return;
   stand.opt.lesart = b.dataset.l; speichern(); menueZeigen(); auftragZeigen();
 });
+$('bau-material').addEventListener('click', e => {
+  const b = e.target.closest('button');
+  if (!b || !bauen) return;
+  bauen.material(+b.dataset.block);
+  $('bau-material').querySelectorAll('button').forEach(x => x.classList.toggle('an', x === b));
+});
+$('baubar').addEventListener('click', e => {
+  const b = e.target.closest('button[data-m]');
+  if (!b || !bauen) return;
+  bauen.modus(b.dataset.m);
+  $('baubar').querySelectorAll('button[data-m]').forEach(x => x.classList.toggle('an', x === b));
+});
+$('bau-pruefen').addEventListener('click', () => {
+  const r = bauen.pruefen();
+  if (r.ok) { jubelBis = zeit + 1.3; toast('✅ Super! Der Bauplan ist erfüllt.'); }
+  else toast(`Noch nicht ganz: ${r.fehlt.length + r.falsch.length} Stellen passen noch nicht (rot markiert).`, 3500);
+});
+$('bau-fertig').addEventListener('click', bauEnde);
 $('abbrechen').addEventListener('click', () => { erledigt(true); menueZeigen(); });
 $('opt-seiten').addEventListener('change', e => {
   document.body.classList.toggle('links', e.target.checked);

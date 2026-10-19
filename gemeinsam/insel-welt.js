@@ -403,7 +403,8 @@
     welt.orte.bauplaetze = plaetzeBau.map(({ b, f }) => {
       const y = f.y || oberste(f.x0, f.z0);
       [[f.x0 - 1, f.z0 - 1], [f.x1 + 1, f.z0 - 1], [f.x0 - 1, f.z1 + 1], [f.x1 + 1, f.z1 + 1]].forEach(([x, z]) => welt.set(x, y, z, BLOCK.PFLOCK));
-      return { id: b.id, gebiet: b.gebiet || welt.gebiet(b.x, b.z), art: b.art || '', x0: f.x0, z0: f.z0, x1: f.x1, z1: f.z1, y };
+      return { id: b.id, gebiet: b.gebiet || welt.gebiet(b.x, b.z), art: b.art || '', name: b.name || '', hoehe: b.hoehe || 3,
+        vorrat: b.vorrat || '', plan: b.plan || null, x0: f.x0, z0: f.z0, x1: f.x1, z1: f.z1, y };
     });
 
     // Schilder: Pfosten mit Brett; Text steht in den Daten
