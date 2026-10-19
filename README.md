@@ -217,6 +217,11 @@ Sicherungskarte verbunden ist – aus der **Kartengruppe** (der Sync-Worker schi
   `schwelle` %, ohne Durchklicken; reist mit der Sicherungskarte). Startseite: 🔒-Kacheln und eine Anzeige im Kopf
   der Kategorie mit den Spielen („🎮 Spiele: 1 von 3 Runden“). Direkt geöffnete Spiele zeigen einen Hinweis
   (`gemeinsam/spielsperre.js`, lädt navbar.js nur auf Spielseiten und nur, wenn eine Sperre eingestellt ist).
+  **Ausnahmen** (`spielsperre.ausnahmen`: `[{ id, wer, runden: 0–20, ab?, bis? }]`, Datum `JJJJ-MM-TT`, einschließlich; ohne
+  `bis` = dauerhaft): z. B. „Gruppe 5a heute Spiele frei“ (`runden: 0`) oder „Klasse 6 bis Sonntag 2 Runden“. Eine laufende
+  Ausnahme geht **allen** Wochentag-Listen vor; unter mehreren gilt die genaueste (Gruppe vor Klasse vor alle), bei gleichem
+  `wer` die, die am frühesten endet. Admin: unter den Wochentagen „⭐ Ausnahmen“ (nur heute, nur morgen, bis Sonntag,
+  Zeitraum, dauerhaft); abgelaufene Ausnahmen räumt der Admin beim nächsten Speichern weg. Braucht den aktuellen Worker.
 - **gemeinsam/freigabe.js** (`window.LernFreigabe`): `erlaubt(id)`, `status(id)`, `wer()`, `fokus()`, `imFokus(datei)`,
   `spielSperre()`, `spielGesperrt(datei)`.
   Liest die Offline-Kopie von config.json; ist sie älter als 5 Minuten, holt sie config.json im Hintergrund.

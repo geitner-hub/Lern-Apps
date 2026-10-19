@@ -35,6 +35,9 @@ Passwörtern ist das Gerät 15 Minuten gesperrt.
 - **Gruppen-Auswertung (Okt. 2026):** `sync.js` hat zwei neue Endpunkte (`/sync/statistik` für die iPads,
   `/sync/admin/statistik` für den Admin) und eine neue Tabelle `sync_statistik` (legt sich selbst an).
   Gespeichert werden nur Summen je Gruppe, Thema und Woche – keine Karten-Kennung. Nur `sync.js` ersetzen.
+- **Spielsperre-Ausnahmen (Okt. 2026, v61):** `worker.js` nimmt in `spielsperre` zusätzlich `ausnahmen[]` an
+  (`id`, `wer`, `runden` 0–20, `ab?`, `bis?` als Datum, höchstens 40). Nur `worker.js` ersetzen; `sync.js` ist unverändert.
+  Ohne neuen Worker lehnt das Speichern eine Ausnahme mit „spielsperre ungültig“ ab – sonst passiert nichts.
 
 ## Anmeldung im Admin
 
