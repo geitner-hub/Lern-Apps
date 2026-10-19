@@ -516,6 +516,17 @@
       "klassen": [],
       "customTags": [],
       "aod": false
+    },
+    {
+      "name": "Meine Insel",
+      "datei": "spiele/insel.html",
+      "fach": "Allgemein",
+      "emoji": "🏝️",
+      "beschreibung": "Löse Quests und baue auf deiner eigenen Insel",
+      "hidden": true,
+      "klassen": [],
+      "customTags": [],
+      "aod": false
     }
   ],
   "customTags": [
