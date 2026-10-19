@@ -7,7 +7,8 @@
 //  Braucht: sync-code.js (LernSyncCode). pass.js ist hilfreich, aber nicht nötig.
 //
 //  Gesichert werden die Speicherstände UNVERÄNDERT (verlustfrei):
-//    'lernwelt-pass', 'lernwelt-dorf', 'lernwelt-expedition', 'lern-apps-results', 'lernwelt-td-kampagne'
+//    'lernwelt-pass', 'lernwelt-dorf', 'lernwelt-expedition', 'lern-apps-results', 'lernwelt-td-kampagne',
+//    'lernwelt-insel' (seit v63; Stände ohne ihn lassen den Insel-Spielstand beim Übernehmen in Ruhe)
 //  Ein Schlüssel, den ein älterer Stand noch nicht kennt, bleibt beim Übernehmen unangetastet.
 //
 //  Gruppenauswertung (Etappe 8): Ist die Karte in einer Gruppe, gehen zusätzlich nur Zahlen
@@ -41,7 +42,7 @@
   const WORKER_URL = 'https://lern-apps-config.bennigeitner.workers.dev';   // wie in config-api.js
   const STATE_KEY  = 'lernwelt-sync';
   const HINWEIS_KEY = 'lernwelt-sync-hinweis';
-  const KEYS = ['lernwelt-pass', 'lernwelt-dorf', 'lernwelt-expedition', 'lern-apps-results', 'lernwelt-td-kampagne'];
+  const KEYS = ['lernwelt-pass', 'lernwelt-dorf', 'lernwelt-expedition', 'lern-apps-results', 'lernwelt-td-kampagne', 'lernwelt-insel'];
   const PASS_KEY = 'lernwelt-pass';
   const SENDEN_VERZOEGERUNG = 20000;
   const PRUEF_INTERVALL = 60000;

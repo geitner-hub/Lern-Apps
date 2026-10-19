@@ -15,16 +15,25 @@
    Hinkommen, Bauen und Handeln – nie durch eingeblendete Fragen
    (Aktionsplan „Die Insel“).
 
-   Etappe 1 – Probelauf (Go/No-Go auf dem ältesten Schul-iPad):
-     Testinsel aus festem Zufallswert, gebackene Weltstücke, Nebel, Licht,
-     Pass-Figur mit Laufanimation, Joystick, Kamera, Kollision, Hochsteigen,
-     drei Bewohner, die beim Aktionsknopf einen englischen Satz sagen.
-     Noch kein Spielstand, keine XP (kommt in Etappe 2 bzw. 3).
-     Noch nicht in config.json – erreichbar über den direkten Link.
+   Etappe 1 – Probelauf (Go/No-Go auf dem ältesten Schul-iPad): gebackene
+     Weltstücke, Nebel, Licht, Pass-Figur mit Laufanimation, Joystick, Kamera,
+     Kollision, Hochsteigen, Bewohner mit englischen Sätzen.
+   Etappe 2 – Welt und Speichern:
+     Welt aus daten/insel.json (Höhenkarte, Gebiete Hafendorf / Baumeister-Tal /
+     Kartenleser-Hochland, Gebäude, Wege, Stege, Bauplätze, Schilder). Nur das
+     Hafendorf ist offen; geschlossene Gebiete sperren den Weg (Wasser, Steilkante,
+     Zaun + Hinweis). Spielstand 'lernwelt-insel' (in der Sicherungskarte):
+       { v: 1, pos: { x, y, z, b }, gebiete: [IDs], auftraege: {}, stufen: {},
+         bau: {}, funde: [], opt: { seiten, vorlesen }, t }
+     Gespeichert wird nach jedem Schritt (Position höchstens alle 5 s), beim
+     Pausieren und beim Verlassen. Freischaltungen nur aufbauend (nie entfernen).
+     Unbekannte Felder (aus neueren Fassungen) bleiben beim Speichern erhalten.
+     Noch keine XP (ab Etappe 3: Aufträge). Noch nicht in config.json.
 
    Link-Parameter:
-     ?debug=1     Bildrate, Draw-Calls, Dreiecke, Startzeit, Position
-     ?seed=TEXT   andere Testinsel (nur zum Ausprobieren)
+     ?debug=1     Bildrate, Draw-Calls, Dreiecke, Startzeit, Position, Gebiet;
+                  im Pausenmenü „alle Gebiete öffnen“ (nur zum Testen, wird nicht gespeichert)
+     ?seed=TEXT   Testinsel aus Etappe 1 statt der Weltdaten (nur zum Ausprobieren, ohne Speichern)
 
    Grafik für ältere iPads: höchstens 30 Bilder pro Sekunde, Pixel-Ratio
    höchstens 1,5, Sichtweite etwa 2 Weltstücke mit Nebel, Pause bei verdeckter
@@ -97,6 +106,19 @@
       @keyframes blasePop { from { opacity: 0; transform: translate(-50%, -88%) scale(.9); } }
     }
 
+    /* Kurze Meldung (Gebiet gesperrt) und Gebietsname beim Betreten */
+    #toast { position: fixed; z-index: 19; left: 50%; top: max(4.6rem, calc(env(safe-area-inset-top) + 4rem)); transform: translateX(-50%);
+      background: var(--panel); border: 2px solid rgba(255,255,255,.12); border-radius: 16px; padding: .6rem 1rem;
+      font-weight: 800; max-width: min(460px, 88vw); text-align: center; pointer-events: none; }
+    #gebietsname { position: fixed; z-index: 16; left: 50%; top: max(1rem, env(safe-area-inset-top)); transform: translateX(-50%);
+      font-size: 1.7rem; color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,.55); pointer-events: none; white-space: nowrap;
+      transition: opacity .8s; }
+    #gebietsname.weg { opacity: 0; }
+    .gebiete { margin-top: .9rem; display: grid; gap: .45rem; text-align: left; }
+    .gebiete div { background: var(--panel2); border-radius: 14px; padding: .55rem .8rem; font-weight: 800; display: flex; justify-content: space-between; gap: .6rem; }
+    .gebiete small { color: var(--muted); font-weight: 700; }
+    .gebiete .zu { color: var(--muted); }
+
     #debug { position: fixed; z-index: 30; left: max(.5rem, env(safe-area-inset-left)); top: max(.5rem, env(safe-area-inset-top));
       background: rgba(0,0,0,.6); color: #a7f3d0; font: 700 12px/1.35 ui-monospace, Menlo, monospace; padding: .35rem .5rem;
       border-radius: 8px; white-space: pre; pointer-events: none; }
@@ -134,6 +156,8 @@
 <button id="aktion" hidden><span class="sym">💬</span><span class="txt">Sprechen</span></button>
 <div id="hinweis" hidden><span>👈 Daumen links: laufen</span><span>Rechts wischen: umschauen 👉</span></div>
 <div id="blase" hidden><span class="wer"></span><div class="zeile"><span class="satz" lang="en"></span><button id="blase-hoeren" aria-label="Vorlesen">🔊</button></div></div>
+<div id="toast" hidden></div>
+<div id="gebietsname" class="fredoka weg" aria-live="polite"></div>
 <div id="debug" hidden></div>
 
 <div class="overlay" id="start">
@@ -153,9 +177,11 @@
 <div class="overlay" id="pause" hidden>
   <div class="karte">
     <h2 class="fredoka">⏸ Pause</h2>
+    <div class="gebiete" id="gebiete-liste"></div>
     <label class="schalter">Seiten tauschen (Linkshänder) <input type="checkbox" id="opt-seiten"></label>
     <label class="schalter">Vorlesen <input type="checkbox" id="opt-vorlesen" checked></label>
     <button class="gross fredoka" id="weiter">Weiter</button>
+    <button class="zweit" id="debug-gebiete" hidden>🧪 Test: alle Gebiete öffnen (wird nicht gespeichert)</button>
     <a class="zweit" href="../index.html">🏠 Zurück zur Lernwelt</a>
   </div>
 </div>
@@ -179,25 +205,30 @@
 const $ = id => document.getElementById(id);
 const PARAM = new URLSearchParams(location.search);
 const DEBUG = PARAM.get('debug') === '1';
+const TESTINSEL = PARAM.get('seed');                 // Testinsel aus Etappe 1: ohne Gebiete, ohne Speichern
 const REDUCE = !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
 const T0 = performance.now();
-const MAX_FPS = 30, SICHTWEITE = 32, FIGUR_HOEHE = 1.75, SPRECH_ABSTAND = 2.4;
+const MAX_FPS = 30, SICHTWEITE = 32, FIGUR_HOEHE = 1.75, SPRECH_ABSTAND = 2.4, LESE_ABSTAND = 2.2;
+const STAND_KEY = 'lernwelt-insel';
+const STAND_MAX = 20000;                             // Zeichen; die Sicherungskarte trägt alle Spielstände zusammen (~64 KB)
+const POS_ALLE_MS = 5000;                            // Position höchstens so oft speichern
 
-// Bewohner des Probelaufs (ab Etappe 3: insel-figuren.js + daten/insel-auftraege.json)
+// Bewohner zum Ausprobieren (ab Etappe 3: insel-figuren.js + daten/insel-auftraege.json).
+// platz = ID aus daten/insel.json → plaetze (dort stehen sie mindestens 20 Blöcke auseinander)
 const BEWOHNER = [
-  { name: 'Tom', haus: 0, look: { haut: 1, haarfarbe: 2, frisur: 'stachelig', augen: 'normal', mund: 'breit', eq: { oberteil: 'o-hoodie', hose: 'h-jeans', schuhe: 's-sneaker', kopf: 'k-cap-blau' } },
-    saetze: ['Hello! My name is Tom.', 'I live in the house with the red roof.', 'I have got a dog. His name is Max.', 'Can you see the well? It is next to my house.'] },
-  { name: 'Mia', haus: 1, look: { haut: 4, haarfarbe: 0, frisur: 'zoepfe', augen: 'wimpern', mund: 'laecheln', eq: { oberteil: 'o-shirt-gelb', hose: 'h-latzhose', schuhe: 's-hightop' } },
+  { name: 'Tom', platz: 'tom', look: { haut: 1, haarfarbe: 2, frisur: 'stachelig', augen: 'normal', mund: 'breit', eq: { oberteil: 'o-hoodie', hose: 'h-jeans', schuhe: 's-sneaker', kopf: 'k-cap-blau' } },
+    saetze: ['Hello! My name is Tom.', 'I live in the house with the red roof.', 'I have got a dog. His name is Max.', 'Can you see the well? It is in the middle of the village.'] },
+  { name: 'Mia', platz: 'mia', look: { haut: 4, haarfarbe: 0, frisur: 'zoepfe', augen: 'wimpern', mund: 'laecheln', eq: { oberteil: 'o-shirt-gelb', hose: 'h-latzhose', schuhe: 's-hightop' } },
     saetze: ['Hi! I am Mia. Nice to meet you!', 'My house has got a blue roof.', 'My favourite colour is yellow.', 'There are lots of trees on this island.'] },
-  { name: 'Mr Brown', haus: 2, look: { haut: 2, haarfarbe: 6, frisur: 'kurz', augen: 'froehlich', mund: 'laecheln', eq: { oberteil: 'o-karohemd', hose: 'h-jogging', schuhe: 's-stiefel', kopf: 'k-entdecker' } },
-    saetze: ['Good morning! I am Mr Brown.', 'I am a fisherman. I love the sea.', 'Look at the beach! The sand is very hot today.', 'Have a nice day!'] },
+  { name: 'Mr Brown', platz: 'brown', look: { haut: 2, haarfarbe: 6, frisur: 'kurz', augen: 'froehlich', mund: 'laecheln', eq: { oberteil: 'o-karohemd', hose: 'h-jogging', schuhe: 's-stiefel', kopf: 'k-entdecker' } },
+    saetze: ['Good morning! I am Mr Brown.', 'I am a fisherman. My boat is in the harbour.', 'Look at the sea! It is very blue today.', 'Have a nice day!'] },
 ];
 
 let T, renderer, scene, camera, welt, weltSzene, steuerung, spielerFigur, spielerGruppe, spielerSchatten;
-let bewohner = [], laeuft = false, bereit = false, letzte = 0, phase = 0, zeit = 0, sichtUhr = 0;
+let bewohner = [], schilder = [], laeuft = false, bereit = false, letzte = 0, phase = 0, zeit = 0, sichtUhr = 0;
 let fpsBilder = 0, fpsUhr = 0, fps = 0, startMs = 0, gesprochen = null, hinweisWeg = false;
 const spieler = { x: 0, y: 0, z: 0, blick: 0, anzeigeY: 0 };
-let vorlesen = true;
+let stand = null, offen = new Set(['hafen']), testOffen = false, letztesSpeichern = 0, posGespeichert = null, aktGebiet = null;
 
 function webglOk() {
   try { const c = document.createElement('canvas'); return !!(c.getContext('webgl') || c.getContext('experimental-webgl')); }
@@ -211,6 +242,53 @@ function ohne3d(text) {
 }
 function homeZeigen(an) {
   ['lern-home-btn', 'lern-result-badge'].forEach(id => { const el = $(id); if (el) el.style.visibility = an ? '' : 'hidden'; });
+}
+
+/* ═══════════════════════════════════════════════════════
+   SPIELSTAND (lernwelt-insel, in der Sicherungskarte)
+   Nur aufbauend: Gebiete werden nie wieder geschlossen, unbekannte Felder bleiben.
+   ═══════════════════════════════════════════════════════ */
+function standLesen() {
+  let s = null;
+  try { s = JSON.parse(localStorage.getItem(STAND_KEY) || 'null'); } catch (e) {}
+  if (!s || typeof s !== 'object' || Array.isArray(s)) s = {};
+  s.v = 1;
+  s.gebiete = Array.isArray(s.gebiete) ? s.gebiete.filter(g => typeof g === 'string' && /^[a-z0-9-]{1,30}$/.test(g)) : [];
+  if (!s.gebiete.includes('hafen')) s.gebiete.unshift('hafen');
+  ['auftraege', 'stufen', 'bau'].forEach(k => { if (!s[k] || typeof s[k] !== 'object' || Array.isArray(s[k])) s[k] = {}; });
+  if (!Array.isArray(s.funde)) s.funde = [];
+  s.opt = Object.assign({ seiten: false, vorlesen: true }, s.opt && typeof s.opt === 'object' ? s.opt : {});
+  const p = s.pos;
+  s.pos = p && [p.x, p.y, p.z].every(n => typeof n === 'number' && isFinite(n)) ? { x: p.x, y: p.y, z: p.z, b: Number(p.b) || 0 } : null;
+  return s;
+}
+function speichern() {
+  if (!stand || TESTINSEL) return;
+  if (laeuft || bereit) stand.pos = { x: +spieler.x.toFixed(2), y: +spieler.y.toFixed(2), z: +spieler.z.toFixed(2), b: +spieler.blick.toFixed(2) };
+  stand.t = Date.now();
+  const text = JSON.stringify(stand);
+  if (text.length > STAND_MAX) { console.warn('Insel-Spielstand zu groß', text.length); return; }
+  try { localStorage.setItem(STAND_KEY, text); } catch (e) {}
+  letztesSpeichern = performance.now();
+  posGespeichert = { x: spieler.x, z: spieler.z };
+}
+/** Gebiet freischalten (ab Etappe 5 durch Fähre und Brücke) – nur aufbauend */
+function gebietOeffnen(id, speichernAuch = true) {
+  if (offen.has(id) || !welt.gebiete.some(g => g.id === id)) return;
+  offen.add(id);
+  if (speichernAuch && !stand.gebiete.includes(id)) { stand.gebiete.push(id); speichern(); }
+  welt.absperren(offen).forEach(c => weltSzene.neuBauen(c.cx, c.cz));
+}
+/** Gespeicherte Position nur nehmen, wenn man dort stehen darf (Welt kann sich geändert haben) */
+function posGueltig(p) {
+  if (!p || p.x < 1 || p.z < 1 || p.x > welt.N - 1 || p.z > welt.N - 1) return false;
+  const g = welt.gebiet(p.x, p.z);
+  if (g && !offen.has(g)) return false;
+  const y = Math.round(p.y);
+  const bx = Math.floor(p.x), bz = Math.floor(p.z);
+  if (welt.fest(bx, y, bz) || welt.fest(bx, y + 1, bz)) return false;
+  for (let by = y - 1; by >= 0; by--) { if (welt.nass(bx, by, bz)) return false; if (welt.fest(bx, by, bz)) return true; }
+  return false;
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -261,13 +339,23 @@ function bodenUnter(x, y, z) {
   for (let by = Math.floor(y + .01) - 1; by >= 0; by--) if (welt.fest(bx, by, bz) || welt.nass(bx, by, bz)) return by + 1;
   return 0;
 }
+async function weltDaten() {
+  const r = await fetch('../daten/insel.json', { cache: 'no-cache' });
+  if (!r.ok) throw new Error('insel.json ' + r.status);
+  return r.json();
+}
 
 async function aufbauen() {
   if (!webglOk() || !window.LernAvatar) { ohne3d(); return; }
+  const datenP = TESTINSEL ? Promise.resolve(null) : weltDaten();
+  datenP.catch(() => {});
   let ich;
   try { ich = await figurAufstellen(null); }
   catch (e) { ohne3d(); return; }
   T = ich.figur.THREE;
+  let daten;
+  try { daten = await datenP; }
+  catch (e) { ohne3d('Die Insel konnte nicht geladen werden. Bitte mit Internet einmal neu laden.'); return; }
 
   renderer = new T.WebGLRenderer({ antialias: false, powerPreference: 'high-performance' });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
@@ -282,39 +370,48 @@ async function aufbauen() {
   scene.add(sonne);
   camera = new T.PerspectiveCamera(60, 1, .1, SICHTWEITE + 8);
 
-  // Welt
-  welt = LernInselWelt.erzeuge(PARAM.get('seed') || 'lernwelt-insel-1');
+  // Spielstand und Welt
+  stand = standLesen();
+  offen = new Set(stand.gebiete);
+  welt = TESTINSEL ? LernInselWelt.erzeuge(TESTINSEL) : LernInselWelt.ausDaten(daten, { offen });
   weltSzene = LernInselWelt.szene(T, welt);
   scene.add(weltSzene.gruppe);
+  schilder = welt.orte.schilder || [];
 
-  // Spieler
-  spieler.x = welt.start.x; spieler.z = welt.start.z; spieler.blick = welt.start.blick;
-  spieler.y = spieler.anzeigeY = welt.boden(spieler.x, spieler.z);
+  // Spieler: gespeicherte Position oder Startpunkt
+  const p = !TESTINSEL && posGueltig(stand.pos) ? stand.pos : null;
+  spieler.x = p ? p.x : welt.start.x; spieler.z = p ? p.z : welt.start.z; spieler.blick = p ? p.b : welt.start.blick;
+  spieler.y = spieler.anzeigeY = p ? Math.round(p.y) : welt.boden(spieler.x, spieler.z);
   spielerFigur = ich.figur; spielerGruppe = ich.gruppe;
   scene.add(spielerGruppe);
   spielerSchatten = schatten(); scene.add(spielerSchatten);
 
-  // Bewohner vor ihren Häusern
+  // Bewohner auf ihren Plätzen
   for (const def of BEWOHNER) {
-    const haus = welt.orte.haeuser[def.haus];
-    if (!haus) continue;
+    const pl = (welt.orte.plaetze || []).find(q => q.id === def.platz);
+    if (!pl) continue;
     try {
       // gebacken: wenige Draw-Calls statt ~35 je Figur (Bewohner stehen und drehen sich nur)
       const gruppe = LernInselWelt.backe(T, (await figurAufstellen(def.look)).gruppe);
-      const p = haus.vorTuer;
-      const y = welt.boden(p.x, p.z);
-      gruppe.position.set(p.x, y, p.z);
-      gruppe.rotation.y = p.blick;
+      const y = welt.boden(pl.x, pl.z);
+      gruppe.position.set(pl.x, y, pl.z);
+      gruppe.rotation.y = pl.blick;
       scene.add(gruppe);
-      const sch = schatten(); sch.position.set(p.x, y + .02, p.z); scene.add(sch);
-      bewohner.push({ def, x: p.x, y, z: p.z, blick: p.blick, grund: p.blick, ziel: p.blick, satz: 0, gruppe });
+      const sch = schatten(); sch.position.set(pl.x, y + .02, pl.z); scene.add(sch);
+      bewohner.push({ art: 'bewohner', def, x: pl.x, y, z: pl.z, blick: pl.blick, grund: pl.blick, ziel: pl.blick, satz: 0, gruppe });
     } catch (e) {}
   }
 
   steuerung = LernInselSteuerung.erstelle({
     flaeche: $('buehne'), welt, spieler, aktion,
-    optionen: { reduce: REDUCE },
+    darf: (x, z) => { const g = welt.gebiet(x, z); return !g || offen.has(g); },
+    gesperrt: gesperrtHinweis,
+    optionen: { reduce: REDUCE, seitenTauschen: !!stand.opt.seiten },
   });
+  $('opt-seiten').checked = !!stand.opt.seiten;
+  document.body.classList.toggle('links', !!stand.opt.seiten);
+  $('opt-vorlesen').checked = stand.opt.vorlesen !== false;
+  $('debug-gebiete').hidden = !DEBUG || TESTINSEL;
 
   groesse();
   window.addEventListener('resize', groesse);
@@ -323,7 +420,7 @@ async function aufbauen() {
   bereit = true;
   startMs = Math.round(performance.now() - T0);
   $('los').disabled = false;
-  $('los').textContent = 'Los geht\'s!';
+  $('los').textContent = p ? 'Weiterspielen' : 'Los geht\'s!';
   $('start-info').textContent = DEBUG ? `Fertig in ${(startMs / 1000).toFixed(1)} s` : 'Tipp: Geh zu den Leuten und tippe auf 💬.';
 }
 
@@ -352,8 +449,10 @@ function pausieren() {
   if (!laeuft) return;
   laeuft = false;
   steuerung.stopp();
+  speichern();
   if ('speechSynthesis' in window) speechSynthesis.cancel();
-  $('pause').hidden = false; $('pause-knopf').hidden = true; $('aktion').hidden = true;
+  gebieteZeigen();
+  $('pause').hidden = false; $('pause-knopf').hidden = true; $('aktion').hidden = true; aktionZiel = null;
   homeZeigen(true);
 }
 function schleife(t) {
@@ -363,6 +462,10 @@ function schleife(t) {
   const dt = letzte ? Math.min(.1, (t - letzte) / 1000) : 1 / MAX_FPS;
   letzte = t;
   zeichneBild(dt);
+  // Speichern nach jedem Schritt: Position höchstens alle 5 s und nur, wenn man sich bewegt hat
+  if (posGespeichert && performance.now() - letztesSpeichern > POS_ALLE_MS
+      && Math.hypot(spieler.x - posGespeichert.x, spieler.z - posGespeichert.z) > .5) speichern();
+  else if (!posGespeichert) posGespeichert = { x: spieler.x, z: spieler.z };
   if (DEBUG) {
     fpsBilder++; fpsUhr += dt;
     if (fpsUhr >= 1) { fps = fpsBilder / fpsUhr; fpsBilder = 0; fpsUhr = 0; debugZeigen(); }
@@ -374,8 +477,9 @@ function zeichneBild(dt) {
   // Bewegen – durch Bewohner kann man nicht hindurchlaufen
   const ax = spieler.x, az = spieler.z;
   const r = dt ? steuerung.update(dt) : { lauf: 0 };
-  if (bewohner.some(b => Math.hypot(b.x - spieler.x, b.z - spieler.z) < .6) ) { spieler.x = ax; spieler.z = az; r.lauf = 0; }
+  if (bewohner.some(b => Math.hypot(b.x - spieler.x, b.z - spieler.z) < .6)) { spieler.x = ax; spieler.z = az; r.lauf = 0; }
   if (r.lauf && !hinweisWeg) { hinweisWeg = true; $('hinweis').classList.add('weg'); setTimeout(() => { $('hinweis').hidden = true; }, 700); }
+  gebietPruefen();
 
   // Figur
   phase += dt * (r.lauf ? (r.rennt ? 13 : 9) : 0);
@@ -384,7 +488,7 @@ function zeichneBild(dt) {
   spielerFigur.pose({ lauf: r.lauf, phase, t: REDUCE ? 0 : zeit });
   spielerSchatten.position.set(spieler.x, bodenUnter(spieler.x, spieler.y, spieler.z) + .02, spieler.z);
 
-  // Bewohner: drehen sich zum Kind, wenn sie sprechen
+  // Bewohner: drehen sich zum Kind, wenn sie sprechen. Nächstes Ziel für den Aktionsknopf
   let naechster = null, nd = SPRECH_ABSTAND;
   bewohner.forEach(b => {
     const d = Math.hypot(b.x - spieler.x, b.z - spieler.z);
@@ -393,6 +497,10 @@ function zeichneBild(dt) {
     let w = b.ziel - b.blick; w = Math.atan2(Math.sin(w), Math.cos(w));
     b.blick += w * Math.min(1, dt * 6);
     b.gruppe.rotation.y = b.blick;
+  });
+  schilder.forEach(s => {
+    const d = Math.hypot(s.x - spieler.x, s.z - spieler.z);
+    if (d < LESE_ABSTAND && d < nd) { nd = d; naechster = { art: 'schild', s, x: s.x, y: s.y + .6, z: s.z }; }
   });
   aktionZeigen(naechster);
   if (gesprochen && Math.hypot(gesprochen.x - spieler.x, gesprochen.z - spieler.z) > 5) blaseWeg();
@@ -407,28 +515,85 @@ function zeichneBild(dt) {
 }
 
 /* ═══════════════════════════════════════════════════════
+   GEBIETE: Name beim Betreten, Hinweis an geschlossenen Grenzen
+   ═══════════════════════════════════════════════════════ */
+let toastUhr = 0, gesperrtZuletzt = 0, nameUhr = 0;
+function toast(text, ms = 3200) {
+  const el = $('toast');
+  el.textContent = text; el.hidden = false;
+  clearTimeout(toastUhr);
+  toastUhr = setTimeout(() => { el.hidden = true; }, ms);
+}
+function gesperrtHinweis(x, z) {
+  if (performance.now() - gesperrtZuletzt < 4000) return;
+  gesperrtZuletzt = performance.now();
+  const g = welt.gebiete.find(q => q.id === welt.gebiet(x, z));
+  if (g) toast('🔒 ' + (g.hinweis || g.name + ' ist noch geschlossen.'));
+}
+function gebietPruefen() {
+  const id = welt.gebiet(spieler.x, spieler.z);
+  if (!id || id === aktGebiet) return;
+  const erstes = aktGebiet === null;
+  aktGebiet = id;
+  if (erstes) return;                                // beim Start kein Einblenden
+  const g = welt.gebiete.find(q => q.id === id);
+  if (!g) return;
+  const el = $('gebietsname');
+  el.textContent = g.name;
+  el.classList.remove('weg');
+  clearTimeout(nameUhr);
+  nameUhr = setTimeout(() => el.classList.add('weg'), 2600);
+}
+function gebieteZeigen() {
+  const el = $('gebiete-liste');
+  el.textContent = '';
+  (welt.gebiete || []).forEach(g => {
+    const zeile = document.createElement('div');
+    const auf = offen.has(g.id);
+    if (!auf) zeile.className = 'zu';
+    const name = document.createElement('span'); name.textContent = (auf ? '✅ ' : '🔒 ') + g.name;
+    const fach = document.createElement('small'); fach.textContent = g.fach || '';
+    zeile.append(name, fach);
+    el.appendChild(zeile);
+  });
+}
+
+/* ═══════════════════════════════════════════════════════
    AKTIONSKNOPF UND SPRECHBLASE
    ═══════════════════════════════════════════════════════ */
 let aktionZiel = null;
 function aktionZeigen(b) {
-  if (b === aktionZiel) return;
+  if (b === aktionZiel || (b && aktionZiel && b.art === 'schild' && aktionZiel.s === b.s)) return;
   aktionZiel = b;
   $('aktion').hidden = !b;
-  if (b) $('aktion').setAttribute('aria-label', 'Mit ' + b.def.name + ' sprechen');
+  if (!b) return;
+  const schild = b.art === 'schild';
+  $('aktion').querySelector('.sym').textContent = schild ? '📜' : '💬';
+  $('aktion').querySelector('.txt').textContent = schild ? 'Lesen' : 'Sprechen';
+  $('aktion').setAttribute('aria-label', schild ? 'Schild lesen' : 'Mit ' + b.def.name + ' sprechen');
 }
 function aktion() {
   if (!laeuft || !aktionZiel) return;
-  const b = aktionZiel;
-  const satz = b.def.saetze[b.satz % b.def.saetze.length];
-  b.satz++;
+  const b = aktionZiel, el = $('blase');
+  const satzEl = el.querySelector('.satz');
+  if (b.art === 'schild') {                         // Schilder sind deutsch (Hinweise zur Insel)
+    el.querySelector('.wer').textContent = '📜 Schild';
+    satzEl.textContent = b.s.text;
+    satzEl.lang = 'de';
+    $('blase-hoeren').hidden = true;
+  } else {
+    const satz = b.def.saetze[b.satz % b.def.saetze.length];
+    b.satz++;
+    el.querySelector('.wer').textContent = b.def.name;
+    satzEl.textContent = satz;
+    satzEl.lang = 'en';
+    $('blase-hoeren').hidden = false;
+    if (stand.opt.vorlesen !== false) sprich(satz);
+  }
   gesprochen = b;
-  const el = $('blase');
-  el.querySelector('.wer').textContent = b.def.name;
-  el.querySelector('.satz').textContent = satz;
   el.hidden = false;
   el.classList.remove('neu'); void el.offsetWidth; el.classList.add('neu');
   blaseSetzen();
-  if (vorlesen) sprich(satz);
 }
 function blaseWeg() { gesprochen = null; $('blase').hidden = true; }
 const kopf = { v: null };
@@ -436,7 +601,7 @@ function blaseSetzen() {
   const b = gesprochen;
   if (!b || !T) return;
   const v = kopf.v || (kopf.v = new T.Vector3());
-  v.set(b.x, b.y + FIGUR_HOEHE + .35, b.z).project(camera);
+  v.set(b.x, b.y + (b.art === 'schild' ? 1.2 : FIGUR_HOEHE + .35), b.z).project(camera);
   const el = $('blase');
   if (v.z > 1) { el.style.visibility = 'hidden'; return; }
   el.style.visibility = '';
@@ -454,7 +619,8 @@ function debugZeigen() {
   $('debug').hidden = false;
   $('debug').textContent = `${fps.toFixed(0)} FPS (max ${MAX_FPS})\n${i.calls} Draw-Calls · ${Math.round(i.triangles / 1000)}k Dreiecke\n`
     + `Start ${(startMs / 1000).toFixed(1)} s · Pixel-Ratio ${renderer.getPixelRatio()}\n`
-    + `x ${spieler.x.toFixed(1)} y ${spieler.y.toFixed(1)} z ${spieler.z.toFixed(1)}${REDUCE ? '\nBewegung reduziert' : ''}`;
+    + `x ${spieler.x.toFixed(1)} y ${spieler.y.toFixed(1)} z ${spieler.z.toFixed(1)} · ${welt.gebiet(spieler.x, spieler.z) || '–'}`
+    + `${testOffen ? ' · Test: alles offen' : ''}${REDUCE ? '\nBewegung reduziert' : ''}`;
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -468,9 +634,16 @@ $('blase-hoeren').addEventListener('click', () => sprich($('blase').querySelecto
 $('opt-seiten').addEventListener('change', e => {
   document.body.classList.toggle('links', e.target.checked);
   if (steuerung) steuerung.setzeOptionen({ seitenTauschen: e.target.checked });
+  if (stand) { stand.opt.seiten = e.target.checked; speichern(); }
 });
-$('opt-vorlesen').addEventListener('change', e => { vorlesen = e.target.checked; });
-document.addEventListener('visibilitychange', () => { if (document.hidden) pausieren(); });
+$('opt-vorlesen').addEventListener('change', e => { if (stand) { stand.opt.vorlesen = e.target.checked; speichern(); } });
+$('debug-gebiete').addEventListener('click', () => {           // nur ?debug=1: alles öffnen, ohne zu speichern
+  testOffen = true;
+  welt.gebiete.forEach(g => gebietOeffnen(g.id, false));
+  gebieteZeigen();
+});
+document.addEventListener('visibilitychange', () => { if (document.hidden) { pausieren(); speichern(); } });
+window.addEventListener('pagehide', () => { if (bereit) speichern(); });
 window.addEventListener('keydown', e => { if (e.key === 'Escape') (laeuft ? pausieren() : (bereit && $('ohne3d').hidden && starten())); });
 
 aufbauen().catch(e => { console.error(e); ohne3d('Die Insel konnte nicht geladen werden. Bitte die Seite neu laden.'); });

@@ -26,6 +26,7 @@ daten/                katalog.json (Inhalts-Katalog mit Themen-IDs), vokabeln5.j
                       woerter-en.json (Prüfliste fürs Wort des Tages, ENABLE-Wortliste, gemeinfrei)
                       kitchen-chaos.json (Schauplätze, Zutaten, Satzrahmen, Stufen)
                       room-detective.json (Gegenstände, Möbel, Präpositionen, Fälle, Merkmale der Verdächtigen, Stufen)
+                      insel.json (Die Insel: Höhen- und Gebietskarte, Gebäude, Plätze, Wege, Bauplätze, Schilder)
                       karten.json (Europa- und Deutschlandkarte, für Länder-Finder und Expedition)
                       welt.json (alle Länder in Längen-/Breitengraden, Kontinente, Länderlisten der Welt-Modi)
                       ozeane.json (die fünf Ozeane für den Globus, Natural Earth, gemeinfrei)
@@ -61,8 +62,8 @@ werkzeuge/            Prüfskript (pruefen.py), Inventar (inventar.py → INVENT
 | `karten-ansicht.js` | Karten laden, zoomen, verschieben, antippen (Länder-Finder, Expedition); `LernKarte.markup` zeichnet Flächen, Linien (Flüsse) und Punkte (Städte) mit Tippzonen |
 | `globus.js` | Drehbarer Globus als SVG (orthografisch, kein WebGL) mit Gradnetz, Äquator und Nullmeridian (`LernGlobus`); Ozeane aus `daten/ozeane.json` |
 | `welt-karte.js` | Weltkarte in **Equal Earth** (flächentreu) aus `daten/welt.json` über `vendor/d3-geo.min.js` (`LernWelt`) – Grundlage für alle Weltkarten und den Globus |
-| `insel-welt.js` | „Die Insel“: Welt aus Blöcken, Testinsel, Weltstücke (16 × 16 × 24) zu je einem Mesh gebacken (`LernInselWelt`), nur in `spiele/insel.html` |
-| `insel-steuerung.js` | „Die Insel“: Joystick, Kamera (dritte Person), Kollision mit dem Blockgitter, Hochsteigen (`LernInselSteuerung`) |
+| `insel-welt.js` | „Die Insel“: Welt aus Blöcken nach `daten/insel.json` (Gebiete, Gebäude-Vorlagen, Wege, Absperrungen), Testinsel, Weltstücke (16 × 16 × 24) zu je einem Mesh gebacken (`LernInselWelt`), nur in `spiele/insel.html` |
+| `insel-steuerung.js` | „Die Insel“: Joystick, Kamera (dritte Person), Kollision mit dem Blockgitter, Hochsteigen, Sperre geschlossener Gebiete (`LernInselSteuerung`) |
 | `spiel-hilfen.js` | Kleine Bausteine für die neuen Spiele: Runde melden, Endlos-XP, robuste Zeiger (mehrere Finger), wiederholbarer Zufall |
 | `qrcode.js` | QR-Code-Erzeugung im Browser (MIT-Lizenz, Kazuhiko Arase) |
 | `fonts.css` | Lokal gehostete Schriften aus `fonts/` (kein Google Fonts → DSGVO) |
@@ -731,9 +732,26 @@ Kleine, offene 3D-Welt im Klötzchen-Stil: Die Kinder laufen mit ihrer Pass-Figu
 Gelernte verändert später die Welt (Hinkommen, Bauen, Handeln – nie eingeblendete Fragen). Plan: Aktionsplan „Die
 Insel“ (8 Etappen). Noch nicht in `config.json` – erreichbar über den direkten Link `spiele/insel.html`.
 
-- **Stand: Etappe 1 – Probelauf.** Testinsel aus festem Zufallswert (`LernInselWelt.erzeuge`, 96 × 96 Blöcke, 24 hoch):
-  Gras, Sand, Meer, Bäume, Dorfplatz mit Brunnen, vier Häuser. Pass-Figur mit Laufanimation, drei Bewohner vor ihren
-  Häusern, die beim Aktionsknopf 💬 einen englischen Satz sagen (Sprechblase + Vorlesen). Noch kein Spielstand, keine XP.
+- **Stand: Etappe 2 – Welt und Speichern.** Die Welt kommt aus `daten/insel.json` (96 × 96 Blöcke, 24 hoch) mit drei
+  Gebieten: **Hafendorf** (Süden, Startgebiet, offen), **Baumeister-Tal** (Nordwesten, hinter einem Meeresarm – öffnet in
+  Etappe 5 die Fähre) und **Kartenleser-Hochland** (Nordosten, hinter Fluss und Steilkante – öffnet die Brücke aus dem
+  Tal). Geschlossene Gebiete sperren den Weg (Wasser, Steilkante, Zaun am Fährsteg, Hinweis beim Anlaufen); beim
+  Betreten eines Gebiets erscheint sein Name. Drei Bewohner zum Ausprobieren (Tom, Mia, Mr Brown) mit englischen Sätzen,
+  Schilder mit 📜 lesen. Noch keine XP (Aufträge ab Etappe 3).
+- **Weltdaten (`daten/insel.json`):** von Hand gepflegt: `start`, `gebiete` (id, name, zeichen, fach, offen/hinweis),
+  `vorlagen` (Gebäude-Typen: breite, tiefe, hoehe, wand, ecke, dach, boden – Blocknamen aus `LernInselWelt.BLOCK`),
+  `gebaeude` (id, vorlage, x, z, tuer, Farben überschreibbar), `plaetze` (Stellen für Bewohner: an einem Gebäude oder
+  frei), `wege`, `stege`, `bauplaetze` (für Etappe 4–5, werden geebnet, Pflöcke an den Ecken), `schilder`,
+  `absperrungen` (Zaun, solange das Gebiet zu ist), `frei` (keine Bäume), `baeume` (seed, Dichte je Gebiet).
+  Erzeugt: `hoehen` und `gebietskarte` (je 96 Zeilen à 96 Zeichen) mit `python3 werkzeuge/insel_karte.py` – das Werkzeug
+  schreibt nur diese beiden Felder. **Bewohner-Plätze stehen mindestens 20 Blöcke auseinander** (Laufweg statt
+  Durchprobieren); `pruefen.py` prüft das und die übrigen Angaben.
+- **Spielstand `lernwelt-insel`** (in der Sicherungskarte, `gemeinsam/sync.js`): `{ v, pos, gebiete, auftraege, stufen,
+  bau, funde, opt, t }`. Gespeichert wird nach jedem Schritt (Position höchstens alle 5 s), beim Pausieren und beim
+  Verlassen; nur Abweichungen von der Grundwelt (Bauplätze ab Etappe 4). Freischaltungen werden nie entfernt, unbekannte
+  Felder bleiben erhalten; höchstens 20 000 Zeichen. Startbildschirm „Weiterspielen“ setzt an der gespeicherten Stelle
+  fort (ist sie nicht mehr begehbar, geht es am Startpunkt los). Pausenmenü: offene und geschlossene Gebiete,
+  Einstellungen. `?debug=1`: im Pausenmenü alle Gebiete zum Testen öffnen (wird nicht gespeichert).
 - **Steuerung:** Joystick erscheint links unter dem Daumen (Totzone, ab 70 % Auslenkung rennen, Richtung relativ zur
   Kamera); rechts wischen dreht die Kamera, beim Vorwärtslaufen schwenkt sie langsam hinter die Figur. Stufen von einem
   Block steigt die Figur von selbst hoch, an Wänden gleitet sie entlang; Wasser und Inselrand sind gesperrt. Steht eine
@@ -747,7 +765,7 @@ Insel“ (8 Etappen). Noch nicht in `config.json` – erreichbar über den direk
   Startzeit und Position. Go: mindestens 30 Bilder pro Sekunde, Start unter 5 Sekunden (aus dem Offline-Speicher),
   2–3 Kinder laufen ohne Erklärung los, keine hängenden Finger. 20–30 Bilder → nachbessern (Sichtweite `SICHTWEITE`,
   Pixel-Ratio, Weltgröße); unter 20 → No-Go (Gebiete als feste isometrische Szenen wie im Dorf).
-  `?seed=TEXT` erzeugt zum Ausprobieren eine andere Insel.
-- **Dateien:** alle Insel-Dateien (`spiele/insel.html`, `gemeinsam/insel-*.js`, später `daten/insel*.json`) stehen in
-  `sw.js` NACHLADEN – `pruefen.py` prüft das. Block-, Gebiets-, Auftrags- und Sammelstück-IDs nie umbenennen (ab
-  Etappe 2 im Spielstand `lernwelt-insel`).
+  `?seed=TEXT` zeigt statt der Weltdaten die Testinsel aus Etappe 1 (ohne Gebiete, ohne Speichern).
+- **Dateien:** alle Insel-Dateien (`spiele/insel.html`, `gemeinsam/insel-*.js`, `daten/insel*.json`) stehen in
+  `sw.js` NACHLADEN – `pruefen.py` prüft das. Block-, Gebiets-, Platz-, Bauplatz-, Auftrags- und Sammelstück-IDs nie
+  umbenennen (sie stehen im Spielstand `lernwelt-insel`); Block-Nummern in `BLOCK` nie umnummerieren.

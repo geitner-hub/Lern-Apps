@@ -30,7 +30,7 @@
   'use strict';
   if (window.LW && window.LW.UMGEBUNG) return;          // doppeltes Laden verhindern
 
-  const VERSION = 'v62';                                 // ⚙ bei jedem Upload mit sw.js zusammen erhöhen
+  const VERSION = 'v63';                                 // ⚙ bei jedem Upload mit sw.js zusammen erhöhen
 
   // ── Umgebung erkennen ────────────────────────────────
   //  GitHub Pages: erster Pfadteil = Repo-Name (Lern-Apps bzw. Lern-Apps-test)
@@ -88,6 +88,7 @@
     ['lern-tauziehen-wahl',         'local',   'spiele/tauziehen.html',    'Tauziehen-Duell: zuletzt gewählte Einstellungen', false],
     ['lern-zauberwort-wahl',        'local',   'spiele/zauberwort.html',   'Zauberwort: zuletzt gewählte Einstellungen', false],
     ['lern-zauberwort-rekord',      'local',   'spiele/zauberwort.html',   'Zauberwort: Rekord', false],
+    ['lernwelt-insel',              'local',   'spiele/insel.html',        'Die Insel: Position, offene Gebiete, Aufträge, Bauplätze, Sammelstücke, Einstellungen', true],
     ['lernwelt-room-detective',     'local',   'spiele/room-detective.html', 'Room Detective: Stufen, Zähler und letzte Wahl', false],
     // Lern-Apps mit eigenem Speicher
     ['lernwelt-lernweg',            'local',   'apps/typen/lernweg.html', 'Lernweg: abgehakte Schritte, Niveau, Smileys, Start und letzter Besuch je Lernweg (nur dieses Gerät)', false],
