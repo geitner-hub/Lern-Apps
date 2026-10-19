@@ -14,7 +14,7 @@
 //  und teilen sich den Offline-Speicher. Deshalb hat jede Umgebung ihr
 //  eigenes Präfix und räumt nur ihre eigenen Speicher auf.
 // ═══════════════════════════════════════════════════════
-const VERSION = 'v56';  // v56: Lernweg Unit 1: genaue Buchseiten, ganze Sätze auch bei Buchaufgaben. v55: Lernweg Unit 1: ganze Sätze ins Heft. v54: Lernweg Unit 1 ohne Listening, Arbeitsblätter statt Workbook. v53: Lernwege (apps/typen/lernweg.html, nur zugeteilt). v52: neues Spiel Room Detective. v51: Spiele erst nach guten Lern-Runden (Spielsperre je Wochentag und Gruppe)
+const VERSION = 'v57';  // v57: Admin: Lernwege als eigener Tab. v56: Lernweg Unit 1: genaue Buchseiten, ganze Sätze auch bei Buchaufgaben. v55: Lernweg Unit 1: ganze Sätze ins Heft. v54: Lernweg Unit 1 ohne Listening, Arbeitsblätter statt Workbook. v53: Lernwege (apps/typen/lernweg.html, nur zugeteilt). v52: neues Spiel Room Detective. v51: Spiele erst nach guten Lern-Runden (Spielsperre je Wochentag und Gruppe)
 const PRAEFIX = /\/[^/]*-test\/$/i.test(new URL(self.registration.scope).pathname) ? 'lwtest-v' : 'lernwelt-v';
 const CACHE   = PRAEFIX + VERSION.replace(/^v/, '');        // z. B. 'lernwelt-v24' (Format wie bisher)
 

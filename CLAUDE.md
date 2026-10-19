@@ -88,7 +88,7 @@ und gelbe Hinweise. Manuelle Checkliste nach Uploads: `werkzeuge/RAUCHTEST.md`.
 - **Lernwege** (`apps/typen/lernweg.html?weg=<ID>` + `daten/lernwege/<ID>.json`, ID mit `.lernweg-`): Stationenarbeit
   mit digitalem Laufzettel, Arbeit im Heft, Kontrolle mit gedrucktem Lösungsheft – bewusst ohne automatische Kontrolle und
   ohne `saveResult`. **Keine normale App** (nicht in config.json): ohne Zuteilung gesperrt (`LernFreigabe.zugeteilt`,
-  umgekehrt zu `erlaubt`); Zuteilung im Admin „🎯 Unterricht → 🧭 Lernwege“ schreibt `freigaben[ID][wer] = 'offen'`.
+  umgekehrt zu `erlaubt`); Zuteilung im Admin Tab „🗺️ Lernwege“ schreibt `freigaben[ID][wer] = 'offen'`.
   Zugeteilte Lernwege zeigt die Startseite unter „🧭 Mein Lernweg“; mit Admin-Anmeldung immer als Vorschau.
   Neuer Lernweg = JSON-Datei + Katalog-Thema (quelle `apps/typen/lernweg.html`, parameter `weg=<ID>`) + sw.js NACHLADEN.
 - **Backend:** nur ein Cloudflare Worker (`cloudflare/worker.js`, wird von Hand bei Cloudflare eingefügt). Er

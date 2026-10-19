@@ -322,7 +322,7 @@ selbst im Admin unter „🎯 Unterricht“), Wiederholung, Fehler-Training, Inf
   mit dem gedruckten Lösungsheft; **keine automatische Kontrolle, kein Ergebnis für Pass/Sterne**.
   Gespeichert wird nur auf dem Gerät (`lernwelt-lernweg`: abgehakte Schritte, Smileys).
 - **Nur für zugeteilte Gruppen:** Ein Lernweg ist keine App in config.json. Ohne Eintrag ist er gesperrt
-  (`LernFreigabe.zugeteilt(id)` – umgekehrt zu `erlaubt`). Admin → **🎯 Unterricht → 🧭 Lernwege zuteilen**: Gruppe
+  (`LernFreigabe.zugeteilt(id)` – umgekehrt zu `erlaubt`). Admin → Tab **🗺️ Lernwege**: Gruppe
   (Sicherungskarten) oder Klasse antippen → `freigaben[<ID>][wer] = 'offen'`, dann veröffentlichen. Zugeteilte
   Lernwege erscheinen oben auf der Startseite unter „🧭 Mein Lernweg“. Mit Admin-Anmeldung auf dem Gerät ist jeder
   Lernweg als Vorschau zu sehen (Beamer).

@@ -241,6 +241,7 @@ document.querySelectorAll('.tab').forEach(tab => tab.addEventListener('click', (
   document.getElementById('panel-' + tab.dataset.t).classList.add('active');
   if (tab.dataset.t === 'dorf') buildDorfAdmin();
   if (tab.dataset.t === 'freigaben') buildFreigaben();
+  if (tab.dataset.t === 'lernwege') buildLernwegeTab();
 }));
 
 // ── Build All ─────────────────────────────────────────
@@ -248,6 +249,7 @@ function buildAll() {
   buildPassAdmin();
   if (document.querySelector('.tab[data-t="dorf"].active')) buildDorfAdmin();
   if (document.querySelector('.tab[data-t="freigaben"].active')) buildFreigaben();
+  if (document.querySelector('.tab[data-t="lernwege"].active')) buildLernwegeTab();
   buildDashboard();
   buildAppList();
   buildOrdnen();

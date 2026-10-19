@@ -15,7 +15,7 @@
 //  daten/kopfrechnen.json und die Units/Listen des Vokabeltrainers aus dem Katalog.
 //  Inhalte des Aufgabentyp-Baukastens (Etappe 9) erscheinen automatisch; andere Apps mit Stufen in FR_KATALOG_REIHEN.
 //
-//  Lernwege (apps/typen/lernweg.html): umgekehrte Regel – ohne Eintrag für niemanden sichtbar. „Zuteilen“ schreibt
+//  Lernwege (apps/typen/lernweg.html, eigener Tab „🗺️ Lernwege“): umgekehrte Regel – ohne Eintrag für niemanden sichtbar. „Zuteilen“ schreibt
 //  freigaben[<Lernweg-ID>][wer] = 'offen' (gleiches Format, der Worker prüft es schon), ausgewertet mit
 //  LernFreigabe.zugeteilt(). Liste = Katalog-Themen mit quelle apps/typen/lernweg.html.
 // ═══════════════════════════════════════════════════════
@@ -157,7 +157,6 @@ async function buildFreigaben() {
   }).join('');
 
   box.innerHTML = kopf + (reihen || '<div class="empty-msg">Keine Inhalte gefunden.</div>');
-  buildLernwegeZuteilung();
   buildFokus();
   buildSpielsperre();
   buildHeuteSchalter();
@@ -217,7 +216,21 @@ function frAktion(akt) {
   buildFreigaben();
 }
 
-// ── Lernwege zuteilen ──────────────────────────────────
+// ── Lernwege zuteilen (eigener Tab „🗺️ Lernwege“) ───────
+let lwLaedt = null;
+async function buildLernwegeTab() {
+  const box = document.getElementById('lernwege-inhalt');
+  if (!box) return;
+  if (!FR.gruppen || !(window.LernKatalog && LernKatalog.geladen())) {
+    box.innerHTML = '<div class="empty-msg">Lade Lernwege …</div>';
+    if (!lwLaedt) lwLaedt = Promise.all([
+      FR.gruppen ? null : frGruppenLaden(),
+      window.LernKatalog ? Promise.race([LernKatalog.bereit, new Promise(r => setTimeout(r, 4000))]) : null,
+    ]).catch(() => {}).finally(() => { lwLaedt = null; });
+    await lwLaedt;
+  }
+  buildLernwegeZuteilung();
+}
 function lwListe() {
   const K = window.LernKatalog;
   return K && K.geladen() ? K.themen({ nurOben: true }).filter(t => t.quelle && t.quelle.app === FR_LERNWEG) : [];
@@ -245,7 +258,7 @@ function buildLernwegeZuteilung() {
 }
 document.addEventListener('click', e => {
   const t = e.target.closest('[data-lw-weg]');
-  if (!t || !t.closest('#panel-freigaben')) return;
+  if (!t || !t.closest('#panel-lernwege')) return;
   const id = t.dataset.lwWeg, w = t.dataset.lwWer, F = frCfg(), e2 = F[id] || (F[id] = {});
   const an = e2[w] !== 'offen';
   if (an) e2[w] = 'offen'; else delete e2[w];
