@@ -1,6 +1,6 @@
 # Inventar der Lern-Apps und Spiele
 
-Automatisch erzeugt am 18.10.2026 mit `python3 werkzeuge/inventar.py` (Angaben aus dem Code). Nur die Spalten **Entscheidung** und **Notiz** von Hand pflegen – sie bleiben beim Neu-Erzeugen erhalten.
+Automatisch erzeugt am 19.10.2026 mit `python3 werkzeuge/inventar.py` (Angaben aus dem Code). Nur die Spalten **Entscheidung** und **Notiz** von Hand pflegen – sie bleiben beim Neu-Erzeugen erhalten.
 
 Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv**
 
@@ -31,6 +31,7 @@ Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv
 | `apps/mathe/rechen-arena.html` | Rechen-Arena | `ma.5.rechen-arena` | Lern-App | Allgemein · 5, 6 | sichtbar | ja | ja | – | – | ja | Kern | Beliebt, vier Modi. Mängel: Startseite scrollt (iPad quer), kein `thema`/`inhalt`, Ballon-Pop hat keine Rückmeldung zum Fehler (bewusst schnell) |
 | `apps/mathe/stellenwerttafel.html` | Große Zahlen können | `ma.5.stellenwert` (5 Stufen) | Lern-App | Mathematik · 5 | sichtbar | – | – | – | – | ja |  |  |
 | `apps/mathe/zahlenstrahl.html` | Der Zahlenstrahl | `ma.5.zahlenstrahl` (5 Stufen) | Lern-App | Mathematik · 5 | sichtbar | – | – | – | – | ja |  |  |
+| `apps/typen/lernweg.html` | – | `en.6.lernweg-u1`, `en.6.lernweg-u2` | Lern-App | – | nicht in config | – | – | – | – | – (nicht in config) |  |  |
 | `apps/typen/uebung.html` | Geometrie-Training | `ma.5.geometrie` (8 Stufen), `en.5.to-be` (6 Stufen), `en.5.simple-present` (8 Stufen), `en.5.simple-past` (7 Stufen), `en.5.have-got` (5 Stufen), `en.5.can` (5 Stufen), `en.5.present-progressive` (5 Stufen), `en.5.nomen` (4 Stufen), `en.5.pronomen` (5 Stufen), `en.5.there-is` (5 Stufen), `en.5.fragen` (3 Stufen), `en.5.praepositionen` (4 Stufen), `en.6.future` (6 Stufen), `en.6.steigerung` (4 Stufen), `en.6.some-any` (4 Stufen) | Lern-App | Mathematik · 5, 6 | sichtbar | – | – | – | – | ja |  |  |
 | `spiele/burg-verteidigung.html` | Tower Defense | – | Spiel | Allgemein · alle | sichtbar | ja | ja | – | ja | – (Spiel) |  |  |
 | `spiele/dorf.html` | Mein Dorf | – | Spiel | Allgemein · alle | sichtbar | – | – | – | – | Dorf selbst |  |  |
@@ -70,6 +71,7 @@ Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv
 | apps/mathe/rechen-arena.html | 52 | navbar.js | rechenArena_ballonHighscore, + über navbar.js |
 | apps/mathe/stellenwerttafel.html | 15 | freigabe.js, ueben.js, ziffernblock.js, navbar.js | + über navbar.js |
 | apps/mathe/zahlenstrahl.html | 17 | freigabe.js, ueben.js, ziffernblock.js, navbar.js | + über navbar.js |
+| apps/typen/lernweg.html | 38 | freigabe.js, navbar.js | lern-apps-results, lernwelt-admin-schluessel, lernwelt-lernweg, lernwelt-lernweg-zurueck, + über navbar.js |
 | apps/typen/uebung.html | 2 | freigabe.js, ueben.js, typen.js, navbar.js | + über navbar.js |
 | spiele/burg-verteidigung.html | 143 | navbar.js, aufgaben.js, avatar3d.js | lern-apps-results, lern-burg-wahl, lern-burg-rekorde, lernwelt-td-kampagne, + über navbar.js |
 | spiele/dorf.html | 88 | shared.js, config-api.js, dorf-kern.js, avatar3d.js, dorf-szene.js, navbar.js | lernwelt-dorf, lernwelt-dorf-besuch, + über navbar.js |

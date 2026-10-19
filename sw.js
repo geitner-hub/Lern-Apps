@@ -14,7 +14,7 @@
 //  und teilen sich den Offline-Speicher. Deshalb hat jede Umgebung ihr
 //  eigenes Präfix und räumt nur ihre eigenen Speicher auf.
 // ═══════════════════════════════════════════════════════
-const VERSION = 'v53';  // v53: Die Insel – Etappe 1 (Probelauf). v52: neues Spiel Room Detective. v51: Spiele erst nach guten Lern-Runden (Spielsperre je Wochentag und Gruppe)
+const VERSION = 'v60';  // v60: Die Insel – Etappe 1 (Probelauf). v59: Lernweg-Klassen-Übersicht im Admin (anonym über die Gruppenauswertung). v58: Lernweg Unit 2, Lernweg-Stufen (Niveaus, Wahl, App-Haken, Code, Banner, Auto-Start). v57: Admin: Lernwege als eigener Tab. v56: Lernweg Unit 1: genaue Buchseiten, ganze Sätze auch bei Buchaufgaben. v55: Lernweg Unit 1: ganze Sätze ins Heft. v54: Lernweg Unit 1 ohne Listening, Arbeitsblätter statt Workbook. v53: Lernwege (apps/typen/lernweg.html, nur zugeteilt). v52: neues Spiel Room Detective. v51: Spiele erst nach guten Lern-Runden (Spielsperre je Wochentag und Gruppe)
 const PRAEFIX = /\/[^/]*-test\/$/i.test(new URL(self.registration.scope).pathname) ? 'lwtest-v' : 'lernwelt-v';
 const CACHE   = PRAEFIX + VERSION.replace(/^v/, '');        // z. B. 'lernwelt-v24' (Format wie bisher)
 
@@ -62,7 +62,8 @@ const NACHLADEN = ['spiele/runner.html', 'spiele/burg-verteidigung.html', 'spiel
                    'daten/inhalte/en/en.5.can.json', 'daten/inhalte/en/en.5.fragen.json', 'daten/inhalte/en/en.5.have-got.json',
                    'daten/inhalte/en/en.5.knowing-english.json', 'daten/inhalte/en/en.5.nomen.json', 'daten/inhalte/en/en.5.praepositionen.json',
                    'daten/inhalte/en/en.5.present-progressive.json', 'daten/inhalte/en/en.5.pronomen.json', 'daten/inhalte/en/en.5.there-is.json',
-                   'daten/inhalte/en/en.6.future.json', 'daten/inhalte/en/en.6.some-any.json', 'daten/inhalte/en/en.6.steigerung.json'];
+                   'daten/inhalte/en/en.6.future.json', 'daten/inhalte/en/en.6.some-any.json', 'daten/inhalte/en/en.6.steigerung.json',
+                   'apps/typen/lernweg.html', 'daten/lernwege/en.6.lernweg-u1.json', 'daten/lernwege/en.6.lernweg-u2.json', 'gemeinsam/lernweg-zurueck.js'];  // Lernwege (nur für zugeteilte Gruppen)
 const NACHLADEN_PAUSE_MS = 400;   // Pause zwischen zwei Dateien
 const NACHLADEN_MAX_MS   = 25000; // pro Anstoß höchstens so lange (iOS beendet Hintergrundarbeit sonst)
 const FEST = /\/(vendor|fonts|icons)\//;      // ändern sich (fast) nie

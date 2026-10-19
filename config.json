@@ -549,7 +549,7 @@
     "seasons": true,
     "avatar": true,
     "events": {
-      "halloween": false,
+      "halloween": true,
       "weihnachten": false,
       "ostern": false
     }
@@ -612,22 +612,6 @@
       "name": "Grammar"
     }
   ],
-  "fokus": [
-    {
-      "id": "fk-muxrpi7z",
-      "fuer": "k6",
-      "apps": [
-        "spiele/dorf.html",
-        "apps/englisch/knowing-english.html",
-        "apps/englisch/time-dates-numbers.html",
-        "apps/typen/uebung.html?inhalt=en.5.to-be",
-        "apps/englisch/vokabeltrainer.html?klasse=5",
-        "apps/typen/uebung.html?inhalt=en.5.simple-present",
-        "apps/typen/uebung.html?inhalt=en.5.simple-past"
-      ],
-      "bis": 1791359703647
-    }
-  ],
   "spielsperre": {
     "schwelle": 60,
     "runden": {
@@ -640,6 +624,12 @@
         0,
         0
       ]
+    }
+  },
+  "freigaben": {
+    "en.6.lernweg-u1": {
+      "g:123676bc75aa3e264f709ce34e6e213e": "offen",
+      "g:8dee44b8c52b30c944370c3911111187": "offen"
     }
   }
 }

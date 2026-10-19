@@ -499,6 +499,20 @@
     statSchreiben(l);
     planeStat(15000);
   }
+  // Lernwege (apps/typen/lernweg.html): „Station begonnen / kontrolliert“ als eigenes Thema der Gruppenauswertung,
+  //  was = 'lw:<Lernweg-ID>:<Station>:b' bzw. ':k<Niveau 0–3>'. Der Lernweg meldet jedes Ereignis nur einmal je iPad;
+  //  im Admin (Tab 🗺️ Lernwege) wird daraus „so viele iPads haben Station 3 kontrolliert“. Keine Kennung, keine Namen.
+  const LW_WAS = /^lw:[a-z]+(\.[a-z0-9-]+){1,5}:\d{1,2}:(b|k[0-3])$/;
+  function lernwegMelden(was) {
+    if (TEST || !ST || ST.ungueltig || !ST.gruppe || !LW_WAS.test(String(was)) || !STAT_WAS.test(String(was))) return false;
+    const l = statLesen(), k = was + '|' + montag();
+    if (!l[k] && Object.keys(l).length >= 60) return false;
+    const e = l[k] || (l[k] = { r: 0, n: 0, k: 0 });
+    e.r++; e.n++; e.k++;
+    statSchreiben(l);
+    planeStat(5000);
+    return true;
+  }
   function planeStat(ms) {
     clearTimeout(statTimer);
     statTimer = setTimeout(() => statSenden(false), Math.max(ms, statLetzte + STAT_ABSTAND - Date.now()));
@@ -557,10 +571,11 @@
     if (ST && ST.gruppe) planeStat(20000);
     window.addEventListener('online', () => { if (ST) { laufzeit.offline = false; senden(false); } });
     melden();
+    try { window.dispatchEvent(new CustomEvent('lernsync:bereit')); } catch (e) {}
   }
 
   window.LernSync = {
-    status, verbinden, trennen,
+    status, verbinden, trennen, lernwegMelden,
     jetztSichern: () => senden(false),
     holen: () => holen(true),
     _intern: { standLesen, standHash, fortschritt, verschluesseln, entschluesseln },   // für Tests

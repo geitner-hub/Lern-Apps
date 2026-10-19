@@ -317,6 +317,45 @@ selbst im Admin unter „🎯 Unterricht“), Wiederholung, Fehler-Training, Inf
 - **Länder-Finder** bleibt eigener Typ (Karte antippen) und ist an den Rahmen angeschlossen: Modi = Stufen
   `gpg.6.laender.europa` / `.bundeslaender` (Freigabe mit 🔒, Ergebnis mit Themen-ID).
 
+## Lernwege (Stationenarbeit mit digitalem Laufzettel)
+
+- **Seite:** `apps/typen/lernweg.html?weg=<ID>` zeigt `daten/lernwege/<ID>.json` – Laufzettel mit Stationen,
+  „So arbeitest du“ zum Abhaken, Hefteinträge im Heft-Schema, Aufgaben (Lücken, Zuordnen, Sätze, Schreiben, Mediation)
+  und „Fit für die Probe?“ mit Smileys. Die Kinder schreiben alles ins Heft und kontrollieren an der Kontrollstation
+  mit dem gedruckten Lösungsheft; **keine automatische Kontrolle, kein Ergebnis für Pass/Sterne**.
+  Gespeichert wird nur auf dem Gerät (`lernwelt-lernweg`: abgehakte Schritte, Smileys).
+- **Nur für zugeteilte Gruppen:** Ein Lernweg ist keine App in config.json. Ohne Eintrag ist er gesperrt
+  (`LernFreigabe.zugeteilt(id)` – umgekehrt zu `erlaubt`). Admin → Tab **🗺️ Lernwege**: Gruppe
+  (Sicherungskarten) oder Klasse antippen → `freigaben[<ID>][wer] = 'offen'`, dann veröffentlichen. Zugeteilte
+  Lernwege erscheinen oben auf der Startseite unter „🧭 Mein Lernweg“. Mit Admin-Anmeldung auf dem Gerät ist jeder
+  Lernweg als Vorschau zu sehen (Beamer).
+- **Neuer Lernweg:** JSON-Datei `daten/lernwege/<ID>.json` (ID mit `.lernweg-`, z. B. `en.6.lernweg-u2`), Thema im
+  Katalog (Bereich „Lernwege“ des Fachs, `quelle: { app: "apps/typen/lernweg.html", parameter: "weg=<ID>" }`),
+  Datei in `sw.js` → `NACHLADEN`. Format: siehe `daten/lernwege/en.6.lernweg-u1.json` (stationen → schritte,
+  aufgaben mit art `luecken` · `wahl` · `zuordnen` · `saetze` · `sortieren` · `schreiben` · `mediation`;
+  `hefteintraege` mit zeilen `[text, stil]`, stil `g` = grün, `b` = fett).
+- **Bausteine (seit v58, alle freiwillig – ohne sie verhält sich ein Lernweg wie Unit 1):**
+  - Kopf: `wahlAnzahl` (so viele Wahlstationen zählen), `zieleVorher: true` (Start-Einschätzung mit den `probe`-Sätzen,
+    „Fit für die Probe?“ zeigt vorher/jetzt), `autostart: "taeglich"` (Startseite öffnet den Lernweg beim ersten Besuch am Tag).
+  - Station: `niveaus: true` (Kind wählt ★ Basis / ★★ Standard / ★★★ Profi, Standard vorgewählt), `wahl: true` (Wahlstation),
+    `schluss: true` (unter „Zum Schluss“, z. B. Checkpoint), `code` (Kontroll-Code: „kontrolliert“ erst nach Eingabe),
+    `kompetenz` (Etikett, z. B. „Grammatik“). Stationen ohne Kontroll-Schritt gelten als fertig, wenn alle Schritte erledigt sind.
+  - Schritt/Aufgabe: `niveau: [1, 2]` (nur auf diesen Niveaus sichtbar). Schritt `art: "app"` mit
+    `ziel: { thema: <Stufen-ID>, runden, prozent }` hakt sich selbst ab: gezählt werden gute Runden ab dem ersten Öffnen des
+    Lernwegs aus dem Verlauf in `lern-apps-results` (navbar.js speichert dafür je Runde die Themen-ID `s`).
+  - Aufgabenart `frei` (offene Schreibaufgabe mit `text` und `beispiel`).
+- **Zurück zum Lernweg:** Wer aus dem Lernweg eine App öffnet, bekommt dort oben den Knopf „🧭 Zurück zum Lernweg“
+  (`gemeinsam/lernweg-zurueck.js`, nur nachgeladen, wenn `lernwelt-lernweg-zurueck` im Tab gesetzt ist).
+- **Startseite:** zugeteilte Lernwege stehen ganz oben als großes Banner mit Fortschrittsring und nächster Station.
+- **Klassen-Übersicht (Admin → Tab 🗺️ Lernwege → „📊 Stand der Klasse“):** Jedes iPad mit Sicherungskarte in einer Gruppe meldet
+  je Station einmal „begonnen“ und einmal „kontrolliert“ (mit Niveau) über die vorhandene Gruppenauswertung
+  (`LernSync.lernwegMelden`, Thema `lw:<ID>:<Station>:b` bzw. `:k<0–3>`). Der Worker addiert nur Summen je Gruppe – keine
+  Kennung, keine Namen; dafür war keine Worker-Änderung nötig. Die normale Gruppen-Auswertung im Tab „🎯 Unterricht“
+  blendet diese Einträge aus. iPads ohne Karte fehlen in der Übersicht (dafür der Klassen-Laufzettel).
+- **Erster Lernweg:** `en.6.lernweg-u1` (Highlight 6, Unit 1 „Together again“, 7 Stationen; Hören macht die Lehrkraft im Unterricht,
+  Extras sind nummerierte Arbeitsblätter am Pult – die Kinder haben kein Workbook).
+- **Unit 2:** `en.6.lernweg-u2` (10 Stationen: 7 Pflicht mit Niveaus, 2 Wahl, Checkpoint; App-Schritte, Kontroll-Codes, Auto-Start).
+
 ## Vokabel-Engine (Infrastruktur Etappe 5)
 
 - **apps/englisch/vokabeltrainer.html** – ein Trainer für alle Wortlisten, alle Modi wie bisher

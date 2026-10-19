@@ -30,6 +30,7 @@
 //
 //  API (window.LernFreigabe):
 //    erlaubt(themaId)   → true/false
+//    zugeteilt(themaId) → true/false – für Lernwege: OHNE Eintrag ZU (nur ausdrücklich zugeteilt ist offen)
 //    status(themaId)    → { frei, ab? }  (ab = Datum, ab dem es frei wird)
 //    wer()              → ['g:…', 'k5', 'alle'] (was für dieses iPad gilt)
 //    fokus()            → { id, apps, bis } oder null
@@ -95,6 +96,21 @@
   }
   const erlaubt = themaId => status(themaId).frei;
 
+  // Lernwege (apps/typen/lernweg.html): umgekehrte Regel – ohne Eintrag gesperrt. Offen nur, wenn für
+  // dieses iPad (Gruppe vor Klasse vor „alle“) ausdrücklich 'offen' oder ein erreichtes Datum eingetragen ist.
+  function zugeteilt(themaId) {
+    const F = CFG && CFG.freigaben, e = F && typeof F === 'object' ? F[themaId] : null;
+    if (!e || typeof e !== 'object') return false;
+    for (const x of wer()) {
+      const v = e[x];
+      if (v === undefined) continue;
+      if (v === 'offen') return true;
+      if (v === 'zu') return false;
+      if (typeof v === 'string' && DATUM.test(v)) return heute() >= v;
+    }
+    return false;
+  }
+
   function fokus() {
     const L = CFG && Array.isArray(CFG.fokus) ? CFG.fokus : [];
     if (!L.length) return null;
@@ -156,5 +172,5 @@
     }).catch(() => {});
   }, 1500);
 
-  window.LernFreigabe = { erlaubt, status, wer, fokus, imFokus, spielSperre, spielGesperrt, neu };
+  window.LernFreigabe = { erlaubt, zugeteilt, status, wer, fokus, imFokus, spielSperre, spielGesperrt, neu };
 })();
