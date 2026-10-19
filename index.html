@@ -229,7 +229,18 @@
     #lernweg-section{max-width:980px;margin:-.4rem auto 1.2rem;padding:0 1.4rem;}
     #lernweg-section:empty{display:none;}
     #lernweg-section h2{font:400 1.05rem 'Fredoka One','Nunito',sans-serif;color:#818cf8;margin:0 0 .55rem;}
-    .heute-karte.lw{border-color:rgba(129,140,248,.6);background:linear-gradient(135deg,rgba(99,102,241,.28),var(--card));}
+    .lw-banner-liste{display:grid;gap:.7rem;}
+    .lw-banner{display:flex;align-items:center;gap:1rem;padding:1rem 1.1rem;border-radius:20px;text-decoration:none;color:var(--text);min-height:96px;
+      background:linear-gradient(135deg,rgba(99,102,241,.55),rgba(129,140,248,.25) 55%,rgba(230,168,23,.22));border:2px solid rgba(129,140,248,.7);
+      box-shadow:0 10px 26px rgba(0,0,0,.28);transition:transform .15s;}
+    .lw-banner:hover{transform:translateY(-2px);}
+    .lw-ring{--p:0;width:64px;height:64px;border-radius:50%;flex-shrink:0;display:grid;place-items:center;background:conic-gradient(#4ade80 calc(var(--p) * 1%),rgba(255,255,255,.18) 0);}
+    .lw-ring span{width:50px;height:50px;border-radius:50%;background:#1b1929;display:grid;place-items:center;font:400 1.05rem 'Fredoka One','Nunito',sans-serif;}
+    .lw-txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:.2rem;}
+    .lw-txt b{font:400 1.3rem 'Fredoka One','Nunito',sans-serif;line-height:1.2;}
+    .lw-txt small{color:rgba(241,240,251,.85);font-weight:800;font-size:.9rem;}
+    .lw-los{background:#e6a817;color:#1b1300;font-weight:900;border-radius:999px;padding:.55rem 1.1rem;white-space:nowrap;}
+    @media (prefers-reduced-motion:reduce){.lw-banner{transition:none;}.lw-banner:hover{transform:none;}}
     #heute-section h2{font:400 1.05rem 'Fredoka One','Nunito',sans-serif;color:#e6a817;margin:0 0 .55rem;}
     .heute-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.7rem;}
     .heute-karte{display:flex;gap:.75rem;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:.8rem .95rem;
@@ -499,9 +510,9 @@
 
 <div id="ann-banner" role="status" aria-live="polite"></div>
 
+<div id="lernweg-section" aria-label="Mein Lernweg"></div>
 <div id="pass-section"></div>
 <div id="heute-section" aria-label="Heute für dich"></div>
-<div id="lernweg-section" aria-label="Mein Lernweg"></div>
 <div id="dorf-section"></div>
 
 <div class="filter-bar">
@@ -874,7 +885,26 @@ function appKarte(app, fach) {
 }
 
 // ── Lernwege: nur sichtbar, wenn im Admin dieser Gruppe/Klasse zugeteilt (LernFreigabe.zugeteilt) ──
-let lernwegKatalog = null;
+//  Großes Banner mit Fortschritt; "autostart": "taeglich" in daten/lernwege/<ID>.json öffnet den Lernweg beim ersten
+//  Besuch am Tag direkt (Stand aus lernwelt-lernweg, den der Lernweg selbst schreibt).
+let lernwegKatalog = null, lernwegAutoWeg = false;
+const lernwegDaten = {};
+function lernwegStand(id) { try { return (JSON.parse(localStorage.getItem('lernwelt-lernweg') || '{}') || {})[id] || {}; } catch (e) { return {}; } }
+function lernwegFortschritt(id) {
+  const D = lernwegDaten[id];
+  if (!D || !Array.isArray(D.stationen)) return null;
+  const s = lernwegStand(id).s || {};
+  const fertig = st => {
+    const l = st.schritte.map((x, i) => ({ x, i })).filter(o => o.x.art !== 'extra');
+    const k = l.find(o => o.x.art === 'kontrolle');
+    return k ? !!s[st.nr + '.' + k.i] : l.length > 0 && l.every(o => s[st.nr + '.' + o.i]);
+  };
+  const pf = D.stationen.filter(x => !x.wahl), wa = D.stationen.filter(x => x.wahl);
+  const wSoll = wa.length ? Math.min(Number(D.wahlAnzahl) || 1, wa.length) : 0;
+  const nGeschafft = pf.filter(fertig).length + Math.min(wSoll, wa.filter(fertig).length);
+  const naechste = pf.find(x => !fertig(x)) || (wa.filter(fertig).length < wSoll ? wa.find(x => !fertig(x)) : null);
+  return { fertig: nGeschafft, soll: pf.length + wSoll, naechste };
+}
 function buildLernwege() {
   const sec = document.getElementById('lernweg-section');
   if (!sec) return;
@@ -886,10 +916,29 @@ function buildLernwege() {
     if (!window.LernKatalog || !LernKatalog.geladen()) return;
   }
   const wege = ids.map(id => LernKatalog.thema(id)).filter(t => t && t.quelle && t.quelle.app === 'apps/typen/lernweg.html');
-  sec.innerHTML = wege.length ? `<h2>🧭 Mein Lernweg</h2><div class="heute-grid">${wege.map(t => {
-    const href = t.quelle.app + (t.quelle.parameter ? '?' + t.quelle.parameter : '');
-    return isSafeLink(href) ? `<a class="heute-karte lw" href="${escHtml(href)}"><span class="hk-ic">🧭</span>
-      <span><b>${escHtml(t.titel)}</b><small>${escHtml(t.einsatz ? 'Stationen, Laufzettel und Hefteinträge' : 'Lernweg öffnen')}</small></span></a>` : '';
+  const href = t => t.quelle.app + (t.quelle.parameter ? '?' + t.quelle.parameter : '');
+  // Daten für den Fortschritt nachladen (einmal je Seitenaufruf)
+  wege.forEach(t => {
+    if (lernwegDaten[t.id] !== undefined) return;
+    lernwegDaten[t.id] = null;
+    fetch('daten/lernwege/' + t.id + '.json', { cache: 'no-cache' }).then(r => r.ok ? r.json() : null)
+      .then(d => {
+        if (!d) return;
+        lernwegDaten[t.id] = d;
+        // Auto-Start: einmal am Tag (erster Besuch), nur ohne besondere Adresse (Vorschau, Filter, Pass-Link)
+        if (d.autostart === 'taeglich' && !lernwegAutoWeg && lernwegStand(t.id).a !== heuteIso() && !location.hash && !location.search && isSafeLink(href(t))) {
+          lernwegAutoWeg = true; location.href = href(t); return;
+        }
+        buildLernwege();
+      }).catch(() => {});
+  });
+  sec.innerHTML = wege.length ? `<h2>🧭 Mein Lernweg</h2><div class="lw-banner-liste">${wege.map(t => {
+    if (!isSafeLink(href(t))) return '';
+    const f = lernwegFortschritt(t.id), pct = f ? Math.round(100 * f.fertig / Math.max(1, f.soll)) : 0;
+    const weiter = f ? (f.naechste ? `Weiter mit Station ${f.naechste.nr}: ${f.naechste.titel}` : '🎉 Alle Stationen geschafft – jetzt: Fit für die Probe?') : 'Stationen, Laufzettel und Hefteinträge';
+    return `<a class="lw-banner" href="${escHtml(href(t))}">
+      <span class="lw-ring" style="--p:${pct}"><span>${f ? f.fertig + '/' + f.soll : '🧭'}</span></span>
+      <span class="lw-txt"><b>${escHtml(t.titel)}</b><small>${escHtml(weiter)}</small></span><span class="lw-los">Los ›</span></a>`;
   }).join('')}</div>` : '';
 }
 

@@ -331,8 +331,22 @@ selbst im Admin unter „🎯 Unterricht“), Wiederholung, Fehler-Training, Inf
   Datei in `sw.js` → `NACHLADEN`. Format: siehe `daten/lernwege/en.6.lernweg-u1.json` (stationen → schritte,
   aufgaben mit art `luecken` · `wahl` · `zuordnen` · `saetze` · `sortieren` · `schreiben` · `mediation`;
   `hefteintraege` mit zeilen `[text, stil]`, stil `g` = grün, `b` = fett).
+- **Bausteine (seit v58, alle freiwillig – ohne sie verhält sich ein Lernweg wie Unit 1):**
+  - Kopf: `wahlAnzahl` (so viele Wahlstationen zählen), `zieleVorher: true` (Start-Einschätzung mit den `probe`-Sätzen,
+    „Fit für die Probe?“ zeigt vorher/jetzt), `autostart: "taeglich"` (Startseite öffnet den Lernweg beim ersten Besuch am Tag).
+  - Station: `niveaus: true` (Kind wählt ★ Basis / ★★ Standard / ★★★ Profi, Standard vorgewählt), `wahl: true` (Wahlstation),
+    `schluss: true` (unter „Zum Schluss“, z. B. Checkpoint), `code` (Kontroll-Code: „kontrolliert“ erst nach Eingabe),
+    `kompetenz` (Etikett, z. B. „Grammatik“). Stationen ohne Kontroll-Schritt gelten als fertig, wenn alle Schritte erledigt sind.
+  - Schritt/Aufgabe: `niveau: [1, 2]` (nur auf diesen Niveaus sichtbar). Schritt `art: "app"` mit
+    `ziel: { thema: <Stufen-ID>, runden, prozent }` hakt sich selbst ab: gezählt werden gute Runden ab dem ersten Öffnen des
+    Lernwegs aus dem Verlauf in `lern-apps-results` (navbar.js speichert dafür je Runde die Themen-ID `s`).
+  - Aufgabenart `frei` (offene Schreibaufgabe mit `text` und `beispiel`).
+- **Zurück zum Lernweg:** Wer aus dem Lernweg eine App öffnet, bekommt dort oben den Knopf „🧭 Zurück zum Lernweg“
+  (`gemeinsam/lernweg-zurueck.js`, nur nachgeladen, wenn `lernwelt-lernweg-zurueck` im Tab gesetzt ist).
+- **Startseite:** zugeteilte Lernwege stehen ganz oben als großes Banner mit Fortschrittsring und nächster Station.
 - **Erster Lernweg:** `en.6.lernweg-u1` (Highlight 6, Unit 1 „Together again“, 7 Stationen; Hören macht die Lehrkraft im Unterricht,
   Extras sind nummerierte Arbeitsblätter am Pult – die Kinder haben kein Workbook).
+- **Unit 2:** `en.6.lernweg-u2` (10 Stationen: 7 Pflicht mit Niveaus, 2 Wahl, Checkpoint; App-Schritte, Kontroll-Codes, Auto-Start).
 
 ## Vokabel-Engine (Infrastruktur Etappe 5)
 

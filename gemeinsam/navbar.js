@@ -127,9 +127,11 @@
       const all   = loadResults();
       const key   = getPageKey();
       const prev  = all[key] || {};
-      // Verlauf der letzten Versuche (Grundlage für spätere Level/Serien/Meisterschaft)
+      const thema = normInhalt(result && result.thema);   // gleiche Prüfung wie inhalt
+      // Verlauf der letzten Versuche (Grundlage für spätere Level/Serien/Meisterschaft);
+      // s = Themen-ID der Runde – Lernwege zählen damit Runden je Stufe (apps/typen/lernweg.html)
       const history = Array.isArray(prev.history) ? prev.history.slice(-(HISTORY_MAX - 1)) : [];
-      history.push({ t: Date.now(), p: pct });
+      history.push(thema.length ? { t: Date.now(), p: pct, s: thema[0] } : { t: Date.now(), p: pct });
       all[key] = {
         score, max,
         label:     String((result && result.label) || (score + ' / ' + max)).slice(0, 40),
@@ -140,7 +142,6 @@
         history,
         ...(result && result.skill ? { skill: String(result.skill).slice(0, 60) } : {}),
       };
-      const thema = normInhalt(result && result.thema);   // gleiche Prüfung wie inhalt
       if (thema.length) all[key].thema = thema;
       try { localStorage.setItem(STORE_KEY, JSON.stringify(all)); } catch (e) { if (window.LW && LW.speicher) LW.speicher.fehlgeschlagen(e); }
       updateBadge(all[key]);
@@ -338,5 +339,10 @@
 
   // Vorheriges Ergebnis direkt beim Laden anzeigen
   updateBadge(getResult());
+
+  // Aus einem Lernweg geöffnet? → Knopf „Zurück zum Lernweg“ (Modul nur dann nachladen)
+  try {
+    if (sessionStorage.getItem('lernwelt-lernweg-zurueck') && !/lernweg\.html$/.test(location.pathname) && window.LW && LW.laden) LW.laden('gemeinsam/lernweg-zurueck.js');
+  } catch (e) {}
 
 })();

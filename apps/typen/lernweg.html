@@ -128,6 +128,29 @@
     .ueben li { margin: .3rem 0 .3rem 1.2rem; }
     .fehler { text-align: center; color: var(--text2); padding: 4rem 1rem; font-weight: 800; }
     .vorschau { background: rgba(230,168,23,.15); border: 1px solid rgba(230,168,23,.5); border-radius: 12px; padding: .5rem .8rem; font-size: .85rem; font-weight: 800; margin-bottom: 1rem; color: var(--accent); }
+    /* Erweiterungen (Unit 2 ff.): Niveaus, App-Schritte, Kontroll-Code, Fortschrittsring, Start-Einschätzung */
+    .niveaus b { display: block; margin-bottom: .5rem; }
+    .nv-knoepfe { display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem; }
+    .nv { background: var(--surface2); border: 2px solid transparent; border-radius: 14px; padding: .6rem .5rem; cursor: pointer; text-align: center; }
+    .nv b { margin: 0; font-size: 1rem; } .nv small { display: block; color: var(--muted); font-size: .78rem; margin-top: .15rem; }
+    .nv.an { border-color: var(--accent); background: rgba(230,168,23,.16); }
+    @media (max-width: 560px) { .nv-knoepfe { grid-template-columns: 1fr; } }
+    .nv-marke { margin-left: .5rem; font-size: .8rem; color: var(--accent); font-weight: 900; }
+    .schritt.auto { cursor: default; } .schritt.auto .haken { border-style: dashed; }
+    .app-stand { display: block; color: var(--indigo2); font-size: .85rem; font-weight: 800; margin-top: .25rem; text-decoration: none; }
+    .schritt.an .app-stand { color: var(--green); }
+    .code-zeile { display: flex; gap: .4rem; flex-wrap: wrap; align-items: center; margin-top: .45rem; }
+    .code-zeile input { font: 800 1.05rem 'Nunito', sans-serif; padding: .5rem .7rem; border-radius: 10px; border: 2px solid var(--accent); background: #0f0e1a; color: var(--text); text-transform: uppercase; min-width: 12rem; }
+    .code-ok { background: var(--accent); color: #1b1300; border: 0; border-radius: 10px; padding: .5rem 1rem; font-weight: 900; cursor: pointer; }
+    #lw-code-msg { color: #f87171; font-weight: 800; font-size: .85rem; }
+    .ring-box { display: flex; gap: 1rem; align-items: center; }
+    .ring { --p: 0; width: 4.6rem; height: 4.6rem; border-radius: 50%; flex-shrink: 0; display: grid; place-items: center;
+      background: conic-gradient(var(--green) calc(var(--p) * 1%), rgba(255,255,255,.1) 0); }
+    .ring span { background: var(--surface); width: 3.6rem; height: 3.6rem; border-radius: 50%; display: grid; place-items: center; font: 400 1.2rem 'Fredoka One', sans-serif; }
+    .los { display: block; width: 100%; margin-top: 1rem; background: linear-gradient(135deg, var(--indigo), var(--indigo2)); color: #fff; border: 0; border-radius: 16px; padding: 1rem; font: 400 1.3rem 'Fredoka One', sans-serif; cursor: pointer; }
+    .lesetext { background: #fffef8; color: #111; border-radius: 12px; padding: .8rem 1rem; margin-bottom: .8rem; line-height: 1.55; font-family: 'Atkinson Hyperlegible', 'Nunito', sans-serif; }
+    .lesetext p + p { margin-top: .4rem; }
+    a.oeffnen { white-space: nowrap; }
     @media (prefers-reduced-motion: reduce) { .karte { transition: none; } }
   </style>
 </head>
@@ -138,46 +161,92 @@
 <script>
 'use strict';
 (function () {
-  const SPEICHER_KEY = 'lernwelt-lernweg';            // { <Lernweg-ID>: { s: { "2.0": 1 }, g: { "2": 3 }, p: { "0": 2 } } }
+  const SPEICHER_KEY = 'lernwelt-lernweg';
+  //  { <Lernweg-ID>: { s: { "2.0": 1 } abgehakt (Station.Schritt), g: { "2": 3 } Smiley je Station, p: { "0": 2 } Probe-Check jetzt,
+  //                    v: { "0": 1 } Probe-Check vorher, vf: 1 Start-Einschätzung erledigt, n: { "2": 1 } Niveau je Station (1–3),
+  //                    t0: ms erster Besuch (ab da zählen App-Runden), a: 'JJJJ-MM-TT' letzter Besuch (Auto-Start der Startseite) } }
   const ID = new URLSearchParams(location.search).get('weg') || 'en.6.lernweg-u1';
   const app = document.getElementById('app');
   const esc = t => String(t == null ? '' : t).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const SYM = { buch: '📗', heft: '✏️', aufgaben: '📝', hefteintrag: '📒', kontrolle: '✅', app: '📱', extra: '★', hoeren: '🎧', partner: '👥', schreiben: '✍️' };
   const SMILEY = ['😟', '😐', '😀'];
-  let D = null;
+  const NIVEAU = [null, { s: '★', n: 'Basis', t: 'mit Hilfen, weniger Aufgaben' }, { s: '★★', n: 'Standard', t: 'alle Pflichtaufgaben' }, { s: '★★★', n: 'Profi', t: 'mit Zusatzaufgabe' }];
+  let D = null, codeOffen = '';
+
+  function heute() { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
 
   // ── Speicher (nur dieses Gerät) ─────────────────────
   function alles() { try { return JSON.parse(localStorage.getItem(SPEICHER_KEY) || '{}') || {}; } catch (e) { return {}; } }
-  function stand() { const a = alles(); const s = a[ID] || {}; return { s: s.s || {}, g: s.g || {}, p: s.p || {} }; }
+  function stand() {
+    const a = alles(); const s = a[ID] || {};
+    return Object.assign({}, s, { s: s.s || {}, g: s.g || {}, p: s.p || {}, v: s.v || {}, n: s.n || {} });
+  }
   function sichern(st) {
     const a = alles(); a[ID] = st;
     try { localStorage.setItem(SPEICHER_KEY, JSON.stringify(a)); } catch (e) { if (window.LW && LW.speicher) LW.speicher.fehlgeschlagen(e); }
   }
 
+  // ── Niveaus (nur wenn der Lernweg sie hat): Aufgaben/Schritte mit "niveau": [1, 2] erscheinen nur dort ──
+  const niveauVon = (st, s) => s.niveaus ? (Number(st.n[s.nr]) || 2) : 0;
+  const passt = (x, nv) => !nv || !Array.isArray(x.niveau) || x.niveau.includes(nv);
+  const schritteVon = (st, s) => s.schritte.map((x, i) => ({ x, i })).filter(o => passt(o.x, niveauVon(st, s)));
+  const aufgabenVon = (st, s) => s.aufgaben.filter(a => passt(a, niveauVon(st, s)));
+
+  // ── App-Schritte: zählen gute Runden seit dem ersten Besuch (Verlauf aus lern-apps-results, navbar.js) ──
+  function appStand(x, st) {
+    const z = x.ziel;
+    if (!z) return null;
+    let key = z.key;
+    if (!key && x.link) { try { const u = new URL(x.link, location.href); u.searchParams.delete('stufe'); key = u.pathname.split('/').pop() + u.search; } catch (e) {} }
+    let R = {};
+    try { R = JSON.parse(localStorage.getItem('lern-apps-results') || '{}') || {}; } catch (e) {}
+    const h = R[key] && Array.isArray(R[key].history) ? R[key].history : [];
+    const soll = Math.max(1, Number(z.runden) || 1), pr = Number(z.prozent) || 70, ab = Number(st.t0) || 0;
+    const n = h.filter(e => e && e.t >= ab && e.p >= pr && (!z.thema || e.s === z.thema)).length;
+    return { n: Math.min(n, soll), soll, pr };
+  }
+  /** App-Schritte, deren Ziel erreicht ist, dauerhaft abhaken (der Verlauf hält nur 30 Runden je App) */
+  function appsAbhaken(st) {
+    let neu = false;
+    D.stationen.forEach(s => s.schritte.forEach((x, i) => {
+      const k = s.nr + '.' + i;
+      if (x.art !== 'app' || !x.ziel || st.s[k]) return;
+      const a = appStand(x, st);
+      if (a && a.n >= a.soll) { st.s[k] = 1; neu = true; }
+    }));
+    if (neu) sichern(st);
+  }
+
   // ── Bausteine ───────────────────────────────────────
   const luecken = t => esc(t).replace(/_{2,}/g, '<span class="luecke"></span>').replace(/\*([^*]+)\*/g, '<u>$1</u>');
   const kasten = l => l && l.length ? `<div class="kasten">${l.map(w => `<span>${esc(w)}</span>`).join('')}</div>` : '';
+  const nvMarke = a => Array.isArray(a.niveau) && a.niveau.length < 3 ? `<span class="nv-marke">${a.niveau.map(n => NIVEAU[n].s).join(' / ')}</span>` : '';
 
   function aufgabeHTML(a) {
-    let h = `<section class="aufgabe"><h3><span class="bu">${esc(a.nr)}</span>${esc(a.titel)}</h3>`;
+    let h = `<section class="aufgabe"><h3><span class="bu">${esc(a.nr)}</span>${esc(a.titel)}${nvMarke(a)}</h3>`;
     if (a.heft) h += `<p class="heft">${esc(a.heft)}</p>`;
     if (a.tipp && a.art !== 'mediation') h += `<p class="tipp">💡 ${esc(a.tipp)}</p>`;
-    if (a.beispiel) h += `<div class="beispiel"><b>Beispiel:</b> ${esc(a.beispiel)}</div>`;
+    if (a.beispiel && a.art !== 'frei') h += `<div class="beispiel"><b>Beispiel:</b> ${esc(a.beispiel)}</div>`;
+    // „wahl“ mit immer denselben (mehr als 2) Wörtern: einmal als Kasten statt in jeder Zeile
+    const gleicheOpt = a.art === 'wahl' && a.items.length > 1 && a.items[0].o.length > 2 && a.items.every(x => x.o.join('|') === a.items[0].o.join('|'));
+    if (gleicheOpt) h += kasten(a.items[0].o);
     if (a.art !== 'sortieren') h += kasten(a.kasten);
     const sp = a.spalten === 2 ? ' sp2' : a.spalten === 4 ? ' sp4' : '';
+    if (a.lesetext) h += `<div class="lesetext">${a.lesetext.split('\n').map(z => `<p>${esc(z)}</p>`).join('')}</div>`;
     if (a.art === 'luecken') h += `<ol class="liste${sp}">${a.items.map(x => `<li><span>${luecken(x)}</span></li>`).join('')}</ol>`;
-    else if (a.art === 'wahl') h += `<ol class="liste">${a.items.map(x => `<li><span>${luecken(x.t)} <span class="opt">( ${x.o.map(esc).join(' / ')} )</span></span></li>`).join('')}</ol>`;
+    else if (a.art === 'wahl') h += `<ol class="liste">${a.items.map(x => `<li><span>${luecken(x.t)}${gleicheOpt ? '' : ` <span class="opt">( ${x.o.map(esc).join(' / ')} )</span>`}</span></li>`).join('')}</ol>`;
     else if (a.art === 'saetze') h += `<ol class="liste">${a.items.map(x => `<li><span>${luecken(x)}</span></li>`).join('')}</ol>`;
     else if (a.art === 'zuordnen') h += `<div class="zwei"><ol class="liste">${a.links.map(x => `<li><span>${esc(x)}</span></li>`).join('')}</ol>
         <ol class="abc">${a.rechts.map((x, i) => `<li><b>${String.fromCharCode(97 + i)}</b><span>${esc(x)}</span></li>`).join('')}</ol></div>`;
     else if (a.art === 'sortieren') h += kasten(a.kasten) + `<div class="spalten">${a.spalten.map(s => `<div>${esc(s)}</div>`).join('')}</div>`;
+    else if (a.art === 'frei') h += `<p style="margin-bottom:.6rem">${esc(a.text)}</p>${a.beispiel ? `<div class="beispiel"><b>Beispiel:</b> ${esc(a.beispiel)}</div>` : ''}${a.hilfe ? `<ul class="hilfe">${a.hilfe.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}`;
     else if (a.art === 'mediation') {
       h += `<div class="plakat">${a.plakat.map(([t, s]) => `<div class="${s}">${esc(t)}</div>`).join('')}</div>
         <p style="margin-bottom:.5rem">${esc(a.text)}</p><p class="tipp">💡 ${esc(a.tipp)}</p>
         <ol class="liste">${a.items.map(x => `<li><span>„${esc(x)}“</span></li>`).join('')}</ol>`;
     } else if (a.art === 'schreiben') {
       h += `<p>${esc(a.text)}</p><p style="font-weight:900;margin:.4rem 0">${esc(a.regel)}</p>
-        <div class="beispiel"><b>Hilfe – Satzanfänge:</b><ul class="hilfe">${a.hilfe.map(x => `<li>${esc(x)}</li>`).join('')}</ul></div>
+        ${a.hilfe ? `<div class="beispiel"><b>Hilfe – Satzanfänge:</b><ul class="hilfe">${a.hilfe.map(x => `<li>${esc(x)}</li>`).join('')}</ul></div>` : ''}
         <p class="heft">Schreibe ins Heft. Fang so an: ${esc(a.anfang)}</p>
         <p style="font-weight:900;margin:.6rem 0 .3rem">Checkliste (du und dein Partner):</p><ul class="hilfe">${a.checkliste.map(x => `<li>${esc(x)}</li>`).join('')}</ul>`;
     }
@@ -197,65 +266,112 @@
     return `<div class="smileys">${SMILEY.map((s, i) => `<button type="button" ${attr}="${i + 1}" class="${wert === i + 1 ? 'an' : ''}" aria-label="${['noch schwer', 'geht so', 'kann ich gut'][i]}">${s}</button>`).join('')}</div>`;
   }
 
-  // ── Ansichten ───────────────────────────────────────
+  // ── Fortschritt ─────────────────────────────────────
+  //  fertig = Kontrolle abgehakt; Stationen ohne Kontroll-Schritt (z. B. Checkpoint) = alle Schritte erledigt
   function fortschritt(st, s) {
-    const n = s.schritte.filter(x => x.art !== 'extra').length;
-    const fertig = s.schritte.filter((x, i) => x.art !== 'extra' && st.s[s.nr + '.' + i]).length;
-    const kontrolliert = s.schritte.some((x, i) => x.art === 'kontrolle' && st.s[s.nr + '.' + i]);
-    return { n, fertig, kontrolliert };
+    const l = schritteVon(st, s).filter(o => o.x.art !== 'extra');
+    const fertig = l.filter(o => st.s[s.nr + '.' + o.i]).length;
+    const k = l.find(o => o.x.art === 'kontrolle');
+    const kontrolliert = k ? !!st.s[s.nr + '.' + k.i] : l.length > 0 && fertig === l.length;
+    return { n: l.length, fertig, kontrolliert };
+  }
+  const pflicht = () => D.stationen.filter(s => !s.wahl);
+  const wahl = () => D.stationen.filter(s => s.wahl);
+  function gesamt(st) {
+    const p = pflicht().filter(s => fortschritt(st, s).kontrolliert).length;
+    const wSoll = wahl().length ? Math.min(Number(D.wahlAnzahl) || 1, wahl().length) : 0;
+    const w = Math.min(wSoll, wahl().filter(s => fortschritt(st, s).kontrolliert).length);
+    return { fertig: p + w, soll: pflicht().length + wSoll, p, w, wSoll };
   }
 
+  function karte(st, s) {
+    const f = fortschritt(st, s), g = st.g[s.nr], nv = niveauVon(st, s);
+    const kl = f.kontrolliert ? ' fertig' : f.fertig ? ' arbeit' : '';
+    const info = f.kontrolliert ? '✅ ' + (s.schritte.some(x => x.art === 'kontrolle') ? 'kontrolliert' : 'geschafft') : f.fertig ? `${f.fertig} von ${f.n} Schritten` : 'noch nicht begonnen';
+    return `<button type="button" class="karte${kl}" data-station="${s.nr}">
+      <span class="ico" aria-hidden="true">${esc(s.ico)}</span>
+      <span class="txt"><small>Station ${s.nr}${s.kompetenz ? ' · ' + esc(s.kompetenz) : ''}</small><b>${esc(s.titel)}</b><span>${esc(info)}${nv && f.fertig ? ' · ' + NIVEAU[nv].s : ''}</span>
+      <span class="balken"><i style="width:${Math.round(100 * f.fertig / Math.max(1, f.n))}%"></i></span></span>
+      ${g ? `<span class="mini" aria-hidden="true">${SMILEY[g - 1]}</span>` : ''}</button>`;
+  }
+
+  // ── Ansichten ───────────────────────────────────────
   function laufzettel() {
     const st = stand();
-    const karten = D.stationen.map(s => {
-      const f = fortschritt(st, s), g = st.g[s.nr];
-      const kl = f.kontrolliert ? ' fertig' : f.fertig ? ' arbeit' : '';
-      const info = f.kontrolliert ? '✅ kontrolliert' : f.fertig ? `${f.fertig} von ${f.n} Schritten` : 'noch nicht begonnen';
-      return `<button type="button" class="karte${kl}" data-station="${s.nr}">
-        <span class="ico" aria-hidden="true">${esc(s.ico)}</span>
-        <span class="txt"><small>Station ${s.nr}</small><b>${esc(s.titel)}</b><span>${esc(info)}</span>
-        <span class="balken"><i style="width:${Math.round(100 * f.fertig / Math.max(1, f.n))}%"></i></span></span>
-        ${g ? `<span class="mini" aria-hidden="true">${SMILEY[g - 1]}</span>` : ''}</button>`;
-    }).join('');
-    const fertig = D.stationen.filter(s => fortschritt(st, s).kontrolliert).length;
-    app.innerHTML = `<h1>${esc(D.emoji || '🧭')} ${esc(D.titel)}</h1><p class="sub">${esc(D.untertitel)} · ${fertig} von ${D.stationen.length} Stationen kontrolliert</p>
-      <details class="box regeln"><summary>📋 Unsere Regeln (antippen)</summary><ul>${D.regeln.map(r => `<li>${esc(r)}</li>`).join('')}</ul></details>
-      <h2>Mein Laufzettel</h2><div class="grid">${karten}
-        <button type="button" class="karte probe" data-probe="1"><span class="ico" aria-hidden="true">🎯</span>
-        <span class="txt"><small>Zum Schluss</small><b>Fit für die Probe?</b><span>Kreuze ehrlich an, was du schon kannst.</span></span></button></div>`;
+    const regeln = `<details class="box regeln"><summary>📋 Unsere Regeln (antippen)</summary><ul>${D.regeln.map(r => `<li>${esc(r)}</li>`).join('')}</ul></details>`;
+    const probeKarte = `<button type="button" class="karte probe" data-probe="1"><span class="ico" aria-hidden="true">🎯</span>
+        <span class="txt"><small>Zum Schluss</small><b>Fit für die Probe?</b><span>Kreuze ehrlich an, was du schon kannst.</span></span></button>`;
+    if (!wahl().length) {                                   // wie bisher (Unit 1)
+      const fertig = D.stationen.filter(s => fortschritt(st, s).kontrolliert).length;
+      app.innerHTML = `<h1>${esc(D.emoji || '🧭')} ${esc(D.titel)}</h1><p class="sub">${esc(D.untertitel)} · ${fertig} von ${D.stationen.length} Stationen kontrolliert</p>
+        ${regeln}<h2>Mein Laufzettel</h2><div class="grid">${D.stationen.map(s => karte(st, s)).join('')}${probeKarte}</div>`;
+    } else {
+      const g = gesamt(st);
+      app.innerHTML = `<h1>${esc(D.emoji || '🧭')} ${esc(D.titel)}</h1><p class="sub">${esc(D.untertitel)}</p>
+        <div class="box ring-box"><div class="ring" style="--p:${Math.round(100 * g.fertig / Math.max(1, g.soll))}"><span>${g.fertig}/${g.soll}</span></div>
+          <div><b>${g.fertig === g.soll ? '🎉 Alles geschafft!' : 'Dein Fortschritt'}</b><br><span class="sub">${g.p} von ${pflicht().length} Pflichtstationen · ${g.w} von ${g.wSoll} Wahlstation${g.wSoll === 1 ? '' : 'en'}</span></div></div>
+        ${regeln}<h2>Pflichtstationen</h2><div class="grid">${pflicht().filter(s => !s.schluss).map(s => karte(st, s)).join('')}</div>
+        <h2>Wahlstationen – wähle ${g.wSoll} von ${wahl().length}</h2><div class="grid">${wahl().map(s => karte(st, s)).join('')}</div>
+        <h2>Zum Schluss</h2><div class="grid">${pflicht().filter(s => s.schluss).map(s => karte(st, s)).join('')}${probeKarte}</div>`;
+    }
+    app.dataset.station = '';
     window.scrollTo(0, 0);
+  }
+
+  function schrittHTML(st, s, o) {
+    const x = o.x, k = s.nr + '.' + o.i, an = !!st.s[k];
+    const link = x.link ? ` <a href="${esc(x.link)}" class="oeffnen">öffnen ›</a>` : '';
+    let zusatz = '';
+    if (x.art === 'app' && x.ziel) {
+      const a = appStand(x, st);
+      zusatz = `<span class="app-stand">${an ? '✓ geschafft' : `Stand: ${a.n} von ${a.soll} Runde${a.soll === 1 ? '' : 'n'} mit mindestens ${a.pr} %`} · hakt sich selbst ab</span>`;
+    }
+    if (x.art === 'kontrolle' && s.code && !an && codeOffen === k) {
+      zusatz = `<span class="code-zeile"><input type="text" id="lw-code" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Code von der Kontrollstation" aria-label="Kontroll-Code">
+        <button type="button" class="code-ok" data-code-ok="${o.i}">OK</button><span id="lw-code-msg"></span></span>`;
+    } else if (x.art === 'kontrolle' && s.code && !an) zusatz = '<span class="app-stand">🔑 Antippen und den Code von der Kontrollstation eingeben</span>';
+    const auto = x.art === 'app' && x.ziel;
+    return `<div class="schritt${an ? ' an' : ''}${x.art === 'kontrolle' ? ' kontrolle' : ''}${auto ? ' auto' : ''}" ${auto ? '' : `data-schritt="${o.i}" role="button" tabindex="0"`} aria-pressed="${an}">
+      <span class="haken">${an ? '✓' : auto ? '⏳' : ''}</span><span class="sym" aria-hidden="true">${SYM[x.art] || '•'}</span>
+      <span class="stext">${esc(x.text)}${link}${zusatz}</span></div>`;
   }
 
   function station(nr) {
     const s = D.stationen.find(x => x.nr === nr);
     if (!s) return laufzettel();
-    const st = stand();
-    const schritte = s.schritte.map((x, i) => {
-      const an = !!st.s[s.nr + '.' + i];
-      const link = x.link ? ` <a href="${esc(x.link)}">öffnen ›</a>` : '';
-      return `<button type="button" class="schritt${an ? ' an' : ''}${x.art === 'kontrolle' ? ' kontrolle' : ''}" data-schritt="${i}" aria-pressed="${an}">
-        <span class="haken">${an ? '✓' : ''}</span><span class="sym" aria-hidden="true">${SYM[x.art] || '•'}</span>
-        <span class="stext">${esc(x.text)}${link}</span></button>`;
-    }).join('');
+    const st = stand(), nv = niveauVon(st, s);
+    const wahlNiveau = nv ? `<div class="box niveaus"><b>Wähle dein Niveau:</b><div class="nv-knoepfe">${[1, 2, 3].map(n =>
+      `<button type="button" class="nv${n === nv ? ' an' : ''}" data-niveau="${n}"><b>${NIVEAU[n].s} ${NIVEAU[n].n}</b><small>${NIVEAU[n].t}</small></button>`).join('')}</div></div>` : '';
+    const schritte = schritteVon(st, s).map(o => schrittHTML(st, s, o)).join('');
     const merk = s.merk ? `<div class="merk">${s.merk.map(m => `<div>${esc(m)}</div>`).join('')}</div>` : '';
     const tipps = s.tipps ? `<div class="box"><b>🎧 So hörst du richtig:</b><ul class="hilfe">${s.tipps.map(t => `<li>${esc(t)}</li>`).join('')}</ul></div>` : '';
-    const auf = s.aufgaben.length ? `<h2>📝 Aufgaben – alles ins Heft</h2><p class="tipp">Überschrift im Heft: <b>Station ${s.nr} – ${esc(s.titel)}</b></p>${merk}${s.aufgaben.map(aufgabeHTML).join('')}` : merk;
+    const al = aufgabenVon(st, s);
+    const auf = al.length ? `<h2>📝 Aufgaben – alles ins Heft</h2><p class="tipp">Überschrift im Heft: <b>Station ${s.nr} – ${esc(s.titel)}</b></p>${merk}${al.map(aufgabeHTML).join('')}` : merk;
     app.innerHTML = `<button type="button" class="zurueck" data-zurueck>‹ Laufzettel</button>
-      <div class="kopf"><span class="nr">Station ${s.nr}</span><h1>${esc(s.titel)}</h1></div><p class="sub">${esc(s.kurz)}</p>
+      <div class="kopf"><span class="nr">Station ${s.nr}</span><h1>${esc(s.titel)}</h1></div>
+      <p class="sub">${esc(s.kurz)}${s.wahl ? ' · Wahlstation' : ''}</p>${wahlNiveau}
       <h2>So arbeitest du – hake ab, was du geschafft hast</h2>${schritte}${tipps}
       ${s.hefteintrag ? hefteintragHTML(s.hefteintrag) : ''}${auf}
       <h2>So gut kann ich das</h2><div class="box">${smileys(st.g[s.nr], 'data-gefuehl')}</div>
       <button type="button" class="zurueck" data-zurueck style="margin-top:1rem">‹ Zurück zum Laufzettel</button>`;
     app.dataset.station = s.nr;
-    window.scrollTo(0, 0);
+  }
+
+  function vorher() {
+    const st = stand();
+    app.innerHTML = `<h1>${esc(D.emoji || '🧭')} ${esc(D.titel)}</h1><p class="sub">${esc(D.untertitel)}</p>
+      <div class="box"><b>Bevor du startest:</b> Wie gut kannst du das <b>schon jetzt</b>? Sei ehrlich – am Ende vergleichst du.</div>
+      ${D.probe.map((p, i) => `<div class="box probe-zeile"><div><div class="teil">${esc(p.teil)}</div><div>Ich kann ${esc(p.kann)}</div></div>${smileys(st.v[i], 'data-vorher-' + i)}</div>`).join('')}
+      <button type="button" class="los" data-los>Los geht's › zum Laufzettel</button>`;
+    app.dataset.station = '';
   }
 
   function probe() {
     const st = stand();
     const zeilen = D.probe.map((p, i) => `<div class="box probe-zeile"><div><div class="teil">${esc(p.teil)}</div><div>Ich kann ${esc(p.kann)}</div>
-      <small style="color:var(--muted)">Üben: ${p.station ? 'Station ' + p.station : 'im Unterricht'}</small></div>${smileys(st.p[i], 'data-probe-wert-' + i)}</div>`).join('');
+      <small style="color:var(--muted)">Üben: ${p.station ? 'Station ' + p.station : 'im Unterricht'}${st.v[i] ? ' · am Anfang: ' + SMILEY[st.v[i] - 1] : ''}</small></div>${smileys(st.p[i], 'data-probe-wert-' + i)}</div>`).join('');
     const ueben = D.probe.map((p, i) => ({ p, w: st.p[i] })).filter(x => x.w && x.w < 3);
-    const offen = D.stationen.filter(s => !fortschritt(st, s).kontrolliert);
+    const offen = (wahl().length ? pflicht() : D.stationen).filter(s => !fortschritt(st, s).kontrolliert);
     app.innerHTML = `<button type="button" class="zurueck" data-zurueck>‹ Laufzettel</button>
       <h1>🎯 Fit für die Probe?</h1><p class="sub">Das kommt in der Probe dran. Tippe an, wie gut du es schon kannst.</p>${zeilen}
       <h2>Mein Lernplan bis zur Probe</h2><div class="box ueben">
@@ -267,15 +383,35 @@
   }
 
   // ── Bedienung ───────────────────────────────────────
+  function codePruefen(i) {
+    const nr = Number(app.dataset.station), s = D.stationen.find(x => x.nr === nr), feld = document.getElementById('lw-code');
+    if (!s || !feld) return;
+    const norm = v => String(v || '').toUpperCase().replace(/[^A-Z0-9ÄÖÜ]/g, '');
+    if (norm(feld.value) && norm(feld.value) === norm(s.code)) {
+      const st = stand(); st.s[nr + '.' + i] = 1; sichern(st); codeOffen = ''; station(nr);
+    } else { const m = document.getElementById('lw-code-msg'); if (m) m.textContent = '❌ Falscher Code – schau im Lösungsheft oben nach.'; feld.select(); }
+  }
   app.addEventListener('click', e => {
-    const t = e.target.closest('button');
-    if (!t || e.target.closest('a')) return;
+    const lk = e.target.closest('a');
+    if (lk) { try { sessionStorage.setItem('lernwelt-lernweg-zurueck', location.href); } catch (er) {} return; }
+    if (e.target.closest('input')) return;
+    const t = e.target.closest('button, [data-schritt]');
+    if (!t) return;
     if (t.dataset.station) { location.hash = 's' + t.dataset.station; return; }
     if (t.dataset.probe) { location.hash = 'probe'; return; }
     if (t.hasAttribute('data-zurueck')) { location.hash = ''; return; }
     const st = stand(), nr = Number(app.dataset.station);
+    if (t.hasAttribute('data-los')) { st.vf = 1; sichern(st); route(); return; }
+    if (t.dataset.codeOk !== undefined) { codePruefen(t.dataset.codeOk); return; }
+    if (t.dataset.niveau) { st.n[nr] = Number(t.dataset.niveau); sichern(st); station(nr); return; }
     if (t.dataset.schritt !== undefined) {
+      const s = D.stationen.find(x => x.nr === nr), x = s && s.schritte[Number(t.dataset.schritt)];
       const k = nr + '.' + t.dataset.schritt;
+      if (x && x.art === 'kontrolle' && s.code && !st.s[k]) {          // Kontroll-Code nötig
+        codeOffen = k; station(nr);
+        const f = document.getElementById('lw-code'); if (f) f.focus();
+        return;
+      }
       if (st.s[k]) delete st.s[k]; else st.s[k] = 1;
       sichern(st);
       const an = !!st.s[k];
@@ -283,8 +419,14 @@
       return;
     }
     if (t.dataset.gefuehl) { st.g[nr] = Number(t.dataset.gefuehl); sichern(st); station(nr); return; }
+    const vw = [...t.attributes].find(a => a.name.startsWith('data-vorher-'));
+    if (vw) { st.v[vw.name.slice(12)] = Number(vw.value); sichern(st); vorher(); return; }
     const pw = [...t.attributes].find(a => a.name.startsWith('data-probe-wert-'));
     if (pw) { st.p[pw.name.slice(16)] = Number(pw.value); sichern(st); probe(); }
+  });
+  app.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && e.target.id === 'lw-code') { const b = app.querySelector('[data-code-ok]'); if (b) codePruefen(b.dataset.codeOk); }
+    else if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('[data-schritt]')) { e.preventDefault(); e.target.click(); }
   });
 
   // Zuteilung: nur für zugeteilte Gruppen/Klassen; mit Admin-Anmeldung immer (Vorschau)
@@ -300,20 +442,32 @@
       app.innerHTML = '<p class="fehler">🔒 Dieser Lernweg ist für dein iPad gerade nicht freigeschaltet.<br>Frag deine Lehrkraft.</p>';
       return;
     }
+    const st = stand();
+    if (offen()) {                                         // Start (ab da zählen App-Runden) und letzter Besuch (Auto-Start)
+      let neu = false;
+      if (!st.t0) { st.t0 = Date.now(); neu = true; }
+      if (st.a !== heute()) { st.a = heute(); neu = true; }
+      if (neu) sichern(st);
+    }
+    appsAbhaken(st);
     const h = location.hash.slice(1);
     if (h === 'probe') probe();
-    else if (/^s\d+$/.test(h)) station(Number(h.slice(1)));
+    else if (/^s\d+$/.test(h)) { const nr = Number(h.slice(1)); if (String(app.dataset.station) !== String(nr)) { codeOffen = ''; station(nr); window.scrollTo(0, 0); } else station(nr); }
+    else if (D.zieleVorher && !st.vf) vorher();
     else laufzettel();
     if (!offen()) app.insertAdjacentHTML('afterbegin', '<div class="vorschau">👁 Vorschau für Lehrkräfte – dieser Lernweg ist für dieses iPad nicht zugeteilt.</div>');
   }
-  window.addEventListener('hashchange', route);
+  window.addEventListener('hashchange', () => { app.dataset.station = ''; route(); });
   window.addEventListener('lernfreigabe:neu', route);      // frische config.json → Zuteilung neu prüfen
+  // Zurück aus einer App (Safari: Seite aus dem Cache) → App-Schritte neu auswerten
+  window.addEventListener('pageshow', e => { if (e.persisted) route(); });
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && D) route(); });
 
   if (!/^[a-z]+(\.[a-z0-9-]+){1,5}$/.test(ID)) { app.innerHTML = '<p class="fehler">Diesen Lernweg gibt es nicht.</p>'; return; }
   const ROOT = (window.LW && LW.ROOT) || '../../';
   fetch(ROOT + 'daten/lernwege/' + ID + '.json', { cache: 'no-cache' })
     .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
-    .then(d => { D = d; document.title = (d.titel || 'Lernweg') + ' – Lernwelt'; route(); })
+    .then(d => { D = d; document.title = (d.titel || 'Lernweg') + ' – Lernwelt'; route(); window.scrollTo(0, 0); })
     .catch(() => { app.innerHTML = '<p class="fehler">⚠️ Der Lernweg konnte nicht geladen werden. Bitte mit Internet neu öffnen.</p>'; });
 })();
 </script>
