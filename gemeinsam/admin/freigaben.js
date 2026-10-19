@@ -14,11 +14,16 @@
 //  Reihen = Inhalte, deren App die Freigabe schon auswertet (Übungs-Rahmen): Stufen aus
 //  daten/kopfrechnen.json und die Units/Listen des Vokabeltrainers aus dem Katalog.
 //  Inhalte des Aufgabentyp-Baukastens (Etappe 9) erscheinen automatisch; andere Apps mit Stufen in FR_KATALOG_REIHEN.
+//
+//  Lernwege (apps/typen/lernweg.html): umgekehrte Regel – ohne Eintrag für niemanden sichtbar. „Zuteilen“ schreibt
+//  freigaben[<Lernweg-ID>][wer] = 'offen' (gleiches Format, der Worker prüft es schon), ausgewertet mit
+//  LernFreigabe.zugeteilt(). Liste = Katalog-Themen mit quelle apps/typen/lernweg.html.
 // ═══════════════════════════════════════════════════════
 'use strict';
 
 const FR_KATALOG_REIHEN = ['en.5.vok', 'en.5.wortlisten', 'en.6.vok', 'gpg.6.laender', 'gpg.5.erde', 'gpg.5.bayern'];
-const FR_BAUKASTEN = 'apps/typen/uebung.html';          // Etappe 9: jeder Inhalt des Baukastens ist automatisch eine Reihe
+const FR_BAUKASTEN = 'apps/typen/uebung.html';
+const FR_LERNWEG = 'apps/typen/lernweg.html';          // Lernwege: nur zugeteilt sichtbar          // Etappe 9: jeder Inhalt des Baukastens ist automatisch eine Reihe
 const FR_APP_NAMEN = { kopfrechnen: '🧮', trainer: '📐', laengen: '📏' };
 const FR = { wer: 'alle', offen: '', reihen: null, gruppen: null, gruppenFehler: '', spWer: null };
 
@@ -152,6 +157,7 @@ async function buildFreigaben() {
   }).join('');
 
   box.innerHTML = kopf + (reihen || '<div class="empty-msg">Keine Inhalte gefunden.</div>');
+  buildLernwegeZuteilung();
   buildFokus();
   buildSpielsperre();
   buildHeuteSchalter();
@@ -210,6 +216,45 @@ function frAktion(akt) {
   saveConfig();
   buildFreigaben();
 }
+
+// ── Lernwege zuteilen ──────────────────────────────────
+function lwListe() {
+  const K = window.LernKatalog;
+  return K && K.geladen() ? K.themen({ nurOben: true }).filter(t => t.quelle && t.quelle.app === FR_LERNWEG) : [];
+}
+function buildLernwegeZuteilung() {
+  const box = document.getElementById('lernwege-inhalt');
+  if (!box) return;
+  const wege = lwListe(), F = CONFIG.freigaben || {};
+  if (!wege.length) { box.innerHTML = '<div class="empty-msg">Noch keine Lernwege im Katalog.</div>'; return; }
+  const werListe = frWerListe().filter(w => w !== 'alle').concat('alle');
+  box.innerHTML = wege.map(t => {
+    const e = F[t.id] || {};
+    const zu = werListe.filter(w => e[w] === 'offen');
+    const chips = werListe.map(w => {
+      const an = e[w] === 'offen';
+      return `<button type="button" class="fr-chip${an ? '' : ' zu geerbt'}" data-lw-weg="${frEsc(t.id)}" data-lw-wer="${frEsc(w)}" aria-pressed="${an}">${an ? '✅' : '○'} ${frEsc(frWerName(w))}</button>`;
+    }).join('');
+    const href = t.quelle.app + (t.quelle.parameter ? '?' + t.quelle.parameter : '');
+    return `<details class="fr-reihe"${zu.length ? ' open' : ''}><summary>🧭 ${frEsc(t.titel)} <span style="color:var(--muted);font-size:.8rem">(Klasse ${frEsc(t.klasse)})</span>${zu.length ? ' <span class="fr-punkt">●</span>' : ''}</summary>
+      <div class="fr-chips">${chips}</div>
+      <p class="fr-hinweis">${zu.length ? 'Zugeteilt: ' + zu.map(w => frEsc(frWerName(w))).join(', ') : 'Noch niemandem zugeteilt – für Kinder unsichtbar.'}
+        · <a href="${frEsc(href)}" target="_blank" rel="noopener">👁 Vorschau</a></p></details>`;
+  }).join('') + (FR.gruppenFehler ? `<p class="fr-hinweis">⚠ Sync-Gruppen nicht geladen (${frEsc(FR.gruppenFehler)}).</p>`
+    : !(FR.gruppen || []).length ? '<p class="fr-hinweis">Noch keine Sync-Gruppen angelegt (Sicherungskarten) – zuteilen geht dann nur nach Klasse.</p>' : '');
+}
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-lw-weg]');
+  if (!t || !t.closest('#panel-freigaben')) return;
+  const id = t.dataset.lwWeg, w = t.dataset.lwWer, F = frCfg(), e2 = F[id] || (F[id] = {});
+  const an = e2[w] !== 'offen';
+  if (an) e2[w] = 'offen'; else delete e2[w];
+  const titel = (lwListe().find(x => x.id === id) || {}).titel || id;
+  frAufraeumen();
+  logChange(`🧭 ${titel}: ${frWerName(w)} ${an ? 'zugeteilt' : 'nicht mehr zugeteilt'}`);
+  saveConfig();
+  buildLernwegeZuteilung();
+});
 
 // ── Spielsperre: Spiele erst nach guten Lern-Runden (je Wochentag, je Gruppe/Klasse) ──
 const SP_TAGE = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];

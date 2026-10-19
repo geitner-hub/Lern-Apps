@@ -30,7 +30,7 @@
   'use strict';
   if (window.LW && window.LW.UMGEBUNG) return;          // doppeltes Laden verhindern
 
-  const VERSION = 'v52';                                 // ⚙ bei jedem Upload mit sw.js zusammen erhöhen
+  const VERSION = 'v53';                                 // ⚙ bei jedem Upload mit sw.js zusammen erhöhen
 
   // ── Umgebung erkennen ────────────────────────────────
   //  GitHub Pages: erster Pfadteil = Repo-Name (Lern-Apps bzw. Lern-Apps-test)
@@ -90,6 +90,7 @@
     ['lern-zauberwort-rekord',      'local',   'spiele/zauberwort.html',   'Zauberwort: Rekord', false],
     ['lernwelt-room-detective',     'local',   'spiele/room-detective.html', 'Room Detective: Stufen, Zähler und letzte Wahl', false],
     // Lern-Apps mit eigenem Speicher
+    ['lernwelt-lernweg',            'local',   'apps/typen/lernweg.html', 'Lernweg: abgehakte Schritte und Smileys je Station (nur dieses Gerät)', false],
     ['laender-finder-best',         'local',   'apps/gpg/laender-finder.html', 'Länder-Finder: Bestzeiten je Modus', false],
     ['lernwelt-bayern-best',        'local',   'apps/gpg/bayern.html',     'Auskennen in Bayern: Bestwerte je Modus', false],
     ['rechenArena_ballonHighscore', 'local',   'apps/mathe/rechen-arena.html', 'Rechen-Arena: Highscore Ballon-Pop', false],

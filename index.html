@@ -226,6 +226,10 @@
     /* „Heute für dich“ (Etappe 8): höchstens drei Karten */
     #heute-section{max-width:980px;margin:-.4rem auto 1.2rem;padding:0 1.4rem;}
     #heute-section:empty{display:none;}
+    #lernweg-section{max-width:980px;margin:-.4rem auto 1.2rem;padding:0 1.4rem;}
+    #lernweg-section:empty{display:none;}
+    #lernweg-section h2{font:400 1.05rem 'Fredoka One','Nunito',sans-serif;color:#818cf8;margin:0 0 .55rem;}
+    .heute-karte.lw{border-color:rgba(129,140,248,.6);background:linear-gradient(135deg,rgba(99,102,241,.28),var(--card));}
     #heute-section h2{font:400 1.05rem 'Fredoka One','Nunito',sans-serif;color:#e6a817;margin:0 0 .55rem;}
     .heute-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.7rem;}
     .heute-karte{display:flex;gap:.75rem;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:.8rem .95rem;
@@ -497,6 +501,7 @@
 
 <div id="pass-section"></div>
 <div id="heute-section" aria-label="Heute für dich"></div>
+<div id="lernweg-section" aria-label="Mein Lernweg"></div>
 <div id="dorf-section"></div>
 
 <div class="filter-bar">
@@ -868,9 +873,30 @@ function appKarte(app, fach) {
       return card;
 }
 
+// ── Lernwege: nur sichtbar, wenn im Admin dieser Gruppe/Klasse zugeteilt (LernFreigabe.zugeteilt) ──
+let lernwegKatalog = null;
+function buildLernwege() {
+  const sec = document.getElementById('lernweg-section');
+  if (!sec) return;
+  const F = window.LernFreigabe;
+  const ids = F && F.zugeteilt ? Object.keys(CONFIG.freigaben || {}).filter(id => /\.lernweg-/.test(id) && F.zugeteilt(id)) : [];
+  if (!ids.length) { sec.innerHTML = ''; return; }
+  if (!window.LernKatalog || !LernKatalog.geladen()) {
+    if (!lernwegKatalog) lernwegKatalog = LW.laden('gemeinsam/katalog.js').then(() => LernKatalog.bereit).then(buildLernwege).catch(() => {});
+    if (!window.LernKatalog || !LernKatalog.geladen()) return;
+  }
+  const wege = ids.map(id => LernKatalog.thema(id)).filter(t => t && t.quelle && t.quelle.app === 'apps/typen/lernweg.html');
+  sec.innerHTML = wege.length ? `<h2>🧭 Mein Lernweg</h2><div class="heute-grid">${wege.map(t => {
+    const href = t.quelle.app + (t.quelle.parameter ? '?' + t.quelle.parameter : '');
+    return isSafeLink(href) ? `<a class="heute-karte lw" href="${escHtml(href)}"><span class="hk-ic">🧭</span>
+      <span><b>${escHtml(t.titel)}</b><small>${escHtml(t.einsatz ? 'Stationen, Laufzettel und Hefteinträge' : 'Lernweg öffnen')}</small></span></a>` : '';
+  }).join('')}</div>` : '';
+}
+
 function buildPage() {
   buildPassCard();
   buildHeute();
+  buildLernwege();
   buildDorfStrip();
   buildAnnouncement();
   buildFokusBanner();

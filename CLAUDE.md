@@ -85,6 +85,12 @@ und gelbe Hinweise. Manuelle Checkliste nach Uploads: `werkzeuge/RAUCHTEST.md`.
   eingabe, beschriften, bildwort). Neue App = Inhaltsdatei + Katalog-Thema (quelle uebung.html, parameter
   `inhalt=<ID>`) + Eintrag in `sw.js` NACHLADEN; Format: README → Aufgabentyp-Baukasten, Vorlage für Claude:
   `werkzeuge/INHALT-PROMPT.md`. Eine eigene App nur, wenn kein Typ passt (Spiele, besondere Mechaniken).
+- **Lernwege** (`apps/typen/lernweg.html?weg=<ID>` + `daten/lernwege/<ID>.json`, ID mit `.lernweg-`): Stationenarbeit
+  mit digitalem Laufzettel, Arbeit im Heft, Kontrolle mit gedrucktem Lösungsheft – bewusst ohne automatische Kontrolle und
+  ohne `saveResult`. **Keine normale App** (nicht in config.json): ohne Zuteilung gesperrt (`LernFreigabe.zugeteilt`,
+  umgekehrt zu `erlaubt`); Zuteilung im Admin „🎯 Unterricht → 🧭 Lernwege“ schreibt `freigaben[ID][wer] = 'offen'`.
+  Zugeteilte Lernwege zeigt die Startseite unter „🧭 Mein Lernweg“; mit Admin-Anmeldung immer als Vorschau.
+  Neuer Lernweg = JSON-Datei + Katalog-Thema (quelle `apps/typen/lernweg.html`, parameter `weg=<ID>`) + sw.js NACHLADEN.
 - **Backend:** nur ein Cloudflare Worker (`cloudflare/worker.js`, wird von Hand bei Cloudflare eingefügt). Er
   prüft Admin-Login und schreibt ausschließlich `config.json` per GitHub-API; jedes Feld wird validiert. Neue
   Config-Felder müssen auch im Worker erlaubt/geprüft werden. Sicherungskarten-Sync: `cloudflare/sync.js`,

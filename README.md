@@ -314,6 +314,25 @@ selbst im Admin unter „🎯 Unterricht“), Wiederholung, Fehler-Training, Inf
 - **Länder-Finder** bleibt eigener Typ (Karte antippen) und ist an den Rahmen angeschlossen: Modi = Stufen
   `gpg.6.laender.europa` / `.bundeslaender` (Freigabe mit 🔒, Ergebnis mit Themen-ID).
 
+## Lernwege (Stationenarbeit mit digitalem Laufzettel)
+
+- **Seite:** `apps/typen/lernweg.html?weg=<ID>` zeigt `daten/lernwege/<ID>.json` – Laufzettel mit Stationen,
+  „So arbeitest du“ zum Abhaken, Hefteinträge im Heft-Schema, Aufgaben (Lücken, Zuordnen, Sätze, Schreiben, Mediation)
+  und „Fit für die Probe?“ mit Smileys. Die Kinder schreiben alles ins Heft und kontrollieren an der Kontrollstation
+  mit dem gedruckten Lösungsheft; **keine automatische Kontrolle, kein Ergebnis für Pass/Sterne**.
+  Gespeichert wird nur auf dem Gerät (`lernwelt-lernweg`: abgehakte Schritte, Smileys).
+- **Nur für zugeteilte Gruppen:** Ein Lernweg ist keine App in config.json. Ohne Eintrag ist er gesperrt
+  (`LernFreigabe.zugeteilt(id)` – umgekehrt zu `erlaubt`). Admin → **🎯 Unterricht → 🧭 Lernwege zuteilen**: Gruppe
+  (Sicherungskarten) oder Klasse antippen → `freigaben[<ID>][wer] = 'offen'`, dann veröffentlichen. Zugeteilte
+  Lernwege erscheinen oben auf der Startseite unter „🧭 Mein Lernweg“. Mit Admin-Anmeldung auf dem Gerät ist jeder
+  Lernweg als Vorschau zu sehen (Beamer).
+- **Neuer Lernweg:** JSON-Datei `daten/lernwege/<ID>.json` (ID mit `.lernweg-`, z. B. `en.6.lernweg-u2`), Thema im
+  Katalog (Bereich „Lernwege“ des Fachs, `quelle: { app: "apps/typen/lernweg.html", parameter: "weg=<ID>" }`),
+  Datei in `sw.js` → `NACHLADEN`. Format: siehe `daten/lernwege/en.6.lernweg-u1.json` (stationen → schritte,
+  aufgaben mit art `luecken` · `wahl` · `zuordnen` · `saetze` · `sortieren` · `schreiben` · `mediation`;
+  `hefteintraege` mit zeilen `[text, stil]`, stil `g` = grün, `b` = fett).
+- **Erster Lernweg:** `en.6.lernweg-u1` (Highlight 6, Unit 1 „Together again“, 8 Stationen).
+
 ## Vokabel-Engine (Infrastruktur Etappe 5)
 
 - **apps/englisch/vokabeltrainer.html** – ein Trainer für alle Wortlisten, alle Modi wie bisher

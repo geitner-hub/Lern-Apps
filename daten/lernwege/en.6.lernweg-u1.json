@@ -1,0 +1,983 @@
+{
+ "id": "en.6.lernweg-u1",
+ "titel": "Lernweg Unit 1",
+ "untertitel": "Together again – fit für die Probe",
+ "klasse": 6,
+ "emoji": "🧭",
+ "regeln": [
+  "Ich arbeite leise am Platz (Flüsterstimme).",
+  "Ich arbeite der Reihe nach: Station 1 → 8.",
+  "Ich schreibe alles ins Heft: Überschrift „Station 1 – …“, dann A, B, C.",
+  "Fertig? → mit dem Heft zur Kontrollstation, mit GRÜN verbessern, auf dem Klassen-Laufzettel abhaken.",
+  "Frage? → erst Buch, dann Nachbar, dann Lehrer.",
+  "Alle Stationen fertig? → ★ Extras."
+ ],
+ "hefteintraege": {
+  "2": {
+   "titel": "Objektpronomen – me, him, her …",
+   "zeilen": [
+    [
+     [
+      "Wenn ich einen Namen nicht wiederholen will,",
+      ""
+     ]
+    ],
+    [
+     [
+      "ersetze ich ihn durch ein Pronomen.",
+      ""
+     ]
+    ],
+    [
+     [
+      "Nach dem Verb steht das ",
+      ""
+     ],
+     [
+      "Objektpronomen",
+      "g"
+     ],
+     [
+      ".",
+      ""
+     ]
+    ],
+    [
+     [
+      "I → ",
+      ""
+     ],
+     [
+      "me",
+      "g"
+     ],
+     [
+      "     you → ",
+      ""
+     ],
+     [
+      "you",
+      "g"
+     ],
+     [
+      "     he → ",
+      ""
+     ],
+     [
+      "him",
+      "g"
+     ],
+     [
+      "     she → ",
+      ""
+     ],
+     [
+      "her",
+      "g"
+     ]
+    ],
+    [
+     [
+      "it → ",
+      ""
+     ],
+     [
+      "it",
+      "g"
+     ],
+     [
+      "     we → ",
+      ""
+     ],
+     [
+      "us",
+      "g"
+     ],
+     [
+      "     you → ",
+      ""
+     ],
+     [
+      "you",
+      "g"
+     ],
+     [
+      "     they → ",
+      ""
+     ],
+     [
+      "them",
+      "g"
+     ]
+    ],
+    [
+     [
+      "Mia is sad. Ellie helps ",
+      ""
+     ],
+     [
+      "her",
+      "g"
+     ],
+     [
+      ".  (her = Mia)",
+      ""
+     ]
+    ],
+    [
+     [
+      "Adam and Luca are nice. I like ",
+      ""
+     ],
+     [
+      "them",
+      "g"
+     ],
+     [
+      ".",
+      ""
+     ]
+    ]
+   ],
+   "merke": "Nach dem Verb: me, you, him, her, it, us, them!"
+  },
+  "3": {
+   "titel": "Linking words – Sätze verbinden",
+   "zeilen": [
+    [
+     [
+      "Mit ",
+      ""
+     ],
+     [
+      "linking words",
+      "g"
+     ],
+     [
+      " verbinde ich zwei Sätze zu einem.",
+      ""
+     ]
+    ],
+    [
+     [
+      "and",
+      "g"
+     ],
+     [
+      " = und:  I played football ",
+      ""
+     ],
+     [
+      "and",
+      "b"
+     ],
+     [
+      " I went swimming.",
+      ""
+     ]
+    ],
+    [
+     [
+      "but",
+      "g"
+     ],
+     [
+      " = aber:  It was sunny ",
+      ""
+     ],
+     [
+      "but",
+      "b"
+     ],
+     [
+      " it was cold.",
+      ""
+     ]
+    ],
+    [
+     [
+      "so",
+      "g"
+     ],
+     [
+      " = also, deshalb:  It was rainy, ",
+      ""
+     ],
+     [
+      "so",
+      "b"
+     ],
+     [
+      " I stayed at home.",
+      ""
+     ]
+    ],
+    [
+     [
+      "because",
+      "g"
+     ],
+     [
+      " = weil:  I was happy ",
+      ""
+     ],
+     [
+      "because",
+      "b"
+     ],
+     [
+      " I saw my friends.",
+      ""
+     ]
+    ],
+    [
+     [
+      "Nach because: Satzstellung bleibt gleich (because I saw …).",
+      ""
+     ]
+    ]
+   ],
+   "merke": "Mit linking words werden meine Sätze länger und besser!"
+  }
+ },
+ "stationen": [
+  {
+   "nr": 1,
+   "ico": "📖",
+   "titel": "Everybody needs friends",
+   "kurz": "Lesen · Vokabeln",
+   "schritte": [
+    {
+     "art": "buch",
+     "text": "Lies die Geschichte im Buch S. 14–15. Hör sie dazu an (Track 1.06–1.10)."
+    },
+    {
+     "art": "heft",
+     "text": "Buch S. 15 Ü 2 und Ü 3 ins Heft."
+    },
+    {
+     "art": "aufgaben",
+     "text": "Aufgaben A, B und C (unten) ins Heft."
+    },
+    {
+     "art": "kontrolle",
+     "text": "Kontrolle: Geh mit deinem Heft zur Kontrollstation. Verbessere mit Grün. Hake dich auf dem Klassen-Laufzettel ab."
+    },
+    {
+     "art": "extra",
+     "text": "Extra: Workbook S. 7."
+    }
+   ],
+   "aufgaben": [
+    {
+     "nr": "A",
+     "art": "wahl",
+     "titel": "Right or wrong?",
+     "heft": "Schreibe ins Heft: 1 right, 2 …",
+     "items": [
+      {
+       "t": "Mia is new at Eggy.",
+       "o": [
+        "right",
+        "wrong"
+       ]
+      },
+      {
+       "t": "Mia comes from Spain.",
+       "o": [
+        "right",
+        "wrong"
+       ]
+      },
+      {
+       "t": "Mia feels lonely at the new school.",
+       "o": [
+        "right",
+        "wrong"
+       ]
+      },
+      {
+       "t": "Ellie is happy all the time.",
+       "o": [
+        "right",
+        "wrong"
+       ]
+      },
+      {
+       "t": "Mia misses her home.",
+       "o": [
+        "right",
+        "wrong"
+       ]
+      },
+      {
+       "t": "At the end Ellie and Mia are friends.",
+       "o": [
+        "right",
+        "wrong"
+       ]
+      }
+     ]
+    },
+    {
+     "nr": "B",
+     "art": "zuordnen",
+     "titel": "Feelings: Welches deutsche Wort passt?",
+     "heft": "Schreibe ins Heft: 1 c, 2 …",
+     "links": [
+      "sad",
+      "lonely",
+      "happy",
+      "surprised",
+      "jealous",
+      "(to) feel sorry for"
+     ],
+     "rechts": [
+      "einsam",
+      "glücklich",
+      "traurig",
+      "Mitleid haben mit",
+      "eifersüchtig",
+      "überrascht"
+     ]
+    },
+    {
+     "nr": "C",
+     "art": "luecken",
+     "titel": "Fill in. Nimm die Wörter aus dem Kasten.",
+     "heft": "Schreibe ins Heft: 1 lonely, 2 …",
+     "kasten": [
+      "lonely",
+      "cry",
+      "wait",
+      "understand",
+      "That’s why",
+      "The next day"
+     ],
+     "items": [
+      "I have no friends here. I feel ___.",
+      "Please ___ for me! I’m coming.",
+      "The film is very sad. I want to ___.",
+      "I don’t ___ this word. Can you help me?",
+      "It was rainy. ___ we stayed at home.",
+      "On Monday we went to the beach. ___ we went to the park."
+     ]
+    }
+   ]
+  },
+  {
+   "nr": 2,
+   "ico": "⏪",
+   "titel": "Simple past",
+   "kurz": "Grammatik · Hefteintrag 1",
+   "schritte": [
+    {
+     "art": "hefteintrag",
+     "text": "Lies deinen Hefteintrag 1 (simple past) im Heft."
+    },
+    {
+     "art": "aufgaben",
+     "text": "Aufgaben A, B und C (unten) ins Heft."
+    },
+    {
+     "art": "buch",
+     "text": "Buch S. 16–19 (Focus on language): Ü 6 „Mia’s first days“ ins Heft."
+    },
+    {
+     "art": "kontrolle",
+     "text": "Kontrolle: Geh mit deinem Heft zur Kontrollstation. Verbessere mit Grün. Hake dich auf dem Klassen-Laufzettel ab."
+    },
+    {
+     "art": "extra",
+     "text": "Extra: Workbook S. 8 · Lernwelt-App „Simple Past“.",
+     "link": "../typen/uebung.html?inhalt=en.5.simple-past"
+    }
+   ],
+   "aufgaben": [
+    {
+     "nr": "A",
+     "art": "luecken",
+     "titel": "Regelmäßige Verben: -ed. Schreibe das simple past.",
+     "heft": "Schreibe ins Heft: play – played …",
+     "tipp": "like → liked · stop → stopped · try → tried",
+     "spalten": 2,
+     "items": [
+      "play → ___",
+      "watch → ___",
+      "like → ___",
+      "stop → ___",
+      "try → ___",
+      "visit → ___",
+      "help → ___",
+      "carry → ___"
+     ]
+    },
+    {
+     "nr": "B",
+     "art": "luecken",
+     "titel": "Unregelmäßige Verben: kein -ed! Nimm die Wörter aus dem Kasten.",
+     "heft": "Schreibe ins Heft: go – went …",
+     "kasten": [
+      "ate",
+      "bought",
+      "came",
+      "got",
+      "had",
+      "made",
+      "read",
+      "saw",
+      "took",
+      "went"
+     ],
+     "spalten": 2,
+     "items": [
+      "go (gehen) → ___",
+      "see (sehen) → ___",
+      "have (haben) → ___",
+      "eat (essen) → ___",
+      "come (kommen) → ___",
+      "get (bekommen) → ___",
+      "buy (kaufen) → ___",
+      "take (nehmen) → ___",
+      "make (machen) → ___",
+      "read (lesen) → ___"
+     ]
+    },
+    {
+     "nr": "C",
+     "art": "saetze",
+     "titel": "Verneinung: didn’t + Grundform. Schreibe den Satz verneint.",
+     "heft": "Schreibe den ganzen Satz ins Heft.",
+     "beispiel": "I played tennis. → I didn’t play tennis.",
+     "items": [
+      "I played football.",
+      "Mia went to the beach.",
+      "We watched TV.",
+      "Luca ate a pizza."
+     ]
+    }
+   ]
+  },
+  {
+   "nr": 3,
+   "ico": "❓",
+   "titel": "was / were & Did …?",
+   "kurz": "Grammatik · Fragen und Kurzantworten",
+   "schritte": [
+    {
+     "art": "aufgaben",
+     "text": "Aufgaben A, B und C (unten) ins Heft."
+    },
+    {
+     "art": "buch",
+     "text": "Buch S. 16–19 (Focus on language): Ü 8a und 8b ins Heft."
+    },
+    {
+     "art": "kontrolle",
+     "text": "Kontrolle: Geh mit deinem Heft zur Kontrollstation. Verbessere mit Grün. Hake dich auf dem Klassen-Laufzettel ab."
+    },
+    {
+     "art": "extra",
+     "text": "Extra: Workbook S. 9."
+    }
+   ],
+   "aufgaben": [
+    {
+     "nr": "A",
+     "art": "luecken",
+     "titel": "was or were?",
+     "heft": "Schreibe ins Heft: 1 was, 2 …",
+     "items": [
+      "I ___ at the seaside.",
+      "The weather ___ sunny.",
+      "We ___ in Spain.",
+      "Mia and Ellie ___ sad.",
+      "___ you at home yesterday?",
+      "Luca ___ in Munich last week."
+     ]
+    },
+    {
+     "nr": "B",
+     "art": "luecken",
+     "titel": "wasn’t or weren’t?",
+     "heft": "Schreibe ins Heft: 1 wasn’t, 2 …",
+     "items": [
+      "It ___ rainy.",
+      "They ___ at school.",
+      "I ___ tired."
+     ]
+    },
+    {
+     "nr": "C",
+     "art": "saetze",
+     "titel": "Fragen mit Did + Grundform. Schreibe die Frage und die Kurzantwort.",
+     "heft": "Schreibe Frage und Antwort ins Heft.",
+     "beispiel": "you / play tennis? (✓) → Did you play tennis? – Yes, I did.",
+     "items": [
+      "you / play football yesterday? (✓)",
+      "Mia / go to the beach? (✗)",
+      "they / watch a film? (✓)",
+      "Luca / eat pizza? (✗)"
+     ]
+    }
+   ],
+   "merk": [
+    "I / he / she / it → was / wasn’t",
+    "you / we / they → were / weren’t"
+   ]
+  },
+  {
+   "nr": 4,
+   "ico": "👤",
+   "titel": "me, him, her …",
+   "kurz": "Grammatik · Hefteintrag 2",
+   "schritte": [
+    {
+     "art": "hefteintrag",
+     "text": "Schreibe Hefteintrag 2 (unten) sauber in dein Heft."
+    },
+    {
+     "art": "buch",
+     "text": "Buch S. 16–19 (Focus on language): Ü 7a und 7b (Track 1.11) ins Heft."
+    },
+    {
+     "art": "aufgaben",
+     "text": "Aufgaben A, B und C (unten) ins Heft."
+    },
+    {
+     "art": "kontrolle",
+     "text": "Kontrolle: Geh mit deinem Heft zur Kontrollstation. Verbessere mit Grün. Hake dich auf dem Klassen-Laufzettel ab."
+    },
+    {
+     "art": "extra",
+     "text": "Extra: Lernwelt-App „Pronomen“.",
+     "link": "../typen/uebung.html?inhalt=en.5.pronomen"
+    }
+   ],
+   "aufgaben": [
+    {
+     "nr": "A",
+     "art": "luecken",
+     "titel": "Ergänze die Tabelle.",
+     "heft": "Schreibe ins Heft: I – me, you – you …",
+     "spalten": 4,
+     "items": [
+      "I → ___",
+      "you → ___",
+      "he → ___",
+      "she → ___",
+      "it → ___",
+      "we → ___",
+      "you → ___",
+      "they → ___"
+     ]
+    },
+    {
+     "nr": "B",
+     "art": "saetze",
+     "titel": "Ersetze den unterstrichenen Namen durch me, him, her, it, us oder them.",
+     "heft": "Schreibe den ganzen Satz ins Heft.",
+     "items": [
+      "I like *Mia*.",
+      "Ellie helps *Adam*.",
+      "We call *Luca and Berry*.",
+      "I can’t find *the ball*.",
+      "Can you help *Mia and me*?",
+      "Adam sees *Ellie*."
+     ]
+    },
+    {
+     "nr": "C",
+     "art": "wahl",
+     "titel": "Welches Wort ist richtig?",
+     "heft": "Schreibe ins Heft: 1 him, 2 …",
+     "items": [
+      {
+       "t": "Berry is in the US. Luca calls ___.",
+       "o": [
+        "him",
+        "her"
+       ]
+      },
+      {
+       "t": "Mia is sad. Ellie talks to ___.",
+       "o": [
+        "them",
+        "her"
+       ]
+      },
+      {
+       "t": "My friends are great. I love ___.",
+       "o": [
+        "them",
+        "us"
+       ]
+      },
+      {
+       "t": "Can you help ___?",
+       "o": [
+        "I",
+        "me"
+       ]
+      }
+     ]
+    }
+   ],
+   "hefteintrag": "2"
+  },
+  {
+   "nr": 5,
+   "ico": "🔗",
+   "titel": "Linking words & Writing",
+   "kurz": "Grammatik · Schreiben · Hefteintrag 3",
+   "schritte": [
+    {
+     "art": "hefteintrag",
+     "text": "Schreibe Hefteintrag 3 (unten) sauber in dein Heft."
+    },
+    {
+     "art": "buch",
+     "text": "Buch S. 21 Ü 1 und Ü 2 ins Heft."
+    },
+    {
+     "art": "aufgaben",
+     "text": "Aufgaben A und B (unten) ins Heft."
+    },
+    {
+     "art": "schreiben",
+     "text": "Aufgabe C: Schreibe die Nachricht an Luca ins Heft. Dann Checkliste mit einem Partner (flüstern!)."
+    },
+    {
+     "art": "kontrolle",
+     "text": "Kontrolle: Geh mit deinem Heft zur Kontrollstation. Verbessere mit Grün. Hake dich auf dem Klassen-Laufzettel ab."
+    },
+    {
+     "art": "extra",
+     "text": "Extra: Workbook S. 11."
+    }
+   ],
+   "aufgaben": [
+    {
+     "nr": "A",
+     "art": "luecken",
+     "titel": "and, but, so or because?",
+     "heft": "Schreibe ins Heft: 1 and, 2 …",
+     "items": [
+      "I was at the seaside ___ I swam in the sea.",
+      "It was rainy, ___ we stayed at home.",
+      "I like football ___ I don’t like tennis.",
+      "Mia was sad ___ she missed her home.",
+      "We went to the park ___ we played football.",
+      "I was tired, ___ I went to bed.",
+      "It was sunny ___ it was cold.",
+      "Ellie was happy ___ she saw her friends."
+     ]
+    },
+    {
+     "nr": "B",
+     "art": "zuordnen",
+     "titel": "Was passt zusammen?",
+     "heft": "Schreibe den ganzen Satz ins Heft.",
+     "links": [
+      "Ellie was happy",
+      "I was ill,",
+      "We wanted to swim",
+      "Luca met Adam"
+     ],
+     "rechts": [
+      "so I didn’t go to school.",
+      "because she saw Mia.",
+      "and they went to the cinema.",
+      "but the water was cold."
+     ]
+    },
+    {
+     "nr": "C",
+     "art": "schreiben",
+     "titel": "A message to Luca",
+     "text": "Luca fragt dich: “What did you do last weekend?” Schreibe ihm eine Nachricht.",
+     "regel": "Mindestens 5 Sätze im simple past · mindestens 2 linking words (and, but, so, because)",
+     "hilfe": [
+      "Last weekend I was … (at home / at my grandma’s / in …).",
+      "The weather was … (sunny / rainy / cold / warm).",
+      "On Saturday I … (played / watched / went / met …) and …",
+      "On Sunday I … but …",
+      "I was happy / tired because …",
+      "What did you do?  Bye, …"
+     ],
+     "anfang": "Hi Luca,",
+     "checkliste": [
+      "Ich habe mindestens 5 Sätze geschrieben.",
+      "Ich habe das simple past benutzt (played, went …).",
+      "Ich habe 2 linking words benutzt.",
+      "Satzanfang und I schreibe ich groß."
+     ]
+    }
+   ],
+   "hefteintrag": "3"
+  },
+  {
+   "nr": 6,
+   "ico": "🔤",
+   "titel": "Vocabulary",
+   "kurz": "Wortschatz Unit 1",
+   "schritte": [
+    {
+     "art": "buch",
+     "text": "Buch S. 20 Ü 1a, Ü 2 und Ü 3 ins Heft."
+    },
+    {
+     "art": "aufgaben",
+     "text": "Aufgaben A, B und C (unten) ins Heft."
+    },
+    {
+     "art": "kontrolle",
+     "text": "Kontrolle: Geh mit deinem Heft zur Kontrollstation. Verbessere mit Grün. Hake dich auf dem Klassen-Laufzettel ab."
+    },
+    {
+     "art": "app",
+     "text": "Vokabeltrainer Klasse 6, Unit 1: mindestens 2 Runden.",
+     "link": "../englisch/vokabeltrainer.html?klasse=6"
+    },
+    {
+     "art": "extra",
+     "text": "Extra: Workbook S. 10."
+    }
+   ],
+   "aufgaben": [
+    {
+     "nr": "A",
+     "art": "luecken",
+     "titel": "Wie heißt das auf Englisch? Nimm die Wörter aus dem Kasten.",
+     "heft": "Schreibe ins Heft: 1 weather, 2 …",
+     "kasten": [
+      "adventure",
+      "aunt",
+      "dream",
+      "eye",
+      "factory",
+      "mountain",
+      "sentence",
+      "stadium",
+      "weather",
+      "window"
+     ],
+     "spalten": 2,
+     "items": [
+      "Wetter → ___",
+      "Berg → ___",
+      "Satz → ___",
+      "Stadion → ___",
+      "Fabrik → ___",
+      "Fenster → ___",
+      "Abenteuer → ___",
+      "Traum → ___",
+      "Auge → ___",
+      "Tante → ___"
+     ]
+    },
+    {
+     "nr": "B",
+     "art": "luecken",
+     "titel": "Opposites: Schreibe das Gegenteil.",
+     "heft": "Schreibe ins Heft: happy – sad …",
+     "kasten": [
+      "sad",
+      "next week",
+      "(to) cry",
+      "rainy",
+      "together"
+     ],
+     "items": [
+      "happy ↔ ___",
+      "sunny ↔ ___",
+      "alone ↔ ___",
+      "(to) smile ↔ ___",
+      "last week ↔ ___"
+     ]
+    },
+    {
+     "nr": "C",
+     "art": "sortieren",
+     "titel": "Word fields: Schreibe jedes Wort in die richtige Spalte.",
+     "heft": "Zeichne die Tabelle ins Heft.",
+     "kasten": [
+      "sunny",
+      "sad",
+      "sentence",
+      "rainy",
+      "lonely",
+      "classroom",
+      "cold",
+      "jealous",
+      "sports hall",
+      "warm",
+      "club",
+      "surprised"
+     ],
+     "spalten": [
+      "weather ☀️",
+      "school 🏫",
+      "feelings 🙂"
+     ],
+     "zeilen": 4
+    }
+   ]
+  },
+  {
+   "nr": 7,
+   "ico": "🎧",
+   "titel": "Listening",
+   "kurz": "Hörverstehen · nur mit Kopfhörer",
+   "schritte": [
+    {
+     "art": "hoeren",
+     "text": "Kopfhörer auf! Öffne die Hördateien auf deinem Tablet."
+    },
+    {
+     "art": "buch",
+     "text": "Buch S. 11 Ü 4 „Mia, a new student in 8Y“ (Track 1.04) – Antworten ins Heft."
+    },
+    {
+     "art": "buch",
+     "text": "Buch S. 12 Ü 2 „Which club?“ (Track 1.05) – Antworten ins Heft."
+    },
+    {
+     "art": "kontrolle",
+     "text": "Kontrolle: Geh mit deinem Heft zur Kontrollstation. Verbessere mit Grün. Hake dich auf dem Klassen-Laufzettel ab."
+    },
+    {
+     "art": "extra",
+     "text": "Extra: Buch S. 9 Ü 5 „School tomorrow“ (Track 1.02)."
+    }
+   ],
+   "aufgaben": [],
+   "tipps": [
+    "Lies zuerst die Aufgabe im Buch. Was sollst du herausfinden?",
+    "1. Hören: Worum geht es? Wer spricht?",
+    "2. Hören: Schreibe die Lösungen auf.",
+    "Du verstehst nicht jedes Wort? Keine Panik! Du brauchst nur die Infos aus der Aufgabe."
+   ]
+  },
+  {
+   "nr": 8,
+   "ico": "🗣️",
+   "titel": "Mediation",
+   "kurz": "Englisch → Deutsch · mit Partner",
+   "schritte": [
+    {
+     "art": "partner",
+     "text": "Buch S. 22 Ü 1 mit einem Partner (Rollen A und B, flüstern!)."
+    },
+    {
+     "art": "aufgaben",
+     "text": "Aufgabe A (unten) allein ins Heft – auf Deutsch."
+    },
+    {
+     "art": "kontrolle",
+     "text": "Kontrolle: Geh mit deinem Heft zur Kontrollstation. Verbessere mit Grün. Hake dich auf dem Klassen-Laufzettel ab."
+    },
+    {
+     "art": "extra",
+     "text": "Extra: Workbook S. 12."
+    }
+   ],
+   "aufgaben": [
+    {
+     "nr": "A",
+     "art": "mediation",
+     "titel": "Eggy Football Club",
+     "heft": "Schreibe ins Heft: 1 Jeden Dienstag. 2 …",
+     "tipp": "Nicht Wort für Wort übersetzen! Kurze Antworten reichen.",
+     "text": "Du bist mit deinem Bruder Jonas in Plymouth. Er möchte mitspielen, versteht aber kein Englisch. Beantworte seine Fragen auf Deutsch.",
+     "plakat": [
+      [
+       "⚽  EGGY FOOTBALL CLUB  ⚽",
+       "h"
+      ],
+      [
+       "For students in Year 7 and Year 8",
+       ""
+      ],
+      [
+       "When?  Every Tuesday, 3:30 – 4:30 pm",
+       "b"
+      ],
+      [
+       "Where?  In the sports hall",
+       "b"
+      ],
+      [
+       "What do you need?  Trainers and a T-shirt. Bring a bottle of water!",
+       "b"
+      ],
+      [
+       "Rules:  You must be on time.  You mustn’t eat in the sports hall.  You can bring a friend.",
+       ""
+      ],
+      [
+       "Questions? Ask Mr Brown in Room 12.",
+       ""
+      ]
+     ],
+     "items": [
+      "An welchem Tag ist das Training?",
+      "Um wie viel Uhr?",
+      "Wo spielen sie?",
+      "Was muss ich mitbringen?",
+      "Was ist verboten?",
+      "Darf ich einen Freund mitbringen?",
+      "Wen kann ich fragen?"
+     ]
+    }
+   ]
+  }
+ ],
+ "probe": [
+  {
+   "teil": "Hören",
+   "kann": "kurze Hörtexte über Schule und Clubs verstehen.",
+   "station": 7
+  },
+  {
+   "teil": "Schreiben",
+   "kann": "eine Nachricht über mein Wochenende schreiben (simple past, linking words).",
+   "station": 5
+  },
+  {
+   "teil": "Grammatik",
+   "kann": "das simple past bilden: played, went, saw …",
+   "station": 2
+  },
+  {
+   "teil": "Grammatik",
+   "kann": "verneinen mit didn’t und fragen mit Did …?",
+   "station": 3
+  },
+  {
+   "teil": "Grammatik",
+   "kann": "was und were richtig benutzen.",
+   "station": 3
+  },
+  {
+   "teil": "Grammatik",
+   "kann": "me, you, him, her, it, us, them benutzen.",
+   "station": 4
+  },
+  {
+   "teil": "Grammatik",
+   "kann": "Sätze mit and, but, so, because verbinden.",
+   "station": 5
+  },
+  {
+   "teil": "Vokabeln",
+   "kann": "die Wörter aus Unit 1.",
+   "station": 6
+  },
+  {
+   "teil": "Mediation",
+   "kann": "englische Infos (Plakat, Regeln) auf Deutsch weitergeben.",
+   "station": 8
+  }
+ ]
+}
