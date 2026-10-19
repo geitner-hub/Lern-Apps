@@ -273,7 +273,7 @@
      "nr": "A",
      "art": "wahl",
      "titel": "Right or wrong?",
-     "heft": "Schreibe ins Heft: 1 right, 2 …",
+     "heft": "Schreibe die ganzen Sätze ab und right oder wrong dahinter: 1 Mia is new at Eggy. – right",
      "items": [
       {
        "t": "Mia is new at Eggy.",
@@ -323,7 +323,7 @@
      "nr": "B",
      "art": "zuordnen",
      "titel": "Feelings: Welches deutsche Wort passt?",
-     "heft": "Schreibe ins Heft: 1 c, 2 …",
+     "heft": "Schreibe die Wortpaare ins Heft: 1 sad – traurig",
      "links": [
       "sad",
       "lonely",
@@ -345,7 +345,7 @@
      "nr": "C",
      "art": "luecken",
      "titel": "Fill in. Nimm die Wörter aus dem Kasten.",
-     "heft": "Schreibe ins Heft: 1 lonely, 2 …",
+     "heft": "Schreibe die ganzen Sätze ins Heft: 1 I have no friends here. I feel lonely.",
      "kasten": [
       "lonely",
       "cry",
@@ -398,7 +398,7 @@
      "nr": "A",
      "art": "luecken",
      "titel": "Regelmäßige Verben: -ed. Schreibe das simple past.",
-     "heft": "Schreibe ins Heft: play – played …",
+     "heft": "Schreibe beide Formen ins Heft: play – played",
      "tipp": "like → liked · stop → stopped · try → tried",
      "spalten": 2,
      "items": [
@@ -416,7 +416,7 @@
      "nr": "B",
      "art": "luecken",
      "titel": "Unregelmäßige Verben: kein -ed! Nimm die Wörter aus dem Kasten.",
-     "heft": "Schreibe ins Heft: go – went …",
+     "heft": "Schreibe beide Formen ins Heft: go – went",
      "kasten": [
       "ate",
       "bought",
@@ -486,7 +486,7 @@
      "nr": "A",
      "art": "luecken",
      "titel": "was or were?",
-     "heft": "Schreibe ins Heft: 1 was, 2 …",
+     "heft": "Schreibe die ganzen Sätze ins Heft: 1 I was at the seaside.",
      "items": [
       "I ___ at the seaside.",
       "The weather ___ sunny.",
@@ -500,7 +500,7 @@
      "nr": "B",
      "art": "luecken",
      "titel": "wasn’t or weren’t?",
-     "heft": "Schreibe ins Heft: 1 wasn’t, 2 …",
+     "heft": "Schreibe die ganzen Sätze ins Heft: 1 It wasn’t rainy.",
      "items": [
       "It ___ rainy.",
       "They ___ at school.",
@@ -511,7 +511,7 @@
      "nr": "C",
      "art": "saetze",
      "titel": "Fragen mit Did + Grundform. Schreibe die Frage und die Kurzantwort.",
-     "heft": "Schreibe Frage und Antwort ins Heft.",
+     "heft": "Schreibe die ganze Frage und die Kurzantwort ins Heft.",
      "beispiel": "you / play tennis? (✓) → Did you play tennis? – Yes, I did.",
      "items": [
       "you / play football yesterday? (✓)",
@@ -559,7 +559,7 @@
      "nr": "A",
      "art": "luecken",
      "titel": "Ergänze die Tabelle.",
-     "heft": "Schreibe ins Heft: I – me, you – you …",
+     "heft": "Schreibe die Paare ins Heft: I – me, you – you …",
      "spalten": 4,
      "items": [
       "I → ___",
@@ -590,7 +590,7 @@
      "nr": "C",
      "art": "wahl",
      "titel": "Welches Wort ist richtig?",
-     "heft": "Schreibe ins Heft: 1 him, 2 …",
+     "heft": "Schreibe die ganzen Sätze ins Heft: 1 Berry is in the US. Luca calls him.",
      "items": [
       {
        "t": "Berry is in the US. Luca calls ___.",
@@ -661,7 +661,7 @@
      "nr": "A",
      "art": "luecken",
      "titel": "and, but, so or because?",
-     "heft": "Schreibe ins Heft: 1 and, 2 …",
+     "heft": "Schreibe die ganzen Sätze ins Heft: 1 I was at the seaside and I swam in the sea.",
      "items": [
       "I was at the seaside ___ I swam in the sea.",
       "It was rainy, ___ we stayed at home.",
@@ -749,7 +749,7 @@
      "nr": "A",
      "art": "luecken",
      "titel": "Wie heißt das auf Englisch? Nimm die Wörter aus dem Kasten.",
-     "heft": "Schreibe ins Heft: 1 weather, 2 …",
+     "heft": "Schreibe die Wortpaare ins Heft: 1 Wetter – weather",
      "kasten": [
       "adventure",
       "aunt",
@@ -780,7 +780,7 @@
      "nr": "B",
      "art": "luecken",
      "titel": "Opposites: Schreibe das Gegenteil.",
-     "heft": "Schreibe ins Heft: happy – sad …",
+     "heft": "Schreibe die Wortpaare ins Heft: happy – sad",
      "kasten": [
       "sad",
       "next week",
@@ -852,8 +852,8 @@
      "nr": "A",
      "art": "mediation",
      "titel": "Eggy Football Club",
-     "heft": "Schreibe ins Heft: 1 Jeden Dienstag. 2 …",
-     "tipp": "Nicht Wort für Wort übersetzen! Kurze Antworten reichen.",
+     "heft": "Schreibe ganze Sätze ins Heft: 1 Das Training ist jeden Dienstag.",
+     "tipp": "Nicht Wort für Wort übersetzen! Antworte in ganzen Sätzen auf Deutsch.",
      "text": "Du bist mit deinem Bruder Jonas in Plymouth. Er möchte mitspielen, versteht aber kein Englisch. Beantworte seine Fragen auf Deutsch.",
      "plakat": [
       [
