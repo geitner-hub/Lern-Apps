@@ -149,7 +149,7 @@
    "id": "faehrmann",
    "x": 21,
    "z": 56,
-   "blick": 3.1416
+   "blick": 0
   },
   {
    "id": "baumeister",
@@ -379,7 +379,7 @@
   },
   {
    "id": "faehre-hafen",
-   "x": 21,
+   "x": 25,
    "z": 54,
    "text": "Fähre zum Baumeister-Tal. Der Fährmann bringt dich bald hinüber."
   },

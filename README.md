@@ -27,6 +27,7 @@ daten/                katalog.json (Inhalts-Katalog mit Themen-IDs), vokabeln5.j
                       kitchen-chaos.json (Schauplätze, Zutaten, Satzrahmen, Stufen)
                       room-detective.json (Gegenstände, Möbel, Präpositionen, Fälle, Merkmale der Verdächtigen, Stufen)
                       insel.json (Die Insel: Höhen- und Gebietskarte, Gebäude, Plätze, Wege, Bauplätze, Schilder)
+                      insel-auftraege.json (Die Insel: Bewohner, Warenkisten, Paket-Orte, Satzrahmen je Stufe)
                       karten.json (Europa- und Deutschlandkarte, für Länder-Finder und Expedition)
                       welt.json (alle Länder in Längen-/Breitengraden, Kontinente, Länderlisten der Welt-Modi)
                       ozeane.json (die fünf Ozeane für den Globus, Natural Earth, gemeinfrei)
@@ -63,6 +64,8 @@ werkzeuge/            Prüfskript (pruefen.py), Inventar (inventar.py → INVENT
 | `globus.js` | Drehbarer Globus als SVG (orthografisch, kein WebGL) mit Gradnetz, Äquator und Nullmeridian (`LernGlobus`); Ozeane aus `daten/ozeane.json` |
 | `welt-karte.js` | Weltkarte in **Equal Earth** (flächentreu) aus `daten/welt.json` über `vendor/d3-geo.min.js` (`LernWelt`) – Grundlage für alle Weltkarten und den Globus |
 | `insel-welt.js` | „Die Insel“: Welt aus Blöcken nach `daten/insel.json` (Gebiete, Gebäude-Vorlagen, Wege, Absperrungen), Testinsel, Weltstücke (16 × 16 × 24) zu je einem Mesh gebacken (`LernInselWelt`), nur in `spiele/insel.html` |
+| `insel-figuren.js` | „Die Insel“: Pass-Figur und Bewohner (Looks, gebacken), Warenkisten, Pakete, Vorlesen (`LernInselFiguren`) |
+| `insel-auftraege.js` | „Die Insel“: Auftragsrahmen – Aufträge aus Bausteinen, Prüfung durch die Welt, erster Versuch (`LernInselAuftraege`) |
 | `insel-steuerung.js` | „Die Insel“: Joystick, Kamera (dritte Person), Kollision mit dem Blockgitter, Hochsteigen, Sperre geschlossener Gebiete (`LernInselSteuerung`) |
 | `spiel-hilfen.js` | Kleine Bausteine für die neuen Spiele: Runde melden, Endlos-XP, robuste Zeiger (mehrere Finger), wiederholbarer Zufall |
 | `qrcode.js` | QR-Code-Erzeugung im Browser (MIT-Lizenz, Kazuhiko Arase) |
@@ -730,14 +733,32 @@ Englisch-Spiel mit zwei Modi, je Runde 3 Zimmer bzw. 3 Fälle, Lesen oder Hören
 
 Kleine, offene 3D-Welt im Klötzchen-Stil: Die Kinder laufen mit ihrer Pass-Figur per Joystick über eine Insel; das
 Gelernte verändert später die Welt (Hinkommen, Bauen, Handeln – nie eingeblendete Fragen). Plan: Aktionsplan „Die
-Insel“ (8 Etappen). Noch nicht in `config.json` – erreichbar über den direkten Link `spiele/insel.html`.
+Insel“ (8 Etappen). Auf der Startseite als „Meine Insel“ (Eintrag über den Admin).
 
-- **Stand: Etappe 2 – Welt und Speichern.** Die Welt kommt aus `daten/insel.json` (96 × 96 Blöcke, 24 hoch) mit drei
-  Gebieten: **Hafendorf** (Süden, Startgebiet, offen), **Baumeister-Tal** (Nordwesten, hinter einem Meeresarm – öffnet in
-  Etappe 5 die Fähre) und **Kartenleser-Hochland** (Nordosten, hinter Fluss und Steilkante – öffnet die Brücke aus dem
-  Tal). Geschlossene Gebiete sperren den Weg (Wasser, Steilkante, Zaun am Fährsteg, Hinweis beim Anlaufen); beim
-  Betreten eines Gebiets erscheint sein Name. Drei Bewohner zum Ausprobieren (Tom, Mia, Mr Brown) mit englischen Sätzen,
-  Schilder mit 📜 lesen. Noch keine XP (Aufträge ab Etappe 3).
+- **Stand: Etappe 3 – Hafendorf (Englisch).** Welt mit drei Gebieten aus `daten/insel.json`: **Hafendorf** (Süden,
+  Startgebiet, offen), **Baumeister-Tal** (Nordwesten, hinter einem Meeresarm – öffnet in Etappe 5 die Fähre) und
+  **Kartenleser-Hochland** (Nordosten, hinter Fluss und Steilkante – öffnet die Brücke aus dem Tal). Geschlossene Gebiete
+  sperren den Weg (Wasser, Steilkante, Zaun am Fährsteg, Hinweis beim Anlaufen); beim Betreten eines Gebiets erscheint
+  sein Name. Schilder mit 📜 lesen.
+- **Aufträge im Hafendorf** (`gemeinsam/insel-auftraege.js`, Bausteine in `daten/insel-auftraege.json`): Fünf Bewohner
+  (Tom, Mia, Mr Brown, Mrs Patel, Sam) mit eigenen Looks (`gemeinsam/insel-figuren.js`) geben beim Ansprechen einen
+  Auftrag auf Englisch. **Person finden** („Please find the girl with a yellow T-shirt.“ → hingehen, 🔍 „Bist du es?“),
+  **Ding bringen** („Please bring me three eggs. The eggs are next to the red house.“ → Warenkiste finden, ✋ genau so oft
+  nehmen – die Anzahl wird vorgelesen –, 🎁 der richtigen Person geben; Korb antippen = leeren) und **Paket suchen**
+  („My parcel is next to the shop.“ → 📦 das richtige Paket öffnen). Die Welt prüft: falsche Person, falsches Ding,
+  falsche Anzahl oder leeres Paket = falscher Versuch (Antwort auf Englisch, der Auftrag bleibt offen). **Gewertet wird
+  nur der erste Versuch**; 5 Aufträge = 1 Runde → `LernSpiel.speichereRunde` (XP, Sterne, Dorf-Aufträge; skill
+  `insel:hafen:<stufe>`). Ab 4 von 5 wird die nächste Stufe frei: 1 = next to, Farben, Zahlen bis 6 · 2 = behind,
+  in front of, between, has got, Zahlen bis 9 · 3 = Simple Past, Zahlen bis 12. Pausenmenü: Stufe, **Lesen oder Hören**
+  (beim Hören steht der Auftrag nicht da, 🔊 spielt ihn ab), Auftrag überspringen (zählt nicht).
+  Bewohner, Warenkisten und Paket-Orte stehen je mindestens 20 Blöcke auseinander, und Ziele liegen nie beim
+  Auftraggeber – Durchprobieren kostet Laufweg. Je Stufe entstehen mehrere Hundert verschiedene Aufträge.
+- **Auftrags-Bausteine erweitern** (`daten/insel-auftraege.json`): `bewohner` (Platz-ID aus `insel.json`, Look aus den
+  Avatar-Teilen, `merkmale` – müssen zum Look passen und dürfen bei keinem anderen Bewohner vorkommen –, `ort`, `saetze`
+  für Small Talk), `quellen` (Warenkisten: Wort `eins`/`viele`, Emoji, Farbe, Ortsangabe je Stufe), `suchorte`
+  (Paket-Orte mit Ortsangabe je Stufe), `saetze` (Satzrahmen je Auftragsart und Stufe; Platzhalter `{typ} {er} {Er}
+  {ihn} {m} {m2} {ort} {ort3} {kl} {n} {dinge} {viele} {qort} {port}`), `antworten`, `anzahl` je Stufe. `pruefen.py`
+  prüft Plätze, Looks, eindeutige Merkmale, Abstände und Platzhalter.
 - **Weltdaten (`daten/insel.json`):** von Hand gepflegt: `start`, `gebiete` (id, name, zeichen, fach, offen/hinweis),
   `vorlagen` (Gebäude-Typen: breite, tiefe, hoehe, wand, ecke, dach, boden – Blocknamen aus `LernInselWelt.BLOCK`),
   `gebaeude` (id, vorlage, x, z, tuer, Farben überschreibbar), `plaetze` (Stellen für Bewohner: an einem Gebäude oder
@@ -747,7 +768,8 @@ Insel“ (8 Etappen). Noch nicht in `config.json` – erreichbar über den direk
   schreibt nur diese beiden Felder. **Bewohner-Plätze stehen mindestens 20 Blöcke auseinander** (Laufweg statt
   Durchprobieren); `pruefen.py` prüft das und die übrigen Angaben.
 - **Spielstand `lernwelt-insel`** (in der Sicherungskarte, `gemeinsam/sync.js`): `{ v, pos, gebiete, auftraege, stufen,
-  bau, funde, opt, t }`. Gespeichert wird nach jedem Schritt (Position höchstens alle 5 s), beim Pausieren und beim
+  bau, funde, opt, t }` – `auftraege.hafen = { aktiv, runde: { n, richtig }, verlauf, korb, runden }`,
+  `stufen.hafen = { frei, wahl }`, `opt = { seiten, vorlesen, lesart }`. Gespeichert wird nach jedem Schritt (Position höchstens alle 5 s), beim Pausieren und beim
   Verlassen; nur Abweichungen von der Grundwelt (Bauplätze ab Etappe 4). Freischaltungen werden nie entfernt, unbekannte
   Felder bleiben erhalten; höchstens 20 000 Zeichen. Startbildschirm „Weiterspielen“ setzt an der gespeicherten Stelle
   fort (ist sie nicht mehr begehbar, geht es am Startpunkt los). Pausenmenü: offene und geschlossene Gebiete,

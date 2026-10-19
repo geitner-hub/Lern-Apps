@@ -1,0 +1,544 @@
+{
+ "version": 1,
+ "gebiet": "hafen",
+ "auftraege_je_runde": 5,
+ "aufstieg_ab": 4,
+ "korb_max": 12,
+ "zahlen": [
+  "zero",
+  "one",
+  "two",
+  "three",
+  "four",
+  "five",
+  "six",
+  "seven",
+  "eight",
+  "nine",
+  "ten",
+  "eleven",
+  "twelve"
+ ],
+ "anzahl": {
+  "1": [
+   1,
+   6
+  ],
+  "2": [
+   2,
+   9
+  ],
+  "3": [
+   3,
+   12
+  ]
+ },
+ "arten": {
+  "1": [
+   "finden",
+   "bringen",
+   "suchen"
+  ],
+  "2": [
+   "finden",
+   "bringen",
+   "suchen"
+  ],
+  "3": [
+   "finden",
+   "bringen",
+   "suchen"
+  ]
+ },
+ "bewohner": [
+  {
+   "id": "tom",
+   "name": "Tom",
+   "platz": "tom",
+   "typ": "boy",
+   "er": "he",
+   "ihn": "him",
+   "look": {
+    "haut": 1,
+    "haarfarbe": 1,
+    "frisur": "kurz",
+    "augen": "normal",
+    "mund": "breit",
+    "eq": {
+     "oberteil": "o-hoodie",
+     "hose": "h-jeans",
+     "schuhe": "s-sneaker",
+     "kopf": "k-cap-blau"
+    }
+   },
+   "merkmale": [
+    "a blue cap",
+    "a red hoodie",
+    "short brown hair"
+   ],
+   "kleidung": [
+    "a blue cap",
+    "a red hoodie",
+    "jeans"
+   ],
+   "ort": [
+    "next to the red house"
+   ],
+   "ort3": [
+    "near the red house"
+   ],
+   "saetze": [
+    "Hello! My name is Tom.",
+    "I live in the house with the red roof.",
+    "I have got a dog. His name is Max.",
+    "I like football."
+   ]
+  },
+  {
+   "id": "mia",
+   "name": "Mia",
+   "platz": "mia",
+   "typ": "girl",
+   "er": "she",
+   "ihn": "her",
+   "look": {
+    "haut": 4,
+    "haarfarbe": 6,
+    "frisur": "zoepfe",
+    "augen": "wimpern",
+    "mund": "laecheln",
+    "eq": {
+     "oberteil": "o-shirt-gelb",
+     "hose": "h-latzhose",
+     "schuhe": "s-hightop"
+    }
+   },
+   "merkmale": [
+    "a yellow T-shirt",
+    "long black hair",
+    "dungarees"
+   ],
+   "kleidung": [
+    "a yellow T-shirt",
+    "dungarees"
+   ],
+   "ort": [
+    "in front of the blue house"
+   ],
+   "ort3": [
+    "near the blue house"
+   ],
+   "saetze": [
+    "Hi! I am Mia. Nice to meet you!",
+    "My house has got a blue roof.",
+    "My favourite colour is yellow.",
+    "I can swim very well."
+   ]
+  },
+  {
+   "id": "brown",
+   "name": "Mr Brown",
+   "platz": "brown",
+   "typ": "man",
+   "er": "he",
+   "ihn": "him",
+   "look": {
+    "haut": 2,
+    "haarfarbe": 5,
+    "frisur": "kurz",
+    "augen": "froehlich",
+    "mund": "laecheln",
+    "eq": {
+     "oberteil": "o-karohemd",
+     "hose": "h-jogging",
+     "schuhe": "s-stiefel",
+     "kopf": "k-entdecker"
+    }
+   },
+   "merkmale": [
+    "a checked shirt",
+    "a brown hat",
+    "red hair",
+    "rubber boots"
+   ],
+   "kleidung": [
+    "a checked shirt",
+    "a brown hat",
+    "rubber boots"
+   ],
+   "ort": [
+    "at the harbour"
+   ],
+   "ort3": [
+    "at the harbour"
+   ],
+   "saetze": [
+    "Good morning! I am Mr Brown.",
+    "I am a fisherman.",
+    "Look at the sea! It is very blue today.",
+    "Have a nice day!"
+   ]
+  },
+  {
+   "id": "patel",
+   "name": "Mrs Patel",
+   "platz": "haendler",
+   "typ": "woman",
+   "er": "she",
+   "ihn": "her",
+   "look": {
+    "haut": 3,
+    "haarfarbe": 3,
+    "frisur": "bob",
+    "augen": "normal",
+    "mund": "lippen-rosa",
+    "eq": {
+     "oberteil": "o-hoodie-lila",
+     "hose": "h-rock",
+     "schuhe": "s-ballerina",
+     "kopf": "k-muetze-pink"
+    }
+   },
+   "merkmale": [
+    "a pink hat",
+    "a purple hoodie",
+    "short blond hair",
+    "a skirt"
+   ],
+   "kleidung": [
+    "a pink hat",
+    "a purple hoodie",
+    "a skirt"
+   ],
+   "ort": [
+    "in front of the shop"
+   ],
+   "ort3": [
+    "at the shop"
+   ],
+   "saetze": [
+    "Hello! I am Mrs Patel.",
+    "This is my shop.",
+    "I sell bread and milk.",
+    "Come again soon!"
+   ]
+  },
+  {
+   "id": "sam",
+   "name": "Sam",
+   "platz": "faehrmann",
+   "typ": "man",
+   "er": "he",
+   "ihn": "him",
+   "look": {
+    "haut": 5,
+    "haarfarbe": 6,
+    "frisur": "buzz",
+    "augen": "gross",
+    "mund": "breit",
+    "eq": {
+     "oberteil": "o-trikot",
+     "hose": "h-shorts",
+     "schuhe": "s-sneaker",
+     "kopf": "k-pirat"
+    }
+   },
+   "merkmale": [
+    "a pirate hat",
+    "a striped shirt",
+    "shorts"
+   ],
+   "kleidung": [
+    "a pirate hat",
+    "a striped shirt",
+    "shorts"
+   ],
+   "ort": [
+    "near the ferry"
+   ],
+   "ort3": [
+    "near the ferry"
+   ],
+   "saetze": [
+    "Ahoy! I am Sam.",
+    "I am the ferryman.",
+    "My ferry is broken at the moment.",
+    "Soon I can take you to the valley."
+   ]
+  }
+ ],
+ "quellen": [
+  {
+   "id": "eier",
+   "x": 28,
+   "z": 72,
+   "eins": "egg",
+   "viele": "eggs",
+   "emoji": "🥚",
+   "farbe": "#f3ead7",
+   "ort": {
+    "1": [
+     "next to the house with the red roof"
+    ],
+    "2": [
+     "next to the red house, near the path"
+    ],
+    "3": [
+     "next to the red house"
+    ]
+   }
+  },
+  {
+   "id": "blumen",
+   "x": 71,
+   "z": 58,
+   "eins": "flower",
+   "viele": "flowers",
+   "emoji": "🌼",
+   "farbe": "#f5c518",
+   "ort": {
+    "1": [
+     "next to the house with the blue roof"
+    ],
+    "2": [
+     "behind the blue house"
+    ],
+    "3": [
+     "behind the blue house"
+    ]
+   }
+  },
+  {
+   "id": "brot",
+   "x": 75,
+   "z": 82,
+   "eins": "bread roll",
+   "viele": "bread rolls",
+   "emoji": "🍞",
+   "farbe": "#c98a3c",
+   "ort": {
+    "1": [
+     "next to the shop"
+    ],
+    "2": [
+     "next to the shop"
+    ],
+    "3": [
+     "next to the shop"
+    ]
+   }
+  },
+  {
+   "id": "fisch",
+   "x": 55,
+   "z": 85,
+   "eins": "fish",
+   "viele": "fish",
+   "emoji": "🐟",
+   "farbe": "#7fb3d5",
+   "ort": {
+    "1": [
+     "at the harbour"
+    ],
+    "2": [
+     "at the harbour, next to Mr Brown"
+    ],
+    "3": [
+     "at the harbour"
+    ]
+   }
+  },
+  {
+   "id": "aepfel",
+   "x": 11,
+   "z": 55,
+   "eins": "apple",
+   "viele": "apples",
+   "emoji": "🍎",
+   "farbe": "#d62828",
+   "ort": {
+    "1": [
+     "next to the ferry"
+    ],
+    "2": [
+     "next to the little house near the ferry"
+    ],
+    "3": [
+     "near the ferry"
+    ]
+   }
+  }
+ ],
+ "suchorte": [
+  {
+   "id": "p-brunnen",
+   "x": 43,
+   "z": 65,
+   "ort": {
+    "1": [
+     "next to the well"
+    ],
+    "2": [
+     "in the middle of the village, next to the well"
+    ],
+    "3": [
+     "next to the well"
+    ]
+   }
+  },
+  {
+   "id": "p-tom",
+   "x": 24,
+   "z": 80,
+   "ort": {
+    "1": [
+     "next to the house with the red roof"
+    ],
+    "2": [
+     "next to the red house, near the trees"
+    ],
+    "3": [
+     "next to the red house"
+    ]
+   }
+  },
+  {
+   "id": "p-mia",
+   "x": 66,
+   "z": 54,
+   "ort": {
+    "1": [
+     "next to the house with the blue roof"
+    ],
+    "2": [
+     "between the blue house and the big rocks"
+    ],
+    "3": [
+     "next to the blue house"
+    ]
+   }
+  },
+  {
+   "id": "p-laden",
+   "x": 80,
+   "z": 73,
+   "ort": {
+    "1": [
+     "next to the shop"
+    ],
+    "2": [
+     "next to the shop, on the side with no door"
+    ],
+    "3": [
+     "next to the shop"
+    ]
+   }
+  },
+  {
+   "id": "p-hafen",
+   "x": 45,
+   "z": 87,
+   "ort": {
+    "1": [
+     "at the harbour"
+    ],
+    "2": [
+     "at the harbour, in front of the green house"
+    ],
+    "3": [
+     "at the harbour"
+    ]
+   }
+  },
+  {
+   "id": "p-faehre",
+   "x": 9,
+   "z": 63,
+   "ort": {
+    "1": [
+     "next to the ferry house"
+    ],
+    "2": [
+     "behind the little house near the ferry"
+    ],
+    "3": [
+     "behind the ferry house"
+    ]
+   }
+  }
+ ],
+ "saetze": {
+  "finden": {
+   "1": [
+    "Can you find the {typ} with {m}?",
+    "Please find the {typ} with {m}.",
+    "Where is the {typ} with {m}? Please find {ihn}."
+   ],
+   "2": [
+    "Please find my friend. {Er} has got {m} and {m2}.",
+    "I am looking for a {typ}. {Er} has got {m}. {Er} is {ort}."
+   ],
+   "3": [
+    "Yesterday I met a {typ} {ort3}. {Er} was wearing {kl}. Can you find {ihn}?",
+    "This morning a {typ} with {m} helped me. Please find {ihn} and say thank you!"
+   ]
+  },
+  "bringen": {
+   "1": [
+    "Please bring me {n} {dinge}. You can find {viele} {qort}.",
+    "I need {n} {dinge}. The {viele} are {qort}."
+   ],
+   "2": [
+    "Please bring {n} {dinge} to the {typ} with {m}. The {viele} are {qort}.",
+    "The {typ} with {m} needs {n} {dinge}. You can find {viele} {qort}."
+   ],
+   "3": [
+    "Yesterday the {typ} with {m} asked for {n} {dinge}. Can you take them to {ihn}? I saw {viele} {qort}."
+   ]
+  },
+  "suchen": {
+   "1": [
+    "I have lost my parcel. It is {port}. Can you find it?",
+    "Where is my parcel? It is {port}."
+   ],
+   "2": [
+    "Please get my parcel for me. It is {port}.",
+    "My parcel is {port}. Can you get it, please?"
+   ],
+   "3": [
+    "Yesterday I put my parcel {port}. Please find it!",
+    "I left my parcel {port} this morning. Can you find it?"
+   ]
+  }
+ },
+ "antworten": {
+  "danke": [
+   "Thank you very much!",
+   "Great! Thank you!",
+   "Wonderful, thanks!"
+  ],
+  "gefunden": [
+   "Yes, that is me! Thank you for finding me.",
+   "You found me! Hello!"
+  ],
+  "nichtich": [
+   "Sorry, that is not me. I have got {m}.",
+   "No, sorry. Look again! I have got {m}."
+  ],
+  "falschesding": [
+   "No, thank you. I need {n} {dinge}."
+  ],
+  "falscheanzahl": [
+   "Hmm, I need {n} {dinge}, not {k}."
+  ],
+  "nichtfuermich": [
+   "Sorry, that is not for me."
+  ],
+  "leer": [
+   "Oh, this parcel is empty."
+  ],
+  "paketda": [
+   "Here it is! The right parcel."
+  ]
+ }
+}

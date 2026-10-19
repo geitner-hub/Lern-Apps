@@ -28,7 +28,16 @@
      Gespeichert wird nach jedem Schritt (Position höchstens alle 5 s), beim
      Pausieren und beim Verlassen. Freischaltungen nur aufbauend (nie entfernen).
      Unbekannte Felder (aus neueren Fassungen) bleiben beim Speichern erhalten.
-     Noch keine XP (ab Etappe 3: Aufträge). Noch nicht in config.json.
+   Etappe 3 – Hafendorf (Englisch):
+     Fünf Bewohner mit eigenen Looks (insel-figuren.js) geben Aufträge auf Englisch
+     (insel-auftraege.js, Bausteine in daten/insel-auftraege.json): Person finden,
+     Ding bringen (Warenkiste finden, genau so viele nehmen, der richtigen Person
+     geben), Paket suchen. Die Welt prüft: richtige Person, richtiges Ding, richtige
+     Anzahl, richtiges Paket. Gewertet wird der erste Versuch; 5 Aufträge = 1 Runde
+     → LernSpiel.speichereRunde (XP, Sterne, Dorf), skill 'insel:hafen:<stufe>'.
+     Ab 4 von 5 wird die nächste Stufe frei (3 Stufen). Lesen oder Hören (Pausenmenü).
+     Spielstand zusätzlich: auftraege.hafen { aktiv, runde, verlauf, korb, runden },
+     stufen.hafen { frei, wahl }, opt.lesart.
 
    Link-Parameter:
      ?debug=1     Bildrate, Draw-Calls, Dreiecke, Startzeit, Position, Gebiet;
@@ -41,7 +50,7 @@
    Dauer-Animationen. Ohne WebGL: Ersatzanzeige mit Link zu den anderen Spielen.
 
    Braucht: navbar.js, spiel-hilfen.js, avatar3d.js (+ vendor/three.min.js),
-            insel-welt.js, insel-steuerung.js
+            insel-welt.js, insel-steuerung.js, insel-figuren.js, insel-auftraege.js
   ═══════════════════════════════════════════════
   -->
   <link rel="stylesheet" href="../gemeinsam/fonts.css">
@@ -106,11 +115,36 @@
       @keyframes blasePop { from { opacity: 0; transform: translate(-50%, -88%) scale(.9); } }
     }
 
-    /* Kurze Meldung (Gebiet gesperrt) und Gebietsname beim Betreten */
-    #toast { position: fixed; z-index: 19; left: 50%; top: max(4.6rem, calc(env(safe-area-inset-top) + 4rem)); transform: translateX(-50%);
+    /* Auftragskarte (oben links) und Korb */
+    #auftrag { position: fixed; z-index: 17; left: max(.7rem, env(safe-area-inset-left)); top: max(.7rem, env(safe-area-inset-top));
+      width: min(430px, calc(100vw - 6rem)); background: var(--panel); border: 2px solid rgba(255,255,255,.12); border-radius: 18px;
+      padding: .55rem .75rem .65rem; box-shadow: 0 4px 16px rgba(0,0,0,.3); }
+    #auftrag .oben { display: flex; justify-content: space-between; gap: .5rem; font-size: .78rem; font-weight: 900; color: var(--indigo2); }
+    #auftrag .punkte { letter-spacing: .12em; color: var(--accent); }
+    #auftrag .zeile { display: flex; gap: .55rem; align-items: flex-start; margin-top: .25rem; }
+    #auftrag .sym { font-size: 1.5rem; line-height: 1.2; }
+    #auftrag-text { flex: 1; font-weight: 800; line-height: 1.3; }
+    #auftrag-text.leise { color: var(--text2); font-weight: 700; }
+    #auftrag-hoeren { flex: none; width: 40px; height: 40px; border-radius: 50%; background: var(--panel2); font-size: 1.1rem; }
+    #korb { position: fixed; z-index: 17; left: max(.7rem, env(safe-area-inset-left)); top: calc(max(.7rem, env(safe-area-inset-top)) + var(--karte-h, 92px) + .4rem);
+      background: var(--papier); color: var(--tinte); border-radius: 999px; padding: .4rem .8rem; font-weight: 900; font-size: 1.05rem;
+      box-shadow: 0 4px 14px rgba(0,0,0,.3); display: inline-flex; gap: .45rem; align-items: center; }
+    #korb small { font-size: .72rem; color: #78716c; font-weight: 800; }
+    @media (prefers-reduced-motion: no-preference) {
+      #auftrag.neu, #korb.neu { animation: blasePop2 .3s ease-out; }
+      @keyframes blasePop2 { from { opacity: 0; transform: scale(.94); } }
+    }
+    .wahl { display: flex; gap: .4rem; margin-top: .55rem; }
+    .wahl button { flex: 1; padding: .55rem .4rem; border-radius: 12px; background: var(--panel2); font-weight: 900; border: 2px solid transparent; }
+    .wahl button.an { border-color: var(--accent); color: var(--accent2); }
+    .wahl button:disabled { opacity: .45; cursor: default; }
+    .abschnitt { margin-top: .9rem; text-align: left; font-weight: 900; font-size: .8rem; color: var(--indigo2); letter-spacing: .04em; text-transform: uppercase; }
+
+    /* Kurze Meldung (Gebiet gesperrt, Auftrag erledigt) und Gebietsname beim Betreten */
+    #toast { position: fixed; z-index: 19; left: 50%; bottom: max(8.5rem, calc(env(safe-area-inset-bottom) + 8rem)); transform: translateX(-50%);
       background: var(--panel); border: 2px solid rgba(255,255,255,.12); border-radius: 16px; padding: .6rem 1rem;
       font-weight: 800; max-width: min(460px, 88vw); text-align: center; pointer-events: none; }
-    #gebietsname { position: fixed; z-index: 16; left: 50%; top: max(1rem, env(safe-area-inset-top)); transform: translateX(-50%);
+    #gebietsname { position: fixed; z-index: 16; left: 50%; top: 22%; transform: translateX(-50%);
       font-size: 1.7rem; color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,.55); pointer-events: none; white-space: nowrap;
       transition: opacity .8s; }
     #gebietsname.weg { opacity: 0; }
@@ -119,7 +153,7 @@
     .gebiete small { color: var(--muted); font-weight: 700; }
     .gebiete .zu { color: var(--muted); }
 
-    #debug { position: fixed; z-index: 30; left: max(.5rem, env(safe-area-inset-left)); top: max(.5rem, env(safe-area-inset-top));
+    #debug { position: fixed; z-index: 30; left: 50%; transform: translateX(-50%); top: max(.5rem, env(safe-area-inset-top));
       background: rgba(0,0,0,.6); color: #a7f3d0; font: 700 12px/1.35 ui-monospace, Menlo, monospace; padding: .35rem .5rem;
       border-radius: 8px; white-space: pre; pointer-events: none; }
 
@@ -156,6 +190,11 @@
 <button id="aktion" hidden><span class="sym">💬</span><span class="txt">Sprechen</span></button>
 <div id="hinweis" hidden><span>👈 Daumen links: laufen</span><span>Rechts wischen: umschauen 👉</span></div>
 <div id="blase" hidden><span class="wer"></span><div class="zeile"><span class="satz" lang="en"></span><button id="blase-hoeren" aria-label="Vorlesen">🔊</button></div></div>
+<div id="auftrag" hidden>
+  <div class="oben"><span id="auftrag-kopf">Hafendorf</span><span class="punkte" id="auftrag-punkte"></span></div>
+  <div class="zeile"><span class="sym" id="auftrag-sym">💬</span><span id="auftrag-text"></span><button id="auftrag-hoeren" aria-label="Auftrag anhören">🔊</button></div>
+</div>
+<button id="korb" hidden aria-label="Korb leeren"></button>
 <div id="toast" hidden></div>
 <div id="gebietsname" class="fredoka weg" aria-live="polite"></div>
 <div id="debug" hidden></div>
@@ -164,7 +203,7 @@
   <div class="karte">
     <h1 class="fredoka">🏝️ Die Insel</h1>
     <div class="unter">Probelauf</div>
-    <p>Lauf mit deiner Figur über die Insel und sprich mit den Leuten im Dorf.</p>
+    <p>Lauf mit deiner Figur über die Insel. Die Leute im Hafendorf haben Aufträge für dich – auf Englisch!</p>
     <div class="steuer">
       <div><b>👈</b>Daumen links:<br>laufen</div>
       <div><b>👉</b>Rechts wischen:<br>umschauen</div>
@@ -178,11 +217,24 @@
   <div class="karte">
     <h2 class="fredoka">⏸ Pause</h2>
     <div class="gebiete" id="gebiete-liste"></div>
+    <div class="abschnitt">Aufträge im Hafendorf</div>
+    <div class="wahl" id="stufen"></div>
+    <div class="wahl" id="lesart"><button data-l="lesen">📖 Lesen</button><button data-l="hoeren">🎧 Hören</button></div>
+    <button class="zweit" id="abbrechen" hidden>Diesen Auftrag überspringen (zählt nicht)</button>
     <label class="schalter">Seiten tauschen (Linkshänder) <input type="checkbox" id="opt-seiten"></label>
     <label class="schalter">Vorlesen <input type="checkbox" id="opt-vorlesen" checked></label>
     <button class="gross fredoka" id="weiter">Weiter</button>
     <button class="zweit" id="debug-gebiete" hidden>🧪 Test: alle Gebiete öffnen (wird nicht gespeichert)</button>
     <a class="zweit" href="../index.html">🏠 Zurück zur Lernwelt</a>
+  </div>
+</div>
+
+<div class="overlay" id="runde-ende" hidden>
+  <div class="karte">
+    <h2 class="fredoka" id="ende-titel">Runde geschafft!</h2>
+    <p id="ende-text"></p>
+    <p id="ende-stufe" style="color:var(--accent2)"></p>
+    <button class="gross fredoka" id="ende-weiter">Weiter</button>
   </div>
 </div>
 
@@ -200,6 +252,8 @@
 <script src="../gemeinsam/avatar3d.js"></script>
 <script src="../gemeinsam/insel-welt.js"></script>
 <script src="../gemeinsam/insel-steuerung.js"></script>
+<script src="../gemeinsam/insel-figuren.js"></script>
+<script src="../gemeinsam/insel-auftraege.js"></script>
 <script>
 'use strict';
 const $ = id => document.getElementById(id);
@@ -208,27 +262,20 @@ const DEBUG = PARAM.get('debug') === '1';
 const TESTINSEL = PARAM.get('seed');                 // Testinsel aus Etappe 1: ohne Gebiete, ohne Speichern
 const REDUCE = !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
 const T0 = performance.now();
-const MAX_FPS = 30, SICHTWEITE = 32, FIGUR_HOEHE = 1.75, SPRECH_ABSTAND = 2.4, LESE_ABSTAND = 2.2;
+const MAX_FPS = 30, SICHTWEITE = 32, SPRECH_ABSTAND = 2.4, GREIF_ABSTAND = 1.9, LESE_ABSTAND = 2.2;
 const STAND_KEY = 'lernwelt-insel';
 const STAND_MAX = 20000;                             // Zeichen; die Sicherungskarte trägt alle Spielstände zusammen (~64 KB)
 const POS_ALLE_MS = 5000;                            // Position höchstens so oft speichern
-
-// Bewohner zum Ausprobieren (ab Etappe 3: insel-figuren.js + daten/insel-auftraege.json).
-// platz = ID aus daten/insel.json → plaetze (dort stehen sie mindestens 20 Blöcke auseinander)
-const BEWOHNER = [
-  { name: 'Tom', platz: 'tom', look: { haut: 1, haarfarbe: 2, frisur: 'stachelig', augen: 'normal', mund: 'breit', eq: { oberteil: 'o-hoodie', hose: 'h-jeans', schuhe: 's-sneaker', kopf: 'k-cap-blau' } },
-    saetze: ['Hello! My name is Tom.', 'I live in the house with the red roof.', 'I have got a dog. His name is Max.', 'Can you see the well? It is in the middle of the village.'] },
-  { name: 'Mia', platz: 'mia', look: { haut: 4, haarfarbe: 0, frisur: 'zoepfe', augen: 'wimpern', mund: 'laecheln', eq: { oberteil: 'o-shirt-gelb', hose: 'h-latzhose', schuhe: 's-hightop' } },
-    saetze: ['Hi! I am Mia. Nice to meet you!', 'My house has got a blue roof.', 'My favourite colour is yellow.', 'There are lots of trees on this island.'] },
-  { name: 'Mr Brown', platz: 'brown', look: { haut: 2, haarfarbe: 6, frisur: 'kurz', augen: 'froehlich', mund: 'laecheln', eq: { oberteil: 'o-karohemd', hose: 'h-jogging', schuhe: 's-stiefel', kopf: 'k-entdecker' } },
-    saetze: ['Good morning! I am Mr Brown.', 'I am a fisherman. My boat is in the harbour.', 'Look at the sea! It is very blue today.', 'Have a nice day!'] },
-];
+const F = window.LernInselFiguren;
+const HOCH = F.HOEHE;
+const ART_SYM = { finden: '🔍', bringen: '🧺', suchen: '📦' };
 
 let T, renderer, scene, camera, welt, weltSzene, steuerung, spielerFigur, spielerGruppe, spielerSchatten;
-let bewohner = [], schilder = [], laeuft = false, bereit = false, letzte = 0, phase = 0, zeit = 0, sichtUhr = 0;
-let fpsBilder = 0, fpsUhr = 0, fps = 0, startMs = 0, gesprochen = null, hinweisWeg = false;
+let bewohner = [], schilder = [], kisten = [], pakete = [], laeuft = false, bereit = false, letzte = 0, phase = 0, zeit = 0, sichtUhr = 0;
+let fpsBilder = 0, fpsUhr = 0, fps = 0, startMs = 0, gesprochen = null, hinweisWeg = false, jubelBis = 0;
 const spieler = { x: 0, y: 0, z: 0, blick: 0, anzeigeY: 0 };
 let stand = null, offen = new Set(['hafen']), testOffen = false, letztesSpeichern = 0, posGespeichert = null, aktGebiet = null;
+let AD = null, rahmen = null;                        // Bausteine (insel-auftraege.json) und Auftragsrahmen
 
 function webglOk() {
   try { const c = document.createElement('canvas'); return !!(c.getContext('webgl') || c.getContext('experimental-webgl')); }
@@ -243,23 +290,36 @@ function ohne3d(text) {
 function homeZeigen(an) {
   ['lern-home-btn', 'lern-result-badge'].forEach(id => { const el = $(id); if (el) el.style.visibility = an ? '' : 'hidden'; });
 }
+const istObjekt = o => !!o && typeof o === 'object' && !Array.isArray(o);
 
 /* ═══════════════════════════════════════════════════════
    SPIELSTAND (lernwelt-insel, in der Sicherungskarte)
-   Nur aufbauend: Gebiete werden nie wieder geschlossen, unbekannte Felder bleiben.
+   Nur aufbauend: Gebiete und Stufen werden nie wieder geschlossen, unbekannte Felder bleiben.
    ═══════════════════════════════════════════════════════ */
 function standLesen() {
   let s = null;
   try { s = JSON.parse(localStorage.getItem(STAND_KEY) || 'null'); } catch (e) {}
-  if (!s || typeof s !== 'object' || Array.isArray(s)) s = {};
+  if (!istObjekt(s)) s = {};
   s.v = 1;
   s.gebiete = Array.isArray(s.gebiete) ? s.gebiete.filter(g => typeof g === 'string' && /^[a-z0-9-]{1,30}$/.test(g)) : [];
   if (!s.gebiete.includes('hafen')) s.gebiete.unshift('hafen');
-  ['auftraege', 'stufen', 'bau'].forEach(k => { if (!s[k] || typeof s[k] !== 'object' || Array.isArray(s[k])) s[k] = {}; });
+  ['auftraege', 'stufen', 'bau'].forEach(k => { if (!istObjekt(s[k])) s[k] = {}; });
   if (!Array.isArray(s.funde)) s.funde = [];
-  s.opt = Object.assign({ seiten: false, vorlesen: true }, s.opt && typeof s.opt === 'object' ? s.opt : {});
+  s.opt = Object.assign({ seiten: false, vorlesen: true, lesart: 'lesen' }, istObjekt(s.opt) ? s.opt : {});
   const p = s.pos;
   s.pos = p && [p.x, p.y, p.z].every(n => typeof n === 'number' && isFinite(n)) ? { x: p.x, y: p.y, z: p.z, b: Number(p.b) || 0 } : null;
+  // Aufträge im Hafendorf (Etappe 3)
+  const h = istObjekt(s.auftraege.hafen) ? s.auftraege.hafen : {};
+  h.aktiv = istObjekt(h.aktiv) && typeof h.aktiv.text === 'string' ? h.aktiv : null;
+  h.runde = istObjekt(h.runde) ? { n: Math.max(0, Math.floor(h.runde.n) || 0), richtig: Math.max(0, Math.floor(h.runde.richtig) || 0) } : { n: 0, richtig: 0 };
+  h.verlauf = Array.isArray(h.verlauf) ? h.verlauf.filter(x => typeof x === 'string').slice(-10) : [];
+  h.korb = istObjekt(h.korb) && typeof h.korb.ding === 'string' && h.korb.n > 0 ? { ding: h.korb.ding, n: Math.min(99, Math.floor(h.korb.n)) } : null;
+  h.runden = Math.max(0, Math.floor(h.runden) || 0);
+  s.auftraege.hafen = h;
+  const st = istObjekt(s.stufen.hafen) ? s.stufen.hafen : {};
+  st.frei = Math.max(1, Math.min(3, Math.floor(st.frei) || 1));
+  st.wahl = Math.max(1, Math.min(st.frei, Math.floor(st.wahl) || st.frei));
+  s.stufen.hafen = st;
   return s;
 }
 function speichern() {
@@ -272,6 +332,8 @@ function speichern() {
   letztesSpeichern = performance.now();
   posGespeichert = { x: spieler.x, z: spieler.z };
 }
+const hafen = () => stand.auftraege.hafen;
+const stufe = () => stand.stufen.hafen.wahl;
 /** Gebiet freischalten (ab Etappe 5 durch Fähre und Brücke) – nur aufbauend */
 function gebietOeffnen(id, speichernAuch = true) {
   if (offen.has(id) || !welt.gebiete.some(g => g.id === id)) return;
@@ -290,72 +352,37 @@ function posGueltig(p) {
   for (let by = y - 1; by >= 0; by--) { if (welt.nass(bx, by, bz)) return false; if (welt.fest(bx, by, bz)) return true; }
   return false;
 }
-
-/* ═══════════════════════════════════════════════════════
-   VORLESEN (englische Stimme, wie in Room Detective)
-   ═══════════════════════════════════════════════════════ */
-let STIMME = null;
-function stimmeWaehlen() {
-  if (!('speechSynthesis' in window)) return;
-  const v = speechSynthesis.getVoices();
-  STIMME = v.find(s => /en[-_]GB/i.test(s.lang)) || v.find(s => /^en/i.test(s.lang)) || null;
-}
-if ('speechSynthesis' in window) { stimmeWaehlen(); speechSynthesis.onvoiceschanged = stimmeWaehlen; }
-function sprich(text) {
-  if (!('speechSynthesis' in window) || !text) return;
-  try {
-    speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = (STIMME && STIMME.lang) || 'en-GB';
-    if (STIMME) u.voice = STIMME;
-    u.rate = .9;
-    speechSynthesis.speak(u);
-  } catch (e) {}
-}
+/** Vorlesen, wenn eingeschaltet – beim Hören immer */
+function vorlesen(text) { if (stand.opt.lesart === 'hoeren' || stand.opt.vorlesen !== false) F.sprich(text); }
 
 /* ═══════════════════════════════════════════════════════
    AUFBAU
    ═══════════════════════════════════════════════════════ */
-async function figurAufstellen(look) {
-  const f = await LernAvatar.figur(look, { ohneSchatten: true });
-  const box = new f.THREE.Box3().setFromObject(f.root);
-  const s = FIGUR_HOEHE / Math.max(1, box.max.y - box.min.y);
-  f.root.scale.setScalar(s);
-  f.root.position.y = -box.min.y * s;
-  const g = new f.THREE.Group();
-  g.add(f.root);
-  f.pose({ lauf: 0, t: 0 });
-  return { figur: f, gruppe: g };
-}
-function schatten() {
-  const m = new T.Mesh(new T.CircleGeometry(.42, 14), new T.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: .26, depthWrite: false }));
-  m.rotation.x = -Math.PI / 2;
-  m.renderOrder = 3;
-  return m;
-}
 /** Boden unter einer Stelle (unter Dächern: der Boden im Haus, nicht das Dach) */
 function bodenUnter(x, y, z) {
   const bx = Math.floor(x), bz = Math.floor(z);
   for (let by = Math.floor(y + .01) - 1; by >= 0; by--) if (welt.fest(bx, by, bz) || welt.nass(bx, by, bz)) return by + 1;
   return 0;
 }
-async function weltDaten() {
-  const r = await fetch('../daten/insel.json', { cache: 'no-cache' });
-  if (!r.ok) throw new Error('insel.json ' + r.status);
+async function json(url) {
+  const r = await fetch(url, { cache: 'no-cache' });
+  if (!r.ok) throw new Error(url + ' ' + r.status);
   return r.json();
 }
 
 async function aufbauen() {
   if (!webglOk() || !window.LernAvatar) { ohne3d(); return; }
-  const datenP = TESTINSEL ? Promise.resolve(null) : weltDaten();
+  const datenP = TESTINSEL ? Promise.resolve(null) : json('../daten/insel.json');
+  const auftraegeP = json('../daten/insel-auftraege.json').catch(e => { console.warn(e); return null; });
   datenP.catch(() => {});
   let ich;
-  try { ich = await figurAufstellen(null); }
+  try { ich = await F.aufstellen(null); }
   catch (e) { ohne3d(); return; }
   T = ich.figur.THREE;
   let daten;
   try { daten = await datenP; }
   catch (e) { ohne3d('Die Insel konnte nicht geladen werden. Bitte mit Internet einmal neu laden.'); return; }
+  AD = await auftraegeP;
 
   renderer = new T.WebGLRenderer({ antialias: false, powerPreference: 'high-performance' });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
@@ -370,10 +397,11 @@ async function aufbauen() {
   scene.add(sonne);
   camera = new T.PerspectiveCamera(60, 1, .1, SICHTWEITE + 8);
 
-  // Spielstand und Welt
+  // Spielstand und Welt (Warenkisten und Paket-Orte bleiben frei von Bäumen)
   stand = standLesen();
   offen = new Set(stand.gebiete);
-  welt = TESTINSEL ? LernInselWelt.erzeuge(TESTINSEL) : LernInselWelt.ausDaten(daten, { offen });
+  const frei = AD ? [...(AD.quellen || []), ...(AD.suchorte || [])].map(o => ({ x: o.x, z: o.z, r: 2 })) : [];
+  welt = TESTINSEL ? LernInselWelt.erzeuge(TESTINSEL) : LernInselWelt.ausDaten(daten, { offen, frei });
   weltSzene = LernInselWelt.szene(T, welt);
   scene.add(weltSzene.gruppe);
   schilder = welt.orte.schilder || [];
@@ -384,22 +412,19 @@ async function aufbauen() {
   spieler.y = spieler.anzeigeY = p ? Math.round(p.y) : welt.boden(spieler.x, spieler.z);
   spielerFigur = ich.figur; spielerGruppe = ich.gruppe;
   scene.add(spielerGruppe);
-  spielerSchatten = schatten(); scene.add(spielerSchatten);
+  spielerSchatten = F.schatten(T); scene.add(spielerSchatten);
 
-  // Bewohner auf ihren Plätzen
-  for (const def of BEWOHNER) {
-    const pl = (welt.orte.plaetze || []).find(q => q.id === def.platz);
-    if (!pl) continue;
-    try {
-      // gebacken: wenige Draw-Calls statt ~35 je Figur (Bewohner stehen und drehen sich nur)
-      const gruppe = LernInselWelt.backe(T, (await figurAufstellen(def.look)).gruppe);
-      const y = welt.boden(pl.x, pl.z);
-      gruppe.position.set(pl.x, y, pl.z);
-      gruppe.rotation.y = pl.blick;
-      scene.add(gruppe);
-      const sch = schatten(); sch.position.set(pl.x, y + .02, pl.z); scene.add(sch);
-      bewohner.push({ art: 'bewohner', def, x: pl.x, y, z: pl.z, blick: pl.blick, grund: pl.blick, ziel: pl.blick, satz: 0, gruppe });
-    } catch (e) {}
+  // Bewohner, Warenkisten und Pakete der Aufträge
+  if (AD) {
+    const orte = {};
+    (welt.orte.plaetze || []).forEach(q => { orte[q.id] = q; });
+    rahmen = LernInselAuftraege.erstelle(AD, { orte });
+    bewohner = await F.bewohner(T, welt, rahmen.bewohner.map(b => ({ def: b, x: b.x, z: b.z, blick: b.blick })));
+    bewohner.forEach((b, i) => { b.art = 'bewohner'; b.kopf = HOCH + .35; b.nr = i; scene.add(b.gruppe); scene.add(b.schatten); });
+    if (!TESTINSEL) {
+      kisten = rahmen.quellen.map(q => ding(F.kiste(T, q.farbe || '#cccccc'), q, 'kiste'));
+      pakete = rahmen.suchorte.map(o => ding(F.paket(T), o, 'paket'));
+    }
   }
 
   steuerung = LernInselSteuerung.erstelle({
@@ -411,7 +436,7 @@ async function aufbauen() {
   $('opt-seiten').checked = !!stand.opt.seiten;
   document.body.classList.toggle('links', !!stand.opt.seiten);
   $('opt-vorlesen').checked = stand.opt.vorlesen !== false;
-  $('debug-gebiete').hidden = !DEBUG || TESTINSEL;
+  $('debug-gebiete').hidden = !DEBUG || !!TESTINSEL;
 
   groesse();
   window.addEventListener('resize', groesse);
@@ -422,6 +447,14 @@ async function aufbauen() {
   $('los').disabled = false;
   $('los').textContent = p ? 'Weiterspielen' : 'Los geht\'s!';
   $('start-info').textContent = DEBUG ? `Fertig in ${(startMs / 1000).toFixed(1)} s` : 'Tipp: Geh zu den Leuten und tippe auf 💬.';
+}
+/** Warenkiste oder Paket auf den Boden stellen */
+function ding(gruppe, o, art) {
+  const y = welt.boden(o.x, o.z);
+  gruppe.position.set(o.x, y, o.z);
+  gruppe.rotation.y = (o.x * 7 + o.z * 3) % 6.28;
+  scene.add(gruppe);
+  return { art, o, x: o.x, y, z: o.z, kopf: art === 'kiste' ? 1 : .9, gruppe };
 }
 
 function groesse() {
@@ -438,10 +471,11 @@ function groesse() {
    ═══════════════════════════════════════════════════════ */
 function starten() {
   if (!bereit) return;
-  $('start').hidden = true; $('pause').hidden = true;
+  $('start').hidden = true; $('pause').hidden = true; $('runde-ende').hidden = true;
   $('pause-knopf').hidden = false;
   if (!hinweisWeg) $('hinweis').hidden = false;
   homeZeigen(false);
+  auftragZeigen();
   laeuft = true; letzte = 0;
   requestAnimationFrame(schleife);
 }
@@ -450,8 +484,9 @@ function pausieren() {
   laeuft = false;
   steuerung.stopp();
   speichern();
-  if ('speechSynthesis' in window) speechSynthesis.cancel();
+  F.still();
   gebieteZeigen();
+  menueZeigen();
   $('pause').hidden = false; $('pause-knopf').hidden = true; $('aktion').hidden = true; aktionZiel = null;
   homeZeigen(true);
 }
@@ -481,14 +516,16 @@ function zeichneBild(dt) {
   if (r.lauf && !hinweisWeg) { hinweisWeg = true; $('hinweis').classList.add('weg'); setTimeout(() => { $('hinweis').hidden = true; }, 700); }
   gebietPruefen();
 
-  // Figur
+  // Figur (jubelt kurz nach einem erledigten Auftrag)
+  const jubel = !REDUCE && zeit < jubelBis ? 1 : 0;
   phase += dt * (r.lauf ? (r.rennt ? 13 : 9) : 0);
   spielerGruppe.position.set(spieler.x, spieler.anzeigeY, spieler.z);
   spielerGruppe.rotation.y = spieler.blick;
-  spielerFigur.pose({ lauf: r.lauf, phase, t: REDUCE ? 0 : zeit });
+  spielerFigur.pose({ lauf: jubel ? 0 : r.lauf, phase, jubel, t: REDUCE ? 0 : zeit });
+  spielerFigur.gesicht(zeit < jubelBis ? 'cheer' : 'open');
   spielerSchatten.position.set(spieler.x, bodenUnter(spieler.x, spieler.y, spieler.z) + .02, spieler.z);
 
-  // Bewohner: drehen sich zum Kind, wenn sie sprechen. Nächstes Ziel für den Aktionsknopf
+  // Bewohner drehen sich zum Kind, wenn sie sprechen. Nächstes Ziel für den Aktionsknopf
   let naechster = null, nd = SPRECH_ABSTAND;
   bewohner.forEach(b => {
     const d = Math.hypot(b.x - spieler.x, b.z - spieler.z);
@@ -498,9 +535,13 @@ function zeichneBild(dt) {
     b.blick += w * Math.min(1, dt * 6);
     b.gruppe.rotation.y = b.blick;
   });
+  kisten.concat(pakete).forEach(k => {
+    const d = Math.hypot(k.x - spieler.x, k.z - spieler.z);
+    if (d < GREIF_ABSTAND && d < nd) { nd = d; naechster = k; }
+  });
   schilder.forEach(s => {
     const d = Math.hypot(s.x - spieler.x, s.z - spieler.z);
-    if (d < LESE_ABSTAND && d < nd) { nd = d; naechster = { art: 'schild', s, x: s.x, y: s.y + .6, z: s.z }; }
+    if (d < LESE_ABSTAND && d < nd) { nd = d; naechster = { art: 'schild', s, x: s.x, y: s.y + .6, z: s.z, kopf: 1.2 }; }
   });
   aktionZeigen(naechster);
   if (gesprochen && Math.hypot(gesprochen.x - spieler.x, gesprochen.z - spieler.z) > 5) blaseWeg();
@@ -559,41 +600,163 @@ function gebieteZeigen() {
 }
 
 /* ═══════════════════════════════════════════════════════
+   AUFTRÄGE (Etappe 3): Karte, Korb, Wertung des ersten Versuchs, Runde melden
+   ═══════════════════════════════════════════════════════ */
+const MAX_RUNDE = () => (AD && AD.auftraege_je_runde) || 5;
+function auftragZeigen(neu) {
+  const el = $('auftrag');
+  if (!rahmen || TESTINSEL) { el.hidden = true; $('korb').hidden = true; return; }
+  const h = hafen(), a = h.aktiv;
+  el.hidden = false;
+  $('auftrag-kopf').textContent = `Hafendorf · Stufe ${stufe()}`;
+  $('auftrag-punkte').textContent = '●'.repeat(h.runde.n) + '○'.repeat(Math.max(0, MAX_RUNDE() - h.runde.n));
+  const txt = $('auftrag-text');
+  $('auftrag-sym').textContent = a ? ART_SYM[a.art] || '💬' : '💬';
+  $('auftrag-hoeren').hidden = !a;
+  if (!a) { txt.textContent = 'Sprich mit jemandem im Dorf – du bekommst einen Auftrag.'; txt.className = 'leise'; txt.lang = 'de'; }
+  else if (stand.opt.lesart === 'hoeren') { txt.textContent = '🎧 Tippe auf 🔊 und hör genau zu.'; txt.className = 'leise'; txt.lang = 'de'; }
+  else { txt.textContent = a.text; txt.className = ''; txt.lang = 'en'; }
+  if (neu) { el.classList.remove('neu'); void el.offsetWidth; el.classList.add('neu'); }
+  document.documentElement.style.setProperty('--karte-h', el.offsetHeight + 'px');
+  korbZeigen();
+}
+function korbZeigen() {
+  const k = hafen().korb, el = $('korb');
+  if (!k || !rahmen) { el.hidden = true; return; }
+  const q = rahmen.quellen.find(x => x.id === k.ding);
+  el.textContent = '';
+  const a = document.createElement('span'); a.textContent = `${q ? q.emoji : '🧺'} × ${k.n}`;
+  const b = document.createElement('small'); b.textContent = 'antippen = Korb leeren';
+  el.append(a, b);
+  el.hidden = false;
+}
+/** Ergebnis eines Versuchs (aus dem Auftragsrahmen) verarbeiten */
+function versuch(ergebnis, wer) {
+  if (!ergebnis) return false;
+  const a = hafen().aktiv;
+  blase(wer, ergebnis.text, true);
+  if (ergebnis.versuch && !ergebnis.ok && a) { a.fehler = true; speichern(); }
+  if (ergebnis.ok) erledigt();
+  return true;
+}
+function erledigt(uebersprungen) {
+  const h = hafen(), a = h.aktiv;
+  if (!a) return;
+  h.runde.n++;
+  if (!a.fehler && !uebersprungen) h.runde.richtig++;
+  h.verlauf = h.verlauf.concat(a.id).slice(-10);
+  if (a.art === 'bringen' && !uebersprungen) h.korb = null;
+  h.aktiv = null;
+  if (!uebersprungen) {
+    jubelBis = zeit + 1.3;
+    toast(a.fehler ? `✅ Erledigt! (${h.runde.n}/${MAX_RUNDE()}) – beim nächsten Mal klappt es beim ersten Versuch.` : `⭐ Super, beim ersten Versuch! (${h.runde.n}/${MAX_RUNDE()})`);
+  }
+  if (h.runde.n >= MAX_RUNDE()) rundeEnde();
+  speichern();
+  auftragZeigen(true);
+}
+function rundeEnde() {
+  const h = hafen(), st = stand.stufen.hafen, s = st.wahl;
+  const r = h.runde, max = MAX_RUNDE();
+  LernSpiel.speichereRunde({ score: r.richtig, max, titel: 'Aufträge', skill: `insel:hafen:${s}` });
+  h.runden++;
+  let neu = '';
+  if (r.richtig >= ((AD && AD.aufstieg_ab) || 4) && s === st.frei && st.frei < 3) {
+    st.frei++; st.wahl = st.frei;
+    neu = `🎉 Stufe ${st.frei} ist frei! Die Aufträge werden jetzt etwas schwieriger.`;
+  }
+  h.runde = { n: 0, richtig: 0 };
+  $('ende-titel').textContent = r.richtig === max ? 'Perfekte Runde! 🌟' : 'Runde geschafft!';
+  $('ende-text').textContent = `${r.richtig} von ${max} Aufträgen beim ersten Versuch richtig.`;
+  $('ende-stufe').textContent = neu;
+  setTimeout(() => {                                // kurz jubeln lassen, dann das Ergebnis zeigen (auch aus der Pause)
+    if (laeuft) { laeuft = false; steuerung.stopp(); }
+    $('pause').hidden = true;
+    $('runde-ende').hidden = false; $('pause-knopf').hidden = true; $('aktion').hidden = true; aktionZiel = null;
+    homeZeigen(true);
+  }, 1400);
+}
+function auftragHoeren() { const a = hafen().aktiv; if (a) F.sprich(a.text); }
+
+/* ═══════════════════════════════════════════════════════
    AKTIONSKNOPF UND SPRECHBLASE
    ═══════════════════════════════════════════════════════ */
-let aktionZiel = null;
-function aktionZeigen(b) {
-  if (b === aktionZiel || (b && aktionZiel && b.art === 'schild' && aktionZiel.s === b.s)) return;
-  aktionZiel = b;
-  $('aktion').hidden = !b;
-  if (!b) return;
-  const schild = b.art === 'schild';
-  $('aktion').querySelector('.sym').textContent = schild ? '📜' : '💬';
-  $('aktion').querySelector('.txt').textContent = schild ? 'Lesen' : 'Sprechen';
-  $('aktion').setAttribute('aria-label', schild ? 'Schild lesen' : 'Mit ' + b.def.name + ' sprechen');
+let aktionZiel = null, aktionSchluessel = '';
+function aktionArt(z) {
+  if (!z) return null;
+  if (z.art === 'schild') return ['📜', 'Lesen'];
+  if (z.art === 'kiste') return ['✋', 'Nehmen'];
+  if (z.art === 'paket') return ['📦', 'Öffnen'];
+  const a = rahmen && hafen().aktiv, id = z.def.id;
+  if (a && a.art === 'finden' && id !== a.geber) return ['🔍', 'Bist du es?'];
+  if (a && a.art === 'bringen' && hafen().korb) return ['🎁', 'Geben'];
+  return ['💬', 'Sprechen'];
+}
+function aktionZeigen(z) {
+  const art = aktionArt(z);
+  const schluessel = art ? art.join('') + (z.def ? z.def.id : z.art === 'schild' ? z.s.id : z.o.id) : '';
+  aktionZiel = z;
+  if (schluessel === aktionSchluessel) return;
+  aktionSchluessel = schluessel;
+  $('aktion').hidden = !art;
+  if (!art) return;
+  $('aktion').querySelector('.sym').textContent = art[0];
+  $('aktion').querySelector('.txt').textContent = art[1];
+  $('aktion').setAttribute('aria-label', z.def ? art[1] + ': ' + z.def.name : art[1]);
 }
 function aktion() {
   if (!laeuft || !aktionZiel) return;
-  const b = aktionZiel, el = $('blase');
-  const satzEl = el.querySelector('.satz');
-  if (b.art === 'schild') {                         // Schilder sind deutsch (Hinweise zur Insel)
-    el.querySelector('.wer').textContent = '📜 Schild';
-    satzEl.textContent = b.s.text;
-    satzEl.lang = 'de';
-    $('blase-hoeren').hidden = true;
-  } else {
-    const satz = b.def.saetze[b.satz % b.def.saetze.length];
-    b.satz++;
-    el.querySelector('.wer').textContent = b.def.name;
-    satzEl.textContent = satz;
-    satzEl.lang = 'en';
-    $('blase-hoeren').hidden = false;
-    if (stand.opt.vorlesen !== false) sprich(satz);
+  const z = aktionZiel;
+  if (z.art === 'schild') { blase(z, z.s.text, false, '📜 Schild'); return; }
+  if (z.art === 'kiste') { nehmen(z); return; }
+  if (z.art === 'paket') { versuch(rahmen.oeffnen(hafen().aktiv, z.o.id), z) || blase(z, 'Oh, this parcel is empty.', true); return; }
+  sprechenMit(z);
+  aktionSchluessel = '';                            // Beschriftung neu bestimmen (Auftrag kann sich geändert haben)
+}
+function sprechenMit(b) {
+  const h = hafen(), a = rahmen ? h.aktiv : null, id = b.def.id;
+  if (rahmen && !a && !TESTINSEL && aktGebiet === 'hafen') {             // neuer Auftrag
+    const neu = rahmen.neu(stufe(), id, h.verlauf);
+    if (neu) {
+      h.aktiv = neu; speichern();
+      blase(b, neu.text, true);
+      auftragZeigen(true);
+      return;
+    }
   }
-  gesprochen = b;
+  if (a && a.art === 'finden' && id !== a.geber) { versuch(rahmen.sprechen(a, id), b); return; }
+  if (a && a.art === 'bringen' && h.korb && versuch(rahmen.geben(a, id, h.korb), b)) { korbZeigen(); return; }
+  if (a && id === a.geber) { blase(b, a.text, true); return; }              // Auftrag noch einmal hören
+  const s = b.def.saetze || ['Hello!'];
+  b.satz = (b.satz || 0) + 1;
+  blase(b, s[(b.satz - 1) % s.length], true);
+}
+function nehmen(k) {
+  const h = hafen(), q = k.o, max = (AD && AD.korb_max) || 12;
+  if (h.korb && h.korb.ding !== q.id) {
+    const alt = rahmen.quellen.find(x => x.id === h.korb.ding);
+    toast(`Im Korb ist schon etwas anderes (${alt ? alt.emoji : ''}). Tippe auf den Korb, um ihn zu leeren.`);
+    return;
+  }
+  if (h.korb && h.korb.n >= max) { toast(`Mehr als ${max} passen nicht in den Korb.`); return; }
+  h.korb = { ding: q.id, n: (h.korb ? h.korb.n : 0) + 1 };
+  speichern();
+  korbZeigen();
+  vorlesen(rahmen.menge(q.id, h.korb.n));            // „three eggs“ – Zahlen hören
+}
+function blase(ziel, text, englisch, wer) {
+  gesprochen = ziel;
+  const el = $('blase'), satzEl = el.querySelector('.satz');
+  const hoeren = englisch && stand.opt.lesart === 'hoeren';
+  el.querySelector('.wer').textContent = wer || (ziel.def ? ziel.def.name : ziel.art === 'paket' ? '📦' : '🧺');
+  satzEl.textContent = hoeren ? '🎧 …' : text;
+  satzEl.lang = englisch ? 'en' : 'de';
+  el.dataset.text = englisch ? text : '';
+  $('blase-hoeren').hidden = !englisch;
   el.hidden = false;
   el.classList.remove('neu'); void el.offsetWidth; el.classList.add('neu');
   blaseSetzen();
+  if (englisch) vorlesen(text);
 }
 function blaseWeg() { gesprochen = null; $('blase').hidden = true; }
 const kopf = { v: null };
@@ -601,7 +764,7 @@ function blaseSetzen() {
   const b = gesprochen;
   if (!b || !T) return;
   const v = kopf.v || (kopf.v = new T.Vector3());
-  v.set(b.x, b.y + (b.art === 'schild' ? 1.2 : FIGUR_HOEHE + .35), b.z).project(camera);
+  v.set(b.x, b.y + (b.kopf || HOCH + .35), b.z).project(camera);
   const el = $('blase');
   if (v.z > 1) { el.style.visibility = 'hidden'; return; }
   el.style.visibility = '';
@@ -609,6 +772,26 @@ function blaseSetzen() {
   const halb = el.offsetWidth / 2 + 8;
   el.style.left = Math.max(halb, Math.min(window.innerWidth - halb, x)) + 'px';
   el.style.top = Math.max(el.offsetHeight + 70, y) + 'px';
+}
+
+/* ═══════════════════════════════════════════════════════
+   PAUSENMENÜ: Stufe, Lesen/Hören, Auftrag überspringen
+   ═══════════════════════════════════════════════════════ */
+function menueZeigen() {
+  const box = $('stufen');
+  box.textContent = '';
+  const st = stand.stufen.hafen;
+  for (let s = 1; s <= 3; s++) {
+    const b = document.createElement('button');
+    b.textContent = s <= st.frei ? `Stufe ${s}` : `🔒 Stufe ${s}`;
+    b.disabled = s > st.frei;
+    b.classList.toggle('an', s === st.wahl);
+    b.addEventListener('click', () => { st.wahl = s; speichern(); menueZeigen(); auftragZeigen(); });
+    box.appendChild(b);
+  }
+  $('lesart').querySelectorAll('button').forEach(b => b.classList.toggle('an', b.dataset.l === stand.opt.lesart));
+  $('abbrechen').hidden = !(rahmen && hafen().aktiv);
+  [$('stufen'), $('lesart')].forEach(e => { e.hidden = !rahmen || !!TESTINSEL; });
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -628,9 +811,18 @@ function debugZeigen() {
    ═══════════════════════════════════════════════════════ */
 $('los').addEventListener('click', starten);
 $('weiter').addEventListener('click', starten);
+$('ende-weiter').addEventListener('click', starten);
 $('pause-knopf').addEventListener('click', pausieren);
 $('aktion').addEventListener('click', aktion);
-$('blase-hoeren').addEventListener('click', () => sprich($('blase').querySelector('.satz').textContent));
+$('auftrag-hoeren').addEventListener('click', auftragHoeren);
+$('korb').addEventListener('click', () => { hafen().korb = null; speichern(); korbZeigen(); aktionSchluessel = ''; });
+$('blase-hoeren').addEventListener('click', () => F.sprich($('blase').dataset.text || $('blase').querySelector('.satz').textContent));
+$('lesart').addEventListener('click', e => {
+  const b = e.target.closest('button');
+  if (!b || !stand) return;
+  stand.opt.lesart = b.dataset.l; speichern(); menueZeigen(); auftragZeigen();
+});
+$('abbrechen').addEventListener('click', () => { erledigt(true); menueZeigen(); });
 $('opt-seiten').addEventListener('change', e => {
   document.body.classList.toggle('links', e.target.checked);
   if (steuerung) steuerung.setzeOptionen({ seitenTauschen: e.target.checked });
