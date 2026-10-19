@@ -283,6 +283,7 @@
   /**
    * Baut die Welt aus den Weltdaten (Format: README → Die Insel). Gleiche Daten → gleiche Welt.
    * opt.offen: Set der offenen Gebiets-IDs (bestimmt, welche Absperrungen stehen)
+   * opt.frei:  weitere Freiflächen [{ x, z, r }] ohne Bäume (z. B. Warenkisten und Paket-Orte der Aufträge)
    */
   function ausDaten(d, opt = {}) {
     const N = d.groesse || 96, H = d.hoehe || 24, W = d.wasser || 5;
@@ -422,7 +423,7 @@
     welt.orte.plaetze.forEach(p => { const x = Math.floor(p.x), z = Math.floor(p.z); belege(x - 2, z - 2, x + 2, z + 2); });
 
     // Freiflächen (z. B. Dorfplatz): dort wachsen keine Bäume
-    (d.frei || []).forEach(f => { const r = f.r || 4; belege(Math.floor(f.x - r), Math.floor(f.z - r), Math.ceil(f.x + r), Math.ceil(f.z + r)); });
+    (d.frei || []).concat(opt.frei || []).forEach(f => { const r = f.r || 4; belege(Math.floor(f.x - r), Math.floor(f.z - r), Math.ceil(f.x + r), Math.ceil(f.z + r)); });
 
     // Bäume: wiederholbarer Zufall, Dichte je Gebiet, nie auf Wegen und dicht an Gebäuden
     const bd = d.baeume || {};

@@ -31,6 +31,8 @@
 #       stehen in sw.js NACHLADEN (sonst fehlen sie offline).
 #   14. Die Insel: daten/insel.json ist gültig (Karten, Gebiete, Vorlagen, IDs), und Bewohner-Plätze
 #       stehen mindestens INSEL_ABSTAND (20) Blöcke auseinander.
+#   15. Die Insel: daten/insel-auftraege.json – Bewohner (Platz, Look, eindeutige Merkmale), Warenkisten
+#       und Paket-Orte im Hafendorf und je mindestens 20 Blöcke auseinander, Satzrahmen für alle Stufen.
 # ═══════════════════════════════════════════════════════
 import gzip, json, math, os, re, sys
 from pathlib import Path
@@ -199,6 +201,64 @@ if Path('daten/insel.json').is_file():
             zg = gk[int(st['z'])][int(st['x'])]
             if not any(g.get('zeichen') == zg and g.get('offen') for g in geb): F('daten/insel.json: Start liegt nicht in einem offenen Gebiet')
         I(f'Die Insel: {len(geb)} Gebiete, {len(orte)} Bewohner-Plätze (Abstand ≥ {INSEL_ABSTAND}), {len(insel.get("bauplaetze") or [])} Bauplätze')
+# 15. Die Insel: Auftrags-Bausteine (daten/insel-auftraege.json)
+if Path('daten/insel-auftraege.json').is_file() and Path('daten/insel.json').is_file():
+    wo = 'daten/insel-auftraege.json'
+    try:
+        ia = json.loads(lies(wo)); ins = json.loads(lies('daten/insel.json'))
+    except Exception as e:
+        ia = None
+        F(f'{wo} ist kein gültiges JSON ({e})')
+    if ia is not None:
+        inh = json.loads(lies('daten/lernwelt-inhalte.json'))
+        av = inh.get('AVATAR', {})
+        item_ids = {i.get('id') for i in inh.get('ITEMS', []) if isinstance(i, dict)}
+        frisuren = {f.get('id') for f in av.get('FRISUREN', [])}
+        plaetze = {q.get('id') for q in ins.get('plaetze') or []}
+        gk = ins.get('gebietskarte') or []
+        hafen_z = next((g.get('zeichen') for g in ins.get('gebiete') or [] if g.get('id') == ia.get('gebiet', 'hafen')), 'h')
+        merkmal_von = {}
+        ids = set()
+        for b in ia.get('bewohner') or []:
+            bid = b.get('id')
+            if bid in ids: F(f'{wo}: Bewohner-ID doppelt: {bid}')
+            ids.add(bid)
+            if b.get('platz') not in plaetze: F(f'{wo}: Bewohner {bid}: Platz „{b.get("platz")}“ fehlt in daten/insel.json')
+            for k in ('name', 'typ', 'er', 'ihn'):
+                if not b.get(k): F(f'{wo}: Bewohner {bid}: „{k}“ fehlt')
+            look = b.get('look') or {}
+            if look.get('frisur') not in frisuren: F(f'{wo}: Bewohner {bid}: unbekannte Frisur „{look.get("frisur")}“')
+            if not (0 <= int(look.get('haut', 0)) < len(av.get('HAUT', [])) and 0 <= int(look.get('haarfarbe', 0)) < len(av.get('HAARFARBEN', []))):
+                F(f'{wo}: Bewohner {bid}: Haut- oder Haarfarbe außerhalb der Liste')
+            for slot, item in (look.get('eq') or {}).items():
+                if item not in item_ids: F(f'{wo}: Bewohner {bid}: unbekanntes Teil „{item}“ ({slot})')
+            if not b.get('merkmale'): F(f'{wo}: Bewohner {bid}: keine Merkmale')
+            for m in b.get('merkmale') or []:
+                if m in merkmal_von and merkmal_von[m] != bid:
+                    F(f'{wo}: Merkmal „{m}“ bei {merkmal_von[m]} und {bid} – „find the … with {m}“ wäre nicht eindeutig')
+                merkmal_von[m] = bid
+        for art in ('quellen', 'suchorte'):
+            liste = ia.get(art) or []
+            for o in liste:
+                x, z = o.get('x'), o.get('z')
+                if not (isinstance(x, int) and isinstance(z, int) and 0 <= z < len(gk) and 0 <= x < len(gk[z])):
+                    F(f'{wo}: {art} {o.get("id")}: x/z fehlen oder liegen nicht auf der Insel'); continue
+                if gk[z][x] != hafen_z: F(f'{wo}: {art} {o.get("id")}: liegt nicht im Hafendorf')
+                for s in ('1', '2', '3'):
+                    if not (o.get('ort') or {}).get(s): F(f'{wo}: {art} {o.get("id")}: Ortsangabe für Stufe {s} fehlt')
+                if art == 'quellen' and not (o.get('eins') and o.get('viele')): F(f'{wo}: Kiste {o.get("id")}: „eins“/„viele“ fehlt')
+            for i in range(len(liste)):
+                for j in range(i + 1, len(liste)):
+                    d = math.hypot(liste[i]['x'] - liste[j]['x'], liste[i]['z'] - liste[j]['z'])
+                    if d < INSEL_ABSTAND: F(f'{wo}: {art} „{liste[i]["id"]}“ und „{liste[j]["id"]}“ nur {d:.0f} Blöcke auseinander (mindestens {INSEL_ABSTAND})')
+        erlaubt = {'typ', 'er', 'Er', 'ihn', 'm', 'm2', 'ort', 'ort3', 'kl', 'n', 'dinge', 'viele', 'qort', 'port', 'k', 'name'}
+        for art, stufen in (ia.get('saetze') or {}).items():
+            for s in ('1', '2', '3'):
+                if not stufen.get(s): F(f'{wo}: Satzrahmen „{art}“ für Stufe {s} fehlen')
+                for satz in stufen.get(s) or []:
+                    for ph in re.findall(r'\{(\w+)\}', satz):
+                        if ph not in erlaubt: F(f'{wo}: unbekannter Platzhalter {{{ph}}} in „{satz}“')
+        I(f'Die Insel – Aufträge: {len(ia.get("bewohner") or [])} Bewohner, {len(ia.get("quellen") or [])} Warenkisten, {len(ia.get("suchorte") or [])} Paket-Orte')
 for p in ALLE:
     if p.suffix not in ('.js', '.html') or rel(p).startswith('vendor/'): continue
     for d in re.findall(r"LW\.laden\(\s*'([^']+)'", p.read_text(encoding='utf-8')):
