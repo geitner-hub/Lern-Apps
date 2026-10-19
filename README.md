@@ -331,7 +331,8 @@ selbst im Admin unter „🎯 Unterricht“), Wiederholung, Fehler-Training, Inf
   Datei in `sw.js` → `NACHLADEN`. Format: siehe `daten/lernwege/en.6.lernweg-u1.json` (stationen → schritte,
   aufgaben mit art `luecken` · `wahl` · `zuordnen` · `saetze` · `sortieren` · `schreiben` · `mediation`;
   `hefteintraege` mit zeilen `[text, stil]`, stil `g` = grün, `b` = fett).
-- **Erster Lernweg:** `en.6.lernweg-u1` (Highlight 6, Unit 1 „Together again“, 8 Stationen).
+- **Erster Lernweg:** `en.6.lernweg-u1` (Highlight 6, Unit 1 „Together again“, 7 Stationen; Hören macht die Lehrkraft im Unterricht,
+  Extras sind nummerierte Arbeitsblätter am Pult – die Kinder haben kein Workbook).
 
 ## Vokabel-Engine (Infrastruktur Etappe 5)
 

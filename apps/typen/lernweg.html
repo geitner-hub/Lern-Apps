@@ -253,14 +253,14 @@
   function probe() {
     const st = stand();
     const zeilen = D.probe.map((p, i) => `<div class="box probe-zeile"><div><div class="teil">${esc(p.teil)}</div><div>Ich kann ${esc(p.kann)}</div>
-      <small style="color:var(--muted)">Üben: Station ${p.station}</small></div>${smileys(st.p[i], 'data-probe-wert-' + i)}</div>`).join('');
+      <small style="color:var(--muted)">Üben: ${p.station ? 'Station ' + p.station : 'im Unterricht'}</small></div>${smileys(st.p[i], 'data-probe-wert-' + i)}</div>`).join('');
     const ueben = D.probe.map((p, i) => ({ p, w: st.p[i] })).filter(x => x.w && x.w < 3);
     const offen = D.stationen.filter(s => !fortschritt(st, s).kontrolliert);
     app.innerHTML = `<button type="button" class="zurueck" data-zurueck>‹ Laufzettel</button>
       <h1>🎯 Fit für die Probe?</h1><p class="sub">Das kommt in der Probe dran. Tippe an, wie gut du es schon kannst.</p>${zeilen}
       <h2>Mein Lernplan bis zur Probe</h2><div class="box ueben">
       ${offen.length ? `<p><b>Noch nicht kontrolliert:</b> ${offen.map(s => 'Station ' + s.nr).join(', ')}</p>` : '<p>✅ Alle Stationen kontrolliert – super!</p>'}
-      ${ueben.length ? `<p style="margin-top:.5rem"><b>Das übe ich noch:</b></p><ul>${ueben.map(x => `<li>${esc(x.p.kann)} → Station ${x.p.station}</li>`).join('')}</ul>` : ''}
+      ${ueben.length ? `<p style="margin-top:.5rem"><b>Das übe ich noch:</b></p><ul>${ueben.map(x => `<li>${esc(x.p.kann)} → ${x.p.station ? 'Station ' + x.p.station : 'frag deine Lehrkraft'}</li>`).join('')}</ul>` : ''}
       <p style="margin-top:.6rem">💡 Jeden Tag 10 Minuten Vokabeltrainer und die Hefteinträge lesen!</p></div>`;
     app.dataset.station = '';
     window.scrollTo(0, 0);

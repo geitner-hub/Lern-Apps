@@ -6,7 +6,7 @@
  "emoji": "🧭",
  "regeln": [
   "Ich arbeite leise am Platz (Flüsterstimme).",
-  "Ich arbeite der Reihe nach: Station 1 → 8.",
+  "Ich arbeite der Reihe nach: Station 1 → 7.",
   "Ich schreibe alles ins Heft: Überschrift „Station 1 – …“, dann A, B, C.",
   "Fertig? → mit dem Heft zur Kontrollstation, mit GRÜN verbessern, auf dem Klassen-Laufzettel abhaken.",
   "Frage? → erst Buch, dann Nachbar, dann Lehrer.",
@@ -249,7 +249,7 @@
    "schritte": [
     {
      "art": "buch",
-     "text": "Lies die Geschichte im Buch S. 14–15. Hör sie dazu an (Track 1.06–1.10)."
+     "text": "Lies die Geschichte im Buch S. 14–15."
     },
     {
      "art": "heft",
@@ -265,7 +265,7 @@
     },
     {
      "art": "extra",
-     "text": "Extra: Workbook S. 7."
+     "text": "Extra: Arbeitsblatt 1 (am Pult holen)."
     }
    ],
    "aufgaben": [
@@ -389,7 +389,7 @@
     },
     {
      "art": "extra",
-     "text": "Extra: Workbook S. 8 · Lernwelt-App „Simple Past“.",
+     "text": "Extra: Arbeitsblatt 2 (am Pult holen) · Lernwelt-App „Simple Past“.",
      "link": "../typen/uebung.html?inhalt=en.5.simple-past"
     }
    ],
@@ -478,7 +478,7 @@
     },
     {
      "art": "extra",
-     "text": "Extra: Workbook S. 9."
+     "text": "Extra: Arbeitsblatt 3 (am Pult holen)."
     }
    ],
    "aufgaben": [
@@ -538,7 +538,7 @@
     },
     {
      "art": "buch",
-     "text": "Buch S. 16–19 (Focus on language): Ü 7a und 7b (Track 1.11) ins Heft."
+     "text": "Buch S. 16–19 (Focus on language): Ü 7a und 7b ins Heft."
     },
     {
      "art": "aufgaben",
@@ -653,7 +653,7 @@
     },
     {
      "art": "extra",
-     "text": "Extra: Workbook S. 11."
+     "text": "Extra: Arbeitsblatt 4 (am Pult holen)."
     }
    ],
    "aufgaben": [
@@ -741,7 +741,7 @@
     },
     {
      "art": "extra",
-     "text": "Extra: Workbook S. 10."
+     "text": "Extra: Arbeitsblatt 5 (am Pult holen)."
     }
    ],
    "aufgaben": [
@@ -826,41 +826,6 @@
   },
   {
    "nr": 7,
-   "ico": "🎧",
-   "titel": "Listening",
-   "kurz": "Hörverstehen · nur mit Kopfhörer",
-   "schritte": [
-    {
-     "art": "hoeren",
-     "text": "Kopfhörer auf! Öffne die Hördateien auf deinem Tablet."
-    },
-    {
-     "art": "buch",
-     "text": "Buch S. 11 Ü 4 „Mia, a new student in 8Y“ (Track 1.04) – Antworten ins Heft."
-    },
-    {
-     "art": "buch",
-     "text": "Buch S. 12 Ü 2 „Which club?“ (Track 1.05) – Antworten ins Heft."
-    },
-    {
-     "art": "kontrolle",
-     "text": "Kontrolle: Geh mit deinem Heft zur Kontrollstation. Verbessere mit Grün. Hake dich auf dem Klassen-Laufzettel ab."
-    },
-    {
-     "art": "extra",
-     "text": "Extra: Buch S. 9 Ü 5 „School tomorrow“ (Track 1.02)."
-    }
-   ],
-   "aufgaben": [],
-   "tipps": [
-    "Lies zuerst die Aufgabe im Buch. Was sollst du herausfinden?",
-    "1. Hören: Worum geht es? Wer spricht?",
-    "2. Hören: Schreibe die Lösungen auf.",
-    "Du verstehst nicht jedes Wort? Keine Panik! Du brauchst nur die Infos aus der Aufgabe."
-   ]
-  },
-  {
-   "nr": 8,
    "ico": "🗣️",
    "titel": "Mediation",
    "kurz": "Englisch → Deutsch · mit Partner",
@@ -879,7 +844,7 @@
     },
     {
      "art": "extra",
-     "text": "Extra: Workbook S. 12."
+     "text": "Extra: Arbeitsblatt 6 (am Pult holen)."
     }
    ],
    "aufgaben": [
@@ -937,7 +902,7 @@
   {
    "teil": "Hören",
    "kann": "kurze Hörtexte über Schule und Clubs verstehen.",
-   "station": 7
+   "station": null
   },
   {
    "teil": "Schreiben",
@@ -977,7 +942,7 @@
   {
    "teil": "Mediation",
    "kann": "englische Infos (Plakat, Regeln) auf Deutsch weitergeben.",
-   "station": 8
+   "station": 7
   }
  ]
 }
