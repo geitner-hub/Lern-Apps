@@ -193,6 +193,12 @@ if Path('daten/insel.json').is_file():
                 neue_id(art, o.get('id'))
                 if art != 'Steg': im_feld(o, f'{art} {o.get("id")}')
                 if art == 'Bauplatz' and o.get('gebiet') not in gids: F(f'daten/insel.json: Bauplatz {o.get("id")}: unbekanntes Gebiet „{o.get("gebiet")}“')
+                if art == 'Bauplatz' and o.get('plan'):
+                    pl = o['plan']
+                    if pl.get('art') not in ('rand', 'flaeche', 'muster'): F(f'daten/insel.json: Bauplatz {o.get("id")}: Bauplan-Art „{pl.get("art")}“ unbekannt (rand, flaeche, muster)')
+                    for blk in [pl.get('block')] + [b[3] for b in pl.get('bloecke') or [] if isinstance(b, list) and len(b) == 4]:
+                        if blk is not None and blk not in bloecke: F(f'daten/insel.json: Bauplatz {o.get("id")}: unbekannter Block {blk} im Bauplan')
+                if art == 'Bauplatz' and o.get('vorrat', '') not in ('', 'frei'): F(f'daten/insel.json: Bauplatz {o.get("id")}: vorrat nur "frei" oder weglassen')
                 if art == 'Schild' and not str(o.get('text', '')).strip(): F(f'daten/insel.json: Schild {o.get("id")}: Text fehlt')
         for a in insel.get('absperrungen') or []:
             if a.get('gebiet') not in gids: F(f'daten/insel.json: Absperrung mit unbekanntem Gebiet „{a.get("gebiet")}“')

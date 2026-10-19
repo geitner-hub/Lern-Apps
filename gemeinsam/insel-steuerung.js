@@ -22,7 +22,8 @@
 //      aktion()  wird bei Leertaste/Enter aufgerufen
 //      darf(x, z) → false: dort nicht hineinlaufen (geschlossenes Gebiet, ab Etappe 2)
 //      gesperrt(x, z)  wird aufgerufen, wenn darf() den Weg versperrt (Hinweis zeigen)
-//      optionen  { seitenTauschen, joystickGroesse (1 = 60 px), kameraTempo (1), reduce }
+//      tippen(x, y)    kurzes Antippen ohne Wischen (Bildschirmkoordinaten) – z. B. Block setzen
+//      optionen  { seitenTauschen, joystickGroesse (1 = 60 px), kameraTempo (1), reduce, kameraHoch (Baumodus) }
 //    → { update(dt) → { lauf 0–1, rennt, bewegt }, kamera(cam, dt) → Abstand, yaw, setzeOptionen(o),
 //        stopp(), destroy(), aktiv() }
 // ═══════════════════════════════════════════════════════
@@ -79,6 +80,7 @@
     };
     const zeiger = window.LernSpiel.zeiger(flaeche, {
       down(p) {
+        p.daten.cx = p.x; p.daten.cy = p.y; p.daten.weit = 0;      // Bildschirmstelle für „Antippen“
         if (links(p.x)) {
           if (joy) return false;
           joy = p.id; p.daten.art = 'joy';
@@ -91,6 +93,7 @@
         }
       },
       move(p) {
+        p.daten.weit = Math.max(p.daten.weit, Math.hypot(p.x - p.daten.cx, p.y - p.daten.cy));
         if (p.daten.art === 'joy') {
           const r = flaeche.getBoundingClientRect();
           p.x -= r.left; p.y -= r.top;
@@ -101,7 +104,12 @@
           letzteKamera = performance.now();
         }
       },
-      up(p) { ende(p); },
+      up(p) {
+        // kurz angetippt, kaum bewegt → Antippen (z. B. Block setzen); Joystick/Kamera bleiben unberührt
+        const tipp = o.tippen && p.daten.weit < 14 && performance.now() - p.t0 < 400;
+        ende(p);
+        if (tipp) o.tippen(p.daten.cx, p.daten.cy);
+      },
       cancel(p) { ende(p); },
     });
     function ende(p) {
@@ -243,7 +251,7 @@
       const sx = -Math.sin(yaw), sz = -Math.cos(yaw);
       const waag = h => Math.sqrt(Math.max(1, KAM_ABSTAND * KAM_ABSTAND - h * h));   // gleicher Abstand, steilerer Winkel
       let ziel = HOEHEN[HOEHEN.length - 1], best = -1;
-      for (const h of HOEHEN) {
+      for (const h of opt.kameraHoch ? HOEHEN.slice(2) : HOEHEN) {   // Baumodus: steiler von oben
         const w = waag(h), d = frei(zx, zy, zz, sx * w, h, sz * w);
         if (d >= KAM_ABSTAND * .8) { ziel = h; break; }
         if (d > best) { best = d; ziel = h; }

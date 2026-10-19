@@ -333,6 +333,24 @@
  ],
  "bauplaetze": [
   {
+   "id": "werkstatt",
+   "name": "Werkstatt",
+   "gebiet": "hafen",
+   "art": "uebung",
+   "x": 64,
+   "z": 67,
+   "breite": 6,
+   "tiefe": 6,
+   "hoehe": 4,
+   "vorrat": "frei",
+   "plan": {
+    "art": "rand",
+    "block": "ZAUN",
+    "tor": 1,
+    "text": "Bauplan: Baue einen Zaun rund um den Bauplatz. Eine Lücke als Tor ist erlaubt."
+   }
+  },
+  {
    "id": "weide",
    "gebiet": "tal",
    "art": "zaun",
@@ -400,6 +418,12 @@
    "x": 39,
    "z": 25,
    "text": "Hier soll eine Brücke ins Hochland entstehen."
+  },
+  {
+   "id": "werkstatt",
+   "x": 60,
+   "z": 71,
+   "text": "Werkstatt: Hier kannst du bauen üben. Stell dich auf den Bauplatz und tippe auf 🧱."
   }
  ],
  "absperrungen": [
