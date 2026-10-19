@@ -1,6 +1,6 @@
 # Inventar der Lern-Apps und Spiele
 
-Automatisch erzeugt am 16.10.2026 mit `python3 werkzeuge/inventar.py` (Angaben aus dem Code). Nur die Spalten **Entscheidung** und **Notiz** von Hand pflegen – sie bleiben beim Neu-Erzeugen erhalten.
+Automatisch erzeugt am 19.10.2026 mit `python3 werkzeuge/inventar.py` (Angaben aus dem Code). Nur die Spalten **Entscheidung** und **Notiz** von Hand pflegen – sie bleiben beim Neu-Erzeugen erhalten.
 
 Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv**
 
@@ -31,12 +31,14 @@ Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv
 | `apps/mathe/rechen-arena.html` | Rechen-Arena | `ma.5.rechen-arena` | Lern-App | Allgemein · 5, 6 | sichtbar | ja | ja | – | – | ja | Kern | Beliebt, vier Modi. Mängel: Startseite scrollt (iPad quer), kein `thema`/`inhalt`, Ballon-Pop hat keine Rückmeldung zum Fehler (bewusst schnell) |
 | `apps/mathe/stellenwerttafel.html` | Große Zahlen können | `ma.5.stellenwert` (5 Stufen) | Lern-App | Mathematik · 5 | sichtbar | – | – | – | – | ja |  |  |
 | `apps/mathe/zahlenstrahl.html` | Der Zahlenstrahl | `ma.5.zahlenstrahl` (5 Stufen) | Lern-App | Mathematik · 5 | sichtbar | – | – | – | – | ja |  |  |
+| `apps/typen/lernweg.html` | – | `en.6.lernweg-u1`, `en.6.lernweg-u2` | Lern-App | – | nicht in config | – | – | – | – | – (nicht in config) |  |  |
 | `apps/typen/uebung.html` | Geometrie-Training | `ma.5.geometrie` (8 Stufen), `en.5.to-be` (6 Stufen), `en.5.simple-present` (8 Stufen), `en.5.simple-past` (7 Stufen), `en.5.have-got` (5 Stufen), `en.5.can` (5 Stufen), `en.5.present-progressive` (5 Stufen), `en.5.nomen` (4 Stufen), `en.5.pronomen` (5 Stufen), `en.5.there-is` (5 Stufen), `en.5.fragen` (3 Stufen), `en.5.praepositionen` (4 Stufen), `en.6.future` (6 Stufen), `en.6.steigerung` (4 Stufen), `en.6.some-any` (4 Stufen) | Lern-App | Mathematik · 5, 6 | sichtbar | – | – | – | – | ja |  |  |
 | `spiele/burg-verteidigung.html` | Tower Defense | – | Spiel | Allgemein · alle | sichtbar | ja | ja | – | ja | – (Spiel) |  |  |
 | `spiele/dorf.html` | Mein Dorf | – | Spiel | Allgemein · alle | sichtbar | – | – | – | – | Dorf selbst |  |  |
 | `spiele/expedition.html` | Entdecker-Expedition | – | Spiel | GPG · 6 | versteckt | über spiel-hilfen.js | ja | – | – | – (Spiel) |  |  |
+| `spiele/insel.html` | – | – | Spiel | – | nicht in config | – | – | – | – | – (Spiel) |  |  |
 | `spiele/kitchen-chaos.html` | Kitchen-Chaos | – | Spiel | Allgemein · alle | sichtbar | über spiel-hilfen.js | ja | – | – | – (Spiel) |  |  |
-| `spiele/room-detective.html` | – | – | Spiel | – | nicht in config | über spiel-hilfen.js | ja | – | – | – (Spiel) |  |  |
+| `spiele/room-detective.html` | Room Detective | – | Spiel | Englisch · alle | sichtbar | über spiel-hilfen.js | ja | – | – | – (Spiel) |  |  |
 | `spiele/runner.html` | RUN! | – | Spiel | Allgemein · alle | sichtbar | ja | ja | – | ja | – (Spiel) |  |  |
 | `spiele/tauziehen.html` | Tauziehen | – | Spiel | Allgemein · alle | sichtbar | über spiel-hilfen.js | ja | – | ja | – (Spiel) |  |  |
 | `spiele/wort-des-tages.html` | Wort des Tages | – | Spiel | Allgemein · alle | versteckt | über spiel-hilfen.js | ja | – | ja | – (Spiel) |  |  |
@@ -69,10 +71,12 @@ Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv
 | apps/mathe/rechen-arena.html | 52 | navbar.js | rechenArena_ballonHighscore, + über navbar.js |
 | apps/mathe/stellenwerttafel.html | 15 | freigabe.js, ueben.js, ziffernblock.js, navbar.js | + über navbar.js |
 | apps/mathe/zahlenstrahl.html | 17 | freigabe.js, ueben.js, ziffernblock.js, navbar.js | + über navbar.js |
+| apps/typen/lernweg.html | 38 | freigabe.js, navbar.js | lern-apps-results, lernwelt-admin-schluessel, lernwelt-lernweg, lernwelt-lernweg-zurueck, + über navbar.js |
 | apps/typen/uebung.html | 2 | freigabe.js, ueben.js, typen.js, navbar.js | + über navbar.js |
 | spiele/burg-verteidigung.html | 143 | navbar.js, aufgaben.js, avatar3d.js | lern-apps-results, lern-burg-wahl, lern-burg-rekorde, lernwelt-td-kampagne, + über navbar.js |
 | spiele/dorf.html | 88 | shared.js, config-api.js, dorf-kern.js, avatar3d.js, dorf-szene.js, navbar.js | lernwelt-dorf, lernwelt-dorf-besuch, + über navbar.js |
 | spiele/expedition.html | 33 | navbar.js, spiel-hilfen.js, karten-ansicht.js | lernwelt-expedition, + über navbar.js |
+| spiele/insel.html | 25 | navbar.js, spiel-hilfen.js, avatar3d.js, insel-welt.js, insel-steuerung.js | + über navbar.js |
 | spiele/kitchen-chaos.html | 38 | navbar.js, spiel-hilfen.js, avatar3d.js | lern-kitchen-chaos, + über navbar.js |
 | spiele/room-detective.html | 59 | navbar.js, spiel-hilfen.js | lernwelt-room-detective, + über navbar.js |
 | spiele/runner.html | 51 | navbar.js, aufgaben.js, avatar3d.js | lern-runner-wahl, lern-runner-rekorde, + über navbar.js |

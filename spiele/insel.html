@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <script src="../gemeinsam/umgebung.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#0f0e1a">
+  <title>Die Insel</title>
+  <!--
+  ═══════════════════════════════════════════════
+   DIE INSEL  (spiele/insel.html)
+
+   Kleine, offene 3D-Welt im Klötzchen-Stil: Die Kinder laufen mit ihrer
+   Pass-Figur per Joystick über eine Insel. Gelernt wird später durch
+   Hinkommen, Bauen und Handeln – nie durch eingeblendete Fragen
+   (Aktionsplan „Die Insel“).
+
+   Etappe 1 – Probelauf (Go/No-Go auf dem ältesten Schul-iPad):
+     Testinsel aus festem Zufallswert, gebackene Weltstücke, Nebel, Licht,
+     Pass-Figur mit Laufanimation, Joystick, Kamera, Kollision, Hochsteigen,
+     drei Bewohner, die beim Aktionsknopf einen englischen Satz sagen.
+     Noch kein Spielstand, keine XP (kommt in Etappe 2 bzw. 3).
+     Noch nicht in config.json – erreichbar über den direkten Link.
+
+   Link-Parameter:
+     ?debug=1     Bildrate, Draw-Calls, Dreiecke, Startzeit, Position
+     ?seed=TEXT   andere Testinsel (nur zum Ausprobieren)
+
+   Grafik für ältere iPads: höchstens 30 Bilder pro Sekunde, Pixel-Ratio
+   höchstens 1,5, Sichtweite etwa 2 Weltstücke mit Nebel, Pause bei verdeckter
+   Seite; bei „Bewegung reduzieren“ keine Kamerafahrten und keine
+   Dauer-Animationen. Ohne WebGL: Ersatzanzeige mit Link zu den anderen Spielen.
+
+   Braucht: navbar.js, spiel-hilfen.js, avatar3d.js (+ vendor/three.min.js),
+            insel-welt.js, insel-steuerung.js
+  ═══════════════════════════════════════════════
+  -->
+  <link rel="stylesheet" href="../gemeinsam/fonts.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f0e1a; --panel: rgba(27,25,41,.94); --panel2: #252238;
+      --accent: #e6a817; --accent2: #fde68a; --indigo: #6366f1; --indigo2: #818cf8;
+      --text: #f1f0fb; --text2: rgba(241,240,251,.72); --muted: rgba(241,240,251,.45);
+      --papier: #fffbeb; --tinte: #1c1917;
+    }
+    html, body { height: 100%; overflow: hidden; }
+    body { font-family: 'Nunito', system-ui, sans-serif; background: var(--bg); color: var(--text);
+      -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;
+      overscroll-behavior: none; }
+    button { font: inherit; color: inherit; border: 0; background: none; cursor: pointer; touch-action: manipulation; }
+    button:focus-visible, a:focus-visible { outline: 3px solid var(--indigo2); outline-offset: 2px; }
+    [hidden] { display: none !important; }
+    .fredoka { font-family: 'Fredoka One', 'Nunito', sans-serif; font-weight: 400; }
+
+    /* ── Bühne (Canvas + Finger-Fläche) ───── */
+    #buehne { position: fixed; inset: 0; touch-action: none; background: #a9d8ff; }
+    #buehne canvas { display: block; width: 100%; height: 100%; }
+    .insel-joy { position: absolute; border-radius: 50%; pointer-events: none;
+      background: rgba(15,14,26,.22); border: 3px solid rgba(255,255,255,.55); box-shadow: 0 2px 14px rgba(0,0,0,.18); }
+    .insel-joy-knopf { position: absolute; left: 50%; top: 50%; width: 46%; height: 46%; border-radius: 50%;
+      background: rgba(255,255,255,.85); border: 3px solid var(--indigo2); box-shadow: 0 2px 8px rgba(0,0,0,.25); }
+
+    /* ── HUD ──────────────────────────────── */
+    .hud-knopf { position: fixed; z-index: 20; width: 52px; height: 52px; border-radius: 16px; font-size: 1.45rem;
+      background: var(--panel); border: 2px solid rgba(255,255,255,.12); box-shadow: 0 4px 14px rgba(0,0,0,.3);
+      display: grid; place-items: center; }
+    #pause-knopf { top: max(.7rem, env(safe-area-inset-top)); right: max(.7rem, env(safe-area-inset-right)); }
+    #aktion { position: fixed; z-index: 20; right: max(1.6rem, env(safe-area-inset-right)); bottom: max(1.8rem, env(safe-area-inset-bottom));
+      min-width: 96px; height: 96px; border-radius: 50%; padding: 0 .4rem;
+      background: radial-gradient(circle at 35% 30%, #fde68a, var(--accent)); color: var(--tinte);
+      border: 4px solid #fff; box-shadow: 0 6px 22px rgba(0,0,0,.35);
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .05rem; }
+    #aktion .sym { font-size: 2.1rem; line-height: 1; }
+    #aktion .txt { font-weight: 900; font-size: .78rem; }
+    #aktion:active { transform: scale(.95); }
+    body.links #aktion { right: auto; left: max(1.6rem, env(safe-area-inset-left)); }
+
+    #hinweis { position: fixed; z-index: 15; left: 50%; bottom: max(1.2rem, env(safe-area-inset-bottom)); transform: translateX(-50%);
+      background: var(--panel); border-radius: 18px; padding: .6rem 1rem; font-weight: 800; font-size: .95rem;
+      display: flex; gap: 1.2rem; align-items: center; pointer-events: none; transition: opacity .6s; white-space: nowrap; }
+    #hinweis.weg { opacity: 0; }
+    #hinweis span { display: inline-flex; gap: .4rem; align-items: center; }
+
+    /* Sprechblase (hängt über dem Kopf des Bewohners) */
+    #blase { position: fixed; z-index: 18; left: 0; top: 0; width: max-content; max-width: min(320px, 80vw);
+      background: var(--papier); color: var(--tinte); border-radius: 18px; padding: .65rem .85rem .7rem;
+      box-shadow: 0 6px 20px rgba(0,0,0,.3); font-weight: 800; font-size: 1.08rem; line-height: 1.3;
+      transform: translate(-50%, -100%); pointer-events: auto; }
+    #blase::after { content: ''; position: absolute; left: 50%; bottom: -10px; margin-left: -10px;
+      border: 10px solid transparent; border-bottom: 0; border-top-color: var(--papier); }
+    #blase .wer { display: block; font-size: .8rem; color: #92400e; font-weight: 900; margin-bottom: .1rem; }
+    #blase .zeile { display: flex; gap: .5rem; align-items: flex-start; }
+    #blase button { flex: none; width: 36px; height: 36px; border-radius: 50%; background: #fde68a; font-size: 1.05rem; }
+    @media (prefers-reduced-motion: no-preference) {
+      #blase.neu { animation: blasePop .25s ease-out; }
+      @keyframes blasePop { from { opacity: 0; transform: translate(-50%, -88%) scale(.9); } }
+    }
+
+    #debug { position: fixed; z-index: 30; left: max(.5rem, env(safe-area-inset-left)); top: max(.5rem, env(safe-area-inset-top));
+      background: rgba(0,0,0,.6); color: #a7f3d0; font: 700 12px/1.35 ui-monospace, Menlo, monospace; padding: .35rem .5rem;
+      border-radius: 8px; white-space: pre; pointer-events: none; }
+
+    /* ── Overlays (Start, Pause, ohne 3D) ─── */
+    .overlay { position: fixed; inset: 0; z-index: 40; display: grid; place-items: center; padding: 1.2rem;
+      background: rgba(15,14,26,.72); }
+    #start { background: linear-gradient(180deg, rgba(15,14,26,.55), rgba(15,14,26,.92)), #1e3a5f; }
+    .karte { background: var(--panel); border: 2px solid rgba(255,255,255,.08); border-radius: 26px; padding: 1.5rem 1.4rem 1.3rem;
+      width: min(440px, 100%); text-align: center; box-shadow: 0 16px 50px rgba(0,0,0,.45); }
+    .karte h1 { font-size: 2.3rem; color: var(--accent); line-height: 1.1; }
+    .karte h2 { font-size: 1.6rem; color: var(--accent); }
+    .karte .unter { color: var(--indigo2); font-weight: 900; font-size: .85rem; letter-spacing: .06em; text-transform: uppercase; margin-top: .2rem; }
+    .karte p { color: var(--text2); font-weight: 700; margin-top: .8rem; line-height: 1.4; }
+    .steuer { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; margin-top: 1rem; }
+    .steuer div { background: var(--panel2); border-radius: 16px; padding: .7rem .5rem; font-weight: 800; font-size: .9rem; color: var(--text2); }
+    .steuer b { display: block; font-size: 1.6rem; margin-bottom: .2rem; }
+    .gross { display: block; width: 100%; margin-top: 1.2rem; padding: .9rem 1rem; border-radius: 18px; font-size: 1.3rem;
+      background: var(--accent); color: var(--tinte); box-shadow: 0 6px 0 #a87708; }
+    .gross:active { transform: translateY(3px); box-shadow: 0 3px 0 #a87708; }
+    .gross:disabled { background: #57534e; color: #d6d3d1; box-shadow: none; cursor: default; }
+    .zweit { display: block; width: 100%; margin-top: .7rem; padding: .75rem 1rem; border-radius: 16px; font-weight: 900;
+      background: var(--panel2); color: var(--text); text-decoration: none; }
+    .klein { font-size: .8rem; color: var(--muted); margin-top: .8rem; font-weight: 700; }
+    .schalter { display: flex; align-items: center; justify-content: space-between; gap: .8rem; margin-top: .9rem;
+      background: var(--panel2); border-radius: 14px; padding: .6rem .8rem; font-weight: 800; text-align: left; }
+    .schalter input { width: 22px; height: 22px; accent-color: var(--indigo); }
+  </style>
+</head>
+<body>
+
+<div id="buehne" aria-label="Die Insel"></div>
+
+<button class="hud-knopf" id="pause-knopf" aria-label="Pause" hidden>⏸</button>
+<button id="aktion" hidden><span class="sym">💬</span><span class="txt">Sprechen</span></button>
+<div id="hinweis" hidden><span>👈 Daumen links: laufen</span><span>Rechts wischen: umschauen 👉</span></div>
+<div id="blase" hidden><span class="wer"></span><div class="zeile"><span class="satz" lang="en"></span><button id="blase-hoeren" aria-label="Vorlesen">🔊</button></div></div>
+<div id="debug" hidden></div>
+
+<div class="overlay" id="start">
+  <div class="karte">
+    <h1 class="fredoka">🏝️ Die Insel</h1>
+    <div class="unter">Probelauf</div>
+    <p>Lauf mit deiner Figur über die Insel und sprich mit den Leuten im Dorf.</p>
+    <div class="steuer">
+      <div><b>👈</b>Daumen links:<br>laufen</div>
+      <div><b>👉</b>Rechts wischen:<br>umschauen</div>
+    </div>
+    <button class="gross fredoka" id="los" disabled>Lädt …</button>
+    <div class="klein" id="start-info">Die Insel wird gebaut …</div>
+  </div>
+</div>
+
+<div class="overlay" id="pause" hidden>
+  <div class="karte">
+    <h2 class="fredoka">⏸ Pause</h2>
+    <label class="schalter">Seiten tauschen (Linkshänder) <input type="checkbox" id="opt-seiten"></label>
+    <label class="schalter">Vorlesen <input type="checkbox" id="opt-vorlesen" checked></label>
+    <button class="gross fredoka" id="weiter">Weiter</button>
+    <a class="zweit" href="../index.html">🏠 Zurück zur Lernwelt</a>
+  </div>
+</div>
+
+<div class="overlay" id="ohne3d" hidden>
+  <div class="karte">
+    <h2 class="fredoka">🏝️ Die Insel</h2>
+    <p id="ohne3d-text">Dieses Gerät kann leider keine 3D-Grafik anzeigen. Die Insel braucht WebGL.</p>
+    <p>Probier doch eines der anderen Spiele!</p>
+    <a class="gross fredoka" style="text-decoration:none" href="../index.html">Zu den Spielen</a>
+  </div>
+</div>
+
+<script src="../gemeinsam/navbar.js"></script>
+<script src="../gemeinsam/spiel-hilfen.js"></script>
+<script src="../gemeinsam/avatar3d.js"></script>
+<script src="../gemeinsam/insel-welt.js"></script>
+<script src="../gemeinsam/insel-steuerung.js"></script>
+<script>
+'use strict';
+const $ = id => document.getElementById(id);
+const PARAM = new URLSearchParams(location.search);
+const DEBUG = PARAM.get('debug') === '1';
+const REDUCE = !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+const T0 = performance.now();
+const MAX_FPS = 30, SICHTWEITE = 32, FIGUR_HOEHE = 1.75, SPRECH_ABSTAND = 2.4;
+
+// Bewohner des Probelaufs (ab Etappe 3: insel-figuren.js + daten/insel-auftraege.json)
+const BEWOHNER = [
+  { name: 'Tom', haus: 0, look: { haut: 1, haarfarbe: 2, frisur: 'stachelig', augen: 'normal', mund: 'breit', eq: { oberteil: 'o-hoodie', hose: 'h-jeans', schuhe: 's-sneaker', kopf: 'k-cap-blau' } },
+    saetze: ['Hello! My name is Tom.', 'I live in the house with the red roof.', 'I have got a dog. His name is Max.', 'Can you see the well? It is next to my house.'] },
+  { name: 'Mia', haus: 1, look: { haut: 4, haarfarbe: 0, frisur: 'zoepfe', augen: 'wimpern', mund: 'laecheln', eq: { oberteil: 'o-shirt-gelb', hose: 'h-latzhose', schuhe: 's-hightop' } },
+    saetze: ['Hi! I am Mia. Nice to meet you!', 'My house has got a blue roof.', 'My favourite colour is yellow.', 'There are lots of trees on this island.'] },
+  { name: 'Mr Brown', haus: 2, look: { haut: 2, haarfarbe: 6, frisur: 'kurz', augen: 'froehlich', mund: 'laecheln', eq: { oberteil: 'o-karohemd', hose: 'h-jogging', schuhe: 's-stiefel', kopf: 'k-entdecker' } },
+    saetze: ['Good morning! I am Mr Brown.', 'I am a fisherman. I love the sea.', 'Look at the beach! The sand is very hot today.', 'Have a nice day!'] },
+];
+
+let T, renderer, scene, camera, welt, weltSzene, steuerung, spielerFigur, spielerGruppe, spielerSchatten;
+let bewohner = [], laeuft = false, bereit = false, letzte = 0, phase = 0, zeit = 0, sichtUhr = 0;
+let fpsBilder = 0, fpsUhr = 0, fps = 0, startMs = 0, gesprochen = null, hinweisWeg = false;
+const spieler = { x: 0, y: 0, z: 0, blick: 0, anzeigeY: 0 };
+let vorlesen = true;
+
+function webglOk() {
+  try { const c = document.createElement('canvas'); return !!(c.getContext('webgl') || c.getContext('experimental-webgl')); }
+  catch (e) { return false; }
+}
+function ohne3d(text) {
+  $('start').hidden = true;
+  $('ohne3d').hidden = false;
+  if (text) $('ohne3d-text').textContent = text;
+  homeZeigen(true);
+}
+function homeZeigen(an) {
+  ['lern-home-btn', 'lern-result-badge'].forEach(id => { const el = $(id); if (el) el.style.visibility = an ? '' : 'hidden'; });
+}
+
+/* ═══════════════════════════════════════════════════════
+   VORLESEN (englische Stimme, wie in Room Detective)
+   ═══════════════════════════════════════════════════════ */
+let STIMME = null;
+function stimmeWaehlen() {
+  if (!('speechSynthesis' in window)) return;
+  const v = speechSynthesis.getVoices();
+  STIMME = v.find(s => /en[-_]GB/i.test(s.lang)) || v.find(s => /^en/i.test(s.lang)) || null;
+}
+if ('speechSynthesis' in window) { stimmeWaehlen(); speechSynthesis.onvoiceschanged = stimmeWaehlen; }
+function sprich(text) {
+  if (!('speechSynthesis' in window) || !text) return;
+  try {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = (STIMME && STIMME.lang) || 'en-GB';
+    if (STIMME) u.voice = STIMME;
+    u.rate = .9;
+    speechSynthesis.speak(u);
+  } catch (e) {}
+}
+
+/* ═══════════════════════════════════════════════════════
+   AUFBAU
+   ═══════════════════════════════════════════════════════ */
+async function figurAufstellen(look) {
+  const f = await LernAvatar.figur(look, { ohneSchatten: true });
+  const box = new f.THREE.Box3().setFromObject(f.root);
+  const s = FIGUR_HOEHE / Math.max(1, box.max.y - box.min.y);
+  f.root.scale.setScalar(s);
+  f.root.position.y = -box.min.y * s;
+  const g = new f.THREE.Group();
+  g.add(f.root);
+  f.pose({ lauf: 0, t: 0 });
+  return { figur: f, gruppe: g };
+}
+function schatten() {
+  const m = new T.Mesh(new T.CircleGeometry(.42, 14), new T.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: .26, depthWrite: false }));
+  m.rotation.x = -Math.PI / 2;
+  m.renderOrder = 3;
+  return m;
+}
+/** Boden unter einer Stelle (unter Dächern: der Boden im Haus, nicht das Dach) */
+function bodenUnter(x, y, z) {
+  const bx = Math.floor(x), bz = Math.floor(z);
+  for (let by = Math.floor(y + .01) - 1; by >= 0; by--) if (welt.fest(bx, by, bz) || welt.nass(bx, by, bz)) return by + 1;
+  return 0;
+}
+
+async function aufbauen() {
+  if (!webglOk() || !window.LernAvatar) { ohne3d(); return; }
+  let ich;
+  try { ich = await figurAufstellen(null); }
+  catch (e) { ohne3d(); return; }
+  T = ich.figur.THREE;
+
+  renderer = new T.WebGLRenderer({ antialias: false, powerPreference: 'high-performance' });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+  $('buehne').appendChild(renderer.domElement);
+  scene = new T.Scene();
+  const himmel = new T.Color('#a9d8ff');
+  scene.background = himmel;
+  scene.fog = new T.Fog(himmel, SICHTWEITE * .55, SICHTWEITE);
+  scene.add(new T.HemisphereLight(0xf2f6ff, 0x4d6b45, .68));
+  const sonne = new T.DirectionalLight(0xfff1d6, .62);
+  sonne.position.set(-0.45, 1, .6);
+  scene.add(sonne);
+  camera = new T.PerspectiveCamera(60, 1, .1, SICHTWEITE + 8);
+
+  // Welt
+  welt = LernInselWelt.erzeuge(PARAM.get('seed') || 'lernwelt-insel-1');
+  weltSzene = LernInselWelt.szene(T, welt);
+  scene.add(weltSzene.gruppe);
+
+  // Spieler
+  spieler.x = welt.start.x; spieler.z = welt.start.z; spieler.blick = welt.start.blick;
+  spieler.y = spieler.anzeigeY = welt.boden(spieler.x, spieler.z);
+  spielerFigur = ich.figur; spielerGruppe = ich.gruppe;
+  scene.add(spielerGruppe);
+  spielerSchatten = schatten(); scene.add(spielerSchatten);
+
+  // Bewohner vor ihren Häusern
+  for (const def of BEWOHNER) {
+    const haus = welt.orte.haeuser[def.haus];
+    if (!haus) continue;
+    try {
+      // gebacken: wenige Draw-Calls statt ~35 je Figur (Bewohner stehen und drehen sich nur)
+      const gruppe = LernInselWelt.backe(T, (await figurAufstellen(def.look)).gruppe);
+      const p = haus.vorTuer;
+      const y = welt.boden(p.x, p.z);
+      gruppe.position.set(p.x, y, p.z);
+      gruppe.rotation.y = p.blick;
+      scene.add(gruppe);
+      const sch = schatten(); sch.position.set(p.x, y + .02, p.z); scene.add(sch);
+      bewohner.push({ def, x: p.x, y, z: p.z, blick: p.blick, grund: p.blick, ziel: p.blick, satz: 0, gruppe });
+    } catch (e) {}
+  }
+
+  steuerung = LernInselSteuerung.erstelle({
+    flaeche: $('buehne'), welt, spieler, aktion,
+    optionen: { reduce: REDUCE },
+  });
+
+  groesse();
+  window.addEventListener('resize', groesse);
+  window.addEventListener('orientationchange', () => setTimeout(groesse, 250));
+  zeichneBild(0);                                   // erstes Bild schon hinter dem Startbildschirm
+  bereit = true;
+  startMs = Math.round(performance.now() - T0);
+  $('los').disabled = false;
+  $('los').textContent = 'Los geht\'s!';
+  $('start-info').textContent = DEBUG ? `Fertig in ${(startMs / 1000).toFixed(1)} s` : 'Tipp: Geh zu den Leuten und tippe auf 💬.';
+}
+
+function groesse() {
+  if (!renderer) return;
+  const w = window.innerWidth, h = window.innerHeight;
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+  if (!laeuft) zeichneBild(0);
+}
+
+/* ═══════════════════════════════════════════════════════
+   SPIELSCHLEIFE (höchstens 30 Bilder pro Sekunde)
+   ═══════════════════════════════════════════════════════ */
+function starten() {
+  if (!bereit) return;
+  $('start').hidden = true; $('pause').hidden = true;
+  $('pause-knopf').hidden = false;
+  if (!hinweisWeg) $('hinweis').hidden = false;
+  homeZeigen(false);
+  laeuft = true; letzte = 0;
+  requestAnimationFrame(schleife);
+}
+function pausieren() {
+  if (!laeuft) return;
+  laeuft = false;
+  steuerung.stopp();
+  if ('speechSynthesis' in window) speechSynthesis.cancel();
+  $('pause').hidden = false; $('pause-knopf').hidden = true; $('aktion').hidden = true;
+  homeZeigen(true);
+}
+function schleife(t) {
+  if (!laeuft) return;
+  requestAnimationFrame(schleife);
+  if (letzte && t - letzte < 1000 / MAX_FPS - 3) return;
+  const dt = letzte ? Math.min(.1, (t - letzte) / 1000) : 1 / MAX_FPS;
+  letzte = t;
+  zeichneBild(dt);
+  if (DEBUG) {
+    fpsBilder++; fpsUhr += dt;
+    if (fpsUhr >= 1) { fps = fpsBilder / fpsUhr; fpsBilder = 0; fpsUhr = 0; debugZeigen(); }
+  }
+}
+
+function zeichneBild(dt) {
+  zeit += dt;
+  // Bewegen – durch Bewohner kann man nicht hindurchlaufen
+  const ax = spieler.x, az = spieler.z;
+  const r = dt ? steuerung.update(dt) : { lauf: 0 };
+  if (bewohner.some(b => Math.hypot(b.x - spieler.x, b.z - spieler.z) < .6) ) { spieler.x = ax; spieler.z = az; r.lauf = 0; }
+  if (r.lauf && !hinweisWeg) { hinweisWeg = true; $('hinweis').classList.add('weg'); setTimeout(() => { $('hinweis').hidden = true; }, 700); }
+
+  // Figur
+  phase += dt * (r.lauf ? (r.rennt ? 13 : 9) : 0);
+  spielerGruppe.position.set(spieler.x, spieler.anzeigeY, spieler.z);
+  spielerGruppe.rotation.y = spieler.blick;
+  spielerFigur.pose({ lauf: r.lauf, phase, t: REDUCE ? 0 : zeit });
+  spielerSchatten.position.set(spieler.x, bodenUnter(spieler.x, spieler.y, spieler.z) + .02, spieler.z);
+
+  // Bewohner: drehen sich zum Kind, wenn sie sprechen
+  let naechster = null, nd = SPRECH_ABSTAND;
+  bewohner.forEach(b => {
+    const d = Math.hypot(b.x - spieler.x, b.z - spieler.z);
+    if (d < nd) { nd = d; naechster = b; }
+    b.ziel = gesprochen === b && d < 5 ? Math.atan2(spieler.x - b.x, spieler.z - b.z) : b.grund;
+    let w = b.ziel - b.blick; w = Math.atan2(Math.sin(w), Math.cos(w));
+    b.blick += w * Math.min(1, dt * 6);
+    b.gruppe.rotation.y = b.blick;
+  });
+  aktionZeigen(naechster);
+  if (gesprochen && Math.hypot(gesprochen.x - spieler.x, gesprochen.z - spieler.z) > 5) blaseWeg();
+
+  // Kamera, Sichtweite
+  const abstand = steuerung.kamera(camera, dt || 1);
+  spielerGruppe.visible = abstand > 1.1;                // Kamera ganz nah (enge Ecke): eigene Figur ausblenden
+  sichtUhr -= dt;
+  if (sichtUhr <= 0) { weltSzene.sicht(spieler.x, spieler.z, SICHTWEITE); sichtUhr = .4; }
+  renderer.render(scene, camera);
+  if (gesprochen) blaseSetzen();
+}
+
+/* ═══════════════════════════════════════════════════════
+   AKTIONSKNOPF UND SPRECHBLASE
+   ═══════════════════════════════════════════════════════ */
+let aktionZiel = null;
+function aktionZeigen(b) {
+  if (b === aktionZiel) return;
+  aktionZiel = b;
+  $('aktion').hidden = !b;
+  if (b) $('aktion').setAttribute('aria-label', 'Mit ' + b.def.name + ' sprechen');
+}
+function aktion() {
+  if (!laeuft || !aktionZiel) return;
+  const b = aktionZiel;
+  const satz = b.def.saetze[b.satz % b.def.saetze.length];
+  b.satz++;
+  gesprochen = b;
+  const el = $('blase');
+  el.querySelector('.wer').textContent = b.def.name;
+  el.querySelector('.satz').textContent = satz;
+  el.hidden = false;
+  el.classList.remove('neu'); void el.offsetWidth; el.classList.add('neu');
+  blaseSetzen();
+  if (vorlesen) sprich(satz);
+}
+function blaseWeg() { gesprochen = null; $('blase').hidden = true; }
+const kopf = { v: null };
+function blaseSetzen() {
+  const b = gesprochen;
+  if (!b || !T) return;
+  const v = kopf.v || (kopf.v = new T.Vector3());
+  v.set(b.x, b.y + FIGUR_HOEHE + .35, b.z).project(camera);
+  const el = $('blase');
+  if (v.z > 1) { el.style.visibility = 'hidden'; return; }
+  el.style.visibility = '';
+  const x = (v.x * .5 + .5) * window.innerWidth, y = (-v.y * .5 + .5) * window.innerHeight;
+  const halb = el.offsetWidth / 2 + 8;
+  el.style.left = Math.max(halb, Math.min(window.innerWidth - halb, x)) + 'px';
+  el.style.top = Math.max(el.offsetHeight + 70, y) + 'px';
+}
+
+/* ═══════════════════════════════════════════════════════
+   DEBUG (?debug=1)
+   ═══════════════════════════════════════════════════════ */
+function debugZeigen() {
+  const i = renderer.info.render;
+  $('debug').hidden = false;
+  $('debug').textContent = `${fps.toFixed(0)} FPS (max ${MAX_FPS})\n${i.calls} Draw-Calls · ${Math.round(i.triangles / 1000)}k Dreiecke\n`
+    + `Start ${(startMs / 1000).toFixed(1)} s · Pixel-Ratio ${renderer.getPixelRatio()}\n`
+    + `x ${spieler.x.toFixed(1)} y ${spieler.y.toFixed(1)} z ${spieler.z.toFixed(1)}${REDUCE ? '\nBewegung reduziert' : ''}`;
+}
+
+/* ═══════════════════════════════════════════════════════
+   BEDIENUNG
+   ═══════════════════════════════════════════════════════ */
+$('los').addEventListener('click', starten);
+$('weiter').addEventListener('click', starten);
+$('pause-knopf').addEventListener('click', pausieren);
+$('aktion').addEventListener('click', aktion);
+$('blase-hoeren').addEventListener('click', () => sprich($('blase').querySelector('.satz').textContent));
+$('opt-seiten').addEventListener('change', e => {
+  document.body.classList.toggle('links', e.target.checked);
+  if (steuerung) steuerung.setzeOptionen({ seitenTauschen: e.target.checked });
+});
+$('opt-vorlesen').addEventListener('change', e => { vorlesen = e.target.checked; });
+document.addEventListener('visibilitychange', () => { if (document.hidden) pausieren(); });
+window.addEventListener('keydown', e => { if (e.key === 'Escape') (laeuft ? pausieren() : (bereit && $('ohne3d').hidden && starten())); });
+
+aufbauen().catch(e => { console.error(e); ohne3d('Die Insel konnte nicht geladen werden. Bitte die Seite neu laden.'); });
+</script>
+</body>
+</html>
