@@ -2,7 +2,9 @@
 //  Lernwelt – sw.js  (Service Worker: Offline-Speicher)
 //
 //  Grundsatz „Internet zuerst“: Ist das Netz da, kommt immer die
-//  aktuelle Datei von GitHub Pages (Änderungen wirken wie bisher).
+//  aktuelle Datei von GitHub Pages. Seit v62 fragt das iPad dabei jedes Mal
+//  bei GitHub nach (cache: 'no-cache', meist nur ein winziges „unverändert“),
+//  statt bis zu 10 Minuten die Browser-Kopie zu nehmen – Änderungen wirken sofort.
 //  Nur wenn das Netz fehlt oder zu langsam ist, wird die zuletzt
 //  gesehene Kopie verwendet. Große, unveränderliche Dateien
 //  (three.js, Schriften, Symbole) kommen direkt aus dem Speicher.
@@ -14,7 +16,7 @@
 //  und teilen sich den Offline-Speicher. Deshalb hat jede Umgebung ihr
 //  eigenes Präfix und räumt nur ihre eigenen Speicher auf.
 // ═══════════════════════════════════════════════════════
-const VERSION = 'v61';  // v61: Ausnahmen von der Spielsperre je Gruppe/Klasse (Admin, freigabe.js, Worker). v60: Die Insel – Etappe 1 (Probelauf). v59: Lernweg-Klassen-Übersicht im Admin (anonym über die Gruppenauswertung). v58: Lernweg Unit 2, Lernweg-Stufen (Niveaus, Wahl, App-Haken, Code, Banner, Auto-Start). v57: Admin: Lernwege als eigener Tab. v56: Lernweg Unit 1: genaue Buchseiten, ganze Sätze auch bei Buchaufgaben. v55: Lernweg Unit 1: ganze Sätze ins Heft. v54: Lernweg Unit 1 ohne Listening, Arbeitsblätter statt Workbook. v53: Lernwege (apps/typen/lernweg.html, nur zugeteilt). v52: neues Spiel Room Detective. v51: Spiele erst nach guten Lern-Runden (Spielsperre je Wochentag und Gruppe)
+const VERSION = 'v62';  // v62: Änderungen wirken sofort (Service Worker fragt jedes Mal bei GitHub nach statt Browser-Kopie bis 10 Min.). v61: Ausnahmen von der Spielsperre je Gruppe/Klasse (Admin, freigabe.js, Worker). v60: Die Insel – Etappe 1 (Probelauf). v59: Lernweg-Klassen-Übersicht im Admin (anonym über die Gruppenauswertung). v58: Lernweg Unit 2, Lernweg-Stufen (Niveaus, Wahl, App-Haken, Code, Banner, Auto-Start). v57: Admin: Lernwege als eigener Tab. v56: Lernweg Unit 1: genaue Buchseiten, ganze Sätze auch bei Buchaufgaben. v55: Lernweg Unit 1: ganze Sätze ins Heft. v54: Lernweg Unit 1 ohne Listening, Arbeitsblätter statt Workbook. v53: Lernwege (apps/typen/lernweg.html, nur zugeteilt). v52: neues Spiel Room Detective. v51: Spiele erst nach guten Lern-Runden (Spielsperre je Wochentag und Gruppe)
 const PRAEFIX = /\/[^/]*-test\/$/i.test(new URL(self.registration.scope).pathname) ? 'lwtest-v' : 'lernwelt-v';
 const CACHE   = PRAEFIX + VERSION.replace(/^v/, '');        // z. B. 'lernwelt-v24' (Format wie bisher)
 
@@ -71,7 +73,8 @@ const WARTEN_MS = 4000;                        // so lange auf das Netz warten
 
 self.addEventListener('install', e => {
   self.skipWaiting();
-  e.waitUntil(caches.open(CACHE).then(c => Promise.all(START.map(u => c.add(u).catch(() => {})))));
+  // frisch von GitHub holen (nicht die bis zu 10 Minuten alte Browser-Kopie in den neuen Speicher legen)
+  e.waitUntil(caches.open(CACHE).then(c => Promise.all(START.map(u => c.add(new Request(u, { cache: 'no-cache' })).catch(() => {})))));
 });
 
 self.addEventListener('activate', e => {
@@ -133,9 +136,21 @@ async function speicherZuerst(req) {
   return res;
 }
 
+/** Immer bei GitHub nachfragen statt die Browser-Kopie (bis 10 Min. alt) zu nehmen.
+ *  Seitenaufrufe (navigate) lassen sich nicht mit Optionen kopieren → über die Adresse;
+ *  endet das in einer Weiterleitung, normal laden (Safari mag umgeleitete Antworten nicht). */
+function holeFrisch(req) {
+  if (req.mode === 'navigate') {
+    return fetch(req.url, { cache: 'no-cache', credentials: 'same-origin' })
+      .then(res => res.redirected ? fetch(req) : res)
+      .catch(() => fetch(req));
+  }
+  try { return fetch(req, { cache: 'no-cache' }); } catch (e) { return fetch(req); }
+}
+
 async function netzZuerst(req) {
   const cache = await caches.open(CACHE);
-  const netz = fetch(req).then(res => {
+  const netz = holeFrisch(req).then(res => {
     if (res.ok) cache.put(req, res.clone());
     return res;
   });

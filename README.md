@@ -140,6 +140,12 @@ das ist die Menge, die übers Schul-WLAN geht; komprimiert ≈ ein Drittel der D
 | Jede Lern-App | umgebung.js, navbar.js, pass.js (`SOFORT` in navbar.js) | pass-extras.js (erste Meldung), Dorf-Kern (nach der ersten Runde, nur mit Dorf), Sicherung (nur mit Karte) | < 35 KB |
 | Offline-Speicher (sw.js) | `START` = Kern | `NACHLADEN` = Spiele, 3D, große Daten: gestaffelt im Hintergrund | < 300 KB |
 
+- **Änderungen wirken sofort (seit v62):** Der Service Worker holt jede Datei mit `cache: 'no-cache'` – das iPad fragt bei
+  GitHub nach, ob es eine neue Fassung gibt (meist nur ein winziges „unverändert“), statt bis zu 10 Minuten die Browser-Kopie
+  zu nehmen (GitHub Pages schickt `max-age=600`). Auch der Kern beim Update (`START`) wird frisch geholt. Ausnahme: `vendor/`,
+  `fonts/`, `icons/` kommen weiter direkt aus dem Speicher. Offline bzw. bei langsamem WLAN (> 4 s) gilt die gespeicherte Kopie.
+  Nach einem Merge dauert es nur noch, bis GitHub Pages fertig veröffentlicht hat (meist 1–2 Minuten).
+
 - **pass.js** rechnet und speichert nur noch. Anzeige (XP-Meldung, Lob, Konfetti), Safari-Hinweis,
   Speicher-Wartung und Diagnose stehen in **gemeinsam/pass-extras.js**. Neue Funktionen, die nicht jede App
   sofort braucht, gehören dorthin oder in ein eigenes Modul – nicht in den Kern (das Budget ist ein Polster, kein Freifahrtschein).
