@@ -249,13 +249,79 @@ function buildLernwegeZuteilung() {
       return `<button type="button" class="fr-chip${an ? '' : ' zu geerbt'}" data-lw-weg="${frEsc(t.id)}" data-lw-wer="${frEsc(w)}" aria-pressed="${an}">${an ? '✅' : '○'} ${frEsc(frWerName(w))}</button>`;
     }).join('');
     const href = t.quelle.app + (t.quelle.parameter ? '?' + t.quelle.parameter : '');
-    return `<details class="fr-reihe"${zu.length ? ' open' : ''}><summary>🧭 ${frEsc(t.titel)} <span style="color:var(--muted);font-size:.8rem">(Klasse ${frEsc(t.klasse)})</span>${zu.length ? ' <span class="fr-punkt">●</span>' : ''}</summary>
+    return `<details class="fr-reihe"${zu.length || LWU.weg === t.id ? ' open' : ''}><summary>🧭 ${frEsc(t.titel)} <span style="color:var(--muted);font-size:.8rem">(Klasse ${frEsc(t.klasse)})</span>${zu.length ? ' <span class="fr-punkt">●</span>' : ''}</summary>
       <div class="fr-chips">${chips}</div>
       <p class="fr-hinweis">${zu.length ? 'Zugeteilt: ' + zu.map(w => frEsc(frWerName(w))).join(', ') : 'Noch niemandem zugeteilt – für Kinder unsichtbar.'}
-        · <a href="${frEsc(href)}" target="_blank" rel="noopener">👁 Vorschau</a></p></details>`;
+        · <a href="${frEsc(href)}" target="_blank" rel="noopener">👁 Vorschau</a></p>
+      ${lwUebersichtHTML(t)}</details>`;
   }).join('') + (FR.gruppenFehler ? `<p class="fr-hinweis">⚠ Sync-Gruppen nicht geladen (${frEsc(FR.gruppenFehler)}).</p>`
     : !(FR.gruppen || []).length ? '<p class="fr-hinweis">Noch keine Sync-Gruppen angelegt (Sicherungskarten) – zuteilen geht dann nur nach Klasse.</p>' : '');
 }
+// ── Klassen-Übersicht je Lernweg (anonym, aus der Gruppenauswertung: was = 'lw:<ID>:<Station>:b|k<Niveau>') ──
+//  Gezählt wird einmal je iPad mit Sicherungskarte in der Gruppe – ohne Kennung, ohne Namen (cloudflare/sync.js).
+const LWU = { weg: '', gruppe: '', laedt: false, fehler: '', zeilen: null, daten: {} };
+function lwUebersichtHTML(t) {
+  const G = FR.gruppen || [];
+  if (!G.length) return `<p class="fr-hinweis">📊 Klassen-Übersicht: braucht Sync-Gruppen (Sicherungskarten).</p>`;
+  const aktiv = LWU.weg === t.id;
+  const gruppe = aktiv && G.some(g => g.id === LWU.gruppe) ? LWU.gruppe : (G.find(g => ((CONFIG.freigaben || {})[t.id] || {})['g:' + g.id] === 'offen') || G[0]).id;
+  let inhalt = '';
+  if (aktiv && LWU.laedt) inhalt = '<div class="empty-msg">Lade …</div>';
+  else if (aktiv && LWU.fehler) inhalt = `<p style="color:var(--red);font-size:.85rem">⚠ ${frEsc(LWU.fehler)}</p>`;
+  else if (aktiv && LWU.zeilen) inhalt = lwTabelle(t, gruppe);
+  return `<div class="lwu" style="border-top:1px solid var(--border);margin-top:.6rem;padding-top:.7rem">
+    <div style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:center"><b style="font-size:.9rem">📊 Stand der Klasse</b>
+      <select data-lwu-gruppe="${frEsc(t.id)}" style="width:auto" aria-label="Gruppe">${G.map(g => `<option value="${frEsc(g.id)}"${g.id === gruppe ? ' selected' : ''}>${frEsc(g.name)}</option>`).join('')}</select>
+      <button class="btn sm" data-lwu-laden="${frEsc(t.id)}">Laden</button></div>${inhalt}</div>`;
+}
+function lwTabelle(t, gruppe) {
+  const D = LWU.daten[t.id], g = (FR.gruppen || []).find(x => x.id === gruppe);
+  const sum = {};
+  (LWU.zeilen || []).forEach(z => {
+    if (z.gruppe !== gruppe || !String(z.was).startsWith('lw:' + t.id + ':')) return;
+    sum[String(z.was).slice(t.id.length + 4)] = (sum[String(z.was).slice(t.id.length + 4)] || 0) + (z.runden || 0);
+  });
+  const stationen = D && Array.isArray(D.stationen) ? D.stationen : [];
+  if (!stationen.length) return '<p class="fr-hinweis">Lernweg-Daten nicht geladen.</p>';
+  const karten = g ? g.karten : 0, voll = Math.max(1, karten);
+  const zeilen = stationen.map(s => {
+    const b = sum[s.nr + ':b'] || 0, k = [0, 1, 2, 3].map(n => sum[s.nr + ':k' + n] || 0), kg = k.reduce((a, x) => a + x, 0);
+    const nv = s.niveaus ? `★ ${k[1]} · ★★ ${k[2]} · ★★★ ${k[3]}` : '';
+    return `<tr><td>${frEsc(s.nr)} ${frEsc(s.titel)}${s.wahl ? ' <small>(Wahl)</small>' : ''}</td><td class="z">${b}</td><td class="z"><b>${kg}</b></td>
+      <td style="width:30%"><div class="aw-balken"><i style="width:${Math.min(100, Math.round(100 * kg / voll))}%;background:var(--green)"></i></div><small style="color:var(--muted)">${nv}</small></td></tr>`;
+  }).join('');
+  return `<table class="aw-tab" style="margin-top:.6rem"><thead><tr><th>Station</th><th>begonnen</th><th>kontrolliert</th><th>${karten ? 'von ' + karten + ' Karten' : ''}</th></tr></thead><tbody>${zeilen}</tbody></table>
+    <p style="font-size:.72rem;color:var(--muted);margin:.5rem 0 0;line-height:1.5">Gezählt wird einmal je iPad mit Sicherungskarte dieser Gruppe – ohne Namen. iPads ohne Karte fehlen hier
+      (dafür der Klassen-Laufzettel). Neue Meldungen kommen nach 1–2 Minuten an.${karten && karten < 5 ? ' Wenige Karten: Rückschlüsse auf einzelne Kinder möglich.' : ''}</p>`;
+}
+async function lwUebersichtLaden(id, gruppe) {
+  Object.assign(LWU, { weg: id, gruppe, laedt: true, fehler: '', zeilen: null });
+  buildLernwegeZuteilung();
+  try {
+    if (!LWU.daten[id]) LWU.daten[id] = await fetch('daten/lernwege/' + id + '.json', { cache: 'no-cache' }).then(r => r.ok ? r.json() : null);
+    const tk = JSON.parse(localStorage.getItem('lernwelt-admin-schluessel') || 'null');
+    const r = await fetch(ConfigAPI.WORKER_URL + '/sync/admin/statistik', {
+      method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + (tk && tk.token || '') },
+      body: JSON.stringify({ gruppeId: gruppe, wochen: 30 }),
+    });
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(d.error || 'Fehler ' + r.status);
+    LWU.zeilen = Array.isArray(d.zeilen) ? d.zeilen : [];
+  } catch (e) { LWU.fehler = e.message || 'Worker nicht erreichbar'; }
+  LWU.laedt = false;
+  buildLernwegeZuteilung();
+}
+document.addEventListener('change', e => {
+  const s = e.target.closest('[data-lwu-gruppe]');
+  if (s && s.closest('#panel-lernwege')) lwUebersichtLaden(s.dataset.lwuGruppe, s.value);
+});
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-lwu-laden]');
+  if (!b || !b.closest('#panel-lernwege')) return;
+  const sel = b.parentElement.querySelector('[data-lwu-gruppe]');
+  lwUebersichtLaden(b.dataset.lwuLaden, sel ? sel.value : '');
+});
+
 document.addEventListener('click', e => {
   const t = e.target.closest('[data-lw-weg]');
   if (!t || !t.closest('#panel-lernwege')) return;
@@ -416,7 +482,8 @@ function buildAuswertung() {
   else if (AW.fehler) tabelle = `<p style="color:var(--red);font-size:.85rem">⚠ ${frEsc(AW.fehler)}</p>`;
   else if (AW.zeilen) {
     const sum = {};
-    AW.zeilen.forEach(z => { const x = sum[z.was] || (sum[z.was] = { was: z.was, runden: 0, aufgaben: 0, richtig: 0 }); x.runden += z.runden; x.aufgaben += z.aufgaben; x.richtig += z.richtig; });
+    // Lernweg-Meldungen (lw:…) stehen im Tab 🗺️ Lernwege, nicht hier
+    AW.zeilen.filter(z => !String(z.was).startsWith('lw:')).forEach(z => { const x = sum[z.was] || (sum[z.was] = { was: z.was, runden: 0, aufgaben: 0, richtig: 0 }); x.runden += z.runden; x.aufgaben += z.aufgaben; x.richtig += z.richtig; });
     const liste = Object.values(sum).map(x => ({ ...x, pct: x.aufgaben ? Math.round(x.richtig / x.aufgaben * 100) : 0 }))
       .sort((a, b) => (a.runden < AW_WENIG) - (b.runden < AW_WENIG) || a.pct - b.pct);
     const farbe = p => p >= 80 ? 'var(--green)' : p >= 60 ? 'var(--accent)' : 'var(--red)';

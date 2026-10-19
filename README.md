@@ -344,6 +344,11 @@ selbst im Admin unter „🎯 Unterricht“), Wiederholung, Fehler-Training, Inf
 - **Zurück zum Lernweg:** Wer aus dem Lernweg eine App öffnet, bekommt dort oben den Knopf „🧭 Zurück zum Lernweg“
   (`gemeinsam/lernweg-zurueck.js`, nur nachgeladen, wenn `lernwelt-lernweg-zurueck` im Tab gesetzt ist).
 - **Startseite:** zugeteilte Lernwege stehen ganz oben als großes Banner mit Fortschrittsring und nächster Station.
+- **Klassen-Übersicht (Admin → Tab 🗺️ Lernwege → „📊 Stand der Klasse“):** Jedes iPad mit Sicherungskarte in einer Gruppe meldet
+  je Station einmal „begonnen“ und einmal „kontrolliert“ (mit Niveau) über die vorhandene Gruppenauswertung
+  (`LernSync.lernwegMelden`, Thema `lw:<ID>:<Station>:b` bzw. `:k<0–3>`). Der Worker addiert nur Summen je Gruppe – keine
+  Kennung, keine Namen; dafür war keine Worker-Änderung nötig. Die normale Gruppen-Auswertung im Tab „🎯 Unterricht“
+  blendet diese Einträge aus. iPads ohne Karte fehlen in der Übersicht (dafür der Klassen-Laufzettel).
 - **Erster Lernweg:** `en.6.lernweg-u1` (Highlight 6, Unit 1 „Together again“, 7 Stationen; Hören macht die Lehrkraft im Unterricht,
   Extras sind nummerierte Arbeitsblätter am Pult – die Kinder haben kein Workbook).
 - **Unit 2:** `en.6.lernweg-u2` (10 Stationen: 7 Pflicht mit Niveaus, 2 Wahl, Checkpoint; App-Schritte, Kontroll-Codes, Auto-Start).
