@@ -95,6 +95,17 @@ Deshalb funktionieren sie aus jeder Ordnertiefe – nur der Pfad beim Einbinden 
 in einen anderen Ordner umziehen, ohne dass Fortschritt verloren geht (dann `config.json`
 über den Admin und die Liste in `404.html` anpassen).
 
+## Medienbereich (Admin-Tab „📁 Medien“, v70)
+
+Dateien (Bilder, Videos, Audio, PDF, Office, Pages/Keynote …) im Admin hochladen und per QR-Code oder Kurzlink
+`…workers.dev/m/<code>` zeigen – **ohne Bezug zur Lernwelt** (keine Navbar, kein Pass, kein Lernwelt-Design).
+Ohne Texte führt der Link direkt zur Datei, mit Untertitel/Infotext/Arbeitsauftrag zu einer schlichten Seite.
+Ordner je Fach, Sammlungen (mehrere Dateien unter einem Code), Ein/Aus-Schalter, Aufrufzähler, Untertitel-Spur
+(.vtt/.srt) für Videos, QR als PNG (mit/ohne Titel), Beamer-Großansicht, Speicheranzeige (Grenze 9,5 GB).
+Läuft **nicht** über config.json und den Entwurf, sondern direkt über den Worker – jede Aktion wirkt sofort.
+Technik: `cloudflare/medien.js` (Dateien in R2 `MEDIEN`, Daten in D1 `SYNC_DB`, Tabelle `medien`),
+`gemeinsam/admin/medien.js`. Einrichtung und Fehlersuche: `cloudflare/ANLEITUNG-MEDIEN.md`.
+
 ## Neue App einpflegen
 
 **Zuerst prüfen, ob ein Aufgabentyp reicht** (Abschnitt „Aufgabentyp-Baukasten“): Zuordnen, Sortieren, Lückentext,

@@ -43,6 +43,11 @@
 //                      ausnahmen?: [{ id, wer, runden: 0–20, ab?: Datum, bis?: Datum }] } Spiele erst nach Lern-Runden
 //    heute         – nur false: Startseite ohne „Heute für dich“ (Etappe 8)
 //
+//  Medien (Okt. 2026, cloudflare/medien.js, Anleitung: ANLEITUNG-MEDIEN.md):
+//    /m/<code>…        → öffentliche Kurzlinks zu hochgeladenen Dateien (ohne Lernwelt-Bezug)
+//    /medien/admin/…   → Hochladen, Ordner, Sammlungen, Ein/Aus, Löschen (mit Anmelde-Schlüssel)
+//    Braucht zusätzlich das R2-Binding MEDIEN; die Tabelle liegt in SYNC_DB.
+//
 //  Wartung & Fehlersuche: cloudflare/ANLEITUNG.md
 // ═══════════════════════════════════════════════════════
 
@@ -64,12 +69,20 @@ const SESSION_DAYS   = 7;           // so lange gilt ein Anmelde-Schlüssel
 // Gleiche Regel wie isSafeLink() in shared.js
 const SAFE_LINK = /^(?:[A-Za-z0-9_-]+\/)*[A-Za-z0-9_.-]+\.html(?:\?[A-Za-z0-9_.~%=&+-]*)?(?:#[A-Za-z0-9_-]*)?$|^https:\/\/[^\s"'<>`]+$/;
 
-// ── Einstieg ───────────────────────────────────────────
+// ── Module ─────────────────────────────────────────────
 import { handleSync, syncAufraeumen } from './sync.js';
+import { handleMedienOeffentlich, handleMedienAdmin, medienAufraeumen } from './medien.js';
 
 // ── Einstieg ───────────────────────────────────────────
 export default {
   async fetch(request, env) {
+    // Medien-Kurzlinks (/m/…) zuerst: öffentlich, werden direkt im Browser geöffnet (QR-Code)
+    const url = new URL(request.url);
+    if (url.pathname === '/m' || url.pathname.startsWith('/m/')) {
+      try { return await handleMedienOeffentlich(request, env, url); }
+      catch (e) { console.error(e); return new Response('Fehler', { status: 500 }); }
+    }
+
     const origin = request.headers.get('Origin') || '';
     const cors   = corsHeaders(origin);
 
@@ -84,8 +97,8 @@ export default {
       return json({ error: 'Worker nicht konfiguriert (Secrets fehlen)' }, 500, cors);
     }
 
-    const url = new URL(request.url);
     try {
+      if (url.pathname.startsWith('/medien/'))                    return await handleMedienAdmin(request, env, cors, url, { checkToken });
       if (url.pathname.startsWith('/sync/'))                      return await handleSync(request, env, cors, url, { checkToken });
       if (request.method === 'GET' && url.pathname === '/')       return await handleGet(env, cors);
       if (request.method === 'POST' && url.pathname === '/login') return await handleLogin(request, env, cors);
@@ -99,9 +112,10 @@ export default {
     }
   },
 
-  // Täglicher Cron: alte Pass-Stände löschen (siehe ANLEITUNG-SYNC.md)
+  // Täglicher Cron: alte Pass-Stände löschen (ANLEITUNG-SYNC.md), abgebrochene Medien-Uploads entfernen
   async scheduled(event, env, ctx) {
     ctx.waitUntil(syncAufraeumen(env));
+    ctx.waitUntil(medienAufraeumen(env).catch(e => console.error(e)));
   },
 };
 

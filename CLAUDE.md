@@ -96,7 +96,9 @@ und gelbe Hinweise. Manuelle Checkliste nach Uploads: `werkzeuge/RAUCHTEST.md`.
 - **Backend:** nur ein Cloudflare Worker (`cloudflare/worker.js`, wird von Hand bei Cloudflare eingefügt). Er
   prüft Admin-Login und schreibt ausschließlich `config.json` per GitHub-API; jedes Feld wird validiert. Neue
   Config-Felder müssen auch im Worker erlaubt/geprüft werden. Sicherungskarten-Sync: `cloudflare/sync.js`,
-  `gemeinsam/sync.js`.
+  `gemeinsam/sync.js`. Medienbereich (Dateien per QR-Code/Kurzlink `/m/<code>`, ohne Bezug zur Lernwelt):
+  `cloudflare/medien.js` (R2-Binding `MEDIEN`, Tabelle `medien` in `SYNC_DB`) + Admin-Tab `gemeinsam/admin/medien.js`;
+  läuft nicht über config.json, Einrichtung: `cloudflare/ANLEITUNG-MEDIEN.md`.
 - **Admin:** `admin.html` lädt `gemeinsam/admin/*.js` in fester Reihenfolge (`kern` zuerst, `start` zuletzt);
   Änderungen landen als Entwurf (`lernwelt-admin-entwurf`) und werden gesammelt veröffentlicht.
 - **Testumgebung:** Kopie im Repo `Lern-Apps-test`; umgebung.js erkennt das am Repo-Namen, setzt das

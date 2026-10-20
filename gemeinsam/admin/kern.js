@@ -242,6 +242,7 @@ document.querySelectorAll('.tab').forEach(tab => tab.addEventListener('click', (
   if (tab.dataset.t === 'dorf') buildDorfAdmin();
   if (tab.dataset.t === 'freigaben') buildFreigaben();
   if (tab.dataset.t === 'lernwege') buildLernwegeTab();
+  if (tab.dataset.t === 'medien') buildMedien();
 }));
 
 // ── Build All ─────────────────────────────────────────

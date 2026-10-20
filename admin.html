@@ -369,6 +369,7 @@
       <button class="tab" data-t="dorf">🏘️ Dorf</button>
       <button class="tab" data-t="freigaben">🎯 Unterricht</button>
       <button class="tab" data-t="lernwege">🗺️ Lernwege</button>
+      <button class="tab" data-t="medien">📁 Medien</button>
     </div>
 
     <!-- DASHBOARD -->
@@ -525,6 +526,12 @@
       <div class="form-card" id="lernwege-inhalt" style="margin-bottom:1.5rem;"></div>
     </div>
 
+    <!-- ── MEDIEN (gemeinsam/admin/medien.js, Worker: cloudflare/medien.js) ── -->
+    <div class="tab-panel" id="panel-medien">
+      <p style="font-size:.8rem;color:var(--muted);margin:0 0 1rem;line-height:1.5;">Bilder, Videos, Audio, PDFs und Dokumente hochladen und den Kindern per QR-Code oder Kurzlink zeigen – unabhängig von der Lernwelt: Die Kinder sehen nur den Inhalt. Alles wirkt <b>sofort</b> (ohne Veröffentlichen). Einrichtung einmalig: <code>cloudflare/ANLEITUNG-MEDIEN.md</code>.</p>
+      <div id="medien-inhalt"></div>
+    </div>
+
     <!-- ── FREIGABEN & FOKUS (Etappe 7, gemeinsam/admin/freigaben.js) ── -->
     <div class="tab-panel" id="panel-freigaben">
       <div class="sec-header"><span class="sec-title">🗓 Startseite</span></div>
@@ -601,6 +608,7 @@
 <script src="gemeinsam/admin/tags.js"></script>
 <script src="gemeinsam/admin/werkzeuge.js"></script>
 <script src="gemeinsam/admin/freigaben.js"></script>
+<script src="gemeinsam/admin/medien.js"></script>
 <script src="gemeinsam/admin/start.js"></script>
 </body>
 </html>
