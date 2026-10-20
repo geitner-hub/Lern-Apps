@@ -567,7 +567,7 @@
     "GPG"
   ],
   "announcement": {
-    "active": true,
+    "active": false,
     "text": "Spiele sind jeden Tag versteckt, bis du mehrere Runden gut geübt hast! Viel Spaß beim Üben!",
     "emoji": "📢",
     "color": 3
