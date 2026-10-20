@@ -68,6 +68,22 @@
    "typ": "brunnen",
    "breite": 3,
    "tiefe": 3
+  },
+  "turm": {
+   "typ": "turm",
+   "breite": 3,
+   "tiefe": 3,
+   "hoehe": 8
+  },
+  "steinkreis": {
+   "typ": "steinkreis",
+   "breite": 7,
+   "tiefe": 7
+  },
+  "eiche": {
+   "typ": "eiche",
+   "breite": 3,
+   "tiefe": 3
   }
  },
  "gebaeude": [
@@ -124,6 +140,24 @@
    "tuer": "ost",
    "wand": "PLANKE",
    "dach": "DACH_BLAU"
+  },
+  {
+   "id": "turm",
+   "vorlage": "turm",
+   "x": 81,
+   "z": 18
+  },
+  {
+   "id": "steinkreis",
+   "vorlage": "steinkreis",
+   "x": 61,
+   "z": 13
+  },
+  {
+   "id": "eiche",
+   "vorlage": "eiche",
+   "x": 72,
+   "z": 40
   }
  ],
  "plaetze": [
@@ -165,15 +199,15 @@
   },
   {
    "id": "kartenleserin",
-   "x": 62,
-   "z": 34,
-   "blick": 0
+   "x": 56,
+   "z": 38,
+   "blick": 1.5708
   },
   {
    "id": "turmwaechterin",
-   "x": 80,
-   "z": 16,
-   "blick": 0
+   "x": 79,
+   "z": 22,
+   "blick": 3.1416
   }
  ],
  "wege": [
@@ -348,7 +382,13 @@
     "block": "ZAUN",
     "tor": 1,
     "text": "Bauplan: Baue einen Zaun rund um den Bauplatz. Eine Lücke als Tor ist erlaubt."
-   }
+   },
+   "material": [
+    "PLANKE",
+    "STEIN",
+    "ZAUN",
+    "DACH"
+   ]
   },
   {
    "id": "weide",
@@ -357,7 +397,12 @@
    "x": 18,
    "z": 28,
    "breite": 8,
-   "tiefe": 6
+   "tiefe": 6,
+   "name": "Schafweide",
+   "hoehe": 1,
+   "material": [
+    "ZAUN"
+   ]
   },
   {
    "id": "lager",
@@ -366,7 +411,21 @@
    "x": 33,
    "z": 18,
    "breite": 6,
-   "tiefe": 6
+   "tiefe": 6,
+   "name": "Lager",
+   "hoehe": 3,
+   "material": [
+    "KISTE1000",
+    "KISTE100",
+    "KISTE10",
+    "KISTE1"
+   ],
+   "frei": [
+    "KISTE1000",
+    "KISTE100",
+    "KISTE10",
+    "KISTE1"
+   ]
   },
   {
    "id": "felder",
@@ -375,7 +434,12 @@
    "x": 14,
    "z": 40,
    "breite": 7,
-   "tiefe": 5
+   "tiefe": 5,
+   "name": "Gemüsefeld",
+   "hoehe": 1,
+   "material": [
+    "PFLANZE"
+   ]
   },
   {
    "id": "bruecke-hochland",
@@ -385,7 +449,15 @@
    "z": 22,
    "breite": 9,
    "tiefe": 3,
-   "ebnen": false
+   "ebnen": false,
+   "name": "Brücke ins Hochland",
+   "hoehe": 1,
+   "material": [
+    "PLANKE"
+   ],
+   "verbrauch": {
+    "PLANKE": 2
+   }
   }
  ],
  "schilder": [
@@ -417,13 +489,31 @@
    "id": "bruecke",
    "x": 39,
    "z": 25,
-   "text": "Hier soll eine Brücke ins Hochland entstehen."
+   "text": "Hier soll eine Brücke ins Hochland entstehen. Frag die Baumeisterin!"
   },
   {
    "id": "werkstatt",
    "x": 60,
    "z": 71,
    "text": "Werkstatt: Hier kannst du bauen üben. Stell dich auf den Bauplatz und tippe auf 🧱."
+  },
+  {
+   "id": "holzhandel",
+   "x": 13,
+   "z": 21,
+   "text": "Holzhandel – Zaunpfosten 2 €, Brett 3 €, Stein 1 €, Setzling 1 €. Tipp: Zahl passend!"
+  },
+  {
+   "id": "wegweiser-bruecke",
+   "x": 53,
+   "z": 24,
+   "text": "Wegweiser: Nach Osten kommst du zum Steinkreis und zum Turm. Nach Süden geht es zur Kartenleserin und zur alten Eiche."
+  },
+  {
+   "id": "wegweiser-mitte",
+   "x": 68,
+   "z": 30,
+   "text": "Wegweiser: Norden – Steinkreis. Nordosten – Turm. Süden – alte Eiche. Westen – Kartenleserin."
   }
  ],
  "absperrungen": [
@@ -482,11 +572,11 @@
   "222222222345677788988888888888888999aabccb633334eeefffffffeeeeeedddddddddddddeeeeedb742222222222",
   "2222222224567778889988888888888888899abbcba433336eefffffffeeeeeedddddddddddddeeeeeec963222222222",
   "2222222224567788899998888888888888899aabbbb433336eeffffffeeeeeeeddddddddddddeeeeeeeeb74222222222",
-  "22222222235677888889988888888888888899abbbb533335eefffffeeeeeeeeddddddddddddeeeeeeeec95322222222",
-  "22222222235678888888888888888888888889aabbb633334eeeffffeeeeeeedddddddddddddeeeeeeeed96322222222",
-  "222222222356788888888888888888888888899abbb633334eeeffffeeeeeeedddddddddddddeeeeeeeeda7422222222",
-  "222222222456788888888888888888888888889aabba433336eeeffeeeeeeeeddddddddddddddeeeeeeeeb8532222222",
-  "222222223467888888888888888888888888889aabba433336eeeeeeeeeeeeedddddddddddddeeeeeeeeec9632222222",
+  "22222222235677888889988888888888888899abbbb533335cdfffffeeeeeeeeddddddddddddeeeeeeeec95322222222",
+  "22222222235678888888888888888888888889aabbb633334cdeffffeeeeeeedddddddddddddeeeeeeeed96322222222",
+  "222222222356788888888888888888888888899abbb633334cdeffffeeeeeeedddddddddddddeeeeeeeeda7422222222",
+  "222222222456788888888888888888888888889aabba43333cdeeffeeeeeeeeddddddddddddddeeeeeeeeb8532222222",
+  "222222223467888888888888888888888888889aabba43333cdeeeeeeeeeeeedddddddddddddeeeeeeeeec9632222222",
   "2222222235678888888888888888888888888899abbb533335eeeeeeeeeeeeeddddddddddddeeeeeeeeeec9642222222",
   "2222222345788888888888888888888888888899abbb533335eeeeeeeeeeeeeeddddddeeeeeeeeeeeeeeeca753222222",
   "2222222356788888888888888888888888888899abbb633334eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeca853222222",
@@ -656,5 +746,24 @@
   "................................................................................................",
   "................................................................................................",
   "................................................................................................"
- ]
+ ],
+ "faehre": {
+  "gebiet": "tal",
+  "hafen": {
+   "x": 18,
+   "z": 53
+  },
+  "tal": {
+   "x": 18,
+   "z": 46
+  }
+ },
+ "raster": {
+  "gebiet": "hochland",
+  "x0": 48,
+  "z0": 6,
+  "groesse": 10,
+  "spalten": 4,
+  "zeilen": 5
+ }
 }

@@ -13,6 +13,12 @@
 //        'rand'    Rand des Bauplatzes in Höhe 0 aus plan.block, höchstens plan.tor Lücken (Zaun mit Tor)
 //        'flaeche' ganze Fläche in Höhe 0 aus plan.block (Boden, Feld)
 //        'muster'  genau diese Blöcke: plan.bloecke = [[dx, dy, dz, 'BLOCK'], …]
+//        'ring'    Zaun um eine Weide a × b Meter (Pfosten-Abstand 1 m, Anzahl = Umfang), plan.tor Lücken
+//        'rechteck' plan.a × plan.b Blöcke (Felder: Reihen × Pflanzen je Reihe)
+//        'summe'   Kisten (1000/100/10/1) ergeben plan.zahl, je Sorte höchstens 9 (Stellenwert)
+//        'reihe'   eine Zeile überbrückt die ganze Lücke des Bauplatzes (Brücke über den Fluss)
+//    - Bauplätze bestimmen Material (material), freies Material (frei) und Verbrauch (verbrauch:
+//      z. B. { PLANKE: 2 } = 2 Bretter je Block)
 //      → { ok, fehlt: [[x, y, z]], falsch: [[x, y, z]] } – fehlende Stellen werden kurz rot gezeigt.
 //    - Spielstand: stand.bau[<platz-id>] = [[dx, dy, dz, blocknr], …] – nur das Gebaute
 //      (die Grundwelt ist dort leer). Ungültiges wird beim Laden übergangen.
@@ -40,7 +46,13 @@
     { block: 'STEIN', name: 'Stein', emoji: '🪨' },
     { block: 'ZAUN', name: 'Zaun', emoji: '🚧' },
     { block: 'DACH', name: 'Dach', emoji: '🟥' },
+    { block: 'PFLANZE', name: 'Setzling', emoji: '🌱' },
+    { block: 'KISTE1000', name: '1000er', emoji: '🟫' },
+    { block: 'KISTE100', name: '100er', emoji: '🟧' },
+    { block: 'KISTE10', name: '10er', emoji: '🟨' },
+    { block: 'KISTE1', name: '1er', emoji: '⬜' },
   ];
+  const WERT = { KISTE1000: 1000, KISTE100: 100, KISTE10: 10, KISTE1: 1 };   // Steine je Kiste (Lager)
   const REICHWEITE = 14;                              // so weit reicht ein Tippen (Blöcke)
 
   function erstelle(o) {
@@ -49,15 +61,21 @@
     const B = window.LernInselWelt.BLOCK;
     const STUECK = window.LernInselWelt.STUECK;
     const erlaubt = new Set(MATERIAL.map(m => B[m.block]));
-    const plaetze = (o.plaetze || []).map(p => Object.assign({ hoehe: 3 }, p));
+    const plaetze = (o.plaetze || []).map(p => Object.assign({ hoehe: 3 }, p, {
+      material: (p.material || ['PLANKE', 'STEIN', 'ZAUN', 'DACH']).map(n => B[n]).filter(b => erlaubt.has(b)),
+      frei: new Set((p.frei || []).map(n => B[n])),
+      verbrauch: Object.fromEntries(Object.entries(p.verbrauch || {}).map(([n, k]) => [B[n], Math.max(1, k | 0)])),
+    }));
     const bau = o.bau;                                // stand.bau (wird verändert)
     const inventar = o.inventar;                      // stand.inventar (wird verändert)
     let aktiv = null, material = B.PLANKE, modus = 'setzen', raster = null, marken = null, markenUhr = 0;
 
     const drin = (p, x, y, z) => x >= p.x0 && x <= p.x1 && z >= p.z0 && z <= p.z1 && y >= p.y && y < p.y + p.hoehe;
-    const frei = p => p.vorrat === 'frei';
+    const frei = (p, b) => p.vorrat === 'frei' || p.frei.has(b);
+    const kostet = (p, b) => p.verbrauch[b] || 1;      // z. B. Brücke: 2 Bretter (je 50 cm) für 1 m
 
-    function vorrat(b) { return aktiv && frei(aktiv) ? Infinity : Math.max(0, Math.floor(inventar[b] || 0)); }
+    /** Material im Inventar (Infinity bei freiem Material); bei Verbrauch > 1 in Stück (z. B. Bretter) */
+    function vorrat(b) { return aktiv && frei(aktiv, b) ? Infinity : Math.max(0, Math.floor(inventar[b] || 0)); }
 
     /** Weltstück(e) neu bauen, die die Stelle berühren */
     function neu(x, z) {
@@ -109,7 +127,10 @@
     }
     function rasterWeg() { if (raster) { scene.remove(raster); raster.geometry.dispose(); raster = null; } }
 
-    function start(p) { aktiv = p; rasterZeigen(p); }
+    function start(p) {
+      aktiv = p; rasterZeigen(p);
+      if (!p.material.includes(material)) material = p.material[0];
+    }
     function ende() { aktiv = null; rasterWeg(); markenWeg(); }
 
     // ── Tippen: Strahl durch das Blockgitter (DDA) ──────────
@@ -140,31 +161,49 @@
       }
       return null;
     }
+    /** Stelle, an der der Strahl die Mitte der untersten Bauschicht des Platzes kreuzt (frei, auf dem Platz) */
+    function ebene(r, p) {
+      if (Math.abs(r.direction.y) < 1e-4) return null;
+      const t = (p.y + .5 - r.origin.y) / r.direction.y;
+      if (t <= 0 || t > REICHWEITE + 8) return null;
+      const x = Math.floor(r.origin.x + r.direction.x * t), z = Math.floor(r.origin.z + r.direction.z * t);
+      if (!drin(p, x, p.y, z) || welt.get(x, p.y, z)) return null;
+      return [x, p.y, z];
+    }
     function figurIm(x, y, z) {                       // würde der Block die Figur einklemmen?
       const r = .3, h = 1.7;
       return x + 1 > spieler.x - r && x < spieler.x + r && z + 1 > spieler.z - r && z < spieler.z + r && y + 1 > spieler.y && y < spieler.y + h;
     }
     function tippen(sx, sy) {
       if (!aktiv) return { ok: false, grund: 'kein Baumodus' };
-      const t = suchen(strahl(sx, sy));
-      if (!t) return { ok: false, grund: 'daneben' };
+      const r = strahl(sx, sy);
       const p = aktiv;
+      const t = suchen(r) || (modus === 'setzen' && ebene(r, p) ? { treffer: null, davor: ebene(r, p) } : null);
+      if (!t) return { ok: false, grund: 'daneben' };
       if (modus === 'entfernen') {
+        if (!t.treffer) return { ok: false, grund: 'daneben' };
         const [x, y, z] = t.treffer;
         if (!drin(p, x, y, z)) return { ok: false, grund: 'nicht auf dem Bauplatz' };
         const b = welt.get(x, y, z);
         welt.set(x, y, z, B.LUFT);
-        if (!frei(p) && erlaubt.has(b)) inventar[b] = (inventar[b] || 0) + 1;   // Material zurück ins Inventar
+        if (!frei(p, b) && erlaubt.has(b)) inventar[b] = (inventar[b] || 0) + kostet(p, b);   // Material zurück ins Inventar
         merken(p); neu(x, z); o.speichern();
         return { ok: true, art: 'entfernt', x, y, z };
       }
-      const [x, y, z] = t.davor;
-      if (!drin(p, x, y, z)) return { ok: false, grund: y >= p.y + p.hoehe ? 'zu hoch' : 'nicht auf dem Bauplatz' };
+      let [x, y, z] = t.davor;
+      if (!drin(p, x, y, z)) {
+        // Über einer Lücke (Fluss unter der Brücke) trifft der Strahl erst tief unten etwas: dann zählt die Stelle,
+        // an der er die Bauhöhe des Platzes kreuzt
+        const e = ebene(r, p);
+        if (!e) return { ok: false, grund: y >= p.y + p.hoehe ? 'zu hoch' : 'nicht auf dem Bauplatz' };
+        [x, y, z] = e;
+      }
       if (welt.get(x, y, z)) return { ok: false, grund: 'besetzt' };
       if (figurIm(x, y, z)) return { ok: false, grund: 'du stehst dort' };
-      if (vorrat(material) < 1) return { ok: false, grund: 'kein Material' };
+      if (!p.material.includes(material)) return { ok: false, grund: 'falsches Material' };
+      if (vorrat(material) < kostet(p, material)) return { ok: false, grund: 'kein Material' };
       welt.set(x, y, z, material);
-      if (!frei(p)) inventar[material] = vorrat(material) - 1;
+      if (!frei(p, material)) inventar[material] = vorrat(material) - kostet(p, material);
       merken(p); neu(x, z); o.speichern();
       return { ok: true, art: 'gesetzt', x, y, z };
     }
@@ -188,10 +227,79 @@
         }
       } else if (plan.art === 'muster') {
         (plan.bloecke || []).forEach(([dx, dy, dz, n]) => pruefe(p.x0 + dx, p.y + dy, p.z0 + dz, B[n] !== undefined ? B[n] : soll));
+      } else if (plan.art === 'ring' || plan.art === 'rechteck') {
+        return form(p, plan, soll);
+      } else if (plan.art === 'summe') {
+        return summe(p, plan);
+      } else if (plan.art === 'reihe') {
+        return reihe(p);
       }
       const ok = !fehlt.length && !falsch.length;
       if (!ok) markenZeigen(fehlt.concat(falsch));
       return { ok, fehlt, falsch };
+    }
+
+    /** Alle Stellen eines Blocks in Höhe 0 */
+    function stellen(p, b) {
+      const l = [];
+      for (let z = p.z0; z <= p.z1; z++) for (let x = p.x0; x <= p.x1; x++) if (welt.get(x, p.y, z) === b) l.push([x, p.y, z]);
+      return l;
+    }
+    /**
+     * 'ring':     Zaun um eine Weide a × b (Meter von Pfosten zu Pfosten) → Pfosten auf dem Rand eines Rechtecks
+     *             (a+1) × (b+1) Felder, Anzahl = Umfang 2·(a+b); plan.tor Lücken (keine Ecke) erlaubt
+     * 'rechteck': r Reihen mit je s Pflanzen → genau ein gefülltes Rechteck r × s (oder s × r)
+     */
+    function form(p, plan, soll) {
+      const l = stellen(p, soll);
+      const leer = { ok: false, fehlt: [], falsch: [], grund: 'leer' };
+      if (!l.length) return leer;
+      let x0 = 1e9, x1 = -1e9, z0 = 1e9, z1 = -1e9;
+      l.forEach(([x, , z]) => { x0 = Math.min(x0, x); x1 = Math.max(x1, x); z0 = Math.min(z0, z); z1 = Math.max(z1, z); });
+      const w = x1 - x0 + 1, h = z1 - z0 + 1;
+      const fehlt = [], falsch = [];
+      const istRand = (x, z) => x === x0 || x === x1 || z === z0 || z === z1;
+      const istEcke = (x, z) => (x === x0 || x === x1) && (z === z0 || z === z1);
+      for (let z = z0; z <= z1; z++) for (let x = x0; x <= x1; x++) {
+        const da = welt.get(x, p.y, z) === soll;
+        const muss = plan.art === 'rechteck' || istRand(x, z);
+        if (muss && !da) fehlt.push([x, p.y, z, istEcke(x, z)]);
+        if (!muss && da) falsch.push([x, p.y, z]);
+      }
+      const [a, b] = plan.art === 'ring' ? [plan.a + 1, plan.b + 1] : [plan.a, plan.b];
+      const groesse = (w === a && h === b) || (w === b && h === a);
+      let ok = groesse && !falsch.length;
+      if (plan.art === 'ring') ok = ok && fehlt.length <= (plan.tor | 0) && !fehlt.some(f => f[3]);
+      else ok = ok && !fehlt.length;
+      const grund = ok ? '' : !groesse ? 'groesse' : falsch.length ? 'innen' : 'luecke';
+      if (!ok) markenZeigen(fehlt.concat(falsch).map(f => f.slice(0, 3)));
+      return { ok, fehlt, falsch, grund, w, h };
+    }
+    /** 'summe': Kisten im Lager ergeben plan.zahl Steine, von jeder Sorte höchstens 9 (Stellenwert) */
+    function summe(p, plan) {
+      const anzahl = {};
+      for (let y = p.y; y < p.y + p.hoehe; y++) for (let z = p.z0; z <= p.z1; z++) for (let x = p.x0; x <= p.x1; x++) {
+        const b = welt.get(x, y, z);
+        const n = Object.keys(WERT).find(k => B[k] === b);
+        if (n) anzahl[n] = (anzahl[n] || 0) + 1;
+      }
+      const wert = Object.keys(WERT).reduce((s, k) => s + (anzahl[k] || 0) * WERT[k], 0);
+      const zuViele = Object.keys(WERT).some(k => (anzahl[k] || 0) > 9);
+      const ok = wert === plan.zahl && !zuViele;
+      return { ok, fehlt: [], falsch: [], wert, anzahl, grund: ok ? '' : zuViele ? 'mehr als 9' : 'summe' };
+    }
+    /** 'reihe': eine Zeile des Bauplatzes überbrückt die ganze Lücke (z. B. Fluss) – sonst trägt die Brücke nicht */
+    function reihe(p) {
+      let beste = null;
+      Object.keys(p.luecken || {}).forEach(z => {
+        const lu = p.luecken[z];
+        if (!lu.length) return;
+        const fehlt = lu.filter(x => !welt.get(x, p.y, +z)).map(x => [x, p.y, +z]);
+        if (!beste || fehlt.length < beste.length) beste = fehlt;
+      });
+      if (!beste) return { ok: false, fehlt: [], falsch: [], grund: 'keine Lücke' };
+      if (beste.length) markenZeigen(beste);
+      return { ok: !beste.length, fehlt: beste, falsch: [], grund: beste.length ? 'zu kurz' : '' };
     }
     function markenZeigen(stellen) {
       markenWeg();
@@ -213,6 +321,21 @@
       anwenden, platzBei, start, ende, tippen, pruefen, vorrat,
       get aktiv() { return aktiv; },
       material(b) { if (erlaubt.has(b)) material = b; return material; },
+      kostet: b => (aktiv ? kostet(aktiv, b) : 1),
+      platz: id => plaetze.find(p => p.id === id) || null,
+      leeren(id) {                                    // Bauplatz für einen neuen Auftrag frei räumen (Material zurück)
+        const p = plaetze.find(q => q.id === id);
+        if (!p) return;
+        for (let y = p.y; y < p.y + p.hoehe; y++) for (let z = p.z0; z <= p.z1; z++) for (let x = p.x0; x <= p.x1; x++) {
+          const b = welt.get(x, y, z);
+          if (!b || !erlaubt.has(b)) continue;
+          if (!frei(p, b)) inventar[b] = (inventar[b] || 0) + kostet(p, b);
+          welt.set(x, y, z, B.LUFT);
+        }
+        delete bau[p.id];
+        for (let x = p.x0; x <= p.x1 + STUECK; x += STUECK) for (let z = p.z0; z <= p.z1 + STUECK; z += STUECK) neu(Math.min(x, p.x1), Math.min(z, p.z1));
+        o.speichern();
+      },
       modus(m) { if (m === 'setzen' || m === 'entfernen') modus = m; return modus; },
     };
   }

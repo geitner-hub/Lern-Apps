@@ -262,8 +262,8 @@
    "saetze": [
     "Ahoy! I am Sam.",
     "I am the ferryman.",
-    "My ferry is broken at the moment.",
-    "Soon I can take you to the valley."
+    "Help the people in the village. Then I can take you to the valley!",
+    "My ferry goes to the Baumeister valley."
    ]
   }
  ],
@@ -539,6 +539,379 @@
   ],
   "paketda": [
    "Here it is! The right parcel."
+  ]
+ },
+ "tal": {
+  "gebiet": "tal",
+  "auftraggeber": "stone",
+  "haendler": "wood",
+  "auftraege_je_runde": 5,
+  "aufstieg_ab": 4,
+  "brett_cm": 50,
+  "bewohner": [
+   {
+    "id": "stone",
+    "name": "Frau Stein",
+    "platz": "baumeister",
+    "typ": "woman",
+    "er": "she",
+    "ihn": "her",
+    "look": {
+     "haut": 2,
+     "haarfarbe": 1,
+     "frisur": "dutt",
+     "augen": "normal",
+     "mund": "laecheln",
+     "eq": {
+      "oberteil": "o-karohemd",
+      "hose": "h-latzhose",
+      "schuhe": "s-stiefel",
+      "kopf": "k-entdecker"
+     }
+    },
+    "merkmale": [],
+    "saetze": [
+     "Hallo! Ich bin Frau Stein, die Baumeisterin.",
+     "Im Tal gibt es viel zu bauen.",
+     "Gut gerechnet ist halb gebaut!"
+    ]
+   },
+   {
+    "id": "wood",
+    "name": "Herr Holz",
+    "platz": "holzfaeller",
+    "typ": "man",
+    "er": "he",
+    "ihn": "him",
+    "look": {
+     "haut": 3,
+     "haarfarbe": 6,
+     "frisur": "seitenscheitel",
+     "augen": "froehlich",
+     "mund": "breit",
+     "eq": {
+      "oberteil": "o-hoodie-mint",
+      "hose": "h-jeans",
+      "schuhe": "s-stiefel",
+      "kopf": "k-muetze"
+     }
+    },
+    "merkmale": [],
+    "saetze": [
+     "Willkommen im Holzhandel!"
+    ]
+   }
+  ],
+  "preise": {
+   "ZAUN": 2,
+   "PLANKE": 3,
+   "STEIN": 1,
+   "PFLANZE": 1
+  },
+  "namen": {
+   "ZAUN": [
+    "Zaunpfosten",
+    "Zaunpfosten"
+   ],
+   "PLANKE": [
+    "Brett",
+    "Bretter"
+   ],
+   "STEIN": [
+    "Stein",
+    "Steine"
+   ],
+   "PFLANZE": [
+    "Setzling",
+    "Setzlinge"
+   ]
+  },
+  "emoji": {
+   "ZAUN": "🚧",
+   "PLANKE": "🪵",
+   "STEIN": "🪨",
+   "PFLANZE": "🌱"
+  },
+  "arten": {
+   "1": [
+    "zaun",
+    "felder",
+    "lager",
+    "haendler"
+   ],
+   "2": [
+    "zaun",
+    "felder",
+    "lager",
+    "haendler"
+   ],
+   "3": [
+    "zaun",
+    "felder",
+    "lager",
+    "haendler"
+   ]
+  },
+  "saetze": {
+   "zaun": {
+    "1": [
+     "Die Schafe brauchen eine Weide: {a} m lang und {b} m breit. Von Pfosten zu Pfosten ist es 1 m. Kauf beim Holzhändler genau so viele Zaunpfosten, wie du brauchst, und bau den Zaun auf der Schafweide."
+    ],
+    "2": [
+     "Bau auf der Schafweide einen Zaun um eine Weide von {a} m Länge und {b} m Breite. Die Pfosten stehen 1 m auseinander. Kauf genau die Pfosten, die du brauchst!"
+    ],
+    "3": [
+     "Neue Weide: {a} m lang, {b} m breit, Pfosten alle 1 m. Lass eine Lücke von 1 m als Tor – dort fehlt genau ein Pfosten. Kauf genau so viele Pfosten, wie du brauchst."
+    ]
+   },
+   "felder": {
+    "1": [
+     "Auf dem Gemüsefeld sollen {r} Reihen mit je {s} Salatpflanzen wachsen. Kauf genau so viele Setzlinge, wie du brauchst, und pflanze sie."
+    ],
+    "2": [
+     "Pflanze auf dem Gemüsefeld {r} Reihen mit je {s} Setzlingen – ohne Lücken. Kauf vorher genau die richtige Zahl Setzlinge."
+    ],
+    "3": [
+     "Ich habe {n} Salatpflanzen bestellt. Sie sollen in {r} gleich langen Reihen auf dem Gemüsefeld stehen. Kauf die Setzlinge und pflanze sie."
+    ]
+   },
+   "lager": {
+    "1": [
+     "Ins Lager kommen {zahl} Steine. Es gibt Kisten mit 100, 10 und 1 Stein. Stell genau die richtigen Kisten ins Lager – von jeder Sorte höchstens 9."
+    ],
+    "2": [
+     "Bring {zahl} Steine ins Lager. Es gibt Kisten mit 1000, 100, 10 und 1 Stein – von jeder Sorte höchstens 9."
+    ],
+    "3": [
+     "Im Lager sollen {wort} Steine liegen. Nimm Kisten mit 1000, 100, 10 und 1 Stein – von jeder Sorte höchstens 9."
+    ]
+   },
+   "haendler": {
+    "1": [
+     "Für meine Werkstatt brauche ich {liste}. Kauf es beim Holzhändler und bezahl passend – rechne vorher aus, was es kostet!"
+    ],
+    "2": [
+     "Bitte kauf beim Holzhändler {liste}. Die Preise stehen am Schild. Bezahl passend!"
+    ],
+    "3": [
+     "Ich brauche {liste}. Rechne aus, was das kostet, und bezahl beim Holzhändler passend."
+    ]
+   }
+  },
+  "bruecke_text": "Der große Auftrag: Bau die Brücke ins Hochland! Der Fluss ist {w} m breit, ein Brett ist {cm} cm lang. Für eine Reihe über den Fluss legst du die Bretter hintereinander. Kauf genau so viele Bretter, wie du brauchst.",
+  "faehre": {
+   "geber": "sam",
+   "saetze": [
+    "My ferry is ready, but I am very hungry. Please bring me {n} {dinge}. Then I can take you to the valley. The {viele} are {qort}."
+   ],
+   "danach": "Thank you! Now my ferry can take you to the valley. Come on board!"
+  }
+ },
+ "hochland": {
+  "gebiet": "hochland",
+  "auftraggeber": "lea",
+  "auftraege_je_runde": 5,
+  "aufstieg_ab": 4,
+  "massstab": 5,
+  "bewohner": [
+   {
+    "id": "lea",
+    "name": "Lea",
+    "platz": "kartenleserin",
+    "typ": "woman",
+    "er": "she",
+    "ihn": "her",
+    "look": {
+     "haut": 1,
+     "haarfarbe": 5,
+     "frisur": "pferdeschwanz",
+     "augen": "gross",
+     "mund": "laecheln",
+     "eq": {
+      "oberteil": "o-shirt",
+      "hose": "h-shorts",
+      "schuhe": "s-hightop",
+      "kopf": "k-entdecker"
+     }
+    },
+    "merkmale": [],
+    "saetze": [
+     "Hallo! Ich bin Lea, die Kartenleserin.",
+     "Mit Karte und Kompass findest du jeden Schatz.",
+     "Norden ist dort, wo das N auf dem Kompass zeigt."
+    ]
+   },
+   {
+    "id": "falk",
+    "name": "Frau Falk",
+    "platz": "turmwaechterin",
+    "typ": "woman",
+    "er": "she",
+    "ihn": "her",
+    "look": {
+     "haut": 4,
+     "haarfarbe": 4,
+     "frisur": "dutt",
+     "augen": "normal",
+     "mund": "laecheln",
+     "eq": {
+      "oberteil": "o-trikot",
+      "hose": "h-jeans",
+      "schuhe": "s-stiefel",
+      "kopf": "k-muetze"
+     }
+    },
+    "merkmale": [],
+    "saetze": [
+     "Ich bin Frau Falk und passe auf den Turm auf.",
+     "Vom Turm aus liegt der Steinkreis im Westen.",
+     "Die alte Eiche steht südlich von hier."
+    ]
+   }
+  ],
+  "landmarken": [
+   {
+    "id": "steinkreis",
+    "von": "vom Steinkreis",
+    "x": 61,
+    "z": 13,
+    "symbol": "🪨",
+    "name": "Steinkreis"
+   },
+   {
+    "id": "turm",
+    "von": "vom Turm",
+    "x": 81,
+    "z": 18,
+    "symbol": "🗼",
+    "name": "Turm"
+   },
+   {
+    "id": "eiche",
+    "von": "von der alten Eiche",
+    "x": 72,
+    "z": 40,
+    "symbol": "🌳",
+    "name": "Alte Eiche"
+   }
+  ],
+  "schaetze": [
+   {
+    "id": "s-a1",
+    "x": 50,
+    "z": 8
+   },
+   {
+    "id": "s-b3",
+    "x": 61,
+    "z": 28
+   },
+   {
+    "id": "s-b5",
+    "x": 62,
+    "z": 50
+   },
+   {
+    "id": "s-c1",
+    "x": 71,
+    "z": 8
+   },
+   {
+    "id": "s-d3",
+    "x": 82,
+    "z": 29
+   },
+   {
+    "id": "s-d5",
+    "x": 82,
+    "z": 50
+   }
+  ],
+  "arten": {
+   "1": [
+    "planquadrat"
+   ],
+   "2": [
+    "planquadrat",
+    "kompass",
+    "kompass"
+   ],
+   "3": [
+    "kompass",
+    "massstab",
+    "massstab"
+   ]
+  },
+  "saetze": {
+   "planquadrat": {
+    "1": [
+     "Auf meiner Schatzkarte ist ein Schatz im Planquadrat {feld} eingezeichnet. Such dort den Erdhügel und grab!",
+     "Der Schatz liegt im Planquadrat {feld}. Schau auf die Schatzkarte 🗺️ und geh hin!"
+    ],
+    "2": [
+     "Planquadrat {feld}: Dort ist ein Schatz vergraben. Finde den Erdhügel!"
+    ],
+    "3": [
+     "Im Planquadrat {feld} liegt ein Schatz."
+    ]
+   },
+   "kompass": {
+    "2": [
+     "Geh {von} {weg}. Dort ist ein Schatz vergraben – ein Schritt ist ein Block.",
+     "Start {von}: Geh {weg}. Grab dort!"
+    ],
+    "3": [
+     "Vom Startpunkt aus: Geh {von} {weg}. Dort liegt der Schatz."
+    ]
+   },
+   "massstab": {
+    "3": [
+     "Miss auf der Schatzkarte: Der Schatz liegt {von} aus {weg}. Maßstab: 1 cm = {m} Schritte.",
+     "Auf der Schatzkarte sind es {von} aus {weg}. Rechne mit dem Maßstab (1 cm = {m} Schritte) und grab dort!"
+    ]
+   }
+  },
+  "funde": [
+   {
+    "id": "goldmuenze",
+    "name": "Goldmünze",
+    "emoji": "🪙"
+   },
+   {
+    "id": "kristall",
+    "name": "Kristall",
+    "emoji": "💎"
+   },
+   {
+    "id": "muschel",
+    "name": "Riesenmuschel",
+    "emoji": "🐚"
+   },
+   {
+    "id": "kompass",
+    "name": "Goldener Kompass",
+    "emoji": "🧭"
+   },
+   {
+    "id": "krone",
+    "name": "Kleine Krone",
+    "emoji": "👑"
+   },
+   {
+    "id": "fossil",
+    "name": "Fossil",
+    "emoji": "🦴"
+   },
+   {
+    "id": "stern",
+    "name": "Sternstein",
+    "emoji": "⭐"
+   },
+   {
+    "id": "amulett",
+    "name": "Amulett",
+    "emoji": "🧿"
+   }
   ]
  }
 }

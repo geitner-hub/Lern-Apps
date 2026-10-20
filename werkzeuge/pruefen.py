@@ -31,6 +31,8 @@
 #       stehen in sw.js NACHLADEN (sonst fehlen sie offline).
 #   14. Die Insel: daten/insel.json ist gültig (Karten, Gebiete, Vorlagen, IDs), und Bewohner-Plätze
 #       stehen mindestens INSEL_ABSTAND (20) Blöcke auseinander.
+#   16. Die Insel – Hochland: Schätze im Hochland, je mindestens 20 Blöcke auseinander und jeder in einem
+#       eigenen Planquadrat; Landmarken, Auftraggeberin, Sammelstücke eindeutig.
 #   15. Die Insel: daten/insel-auftraege.json – Bewohner (Platz, Look, eindeutige Merkmale), Warenkisten
 #       und Paket-Orte im Hafendorf und je mindestens 20 Blöcke auseinander, Satzrahmen für alle Stufen.
 # ═══════════════════════════════════════════════════════
@@ -264,7 +266,65 @@ if Path('daten/insel-auftraege.json').is_file() and Path('daten/insel.json').is_
                 for satz in stufen.get(s) or []:
                     for ph in re.findall(r'\{(\w+)\}', satz):
                         if ph not in erlaubt: F(f'{wo}: unbekannter Platzhalter {{{ph}}} in „{satz}“')
-        I(f'Die Insel – Aufträge: {len(ia.get("bewohner") or [])} Bewohner, {len(ia.get("quellen") or [])} Warenkisten, {len(ia.get("suchorte") or [])} Paket-Orte')
+        # Baumeister-Tal (Etappe 5)
+        tal = ia.get('tal') or {}
+        if tal:
+            ins_bloecke = set(re.findall(r'\b([A-Z_0-9]+):\s*\d+', (re.search(r'const BLOCK = \{(.*?)\};', lies('gemeinsam/insel-welt.js'), re.S) or [None, ''])[1]))
+            tids = set()
+            for b in tal.get('bewohner') or []:
+                if b.get('platz') not in plaetze: F(f'{wo}: Tal-Bewohner {b.get("id")}: Platz „{b.get("platz")}“ fehlt in daten/insel.json')
+                if b.get('id') in ids or b.get('id') in tids: F(f'{wo}: Bewohner-ID doppelt: {b.get("id")}')
+                tids.add(b.get('id'))
+                for slot, item in ((b.get('look') or {}).get('eq') or {}).items():
+                    if item not in item_ids: F(f'{wo}: Tal-Bewohner {b.get("id")}: unbekanntes Teil „{item}“')
+            for k in ('auftraggeber', 'haendler'):
+                if tal.get(k) not in tids: F(f'{wo}: tal.{k} „{tal.get(k)}“ ist kein Tal-Bewohner')
+            for k, v in (tal.get('preise') or {}).items():
+                if k not in ins_bloecke: F(f'{wo}: tal.preise: unbekannter Block {k}')
+                if not (isinstance(v, int) and 0 < v <= 20): F(f'{wo}: tal.preise.{k}: ganze Euro 1–20 (kopfrechentauglich)')
+                if k not in (tal.get('namen') or {}): F(f'{wo}: tal.namen: Name für {k} fehlt')
+            for art in ('zaun', 'felder', 'lager', 'haendler'):
+                for s in ('1', '2', '3'):
+                    if not ((tal.get('saetze') or {}).get(art) or {}).get(s): F(f'{wo}: tal.saetze.{art} für Stufe {s} fehlt')
+            if tal.get('faehre', {}).get('geber') not in ids: F(f'{wo}: tal.faehre.geber ist kein Bewohner des Hafendorfs')
+            for bp in ins.get('bauplaetze') or []:
+                for feld in ('material', 'frei'):
+                    for n in bp.get(feld) or []:
+                        if n not in ins_bloecke: F(f'daten/insel.json: Bauplatz {bp.get("id")}: unbekannter Block {n} in {feld}')
+                for n in (bp.get('verbrauch') or {}):
+                    if n not in ins_bloecke: F(f'daten/insel.json: Bauplatz {bp.get("id")}: unbekannter Block {n} in verbrauch')
+            for need in ('weide', 'felder', 'lager', 'bruecke-hochland'):
+                if need not in {bp.get('id') for bp in ins.get('bauplaetze') or []}: F(f'daten/insel.json: Bauplatz „{need}“ fehlt (Tal-Aufträge)')
+        # Kartenleser-Hochland (Etappe 6)
+        hl = ia.get('hochland') or {}
+        if hl:
+            ra = ins.get('raster') or {}
+            if not all(isinstance(ra.get(k), int) and ra.get(k) > 0 for k in ('groesse', 'spalten', 'zeilen')): F('daten/insel.json: "raster" (Planquadrate) fehlt oder ist unvollständig')
+            hk = next((g.get('zeichen') for g in ins.get('gebiete') or [] if g.get('id') == hl.get('gebiet', 'hochland')), 'k')
+            sch = hl.get('schaetze') or []
+            felder = set()
+            for s in sch:
+                x, z = s.get('x'), s.get('z')
+                if not (isinstance(x, int) and isinstance(z, int) and 0 <= z < len(gk) and 0 <= x < len(gk[z]) and gk[z][x] == hk):
+                    F(f'{wo}: Schatz {s.get("id")} liegt nicht im Hochland'); continue
+                if ra:
+                    fld = (x - ra.get('x0', 0)) // ra['groesse'], (z - ra.get('z0', 0)) // ra['groesse']
+                    if not (0 <= fld[0] < ra['spalten'] and 0 <= fld[1] < ra['zeilen']): F(f'{wo}: Schatz {s.get("id")} liegt außerhalb der Planquadrate')
+                    if fld in felder: F(f'{wo}: zwei Schätze im selben Planquadrat ({s.get("id")}) – „im Planquadrat …“ wäre nicht eindeutig')
+                    felder.add(fld)
+            for i in range(len(sch)):
+                for j in range(i + 1, len(sch)):
+                    d = math.hypot(sch[i]['x'] - sch[j]['x'], sch[i]['z'] - sch[j]['z'])
+                    if d < INSEL_ABSTAND: F(f'{wo}: Schätze „{sch[i]["id"]}“ und „{sch[j]["id"]}“ nur {d:.0f} Blöcke auseinander (mindestens {INSEL_ABSTAND})')
+            for b in hl.get('bewohner') or []:
+                if b.get('platz') not in plaetze: F(f'{wo}: Hochland-Bewohner {b.get("id")}: Platz „{b.get("platz")}“ fehlt')
+            if hl.get('auftraggeber') not in {b.get('id') for b in hl.get('bewohner') or []}: F(f'{wo}: hochland.auftraggeber ist kein Hochland-Bewohner')
+            for lm in hl.get('landmarken') or []:
+                if not (lm.get('von') and lm.get('name') and isinstance(lm.get('x'), int)): F(f'{wo}: Landmarke {lm.get("id")}: von, name, x, z nötig')
+            fid = [f.get('id') for f in hl.get('funde') or []]
+            if len(set(fid)) != len(fid): F(f'{wo}: Sammelstück-IDs doppelt')
+        I(f'Die Insel – Aufträge: {len(ia.get("bewohner") or [])} Bewohner, {len(ia.get("quellen") or [])} Warenkisten, {len(ia.get("suchorte") or [])} Paket-Orte'
+          + (f', Tal: {len(tal.get("bewohner") or [])} Bewohner, {len(tal.get("preise") or {})} Waren' if tal else ''))
 for p in ALLE:
     if p.suffix not in ('.js', '.html') or rel(p).startswith('vendor/'): continue
     for d in re.findall(r"LW\.laden\(\s*'([^']+)'", p.read_text(encoding='utf-8')):
