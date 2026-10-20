@@ -1267,7 +1267,25 @@
   {
    "id": "allg",
    "name": "Allgemein",
-   "bereiche": []
+   "bereiche": [
+    {
+     "id": "allg.spiele",
+     "titel": "Spiele",
+     "themen": [
+      {
+       "id": "allg.5.insel",
+       "titel": "Die Insel",
+       "klasse": 5,
+       "quelle": {
+        "app": "spiele/insel.html"
+       },
+       "lehrplan": "Fächerübergreifend: E5 Hörverstehen und Leseverstehen (Personen beschreiben, have got, simple past, Präpositionen), M5 Zahlen und Operationen (Einmaleins, Stellenwert, Geld), GPG5 Orientierung mit Karte, Kompass und Maßstab",
+       "dauer": 15,
+       "einsatz": "Belohnung oder Freiarbeit: drei Gebiete (Hafendorf Englisch, Baumeister-Tal Mathe, Kartenleser-Hochland GPG). Lehrer-Links: insel.html?gebiet=hafen|tal|hochland&stufe=1–3. Stufen sperren über die Freigaben der Themen have got, simple past, Einmaleins und Stellenwert."
+      }
+     ]
+    }
+   ]
   }
  ]
 }
