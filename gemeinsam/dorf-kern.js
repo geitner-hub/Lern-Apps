@@ -349,6 +349,14 @@
   //  für die Klasse freigeschaltet, keine Spiele (Ordner spiele/) und keine externen Links.
   //  Rückgabe: [{ key, name, fach, emoji, datei }] – key = Dateiname wie in den Ergebnissen.
   function appKey(datei) { return String(datei || '').split('/').pop(); }
+  // Sammel-Apps: Übersichten, deren Übungen in einer anderen Seite laufen (Ergebnis-Schlüssel dort).
+  //  Knowing English öffnet jede Struktur in apps/typen/uebung.html?inhalt=en.… – diese Runden zählen mit.
+  const SAMMEL = { 'knowing-english.html': k => k.startsWith('uebung.html?inhalt=en.') };
+  /** Gehört die Runde zur App eines Auftrags? (gleicher Schlüssel oder Übung einer Sammel-App) */
+  function passtApp(key, runde) {
+    const k = String(runde && runde.app || '');
+    return !!key && (k === key || (Object.prototype.hasOwnProperty.call(SAMMEL, key) && SAMMEL[key](k)));
+  }
   function dorfApps(kl) {
     return (configApps() || []).filter(a => a && typeof a === 'object'
         && typeof a.datei === 'string' && a.datei && !/^https?:/i.test(a.datei)
@@ -674,7 +682,7 @@
   function passtZurWoche(runde) {
     const w = D.w;
     if (!w || w.f || !zaehlt(runde, w.m)) return false;
-    if (w.a === 'app') return runde.app === w.z;
+    if (w.a === 'app') return passtApp(w.z, runde);
     if (w.a === 'thema') return (runde.inhalt || []).some(id => id === w.z || id.startsWith(w.z + '/') || id.startsWith(w.z + ':'));
     return false;
   }
@@ -1313,7 +1321,7 @@
     const e = a.def, w = e.waehrung, E = eventWerte(), W = werte();
     const z = evZustand(a.id);
     // Gast-Auftrag
-    if (z.q && z.q.a === runde.app && zaehlt(runde, z.q.m)) {
+    if (z.q && passtApp(z.q.a, runde) && zaehlt(runde, z.q.m)) {
       const info = gastAuftragInfo();
       z.q.c = Math.min(z.q.n, z.q.c + 1);
       if (z.q.c >= z.q.n) {
@@ -1485,7 +1493,7 @@
     if (D.fd !== heute()) tagesCheck();
     if (runde.blocked) return;
     // Eine App kann gleichzeitig auf dem Brett und auf dem Lehrer-Zettel stehen: beide zählen
-    const passende = D.q.filter(x => x.a === runde.app);
+    const passende = D.q.filter(x => passtApp(x.a, runde));
     let q = passende[0] || null, meldung = null, wochenMeldung = null, erfuellt = false, fleissNeu = false;
     const rang = { zuwenig: 1, fortschritt: 2, erfuellt: 3 };
     passende.forEach(x => {
@@ -1508,7 +1516,7 @@
     if (passtZurWoche(runde)) wochenMeldung = wocheZaehlen();
     if (wochenMeldung === 'woche-erfuellt') erfuellt = true;
     let bewohnerMeldung = null;
-    if (D.bq && D.bq.a === runde.app && zaehlt(runde, D.bq.m)) {
+    if (D.bq && passtApp(D.bq.a, runde) && zaehlt(runde, D.bq.m)) {
       const info = bewohnerAuftragInfo();
       D.bq.c = Math.min(D.bq.n, D.bq.c + 1);
       if (D.bq.c >= D.bq.n) {
