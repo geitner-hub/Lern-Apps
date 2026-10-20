@@ -706,5 +706,212 @@
    ],
    "danach": "Thank you! Now my ferry can take you to the valley. Come on board!"
   }
+ },
+ "hochland": {
+  "gebiet": "hochland",
+  "auftraggeber": "lea",
+  "auftraege_je_runde": 5,
+  "aufstieg_ab": 4,
+  "massstab": 5,
+  "bewohner": [
+   {
+    "id": "lea",
+    "name": "Lea",
+    "platz": "kartenleserin",
+    "typ": "woman",
+    "er": "she",
+    "ihn": "her",
+    "look": {
+     "haut": 1,
+     "haarfarbe": 5,
+     "frisur": "pferdeschwanz",
+     "augen": "gross",
+     "mund": "laecheln",
+     "eq": {
+      "oberteil": "o-shirt",
+      "hose": "h-shorts",
+      "schuhe": "s-hightop",
+      "kopf": "k-entdecker"
+     }
+    },
+    "merkmale": [],
+    "saetze": [
+     "Hallo! Ich bin Lea, die Kartenleserin.",
+     "Mit Karte und Kompass findest du jeden Schatz.",
+     "Norden ist dort, wo das N auf dem Kompass zeigt."
+    ]
+   },
+   {
+    "id": "falk",
+    "name": "Frau Falk",
+    "platz": "turmwaechterin",
+    "typ": "woman",
+    "er": "she",
+    "ihn": "her",
+    "look": {
+     "haut": 4,
+     "haarfarbe": 4,
+     "frisur": "dutt",
+     "augen": "normal",
+     "mund": "laecheln",
+     "eq": {
+      "oberteil": "o-trikot",
+      "hose": "h-jeans",
+      "schuhe": "s-stiefel",
+      "kopf": "k-muetze"
+     }
+    },
+    "merkmale": [],
+    "saetze": [
+     "Ich bin Frau Falk und passe auf den Turm auf.",
+     "Vom Turm aus liegt der Steinkreis im Westen.",
+     "Die alte Eiche steht südlich von hier."
+    ]
+   }
+  ],
+  "landmarken": [
+   {
+    "id": "steinkreis",
+    "von": "vom Steinkreis",
+    "x": 61,
+    "z": 13,
+    "symbol": "🪨",
+    "name": "Steinkreis"
+   },
+   {
+    "id": "turm",
+    "von": "vom Turm",
+    "x": 81,
+    "z": 18,
+    "symbol": "🗼",
+    "name": "Turm"
+   },
+   {
+    "id": "eiche",
+    "von": "von der alten Eiche",
+    "x": 72,
+    "z": 40,
+    "symbol": "🌳",
+    "name": "Alte Eiche"
+   }
+  ],
+  "schaetze": [
+   {
+    "id": "s-a1",
+    "x": 50,
+    "z": 8
+   },
+   {
+    "id": "s-b3",
+    "x": 61,
+    "z": 28
+   },
+   {
+    "id": "s-b5",
+    "x": 62,
+    "z": 50
+   },
+   {
+    "id": "s-c1",
+    "x": 71,
+    "z": 8
+   },
+   {
+    "id": "s-d3",
+    "x": 82,
+    "z": 29
+   },
+   {
+    "id": "s-d5",
+    "x": 82,
+    "z": 50
+   }
+  ],
+  "arten": {
+   "1": [
+    "planquadrat"
+   ],
+   "2": [
+    "planquadrat",
+    "kompass",
+    "kompass"
+   ],
+   "3": [
+    "kompass",
+    "massstab",
+    "massstab"
+   ]
+  },
+  "saetze": {
+   "planquadrat": {
+    "1": [
+     "Auf meiner Schatzkarte ist ein Schatz im Planquadrat {feld} eingezeichnet. Such dort den Erdhügel und grab!",
+     "Der Schatz liegt im Planquadrat {feld}. Schau auf die Schatzkarte 🗺️ und geh hin!"
+    ],
+    "2": [
+     "Planquadrat {feld}: Dort ist ein Schatz vergraben. Finde den Erdhügel!"
+    ],
+    "3": [
+     "Im Planquadrat {feld} liegt ein Schatz."
+    ]
+   },
+   "kompass": {
+    "2": [
+     "Geh {von} {weg}. Dort ist ein Schatz vergraben – ein Schritt ist ein Block.",
+     "Start {von}: Geh {weg}. Grab dort!"
+    ],
+    "3": [
+     "Vom Startpunkt aus: Geh {von} {weg}. Dort liegt der Schatz."
+    ]
+   },
+   "massstab": {
+    "3": [
+     "Miss auf der Schatzkarte: Der Schatz liegt {von} aus {weg}. Maßstab: 1 cm = {m} Schritte.",
+     "Auf der Schatzkarte sind es {von} aus {weg}. Rechne mit dem Maßstab (1 cm = {m} Schritte) und grab dort!"
+    ]
+   }
+  },
+  "funde": [
+   {
+    "id": "goldmuenze",
+    "name": "Goldmünze",
+    "emoji": "🪙"
+   },
+   {
+    "id": "kristall",
+    "name": "Kristall",
+    "emoji": "💎"
+   },
+   {
+    "id": "muschel",
+    "name": "Riesenmuschel",
+    "emoji": "🐚"
+   },
+   {
+    "id": "kompass",
+    "name": "Goldener Kompass",
+    "emoji": "🧭"
+   },
+   {
+    "id": "krone",
+    "name": "Kleine Krone",
+    "emoji": "👑"
+   },
+   {
+    "id": "fossil",
+    "name": "Fossil",
+    "emoji": "🦴"
+   },
+   {
+    "id": "stern",
+    "name": "Sternstein",
+    "emoji": "⭐"
+   },
+   {
+    "id": "amulett",
+    "name": "Amulett",
+    "emoji": "🧿"
+   }
+  ]
  }
 }

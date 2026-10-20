@@ -15,7 +15,7 @@
 //    HOEHE                          Größe einer Figur in Blöcken
 //    aufstellen(look?)              → Promise { figur, gruppe } (look null = eigene Pass-Figur)
 //    bewohner(T, welt, liste)       → Promise [{ def, x, y, z, blick, grund, gruppe }]
-//    kiste(T, farbe) / paket(T)     → Gruppe (gebacken)
+//    kiste(T, farbe) / paket(T) / huegel(T)  → Gruppe (gebacken; huegel = Grabstelle im Hochland)
 //    schatten(T)                    → runder Schattenfleck
 //    sprich(text) / kannSprechen()  Vorlesen (englisch)
 // ═══════════════════════════════════════════════════════
@@ -88,6 +88,15 @@
     return LernInselWelt.backe(T, g);
   }
 
+  /** Erdhügel (Grabstelle im Hochland) – alle sehen gleich aus */
+  function huegel(T) {
+    const g = new T.Group();
+    klotz(T, g, 1.1, .16, 1.1, 0, 0, 0, '#7a5230');
+    klotz(T, g, .8, .16, .8, 0, .16, 0, '#8a5d36');
+    klotz(T, g, .45, .12, .45, 0, .32, 0, '#966a40');
+    return LernInselWelt.backe(T, g);
+  }
+
   // ── Vorlesen (englische Stimme) ─────────────────────────
   let STIMME = null;
   const kannSprechen = () => 'speechSynthesis' in window;
@@ -110,5 +119,5 @@
   }
   function still() { try { if (kannSprechen()) speechSynthesis.cancel(); } catch (e) {} }
 
-  window.LernInselFiguren = { HOEHE, aufstellen, bewohner, kiste, paket, schatten, sprich, still, kannSprechen };
+  window.LernInselFiguren = { HOEHE, aufstellen, bewohner, kiste, paket, huegel, schatten, sprich, still, kannSprechen };
 })();

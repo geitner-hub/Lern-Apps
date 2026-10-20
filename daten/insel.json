@@ -68,6 +68,22 @@
    "typ": "brunnen",
    "breite": 3,
    "tiefe": 3
+  },
+  "turm": {
+   "typ": "turm",
+   "breite": 3,
+   "tiefe": 3,
+   "hoehe": 8
+  },
+  "steinkreis": {
+   "typ": "steinkreis",
+   "breite": 7,
+   "tiefe": 7
+  },
+  "eiche": {
+   "typ": "eiche",
+   "breite": 3,
+   "tiefe": 3
   }
  },
  "gebaeude": [
@@ -124,6 +140,24 @@
    "tuer": "ost",
    "wand": "PLANKE",
    "dach": "DACH_BLAU"
+  },
+  {
+   "id": "turm",
+   "vorlage": "turm",
+   "x": 81,
+   "z": 18
+  },
+  {
+   "id": "steinkreis",
+   "vorlage": "steinkreis",
+   "x": 61,
+   "z": 13
+  },
+  {
+   "id": "eiche",
+   "vorlage": "eiche",
+   "x": 72,
+   "z": 40
   }
  ],
  "plaetze": [
@@ -165,15 +199,15 @@
   },
   {
    "id": "kartenleserin",
-   "x": 62,
-   "z": 34,
-   "blick": 0
+   "x": 56,
+   "z": 38,
+   "blick": 1.5708
   },
   {
    "id": "turmwaechterin",
-   "x": 80,
-   "z": 16,
-   "blick": 0
+   "x": 79,
+   "z": 22,
+   "blick": 3.1416
   }
  ],
  "wege": [
@@ -468,6 +502,18 @@
    "x": 13,
    "z": 21,
    "text": "Holzhandel – Zaunpfosten 2 €, Brett 3 €, Stein 1 €, Setzling 1 €. Tipp: Zahl passend!"
+  },
+  {
+   "id": "wegweiser-bruecke",
+   "x": 53,
+   "z": 24,
+   "text": "Wegweiser: Nach Osten kommst du zum Steinkreis und zum Turm. Nach Süden geht es zur Kartenleserin und zur alten Eiche."
+  },
+  {
+   "id": "wegweiser-mitte",
+   "x": 68,
+   "z": 30,
+   "text": "Wegweiser: Norden – Steinkreis. Nordosten – Turm. Süden – alte Eiche. Westen – Kartenleserin."
   }
  ],
  "absperrungen": [
@@ -711,5 +757,13 @@
    "x": 18,
    "z": 46
   }
+ },
+ "raster": {
+  "gebiet": "hochland",
+  "x0": 48,
+  "z0": 6,
+  "groesse": 10,
+  "spalten": 4,
+  "zeilen": 5
  }
 }

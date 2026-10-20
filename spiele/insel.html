@@ -51,6 +51,12 @@
      Gekauftes zählt als Rechenfehler. Nach der ersten Tal-Runde: die Brücke ins Hochland
      (Längen: Fluss in m, Bretter à 50 cm) → Hochland offen. Runden: skill 'insel:tal:<stufe>'.
      Spielstand zusätzlich: auftraege.tal, stufen.tal, geld.
+   Etappe 6 – Kartenleser-Hochland (GPG): Lea gibt Schatz-Aufträge auf Deutsch –
+     Planquadrat (Stufe 1), Kompass und Schritte (ab 2), Maßstab „1 cm = 5 Schritte“ (3).
+     Kompass am Bildschirmrand, Schatzkarte 🗺️ (insel-karte.js: aus den Weltdaten, mit
+     Planquadraten, Landmarken, Nordpfeil, Maßstab – ohne „Du bist hier“), Wegweiser.
+     Alle Erdhügel sehen gleich aus; ⛏️ am falschen = erster Versuch verbraucht.
+     Gefundene Schätze werden Sammelstücke (funde). Runden: skill 'insel:hochland:<stufe>'.
 
    Link-Parameter:
      ?debug=1     Bildrate, Draw-Calls, Dreiecke, Startzeit, Position, Gebiet;
@@ -162,6 +168,19 @@
     #auftrag .unten { margin-top: .3rem; font-size: .8rem; font-weight: 800; color: var(--accent2); }
     #geld { position: fixed; z-index: 17; right: max(.7rem, env(safe-area-inset-right)); top: calc(max(.7rem, env(safe-area-inset-top)) + 60px);
       background: var(--papier); color: var(--tinte); border-radius: 999px; padding: .35rem .75rem; font-weight: 900; box-shadow: 0 4px 14px rgba(0,0,0,.3); }
+    #karte-knopf { top: max(.7rem, env(safe-area-inset-top)); right: calc(max(.7rem, env(safe-area-inset-right)) + 60px); }
+    #kompass { position: fixed; z-index: 17; right: max(.7rem, env(safe-area-inset-right)); top: calc(max(.7rem, env(safe-area-inset-top)) + 104px);
+      width: 86px; height: 86px; border-radius: 50%; background: var(--papier); border: 3px solid var(--accent); box-shadow: 0 4px 14px rgba(0,0,0,.3); }
+    #kompass .rose { position: absolute; inset: 0; }
+    #kompass b { position: absolute; left: 50%; top: 50%; width: 22px; height: 22px; margin: -11px; text-align: center; line-height: 22px;
+      font: 900 15px 'Nunito', sans-serif; color: var(--tinte); }
+    #kompass b.n { color: #dc2626; font-size: 18px; }
+    #kompass i { position: absolute; left: 50%; top: 14px; width: 0; height: 0; margin-left: -6px; border: 6px solid transparent; border-bottom: 14px solid #dc2626; }
+    .schatzkarte { width: min(720px, 100%); padding-top: 1rem; padding-bottom: 1rem; }
+    .schatzkarte h2 { font-size: 1.35rem; }
+    .schatzkarte canvas { display: block; margin: .6rem auto 0; border-radius: 10px; box-shadow: 0 4px 16px rgba(0,0,0,.35); max-width: 100%; }
+    .funde { margin-top: .9rem; background: var(--panel2); border-radius: 14px; padding: .55rem .8rem; font-weight: 800; text-align: left; }
+    .funde .liste { font-size: 1.5rem; letter-spacing: .1em; margin-top: .2rem; }
     #blende { position: fixed; inset: 0; z-index: 35; background: #0f172a; opacity: 0; transition: opacity .35s; pointer-events: none; }
     #blende.an { opacity: 1; }
     .laden { text-align: left; }
@@ -201,7 +220,7 @@
       border-radius: 8px; white-space: pre; pointer-events: none; }
 
     /* ── Overlays (Start, Pause, ohne 3D) ─── */
-    .overlay { position: fixed; inset: 0; z-index: 40; display: grid; place-items: center; padding: 1.2rem;
+    .overlay { position: fixed; inset: 0; z-index: 40; display: grid; place-items: center; padding: 1.2rem; overflow-y: auto;
       background: rgba(15,14,26,.72); }
     #start { background: linear-gradient(180deg, rgba(15,14,26,.55), rgba(15,14,26,.92)), #1e3a5f; }
     .karte { background: var(--panel); border: 2px solid rgba(255,255,255,.08); border-radius: 26px; padding: 1.5rem 1.4rem 1.3rem;
@@ -240,6 +259,8 @@
 </div>
 <button id="korb" hidden aria-label="Korb leeren"></button>
 <div id="geld" hidden></div>
+<div id="kompass" hidden aria-hidden="true"><div class="rose"><b class="n">N</b><b class="o">O</b><b class="s">S</b><b class="w">W</b><i></i></div></div>
+<button class="hud-knopf" id="karte-knopf" aria-label="Schatzkarte" hidden>🗺️</button>
 <div id="blende" hidden></div>
 <div id="baubar" hidden>
   <div class="plan" id="bau-plan"></div>
@@ -277,6 +298,7 @@
     <div class="wahl" id="stufen"></div>
     <div class="wahl" id="lesart"><button data-l="lesen">📖 Lesen</button><button data-l="hoeren">🎧 Hören</button></div>
     <button class="zweit" id="abbrechen" hidden>Diesen Auftrag überspringen (zählt nicht)</button>
+    <div class="funde" id="funde" hidden></div>
     <label class="schalter">Seiten tauschen (Linkshänder) <input type="checkbox" id="opt-seiten"></label>
     <label class="schalter">Vorlesen <input type="checkbox" id="opt-vorlesen" checked></label>
     <button class="gross fredoka" id="weiter">Weiter</button>
@@ -296,6 +318,15 @@
     <div class="tresen"><b id="laden-tresen">0 €</b><span id="laden-beutel"></span></div>
     <div class="wahl"><button id="laden-zurueck">↩ Geld zurück</button><button id="laden-zahlen" class="an">💶 Bezahlen</button></div>
     <button class="zweit" id="laden-zu">Schließen</button>
+  </div>
+</div>
+
+<div class="overlay" id="karte" hidden>
+  <div class="karte schatzkarte">
+    <h2 class="fredoka">🗺️ Schatzkarte</h2>
+    <canvas id="karte-bild"></canvas>
+    <p class="klein">Planquadrate: Buchstabe für die Spalte, Zahl für die Zeile (z. B. B3). Norden ist oben.</p>
+    <button class="gross fredoka" id="karte-zu">Zurück</button>
   </div>
 </div>
 
@@ -325,6 +356,7 @@
 <script src="../gemeinsam/insel-figuren.js"></script>
 <script src="../gemeinsam/insel-auftraege.js"></script>
 <script src="../gemeinsam/insel-bauen.js"></script>
+<script src="../gemeinsam/insel-karte.js"></script>
 <script>
 'use strict';
 const $ = id => document.getElementById(id);
@@ -340,7 +372,7 @@ const POS_ALLE_MS = 5000;                            // Position höchstens so o
 const F = window.LernInselFiguren;
 const HOCH = F.HOEHE;
 const ART_SYM = { finden: '🔍', bringen: '🧺', suchen: '📦', zaun: '🚧', felder: '🌱', lager: '📦', haendler: '💶', bruecke: '🌉' };
-const AUFTRAGS_GEBIETE = ['hafen', 'tal'];
+const AUFTRAGS_GEBIETE = ['hafen', 'tal', 'hochland'];
 
 let T, renderer, scene, camera, welt, weltSzene, steuerung, spielerFigur, spielerGruppe, spielerSchatten;
 let bewohner = [], schilder = [], kisten = [], pakete = [], laeuft = false, bereit = false, letzte = 0, phase = 0, zeit = 0, sichtUhr = 0;
@@ -350,6 +382,7 @@ let stand = null, offen = new Set(['hafen']), testOffen = false, letztesSpeicher
 let AD = null, rahmen = null;                        // Bausteine (insel-auftraege.json) und Auftragsrahmen
 let bauen = null;                                    // Bauen auf Bauplätzen (Etappe 4)
 let TD = null, talRahmen = null;                     // Baumeister-Tal (Etappe 5): Bausteine und Bauaufträge
+let HD = null, hochRahmen = null, huegel = [], kompassGrad = null;   // Kartenleser-Hochland (Etappe 6)
 
 function webglOk() {
   try { const c = document.createElement('canvas'); return !!(c.getContext('webgl') || c.getContext('experimental-webgl')); }
@@ -414,9 +447,12 @@ function speichern() {
 }
 const hafen = () => stand.auftraege.hafen;
 const tal = () => stand.auftraege.tal;
+const hoch = () => stand.auftraege.hochland;
 const stufe = (g = 'hafen') => stand.stufen[g].wahl;
 /** Gebiet, dessen Aufträge die Karte zeigt: wo das Kind gerade ist */
-const kartenGebiet = () => (aktGebiet === 'tal' && talRahmen ? 'tal' : 'hafen');
+const kartenGebiet = () => (aktGebiet === 'tal' && talRahmen ? 'tal' : aktGebiet === 'hochland' && hochRahmen ? 'hochland' : 'hafen');
+const GEBIET_NAME = { hafen: 'Hafendorf', tal: 'Baumeister-Tal', hochland: 'Kartenleser-Hochland' };
+const gebietsDaten = g => (g === 'tal' ? TD : g === 'hochland' ? HD : AD) || {};
 const BLOCKNR = n => LernInselWelt.BLOCK[n];
 /** Gebiet freischalten (ab Etappe 5 durch Fähre und Brücke) – nur aufbauend */
 function gebietOeffnen(id, speichernAuch = true) {
@@ -484,7 +520,7 @@ async function aufbauen() {
   // Spielstand und Welt (Warenkisten und Paket-Orte bleiben frei von Bäumen)
   stand = standLesen();
   offen = new Set(stand.gebiete);
-  const frei = AD ? [...(AD.quellen || []), ...(AD.suchorte || [])].map(o => ({ x: o.x, z: o.z, r: 2 })) : [];
+  const frei = AD ? [...(AD.quellen || []), ...(AD.suchorte || []), ...((AD.hochland || {}).schaetze || [])].map(o => ({ x: o.x, z: o.z, r: 2 })) : [];
   welt = TESTINSEL ? LernInselWelt.erzeuge(TESTINSEL) : LernInselWelt.ausDaten(daten, { offen, frei });
   bauen = LernInselBauen.erstelle({ T, welt, scene, camera, leinwand: renderer.domElement, szene: () => weltSzene,
     plaetze: welt.orte.bauplaetze || [], bau: stand.bau, inventar: stand.inventar, spieler, speichern });
@@ -512,11 +548,18 @@ async function aufbauen() {
       talRahmen = LernInselAuftraege.erstelleTal(TD, { plaetze: Object.fromEntries((welt.orte.bauplaetze || []).map(q => [q.id, q])) });
       (TD.bewohner || []).forEach(d => { const o = orte[d.platz]; if (o) liste.push({ def: d, x: o.x, z: o.z, blick: o.blick, gebiet: 'tal' }); });
     }
+    HD = !TESTINSEL && AD.hochland && welt.raster ? AD.hochland : null;
+    if (HD) {
+      const lea = (HD.bewohner || []).find(d => d.id === HD.auftraggeber);
+      hochRahmen = LernInselAuftraege.erstelleHochland(HD, { raster: welt.raster, geber: lea && orte[lea.platz] });
+      (HD.bewohner || []).forEach(d => { const o = orte[d.platz]; if (o) liste.push({ def: d, x: o.x, z: o.z, blick: o.blick, gebiet: 'hochland' }); });
+    }
     bewohner = await F.bewohner(T, welt, liste);
     bewohner.forEach((b, i) => { b.art = 'bewohner'; b.gebiet = liste.find(l => l.def === b.def).gebiet; b.kopf = HOCH + .35; b.nr = i; scene.add(b.gruppe); scene.add(b.schatten); });
     if (!TESTINSEL) {
       kisten = rahmen.quellen.map(q => ding(F.kiste(T, q.farbe || '#cccccc'), q, 'kiste'));
       pakete = rahmen.suchorte.map(o => ding(F.paket(T), o, 'paket'));
+      if (hochRahmen) huegel = hochRahmen.schaetze.map(s => ding(F.huegel(T), Object.assign({}, s, { x: s.x + .5, z: s.z + .5 }), 'huegel'));
     }
   }
 
@@ -569,8 +612,9 @@ function starten() {
   $('pause-knopf').hidden = false;
   if (!hinweisWeg) $('hinweis').hidden = false;
   homeZeigen(false);
-  auftragZeigen();
   laeuft = true; letzte = 0;
+  auftragZeigen();
+  $('karte').hidden = true;
   requestAnimationFrame(schleife);
 }
 function pausieren() {
@@ -583,6 +627,7 @@ function pausieren() {
   menueZeigen();
   $('pause').hidden = false; $('pause-knopf').hidden = true; $('aktion').hidden = true; aktionZiel = null;
   if (bauen && bauen.aktiv) bauEnde();
+  hochHudZeigen();
   homeZeigen(true);
 }
 function schleife(t) {
@@ -630,7 +675,7 @@ function zeichneBild(dt) {
     b.blick += w * Math.min(1, dt * 6);
     b.gruppe.rotation.y = b.blick;
   });
-  kisten.concat(pakete).forEach(k => {
+  kisten.concat(pakete, huegel).forEach(k => {
     const d = Math.hypot(k.x - spieler.x, k.z - spieler.z);
     if (d < GREIF_ABSTAND && d < nd) { nd = d; naechster = k; }
   });
@@ -647,6 +692,20 @@ function zeichneBild(dt) {
   if (!naechster && bauen && !bauen.aktiv) { const bp = bauen.platzBei(spieler.x, spieler.z); if (bp) naechster = { art: 'bauplatz', bp, x: spieler.x, y: spieler.y, z: spieler.z }; }
   aktionZeigen(bauen && bauen.aktiv ? null : naechster);
   if (gesprochen && Math.hypot(gesprochen.x - spieler.x, gesprochen.z - spieler.z) > 5) blaseWeg();
+
+  // Kompass am Bildschirmrand (Hochland): Rose dreht sich mit der Kamera
+  if (hochRahmen && aktGebiet === 'hochland') {
+    const grad = Math.round(LernInselKarte.kompassWinkel(steuerung.yaw));
+    if (grad !== kompassGrad) {
+      kompassGrad = grad;
+      const rose = $('kompass').firstElementChild;
+      rose.style.transform = `rotate(${grad}deg)`;
+      [['n', 0], ['o', 90], ['s', 180], ['w', 270]].forEach(([k, w]) => {
+        const b = rose.querySelector('.' + k), r = (w * Math.PI) / 180;
+        b.style.transform = `translate(${Math.sin(r) * 28}px, ${-Math.cos(r) * 28}px) rotate(${-grad}deg)`;
+      });
+    }
+  }
 
   // Kamera, Sichtweite
   const abstand = steuerung.kamera(camera, dt || 1);
@@ -705,21 +764,26 @@ function gebieteZeigen() {
 /* ═══════════════════════════════════════════════════════
    AUFTRÄGE (Etappe 3): Karte, Korb, Wertung des ersten Versuchs, Runde melden
    ═══════════════════════════════════════════════════════ */
-const MAX_RUNDE = (g = 'hafen') => (g === 'tal' ? TD && TD.auftraege_je_runde : AD && AD.auftraege_je_runde) || 5;
+const MAX_RUNDE = (g = 'hafen') => gebietsDaten(g).auftraege_je_runde || 5;
 function auftragZeigen(neu) {
   const el = $('auftrag');
   geldZeigen();
-  if (!rahmen || TESTINSEL || (bauen && bauen.aktiv) || aktGebiet === 'hochland') { el.hidden = true; $('korb').hidden = true; return; }   // Hochland: Aufträge ab Etappe 6
+  hochHudZeigen();
+  if (!rahmen || TESTINSEL || (bauen && bauen.aktiv) || (aktGebiet === 'hochland' && !hochRahmen)) { el.hidden = true; $('korb').hidden = true; return; }
   const g = kartenGebiet(), h = stand.auftraege[g], a = h.aktiv;
   el.hidden = false;
-  $('auftrag-kopf').textContent = a && a.spezial ? (a.spezial === 'faehre' ? 'Die Fähre' : 'Großer Auftrag') : `${g === 'tal' ? 'Baumeister-Tal' : 'Hafendorf'} · Stufe ${stufe(g)}`;
+  $('auftrag-kopf').textContent = a && a.spezial ? (a.spezial === 'faehre' ? 'Die Fähre' : 'Großer Auftrag') : `${GEBIET_NAME[g]} · Stufe ${stufe(g)}`;
   $('auftrag-punkte').textContent = a && a.spezial ? '' : '●'.repeat(h.runde.n) + '○'.repeat(Math.max(0, MAX_RUNDE(g) - h.runde.n));
   const txt = $('auftrag-text');
-  $('auftrag-sym').textContent = a ? ART_SYM[a.art] || '💬' : (g === 'tal' ? '🏗️' : '💬');
-  $('auftrag-hoeren').hidden = !a || g === 'tal';
+  $('auftrag-sym').textContent = a ? ART_SYM[a.art] || '💬' : (g === 'tal' ? '🏗️' : g === 'hochland' ? '🗺️' : '💬');
+  $('auftrag-hoeren').hidden = !a || g !== 'hafen';
   const unten = $('auftrag-unten');
   unten.hidden = true;
-  if (g === 'tal') {
+  if (g === 'hochland') {
+    if (!a) { txt.textContent = 'Geh zu Lea, der Kartenleserin – sie hat Schatz-Aufträge für dich.'; txt.className = 'leise'; }
+    else { txt.textContent = a.text; txt.className = ''; }
+    txt.lang = 'de';
+  } else if (g === 'tal') {
     if (!a) { txt.textContent = 'Geh zu Frau Stein, der Baumeisterin – sie hat Bauaufträge für dich.'; txt.className = 'leise'; }
     else {
       txt.textContent = a.art === 'haendler' ? a.text : a.text; txt.className = '';
@@ -780,7 +844,7 @@ function rundeEnde(g = 'hafen') {
   LernSpiel.speichereRunde({ score: r.richtig, max, titel: 'Aufträge', skill: `insel:${g}:${s}` });
   h.runden++;
   let neu = '';
-  if (r.richtig >= (((g === 'tal' ? TD : AD) || {}).aufstieg_ab || 4) && s === st.frei && st.frei < 3) {
+  if (r.richtig >= (gebietsDaten(g).aufstieg_ab || 4) && s === st.frei && st.frei < 3) {
     st.frei++; st.wahl = st.frei;
     neu = `🎉 Stufe ${st.frei} ist frei! Die Aufträge werden jetzt etwas schwieriger.`;
   }
@@ -808,6 +872,8 @@ function aktionArt(z) {
   if (z.art === 'paket') return ['📦', 'Öffnen'];
   if (z.art === 'bauplatz') return ['🧱', 'Bauen'];
   if (z.art === 'faehre') return ['⛴️', 'Übersetzen'];
+  if (z.art === 'huegel') return ['⛏️', 'Graben'];
+  if (z.gebiet === 'hochland') return ['💬', 'Sprechen'];
   if (z.gebiet === 'tal') return TD && z.def.id === TD.haendler ? ['🪵', 'Einkaufen'] : ['💬', 'Sprechen'];
   const a = rahmen && hafen().aktiv, id = z.def.id;
   if (a && a.art === 'finden' && id !== a.geber) return ['🔍', 'Bist du es?'];
@@ -833,12 +899,14 @@ function aktion() {
   if (z.art === 'kiste') { nehmen(z); return; }
   if (z.art === 'bauplatz') { bauStart(z.bp); return; }
   if (z.art === 'faehre') { faehren(z.seite); return; }
+  if (z.art === 'huegel') { graben(z); return; }
   if (z.art === 'paket') { versuch(rahmen.oeffnen(hafen().aktiv, z.o.id), z) || blase(z, 'Oh, this parcel is empty.', true); return; }
   sprechenMit(z);
   aktionSchluessel = '';                            // Beschriftung neu bestimmen (Auftrag kann sich geändert haben)
 }
 function sprechenMit(b) {
   if (b.gebiet === 'tal') { talSprechen(b); return; }
+  if (b.gebiet === 'hochland') { hochSprechen(b); return; }
   const h = hafen(), a = rahmen ? h.aktiv : null, id = b.def.id;
   // Fährmann: Fähr-Auftrag öffnet das Baumeister-Tal (erst nach einer Runde im Hafendorf)
   if (TD && TD.faehre && id === TD.faehre.geber && !offen.has('tal') && !a && h.runden >= 1) {
@@ -1046,6 +1114,63 @@ function ladenZahlen() {
 }
 
 /* ═══════════════════════════════════════════════════════
+   KARTENLESER-HOCHLAND (Etappe 6): Schatzsuche mit Karte und Kompass, Sammelstücke
+   ═══════════════════════════════════════════════════════ */
+function hochHudZeigen() {
+  const da = !!hochRahmen && aktGebiet === 'hochland' && !(bauen && bauen.aktiv);
+  $('kompass').hidden = !da;
+  $('karte-knopf').hidden = !da || !laeuft;
+}
+function hochSprechen(b) {
+  const h = hoch(), id = b.def.id;
+  if (id === HD.auftraggeber) {
+    if (h.aktiv) { blase(b, h.aktiv.text, false); return; }
+    const neu = hochRahmen.neu(stufe('hochland'), h.verlauf);
+    if (neu) {
+      h.aktiv = neu; speichern();
+      blase(b, neu.text + (h.runden || h.runde.n ? '' : ' Die Schatzkarte öffnest du oben mit 🗺️.'), false);
+      auftragZeigen(true);
+      return;
+    }
+  }
+  const s = b.def.saetze || ['Hallo!'];
+  b.satz = (b.satz || 0) + 1;
+  blase(b, s[(b.satz - 1) % s.length], false);
+}
+function graben(hg) {
+  const h = hoch(), a = h.aktiv;
+  const r = hochRahmen.graben(a, hg.o.id);
+  blase(hg, r.text, false, '⛏️');
+  if (r.versuch && !r.ok && a) { a.fehler = true; speichern(); }
+  if (r.ok) { fund(); erledigt(false, 'hochland'); }
+}
+/** Sammelstück: das nächste, das noch fehlt (bleibt im Spielstand, auch in der Sicherungskarte) */
+function fund() {
+  const alle = HD.funde || [], neu = alle.find(f => !stand.funde.includes(f.id));
+  if (!neu) { setTimeout(() => toast('🎉 Schatz gefunden! Alle Sammelstücke hast du schon.'), 3300); return; }
+  stand.funde.push(neu.id);
+  const n = alle.filter(f => stand.funde.includes(f.id)).length;
+  setTimeout(() => toast(`🎉 Sammelstück: ${neu.emoji} ${neu.name}! (${n} von ${alle.length})`, 4000), 3300);
+}
+function fundeZeigen() {
+  const el = $('funde'), alle = (HD && HD.funde) || [];
+  const meine = alle.filter(f => stand.funde.includes(f.id));
+  el.hidden = !HD || !offen.has('hochland');
+  if (el.hidden) return;
+  el.textContent = '';
+  const t = document.createElement('div'); t.textContent = `Sammelstücke: ${meine.length} von ${alle.length}`;
+  const l = document.createElement('div'); l.className = 'liste'; l.textContent = meine.map(f => f.emoji).join(' ') || '–';
+  el.append(t, l);
+}
+function karteOeffnen() {
+  laeuft = false; steuerung.stopp();
+  $('karte').hidden = false; $('pause-knopf').hidden = true; $('aktion').hidden = true; aktionZiel = null; aktionSchluessel = '';
+  hochHudZeigen();
+  const lm = (HD.landmarken || []).map(l => ({ name: l.name, symbol: l.symbol, x: l.x, z: l.z }));
+  LernInselKarte.zeichnen($('karte-bild'), welt, { raster: welt.raster, landmarken: lm, massstab: HD.massstab || 5, breite: Math.min(window.innerWidth - 60, 700), hoehe: window.innerHeight - 230 });
+}
+
+/* ═══════════════════════════════════════════════════════
    BAUEN (Etappe 4): Baumodus, Leiste, Antippen, Bauplan prüfen
    ═══════════════════════════════════════════════════════ */
 const BAU_GRUND = { 'nicht auf dem Bauplatz': 'Nur auf dem Bauplatz bauen (im Raster).', 'zu hoch': 'Höher geht es hier nicht.',
@@ -1112,7 +1237,8 @@ function menueZeigen() {
   const box = $('stufen');
   box.textContent = '';
   const g = kartenGebiet(), st = stand.stufen[g];
-  $('auftraege-titel').textContent = g === 'tal' ? 'Bauaufträge im Baumeister-Tal' : 'Aufträge im Hafendorf';
+  $('auftraege-titel').textContent = g === 'tal' ? 'Bauaufträge im Baumeister-Tal' : g === 'hochland' ? 'Schatzsuche im Hochland' : 'Aufträge im Hafendorf';
+  fundeZeigen();
   for (let s = 1; s <= 3; s++) {
     const b = document.createElement('button');
     b.textContent = s <= st.frei ? `Stufe ${s}` : `🔒 Stufe ${s}`;
@@ -1124,7 +1250,7 @@ function menueZeigen() {
   $('lesart').querySelectorAll('button').forEach(b => b.classList.toggle('an', b.dataset.l === stand.opt.lesart));
   $('abbrechen').hidden = !(rahmen && stand.auftraege[g].aktiv);
   [$('stufen'), $('lesart')].forEach(e => { e.hidden = !rahmen || !!TESTINSEL; });
-  $('lesart').hidden = $('lesart').hidden || g === 'tal';
+  $('lesart').hidden = $('lesart').hidden || g !== 'hafen';
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -1193,6 +1319,8 @@ $('laden-muenzen').addEventListener('click', e => {
 });
 $('laden-zurueck').addEventListener('click', () => { tresen = 0; ladenZeigen(); });
 $('laden-zahlen').addEventListener('click', ladenZahlen);
+$('karte-knopf').addEventListener('click', karteOeffnen);
+$('karte-zu').addEventListener('click', starten);
 $('laden-zu').addEventListener('click', () => { $('laden').hidden = true; starten(); });
 $('opt-seiten').addEventListener('change', e => {
   document.body.classList.toggle('links', e.target.checked);
@@ -1207,7 +1335,7 @@ $('debug-gebiete').addEventListener('click', () => {           // nur ?debug=1: 
 });
 document.addEventListener('visibilitychange', () => { if (document.hidden) { pausieren(); speichern(); } });
 window.addEventListener('pagehide', () => { if (bereit) speichern(); });
-window.addEventListener('keydown', e => { if (e.key === 'Escape') { $('laden').hidden = true; (laeuft ? pausieren() : (bereit && $('ohne3d').hidden && starten())); } });
+window.addEventListener('keydown', e => { if (e.key === 'm' && laeuft && !$('karte-knopf').hidden) karteOeffnen(); if (e.key === 'Escape') { $('laden').hidden = true; $('karte').hidden = true; (laeuft ? pausieren() : (bereit && $('ohne3d').hidden && starten())); } });
 
 aufbauen().catch(e => { console.error(e); ohne3d('Die Insel konnte nicht geladen werden. Bitte die Seite neu laden.'); });
 </script>

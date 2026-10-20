@@ -67,6 +67,7 @@ werkzeuge/            Prüfskript (pruefen.py), Inventar (inventar.py → INVENT
 | `insel-figuren.js` | „Die Insel“: Pass-Figur und Bewohner (Looks, gebacken), Warenkisten, Pakete, Vorlesen (`LernInselFiguren`) |
 | `insel-auftraege.js` | „Die Insel“: Auftragsrahmen – Aufträge aus Bausteinen, Prüfung durch die Welt, erster Versuch (`LernInselAuftraege`) |
 | `insel-bauen.js` | „Die Insel“: Bauen auf Bauplätzen – Raster, Antippen, Inventar, Bauplan prüfen, Spielstand (`LernInselBauen`) |
+| `insel-karte.js` | „Die Insel“: Schatzkarte (aus den Weltdaten gezeichnet, Planquadrate, Maßstab) und Kompass (`LernInselKarte`) |
 | `insel-steuerung.js` | „Die Insel“: Joystick, Kamera (dritte Person), Kollision mit dem Blockgitter, Hochsteigen, Sperre geschlossener Gebiete (`LernInselSteuerung`) |
 | `spiel-hilfen.js` | Kleine Bausteine für die neuen Spiele: Runde melden, Endlos-XP, robuste Zeiger (mehrere Finger), wiederholbarer Zufall |
 | `qrcode.js` | QR-Code-Erzeugung im Browser (MIT-Lizenz, Kazuhiko Arase) |
@@ -736,7 +737,7 @@ Kleine, offene 3D-Welt im Klötzchen-Stil: Die Kinder laufen mit ihrer Pass-Figu
 Gelernte verändert später die Welt (Hinkommen, Bauen, Handeln – nie eingeblendete Fragen). Plan: Aktionsplan „Die
 Insel“ (8 Etappen). Auf der Startseite als „Meine Insel“ (Eintrag über den Admin).
 
-- **Stand: Etappe 5 – Baumeister-Tal (Mathe) und Fähre.** Welt mit drei Gebieten aus `daten/insel.json`: **Hafendorf** (Süden,
+- **Stand: Etappe 6 – Kartenleser-Hochland (GPG).** Welt mit drei Gebieten aus `daten/insel.json`: **Hafendorf** (Süden,
   Startgebiet, offen), **Baumeister-Tal** (Nordwesten, hinter einem Meeresarm – öffnet in Etappe 5 die Fähre) und
   **Kartenleser-Hochland** (Nordosten, hinter Fluss und Steilkante – öffnet die Brücke aus dem Tal). Geschlossene Gebiete
   sperren den Weg (Wasser, Steilkante, Zaun am Fährsteg, Hinweis beim Anlaufen); beim Betreten eines Gebiets erscheint
@@ -778,6 +779,18 @@ Insel“ (8 Etappen). Auf der Startseite als „Meine Insel“ (Eintrag über de
   ist das Kartenleser-Hochland offen (Aufträge dort ab Etappe 6). Bausteine: `daten/insel-auftraege.json` → `tal`
   (Bewohner, Preise, Namen, Satzrahmen je Art und Stufe, Fähr-Texte); Bauplätze in `insel.json` mit `material`,
   `frei` (Material ohne Kauf, z. B. Kisten) und `verbrauch` (z. B. `{ "PLANKE": 2 }`).
+- **Kartenleser-Hochland** (Etappe 6, `gemeinsam/insel-karte.js`): Landmarken Turm, Steinkreis und alte Eiche, zwei
+  Wegweiser. **Lea** (Kartenleserin) gibt Schatz-Aufträge auf Deutsch: **Planquadrat** (Stufe 1: „Der Schatz liegt im
+  Planquadrat C1“), **Kompass und Schritte** (ab Stufe 2: „Geh vom Turm 10 Schritte nach Westen und dann 10 Schritte
+  nach Norden“ – 1 Schritt = 1 Block) und **Maßstab** (Stufe 3: „vom Steinkreis aus 3 cm nach Süden, 1 cm = 5 Schritte“).
+  **Kompass** am Bildschirmrand (dreht sich mit der Kamera, Norden = oben auf der Karte), **Schatzkarte** 🗺️ aus den
+  Weltdaten gezeichnet (Gelände, Planquadrate A–D / 1–5, Landmarken, Nordpfeil, Maßstabsleiste) – bewusst ohne
+  „Du bist hier“ und ohne Schätze. Sechs gleich aussehende Erdhügel (je mindestens 20 Blöcke auseinander, jeder in einem
+  eigenen Planquadrat); ⛏️ am falschen Hügel verbraucht den ersten Versuch. Gefundene Schätze werden **Sammelstücke**
+  (`funde`, 8 Stück, im Pausenmenü). 5 Schätze = 1 Runde (`insel:hochland:<stufe>`). Bausteine:
+  `insel-auftraege.json` → `hochland` (Bewohner, Landmarken mit `von`, Schätze, Satzrahmen je Art und Stufe, Maßstab,
+  Sammelstücke); Planquadrate: `raster` in `insel.json`. Aufträge werden aus allen Paaren Schatz–Landmarke gebildet
+  (Maßstab nur bei Vielfachen von 5); derselbe Schatz kommt frühestens nach drei anderen wieder.
 - **Auftrags-Bausteine erweitern** (`daten/insel-auftraege.json`): `bewohner` (Platz-ID aus `insel.json`, Look aus den
   Avatar-Teilen, `merkmale` – müssen zum Look passen und dürfen bei keinem anderen Bewohner vorkommen –, `ort`, `saetze`
   für Small Talk), `quellen` (Warenkisten: Wort `eins`/`viele`, Emoji, Farbe, Ortsangabe je Stufe), `suchorte`
@@ -796,7 +809,8 @@ Insel“ (8 Etappen). Auf der Startseite als „Meine Insel“ (Eintrag über de
   bau, funde, opt, t }` – `auftraege.hafen = { aktiv, runde: { n, richtig }, verlauf, korb, runden }`,
   `stufen.hafen = { frei, wahl }`, `opt = { seiten, vorlesen, lesart }`, `bau = { <platz-id>: [[dx, dy, dz, block], …] }`
   (nur das Gebaute, relativ zur Ecke des Bauplatzes), `inventar = { <block>: Anzahl }`, `geld` (Euro im Geldbeutel),
-  `auftraege.tal` und `stufen.tal` wie beim Hafendorf. Gespeichert wird nach jedem Schritt (Position höchstens alle 5 s), beim Pausieren und beim
+  `auftraege.tal`/`stufen.tal` und `auftraege.hochland`/`stufen.hochland` wie beim Hafendorf, `funde` (IDs der
+  Sammelstücke). Gespeichert wird nach jedem Schritt (Position höchstens alle 5 s), beim Pausieren und beim
   Verlassen; nur Abweichungen von der Grundwelt (Bauplätze ab Etappe 4). Freischaltungen werden nie entfernt, unbekannte
   Felder bleiben erhalten; höchstens 20 000 Zeichen. Startbildschirm „Weiterspielen“ setzt an der gespeicherten Stelle
   fort (ist sie nicht mehr begehbar, geht es am Startpunkt los). Pausenmenü: offene und geschlossene Gebiete,

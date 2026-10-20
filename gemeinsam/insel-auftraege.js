@@ -25,6 +25,8 @@
 //      rahmen.vielfalt(stufe, n)            → Anzahl verschiedener Aufträge in n Versuchen (zum Prüfen)
 //    erstelleTal(daten.tal, { plaetze })   → Bauaufträge im Baumeister-Tal (siehe unten): neu(stufe, verlauf),
 //                                            bruecke(), bezahlen(korb, betrag, auftrag)
+//    erstelleHochland(daten.hochland, { raster, geber }) → Schatzsuche: neu(stufe, verlauf), graben(auftrag, id),
+//                                            feld(ort) → Planquadrat, vielfalt(stufe)
 // ═══════════════════════════════════════════════════════
 
 (function () {
@@ -259,5 +261,69 @@
     return { neu, bruecke, bezahlen, preise, namen, menge };
   }
 
-  window.LernInselAuftraege = { erstelle, erstelleTal, zahlwort, ABSTAND };
+  // ── Kartenleser-Hochland (Etappe 6): Schatzsuche mit Karte und Kompass, deutsch ─────────
+  //  planquadrat  „Der Schatz liegt im Planquadrat C1.“ → Feld auf der Schatzkarte finden, hingehen, graben
+  //  kompass      „Geh vom Turm 10 Schritte nach Westen und dann 10 Schritte nach Norden.“ (1 Schritt = 1 Block)
+  //  massstab     „Vom Steinkreis aus 3 cm nach Süden. Maßstab: 1 cm = 5 Schritte.“
+  //  Alle Erdhügel sehen gleich aus; wer am falschen gräbt, hat den ersten Versuch verbraucht.
+  function erstelleHochland(D, opt = {}) {
+    const rnd = opt.rnd || Math.random;
+    const wahl = l => l[Math.floor(rnd() * l.length)];
+    const st = n => String(Math.max(1, Math.min(3, n || 1)));
+    const R = opt.raster || { x0: 0, z0: 0, groesse: 10 };
+    const m = D.massstab || 5;
+    const fuellen = (v, w) => v.replace(/\{(\w+)\}/g, (_, k) => (w[k] !== undefined ? w[k] : ''));
+    const feld = s => 'ABCDEFGH'[Math.floor((s.x - R.x0) / R.groesse)] + (Math.floor((s.z - R.z0) / R.groesse) + 1);
+    const geber = opt.geber || null;
+    const schaetze = (D.schaetze || []).filter(s => !geber || Math.hypot(s.x - geber.x, s.z - geber.z) >= 10);
+    const richtung = (d, achse) => (achse === 'x' ? (d > 0 ? 'Osten' : 'Westen') : (d > 0 ? 'Süden' : 'Norden'));
+    function weg(dx, dz, einheit, teiler) {
+      const teile = [], wort = n => (einheit === 'Schritte' && n === 1 ? 'Schritt' : einheit);
+      if (dx) teile.push(`${Math.abs(dx) / teiler} ${wort(Math.abs(dx) / teiler)} nach ${richtung(dx, 'x')}`);
+      if (dz) teile.push(`${Math.abs(dz) / teiler} ${wort(Math.abs(dz) / teiler)} nach ${richtung(dz, 'z')}`);
+      return teile.join(' und dann ');
+    }
+    /** Alle möglichen Aufträge einer Art (für Auswahl und Vielfalt) */
+    function moeglich(art) {
+      const l = [];
+      schaetze.forEach(s => {
+        if (art === 'planquadrat') { l.push({ s, w: { feld: feld(s) } }); return; }
+        (D.landmarken || []).forEach(lm => {
+          const dx = s.x - lm.x, dz = s.z - lm.z;
+          if (Math.abs(dx) > 20 || Math.abs(dz) > 20 || (!dx && !dz)) return;
+          if (art === 'kompass') l.push({ s, w: { von: lm.von, weg: weg(dx, dz, 'Schritte', 1) } });
+          if (art === 'massstab' && dx % m === 0 && dz % m === 0) l.push({ s, w: { von: lm.von, weg: weg(dx, dz, 'cm', m), m } });
+        });
+      });
+      return l;
+    }
+    function neu(stufe, verlauf = []) {
+      const s = st(stufe);
+      let a = null;
+      for (let i = 0; i < 40; i++) {
+        const art = wahl((D.arten && D.arten[s]) || ['planquadrat']);
+        const saetze = ((D.saetze || {})[art] || {})[s];
+        const opts = moeglich(art);
+        if (!saetze || !opts.length) continue;
+        const o = wahl(opts);
+        a = { gebiet: 'hochland', art, stufe: +s, ziel: o.s.id, feld: feld(o.s), fehler: false, text: fuellen(wahl(saetze), o.w) };
+        a.id = (o.s.id + '|' + art + ':' + a.text).slice(0, 200);
+        // nicht derselbe Schatz wie in den letzten drei Aufträgen
+        if (!verlauf.slice(-6).includes(a.id) && !verlauf.slice(-3).some(v => v.split('|')[0] === o.s.id)) break;
+      }
+      return a;
+    }
+    function graben(a, id) {
+      if (!a) return { ok: false, versuch: false, text: 'Hier könnte etwas vergraben sein. Frag Lea nach einem Schatz-Auftrag!' };
+      if (id === a.ziel) return { ok: true, versuch: true, text: 'Da ist etwas! Du hast den Schatz gefunden!' };
+      return { ok: false, versuch: true, text: 'Hier ist nichts vergraben. Schau noch einmal auf Karte und Kompass.' };
+    }
+    function vielfalt(stufe) {
+      const s = st(stufe);
+      return [...new Set((D.arten[s] || [])).values()].reduce((n, art) => n + moeglich(art).length * (((D.saetze[art] || {})[s] || []).length), 0);
+    }
+    return { neu, graben, feld, vielfalt, schaetze: D.schaetze || [] };
+  }
+
+  window.LernInselAuftraege = { erstelle, erstelleTal, erstelleHochland, zahlwort, ABSTAND };
 })();

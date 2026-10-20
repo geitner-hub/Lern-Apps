@@ -46,6 +46,7 @@ const NACHLADEN = ['spiele/runner.html', 'spiele/burg-verteidigung.html', 'spiel
                    'spiele/insel.html', 'gemeinsam/insel-welt.js', 'gemeinsam/insel-steuerung.js', 'daten/insel.json',  // Die Insel (Etappen 1–2: Probelauf, Welt und Speichern)
                    'gemeinsam/insel-figuren.js', 'gemeinsam/insel-auftraege.js', 'daten/insel-auftraege.json',  // Etappe 3: Aufträge im Hafendorf
                    'gemeinsam/insel-bauen.js',  // Etappe 4: Bauen
+                   'gemeinsam/insel-karte.js',  // Etappe 6: Schatzkarte und Kompass
                    'gemeinsam/spielsperre.js',  // Hinweis auf Spielseiten: erst Lern-Runden (nur mit config.spielsperre)
                    // Weltkarte in Equal Earth (Neue Lern-Apps Etappe 1–2): Daten, Projektion, d3-geo
                    'daten/welt.json', 'gemeinsam/welt-karte.js', 'vendor/d3-geo.min.js',

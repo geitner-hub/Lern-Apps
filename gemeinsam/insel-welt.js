@@ -398,6 +398,9 @@
     welt.orte.gebaeude = [];
     bauten.forEach(({ g, v, f }) => {
       if (v.typ === 'brunnen') brunnen(welt, Math.round(g.x), f.y, Math.round(g.z));
+      else if (v.typ === 'turm') turm(welt, f, f.y, v.hoehe || 8);
+      else if (v.typ === 'steinkreis') steinkreis(welt, Math.round(g.x), f.y, Math.round(g.z));
+      else if (v.typ === 'eiche') eiche(welt, Math.round(g.x), f.y, Math.round(g.z));
       else gebaeude(welt, f, f.y, Object.assign({}, v, g), g.tuer || 'sued');
       const [ax, az] = SEITEN[g.tuer || 'sued'];
       const tx = ax ? (ax > 0 ? f.x1 : f.x0) : Math.round(g.x), tz = az ? (az > 0 ? f.z1 : f.z0) : Math.round(g.z);
@@ -493,6 +496,7 @@
     welt.absperren(offen);
 
     welt.faehre = d.faehre || null;
+    welt.raster = d.raster || null;                  // Planquadrate der Schatzkarte (Etappe 6)
     const st = d.start || {};
     welt.start = { x: (st.x || N / 2) + .5, z: (st.z || N / 2) + .5, blick: st.blick || 0 };
     return welt;
@@ -543,6 +547,33 @@
     }
     [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(([dx, dz]) => welt.set(x + dx, y + 1, z + dz, BLOCK.STAMM));
     for (let dz = -1; dz <= 1; dz++) for (let dx = -1; dx <= 1; dx++) welt.set(x + dx, y + 2, z + dz, BLOCK.DACH);
+  }
+
+  /** Landmarken im Hochland (Etappe 6): Turm mit Zinnen, Steinkreis, alte Eiche – weithin zu sehen */
+  function turm(welt, f, y, hoch) {
+    for (let z = f.z0; z <= f.z1; z++) for (let x = f.x0; x <= f.x1; x++) {
+      for (let yy = y - 4; yy < y; yy++) if (!welt.get(x, yy, z) || welt.nass(x, yy, z)) welt.set(x, yy, z, BLOCK.STEIN);
+      for (let h = 0; h < hoch; h++) welt.set(x, y + h, z, (h === 3 || h === 6) && (x === f.x0 + 1 || z === f.z0 + 1) ? BLOCK.FENSTER : BLOCK.STEIN);
+      const rand = x === f.x0 || x === f.x1 || z === f.z0 || z === f.z1;
+      if (rand && (x + z) % 2 === 0) welt.set(x, y + hoch, z, BLOCK.STEIN);                  // Zinnen
+    }
+    welt.set(Math.round((f.x0 + f.x1) / 2), y + hoch, Math.round((f.z0 + f.z1) / 2), BLOCK.DACH);  // rote Spitze
+  }
+  function steinkreis(welt, x, y, z) {
+    [[3, 0], [-3, 0], [0, 3], [0, -3], [2, 2], [-2, 2], [2, -2], [-2, -2]].forEach(([dx, dz], i) => {
+      for (let h = 0; h < (i < 4 ? 3 : 2); h++) welt.set(x + dx, y + h, z + dz, BLOCK.STEIN);
+    });
+    welt.set(x, y - 1, z, BLOCK.KIES);
+  }
+  function eiche(welt, x, y, z) {
+    for (let h = 0; h < 6; h++) welt.set(x, y + h, z, BLOCK.STAMM);
+    for (let dy = 3; dy <= 8; dy++) {
+      const r = dy <= 4 ? 2 : dy <= 6 ? 3 : dy === 7 ? 2 : 1;
+      for (let dz = -r; dz <= r; dz++) for (let dx = -r; dx <= r; dx++) {
+        if (dx * dx + dz * dz > r * r + 1) continue;
+        if (!welt.get(x + dx, y + dy, z + dz)) welt.set(x + dx, y + dy, z + dz, BLOCK.LAUB);
+      }
+    }
   }
 
   // ── Zeichnen: Weltstücke backen ─────────────────────────
