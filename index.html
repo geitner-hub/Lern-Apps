@@ -895,7 +895,7 @@ function lernwegFortschritt(id) {
   if (!D || !Array.isArray(D.stationen)) return null;
   const s = lernwegStand(id).s || {};
   const fertig = st => {
-    const l = st.schritte.map((x, i) => ({ x, i })).filter(o => o.x.art !== 'extra');
+    const l = st.schritte.map((x, i) => ({ x, i: x.id != null ? String(x.id) : String(i) })).filter(o => o.x.art !== 'extra');
     const k = l.find(o => o.x.art === 'kontrolle');
     return k ? !!s[st.nr + '.' + k.i] : l.length > 0 && l.every(o => s[st.nr + '.' + o.i]);
   };
