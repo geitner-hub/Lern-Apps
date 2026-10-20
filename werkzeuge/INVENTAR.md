@@ -1,6 +1,6 @@
 # Inventar der Lern-Apps und Spiele
 
-Automatisch erzeugt am 19.10.2026 mit `python3 werkzeuge/inventar.py` (Angaben aus dem Code). Nur die Spalten **Entscheidung** und **Notiz** von Hand pflegen – sie bleiben beim Neu-Erzeugen erhalten.
+Automatisch erzeugt am 20.10.2026 mit `python3 werkzeuge/inventar.py` (Angaben aus dem Code). Nur die Spalten **Entscheidung** und **Notiz** von Hand pflegen – sie bleiben beim Neu-Erzeugen erhalten.
 
 Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv**
 
@@ -36,7 +36,7 @@ Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv
 | `spiele/burg-verteidigung.html` | Tower Defense | – | Spiel | Allgemein · alle | sichtbar | ja | ja | – | ja | – (Spiel) |  |  |
 | `spiele/dorf.html` | Mein Dorf | – | Spiel | Allgemein · alle | sichtbar | – | – | – | – | Dorf selbst |  |  |
 | `spiele/expedition.html` | Entdecker-Expedition | – | Spiel | GPG · 6 | versteckt | über spiel-hilfen.js | ja | – | – | – (Spiel) |  |  |
-| `spiele/insel.html` | Meine Insel | – | Spiel | Allgemein · 5, 6 | sichtbar | über spiel-hilfen.js | ja | – | – | – (Spiel) |  |  |
+| `spiele/insel.html` | Meine Insel | – | Spiel | Allgemein · 5, 6 | versteckt | über spiel-hilfen.js | ja | – | – | – (Spiel) |  |  |
 | `spiele/kitchen-chaos.html` | Kitchen-Chaos | – | Spiel | Allgemein · alle | sichtbar | über spiel-hilfen.js | ja | – | – | – (Spiel) |  |  |
 | `spiele/room-detective.html` | Room Detective | – | Spiel | Englisch · 5, 6 | sichtbar | über spiel-hilfen.js | ja | – | – | – (Spiel) |  |  |
 | `spiele/runner.html` | RUN! | – | Spiel | Allgemein · alle | sichtbar | ja | ja | – | ja | – (Spiel) |  |  |
@@ -76,7 +76,7 @@ Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv
 | spiele/burg-verteidigung.html | 143 | navbar.js, aufgaben.js, avatar3d.js | lern-apps-results, lern-burg-wahl, lern-burg-rekorde, lernwelt-td-kampagne, + über navbar.js |
 | spiele/dorf.html | 88 | shared.js, config-api.js, dorf-kern.js, avatar3d.js, dorf-szene.js, navbar.js | lernwelt-dorf, lernwelt-dorf-besuch, + über navbar.js |
 | spiele/expedition.html | 33 | navbar.js, spiel-hilfen.js, karten-ansicht.js | lernwelt-expedition, + über navbar.js |
-| spiele/insel.html | 53 | navbar.js, spiel-hilfen.js, avatar3d.js, insel-welt.js, insel-steuerung.js, insel-figuren.js, insel-auftraege.js, insel-bauen.js | lernwelt-insel, + über navbar.js |
+| spiele/insel.html | 68 | navbar.js, spiel-hilfen.js, avatar3d.js, insel-welt.js, insel-steuerung.js, insel-figuren.js, insel-auftraege.js, insel-bauen.js | lernwelt-insel, + über navbar.js |
 | spiele/kitchen-chaos.html | 38 | navbar.js, spiel-hilfen.js, avatar3d.js | lern-kitchen-chaos, + über navbar.js |
 | spiele/room-detective.html | 59 | navbar.js, spiel-hilfen.js | lernwelt-room-detective, + über navbar.js |
 | spiele/runner.html | 51 | navbar.js, aufgaben.js, avatar3d.js | lern-runner-wahl, lern-runner-rekorde, + über navbar.js |

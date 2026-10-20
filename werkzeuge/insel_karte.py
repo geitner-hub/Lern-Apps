@@ -68,6 +68,8 @@ def abstand_linie(px, pz, punkte):
 ARM = [(-6, 47), (14, 49), (30, 51), (44, 50)]
 FLUSS = [(46, -6), (44, 12), (47, 28), (44, 42), (44, 50)]
 KANTE_Z = 53                     # Steilkante Hafendorf | Hochland (östlich vom Fluss)
+BRUECKE_Z = 22                   # Zeile der Brücke ins Hochland (Bauplatz bruecke-hochland)
+BRUECKE_STUFEN = {49: 12, 50: 13}   # x → Höhe der Stufen am Hochland-Ufer
 
 
 def gebiet(x, z):
@@ -104,6 +106,10 @@ def karte():
             if fluss < 3: h = min(h, W - 2 + glatt(1.6, 3, fluss) * 3)
             if bucht < 12: h = min(h, W - 2 + glatt(8, 12, bucht) * 4)
             h = max(1, min(17, round(h)))
+            # Brückenkopf im Hochland (Etappe 5): Stufen von je 1 Block hinauf zur Hochebene,
+            # damit die Brücke vom Tal-Ufer (Höhe 11, Deck 12) ohne Wand ankommt
+            if BRUECKE_Z - 2 <= z <= BRUECKE_Z + 2 and g == 'k' and x in BRUECKE_STUFEN:
+                h = BRUECKE_STUFEN[x]
             zh += ZEICHEN[h]
             zg += g if h >= W else '.'
         hoehen.append(zh)

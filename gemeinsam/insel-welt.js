@@ -51,6 +51,7 @@
     LUFT: 0, GRAS: 1, ERDE: 2, SAND: 3, STEIN: 4, WASSER: 5, STAMM: 6, LAUB: 7, PLANKE: 8,
     DACH: 9, WEG: 10, PUTZ: 11, FENSTER: 12, BRUNNEN: 13, DACH_BLAU: 14, DACH_GRUEN: 15, KIES: 16,
     ZAUN: 17, SCHILD: 18, PFLOCK: 19, DACH_GELB: 20,
+    PFLANZE: 21, KISTE1: 22, KISTE10: 23, KISTE100: 24, KISTE1000: 25,   // Etappe 5: Felder und Lager
   };
   const ART = [];
   function art(id, oben, seite, o = {}) { ART[id] = Object.assign({ oben, seite: seite || oben, fest: true, nass: false, kamera: true, unsichtbar: false }, o); }
@@ -75,6 +76,11 @@
   art(BLOCK.SCHILD, '#e8c48a', '#d9b070');
   art(BLOCK.PFLOCK, '#f59e0b', '#d97706');
   art(BLOCK.DACH_GELB, '#e0a526', '#c38d1c');
+  art(BLOCK.PFLANZE, '#58c24a', '#3f8f35');
+  art(BLOCK.KISTE1, '#f1ece2', '#d9d2c4');
+  art(BLOCK.KISTE10, '#f2cf3d', '#d6b42a');
+  art(BLOCK.KISTE100, '#f08a2c', '#cf7220');
+  art(BLOCK.KISTE1000, '#8a4b25', '#6f3a1b');
 
   // ── Zufall und Rauschen (wiederholbar) ──────────────────
   function seedZahl(s) {
@@ -403,8 +409,15 @@
     welt.orte.bauplaetze = plaetzeBau.map(({ b, f }) => {
       const y = f.y || oberste(f.x0, f.z0);
       [[f.x0 - 1, f.z0 - 1], [f.x1 + 1, f.z0 - 1], [f.x0 - 1, f.z1 + 1], [f.x1 + 1, f.z1 + 1]].forEach(([x, z]) => welt.set(x, y, z, BLOCK.PFLOCK));
+      // Lücke je Zeile: Stellen unter der Bauhöhe (z. B. der Fluss unter der Brücke)
+      const luecken = {};
+      for (let z = f.z0; z <= f.z1; z++) {
+        luecken[z] = [];
+        for (let x = f.x0; x <= f.x1; x++) if (oberste(x, z) < y) luecken[z].push(x);
+      }
       return { id: b.id, gebiet: b.gebiet || welt.gebiet(b.x, b.z), art: b.art || '', name: b.name || '', hoehe: b.hoehe || 3,
-        vorrat: b.vorrat || '', plan: b.plan || null, x0: f.x0, z0: f.z0, x1: f.x1, z1: f.z1, y };
+        vorrat: b.vorrat || '', plan: b.plan || null, material: b.material || null, frei: b.frei || [], verbrauch: b.verbrauch || {},
+        luecken, x0: f.x0, z0: f.z0, x1: f.x1, z1: f.z1, y };
     });
 
     // Schilder: Pfosten mit Brett; Text steht in den Daten
@@ -479,6 +492,7 @@
     };
     welt.absperren(offen);
 
+    welt.faehre = d.faehre || null;
     const st = d.start || {};
     welt.start = { x: (st.x || N / 2) + .5, z: (st.z || N / 2) + .5, blick: st.blick || 0 };
     return welt;

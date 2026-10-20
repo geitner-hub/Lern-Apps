@@ -43,6 +43,14 @@
      ✅ prüft den Bauplan (fehlende Stellen rot). Joystick und Kamera bleiben aktiv.
      Werkstatt im Hafendorf: Übungs-Bauplatz mit freiem Material. Spielstand:
      bau { <platz-id>: [[dx, dy, dz, block], …] }, inventar { <block>: Anzahl }.
+   Etappe 5 – Baumeister-Tal (Mathe) und Fähre: Sam (Fährmann) gibt nach einer Runde im
+     Hafendorf den Fähr-Auftrag (englisch) → Tal offen, ⛴️ an beiden Stegen übersetzen.
+     Frau Stein (Baumeisterin) gibt Bauaufträge auf Deutsch: Zaun (Umfang), Gemüsefeld
+     (Einmaleins), Lager (Stellenwert), Holzhandel (Geld, passend zahlen); Herr Holz
+     verkauft Material (Preise am Schild). Die Welt prüft (✅ auf dem Bauplatz), zu viel
+     Gekauftes zählt als Rechenfehler. Nach der ersten Tal-Runde: die Brücke ins Hochland
+     (Längen: Fluss in m, Bretter à 50 cm) → Hochland offen. Runden: skill 'insel:tal:<stufe>'.
+     Spielstand zusätzlich: auftraege.tal, stufen.tal, geld.
 
    Link-Parameter:
      ?debug=1     Bildrate, Draw-Calls, Dreiecke, Startzeit, Position, Gebiet;
@@ -151,6 +159,23 @@
     #baubar button.an { border-color: var(--accent); color: var(--accent2); }
     #baubar .trenner { width: 2px; background: rgba(255,255,255,.1); margin: .2rem .1rem; flex: none; }
     #baubar .fertig { background: var(--accent); color: var(--tinte); }
+    #auftrag .unten { margin-top: .3rem; font-size: .8rem; font-weight: 800; color: var(--accent2); }
+    #geld { position: fixed; z-index: 17; right: max(.7rem, env(safe-area-inset-right)); top: calc(max(.7rem, env(safe-area-inset-top)) + 60px);
+      background: var(--papier); color: var(--tinte); border-radius: 999px; padding: .35rem .75rem; font-weight: 900; box-shadow: 0 4px 14px rgba(0,0,0,.3); }
+    #blende { position: fixed; inset: 0; z-index: 35; background: #0f172a; opacity: 0; transition: opacity .35s; pointer-events: none; }
+    #blende.an { opacity: 1; }
+    .laden { text-align: left; }
+    .laden h2, .laden > p { text-align: center; }
+    .ware { display: flex; align-items: center; gap: .5rem; background: var(--panel2); border-radius: 14px; padding: .4rem .6rem; margin-top: .45rem; font-weight: 800; }
+    .ware .e { font-size: 1.4rem; } .ware .n { flex: 1; } .ware .pr { color: var(--accent2); min-width: 3.2rem; text-align: right; }
+    .ware button { width: 38px; height: 38px; border-radius: 12px; background: #34304d; font-size: 1.2rem; font-weight: 900; }
+    .ware .z { min-width: 1.6rem; text-align: center; font-size: 1.1rem; }
+    .laden .summe { margin-top: .5rem; text-align: right; font-weight: 900; color: var(--text2); }
+    .muenzen { display: flex; gap: .35rem; flex-wrap: wrap; margin-top: .4rem; }
+    .muenzen button { flex: 1; min-width: 52px; padding: .5rem .2rem; border-radius: 999px; background: #fde68a; color: var(--tinte); font-weight: 900; }
+    .muenzen button.schein { border-radius: 8px; background: #a7f3d0; }
+    .tresen { display: flex; justify-content: space-between; margin-top: .5rem; font-weight: 800; color: var(--text2); }
+    .tresen b { color: var(--accent2); font-size: 1.15rem; }
     .wahl { display: flex; gap: .4rem; margin-top: .55rem; }
     .wahl button { flex: 1; padding: .55rem .4rem; border-radius: 12px; background: var(--panel2); font-weight: 900; border: 2px solid transparent; }
     .wahl button.an { border-color: var(--accent); color: var(--accent2); }
@@ -211,8 +236,11 @@
 <div id="auftrag" hidden>
   <div class="oben"><span id="auftrag-kopf">Hafendorf</span><span class="punkte" id="auftrag-punkte"></span></div>
   <div class="zeile"><span class="sym" id="auftrag-sym">💬</span><span id="auftrag-text"></span><button id="auftrag-hoeren" aria-label="Auftrag anhören">🔊</button></div>
+  <div class="unten" id="auftrag-unten" hidden></div>
 </div>
 <button id="korb" hidden aria-label="Korb leeren"></button>
+<div id="geld" hidden></div>
+<div id="blende" hidden></div>
 <div id="baubar" hidden>
   <div class="plan" id="bau-plan"></div>
   <div class="reihe" id="bau-material"></div>
@@ -245,7 +273,7 @@
   <div class="karte">
     <h2 class="fredoka">⏸ Pause</h2>
     <div class="gebiete" id="gebiete-liste"></div>
-    <div class="abschnitt">Aufträge im Hafendorf</div>
+    <div class="abschnitt" id="auftraege-titel">Aufträge im Hafendorf</div>
     <div class="wahl" id="stufen"></div>
     <div class="wahl" id="lesart"><button data-l="lesen">📖 Lesen</button><button data-l="hoeren">🎧 Hören</button></div>
     <button class="zweit" id="abbrechen" hidden>Diesen Auftrag überspringen (zählt nicht)</button>
@@ -254,6 +282,20 @@
     <button class="gross fredoka" id="weiter">Weiter</button>
     <button class="zweit" id="debug-gebiete" hidden>🧪 Test: alle Gebiete öffnen (wird nicht gespeichert)</button>
     <a class="zweit" href="../index.html">🏠 Zurück zur Lernwelt</a>
+  </div>
+</div>
+
+<div class="overlay" id="laden" hidden>
+  <div class="karte laden">
+    <h2 class="fredoka">🪵 Holzhandel</h2>
+    <p id="laden-text">Hallo! Was darf es sein?</p>
+    <div id="laden-waren"></div>
+    <div class="summe" id="laden-summe"></div>
+    <div class="abschnitt">Geld auf den Tresen legen</div>
+    <div class="muenzen" id="laden-muenzen"></div>
+    <div class="tresen"><b id="laden-tresen">0 €</b><span id="laden-beutel"></span></div>
+    <div class="wahl"><button id="laden-zurueck">↩ Geld zurück</button><button id="laden-zahlen" class="an">💶 Bezahlen</button></div>
+    <button class="zweit" id="laden-zu">Schließen</button>
   </div>
 </div>
 
@@ -297,7 +339,8 @@ const STAND_MAX = 20000;                             // Zeichen; die Sicherungsk
 const POS_ALLE_MS = 5000;                            // Position höchstens so oft speichern
 const F = window.LernInselFiguren;
 const HOCH = F.HOEHE;
-const ART_SYM = { finden: '🔍', bringen: '🧺', suchen: '📦' };
+const ART_SYM = { finden: '🔍', bringen: '🧺', suchen: '📦', zaun: '🚧', felder: '🌱', lager: '📦', haendler: '💶', bruecke: '🌉' };
+const AUFTRAGS_GEBIETE = ['hafen', 'tal'];
 
 let T, renderer, scene, camera, welt, weltSzene, steuerung, spielerFigur, spielerGruppe, spielerSchatten;
 let bewohner = [], schilder = [], kisten = [], pakete = [], laeuft = false, bereit = false, letzte = 0, phase = 0, zeit = 0, sichtUhr = 0;
@@ -306,6 +349,7 @@ const spieler = { x: 0, y: 0, z: 0, blick: 0, anzeigeY: 0 };
 let stand = null, offen = new Set(['hafen']), testOffen = false, letztesSpeichern = 0, posGespeichert = null, aktGebiet = null;
 let AD = null, rahmen = null;                        // Bausteine (insel-auftraege.json) und Auftragsrahmen
 let bauen = null;                                    // Bauen auf Bauplätzen (Etappe 4)
+let TD = null, talRahmen = null;                     // Baumeister-Tal (Etappe 5): Bausteine und Bauaufträge
 
 function webglOk() {
   try { const c = document.createElement('canvas'); return !!(c.getContext('webgl') || c.getContext('experimental-webgl')); }
@@ -341,18 +385,21 @@ function standLesen() {
   s.opt = Object.assign({ seiten: false, vorlesen: true, lesart: 'lesen' }, istObjekt(s.opt) ? s.opt : {});
   const p = s.pos;
   s.pos = p && [p.x, p.y, p.z].every(n => typeof n === 'number' && isFinite(n)) ? { x: p.x, y: p.y, z: p.z, b: Number(p.b) || 0 } : null;
-  // Aufträge im Hafendorf (Etappe 3)
-  const h = istObjekt(s.auftraege.hafen) ? s.auftraege.hafen : {};
-  h.aktiv = istObjekt(h.aktiv) && typeof h.aktiv.text === 'string' ? h.aktiv : null;
-  h.runde = istObjekt(h.runde) ? { n: Math.max(0, Math.floor(h.runde.n) || 0), richtig: Math.max(0, Math.floor(h.runde.richtig) || 0) } : { n: 0, richtig: 0 };
-  h.verlauf = Array.isArray(h.verlauf) ? h.verlauf.filter(x => typeof x === 'string').slice(-10) : [];
-  h.korb = istObjekt(h.korb) && typeof h.korb.ding === 'string' && h.korb.n > 0 ? { ding: h.korb.ding, n: Math.min(99, Math.floor(h.korb.n)) } : null;
-  h.runden = Math.max(0, Math.floor(h.runden) || 0);
-  s.auftraege.hafen = h;
-  const st = istObjekt(s.stufen.hafen) ? s.stufen.hafen : {};
-  st.frei = Math.max(1, Math.min(3, Math.floor(st.frei) || 1));
-  st.wahl = Math.max(1, Math.min(st.frei, Math.floor(st.wahl) || st.frei));
-  s.stufen.hafen = st;
+  s.geld = Math.max(0, Math.min(9999, Math.floor(s.geld) || 0));        // Geldbeutel im Tal (Etappe 5)
+  // Aufträge je Gebiet (Hafendorf: Etappe 3, Baumeister-Tal: Etappe 5)
+  AUFTRAGS_GEBIETE.forEach(g => {
+    const h = istObjekt(s.auftraege[g]) ? s.auftraege[g] : {};
+    h.aktiv = istObjekt(h.aktiv) && typeof h.aktiv.text === 'string' ? h.aktiv : null;
+    h.runde = istObjekt(h.runde) ? { n: Math.max(0, Math.floor(h.runde.n) || 0), richtig: Math.max(0, Math.floor(h.runde.richtig) || 0) } : { n: 0, richtig: 0 };
+    h.verlauf = Array.isArray(h.verlauf) ? h.verlauf.filter(x => typeof x === 'string').slice(-10) : [];
+    h.korb = istObjekt(h.korb) && typeof h.korb.ding === 'string' && h.korb.n > 0 ? { ding: h.korb.ding, n: Math.min(99, Math.floor(h.korb.n)) } : null;
+    h.runden = Math.max(0, Math.floor(h.runden) || 0);
+    s.auftraege[g] = h;
+    const st = istObjekt(s.stufen[g]) ? s.stufen[g] : {};
+    st.frei = Math.max(1, Math.min(3, Math.floor(st.frei) || 1));
+    st.wahl = Math.max(1, Math.min(st.frei, Math.floor(st.wahl) || st.frei));
+    s.stufen[g] = st;
+  });
   return s;
 }
 function speichern() {
@@ -366,7 +413,11 @@ function speichern() {
   posGespeichert = { x: spieler.x, z: spieler.z };
 }
 const hafen = () => stand.auftraege.hafen;
-const stufe = () => stand.stufen.hafen.wahl;
+const tal = () => stand.auftraege.tal;
+const stufe = (g = 'hafen') => stand.stufen[g].wahl;
+/** Gebiet, dessen Aufträge die Karte zeigt: wo das Kind gerade ist */
+const kartenGebiet = () => (aktGebiet === 'tal' && talRahmen ? 'tal' : 'hafen');
+const BLOCKNR = n => LernInselWelt.BLOCK[n];
 /** Gebiet freischalten (ab Etappe 5 durch Fähre und Brücke) – nur aufbauend */
 function gebietOeffnen(id, speichernAuch = true) {
   if (offen.has(id) || !welt.gebiete.some(g => g.id === id)) return;
@@ -455,8 +506,14 @@ async function aufbauen() {
     const orte = {};
     (welt.orte.plaetze || []).forEach(q => { orte[q.id] = q; });
     rahmen = LernInselAuftraege.erstelle(AD, { orte });
-    bewohner = await F.bewohner(T, welt, rahmen.bewohner.map(b => ({ def: b, x: b.x, z: b.z, blick: b.blick })));
-    bewohner.forEach((b, i) => { b.art = 'bewohner'; b.kopf = HOCH + .35; b.nr = i; scene.add(b.gruppe); scene.add(b.schatten); });
+    const liste = rahmen.bewohner.map(b => ({ def: b, x: b.x, z: b.z, blick: b.blick, gebiet: 'hafen' }));
+    TD = !TESTINSEL && AD.tal ? AD.tal : null;
+    if (TD) {
+      talRahmen = LernInselAuftraege.erstelleTal(TD, { plaetze: Object.fromEntries((welt.orte.bauplaetze || []).map(q => [q.id, q])) });
+      (TD.bewohner || []).forEach(d => { const o = orte[d.platz]; if (o) liste.push({ def: d, x: o.x, z: o.z, blick: o.blick, gebiet: 'tal' }); });
+    }
+    bewohner = await F.bewohner(T, welt, liste);
+    bewohner.forEach((b, i) => { b.art = 'bewohner'; b.gebiet = liste.find(l => l.def === b.def).gebiet; b.kopf = HOCH + .35; b.nr = i; scene.add(b.gruppe); scene.add(b.schatten); });
     if (!TESTINSEL) {
       kisten = rahmen.quellen.map(q => ding(F.kiste(T, q.farbe || '#cccccc'), q, 'kiste'));
       pakete = rahmen.suchorte.map(o => ding(F.paket(T), o, 'paket'));
@@ -474,7 +531,6 @@ async function aufbauen() {
   document.body.classList.toggle('links', !!stand.opt.seiten);
   $('opt-vorlesen').checked = stand.opt.vorlesen !== false;
   $('debug-gebiete').hidden = !DEBUG || !!TESTINSEL;
-  bauleisteBauen();
 
   groesse();
   window.addEventListener('resize', groesse);
@@ -509,7 +565,7 @@ function groesse() {
    ═══════════════════════════════════════════════════════ */
 function starten() {
   if (!bereit) return;
-  $('start').hidden = true; $('pause').hidden = true; $('runde-ende').hidden = true;
+  $('start').hidden = true; $('pause').hidden = true; $('runde-ende').hidden = true; $('laden').hidden = true;
   $('pause-knopf').hidden = false;
   if (!hinweisWeg) $('hinweis').hidden = false;
   homeZeigen(false);
@@ -582,6 +638,11 @@ function zeichneBild(dt) {
     const d = Math.hypot(s.x - spieler.x, s.z - spieler.z);
     if (d < LESE_ABSTAND && d < nd) { nd = d; naechster = { art: 'schild', s, x: s.x, y: s.y + .6, z: s.z, kopf: 1.2 }; }
   });
+  const fa = welt.faehre;
+  if (fa && offen.has(fa.gebiet)) ['hafen', 'tal'].forEach(seite => {             // Fähre: an beiden Stegen übersetzen
+    const o = fa[seite], d = Math.hypot(o.x + .5 - spieler.x, o.z + .5 - spieler.z);
+    if (d < 2.2 && d < nd) { nd = d; naechster = { art: 'faehre', seite, x: o.x + .5, y: spieler.y, z: o.z + .5 }; }
+  });
   if (bauen && bauen.aktiv && !bauen.platzBei(spieler.x, spieler.z)) bauEnde();    // vom Bauplatz weggelaufen
   if (!naechster && bauen && !bauen.aktiv) { const bp = bauen.platzBei(spieler.x, spieler.z); if (bp) naechster = { art: 'bauplatz', bp, x: spieler.x, y: spieler.y, z: spieler.z }; }
   aktionZeigen(bauen && bauen.aktiv ? null : naechster);
@@ -617,6 +678,7 @@ function gebietPruefen() {
   if (!id || id === aktGebiet) return;
   const erstes = aktGebiet === null;
   aktGebiet = id;
+  auftragZeigen();                                   // Karte zeigt die Aufträge des Gebiets, in dem das Kind ist
   if (erstes) return;                                // beim Start kein Einblenden
   const g = welt.gebiete.find(q => q.id === id);
   if (!g) return;
@@ -643,23 +705,38 @@ function gebieteZeigen() {
 /* ═══════════════════════════════════════════════════════
    AUFTRÄGE (Etappe 3): Karte, Korb, Wertung des ersten Versuchs, Runde melden
    ═══════════════════════════════════════════════════════ */
-const MAX_RUNDE = () => (AD && AD.auftraege_je_runde) || 5;
+const MAX_RUNDE = (g = 'hafen') => (g === 'tal' ? TD && TD.auftraege_je_runde : AD && AD.auftraege_je_runde) || 5;
 function auftragZeigen(neu) {
   const el = $('auftrag');
-  if (!rahmen || TESTINSEL) { el.hidden = true; $('korb').hidden = true; return; }
-  const h = hafen(), a = h.aktiv;
+  geldZeigen();
+  if (!rahmen || TESTINSEL || (bauen && bauen.aktiv) || aktGebiet === 'hochland') { el.hidden = true; $('korb').hidden = true; return; }   // Hochland: Aufträge ab Etappe 6
+  const g = kartenGebiet(), h = stand.auftraege[g], a = h.aktiv;
   el.hidden = false;
-  $('auftrag-kopf').textContent = `Hafendorf · Stufe ${stufe()}`;
-  $('auftrag-punkte').textContent = '●'.repeat(h.runde.n) + '○'.repeat(Math.max(0, MAX_RUNDE() - h.runde.n));
+  $('auftrag-kopf').textContent = a && a.spezial ? (a.spezial === 'faehre' ? 'Die Fähre' : 'Großer Auftrag') : `${g === 'tal' ? 'Baumeister-Tal' : 'Hafendorf'} · Stufe ${stufe(g)}`;
+  $('auftrag-punkte').textContent = a && a.spezial ? '' : '●'.repeat(h.runde.n) + '○'.repeat(Math.max(0, MAX_RUNDE(g) - h.runde.n));
   const txt = $('auftrag-text');
-  $('auftrag-sym').textContent = a ? ART_SYM[a.art] || '💬' : '💬';
-  $('auftrag-hoeren').hidden = !a;
-  if (!a) { txt.textContent = 'Sprich mit jemandem im Dorf – du bekommst einen Auftrag.'; txt.className = 'leise'; txt.lang = 'de'; }
+  $('auftrag-sym').textContent = a ? ART_SYM[a.art] || '💬' : (g === 'tal' ? '🏗️' : '💬');
+  $('auftrag-hoeren').hidden = !a || g === 'tal';
+  const unten = $('auftrag-unten');
+  unten.hidden = true;
+  if (g === 'tal') {
+    if (!a) { txt.textContent = 'Geh zu Frau Stein, der Baumeisterin – sie hat Bauaufträge für dich.'; txt.className = 'leise'; }
+    else {
+      txt.textContent = a.art === 'haendler' ? a.text : a.text; txt.className = '';
+      if (a.material) { unten.textContent = `Im Inventar: ${(TD.emoji || {})[a.material] || ''} ${stand.inventar[BLOCKNR(a.material)] || 0}`; unten.hidden = false; }
+    }
+    txt.lang = 'de';
+  } else if (!a) { txt.textContent = 'Sprich mit jemandem im Dorf – du bekommst einen Auftrag.'; txt.className = 'leise'; txt.lang = 'de'; }
   else if (stand.opt.lesart === 'hoeren') { txt.textContent = '🎧 Tippe auf 🔊 und hör genau zu.'; txt.className = 'leise'; txt.lang = 'de'; }
   else { txt.textContent = a.text; txt.className = ''; txt.lang = 'en'; }
   if (neu) { el.classList.remove('neu'); void el.offsetWidth; el.classList.add('neu'); }
   document.documentElement.style.setProperty('--karte-h', el.offsetHeight + 'px');
-  korbZeigen();
+  if (g === 'hafen') korbZeigen(); else $('korb').hidden = true;
+}
+function geldZeigen() {
+  const el = $('geld');
+  el.hidden = !stand || !TD || (aktGebiet !== 'tal' && !stand.geld);
+  if (!el.hidden) el.textContent = `💶 ${stand.geld} €`;
 }
 function korbZeigen() {
   const k = hafen().korb, el = $('korb');
@@ -680,9 +757,10 @@ function versuch(ergebnis, wer) {
   if (ergebnis.ok) erledigt();
   return true;
 }
-function erledigt(uebersprungen) {
-  const h = hafen(), a = h.aktiv;
+function erledigt(uebersprungen, g = 'hafen') {
+  const h = stand.auftraege[g], a = h.aktiv;
   if (!a) return;
+  if (a.spezial) { spezialErledigt(a, h, uebersprungen); return; }
   h.runde.n++;
   if (!a.fehler && !uebersprungen) h.runde.richtig++;
   h.verlauf = h.verlauf.concat(a.id).slice(-10);
@@ -690,19 +768,19 @@ function erledigt(uebersprungen) {
   h.aktiv = null;
   if (!uebersprungen) {
     jubelBis = zeit + 1.3;
-    toast(a.fehler ? `✅ Erledigt! (${h.runde.n}/${MAX_RUNDE()}) – beim nächsten Mal klappt es beim ersten Versuch.` : `⭐ Super, beim ersten Versuch! (${h.runde.n}/${MAX_RUNDE()})`);
+    toast(a.fehler ? `✅ Erledigt! (${h.runde.n}/${MAX_RUNDE(g)}) – beim nächsten Mal klappt es beim ersten Versuch.` : `⭐ Super, beim ersten Versuch! (${h.runde.n}/${MAX_RUNDE(g)})`);
   }
-  if (h.runde.n >= MAX_RUNDE()) rundeEnde();
+  if (h.runde.n >= MAX_RUNDE(g)) rundeEnde(g);
   speichern();
   auftragZeigen(true);
 }
-function rundeEnde() {
-  const h = hafen(), st = stand.stufen.hafen, s = st.wahl;
-  const r = h.runde, max = MAX_RUNDE();
-  LernSpiel.speichereRunde({ score: r.richtig, max, titel: 'Aufträge', skill: `insel:hafen:${s}` });
+function rundeEnde(g = 'hafen') {
+  const h = stand.auftraege[g], st = stand.stufen[g], s = st.wahl;
+  const r = h.runde, max = MAX_RUNDE(g);
+  LernSpiel.speichereRunde({ score: r.richtig, max, titel: 'Aufträge', skill: `insel:${g}:${s}` });
   h.runden++;
   let neu = '';
-  if (r.richtig >= ((AD && AD.aufstieg_ab) || 4) && s === st.frei && st.frei < 3) {
+  if (r.richtig >= (((g === 'tal' ? TD : AD) || {}).aufstieg_ab || 4) && s === st.frei && st.frei < 3) {
     st.frei++; st.wahl = st.frei;
     neu = `🎉 Stufe ${st.frei} ist frei! Die Aufträge werden jetzt etwas schwieriger.`;
   }
@@ -729,6 +807,8 @@ function aktionArt(z) {
   if (z.art === 'kiste') return ['✋', 'Nehmen'];
   if (z.art === 'paket') return ['📦', 'Öffnen'];
   if (z.art === 'bauplatz') return ['🧱', 'Bauen'];
+  if (z.art === 'faehre') return ['⛴️', 'Übersetzen'];
+  if (z.gebiet === 'tal') return TD && z.def.id === TD.haendler ? ['🪵', 'Einkaufen'] : ['💬', 'Sprechen'];
   const a = rahmen && hafen().aktiv, id = z.def.id;
   if (a && a.art === 'finden' && id !== a.geber) return ['🔍', 'Bist du es?'];
   if (a && a.art === 'bringen' && hafen().korb) return ['🎁', 'Geben'];
@@ -736,7 +816,7 @@ function aktionArt(z) {
 }
 function aktionZeigen(z) {
   const art = aktionArt(z);
-  const schluessel = art ? art.join('') + (z.def ? z.def.id : z.art === 'schild' ? z.s.id : z.art === 'bauplatz' ? z.bp.id : z.o.id) : '';
+  const schluessel = art ? art.join('') + (z.def ? z.def.id : z.art === 'schild' ? z.s.id : z.art === 'bauplatz' ? z.bp.id : z.art === 'faehre' ? z.seite : z.o.id) : '';
   aktionZiel = z;
   if (schluessel === aktionSchluessel) return;
   aktionSchluessel = schluessel;
@@ -752,12 +832,19 @@ function aktion() {
   if (z.art === 'schild') { blase(z, z.s.text, false, '📜 Schild'); return; }
   if (z.art === 'kiste') { nehmen(z); return; }
   if (z.art === 'bauplatz') { bauStart(z.bp); return; }
+  if (z.art === 'faehre') { faehren(z.seite); return; }
   if (z.art === 'paket') { versuch(rahmen.oeffnen(hafen().aktiv, z.o.id), z) || blase(z, 'Oh, this parcel is empty.', true); return; }
   sprechenMit(z);
   aktionSchluessel = '';                            // Beschriftung neu bestimmen (Auftrag kann sich geändert haben)
 }
 function sprechenMit(b) {
+  if (b.gebiet === 'tal') { talSprechen(b); return; }
   const h = hafen(), a = rahmen ? h.aktiv : null, id = b.def.id;
+  // Fährmann: Fähr-Auftrag öffnet das Baumeister-Tal (erst nach einer Runde im Hafendorf)
+  if (TD && TD.faehre && id === TD.faehre.geber && !offen.has('tal') && !a && h.runden >= 1) {
+    const neu = rahmen.neu(1, id, [], { art: 'bringen', saetze: TD.faehre.saetze, selbst: true });
+    if (neu) { neu.spezial = 'faehre'; h.aktiv = neu; speichern(); blase(b, neu.text, true); auftragZeigen(true); return; }
+  }
   if (rahmen && !a && !TESTINSEL && aktGebiet === 'hafen') {             // neuer Auftrag
     const neu = rahmen.neu(stufe(), id, h.verlauf);
     if (neu) {
@@ -818,19 +905,161 @@ function blaseSetzen() {
 }
 
 /* ═══════════════════════════════════════════════════════
+   FÄHRE, BAUMEISTER-TAL, HOLZHANDEL (Etappe 5)
+   ═══════════════════════════════════════════════════════ */
+/** Fähr-Auftrag und Brücke: öffnen ein Gebiet, zählen aber nicht zur Runde */
+function spezialErledigt(a, h, uebersprungen) {
+  h.aktiv = null;
+  if (a.art === 'bringen') h.korb = null;
+  if (!uebersprungen) {
+    jubelBis = zeit + 1.6;
+    if (a.spezial === 'faehre') {
+      gebietOeffnen('tal');
+      setTimeout(() => { if (gesprochen) blase(gesprochen, TD.faehre.danach, true); }, 1200);
+      toast('⛴️ Die Fähre fährt jetzt ins Baumeister-Tal! Geh zum Steg und tippe auf ⛴️.', 4500);
+    }
+    if (a.spezial === 'bruecke') {
+      gebietOeffnen('hochland');
+      toast('🌉 Die Brücke trägt! Das Kartenleser-Hochland ist offen.', 4500);
+    }
+  }
+  speichern();
+  auftragZeigen(true);
+}
+function faehren(seite) {
+  const ziel = welt.faehre[seite === 'hafen' ? 'tal' : 'hafen'];
+  const setzen = () => {
+    spieler.x = ziel.x + .5; spieler.z = ziel.z + .5;
+    spieler.y = spieler.anzeigeY = welt.boden(spieler.x, spieler.z);
+    spieler.blick = seite === 'hafen' ? Math.PI : 0;              // Blick an Land
+    for (let i = 0; i < 3; i++) steuerung.update(1 / 30);
+    speichern();
+  };
+  if (REDUCE) { setzen(); return; }
+  const b = $('blende');
+  b.hidden = false; void b.offsetWidth; b.classList.add('an');
+  setTimeout(() => { setzen(); b.classList.remove('an'); setTimeout(() => { b.hidden = true; }, 400); }, 450);
+}
+function talSprechen(b) {
+  const t = tal(), id = b.def.id;
+  if (id === TD.haendler) { ladenOeffnen(); return; }
+  if (id === TD.auftraggeber) {
+    if (t.aktiv) { blase(b, t.aktiv.text, false); return; }
+    // Nach der ersten Runde im Tal: der große Auftrag (Brücke ins Hochland)
+    const neu = !offen.has('hochland') && t.runden >= 1 ? talRahmen.bruecke() : talRahmen.neu(stufe('tal'), t.verlauf);
+    if (neu) {
+      if (neu.platz && neu.art !== 'bruecke') bauen.leeren(neu.platz);       // Bauplatz für den neuen Auftrag frei räumen
+      if (neu.material) neu.vorher = stand.inventar[BLOCKNR(neu.material)] || 0;
+      if (neu.geld) stand.geld += neu.geld;
+      t.aktiv = neu;
+      speichern();
+      blase(b, neu.text + (neu.geld ? ` Hier sind ${neu.geld} € dafür.` : ''), false);
+      auftragZeigen(true);
+      return;
+    }
+  }
+  const s = b.def.saetze || ['Hallo!'];
+  b.satz = (b.satz || 0) + 1;
+  blase(b, s[(b.satz - 1) % s.length], false);
+}
+const TAL_GRUND = {
+  groesse: 'Die Größe stimmt noch nicht – zähl die Meter von Pfosten zu Pfosten.',
+  luecke: 'Da ist noch eine Lücke – die Schafe laufen weg! 🐑', innen: 'Mittendrin steht etwas, das da nicht hingehört.',
+  leer: 'Auf dem Bauplatz ist noch nichts.', 'mehr als 9': 'Von einer Kistensorte sind mehr als 9 da – 10 kleine Kisten passen in eine große.',
+  'zu kurz': 'Die Brücke reicht noch nicht über den ganzen Fluss – so trägt sie nicht.',
+};
+/** ✅ auf dem Bauplatz des Tal-Auftrags: die Welt prüft */
+function talPruefen(a) {
+  const r = bauen.pruefen(a.plan);
+  if (!r.ok) {
+    a.fehler = true; speichern();
+    const text = a.art === 'felder' && r.grund === 'groesse' ? 'Die Reihen stimmen noch nicht – zähl Reihen und Pflanzen je Reihe.'
+      : r.grund === 'summe' ? `Im Lager liegen jetzt ${r.wert.toLocaleString('de-DE')} Steine – das passt noch nicht.` : TAL_GRUND[r.grund] || 'Das passt noch nicht ganz.';
+    toast(text, 4200);
+    return;
+  }
+  const zuviel = a.material ? (stand.inventar[BLOCKNR(a.material)] || 0) - (a.vorher || 0) : 0;
+  if (zuviel > 0) {
+    a.fehler = true;
+    setTimeout(() => toast(`Fertig! Aber ${talRahmen.menge(a.material, zuviel)} hast du zu viel gekauft – genau rechnen spart Geld.`, 4200), 3300);
+  }
+  bauEnde();
+  erledigt(false, 'tal');
+}
+// ── Holzhandel: Waren wählen, Geld auf den Tresen legen, bezahlen ──
+let ladenKorb = {}, tresen = 0;
+const MUENZEN = [1, 2, 5, 10, 20];
+function ladenOeffnen() {
+  laeuft = false; steuerung.stopp();
+  ladenKorb = {}; tresen = 0;
+  $('laden').hidden = false; $('pause-knopf').hidden = true; $('aktion').hidden = true; aktionZiel = null; aktionSchluessel = '';
+  ladenZeigen('Hallo! Was darf es sein? Die Preise stehen am Schild.');
+}
+function ladenZeigen(text) {
+  if (text) $('laden-text').textContent = text;
+  const box = $('laden-waren');
+  box.textContent = '';
+  Object.keys(talRahmen.preise).forEach(k => {
+    const zeile = document.createElement('div');
+    zeile.className = 'ware';
+    zeile.innerHTML = '<span class="e"></span><span class="n"></span><span class="pr"></span><button data-w="-">−</button><span class="z"></span><button data-w="+">+</button>';
+    zeile.dataset.k = k;
+    zeile.querySelector('.e').textContent = (TD.emoji || {})[k] || '';
+    zeile.querySelector('.n').textContent = (talRahmen.namen[k] || [k, k])[1];
+    zeile.querySelector('.pr').textContent = `${talRahmen.preise[k]} €`;
+    zeile.querySelector('.z').textContent = ladenKorb[k] || 0;
+    box.appendChild(zeile);
+  });
+  const a = tal().aktiv, summe = Object.keys(ladenKorb).reduce((s, k) => s + ladenKorb[k] * talRahmen.preise[k], 0);
+  $('laden-summe').textContent = a && a.art === 'haendler' ? 'Wie viel kostet das? Rechne selbst und zahl passend!' : summe ? `Zusammen: ${summe} €` : '';
+  const m = $('laden-muenzen');
+  if (!m.children.length) MUENZEN.forEach(v => {
+    const b = document.createElement('button'); b.textContent = `${v} €`; b.dataset.v = v; if (v >= 5) b.className = 'schein'; m.appendChild(b);
+  });
+  $('laden-tresen').textContent = `Auf dem Tresen: ${tresen} €`;
+  $('laden-beutel').textContent = `Im Geldbeutel: ${stand.geld - tresen} €`;
+}
+function ladenZahlen() {
+  const a = tal().aktiv;
+  const korb = Object.fromEntries(Object.entries(ladenKorb).filter(([, n]) => n > 0));
+  const r = talRahmen.bezahlen(korb, tresen, a);
+  if (!r.ok) {
+    if (r.zuWenig && a && a.art === 'haendler') { a.fehler = true; speichern(); }
+    ladenZeigen(r.text);
+    return;
+  }
+  stand.geld -= r.kosten;
+  Object.keys(korb).forEach(k => { const b = BLOCKNR(k); stand.inventar[b] = Math.min(999, (stand.inventar[b] || 0) + korb[k]); });
+  ladenKorb = {}; tresen = 0;
+  let text = r.text;
+  if (a && a.art === 'haendler') {
+    if (r.gleich) {
+      if (!r.passt) { a.fehler = true; text += ' (Passend wäre besser gewesen!)'; }
+      speichern(); ladenZeigen(text);
+      erledigt(false, 'tal');
+      return;
+    }
+    a.fehler = true; text += ' Hm – war das wirklich alles, was Frau Stein bestellt hat?';
+  }
+  speichern();
+  ladenZeigen(text);
+}
+
+/* ═══════════════════════════════════════════════════════
    BAUEN (Etappe 4): Baumodus, Leiste, Antippen, Bauplan prüfen
    ═══════════════════════════════════════════════════════ */
 const BAU_GRUND = { 'nicht auf dem Bauplatz': 'Nur auf dem Bauplatz bauen (im Raster).', 'zu hoch': 'Höher geht es hier nicht.',
   besetzt: 'Da ist schon ein Block.', 'du stehst dort': 'Da stehst du gerade – geh einen Schritt zur Seite.', 'kein Material': 'Davon hast du nichts mehr.' };
-function bauleisteBauen() {
+function bauleisteBauen(bp) {
   const box = $('bau-material');
   box.textContent = '';
-  LernInselBauen.MATERIAL.forEach((m, i) => {
+  const aktuell = bauen.material();
+  LernInselBauen.MATERIAL.filter(m => bp.material.includes(BLOCKNR(m.block))).forEach((m, i) => {
     const b = document.createElement('button');
-    b.dataset.block = LernInselWelt.BLOCK[m.block];
+    b.dataset.block = BLOCKNR(m.block);
     b.innerHTML = '<span class="e"></span><span class="n"></span>';
     b.querySelector('.e').textContent = m.emoji;
-    if (i === 0) b.classList.add('an');
+    if (BLOCKNR(m.block) === aktuell) b.classList.add('an');
     box.appendChild(b);
   });
 }
@@ -838,14 +1067,21 @@ function bauleisteZeigen() {
   if (!bauen || !bauen.aktiv) return;
   $('bau-material').querySelectorAll('button').forEach(b => {
     const n = bauen.vorrat(+b.dataset.block), m = LernInselBauen.MATERIAL.find(x => LernInselWelt.BLOCK[x.block] === +b.dataset.block);
-    b.querySelector('.n').textContent = m.name + (n === Infinity ? '' : ` · ${n}`);
+    const k = bauen.kostet(+b.dataset.block);
+    b.querySelector('.n').textContent = m.name + (n === Infinity ? '' : ` · ${n}`) + (k > 1 ? ` (${k} je Block)` : '');
   });
-  const plan = bauen.aktiv.plan;
-  $('bau-plan').textContent = plan && plan.text ? plan.text : (bauen.aktiv.name || 'Bauplatz') + ': Tippe auf ein Feld im Raster.';
-  $('bau-pruefen').hidden = !plan;
+  const plan = bauen.aktiv.plan, a = talAuftragHier();
+  $('bau-plan').textContent = a ? a.text : plan && plan.text ? plan.text : (bauen.aktiv.name || 'Bauplatz') + ': Tippe auf ein Feld im Raster.';
+  $('bau-pruefen').hidden = !plan && !a;
+}
+/** Tal-Auftrag, der auf dem aktiven Bauplatz gebaut wird (oder null) */
+function talAuftragHier() {
+  const a = talRahmen && tal().aktiv;
+  return a && a.platz && bauen.aktiv && bauen.aktiv.id === a.platz ? a : null;
 }
 function bauStart(bp) {
   bauen.start(bp);
+  bauleisteBauen(bp);
   steuerung.setzeOptionen({ kameraHoch: true });
   document.body.classList.add('baut');
   $('baubar').hidden = false;
@@ -875,7 +1111,8 @@ function bauTippen(x, y) {
 function menueZeigen() {
   const box = $('stufen');
   box.textContent = '';
-  const st = stand.stufen.hafen;
+  const g = kartenGebiet(), st = stand.stufen[g];
+  $('auftraege-titel').textContent = g === 'tal' ? 'Bauaufträge im Baumeister-Tal' : 'Aufträge im Hafendorf';
   for (let s = 1; s <= 3; s++) {
     const b = document.createElement('button');
     b.textContent = s <= st.frei ? `Stufe ${s}` : `🔒 Stufe ${s}`;
@@ -885,8 +1122,9 @@ function menueZeigen() {
     box.appendChild(b);
   }
   $('lesart').querySelectorAll('button').forEach(b => b.classList.toggle('an', b.dataset.l === stand.opt.lesart));
-  $('abbrechen').hidden = !(rahmen && hafen().aktiv);
+  $('abbrechen').hidden = !(rahmen && stand.auftraege[g].aktiv);
   [$('stufen'), $('lesart')].forEach(e => { e.hidden = !rahmen || !!TESTINSEL; });
+  $('lesart').hidden = $('lesart').hidden || g === 'tal';
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -930,12 +1168,32 @@ $('baubar').addEventListener('click', e => {
   $('baubar').querySelectorAll('button[data-m]').forEach(x => x.classList.toggle('an', x === b));
 });
 $('bau-pruefen').addEventListener('click', () => {
+  const a = talAuftragHier();
+  if (a) { talPruefen(a); return; }
   const r = bauen.pruefen();
   if (r.ok) { jubelBis = zeit + 1.3; toast('✅ Super! Der Bauplan ist erfüllt.'); }
   else toast(`Noch nicht ganz: ${r.fehlt.length + r.falsch.length} Stellen passen noch nicht (rot markiert).`, 3500);
 });
 $('bau-fertig').addEventListener('click', bauEnde);
-$('abbrechen').addEventListener('click', () => { erledigt(true); menueZeigen(); });
+$('abbrechen').addEventListener('click', () => { erledigt(true, kartenGebiet()); menueZeigen(); });
+// Holzhandel
+$('laden-waren').addEventListener('click', e => {
+  const b = e.target.closest('button[data-w]');
+  if (!b) return;
+  const k = b.closest('.ware').dataset.k;
+  ladenKorb[k] = Math.max(0, Math.min(30, (ladenKorb[k] || 0) + (b.dataset.w === '+' ? 1 : -1)));
+  ladenZeigen();
+});
+$('laden-muenzen').addEventListener('click', e => {
+  const b = e.target.closest('button[data-v]');
+  if (!b) return;
+  const v = +b.dataset.v;
+  if (tresen + v > stand.geld) { ladenZeigen('So viel Geld hast du nicht im Geldbeutel.'); return; }
+  tresen += v; ladenZeigen();
+});
+$('laden-zurueck').addEventListener('click', () => { tresen = 0; ladenZeigen(); });
+$('laden-zahlen').addEventListener('click', ladenZahlen);
+$('laden-zu').addEventListener('click', () => { $('laden').hidden = true; starten(); });
 $('opt-seiten').addEventListener('change', e => {
   document.body.classList.toggle('links', e.target.checked);
   if (steuerung) steuerung.setzeOptionen({ seitenTauschen: e.target.checked });
@@ -949,7 +1207,7 @@ $('debug-gebiete').addEventListener('click', () => {           // nur ?debug=1: 
 });
 document.addEventListener('visibilitychange', () => { if (document.hidden) { pausieren(); speichern(); } });
 window.addEventListener('pagehide', () => { if (bereit) speichern(); });
-window.addEventListener('keydown', e => { if (e.key === 'Escape') (laeuft ? pausieren() : (bereit && $('ohne3d').hidden && starten())); });
+window.addEventListener('keydown', e => { if (e.key === 'Escape') { $('laden').hidden = true; (laeuft ? pausieren() : (bereit && $('ohne3d').hidden && starten())); } });
 
 aufbauen().catch(e => { console.error(e); ohne3d('Die Insel konnte nicht geladen werden. Bitte die Seite neu laden.'); });
 </script>
