@@ -22,6 +22,7 @@
    "zeichen": "t",
    "fach": "Mathe",
    "oeffnet": "faehre",
+   "start": { "x": 18.5, "z": 46.5, "blick": 0 },
    "hinweis": "Ins Baumeister-Tal kommst du bald mit der Fähre."
   },
   {
@@ -30,6 +31,7 @@
    "zeichen": "k",
    "fach": "GPG",
    "oeffnet": "bruecke",
+   "start": { "x": 54.5, "z": 24.5, "blick": 0 },
    "hinweis": "Ins Hochland führt bald eine Brücke aus dem Baumeister-Tal."
   }
  ],

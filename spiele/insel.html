@@ -57,8 +57,13 @@
      Planquadraten, Landmarken, Nordpfeil, Maßstab – ohne „Du bist hier“), Wegweiser.
      Alle Erdhügel sehen gleich aus; ⛏️ am falschen = erster Versuch verbraucht.
      Gefundene Schätze werden Sammelstücke (funde). Runden: skill 'insel:hochland:<stufe>'.
+   Etappe 7 – Einbindung: Freigabe des ganzen Spiels (Katalog allg.5.insel) und je Stufe bzw.
+     Bauauftrag (insel-auftraege.json → freigaben, über freigabe.js); Wortkarten aus „Meine
+     Themen“ im richtigen Paket (aufgaben.js, nur geübte Vokabeln); Avatar-Jubel.
 
    Link-Parameter:
+     ?gebiet=hafen|tal|hochland  Start am Eingang des Gebiets, wenn es schon offen ist (Lehrer-Link)
+     ?stufe=1–3   Stufe nur für diese Sitzung (nicht gespeichert, schaltet nichts frei)
      ?debug=1     Bildrate, Draw-Calls, Dreiecke, Startzeit, Position, Gebiet;
                   im Pausenmenü „alle Gebiete öffnen“ (nur zum Testen, wird nicht gespeichert)
      ?seed=TEXT   Testinsel aus Etappe 1 statt der Weltdaten (nur zum Ausprobieren, ohne Speichern)
@@ -296,6 +301,7 @@
     <div class="gebiete" id="gebiete-liste"></div>
     <div class="abschnitt" id="auftraege-titel">Aufträge im Hafendorf</div>
     <div class="wahl" id="stufen"></div>
+    <div class="klein" id="stufen-hinweis" hidden></div>
     <div class="wahl" id="lesart"><button data-l="lesen">📖 Lesen</button><button data-l="hoeren">🎧 Hören</button></div>
     <button class="zweit" id="abbrechen" hidden>Diesen Auftrag überspringen (zählt nicht)</button>
     <div class="funde" id="funde" hidden></div>
@@ -363,6 +369,10 @@ const $ = id => document.getElementById(id);
 const PARAM = new URLSearchParams(location.search);
 const DEBUG = PARAM.get('debug') === '1';
 const TESTINSEL = PARAM.get('seed');                 // Testinsel aus Etappe 1: ohne Gebiete, ohne Speichern
+// Lehrer-Links (Etappe 7): ?gebiet=hafen|tal|hochland startet dort (wenn offen), ?stufe=1–3 gilt nur für diese Sitzung
+const LEHRER_GEBIET = /^(hafen|tal|hochland)$/.test(PARAM.get('gebiet') || '') ? PARAM.get('gebiet') : null;
+const LEHRER_STUFE = /^[123]$/.test(PARAM.get('stufe') || '') ? +PARAM.get('stufe') : 0;
+const INSEL_THEMA = 'allg.5.insel';                  // Katalog-Thema: Infokarte und Freigabe des ganzen Spiels
 const REDUCE = !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
 const T0 = performance.now();
 const MAX_FPS = 30, SICHTWEITE = 32, SPRECH_ABSTAND = 2.4, GREIF_ABSTAND = 1.9, LESE_ABSTAND = 2.2;
@@ -448,7 +458,18 @@ function speichern() {
 const hafen = () => stand.auftraege.hafen;
 const tal = () => stand.auftraege.tal;
 const hoch = () => stand.auftraege.hochland;
-const stufe = (g = 'hafen') => stand.stufen[g].wahl;
+/** Freigaben der Lehrkraft (config.json → freigaben, ausgewertet von freigabe.js); ohne freigabe.js ist alles offen */
+const freiGegeben = id => !id || !window.LernFreigabe || LernFreigabe.erlaubt(id);
+const freigabeId = (g, k) => (((AD && AD.freigaben) || {})[g] || {})[k];
+/** Stufe s im Gebiet g freigegeben? Stufe 1 geht immer (insel-auftraege.json → freigaben) */
+const stufeErlaubt = (g, s) => s === 1 || freiGegeben(freigabeId(g, s));
+const lehrerStufe = g => (LEHRER_STUFE && (!LEHRER_GEBIET || LEHRER_GEBIET === g) ? LEHRER_STUFE : 0);
+/** Gespielte Stufe: Lehrer-Link vor eigener Wahl; eine gesperrte Stufe fällt auf die nächstniedrigere zurück */
+function stufe(g = 'hafen') {
+  let s = lehrerStufe(g) || stand.stufen[g].wahl;
+  while (s > 1 && !stufeErlaubt(g, s)) s--;
+  return s;
+}
 /** Gebiet, dessen Aufträge die Karte zeigt: wo das Kind gerade ist */
 const kartenGebiet = () => (aktGebiet === 'tal' && talRahmen ? 'tal' : aktGebiet === 'hochland' && hochRahmen ? 'hochland' : 'hafen');
 const GEBIET_NAME = { hafen: 'Hafendorf', tal: 'Baumeister-Tal', hochland: 'Kartenleser-Hochland' };
@@ -494,6 +515,12 @@ async function aufbauen() {
   if (!webglOk() || !window.LernAvatar) { ohne3d(); return; }
   const datenP = TESTINSEL ? Promise.resolve(null) : json('../daten/insel.json');
   const auftraegeP = json('../daten/insel-auftraege.json').catch(e => { console.warn(e); return null; });
+  await LW.laden('gemeinsam/freigabe.js').catch(() => {});
+  if (!TESTINSEL && !freiGegeben(INSEL_THEMA)) {
+    const st = LernFreigabe.status(INSEL_THEMA);
+    ohne3d(`🔒 Deine Lehrkraft hat die Insel ${st && st.ab ? 'bis ' + st.ab.split('-').reverse().join('.') : 'gerade'} gesperrt.`);
+    return;
+  }
   datenP.catch(() => {});
   let ich;
   try { ich = await F.aufstellen(null); }
@@ -530,7 +557,8 @@ async function aufbauen() {
   schilder = welt.orte.schilder || [];
 
   // Spieler: gespeicherte Position oder Startpunkt
-  const p = !TESTINSEL && posGueltig(stand.pos) ? stand.pos : null;
+  const lehrer = lehrerStart();
+  const p = lehrer || (!TESTINSEL && posGueltig(stand.pos) ? stand.pos : null);
   spieler.x = p ? p.x : welt.start.x; spieler.z = p ? p.z : welt.start.z; spieler.blick = p ? p.b : welt.start.blick;
   spieler.y = spieler.anzeigeY = p ? Math.round(p.y) : welt.boden(spieler.x, spieler.z);
   spielerFigur = ich.figur; spielerGruppe = ich.gruppe;
@@ -582,8 +610,42 @@ async function aufbauen() {
   bereit = true;
   startMs = Math.round(performance.now() - T0);
   $('los').disabled = false;
-  $('los').textContent = p ? 'Weiterspielen' : 'Los geht\'s!';
-  $('start-info').textContent = DEBUG ? `Fertig in ${(startMs / 1000).toFixed(1)} s` : 'Tipp: Geh zu den Leuten und tippe auf 💬.';
+  $('los').textContent = p && !lehrer ? 'Weiterspielen' : 'Los geht\'s!';
+  $('start-info').textContent = DEBUG ? `Fertig in ${(startMs / 1000).toFixed(1)} s` : lehrerHinweis || 'Tipp: Geh zu den Leuten und tippe auf 💬.';
+  woerterLaden();
+}
+/** Lehrer-Link ?gebiet=…: Start am Eingang dieses Gebiets, wenn es für das Kind schon offen ist */
+let lehrerHinweis = '';
+function lehrerStart() {
+  const g = !TESTINSEL && LEHRER_GEBIET && welt.gebiete.find(x => x.id === LEHRER_GEBIET);
+  if (!g) return null;
+  if (!offen.has(g.id)) {
+    lehrerHinweis = `${g.name} ist für dich noch nicht offen. ${g.oeffnet === 'faehre' ? 'Frag Sam am Hafen nach der Fähre.' : 'Bau im Baumeister-Tal die Brücke.'}`;
+    return null;
+  }
+  const z = g.start || (g.id === 'hafen' ? { x: welt.start.x, z: welt.start.z, blick: welt.start.blick } : null);
+  if (!z) return null;
+  const q = { x: z.x, z: z.z, y: welt.boden(z.x, z.z), b: Number(z.blick) || 0 };
+  return posGueltig(q) ? q : null;
+}
+
+/* Wortkarten aus „Meine Themen“ (Englisch): liegen in gefundenen Paketen im Hafendorf */
+let woerter = null;
+function woerterLaden() {
+  if (woerter || TESTINSEL) return;
+  woerter = [];
+  LW.laden('gemeinsam/aufgaben.js').then(() => window.LernAufgaben && LernAufgaben.woerter({ meine: true, max: 14 }))
+    .then(l => { if (Array.isArray(l)) woerter = l.filter(w => w && /^(the |an? )?[a-z][a-z -]*$/.test(w.en) && !/^to /.test(w.en) && /^(der |die |das )?[A-ZÄÖÜ][a-zäöüß-]+$/.test(w.de || '')); })   // nur Dinge (Nomen)
+    .catch(() => {});
+}
+function wortkarte() {
+  if (!woerter || !woerter.length) return '';
+  const w = woerter[Math.floor(Math.random() * woerter.length)];
+  return `📦 🃏 ${w.en} = ${w.de}`;
+}
+/** Jubel der eigenen Pass-Figur (unten rechts), wie in den Lern-Apps */
+function avatarJubel(text) {
+  try { if (window.LernAvatar && LernAvatar.appear) LernAvatar.appear({ text, big: true }); } catch (e) {}
 }
 /** Warenkiste oder Paket auf den Boden stellen */
 function ding(gruppe, o, art) {
@@ -813,10 +875,10 @@ function korbZeigen() {
   el.hidden = false;
 }
 /** Ergebnis eines Versuchs (aus dem Auftragsrahmen) verarbeiten */
-function versuch(ergebnis, wer) {
+function versuch(ergebnis, wer, titel) {
   if (!ergebnis) return false;
   const a = hafen().aktiv;
-  blase(wer, ergebnis.text, true);
+  blase(wer, ergebnis.text, true, titel || '');
   if (ergebnis.versuch && !ergebnis.ok && a) { a.fehler = true; speichern(); }
   if (ergebnis.ok) erledigt();
   return true;
@@ -839,7 +901,7 @@ function erledigt(uebersprungen, g = 'hafen') {
   auftragZeigen(true);
 }
 function rundeEnde(g = 'hafen') {
-  const h = stand.auftraege[g], st = stand.stufen[g], s = st.wahl;
+  const h = stand.auftraege[g], st = stand.stufen[g], s = stufe(g);
   const r = h.runde, max = MAX_RUNDE(g);
   LernSpiel.speichereRunde({ score: r.richtig, max, titel: 'Aufträge', skill: `insel:${g}:${s}` });
   h.runden++;
@@ -857,6 +919,7 @@ function rundeEnde(g = 'hafen') {
     $('pause').hidden = true;
     $('runde-ende').hidden = false; $('pause-knopf').hidden = true; $('aktion').hidden = true; aktionZiel = null;
     homeZeigen(true);
+    avatarJubel(neu ? `Stufe ${st.frei} ist frei! 🎉` : r.richtig === max ? 'Perfekte Runde! 🌟' : 'Runde geschafft! 💪');
   }, 1400);
 }
 function auftragHoeren() { const a = hafen().aktiv; if (a) F.sprich(a.text); }
@@ -900,7 +963,7 @@ function aktion() {
   if (z.art === 'bauplatz') { bauStart(z.bp); return; }
   if (z.art === 'faehre') { faehren(z.seite); return; }
   if (z.art === 'huegel') { graben(z); return; }
-  if (z.art === 'paket') { versuch(rahmen.oeffnen(hafen().aktiv, z.o.id), z) || blase(z, 'Oh, this parcel is empty.', true); return; }
+  if (z.art === 'paket') { const r = rahmen.oeffnen(hafen().aktiv, z.o.id); versuch(r, z, r && r.ok ? wortkarte() : '') || blase(z, 'Oh, this parcel is empty.', true); return; }
   sprechenMit(z);
   aktionSchluessel = '';                            // Beschriftung neu bestimmen (Auftrag kann sich geändert haben)
 }
@@ -985,10 +1048,12 @@ function spezialErledigt(a, h, uebersprungen) {
       gebietOeffnen('tal');
       setTimeout(() => { if (gesprochen) blase(gesprochen, TD.faehre.danach, true); }, 1200);
       toast('⛴️ Die Fähre fährt jetzt ins Baumeister-Tal! Geh zum Steg und tippe auf ⛴️.', 4500);
+      avatarJubel('Das Baumeister-Tal ist offen! ⛴️');
     }
     if (a.spezial === 'bruecke') {
       gebietOeffnen('hochland');
       toast('🌉 Die Brücke trägt! Das Kartenleser-Hochland ist offen.', 4500);
+      avatarJubel('Das Hochland ist offen! 🌉');
     }
   }
   speichern();
@@ -1014,7 +1079,7 @@ function talSprechen(b) {
   if (id === TD.auftraggeber) {
     if (t.aktiv) { blase(b, t.aktiv.text, false); return; }
     // Nach der ersten Runde im Tal: der große Auftrag (Brücke ins Hochland)
-    const neu = !offen.has('hochland') && t.runden >= 1 ? talRahmen.bruecke() : talRahmen.neu(stufe('tal'), t.verlauf);
+    const neu = !offen.has('hochland') && t.runden >= 1 ? talRahmen.bruecke() : talRahmen.neu(stufe('tal'), t.verlauf, art => freiGegeben(freigabeId('tal', art)));
     if (neu) {
       if (neu.platz && neu.art !== 'bruecke') bauen.leeren(neu.platz);       // Bauplatz für den neuen Auftrag frei räumen
       if (neu.material) neu.vorher = stand.inventar[BLOCKNR(neu.material)] || 0;
@@ -1239,17 +1304,23 @@ function menueZeigen() {
   const g = kartenGebiet(), st = stand.stufen[g];
   $('auftraege-titel').textContent = g === 'tal' ? 'Bauaufträge im Baumeister-Tal' : g === 'hochland' ? 'Schatzsuche im Hochland' : 'Aufträge im Hafendorf';
   fundeZeigen();
+  const jetzt = stufe(g), lehrer = lehrerStufe(g);
+  let lehrkraft = false;
   for (let s = 1; s <= 3; s++) {
-    const b = document.createElement('button');
-    b.textContent = s <= st.frei ? `Stufe ${s}` : `🔒 Stufe ${s}`;
-    b.disabled = s > st.frei;
-    b.classList.toggle('an', s === st.wahl);
+    const b = document.createElement('button'), zu = !stufeErlaubt(g, s);
+    if (zu && s <= st.frei) lehrkraft = true;
+    b.textContent = zu || (s > st.frei && s !== lehrer) ? `🔒 Stufe ${s}` : `Stufe ${s}`;
+    b.disabled = zu || s > st.frei || !!lehrer;
+    if (zu) b.title = 'Von deiner Lehrkraft noch gesperrt';
+    b.classList.toggle('an', s === jetzt);
     b.addEventListener('click', () => { st.wahl = s; speichern(); menueZeigen(); auftragZeigen(); });
     box.appendChild(b);
   }
   $('lesart').querySelectorAll('button').forEach(b => b.classList.toggle('an', b.dataset.l === stand.opt.lesart));
   $('abbrechen').hidden = !(rahmen && stand.auftraege[g].aktiv);
   [$('stufen'), $('lesart')].forEach(e => { e.hidden = !rahmen || !!TESTINSEL; });
+  $('stufen-hinweis').textContent = lehrer ? `Stufe ${jetzt} ist über den Link deiner Lehrkraft eingestellt.` : lehrkraft ? '🔒 Diese Stufe hat deine Lehrkraft noch gesperrt.' : '';
+  $('stufen-hinweis').hidden = $('stufen').hidden || !$('stufen-hinweis').textContent;
   $('lesart').hidden = $('lesart').hidden || g !== 'hafen';
 }
 

@@ -453,6 +453,16 @@ if katalog is not None:
     # Etappe 7: Freigaben verweisen auf Katalog-IDs (gelb – ein Tippfehler sperrt nur nichts)
     for t in (config.get('freigaben') or {}):
         if t not in ids: H(f'config.json: Freigabe für unbekannte Themen-ID {t} (wirkt nicht)')
+    # Die Insel (Etappe 7): Stufen und Bauaufträge hängen an Freigaben von Katalog-Themen
+    try:
+        ia_fg = json.loads(lies('daten/insel-auftraege.json')).get('freigaben') or {}
+    except Exception:
+        ia_fg = {}
+    for g, zuordnung in ia_fg.items():
+        for k, t in (zuordnung or {}).items():
+            if t not in ids: F(f'daten/insel-auftraege.json: freigaben.{g}.{k} nennt unbekannte Themen-ID {t}')
+            if g == 'hafen' and k == '1': F('daten/insel-auftraege.json: Stufe 1 im Hafendorf darf nicht gesperrt werden')
+    if 'allg.5.insel' not in ids: F('Katalog: Thema allg.5.insel (Die Insel) fehlt – spiele/insel.html fragt seine Freigabe ab')
 
 # ── 10. Kopfrechnen-Stufen (Etappe 4) ───────────────────
 try:

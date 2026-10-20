@@ -4,6 +4,10 @@
  "auftraege_je_runde": 5,
  "aufstieg_ab": 4,
  "korb_max": 12,
+ "freigaben": {
+  "hafen": { "2": "en.5.have-got", "3": "en.5.simple-past" },
+  "tal": { "felder": "ma.5.kopf.einmaleins", "lager": "ma.5.stellenwert" }
+ },
  "zahlen": [
   "zero",
   "one",

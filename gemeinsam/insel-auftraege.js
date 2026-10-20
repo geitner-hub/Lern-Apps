@@ -23,7 +23,7 @@
 //      rahmen.geben(auftrag, bewohnerId, korb) → null | { ok, versuch, text }  (bringen)
 //      rahmen.oeffnen(auftrag, ortId)       → { ok, versuch, text }           (suchen)
 //      rahmen.vielfalt(stufe, n)            → Anzahl verschiedener Aufträge in n Versuchen (zum Prüfen)
-//    erstelleTal(daten.tal, { plaetze })   → Bauaufträge im Baumeister-Tal (siehe unten): neu(stufe, verlauf),
+//    erstelleTal(daten.tal, { plaetze })   → Bauaufträge im Baumeister-Tal (siehe unten): neu(stufe, verlauf, erlaubt?),
 //                                            bruecke(), bezahlen(korb, betrag, auftrag)
 //    erstelleHochland(daten.hochland, { raster, geber }) → Schatzsuche: neu(stufe, verlauf), graben(auftrag, id),
 //                                            feld(ort) → Planquadrat, vielfalt(stufe)
@@ -220,11 +220,13 @@
     }
     const ARTEN = { zaun, felder, lager, haendler };
 
-    function neu(stufe, verlauf = []) {
+    function neu(stufe, verlauf = [], erlaubt) {
       const s = st(stufe);
+      const alle = (D.arten && D.arten[s]) || Object.keys(ARTEN);
+      const arten = erlaubt ? alle.filter(erlaubt) : alle;            // Freigaben der Lehrkraft (Etappe 7)
       let a = null;
       for (let i = 0; i < 12; i++) {
-        const art = wahl((D.arten && D.arten[s]) || Object.keys(ARTEN));
+        const art = wahl(arten.length ? arten : alle);
         a = ARTEN[art] && ARTEN[art](s);
         if (!a) continue;
         a.id = (a.art + ':' + a.text).slice(0, 200);

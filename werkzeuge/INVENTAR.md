@@ -36,7 +36,7 @@ Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv
 | `spiele/burg-verteidigung.html` | Tower Defense | – | Spiel | Allgemein · alle | sichtbar | ja | ja | – | ja | – (Spiel) |  |  |
 | `spiele/dorf.html` | Mein Dorf | – | Spiel | Allgemein · alle | sichtbar | – | – | – | – | Dorf selbst |  |  |
 | `spiele/expedition.html` | Entdecker-Expedition | – | Spiel | GPG · 6 | versteckt | über spiel-hilfen.js | ja | – | – | – (Spiel) |  |  |
-| `spiele/insel.html` | Meine Insel | – | Spiel | Allgemein · 5, 6 | sichtbar | über spiel-hilfen.js | ja | – | – | – (Spiel) |  |  |
+| `spiele/insel.html` | Meine Insel | `allg.5.insel` | Spiel | Allgemein · 5, 6 | sichtbar | über spiel-hilfen.js | ja | – | ja | – (Spiel) |  |  |
 | `spiele/kitchen-chaos.html` | Kitchen-Chaos | – | Spiel | Allgemein · alle | sichtbar | über spiel-hilfen.js | ja | – | – | – (Spiel) |  |  |
 | `spiele/room-detective.html` | Room Detective | – | Spiel | Englisch · 5, 6 | sichtbar | über spiel-hilfen.js | ja | – | – | – (Spiel) |  |  |
 | `spiele/runner.html` | RUN! | – | Spiel | Allgemein · alle | sichtbar | ja | ja | – | ja | – (Spiel) |  |  |
@@ -71,12 +71,12 @@ Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv
 | apps/mathe/rechen-arena.html | 52 | navbar.js | rechenArena_ballonHighscore, + über navbar.js |
 | apps/mathe/stellenwerttafel.html | 15 | freigabe.js, ueben.js, ziffernblock.js, navbar.js | + über navbar.js |
 | apps/mathe/zahlenstrahl.html | 17 | freigabe.js, ueben.js, ziffernblock.js, navbar.js | + über navbar.js |
-| apps/typen/lernweg.html | 38 | freigabe.js, navbar.js | lern-apps-results, lernwelt-admin-schluessel, lernwelt-lernweg, lernwelt-lernweg-zurueck, + über navbar.js |
+| apps/typen/lernweg.html | 39 | freigabe.js, navbar.js | lern-apps-results, lernwelt-admin-schluessel, lernwelt-lernweg, lernwelt-lernweg-zurueck, + über navbar.js |
 | apps/typen/uebung.html | 2 | freigabe.js, ueben.js, typen.js, navbar.js | + über navbar.js |
 | spiele/burg-verteidigung.html | 143 | navbar.js, aufgaben.js, avatar3d.js | lern-apps-results, lern-burg-wahl, lern-burg-rekorde, lernwelt-td-kampagne, + über navbar.js |
 | spiele/dorf.html | 88 | shared.js, config-api.js, dorf-kern.js, avatar3d.js, dorf-szene.js, navbar.js | lernwelt-dorf, lernwelt-dorf-besuch, + über navbar.js |
 | spiele/expedition.html | 33 | navbar.js, spiel-hilfen.js, karten-ansicht.js | lernwelt-expedition, + über navbar.js |
-| spiele/insel.html | 76 | navbar.js, spiel-hilfen.js, avatar3d.js, insel-welt.js, insel-steuerung.js, insel-figuren.js, insel-auftraege.js, insel-bauen.js, insel-karte.js | lernwelt-insel, + über navbar.js |
+| spiele/insel.html | 80 | navbar.js, spiel-hilfen.js, avatar3d.js, insel-welt.js, insel-steuerung.js, insel-figuren.js, insel-auftraege.js, insel-bauen.js, insel-karte.js, freigabe.js (nachgeladen), aufgaben.js (nachgeladen) | lernwelt-insel, + über navbar.js |
 | spiele/kitchen-chaos.html | 38 | navbar.js, spiel-hilfen.js, avatar3d.js | lern-kitchen-chaos, + über navbar.js |
 | spiele/room-detective.html | 59 | navbar.js, spiel-hilfen.js | lernwelt-room-detective, + über navbar.js |
 | spiele/runner.html | 51 | navbar.js, aufgaben.js, avatar3d.js | lern-runner-wahl, lern-runner-rekorde, + über navbar.js |

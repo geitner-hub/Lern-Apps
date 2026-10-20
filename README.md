@@ -21,7 +21,7 @@ apps/typen/uebung.html                  Aufgabentyp-Baukasten: eine Seite für a
 spiele/               RUN!, Tower Defense, Mein Dorf (dorf.html), Tauziehen-Duell (tauziehen.html), Wort des Tages (wort-des-tages.html),
                       Zauberwort (zauberwort.html), Kitchen-Chaos (kitchen-chaos.html),
                       Entdecker-Expedition (expedition.html), Room Detective (room-detective.html),
-                      Die Insel (insel.html, im Aufbau: Probelauf)
+                      Die Insel (insel.html: Hafendorf, Baumeister-Tal, Kartenleser-Hochland)
 daten/                katalog.json (Inhalts-Katalog mit Themen-IDs), vokabeln5.json, vokabeln6.json, lernwelt-inhalte.json, dorf-inhalte.json,
                       woerter-en.json (Prüfliste fürs Wort des Tages, ENABLE-Wortliste, gemeinfrei)
                       kitchen-chaos.json (Schauplätze, Zutaten, Satzrahmen, Stufen)
@@ -449,6 +449,9 @@ und das Enter im Eingabefeld mit `e.stopPropagation()` abschließen. Abschalten:
 
 - `index.html?kl=5` – Startseite nur mit Klasse-5-Apps (auch als QR über „QR zur Startseite“)
 - `index.html?tag=Vokabeln`, `index.html?q=rechnen`
+- `spiele/insel.html?gebiet=tal` – Die Insel startet am Eingang dieses Gebiets (`hafen`, `tal`, `hochland`), wenn es für das
+  Kind schon offen ist (sonst Hinweis, wie man hinkommt); `&stufe=2` spielt für diese Sitzung Stufe 1–3 (wird nicht
+  gespeichert und schaltet nichts frei; Freigaben der Lehrkraft gelten weiter). Ohne `gebiet` gilt `stufe` überall.
 
 ## Sicherheit
 
@@ -735,13 +738,13 @@ Englisch-Spiel mit zwei Modi, je Runde 3 Zimmer bzw. 3 Fälle, Lesen oder Hören
 - **Inhalte erweitern:** `daten/room-detective.json` – neue Gegenstände (Emoji + Wort aus dem Buch), Kundennamen, Fälle,
   Satzrahmen je Stufe. Neue Möbel brauchen zusätzlich eine Zeichnung und Plätze im Code (`MOEBEL_SVG`, `moebelPlaetze`).
 
-## Die Insel (spiele/insel.html, im Aufbau)
+## Die Insel (spiele/insel.html)
 
 Kleine, offene 3D-Welt im Klötzchen-Stil: Die Kinder laufen mit ihrer Pass-Figur per Joystick über eine Insel; das
 Gelernte verändert später die Welt (Hinkommen, Bauen, Handeln – nie eingeblendete Fragen). Plan: Aktionsplan „Die
 Insel“ (8 Etappen). Auf der Startseite als „Meine Insel“ (Eintrag über den Admin).
 
-- **Stand: Etappe 6 – Kartenleser-Hochland (GPG).** Welt mit drei Gebieten aus `daten/insel.json`: **Hafendorf** (Süden,
+- **Stand: Etappe 7 – Einbindung in die Lernwelt.** Welt mit drei Gebieten aus `daten/insel.json`: **Hafendorf** (Süden,
   Startgebiet, offen), **Baumeister-Tal** (Nordwesten, hinter einem Meeresarm – öffnet in Etappe 5 die Fähre) und
   **Kartenleser-Hochland** (Nordosten, hinter Fluss und Steilkante – öffnet die Brücke aus dem Tal). Geschlossene Gebiete
   sperren den Weg (Wasser, Steilkante, Zaun am Fährsteg, Hinweis beim Anlaufen); beim Betreten eines Gebiets erscheint
@@ -795,6 +798,15 @@ Insel“ (8 Etappen). Auf der Startseite als „Meine Insel“ (Eintrag über de
   `insel-auftraege.json` → `hochland` (Bewohner, Landmarken mit `von`, Schätze, Satzrahmen je Art und Stufe, Maßstab,
   Sammelstücke); Planquadrate: `raster` in `insel.json`. Aufträge werden aus allen Paaren Schatz–Landmarke gebildet
   (Maßstab nur bei Vielfachen von 5); derselbe Schatz kommt frühestens nach drei anderen wieder.
+- **Einbindung in die Lernwelt** (Etappe 7): Die **Spielsperre** gilt wie bei allen Spielen (navbar.js). **Freigaben**:
+  Katalog-Thema `allg.5.insel` (Infokarte „Meine Insel“) sperrt das ganze Spiel; einzelne Stufen und Bauaufträge hängen
+  an den Freigaben der Lern-Themen (`insel-auftraege.json` → `freigaben`): Hafendorf Stufe 2 = `en.5.have-got`, Stufe 3
+  = `en.5.simple-past`, Gemüsefeld = `ma.5.kopf.einmaleins`, Lager = `ma.5.stellenwert`. Gesperrte Stufen stehen im
+  Pausenmenü mit 🔒, gespielt wird dann die höchste offene Stufe (Stufe 1 ist nie gesperrt, die Brücke auch nicht);
+  freigeschaltete Stufen bleiben im Spielstand. **Wortkarten aus „Meine Themen“**: Im richtigen Paket im Hafendorf liegt
+  eine Wortkarte (englisches Nomen mit Übersetzung) aus den Vokabeln, die das Kind schon geübt hat – ohne geübte
+  Vokabeln keine Karte. **Avatar-Jubel** (`LernAvatar.appear`) am Rundenende und wenn sich ein Gebiet öffnet.
+  **Lehrer-Links** siehe „Links mit Voreinstellungen“.
 - **Auftrags-Bausteine erweitern** (`daten/insel-auftraege.json`): `bewohner` (Platz-ID aus `insel.json`, Look aus den
   Avatar-Teilen, `merkmale` – müssen zum Look passen und dürfen bei keinem anderen Bewohner vorkommen –, `ort`, `saetze`
   für Small Talk), `quellen` (Warenkisten: Wort `eins`/`viele`, Emoji, Farbe, Ortsangabe je Stufe), `suchorte`
