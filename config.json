@@ -531,7 +531,7 @@
       "fach": "Allgemein",
       "emoji": "🏝️",
       "beschreibung": "Löse Quests und baue auf deiner eigenen Insel",
-      "hidden": true,
+      "hidden": false,
       "klassen": [
         5,
         6
