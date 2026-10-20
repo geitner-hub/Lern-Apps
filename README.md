@@ -361,6 +361,10 @@ selbst im Admin unter „🎯 Unterricht“), Wiederholung, Fehler-Training, Inf
     `ziel: { thema: <Stufen-ID>, runden, prozent }` hakt sich selbst ab: gezählt werden gute Runden ab dem ersten Öffnen des
     Lernwegs aus dem Verlauf in `lern-apps-results` (navbar.js speichert dafür je Runde die Themen-ID `s`).
   - Aufgabenart `frei` (offene Schreibaufgabe mit `text` und `beispiel`).
+  - Schritt `id`: fester Schlüssel statt Position. Wer in einen Lernweg, den Kinder schon nutzen, Schritte **einfügt**, gibt allen
+    bestehenden Schritten ihre alte Position als `id` ("0", "1", …) und dem neuen eine eigene (z. B. "v") – sonst verrutschen Haken.
+  - Schritt `art: "vokabeln"` (📘): die Wörter der Unit **thematisch in den Stationen**, die sie brauchen – keine große
+    „Schreib alle Vokabeln ab“-Station (Unit 1 hat sie als Ausnahme am Ende).
 - **Zurück zum Lernweg:** Wer aus dem Lernweg eine App öffnet, bekommt dort oben den Knopf „🧭 Zurück zum Lernweg“
   (`gemeinsam/lernweg-zurueck.js`, nur nachgeladen, wenn `lernwelt-lernweg-zurueck` im Tab gesetzt ist).
 - **Startseite:** zugeteilte Lernwege stehen ganz oben als großes Banner mit Fortschrittsring und nächster Station.

@@ -169,7 +169,7 @@
   const ID = new URLSearchParams(location.search).get('weg') || 'en.6.lernweg-u1';
   const app = document.getElementById('app');
   const esc = t => String(t == null ? '' : t).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-  const SYM = { buch: '📗', heft: '✏️', aufgaben: '📝', hefteintrag: '📒', kontrolle: '✅', app: '📱', extra: '★', hoeren: '🎧', partner: '👥', schreiben: '✍️' };
+  const SYM = { buch: '📗', heft: '✏️', aufgaben: '📝', hefteintrag: '📒', kontrolle: '✅', app: '📱', extra: '★', hoeren: '🎧', partner: '👥', schreiben: '✍️', vokabeln: '📘' };
   const SMILEY = ['😟', '😐', '😀'];
   const NIVEAU = [null, { s: '★', n: 'Basis', t: 'mit Hilfen, weniger Aufgaben' }, { s: '★★', n: 'Standard', t: 'alle Pflichtaufgaben' }, { s: '★★★', n: 'Profi', t: 'mit Zusatzaufgabe' }];
   let D = null, codeOffen = '';
@@ -190,7 +190,11 @@
   // ── Niveaus (nur wenn der Lernweg sie hat): Aufgaben/Schritte mit "niveau": [1, 2] erscheinen nur dort ──
   const niveauVon = (st, s) => s.niveaus ? (Number(st.n[s.nr]) || 2) : 0;
   const passt = (x, nv) => !nv || !Array.isArray(x.niveau) || x.niveau.includes(nv);
-  const schritteVon = (st, s) => s.schritte.map((x, i) => ({ x, i })).filter(o => passt(o.x, niveauVon(st, s)));
+  // Schlüssel eines Schritts: feste "id" (wenn gesetzt), sonst die Position – so lassen sich später Schritte einfügen,
+  // ohne dass abgehakte Schritte der Kinder verrutschen (dann allen bestehenden Schritten ihre alte Position als id geben)
+  const schrittKey = (x, i) => x.id != null ? String(x.id) : String(i);
+  const schritteVon = (st, s) => s.schritte.map((x, i) => ({ x, i: schrittKey(x, i) })).filter(o => passt(o.x, niveauVon(st, s)));
+  const findeSchritt = (s, key) => s.schritte.find((x, i) => schrittKey(x, i) === String(key));
   const aufgabenVon = (st, s) => s.aufgaben.filter(a => passt(a, niveauVon(st, s)));
 
   // ── App-Schritte: zählen gute Runden seit dem ersten Besuch (Verlauf aus lern-apps-results, navbar.js) ──
@@ -210,7 +214,7 @@
   function appsAbhaken(st) {
     let neu = false;
     D.stationen.forEach(s => s.schritte.forEach((x, i) => {
-      const k = s.nr + '.' + i;
+      const k = s.nr + '.' + schrittKey(x, i);
       if (x.art !== 'app' || !x.ziel || st.s[k]) return;
       const a = appStand(x, st);
       if (a && a.n >= a.soll) { st.s[k] = 1; neu = true; }
@@ -422,7 +426,7 @@
     if (t.dataset.codeOk !== undefined) { codePruefen(t.dataset.codeOk); return; }
     if (t.dataset.niveau) { st.n[nr] = Number(t.dataset.niveau); sichern(st); station(nr); return; }
     if (t.dataset.schritt !== undefined) {
-      const s = D.stationen.find(x => x.nr === nr), x = s && s.schritte[Number(t.dataset.schritt)];
+      const s = D.stationen.find(x => x.nr === nr), x = s && findeSchritt(s, t.dataset.schritt);
       const k = nr + '.' + t.dataset.schritt;
       if (x && x.art === 'kontrolle' && s.code && !st.s[k]) {          // Kontroll-Code nötig
         codeOffen = k; station(nr);
