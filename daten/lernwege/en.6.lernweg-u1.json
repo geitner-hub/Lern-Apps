@@ -10,7 +10,8 @@
   "Ich schreibe alles ins Heft: Überschrift „Station 1 – …“, dann A, B, C.",
   "Fertig? → mit dem Heft zur Kontrollstation, mit GRÜN verbessern, auf dem Klassen-Laufzettel abhaken.",
   "Frage? → erst Buch, dann Nachbar, dann Lehrer.",
-  "Alle Stationen fertig? → ★ Extras."
+  "Alle Stationen fertig? → ★ Extras.",
+  "Am Ende stehen alle Vokabeln aus Unit 1 in meinem Vokabelheft (Station 8)."
  ],
  "hefteintraege": {
   "2": {
@@ -896,6 +897,38 @@
      ]
     }
    ]
+  },
+  {
+   "nr": 8,
+   "ico": "📘",
+   "titel": "Mein Vokabelheft",
+   "kurz": "Zum Schluss · alle Vokabeln aus Unit 1",
+   "schritte": [
+    {
+     "art": "heft",
+     "text": "Schreibe alle Vokabeln aus Unit 1 in dein Vokabelheft: Buch ab S. 163 (Vocabulary, Unit 1). Links Englisch, rechts Deutsch."
+    },
+    {
+     "art": "heft",
+     "text": "Kontrolliere: Fehlt keine Vokabel? Ist alles richtig geschrieben? Verbessere mit Grün."
+    },
+    {
+     "art": "app",
+     "text": "Übe im Vokabeltrainer Klasse 6 → Unit 1: 1 Runde mit mindestens 80 %.",
+     "link": "../englisch/vokabeltrainer.html?klasse=6",
+     "ziel": {
+      "thema": "en.6.vok.u1",
+      "runden": 1,
+      "prozent": 80
+     }
+    },
+    {
+     "art": "heft",
+     "text": "Zeig dein Vokabelheft deiner Lehrkraft."
+    }
+   ],
+   "aufgaben": [],
+   "schluss": true
   }
  ],
  "probe": [
