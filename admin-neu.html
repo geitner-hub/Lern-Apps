@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8"/>
+  <script src="gemeinsam/umgebung.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin (neu) – Lernwelt</title>
+  <link rel="stylesheet" href="gemeinsam/fonts.css">
+  <meta name="robots" content="noindex">
+  <!-- Admin-Umbau Etappe 0: Gerüst des neuen Admins. Noch ohne Funktionen und nirgends verlinkt.
+       Gleiche Anmeldung wie admin.html (ConfigAPI, Schlüssel 7 Tage). admin.html bleibt bis Etappe 2 der Admin. -->
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#0f0e1a; --surface:#1b1929; --surface2:#221f35;
+      --border:rgba(255,255,255,.07); --border2:rgba(255,255,255,.13);
+      --accent:#e6a817; --indigo:#6366f1; --indigo2:#818cf8;
+      --red:#f87171; --text:#f1f0fb; --text2:rgba(241,240,251,.65); --muted:rgba(241,240,251,.35);
+    }
+    body{font-family:'Nunito',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+    /* ── Anmeldung ── */
+    #anmeldung{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--bg);background-image:radial-gradient(circle,rgba(99,102,241,.08) 1.5px,transparent 1.5px);background-size:28px 28px;}
+    .box{background:var(--surface);border:1px solid var(--border2);border-radius:20px;padding:2.5rem 2rem;width:min(320px,calc(100vw - 2rem));text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.5);}
+    .box h1{font-family:'Fredoka One',cursive;font-weight:400;font-size:1.9rem;margin-bottom:.25rem;color:#fff;}
+    .box h1 span{color:var(--accent);}
+    .box p{font-size:.85rem;color:var(--muted);margin-bottom:1.5rem;}
+    .box input{width:100%;padding:.8rem 1rem;background:var(--surface2);border:1px solid var(--border2);border-radius:10px;color:var(--text);font:inherit;font-size:1rem;outline:none;text-align:center;letter-spacing:3px;}
+    .box input:focus{border-color:var(--accent);}
+    .fehler{color:var(--red);font-size:.8rem;margin-top:.5rem;min-height:1.1rem;}
+    .knopf{background:linear-gradient(135deg,var(--indigo),#7c3fc5);border:none;color:#fff;padding:.85rem 1.5rem;border-radius:10px;cursor:pointer;font:inherit;font-weight:800;font-size:.95rem;width:100%;margin-top:.8rem;min-height:44px;}
+    .knopf:disabled{opacity:.6;}
+
+    /* ── Admin ── */
+    #admin{display:none;}
+    .kopf{background:var(--surface);border-bottom:1px solid var(--border);padding:.85rem 1.25rem;display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;position:sticky;top:0;}
+    .wortmarke{font-family:'Fredoka One',cursive;font-size:1.25rem;color:#fff;}
+    .wortmarke em{color:var(--accent);font-style:normal;}
+    .marke{font-size:.66rem;font-weight:800;color:var(--indigo2);border:1px solid rgba(99,102,241,.4);border-radius:99px;padding:.1rem .5rem;}
+    .kopf-rechts{margin-left:auto;display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;}
+    .klein{font-size:.72rem;color:var(--muted);font-weight:700;}
+    .btn{padding:.55rem 1rem;min-height:44px;border-radius:9px;font:inherit;font-weight:800;font-size:.82rem;cursor:pointer;border:1px solid var(--border2);background:var(--surface2);color:var(--text);text-decoration:none;display:inline-flex;align-items:center;}
+    main{max-width:900px;margin:0 auto;padding:2rem 1.25rem;}
+    .leer{background:var(--surface);border:1px dashed var(--border2);border-radius:14px;padding:2rem;text-align:center;color:var(--text2);line-height:1.6;}
+    .leer h2{font-family:'Fredoka One',cursive;font-weight:400;color:var(--accent);margin-bottom:.4rem;}
+  </style>
+</head>
+<body>
+
+<div id="anmeldung">
+  <div class="box">
+    <h1>🧭 Lern<span>welt</span></h1>
+    <p>Neuer Admin (im Aufbau)</p>
+    <input type="password" id="pw" placeholder="Passwort" autocomplete="off" aria-label="Passwort"/>
+    <div class="fehler" id="pw-fehler" role="alert"></div>
+    <button class="knopf" id="btn-anmelden">Anmelden</button>
+  </div>
+</div>
+
+<div id="admin">
+  <header class="kopf">
+    <span class="wortmarke">🧭 Lern<em>welt</em></span>
+    <span class="marke">Admin neu</span>
+    <span class="klein" id="version"></span>
+    <div class="kopf-rechts">
+      <span class="klein" id="sitzung"></span>
+      <a class="btn" href="admin.html">Zum bisherigen Admin</a>
+      <button class="btn" id="btn-abmelden">🔒 Abmelden</button>
+    </div>
+  </header>
+  <main>
+    <div class="leer">
+      <h2>Hier entsteht der neue Admin</h2>
+      Etappe 0 – noch ohne Funktionen. Alles Bisherige läuft weiter über <a href="admin.html" style="color:var(--indigo2)">admin.html</a>.
+    </div>
+  </main>
+</div>
+
+<script src="gemeinsam/shared.js"></script>
+<script src="gemeinsam/config-api.js"></script>
+<script>
+'use strict';
+(function () {
+  const $ = id => document.getElementById(id);
+  $('version').textContent = (window.LW && LW.versionText) ? LW.versionText() : '';
+
+  function zeigeAdmin() {
+    $('anmeldung').style.display = 'none';
+    $('admin').style.display = 'block';
+    const bis = ConfigAPI.sessionExpiry();
+    $('sitzung').textContent = bis
+      ? 'Angemeldet bis ' + bis.toLocaleDateString('de-DE', { weekday: 'short', day: '2-digit', month: '2-digit' }) : '';
+  }
+  function zeigeAnmeldung(text) {
+    $('admin').style.display = 'none';
+    $('anmeldung').style.display = 'flex';
+    $('pw-fehler').textContent = text || '';
+    $('pw').focus();
+  }
+
+  async function anmelden() {
+    const pw = $('pw').value, knopf = $('btn-anmelden');
+    if (!pw) { $('pw-fehler').textContent = 'Bitte Passwort eingeben'; return; }
+    knopf.disabled = true; knopf.textContent = 'Prüfe …'; $('pw-fehler').textContent = '';
+    const res = await ConfigAPI.login(pw);
+    knopf.disabled = false; knopf.textContent = 'Anmelden';
+    $('pw').value = '';
+    if (res.ok) zeigeAdmin();
+    else zeigeAnmeldung(res.status === 401 ? '❌ Falsches Passwort'
+                      : res.status === 429 ? '⏳ ' + res.error
+                      : '⚠ ' + (res.error || 'Fehler'));
+  }
+
+  $('btn-anmelden').addEventListener('click', anmelden);
+  $('pw').addEventListener('keydown', e => { if (e.key === 'Enter') anmelden(); });
+  $('btn-abmelden').addEventListener('click', () => { ConfigAPI.logout(); zeigeAnmeldung('Abgemeldet.'); });
+
+  // Auf diesem Gerät schon angemeldet? → Schlüssel serverseitig prüfen (wie admin.html)
+  (async () => {
+    if (!ConfigAPI.hasSession()) return;
+    const res = await ConfigAPI.checkSession();
+    if (res.ok) zeigeAdmin();
+    else zeigeAnmeldung(res.status === 401 ? 'Anmeldung abgelaufen – bitte Passwort eingeben.' : (res.error ? '⚠ ' + res.error : ''));
+  })();
+})();
+</script>
+</body>
+</html>
