@@ -88,7 +88,7 @@ und gelbe Hinweise. Manuelle Checkliste nach Uploads: `werkzeuge/RAUCHTEST.md`.
 - **Lernwege** (`apps/typen/lernweg.html?weg=<ID>` + `daten/lernwege/<ID>.json`, ID mit `.lernweg-`): Stationenarbeit
   mit digitalem Laufzettel, Arbeit im Heft, Kontrolle mit gedrucktem Lösungsheft – bewusst ohne automatische Kontrolle und
   ohne `saveResult`. **Keine normale App** (nicht in config.json): ohne Zuteilung gesperrt (`LernFreigabe.zugeteilt`,
-  umgekehrt zu `erlaubt`); Zuteilung im Admin Tab „🗺️ Lernwege“ schreibt `freigaben[ID][wer] = 'offen'`.
+  umgekehrt zu `erlaubt`); Zuteilung im Admin unter Gruppen → 🗺️ Lernwege schreibt `freigaben[ID][wer] = 'offen'`.
   Zugeteilte Lernwege zeigt die Startseite unter „🧭 Mein Lernweg“; mit Admin-Anmeldung immer als Vorschau.
   Neuer Lernweg = JSON-Datei + Katalog-Thema (quelle `apps/typen/lernweg.html`, parameter `weg=<ID>`) + sw.js NACHLADEN.
   Bausteine (Niveaus, Wahl, App-Schritte mit Auto-Haken, Kontroll-Code, Auto-Start): README → Lernwege. Bestehende Lernwege
@@ -97,16 +97,15 @@ und gelbe Hinweise. Manuelle Checkliste nach Uploads: `werkzeuge/RAUCHTEST.md`.
   prüft Admin-Login und schreibt ausschließlich `config.json` per GitHub-API; jedes Feld wird validiert. Neue
   Config-Felder müssen auch im Worker erlaubt/geprüft werden. Sicherungskarten-Sync: `cloudflare/sync.js`,
   `gemeinsam/sync.js`. Medienbereich (Dateien per QR-Code/Kurzlink `/m/<code>`, ohne Bezug zur Lernwelt):
-  `cloudflare/medien.js` (R2-Binding `MEDIEN`, Tabelle `medien` in `SYNC_DB`) + Admin-Tab `gemeinsam/admin/medien.js`;
+  `cloudflare/medien.js` (R2-Binding `MEDIEN`, Tabelle `medien` in `SYNC_DB`) + Admin-Modul Medien → Dateien (`gemeinsam/admin/medien.js`);
   läuft nicht über config.json, Einrichtung: `cloudflare/ANLEITUNG-MEDIEN.md`.
-- **Admin:** `admin.html` lädt `gemeinsam/admin/*.js` in fester Reihenfolge (`kern` zuerst, `start` zuletzt);
-  Änderungen landen als Entwurf (`lernwelt-admin-entwurf`) und werden gesammelt veröffentlicht.
-  **Admin-Umbau (läuft):** neuer Admin `admin-neu.html` entsteht daneben (Inventar: `werkzeuge/admin-inventar.md`).
-  Datenschicht `gemeinsam/admin/store.js` (LWAdmin.store, gleicher Entwurf wie der alte Admin), Modul-System und
-  Navigation `module.js` (sechs Bereiche, Adressen `#/bereich/modul`), Rahmen `rahmen.js` (zuletzt laden).
-  Neues Modul = Datei unter `gemeinsam/admin/module/` mit `LWAdmin.modul({…})` + Zeile in `admin-neu.html`.
-  Etappe 2: alle Funktionen des alten Admins stecken als `LWAdmin.altModul({ teil })` drin – die alten Dateien laufen
-  unverändert über `gemeinsam/admin/bruecke.js` (ersetzt kern.js, schreibt über den Store), ihre Reiter-HTML steht
-  versteckt in `#lw-park` von `admin-neu.html` (gleiche ids). Stile beider Admins: `gemeinsam/admin/admin.css`.
+- **Admin:** `admin.html` – sechs Bereiche (Start, Inhalte, Gruppen, Motivation, Medien, System), Adressen
+  `#/bereich/modul`. Datenschicht `gemeinsam/admin/store.js` (`LWAdmin.store`): alle Änderungen landen als Entwurf
+  (`lernwelt-admin-entwurf`) und werden gesammelt veröffentlicht. Modul-System `module.js`, Rahmen `rahmen.js`
+  (zuletzt laden). Neues Modul = Datei unter `gemeinsam/admin/module/` mit `LWAdmin.modul({…})` + Zeile in
+  `admin.html` (pruefen.py prüft das). Die Funktionsdateien `gemeinsam/admin/*.js` (apps, ordnen, tags, freigaben,
+  dorf, medien …) laufen über `bruecke.js` (globale `CONFIG`, `saveConfig`, `buildAll` – schreibt über den Store);
+  ihr HTML steht versteckt in `#lw-park` von `admin.html` (feste ids), `LWAdmin.altModul({ teil })` hängt es ein.
+  Stile: `gemeinsam/admin/admin.css`. Bestandsaufnahme und Plan: `werkzeuge/admin-inventar.md`.
 - **Testumgebung:** Kopie im Repo `Lern-Apps-test`; umgebung.js erkennt das am Repo-Namen, setzt das
   Präfix `lwtest-` vor alle Speicherschlüssel und sperrt Schreibzugriffe auf den Worker.

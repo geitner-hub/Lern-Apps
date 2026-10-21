@@ -18,7 +18,7 @@ const MD = {
   bearbeiten: null, samInhalt: [], qr: null,
 };
 
-// ── Einstieg (aus kern.js beim Öffnen des Tabs) ────────
+// ── Einstieg (beim Öffnen des Moduls Medien → Dateien) ──
 function buildMedien() {
   mdStil();
   mdGeruest();

@@ -2,7 +2,7 @@
 //  Lernwelt-Admin – Freigaben und Fokus (Infrastruktur Etappe 7)
 //  Seit Etappe 8 auch der Schalter für „Heute für dich“ (config.heute = false schaltet ab)
 //  und die Gruppen-Auswertung (nur lesen, Daten beim Sync-Worker). Tab heißt „🎯 Unterricht“.
-//  Teil von admin.html. Alle Module teilen sich die globalen Variablen aus kern.js (CONFIG, ghSha …)
+//  Teil von admin.html, läuft über gemeinsam/admin/bruecke.js (CONFIG, saveConfig, buildAll …)
 //  und werden in admin.html in fester Reihenfolge geladen.
 //
 //  Schreibt zwei Felder in config.json (Format und Auswertung: gemeinsam/freigabe.js):

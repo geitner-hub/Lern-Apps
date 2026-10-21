@@ -1,5 +1,5 @@
 // Admin-Modul Medien → Dateien: Dateien per QR-Code und Kurzlink (medien.js, wirkt sofort)
-// Teil des bisherigen Admins, eingehängt über die Brücke (Admin-Umbau Etappe 2)
+// HTML in admin.html (#lw-park), Logik in der genannten Funktionsdatei, eingehängt über bruecke.js
 'use strict';
 
 LWAdmin.altModul({

@@ -17,7 +17,7 @@
 //  Aufräum-Funktion zurück, die abbestellt und danach nicht mehr in host zeichnet.
 //
 //  ctx = { store, gehe(bereich, modul), toast(text, fehler) }
-//  Danach die Datei in admin-neu.html bei den Modulen eintragen (pruefen.py prüft das).
+//  Danach die Datei in admin.html bei den Modulen eintragen (pruefen.py prüft das).
 // ═══════════════════════════════════════════════════════
 'use strict';
 
@@ -91,7 +91,7 @@ window.LWAdmin = window.LWAdmin || {};
     host.innerHTML = '';
     if (!mod) {
       host.innerHTML = `<div class="lw-leer"><b>${escHtml(b.text)}</b><br>
-        Noch leer – kommt in Etappe 2 aus dem bisherigen Admin hierher. Bis dahin: <a href="admin.html">bisheriger Admin</a>.</div>`;
+        Hier gibt es noch keine Module.</div>`;
       return;
     }
     try { aufraeumen = mod.zeigen(host, ctx); }

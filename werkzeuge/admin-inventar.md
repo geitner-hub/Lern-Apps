@@ -1,7 +1,8 @@
 # Admin-Inventar (Admin-Umbau, Etappe 0)
 
-Bestandsaufnahme des alten Admins (`admin.html` + `gemeinsam/admin/*.js`, Stand v70) als Grundlage für den
-Umbau. **Etappe 2** hakt jede Zeile ab, sobald die Funktion im neuen Admin (`admin-neu.html`) gleich funktioniert.
+Bestandsaufnahme des Admins vor dem Umbau (`admin.html` + `gemeinsam/admin/*.js`, Stand v70) als Grundlage für den
+Umbau. Seit Etappe 2 (v73) gibt es nur noch den neuen Admin unter `admin.html`; `kern.js` und `start.js` sind
+durch `store.js`, `bruecke.js` und `rahmen.js` ersetzt. **Etappe 2** hat jede Zeile abgehakt, die Funktion steht im neuen Admin (`admin.html`).
 ☑ = im neuen Admin vorhanden (Etappe 2, über die Brücke `gemeinsam/admin/bruecke.js`; Adresse in Klammern).
 **Etappe 4** nutzt die Spalte „Suchbegriffe“ für den Suchindex.
 
@@ -101,10 +102,12 @@ Secrets/Bindings: `ADMIN_PASSWORD`, `GITHUB_TOKEN`, optional `LOGIN_KV`, `SYNC_D
 - **Versionsverlauf gibt es schon in klein** (letzte 5 Commits über die öffentliche GitHub-API, ohne Worker).
   → Etappe 3 baut darauf auf (letzte 30, Ansehen, Wiederherstellen über einen Worker-Lese-Endpunkt).
 - **„Letzte Aktionen“ im Dashboard** gilt nur für die laufende Sitzung. → Etappe 3: Änderungsprotokoll aus den Commit-Nachrichten.
-- **Größte Module**: `medien.js` (781 Zeilen), `freigaben.js` (609 Zeilen, Unterricht + Lernwege + Spielsperre + Auswertung).
-  → Etappe 2: aufteilen, `freigaben.js` mindestens in Freigaben, Fokus/Heute, Spielsperre, Lernwege, Auswertung.
-- **Alle Module teilen globale Variablen aus `kern.js`** (`CONFIG`, `ghSha`, `saveConfig`, `showToast` …).
-  → Etappe 1: Datenschicht `store.js` ersetzt diese; beim Umzug (Etappe 2) jedes Modul darauf umstellen.
+- **Größte Module**: `medien.js` (781 Zeilen, 14 KB gz), `freigaben.js` (609 Zeilen, 13 KB gz). Beide liegen weit unter
+  dem Budget von 55 KB je Datei. Etappe 2 hat sie deshalb nicht aufgeteilt (die Teile teilen sich Zustand wie `FR`
+  und `frCfg`; Aufteilen hätte nur Risiko gebracht). Aufteilen, sobald eine davon an Funktionen wächst.
+- **Alle Module teilten globale Variablen aus `kern.js`** (`CONFIG`, `ghSha`, `saveConfig`, `showToast` …).
+  → Etappe 2: `bruecke.js` stellt sie bereit und schreibt über `store.js`; die Funktionsdateien blieben dadurch
+  unverändert. Ein Modul darf später einzeln auf `ctx.store` umgestellt werden (dann aus der Brücke nehmen).
 - **Spielsperre-Ausnahmen und Fokus haben schon `ab`/`bis`**, Freigaben kennen ein Datum („ab JJJJ-MM-TT“).
   → Etappe 6 übernimmt diese Felder, statt neue `start`/`ende` daneben zu stellen, wo es sie schon gibt.
 - Speicher-Schlüssel des Admins: `lernwelt-admin-entwurf`, `lernwelt-admin-vorschau`, `lernwelt-admin-schluessel`,

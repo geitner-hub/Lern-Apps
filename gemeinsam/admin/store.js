@@ -11,9 +11,8 @@
 //    LWAdmin.store.verwerfen()                    // Entwurf weg, veröffentlichter Stand gilt wieder
 //    LWAdmin.store.abonnieren(fn)                 // fn(store) nach jeder Änderung → Abmelde-Funktion
 //
-//  Der Entwurf liegt unter demselben Schlüssel und im selben Format wie im bisherigen
-//  Admin (gemeinsam/admin/kern.js): { basis: sha, aenderungen: [text], zeit, config }.
-//  Beide Admins sehen also denselben Entwurf, solange sie parallel laufen.
+//  Entwurf im localStorage (lernwelt-admin-entwurf), Format seit dem bisherigen Admin unverändert:
+//  { basis: sha, aenderungen: [text], zeit, config } – ein Entwurf von vor dem Umbau wird übernommen.
 //  Abhängigkeiten: shared.js, config-api.js
 // ═══════════════════════════════════════════════════════
 'use strict';

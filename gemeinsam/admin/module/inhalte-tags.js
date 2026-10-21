@@ -1,5 +1,5 @@
 // Admin-Modul Inhalte → Tags und Klassen: Eigene Tags, Tags und Klassen je App (tags.js)
-// Teil des bisherigen Admins, eingehängt über die Brücke (Admin-Umbau Etappe 2)
+// HTML in admin.html (#lw-park), Logik in der genannten Funktionsdatei, eingehängt über bruecke.js
 'use strict';
 
 LWAdmin.altModul({
