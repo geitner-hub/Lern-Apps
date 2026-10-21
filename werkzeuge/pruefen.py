@@ -36,7 +36,7 @@
 #   15. Die Insel: daten/insel-auftraege.json – Bewohner (Platz, Look, eindeutige Merkmale), Warenkisten
 #       und Paket-Orte im Hafendorf und je mindestens 20 Blöcke auseinander, Satzrahmen für alle Stufen.
 #   17. Neuer Admin (Admin-Umbau Etappe 1): jede Datei unter gemeinsam/admin/module/ ist in admin-neu.html
-#       eingebunden (und umgekehrt), meldet sich mit LWAdmin.modul an, Modul-IDs sind eindeutig,
+#       eingebunden (und umgekehrt), meldet sich mit LWAdmin.modul/altModul an (Teile stehen in admin-neu.html), IDs eindeutig,
 #       Bereiche gültig; store.js und module.js vor den Modulen, rahmen.js als letztes Admin-Skript.
 # ═══════════════════════════════════════════════════════
 import gzip, json, math, os, re, sys
@@ -611,7 +611,9 @@ if Path('admin-neu.html').is_file():
     ids = {}
     for d in dateien:
         t = lies(d)
-        if 'LWAdmin.modul(' not in t: F(f'{d}: meldet sich nicht mit LWAdmin.modul(…) an'); continue
+        if 'LWAdmin.modul(' not in t and 'LWAdmin.altModul(' not in t: F(f'{d}: meldet sich nicht mit LWAdmin.modul(…) an'); continue
+        for teil in re.findall(r"teil:\s*'([^']+)'", t):        # Teil des bisherigen Admins (Brücke, Etappe 2)
+            if f'id="{teil}"' not in an: F(f'{d}: Teil {teil} fehlt in admin-neu.html (#lw-park)')
         for mid, ber in re.findall(r"id:\s*'([^']+)',\s*bereich:\s*'([^']+)'", t):
             if mid in ids: F(f'{d}: Modul-ID {mid} doppelt (auch in {ids[mid]})')
             ids[mid] = d
