@@ -314,3 +314,21 @@ textarea{resize:vertical;min-height:65px;}
 .aw-balken{height:8px;border-radius:99px;background:var(--surface2);min-width:80px;overflow:hidden;}
 .aw-balken i{display:block;height:100%;border-radius:99px;}
 .aw-wenig{opacity:.5;}
+
+/* ── Apps als Kacheln (Admin → Inhalte → Apps) ── */
+.app-kacheln{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:.75rem;}
+.app-kacheln .app-row{flex-direction:column;align-items:stretch;gap:.35rem;padding:.9rem .85rem .7rem;min-height:210px;text-align:center;}
+.app-kacheln .drag-handle{position:absolute;top:.45rem;left:.5rem;padding:.2rem;}
+.app-kacheln .row-emoji{font-size:2.3rem;line-height:1.1;margin-top:.2rem;}
+.app-kacheln .row-info{flex:1;display:flex;flex-direction:column;align-items:center;min-width:0;width:100%;}
+.app-kacheln .row-name{white-space:normal;overflow:visible;line-height:1.25;}
+.app-kacheln .row-datei{font-size:.66rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;margin-top:.1rem;}
+.app-kacheln .row-tags{justify-content:center;}
+.app-kacheln .row-actions{display:grid;grid-template-columns:repeat(6,1fr);gap:.25rem;padding-top:.55rem;margin-top:auto;border-top:1px solid var(--border);}
+.app-kacheln .icon-btn{min-width:0;min-height:38px;padding:.3rem 0;font-size:.85rem;}
+.app-kacheln .app-row.editing .row-actions{grid-template-columns:repeat(6,minmax(0,52px));justify-content:center;}
+.app-kacheln .aod-indicator{display:inline-block;margin:.2rem 0 0 .3rem;}
+.app-kacheln .app-row.editing{grid-column:1/-1;text-align:left;}
+.app-kacheln .app-row.editing .row-info{align-items:stretch;}
+.app-kacheln .app-row.editing .row-tags{justify-content:flex-start;}
+.app-kacheln .inline-edit{width:100%;text-align:left;}

@@ -29,9 +29,9 @@ Erst in der Testumgebung, dort wird nichts gespeichert. Den Admin nicht in zwei 
 
 | # | Schritt | Erwartung |
 |---|---|---|
-| A1 | Admin öffnen, abmelden, mit Passwort wieder anmelden | „Angemeldet bis …“ oben, Version stimmt |
+| A1 | Admin öffnen, abmelden, mit Passwort wieder anmelden | „Angemeldet bis …“ oben, Version stimmt, „← Zur Lernwelt“ führt zur Startseite |
 | A2 | Seite neu laden | bleibt angemeldet, App-Liste geladen |
-| A3 | Inhalte → Apps: eine App ausblenden und wieder einblenden | Entwurf verschwindet wieder (Änderung zurückgenommen) |
+| A3 | Inhalte → Apps: Kacheln mit Symbol, Titel und Knöpfen unten; eine App ausblenden und wieder einblenden, ✏️ öffnet die Kachel breit | Entwurf verschwindet wieder (Änderung zurückgenommen) |
 | A4 | Zwei Apps ausblenden, oben „2 ungespeicherte Änderungen“ antippen, dann „Verwerfen“ | Liste zeigt beide Änderungen und die geänderten Werte; danach alter Stand |
 | A5 | Inhalte → Ordnen: ein Regal zwischen zwei Fächern ziehen, Vorschau öffnen, Verwerfen | Vorschau zeigt neue Ordnung, nach Verwerfen alter Stand |
 | A6 | Inhalte → Tags, Start → Banner, Motivation → Pass und Mein Dorf je einmal öffnen | alles lädt ohne Fehlermeldung |
