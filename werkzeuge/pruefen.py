@@ -35,6 +35,9 @@
 #       eigenen Planquadrat; Landmarken, Auftraggeberin, Sammelstücke eindeutig.
 #   15. Die Insel: daten/insel-auftraege.json – Bewohner (Platz, Look, eindeutige Merkmale), Warenkisten
 #       und Paket-Orte im Hafendorf und je mindestens 20 Blöcke auseinander, Satzrahmen für alle Stufen.
+#   17. Neuer Admin (Admin-Umbau Etappe 1): jede Datei unter gemeinsam/admin/module/ ist in admin-neu.html
+#       eingebunden (und umgekehrt), meldet sich mit LWAdmin.modul an, Modul-IDs sind eindeutig,
+#       Bereiche gültig; store.js und module.js vor den Modulen, rahmen.js als letztes Admin-Skript.
 # ═══════════════════════════════════════════════════════
 import gzip, json, math, os, re, sys
 from pathlib import Path
@@ -588,6 +591,32 @@ for a in config.get('apps', []):
         m_ = re.search(r'[?&]inhalt=([a-z0-9.-]+)', d)
         if not m_ or m_.group(1) not in inhalt_ids: F(f'config.json: „{a.get("name", "?")}“ – zu {d} gibt es keine Inhaltsdatei')
 I(f'Aufgabentypen: {len(TYPEN)} Typen, {len(inhalt_ids)} Inhaltsdateien')
+
+# ── 17. Neuer Admin: Module (Admin-Umbau Etappe 1) ───────
+if Path('admin-neu.html').is_file():
+    an = lies('admin-neu.html')
+    srcs = SCRIPT_SRC.findall(an)
+    eingebunden = [s for s in srcs if s.startswith('gemeinsam/admin/module/')]
+    dateien = sorted(rel(p) for p in ROOT.glob('gemeinsam/admin/module/*.js'))
+    for d in dateien:
+        if d not in eingebunden: F(f'admin-neu.html: Modul {d} ist nicht eingebunden')
+    for s in eingebunden:
+        if not Path(s).is_file(): F(f'admin-neu.html: Modul-Datei fehlt: {s}')
+    def pos(s): return srcs.index(s) if s in srcs else -1
+    if pos('gemeinsam/admin/store.js') < 0 or pos('gemeinsam/admin/module.js') < 0 or pos('gemeinsam/admin/rahmen.js') < 0:
+        F('admin-neu.html: store.js, module.js oder rahmen.js fehlt')
+    elif eingebunden and (min(map(pos, eingebunden)) < pos('gemeinsam/admin/module.js') or max(map(pos, eingebunden)) > pos('gemeinsam/admin/rahmen.js')):
+        F('admin-neu.html: Module müssen nach module.js und vor rahmen.js stehen')
+    bereiche = set(re.findall(r"\{ id: '([a-z]+)',\s+titel:", lies('gemeinsam/admin/module.js')))
+    ids = {}
+    for d in dateien:
+        t = lies(d)
+        if 'LWAdmin.modul(' not in t: F(f'{d}: meldet sich nicht mit LWAdmin.modul(…) an'); continue
+        for mid, ber in re.findall(r"id:\s*'([^']+)',\s*bereich:\s*'([^']+)'", t):
+            if mid in ids: F(f'{d}: Modul-ID {mid} doppelt (auch in {ids[mid]})')
+            ids[mid] = d
+            if ber not in bereiche: F(f'{d}: Bereich {ber} unbekannt (erlaubt: {", ".join(sorted(bereiche))})')
+    I(f'Neuer Admin: {len(ids)} Module in {len(bereiche)} Bereichen')
 
 # ── 7. Budgets ──────────────────────────────────────────
 def groesse(d):

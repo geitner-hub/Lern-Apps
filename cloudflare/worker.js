@@ -42,6 +42,9 @@
 //    spielsperre   – { schwelle: 50–100, runden: { wer: [7 Zahlen 0–20, Mo–So] },
 //                      ausnahmen?: [{ id, wer, runden: 0–20, ab?: Datum, bis?: Datum }] } Spiele erst nach Lern-Runden
 //    heute         – nur false: Startseite ohne „Heute für dich“ (Etappe 8)
+//    spiele        – auswahl, schwelle 50–100, runden 1–3, starter { klasse: [IDs] }, wortBis { klasse: unit } („Meine Themen“)
+//    featureSchalter – { name: true|false } (Admin-Umbau Etappe 1, genutzt ab Etappe 10)
+//    Andere Felder oben in config.json werden abgelehnt.
 //
 //  Medien (Okt. 2026, cloudflare/medien.js, Anleitung: ANLEITUNG-MEDIEN.md):
 //    /m/<code>…        → öffentliche Kurzlinks zu hochgeladenen Dateien (ohne Lernwelt-Bezug)
@@ -316,6 +319,30 @@ function validateConfig(cfg) {
   }
   // „Heute für dich“ (Etappe 8): nur abschaltbar
   if (cfg.heute !== undefined && cfg.heute !== false) p.push('heute ungültig');
+  // Spiele „Meine Themen“ (gleiche Grenzen wie sanitizeSpiele in gemeinsam/pass.js)
+  const sp = cfg.spiele;
+  if (sp !== undefined) {
+    const KL = ['5', '6', '7', '8', '9'];
+    const INHALT_ID = /^[a-z0-9][a-z0-9:/_.+-]{0,79}$/i;
+    const zahl = (v, lo, hi) => v === undefined || (Number.isInteger(v) && v >= lo && v <= hi);
+    const stOk = st => st === undefined || (st && typeof st === 'object' && !Array.isArray(st)
+      && Object.entries(st).every(([k, l]) => KL.includes(k) && Array.isArray(l) && l.length <= 30 && l.every(x => typeof x === 'string' && INHALT_ID.test(x))));
+    const wbOk = wb => wb === undefined || (wb && typeof wb === 'object' && !Array.isArray(wb)
+      && Object.entries(wb).every(([k, v]) => KL.includes(k) && typeof v === 'string' && /^[a-z0-9_]{0,20}$/i.test(v)));
+    if (!sp || typeof sp !== 'object' || Array.isArray(sp)
+        || (sp.auswahl !== undefined && !['auto', 'auto+frei', 'frei'].includes(sp.auswahl))
+        || !zahl(sp.schwelle, 50, 100) || !zahl(sp.runden, 1, 3) || !stOk(sp.starter) || !wbOk(sp.wortBis)
+        || Object.keys(sp).some(k => !['auswahl', 'schwelle', 'runden', 'starter', 'wortBis'].includes(k))) p.push('spiele ungültig');
+  }
+  // Feature-Schalter (Admin-Umbau Etappe 1, genutzt ab Etappe 10): { name: true|false }
+  const fs = cfg.featureSchalter;
+  if (fs !== undefined && (!fs || typeof fs !== 'object' || Array.isArray(fs) || Object.keys(fs).length > 50
+      || !Object.entries(fs).every(([k, v]) => /^[a-z][a-zA-Z0-9-]{0,39}$/.test(k) && typeof v === 'boolean'))) p.push('featureSchalter ungültig');
+  // Nur bekannte Felder (neues Feld → hier und oben in der Kopfzeile eintragen)
+  const FELDER = ['version', 'apps', 'customTags', 'hiddenCats', 'catOrder', 'announcement', 'pass', 'spiele', 'dorf',
+    'gruppen', 'freigaben', 'fokus', 'spielsperre', 'heute', 'featureSchalter'];
+  const fremd = Object.keys(cfg).filter(k => !FELDER.includes(k));
+  if (fremd.length) p.push('unbekanntes Feld: ' + fremd.slice(0, 3).join(', '));
   return p;
 }
 

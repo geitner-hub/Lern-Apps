@@ -83,17 +83,20 @@ Secrets/Bindings: `ADMIN_PASSWORD`, `GITHUB_TOKEN`, optional `LOGIN_KV`, `SYNC_D
 | `customTags[]`, `hiddenCats[]`, `catOrder[]`, `gruppen[]` | Tags, Ordnen | ja |
 | `announcement` | Banner | ja |
 | `pass` – `seasons`, `avatar`, `events` | Pass | ja |
-| `spiele` – `auswahl`, `schwelle`, `runden`, `starter`, `wortBis` | Pass (`spiele.js`) | **nein** ⚠ |
+| `spiele` – `auswahl`, `schwelle`, `runden`, `starter`, `wortBis` | Pass (`spiele.js`) | ja (seit Etappe 1, vorher nicht) |
 | `dorf` – `plaetze`, `rerollsProTag`, `rerollsMax`, `kostenfaktor`, `wochen`, `challenges`, `challengeRotation`, `lehrerZettel` | Dorf | ja |
 | `freigaben` | Unterricht, Lernwege | ja |
 | `fokus[]` | Unterricht | ja |
 | `spielsperre` – `schwelle`, `runden`, `ausnahmen` | Unterricht | ja |
 | `heute` | Unterricht | ja (nur `false`) |
+| `featureSchalter` – `{ name: true\|false }` | neu (Etappe 1), genutzt ab Etappe 10 | ja |
+| andere Felder oben | – | werden seit Etappe 1 abgelehnt |
 
 ## 4. Befunde für spätere Etappen
 
-- **Unbekannte Felder oben in config.json lehnt der Worker nicht ab**, und `spiele` wird gar nicht geprüft.
-  → Etappe 1: Prüfung für `spiele` und das neue `featureSchalter` ergänzen; bekannte Felder als Liste führen.
+- ~~Unbekannte Felder oben in config.json lehnt der Worker nicht ab, und `spiele` wird gar nicht geprüft.~~
+  Erledigt in Etappe 1 (`validateConfig`: `spiele`, `featureSchalter`, Liste bekannter Felder). Wirkt erst, wenn der
+  neue `cloudflare/worker.js` bei Cloudflare eingefügt ist.
 - **Versionsverlauf gibt es schon in klein** (letzte 5 Commits über die öffentliche GitHub-API, ohne Worker).
   → Etappe 3 baut darauf auf (letzte 30, Ansehen, Wiederherstellen über einen Worker-Lese-Endpunkt).
 - **„Letzte Aktionen“ im Dashboard** gilt nur für die laufende Sitzung. → Etappe 3: Änderungsprotokoll aus den Commit-Nachrichten.

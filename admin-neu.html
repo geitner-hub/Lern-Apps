@@ -3,46 +3,96 @@
 <head>
   <meta charset="UTF-8"/>
   <script src="gemeinsam/umgebung.js"></script>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
   <title>Admin (neu) – Lernwelt</title>
   <link rel="stylesheet" href="gemeinsam/fonts.css">
   <meta name="robots" content="noindex">
-  <!-- Admin-Umbau Etappe 0: Gerüst des neuen Admins. Noch ohne Funktionen und nirgends verlinkt.
-       Gleiche Anmeldung wie admin.html (ConfigAPI, Schlüssel 7 Tage). admin.html bleibt bis Etappe 2 der Admin. -->
+  <!-- Admin-Umbau: neuer Admin, entsteht neben admin.html (bis Etappe 2 nirgends verlinkt).
+       Etappe 1: Datenschicht (gemeinsam/admin/store.js), Modul-System und Navigation (module.js),
+       Rahmen mit Anmeldung und Kopfleiste (rahmen.js), Module unter gemeinsam/admin/module/. -->
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
-      --bg:#0f0e1a; --surface:#1b1929; --surface2:#221f35;
+      --bg:#0f0e1a; --surface:#1b1929; --surface2:#221f35; --surface3:#2a2740;
       --border:rgba(255,255,255,.07); --border2:rgba(255,255,255,.13);
-      --accent:#e6a817; --indigo:#6366f1; --indigo2:#818cf8;
-      --red:#f87171; --text:#f1f0fb; --text2:rgba(241,240,251,.65); --muted:rgba(241,240,251,.35);
+      --accent:#e6a817; --accent-dim:rgba(230,168,23,.15); --indigo:#6366f1; --indigo2:#818cf8;
+      --green:#4ade80; --red:#f87171; --red-dim:rgba(248,113,113,.12);
+      --text:#f1f0fb; --text2:rgba(241,240,251,.65); --muted:rgba(241,240,251,.4);
+      --nav-breite:200px; --nav-hoehe:64px;
     }
-    body{font-family:'Nunito',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+    body{font-family:'Nunito',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;-webkit-text-size-adjust:100%;}
+    a{color:var(--indigo2);}
+    code{font-size:.85em;color:var(--indigo2);}
 
     /* ── Anmeldung ── */
-    #anmeldung{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--bg);background-image:radial-gradient(circle,rgba(99,102,241,.08) 1.5px,transparent 1.5px);background-size:28px 28px;}
+    #anmeldung{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:var(--bg);background-image:radial-gradient(circle,rgba(99,102,241,.08) 1.5px,transparent 1.5px);background-size:28px 28px;z-index:50;}
     .box{background:var(--surface);border:1px solid var(--border2);border-radius:20px;padding:2.5rem 2rem;width:min(320px,calc(100vw - 2rem));text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.5);}
     .box h1{font-family:'Fredoka One',cursive;font-weight:400;font-size:1.9rem;margin-bottom:.25rem;color:#fff;}
     .box h1 span{color:var(--accent);}
     .box p{font-size:.85rem;color:var(--muted);margin-bottom:1.5rem;}
     .box input{width:100%;padding:.8rem 1rem;background:var(--surface2);border:1px solid var(--border2);border-radius:10px;color:var(--text);font:inherit;font-size:1rem;outline:none;text-align:center;letter-spacing:3px;}
     .box input:focus{border-color:var(--accent);}
-    .fehler{color:var(--red);font-size:.8rem;margin-top:.5rem;min-height:1.1rem;}
+    .fehler-text{color:var(--red);font-size:.8rem;margin-top:.5rem;min-height:1.1rem;}
     .knopf{background:linear-gradient(135deg,var(--indigo),#7c3fc5);border:none;color:#fff;padding:.85rem 1.5rem;border-radius:10px;cursor:pointer;font:inherit;font-weight:800;font-size:.95rem;width:100%;margin-top:.8rem;min-height:44px;}
     .knopf:disabled{opacity:.6;}
 
-    /* ── Admin ── */
-    #admin{display:none;}
-    .kopf{background:var(--surface);border-bottom:1px solid var(--border);padding:.85rem 1.25rem;display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;position:sticky;top:0;}
-    .wortmarke{font-family:'Fredoka One',cursive;font-size:1.25rem;color:#fff;}
+    /* ── Kopfleiste ── */
+    .kopf{background:var(--surface);border-bottom:1px solid var(--border);padding:.6rem 1rem;display:flex;align-items:center;gap:.7rem;flex-wrap:wrap;position:sticky;top:0;z-index:20;box-shadow:0 4px 20px rgba(0,0,0,.35);}
+    .wortmarke{font-family:'Fredoka One',cursive;font-size:1.2rem;color:#fff;white-space:nowrap;}
     .wortmarke em{color:var(--accent);font-style:normal;}
-    .marke{font-size:.66rem;font-weight:800;color:var(--indigo2);border:1px solid rgba(99,102,241,.4);border-radius:99px;padding:.1rem .5rem;}
-    .kopf-rechts{margin-left:auto;display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;}
-    .klein{font-size:.72rem;color:var(--muted);font-weight:700;}
-    .btn{padding:.55rem 1rem;min-height:44px;border-radius:9px;font:inherit;font-weight:800;font-size:.82rem;cursor:pointer;border:1px solid var(--border2);background:var(--surface2);color:var(--text);text-decoration:none;display:inline-flex;align-items:center;}
-    main{max-width:900px;margin:0 auto;padding:2rem 1.25rem;}
-    .leer{background:var(--surface);border:1px dashed var(--border2);border-radius:14px;padding:2rem;text-align:center;color:var(--text2);line-height:1.6;}
-    .leer h2{font-family:'Fredoka One',cursive;font-weight:400;color:var(--accent);margin-bottom:.4rem;}
+    .kopf-rechts{margin-left:auto;display:flex;gap:.45rem;align-items:center;flex-wrap:wrap;}
+    #lw-entwurf{display:flex;gap:.45rem;align-items:center;}
+    #lw-entwurf[hidden],#lw-gesperrt[hidden]{display:none;}
+    #lw-entwurf-zahl{background:var(--accent-dim);border-color:rgba(230,168,23,.45);color:var(--accent);}
+    #lw-gesperrt{color:var(--red);font-size:.78rem;font-weight:800;}
+    #lw-entwurf-liste{position:fixed;top:68px;right:1rem;width:min(520px,calc(100vw - 2rem));background:var(--surface2);border:1px solid rgba(230,168,23,.45);border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,.55);padding:.9rem 1.1rem;font-size:.85rem;z-index:30;max-height:60vh;overflow:auto;}
+    #lw-entwurf-liste[hidden]{display:none;}
+
+    /* ── Knöpfe ── */
+    .lw-btn{padding:.55rem 1rem;min-height:44px;border-radius:10px;font:inherit;font-weight:800;font-size:.84rem;cursor:pointer;border:1px solid var(--border2);background:var(--surface2);color:var(--text);text-decoration:none;display:inline-flex;align-items:center;gap:.35rem;}
+    .lw-btn:hover{background:var(--surface3);}
+    .lw-btn.gold{background:var(--accent);border-color:var(--accent);color:#0f0e1a;}
+    .lw-btn:disabled{opacity:.45;cursor:default;}
+    .lw-klein{font-size:.75rem;color:var(--muted);font-weight:700;}
+
+    /* ── Navigation: Seitenleiste, am schmalen Bildschirm unten ── */
+    #lw-nav{position:fixed;left:0;top:60px;bottom:0;width:var(--nav-breite);padding:1rem .6rem;display:flex;flex-direction:column;gap:.25rem;background:var(--surface);border-right:1px solid var(--border);z-index:10;}
+    .lw-nav-punkt{display:flex;align-items:center;gap:.65rem;padding:.7rem .85rem;min-height:48px;border-radius:12px;color:var(--text2);text-decoration:none;font-weight:800;font-size:.95rem;}
+    .lw-nav-punkt:hover{background:var(--surface2);color:var(--text);}
+    .lw-nav-punkt.aktiv{background:rgba(99,102,241,.18);color:#fff;box-shadow:inset 3px 0 0 var(--accent);}
+    .lw-nav-symbol{font-size:1.25rem;width:1.6rem;text-align:center;}
+    main{margin-left:var(--nav-breite);padding:1.5rem 1.5rem 3rem;max-width:calc(1100px + var(--nav-breite));}
+    @media (max-width: 899px){
+      #lw-nav{top:auto;right:0;width:auto;height:calc(var(--nav-hoehe) + env(safe-area-inset-bottom));flex-direction:row;padding:.3rem .3rem calc(.3rem + env(safe-area-inset-bottom));border-right:none;border-top:1px solid var(--border);gap:.15rem;}
+      .lw-nav-punkt{flex:1;flex-direction:column;justify-content:center;gap:.1rem;padding:.3rem .2rem;font-size:.68rem;min-height:0;}
+      .lw-nav-punkt.aktiv{box-shadow:inset 0 3px 0 var(--accent);}
+      main{margin-left:0;padding:1.1rem 1rem calc(var(--nav-hoehe) + 2rem);}
+    }
+
+    /* ── Bereich und Module ── */
+    .lw-bereich-titel{font-family:'Fredoka One',cursive;font-weight:400;font-size:1.6rem;color:#fff;margin-bottom:.8rem;}
+    .lw-reiter{display:flex;gap:.3rem;flex-wrap:wrap;margin-bottom:1.1rem;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.3rem;}
+    .lw-reiter-punkt{padding:.6rem 1rem;min-height:44px;display:inline-flex;align-items:center;border-radius:9px;font-weight:800;font-size:.86rem;color:var(--muted);text-decoration:none;}
+    .lw-reiter-punkt.aktiv{background:var(--surface2);color:var(--accent);}
+    .lw-leer{background:var(--surface);border:1px dashed var(--border2);border-radius:14px;padding:2rem;text-align:center;color:var(--text2);line-height:1.7;}
+    .lw-fehler{border-color:var(--red);color:var(--red);}
+    .lw-karte{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.2rem 1.3rem;margin-bottom:1.1rem;line-height:1.55;}
+    .lw-karte h2{font-family:'Fredoka One',cursive;font-weight:400;font-size:1.1rem;color:var(--accent);margin-bottom:.5rem;}
+    .lw-karte h3{font-size:.85rem;margin:.9rem 0 .3rem;color:var(--text2);}
+    .lw-karte p{color:var(--text2);font-size:.9rem;}
+    .lw-knoepfe{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.9rem;}
+    .lw-liste{margin:.4rem 0 0 1.1rem;display:flex;flex-direction:column;gap:.25rem;}
+    .lw-kacheln{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.8rem;margin-bottom:1.1rem;}
+    .lw-kachel{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem;}
+    .lw-kachel.gold{border-color:rgba(230,168,23,.45);}
+    .lw-kachel-titel{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:.3rem;}
+    .lw-kachel-wert{font-family:'Fredoka One',cursive;font-size:1.9rem;color:#fff;}
+
+    /* ── Meldung ── */
+    #lw-toast{position:fixed;left:50%;bottom:calc(var(--nav-hoehe) + 1.2rem);transform:translate(-50%,1rem);background:var(--surface3);border:1px solid var(--border2);color:var(--text);padding:.7rem 1.1rem;border-radius:12px;font-weight:800;font-size:.86rem;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:60;max-width:calc(100vw - 2rem);}
+    #lw-toast.zeigen{opacity:1;transform:translate(-50%,0);}
+    #lw-toast.fehler{border-color:var(--red);color:var(--red);}
+    @media (prefers-reduced-motion: reduce){ #lw-toast{transition:none;} }
   </style>
 </head>
 <body>
@@ -52,77 +102,43 @@
     <h1>🧭 Lern<span>welt</span></h1>
     <p>Neuer Admin (im Aufbau)</p>
     <input type="password" id="pw" placeholder="Passwort" autocomplete="off" aria-label="Passwort"/>
-    <div class="fehler" id="pw-fehler" role="alert"></div>
+    <div class="fehler-text" id="pw-fehler" role="alert"></div>
     <button class="knopf" id="btn-anmelden">Anmelden</button>
   </div>
 </div>
 
-<div id="admin">
+<div id="admin" style="display:none">
   <header class="kopf">
     <span class="wortmarke">🧭 Lern<em>welt</em></span>
-    <span class="marke">Admin neu</span>
-    <span class="klein" id="version"></span>
+    <span class="lw-klein" id="lw-version"></span>
     <div class="kopf-rechts">
-      <span class="klein" id="sitzung"></span>
-      <a class="btn" href="admin.html">Zum bisherigen Admin</a>
-      <button class="btn" id="btn-abmelden">🔒 Abmelden</button>
+      <span id="lw-gesperrt" hidden>⚠ Speichern gesperrt – Seite neu laden</span>
+      <div id="lw-entwurf" hidden>
+        <button class="lw-btn" id="lw-entwurf-zahl" aria-expanded="false" aria-controls="lw-entwurf-liste">0 ungespeicherte Änderungen</button>
+        <button class="lw-btn" id="lw-verwerfen">Verwerfen</button>
+      </div>
+      <button class="lw-btn gold" id="lw-veroeffentlichen" disabled>🚀 Veröffentlichen</button>
+      <span class="lw-klein" id="lw-sitzung"></span>
+      <button class="lw-btn" id="lw-abmelden" title="Nur dieses Gerät abmelden">🔒</button>
     </div>
   </header>
+  <div id="lw-entwurf-liste" hidden></div>
+  <nav id="lw-nav" aria-label="Bereiche"></nav>
   <main>
-    <div class="leer">
-      <h2>Hier entsteht der neue Admin</h2>
-      Etappe 0 – noch ohne Funktionen. Alles Bisherige läuft weiter über <a href="admin.html" style="color:var(--indigo2)">admin.html</a>.
-    </div>
+    <div id="lw-bereich-kopf"></div>
+    <div id="lw-modul"></div>
   </main>
 </div>
+<div id="lw-toast" role="status" aria-live="polite"></div>
 
 <script src="gemeinsam/shared.js"></script>
 <script src="gemeinsam/config-api.js"></script>
-<script>
-'use strict';
-(function () {
-  const $ = id => document.getElementById(id);
-  $('version').textContent = (window.LW && LW.versionText) ? LW.versionText() : '';
-
-  function zeigeAdmin() {
-    $('anmeldung').style.display = 'none';
-    $('admin').style.display = 'block';
-    const bis = ConfigAPI.sessionExpiry();
-    $('sitzung').textContent = bis
-      ? 'Angemeldet bis ' + bis.toLocaleDateString('de-DE', { weekday: 'short', day: '2-digit', month: '2-digit' }) : '';
-  }
-  function zeigeAnmeldung(text) {
-    $('admin').style.display = 'none';
-    $('anmeldung').style.display = 'flex';
-    $('pw-fehler').textContent = text || '';
-    $('pw').focus();
-  }
-
-  async function anmelden() {
-    const pw = $('pw').value, knopf = $('btn-anmelden');
-    if (!pw) { $('pw-fehler').textContent = 'Bitte Passwort eingeben'; return; }
-    knopf.disabled = true; knopf.textContent = 'Prüfe …'; $('pw-fehler').textContent = '';
-    const res = await ConfigAPI.login(pw);
-    knopf.disabled = false; knopf.textContent = 'Anmelden';
-    $('pw').value = '';
-    if (res.ok) zeigeAdmin();
-    else zeigeAnmeldung(res.status === 401 ? '❌ Falsches Passwort'
-                      : res.status === 429 ? '⏳ ' + res.error
-                      : '⚠ ' + (res.error || 'Fehler'));
-  }
-
-  $('btn-anmelden').addEventListener('click', anmelden);
-  $('pw').addEventListener('keydown', e => { if (e.key === 'Enter') anmelden(); });
-  $('btn-abmelden').addEventListener('click', () => { ConfigAPI.logout(); zeigeAnmeldung('Abgemeldet.'); });
-
-  // Auf diesem Gerät schon angemeldet? → Schlüssel serverseitig prüfen (wie admin.html)
-  (async () => {
-    if (!ConfigAPI.hasSession()) return;
-    const res = await ConfigAPI.checkSession();
-    if (res.ok) zeigeAdmin();
-    else zeigeAnmeldung(res.status === 401 ? 'Anmeldung abgelaufen – bitte Passwort eingeben.' : (res.error ? '⚠ ' + res.error : ''));
-  })();
-})();
-</script>
+<script src="gemeinsam/admin/store.js"></script>
+<script src="gemeinsam/admin/module.js"></script>
+<!-- Module (eine Datei je Modul; neue Datei hier eintragen – pruefen.py prüft, dass keine fehlt) -->
+<script src="gemeinsam/admin/module/start-uebersicht.js"></script>
+<script src="gemeinsam/admin/module/system-entwurf.js"></script>
+<!-- Rahmen zuletzt: Anmeldung prüfen und starten -->
+<script src="gemeinsam/admin/rahmen.js"></script>
 </body>
 </html>
