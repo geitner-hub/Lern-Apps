@@ -22,6 +22,26 @@ Live am iPad über das Symbol auf dem Home-Bildschirm, Test in Safari.
 speichern → Meldung „Testumgebung: Speichern und Sicherung sind hier abgeschaltet“. Danach live den Pass
 öffnen: XP und Level sind unverändert.
 
+## Admin (nach Änderungen am Admin, ca. 5 Minuten)
+
+Gehört zum Admin-Umbau (Inventar: `werkzeuge/admin-inventar.md`). Bis Etappe 2 im **bisherigen Admin**
+(`admin.html`) prüfen, ab dann im neuen. Erst in der Testumgebung, dort wird nichts gespeichert.
+
+| # | Schritt | Erwartung |
+|---|---|---|
+| A1 | Admin öffnen, abmelden, mit Passwort wieder anmelden | „Angemeldet bis …“ oben, Version stimmt |
+| A2 | Seite neu laden | bleibt angemeldet, App-Liste geladen |
+| A3 | Apps: eine App ausblenden und wieder einblenden | Entwurfs-Leiste zeigt „2 Änderungen“ |
+| A4 | Entwurf: „ansehen“ aufklappen, dann „Verwerfen“ | Liste zeigt beide Änderungen; danach Leiste weg, alter Stand |
+| A5 | Ordnen: ein Regal zwischen zwei Fächern ziehen, Vorschau öffnen, Verwerfen | Vorschau zeigt neue Ordnung, nach Verwerfen alter Stand |
+| A6 | Tags, Banner, Pass, Dorf je einmal öffnen | alles lädt ohne Fehlermeldung |
+| A7 | Unterricht: Fokus, Spielsperre (mit Ausnahmen), Freigaben, Gruppen-Auswertung öffnen | Gruppen der Sicherungskarten erscheinen, Auswertung lädt |
+| A8 | Lernwege öffnen | Lernwege mit Gruppen/Klassen zum Antippen |
+| A9 | Medien öffnen, ein kleines Bild hochladen, QR-Code zeigen, wieder löschen (nur live) | Upload läuft, QR öffnet die Datei, Speicheranzeige stimmt |
+| A10 | Sicherungskarten und Infokarten über die Kopfleiste öffnen | beide Seiten öffnen |
+| A11 | Live: eine kleine Änderung veröffentlichen | „Veröffentlicht“, nach ca. 1 Min. auf der Startseite sichtbar, unter „Zuletzt veröffentlicht“ |
+| A12 | `admin-neu.html` öffnen (bis Etappe 2) | gleiche Anmeldung, danach Seite „Hier entsteht der neue Admin“ |
+
 **Wenn etwas nicht geht:** GitHub → Repo → „Commits“ → vorigen Stand öffnen → Dateien von dort
 zurückholen (oder Claude die Fehlermeldung schicken). Die Kinder verlieren dabei nichts: Speicherstände
 liegen auf den iPads bzw. in der Cloud-Sicherung, nicht im Repo.

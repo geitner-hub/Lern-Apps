@@ -101,5 +101,9 @@ und gelbe Hinweise. Manuelle Checkliste nach Uploads: `werkzeuge/RAUCHTEST.md`.
   läuft nicht über config.json, Einrichtung: `cloudflare/ANLEITUNG-MEDIEN.md`.
 - **Admin:** `admin.html` lädt `gemeinsam/admin/*.js` in fester Reihenfolge (`kern` zuerst, `start` zuletzt);
   Änderungen landen als Entwurf (`lernwelt-admin-entwurf`) und werden gesammelt veröffentlicht.
+  **Admin-Umbau (läuft):** neuer Admin `admin-neu.html` entsteht daneben (Inventar: `werkzeuge/admin-inventar.md`).
+  Datenschicht `gemeinsam/admin/store.js` (LWAdmin.store, gleicher Entwurf wie der alte Admin), Modul-System und
+  Navigation `module.js` (sechs Bereiche, Adressen `#/bereich/modul`), Rahmen `rahmen.js` (zuletzt laden).
+  Neues Modul = Datei unter `gemeinsam/admin/module/` mit `LWAdmin.modul({…})` + Zeile in `admin-neu.html`.
 - **Testumgebung:** Kopie im Repo `Lern-Apps-test`; umgebung.js erkennt das am Repo-Namen, setzt das
   Präfix `lwtest-` vor alle Speicherschlüssel und sperrt Schreibzugriffe auf den Worker.

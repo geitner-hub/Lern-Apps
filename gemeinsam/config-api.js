@@ -39,6 +39,7 @@ const ConfigAPI = (() => {
     hiddenCats:   [],
     catOrder:     [],
     announcement: { active: false, text: '', emoji: '📢', color: 0 },
+    featureSchalter: {},        // Admin-Umbau Etappe 1: { name: true|false }, genutzt ab Etappe 10
   });
 
   // ── Base64 <-> UTF-8 (Umlaute & Emojis sicher) ─────────
@@ -64,6 +65,7 @@ const ConfigAPI = (() => {
     if (!Array.isArray(cfg.hiddenCats)) cfg.hiddenCats = [];
     if (!Array.isArray(cfg.catOrder))   cfg.catOrder = [];
     cfg.catOrder = cfg.catOrder.filter(f => typeof f === 'string');
+    if (!cfg.featureSchalter || typeof cfg.featureSchalter !== 'object' || Array.isArray(cfg.featureSchalter)) cfg.featureSchalter = {};
     // Regale (Etappe 6): [{ id, fach, name }]; Apps verweisen mit app.gruppe darauf
     cfg.gruppen = (Array.isArray(cfg.gruppen) ? cfg.gruppen : [])
       .filter(g => g && typeof g.id === 'string' && typeof g.fach === 'string' && typeof g.name === 'string');
