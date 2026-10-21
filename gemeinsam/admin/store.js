@@ -10,6 +10,12 @@
 //    await LWAdmin.store.veroeffentlichen()       // alles mit EINEM Commit schreiben → { ok, status, fehler }
 //    LWAdmin.store.verwerfen()                    // Entwurf weg, veröffentlichter Stand gilt wieder
 //    LWAdmin.store.abonnieren(fn)                 // fn(store) nach jeder Änderung → Abmelde-Funktion
+//    await LWAdmin.store.historie(30)             // [{ sha, zeit, text, wer }] letzte Veröffentlichungen (Etappe 3)
+//    await LWAdmin.store.fassung(sha)             // config.json in dieser früheren Fassung
+//    await LWAdmin.store.wiederherstellen(sha, t) // diese Fassung als Entwurf übernehmen (danach veröffentlichen)
+//    LWAdmin.store.vergleichen(alt, neu)          // [{ pfad, alt, neu }] zwischen zwei Ständen
+//
+//  Jede Änderung trägt vorn ihren Bereich („Inhalte: …“), so steht er auch im Änderungsprotokoll (Commit-Text).
 //
 //  Entwurf im localStorage (lernwelt-admin-entwurf), Format seit dem bisherigen Admin unverändert:
 //  { basis: sha, aenderungen: [text], zeit, config } – ein Entwurf von vor dem Umbau wird übernommen.
@@ -83,8 +89,9 @@ LWAdmin.store = (() => {
     return { ok: true, entwurfWieder };
   }
 
-  /** Änderung am Entwurf: fn bekommt eine Kopie und ändert sie. → true, wenn sich etwas geändert hat */
-  function aendern(text, fn) {
+  /** Änderung am Entwurf: fn bekommt eine Kopie und ändert sie. → true, wenn sich etwas geändert hat.
+   *  opts.bereich: Titel des Bereichs vor dem Text (Standard: der gerade gezeigte Bereich) */
+  function aendern(text, fn, opts = {}) {
     if (sha === null) throw new Error('Speichern gesperrt – bitte Seite neu laden');
     if (!config) throw new Error('Noch nicht geladen');
     const neu = klon(config);
@@ -93,7 +100,9 @@ LWAdmin.store = (() => {
     if (gleich(ergebnis, config)) return false;
     config = ergebnis;
     if (!entwurf) entwurf = { basis: sha, aenderungen: [], zeit: Date.now() };
-    const t = String(text || 'Einstellungen geändert').slice(0, 120);
+    const bereich = opts.bereich !== undefined ? opts.bereich : (LWAdmin.aktuell ? LWAdmin.aktuell().titel : '');
+    const roh = String(text || 'Einstellungen geändert');
+    const t = (bereich && !roh.startsWith(bereich + ': ') ? bereich + ': ' : '') + roh.slice(0, 120);
     if (entwurf.aenderungen[entwurf.aenderungen.length - 1] !== t) entwurf.aenderungen.push(t);
     entwurf.zeit = Date.now();
     if (gleich(config, veroeffentlicht)) entwurf = null;        // zurückgeändert → kein Entwurf mehr
@@ -130,11 +139,13 @@ LWAdmin.store = (() => {
     }
     aus.push({ pfad, alt: a, neu: b });
   }
-  function unterschiede() {
-    if (!config || !veroeffentlicht) return [];
+  function vergleichen(alt, neu) {
     const aus = [];
-    vergleiche(veroeffentlicht, config, '', aus);
+    vergleiche(alt, neu, '', aus);
     return aus;
+  }
+  function unterschiede() {
+    return config && veroeffentlicht ? vergleichen(veroeffentlicht, config) : [];
   }
 
   /** Alles mit einem Commit veröffentlichen. → { ok, status?, fehler? } (fehler 'CONFLICT' = woanders geändert) */
@@ -164,21 +175,53 @@ LWAdmin.store = (() => {
     melden();
   }
 
-  /** Die letzten Veröffentlichungen (Commits an config.json) – öffentliche GitHub-Schnittstelle */
+  // ── Versionsverlauf (Etappe 3) ────────────────────────
+  //  Über den Worker (mit dem GitHub-Schlüssel dort: 5000 Abfragen je Stunde). Solange bei Cloudflare noch
+  //  der Worker ohne /verlauf läuft, direkt bei GitHub (ohne Anmeldung: 60 je Stunde und Schul-WLAN).
+  function anmeldeSchluessel() {
+    try { const s = JSON.parse(localStorage.getItem('lernwelt-admin-schluessel') || 'null'); return (s && s.token) || ''; } catch (e) { return ''; }
+  }
+  async function workerPost(pfad, body) {
+    const r = await fetch(ConfigAPI.WORKER_URL + pfad, {
+      method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + anmeldeSchluessel() },
+      body: JSON.stringify(body || {}),
+    });
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok) { const e = new Error(d.error || 'HTTP ' + r.status); e.status = r.status; throw e; }
+    return d;
+  }
+  const textOhneAdmin = s => String(s || '').split('\n')[0].replace(/^Admin: /, '');
   async function historie(n = 5) {
-    const owner = location.hostname.split('.')[0], repo = location.pathname.split('/').filter(Boolean)[0] || '';
-    const r = await fetch(`https://api.github.com/repos/${owner}/${repo}/commits?path=config.json&per_page=${n}`, { cache: 'no-store' });
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    return (await r.json()).map(c => ({
-      zeit: new Date(c.commit.committer.date),
-      text: String(c.commit.message).split('\n')[0].replace(/^Admin: /, ''),
-    }));
+    try {
+      const d = await workerPost('/verlauf');
+      return (d.eintraege || []).slice(0, n).map(e => ({ sha: e.sha, zeit: new Date(e.zeit), text: textOhneAdmin(e.text), wer: e.wer || 'haupt' }));
+    } catch (e) {
+      if (e.status === 401) throw e;
+      const owner = location.hostname.split('.')[0], repo = location.pathname.split('/').filter(Boolean)[0] || '';
+      const r = await fetch(`https://api.github.com/repos/${owner}/${repo}/commits?path=config.json&per_page=${n}`, { cache: 'no-store' });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return (await r.json()).map(c => ({ sha: c.sha, zeit: new Date(c.commit.committer.date), text: textOhneAdmin(c.commit.message), wer: 'haupt' }));
+    }
+  }
+  /** config.json in einer früheren Fassung (über den Worker; braucht den Worker ab Etappe 3) */
+  async function fassung(shaFassung) {
+    let d;
+    try { d = await workerPost('/fassung', { sha: shaFassung }); }
+    catch (e) { throw e.status === 404 && /Nicht gefunden/.test(e.message) ? new Error('Der Worker bei Cloudflare ist noch die alte Version – bitte cloudflare/worker.js einfügen') : e; }
+    return ConfigAPI.migrate(JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(String(d.content).replace(/\s/g, '')), c => c.charCodeAt(0)))));
+  }
+  /** Eine frühere Fassung als Entwurf übernehmen – wirkt erst nach „Veröffentlichen“ (mit Prüfung) */
+  async function wiederherstellen(shaFassung, zeitText) {
+    const alt = await fassung(shaFassung);
+    if (entwurf) verwerfen();
+    aendern(`Fassung vom ${zeitText || shaFassung.slice(0, 7)} wiederhergestellt`, () => alt, { bereich: 'System' });
+    return unterschiede().length;
   }
 
   function abonnieren(fn) { hoerer.add(fn); return () => hoerer.delete(fn); }
 
   const api = {
-    laden, aendern, unterschiede, veroeffentlichen, verwerfen, historie, abonnieren,
+    laden, aendern, unterschiede, vergleichen, veroeffentlichen, verwerfen, historie, fassung, wiederherstellen, abonnieren,
     daten:       () => config,
     aenderungen: () => (entwurf ? entwurf.aenderungen.slice() : []),
     anzahl:      () => (entwurf ? entwurf.aenderungen.length : 0),

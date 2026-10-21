@@ -21,6 +21,9 @@
 //    POST /logout-all → alle Schlüssel ungültig (braucht LOGIN_KV)(Header: Authorization: Bearer <schlüssel>)
 //    PUT  /           → config.json speichern                    (Header: Authorization: Bearer <schlüssel>)
 //                       Body: { content (base64), sha, message }
+//    POST /verlauf    → { eintraege: [{ sha, zeit, text, wer }] } die letzten 30 Veröffentlichungen (Schlüssel)
+//    POST /fassung    → { content (base64) } config.json in einer früheren Fassung, Body: { sha } (Schlüssel)
+//                       (Admin-Umbau Etappe 3: Versionsverlauf und Wiederherstellen; nur lesen)
 //
 //  Anmelde-Schlüssel: Nur beim Anmelden wird das Passwort gesendet. Der Admin
 //  speichert danach nur einen signierten Schlüssel, der SESSION_DAYS gilt.
@@ -108,6 +111,8 @@ export default {
       if (request.method === 'POST' && url.pathname === '/session') return await handleSession(request, env, cors);
       if (request.method === 'POST' && url.pathname === '/logout-all') return await handleLogoutAll(request, env, cors);
       if (request.method === 'PUT' && url.pathname === '/')       return await handlePut(request, env, cors);
+      if (request.method === 'POST' && url.pathname === '/verlauf') return await handleVerlauf(request, env, cors);
+      if (request.method === 'POST' && url.pathname === '/fassung') return await handleFassung(request, env, cors);
       return json({ error: 'Nicht gefunden' }, 404, cors);
     } catch (e) {
       console.error(e);
@@ -190,6 +195,36 @@ async function handlePut(request, env, cors) {
   if (!r.ok) return json({ error: 'GitHub: ' + r.status }, 502, cors);
   const d = await r.json();
   return json({ ok: true, sha: d.content?.sha, content: { sha: d.content?.sha } }, 200, cors);
+}
+
+// ── Versionsverlauf (Admin-Umbau Etappe 3): jede Veröffentlichung ist ein Commit an config.json ──
+const VERLAUF_ANZAHL = 30;
+async function handleVerlauf(request, env, cors) {
+  const auth = await checkToken(request, env);
+  if (!auth.ok) return json({ error: auth.error }, auth.status, cors);
+  const r = await gh(env, `commits?path=${FILE_PATH}&sha=${BRANCH}&per_page=${VERLAUF_ANZAHL}`);
+  if (!r.ok) return json({ error: 'GitHub: ' + r.status }, 502, cors);
+  const liste = await r.json();
+  const eintraege = (Array.isArray(liste) ? liste : []).map(c => ({
+    sha:  String(c.sha || ''),
+    zeit: String((c.commit && c.commit.committer && c.commit.committer.date) || ''),
+    text: String((c.commit && c.commit.message) || '').split('\n')[0].slice(0, 200),
+    wer:  'haupt',                    // Vorentlastung Etappe 10 (Rollen): bis dahin gibt es nur den Hauptzugang
+  }));
+  return json({ eintraege }, 200, { ...cors, 'Cache-Control': 'no-store' });
+}
+async function handleFassung(request, env, cors) {
+  const auth = await checkToken(request, env);
+  if (!auth.ok) return json({ error: auth.error }, auth.status, cors);
+  let body;
+  try { body = JSON.parse((await request.text()).slice(0, 1000) || '{}'); } catch { return json({ error: 'Ungültiges JSON' }, 400, cors); }
+  const sha = body && typeof body.sha === 'string' ? body.sha : '';
+  if (!/^[0-9a-f]{40}$/.test(sha)) return json({ error: 'sha ungültig' }, 400, cors);
+  const r = await gh(env, `contents/${FILE_PATH}?ref=${sha}`);
+  if (r.status === 404) return json({ error: 'Fassung nicht gefunden' }, 404, cors);
+  if (!r.ok) return json({ error: 'GitHub: ' + r.status }, 502, cors);
+  const d = await r.json();
+  return json({ content: d.content }, 200, { ...cors, 'Cache-Control': 'no-store' });
 }
 
 // ── Validierung ────────────────────────────────────────

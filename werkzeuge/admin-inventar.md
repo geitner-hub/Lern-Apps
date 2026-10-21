@@ -15,7 +15,7 @@ Bereiche im neuen Admin: **Start · Inhalte · Gruppen · Motivation · Medien �
 | (Kopf) | Anmelden mit Passwort, 7-Tage-Schlüssel, Sitzung prüfen | `kern.js`, `start.js`, `config-api.js` | `/login`, `/session` | System | Anmeldung, Passwort | ☑ System (#/system/anmeldung) |
 | (Kopf) | Dieses Gerät abmelden / Alle Geräte abmelden | `kern.js` | `/logout-all` | System | Abmelden, Geräte | ☑ #/system/anmeldung |
 | (Kopf) | Entwurf merken, Leiste „x Änderungen“, Verwerfen, Veröffentlichen (ein Commit) | `kern.js` | `PUT /` | Kopfleiste | Entwurf, Veröffentlichen | ☑ Kopfleiste |
-| (Kopf) | Letzte 5 Veröffentlichungen (GitHub-Commits an config.json) | `kern.js` | öffentliche GitHub-API | System (Etappe 3: Versionsverlauf) | Verlauf, Historie | ☑ #/system/entwurf |
+| (Kopf) | Letzte 5 Veröffentlichungen (GitHub-Commits an config.json) | `kern.js` | öffentliche GitHub-API, ab Etappe 3 Worker `/verlauf` | System (Etappe 3: Versionsverlauf) | Verlauf, Historie | ☑ #/system/entwurf |
 | (Kopf) | Versionsanzeige | `admin.html` (inline) | – | Kopfleiste | Version | ☑ Kopfleiste |
 | (Kopf) | Links zu Sicherungskarten, Infokarten, Startseite | `admin.html` | – | Gruppen / Inhalte | Karten | ☑ #/system/seiten, #/gruppen/karten |
 | 📊 Dashboard | Kennzahlen (Apps, sichtbar, versteckt, Tags, Banner), Pass-Status | `uebersicht.js` | – | Start (wird umgebaut) | Übersicht | ☑ #/start/uebersicht |
@@ -67,6 +67,7 @@ Bereiche im neuen Admin: **Start · Inhalte · Gruppen · Motivation · Medien �
 | `POST /session` | Schlüssel | Schlüssel noch gültig? | Admin |
 | `POST /logout-all` | Schlüssel | alle Schlüssel ungültig (braucht `LOGIN_KV`) | Admin |
 | `PUT /` | Schlüssel | config.json schreiben (ein Commit, sha gegen Konflikte, `validateConfig`) | Admin |
+| `POST /verlauf`, `POST /fassung` | Schlüssel | letzte 30 Veröffentlichungen, eine frühere Fassung lesen (Etappe 3) | System → Entwurf und Versionen |
 | `/sync/holen`, `/sync/speichern`, `/sync/statistik` | Code der Karte | Pass-Sicherung der Kinder | Kinder-Seite |
 | `/sync/admin/gruppen`, `gruppe-anlegen`, `gruppe-umbenennen`, `gruppe-loeschen`, `code-loeschen` | Schlüssel | Sicherungskarten verwalten | `admin-karten.html`, `freigaben.js` |
 | `/sync/admin/statistik` | Schlüssel | anonyme Gruppen-Auswertung | `freigaben.js` |
