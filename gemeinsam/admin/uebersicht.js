@@ -1,8 +1,7 @@
 // ═══════════════════════════════════════════════════════
 //  Lernwelt-Admin – Pass-Übersicht und Dashboard
 //  Teil von admin.html (Infrastruktur Etappe 6: Admin in Module zerlegt).
-//  Alle Module teilen sich die globalen Variablen aus kern.js (CONFIG, ghSha …)
-//  und werden in admin.html in fester Reihenfolge geladen.
+//  Läuft über gemeinsam/admin/bruecke.js (CONFIG, saveConfig, buildAll …), eingebunden in admin.html.
 // ═══════════════════════════════════════════════════════
 'use strict';
 

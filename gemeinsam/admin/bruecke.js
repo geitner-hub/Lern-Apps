@@ -1,22 +1,20 @@
 // ═══════════════════════════════════════════════════════
-//  Lernwelt-Admin (neu) – Brücke zu den bisherigen Admin-Funktionen  (Admin-Umbau Etappe 2)
+//  Lernwelt-Admin – Brücke zu den Funktionsdateien  (Admin-Umbau Etappe 2)
 //
-//  Der neue Admin nutzt die bewährten Dateien des bisherigen Admins (apps.js, ordnen.js, tags.js,
-//  werkzeuge.js, pass.js, spiele.js, dorf.js, uebersicht.js, freigaben.js, medien.js) unverändert.
-//  Diese Datei ersetzt für sie kern.js: Sie stellt dieselben globalen Namen bereit (CONFIG, saveConfig,
-//  logChange-Verlauf, buildAll, showToast, showLogin …), schreibt aber über LWAdmin.store.
+//  Die Funktionsdateien gemeinsam/admin/*.js (apps, ordnen, sichtbarkeit, tags, werkzeuge, pass, spiele,
+//  dorf, uebersicht, freigaben, medien) stammen aus dem Admin vor dem Umbau und arbeiten mit globalen
+//  Namen: CONFIG ändern, logChange(text), saveConfig(), buildAll(), showToast(). Diese Datei stellt
+//  diese Namen bereit (früher kern.js) und schreibt über LWAdmin.store.
 //
-//  Die Reiter des bisherigen Admins stehen in admin-neu.html einmal im versteckten Bereich #lw-park
-//  (gleiche ids wie in admin.html, weil die alten Dateien beim Laden Ereignisse daran hängen).
-//  Ein Modul aus LWAdmin.altModul({ …, teil: 'id' }) hängt beim Zeigen nur seinen Teil in den
-//  Inhaltsbereich und legt ihn beim Verlassen zurück.
+//  Ihr HTML steht in admin.html einmal im versteckten Bereich #lw-park (feste ids – einige Dateien hängen
+//  beim Laden Ereignisse daran). Ein Modul aus LWAdmin.altModul({ …, teil: 'id' }) hängt beim Zeigen
+//  nur seinen Teil in den Inhaltsbereich und legt ihn beim Verlassen zurück.
 //
-//  Lädt nach store.js und module.js, vor den alten Dateien. Wird beim Umstieg (Ende Etappe 2) mit
-//  den alten Dateien zusammen in die Module überführt.
+//  Lädt nach store.js und module.js, vor den Funktionsdateien.
 // ═══════════════════════════════════════════════════════
 'use strict';
 
-// Gleiche globale Variablen wie in kern.js – die alten Dateien greifen direkt darauf zu
+// Globale Variablen (früher kern.js) – die Funktionsdateien greifen direkt darauf zu
 let CONFIG   = ConfigAPI.migrate({});
 let ghSha    = '';
 let modalAppName = '';
@@ -29,7 +27,7 @@ let selectedNewTagColor = 0;
   const store = LWAdmin.store;
   const klon = o => JSON.parse(JSON.stringify(o));
   let eigene = false;            // Änderung kommt gerade von saveConfig() → CONFIG nicht ersetzen
-  let aktuell = null;            // id des gezeigten alten Moduls
+  let aktuell = null;            // id des gezeigten altModul-Moduls
   let ctx = { toast: (t) => console.log(t) };
 
   // ── Speichern: CONFIG (von den alten Dateien geändert) → Entwurf in der Datenschicht ──
@@ -42,7 +40,7 @@ let selectedNewTagColor = 0;
     finally { eigene = false; }
   };
 
-  // Laden, Verwerfen oder ein anderes Modul hat geändert → CONFIG neu übernehmen und neu zeichnen
+  // Laden, Verwerfen oder ein natives Modul hat geändert → CONFIG neu übernehmen und neu zeichnen
   store.abonnieren(() => {
     if (eigene || !store.geladen()) return;
     const d = store.daten();
@@ -57,7 +55,7 @@ let selectedNewTagColor = 0;
   window.showLogin = text => LWAdmin.anmeldungZeigen(text);
   window.setSync = () => {};                       // Anzeige übernimmt die Kopfleiste
 
-  // ── buildAll wie in kern.js: Listen neu, nachladende Reiter nur, wenn sie gerade zu sehen sind ──
+  // ── buildAll: Listen neu, nachladende Reiter nur, wenn sie gerade zu sehen sind ──
   const SICHTBAR = {
     dorf:        ['dorf'],
     freigaben:   ['freigaben', 'fokus', 'spielsperre', 'auswertung'],
@@ -76,7 +74,7 @@ let selectedNewTagColor = 0;
     buildTagAssignList();
   };
 
-  // Fach- und Klassen-Auswahlen aus shared.js füllen (wie in kern.js)
+  // Fach- und Klassen-Auswahlen aus shared.js füllen 
   ['f-fach', 'fach-filter'].forEach(id => {
     const sel = document.getElementById(id);
     if (sel) FAECHER.forEach(f => { const o = document.createElement('option'); o.textContent = f; o.value = f; sel.appendChild(o); });
@@ -86,7 +84,7 @@ let selectedNewTagColor = 0;
     if (sel) KLASSEN.forEach(k => { const o = document.createElement('option'); o.value = k; o.textContent = 'Klasse ' + k; sel.appendChild(o); });
   });
 
-  /** Nach dem ersten Laden einmal: alles aufbauen (wie loadConfig in kern.js) */
+  /** Nach dem ersten Laden einmal: alles aufbauen  */
   let erstmals = true;
   LWAdmin.bruecke = {
     start(c) {
@@ -101,7 +99,7 @@ let selectedNewTagColor = 0;
   };
 
   /**
-   * Modul aus einem Teil des bisherigen Admins.
+   * Modul aus einem Teil der Funktionsdateien (HTML in #lw-park).
    *   teil:   id des Elements im Bereich #lw-park
    *   oeffnen: optional, beim Zeigen aufrufen (Reiter, die erst dann laden – Dorf, Unterricht, Lernwege, Medien)
    */
@@ -109,7 +107,7 @@ let selectedNewTagColor = 0;
     ...def,
     zeigen(host) {
       const el = document.getElementById(def.teil);
-      if (!el) throw new Error('Teil ' + def.teil + ' fehlt in admin-neu.html');
+      if (!el) throw new Error('Teil ' + def.teil + ' fehlt in admin.html');
       host.appendChild(el);
       el.hidden = false;
       aktuell = def.id;

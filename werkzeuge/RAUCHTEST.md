@@ -24,27 +24,25 @@ speichern → Meldung „Testumgebung: Speichern und Sicherung sind hier abgesch
 
 ## Admin (nach Änderungen am Admin, ca. 5 Minuten)
 
-Gehört zum Admin-Umbau (Inventar: `werkzeuge/admin-inventar.md`). Während der Testphase von Etappe 2 die
-Schritte **in beiden Admins** prüfen: `admin.html` (bisher) und `admin-neu.html` (neu, gleiche Funktionen in sechs
-Bereichen). Erst in der Testumgebung, dort wird nichts gespeichert. Beide teilen sich den Entwurf –
-nicht in zwei Tabs gleichzeitig ändern.
+Erst in der Testumgebung, dort wird nichts gespeichert. Den Admin nicht in zwei Tabs gleichzeitig ändern
+(beide teilen sich den Entwurf).
 
 | # | Schritt | Erwartung |
 |---|---|---|
 | A1 | Admin öffnen, abmelden, mit Passwort wieder anmelden | „Angemeldet bis …“ oben, Version stimmt |
 | A2 | Seite neu laden | bleibt angemeldet, App-Liste geladen |
-| A3 | Apps: eine App ausblenden und wieder einblenden | Entwurfs-Leiste zeigt „2 Änderungen“ |
-| A4 | Entwurf: „ansehen“ aufklappen, dann „Verwerfen“ | Liste zeigt beide Änderungen; danach Leiste weg, alter Stand |
-| A5 | Ordnen: ein Regal zwischen zwei Fächern ziehen, Vorschau öffnen, Verwerfen | Vorschau zeigt neue Ordnung, nach Verwerfen alter Stand |
-| A6 | Tags, Banner, Pass, Dorf je einmal öffnen | alles lädt ohne Fehlermeldung |
-| A7 | Unterricht: Fokus, Spielsperre (mit Ausnahmen), Freigaben, Gruppen-Auswertung öffnen | Gruppen der Sicherungskarten erscheinen, Auswertung lädt |
-| A8 | Lernwege öffnen | Lernwege mit Gruppen/Klassen zum Antippen |
-| A9 | Medien öffnen, ein kleines Bild hochladen, QR-Code zeigen, wieder löschen (nur live) | Upload läuft, QR öffnet die Datei, Speicheranzeige stimmt |
-| A10 | Sicherungskarten und Infokarten über die Kopfleiste öffnen | beide Seiten öffnen |
-| A11 | Live: eine kleine Änderung veröffentlichen | „Veröffentlicht“, nach ca. 1 Min. auf der Startseite sichtbar, unter „Zuletzt veröffentlicht“ |
-| A12 | Nur `admin-neu.html`: jeden der sechs Bereiche und jedes Modul oben antippen | jedes Modul zeigt Inhalt, keine Fehlermeldung; Adresse oben passt (z. B. `#/gruppen/spielsperre`) |
-| A13 | Nur `admin-neu.html`: im neuen Admin eine App ausblenden, dann `admin.html` öffnen | der bisherige Admin zeigt denselben Entwurf („1 Änderung“) |
-| A14 | Nur `admin-neu.html`: System → Diagnose | Version und Fehlerprotokoll dieses Geräts |
+| A3 | Inhalte → Apps: eine App ausblenden und wieder einblenden | Entwurf verschwindet wieder (Änderung zurückgenommen) |
+| A4 | Zwei Apps ausblenden, oben „2 ungespeicherte Änderungen“ antippen, dann „Verwerfen“ | Liste zeigt beide Änderungen und die geänderten Werte; danach alter Stand |
+| A5 | Inhalte → Ordnen: ein Regal zwischen zwei Fächern ziehen, Vorschau öffnen, Verwerfen | Vorschau zeigt neue Ordnung, nach Verwerfen alter Stand |
+| A6 | Inhalte → Tags, Start → Banner, Motivation → Pass und Mein Dorf je einmal öffnen | alles lädt ohne Fehlermeldung |
+| A7 | Inhalte → Freigaben; Gruppen → Fokus, Spielsperre (mit Ausnahmen), Auswertung öffnen | Gruppen der Sicherungskarten erscheinen, Auswertung lädt |
+| A8 | Gruppen → Lernwege öffnen | Lernwege mit Gruppen/Klassen zum Antippen |
+| A9 | Medien → Dateien öffnen, ein kleines Bild hochladen, QR-Code zeigen, wieder löschen (nur live) | Upload läuft, QR öffnet die Datei, Speicheranzeige stimmt |
+| A10 | System → Weitere Seiten: Sicherungskarten und Infokarten öffnen | beide Seiten öffnen |
+| A11 | Live: eine kleine Änderung veröffentlichen | „Veröffentlicht“, nach ca. 1 Min. auf der Startseite sichtbar, unter System → Entwurf und Versionen |
+| A12 | Jeden der sechs Bereiche und jedes Modul oben antippen | jedes Modul zeigt Inhalt, keine Fehlermeldung; Adresse oben passt (z. B. `#/gruppen/spielsperre`) |
+| A13 | Im Admin eine App ausblenden, Seite neu laden | Entwurf bleibt („1 ungespeicherte Änderung“), Verwerfen stellt zurück |
+| A14 | System → Diagnose | Version und Fehlerprotokoll dieses Geräts |
 
 **Wenn etwas nicht geht:** GitHub → Repo → „Commits“ → vorigen Stand öffnen → Dateien von dort
 zurückholen (oder Claude die Fehlermeldung schicken). Die Kinder verlieren dabei nichts: Speicherstände

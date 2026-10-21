@@ -1,7 +1,7 @@
 // ═══════════════════════════════════════════════════════
 //  Lernwelt-Admin (neu) – Rahmen: Anmeldung, Kopfleiste, Meldungen  (Admin-Umbau Etappe 1)
-//  Lädt als LETZTES Skript von admin-neu.html (nach store.js, module.js, bruecke.js und allen Modulen).
-//  Anmeldung wie im bisherigen Admin: ConfigAPI, Schlüssel 7 Tage gültig.
+//  Lädt als LETZTES Skript von admin.html (nach store.js, module.js, bruecke.js und allen Modulen).
+//  Anmeldung über ConfigAPI, Schlüssel 7 Tage gültig.
 // ═══════════════════════════════════════════════════════
 'use strict';
 
@@ -71,7 +71,7 @@
     if (!r.ok) toast('⚠ config.json konnte nicht geladen werden – Speichern ist gesperrt', true);
     else if (r.entwurfWieder) toast(`✏️ Entwurf mit ${r.entwurfWieder} Änderung${r.entwurfWieder === 1 ? '' : 'en'} wiederhergestellt`);
     const ctx = { store, gehe: LWAdmin.gehe, toast };
-    if (LWAdmin.bruecke) LWAdmin.bruecke.start(ctx);      // bisherige Admin-Funktionen (Etappe 2)
+    if (LWAdmin.bruecke) LWAdmin.bruecke.start(ctx);      // Funktionsdateien über die Brücke
     LWAdmin.starten(ctx);
   }
   function zeigeAnmeldung(text) {

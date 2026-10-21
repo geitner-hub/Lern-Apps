@@ -36,7 +36,7 @@ daten/                katalog.json (Inhalts-Katalog mit Themen-IDs), vokabeln5.j
                       tower-defense.json (Tower Defense: Karten, Landschaften, Wellen, Türme, Gegner)
 daten/inhalte/<fach>/ Inhaltsdateien des Baukastens (<Themen-ID>.json) und ihre Bilder (SVG)
 gemeinsam/            Code, den alle Seiten nutzen (siehe unten)
-gemeinsam/admin/      Module des Admins (admin.html lädt sie in fester Reihenfolge, Etappe 6)
+gemeinsam/admin/      Admin: Datenschicht, Modul-System, Brücke, Funktionsdateien; module/ = je Modul eine Datei
 gemeinsam/typen/      Die sieben Aufgabentypen (zuordnen, sortieren, lueckentext, eingabe, beschriften, bildwort, markieren)
 fonts/ icons/ vendor/ Schriften, Symbole, fremde Bibliotheken
 cloudflare/           Worker-Quelltext und Anleitung
@@ -95,7 +95,7 @@ Deshalb funktionieren sie aus jeder Ordnertiefe – nur der Pfad beim Einbinden 
 in einen anderen Ordner umziehen, ohne dass Fortschritt verloren geht (dann `config.json`
 über den Admin und die Liste in `404.html` anpassen).
 
-## Medienbereich (Admin-Tab „📁 Medien“, v70)
+## Medienbereich (Admin → 📁 Medien → Dateien, v70)
 
 Dateien (Bilder, Videos, Audio, PDF, Office, Pages/Keynote …) im Admin hochladen und per QR-Code oder Kurzlink
 `…workers.dev/m/<code>` zeigen – **ohne Bezug zur Lernwelt** (keine Navbar, kein Pass, kein Lernwelt-Design).
@@ -202,8 +202,9 @@ das ist die Menge, die übers Schul-WLAN geht; komprimiert ≈ ein Drittel der D
 ## Admin: Ordnen, Regale, Entwurf → Veröffentlichen (Infrastruktur Etappe 6)
 
 - **Entwurf → Veröffentlichen:** Jede Änderung im Admin landet zuerst als Entwurf auf dem Gerät
-  (`lernwelt-admin-entwurf`). Unten erscheint eine Leiste „✏️ n Änderungen noch nicht veröffentlicht“ mit
-  **🚀 Veröffentlichen** (ein Commit für alles), **Verwerfen** und der Liste der letzten Veröffentlichungen.
+  (`lernwelt-admin-entwurf`). Oben in der Kopfleiste stehen „n ungespeicherte Änderungen“ (antippen: Liste und
+  geänderte Werte), **Verwerfen** und **🚀 Veröffentlichen** (ein Commit für alles); die letzten
+  Veröffentlichungen unter System → Entwurf und Versionen.
   Der Entwurf überlebt Neuladen; wurde config.json inzwischen woanders geändert, fragt der Admin nach.
 - **🗂 Ordnen** (ersetzt „Sichtbarkeit“): Fächer, Regale und Apps per Finger ziehen (SortableJS in `vendor/`,
   MIT-Lizenz). **Regale** = Untergruppen eines Fachs (`config.gruppen: [{ id, fach, name }]`, `apps[].gruppe`).
@@ -211,14 +212,22 @@ das ist die Menge, die übers Schul-WLAN geht; komprimiert ≈ ein Drittel der D
 - **Schülervorschau:** „👁 Vorschau öffnen“ zeigt die Startseite mit dem aktuellen Admin-Stand für eine Klasse
   (`index.html?vorschau=5`, liest `lernwelt-admin-vorschau`).
 - **Suche und Filter** in der App-Liste: Name, Fach, Klasse, Sichtbarkeit.
-- **Module:** `gemeinsam/admin/` – kern (Anmeldung, Laden, Entwurf), pass, spiele, dorf, uebersicht, apps,
-  sichtbarkeit (alt), ordnen, tags, werkzeuge, freigaben (Etappe 7), start (immer zuletzt).
+- **Aufbau (Admin-Umbau, Etappe 1–2):** sechs Bereiche Start · Inhalte · Gruppen · Motivation · Medien · System
+  (Seitenleiste, am schmalen iPad unten), Adressen wie `admin.html#/gruppen/spielsperre`.
+  `gemeinsam/admin/store.js` (Datenschicht `LWAdmin.store`: laden, Entwurf, Unterschiede, veröffentlichen),
+  `module.js` (`LWAdmin.modul({ id, bereich, titel, symbol, suchbegriffe, rechte, zeigen })`), `rahmen.js`
+  (Anmeldung, Kopfleiste). Die Funktionsdateien `apps`, `ordnen`, `sichtbarkeit`, `tags`, `werkzeuge`, `pass`,
+  `spiele`, `dorf`, `uebersicht`, `freigaben`, `medien` laufen über `bruecke.js` (globale Namen wie `CONFIG`,
+  `saveConfig`, `buildAll`); ihr HTML steht versteckt in `#lw-park` von `admin.html` und wird von
+  `LWAdmin.altModul({ teil })` eingehängt. Stile: `gemeinsam/admin/admin.css`. Bestandsaufnahme: `werkzeuge/admin-inventar.md`.
+- **Neues Modul:** Datei `gemeinsam/admin/module/<bereich>-<name>.js` mit `LWAdmin.modul({…})`, dazu eine Zeile
+  in `admin.html` (pruefen.py Regel 17 prüft Einbindung, IDs und Bereiche).
 - **Worker zuerst:** Der Worker prüft seit Etappe 6 `gruppen`, `apps[].gruppe` und `catOrder`
   (`cloudflare/worker.js` bei Cloudflare einfügen, bevor der neue Admin Regale speichert).
 
 ## Freischaltung und Fokus-Modus (Infrastruktur Etappe 7)
 
-Admin → **🎯 Unterricht** (Startseite, Fokus, Freigaben, Gruppen-Auswertung). Ohne Accounts: ein iPad weiß, wer es ist, aus der **Klasse im Pass** und – falls eine
+Admin → **Inhalte → 🔐 Freigaben** (mit „Heute für dich“) und **Gruppen → 🎯 Fokus / 📊 Auswertung**. Ohne Accounts: ein iPad weiß, wer es ist, aus der **Klasse im Pass** und – falls eine
 Sicherungskarte verbunden ist – aus der **Kartengruppe** (der Sync-Worker schickt deren Kennung mit).
 
 - **Freigaben** (`config.freigaben`): je Themen-ID, für wen was gilt.
@@ -233,7 +242,7 @@ Sicherungskarte verbunden ist – aus der **Kartengruppe** (der Sync-Worker schi
 - **Fokus** (`config.fokus[]`): „für Klasse 6 / Gruppe 5a bis 13 Uhr nur diese Apps“. Die Startseite zeigt dann nur
   diese Apps mit dem Hinweis „🎯 Heute im Fokus“ und wird am Ende von selbst wieder normal. Direkte Links und
   QR-Codes funktionieren weiter.
-- **Spielsperre** (`config.spielsperre`, Admin → 🎯 Unterricht → „🎮 Spiele erst nach Lern-Runden“): Spiele
+- **Spielsperre** (`config.spielsperre`, Admin → Gruppen → 🎮 Spielsperre): Spiele
   (`spiele/…`, **außer Mein Dorf**) gehen erst auf, wenn das Kind heute so viele gute Runden in Lern-Apps geschafft hat.
   `{ schwelle: 60, runden: { "alle": [Mo, Di, Mi, Do, Fr, Sa, So], "k5": […], "g:<gruppe>": […] } }` – genaueste Liste
   gilt (Gruppe vor Klasse vor alle), 0 = keine Sperre. Gezählt im Pass (`lernwelt-pass` → `today.lr`: Lern-App-Runden ab
@@ -268,10 +277,10 @@ Sicherungskarte verbunden ist – aus der **Kartengruppe** (der Sync-Worker schi
   Meisterschaft einer Stufe. Der Vokabeltrainer hat dafür weiter „Schwierige Wörter üben“.
 - **„Heute für dich“** (index.html, nur mit Pass): höchstens drei Karten – Lehrer-Zettel von heute, fällige
   Wiederholung, nächstes Ziel im Pass (Wochenziel bzw. nächstes Level). Abschaltbar im Admin unter
-  „🎯 Unterricht → Startseite“ (`config.heute = false`, der Worker prüft das Feld).
+  „Inhalte → 🔐 Freigaben → Startseite“ (`config.heute = false`, der Worker prüft das Feld).
 - **Infokarten** (`infokarten.html`, ohne Passwort, Link im Admin oben): je App Fach, Klassen, Lehrplanbezug, Dauer,
   Einsatzidee, Stufen und QR-Code, erzeugt aus config.json und dem Katalog; filterbar, druckbar (helles Druckbild).
-- **Gruppen-Auswertung** (Admin → „🎯 Unterricht“, Zustimmung der Schulleitung liegt vor): iPads **mit
+- **Gruppen-Auswertung** (Admin → Gruppen → 📊 Auswertung, Zustimmung der Schulleitung liegt vor): iPads **mit
   Sicherungskarte in einer Gruppe** zählen je gewerteter Runde (ohne Durchklicken) Thema bzw. App und Woche mit
   (`lernwelt-statistik`) und schicken die Summen gebündelt an `/sync/statistik` (gemeinsam/sync.js). Der Sync-Worker
   prüft die Karte und addiert auf **Gruppe × Thema × Woche** (Tabelle `sync_statistik`) – welche Karte gemeldet hat,
@@ -329,7 +338,7 @@ Eine neue App = **Inhaltsdatei + Katalog-Eintrag + Admin-Eintrag**. Kein neuer C
    config.json. Neue Inhaltsdateien zusätzlich in `sw.js` → `NACHLADEN` eintragen (offline).
 
 **Was jeder Inhalt automatisch hat:** Stufenwahl, Rückmeldung mit Erklärung, Meisterschaft (⭐), Freigabe (erscheint
-selbst im Admin unter „🎯 Unterricht“), Wiederholung, Fehler-Training, Infokarte, Dorf-Aufträge, Gruppen-Auswertung.
+selbst im Admin unter Inhalte → 🔐 Freigaben), Wiederholung, Fehler-Training, Infokarte, Dorf-Aufträge, Gruppen-Auswertung.
 
 - **Technik:** `apps/typen/uebung.html?inhalt=ID` → `gemeinsam/typen.js` (`LernTypen`) lädt die Inhaltsdatei und den
   Typ (`LW.laden('gemeinsam/typen/<typ>.js')`) und startet `LernUeben.start`. Typen nutzen die Aufgabenart `eigen` des
@@ -353,7 +362,7 @@ selbst im Admin unter „🎯 Unterricht“), Wiederholung, Fehler-Training, Inf
   mit dem gedruckten Lösungsheft; **keine automatische Kontrolle, kein Ergebnis für Pass/Sterne**.
   Gespeichert wird nur auf dem Gerät (`lernwelt-lernweg`: abgehakte Schritte, Smileys).
 - **Nur für zugeteilte Gruppen:** Ein Lernweg ist keine App in config.json. Ohne Eintrag ist er gesperrt
-  (`LernFreigabe.zugeteilt(id)` – umgekehrt zu `erlaubt`). Admin → Tab **🗺️ Lernwege**: Gruppe
+  (`LernFreigabe.zugeteilt(id)` – umgekehrt zu `erlaubt`). Admin → Gruppen → **🗺️ Lernwege**: Gruppe
   (Sicherungskarten) oder Klasse antippen → `freigaben[<ID>][wer] = 'offen'`, dann veröffentlichen. Zugeteilte
   Lernwege erscheinen oben auf der Startseite unter „🧭 Mein Lernweg“. Mit Admin-Anmeldung auf dem Gerät ist jeder
   Lernweg als Vorschau zu sehen (Beamer).
@@ -379,10 +388,10 @@ selbst im Admin unter „🎯 Unterricht“), Wiederholung, Fehler-Training, Inf
 - **Zurück zum Lernweg:** Wer aus dem Lernweg eine App öffnet, bekommt dort oben den Knopf „🧭 Zurück zum Lernweg“
   (`gemeinsam/lernweg-zurueck.js`, nur nachgeladen, wenn `lernwelt-lernweg-zurueck` im Tab gesetzt ist).
 - **Startseite:** zugeteilte Lernwege stehen ganz oben als großes Banner mit Fortschrittsring und nächster Station.
-- **Klassen-Übersicht (Admin → Tab 🗺️ Lernwege → „📊 Stand der Klasse“):** Jedes iPad mit Sicherungskarte in einer Gruppe meldet
+- **Klassen-Übersicht (Admin → Gruppen → 🗺️ Lernwege → „📊 Stand der Klasse“):** Jedes iPad mit Sicherungskarte in einer Gruppe meldet
   je Station einmal „begonnen“ und einmal „kontrolliert“ (mit Niveau) über die vorhandene Gruppenauswertung
   (`LernSync.lernwegMelden`, Thema `lw:<ID>:<Station>:b` bzw. `:k<0–3>`). Der Worker addiert nur Summen je Gruppe – keine
-  Kennung, keine Namen; dafür war keine Worker-Änderung nötig. Die normale Gruppen-Auswertung im Tab „🎯 Unterricht“
+  Kennung, keine Namen; dafür war keine Worker-Änderung nötig. Die normale Gruppen-Auswertung unter Gruppen → 📊 Auswertung
   blendet diese Einträge aus. iPads ohne Karte fehlen in der Übersicht (dafür der Klassen-Laufzettel).
 - **Erster Lernweg:** `en.6.lernweg-u1` (Highlight 6, Unit 1 „Together again“, 7 Stationen; Hören macht die Lehrkraft im Unterricht,
   Extras sind nummerierte Arbeitsblätter am Pult – die Kinder haben kein Workbook).
@@ -508,12 +517,12 @@ in `RULES` am Anfang von `pass.js` und können dort angepasst werden.
 - **Pass-Reiter:** Garderobe (Start) · Truhen · Erfolge (Leiste + Abzeichen) · Sicherung (Karte verbinden
   bzw. Stand der automatischen Sicherung; „!“, wenn die verbundene Karte nicht mehr gilt).
 - **Abzeichen:** schalten legendäre Set-Teile frei (Liste in `lernwelt-inhalte.json`).
-- **Saison-Modus** (Admin → 🧭 Pass): Level/Titel zählen pro Schuljahr, Wechsel automatisch am
+- **Saison-Modus** (Admin → Motivation → 🧭 Pass): Level/Titel zählen pro Schuljahr, Wechsel automatisch am
   1. August. Gesamt-XP, Sterne, Abzeichen, Truhen und Cosmetics bleiben.
-- **Events** (Admin → 🧭 Pass, einzeln schaltbar): Halloween, Weihnachten, Ostern. Während eines
+- **Events** (Admin → Motivation → 🧭 Pass, einzeln schaltbar): Halloween, Weihnachten, Ostern. Während eines
   Events: 60 % Event-Teile in Truhen, eine Geschenk-Truhe nach der ersten guten Runde (einmal pro
   Schuljahr), Event-Abzeichen nach 3 guten Tagen mit legendärem Teil.
-- **Avatar-Auftritte** (Admin → 🧭 Pass, Schalter „Avatar nach Runden anzeigen“, Standard: an): nach
+- **Avatar-Auftritte** (Admin → Motivation → 🧭 Pass, Schalter „Avatar nach Runden anzeigen“, Standard: an): nach
   jeder Runde erscheint die eigene Figur ca. 3 s unten rechts – jubelt ab 50 %, winkt aufmunternd darunter
   (nie traurig), feiert Level, Sterne, Abzeichen, Truhen und Geschenke länger mit goldener Sprechblase.
   Feuerwerk bei Level-Aufstieg und Abzeichen, Konfetti bei 100 %-Runden, Gold-Stern, neuer Truhe und
@@ -577,7 +586,7 @@ Jedes Teil in `ITEMS` beschreibt seine Form als Liste von Blöcken in `modell`. 
   `vorne`/`hinten`/`seite` (nur auf dieser Seite) und `loecher`.
 - **Hintergründe** haben `css` (Bühnenfarbe), `deko` (SVG) und `boden` (Farbe der Plattform).
 - **Figur-Optionen** (`AVATAR.FRISUREN`, `AUGEN`, `MUENDER`, `HAUT`, `HAARFARBEN`) funktionieren genauso.
-- Tipp: neues Teil zuerst im Admin unter 🧭 Pass → Avatar-Teile ansehen – dort erscheint die Vorschau.
+- Tipp: neues Teil zuerst im Admin unter Motivation → 🧭 Pass → Avatar-Teile ansehen – dort erscheint die Vorschau.
 
 ## Tower Defense (spiele/burg-verteidigung.html)
 
@@ -661,7 +670,7 @@ Plan und Stand: Claude-Doc „Aktionsplan: Aufbauspiel „Mein Dorf““.
   vom Brett“, oder von der Lehrkraft im Admin (🏘️ Dorf) je Woche und Klasse eine App oder ein Thema
   (z. B. „Vokabeln Unit 2“ = Runden, die `vok5:unit2…` melden). Belohnung 30 Holz + 30 Stein + 2 Gold – Gold
   gibt es nur hierfür. Ein neuer Auftrag der Lehrkraft ersetzt einen offenen; am Montag beginnt ein neuer.
-- **Admin → 🏘️ Dorf:** Wochenaufträge, Auftragsplätze (1–3), Tausche pro Tag / höchstens, Baukosten-Faktor,
+- **Admin → Motivation → 🏘️ Mein Dorf:** Wochenaufträge, Auftragsplätze (1–3), Tausche pro Tag / höchstens, Baukosten-Faktor,
   Apps ausschließen, Übersicht der Dorf-Inhalte. Gespeichert in `config.json` → `"dorf"` und `apps[].dorf`.
   Der Worker (`cloudflare/worker.js`) prüft diese Felder ab der Version mit „Mein Dorf“ – der alte Worker
   lässt sie ungeprüft durch, beides funktioniert.
@@ -719,7 +728,7 @@ Plan und Stand: Claude-Doc „Aktionsplan: Aufbauspiel „Mein Dorf““.
     Meldung der Lern-Apps. Verschwindet von selbst, wenn gebaut.
   - **Rohstoff-Lenkung** (`AUFTRAEGE.tag.rohstoffLenkung`, Start 0,7): so viele neue Aufträge bringen den
     Rohstoff, der fürs Ziel bzw. im Vorrat fehlt.
-  - **Runden je App:** Admin → 🏘️ Dorf → Apps (`apps[].dorfRunden`, 1–10), gilt für neue Aufträge.
+  - **Runden je App:** Admin → Motivation → 🏘️ Mein Dorf → Apps (`apps[].dorfRunden`, 1–10), gilt für neue Aufträge.
   - **Lehrer-Zettel** (Platz 5, `config.json` → `dorf.lehrerZettel`: `{ id, start, bis, app, text, runden, klassen }`):
     im Admin unter 📣 Lehrer-Zettel; hängt von start bis bis oben am Brett, pro Kind nur einmal, Belohnung wie ein
     Tagesauftrag, kein Tausch. **Braucht den aktuellen Worker.**

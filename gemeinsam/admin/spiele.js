@@ -1,8 +1,7 @@
 // ═══════════════════════════════════════════════════════
 //  Lernwelt-Admin – Spiele: „Meine Themen“
 //  Teil von admin.html (Infrastruktur Etappe 6: Admin in Module zerlegt).
-//  Alle Module teilen sich die globalen Variablen aus kern.js (CONFIG, ghSha …)
-//  und werden in admin.html in fester Reihenfolge geladen.
+//  Läuft über gemeinsam/admin/bruecke.js (CONFIG, saveConfig, buildAll …), eingebunden in admin.html.
 // ═══════════════════════════════════════════════════════
 'use strict';
 
@@ -109,7 +108,7 @@ document.getElementById('pass-settings').addEventListener('change', e => {
 
 // pass.js meldet sich, sobald seine Inhalte geladen sind
 window.addEventListener('lernpass:ready', () => {
-  const admin = document.getElementById('app') || document.getElementById('admin');   // admin.html bzw. admin-neu.html
+  const admin = document.getElementById('admin');
   if (CONFIG && admin && admin.style.display === 'block') { buildPassAdmin(); buildDashboard(); }
 });
 
