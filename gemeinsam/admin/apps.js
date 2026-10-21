@@ -24,12 +24,14 @@ function buildAppList() {
       return `<span class="rtag ct" style="background:${col.bg};border-color:${col.border};color:${col.text};">${escHtml(tagName(t))}</span>`;
     }).join('');
 
+    // Kachel (Admin-Umbau): Symbol und Titel oben, Knöpfe am unteren Rand; beim Bearbeiten wird sie breit
     row.innerHTML = `
-      <span class="drag-handle">⠿</span>
+      <span class="drag-handle" title="Ziehen zum Umsortieren">⠿</span>
       <span class="row-emoji">${escHtml(app.emoji || '📱')}</span>
-      <div class="row-info" style="flex:1;min-width:0;">
+      <div class="row-info">
         <div class="row-name">${escHtml(app.name)}${app.aod ? '<span class="aod-indicator">⭐ Heute</span>' : ''}</div>
-        <div class="row-meta">${escHtml(app.fach || '–')} · ${escHtml(app.datei || '–')}</div>
+        <div class="row-meta">${escHtml(app.fach || '–')}</div>
+        <div class="row-datei" title="${escHtml(app.datei || '')}">${escHtml(app.datei || '–')}</div>
         <div class="row-tags">${klTags}${ctTags}${!klTags && !ctTags ? '<span style="font-size:.68rem;color:var(--muted)">Keine Tags</span>' : ''}</div>
         <div class="inline-edit" id="edit-${i}">
           <div class="form-group"><label>Name</label><input type="text" id="ei-name-${i}" value="${escHtml(app.name)}"/></div>
@@ -117,8 +119,9 @@ function filterAppList() {
   document.querySelectorAll('#app-list .app-row').forEach(row => {
     const name     = (row.querySelector('.row-name')?.textContent || '').toLowerCase();
     const meta     = (row.querySelector('.row-meta')?.textContent || '').toLowerCase();
+    const datei    = (row.querySelector('.row-datei')?.textContent || '').toLowerCase();
     const isHidden = row.classList.contains('is-hidden');
-    const matchQ   = !q      || name.includes(q) || meta.includes(q);
+    const matchQ   = !q      || name.includes(q) || meta.includes(q) || datei.includes(q);
     const matchF   = !fach   || meta.includes(fach.toLowerCase());
     const matchS   = !status || (status === 'hidden' && isHidden) || (status === 'visible' && !isHidden);
     const kls      = row.dataset.kl ? row.dataset.kl.split(',') : [];
