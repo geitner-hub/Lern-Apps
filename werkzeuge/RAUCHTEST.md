@@ -24,8 +24,10 @@ speichern → Meldung „Testumgebung: Speichern und Sicherung sind hier abgesch
 
 ## Admin (nach Änderungen am Admin, ca. 5 Minuten)
 
-Gehört zum Admin-Umbau (Inventar: `werkzeuge/admin-inventar.md`). Bis Etappe 2 im **bisherigen Admin**
-(`admin.html`) prüfen, ab dann im neuen. Erst in der Testumgebung, dort wird nichts gespeichert.
+Gehört zum Admin-Umbau (Inventar: `werkzeuge/admin-inventar.md`). Während der Testphase von Etappe 2 die
+Schritte **in beiden Admins** prüfen: `admin.html` (bisher) und `admin-neu.html` (neu, gleiche Funktionen in sechs
+Bereichen). Erst in der Testumgebung, dort wird nichts gespeichert. Beide teilen sich den Entwurf –
+nicht in zwei Tabs gleichzeitig ändern.
 
 | # | Schritt | Erwartung |
 |---|---|---|
@@ -40,7 +42,9 @@ Gehört zum Admin-Umbau (Inventar: `werkzeuge/admin-inventar.md`). Bis Etappe 2 
 | A9 | Medien öffnen, ein kleines Bild hochladen, QR-Code zeigen, wieder löschen (nur live) | Upload läuft, QR öffnet die Datei, Speicheranzeige stimmt |
 | A10 | Sicherungskarten und Infokarten über die Kopfleiste öffnen | beide Seiten öffnen |
 | A11 | Live: eine kleine Änderung veröffentlichen | „Veröffentlicht“, nach ca. 1 Min. auf der Startseite sichtbar, unter „Zuletzt veröffentlicht“ |
-| A12 | `admin-neu.html` öffnen (bis Etappe 2) | gleiche Anmeldung, danach Seite „Hier entsteht der neue Admin“ |
+| A12 | Nur `admin-neu.html`: jeden der sechs Bereiche und jedes Modul oben antippen | jedes Modul zeigt Inhalt, keine Fehlermeldung; Adresse oben passt (z. B. `#/gruppen/spielsperre`) |
+| A13 | Nur `admin-neu.html`: im neuen Admin eine App ausblenden, dann `admin.html` öffnen | der bisherige Admin zeigt denselben Entwurf („1 Änderung“) |
+| A14 | Nur `admin-neu.html`: System → Diagnose | Version und Fehlerprotokoll dieses Geräts |
 
 **Wenn etwas nicht geht:** GitHub → Repo → „Commits“ → vorigen Stand öffnen → Dateien von dort
 zurückholen (oder Claude die Fehlermeldung schicken). Die Kinder verlieren dabei nichts: Speicherstände

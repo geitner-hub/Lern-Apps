@@ -2,6 +2,7 @@
 
 Bestandsaufnahme des alten Admins (`admin.html` + `gemeinsam/admin/*.js`, Stand v70) als Grundlage für den
 Umbau. **Etappe 2** hakt jede Zeile ab, sobald die Funktion im neuen Admin (`admin-neu.html`) gleich funktioniert.
+☑ = im neuen Admin vorhanden (Etappe 2, über die Brücke `gemeinsam/admin/bruecke.js`; Adresse in Klammern).
 **Etappe 4** nutzt die Spalte „Suchbegriffe“ für den Suchindex.
 
 Bereiche im neuen Admin: **Start · Inhalte · Gruppen · Motivation · Medien · System**.
@@ -10,41 +11,41 @@ Bereiche im neuen Admin: **Start · Inhalte · Gruppen · Motivation · Medien �
 
 | Alter Reiter | Funktion | Datei (alt) | config.json / Worker | Neuer Bereich | Suchbegriffe | Umgezogen |
 |---|---|---|---|---|---|---|
-| (Kopf) | Anmelden mit Passwort, 7-Tage-Schlüssel, Sitzung prüfen | `kern.js`, `start.js`, `config-api.js` | `/login`, `/session` | System | Anmeldung, Passwort | ☐ |
-| (Kopf) | Dieses Gerät abmelden / Alle Geräte abmelden | `kern.js` | `/logout-all` | System | Abmelden, Geräte | ☐ |
-| (Kopf) | Entwurf merken, Leiste „x Änderungen“, Verwerfen, Veröffentlichen (ein Commit) | `kern.js` | `PUT /` | Kopfleiste | Entwurf, Veröffentlichen | ☐ |
-| (Kopf) | Letzte 5 Veröffentlichungen (GitHub-Commits an config.json) | `kern.js` | öffentliche GitHub-API | System (Etappe 3: Versionsverlauf) | Verlauf, Historie | ☐ |
-| (Kopf) | Versionsanzeige | `admin.html` (inline) | – | Kopfleiste | Version | ☐ |
-| (Kopf) | Links zu Sicherungskarten, Infokarten, Startseite | `admin.html` | – | Gruppen / Inhalte | Karten | ☐ |
-| 📊 Dashboard | Kennzahlen (Apps, sichtbar, versteckt, Tags, Banner), Pass-Status | `uebersicht.js` | – | Start (wird umgebaut) | Übersicht | ☐ |
-| 📊 Dashboard | App des Tages anzeigen | `uebersicht.js` | `apps[].aod` | Start | App des Tages | ☐ |
-| 📊 Dashboard | „Letzte Aktionen“ (nur diese Sitzung) | `uebersicht.js` (`logChange`) | – | Start | Aktionen | ☐ |
-| 📱 Apps | Neue App anlegen (Emoji, Name, Datei, Fach, Beschreibung) | `apps.js` | `apps[]` | Inhalte | App hinzufügen | ☐ |
-| 📱 Apps | Liste mit Suche, Fach-, Klassen-, Statusfilter | `apps.js` | – | Inhalte | Suche, Filter | ☐ |
-| 📱 Apps | Bearbeiten, Ein-/Ausblenden, App des Tages, Löschen mit Rückgängig | `apps.js` | `apps[].hidden`, `.aod` | Inhalte | bearbeiten, verstecken | ☐ |
-| 📱 Apps | QR-Code einer App zeigen/speichern | `tags.js` (`showQR`) | – | Inhalte (+ Unterrichtsmodus) | QR | ☐ |
-| 🗂 Ordnen | Fächer und Regale per Drag & Drop, Apps verschieben, Fach ausblenden | `ordnen.js`, `sichtbarkeit.js`, `vendor/Sortable.min.js` | `catOrder`, `hiddenCats`, `gruppen[]`, `apps[].gruppe` | Inhalte | Regal, Reihenfolge | ☐ |
-| 🗂 Ordnen | Schüler-Vorschau der Startseite je Klasse | `ordnen.js` | localStorage `lernwelt-admin-vorschau` | Inhalte | Vorschau | ☐ |
-| 🏷 Tags | Eigene Tags anlegen, Farbe wählen | `tags.js` | `customTags[]` | Inhalte | Tags | ☐ |
-| 🏷 Tags | Tags und Klassenstufen je App zuweisen (Modal) | `tags.js` | `apps[].customTags`, `.klassen` | Inhalte | Klasse, Tags | ☐ |
-| 📢 Banner | Ankündigungs-Banner mit Vorschau, Farbe, an/aus | `werkzeuge.js` | `announcement` | Start | Banner, Ankündigung | ☐ |
-| 🧭 Pass | Saison-Modus, Avatar, Events an/aus | `pass.js` | `pass.seasons`, `.avatar`, `.events` | Motivation | Saison, Event | ☐ |
-| 🧭 Pass | Spiele: „Meine Themen“-Schwellen, Auswahl, Starter, Wort-Units | `spiele.js` | `spiele` | Inhalte | Meine Themen, RUN, Burg | ☐ |
-| 🧭 Pass | Übersicht aller Inhalte und Titel (nur Ansicht) | `uebersicht.js` | – | Motivation | Titel, Inhalte | ☐ |
-| 🏘️ Dorf | Wochenauftrag | `dorf.js` | `dorf.wochen[]` | Motivation | Wochenauftrag | ☐ |
-| 🏘️ Dorf | Lehrer-Zettel am Auftragsbrett | `dorf.js` | `dorf.lehrerZettel[]` | Motivation | Zettel, Hausaufgabe | ☐ |
-| 🏘️ Dorf | Challenges (eigene starten, Rotation) | `dorf.js` | `dorf.challenges[]`, `.challengeRotation` | Motivation | Challenge, Trophäe | ☐ |
-| 🏘️ Dorf | Einstellungen (Plätze, Neu-Würfeln, Baukosten-Faktor) | `dorf.js` | `dorf.plaetze`, `.rerollsProTag`, `.rerollsMax`, `.kostenfaktor` | Motivation | Dorf | ☐ |
-| 🏘️ Dorf | Apps für Aufträge ausschließen, Runden je Auftrag | `dorf.js` | `apps[].dorf`, `.dorfRunden` | Motivation | Aufträge | ☐ |
-| 🏘️ Dorf | Übersicht Dorf-Inhalte (nur Ansicht) | `dorf.js` | – | Motivation | Gebäude | ☐ |
-| 🎯 Unterricht | Startseite: „Heute für dich“ an/aus | `freigaben.js` | `heute` | Inhalte | Heute | ☐ |
-| 🎯 Unterricht | Fokus „heute nur diese Apps“ je Gruppe/Klasse | `freigaben.js` | `fokus[]` | Gruppen (+ Unterrichtsmodus) | Fokus | ☐ |
-| 🎯 Unterricht | Spielsperre je Wochentag und Gruppe/Klasse, Schwelle | `freigaben.js` | `spielsperre.schwelle`, `.runden` | Gruppen | Spielsperre | ☐ |
-| 🎯 Unterricht | Ausnahmen von der Spielsperre (enden von selbst) | `freigaben.js` | `spielsperre.ausnahmen[]` | Gruppen (+ Unterrichtsmodus) | Spiele frei | ☐ |
-| 🎯 Unterricht | Freigaben je Stufe/Unit (zu, offen, ab Datum) | `freigaben.js` | `freigaben` | Inhalte (Etappe 8: Katalog-Baum) | Freigabe, Sperre, Stufe | ☐ |
-| 🎯 Unterricht | Gruppen-Auswertung (anonyme Summen je Thema) | `freigaben.js` | `/sync/admin/statistik` | Gruppen | Auswertung, Fortschritt | ☐ |
-| 🗺️ Lernwege | Lernwege Gruppen/Klassen zuteilen, Vorschau, Klassen-Übersicht | `freigaben.js` (`buildLernwegeTab`) | `freigaben[ID][wer] = 'offen'`, `/sync/admin/statistik` | Gruppen | Lernweg, Stationen | ☐ |
-| 📁 Medien | Hochladen (auch in Teilen), Untertitel, Ordner, Sammlungen, Ein/Aus, Löschen, QR, Beamer, Speicheranzeige | `medien.js` (fertig, wirkt sofort) | `/medien/admin/*` (R2 + `SYNC_DB`) | Medien | Datei, QR, Beamer | ☐ |
+| (Kopf) | Anmelden mit Passwort, 7-Tage-Schlüssel, Sitzung prüfen | `kern.js`, `start.js`, `config-api.js` | `/login`, `/session` | System | Anmeldung, Passwort | ☑ System (#/system/anmeldung) |
+| (Kopf) | Dieses Gerät abmelden / Alle Geräte abmelden | `kern.js` | `/logout-all` | System | Abmelden, Geräte | ☑ #/system/anmeldung |
+| (Kopf) | Entwurf merken, Leiste „x Änderungen“, Verwerfen, Veröffentlichen (ein Commit) | `kern.js` | `PUT /` | Kopfleiste | Entwurf, Veröffentlichen | ☑ Kopfleiste |
+| (Kopf) | Letzte 5 Veröffentlichungen (GitHub-Commits an config.json) | `kern.js` | öffentliche GitHub-API | System (Etappe 3: Versionsverlauf) | Verlauf, Historie | ☑ #/system/entwurf |
+| (Kopf) | Versionsanzeige | `admin.html` (inline) | – | Kopfleiste | Version | ☑ Kopfleiste |
+| (Kopf) | Links zu Sicherungskarten, Infokarten, Startseite | `admin.html` | – | Gruppen / Inhalte | Karten | ☑ #/system/seiten, #/gruppen/karten |
+| 📊 Dashboard | Kennzahlen (Apps, sichtbar, versteckt, Tags, Banner), Pass-Status | `uebersicht.js` | – | Start (wird umgebaut) | Übersicht | ☑ #/start/uebersicht |
+| 📊 Dashboard | App des Tages anzeigen | `uebersicht.js` | `apps[].aod` | Start | App des Tages | ☑ #/start/uebersicht |
+| 📊 Dashboard | „Letzte Aktionen“ (nur diese Sitzung) | `uebersicht.js` (`logChange`) | – | Start | Aktionen | ☑ #/start/uebersicht |
+| 📱 Apps | Neue App anlegen (Emoji, Name, Datei, Fach, Beschreibung) | `apps.js` | `apps[]` | Inhalte | App hinzufügen | ☑ #/inhalte/apps |
+| 📱 Apps | Liste mit Suche, Fach-, Klassen-, Statusfilter | `apps.js` | – | Inhalte | Suche, Filter | ☑ #/inhalte/apps |
+| 📱 Apps | Bearbeiten, Ein-/Ausblenden, App des Tages, Löschen mit Rückgängig | `apps.js` | `apps[].hidden`, `.aod` | Inhalte | bearbeiten, verstecken | ☑ #/inhalte/apps |
+| 📱 Apps | QR-Code einer App zeigen/speichern | `tags.js` (`showQR`) | – | Inhalte (+ Unterrichtsmodus) | QR | ☑ #/inhalte/apps |
+| 🗂 Ordnen | Fächer und Regale per Drag & Drop, Apps verschieben, Fach ausblenden | `ordnen.js`, `sichtbarkeit.js`, `vendor/Sortable.min.js` | `catOrder`, `hiddenCats`, `gruppen[]`, `apps[].gruppe` | Inhalte | Regal, Reihenfolge | ☑ #/inhalte/ordnen |
+| 🗂 Ordnen | Schüler-Vorschau der Startseite je Klasse | `ordnen.js` | localStorage `lernwelt-admin-vorschau` | Inhalte | Vorschau | ☑ #/inhalte/ordnen |
+| 🏷 Tags | Eigene Tags anlegen, Farbe wählen | `tags.js` | `customTags[]` | Inhalte | Tags | ☑ #/inhalte/tags |
+| 🏷 Tags | Tags und Klassenstufen je App zuweisen (Modal) | `tags.js` | `apps[].customTags`, `.klassen` | Inhalte | Klasse, Tags | ☑ #/inhalte/tags |
+| 📢 Banner | Ankündigungs-Banner mit Vorschau, Farbe, an/aus | `werkzeuge.js` | `announcement` | Start | Banner, Ankündigung | ☑ #/start/banner |
+| 🧭 Pass | Saison-Modus, Avatar, Events an/aus | `pass.js` | `pass.seasons`, `.avatar`, `.events` | Motivation | Saison, Event | ☑ #/motivation/pass |
+| 🧭 Pass | Spiele: „Meine Themen“-Schwellen, Auswahl, Starter, Wort-Units | `spiele.js` | `spiele` | Inhalte | Meine Themen, RUN, Burg | ☑ #/motivation/pass (steht im Pass-Formular) |
+| 🧭 Pass | Übersicht aller Inhalte und Titel (nur Ansicht) | `uebersicht.js` | – | Motivation | Titel, Inhalte | ☑ #/motivation/pass |
+| 🏘️ Dorf | Wochenauftrag | `dorf.js` | `dorf.wochen[]` | Motivation | Wochenauftrag | ☑ #/motivation/dorf |
+| 🏘️ Dorf | Lehrer-Zettel am Auftragsbrett | `dorf.js` | `dorf.lehrerZettel[]` | Motivation | Zettel, Hausaufgabe | ☑ #/motivation/dorf |
+| 🏘️ Dorf | Challenges (eigene starten, Rotation) | `dorf.js` | `dorf.challenges[]`, `.challengeRotation` | Motivation | Challenge, Trophäe | ☑ #/motivation/dorf |
+| 🏘️ Dorf | Einstellungen (Plätze, Neu-Würfeln, Baukosten-Faktor) | `dorf.js` | `dorf.plaetze`, `.rerollsProTag`, `.rerollsMax`, `.kostenfaktor` | Motivation | Dorf | ☑ #/motivation/dorf |
+| 🏘️ Dorf | Apps für Aufträge ausschließen, Runden je Auftrag | `dorf.js` | `apps[].dorf`, `.dorfRunden` | Motivation | Aufträge | ☑ #/motivation/dorf |
+| 🏘️ Dorf | Übersicht Dorf-Inhalte (nur Ansicht) | `dorf.js` | – | Motivation | Gebäude | ☑ #/motivation/dorf |
+| 🎯 Unterricht | Startseite: „Heute für dich“ an/aus | `freigaben.js` | `heute` | Inhalte | Heute | ☑ #/inhalte/freigaben |
+| 🎯 Unterricht | Fokus „heute nur diese Apps“ je Gruppe/Klasse | `freigaben.js` | `fokus[]` | Gruppen (+ Unterrichtsmodus) | Fokus | ☑ #/gruppen/fokus |
+| 🎯 Unterricht | Spielsperre je Wochentag und Gruppe/Klasse, Schwelle | `freigaben.js` | `spielsperre.schwelle`, `.runden` | Gruppen | Spielsperre | ☑ #/gruppen/spielsperre |
+| 🎯 Unterricht | Ausnahmen von der Spielsperre (enden von selbst) | `freigaben.js` | `spielsperre.ausnahmen[]` | Gruppen (+ Unterrichtsmodus) | Spiele frei | ☑ #/gruppen/spielsperre |
+| 🎯 Unterricht | Freigaben je Stufe/Unit (zu, offen, ab Datum) | `freigaben.js` | `freigaben` | Inhalte (Etappe 8: Katalog-Baum) | Freigabe, Sperre, Stufe | ☑ #/inhalte/freigaben |
+| 🎯 Unterricht | Gruppen-Auswertung (anonyme Summen je Thema) | `freigaben.js` | `/sync/admin/statistik` | Gruppen | Auswertung, Fortschritt | ☑ #/gruppen/auswertung |
+| 🗺️ Lernwege | Lernwege Gruppen/Klassen zuteilen, Vorschau, Klassen-Übersicht | `freigaben.js` (`buildLernwegeTab`) | `freigaben[ID][wer] = 'offen'`, `/sync/admin/statistik` | Gruppen | Lernweg, Stationen | ☑ #/gruppen/lernwege |
+| 📁 Medien | Hochladen (auch in Teilen), Untertitel, Ordner, Sammlungen, Ein/Aus, Löschen, QR, Beamer, Speicheranzeige | `medien.js` (fertig, wirkt sofort) | `/medien/admin/*` (R2 + `SYNC_DB`) | Medien | Datei, QR, Beamer | ☑ #/medien/dateien |
 
 **Eigene Seiten neben dem Admin** (bleiben, werden aus dem neuen Admin verlinkt):
 
@@ -54,7 +55,7 @@ Bereiche im neuen Admin: **Start · Inhalte · Gruppen · Motivation · Medien �
 | `infokarten.html` | Infokarten zu allen Apps (auch ohne Passwort) | Inhalte |
 | `aufgaben-check.html` | Aufgaben prüfen | System |
 | `sync-karte.html` | Karte für ein Kind (Sicherung) | Gruppen |
-| Startseite → Pass → Sicherung → 5× Versionszeile | Diagnose und Fehlerprotokoll (`pass-extras.js`) | System (zusätzlich, Etappe 2) |
+| Startseite → Pass → Sicherung → 5× Versionszeile | Diagnose und Fehlerprotokoll (`pass-extras.js`) | System (zusätzlich, ☑ #/system/diagnose – zeigt das Admin-Gerät) |
 
 ## 2. Worker-Endpunkte (`cloudflare/worker.js`, `sync.js`, `medien.js`)
 

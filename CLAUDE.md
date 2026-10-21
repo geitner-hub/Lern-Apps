@@ -105,5 +105,8 @@ und gelbe Hinweise. Manuelle Checkliste nach Uploads: `werkzeuge/RAUCHTEST.md`.
   Datenschicht `gemeinsam/admin/store.js` (LWAdmin.store, gleicher Entwurf wie der alte Admin), Modul-System und
   Navigation `module.js` (sechs Bereiche, Adressen `#/bereich/modul`), Rahmen `rahmen.js` (zuletzt laden).
   Neues Modul = Datei unter `gemeinsam/admin/module/` mit `LWAdmin.modul({…})` + Zeile in `admin-neu.html`.
+  Etappe 2: alle Funktionen des alten Admins stecken als `LWAdmin.altModul({ teil })` drin – die alten Dateien laufen
+  unverändert über `gemeinsam/admin/bruecke.js` (ersetzt kern.js, schreibt über den Store), ihre Reiter-HTML steht
+  versteckt in `#lw-park` von `admin-neu.html` (gleiche ids). Stile beider Admins: `gemeinsam/admin/admin.css`.
 - **Testumgebung:** Kopie im Repo `Lern-Apps-test`; umgebung.js erkennt das am Repo-Namen, setzt das
   Präfix `lwtest-` vor alle Speicherschlüssel und sperrt Schreibzugriffe auf den Worker.

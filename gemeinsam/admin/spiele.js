@@ -109,7 +109,8 @@ document.getElementById('pass-settings').addEventListener('change', e => {
 
 // pass.js meldet sich, sobald seine Inhalte geladen sind
 window.addEventListener('lernpass:ready', () => {
-  if (CONFIG && document.getElementById('app').style.display === 'block') { buildPassAdmin(); buildDashboard(); }
+  const admin = document.getElementById('app') || document.getElementById('admin');   // admin.html bzw. admin-neu.html
+  if (CONFIG && admin && admin.style.display === 'block') { buildPassAdmin(); buildDashboard(); }
 });
 
 document.getElementById('pass-settings').addEventListener('change', e => {
