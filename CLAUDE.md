@@ -107,5 +107,7 @@ und gelbe Hinweise. Manuelle Checkliste nach Uploads: `werkzeuge/RAUCHTEST.md`.
   dorf, medien …) laufen über `bruecke.js` (globale `CONFIG`, `saveConfig`, `buildAll` – schreibt über den Store);
   ihr HTML steht versteckt in `#lw-park` von `admin.html` (feste ids), `LWAdmin.altModul({ teil })` hängt es ein.
   Stile: `gemeinsam/admin/admin.css`. Bestandsaufnahme und Plan: `werkzeuge/admin-inventar.md`.
+  Vor dem Veröffentlichen prüft `gemeinsam/admin/pruefung.js` (`LWAdmin.pruefen`) dieselben config-Regeln wie
+  pruefen.py – neue Regel in pruefen.py zu config.json → auch dort ergänzen. Versionsverlauf: Worker `/verlauf`, `/fassung`.
 - **Testumgebung:** Kopie im Repo `Lern-Apps-test`; umgebung.js erkennt das am Repo-Namen, setzt das
   Präfix `lwtest-` vor alle Speicherschlüssel und sperrt Schreibzugriffe auf den Worker.

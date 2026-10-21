@@ -43,6 +43,9 @@ Erst in der Testumgebung, dort wird nichts gespeichert. Den Admin nicht in zwei 
 | A12 | Jeden der sechs Bereiche und jedes Modul oben antippen | jedes Modul zeigt Inhalt, keine Fehlermeldung; Adresse oben passt (z. B. `#/gruppen/spielsperre`) |
 | A13 | Im Admin eine App ausblenden, Seite neu laden | Entwurf bleibt („1 ungespeicherte Änderung“), Verwerfen stellt zurück |
 | A14 | System → Diagnose | Version und Fehlerprotokoll dieses Geräts |
+| A15 | Inhalte → Apps: bei einer App die Datei auf `apps/gibt-es-nicht.html` ändern, Veröffentlichen | „Veröffentlichen gestoppt“ mit „Datei fehlt“; danach Verwerfen |
+| A16 | System → Entwurf und Versionen: Protokoll ansehen, bei der vorletzten Fassung „Ansehen“ | Liste mit Datum und Bereich; Unterschiede zum aktuellen Stand |
+| A17 | Live: „Wiederherstellen“ bei der vorletzten Fassung, Veröffentlichen, danach die neueste vorherige Fassung wiederherstellen und veröffentlichen | beide Male „Veröffentlicht“, am Ende ist alles wie vorher (braucht den neuen Worker) |
 
 **Wenn etwas nicht geht:** GitHub → Repo → „Commits“ → vorigen Stand öffnen → Dateien von dort
 zurückholen (oder Claude die Fehlermeldung schicken). Die Kinder verlieren dabei nichts: Speicherstände

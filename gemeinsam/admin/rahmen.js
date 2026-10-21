@@ -32,6 +32,7 @@
     const n = store.anzahl();
     $('lw-entwurf').hidden = n === 0;
     $('lw-entwurf-zahl').textContent = n === 1 ? '1 ungespeicherte Änderung' : n + ' ungespeicherte Änderungen';
+    if (pruefeGerade) return;
     $('lw-veroeffentlichen').disabled = n === 0 || store.gesperrt() || store.beschaeftigt();
     $('lw-veroeffentlichen').textContent = store.beschaeftigt() ? 'Veröffentlicht …' : '🚀 Veröffentlichen';
     $('lw-gesperrt').hidden = !store.gesperrt();
@@ -47,7 +48,43 @@
         `<li><code>${escHtml(x.pfad || '(alles)')}</code> ${escHtml(kurz(x.alt))} → ${escHtml(kurz(x.neu))}</li>`).join('')}${u.length > 60 ? '<li>…</li>' : ''}</ul></details>` : '');
   }
 
+  // ── Dialog (Prüfung, Bestätigungen) ───────────────────
+  /** → Promise<boolean>; ohne ja-Text nur ein „OK“ (nichts zu entscheiden) */
+  function dialog({ titel, fehler = [], warnungen = [], text = '', ja = '', nein = 'Abbrechen' }) {
+    return new Promise(fertig => {
+      const d = $('lw-dialog');
+      const liste = (l, kl) => l.length ? `<ul class="lw-liste ${kl}">${l.map(x => `<li>${escHtml(x)}</li>`).join('')}</ul>` : '';
+      d.innerHTML = `<div class="lw-dialog-box" role="dialog" aria-modal="true" aria-labelledby="lw-dialog-titel">
+        <h2 id="lw-dialog-titel">${escHtml(titel)}</h2>${text ? `<p>${escHtml(text)}</p>` : ''}
+        ${fehler.length ? '<h3>⛔ Fehler – so nicht veröffentlichen</h3>' + liste(fehler, 'lw-rot') : ''}
+        ${warnungen.length ? '<h3>⚠️ Warnungen</h3>' + liste(warnungen, '') : ''}
+        <div class="lw-knoepfe">${ja ? `<button class="lw-btn gold" data-a="ja">${escHtml(ja)}</button>` : ''}
+          <button class="lw-btn" data-a="nein">${escHtml(ja ? nein : 'OK')}</button></div></div>`;
+      d.hidden = false;
+      const zu = wert => { d.hidden = true; d.innerHTML = ''; fertig(wert); };
+      d.querySelectorAll('[data-a]').forEach(b => { b.onclick = () => zu(b.dataset.a === 'ja'); });
+      d.onclick = e => { if (e.target === d) zu(false); };
+      (d.querySelector('[data-a="ja"]') || d.querySelector('[data-a]')).focus();
+    });
+  }
+  LWAdmin.dialog = dialog;
+
+  // ── Veröffentlichen: erst prüfen (Etappe 3), Fehler blockieren, Warnungen bestätigen ──
+  let pruefeGerade = false;
   async function veroeffentlichen() {
+    if (pruefeGerade) return;
+    pruefeGerade = true;
+    const knopf = $('lw-veroeffentlichen');
+    knopf.disabled = true; knopf.textContent = 'Prüfe …';
+    let p;
+    try { p = await LWAdmin.pruefen(store.daten()); }
+    catch (e) { p = { fehler: [], warnungen: ['Prüfung nicht möglich: ' + (e.message || e)] }; }
+    finally { pruefeGerade = false; kopfleiste(); }
+    if (p.fehler.length) {
+      await dialog({ titel: 'Veröffentlichen gestoppt', text: 'Bitte zuerst beheben (oder den Entwurf verwerfen).', fehler: p.fehler, warnungen: p.warnungen });
+      return;
+    }
+    if (p.warnungen.length && !await dialog({ titel: 'Trotzdem veröffentlichen?', warnungen: p.warnungen, ja: '🚀 Trotzdem veröffentlichen' })) return;
     const r = await store.veroeffentlichen();
     if (r.ok) { toast('🚀 Veröffentlicht – auf der Startseite in ca. 1 Min. sichtbar'); return; }
     if (r.status === 401) { zeigeAnmeldung('Sitzung abgelaufen – bitte neu anmelden. Dein Entwurf bleibt erhalten.'); return; }

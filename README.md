@@ -220,6 +220,15 @@ das ist die Menge, die übers Schul-WLAN geht; komprimiert ≈ ein Drittel der D
   `spiele`, `dorf`, `uebersicht`, `freigaben`, `medien` laufen über `bruecke.js` (globale Namen wie `CONFIG`,
   `saveConfig`, `buildAll`); ihr HTML steht versteckt in `#lw-park` von `admin.html` und wird von
   `LWAdmin.altModul({ teil })` eingehängt. Stile: `gemeinsam/admin/admin.css`. Bestandsaufnahme: `werkzeuge/admin-inventar.md`.
+- **Sicheres Veröffentlichen (Admin-Umbau Etappe 3):** „🚀 Veröffentlichen“ prüft vorher im Browser, was
+  `werkzeuge/pruefen.py` an config.json prüft (`gemeinsam/admin/pruefung.js`): fehlende Dateien, doppelte App-Namen,
+  Apps ohne gültiges Fach, ungültige Links, mehr als eine App des Tages, Lern-Apps ohne Katalog-Thema → **Fehler,
+  blockiert**; unbekannte Regale, Freigaben für unbekannte Themen, Fokus/Lehrer-Zettel mit gelöschter App →
+  **Warnung, bestätigen**. System → 🕓 Entwurf und Versionen: „Jetzt prüfen“, **Änderungsprotokoll** der letzten
+  30 Veröffentlichungen (Datum, Bereich – jede Änderung beginnt mit ihrem Bereich, z. B. „Inhalte: …“), jede
+  Fassung **ansehen** (Unterschiede zum aktuellen Stand) und **wiederherstellen** (als Entwurf, gilt nach dem
+  Veröffentlichen). Der Verlauf ist die Git-Historie von config.json, gelesen über den Worker (`POST /verlauf`,
+  `POST /fassung`); ohne neuen Worker kommt die Liste direkt von GitHub, Wiederherstellen braucht den neuen Worker.
 - **Neues Modul:** Datei `gemeinsam/admin/module/<bereich>-<name>.js` mit `LWAdmin.modul({…})`, dazu eine Zeile
   in `admin.html` (pruefen.py Regel 17 prüft Einbindung, IDs und Bereiche).
 - **Worker zuerst:** Der Worker prüft seit Etappe 6 `gruppen`, `apps[].gruppe` und `catOrder`

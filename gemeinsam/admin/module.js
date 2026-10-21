@@ -113,5 +113,10 @@ window.LWAdmin = window.LWAdmin || {};
     BEREICHE, modul, gehe, starten, neuZeichnen: zeichnen,
     module: () => MODULE.filter(darf).slice(),
     rolle: () => rolle,
+    /** Gerade gezeigt: { bereich, titel (des Bereichs), modul } – für das Änderungsprotokoll */
+    aktuell() {
+      const { bereich, modul: m } = adresse();
+      return { bereich, titel: BEREICHE.find(b => b.id === bereich).titel, modul: m ? m.id : '' };
+    },
   });
 })();
