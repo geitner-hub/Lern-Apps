@@ -110,6 +110,8 @@ und gelbe Hinweise. Manuelle Checkliste nach Uploads: `werkzeuge/RAUCHTEST.md`.
   Vor dem Veröffentlichen prüft `gemeinsam/admin/pruefung.js` (`LWAdmin.pruefen`) dieselben config-Regeln wie
   pruefen.py – neue Regel in pruefen.py zu config.json → auch dort ergänzen. Versionsverlauf: Worker `/verlauf`, `/fassung`.
   Dashboard-Kachel = Datei `module/kachel-<name>.js` mit `LWAdmin.kachel({…})`; Suche `suche.js` (Strg+K) findet Module
-  über `suchbegriffe` – neue Module darum mit guten Suchbegriffen anmelden.
+  über `suchbegriffe` – neue Module darum mit guten Suchbegriffen anmelden. Unterrichtsmodus `#/unterricht`
+  (`module/unterricht-stunde.js`): sofort wirkende Änderungen über `store.sofort(text, fn)` – fn läuft auf Stand
+  und Entwurf, darum IDs/Zeiten vor fn erzeugen.
 - **Testumgebung:** Kopie im Repo `Lern-Apps-test`; umgebung.js erkennt das am Repo-Namen, setzt das
   Präfix `lwtest-` vor alle Speicherschlüssel und sperrt Schreibzugriffe auf den Worker.

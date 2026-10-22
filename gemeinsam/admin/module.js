@@ -35,6 +35,8 @@ window.LWAdmin = window.LWAdmin || {};
     { id: 'motivation', titel: 'Motivation', symbol: '🏆', text: 'Pass, Events, Mein Dorf' },
     { id: 'medien',     titel: 'Medien',     symbol: '📁', text: 'Dateien per QR-Code und Kurzlink' },
     { id: 'system',     titel: 'System',     symbol: '⚙️', text: 'Anmeldung und Geräte, Versionen, Diagnose' },
+    // Unterrichtsmodus (Etappe 5): eigene Vollbild-Ansicht ohne Navigation und Einstellungen, Adresse #/unterricht
+    { id: 'unterricht', titel: 'Unterricht', symbol: '🎓', text: 'Die Stunde begleiten', vollbild: true },
   ];
   const MODULE = [], KACHELN = [];
   const ID = /^[a-z][a-z0-9-]{0,39}$/;
@@ -84,7 +86,7 @@ window.LWAdmin = window.LWAdmin || {};
   }
 
   // ── Zeichnen ──────────────────────────────────────────
-  let gestartet = false, aufraeumen = null, ctx = null;
+  let gestartet = false, aufraeumen = null, ctx = null, letzteStelle = '';
 
   function zeichnen() {
     const nav = document.getElementById('lw-nav'), kopf = document.getElementById('lw-bereich-kopf'),
@@ -93,11 +95,14 @@ window.LWAdmin = window.LWAdmin || {};
     const { bereich, modul: mod } = adresse();
     const b = BEREICHE.find(x => x.id === bereich);
 
-    nav.innerHTML = BEREICHE.map(x => `<a href="#/${x.id}" class="lw-nav-punkt${x.id === bereich ? ' aktiv' : ''}"${x.id === bereich ? ' aria-current="page"' : ''}>
+    document.body.classList.toggle('lw-vollbild', !!b.vollbild);
+    const stelle = bereich + '/' + (mod ? mod.id : '');
+    if (stelle !== letzteStelle) { letzteStelle = stelle; window.scrollTo(0, 0); }   // neues Modul beginnt oben
+    nav.innerHTML = BEREICHE.filter(x => !x.vollbild).map(x => `<a href="#/${x.id}" class="lw-nav-punkt${x.id === bereich ? ' aktiv' : ''}"${x.id === bereich ? ' aria-current="page"' : ''}>
       <span class="lw-nav-symbol" aria-hidden="true">${x.symbol}</span><span class="lw-nav-text">${escHtml(x.titel)}</span></a>`).join('');
 
     const liste = moduleIn(bereich);
-    kopf.innerHTML = `<h1 class="lw-bereich-titel">${b.symbol} ${escHtml(b.titel)}</h1>` +
+    kopf.innerHTML = b.vollbild ? '' : `<h1 class="lw-bereich-titel">${b.symbol} ${escHtml(b.titel)}</h1>` +
       (liste.length > 1 ? `<nav class="lw-reiter" aria-label="${escHtml(b.titel)}">${liste.map(m =>
         `<a href="#/${bereich}/${m.id}" class="lw-reiter-punkt${m === mod ? ' aktiv' : ''}">${m.symbol} ${escHtml(m.titel)}</a>`).join('')}</nav>` : '');
 

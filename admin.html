@@ -153,6 +153,34 @@
     .lw-suche-text{flex:1;min-width:0;display:flex;flex-direction:column;}
     .lw-suche-text .lw-klein{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 
+    /* ── Unterrichtsmodus (Etappe 5): Vollbild ohne Kopfleiste und Navigation, große Knöpfe fürs iPad ── */
+    body.lw-vollbild .kopf, body.lw-vollbild #lw-nav, body.lw-vollbild #lw-entwurf-liste{display:none;}
+    body.lw-vollbild main{margin-left:0;max-width:none;padding:1rem 1.2rem 2rem;}
+    .lw-u-kopf{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:1rem;}
+    .lw-u-titel{font-family:'Fredoka One',cursive;font-size:1.7rem;color:#fff;}
+    .lw-u-uhr{font-family:'Fredoka One',cursive;font-size:1.5rem;color:var(--accent);}
+    .lw-u-kopf .lw-btn{margin-left:auto;}
+    .lw-u-reiter{display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem;margin-bottom:1.1rem;}
+    .lw-u-reiter-knopf{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.2rem;min-height:88px;padding:.5rem;border-radius:16px;border:2px solid var(--border2);background:var(--surface);color:var(--text);font:800 1.05rem 'Nunito',sans-serif;cursor:pointer;}
+    .lw-u-reiter-knopf.an{border-color:var(--accent);background:var(--accent-dim);color:var(--accent);}
+    .lw-u-sym{font-size:1.9rem;line-height:1.1;}
+    .lw-u-inhalt h3{font-size:1rem;margin:1.1rem 0 .5rem;color:var(--text2);}
+    .lw-u-chips{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:.8rem;}
+    .lw-u-chip{min-height:52px;padding:.5rem 1.1rem;border-radius:14px;border:2px solid var(--border2);background:var(--surface2);color:var(--text);font:800 .98rem 'Nunito',sans-serif;cursor:pointer;}
+    .lw-u-chip.an{border-color:var(--indigo2);background:rgba(99,102,241,.25);}
+    .lw-u-raster{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.7rem;}
+    .lw-u-raster.klein{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));}
+    .lw-u-kachel{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.35rem;min-height:130px;padding:.7rem;border-radius:16px;border:2px solid var(--border2);background:var(--surface);color:var(--text);font:800 .98rem 'Nunito',sans-serif;cursor:pointer;text-align:center;}
+    .lw-u-raster.klein .lw-u-kachel{min-height:100px;font-size:.88rem;}
+    .lw-u-kachel:active{transform:scale(.97);}
+    .lw-u-kachel.an{border-color:var(--accent);background:var(--accent-dim);}
+    .lw-u-liste{display:flex;flex-direction:column;gap:.55rem;margin-bottom:.8rem;}
+    .lw-u-zeile{display:flex;align-items:center;gap:1rem;justify-content:space-between;background:var(--surface);border:1px solid var(--border2);border-radius:14px;padding:.75rem 1rem;font-size:1.02rem;}
+    .lw-u-knopf{min-height:56px;min-width:170px;padding:.5rem 1.2rem;border-radius:14px;border:2px solid var(--border2);background:var(--surface2);color:var(--text);font:900 1rem 'Nunito',sans-serif;cursor:pointer;}
+    .lw-u-knopf.gold{background:var(--accent);border-color:var(--accent);color:#0f0e1a;}
+    .lw-u-knopf:disabled{opacity:.35;cursor:default;}
+    @media (prefers-reduced-motion: reduce){ .lw-u-kachel:active{transform:none;} }
+
     /* ── Beamer-Großansicht (Etappe 4) ── */
     #lw-beamer{position:fixed;inset:0;z-index:2000;background:#fff;color:#0f0e1a;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5vh;cursor:pointer;padding:3vh 3vw;text-align:center;}
     #lw-beamer[hidden]{display:none;}
@@ -182,6 +210,7 @@
     <span class="lw-klein" id="lw-version"></span>
     <a class="lw-btn" href="index.html" title="Zur Startseite der Lernwelt">← Zur Lernwelt</a>
     <button class="lw-btn" id="lw-suchen" title="Suchen (Strg+K)" aria-label="Suchen">🔍 <span class="lw-nur-breit">Suchen</span> <kbd class="lw-nur-breit">Strg K</kbd></button>
+    <a class="lw-btn" href="#/unterricht" title="Unterrichtsmodus: große Knöpfe fürs iPad, ohne Einstellungen">🎓 <span class="lw-nur-breit">Unterricht</span></a>
     <div class="kopf-rechts">
       <span id="lw-gesperrt" hidden>⚠ Speichern gesperrt – Seite neu laden</span>
       <div id="lw-entwurf" hidden>
@@ -456,6 +485,7 @@
 <script src="gemeinsam/admin/module/system-diagnose.js"></script>
 <script src="gemeinsam/admin/module/system-entwurf.js"></script>
 <script src="gemeinsam/admin/module/system-seiten.js"></script>
+<script src="gemeinsam/admin/module/unterricht-stunde.js"></script>
 <!-- Rahmen zuletzt: Anmeldung prüfen und starten -->
 <script src="gemeinsam/admin/rahmen.js"></script>
 </body>

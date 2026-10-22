@@ -48,6 +48,10 @@ Erst in der Testumgebung, dort wird nichts gespeichert. Den Admin nicht in zwei 
 | A18 | Start → Übersicht: Kacheln Status, Schnellaktionen, Hinweise; „Auf den Beamer“ | Zahlen stimmen, Zeilen führen zum Modul; QR bildschirmfüllend, Antippen schließt |
 | A19 | Strg+K bzw. 🔍: „spielsperre“, eine App, ein Medium suchen, Enter | jeweils das richtige Modul, bei App/Medium steht der Name im Suchfeld |
 | A20 | Live: „Spiele heute frei“ für eine Gruppe (ohne anderen Entwurf) | wird gleich veröffentlicht, unter Gruppen → Spielsperre steht die Ausnahme „nur heute“ |
+| A21 | Am iPad quer: 🎓 Unterricht | Vollbild ohne Seitenleiste, Uhr, vier große Reiter; „✕ Unterricht beenden“ führt zum Dashboard |
+| A22 | Unterricht → App zeigen (Fach wählen, App antippen) und Medien → Sammlung antippen | QR bildschirmfüllend, Handy-Scan öffnet App bzw. Sammlung |
+| A23 | Live: Unterricht → Spiele „Heute frei“ für eine Klasse, nach 2 Min. Kinder-iPad prüfen, dann „Sperre wieder an“ | Spiele offen bzw. wieder gesperrt; ein offener Admin-Entwurf bleibt erhalten |
+| A24 | Live: Unterricht → Fokus für eine Gruppe mit 2 Apps, 45 Min.; danach „Beenden“ | Startseite der Gruppe zeigt nur die 2 Apps, nach Beenden wieder alle |
 | A17 | Live: „Wiederherstellen“ bei der vorletzten Fassung, Veröffentlichen, danach die neueste vorherige Fassung wiederherstellen und veröffentlichen | beide Male „Veröffentlicht“, am Ende ist alles wie vorher (braucht den neuen Worker) |
 
 **Wenn etwas nicht geht:** GitHub → Repo → „Commits“ → vorigen Stand öffnen → Dateien von dort

@@ -1,5 +1,5 @@
 // Dashboard-Kachel „Schnellaktionen“ (Admin-Umbau Etappe 4):
-// App per QR-Code auf den Beamer, Spiele heute frei (Ausnahme von der Spielsperre), häufige Ziele mit einem Klick.
+// App per QR-Code auf den Beamer, Spiele heute frei (Ausnahme von der Spielsperre, sofort), häufige Ziele mit einem Klick.
 'use strict';
 
 LWAdmin.kachel({
@@ -23,11 +23,11 @@ LWAdmin.kachel({
           <label class="lw-schnell-titel" for="sa-wer">🎉 Spiele heute frei</label>
           <div class="lw-reihe"><select id="sa-wer">${wer.map(w => `<option value="${escHtml(w)}">${escHtml(werName(w))}</option>`).join('')}</select>
             <button class="lw-btn" data-a="frei">Heute frei</button></div>
-          <p class="lw-klein">Ausnahme von der Spielsperre nur für heute, endet um Mitternacht von selbst.</p>
+          <p class="lw-klein">Ausnahme von der Spielsperre nur für heute, gilt sofort und endet um Mitternacht von selbst.</p>
         </div>
         <div class="lw-schnell"><div class="lw-schnell-titel">↪ Häufig</div>
           <div class="lw-knoepfe lw-knoepfe-eng">
-            <a class="lw-btn klein" href="#/inhalte/apps">📱 Apps</a><a class="lw-btn klein" href="#/start/banner">📢 Banner</a>
+            <a class="lw-btn klein gold" href="#/unterricht">🎓 Unterrichtsmodus</a><a class="lw-btn klein" href="#/inhalte/apps">📱 Apps</a><a class="lw-btn klein" href="#/start/banner">📢 Banner</a>
             <a class="lw-btn klein" href="#/gruppen/fokus">🎯 Fokus</a><a class="lw-btn klein" href="#/gruppen/spielsperre">🎮 Spielsperre</a>
             <a class="lw-btn klein" href="#/gruppen/lernwege">🗺️ Lernwege</a><a class="lw-btn klein" href="#/inhalte/freigaben">🔐 Freigaben</a>
             <a class="lw-btn klein" href="#/motivation/dorf">🏘️ Dorf</a><a class="lw-btn klein" href="#/medien/dateien">📁 Medium hochladen</a>
@@ -39,19 +39,21 @@ LWAdmin.kachel({
       };
       host.querySelector('[data-a="frei"]').onclick = spieleFrei;
     }
-    function spieleFrei() {
-      const w = host.querySelector('#sa-wer').value, h = heute();
+    async function spieleFrei() {
+      const w = host.querySelector('#sa-wer').value, h = heute(), neuId = 'sa-' + Date.now().toString(36);
       if (!(store.daten() || {}).spielsperre) { toast('Es gibt keine Spielsperre – die Spiele sind schon frei'); return; }
-      const vorher = store.anzahl();
-      try { store.aendern(`⭐ Spielsperre-Ausnahme ${werName(w)}: Spiele frei, nur heute`, c => {
-        const s = c.spielsperre;
-        s.ausnahmen = (s.ausnahmen || []).filter(x => !(x.wer === w && x.ab === h && x.bis === h));
-        if (s.ausnahmen.length >= 40) throw new Error('Höchstens 40 Ausnahmen – bitte unter Gruppen → Spielsperre alte beenden');
-        s.ausnahmen.push({ id: 'sa-' + Date.now().toString(36), wer: w, runden: 0, ab: h, bis: h });
-      }); } catch (e) { toast('⚠ ' + e.message, true); return; }
-      // Nur diese eine Änderung im Entwurf → gleich veröffentlichen (mit Prüfung); sonst gehört sie zum Entwurf dazu
-      if (vorher === 0 && store.anzahl() === 1) LWAdmin.veroeffentlichen();
-      else toast('⭐ Im Entwurf – mit den anderen Änderungen veröffentlichen');
+      // Sofort veröffentlichen, ohne einen offenen Entwurf mitzunehmen (der Entwurf bekommt die Ausnahme auch)
+      try {
+        const r = await store.sofort(`⭐ Spielsperre-Ausnahme ${werName(w)}: Spiele frei, nur heute`, c => {
+          const s = c.spielsperre; if (!s) return;
+          s.ausnahmen = (s.ausnahmen || []).filter(x => !(x.wer === w && x.ab === h && x.bis === h));
+          if (s.ausnahmen.length >= 40) throw new Error('Höchstens 40 Ausnahmen – bitte unter Gruppen → Spielsperre alte beenden');
+          s.ausnahmen.push({ id: neuId, wer: w, runden: 0, ab: h, bis: h });
+        });
+        if (r.ok) toast(`🎉 ${werName(w)}: Spiele heute frei – gilt in ca. 1 Minute`);
+        else if (r.status === 401) LWAdmin.anmeldungZeigen('Sitzung abgelaufen – bitte neu anmelden.');
+        else toast('⚠ ' + (r.fehler === 'CONFLICT' ? 'Die Lernwelt wurde woanders geändert – bitte Seite neu laden' : r.fehler || 'Fehler'), true);
+      } catch (e) { toast('⚠ ' + e.message, true); }
     }
     zeichnen();
     LWAdmin.quellen.gruppen().then(g => { gruppen = g; }).catch(() => {}).then(zeichnen);

@@ -40,9 +40,9 @@ Bereiche im neuen Admin: **Start · Inhalte · Gruppen · Motivation · Medien �
 | 🏘️ Dorf | Apps für Aufträge ausschließen, Runden je Auftrag | `dorf.js` | `apps[].dorf`, `.dorfRunden` | Motivation | Aufträge | ☑ #/motivation/dorf |
 | 🏘️ Dorf | Übersicht Dorf-Inhalte (nur Ansicht) | `dorf.js` | – | Motivation | Gebäude | ☑ #/motivation/dorf |
 | 🎯 Unterricht | Startseite: „Heute für dich“ an/aus | `freigaben.js` | `heute` | Inhalte | Heute | ☑ #/inhalte/freigaben |
-| 🎯 Unterricht | Fokus „heute nur diese Apps“ je Gruppe/Klasse | `freigaben.js` | `fokus[]` | Gruppen (+ Unterrichtsmodus) | Fokus | ☑ #/gruppen/fokus |
+| 🎯 Unterricht | Fokus „heute nur diese Apps“ je Gruppe/Klasse | `freigaben.js` | `fokus[]` | Gruppen (+ Unterrichtsmodus) | Fokus | ☑ #/gruppen/fokus, Schnellfunktion in #/unterricht |
 | 🎯 Unterricht | Spielsperre je Wochentag und Gruppe/Klasse, Schwelle | `freigaben.js` | `spielsperre.schwelle`, `.runden` | Gruppen | Spielsperre | ☑ #/gruppen/spielsperre |
-| 🎯 Unterricht | Ausnahmen von der Spielsperre (enden von selbst) | `freigaben.js` | `spielsperre.ausnahmen[]` | Gruppen (+ Unterrichtsmodus) | Spiele frei | ☑ #/gruppen/spielsperre |
+| 🎯 Unterricht | Ausnahmen von der Spielsperre (enden von selbst) | `freigaben.js` | `spielsperre.ausnahmen[]` | Gruppen (+ Unterrichtsmodus) | Spiele frei | ☑ #/gruppen/spielsperre, „Heute frei“ in #/unterricht |
 | 🎯 Unterricht | Freigaben je Stufe/Unit (zu, offen, ab Datum) | `freigaben.js` | `freigaben` | Inhalte (Etappe 8: Katalog-Baum) | Freigabe, Sperre, Stufe | ☑ #/inhalte/freigaben |
 | 🎯 Unterricht | Gruppen-Auswertung (anonyme Summen je Thema) | `freigaben.js` | `/sync/admin/statistik` | Gruppen | Auswertung, Fortschritt | ☑ #/gruppen/auswertung |
 | 🗺️ Lernwege | Lernwege Gruppen/Klassen zuteilen, Vorschau, Klassen-Übersicht | `freigaben.js` (`buildLernwegeTab`) | `freigaben[ID][wer] = 'offen'`, `/sync/admin/statistik` | Gruppen | Lernweg, Stationen | ☑ #/gruppen/lernwege |
