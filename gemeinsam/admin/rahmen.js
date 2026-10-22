@@ -68,6 +68,7 @@
     });
   }
   LWAdmin.dialog = dialog;
+  LWAdmin.veroeffentlichen = () => veroeffentlichen();      // für Schnellaktionen (mit Prüfung)
 
   // ── Veröffentlichen: erst prüfen (Etappe 3), Fehler blockieren, Warnungen bestätigen ──
   let pruefeGerade = false;
@@ -136,6 +137,7 @@
   $('lw-version').textContent = (window.LW && LW.versionText) ? LW.versionText() : '';
   $('btn-anmelden').addEventListener('click', anmelden);
   $('pw').addEventListener('keydown', e => { if (e.key === 'Enter') anmelden(); });
+  $('lw-suchen').addEventListener('click', () => LWAdmin.suche.auf());
   $('lw-abmelden').addEventListener('click', () => { ConfigAPI.logout(); zeigeAnmeldung('Abgemeldet.'); });
   $('lw-veroeffentlichen').addEventListener('click', veroeffentlichen);
   $('lw-verwerfen').addEventListener('click', () => {

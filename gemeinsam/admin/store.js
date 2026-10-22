@@ -222,6 +222,7 @@ LWAdmin.store = (() => {
 
   const api = {
     laden, aendern, unterschiede, vergleichen, veroeffentlichen, verwerfen, historie, fassung, wiederherstellen, abonnieren,
+    worker: workerPost,          // POST an den Worker mit Anmelde-Schlüssel → Antwort-JSON (Fehler: e.status)
     daten:       () => config,
     aenderungen: () => (entwurf ? entwurf.aenderungen.slice() : []),
     anzahl:      () => (entwurf ? entwurf.aenderungen.length : 0),

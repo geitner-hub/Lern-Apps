@@ -13,6 +13,10 @@
 //      zeigen(host, ctx) { … }          // zeichnet in host; darf eine Aufräum-Funktion zurückgeben
 //    });
 //
+//  Dashboard-Kacheln (Etappe 4) melden sich genauso an und erscheinen unter Start → Übersicht:
+//
+//    LWAdmin.kachel({ id, titel, symbol, reihenfolge, breit: true|false, rechte, zeigen(host, ctx) })
+//
 //  host ist für alle Module dasselbe Element: Wer nachlädt oder store.abonnieren nutzt, gibt eine
 //  Aufräum-Funktion zurück, die abbestellt und danach nicht mehr in host zeichnet.
 //
@@ -32,7 +36,7 @@ window.LWAdmin = window.LWAdmin || {};
     { id: 'medien',     titel: 'Medien',     symbol: '📁', text: 'Dateien per QR-Code und Kurzlink' },
     { id: 'system',     titel: 'System',     symbol: '⚙️', text: 'Anmeldung und Geräte, Versionen, Diagnose' },
   ];
-  const MODULE = [];
+  const MODULE = [], KACHELN = [];
   const ID = /^[a-z][a-z0-9-]{0,39}$/;
 
   /** Modul anmelden (siehe oben) */
@@ -49,6 +53,14 @@ window.LWAdmin = window.LWAdmin || {};
     if (gestartet) zeichnen();
   }
 
+  /** Dashboard-Kachel anmelden (Etappe 4) – zeigen(host, ctx) wie bei Modulen, host ist hier die eigene Kachel */
+  function kachel(def) {
+    if (!def || !ID.test(def.id || '') || KACHELN.some(k => k.id === def.id) || typeof def.zeigen !== 'function') {
+      console.error('[Admin] Kachel ungültig oder doppelt:', def && def.id); return;
+    }
+    KACHELN.push({ titel: def.id, symbol: '•', rechte: ['haupt'], reihenfolge: 100, breit: false, ...def });
+  }
+
   // Rolle des angemeldeten Zugangs – bis Etappe 10 immer der Hauptzugang
   let rolle = 'haupt';
   const darf = m => m.rechte.includes(rolle);
@@ -63,9 +75,12 @@ window.LWAdmin = window.LWAdmin || {};
     const mod = liste.find(x => x.id === m) || liste[0] || null;
     return { bereich, modul: mod };
   }
-  function gehe(bereich, modulId) {
+  /** Zu einem Modul wechseln; nachher() läuft, sobald es gezeichnet ist (z. B. ein Suchfeld füllen) */
+  function gehe(bereich, modulId, nachher) {
     const ziel = '#/' + bereich + (modulId ? '/' + modulId : '');
-    if (location.hash === ziel) zeichnen(); else location.hash = ziel;
+    if (location.hash === ziel) { zeichnen(); if (nachher) nachher(); return; }
+    if (nachher) window.addEventListener('hashchange', () => setTimeout(nachher, 0), { once: true });
+    location.hash = ziel;
   }
 
   // ── Zeichnen ──────────────────────────────────────────
@@ -110,7 +125,8 @@ window.LWAdmin = window.LWAdmin || {};
   }
 
   Object.assign(LWAdmin, {
-    BEREICHE, modul, gehe, starten, neuZeichnen: zeichnen,
+    BEREICHE, modul, kachel, gehe, starten, neuZeichnen: zeichnen,
+    kacheln: () => KACHELN.filter(darf).sort((a, b) => a.reihenfolge - b.reihenfolge),
     module: () => MODULE.filter(darf).slice(),
     rolle: () => rolle,
     /** Gerade gezeigt: { bereich, titel (des Bereichs), modul } – für das Änderungsprotokoll */

@@ -113,6 +113,54 @@
     .lw-version-text{flex:1;min-width:200px;}
     .lw-marke{display:inline-block;font-size:.66rem;font-weight:800;padding:.08rem .45rem;border-radius:99px;background:rgba(99,102,241,.18);color:var(--indigo2);margin-right:.25rem;}
     .lw-btn.klein{min-height:36px;padding:.3rem .7rem;font-size:.76rem;}
+    kbd{font:700 .62rem 'Nunito',sans-serif;color:var(--muted);border:1px solid var(--border2);border-radius:5px;padding:.05rem .3rem;}
+    @media (max-width: 899px){ .lw-nur-breit{display:none;} }
+    .lw-gold{color:var(--accent);} b.lw-rot{color:#fca5a5;}
+
+    /* ── Dashboard (Etappe 4) ── */
+    .lw-dash{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1rem;align-items:start;}
+    .lw-dash-kachel{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem 1.1rem;}
+    .lw-dash-kachel.breit{grid-column:1/-1;}
+    .lw-dash-kachel h2{font-family:'Fredoka One',cursive;font-weight:400;font-size:1.1rem;color:var(--accent);margin-bottom:.6rem;}
+    .lw-zeile{display:flex;align-items:center;gap:.6rem;padding:.55rem .4rem;min-height:44px;border-bottom:1px solid var(--border);color:var(--text);text-decoration:none;border-radius:8px;}
+    .lw-zeile:last-child{border-bottom:none;}
+    .lw-zeile:hover{background:var(--surface2);}
+    .lw-zeile.gold{background:var(--accent-dim);}
+    .lw-zeile-sym{font-size:1.15rem;width:1.6rem;text-align:center;flex-shrink:0;}
+    .lw-zeile-titel{font-weight:800;font-size:.86rem;flex:1;min-width:0;}
+    .lw-zeile-wert{font-size:.82rem;color:var(--text2);text-align:right;}
+    .lw-schnell{padding:.2rem 0 .9rem;border-bottom:1px solid var(--border);margin-bottom:.8rem;}
+    .lw-schnell:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+    .lw-schnell-titel{display:block;font-weight:900;font-size:.88rem;margin-bottom:.45rem;text-transform:none;letter-spacing:0;color:var(--text);}
+    .lw-reihe{display:flex;gap:.5rem;flex-wrap:wrap;}
+    .lw-reihe select{flex:1;min-width:160px;min-height:44px;}
+    .lw-knoepfe-eng{margin-top:0;gap:.35rem;}
+    .lw-hinweise{display:flex;flex-direction:column;gap:.35rem;}
+    .lw-hinweis{display:block;padding:.6rem .8rem;border-radius:10px;background:var(--surface2);color:var(--text);text-decoration:none;font-size:.86rem;border-left:4px solid var(--indigo);}
+    .lw-hinweis.gelb{border-left-color:var(--accent);}
+    .lw-hinweis.rot{border-left-color:var(--red);color:#fca5a5;}
+    .lw-hinweis:hover{background:var(--surface3);}
+
+    /* ── Suche (Etappe 4) ── */
+    #lw-suche{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:80;display:flex;justify-content:center;align-items:flex-start;padding:10vh 1rem 1rem;}
+    #lw-suche[hidden]{display:none;}
+    .lw-suche-box{background:var(--surface);border:1px solid var(--border2);border-radius:16px;width:min(620px,100%);box-shadow:0 20px 60px rgba(0,0,0,.6);overflow:hidden;}
+    .lw-suche-box input{width:100%;padding:1rem 1.1rem;font:inherit;font-size:1.05rem;background:var(--surface2);border:none;border-bottom:1px solid var(--border2);color:var(--text);outline:none;}
+    .lw-suche-liste{max-height:60vh;overflow:auto;padding:.4rem;}
+    .lw-suche-liste > p{padding:.6rem .7rem;}
+    .lw-suche-treffer{display:flex;align-items:center;gap:.6rem;width:100%;text-align:left;padding:.55rem .7rem;min-height:48px;border:none;background:none;color:var(--text);font:inherit;border-radius:10px;cursor:pointer;}
+    .lw-suche-treffer.gewaehlt,.lw-suche-treffer:hover{background:rgba(99,102,241,.18);}
+    .lw-suche-text{flex:1;min-width:0;display:flex;flex-direction:column;}
+    .lw-suche-text .lw-klein{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+    /* ── Beamer-Großansicht (Etappe 4) ── */
+    #lw-beamer{position:fixed;inset:0;z-index:2000;background:#fff;color:#0f0e1a;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5vh;cursor:pointer;padding:3vh 3vw;text-align:center;}
+    #lw-beamer[hidden]{display:none;}
+    .lw-beamer-titel{font-family:'Fredoka One',cursive;font-size:min(6vh,6vw);line-height:1.1;max-width:90vw;overflow-wrap:anywhere;}
+    .lw-beamer-unter{font-size:min(3vh,3.4vw);color:#555;max-width:90vw;} .lw-beamer-unter:empty{display:none;}
+    #lw-beamer canvas{height:min(62vh,82vw);width:min(62vh,82vw);image-rendering:pixelated;}
+    .lw-beamer-link{font-weight:800;font-size:min(3.6vh,4vw);word-break:break-all;}
+    .lw-beamer-hinweis{position:absolute;bottom:1.2vh;font-size:.75rem;color:#999;}
   </style>
 </head>
 <body>
@@ -133,6 +181,7 @@
     <span class="wortmarke">🧭 Lern<em>welt</em></span>
     <span class="lw-klein" id="lw-version"></span>
     <a class="lw-btn" href="index.html" title="Zur Startseite der Lernwelt">← Zur Lernwelt</a>
+    <button class="lw-btn" id="lw-suchen" title="Suchen (Strg+K)" aria-label="Suchen">🔍 <span class="lw-nur-breit">Suchen</span> <kbd class="lw-nur-breit">Strg K</kbd></button>
     <div class="kopf-rechts">
       <span id="lw-gesperrt" hidden>⚠ Speichern gesperrt – Seite neu laden</span>
       <div id="lw-entwurf" hidden>
@@ -153,20 +202,6 @@
 </div>
 <!-- HTML der Funktionsdateien (gemeinsam/admin/*.js, feste ids). Die Module hängen ihren Teil beim Zeigen in #lw-modul. -->
 <div id="lw-park" hidden>
-      <!-- DASHBOARD -->
-      <div class="lw-teil" hidden id="panel-dashboard">
-        <div class="dash-grid" id="dash-stats"></div>
-        <div class="sec-header"><span class="sec-title">⭐ App des Tages</span></div>
-        <div class="form-card" id="aod-info" style="margin-bottom:1.5rem;font-size:.88rem;color:var(--text2);">–</div>
-        <div class="sec-header"><span class="sec-title">🧭 Lernwelt-Pass</span></div>
-        <div class="form-card" style="margin-bottom:1.5rem;font-size:.86rem;color:var(--text2);display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;">
-          <span style="flex:1;min-width:220px;">Sicherungskarten für die automatische Pass-Sicherung erzeugen, drucken und verwalten.<br><span id="pass-status" style="font-size:.78rem;color:var(--muted)"></span></span>
-          <a class="btn accent" href="admin-karten.html">🗂 Sicherungskarten</a>
-        </div>
-        <div class="sec-header"><span class="sec-title">📋 Letzte Aktionen</span></div>
-        <div id="changelog-list" style="display:flex;flex-direction:column;gap:.4rem;"></div>
-      </div>
-
       <!-- APPS -->
       <div class="lw-teil" hidden id="panel-apps">
         <div class="sec-header"><span class="sec-title">➕ Neue App</span></div>
@@ -383,6 +418,9 @@
 <script src="gemeinsam/admin/store.js"></script>
 <script src="gemeinsam/admin/pruefung.js"></script>
 <script src="gemeinsam/admin/module.js"></script>
+<script src="gemeinsam/admin/quellen.js"></script>
+<script src="gemeinsam/admin/beamer.js"></script>
+<script src="gemeinsam/admin/suche.js"></script>
 <!-- Brücke und Funktionsdateien (die Brücke zuerst) -->
 <script src="gemeinsam/admin/bruecke.js"></script>
 <script src="gemeinsam/admin/pass.js"></script>
@@ -399,6 +437,9 @@
 <!-- Module (eine Datei je Modul; neue Datei hier eintragen – pruefen.py prüft, dass keine fehlt) -->
 <script src="gemeinsam/admin/module/start-banner.js"></script>
 <script src="gemeinsam/admin/module/start-uebersicht.js"></script>
+<script src="gemeinsam/admin/module/kachel-hinweise.js"></script>
+<script src="gemeinsam/admin/module/kachel-schnell.js"></script>
+<script src="gemeinsam/admin/module/kachel-status.js"></script>
 <script src="gemeinsam/admin/module/inhalte-apps.js"></script>
 <script src="gemeinsam/admin/module/inhalte-freigaben.js"></script>
 <script src="gemeinsam/admin/module/inhalte-ordnen.js"></script>

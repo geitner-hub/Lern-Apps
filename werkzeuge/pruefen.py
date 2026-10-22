@@ -612,14 +612,20 @@ else:
     ids = {}
     for d in dateien:
         t = lies(d)
-        if 'LWAdmin.modul(' not in t and 'LWAdmin.altModul(' not in t: F(f'{d}: meldet sich nicht mit LWAdmin.modul(…) an'); continue
+        kachel = re.search(r'^LWAdmin\.kachel\(\{', t, re.M)             # Anmeldung steht am Zeilenanfang
+        if not re.search(r'^LWAdmin\.(?:modul|altModul)\(', t, re.M) and not kachel: F(f'{d}: meldet sich nicht mit LWAdmin.modul(…) oder LWAdmin.kachel(…) an'); continue
+        if kachel:                                  # Dashboard-Kachel (Etappe 4): eigene IDs
+            for kid in re.findall(r"LWAdmin\.kachel\(\{\s*id:\s*'([^']+)'", t):
+                if 'k:' + kid in ids: F(f'{d}: Kachel-ID {kid} doppelt (auch in {ids["k:" + kid]})')
+                ids['k:' + kid] = d
+            continue
         for teil in re.findall(r"teil:\s*'([^']+)'", t):        # Teil des bisherigen Admins (Brücke, Etappe 2)
             if f'id="{teil}"' not in an: F(f'{d}: Teil {teil} fehlt in admin.html (#lw-park)')
         for mid, ber in re.findall(r"id:\s*'([^']+)',\s*bereich:\s*'([^']+)'", t):
             if mid in ids: F(f'{d}: Modul-ID {mid} doppelt (auch in {ids[mid]})')
             ids[mid] = d
             if ber not in bereiche: F(f'{d}: Bereich {ber} unbekannt (erlaubt: {", ".join(sorted(bereiche))})')
-    I(f'Admin: {len(ids)} Module in {len(bereiche)} Bereichen')
+    I(f'Admin: {sum(1 for k in ids if not k.startswith("k:"))} Module in {len(bereiche)} Bereichen, {sum(1 for k in ids if k.startswith("k:"))} Dashboard-Kacheln')
 
 # ── 7. Budgets ──────────────────────────────────────────
 def groesse(d):
