@@ -83,6 +83,7 @@ function buildPassOverview() {
 
 // ── Dashboard ─────────────────────────────────────────
 function buildDashboard() {
+  if (!document.getElementById('dash-stats')) return;   // seit Etappe 4: Dashboard = Start → Übersicht (module/kachel-*.js)
   const ps = document.getElementById('pass-status');
   if (ps && window.LernPass) {
     const c = passCfg();

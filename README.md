@@ -229,6 +229,16 @@ das ist die Menge, die übers Schul-WLAN geht; komprimiert ≈ ein Drittel der D
   Fassung **ansehen** (Unterschiede zum aktuellen Stand) und **wiederherstellen** (als Entwurf, gilt nach dem
   Veröffentlichen). Der Verlauf ist die Git-Historie von config.json, gelesen über den Worker (`POST /verlauf`,
   `POST /fassung`); ohne neuen Worker kommt die Liste direkt von GitHub, Wiederherstellen braucht den neuen Worker.
+- **Dashboard (Etappe 4):** Start → Übersicht zeigt Kacheln, die sich mit `LWAdmin.kachel({ id, titel, symbol,
+  reihenfolge, breit, zeigen })` anmelden (`module/kachel-*.js`): **Status** (Entwurf, letzte Veröffentlichung, Apps,
+  App des Tages, Saison/Events, Fehlerprotokoll dieses Geräts, Medien-Speicher – jede Zeile führt zum Modul),
+  **Schnellaktionen** (App per QR auf den Beamer, `gemeinsam/admin/beamer.js`; „Spiele heute frei“ für Alle, eine
+  Klasse oder Gruppe – Ausnahme von der Spielsperre nur für heute, wird ohne weiteren Entwurf gleich veröffentlicht;
+  häufige Ziele), **Hinweise** (Prüfung wie vor dem Veröffentlichen, laufende Events, aktive Ausnahmen und Fokus,
+  Lehrer-Zettel kurz vor Ende, Sicherungskarten nie verbunden oder 14 Tage ohne Sicherung). Gruppen- und Medienlisten
+  lädt `gemeinsam/admin/quellen.js` einmal je Sitzung.
+- **Globale Suche (Etappe 4):** 🔍 in der Kopfleiste oder Strg+K/⌘K (`gemeinsam/admin/suche.js`): Module und
+  ihre Suchbegriffe, Apps, Gruppen, Medien; Enter öffnet das Modul, bei Apps und Medien mit gefülltem Suchfeld.
 - **Neues Modul:** Datei `gemeinsam/admin/module/<bereich>-<name>.js` mit `LWAdmin.modul({…})`, dazu eine Zeile
   in `admin.html` (pruefen.py Regel 17 prüft Einbindung, IDs und Bereiche).
 - **Worker zuerst:** Der Worker prüft seit Etappe 6 `gruppen`, `apps[].gruppe` und `catOrder`
