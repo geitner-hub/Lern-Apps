@@ -11,7 +11,7 @@ LWAdmin.kachel({
       if (!aktiv) return;
       const c = store.daten() || { apps: [] }, n = store.anzahl();
       const sichtbar = c.apps.filter(a => !a.hidden).length, aod = c.apps.find(a => a.aod);
-      const ps = c.pass || {}, events = (window.LernPass && LernPass.EVENTS || []).filter(e => (ps.events || {})[e.id] === true);
+      const ps = c.pass || {}, events = (window.LernPass && LernPass.EVENTS || []).filter(e => LW.zeitplanAktiv((ps.events || {})[e.id]));
       const fehler = window.LW && LW.fehler ? LW.fehler.liste().length : 0;
       const zeile = (ziel, sym, titel, wert, kl = '') => `<a class="lw-zeile${kl ? ' ' + kl : ''}" href="#/${ziel}"><span class="lw-zeile-sym">${sym}</span>
         <span class="lw-zeile-titel">${escHtml(titel)}</span><span class="lw-zeile-wert">${wert}</span></a>`;

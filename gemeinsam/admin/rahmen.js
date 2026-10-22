@@ -155,6 +155,11 @@
     if (!l.hidden && !l.contains(e.target) && e.target !== $('lw-entwurf-zahl')) { l.hidden = true; $('lw-entwurf-zahl').setAttribute('aria-expanded', 'false'); }
   });
   store.abonnieren(kopfleiste);
+  // Seitenleiste und Entwurfs-Fenster beginnen unter der Kopfleiste – auch wenn sie zweizeilig umbricht
+  const kopfEl = document.querySelector('.kopf');
+  const kopfHoehe = () => document.documentElement.style.setProperty('--kopf-h', (kopfEl ? kopfEl.offsetHeight : 60) + 'px');
+  if (kopfEl && window.ResizeObserver) new ResizeObserver(kopfHoehe).observe(kopfEl);
+  window.addEventListener('resize', kopfHoehe);
   window.addEventListener('beforeunload', e => { if (store.beschaeftigt()) { e.preventDefault(); e.returnValue = ''; } });
 
   // Auf diesem Gerät schon angemeldet? → Schlüssel serverseitig prüfen (wie admin.html)

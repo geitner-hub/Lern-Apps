@@ -19,7 +19,13 @@ LWAdmin.kachel({
       }
       const ev = ((c.pass || {}).events) || {};
       (window.LernPass && LernPass.EVENTS || []).filter(e => ev[e.id] === true)
-        .forEach(e => L.push(['info', `${e.icon} ${e.titel || e.name} ist an – nach dem Anlass wieder ausschalten`, 'motivation/pass']));
+        .forEach(e => L.push(['info', `${e.icon} ${e.titel || e.name} ist dauerhaft an – ausschalten oder einen Zeitraum setzen`, 'motivation/pass']));
+      // Etappe 6: was in den nächsten 7 Tagen beginnt oder endet (Events, Ausnahmen, Freigaben, Dorf …)
+      const in7 = LWAdmin.termine.plusTage(h, 7), tag = s => s === h ? 'heute' : s === morgen ? 'morgen' : 'am ' + s.slice(8) + '.' + s.slice(5, 7) + '.';
+      LWAdmin.termine(c, { gruppen: gruppen || [] }).filter(t => t.art !== 'fokus').forEach(t => {
+        if (t.von && t.von > h && t.von <= in7) L.push(['info', `🗓 ${t.sym} ${t.text} beginnt ${tag(t.von)}`, t.ziel]);
+        else if (t.bis && t.bis >= h && t.bis <= in7 && t.von !== t.bis) L.push(['info', `⏳ ${t.sym} ${t.text} endet ${tag(t.bis)}`, t.ziel]);
+      });
       const werName = w => w === 'alle' ? 'Alle' : /^k\d+$/.test(w) ? 'Klasse ' + w.slice(1)
         : 'Gruppe „' + (((gruppen || []).find(g => 'g:' + g.id === w) || {}).name || w.slice(2, 8) + '…') + '“';
       const datum = d => d.slice(8) + '.' + d.slice(5, 7) + '.';
@@ -28,8 +34,6 @@ LWAdmin.kachel({
           !a.bis ? 'dauerhaft' : a.bis === h ? 'nur heute' : 'bis ' + datum(a.bis)}`, 'gruppen/spielsperre']));
       (c.fokus || []).filter(f => Number(f.bis) > Date.now())
         .forEach(f => L.push(['info', `🎯 Fokus aktiv (${(f.apps || []).length} Apps) bis ${new Date(f.bis).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })}`, 'gruppen/fokus']));
-      (((c.dorf || {}).lehrerZettel) || []).filter(z => z.bis === h || z.bis === morgen)
-        .forEach(z => L.push(['info', `📣 Lehrer-Zettel endet ${z.bis === h ? 'heute' : 'morgen'}${z.text ? ': „' + z.text + '“' : ''}`, 'motivation/dorf']));
       if (gruppen) gruppen.forEach(g => {
         const nie = g.codes.filter(k => !k.verbundenAm).length;
         const alt = g.codes.filter(k => k.verbundenAm && (!k.letzteSync || Date.now() - k.letzteSync > TAGE_OHNE_SICHERUNG * 864e5)).length;

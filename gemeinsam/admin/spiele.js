@@ -124,15 +124,41 @@ document.getElementById('pass-settings').addEventListener('change', e => {
     cfg.avatar = inp.checked;
     logChange(`🧍 Avatar nach Runden ${inp.checked ? 'aktiviert' : 'deaktiviert'}`);
   } else if (key.startsWith('event:')) {
+    // Etappe 6: Aus | An | Zeitraum (einmalig) | Jedes Jahr – Vorschlag: zwei Wochen ab heute bzw. die Vorlage
     const id = key.slice(6);
     const ev = LernPass.EVENTS.find(x => x.id === id);
     if (!ev) return;
-    cfg.events[id] = inp.checked;
-    logChange(`${ev.icon} ${ev.titel || ev.name + '-Event'} ${inp.checked ? 'aktiviert' : 'deaktiviert'}`);
+    const art = inp.value, alt = cfg.events[id], h = new Date();
+    if (art === 'aus') cfg.events[id] = false;
+    else if (art === 'an') cfg.events[id] = true;
+    else if (art === 'zeitraum') cfg.events[id] = alt && typeof alt === 'object' && evArt(alt) === 'zeitraum' ? alt
+      : { ab: evIso(h), bis: evIso(new Date(h.getTime() + 14 * 864e5)) };
+    else cfg.events[id] = alt && typeof alt === 'object' && evArt(alt) === 'jaehrlich' ? alt
+      : (v => ({ ab: v[0], bis: v[1] }))(EVENT_VORLAGEN[id] || [evIso(h).slice(5), evIso(new Date(h.getTime() + 14 * 864e5)).slice(5)]);
+    logChange(`${ev.icon} ${ev.titel || ev.name + '-Event'}: ${{ aus: 'aus', an: 'an', zeitraum: 'mit Zeitraum', jaehrlich: 'jedes Jahr' }[art]}`);
   }
-  // nur bekannte Events speichern
-  cfg.events = Object.fromEntries(LernPass.EVENTS.map(ev => [ev.id, cfg.events[ev.id] === true]));
-  CONFIG.pass = cfg;
+  CONFIG.pass = { ...cfg, events: evNurBekannte(cfg.events) };
   saveConfig();
+  buildPassAdmin();
   buildDashboard();
 });
+// Datum eines Event-Zeitraums geändert
+document.getElementById('pass-settings').addEventListener('change', e => {
+  const inp = e.target.closest('[data-ev-ab],[data-ev-bis]');
+  if (!inp) return;
+  const id = inp.dataset.evAb || inp.dataset.evBis, feld = inp.dataset.evAb ? 'ab' : 'bis';
+  const cfg = passCfg(), z = cfg.events[id];
+  const ev = LernPass.EVENTS.find(x => x.id === id);
+  if (!ev || !z || typeof z !== 'object' || !/^\d{4}-\d{2}-\d{2}$/.test(inp.value)) return;
+  const neu = { ...z, [feld]: evArt(z) === 'jaehrlich' ? inp.value.slice(5) : inp.value };
+  if (evArt(z) === 'zeitraum' && neu.ab && neu.bis && neu.ab > neu.bis) { showToast('⚠ „bis“ liegt vor „von“', true); buildPassAdmin(); return; }
+  cfg.events[id] = neu;
+  logChange(`${ev.icon} ${ev.titel || ev.name + '-Event'}: ${feld === 'ab' ? 'von' : 'bis'} ${inp.value.split('-').reverse().join('.')}`);
+  CONFIG.pass = { ...cfg, events: evNurBekannte(cfg.events) };
+  saveConfig();
+  buildPassAdmin();
+});
+/** nur bekannte Events speichern (true/false oder Zeitplan) */
+function evNurBekannte(e) {
+  return Object.fromEntries(LernPass.EVENTS.map(ev => [ev.id, e[ev.id] === true || (e[ev.id] && typeof e[ev.id] === 'object') ? e[ev.id] : false]));
+}

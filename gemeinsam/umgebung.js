@@ -30,7 +30,7 @@
   'use strict';
   if (window.LW && window.LW.UMGEBUNG) return;          // doppeltes Laden verhindern
 
-  const VERSION = 'v77';                                 // ⚙ bei jedem Upload mit sw.js zusammen erhöhen
+  const VERSION = 'v78';                                 // ⚙ bei jedem Upload mit sw.js zusammen erhöhen
 
   // ── Umgebung erkennen ────────────────────────────────
   //  GitHub Pages: erster Pfadteil = Repo-Name (Lern-Apps bzw. Lern-Apps-test)
@@ -242,7 +242,23 @@
     }, 5000 + Math.random() * 20000);                      // zufällig 5–25 s: nicht alle iPads gleichzeitig
   });
 
+  // ── Zeitplan (Admin-Umbau Etappe 6): gilt etwas heute? ──
+  //  true/false wie bisher; { ab, bis } mit JJJJ-MM-TT (einmalig) oder MM-TT (jedes Jahr), jeweils einschließlich;
+  //  jährlich darf über den Jahreswechsel gehen (ab 12-20, bis 01-06). Fehlt ab oder bis, ist diese Seite offen.
+  function zeitplanAktiv(v, datum) {
+    if (v === true) return true;
+    if (!v || typeof v !== 'object') return false;
+    const ab = typeof v.ab === 'string' ? v.ab : '', bis = typeof v.bis === 'string' ? v.bis : '';
+    if (!ab && !bis) return false;
+    const d = datum instanceof Date ? datum : new Date();
+    const iso = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    const jaehrlich = /^\d{2}-\d{2}$/.test(ab || bis), heute = jaehrlich ? iso.slice(5) : iso;
+    if (jaehrlich && ab && bis && ab > bis) return heute >= ab || heute <= bis;
+    return (!ab || heute >= ab) && (!bis || heute <= bis);
+  }
+
   window.LW = Object.freeze({
+    zeitplanAktiv,
     UMGEBUNG, TEST, VERSION, ROOT, laden,
     fehler: Object.freeze({ liste: fehlerListe, merken: fehlerMerken, leeren: () => { try { localStorage.removeItem(FEHLER_KEY); } catch (e) {} } }),
     speicher: Object.freeze({ fehlgeschlagen, voll: () => speicherFehler }),

@@ -112,6 +112,7 @@ und gelbe Hinweise. Manuelle Checkliste nach Uploads: `werkzeuge/RAUCHTEST.md`.
   Dashboard-Kachel = Datei `module/kachel-<name>.js` mit `LWAdmin.kachel({…})`; Suche `suche.js` (Strg+K) findet Module
   über `suchbegriffe` – neue Module darum mit guten Suchbegriffen anmelden. Unterrichtsmodus `#/unterricht`
   (`module/unterricht-stunde.js`): sofort wirkende Änderungen über `store.sofort(text, fn)` – fn läuft auf Stand
-  und Entwurf, darum IDs/Zeiten vor fn erzeugen.
+  und Entwurf, darum IDs/Zeiten vor fn erzeugen. Zeitpläne (Etappe 6): `LW.zeitplanAktiv(v)` in umgebung.js –
+  `true` oder `{ ab, bis }` (JJJJ-MM-TT einmalig, MM-TT jedes Jahr); Termine für Kalender/Dashboard: `termine.js`.
 - **Testumgebung:** Kopie im Repo `Lern-Apps-test`; umgebung.js erkennt das am Repo-Namen, setzt das
   Präfix `lwtest-` vor alle Speicherschlüssel und sperrt Schreibzugriffe auf den Worker.

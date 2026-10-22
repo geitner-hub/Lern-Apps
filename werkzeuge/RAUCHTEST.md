@@ -52,6 +52,8 @@ Erst in der Testumgebung, dort wird nichts gespeichert. Den Admin nicht in zwei 
 | A22 | Unterricht → App zeigen (Fach wählen, App antippen) und Medien → Sammlung antippen | QR bildschirmfüllend, Handy-Scan öffnet App bzw. Sammlung |
 | A23 | Live: Unterricht → Spiele „Heute frei“ für eine Klasse, nach 2 Min. Kinder-iPad prüfen, dann „Sperre wieder an“ | Spiele offen bzw. wieder gesperrt; ein offener Admin-Entwurf bleibt erhalten |
 | A24 | Live: Unterricht → Fokus für eine Gruppe mit 2 Apps, 45 Min.; danach „Beenden“ | Startseite der Gruppe zeigt nur die 2 Apps, nach Beenden wieder alle |
+| A25 | Motivation → Pass: ein Event auf „Zeitraum“ ab morgen stellen, veröffentlichen; Motivation → Kalender | Event steht unter „Kommt“, Dashboard meldet „beginnt morgen“; heute ist es auf der Startseite noch aus |
+| A26 | Am nächsten Tag: Startseite eines Kinder-iPads | Event ist ohne Eingriff an; am Tag nach „bis“ wieder aus (braucht den neuen Worker) |
 | A17 | Live: „Wiederherstellen“ bei der vorletzten Fassung, Veröffentlichen, danach die neueste vorherige Fassung wiederherstellen und veröffentlichen | beide Male „Veröffentlicht“, am Ende ist alles wie vorher (braucht den neuen Worker) |
 
 **Wenn etwas nicht geht:** GitHub → Repo → „Commits“ → vorigen Stand öffnen → Dateien von dort

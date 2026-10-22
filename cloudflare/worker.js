@@ -34,7 +34,7 @@
 //    apps[]        – name, datei (nur sichere Links), fach, emoji, beschreibung,
 //                    klassen, hidden, aod (höchstens eine App des Tages), customTags
 //    customTags[], hiddenCats[], announcement
-//    pass          – seasons, avatar (true/false), events { id: true/false }
+//    pass          – seasons, avatar (true/false), events { id: true/false | { ab?, bis? } } (Zeitplan, Etappe 6)
 //    dorf          – plaetze, rerollsProTag, rerollsMax, kostenfaktor, wochen[], challenges[], challengeRotation (Mein Dorf)
 //    apps[].dorf   – nur false (App bekommt keine Dorf-Aufträge)
 //    apps[].dorfRunden – 1–10 Runden pro Dorf-Auftrag in dieser App
@@ -228,6 +228,16 @@ async function handleFassung(request, env, cors) {
 }
 
 // ── Validierung ────────────────────────────────────────
+// Zeitplan (Admin-Umbau Etappe 6): { ab?, bis? } mit JJJJ-MM-TT (einmalig) oder MM-TT (jedes Jahr), gleiche Art
+function zeitplanOk(v) {
+  if (!v || typeof v !== 'object' || Array.isArray(v) || Object.keys(v).some(k => !['ab', 'bis'].includes(k))) return false;
+  const voll = /^\d{4}-\d{2}-\d{2}$/, jahr = /^\d{2}-\d{2}$/;
+  const art = [v.ab, v.bis].filter(x => x !== undefined);
+  if (!art.length || !art.every(x => typeof x === 'string' && (voll.test(x) || jahr.test(x)))) return false;
+  if (art.length === 2 && voll.test(art[0]) !== voll.test(art[1])) return false;
+  return !(art.length === 2 && voll.test(v.ab) && v.ab > v.bis);       // einmalig: ab nicht nach bis
+}
+
 function validateConfig(cfg) {
   const p = [];
   const isStr  = (v, max) => typeof v === 'string' && v.length <= max;
@@ -281,7 +291,7 @@ function validateConfig(cfg) {
       if (!isBool(ps.seasons) || !isBool(ps.avatar)) p.push('pass: seasons/avatar');
       const ev = ps.events;
       if (ev !== undefined && (!ev || typeof ev !== 'object' || Array.isArray(ev) || Object.keys(ev).length > 20
-          || !Object.entries(ev).every(([k, v]) => /^[a-z0-9-]{1,30}$/.test(k) && typeof v === 'boolean'))) p.push('pass: events');
+          || !Object.entries(ev).every(([k, v]) => /^[a-z0-9-]{1,30}$/.test(k) && (typeof v === 'boolean' || zeitplanOk(v))))) p.push('pass: events');
       if (Object.keys(ps).some(k => !['seasons', 'avatar', 'events'].includes(k))) p.push('pass: unbekanntes Feld');
     }
   }

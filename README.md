@@ -249,6 +249,12 @@ das ist die Menge, die übers Schul-WLAN geht; komprimiert ≈ ein Drittel der D
   erhalten und bekommt dieselbe Änderung (fn läuft zweimal – IDs und Zeiten vorher festlegen). Das Modul hat
   `rechte: ['haupt', 'kollege']` für den Kollegen-Zugang in Etappe 10. Das Einrichten (Wochentage, Ausnahmen mit
   Zeitraum, Fokus planen) bleibt unter Gruppen.
+- **Zeitsteuerung (Etappe 6):** Events schalten sich mit Zeitraum (einmalig) oder „jedes Jahr“ (ohne Jahreszahl,
+  auch über den Jahreswechsel) von selbst ein und aus; jedes iPad prüft das Datum (`LW.zeitplanAktiv` in
+  `gemeinsam/umgebung.js`, genutzt von `pass.js` und `dorf-kern.js`). Spielsperre-Ausnahmen und Fokus hatten schon
+  `ab`/`bis`, Freigaben „frei ab Datum“. Motivation → 🗓 **Kalender**: zwei Monate mit Symbolen je Tag, darunter
+  „läuft gerade · kommt · ohne Ende“ (Events, Ausnahmen, Freigaben, Fokus, Lehrer-Zettel, Wochenaufträge, Challenges;
+  `gemeinsam/admin/termine.js`). Das Dashboard meldet, was in den nächsten 7 Tagen beginnt oder endet.
 - **Neues Modul:** Datei `gemeinsam/admin/module/<bereich>-<name>.js` mit `LWAdmin.modul({…})`, dazu eine Zeile
   in `admin.html` (pruefen.py Regel 17 prüft Einbindung, IDs und Bereiche).
 - **Worker zuerst:** Der Worker prüft seit Etappe 6 `gruppen`, `apps[].gruppe` und `catOrder`
@@ -548,7 +554,7 @@ in `RULES` am Anfang von `pass.js` und können dort angepasst werden.
 - **Abzeichen:** schalten legendäre Set-Teile frei (Liste in `lernwelt-inhalte.json`).
 - **Saison-Modus** (Admin → Motivation → 🧭 Pass): Level/Titel zählen pro Schuljahr, Wechsel automatisch am
   1. August. Gesamt-XP, Sterne, Abzeichen, Truhen und Cosmetics bleiben.
-- **Events** (Admin → Motivation → 🧭 Pass, einzeln schaltbar): Halloween, Weihnachten, Ostern. Während eines
+- **Events** (Admin → Motivation → 🧭 Pass, einzeln: Aus, An, Zeitraum oder jedes Jahr – `pass.events[id]` = `true`/`false` oder `{ ab, bis }` mit JJJJ-MM-TT bzw. MM-TT, ausgewertet auf jedem Gerät mit `LW.zeitplanAktiv`): Halloween, Weihnachten, Ostern. Während eines
   Events: 60 % Event-Teile in Truhen, eine Geschenk-Truhe nach der ersten guten Runde (einmal pro
   Schuljahr), Event-Abzeichen nach 3 guten Tagen mit legendärem Teil.
 - **Avatar-Auftritte** (Admin → Motivation → 🧭 Pass, Schalter „Avatar nach Runden anzeigen“, Standard: an): nach
