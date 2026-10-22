@@ -239,6 +239,16 @@ das ist die Menge, die übers Schul-WLAN geht; komprimiert ≈ ein Drittel der D
   lädt `gemeinsam/admin/quellen.js` einmal je Sitzung.
 - **Globale Suche (Etappe 4):** 🔍 in der Kopfleiste oder Strg+K/⌘K (`gemeinsam/admin/suche.js`): Module und
   ihre Suchbegriffe, Apps, Gruppen, Medien; Enter öffnet das Modul, bei Apps und Medien mit gefülltem Suchfeld.
+- **Unterrichtsmodus (Etappe 5):** 🎓 in der Kopfleiste bzw. `admin.html#/unterricht` – Vollbild fürs iPad im
+  Querformat, ohne Navigation und Einstellungen (Bereich mit `vollbild: true` in `module.js`, Modul
+  `module/unterricht-stunde.js`). Vier große Reiter: **📲 App zeigen** (QR auf den Beamer, nach Fach filtern),
+  **📁 Medien** (eingeschaltete Dateien und Sammlungen auf den Beamer), **🎮 Spiele** (je Alle/Klasse/Gruppe: was
+  heute gilt, „Heute frei“ bzw. „Sperre wieder an“ – Ausnahme `ab = bis = heute`, endet um Mitternacht),
+  **🎯 Fokus** (für wen, wie lange, welche Apps; laufenden beenden). Spiele und Fokus wirken **sofort** über
+  `LWAdmin.store.sofort(text, fn)`: veröffentlicht auf dem veröffentlichten Stand, ein offener Admin-Entwurf bleibt
+  erhalten und bekommt dieselbe Änderung (fn läuft zweimal – IDs und Zeiten vorher festlegen). Das Modul hat
+  `rechte: ['haupt', 'kollege']` für den Kollegen-Zugang in Etappe 10. Das Einrichten (Wochentage, Ausnahmen mit
+  Zeitraum, Fokus planen) bleibt unter Gruppen.
 - **Neues Modul:** Datei `gemeinsam/admin/module/<bereich>-<name>.js` mit `LWAdmin.modul({…})`, dazu eine Zeile
   in `admin.html` (pruefen.py Regel 17 prüft Einbindung, IDs und Bereiche).
 - **Worker zuerst:** Der Worker prüft seit Etappe 6 `gruppen`, `apps[].gruppe` und `catOrder`

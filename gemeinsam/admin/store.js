@@ -14,6 +14,9 @@
 //    await LWAdmin.store.fassung(sha)             // config.json in dieser früheren Fassung
 //    await LWAdmin.store.wiederherstellen(sha, t) // diese Fassung als Entwurf übernehmen (danach veröffentlichen)
 //    LWAdmin.store.vergleichen(alt, neu)          // [{ pfad, alt, neu }] zwischen zwei Ständen
+//    await LWAdmin.store.sofort('Spiele frei', cfg => { … })   // gleich veröffentlichen (Etappe 5, Unterricht):
+//                                                 // auf dem veröffentlichten Stand, ein offener Entwurf bleibt
+//                                                 // und bekommt dieselbe Änderung → { ok, status?, fehler? }
 //
 //  Jede Änderung trägt vorn ihren Bereich („Inhalte: …“), so steht er auch im Änderungsprotokoll (Commit-Text).
 //
@@ -168,6 +171,34 @@ LWAdmin.store = (() => {
     return r.ok ? { ok: true } : { ok: false, status: r.status, fehler: r.error };
   }
 
+  /** Sofort veröffentlichen, ohne einen offenen Entwurf mitzunehmen (Schnellaktionen, Unterrichtsmodus).
+   *  fn ändert eine Kopie des veröffentlichten Stands; danach wird sie auch auf den Entwurf angewandt.
+   *  fn läuft darum zweimal: IDs und Zeitpunkte vorher festlegen, nicht in fn erzeugen (sonst zwei verschiedene). */
+  async function sofort(text, fn, opts = {}) {
+    if (sha === null) return { ok: false, fehler: 'Speichern gesperrt – bitte Seite neu laden' };
+    if (beschaeftigt) return { ok: false, fehler: 'Wird schon veröffentlicht' };
+    const anwenden = basis => { const k = klon(basis); const r = fn(k); return r && typeof r === 'object' ? r : k; };
+    const neu = anwenden(veroeffentlicht);                     // Fehler in fn (z. B. Grenze erreicht) → Ausnahme an den Aufrufer
+    if (gleich(neu, veroeffentlicht)) return { ok: true, unveraendert: true };
+    const bereich = opts.bereich !== undefined ? opts.bereich : (LWAdmin.aktuell ? LWAdmin.aktuell().titel : '');
+    const msg = (bereich ? bereich + ': ' : '') + String(text || 'Einstellungen geändert').slice(0, 120);
+    beschaeftigt = true; melden();
+    const r = await ConfigAPI.save(neu, sha, msg);
+    beschaeftigt = false;
+    if (r.ok) {
+      sha = r.newSha;
+      veroeffentlicht = klon(neu);
+      if (entwurf) {
+        try { config = anwenden(config); } catch (e) { console.warn('[Admin] Entwurf übernimmt die Sofort-Änderung nicht:', e); }
+        entwurf.basis = sha;
+        if (gleich(config, veroeffentlicht)) entwurf = null;
+      } else config = klon(neu);
+      entwurfSchreiben();
+    }
+    melden();
+    return r.ok ? { ok: true } : { ok: false, status: r.status, fehler: r.error };
+  }
+
   function verwerfen() {
     entwurf = null;
     entwurfSchreiben();
@@ -221,7 +252,7 @@ LWAdmin.store = (() => {
   function abonnieren(fn) { hoerer.add(fn); return () => hoerer.delete(fn); }
 
   const api = {
-    laden, aendern, unterschiede, vergleichen, veroeffentlichen, verwerfen, historie, fassung, wiederherstellen, abonnieren,
+    laden, aendern, sofort, unterschiede, vergleichen, veroeffentlichen, verwerfen, historie, fassung, wiederherstellen, abonnieren,
     worker: workerPost,          // POST an den Worker mit Anmelde-Schlüssel → Antwort-JSON (Fehler: e.status)
     daten:       () => config,
     aenderungen: () => (entwurf ? entwurf.aenderungen.slice() : []),
