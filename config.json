@@ -577,8 +577,14 @@
     "seasons": true,
     "avatar": true,
     "events": {
-      "halloween": true,
-      "weihnachten": false,
+      "halloween": {
+        "ab": "10-17",
+        "bis": "11-02"
+      },
+      "weihnachten": {
+        "ab": "12-01",
+        "bis": "12-31"
+      },
       "ostern": false
     }
   },
