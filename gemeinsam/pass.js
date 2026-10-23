@@ -263,7 +263,9 @@
       out.seasons = raw.seasons === true;
       out.avatar = raw.avatar !== false;
       const ev = raw.events && typeof raw.events === 'object' ? raw.events : {};
-      out.events = EVENTS.filter(e => ev[e.id] === true).map(e => e.id);
+      // true oder Zeitplan { ab, bis } (Etappe 6) – ausgewertet mit dem Datum dieses Geräts
+      const an = v => window.LW && LW.zeitplanAktiv ? LW.zeitplanAktiv(v) : v === true;
+      out.events = EVENTS.filter(e => an(ev[e.id])).map(e => e.id);
     }
     return out;
   }

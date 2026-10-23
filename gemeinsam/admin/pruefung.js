@@ -24,13 +24,13 @@ window.LWAdmin = window.LWAdmin || {};
       if (!r.ok) throw new Error('HTTP ' + r.status);
       return r.json();
     }).then(k => {
-      const ids = new Set(), appThemen = new Set();
+      const ids = new Set(), appThemen = new Set(), titel = new Map();
       (k.faecher || []).forEach(f => (f.bereiche || []).forEach(b => (b.themen || []).forEach(th => {
-        ids.add(th.id);
+        ids.add(th.id); titel.set(th.id, th.titel || th.id);
         if (th.quelle && th.quelle.app) appThemen.add(th.quelle.app);
-        (th.stufen || []).forEach(s => { ids.add(s.id); if (s.quelle && s.quelle.app) appThemen.add(s.quelle.app); });
+        (th.stufen || []).forEach(s => { ids.add(s.id); titel.set(s.id, (th.titel ? th.titel + ' – ' : '') + (s.titel || s.id)); if (s.quelle && s.quelle.app) appThemen.add(s.quelle.app); });
       })));
-      return { ids, appThemen };
+      return { ids, appThemen, titel };
     }).catch(e => { katalog = null; throw e; });
     return katalog;
   }
@@ -99,4 +99,5 @@ window.LWAdmin = window.LWAdmin || {};
   }
 
   LWAdmin.pruefen = pruefen;
+  LWAdmin.katalog = katalogLaden;     // → Promise<{ ids, appThemen, titel: Map(id → Titel) }> (auch für den Kalender)
 })();

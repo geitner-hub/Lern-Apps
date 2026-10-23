@@ -1044,7 +1044,7 @@
     const cfg = lesen(CONFIG_KEY), an = cfg && cfg.pass && cfg.pass.events && typeof cfg.pass.events === 'object' ? cfg.pass.events : {};
     const pc = lesen('lernwelt-inhalte-cache');
     const liste = pc && Array.isArray(pc.EVENTS) ? pc.EVENTS : eventListe();
-    return liste.filter(e => e && an[e.id] === true);
+    return liste.filter(e => e && (window.LW && LW.zeitplanAktiv ? LW.zeitplanAktiv(an[e.id]) : an[e.id] === true));
   }
   /** Das Event, das im Dorf gerade gilt: { id, pass, def (null = nur Wimpel), mehrere } oder null */
   function aktivesEvent() {
