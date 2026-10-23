@@ -55,6 +55,9 @@ Erst in der Testumgebung, dort wird nichts gespeichert. Den Admin nicht in zwei 
 | A25 | Motivation → Pass: ein Event auf „Zeitraum“ ab morgen stellen, veröffentlichen; Motivation → Kalender | Event steht unter „Kommt“, Dashboard meldet „beginnt morgen“; heute ist es auf der Startseite noch aus |
 | A26 | Am nächsten Tag: Startseite eines Kinder-iPads | Event ist ohne Eingriff an; am Tag nach „bis“ wieder aus (braucht den neuen Worker) |
 | A27 | Inhalte → App-Einstellungen: Tower Defense „Herzen der Burg“ auf 5, veröffentlichen; Tower Defense am iPad starten | Burg hat 5 Herzen; ↺ setzt auf 10 zurück |
+| A29 | Inhalte → 🌳 Katalog: Englisch → Wortschatz aufklappen, Schalter einer Unit aus, veröffentlichen | Unit im Vokabeltrainer mit 🔒; Schalter wieder an → offen |
+| A30 | Live: Inhalte → 📖 Vokabeln → Klasse 6: neue Unit „Unit 6: …“ anlegen, 3 Zeilen aus einer Tabelle importieren, 💾 Speichern | „Gespeichert“; nach 1–2 Min. im Vokabeltrainer Kl. 6 als neue Unit, im Katalog als Stufe, in RUN! über „selbst wählen“ (braucht `dateien.js` bei Cloudflare) |
+| A31 | Vokabeln: ein Wort leeren, 💾 Speichern | Speichern gestoppt mit „leeres Feld“; ohne neuen Worker steht oben „Nur lesen“ |
 | A28 | Motivation → Mein Dorf → Einstellungen | gleiche Felder wie unter App-Einstellungen (Auftragsplätze, Tausche, Baukosten), Änderung wirkt wie bisher |
 | A17 | Live: „Wiederherstellen“ bei der vorletzten Fassung, Veröffentlichen, danach die neueste vorherige Fassung wiederherstellen und veröffentlichen | beide Male „Veröffentlicht“, am Ende ist alles wie vorher (braucht den neuen Worker) |
 

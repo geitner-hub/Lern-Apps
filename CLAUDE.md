@@ -117,5 +117,10 @@ und gelbe Hinweise. Manuelle Checkliste nach Uploads: `werkzeuge/RAUCHTEST.md`.
   `true` oder `{ ab, bis }` (JJJJ-MM-TT einmalig, MM-TT jedes Jahr); Termine für Kalender/Dashboard: `termine.js`.
   App-Einstellungen (Etappe 7): Schema in `daten/apps/<id>.json`, Werte in `config.appEinstellungen`, in der App
   `await LernEinstellungen.anwenden('<id>', CFG)` (`gemeinsam/einstellungen.js`), Formular `admin/formular.js`.
+  Editoren (Etappe 8): Katalog-Baum und Vokabel-Editor speichern **direkt ins Repo** über `admin/dateien.js`
+  (`LWAdmin.dateien`) und den Worker-Teil `cloudflare/dateien.js` (feste Pfadliste + Formatprüfung je Datei, ein Commit).
+  `daten/katalog.json` und `daten/vokabeln*.json` sind damit **admin-gepflegt**: vor Änderungen den Stand von main holen,
+  nie mit altem Stand überschreiben (pruefen.py Regel 19 warnt). Neue beschreibbare Datei = Muster in `DATEIEN_ERLAUBT`
+  + eigene Prüffunktion dort.
 - **Testumgebung:** Kopie im Repo `Lern-Apps-test`; umgebung.js erkennt das am Repo-Namen, setzt das
   Präfix `lwtest-` vor alle Speicherschlüssel und sperrt Schreibzugriffe auf den Worker.

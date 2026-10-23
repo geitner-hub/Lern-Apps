@@ -43,7 +43,7 @@ Bereiche im neuen Admin: **Start · Inhalte · Gruppen · Motivation · Medien �
 | 🎯 Unterricht | Fokus „heute nur diese Apps“ je Gruppe/Klasse | `freigaben.js` | `fokus[]` | Gruppen (+ Unterrichtsmodus) | Fokus | ☑ #/gruppen/fokus, Schnellfunktion in #/unterricht |
 | 🎯 Unterricht | Spielsperre je Wochentag und Gruppe/Klasse, Schwelle | `freigaben.js` | `spielsperre.schwelle`, `.runden` | Gruppen | Spielsperre | ☑ #/gruppen/spielsperre |
 | 🎯 Unterricht | Ausnahmen von der Spielsperre (enden von selbst) | `freigaben.js` | `spielsperre.ausnahmen[]` | Gruppen (+ Unterrichtsmodus) | Spiele frei | ☑ #/gruppen/spielsperre, „Heute frei“ in #/unterricht |
-| 🎯 Unterricht | Freigaben je Stufe/Unit (zu, offen, ab Datum) | `freigaben.js` | `freigaben` | Inhalte (Etappe 8: Katalog-Baum) | Freigabe, Sperre, Stufe | ☑ #/inhalte/freigaben |
+| 🎯 Unterricht | Freigaben je Stufe/Unit (zu, offen, ab Datum) | `freigaben.js` | `freigaben` | Inhalte (Etappe 8: Katalog-Baum) | Freigabe, Sperre, Stufe | ☑ #/inhalte/freigaben, „für alle“ auch in #/inhalte/katalog |
 | 🎯 Unterricht | Gruppen-Auswertung (anonyme Summen je Thema) | `freigaben.js` | `/sync/admin/statistik` | Gruppen | Auswertung, Fortschritt | ☑ #/gruppen/auswertung |
 | 🗺️ Lernwege | Lernwege Gruppen/Klassen zuteilen, Vorschau, Klassen-Übersicht | `freigaben.js` (`buildLernwegeTab`) | `freigaben[ID][wer] = 'offen'`, `/sync/admin/statistik` | Gruppen | Lernweg, Stationen | ☑ #/gruppen/lernwege |
 | 📁 Medien | Hochladen (auch in Teilen), Untertitel, Ordner, Sammlungen, Ein/Aus, Löschen, QR, Beamer, Speicheranzeige | `medien.js` (fertig, wirkt sofort) | `/medien/admin/*` (R2 + `SYNC_DB`) | Medien | Datei, QR, Beamer | ☑ #/medien/dateien |
@@ -68,6 +68,7 @@ Bereiche im neuen Admin: **Start · Inhalte · Gruppen · Motivation · Medien �
 | `POST /logout-all` | Schlüssel | alle Schlüssel ungültig (braucht `LOGIN_KV`) | Admin |
 | `PUT /` | Schlüssel | config.json schreiben (ein Commit, sha gegen Konflikte, `validateConfig`) | Admin |
 | `POST /verlauf`, `POST /fassung` | Schlüssel | letzte 30 Veröffentlichungen, eine frühere Fassung lesen (Etappe 3) | System → Entwurf und Versionen |
+| `POST /dateien/lesen`, `/dateien/speichern` | Schlüssel | Katalog und Vokabeln lesen/schreiben – nur Pfade aus `DATEIEN_ERLAUBT`, Formatprüfung je Datei, ein Commit (Etappe 8, `dateien.js`) | Inhalte → Katalog, Vokabeln |
 | `/sync/holen`, `/sync/speichern`, `/sync/statistik` | Code der Karte | Pass-Sicherung der Kinder | Kinder-Seite |
 | `/sync/admin/gruppen`, `gruppe-anlegen`, `gruppe-umbenennen`, `gruppe-loeschen`, `code-loeschen` | Schlüssel | Sicherungskarten verwalten | `admin-karten.html`, `freigaben.js` |
 | `/sync/admin/statistik` | Schlüssel | anonyme Gruppen-Auswertung | `freigaben.js` |
@@ -111,5 +112,5 @@ Secrets/Bindings: `ADMIN_PASSWORD`, `GITHUB_TOKEN`, optional `LOGIN_KV`, `SYNC_D
   unverändert. Ein Modul darf später einzeln auf `ctx.store` umgestellt werden (dann aus der Brücke nehmen).
 - **Spielsperre-Ausnahmen und Fokus haben schon `ab`/`bis`**, Freigaben kennen ein Datum („ab JJJJ-MM-TT“).
   → Etappe 6 übernimmt diese Felder, statt neue `start`/`ende` daneben zu stellen, wo es sie schon gibt.
-- Speicher-Schlüssel des Admins: `lernwelt-admin-entwurf`, `lernwelt-admin-vorschau`, `lernwelt-admin-schluessel`,
+- Speicher-Schlüssel des Admins: `lernwelt-admin-entwurf`, `lernwelt-admin-dateien-entwurf` (Etappe 8), `lernwelt-admin-vorschau`, `lernwelt-admin-schluessel`,
   `lernwelt-config-cache(-ts)`. Der neue Admin nutzt dieselben (nie umbenennen).
