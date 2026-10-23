@@ -3,7 +3,7 @@
 'use strict';
 
 LWAdmin.altModul({
-  id: 'dorf', bereich: 'motivation', titel: 'Mein Dorf', symbol: '🏘️', reihenfolge: 2,
+  id: 'dorf', bereich: 'motivation', titel: 'Mein Dorf', symbol: '🏘️', reihenfolge: 3,
   suchbegriffe: ['Dorf', 'Wochenauftrag', 'Lehrer-Zettel', 'Challenge', 'Aufträge'],
   teil: 'panel-dorf',
   oeffnen: () => buildDorfAdmin(),

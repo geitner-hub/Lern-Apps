@@ -58,7 +58,7 @@ werkzeuge/            Prüfskript (pruefen.py), Inventar (inventar.py → INVENT
 | `dorf-kern.js` | „Mein Dorf“: Spielstand, Aufträge, Bauen; von `navbar.js` in jeder App mitgeladen |
 | `dorf-szene.js` | „Mein Dorf“: 3D-Dorf (Voxel-Gebäude als Code, feste Iso-Kamera), nur in `spiele/dorf.html` |
 | `katalog.js` | Inhalts-Katalog laden und abfragen: Themen-IDs, Zuordnung alter Ergebnis- und Inhalt-Schlüssel (`LernKatalog`) |
-| `aufgaben.js` | Aufgaben-Pools für die Spiele („Meine Themen“), Wortquelle `woerter()` für Wort-Spiele |
+| `aufgaben.js` | Aufgaben-Pools für die Spiele („Meine Themen“), Wortquelle `woerter()` für Wort-Spiele; Frage-Antwort-Pools aus `daten/aufgaben-pools.json` (Etappe 9) |
 | `ziffernblock.js` | Großer Ziffernblock für Mathe-Apps (`LernZiffernblock`): Felder antippen, Ziffer springt weiter, iPad-Tastatur bleibt zu (Zahlenstrahl, Stellenwerttafel) |
 | `karten-ansicht.js` | Karten laden, zoomen, verschieben, antippen (Länder-Finder, Expedition); `LernKarte.markup` zeichnet Flächen, Linien (Flüsse) und Punkte (Städte) mit Tippzonen |
 | `globus.js` | Drehbarer Globus als SVG (orthografisch, kein WebGL) mit Gradnetz, Äquator und Nullmeridian (`LernGlobus`); Ozeane aus `daten/ozeane.json` |
@@ -279,6 +279,20 @@ das ist die Menge, die übers Schul-WLAN geht; komprimiert ≈ ein Drittel der D
   `/dateien/speichern`, feste Pfadliste `DATEIEN_ERLAUBT`, Formatprüfung je Datei, ein Commit über die Git-API).
   **Admin-gepflegte Dateien** (Katalog, Vokabeln) in Pull Requests nicht von Hand überschreiben – vorher den Stand von
   main holen; pruefen.py Regel 19 warnt gelb.
+- **Editoren II (Etappe 9):** Inhalte → 🎯 **Aufgaben-Pools** pflegt `daten/aufgaben-pools.json`: Frage-Antwort-Pools
+  für RUN!, Tower Defense und Tauziehen (`{ id, fach, gruppe, klasse, titel, thema?, aufgaben: [{ frage, antwort,
+  falsch: [Ablenker] }] }`). `aufgaben.js` lädt sie wie die Kopfrechen-Stufen nach (`LernAufgaben.bereit`); sie stehen in
+  der Spielauswahl, im Starter-Paket und als Lehrer-Link `?pool=<id>`. Fehlen Ablenker, nimmt das Spiel Antworten
+  anderer Fragen des Pools; `thema` (Themen-ID) = gesperrt, wenn die Freigabe sie sperrt. Antworten über 22 Zeichen passen
+  nicht aufs Tor (Warnung). Import per Copy-Paste (Frage | Antwort | Ablenker …). Pool-IDs nie umbenennen oder löschen.
+  Die fest eingebauten Pools (Rechnen, Hauptstädte, Vokabeln) stehen weiter in `aufgaben.js`.
+  Motivation → 🎁 **Avatar-Teile** pflegt den Loot-Pool in `daten/lernwelt-inhalte.json`: **neues Teil** = Farbvariante
+  (`basis` + `tausch`, siehe „Avatar-Teile“) eines vorhandenen Teils mit Name, Seltenheit und Herkunft (Truhe, Event oder
+  Belohnung eines Abzeichens), mit Live-Vorschau am 3D-Avatar; bestehende Teile: Name, Seltenheit, Herkunft (Varianten auch
+  Farben) – ID und Platz bleiben, Startausstattung bleibt Startausstattung. Dazu die **Level-Titel** (ändern, hinten
+  ergänzen) und die bisherige **Übersicht aller Inhalte** (vorher unter Pass). Teile mit eigener Form oder Hintergründe
+  weiter von Hand in der JSON-Datei. Beide Editoren speichern wie die Vokabeln direkt ins Repo (`cloudflare/dateien.js`:
+  `dateienPruefeAufgaben`, `dateienPruefeInhalte`); pruefen.py Regel 20 prüft beide Dateien.
 - **Neues Modul:** Datei `gemeinsam/admin/module/<bereich>-<name>.js` mit `LWAdmin.modul({…})`, dazu eine Zeile
   in `admin.html` (pruefen.py Regel 17 prüft Einbindung, IDs und Bereiche).
 - **Worker zuerst:** Der Worker prüft seit Etappe 6 `gruppen`, `apps[].gruppe` und `catOrder`

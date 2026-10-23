@@ -32,7 +32,7 @@ Bereiche im neuen Admin: **Start · Inhalte · Gruppen · Motivation · Medien �
 | 📢 Banner | Ankündigungs-Banner mit Vorschau, Farbe, an/aus | `werkzeuge.js` | `announcement` | Start | Banner, Ankündigung | ☑ #/start/banner |
 | 🧭 Pass | Saison-Modus, Avatar, Events an/aus | `pass.js` | `pass.seasons`, `.avatar`, `.events` | Motivation | Saison, Event | ☑ #/motivation/pass |
 | 🧭 Pass | Spiele: „Meine Themen“-Schwellen, Auswahl, Starter, Wort-Units | `spiele.js` | `spiele` | Inhalte | Meine Themen, RUN, Burg | ☑ #/motivation/pass (steht im Pass-Formular) |
-| 🧭 Pass | Übersicht aller Inhalte und Titel (nur Ansicht) | `uebersicht.js` | – | Motivation | Titel, Inhalte | ☑ #/motivation/pass |
+| 🧭 Pass | Übersicht aller Inhalte und Titel (Etappe 9: mit Editor für Avatar-Teile und Titel) | `uebersicht.js`, `module/motivation-teile.js` | `daten/lernwelt-inhalte.json` (ITEMS, TITEL) | Motivation | Titel, Inhalte, Loot | ☑ #/motivation/teile |
 | 🏘️ Dorf | Wochenauftrag | `dorf.js` | `dorf.wochen[]` | Motivation | Wochenauftrag | ☑ #/motivation/dorf |
 | 🏘️ Dorf | Lehrer-Zettel am Auftragsbrett | `dorf.js` | `dorf.lehrerZettel[]` | Motivation | Zettel, Hausaufgabe | ☑ #/motivation/dorf |
 | 🏘️ Dorf | Challenges (eigene starten, Rotation) | `dorf.js` | `dorf.challenges[]`, `.challengeRotation` | Motivation | Challenge, Trophäe | ☑ #/motivation/dorf |
@@ -68,7 +68,7 @@ Bereiche im neuen Admin: **Start · Inhalte · Gruppen · Motivation · Medien �
 | `POST /logout-all` | Schlüssel | alle Schlüssel ungültig (braucht `LOGIN_KV`) | Admin |
 | `PUT /` | Schlüssel | config.json schreiben (ein Commit, sha gegen Konflikte, `validateConfig`) | Admin |
 | `POST /verlauf`, `POST /fassung` | Schlüssel | letzte 30 Veröffentlichungen, eine frühere Fassung lesen (Etappe 3) | System → Entwurf und Versionen |
-| `POST /dateien/lesen`, `/dateien/speichern` | Schlüssel | Katalog und Vokabeln lesen/schreiben – nur Pfade aus `DATEIEN_ERLAUBT`, Formatprüfung je Datei, ein Commit (Etappe 8, `dateien.js`) | Inhalte → Katalog, Vokabeln |
+| `POST /dateien/lesen`, `/dateien/speichern` | Schlüssel | Katalog, Vokabeln, Aufgaben-Pools, Avatar-Teile/Titel lesen/schreiben – nur Pfade aus `DATEIEN_ERLAUBT`, Formatprüfung je Datei, ein Commit (Etappe 8/9, `dateien.js`) | Inhalte → Katalog, Vokabeln, Aufgaben-Pools; Motivation → Avatar-Teile |
 | `/sync/holen`, `/sync/speichern`, `/sync/statistik` | Code der Karte | Pass-Sicherung der Kinder | Kinder-Seite |
 | `/sync/admin/gruppen`, `gruppe-anlegen`, `gruppe-umbenennen`, `gruppe-loeschen`, `code-loeschen` | Schlüssel | Sicherungskarten verwalten | `admin-karten.html`, `freigaben.js` |
 | `/sync/admin/statistik` | Schlüssel | anonyme Gruppen-Auswertung | `freigaben.js` |

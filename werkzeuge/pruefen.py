@@ -46,6 +46,9 @@
 #       der Admin (Commits „Admin: …“). Ändert ein anderer Commit eines Pull Requests sie, gelber Hinweis –
 #       sonst könnte er Änderungen aus dem Admin überschreiben. Der Worker (cloudflare/dateien.js) darf nur
 #       Dateien aus ADMIN_DATEIEN schreiben (Abgleich mit DATEIEN_ERLAUBT).
+#   20. Aufgaben-Pools und Loot-Pool (Admin-Umbau Etappe 9): daten/aufgaben-pools.json – Pool-IDs eindeutig und
+#       nicht schon in gemeinsam/aufgaben.js vergeben, Fach bekannt, Themen-ID im Katalog, jede Aufgabe hat Frage,
+#       Antwort und genug Ablenker; ITEMS-Farbvarianten (basis/tausch) zeigen auf ein Teil ohne eigene Basis.
 # ═══════════════════════════════════════════════════════
 import gzip, json, math, os, re, subprocess, sys
 from pathlib import Path
@@ -461,6 +464,7 @@ if katalog is not None:
                 if not str(th.get('lehrplan') or '').strip():
                     H(f'Katalog: {th.get("id")} hat noch keinen Lehrplanbezug (Feld lehrplan)')
     I(f'Katalog: {len(ids)} Themen und Stufen, {len(app_themen)} Apps zugeordnet')
+    katalog_ids = set(ids)                       # „ids“ wird weiter unten anders verwendet
     # Etappe 7: Freigaben verweisen auf Katalog-IDs (gelb – ein Tippfehler sperrt nur nichts)
     for t in (config.get('freigaben') or {}):
         if t not in ids: H(f'config.json: Freigabe für unbekannte Themen-ID {t} (wirkt nicht)')
@@ -684,7 +688,7 @@ if Path('apps/vorlage/manifest-beispiel.json').is_file():
 I(f'App-Manifeste: {len(dateien_m)} ({", ".join(dateien_m)})')
 
 # ── 19. Admin-gepflegte Dateien (Admin-Umbau Etappe 8) ──
-ADMIN_DATEIEN = ['daten/katalog.json'] + sorted(rel(p) for p in ROOT.glob('daten/vokabeln*.json'))
+ADMIN_DATEIEN = ['daten/katalog.json', 'daten/aufgaben-pools.json', 'daten/lernwelt-inhalte.json'] + sorted(rel(p) for p in ROOT.glob('daten/vokabeln*.json'))
 _dj = lies('cloudflare/dateien.js') if Path('cloudflare/dateien.js').is_file() else ''
 _muster = [re.compile(m.replace('\\/', '/')) for m in re.findall(r"muster: /(.+?)/,", _dj)]
 if _dj and not _muster: F('cloudflare/dateien.js: Liste DATEIEN_ERLAUBT nicht gefunden')
@@ -699,6 +703,47 @@ if _basis:                                    # nur in Pull Requests (CI holt da
             if _fremd: H(f'Admin-gepflegte Dateien werden in diesem Pull Request geändert ({len(_fremd)} Commits: {_fremd[0][:60]} …) – vorher den Stand von main holen, sonst gehen Änderungen aus dem Admin verloren')
     except Exception:
         pass
+
+# ── 20. Aufgaben-Pools und Loot-Pool (Admin-Umbau Etappe 9) ──
+wo = 'daten/aufgaben-pools.json'
+try:
+    ap = json.loads(lies(wo))
+except Exception as e:
+    ap = None; F(f'{wo} fehlt oder ist ungültig ({e})')
+if ap is not None:
+    _aj = lies('gemeinsam/aufgaben.js')
+    fest = set(re.findall(r"\{ id: '([a-z0-9-]+)'", _aj)) | {'kopf4-leicht', 'kopf4-mittel', 'kopf4-schwer', 'kopf5-leicht', 'kopf5-mittel', 'kopf5-schwer', 'kopf6-leicht', 'kopf6-mittel', 'kopf6-schwer'}
+    fest |= set((kr or {}).get('stufen', {}).keys()) if kr else set()
+    pids = set()
+    for x in ap.get('pools') or []:
+        pid = x.get('id')
+        if not isinstance(pid, str) or not re.fullmatch(r'[a-z0-9-]{3,40}', pid): F(f'{wo}: ungültige Pool-ID „{pid}“'); continue
+        if pid in pids or pid in fest: F(f'{wo}: Pool-ID {pid} ist schon vergeben')
+        pids.add(pid)
+        if x.get('fach') not in faecher_shared: F(f'{wo}: {pid}: Fach „{x.get("fach")}“ steht nicht in gemeinsam/shared.js')
+        if not isinstance(x.get('klasse'), int): F(f'{wo}: {pid}: klasse fehlt')
+        if x.get('thema') and katalog is not None and x['thema'] not in katalog_ids: F(f'{wo}: {pid}: Themen-ID {x["thema"]} fehlt im Katalog')
+        auf = x.get('aufgaben') or []
+        if len(auf) < 2: F(f'{wo}: {pid}: mindestens 2 Aufgaben')
+        antworten = {str(a.get('antwort', '')).strip().lower() for a in auf}
+        for a in auf:
+            fr, an = str(a.get('frage', '')).strip(), str(a.get('antwort', '')).strip()
+            if not fr or not an: F(f'{wo}: {pid}: Aufgabe ohne Frage oder Antwort'); continue
+            ab = {str(f).strip().lower() for f in a.get('falsch') or []} - {an.lower()}
+            if len(ab | (antworten - {an.lower()})) < 2: F(f'{wo}: {pid}: „{fr[:40]}“ hat zu wenige Ablenker')
+            if len(an) > 22: H(f'{wo}: {pid}: Antwort „{an}“ ist länger als 22 Zeichen – passt in den Spielen nicht aufs Tor')
+    I(f'Aufgaben-Pools: {len(pids)} Pools aus {wo}')
+try:
+    _it = json.loads(lies('daten/lernwelt-inhalte.json')).get('ITEMS') or []
+except Exception:
+    _it = []
+_by = {i.get('id'): i for i in _it if isinstance(i, dict)}
+for i in _it:
+    if not isinstance(i, dict) or not i.get('basis'): continue
+    b = _by.get(i['basis'])
+    if not b or b.get('basis') or b.get('slot') != i.get('slot'): F(f'lernwelt-inhalte.json: Teil {i.get("id")}: basis „{i["basis"]}“ fehlt, ist selbst eine Variante oder hat einen anderen Platz')
+    if not all(re.fullmatch(r'#[0-9a-fA-F]{6}', str(k)) and re.fullmatch(r'#[0-9a-fA-F]{6}', str(v)) for k, v in (i.get('tausch') or {}).items()):
+        F(f'lernwelt-inhalte.json: Teil {i.get("id")}: tausch nur mit Farben #rrggbb')
 
 # ── 7. Budgets ──────────────────────────────────────────
 def groesse(d):

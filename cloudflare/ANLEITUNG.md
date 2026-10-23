@@ -50,6 +50,10 @@ Passwörtern ist das Gerät 15 Minuten gesperrt.
   Kein neues Secret: der vorhandene `GITHUB_TOKEN` („Contents: Read and write“) reicht.
   Ohne den neuen Worker zeigt der Vokabel-Editor die Wörter nur an („Nur lesen“).
 
+- **Admin-Umbau Etappe 9 (Okt. 2026):** `dateien.js` darf zusätzlich `daten/aufgaben-pools.json` (Aufgaben-Pools der
+  Spiele; Pool-IDs bleiben) und `daten/lernwelt-inhalte.json` (nur Avatar-Teile und Level-Titel; neue Teile nur als
+  Farbvariante eines vorhandenen Teils) schreiben. Nur **`dateien.js`** bei Cloudflare ersetzen; `worker.js` ist unverändert.
+
 ## Anmeldung im Admin
 
 - Das Passwort wird nur beim Anmelden gesendet und **nirgends gespeichert**. Das Gerät
