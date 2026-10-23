@@ -265,6 +265,20 @@ das ist die Menge, die übers Schul-WLAN geht; komprimiert ≈ ein Drittel der D
   (`gemeinsam/einstellungen.js`; ungültige Werte → Standard, Zahlen auf min/max begrenzt). Pilot: Tower Defense,
   RUN!, Mein Dorf. Beispiel: `apps/vorlage/manifest-beispiel.json`. **Jede neue App mit Stellschrauben bringt ihr
   Manifest mit** – neue Einstellung = Zeile im Manifest, kein Admin-Code. pruefen.py Regel 18 prüft die Manifeste.
+- **Editoren I (Etappe 8):** Inhalte → 🌳 **Katalog** zeigt `daten/katalog.json` als Baum Fach → Bereich → Thema →
+  Stufe, mit Schalter „für alle frei“ je Stufe (und je Thema mit Stufen; schreibt `freigaben[id].alle` wie das Modul
+  Freigaben, das für Klassen/Gruppen und Daten bleibt), 🎮 für Inhalte von „Meine Themen“ und oben den Schwellen
+  (`spiele.schwelle`, `spiele.runden`). Inhalte → 📖 **Vokabeln** bearbeitet `daten/vokabeln5.json`/`vokabeln6.json` ohne
+  JSON: Units, Abschnitte und Wörter anlegen, ändern, mit ▲▼ sortieren, Wörter löschen; **Import** per Copy-Paste
+  (Spalten Englisch | Deutsch | Unit, getrennt durch Tabulator, „|“ oder „;“) mit Vorschau; **Prüfung** (leere Felder,
+  doppelte Wörter in einer Unit, Unit ohne Katalog-Eintrag). Eine neue Unit bekommt Schlüssel `unit<n>`, Themen-ID
+  `en.<k>.vok.u<n>` und eine Katalog-Stufe mit `inhalt: vok<k>:unit<n>` – so erscheint sie im Vokabeltrainer, in den
+  Spielen und in Freigaben. Bestehende Units und Abschnitte lassen sich nicht löschen (IDs im Lernstand). Gespeichert
+  wird mit „💾 Speichern“ direkt ins Repo, nicht über „Veröffentlichen“: Datenschicht `gemeinsam/admin/dateien.js`
+  (`LWAdmin.dateien`, Entwurf `lernwelt-admin-dateien-entwurf`), Worker `cloudflare/dateien.js` (`/dateien/lesen`,
+  `/dateien/speichern`, feste Pfadliste `DATEIEN_ERLAUBT`, Formatprüfung je Datei, ein Commit über die Git-API).
+  **Admin-gepflegte Dateien** (Katalog, Vokabeln) in Pull Requests nicht von Hand überschreiben – vorher den Stand von
+  main holen; pruefen.py Regel 19 warnt gelb.
 - **Neues Modul:** Datei `gemeinsam/admin/module/<bereich>-<name>.js` mit `LWAdmin.modul({…})`, dazu eine Zeile
   in `admin.html` (pruefen.py Regel 17 prüft Einbindung, IDs und Bereiche).
 - **Worker zuerst:** Der Worker prüft seit Etappe 6 `gruppen`, `apps[].gruppe` und `catOrder`

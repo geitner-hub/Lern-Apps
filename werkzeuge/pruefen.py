@@ -42,8 +42,12 @@
 #       Datei der App existiert, Einstellungen haben gültigen Typ, eindeutigen Schlüssel und einen Standard,
 #       der zu Typ und Grenzen passt; config-Pfade nur unter dorf./spiele.; Apps mit „ziel“ rufen
 #       LernEinstellungen.anwenden('<id>' auf. Das Beispiel apps/vorlage/manifest-beispiel.json wird mitgeprüft.
+#   19. Admin-gepflegte Dateien (Admin-Umbau Etappe 8): daten/katalog.json und daten/vokabeln*.json schreibt
+#       der Admin (Commits „Admin: …“). Ändert ein anderer Commit eines Pull Requests sie, gelber Hinweis –
+#       sonst könnte er Änderungen aus dem Admin überschreiben. Der Worker (cloudflare/dateien.js) darf nur
+#       Dateien aus ADMIN_DATEIEN schreiben (Abgleich mit DATEIEN_ERLAUBT).
 # ═══════════════════════════════════════════════════════
-import gzip, json, math, os, re, sys
+import gzip, json, math, os, re, subprocess, sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -678,6 +682,23 @@ for mid in dateien_m:
 if Path('apps/vorlage/manifest-beispiel.json').is_file():
     pruefe_manifest('apps/vorlage/manifest-beispiel.json', json.loads(lies('apps/vorlage/manifest-beispiel.json')))
 I(f'App-Manifeste: {len(dateien_m)} ({", ".join(dateien_m)})')
+
+# ── 19. Admin-gepflegte Dateien (Admin-Umbau Etappe 8) ──
+ADMIN_DATEIEN = ['daten/katalog.json'] + sorted(rel(p) for p in ROOT.glob('daten/vokabeln*.json'))
+_dj = lies('cloudflare/dateien.js') if Path('cloudflare/dateien.js').is_file() else ''
+_muster = [re.compile(m.replace('\\/', '/')) for m in re.findall(r"muster: /(.+?)/,", _dj)]
+if _dj and not _muster: F('cloudflare/dateien.js: Liste DATEIEN_ERLAUBT nicht gefunden')
+for d in ADMIN_DATEIEN:
+    if _muster and not any(m.fullmatch(d) for m in _muster): H(f'{d}: der Worker (cloudflare/dateien.js) darf diese Datei nicht schreiben')
+_basis = os.environ.get('GITHUB_BASE_REF')
+if _basis:                                    # nur in Pull Requests (CI holt dafür die ganze Geschichte)
+    try:
+        _log = subprocess.run(['git', 'log', '--format=%s', f'origin/{_basis}..HEAD', '--', *ADMIN_DATEIEN], capture_output=True, text=True, timeout=30)
+        if _log.returncode == 0:
+            _fremd = [z for z in _log.stdout.splitlines() if z.strip() and not z.startswith(('Admin:', 'Merge'))]
+            if _fremd: H(f'Admin-gepflegte Dateien werden in diesem Pull Request geändert ({len(_fremd)} Commits: {_fremd[0][:60]} …) – vorher den Stand von main holen, sonst gehen Änderungen aus dem Admin verloren')
+    except Exception:
+        pass
 
 # ── 7. Budgets ──────────────────────────────────────────
 def groesse(d):

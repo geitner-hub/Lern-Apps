@@ -24,6 +24,8 @@
 //    POST /verlauf    → { eintraege: [{ sha, zeit, text, wer }] } die letzten 30 Veröffentlichungen (Schlüssel)
 //    POST /fassung    → { content (base64) } config.json in einer früheren Fassung, Body: { sha } (Schlüssel)
 //                       (Admin-Umbau Etappe 3: Versionsverlauf und Wiederherstellen; nur lesen)
+//    POST /dateien/lesen, /dateien/speichern → Katalog und Vokabeldateien (Etappe 8, cloudflare/dateien.js):
+//                       feste Liste erlaubter Pfade, Formatprüfung je Datei, alles in einem Commit (Schlüssel)
 //
 //  Anmelde-Schlüssel: Nur beim Anmelden wird das Passwort gesendet. Der Admin
 //  speichert danach nur einen signierten Schlüssel, der SESSION_DAYS gilt.
@@ -61,7 +63,7 @@
 // ── Einstellungen ──────────────────────────────────────
 const REPO_OWNER = 'geitner-hub';
 const REPO_NAME  = 'Lern-Apps';
-const FILE_PATH  = 'config.json';   // der Worker kann NUR diese Datei schreiben
+const FILE_PATH  = 'config.json';   // PUT / schreibt nur diese Datei; weitere Dateien nur über dateien.js (feste Liste)
 const BRANCH     = 'main';
 const ALLOWED_ORIGINS = [
   'https://geitner-hub.github.io',
@@ -79,6 +81,7 @@ const SAFE_LINK = /^(?:[A-Za-z0-9_-]+\/)*[A-Za-z0-9_.-]+\.html(?:\?[A-Za-z0-9_.~
 // ── Module ─────────────────────────────────────────────
 import { handleSync, syncAufraeumen } from './sync.js';
 import { handleMedienOeffentlich, handleMedienAdmin, medienAufraeumen } from './medien.js';
+import { handleDateien } from './dateien.js';
 
 // ── Einstieg ───────────────────────────────────────────
 export default {
@@ -107,6 +110,7 @@ export default {
     try {
       if (url.pathname.startsWith('/medien/'))                    return await handleMedienAdmin(request, env, cors, url, { checkToken });
       if (url.pathname.startsWith('/sync/'))                      return await handleSync(request, env, cors, url, { checkToken });
+      if (url.pathname.startsWith('/dateien/'))                   return await handleDateien(request, env, cors, url, { checkToken, gh, json, b64ToUtf8, BRANCH });
       if (request.method === 'GET' && url.pathname === '/')       return await handleGet(env, cors);
       if (request.method === 'POST' && url.pathname === '/login') return await handleLogin(request, env, cors);
       if (request.method === 'POST' && url.pathname === '/session') return await handleSession(request, env, cors);

@@ -18,6 +18,7 @@ GitHub Pages. Fällt der Worker aus, funktioniert nur das Speichern im Admin nic
 | `POST /session` | mit Schlüssel | prüft beim Öffnen des Admins, ob der Schlüssel noch gilt |
 | `POST /logout-all` | mit Schlüssel | meldet alle Geräte ab (braucht `LOGIN_KV`) |
 | `PUT /` | mit Schlüssel | speichert `config.json`, nach Prüfung jedes Feldes |
+| `POST /dateien/lesen`, `/dateien/speichern` | mit Schlüssel | Katalog und Vokabeln aus dem Admin (`dateien.js`, nur feste Pfade, ein Commit) |
 
 Nur Anfragen von `https://geitner-hub.github.io` werden angenommen. Nach 5 falschen
 Passwörtern ist das Gerät 15 Minuten gesperrt.
@@ -38,6 +39,16 @@ Passwörtern ist das Gerät 15 Minuten gesperrt.
 - **Spielsperre-Ausnahmen (Okt. 2026, v61):** `worker.js` nimmt in `spielsperre` zusätzlich `ausnahmen[]` an
   (`id`, `wer`, `runden` 0–20, `ab?`, `bis?` als Datum, höchstens 40). Nur `worker.js` ersetzen; `sync.js` ist unverändert.
   Ohne neuen Worker lehnt das Speichern eine Ausnahme mit „spielsperre ungültig“ ab – sonst passiert nichts.
+
+- **Admin-Umbau Etappe 8 (Okt. 2026): neue Datei `dateien.js`.** Der Admin bearbeitet jetzt Vokabeln und legt neue
+  Units an (Inhalte → 📖 Vokabeln). Dafür schreibt der Worker neben `config.json` genau diese Dateien:
+  `daten/katalog.json` (nur neue Stufen und Stufen-Titel) und `daten/vokabeln5.json` … `vokabeln10.json`
+  (Units, Abschnitte, Wörter; bestehende Units/Abschnitte bleiben). Jede Datei hat eine eigene Formatprüfung,
+  alle anderen Pfade lehnt er ab. Mehrere Dateien landen in einem Commit („Admin: Inhalte: …“).
+  **Einbau:** *Edit code* → links im Dateibaum neben `worker.js` eine neue Datei **`dateien.js`** anlegen →
+  Inhalt von `cloudflare/dateien.js` einfügen; dann `worker.js` komplett ersetzen → *Deploy*.
+  Kein neues Secret: der vorhandene `GITHUB_TOKEN` („Contents: Read and write“) reicht.
+  Ohne den neuen Worker zeigt der Vokabel-Editor die Wörter nur an („Nur lesen“).
 
 ## Anmeldung im Admin
 
