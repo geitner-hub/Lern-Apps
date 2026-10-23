@@ -255,6 +255,16 @@ das ist die Menge, die übers Schul-WLAN geht; komprimiert ≈ ein Drittel der D
   `ab`/`bis`, Freigaben „frei ab Datum“. Motivation → 🗓 **Kalender**: zwei Monate mit Symbolen je Tag, darunter
   „läuft gerade · kommt · ohne Ende“ (Events, Ausnahmen, Freigaben, Fokus, Lehrer-Zettel, Wochenaufträge, Challenges;
   `gemeinsam/admin/termine.js`). Das Dashboard meldet, was in den nächsten 7 Tagen beginnt oder endet.
+- **App-Einstellungen (Etappe 7):** Eine App beschreibt in `daten/apps/<id>.json` (Liste: `daten/apps/liste.json`,
+  id = Dateiname ohne .html), was die Lehrkraft einstellen darf: `{ id, titel, datei, einstellungen: [{ schluessel,
+  typ, titel, text, standard, … }] }` mit den Typen `schalter`, `zahl` (min, max, schritt, einheit), `auswahl`
+  (optionen `[{ wert, titel }]`), `text` (max) und `inhaltsliste` (Inhalts-IDs, für die Editoren ab Etappe 8). `ziel` = Pfad
+  im `CFG` der App, `config` = vorhandenes Feld in config.json (nur `dorf.`/`spiele.`, z. B. Mein Dorf). Werte stehen in
+  `config.appEinstellungen[id][schluessel]`; der Admin baut daraus das Formular (Inhalte → ⚙️ App-Einstellungen,
+  `gemeinsam/admin/formular.js`), die App holt sie vor dem Start mit `await LernEinstellungen.anwenden('<id>', CFG)`
+  (`gemeinsam/einstellungen.js`; ungültige Werte → Standard, Zahlen auf min/max begrenzt). Pilot: Tower Defense,
+  RUN!, Mein Dorf. Beispiel: `apps/vorlage/manifest-beispiel.json`. **Jede neue App mit Stellschrauben bringt ihr
+  Manifest mit** – neue Einstellung = Zeile im Manifest, kein Admin-Code. pruefen.py Regel 18 prüft die Manifeste.
 - **Neues Modul:** Datei `gemeinsam/admin/module/<bereich>-<name>.js` mit `LWAdmin.modul({…})`, dazu eine Zeile
   in `admin.html` (pruefen.py Regel 17 prüft Einbindung, IDs und Bereiche).
 - **Worker zuerst:** Der Worker prüft seit Etappe 6 `gruppen`, `apps[].gruppe` und `catOrder`

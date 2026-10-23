@@ -47,6 +47,7 @@
 //    heute         – nur false: Startseite ohne „Heute für dich“ (Etappe 8)
 //    spiele        – auswahl, schwelle 50–100, runden 1–3, starter { klasse: [IDs] }, wortBis { klasse: unit } („Meine Themen“)
 //    featureSchalter – { name: true|false } (Admin-Umbau Etappe 1, genutzt ab Etappe 10)
+//    appEinstellungen – { appId: { schluessel: wert } } (Etappe 7, Schema in daten/apps/<id>.json)
 //    Andere Felder oben in config.json werden abgelehnt.
 //
 //  Medien (Okt. 2026, cloudflare/medien.js, Anleitung: ANLEITUNG-MEDIEN.md):
@@ -383,9 +384,20 @@ function validateConfig(cfg) {
   const fs = cfg.featureSchalter;
   if (fs !== undefined && (!fs || typeof fs !== 'object' || Array.isArray(fs) || Object.keys(fs).length > 50
       || !Object.entries(fs).every(([k, v]) => /^[a-z][a-zA-Z0-9-]{0,39}$/.test(k) && typeof v === 'boolean'))) p.push('featureSchalter ungültig');
+  // App-Einstellungen (Admin-Umbau Etappe 7): { appId: { schluessel: wert } } – Typ und Grenzen stehen im
+  // Manifest (daten/apps/<id>.json) und werden auf jedem Gerät nachgeprüft; hier nur Form und Größe
+  const ae = cfg.appEinstellungen;
+  if (ae !== undefined) {
+    const wertOk = v => typeof v === 'boolean' || (typeof v === 'number' && Number.isFinite(v)) || isStr(v, 200)
+      || (Array.isArray(v) && v.length <= 100 && v.every(x => isStr(x, 80)));
+    if (!ae || typeof ae !== 'object' || Array.isArray(ae) || Object.keys(ae).length > 100
+        || !Object.entries(ae).every(([id, w]) => /^[a-z0-9-]{1,40}$/.test(id) && w && typeof w === 'object' && !Array.isArray(w)
+          && Object.keys(w).length <= 50 && Object.entries(w).every(([k, v]) => /^[a-zA-Z][a-zA-Z0-9]{0,39}$/.test(k) && wertOk(v))))
+      p.push('appEinstellungen ungültig');
+  }
   // Nur bekannte Felder (neues Feld → hier und oben in der Kopfzeile eintragen)
   const FELDER = ['version', 'apps', 'customTags', 'hiddenCats', 'catOrder', 'announcement', 'pass', 'spiele', 'dorf',
-    'gruppen', 'freigaben', 'fokus', 'spielsperre', 'heute', 'featureSchalter'];
+    'gruppen', 'freigaben', 'fokus', 'spielsperre', 'heute', 'featureSchalter', 'appEinstellungen'];
   const fremd = Object.keys(cfg).filter(k => !FELDER.includes(k));
   if (fremd.length) p.push('unbekanntes Feld: ' + fremd.slice(0, 3).join(', '));
   return p;

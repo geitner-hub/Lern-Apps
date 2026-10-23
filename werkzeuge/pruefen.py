@@ -38,6 +38,10 @@
 #   17. Admin (Admin-Umbau ab Etappe 1): jede Datei unter gemeinsam/admin/module/ ist in admin.html
 #       eingebunden (und umgekehrt), meldet sich mit LWAdmin.modul/altModul an (Teile stehen in admin.html), IDs eindeutig,
 #       Bereiche gültig; store.js und module.js vor den Modulen, rahmen.js als letztes Admin-Skript.
+#   18. App-Manifeste (Admin-Umbau Etappe 7): daten/apps/liste.json und daten/apps/<id>.json passen zusammen,
+#       Datei der App existiert, Einstellungen haben gültigen Typ, eindeutigen Schlüssel und einen Standard,
+#       der zu Typ und Grenzen passt; config-Pfade nur unter dorf./spiele.; Apps mit „ziel“ rufen
+#       LernEinstellungen.anwenden('<id>' auf. Das Beispiel apps/vorlage/manifest-beispiel.json wird mitgeprüft.
 # ═══════════════════════════════════════════════════════
 import gzip, json, math, os, re, sys
 from pathlib import Path
@@ -626,6 +630,54 @@ else:
             ids[mid] = d
             if ber not in bereiche: F(f'{d}: Bereich {ber} unbekannt (erlaubt: {", ".join(sorted(bereiche))})')
     I(f'Admin: {sum(1 for k in ids if not k.startswith("k:"))} Module in {len(bereiche)} Bereichen, {sum(1 for k in ids if k.startswith("k:"))} Dashboard-Kacheln')
+
+# ── 18. App-Manifeste (Admin-Umbau Etappe 7) ───────────
+TYPEN = {'schalter', 'zahl', 'auswahl', 'text', 'inhaltsliste'}
+def pruefe_manifest(wo, m, id_soll=None):
+    def FM(msg): F(f'{wo}: {msg}')
+    if not isinstance(m, dict): return FM('kein Objekt')
+    if id_soll and m.get('id') != id_soll: FM(f'id „{m.get("id")}“ passt nicht zum Dateinamen ({id_soll})')
+    if not re.fullmatch(r'[a-z0-9-]{1,40}', str(m.get('id', ''))): FM('id ungültig (klein, Ziffern, -)')
+    if not m.get('titel'): FM('titel fehlt')
+    if not Path(str(m.get('datei', ''))).is_file(): FM(f'datei fehlt: {m.get("datei")}')
+    gesehen = set()
+    for e in m.get('einstellungen') or []:
+        k = e.get('schluessel', '')
+        w = f'Einstellung {k}'
+        if not re.fullmatch(r'[a-zA-Z][a-zA-Z0-9]{0,39}', str(k)): FM(f'{w}: Schlüssel ungültig')
+        if k in gesehen: FM(f'{w}: doppelt')
+        gesehen.add(k)
+        typ, s = e.get('typ'), e.get('standard')
+        if typ not in TYPEN: FM(f'{w}: Typ „{typ}“ unbekannt (erlaubt: {", ".join(sorted(TYPEN))})'); continue
+        if not e.get('titel'): FM(f'{w}: titel fehlt')
+        if typ == 'schalter' and not isinstance(s, bool): FM(f'{w}: Standard muss true/false sein')
+        if typ == 'zahl':
+            if not isinstance(s, (int, float)) or isinstance(s, bool): FM(f'{w}: Standard muss eine Zahl sein')
+            elif ('min' in e and s < e['min']) or ('max' in e and s > e['max']): FM(f'{w}: Standard liegt außerhalb von min/max')
+        if typ == 'auswahl':
+            o = e.get('optionen') or []
+            if not o or not all(isinstance(x, dict) and 'wert' in x and x.get('titel') for x in o): FM(f'{w}: optionen fehlen oder ohne wert/titel')
+            elif s not in [x['wert'] for x in o]: FM(f'{w}: Standard steht nicht in den optionen')
+        if typ == 'text' and not isinstance(s, str): FM(f'{w}: Standard muss Text sein')
+        if typ == 'inhaltsliste' and not isinstance(s, list): FM(f'{w}: Standard muss eine Liste sein')
+        if 'config' in e and not re.fullmatch(r'(dorf|spiele)\.[A-Za-z0-9]+', str(e['config'])): FM(f'{w}: config-Pfad nur unter dorf. oder spiele. (der Worker prüft diese Felder)')
+        if 'ziel' in e and not re.fullmatch(r'[A-Za-z0-9_]+(\.[A-Za-z0-9_]+)*', str(e['ziel'])): FM(f'{w}: ziel ungültig')
+    if any('ziel' in e for e in m.get('einstellungen') or []) and Path(str(m.get('datei', ''))).is_file() and not id_soll is None:
+        if f"anwenden('{m.get('id')}'" not in lies(m['datei']): H(f'{wo}: {m.get("datei")} ruft LernEinstellungen.anwenden(\'{m.get("id")}\', CFG) nicht auf – Einstellungen wirken nicht')
+try:
+    apps_liste = json.loads(lies('daten/apps/liste.json')).get('apps') or []
+except Exception as e:
+    apps_liste = []; F(f'daten/apps/liste.json fehlt oder ist ungültig ({e})')
+dateien_m = sorted(p.stem for p in ROOT.glob('daten/apps/*.json') if p.name != 'liste.json')
+for mid in apps_liste:
+    if mid not in dateien_m: F(f'daten/apps/liste.json: Manifest {mid}.json fehlt')
+for mid in dateien_m:
+    if mid not in apps_liste: F(f'daten/apps/{mid}.json steht nicht in daten/apps/liste.json')
+    try: pruefe_manifest(f'daten/apps/{mid}.json', json.loads(lies(f'daten/apps/{mid}.json')), mid)
+    except json.JSONDecodeError: pass                                        # meldet schon Regel 1
+if Path('apps/vorlage/manifest-beispiel.json').is_file():
+    pruefe_manifest('apps/vorlage/manifest-beispiel.json', json.loads(lies('apps/vorlage/manifest-beispiel.json')))
+I(f'App-Manifeste: {len(dateien_m)} ({", ".join(dateien_m)})')
 
 # ── 7. Budgets ──────────────────────────────────────────
 def groesse(d):

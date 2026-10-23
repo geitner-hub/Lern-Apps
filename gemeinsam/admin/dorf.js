@@ -215,19 +215,9 @@ async function buildDorfAdmin() {
     });
   }
 
-  // Einstellungen
+  // Einstellungen – seit Admin-Umbau Etappe 7 aus dem Manifest daten/apps/dorf.json (Formular-Generator)
   const cur = k => cfg[k] ?? std[k];
-  document.getElementById('dorf-settings').innerHTML = `
-    <div class="sw-row"><span class="sw-ic">📌</span>
-      <div class="sw-txt"><div class="sw-name">Auftragsplätze</div><div class="sw-desc">Platz 1 Mathematik, Platz 2 Englisch/GPG, Platz 3 freie Wahl. Weniger Plätze = weniger Rohstoffe pro Tag. Wer eine Bibliothek baut, bekommt einen Platz dazu.</div></div>
-      <select class="sw-sel" data-dorf-set="plaetze">${[1, 2, 3].map(n => opt(n, n + (n === 1 ? ' Platz' : ' Plätze') + (n === std.plaetze ? ' (Standard)' : ''), cur('plaetze'))).join('')}</select></div>
-    <div class="sw-row"><span class="sw-ic">🎲</span>
-      <div class="sw-txt"><div class="sw-name">Tauschen</div><div class="sw-desc">So viele Tausche bekommt ein Kind pro Tag dazu – und so viele kann es höchstens ansparen.</div></div>
-      <select class="sw-sel" data-dorf-set="rerollsProTag">${[0, 1, 2].map(n => opt(n, n + ' pro Tag' + (n === std.rerollsProTag ? ' (Standard)' : ''), cur('rerollsProTag'))).join('')}</select>
-      <select class="sw-sel" data-dorf-set="rerollsMax">${[0, 1, 2, 3, 4, 5].map(n => opt(n, 'bis ' + n + (n === std.rerollsMax ? ' (Standard)' : ''), cur('rerollsMax'))).join('')}</select></div>
-    <div class="sw-row"><span class="sw-ic">🧱</span>
-      <div class="sw-txt"><div class="sw-name">Baukosten</div><div class="sw-desc">Gilt für alle Gebäude und Stufen. Wenn die Klasse zu schnell oder zu langsam vorankommt: hier nachjustieren. Wirkt sofort, bereits Gebautes bleibt.</div></div>
-      <select class="sw-sel" data-dorf-set="kostenfaktor">${[0.5, 0.75, 1, 1.25, 1.5, 2].map(n => opt(n, Math.round(n * 100) + ' %' + (n === std.kostenfaktor ? ' (Standard)' : ''), cur('kostenfaktor'))).join('')}</select></div>`;
+  if (window.LWAdmin && LWAdmin.formular) LWAdmin.formular.einhaengen(document.getElementById('dorf-settings'), 'dorf');
 
   // Apps
   const alle = lernAppsFuerDorf().sort((a, b) => (a.fach + a.name).localeCompare(b.fach + b.name));

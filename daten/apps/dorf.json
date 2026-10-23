@@ -1,0 +1,12 @@
+{
+  "id": "dorf",
+  "titel": "Mein Dorf",
+  "datei": "spiele/dorf.html",
+  "hinweis": "Diese Einstellungen stehen schon immer in config.json → dorf (config-Pfad); Mein Dorf liest sie selbst (gemeinsam/dorf-kern.js).",
+  "einstellungen": [
+    { "schluessel": "plaetze", "typ": "auswahl", "titel": "Auftragsplätze", "text": "Platz 1 Mathematik, Platz 2 Englisch/GPG, Platz 3 freie Wahl. Weniger Plätze = weniger Rohstoffe pro Tag. Wer eine Bibliothek baut, bekommt einen Platz dazu.", "standard": 3, "optionen": [{ "wert": 1, "titel": "1 Platz" }, { "wert": 2, "titel": "2 Plätze" }, { "wert": 3, "titel": "3 Plätze" }], "config": "dorf.plaetze" },
+    { "schluessel": "rerollsProTag", "typ": "auswahl", "titel": "Tausche pro Tag", "text": "So viele Tausche bekommt ein Kind pro Tag dazu.", "standard": 1, "optionen": [{ "wert": 0, "titel": "0 pro Tag" }, { "wert": 1, "titel": "1 pro Tag" }, { "wert": 2, "titel": "2 pro Tag" }], "config": "dorf.rerollsProTag" },
+    { "schluessel": "rerollsMax", "typ": "auswahl", "titel": "Tausche höchstens ansparen", "standard": 3, "optionen": [{ "wert": 0, "titel": "bis 0" }, { "wert": 1, "titel": "bis 1" }, { "wert": 2, "titel": "bis 2" }, { "wert": 3, "titel": "bis 3" }, { "wert": 4, "titel": "bis 4" }, { "wert": 5, "titel": "bis 5" }], "config": "dorf.rerollsMax" },
+    { "schluessel": "kostenfaktor", "typ": "auswahl", "titel": "Baukosten", "text": "Gilt für alle Gebäude und Stufen. Wenn die Klasse zu schnell oder zu langsam vorankommt: hier nachjustieren. Wirkt sofort, bereits Gebautes bleibt.", "standard": 1, "optionen": [{ "wert": 0.5, "titel": "50 %" }, { "wert": 0.75, "titel": "75 %" }, { "wert": 1, "titel": "100 %" }, { "wert": 1.25, "titel": "125 %" }, { "wert": 1.5, "titel": "150 %" }, { "wert": 2, "titel": "200 %" }], "config": "dorf.kostenfaktor" }
+  ]
+}

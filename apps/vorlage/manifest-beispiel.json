@@ -1,0 +1,13 @@
+{
+  "hinweis": "Beispiel-Manifest (Admin-Umbau Etappe 7). Für eine neue App kopieren nach daten/apps/<id>.json (id = Dateiname ohne .html), die id in daten/apps/liste.json eintragen und in der App vor dem Start `await LernEinstellungen.anwenden('<id>', CFG)` aufrufen (gemeinsam/einstellungen.js einbinden). Die Einstellungen erscheinen dann im Admin unter Inhalte → App-Einstellungen, ohne Admin-Code. Typen: schalter, zahl (min, max, schritt, einheit), auswahl (optionen), text (max), inhaltsliste (Liste von Inhalts-IDs, für die Editoren ab Etappe 8). ziel = Pfad im CFG-Objekt der App, in den der Wert geschrieben wird.",
+  "id": "app-template",
+  "titel": "Meine neue App",
+  "datei": "apps/vorlage/app-template.html",
+  "einstellungen": [
+    { "schluessel": "aufgaben", "typ": "zahl", "titel": "Aufgaben pro Runde", "standard": 10, "min": 5, "max": 30, "schritt": 1, "einheit": "Aufgaben", "ziel": "aufgabenProRunde" },
+    { "schluessel": "zeitlimit", "typ": "schalter", "titel": "Mit Zeitlimit", "standard": false, "ziel": "zeitlimit" },
+    { "schluessel": "schwierigkeit", "typ": "auswahl", "titel": "Schwierigkeit", "standard": "normal", "optionen": [{ "wert": "leicht", "titel": "Leicht" }, { "wert": "normal", "titel": "Normal" }, { "wert": "schwer", "titel": "Schwer" }], "ziel": "stufe" },
+    { "schluessel": "begruessung", "typ": "text", "titel": "Begrüßungstext", "standard": "", "max": 80, "ziel": "begruessung" },
+    { "schluessel": "themen", "typ": "inhaltsliste", "titel": "Nur diese Themen", "text": "Liste von Katalog-IDs; leer = alle.", "standard": [], "max": 30, "ziel": "themen" }
+  ]
+}
