@@ -106,6 +106,12 @@ document.getElementById('pass-settings').addEventListener('change', e => {
   saveConfig();
 });
 
+// Aufgaben-Pools aus daten/aufgaben-pools.json kommen nach dem Laden dazu (Starter-Paket neu zeichnen)
+if (window.LernAufgaben && LernAufgaben.bereit) LernAufgaben.bereit.then(() => {
+  const admin = document.getElementById('admin');
+  if (typeof CONFIG !== 'undefined' && CONFIG && admin && admin.style.display === 'block' && document.getElementById('pass-settings').isConnected) buildPassAdmin();
+});
+
 // pass.js meldet sich, sobald seine Inhalte geladen sind
 window.addEventListener('lernpass:ready', () => {
   const admin = document.getElementById('admin');

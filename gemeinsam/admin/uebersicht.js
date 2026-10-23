@@ -11,6 +11,8 @@ function rarBadge(key) {
 }
 
 function buildPassOverview() {
+  const ziel = document.getElementById('pass-overview');      // seit Etappe 9 in Motivation → Avatar-Teile → Übersicht
+  if (!ziel || !window.LernPass) return;
   const P = LernPass, R = P.RULES;
   const truhe = P.ITEMS.filter(i => i.quelle === 'truhe');
   const rars = ['gewoehnlich', 'selten', 'episch'];
@@ -62,7 +64,7 @@ function buildPassOverview() {
 
   const counts = { truhe: truhe.length, set: P.ITEMS.filter(i => i.quelle === 'set').length, event: P.ITEMS.filter(i => i.quelle === 'event').length, start: P.ITEMS.filter(i => i.quelle === 'start').length };
 
-  document.getElementById('pass-overview').innerHTML = `
+  ziel.innerHTML = `
     <details open><summary>🏷 Level & Titel (${P.LEVEL_TITLES.length} Titel)</summary><div class="ov-body">
       <p class="note">Jedes Level braucht 50 XP mehr als das vorherige. Nach Level ${P.LEVEL_TITLES.length} geht es mit „${escHtml(P.LEVEL_TITLES[P.LEVEL_TITLES.length - 1])} ★ … ★★★★★“ weiter. Richtwerte für ein Schuljahr: nur Aufwärmen im Unterricht ≈ Level 11, mit Übung daheim ≈ Level 15, sehr fleißig ≈ Level 20.</p>
       <table><thead><tr><th>Level</th><th>ab XP</th><th>Schritt</th><th>Titel</th></tr></thead><tbody>${lvlRows}</tbody></table></div></details>

@@ -1,0 +1,36 @@
+{
+ "hinweis": "Aufgaben-Pools für die Spiele (RUN!, Tower Defense, Tauziehen) – gepflegt im Admin unter Inhalte → Aufgaben-Pools. Pool-IDs nie umbenennen oder löschen (Starter-Paket, Lehrer-Links). Format: README → Aufgaben-Pools.",
+ "pools": [
+  {"id": "gpg-kontinente-ozeane", "fach": "GPG", "gruppe": "Erdkunde", "klasse": 5, "titel": "Kontinente und Ozeane (Quiz)", "thema": "gpg.5.erde", "aufgaben": [
+   {"frage": "Größter Kontinent?", "antwort": "Asien", "falsch": ["Afrika", "Amerika"]},
+   {"frage": "Größter Ozean?", "antwort": "Pazifik", "falsch": ["Atlantik", "Indischer Ozean"]},
+   {"frage": "Auf welchem Kontinent liegt Deutschland?", "antwort": "Europa", "falsch": ["Asien", "Afrika"]},
+   {"frage": "Welcher Ozean liegt zwischen Europa und Amerika?", "antwort": "Atlantik", "falsch": ["Pazifik", "Indischer Ozean"]},
+   {"frage": "Auf welchem Kontinent liegt Ägypten?", "antwort": "Afrika", "falsch": ["Asien", "Europa"]},
+   {"frage": "Welcher Kontinent liegt am Südpol?", "antwort": "Antarktika", "falsch": ["Australien", "Afrika"]},
+   {"frage": "Wie viele Kontinente gibt es?", "antwort": "7", "falsch": ["5", "9"]},
+   {"frage": "Auf welchem Kontinent liegt Brasilien?", "antwort": "Südamerika", "falsch": ["Afrika", "Nordamerika"]},
+   {"frage": "Auf welchem Kontinent liegt Japan?", "antwort": "Asien", "falsch": ["Australien", "Europa"]},
+   {"frage": "Welcher Ozean liegt zwischen Afrika und Australien?", "antwort": "Indischer Ozean", "falsch": ["Pazifik", "Atlantik"]},
+   {"frage": "Welches Meer liegt am Nordpol?", "antwort": "Nordpolarmeer", "falsch": ["Mittelmeer", "Ostsee"]},
+   {"frage": "Kleinster Kontinent?", "antwort": "Australien", "falsch": ["Europa", "Antarktika"]}
+  ]},
+  {"id": "en-past-unregelmaessig", "fach": "Englisch", "gruppe": "Grammatik", "klasse": 5, "titel": "Simple Past: unregelmäßige Verben", "thema": "en.5.simple-past.unregelmaessig", "aufgaben": [
+   {"frage": "Simple past von „go“?", "antwort": "went", "falsch": ["goed", "gone"]},
+   {"frage": "Simple past von „see“?", "antwort": "saw", "falsch": ["seed", "seen"]},
+   {"frage": "Simple past von „have“?", "antwort": "had", "falsch": ["haved", "has"]},
+   {"frage": "Simple past von „eat“?", "antwort": "ate", "falsch": ["eated", "eaten"]},
+   {"frage": "Simple past von „come“?", "antwort": "came", "falsch": ["comed", "comes"]},
+   {"frage": "Simple past von „buy“?", "antwort": "bought", "falsch": ["buyed", "buys"]},
+   {"frage": "Simple past von „take“?", "antwort": "took", "falsch": ["taked", "taken"]},
+   {"frage": "Simple past von „write“?", "antwort": "wrote", "falsch": ["writed", "written"]},
+   {"frage": "Simple past von „say“?", "antwort": "said", "falsch": ["sayed", "says"]},
+   {"frage": "Simple past von „make“?", "antwort": "made", "falsch": ["maked", "makes"]},
+   {"frage": "Simple past von „get“?", "antwort": "got", "falsch": ["getted", "gets"]},
+   {"frage": "Simple past von „swim“?", "antwort": "swam", "falsch": ["swimmed", "swum"]},
+   {"frage": "Simple past von „run“?", "antwort": "ran", "falsch": ["runned", "runs"]},
+   {"frage": "Simple past von „give“?", "antwort": "gave", "falsch": ["gived", "given"]},
+   {"frage": "Simple past von „find“?", "antwort": "found", "falsch": ["finded", "finds"]}
+  ]}
+ ]
+}

@@ -58,6 +58,9 @@ Erst in der Testumgebung, dort wird nichts gespeichert. Den Admin nicht in zwei 
 | A29 | Inhalte → 🌳 Katalog: Englisch → Wortschatz aufklappen, Schalter einer Unit aus, veröffentlichen | Unit im Vokabeltrainer mit 🔒; Schalter wieder an → offen |
 | A30 | Live: Inhalte → 📖 Vokabeln → Klasse 6: neue Unit „Unit 6: …“ anlegen, 3 Zeilen aus einer Tabelle importieren, 💾 Speichern | „Gespeichert“; nach 1–2 Min. im Vokabeltrainer Kl. 6 als neue Unit, im Katalog als Stufe, in RUN! über „selbst wählen“ (braucht `dateien.js` bei Cloudflare) |
 | A31 | Vokabeln: ein Wort leeren, 💾 Speichern | Speichern gestoppt mit „leeres Feld“; ohne neuen Worker steht oben „Nur lesen“ |
+| A32 | Live: Inhalte → 🎯 Aufgaben-Pools: neuen Pool anlegen, 5 Zeilen aus einer Tabelle einfügen, 💾 Speichern; nach 2 Min. RUN! → selbst wählen | Pool steht in der Auswahl, Fragen mit 3 Antworten; `spiele/runner.html?pool=<id>` startet direkt |
+| A33 | Live: Motivation → 🎁 Avatar-Teile → Neues Teil: Vorlage wählen, Farben ändern (Vorschau dreht sich mit), anlegen, 💾 Speichern | Teil im Raster mit Vorschau; nach 2 Min. in der Garderobe als gesperrtes Teil, erhältlich aus einer Truhe |
+| A34 | Avatar-Teile → Titel: einen Titel ändern, speichern; Übersicht öffnen | neuer Titel auf der Startseite beim passenden Level; Übersicht zeigt Level, XP-Regeln, Truhen, Abzeichen, Teile |
 | A28 | Motivation → Mein Dorf → Einstellungen | gleiche Felder wie unter App-Einstellungen (Auftragsplätze, Tausche, Baukosten), Änderung wirkt wie bisher |
 | A17 | Live: „Wiederherstellen“ bei der vorletzten Fassung, Veröffentlichen, danach die neueste vorherige Fassung wiederherstellen und veröffentlichen | beide Male „Veröffentlicht“, am Ende ist alles wie vorher (braucht den neuen Worker) |
 

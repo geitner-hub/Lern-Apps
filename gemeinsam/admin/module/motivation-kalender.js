@@ -7,7 +7,7 @@
 'use strict';
 
 LWAdmin.modul({
-  id: 'kalender', bereich: 'motivation', titel: 'Kalender', symbol: '🗓', reihenfolge: 3,
+  id: 'kalender', bereich: 'motivation', titel: 'Kalender', symbol: '🗓', reihenfolge: 4,
   suchbegriffe: ['Kalender', 'Zeitraum', 'Termine', 'Event', 'wann', 'Zeitsteuerung'],
   zeigen(host, { store }) {
     let aktiv = true, titel = new Map(), gruppen = [], monat = 0;

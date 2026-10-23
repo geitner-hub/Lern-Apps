@@ -119,7 +119,9 @@ und gelbe Hinweise. Manuelle Checkliste nach Uploads: `werkzeuge/RAUCHTEST.md`.
   `await LernEinstellungen.anwenden('<id>', CFG)` (`gemeinsam/einstellungen.js`), Formular `admin/formular.js`.
   Editoren (Etappe 8): Katalog-Baum und Vokabel-Editor speichern **direkt ins Repo** über `admin/dateien.js`
   (`LWAdmin.dateien`) und den Worker-Teil `cloudflare/dateien.js` (feste Pfadliste + Formatprüfung je Datei, ein Commit).
-  `daten/katalog.json` und `daten/vokabeln*.json` sind damit **admin-gepflegt**: vor Änderungen den Stand von main holen,
+  Etappe 9: Aufgaben-Pools der Spiele (`daten/aufgaben-pools.json`, geladen von `aufgaben.js`) und Loot-Pool/Titel
+  (`daten/lernwelt-inhalte.json`, neue Teile nur als Farbvariante `basis` + `tausch`) ebenso.
+  `daten/katalog.json`, `daten/vokabeln*.json`, `daten/aufgaben-pools.json` und `daten/lernwelt-inhalte.json` sind damit **admin-gepflegt**: vor Änderungen den Stand von main holen,
   nie mit altem Stand überschreiben (pruefen.py Regel 19 warnt). Neue beschreibbare Datei = Muster in `DATEIEN_ERLAUBT`
   + eigene Prüffunktion dort.
 - **Testumgebung:** Kopie im Repo `Lern-Apps-test`; umgebung.js erkennt das am Repo-Namen, setzt das

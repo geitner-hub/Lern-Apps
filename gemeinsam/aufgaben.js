@@ -9,6 +9,7 @@
 //  angeboten (nie Stoff aus höheren Klassen).
 //
 //  API (window.LernAufgaben):
+//    bereit                     Promise → true, sobald alle Pools geladen sind (Kopfrechen-Stufen, aufgaben-pools.json)
 //    pools({ klasse })          → Liste der Pools bis zu dieser Klasse
 //    klasse()                   → Klasse aus dem Pass (oder null)
 //    einheiten(poolId)          → Promise: [{ id, label }] (nur Vokabel-Pools)
@@ -35,6 +36,11 @@
 //
 //  Neue Pools: unten in POOLS eintragen. Rechen-Pools brauchen eine
 //  Funktion gen() → { frage, antwort, falsch: [mind. 2 Ablenker] }.
+//  Frage-Antwort-Pools (GPG, Englisch …) stehen seit Admin-Umbau Etappe 9 in daten/aufgaben-pools.json
+//  (gepflegt im Admin unter Inhalte → Aufgaben-Pools): { id, fach, gruppe, klasse, titel, thema?,
+//  aufgaben: [{ frage, antwort, falsch: [Ablenker] }] }. Fehlen Ablenker, kommen sie aus den anderen
+//  Antworten des Pools. thema = Themen-ID: ist sie gesperrt (freigabe.js), fehlt der Pool in der Auswahl.
+//  bereit → Promise, sobald Kopfrechen-Stufen und diese Pools geladen sind.
 //  Rechen-Aufgaben kommen seit Etappe 4 aus gemeinsam/generatoren-mathe.js;
 //  jede Stufe aus daten/kopfrechnen.json ist automatisch ein Pool (ID = Themen-ID).
 // ═══════════════════════════════════════════════════════
@@ -98,6 +104,26 @@
     window.LernGeneratoren ? null : laden('generatoren-mathe.js'),
     fetch(KOPF_DATEI, { cache: 'no-cache' }).then(r => r.ok ? r.json() : null).catch(() => null),
   ]).then(([, d]) => { stufenPools(d); return !!window.LernGeneratoren; });
+  // Frage-Antwort-Pools aus daten/aufgaben-pools.json (Etappe 9) – Aufbau oben im Kopf
+  const POOL_DATEI = new URL('../daten/aufgaben-pools.json', here).href;
+  const listenBereit = fetch(POOL_DATEI, { cache: 'no-cache' }).then(r => r.ok ? r.json() : null).catch(() => null).then(listenPools);
+  function listenPools(d) {
+    const ok = x => typeof x === 'string' && x.trim();
+    ((d && d.pools) || []).forEach(p => {
+      if (!p || !/^[a-z0-9-]{3,40}$/.test(p.id) || POOL_BY_ID[p.id] || !ok(p.titel)) return;
+      const aufgaben = (p.aufgaben || []).filter(a => a && ok(a.frage) && ok(a.antwort));
+      if (aufgaben.length < 2) return;
+      const pool = { id: p.id, fach: String(p.fach || ''), gruppe: String(p.gruppe || p.fach || ''), klasse: Number(p.klasse) || 5,
+        titel: p.titel, thema: typeof p.thema === 'string' ? p.thema : '', typ: 'liste', gen: () => listenAufgabe(aufgaben) };
+      POOLS.push(pool); POOL_BY_ID[p.id] = pool;
+    });
+  }
+  function listenAufgabe(aufgaben) {
+    const a = pick(aufgaben);
+    let falsch = shuffle((a.falsch || []).filter(x => typeof x === 'string' && x.trim()));
+    if (falsch.length < OPTIONEN - 1) falsch = falsch.concat(shuffle(aufgaben.filter(x => x !== a).map(x => x.antwort)));
+    return { frage: a.frage, antwort: a.antwort, falsch };
+  }
   const G = () => window.LernGeneratoren;
   /** Spiel-Aufgabe (Text-Antwort + Ablenker) aus einem Generator; ohne Generatoren null */
   function spiel(spec) { return G() ? G().spielAufgabe(spec) : null; }
@@ -270,7 +296,8 @@
   /** Pools bis zur Klasse (ohne Angabe: Klasse aus dem Pass; ohne Pass: alle) */
   function pools(o = {}) {
     const k = o.klasse !== undefined ? o.klasse : passKlasse();
-    return POOLS.filter(p => !k || p.klasse <= k)
+    const F = window.LernFreigabe;
+    return POOLS.filter(p => (!k || p.klasse <= k) && !(p.thema && F && !F.erlaubt(p.thema)))
       .map(({ id, fach, gruppe, klasse, titel, typ }) => ({ id, fach, gruppe, klasse, titel, vokabeln: typ === 'vokabeln' }));
   }
 
@@ -285,7 +312,7 @@
    * Unbekannte Pools und Pools über der Passklasse (bei opts.klasse bzw. Pass) werden übergangen.
    */
   async function erzeuger(ids, opts = {}) {
-    await matheBereit;
+    await Promise.all([matheBereit, listenBereit]);
     ids = (Array.isArray(ids) ? ids : [ids]).map(alteForm).filter(id => POOL_BY_ID[id]);
     const k = opts.klasse !== undefined ? opts.klasse : passKlasse();
     ids = ids.filter(id => !k || POOL_BY_ID[id].klasse <= k);
@@ -470,5 +497,6 @@
     return liste;
   }
 
-  window.LernAufgaben = { pools, klasse: passKlasse, einheiten, erzeuger, meineThemen, ausLink, lesezeit, woerter, wortForm, _POOLS: POOLS };
+  const bereit = Promise.all([matheBereit, listenBereit]).then(() => true);
+  window.LernAufgaben = { bereit, pools, klasse: passKlasse, einheiten, erzeuger, meineThemen, ausLink, lesezeit, woerter, wortForm, _POOLS: POOLS };
 })();

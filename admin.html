@@ -232,6 +232,31 @@
     .lw-vok-vorschau th,.lw-vok-vorschau td{padding:.3rem .5rem;border-bottom:1px solid var(--border);text-align:left;}
     .lw-vok-vorschau tr.nein td{color:var(--muted);}
     @media (max-width: 599px){ .lw-vok-wort{grid-template-columns:1fr 1fr;} .lw-vok-wort .lw-vok-k{grid-column:1 / -1;justify-content:flex-end;} }
+
+    /* ── Editoren II (Etappe 9): Aufgaben-Pools, Avatar-Teile ── */
+    .lw-knoepfe select,.lw-knoepfe input:not([type=color]){width:auto;}
+    .lw-ap-felder{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.5rem;margin-top:.6rem;}
+    .lw-ap-felder label,.lw-tl-feld{display:flex;flex-direction:column;gap:.25rem;font-weight:800;font-size:.76rem;color:var(--text2);}
+    .lw-tl-feld{margin:.45rem 0;}
+    .lw-ap-zeile{display:grid;grid-template-columns:2fr 1.2fr 1fr 1fr 1fr auto;gap:.35rem;margin:.25rem 0;}
+    .lw-ap-zeile input{min-width:0;}
+    .lw-ap-zeile input.lang{border-color:var(--accent);}
+    .lw-ap-kopfzeile span{font-size:.7rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;}
+    .lw-ap-tabelle{overflow-x:auto;}
+    @media (max-width: 799px){ .lw-ap-zeile{grid-template-columns:1fr 1fr;} .lw-ap-zeile input:first-child{grid-column:1 / -1;} .lw-ap-kopfzeile{display:none;} .lw-ap-zeile .lw-vok-k{grid-column:1 / -1;justify-content:flex-end;} }
+    .lw-tl-raster{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:.6rem;}
+    .lw-tl-karte{display:flex;flex-direction:column;align-items:center;gap:.3rem;padding:.7rem .4rem;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--text);font:inherit;cursor:pointer;text-align:center;}
+    .lw-tl-karte.an{border-color:var(--accent);box-shadow:0 0 0 2px rgba(230,168,23,.35);}
+    .lw-tl-karte .it-prev{width:72px;height:72px;}
+    .lw-tl-name{font-weight:800;font-size:.82rem;}
+    .lw-tl-zwei{display:grid;grid-template-columns:minmax(220px,320px) 1fr;gap:1.2rem;align-items:start;}
+    .lw-tl-buehne{height:320px;border-radius:14px;background:radial-gradient(circle at 50% 40%,#2b2750,#1b1929);position:relative;overflow:hidden;}
+    .lw-tl-buehne canvas{width:100% !important;height:100% !important;display:block;}
+    .lw-tl-farben{display:flex;flex-wrap:wrap;gap:.5rem;margin:.6rem 0;}
+    .lw-tl-farben label{display:flex;align-items:center;gap:.3rem;font-size:.8rem;color:var(--muted);}
+    .lw-tl-farben span{width:22px;height:22px;border-radius:6px;border:1px solid var(--border2);display:inline-block;}
+    .lw-tl-farben input[type=color]{width:44px;height:36px;padding:2px;border-radius:8px;border:1px solid var(--border2);background:var(--surface2);}
+    @media (max-width: 699px){ .lw-tl-zwei{grid-template-columns:1fr;} .lw-tl-buehne{height:260px;} }
   </style>
 </head>
 <body>
@@ -382,9 +407,7 @@
       <div class="lw-teil" hidden id="panel-pass">
         <div class="sec-header"><span class="sec-title">⚙️ Einstellungen</span></div>
         <div class="form-card" style="margin-bottom:1.5rem;padding:.4rem 1.2rem;" id="pass-settings"></div>
-        <div class="sec-header"><span class="sec-title">📖 Übersicht aller Inhalte</span></div>
-        <p style="font-size:.8rem;color:var(--muted);margin:-.4rem 0 .9rem;line-height:1.5;">Nur zur Ansicht. Inhalte werden in <code>lernwelt-inhalte.json</code> gepflegt, Regeln in <code>pass.js</code> (RULES).</p>
-        <div class="ov" id="pass-overview"></div>
+        <p style="font-size:.85rem;color:var(--muted);line-height:1.5;">📖 Übersicht aller Inhalte, Level-Titel und Avatar-Teile (mit Editor): <a href="#/motivation/teile">Motivation → 🎁 Avatar-Teile</a>.</p>
       </div>
       <!-- ── DORF ── -->
       <div class="lw-teil" hidden id="panel-dorf">
@@ -517,6 +540,7 @@
 <script src="gemeinsam/admin/module/kachel-schnell.js"></script>
 <script src="gemeinsam/admin/module/kachel-status.js"></script>
 <script src="gemeinsam/admin/module/inhalte-apps.js"></script>
+<script src="gemeinsam/admin/module/inhalte-aufgaben.js"></script>
 <script src="gemeinsam/admin/module/inhalte-einstellungen.js"></script>
 <script src="gemeinsam/admin/module/inhalte-freigaben.js"></script>
 <script src="gemeinsam/admin/module/inhalte-katalog.js"></script>
@@ -531,6 +555,7 @@
 <script src="gemeinsam/admin/module/motivation-dorf.js"></script>
 <script src="gemeinsam/admin/module/motivation-pass.js"></script>
 <script src="gemeinsam/admin/module/motivation-kalender.js"></script>
+<script src="gemeinsam/admin/module/motivation-teile.js"></script>
 <script src="gemeinsam/admin/module/medien-dateien.js"></script>
 <script src="gemeinsam/admin/module/system-anmeldung.js"></script>
 <script src="gemeinsam/admin/module/system-diagnose.js"></script>
