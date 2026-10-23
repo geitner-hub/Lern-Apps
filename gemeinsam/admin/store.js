@@ -221,7 +221,7 @@ LWAdmin.store = (() => {
     if (!r.ok) { const e = new Error(d.error || 'HTTP ' + r.status); e.status = r.status; throw e; }
     return d;
   }
-  const textOhneAdmin = s => String(s || '').split('\n')[0].replace(/^Admin: /, '');
+  const textOhneAdmin = s => String(s || '').split('\n')[0].replace(/^Admin: /, '').replace(/^Admin \[([^\]]+)\]: /, '👥 $1: ');
   async function historie(n = 5) {
     try {
       const d = await workerPost('/verlauf');

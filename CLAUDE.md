@@ -124,5 +124,10 @@ und gelbe Hinweise. Manuelle Checkliste nach Uploads: `werkzeuge/RAUCHTEST.md`.
   `daten/katalog.json`, `daten/vokabeln*.json`, `daten/aufgaben-pools.json` und `daten/lernwelt-inhalte.json` sind damit **admin-gepflegt**: vor Änderungen den Stand von main holen,
   nie mit altem Stand überschreiben (pruefen.py Regel 19 warnt). Neue beschreibbare Datei = Muster in `DATEIEN_ERLAUBT`
   + eigene Prüffunktion dort.
+- **Rollen (Etappe 10):** Hauptzugang und Kollegen-Zugänge (`cloudflare/kollegen.js`, Admin System → Kollegen). Kollegen
+  sehen nur Module mit `rechte: ['haupt', 'kollege']` (heute nur der Unterrichtsmodus); der Worker lässt sie nur Fokus und
+  Spielsperre-Ausnahmen ihrer Gruppen schreiben. Neuer Worker-Endpunkt mit Schlüssel → `checkHaupt` (Kollegen gesperrt),
+  außer er gehört ausdrücklich zum Unterrichtsmodus. Feature-Schalter: `LernFreigabe.feature('<id>')` + `daten/features.json`.
+  Anleitung für die Lehrkraft: `werkzeuge/ADMIN-ANLEITUNG.md`.
 - **Testumgebung:** Kopie im Repo `Lern-Apps-test`; umgebung.js erkennt das am Repo-Namen, setzt das
   Präfix `lwtest-` vor alle Speicherschlüssel und sperrt Schreibzugriffe auf den Worker.

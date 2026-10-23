@@ -293,6 +293,19 @@ das ist die Menge, die übers Schul-WLAN geht; komprimiert ≈ ein Drittel der D
   ergänzen) und die bisherige **Übersicht aller Inhalte** (vorher unter Pass). Teile mit eigener Form oder Hintergründe
   weiter von Hand in der JSON-Datei. Beide Editoren speichern wie die Vokabeln direkt ins Repo (`cloudflare/dateien.js`:
   `dateienPruefeAufgaben`, `dateienPruefeInhalte`); pruefen.py Regel 20 prüft beide Dateien.
+- **Rollen (Etappe 10):** Hauptzugang (Admin-Passwort) und **Kollegen-Zugänge** (System → 👥 Kollegen): eigener Code
+  `XXXX-XXXX-XXXX-XXXX`, Kürzel, Gruppen, gültig bis; sperren, neuer Code, löschen wirken sofort. Mit dem Code landet man
+  im Unterrichtsmodus (App-QR, Medien, „Spiele heute frei“ und Fokus nur für die eigenen Gruppen); Kopfleiste, Suche und
+  alle anderen Bereiche fehlen. Der Worker prüft selbst (`cloudflare/kollegen.js`, `kollegeUebernehmen` in `worker.js`):
+  ein Kollegen-Schlüssel liest nur `/session`, `/medien/admin/liste`, `/sync/admin/gruppen` (gefiltert) und übernimmt beim
+  Speichern nur `fokus[]` und `spielsperre.ausnahmen[]` seiner Gruppen in den aktuellen Stand; alles andere → 403.
+  Commits heißen „Admin [Kürzel]: …“. Module tragen `rechte: ['haupt', 'kollege']`, Standard nur `haupt`
+  (`LWAdmin.rolle()`, `LWAdmin.zugang()` → `{ kuerzel, gruppen }`).
+- **Feature-Schalter (Etappe 10):** `config.featureSchalter[id]` = `true` | `false` | `{ wer: ['admin', 'g:<Gruppe>', 'k5'] }`,
+  in der App `LernFreigabe.feature('<id>')` (`admin` = Gerät mit Admin-Anmeldung über den Hauptzugang). Liste der
+  schaltbaren Funktionen: `daten/features.json`; Admin: System → 🧪 Feature-Schalter. pruefen.py Regel 21 meldet Schalter
+  ohne Eintrag in der Liste.
+- **Anleitung für die Lehrkraft:** `werkzeuge/ADMIN-ANLEITUNG.md` (verlinkt unter System → Weitere Seiten).
 - **Neues Modul:** Datei `gemeinsam/admin/module/<bereich>-<name>.js` mit `LWAdmin.modul({…})`, dazu eine Zeile
   in `admin.html` (pruefen.py Regel 17 prüft Einbindung, IDs und Bereiche).
 - **Worker zuerst:** Der Worker prüft seit Etappe 6 `gruppen`, `apps[].gruppe` und `catOrder`

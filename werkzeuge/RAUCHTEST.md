@@ -61,6 +61,11 @@ Erst in der Testumgebung, dort wird nichts gespeichert. Den Admin nicht in zwei 
 | A32 | Live: Inhalte → 🎯 Aufgaben-Pools: neuen Pool anlegen, 5 Zeilen aus einer Tabelle einfügen, 💾 Speichern; nach 2 Min. RUN! → selbst wählen | Pool steht in der Auswahl, Fragen mit 3 Antworten; `spiele/runner.html?pool=<id>` startet direkt |
 | A33 | Live: Motivation → 🎁 Avatar-Teile → Neues Teil: Vorlage wählen, Farben ändern (Vorschau dreht sich mit), anlegen, 💾 Speichern | Teil im Raster mit Vorschau; nach 2 Min. in der Garderobe als gesperrtes Teil, erhältlich aus einer Truhe |
 | A34 | Avatar-Teile → Titel: einen Titel ändern, speichern; Übersicht öffnen | neuer Titel auf der Startseite beim passenden Level; Übersicht zeigt Level, XP-Regeln, Truhen, Abzeichen, Teile |
+| A35 | Live: System → 👥 Kollegen: Test-Zugang „Test“ mit einer Gruppe anlegen, Code notieren | Code erscheint einmal, Zugang steht als 🟢 aktiv in der Liste |
+| A36 | Anderes Gerät (oder privates Fenster): admin.html, mit dem Code anmelden | landet im Unterrichtsmodus, oben „👥 Test“ und 🔒 Abmelden; bei Spiele/Fokus nur die eigene Gruppe; `#/inhalte` führt zurück in den Unterricht |
+| A37 | Als „Test“: App-QR zeigen, „Spiele heute frei“ für die Gruppe, Fokus 45 Min. starten und beenden | wirkt wie beim Hauptzugang; im Versionsverlauf (Hauptzugang) steht „👥 Test: …“ |
+| A38 | Hauptzugang: Zugang „Test“ sperren; auf dem Kollegen-Gerät neu laden | Anmeldung verlangt wieder einen Code; danach den Test-Zugang löschen |
+| A39 | System → 🧪 Feature-Schalter | ohne Einträge in `daten/features.json` der Hinweis „keine Funktion hinter einem Schalter“ |
 | A28 | Motivation → Mein Dorf → Einstellungen | gleiche Felder wie unter App-Einstellungen (Auftragsplätze, Tausche, Baukosten), Änderung wirkt wie bisher |
 | A17 | Live: „Wiederherstellen“ bei der vorletzten Fassung, Veröffentlichen, danach die neueste vorherige Fassung wiederherstellen und veröffentlichen | beide Male „Veröffentlicht“, am Ende ist alles wie vorher (braucht den neuen Worker) |
 

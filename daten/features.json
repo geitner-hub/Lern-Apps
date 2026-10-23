@@ -1,0 +1,4 @@
+{
+ "hinweis": "Funktionen hinter einem Feature-Schalter (Admin → System → Feature-Schalter). Im Code: if (LernFreigabe.feature('<id>')) … – ohne Eintrag in config.featureSchalter ist die Funktion aus. IDs: klein, Ziffern, '-' (höchstens 40 Zeichen).",
+ "features": []
+}

@@ -63,8 +63,8 @@ window.LWAdmin = window.LWAdmin || {};
     KACHELN.push({ titel: def.id, symbol: '•', rechte: ['haupt'], reihenfolge: 100, breit: false, ...def });
   }
 
-  // Rolle des angemeldeten Zugangs – bis Etappe 10 immer der Hauptzugang
-  let rolle = 'haupt';
+  // Rolle des angemeldeten Zugangs (Etappe 10): 'haupt' oder 'kollege' – setzt rahmen.js nach der Anmeldung
+  let rolle = 'haupt', zugang = {};
   const darf = m => m.rechte.includes(rolle);
   const moduleIn = bereich => MODULE.filter(m => m.bereich === bereich && darf(m))
     .sort((a, b) => a.reihenfolge - b.reihenfolge || a.titel.localeCompare(b.titel, 'de'));
@@ -72,7 +72,8 @@ window.LWAdmin = window.LWAdmin || {};
   // ── Adressen: #/bereich/modul ─────────────────────────
   function adresse() {
     const [b, m] = location.hash.replace(/^#\/?/, '').split('/');
-    const bereich = BEREICHE.some(x => x.id === b) ? b : 'start';
+    let bereich = BEREICHE.some(x => x.id === b) ? b : 'start';
+    if (!moduleIn(bereich).length && rolle !== 'haupt') bereich = BEREICHE.find(x => moduleIn(x.id).length) ? BEREICHE.find(x => moduleIn(x.id).length).id : bereich;
     const liste = moduleIn(bereich);
     const mod = liste.find(x => x.id === m) || liste[0] || null;
     return { bereich, modul: mod };
@@ -98,7 +99,7 @@ window.LWAdmin = window.LWAdmin || {};
     document.body.classList.toggle('lw-vollbild', !!b.vollbild);
     const stelle = bereich + '/' + (mod ? mod.id : '');
     if (stelle !== letzteStelle) { letzteStelle = stelle; window.scrollTo(0, 0); }   // neues Modul beginnt oben
-    nav.innerHTML = BEREICHE.filter(x => !x.vollbild).map(x => `<a href="#/${x.id}" class="lw-nav-punkt${x.id === bereich ? ' aktiv' : ''}"${x.id === bereich ? ' aria-current="page"' : ''}>
+    nav.innerHTML = BEREICHE.filter(x => !x.vollbild && moduleIn(x.id).length).map(x => `<a href="#/${x.id}" class="lw-nav-punkt${x.id === bereich ? ' aktiv' : ''}"${x.id === bereich ? ' aria-current="page"' : ''}>
       <span class="lw-nav-symbol" aria-hidden="true">${x.symbol}</span><span class="lw-nav-text">${escHtml(x.titel)}</span></a>`).join('');
 
     const liste = moduleIn(bereich);
@@ -134,6 +135,9 @@ window.LWAdmin = window.LWAdmin || {};
     kacheln: () => KACHELN.filter(darf).sort((a, b) => a.reihenfolge - b.reihenfolge),
     module: () => MODULE.filter(darf).slice(),
     rolle: () => rolle,
+    /** Nach der Anmeldung: Rolle und (bei Kollegen) { kuerzel, gruppen } */
+    rolleSetzen(r, info) { rolle = r === 'kollege' ? 'kollege' : 'haupt'; zugang = info || {}; document.body.classList.toggle('lw-kollege', rolle === 'kollege'); },
+    zugang: () => zugang,
     /** Gerade gezeigt: { bereich, titel (des Bereichs), modul } – für das Änderungsprotokoll */
     aktuell() {
       const { bereich, modul: m } = adresse();

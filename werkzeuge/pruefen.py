@@ -49,6 +49,8 @@
 #   20. Aufgaben-Pools und Loot-Pool (Admin-Umbau Etappe 9): daten/aufgaben-pools.json – Pool-IDs eindeutig und
 #       nicht schon in gemeinsam/aufgaben.js vergeben, Fach bekannt, Themen-ID im Katalog, jede Aufgabe hat Frage,
 #       Antwort und genug Ablenker; ITEMS-Farbvarianten (basis/tausch) zeigen auf ein Teil ohne eigene Basis.
+#   21. Rollen und Feature-Schalter (Admin-Umbau Etappe 10): daten/features.json gültig (IDs eindeutig), jeder Schalter
+#       in config.featureSchalter steht dort (sonst gelb); Admin-Module mit rechte: nur 'haupt'/'kollege'.
 # ═══════════════════════════════════════════════════════
 import gzip, json, math, os, re, subprocess, sys
 from pathlib import Path
@@ -744,6 +746,24 @@ for i in _it:
     if not b or b.get('basis') or b.get('slot') != i.get('slot'): F(f'lernwelt-inhalte.json: Teil {i.get("id")}: basis „{i["basis"]}“ fehlt, ist selbst eine Variante oder hat einen anderen Platz')
     if not all(re.fullmatch(r'#[0-9a-fA-F]{6}', str(k)) and re.fullmatch(r'#[0-9a-fA-F]{6}', str(v)) for k, v in (i.get('tausch') or {}).items()):
         F(f'lernwelt-inhalte.json: Teil {i.get("id")}: tausch nur mit Farben #rrggbb')
+
+# ── 21. Rollen und Feature-Schalter (Admin-Umbau Etappe 10) ──
+try:
+    _ft = json.loads(lies('daten/features.json'))
+except Exception as e:
+    _ft = None; F(f'daten/features.json fehlt oder ist ungültig ({e})')
+if _ft is not None:
+    _fids = [f.get('id') for f in _ft.get('features') or []]
+    for i in _fids:
+        if not isinstance(i, str) or not re.fullmatch(r'[a-z][a-zA-Z0-9-]{0,39}', i): F(f'daten/features.json: ungültige ID „{i}“')
+    if len(set(_fids)) != len(_fids): F('daten/features.json: ID doppelt')
+    for k in (config.get('featureSchalter') or {}):
+        if k not in _fids: H(f'config.json: Feature-Schalter „{k}“ steht nicht in daten/features.json (wirkt nur, wenn der Code ihn abfragt)')
+    I(f'Feature-Schalter: {len(_fids)} Funktionen, {len(config.get("featureSchalter") or {})} geschaltet')
+for p in sorted(ROOT.glob('gemeinsam/admin/module/*.js')):
+    for m in re.findall(r"rechte:\s*\[([^\]]*)\]", p.read_text(encoding='utf-8')):
+        for r_ in re.findall(r"'([^']+)'", m):
+            if r_ not in ('haupt', 'kollege'): F(f'{rel(p)}: unbekannte Rolle „{r_}“ (erlaubt: haupt, kollege)')
 
 # ── 7. Budgets ──────────────────────────────────────────
 def groesse(d):
