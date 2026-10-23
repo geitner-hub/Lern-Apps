@@ -253,6 +253,7 @@
 
 <script src="../gemeinsam/navbar.js"></script>
 <script src="../gemeinsam/aufgaben.js"></script>
+<script src="../gemeinsam/einstellungen.js"></script>   <!-- Admin-Umbau Etappe 7: Einstellungen der Lehrkraft (daten/apps/runner.json) -->
 <script src="../gemeinsam/avatar3d.js"></script>
 <script>
 'use strict';
@@ -607,6 +608,8 @@ function aufgabenQuelle() {
 
 async function startGame() {
   $('menu-err').textContent = '';
+  // Einstellungen der Lehrkraft (Admin → Inhalte → App-Einstellungen) – ohne Eintrag bleibt CFG beim Standard
+  if (window.LernEinstellungen) await LernEinstellungen.anwenden('runner', CFG).catch(() => {});
   try {
     const A = aufgabenQuelle();
     G.gen = await LernAufgaben.erzeuger(A.ids, A.opts);

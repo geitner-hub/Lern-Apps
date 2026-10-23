@@ -1,0 +1,12 @@
+{
+  "id": "burg-verteidigung",
+  "titel": "Tower Defense",
+  "datei": "spiele/burg-verteidigung.html",
+  "einstellungen": [
+    { "schluessel": "burgHerzen", "typ": "zahl", "titel": "Herzen der Burg", "text": "So viele Monster darf ein Kind durchlassen. Weniger Herzen = schwieriger.", "standard": 10, "min": 3, "max": 20, "schritt": 1, "ziel": "burgHerzen" },
+    { "schluessel": "startMuenzen", "typ": "zahl", "titel": "Münzen zu Beginn", "text": "60 reichen für einen Turm. Sonderregeln einer Station oder des Tages gehen vor.", "standard": 60, "min": 30, "max": 200, "schritt": 10, "einheit": "Münzen", "ziel": "startMuenzen" },
+    { "schluessel": "pauseErste", "typ": "zahl", "titel": "Bauzeit vor der ersten Welle", "standard": 12, "min": 5, "max": 30, "schritt": 1, "einheit": "Sekunden", "ziel": "pauseErste" },
+    { "schluessel": "pauseZwischen", "typ": "zahl", "titel": "Pause zwischen zwei Wellen", "text": "Die Fragen laufen in der Pause weiter.", "standard": 8, "min": 3, "max": 20, "schritt": 1, "einheit": "Sekunden", "ziel": "pauseZwischen" },
+    { "schluessel": "anpassung", "typ": "schalter", "titel": "Wellen passen sich an", "text": "Die Wellenstärke richtet sich nach den verdienten Münzen – wer viel richtig hat, bekommt stärkere Monster.", "standard": true, "ziel": "anpassung.an" }
+  ]
+}

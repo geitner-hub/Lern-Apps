@@ -1,0 +1,10 @@
+{
+  "id": "runner",
+  "titel": "RUN!",
+  "datei": "spiele/runner.html",
+  "einstellungen": [
+    { "schluessel": "runde", "typ": "zahl", "titel": "Tore pro Runde", "text": "Modus „Runde“: so viele Aufgaben-Tore bis zum Ziel.", "standard": 15, "min": 5, "max": 30, "schritt": 1, "einheit": "Tore", "ziel": "runde" },
+    { "schluessel": "endlosHerzen", "typ": "zahl", "titel": "Herzen im Endlos-Modus", "standard": 3, "min": 1, "max": 5, "schritt": 1, "ziel": "endlos.herzen" },
+    { "schluessel": "herzAlle", "typ": "auswahl", "titel": "Herz zurück nach …", "text": "Endlos-Modus: nach so vielen richtigen Toren gibt es ein Herz zurück.", "standard": 25, "optionen": [{ "wert": 10, "titel": "10 richtigen" }, { "wert": 15, "titel": "15 richtigen" }, { "wert": 25, "titel": "25 richtigen" }, { "wert": 50, "titel": "50 richtigen" }], "ziel": "endlos.herzAlle" }
+  ]
+}

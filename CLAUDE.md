@@ -17,7 +17,8 @@ den passenden Abschnitt dort lesen.
 - **Ordnerstruktur:** `apps/<fach>/`, `spiele/`, `daten/`, `gemeinsam/`. `index.html`, `admin.html`, `config.json`
   und `sw.js` bleiben im Hauptordner. Neue Apps immer in diese Struktur: Datei aus der Vorlage anlegen, Thema in
   `daten/katalog.json` eintragen, mit `thema` melden; der Eintrag in `config.json` erfolgt über den Admin. Beim
-  Verschieben einer App die Weiterleitungsliste in `404.html` anpassen. Neues Fach: in `shared.js` (`CAT_STYLES`)
+  Verschieben einer App die Weiterleitungsliste in `404.html` anpassen. Hat die App Stellschrauben für die Lehrkraft,
+  bringt sie ein Manifest mit (`daten/apps/<id>.json` + `daten/apps/liste.json`, Vorlage `apps/vorlage/manifest-beispiel.json`). Neues Fach: in `shared.js` (`CAT_STYLES`)
   **und** im Katalog unter `faecher` mit gleichem Namen.
 - **Design:** dunkles Schema, Akzente Gold `#e6a817` und Indigo `#6366f1`/`#818cf8`, Schriftzug „Fredoka One“.
 - **Zielgerät:** Schul-iPads (Safari, Touch, ältere Hardware). `prefers-reduced-motion` respektieren, ohne WebGL
@@ -114,5 +115,7 @@ und gelbe Hinweise. Manuelle Checkliste nach Uploads: `werkzeuge/RAUCHTEST.md`.
   (`module/unterricht-stunde.js`): sofort wirkende Änderungen über `store.sofort(text, fn)` – fn läuft auf Stand
   und Entwurf, darum IDs/Zeiten vor fn erzeugen. Zeitpläne (Etappe 6): `LW.zeitplanAktiv(v)` in umgebung.js –
   `true` oder `{ ab, bis }` (JJJJ-MM-TT einmalig, MM-TT jedes Jahr); Termine für Kalender/Dashboard: `termine.js`.
+  App-Einstellungen (Etappe 7): Schema in `daten/apps/<id>.json`, Werte in `config.appEinstellungen`, in der App
+  `await LernEinstellungen.anwenden('<id>', CFG)` (`gemeinsam/einstellungen.js`), Formular `admin/formular.js`.
 - **Testumgebung:** Kopie im Repo `Lern-Apps-test`; umgebung.js erkennt das am Repo-Namen, setzt das
   Präfix `lwtest-` vor alle Speicherschlüssel und sperrt Schreibzugriffe auf den Worker.

@@ -1,0 +1,4 @@
+{
+  "hinweis": "Admin-Umbau Etappe 7: Liste der App-Manifeste (daten/apps/<id>.json). Neue App mit Einstellungen = Manifest-Datei + Eintrag hier. pruefen.py prüft beides.",
+  "apps": ["burg-verteidigung", "runner", "dorf"]
+}
