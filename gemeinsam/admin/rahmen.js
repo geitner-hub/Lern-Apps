@@ -95,12 +95,16 @@
   }
 
   // ── Anmeldung ─────────────────────────────────────────
-  async function zeigeAdmin() {
+  async function zeigeAdmin(sitzung) {
+    const s = sitzung || {};
+    LWAdmin.rolleSetzen(s.rolle, { kuerzel: s.kuerzel || '', gruppen: s.gruppen || [] });   // Etappe 10: Haupt- oder Kollegen-Zugang
+    const kollege = LWAdmin.rolle() === 'kollege';
+    if (kollege && !/^#\/unterricht/.test(location.hash)) history.replaceState(null, '', '#/unterricht');
     $('anmeldung').style.display = 'none';
     $('admin').style.display = 'block';
     const bis = ConfigAPI.sessionExpiry();
-    $('lw-sitzung').textContent = bis
-      ? 'angemeldet bis ' + bis.toLocaleDateString('de-DE', { weekday: 'short', day: '2-digit', month: '2-digit' }) : '';
+    $('lw-sitzung').textContent = (kollege ? '👥 ' + s.kuerzel + ' · ' : '') + (bis
+      ? 'angemeldet bis ' + bis.toLocaleDateString('de-DE', { weekday: 'short', day: '2-digit', month: '2-digit' }) : '');
     const r = await store.laden({
       beiKonflikt: n => confirm(`Auf diesem Gerät liegt ein Entwurf mit ${n} Änderung${n === 1 ? '' : 'en'}.\n\n` +
         'Inzwischen wurde die Lernwelt aber woanders geändert.\n\nOK = Entwurf trotzdem übernehmen (ersetzt die neueren Änderungen beim Veröffentlichen)\n' +
@@ -109,7 +113,7 @@
     if (!r.ok) toast('⚠ config.json konnte nicht geladen werden – Speichern ist gesperrt', true);
     else if (r.entwurfWieder) toast(`✏️ Entwurf mit ${r.entwurfWieder} Änderung${r.entwurfWieder === 1 ? '' : 'en'} wiederhergestellt`);
     const ctx = { store, gehe: LWAdmin.gehe, toast };
-    if (LWAdmin.bruecke) LWAdmin.bruecke.start(ctx);      // Funktionsdateien über die Brücke
+    if (LWAdmin.bruecke && !kollege) LWAdmin.bruecke.start(ctx);      // Funktionsdateien über die Brücke (nur Hauptzugang)
     LWAdmin.starten(ctx);
   }
   function zeigeAnmeldung(text) {
@@ -125,7 +129,7 @@
     const res = await ConfigAPI.login(pw);
     knopf.disabled = false; knopf.textContent = 'Anmelden';
     $('pw').value = '';
-    if (res.ok) zeigeAdmin();
+    if (res.ok) { const s = await ConfigAPI.checkSession(); zeigeAdmin(s.ok ? s : { rolle: res.rolle }); }
     else zeigeAnmeldung(res.status === 401 ? '❌ Falsches Passwort'
                       : res.status === 429 ? '⏳ ' + res.error
                       : '⚠ ' + (res.error || 'Fehler'));
@@ -137,7 +141,7 @@
   $('lw-version').textContent = (window.LW && LW.versionText) ? LW.versionText() : '';
   $('btn-anmelden').addEventListener('click', anmelden);
   $('pw').addEventListener('keydown', e => { if (e.key === 'Enter') anmelden(); });
-  $('lw-suchen').addEventListener('click', () => LWAdmin.suche.auf());
+  $('lw-suchen').addEventListener('click', () => { if (LWAdmin.rolle() === 'haupt') LWAdmin.suche.auf(); });
   $('lw-abmelden').addEventListener('click', () => { ConfigAPI.logout(); zeigeAnmeldung('Abgemeldet.'); });
   $('lw-veroeffentlichen').addEventListener('click', veroeffentlichen);
   $('lw-verwerfen').addEventListener('click', () => {
@@ -166,7 +170,7 @@
   (async () => {
     if (!ConfigAPI.hasSession()) { zeigeAnmeldung(''); return; }
     const res = await ConfigAPI.checkSession();
-    if (res.ok) zeigeAdmin();
+    if (res.ok) zeigeAdmin(res);
     else zeigeAnmeldung(res.status === 401 ? 'Anmeldung abgelaufen – bitte Passwort eingeben.' : (res.error ? '⚠ ' + res.error : ''));
   })();
 })();

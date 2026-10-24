@@ -38,7 +38,7 @@ window.LWAdmin = window.LWAdmin || {};
     el.querySelector('.lw-beamer-link').textContent = String(link).replace(/^https:\/\//, '');
     if (!renderQR(el.querySelector('canvas'), link, 1100)) return false;
     el.hidden = false;
-    try { (el.requestFullscreen || el.webkitRequestFullscreen || (() => {})).call(el); } catch (e) {}
+    try { const v = (el.requestFullscreen || el.webkitRequestFullscreen || (() => {})).call(el); if (v && v.catch) v.catch(() => {}); } catch (e) {}   // Vollbild darf scheitern
     return true;
   };
 })();

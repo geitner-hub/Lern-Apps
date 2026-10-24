@@ -24,8 +24,15 @@
 //    POST /verlauf    → { eintraege: [{ sha, zeit, text, wer }] } die letzten 30 Veröffentlichungen (Schlüssel)
 //    POST /fassung    → { content (base64) } config.json in einer früheren Fassung, Body: { sha } (Schlüssel)
 //                       (Admin-Umbau Etappe 3: Versionsverlauf und Wiederherstellen; nur lesen)
+//    POST /kollegen/…  → Kollegen-Zugänge anlegen, sperren, Ablauf (Etappe 10, cloudflare/kollegen.js; nur Hauptzugang)
 //    POST /dateien/lesen, /dateien/speichern → Katalog und Vokabeldateien (Etappe 8, cloudflare/dateien.js):
 //                       feste Liste erlaubter Pfade, Formatprüfung je Datei, alles in einem Commit (Schlüssel)
+//
+//  Rollen (Admin-Umbau Etappe 10): Mit dem Admin-Passwort gibt es einen Schlüssel für den Hauptzugang, mit einem
+//  Kollegen-Code (kollegen.js) einen Kollegen-Schlüssel. Der darf nur lesen, was der Unterrichtsmodus braucht
+//  (/session, /medien/admin/liste, /sync/admin/gruppen – nur seine Gruppen) und beim Speichern von config.json nur
+//  fokus[] und spielsperre.ausnahmen[] seiner Gruppen ändern (kollegeUebernehmen); alles andere bleibt, wie es ist.
+//  Alle übrigen Endpunkte mit Schlüssel verlangen den Hauptzugang (checkHaupt).
 //
 //  Anmelde-Schlüssel: Nur beim Anmelden wird das Passwort gesendet. Der Admin
 //  speichert danach nur einen signierten Schlüssel, der SESSION_DAYS gilt.
@@ -48,7 +55,7 @@
 //                      ausnahmen?: [{ id, wer, runden: 0–20, ab?: Datum, bis?: Datum }] } Spiele erst nach Lern-Runden
 //    heute         – nur false: Startseite ohne „Heute für dich“ (Etappe 8)
 //    spiele        – auswahl, schwelle 50–100, runden 1–3, starter { klasse: [IDs] }, wortBis { klasse: unit } („Meine Themen“)
-//    featureSchalter – { name: true|false } (Admin-Umbau Etappe 1, genutzt ab Etappe 10)
+//    featureSchalter – { name: true | false | { wer: ['admin' | 'alle' | 'k5' | 'g:<32 hex>', …] } } (Etappe 10: nur für dich oder Testgruppen)
 //    appEinstellungen – { appId: { schluessel: wert } } (Etappe 7, Schema in daten/apps/<id>.json)
 //    Andere Felder oben in config.json werden abgelehnt.
 //
@@ -82,6 +89,7 @@ const SAFE_LINK = /^(?:[A-Za-z0-9_-]+\/)*[A-Za-z0-9_.-]+\.html(?:\?[A-Za-z0-9_.~
 import { handleSync, syncAufraeumen } from './sync.js';
 import { handleMedienOeffentlich, handleMedienAdmin, medienAufraeumen } from './medien.js';
 import { handleDateien } from './dateien.js';
+import { handleKollegen, kollegeCodeNorm, kollegeFuerCode, kollegeHolen } from './kollegen.js';
 
 // ── Einstieg ───────────────────────────────────────────
 export default {
@@ -108,9 +116,22 @@ export default {
     }
 
     try {
-      if (url.pathname.startsWith('/medien/'))                    return await handleMedienAdmin(request, env, cors, url, { checkToken });
-      if (url.pathname.startsWith('/sync/'))                      return await handleSync(request, env, cors, url, { checkToken });
-      if (url.pathname.startsWith('/dateien/'))                   return await handleDateien(request, env, cors, url, { checkToken, gh, json, b64ToUtf8, BRANCH });
+      // Kollegen-Schlüssel: nur die Listen, die der Unterrichtsmodus braucht
+      const fuerKollegen = ['/medien/admin/liste', '/sync/admin/gruppen'].includes(url.pathname);
+      const pruefer = { checkToken: fuerKollegen ? checkToken : checkHaupt };
+      if (url.pathname === '/sync/admin/gruppen') {
+        const a = await checkToken(request, env);
+        if (a.ok && a.rolle === 'kollege') {                        // nur die eigenen Gruppen zeigen
+          const r = await handleSync(request, env, cors, url, pruefer);
+          const d = await r.json().catch(() => ({}));
+          if (Array.isArray(d.gruppen)) d.gruppen = d.gruppen.filter(g => a.gruppen.includes(g.id));
+          return json(d, r.status, cors);
+        }
+      }
+      if (url.pathname.startsWith('/medien/'))                    return await handleMedienAdmin(request, env, cors, url, pruefer);
+      if (url.pathname.startsWith('/sync/'))                      return await handleSync(request, env, cors, url, pruefer);
+      if (url.pathname.startsWith('/dateien/'))                   return await handleDateien(request, env, cors, url, { checkToken: checkHaupt, gh, json, b64ToUtf8, BRANCH });
+      if (url.pathname.startsWith('/kollegen/'))                  return await handleKollegen(request, env, cors, url, { checkHaupt, json });
       if (request.method === 'GET' && url.pathname === '/')       return await handleGet(env, cors);
       if (request.method === 'POST' && url.pathname === '/login') return await handleLogin(request, env, cors);
       if (request.method === 'POST' && url.pathname === '/session') return await handleSession(request, env, cors);
@@ -144,20 +165,20 @@ async function handleGet(env, cors) {
 async function handleLogin(request, env, cors) {
   const auth = await checkPassword(request, env);
   if (!auth.ok) return json({ error: auth.error }, auth.status, cors);
-  const { token, exp } = await makeToken(env);
-  return json({ ok: true, token, exp }, 200, { ...cors, 'Cache-Control': 'no-store' });
+  const { token, exp } = await makeToken(env, auth.kollege);
+  return json({ ok: true, token, exp, rolle: auth.kollege ? 'kollege' : 'haupt' }, 200, { ...cors, 'Cache-Control': 'no-store' });
 }
 
 // ── POST /session: gilt der Schlüssel noch? ────────────
 async function handleSession(request, env, cors) {
   const auth = await checkToken(request, env);
   if (!auth.ok) return json({ error: auth.error }, auth.status, cors);
-  return json({ ok: true, exp: auth.exp }, 200, cors);
+  return json({ ok: true, exp: auth.exp, rolle: auth.rolle, ...(auth.rolle === 'kollege' ? { kuerzel: auth.kuerzel, gruppen: auth.gruppen } : {}) }, 200, cors);
 }
 
 // ── POST /logout-all: alle Geräte abmelden ─────────────
 async function handleLogoutAll(request, env, cors) {
-  const auth = await checkToken(request, env);
+  const auth = await checkHaupt(request, env);
   if (!auth.ok) return json({ error: auth.error }, auth.status, cors);
   if (!env.LOGIN_KV) return json({ error: 'Dafür fehlt der KV-Speicher LOGIN_KV (siehe cloudflare/ANLEITUNG.md)' }, 501, cors);
   await env.LOGIN_KV.put('sessions:since', String(Date.now()));
@@ -181,13 +202,25 @@ async function handlePut(request, env, cors) {
   try { cfg = JSON.parse(b64ToUtf8(body.content)); }
   catch { return json({ error: 'content ist kein gültiges Base64-JSON' }, 400, cors); }
 
+  // Kollegen-Schlüssel: vom aktuellen Stand ausgehen und nur Fokus und Spielsperre-Ausnahmen der eigenen Gruppen übernehmen
+  if (auth.rolle === 'kollege') {
+    const r = await gh(env, `contents/${FILE_PATH}?ref=${BRANCH}`);
+    if (!r.ok) return json({ error: 'GitHub: ' + r.status }, 502, cors);
+    const akt = await r.json();
+    if (body.sha !== akt.sha) return json({ error: 'CONFLICT' }, 409, cors);
+    const k = kollegeUebernehmen(JSON.parse(b64ToUtf8(akt.content)), cfg, auth.gruppen);
+    if (k.fehler) return json({ error: k.fehler }, 403, cors);
+    if (k.gleich) return json({ ok: true, sha: akt.sha, content: { sha: akt.sha }, unveraendert: true }, 200, cors);   // nichts Erlaubtes geändert
+    cfg = k.cfg;
+  }
+
   const problems = validateConfig(cfg);
   if (problems.length) return json({ error: 'Ungültige Config: ' + problems.slice(0, 5).join('; ') }, 422, cors);
 
   // Sauber neu serialisieren (keine versteckten Zeichen/Formatierungstricks)
   const clean = utf8ToB64(JSON.stringify(cfg, null, 2) + '\n');
 
-  const message = 'Admin: ' + String(body.message || 'Einstellungen aktualisiert')
+  const message = (auth.rolle === 'kollege' ? `Admin [${auth.kuerzel}]: ` : 'Admin: ') + String(body.message || 'Einstellungen aktualisiert')
     .replace(/[\u0000-\u001f\u007f]/g, ' ').slice(0, 100);
 
   const payload = { message, content: clean, branch: BRANCH };
@@ -205,7 +238,7 @@ async function handlePut(request, env, cors) {
 // ── Versionsverlauf (Admin-Umbau Etappe 3): jede Veröffentlichung ist ein Commit an config.json ──
 const VERLAUF_ANZAHL = 30;
 async function handleVerlauf(request, env, cors) {
-  const auth = await checkToken(request, env);
+  const auth = await checkHaupt(request, env);
   if (!auth.ok) return json({ error: auth.error }, auth.status, cors);
   const r = await gh(env, `commits?path=${FILE_PATH}&sha=${BRANCH}&per_page=${VERLAUF_ANZAHL}`);
   if (!r.ok) return json({ error: 'GitHub: ' + r.status }, 502, cors);
@@ -214,12 +247,12 @@ async function handleVerlauf(request, env, cors) {
     sha:  String(c.sha || ''),
     zeit: String((c.commit && c.commit.committer && c.commit.committer.date) || ''),
     text: String((c.commit && c.commit.message) || '').split('\n')[0].slice(0, 200),
-    wer:  'haupt',                    // Vorentlastung Etappe 10 (Rollen): bis dahin gibt es nur den Hauptzugang
+    wer:  /^Admin \[[^\]]+\]: /.test(String((c.commit && c.commit.message) || '')) ? 'kollege' : 'haupt',     // Etappe 10: „Admin [Kürzel]: …“
   }));
   return json({ eintraege }, 200, { ...cors, 'Cache-Control': 'no-store' });
 }
 async function handleFassung(request, env, cors) {
-  const auth = await checkToken(request, env);
+  const auth = await checkHaupt(request, env);
   if (!auth.ok) return json({ error: auth.error }, auth.status, cors);
   let body;
   try { body = JSON.parse((await request.text()).slice(0, 1000) || '{}'); } catch { return json({ error: 'Ungültiges JSON' }, 400, cors); }
@@ -387,7 +420,9 @@ function validateConfig(cfg) {
   // Feature-Schalter (Admin-Umbau Etappe 1, genutzt ab Etappe 10): { name: true|false }
   const fs = cfg.featureSchalter;
   if (fs !== undefined && (!fs || typeof fs !== 'object' || Array.isArray(fs) || Object.keys(fs).length > 50
-      || !Object.entries(fs).every(([k, v]) => /^[a-z][a-zA-Z0-9-]{0,39}$/.test(k) && typeof v === 'boolean'))) p.push('featureSchalter ungültig');
+      || !Object.entries(fs).every(([k, v]) => /^[a-z][a-zA-Z0-9-]{0,39}$/.test(k) && (typeof v === 'boolean'
+        || (v && typeof v === 'object' && !Array.isArray(v) && Object.keys(v).join() === 'wer' && Array.isArray(v.wer) && v.wer.length >= 1 && v.wer.length <= 20
+            && v.wer.every(w => typeof w === 'string' && (w === 'admin' || WER.test(w))))))))  p.push('featureSchalter ungültig');
   // App-Einstellungen (Admin-Umbau Etappe 7): { appId: { schluessel: wert } } – Typ und Grenzen stehen im
   // Manifest (daten/apps/<id>.json) und werden auf jedem Gerät nachgeprüft; hier nur Form und Größe
   const ae = cfg.appEinstellungen;
@@ -422,9 +457,11 @@ async function sign(env, text) {
     { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
   return new Uint8Array(await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(text)));
 }
-async function makeToken(env) {
-  const iat = Date.now(), exp = iat + SESSION_DAYS * 86400 * 1000;
-  const data = 'v1.' + b64url(new TextEncoder().encode(JSON.stringify({ iat, exp })));
+async function makeToken(env, kollege) {
+  const iat = Date.now();
+  const exp = Math.min(iat + SESSION_DAYS * 86400 * 1000, kollege ? kollege.bis : Infinity);
+  const daten = kollege ? { iat, exp, r: 'k', kid: kollege.id } : { iat, exp };   // r: 'k' = Kollegen-Schlüssel (Etappe 10)
+  const data = 'v1.' + b64url(new TextEncoder().encode(JSON.stringify(daten)));
   return { token: data + '.' + b64url(await sign(env, data)), exp };
 }
 // Zeitkonstanter Vergleich zweier Byte-Folgen
@@ -453,7 +490,48 @@ async function checkToken(request, env) {
     const since = Number(await env.LOGIN_KV.get('sessions:since')) || 0;
     if (!(payload.iat > since)) return bad;
   }
-  return { ok: true, exp: payload.exp };
+  if (payload.r === 'k') {                                      // Kollegen-Schlüssel: gesperrt oder abgelaufen → ungültig
+    const k = await kollegeHolen(env, payload.kid);
+    if (!k) return bad;
+    return { ok: true, exp: payload.exp, rolle: 'kollege', kid: k.id, kuerzel: k.kuerzel, gruppen: k.gruppen };
+  }
+  return { ok: true, exp: payload.exp, rolle: 'haupt' };
+}
+/** Wie checkToken, aber nur für den Hauptzugang (Kollegen-Schlüssel → 403) */
+async function checkHaupt(request, env) {
+  const a = await checkToken(request, env);
+  if (a.ok && a.rolle !== 'haupt') return { ok: false, status: 403, error: 'Das geht nur mit dem Hauptzugang' };
+  return a;
+}
+
+/** Kollegen-Speichern: aktueller Stand + fokus[] und spielsperre.ausnahmen[] aus dem Entwurf, wenn sich nur Einträge
+ *  der eigenen Gruppen (g:<id>) geändert haben. Abgelaufene Einträge dürfen wegfallen. → { cfg } oder { fehler } */
+function kollegeUebernehmen(akt, neu, gruppen) {
+  const wer = new Set((gruppen || []).map(g => 'g:' + g)), heute = new Date().toISOString().slice(0, 10);
+  const stabil = v => Array.isArray(v) ? '[' + v.map(stabil).join(',') + ']'
+    : v && typeof v === 'object' ? '{' + Object.keys(v).sort().map(k => JSON.stringify(k) + ':' + stabil(v[k])).join(',') + '}' : JSON.stringify(v);
+  const cfg = JSON.parse(JSON.stringify(akt));
+  const listen = [
+    { alt: akt.fokus, neu: neu.fokus, feld: 'fuer', vorbei: x => !(Number(x.bis) > Date.now()) },
+    { alt: akt.spielsperre && akt.spielsperre.ausnahmen, neu: neu.spielsperre && neu.spielsperre.ausnahmen, feld: 'wer', vorbei: x => !!x.bis && x.bis < heute },
+  ];
+  for (const l of listen) {
+    const A = new Map((Array.isArray(l.alt) ? l.alt : []).map(x => [x && x.id, x])), B = new Map((Array.isArray(l.neu) ? l.neu : []).map(x => [x && x.id, x]));
+    for (const id of new Set([...A.keys(), ...B.keys()])) {
+      const x = A.get(id), y = B.get(id);
+      if (x && y && stabil(x) === stabil(y)) continue;
+      if (x && !y && l.vorbei(x)) continue;
+      if ((x && !wer.has(x[l.feld])) || (y && !wer.has(y[l.feld]))) return { fehler: 'Mit dem Kollegen-Zugang nur für die eigenen Gruppen' };
+    }
+  }
+  if (Array.isArray(neu.fokus) && neu.fokus.length) cfg.fokus = neu.fokus; else delete cfg.fokus;
+  if (cfg.spielsperre) {
+    const a = neu.spielsperre && neu.spielsperre.ausnahmen;
+    if (Array.isArray(a) && a.length) cfg.spielsperre.ausnahmen = a; else delete cfg.spielsperre.ausnahmen;
+  } else if (neu.spielsperre && Array.isArray(neu.spielsperre.ausnahmen) && neu.spielsperre.ausnahmen.length) {
+    return { fehler: 'Ohne Spielsperre gibt es nichts freizugeben' };
+  }
+  return { cfg, gleich: stabil(cfg) === stabil(akt) };
 }
 
 // ── Passwortprüfung mit Sperre nach Fehlversuchen ──────
@@ -475,6 +553,13 @@ async function checkPassword(request, env) {
   if (given && await safeEqual(given, env.ADMIN_PASSWORD)) {
     if (state.count) await setFails(env, key, null);
     return { ok: true };
+  }
+  // Kollegen-Code (Etappe 10): eigener Zugang mit eingeschränkten Rechten
+  const code = kollegeCodeNorm(given);
+  const kollege = code ? await kollegeFuerCode(env, code) : null;
+  if (kollege) {
+    if (state.count) await setFails(env, key, null);
+    return { ok: true, kollege };
   }
 
   const count = (state.count || 0) + 1;

@@ -17,7 +17,8 @@ GitHub Pages. Fällt der Worker aus, funktioniert nur das Speichern im Admin nic
 | `POST /login` | mit Passwort | prüft das Passwort und stellt einen Anmelde-Schlüssel aus (7 Tage gültig) |
 | `POST /session` | mit Schlüssel | prüft beim Öffnen des Admins, ob der Schlüssel noch gilt |
 | `POST /logout-all` | mit Schlüssel | meldet alle Geräte ab (braucht `LOGIN_KV`) |
-| `PUT /` | mit Schlüssel | speichert `config.json`, nach Prüfung jedes Feldes |
+| `PUT /` | mit Schlüssel | speichert `config.json`, nach Prüfung jedes Feldes (Kollegen-Schlüssel: nur Fokus und Spielsperre-Ausnahmen ihrer Gruppen) |
+| `POST /kollegen/…` | Hauptzugang | Kollegen-Zugänge anlegen, ändern, sperren, neuer Code, löschen (`kollegen.js`) |
 | `POST /dateien/lesen`, `/dateien/speichern` | mit Schlüssel | Katalog und Vokabeln aus dem Admin (`dateien.js`, nur feste Pfade, ein Commit) |
 
 Nur Anfragen von `https://geitner-hub.github.io` werden angenommen. Nach 5 falschen
@@ -53,6 +54,16 @@ Passwörtern ist das Gerät 15 Minuten gesperrt.
 - **Admin-Umbau Etappe 9 (Okt. 2026):** `dateien.js` darf zusätzlich `daten/aufgaben-pools.json` (Aufgaben-Pools der
   Spiele; Pool-IDs bleiben) und `daten/lernwelt-inhalte.json` (nur Avatar-Teile und Level-Titel; neue Teile nur als
   Farbvariante eines vorhandenen Teils) schreiben. Nur **`dateien.js`** bei Cloudflare ersetzen; `worker.js` ist unverändert.
+
+- **Admin-Umbau Etappe 10 (Okt. 2026): Kollegen-Zugänge und Feature-Schalter.** Neue Datei **`kollegen.js`** anlegen
+  (wie `dateien.js`: *Edit code* → neue Datei → Inhalt von `cloudflare/kollegen.js`), dann **`worker.js`** komplett
+  ersetzen → *Deploy*. Kein neues Secret; die Zugänge liegen in der vorhandenen Datenbank `SYNC_DB` (Tabelle `kollegen`,
+  legt sich selbst an – ohne `SYNC_DB` meldet der Admin „Dafür fehlt die Datenbank“). Gespeichert werden Kürzel, Gruppen,
+  Ablauf und vom Code nur sein Hash. Kollegen melden sich mit ihrem Code statt des Passworts an (gleicher Fehlversuch-Schutz);
+  ein Kollegen-Schlüssel gilt höchstens 7 Tage und nie länger als der Zugang, Sperren wirkt sofort. Mit ihm sind alle
+  Endpunkte außer `/session`, `/medien/admin/liste`, `/sync/admin/gruppen` (nur eigene Gruppen) und dem Speichern von
+  Fokus/Spielsperre-Ausnahmen der eigenen Gruppen gesperrt (403). `featureSchalter` nimmt jetzt auch `{ wer: [...] }` an.
+  „Alle Geräte abmelden“ meldet auch alle Kollegen ab.
 
 ## Anmeldung im Admin
 

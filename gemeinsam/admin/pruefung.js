@@ -95,6 +95,16 @@ window.LWAdmin = window.LWAdmin || {};
     ((cfg.dorf || {}).lehrerZettel || []).filter(z => z.app && !(z.bis < heute) && !dateien.has(z.app) && ![...dateien].some(d => String(d).split('/').pop() === z.app))
       .forEach(z => warnungen.push(`Lehrer-Zettel „${z.id}“ nennt eine unbekannte App: ${z.app}`));
 
+    // Feature-Schalter (Etappe 10): jeder Schalter steht in daten/features.json (pruefen.py: gelb)
+    const fs = Object.keys(cfg.featureSchalter || {});
+    if (fs.length) {
+      try {
+        const ft = await fetch(ROOT + 'daten/features.json', { cache: 'no-store' }).then(r => r.json());
+        const ids = new Set((ft.features || []).map(f => f.id));
+        fs.filter(k => !ids.has(k)).forEach(k => warnungen.push(`Feature-Schalter „${k}“ steht nicht in daten/features.json`));
+      } catch (e) { /* offline: nicht prüfbar */ }
+    }
+
     return { fehler, warnungen };
   }
 

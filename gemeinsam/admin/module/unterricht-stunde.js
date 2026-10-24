@@ -7,7 +7,8 @@
 //    🎯 Fokus        – „heute nur diese Apps“ starten oder beenden
 //  Spiele und Fokus wirken sofort (store.sofort: ohne einen offenen Admin-Entwurf mitzunehmen).
 //  Tagesausnahmen gelten nur heute (ab = bis = heute) und enden um Mitternacht von selbst.
-//  rechte: Hauptzugang und später die Kollegen-Rolle (Etappe 10) – dieselben Rechte wie die Kollegen.
+//  rechte: Hauptzugang und Kollegen-Zugang (Etappe 10). Kollegen sehen bei Spielen und Fokus nur ihre Gruppen
+//  (der Worker liefert nur diese und lässt auch nur diese speichern) und melden sich hier oben ab.
 // ═══════════════════════════════════════════════════════
 'use strict';
 
@@ -19,7 +20,8 @@ LWAdmin.modul({
     const iso = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
     const uhr = ms => new Date(ms).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
     const klassen = c => { const k = new Set(); (c.apps || []).forEach(a => (a.klassen || []).forEach(x => k.add(x))); return (k.size ? [...k] : KLASSEN.slice(0, 2)).sort((a, b) => a - b); };
-    const werListe = c => ['alle', ...klassen(c).map(k => 'k' + k), ...gruppen.map(g => 'g:' + g.id)];
+    const kollege = () => LWAdmin.rolle() === 'kollege';
+    const werListe = c => kollege() ? gruppen.map(g => 'g:' + g.id) : ['alle', ...klassen(c).map(k => 'k' + k), ...gruppen.map(g => 'g:' + g.id)];
     const werName = w => w === 'alle' ? 'Alle' : /^k\d+$/.test(w) ? 'Klasse ' + w.slice(1)
       : (gruppen.find(g => 'g:' + g.id === w) || { name: 'Gruppe ' + w.slice(2, 8) + '…' }).name;
     const TAGE = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
@@ -49,6 +51,8 @@ LWAdmin.modul({
     function zeichnen() {
       if (!aktiv) return;
       const c = store.daten() || { apps: [] };
+      if (!werListe(c).includes(fokus.wer)) fokus.wer = werListe(c)[0] || 'alle';
+      const keineGruppe = kollege() && !gruppen.length ? '<p>Dir sind noch keine Gruppen zugeteilt – frag die Lehrkraft, die die Lernwelt betreut.</p>' : '';
       const reiter = [['app', '📲', 'App zeigen'], ['medien', '📁', 'Medien'], ['spiele', '🎮', 'Spiele'], ['fokus', '🎯', 'Fokus']];
       let inhalt = '';
       if (teil === 'app') {
@@ -64,7 +68,7 @@ LWAdmin.modul({
           : `<div class="lw-u-raster">${l.map(e => `<button class="lw-u-kachel" data-medium="${escHtml(e.code)}"><span class="lw-u-sym">${e.art === 'sammlung' ? '📚' : '📄'}</span>
               <span>${escHtml(e.titel || e.code)}</span><span class="lw-klein">${escHtml(e.ordner || '')}</span></button>`).join('')}</div>`;
       } else if (teil === 'spiele') {
-        inhalt = !c.spielsperre ? '<p>Es gibt keine Spielsperre – die Spiele sind für alle offen.</p>'
+        inhalt = !c.spielsperre ? '<p>Es gibt keine Spielsperre – die Spiele sind für alle offen.</p>' : keineGruppe ? keineGruppe
           : `<div class="lw-u-liste">${werListe(c).map(w => { const s = spielStand(c, w);
               return `<div class="lw-u-zeile"><div><b>${escHtml(werName(w))}</b><br><span class="lw-klein">${escHtml(s.text)}</span></div>
                 ${s.heuteFrei ? `<button class="lw-u-knopf" data-sperre-an="${escHtml(w)}">🔒 Sperre wieder an</button>`
@@ -79,22 +83,24 @@ LWAdmin.modul({
         if (!dauern.some(([v]) => v === fokus.dauer)) fokus.dauer = '45';
         inhalt = `${laufend.length ? `<div class="lw-u-liste">${laufend.map(f => `<div class="lw-u-zeile"><div><b>🎯 ${escHtml(werName(f.fuer))} bis ${uhr(f.bis)}</b><br>
             <span class="lw-klein">${f.apps.map(d => escHtml(appName(d))).join(' · ')}</span></div><button class="lw-u-knopf" data-fokus-weg="${escHtml(f.id)}">Beenden</button></div>`).join('')}</div>` : ''}
-          <h3>Neuer Fokus – für wen?</h3><div class="lw-u-chips">${werListe(c).map(w => `<button class="lw-u-chip${w === fokus.wer ? ' an' : ''}" data-fk-wer="${escHtml(w)}">${escHtml(werName(w))}</button>`).join('')}</div>
+          ${keineGruppe}<h3>Neuer Fokus – für wen?</h3><div class="lw-u-chips">${werListe(c).map(w => `<button class="lw-u-chip${w === fokus.wer ? ' an' : ''}" data-fk-wer="${escHtml(w)}">${escHtml(werName(w))}</button>`).join('')}</div>
           <h3>Wie lange?</h3><div class="lw-u-chips">${dauern.map(([v, t]) => `<button class="lw-u-chip${v === fokus.dauer ? ' an' : ''}" data-fk-dauer="${v}">${t}</button>`).join('')}</div>
           <h3>Welche Apps? (${fokus.apps.length}/12)</h3><div class="lw-u-raster klein">${apps.map(a => `<button class="lw-u-kachel${fokus.apps.includes(a.datei) ? ' an' : ''}" data-fk-app="${escHtml(a.datei)}">
             <span class="lw-u-sym">${escHtml(a.emoji || '📱')}</span><span>${escHtml(a.name)}</span></button>`).join('')}</div>
-          <div class="lw-knoepfe"><button class="lw-u-knopf gold" data-fk-start${fokus.apps.length ? '' : ' disabled'}>🎯 Fokus starten</button></div>`;
+          <div class="lw-knoepfe"><button class="lw-u-knopf gold" data-fk-start${fokus.apps.length && (!kollege() || gruppen.length) ? '' : ' disabled'}>🎯 Fokus starten</button></div>`;
       }
       const anderer = store.anzahl() ? `<span class="lw-klein">✏️ Im Admin liegt ein Entwurf (${store.anzahl()}) – er bleibt unberührt.</span>` : '';
       host.innerHTML = `<div class="lw-u">
         <div class="lw-u-kopf"><span class="lw-u-titel">🎓 Unterricht</span><span class="lw-u-uhr">${uhr(Date.now())}</span>${anderer}
-          ${LWAdmin.rolle() === 'haupt' ? '<a class="lw-btn" href="#/start">✕ Unterricht beenden</a>' : ''}</div>
+          ${LWAdmin.rolle() === 'haupt' ? '<a class="lw-btn" href="#/start">✕ Unterricht beenden</a>'
+            : `<span class="lw-klein">👥 ${escHtml(LWAdmin.zugang().kuerzel || '')}</span><button class="lw-btn" data-abmelden>🔒 Abmelden</button>`}</div>
         <nav class="lw-u-reiter">${reiter.map(([id, s, t]) => `<button class="lw-u-reiter-knopf${id === teil ? ' an' : ''}" data-teil="${id}"><span class="lw-u-sym">${s}</span>${t}</button>`).join('')}</nav>
         <div class="lw-u-inhalt">${inhalt}</div></div>`;
     }
 
     function klick(e) {
       const b = e.target.closest('button');
+      if (b && b.hasAttribute('data-abmelden')) { ConfigAPI.logout(); LWAdmin.anmeldungZeigen('Abgemeldet.'); return; }
       if (!b || !aktiv) return;
       const c = store.daten() || { apps: [] }, h = iso(new Date());
       const d = b.dataset;

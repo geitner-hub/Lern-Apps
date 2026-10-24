@@ -42,6 +42,10 @@
 //    spielSperre()      → null (heute keine Sperre) oder { noetig, geschafft, frei }
 //    spielGesperrt(datei) → true, wenn diese Datei ein Spiel ist und heute noch gesperrt
 //    neu(config, leise) → mit frischer config.json neu auswerten (Startseite; leise = ohne Ereignis)
+//    feature(id)        → true/false – Feature-Schalter (Admin-Umbau Etappe 10), config.featureSchalter[id]:
+//                         true = an für alle · false/fehlt = aus · { wer: ['admin', 'g:<Gruppe>', 'k5', 'alle'] } =
+//                         nur dort an ('admin' = dieses Gerät ist mit dem Hauptzugang im Admin angemeldet).
+//                         Neue Funktion hinter einen Schalter: Eintrag in daten/features.json + if (LernFreigabe.feature('id')).
 //  Ereignis 'lernfreigabe:neu', wenn sich die Grundlage geändert hat.
 // ═══════════════════════════════════════════════════════
 
@@ -193,5 +197,18 @@
     }).catch(() => {});
   }, 1500);
 
-  window.LernFreigabe = { erlaubt, zugeteilt, status, wer, fokus, imFokus, spielSperre, spielGesperrt, neu };
+  /** Hauptzugang auf diesem Gerät angemeldet? (Schlüssel noch gültig, kein Kollegen-Schlüssel – nur für Vorschauen) */
+  function adminHier() {
+    const t = lies('lernwelt-admin-schluessel');
+    if (!t || typeof t.token !== 'string' || !(t.exp > Date.now())) return false;
+    try { return JSON.parse(atob(t.token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/'))).r !== 'k'; } catch (e) { return false; }
+  }
+  function feature(id) {
+    const v = CFG && CFG.featureSchalter && typeof CFG.featureSchalter === 'object' ? CFG.featureSchalter[id] : undefined;
+    if (v === true) return true;
+    if (!v || typeof v !== 'object' || !Array.isArray(v.wer)) return false;
+    return v.wer.some(w => w === 'admin' ? adminHier() : wer().includes(w));
+  }
+
+  window.LernFreigabe = { erlaubt, zugeteilt, status, wer, fokus, imFokus, spielSperre, spielGesperrt, neu, feature };
 })();

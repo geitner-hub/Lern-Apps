@@ -5,6 +5,10 @@ Umbau. Seit Etappe 2 (v73) gibt es nur noch den neuen Admin unter `admin.html`; 
 durch `store.js`, `bruecke.js` und `rahmen.js` ersetzt. **Etappe 2** hat jede Zeile abgehakt, die Funktion steht im neuen Admin (`admin.html`).
 ☑ = im neuen Admin vorhanden (Etappe 2, über die Brücke `gemeinsam/admin/bruecke.js`; Adresse in Klammern).
 **Etappe 4** nutzt die Spalte „Suchbegriffe“ für den Suchindex.
+**Abschluss (Etappe 10, v82):** Der Umbau ist fertig – alle Funktionen stehen im neuen Admin, dazu Editoren (Katalog, Vokabeln,
+Aufgaben-Pools, Avatar-Teile), Rollen (Kollegen-Zugänge) und Feature-Schalter. Anleitung für die Lehrkraft: `werkzeuge/ADMIN-ANLEITUNG.md`.
+Neue Module seit Etappe 2: Start (Übersicht mit Kacheln), Inhalte → Einstellungen/Katalog/Vokabeln/Aufgaben-Pools,
+Motivation → Kalender/Avatar-Teile, System → Entwurf und Versionen/Kollegen/Feature-Schalter, Unterricht (Vollbild).
 
 Bereiche im neuen Admin: **Start · Inhalte · Gruppen · Motivation · Medien · System**.
 
@@ -63,11 +67,12 @@ Bereiche im neuen Admin: **Start · Inhalte · Gruppen · Motivation · Medien �
 | Endpunkt | Anmeldung | Zweck | Genutzt von |
 |---|---|---|---|
 | `GET /` | – | config.json lesen (base64 + sha) | Admin (`ConfigAPI.loadAdmin`) |
-| `POST /login` | Passwort | Anmelde-Schlüssel (7 Tage) | Admin |
+| `POST /login` | Passwort oder Kollegen-Code | Anmelde-Schlüssel (7 Tage; Kollegen höchstens bis zum Ablauf ihres Zugangs, Rolle im Schlüssel) | Admin |
 | `POST /session` | Schlüssel | Schlüssel noch gültig? | Admin |
 | `POST /logout-all` | Schlüssel | alle Schlüssel ungültig (braucht `LOGIN_KV`) | Admin |
 | `PUT /` | Schlüssel | config.json schreiben (ein Commit, sha gegen Konflikte, `validateConfig`) | Admin |
 | `POST /verlauf`, `POST /fassung` | Schlüssel | letzte 30 Veröffentlichungen, eine frühere Fassung lesen (Etappe 3) | System → Entwurf und Versionen |
+| `POST /kollegen/liste`, `anlegen`, `aendern`, `neuer-code`, `loeschen` | Hauptzugang | Kollegen-Zugänge (Etappe 10, `kollegen.js`, Tabelle in `SYNC_DB`) | System → Kollegen |
 | `POST /dateien/lesen`, `/dateien/speichern` | Schlüssel | Katalog, Vokabeln, Aufgaben-Pools, Avatar-Teile/Titel lesen/schreiben – nur Pfade aus `DATEIEN_ERLAUBT`, Formatprüfung je Datei, ein Commit (Etappe 8/9, `dateien.js`) | Inhalte → Katalog, Vokabeln, Aufgaben-Pools; Motivation → Avatar-Teile |
 | `/sync/holen`, `/sync/speichern`, `/sync/statistik` | Code der Karte | Pass-Sicherung der Kinder | Kinder-Seite |
 | `/sync/admin/gruppen`, `gruppe-anlegen`, `gruppe-umbenennen`, `gruppe-loeschen`, `code-loeschen` | Schlüssel | Sicherungskarten verwalten | `admin-karten.html`, `freigaben.js` |
@@ -93,7 +98,8 @@ Secrets/Bindings: `ADMIN_PASSWORD`, `GITHUB_TOKEN`, optional `LOGIN_KV`, `SYNC_D
 | `fokus[]` | Unterricht | ja |
 | `spielsperre` – `schwelle`, `runden`, `ausnahmen` | Unterricht | ja |
 | `heute` | Unterricht | ja (nur `false`) |
-| `featureSchalter` – `{ name: true\|false }` | neu (Etappe 1), genutzt ab Etappe 10 | ja |
+| `featureSchalter` – `{ name: true\|false\|{ wer: […] } }` | System → Feature-Schalter (Etappe 10), Liste `daten/features.json` | ja |
+| `appEinstellungen` | Inhalte → App-Einstellungen (Etappe 7) | ja |
 | andere Felder oben | – | werden seit Etappe 1 abgelehnt |
 
 ## 4. Befunde für spätere Etappen

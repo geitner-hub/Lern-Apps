@@ -138,7 +138,7 @@ const ConfigAPI = (() => {
         const d = await r.json().catch(() => ({}));
         if (!d.token) return { ok: false, status: 0, error: 'Der Worker bei Cloudflare ist noch die alte Version – bitte zuerst den neuen Code aus cloudflare/worker.js einfügen.' };
         setToken(d.token, d.exp);
-        return { ok: true, status: r.status };
+        return { ok: true, status: r.status, rolle: d.rolle || 'haupt' };
       }
       return { ok: false, status: r.status, error: await readError(r) };
     } catch (e) {
@@ -152,7 +152,10 @@ const ConfigAPI = (() => {
     if (!token) return { ok: false, status: 401 };
     try {
       const r = await fetch(WORKER_URL + '/session', { method: 'POST', headers: { 'Authorization': 'Bearer ' + token } });
-      if (r.ok) return { ok: true, status: 200 };
+      if (r.ok) {                                       // Etappe 10: Rolle (haupt | kollege), bei Kollegen Kürzel und Gruppen
+        const d = await r.json().catch(() => ({}));
+        return { ok: true, status: 200, rolle: d.rolle || 'haupt', kuerzel: d.kuerzel || '', gruppen: Array.isArray(d.gruppen) ? d.gruppen : [] };
+      }
       if (r.status === 401) logout();
       return { ok: false, status: r.status, error: await readError(r) };
     } catch (e) {

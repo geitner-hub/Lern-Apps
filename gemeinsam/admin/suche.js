@@ -90,6 +90,7 @@ window.LWAdmin = window.LWAdmin || {};
   }
 
   function auf() {
+    if (LWAdmin.rolle && LWAdmin.rolle() !== 'haupt') return;       // Kollegen-Zugang: keine Suche (Etappe 10)
     if (!document.getElementById('admin') || document.getElementById('admin').style.display === 'none') return;
     if (!el) anlegen();
     el.hidden = false;

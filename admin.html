@@ -159,6 +159,7 @@
     /* ── Unterrichtsmodus (Etappe 5): Vollbild ohne Kopfleiste und Navigation, große Knöpfe fürs iPad ── */
     body.lw-vollbild .kopf, body.lw-vollbild #lw-nav, body.lw-vollbild #lw-entwurf-liste{display:none;}
     body.lw-vollbild main{margin-left:0;max-width:none;padding:1rem 1.2rem 2rem;}
+    body.lw-kollege #lw-suchen, body.lw-kollege #lw-entwurf, body.lw-kollege #lw-veroeffentlichen, body.lw-kollege #lw-gesperrt, body.lw-kollege a[href="#/unterricht"]{display:none !important;}
     .lw-u-kopf{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:1rem;}
     .lw-u-titel{font-family:'Fredoka One',cursive;font-size:1.7rem;color:#fff;}
     .lw-u-uhr{font-family:'Fredoka One',cursive;font-size:1.5rem;color:var(--accent);}
@@ -257,6 +258,11 @@
     .lw-tl-farben span{width:22px;height:22px;border-radius:6px;border:1px solid var(--border2);display:inline-block;}
     .lw-tl-farben input[type=color]{width:44px;height:36px;padding:2px;border-radius:8px;border:1px solid var(--border2);background:var(--surface2);}
     @media (max-width: 699px){ .lw-tl-zwei{grid-template-columns:1fr;} .lw-tl-buehne{height:260px;} }
+
+    /* ── Rollen (Etappe 10): Kollegen-Zugänge ── */
+    .lw-kol-kopf{display:flex;align-items:center;gap:.7rem;flex-wrap:wrap;}
+    .lw-kol-kopf .switch{margin-left:auto;}
+    .lw-kol-bearbeiten{border-top:1px solid var(--border);margin-top:.6rem;padding-top:.4rem;}
   </style>
 </head>
 <body>
@@ -265,10 +271,11 @@
   <div class="box">
     <h1>🧭 Lern<span>welt</span></h1>
     <p>Admin-Bereich</p>
-    <input type="password" id="pw" placeholder="Passwort" autocomplete="off" aria-label="Passwort"/>
+    <input type="password" id="pw" placeholder="Passwort oder Kollegen-Code" autocomplete="off" aria-label="Passwort oder Kollegen-Code"/>
     <div class="fehler-text" id="pw-fehler" role="alert"></div>
     <button class="knopf" id="btn-anmelden">Anmelden</button>
-    <div class="hinweis">Das Passwort wird vom Server geprüft und nicht gespeichert. Dieses Gerät bleibt danach 7 Tage angemeldet.</div>
+    <div class="hinweis">Das Passwort wird vom Server geprüft und nicht gespeichert. Dieses Gerät bleibt danach 7 Tage angemeldet.
+      Kolleginnen und Kollegen melden sich mit ihrem eigenen Code an (XXXX-XXXX-XXXX-XXXX) und kommen direkt in den Unterrichtsmodus.</div>
   </div>
 </div>
 
@@ -560,6 +567,8 @@
 <script src="gemeinsam/admin/module/system-anmeldung.js"></script>
 <script src="gemeinsam/admin/module/system-diagnose.js"></script>
 <script src="gemeinsam/admin/module/system-entwurf.js"></script>
+<script src="gemeinsam/admin/module/system-features.js"></script>
+<script src="gemeinsam/admin/module/system-kollegen.js"></script>
 <script src="gemeinsam/admin/module/system-seiten.js"></script>
 <script src="gemeinsam/admin/module/unterricht-stunde.js"></script>
 <!-- Rahmen zuletzt: Anmeldung prüfen und starten -->
