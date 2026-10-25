@@ -483,6 +483,40 @@ selbst im Admin unter Inhalte → 🔐 Freigaben), Wiederholung, Fehler-Training
   Extras sind nummerierte Arbeitsblätter am Pult – die Kinder haben kein Workbook).
 - **Unit 2:** `en.6.lernweg-u2` (10 Stationen: 7 Pflicht mit Niveaus, 2 Wahl, Checkpoint; App-Schritte, Kontroll-Codes, Auto-Start).
 
+## Live-Abfrage im Unterricht (v84)
+
+Kurzes Klassen-Quiz für 2–10 Minuten (Einstieg, Zwischensicherung, Exit-Ticket). Plan: Claude-Doc „Aktionsplan: Live-Abfrage im Unterricht“.
+
+- **Ablauf:** Admin → 🎓 Unterricht → **📊 Live-Abfrage** → vorbereitetes Quiz oder spontane Frage (🚦 Ampel, A–D, Wahr/Falsch,
+  Ein Wort) starten. Der Beamer zeigt QR-Code und 6-stelligen Code (ohne 0/O, 1/I/L). Die Kinder scannen mit „📷 QR scannen“
+  oder tippen den Code auf `apps/typen/live.html` ein und antworten anonym. Phasen: warten → sammeln (Zähler „18 von 24“,
+  Zeitlimit) → aufdecken (Verteilung; mit „Zweite Runde“ erst ohne Lösung, dann „Nochmal nach Partnergespräch“, Vergleich
+  vorher/nachher, dann Lösung) → nächste Frage. Spontane Fragen lassen sich jederzeit anhängen; bei A–D/Wahr-Falsch ohne
+  Lösung tippt die Lehrkraft beim Aufdecken die richtige Antwort an.
+- **Fragetypen** (`gemeinsam/live-fragen.js`, `LernLive`): Auswahl, Wahr/Falsch, Zahl (Zifferntastatur aus `ziffernblock.js`,
+  jetzt mit `zeichen: ',-'`), Ein-Wort-Antwort (Wortwolke, Wortfilter im Worker, Wörter vor dem Aufdecken ausblenden),
+  Schätzfrage (Zahlenstrahl, richtig = innerhalb der Toleranz, Standard 10 % des Bereichs), Ampel. Je Frage: Zeitlimit
+  (aus/20/30/60 s), zweite Runde, Emoji oder Bild (`daten/inhalte/<fach>/…`), Erklärung.
+- **Modi:** „Ich führe“ (Frage für Frage, Lösung erst beim Aufdecken) und „Selbst“ (jedes Kind im eigenen Tempo, der Worker
+  schickt nur richtig/falsch zurück, der Beamer zeigt den Fortschritt und auf Knopfdruck % richtig je Frage).
+- **Quizze:** Admin → Inhalte → **📊 Live-Quizze** (`gemeinsam/admin/module/inhalte-live.js`): anlegen, bearbeiten, kopieren,
+  archivieren, löschen; **🎲 Aus dem Pool** (Vokabel-Unit EN→DE/DE→EN, Baukasten-Stufe – Lückentext mit Optionen, Eingabe,
+  Zuordnen, Bild-Wort –, Kopfrechen-Stufe; Freigaben gelten hier nicht). Optionen je Quiz: Modus, Rückblick, XP fürs
+  Mitmachen, Ampel am Ende. Höchstens 15 Fragen.
+- **Datenschutz:** Quizze und Rückblicke liegen in `SYNC_DB` (nicht im Repo). Raum, Einzelantworten und Teilnehmer-Kennungen
+  werden beim Beenden gelöscht, spätestens nach 12 Stunden (Cron). Rückblick (nur mit Haken): je Frage Anzahl, % richtig,
+  Verteilung – Ein-Wort-Antworten nur als Anzahl. Rückblicke 200 Tage, einzeln löschbar. Keine Namen, keine Gruppen.
+- **Kinder-Seite** `apps/typen/live.html`: keine App in config.json, ohne Navbar (`OHNE_NAVBAR`), lädt nur `umgebung.js`,
+  `shared.js`, `live-fragen.js`. Speicher nur `lernwelt-live` (sessionStorage: Raum, zufällige Kennung, noch nicht angekommene
+  Antwort – wird nachgeschickt). Fragt alle 2 s den Stand ab. XP (falls erlaubt): am Ende `LernApps.saveResult` unter dem
+  Schlüssel `live.html` (navbar.js wird erst dann nachgeladen); pass.js zählt das nicht für die Spielsperre.
+- **Startseite:** Kachel „📊 Live-Abfrage läuft“, solange der Raum offen ist, in dem dieser Tab war.
+- **Kollegen** dürfen im Unterrichtsmodus Quizze starten (nicht bearbeiten) und sehen nur ihre eigenen Räume, keine Rückblicke.
+- **Technik:** Worker-Teil `cloudflare/live.js` (Tabellen `live_quizze`, `live_raeume`, `live_antworten` – Beitritt = Zeile mit
+  `frage = -1` –, `live_rueckblick`), Admin-Teil `gemeinsam/admin/live.js` (Beamer `#lw-live`, `store.workerGet`).
+  Testseite: `cloudflare/live-test.html`. Katalog-Thema `allg.5.live-abfrage`. In der Testumgebung sind Räume und Antworten
+  erlaubt, Quizze speichern nicht.
+
 ## Vokabel-Engine (Infrastruktur Etappe 5)
 
 - **apps/englisch/vokabeltrainer.html** – ein Trainer für alle Wortlisten, alle Modi wie bisher

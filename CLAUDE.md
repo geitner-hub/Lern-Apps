@@ -94,6 +94,10 @@ und gelbe Hinweise. Manuelle Checkliste nach Uploads: `werkzeuge/RAUCHTEST.md`.
   Neuer Lernweg = JSON-Datei + Katalog-Thema (quelle `apps/typen/lernweg.html`, parameter `weg=<ID>`) + sw.js NACHLADEN.
   Bausteine (Niveaus, Wahl, App-Schritte mit Auto-Haken, Kontroll-Code, Auto-Start): README → Lernwege. Bestehende Lernwege
   ohne diese Felder müssen unverändert funktionieren (die Kinder nutzen sie).
+- **Live-Abfrage** (Unterrichtsmodus → 📊, Kinder-Seite `apps/typen/live.html?raum=CODE`, keine App in config.json, ohne Navbar):
+  Worker-Teil `cloudflare/live.js` (Räume, Antworten, Quizze, Rückblicke in `SYNC_DB`; Räume nach dem Beenden gelöscht),
+  Fragetypen `gemeinsam/live-fragen.js` (`LernLive`), Beamer `gemeinsam/admin/live.js`, Quiz-Editor Inhalte → Live-Quizze.
+  Speicher nur `lernwelt-live` (sessionStorage). README → Live-Abfrage.
 - **Backend:** nur ein Cloudflare Worker (`cloudflare/worker.js`, wird von Hand bei Cloudflare eingefügt). Er
   prüft Admin-Login und schreibt ausschließlich `config.json` per GitHub-API; jedes Feld wird validiert. Neue
   Config-Felder müssen auch im Worker erlaubt/geprüft werden. Sicherungskarten-Sync: `cloudflare/sync.js`,

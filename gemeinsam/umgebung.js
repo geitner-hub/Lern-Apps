@@ -30,7 +30,7 @@
   'use strict';
   if (window.LW && window.LW.UMGEBUNG) return;          // doppeltes Laden verhindern
 
-  const VERSION = 'v83';                                 // ⚙ bei jedem Upload mit sw.js zusammen erhöhen
+  const VERSION = 'v84';                                 // ⚙ bei jedem Upload mit sw.js zusammen erhöhen
 
   // ── Umgebung erkennen ────────────────────────────────
   //  GitHub Pages: erster Pfadteil = Repo-Name (Lern-Apps bzw. Lern-Apps-test)
@@ -95,6 +95,7 @@
     // Lern-Apps mit eigenem Speicher
     ['lernwelt-lernweg',            'local',   'apps/typen/lernweg.html', 'Lernweg: abgehakte Schritte, Niveau, Smileys, Start und letzter Besuch je Lernweg (nur dieses Gerät)', false],
     ['lernwelt-lernweg-zurueck',    'session', 'gemeinsam/lernweg-zurueck.js', 'Adresse des Lernwegs, aus dem eine App geöffnet wurde (Knopf „Zurück zum Lernweg“)', false],
+    ['lernwelt-live',               'session', 'apps/typen/live.html',     'Live-Abfrage: Raum-Code, zufällige Teilnehmer-Kennung des Tabs, noch nicht angekommene Antwort', false],
     ['laender-finder-best',         'local',   'apps/gpg/laender-finder.html', 'Länder-Finder: Bestzeiten je Modus', false],
     ['lernwelt-bayern-best',        'local',   'apps/gpg/bayern.html',     'Auskennen in Bayern: Bestwerte je Modus', false],
     ['rechenArena_ballonHighscore', 'local',   'apps/mathe/rechen-arena.html', 'Rechen-Arena: Highscore Ballon-Pop', false],
@@ -130,8 +131,9 @@
     } catch (e) { console.warn('[Lernwelt] Speicher-Trennung nicht möglich:', e); }
 
     // ── Testumgebung: nichts Echtes schreiben ──────────
-    //  Erlaubt: Lesen vom Worker (GET) und die Admin-Anmeldung.
-    //  Gesperrt: Speichern (PUT), alle Geräte abmelden, Sicherungskarten, Cloud-Sicherung.
+    //  Erlaubt: Lesen vom Worker (GET), die Admin-Anmeldung und die Live-Abfrage (Räume, Antworten – alles nach
+    //  der Stunde gelöscht). Gesperrt: Speichern (PUT), alle Geräte abmelden, Sicherungskarten, Cloud-Sicherung,
+    //  Live-Quizze speichern.
     try {
       const echtFetch = window.fetch.bind(window);
       window.fetch = function (input, init) {
@@ -140,7 +142,8 @@
           if (/\.workers\.dev$/i.test(url.hostname)) {
             const m = String((init && init.method) || (input && input.method) || 'GET').toUpperCase();
             const ok = (m === 'GET' && !url.pathname.startsWith('/sync'))
-                    || (m === 'POST' && (url.pathname === '/login' || url.pathname === '/session'));
+                    || (m === 'POST' && (url.pathname === '/login' || url.pathname === '/session'
+                        || /^\/live\/(beitreten|antwort|raum|raeume|quizze)(\/|$)/.test(url.pathname)));
             if (!ok) {
               return Promise.resolve(new Response(
                 JSON.stringify({ error: 'Testumgebung: Speichern und Sicherung sind hier abgeschaltet.' }),

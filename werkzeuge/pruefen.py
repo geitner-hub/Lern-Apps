@@ -74,6 +74,7 @@ OHNE_UMGEBUNG = {'404.html'}
 # Lern-Apps/Spiele ohne navbar.js (bewusst) – hier eintragen, mit Grund
 OHNE_NAVBAR = {
     'apps/englisch/english-dialog-vorlagen.html',   # Arbeitsblatt-Vorlagen, versteckt; Entscheidung in Etappe 3
+    'apps/typen/live.html',                         # Live-Abfrage: schlanke Seite ohne Pass, navbar.js erst am Ende für die XP
 }
 
 fehler, hinweise, infos = [], [], []

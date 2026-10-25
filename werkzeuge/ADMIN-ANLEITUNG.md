@@ -37,8 +37,20 @@ umbenennen. Neues hinzufügen und Texte ändern geht immer.
 ## Unterrichtsmodus (🎓)
 
 Vollbild fürs iPad, große Knöpfe, keine Einstellungen: 📲 App als QR-Code auf den Beamer, 📁 Medien auf den Beamer,
-🎮 „Spiele heute frei“ (endet um Mitternacht), 🎯 Fokus „heute nur diese Apps“. Wirkt sofort, ein offener Entwurf bleibt
+🎮 „Spiele heute frei“ (endet um Mitternacht), 🎯 Fokus „heute nur diese Apps“, 📊 Live-Abfrage (siehe unten). Wirkt sofort, ein offener Entwurf bleibt
 unberührt.
+
+### 📊 Live-Abfrage
+
+- **Vorbereiten:** Inhalte → 📊 Live-Quizze → „➕ Neues Quiz“ oder „🎲 Aus dem Pool“ (Vokabeln, Baukasten, Kopfrechnen; Anzahl
+  wählen, mischen, dann anpassen und speichern). Fragetypen: Auswahl, Wahr/Falsch, Zahl, Ein Wort, Schätzfrage, Ampel.
+  Häkchen „Rückblick“ = nach jeder Abfrage bleibt eine anonyme Zusammenfassung (unter „📈 Rückblicke“ beim Quiz).
+- **Im Unterricht:** 🎓 Unterricht → 📊 Live-Abfrage → Quiz antippen (oder spontane Frage: 🚦 Ampel, A–D, Wahr/Falsch, Ein Wort).
+  Am Beamer erscheinen QR-Code und Code. Kinder: „📷 QR scannen“. Dann „▶ Los geht's“, „👁 Aufdecken“, „▶ Nächste Frage“.
+  Mit „Zweite Runde“: nach dem Aufdecken „🗣 Nochmal nach Partnergespräch“, dann „✓ Lösung zeigen“.
+  Bei Ein-Wort-Fragen vor dem Aufdecken „🔍 Wörter prüfen“ und unpassende Wörter antippen (Beamer kurz abdunkeln, wenn er gespiegelt ist).
+- **Beenden** löscht alle Antworten. „↙ Verkleinern“ lässt die Abfrage weiterlaufen; sie steht dann unter „Läuft gerade“.
+- Kollegen können vorbereitete Quizze starten, aber nicht bearbeiten.
 
 ## Kollegen-Zugänge (System → 👥 Kollegen)
 

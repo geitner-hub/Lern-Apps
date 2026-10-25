@@ -14,6 +14,7 @@
 //    await LWAdmin.store.fassung(sha)             // config.json in dieser früheren Fassung
 //    await LWAdmin.store.wiederherstellen(sha, t) // diese Fassung als Entwurf übernehmen (danach veröffentlichen)
 //    LWAdmin.store.vergleichen(alt, neu)          // [{ pfad, alt, neu }] zwischen zwei Ständen
+//    await LWAdmin.store.worker(pfad, body) / workerGet(pfad)   // Worker-Endpunkte mit Anmelde-Schlüssel (POST / GET)
 //    await LWAdmin.store.sofort('Spiele frei', cfg => { … })   // gleich veröffentlichen (Etappe 5, Unterricht):
 //                                                 // auf dem veröffentlichten Stand, ein offener Entwurf bleibt
 //                                                 // und bekommt dieselbe Änderung → { ok, status?, fehler? }
@@ -221,6 +222,13 @@ LWAdmin.store = (() => {
     if (!r.ok) { const e = new Error(d.error || 'HTTP ' + r.status); e.status = r.status; throw e; }
     return d;
   }
+  /** GET an den Worker mit Anmelde-Schlüssel (Live-Abfrage: Stand eines Raums) → Antwort-JSON (Fehler: e.status, e.daten) */
+  async function workerGet(pfad) {
+    const r = await fetch(ConfigAPI.WORKER_URL + pfad, { cache: 'no-store', headers: { 'Authorization': 'Bearer ' + anmeldeSchluessel() } });
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok) { const e = new Error(d.error || 'HTTP ' + r.status); e.status = r.status; e.daten = d; throw e; }
+    return d;
+  }
   const textOhneAdmin = s => String(s || '').split('\n')[0].replace(/^Admin: /, '').replace(/^Admin \[([^\]]+)\]: /, '👥 $1: ');
   async function historie(n = 5) {
     try {
@@ -254,6 +262,7 @@ LWAdmin.store = (() => {
   const api = {
     laden, aendern, sofort, unterschiede, vergleichen, veroeffentlichen, verwerfen, historie, fassung, wiederherstellen, abonnieren,
     worker: workerPost,          // POST an den Worker mit Anmelde-Schlüssel → Antwort-JSON (Fehler: e.status)
+    workerGet,                   // GET an den Worker mit Anmelde-Schlüssel (Live-Abfrage)
     daten:       () => config,
     aenderungen: () => (entwurf ? entwurf.aenderungen.slice() : []),
     anzahl:      () => (entwurf ? entwurf.aenderungen.length : 0),

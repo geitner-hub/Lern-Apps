@@ -27,12 +27,15 @@
 //    POST /kollegen/…  → Kollegen-Zugänge anlegen, sperren, Ablauf (Etappe 10, cloudflare/kollegen.js; nur Hauptzugang)
 //    POST /dateien/lesen, /dateien/speichern → Katalog und Vokabeldateien (Etappe 8, cloudflare/dateien.js):
 //                       feste Liste erlaubter Pfade, Formatprüfung je Datei, alles in einem Commit (Schlüssel)
+//    /live/…           → Live-Abfrage im Unterricht (cloudflare/live.js): Räume, Antworten der Kinder (ohne Schlüssel),
+//                       Stand und Phase (Haupt- und Kollegen-Zugang, nur eigene Räume), Quizze und Rückblicke (nur Hauptzugang)
 //
 //  Rollen (Admin-Umbau Etappe 10): Mit dem Admin-Passwort gibt es einen Schlüssel für den Hauptzugang, mit einem
 //  Kollegen-Code (kollegen.js) einen Kollegen-Schlüssel. Der darf nur lesen, was der Unterrichtsmodus braucht
 //  (/session, /medien/admin/liste, /sync/admin/gruppen – nur seine Gruppen) und beim Speichern von config.json nur
 //  fokus[] und spielsperre.ausnahmen[] seiner Gruppen ändern (kollegeUebernehmen); alles andere bleibt, wie es ist.
-//  Alle übrigen Endpunkte mit Schlüssel verlangen den Hauptzugang (checkHaupt).
+//  Alle übrigen Endpunkte mit Schlüssel verlangen den Hauptzugang (checkHaupt) – außer der Live-Abfrage, die zum
+//  Unterrichtsmodus gehört: Räume starten und führen dürfen auch Kollegen (live.js prüft das selbst).
 //
 //  Anmelde-Schlüssel: Nur beim Anmelden wird das Passwort gesendet. Der Admin
 //  speichert danach nur einen signierten Schlüssel, der SESSION_DAYS gilt.
@@ -90,6 +93,7 @@ import { handleSync, syncAufraeumen } from './sync.js';
 import { handleMedienOeffentlich, handleMedienAdmin, medienAufraeumen } from './medien.js';
 import { handleDateien } from './dateien.js';
 import { handleKollegen, kollegeCodeNorm, kollegeFuerCode, kollegeHolen } from './kollegen.js';
+import { handleLive, liveAufraeumen } from './live.js';
 
 // ── Einstieg ───────────────────────────────────────────
 export default {
@@ -128,6 +132,7 @@ export default {
           return json(d, r.status, cors);
         }
       }
+      if (url.pathname.startsWith('/live/'))                      return await handleLive(request, env, cors, url, { checkToken, checkHaupt, json });
       if (url.pathname.startsWith('/medien/'))                    return await handleMedienAdmin(request, env, cors, url, pruefer);
       if (url.pathname.startsWith('/sync/'))                      return await handleSync(request, env, cors, url, pruefer);
       if (url.pathname.startsWith('/dateien/'))                   return await handleDateien(request, env, cors, url, { checkToken: checkHaupt, gh, json, b64ToUtf8, BRANCH });
@@ -146,10 +151,12 @@ export default {
     }
   },
 
-  // Täglicher Cron: alte Pass-Stände löschen (ANLEITUNG-SYNC.md), abgebrochene Medien-Uploads entfernen
+  // Täglicher Cron: alte Pass-Stände löschen (ANLEITUNG-SYNC.md), abgebrochene Medien-Uploads entfernen,
+  // Live-Abfrage: Räume älter als 12 Stunden samt Antworten, Rückblicke älter als 200 Tage
   async scheduled(event, env, ctx) {
     ctx.waitUntil(syncAufraeumen(env));
     ctx.waitUntil(medienAufraeumen(env).catch(e => console.error(e)));
+    ctx.waitUntil(liveAufraeumen(env).catch(e => console.error(e)));
   },
 };
 

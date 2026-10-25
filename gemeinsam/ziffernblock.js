@@ -1,7 +1,7 @@
 // ═══════════════════════════════════════════════════════
 //  Lernwelt – ziffernblock.js   (großer Ziffernblock für Mathe-Apps, Neue Lern-Apps Etappe 9)
 //
-//  Genutzt von: apps/mathe/zahlenstrahl.html, apps/mathe/stellenwerttafel.html
+//  Genutzt von: apps/mathe/zahlenstrahl.html, apps/mathe/stellenwerttafel.html, gemeinsam/live-fragen.js (Live-Abfrage)
 //  Großer Ziffernblock 0–9 mit Löschen und Fertig – die iPad-Tastatur öffnet sich nie
 //  (keine <input>-Felder). Die Felder sind beliebige Elemente der Seite:
 //    • Tippen einer Ziffer füllt das aktive Feld und springt zum nächsten (einstellig)
@@ -12,6 +12,7 @@
 //  API (window.LernZiffernblock):
 //    erstelle({ box, felder: [Element …], einstellig: true|false, max: 12,
 //               gruppieren: true (Tausender-Abstand im Feld), start: 0,
+//               zeichen: ',-' (optional: Komma- und Minus-Taste, nur mehrstellig),
 //               fertig(werte) })   → { werte(), aktiv(i), leeren(), weg() }
 //    werte: Liste der Texte je Feld ('' = leer)
 //    format(zahl|text)  → „3 400 000“ (schmales Leerzeichen als Tausender-Abstand)
@@ -27,6 +28,7 @@
      font:900 1.5rem 'Nunito',system-ui,sans-serif;cursor:pointer;touch-action:manipulation}
   .zb button:active{transform:scale(.95)}
   .zb .zb-weg{background:rgba(248,113,113,.18)} .zb .zb-ok{background:#e6a817;color:#231a02}
+  .zb .zb-extra{grid-column:span 3}
   .zb-feld{cursor:pointer}
   .zb-feld.zb-aktiv{outline:3px solid #e6a817;outline-offset:-3px;background:rgba(230,168,23,.12)}
   @media (max-width:420px){.zb button{min-height:2.8rem;font-size:1.3rem}}
@@ -64,7 +66,9 @@
     box.innerHTML = ['1', '2', '3', '4', '5', 'weg', '6', '7', '8', '9', '0', 'ok'].map(k =>
       k === 'weg' ? '<button type="button" class="zb-weg" data-k="weg" aria-label="Löschen">⌫</button>'
       : k === 'ok' ? '<button type="button" class="zb-ok" data-k="ok" aria-label="Fertig">✓</button>'
-      : `<button type="button" data-k="${k}">${k}</button>`).join('');
+      : `<button type="button" data-k="${k}">${k}</button>`).join('')
+      + (!einstellig && String(o.zeichen || '').includes(',') ? '<button type="button" class="zb-extra" data-k="," aria-label="Komma">,</button>' : '')
+      + (!einstellig && String(o.zeichen || '').includes('-') ? '<button type="button" class="zb-extra" data-k="-" aria-label="Minus">±</button>' : '');
     o.box.appendChild(box);
     const api = {
       box,
@@ -75,8 +79,13 @@
           else werte[i] = werte[i].slice(0, -1);
           return zeig(i);
         }
+        if (k === ',' || k === '-') {                                // nur mit zeichen: ',-'
+          if (k === '-') werte[i] = werte[i].startsWith('-') ? werte[i].slice(1) : '-' + werte[i];
+          else if (!werte[i].includes(',') && werte[i].length < max) werte[i] = (/\d$/.test(werte[i]) ? werte[i] : werte[i] + '0') + ',';
+          return zeig(i);
+        }
         if (einstellig) { werte[i] = k; zeig(i); if (i < felder.length - 1) aktiv(i + 1); }
-        else if (werte[i].length < max) { werte[i] = (werte[i] === '0' ? '' : werte[i]) + k; zeig(i); }
+        else if (werte[i].length < max) { werte[i] = werte[i].replace(/^(-?)0$/, '$1') + k; zeig(i); }
       },
       schiebe(d) { aktiv(i + d); },
     };
