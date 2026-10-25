@@ -65,6 +65,15 @@ Passwörtern ist das Gerät 15 Minuten gesperrt.
   Fokus/Spielsperre-Ausnahmen der eigenen Gruppen gesperrt (403). `featureSchalter` nimmt jetzt auch `{ wer: [...] }` an.
   „Alle Geräte abmelden“ meldet auch alle Kollegen ab.
 
+- **Live-Abfrage (Okt. 2026, v84): neue Datei `live.js`.** *Edit code* → neue Datei **`live.js`** anlegen → Inhalt von
+  `cloudflare/live.js` einfügen; dann **`worker.js`** komplett ersetzen → *Deploy*. Kein neues Secret; alles liegt in der
+  vorhandenen Datenbank `SYNC_DB` (Tabellen `live_quizze`, `live_raeume`, `live_antworten`, `live_rueckblick` legen sich
+  selbst an). Der tägliche Cron räumt Räume älter als 12 Stunden und Rückblicke älter als 200 Tage auf.
+  **Prüfen:** `cloudflare/live-test.html` öffnen (über GitHub Pages), Admin-Passwort eingeben → alle Schritte grün.
+  Ohne den neuen Worker zeigt der Unterrichtsmodus „Die Live-Abfrage braucht den neuen Worker“.
+  Kosten: 25 Kinder × alle 2 s × 10 Minuten ≈ 7.500 Lesezugriffe je Abfrage – weit unter den kostenlosen D1-Grenzen
+  (bei Gelegenheit unter D1 → Metrics nachsehen).
+
 ## Anmeldung im Admin
 
 - Das Passwort wird nur beim Anmelden gesendet und **nirgends gespeichert**. Das Gerät

@@ -164,7 +164,8 @@
     .lw-u-titel{font-family:'Fredoka One',cursive;font-size:1.7rem;color:#fff;}
     .lw-u-uhr{font-family:'Fredoka One',cursive;font-size:1.5rem;color:var(--accent);}
     .lw-u-kopf .lw-btn{margin-left:auto;}
-    .lw-u-reiter{display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem;margin-bottom:1.1rem;}
+    .lw-u-reiter{display:grid;grid-template-columns:repeat(5,1fr);gap:.6rem;margin-bottom:1.1rem;}
+    @media (max-width:700px){ .lw-u-reiter{grid-template-columns:repeat(3,1fr);} }
     .lw-u-reiter-knopf{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.2rem;min-height:88px;padding:.5rem;border-radius:16px;border:2px solid var(--border2);background:var(--surface);color:var(--text);font:800 1.05rem 'Nunito',sans-serif;cursor:pointer;}
     .lw-u-reiter-knopf.an{border-color:var(--accent);background:var(--accent-dim);color:var(--accent);}
     .lw-u-sym{font-size:1.9rem;line-height:1.1;}
@@ -523,6 +524,8 @@
 <script src="gemeinsam/admin/module.js"></script>
 <script src="gemeinsam/admin/quellen.js"></script>
 <script src="gemeinsam/admin/beamer.js"></script>
+<script src="gemeinsam/live-fragen.js"></script>
+<script src="gemeinsam/admin/live.js"></script>
 <script src="gemeinsam/admin/suche.js"></script>
 <script src="gemeinsam/admin/termine.js"></script>
 <script src="gemeinsam/einstellungen.js"></script>
@@ -551,6 +554,7 @@
 <script src="gemeinsam/admin/module/inhalte-einstellungen.js"></script>
 <script src="gemeinsam/admin/module/inhalte-freigaben.js"></script>
 <script src="gemeinsam/admin/module/inhalte-katalog.js"></script>
+<script src="gemeinsam/admin/module/inhalte-live.js"></script>
 <script src="gemeinsam/admin/module/inhalte-ordnen.js"></script>
 <script src="gemeinsam/admin/module/inhalte-tags.js"></script>
 <script src="gemeinsam/admin/module/inhalte-vokabeln.js"></script>

@@ -271,7 +271,7 @@
     #start-raster{max-width:980px;margin:1.2rem auto 1.4rem;padding:0 1.4rem;display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:.8rem;align-items:stretch;grid-auto-flow:row dense;}
     #start-raster > .sk{max-width:none;margin:0;padding:0;min-width:0;display:flex;flex-direction:column;}
     #start-raster > .sk:empty{display:none;}
-    #start-raster #lernweg-section{grid-column:1/-1;}                       /* der Lernweg ist der Arbeitsauftrag: volle Breite */
+    #start-raster #lernweg-section,#start-raster #live-section{grid-column:1/-1;}   /* Lernweg und laufende Live-Abfrage: volle Breite */
     #start-raster #heute-section h2,#start-raster #lernweg-section h2{margin:0 0 .45rem;}
     #start-raster .heute-grid{grid-template-columns:1fr;gap:.5rem;flex:1;align-content:start;}
     #start-raster .pass-card{flex:1;flex-wrap:wrap;gap:.7rem;align-content:center;}
@@ -535,6 +535,7 @@
 
 <!-- Start-Kacheln: Pass, Lernweg, Heute, Dorf, App des Tages nebeneinander statt untereinander -->
 <div id="start-raster">
+  <div id="live-section" class="sk" aria-label="Live-Abfrage"></div>
   <div id="lernweg-section" class="sk" aria-label="Mein Lernweg"></div>
   <div id="pass-section" class="sk"></div>
   <div id="heute-section" class="sk" aria-label="Heute für dich"></div>
@@ -990,6 +991,21 @@ function buildLernwege() {
       <span class="lw-txt"><b>${escHtml(t.titel)}</b><small>${escHtml(weiter)}</small></span><span class="lw-los">Los ›</span></a>`;
   }).join('')}</div>` : '';
 }
+
+// ── Live-Abfrage: Kachel, solange der Raum offen ist, in dem dieses iPad (dieser Tab) war (apps/typen/live.html) ──
+function buildLive() {
+  const sec = document.getElementById('live-section');
+  let l = null;
+  try { l = JSON.parse(sessionStorage.getItem('lernwelt-live') || 'null'); } catch (e) {}
+  if (!sec || !l || !/^[A-Z0-9]{6}$/.test(l.raum || '') || !window.ConfigAPI) { if (sec) sec.innerHTML = ''; return; }
+  fetch(ConfigAPI.WORKER_URL + '/live/raum/' + l.raum, { cache: 'no-store' }).then(r => {
+    if (r.status === 404) { try { sessionStorage.removeItem('lernwelt-live'); } catch (e) {} sec.innerHTML = ''; return; }
+    if (!r.ok) return;
+    sec.innerHTML = `<a class="lw-banner" href="apps/typen/live.html?raum=${l.raum}"><span class="lw-ring" style="--p:100"><span>📊</span></span>
+      <span class="lw-txt"><b>Live-Abfrage läuft</b><small>Raum ${l.raum} – mach weiter mit!</small></span><span class="lw-los">Zurück ›</span></a>`;
+  }).catch(() => {});
+}
+window.addEventListener('pageshow', buildLive);
 
 function buildPage() {
   klasseAusPass();

@@ -5,6 +5,8 @@
 //    📁 Medien       – Datei oder Sammlung aus dem Medienbereich auf den Beamer
 //    🎮 Spiele       – Spielsperre heute für Alle, eine Klasse oder Gruppe aus- bzw. wieder einschalten
 //    🎯 Fokus        – „heute nur diese Apps“ starten oder beenden
+//    📊 Live-Abfrage – Klassen-Quiz per QR-Code: gespeichertes Quiz oder spontane Frage starten, Beamer-Ansicht
+//                      (gemeinsam/admin/live.js, Worker cloudflare/live.js; Quizze vorbereiten unter Inhalte → Live-Quizze)
 //  Spiele und Fokus wirken sofort (store.sofort: ohne einen offenen Admin-Entwurf mitzunehmen).
 //  Tagesausnahmen gelten nur heute (ab = bis = heute) und enden um Mitternacht von selbst.
 //  rechte: Hauptzugang und Kollegen-Zugang (Etappe 10). Kollegen sehen bei Spielen und Fokus nur ihre Gruppen
@@ -14,9 +16,10 @@
 
 LWAdmin.modul({
   id: 'stunde', bereich: 'unterricht', titel: 'Unterricht', symbol: '🎓', reihenfolge: 1, rechte: ['haupt', 'kollege'],
-  suchbegriffe: ['Unterrichtsmodus', 'Stunde', 'Beamer', 'QR', 'Spiele frei', 'Fokus', 'iPad'],
+  suchbegriffe: ['Unterrichtsmodus', 'Stunde', 'Beamer', 'QR', 'Spiele frei', 'Fokus', 'iPad', 'Live-Abfrage', 'Quiz', 'Exit-Ticket', 'Ampel'],
   zeigen(host, { store, toast }) {
     let aktiv = true, teil = 'app', fach = '', gruppen = [], medien = null, medienFehler = '', fokus = { wer: 'alle', dauer: '45', apps: [] };
+    const live = { quizze: null, raeume: [], fehler: '', fach: '', laedt: false };
     const iso = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
     const uhr = ms => new Date(ms).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
     const klassen = c => { const k = new Set(); (c.apps || []).forEach(a => (a.klassen || []).forEach(x => k.add(x))); return (k.size ? [...k] : KLASSEN.slice(0, 2)).sort((a, b) => a - b); };
@@ -53,7 +56,7 @@ LWAdmin.modul({
       const c = store.daten() || { apps: [] };
       if (!werListe(c).includes(fokus.wer)) fokus.wer = werListe(c)[0] || 'alle';
       const keineGruppe = kollege() && !gruppen.length ? '<p>Dir sind noch keine Gruppen zugeteilt – frag die Lehrkraft, die die Lernwelt betreut.</p>' : '';
-      const reiter = [['app', '📲', 'App zeigen'], ['medien', '📁', 'Medien'], ['spiele', '🎮', 'Spiele'], ['fokus', '🎯', 'Fokus']];
+      const reiter = [['app', '📲', 'App zeigen'], ['medien', '📁', 'Medien'], ['spiele', '🎮', 'Spiele'], ['fokus', '🎯', 'Fokus'], ['live', '📊', 'Live-Abfrage']];
       let inhalt = '';
       if (teil === 'app') {
         const apps = c.apps.filter(a => !a.hidden && isSafeLink(a.datei) && (!fach || a.fach === fach));
@@ -74,6 +77,8 @@ LWAdmin.modul({
                 ${s.heuteFrei ? `<button class="lw-u-knopf" data-sperre-an="${escHtml(w)}">🔒 Sperre wieder an</button>`
                   : `<button class="lw-u-knopf gold" data-frei="${escHtml(w)}"${s.frei ? ' disabled' : ''}>🎉 Heute frei</button>`}</div>`; }).join('')}</div>
             <p class="lw-klein">„Heute frei“ endet um Mitternacht von selbst. Dauerhafte Einstellungen: Admin → Gruppen → Spielsperre.</p>`;
+      } else if (teil === 'live') {
+        inhalt = liveInhalt();
       } else {
         const laufend = (c.fokus || []).filter(f => Number(f.bis) > Date.now());
         const appName = d => { const a = c.apps.find(x => x.datei === d); return a ? (a.emoji || '📱') + ' ' + a.name : d; };
@@ -98,13 +103,56 @@ LWAdmin.modul({
         <div class="lw-u-inhalt">${inhalt}</div></div>`;
     }
 
+    // ── Live-Abfrage ──
+    async function liveLaden() {
+      if (live.laedt) return;
+      live.laedt = true;
+      try { [live.quizze, live.raeume] = await Promise.all([LWAdmin.live.quizze(), LWAdmin.live.raeume()]); live.fehler = ''; }
+      catch (x) { live.fehler = LWAdmin.live.fehlerText(x); if (!live.quizze) live.quizze = []; }
+      live.laedt = false;
+      zeichnen();
+    }
+    function liveInhalt() {
+      if (live.quizze === null) { liveLaden(); return '<p>lädt …</p>'; }
+      if (live.fehler) return `<p>⚠ ${escHtml(live.fehler)}</p>`;
+      const uhrzeit = ms => new Date(ms).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+      const faecher = [...new Set(live.quizze.map(q => q.fach).filter(Boolean))];
+      const liste = live.quizze.filter(q => !live.fach || q.fach === live.fach);
+      return `${live.raeume.length ? `<h3>Läuft gerade</h3><div class="lw-u-liste">${live.raeume.map(r => `<div class="lw-u-zeile"><div><b>📊 ${escHtml(r.titel)}</b>
+          <br><span class="lw-klein">Code ${escHtml(r.code)} · seit ${uhrzeit(r.erstellt)} · 👥 ${r.teilnehmer}</span></div>
+          <div class="lw-knoepfe"><button class="lw-u-knopf gold" data-live-oeffnen="${escHtml(r.code)}">Auf den Beamer</button><button class="lw-u-knopf" data-live-ende="${escHtml(r.code)}">Beenden</button></div></div>`).join('')}</div>` : ''}
+        <h3>⚡ Spontane Frage – ohne Vorbereitung</h3>
+        <input class="lw-u-eingabe" data-live-text maxlength="200" placeholder="Frage (optional) – sonst stellst du sie mündlich" value="${escHtml(live.text || '')}">
+        <div class="lw-u-raster klein">${[['ampel', '🚦', 'Ampel'], ['auswahl', '🔤', 'Auswahl A–D'], ['wahrfalsch', '⚖️', 'Wahr/Falsch'], ['wort', '☁️', 'Ein Wort']]
+          .map(([t, s, n]) => `<button class="lw-u-kachel" data-live-spontan="${t}"><span class="lw-u-sym">${s}</span><span>${n}</span></button>`).join('')}</div>
+        <h3>📚 Vorbereitete Quizze</h3>
+        ${faecher.length > 1 ? `<div class="lw-u-chips">${['', ...faecher].map(f => `<button class="lw-u-chip${f === live.fach ? ' an' : ''}" data-live-fach="${escHtml(f)}">${f ? escHtml(f) : 'Alle Fächer'}</button>`).join('')}</div>` : ''}
+        <div class="lw-u-raster">${liste.map(q => `<button class="lw-u-kachel" data-live-quiz="${escHtml(q.id)}"><span class="lw-u-sym">${q.modus === 'selbst' ? '🧑‍🎓' : '📊'}</span>
+          <span>${escHtml(q.titel)}</span><span class="lw-klein">${escHtml([q.fach, q.klasse ? 'Kl. ' + q.klasse : '', q.anzahl + ' Fragen'].filter(Boolean).join(' · '))}</span></button>`).join('')
+          || `<p>Noch keine Quizze. ${LWAdmin.rolle() === 'haupt' ? 'Anlegen unter Inhalte → Live-Quizze.' : 'Die Lehrkraft, die die Lernwelt betreut, legt sie an.'}</p>`}</div>`;
+    }
+    async function liveStarten(was) {
+      try { await LWAdmin.live.starten(was); }
+      catch (x) { toast('⚠ ' + LWAdmin.live.fehlerText(x), true); }
+    }
+    const liveZu = () => { if (teil === 'live') { live.quizze = live.quizze || []; liveLaden(); } };
+    window.addEventListener('lwlive:zu', liveZu);
+
     function klick(e) {
       const b = e.target.closest('button');
       if (b && b.hasAttribute('data-abmelden')) { ConfigAPI.logout(); LWAdmin.anmeldungZeigen('Abgemeldet.'); return; }
       if (!b || !aktiv) return;
       const c = store.daten() || { apps: [] }, h = iso(new Date());
       const d = b.dataset;
-      if (d.teil) { teil = d.teil; zeichnen(); }
+      if (d.teil) { teil = d.teil; if (teil === 'live' && live.quizze) liveLaden(); zeichnen(); }
+      else if (d.liveFach !== undefined) { live.fach = d.liveFach; zeichnen(); }
+      else if (d.liveSpontan) { const i = host.querySelector('[data-live-text]'); live.text = ''; liveStarten({ quiz: { titel: 'Spontane Frage', fragen: [LWAdmin.live.spontan(d.liveSpontan, i ? i.value : '')] } }); }
+      else if (d.liveQuiz) liveStarten({ quizId: d.liveQuiz });
+      else if (d.liveOeffnen) LWAdmin.live.oeffnen(d.liveOeffnen);
+      else if (d.liveEnde) {
+        if (!confirm('Diese Abfrage beenden? Alle Antworten werden gelöscht (ein Rückblick bleibt, falls er beim Quiz angehakt ist).')) return;
+        store.worker('/live/raum/' + d.liveEnde + '/ende', {}).then(() => { toast('📊 Abfrage beendet'); liveLaden(); }).catch(x => toast('⚠ ' + LWAdmin.live.fehlerText(x), true));
+      }
       else if (d.fach !== undefined) { fach = d.fach; zeichnen(); }
       else if (d.app) {
         const a = c.apps.find(x => x.datei === d.app);
@@ -152,11 +200,13 @@ LWAdmin.modul({
     }
 
     host.addEventListener('click', klick);
+    const tippen = ev => { if (ev.target.matches('[data-live-text]')) live.text = ev.target.value; };
+    host.addEventListener('input', tippen);
     zeichnen();
     LWAdmin.quellen.gruppen().then(g => { gruppen = g; }).catch(() => {}).then(zeichnen);
     LWAdmin.quellen.medien().then(m => { medien = m; }).catch(e => { medien = null; medienFehler = e.status === 401 ? 'Sitzung abgelaufen' : 'Medien nicht erreichbar'; }).then(zeichnen);
-    const takt = setInterval(zeichnen, 30e3);                         // Uhr und ablaufender Fokus
+    const takt = setInterval(() => { if (!host.querySelector('[data-live-text]:focus')) zeichnen(); }, 30e3);   // Uhr und ablaufender Fokus (nicht beim Tippen)
     const ab = store.abonnieren(zeichnen);
-    return () => { aktiv = false; ab(); clearInterval(takt); host.removeEventListener('click', klick); };
+    return () => { aktiv = false; ab(); clearInterval(takt); host.removeEventListener('click', klick); host.removeEventListener('input', tippen); window.removeEventListener('lwlive:zu', liveZu); };
   },
 });

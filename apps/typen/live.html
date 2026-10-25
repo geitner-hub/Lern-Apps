@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8"/>
+  <script src="../../gemeinsam/umgebung.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>Live-Abfrage – Lernwelt</title>
+  <!--
+  ═══════════════════════════════════════════════
+   LERNWELT – Live-Abfrage, Seite der Kinder  (Aktionsplan „Live-Abfrage im Unterricht“)
+   apps/typen/live.html?raum=CODE   (QR-Code am Beamer, „QR scannen“ der Lernwelt; ohne Code: Code eintippen)
+
+   KEINE normale App (nicht in config.json, ohne Navbar – OHNE_NAVBAR in pruefen.py): Die Lehrkraft startet die Abfrage
+   im Unterrichtsmodus (Admin → Unterricht → 📊 Live-Abfrage), die Kinder antworten anonym.
+   Lädt nur umgebung.js, shared.js und live-fragen.js – nicht den Pass. Die Zifferntastatur (ziffernblock.js) kommt
+   erst bei einer Zahl-Frage dazu, navbar.js (XP) nur am Ende, wenn das Quiz „XP fürs Mitmachen“ erlaubt.
+   Speicher: nur lernwelt-live im Tab (sessionStorage): Raum-Code, zufällige Teilnehmer-Kennung, eine noch nicht
+   angekommene Antwort. Nie mit Pass oder Sicherungskarte verknüpft.
+   Ablauf: beitreten → alle 2 Sekunden GET /live/raum/CODE (Worker cloudflare/live.js) → Antwort POST /live/antwort.
+   Die Lösung kommt erst beim Aufdecken; im Modus „Selbst“ schickt der Worker nur richtig/falsch zurück.
+  ═══════════════════════════════════════════════
+  -->
+  <link rel="stylesheet" href="../../gemeinsam/fonts.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --bg: #0f0e1a; --surface: #1b1929; --surface2: #252238; --accent: #e6a817; --indigo: #6366f1; --indigo2: #818cf8;
+      --text: #f1f0fb; --text2: rgba(241,240,251,.7); --muted: rgba(241,240,251,.45); --line: rgba(255,255,255,.09);
+      --green: #4ade80; --red: #f87171; --r: 20px; }
+    body { font-family: 'Nunito', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh;
+      padding: max(1rem, env(safe-area-inset-top)) 1rem max(2rem, env(safe-area-inset-bottom)); -webkit-tap-highlight-color: transparent; font-size: 1.05rem; }
+    .wrap { max-width: 860px; margin: 0 auto; }
+    .kopf { display: flex; align-items: center; gap: .7rem; margin-bottom: 1rem; }
+    .kopf h1 { font-family: 'Fredoka One', 'Nunito', sans-serif; font-weight: 400; color: var(--accent); font-size: 1.6rem; flex: 1; }
+    .kopf a { color: var(--text2); text-decoration: none; font-weight: 800; background: var(--surface2); border-radius: 12px; padding: .45rem .8rem; }
+    .code-marke { font-weight: 900; letter-spacing: .15em; background: var(--surface2); border-radius: 10px; padding: .3rem .6rem; color: var(--indigo2); }
+    .box { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 1.3rem 1.2rem; margin-bottom: 1rem; }
+    .mitte { text-align: center; }
+    .gross { font-size: 3.4rem; line-height: 1.1; margin-bottom: .4rem; }
+    h2 { font-family: 'Fredoka One', 'Nunito', sans-serif; font-weight: 400; font-size: 1.7rem; color: var(--text); margin-bottom: .35rem; }
+    .sub { color: var(--text2); font-weight: 700; }
+    .leiste { display: flex; justify-content: space-between; align-items: center; gap: .6rem; margin-bottom: .8rem; font-weight: 900; color: var(--text2); }
+    .zeit { color: var(--accent); font-variant-numeric: tabular-nums; }
+    .zeit.knapp { color: var(--red); }
+    .status { margin-top: 1rem; text-align: center; font-weight: 900; color: var(--green); font-size: 1.15rem; }
+    .status.warte { color: var(--text2); }
+    .ergebnis { border-radius: var(--r); padding: 1.3rem 1.1rem; text-align: center; margin-top: 1rem; }
+    .ergebnis.ja { background: rgba(74,222,128,.14); border: 2px solid rgba(74,222,128,.55); }
+    .ergebnis.nein { background: rgba(248,113,113,.12); border: 2px solid rgba(248,113,113,.5); }
+    .ergebnis.neutral { background: rgba(129,140,248,.14); border: 2px solid rgba(129,140,248,.45); }
+    .ergebnis b { display: block; font-family: 'Fredoka One', 'Nunito', sans-serif; font-weight: 400; font-size: 1.8rem; margin-bottom: .2rem; }
+    .ergebnis p { color: var(--text2); font-weight: 700; margin-top: .3rem; }
+    .code-form { display: flex; flex-direction: column; align-items: center; gap: .9rem; }
+    .code-form input { width: min(360px, 100%); text-align: center; font: 900 2.4rem 'Nunito', system-ui, sans-serif; letter-spacing: .3em; text-transform: uppercase;
+      padding: .6rem; border-radius: 18px; border: 2px solid var(--line); background: var(--surface2); color: var(--text); }
+    .code-form input:focus { outline: 3px solid var(--accent); outline-offset: 2px; }
+    .knopf { display: inline-block; min-height: 3.6rem; padding: .8rem 1.6rem; border-radius: 16px; border: 0; background: var(--accent); color: #231a02;
+      font: 900 1.2rem 'Nunito', system-ui, sans-serif; cursor: pointer; text-decoration: none; }
+    .knopf.zweit { background: var(--surface2); color: var(--text); }
+    .knoepfe { display: flex; gap: .7rem; justify-content: center; flex-wrap: wrap; margin-top: 1.1rem; }
+    .fehler { color: var(--red); font-weight: 800; text-align: center; min-height: 1.4em; }
+    #netz { position: fixed; left: 50%; bottom: max(1rem, env(safe-area-inset-bottom)); transform: translateX(-50%); background: #3b1d1d; color: #fecaca;
+      border: 1px solid rgba(248,113,113,.5); border-radius: 14px; padding: .6rem 1rem; font-weight: 800; z-index: 10; max-width: calc(100% - 2rem); text-align: center; }
+    #netz[hidden] { display: none; }
+    .punkte { display: flex; justify-content: center; gap: .4rem; margin: .6rem 0 1rem; flex-wrap: wrap; }
+    .punkte span { width: 1.1rem; height: 1.1rem; border-radius: 50%; background: var(--surface2); }
+    .punkte span.ja { background: var(--green); } .punkte span.nein { background: var(--red); } .punkte span.da { background: var(--indigo2); }
+    .punkte span.jetzt { outline: 3px solid var(--accent); outline-offset: 2px; }
+    .puls { animation: puls 1.6s ease-in-out infinite; }
+    @keyframes puls { 50% { opacity: .45; } }
+    @media (prefers-reduced-motion: reduce) { .puls { animation: none; } }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="kopf"><h1>📊 Live-Abfrage</h1><span class="code-marke" id="marke" hidden></span><a href="../../index.html">🏠</a></div>
+  <main id="ansicht" aria-live="polite"></main>
+</div>
+<div id="netz" role="status" hidden>📡 Verbindung weg – versuche es gleich wieder …</div>
+
+<script src="../../gemeinsam/shared.js"></script>
+<script src="../../gemeinsam/live-fragen.js"></script>
+<script>
+'use strict';
+(() => {
+  const WORKER = 'https://lern-apps-config.bennigeitner.workers.dev';   // wie in gemeinsam/config-api.js
+  const SPEICHER_KEY = 'lernwelt-live';                                  // nur im Tab (sessionStorage)
+  const TAKT_MS = 2000;
+  const ZEICHEN = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+  const L = window.LernLive;
+  const ansicht = document.getElementById('ansicht'), netz = document.getElementById('netz'), marke = document.getElementById('marke');
+
+  // ── Zustand ──
+  let raum = '', k = '', stand = null, schluessel = '', laeuft = false, timer = null, uhr = null, ende = 0;
+  let dabeiGewesen = false, fertig = false, selbstNr = null, selbstRueck = null;
+  const beantwortet = new Set();
+  const lesen = () => { try { return JSON.parse(sessionStorage.getItem(SPEICHER_KEY) || 'null') || {}; } catch (e) { return {}; } };
+  const merken = o => { try { sessionStorage.setItem(SPEICHER_KEY, JSON.stringify({ raum, k, ...o })); } catch (e) {} };
+  const kennung = () => [...crypto.getRandomValues(new Uint8Array(16))].map(b => b.toString(16).padStart(2, '0')).join('');
+  const codeNorm = s => String(s || '').toUpperCase().split('').filter(z => ZEICHEN.includes(z)).join('').slice(0, 6);
+
+  async function anfrage(pfad, body) {
+    const r = await fetch(WORKER + pfad, body ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) } : { cache: 'no-store' });
+    const d = await r.json().catch(() => ({}));
+    return { status: r.status, d };
+  }
+  const netzWeg = an => { netz.hidden = !an; };
+
+  // ── Code eingeben ──
+  function codeEingabe(fehler) {
+    stop();
+    marke.hidden = true;
+    ansicht.innerHTML = `<div class="box mitte"><div class="gross">🔑</div><h2>Code eingeben</h2>
+      <p class="sub">Der Code steht am Beamer neben dem QR-Code.</p>
+      <form class="code-form" style="margin-top:1rem"><input id="code" maxlength="6" autocomplete="off" autocapitalize="characters" spellcheck="false" inputmode="text" aria-label="Raum-Code" placeholder="······">
+      <div class="fehler" id="code-fehler">${fehler ? escHtml(fehler) : ''}</div><button class="knopf">Mitmachen</button></form></div>`;
+    const inp = document.getElementById('code');
+    inp.addEventListener('input', () => { inp.value = codeNorm(inp.value); });
+    ansicht.querySelector('form').onsubmit = ev => {
+      ev.preventDefault();
+      const c = codeNorm(inp.value);
+      if (c.length !== 6) { document.getElementById('code-fehler').textContent = 'Der Code hat 6 Zeichen.'; return; }
+      starten(c);
+    };
+    setTimeout(() => inp.focus(), 50);
+  }
+
+  // ── Raum betreten ──
+  async function starten(c) {
+    raum = c;
+    const alt = lesen();
+    k = alt.raum === raum && /^[0-9a-f]{32}$/.test(alt.k || '') ? alt.k : kennung();
+    merken(alt.raum === raum ? { offen: alt.offen } : {});
+    try { history.replaceState(null, '', location.pathname + '?raum=' + raum); } catch (e) {}
+    marke.textContent = raum; marke.hidden = false;
+    ansicht.innerHTML = '<div class="box mitte"><div class="gross puls">📡</div><h2>Verbinde …</h2></div>';
+    try {
+      const r = await anfrage('/live/beitreten', { raum, kennung: k });
+      if (r.status === 404) { codeEingabe('Diesen Raum gibt es nicht (mehr). Code richtig?'); return; }
+      if (r.status === 409 && !r.d.ok) { codeEingabe(r.d.error || 'Der Raum ist voll.'); return; }
+      if (r.status >= 400 && r.status !== 429) { codeEingabe(r.d.error || 'Das hat nicht geklappt.'); return; }
+      netzWeg(false);
+    } catch (e) { netzWeg(true); }                      // offline: trotzdem weiter fragen, Beitritt holt der Worker mit der Antwort nach
+    dabeiGewesen = true;
+    laeuft = true;
+    abfragen();
+  }
+  function stop() { laeuft = false; clearTimeout(timer); clearInterval(uhr); }
+
+  async function abfragen() {
+    clearTimeout(timer);
+    if (!laeuft) return;
+    if (document.hidden) { timer = setTimeout(abfragen, TAKT_MS); return; }
+    try {
+      const r = await anfrage(`/live/raum/${raum}?k=${k}${stand ? '&rev=' + stand.rev : ''}`);
+      netzWeg(false);
+      if (r.status === 404) { beendet(); return; }
+      if (r.d.ok && !r.d.unveraendert) { stand = r.d; zeichnen(); }
+      await nachsenden();
+    } catch (e) { netzWeg(true); }
+    timer = setTimeout(abfragen, TAKT_MS);
+  }
+  document.addEventListener('visibilitychange', () => { if (!document.hidden && laeuft) abfragen(); });
+
+  // ── Antwort senden (bei Netzproblemen später nachschicken) ──
+  async function senden(a, nr, runde) {
+    merken({ offen: { a, nr, runde } });
+    beantwortet.add(nr);
+    const ok = await schicken({ a, nr, runde });
+    return ok;
+  }
+  async function schicken(o) {
+    try {
+      const r = await anfrage('/live/antwort', { raum, kennung: k, frage: o.nr, runde: o.runde, antwort: o.a });
+      netzWeg(false);
+      merken({});
+      if (r.status === 404) { beendet(); return null; }
+      if (r.d.ok || r.d.schon) return { ok: true, richtig: r.d.richtig };
+      if (r.d.vorbei) return { vorbei: true, text: r.d.error };
+      return { fehler: r.d.error || 'Das hat nicht geklappt.' };
+    } catch (e) { netzWeg(true); return null; }
+  }
+  async function nachsenden() {
+    const o = lesen().offen;
+    if (!o || o.nr === undefined) return;
+    const r = await schicken(o);
+    if (r && r.ok && stand && stand.modus === 'fuehren' && stand.nr === o.nr && stand.runde === o.runde) { stand.meine = { a: String(o.a) }; zeichnen(); }
+  }
+
+  // ── Anzeige ──
+  function zeitZeigen() {
+    clearInterval(uhr);
+    const el = ansicht.querySelector('.zeit');
+    if (!el || !ende) return;
+    const tick = () => {
+      const s = Math.max(0, Math.ceil((ende - Date.now()) / 1000));
+      el.textContent = '⏱ ' + s + ' s';
+      el.classList.toggle('knapp', s <= 5);
+      if (!s) {
+        clearInterval(uhr);
+        if (stand && !stand.meine) {
+          ansicht.querySelectorAll('button, input').forEach(x => { x.disabled = true; });
+          const st = ansicht.querySelector('.status'); if (st) { st.textContent = '⏰ Die Zeit ist um.'; st.className = 'status warte'; }
+        }
+      }
+    };
+    tick();
+    uhr = setInterval(tick, 250);
+  }
+
+  function zeichnen() {
+    const s = stand;
+    if (!s) return;
+    if (s.modus === 'selbst') return zeichneSelbst();
+    const neu = [s.phase, s.nr, s.runde, s.loesung ? 1 : 0, s.meine ? 1 : 0].join('|');
+    if (neu === schluessel) return;                       // nichts Sichtbares geändert: Eingabe nicht stören
+    schluessel = neu;
+    clearInterval(uhr); ende = 0;
+    if (s.phase === 'warten' || !s.frage) {
+      ansicht.innerHTML = `<div class="box mitte"><div class="gross">✅</div><h2>Du bist dabei!</h2><p class="sub">${escHtml(s.titel || '')}</p>
+        <p class="sub puls" style="margin-top:.8rem">Gleich geht's los – schau zum Beamer.</p></div>`;
+      return;
+    }
+    const f = s.frage, kopf = `<div class="leiste"><span>Frage ${s.nr + 1} von ${s.anzahl}${s.runde === 2 ? ' · 2. Runde' : ''}</span><span class="zeit"></span></div>`;
+    if (s.phase === 'sammeln') {
+      if (typeof s.rest === 'number') ende = Date.now() + s.rest;
+      ansicht.innerHTML = `<div class="box">${kopf}${L.frageHtml(f)}<div id="eingabe"></div>
+        <div class="status${s.meine ? '' : ' warte'}">${s.meine ? '✓ Deine Antwort ist angekommen. Warte auf die anderen …' : s.runde === 2 ? 'Nach dem Partnergespräch: Was meinst du jetzt?' : ''}</div></div>`;
+      if (f.typ === 'zahl' && !s.meine) LW.laden('gemeinsam/ziffernblock.js').catch(() => {});
+      L.antwortUi(document.getElementById('eingabe'), f, {
+        meine: s.meine ? (f.typ === 'auswahl' ? Number(s.meine.a) : s.meine.a) : null,
+        async senden(a) {
+          const st = ansicht.querySelector('.status');
+          st.className = 'status warte'; st.textContent = 'wird gesendet …';
+          const r = await senden(a, s.nr, s.runde);
+          if (!r) { st.textContent = '📡 Antwort wird geschickt, sobald die Verbindung wieder da ist.'; return; }
+          if (r.ok) { s.meine = { a: String(a) }; schluessel = ''; zeichnen(); return; }
+          st.className = 'status'; st.style.color = 'var(--red)'; st.textContent = r.vorbei ? '⏰ ' + (r.text || 'Diese Frage ist schon vorbei.') : '⚠ ' + r.fehler;
+          if (r.fehler) { schluessel = ''; setTimeout(zeichnen, 1500); }
+        },
+      });
+      zeitZeigen();
+      return;
+    }
+    // aufdecken
+    if (!s.loesung) {
+      ansicht.innerHTML = `<div class="box mitte">${kopf}<div class="gross">👀</div><h2>Schau zum Beamer!</h2>
+        <p class="sub">${s.meine ? 'Deine Antwort: ' + escHtml(L.antwortText(f, s.meine.a)) : 'Du hast diesmal nicht geantwortet.'}</p>
+        <p class="sub" style="margin-top:.6rem">${f.typ === 'wort' || f.typ === 'ampel' ? '' : 'Gleich: Sprich mit deinem Partner – wer hat recht?'}</p></div>`;
+      return;
+    }
+    const l = s.loesung, bew = L.bewertbar({ ...f, ...l });
+    let erg;
+    if (!s.meine) erg = `<div class="ergebnis neutral"><b>Keine Antwort</b><p>${bew ? 'Richtig ist: ' + escHtml(L.loesungText(f, l)) : ''}</p></div>`;
+    else if (!bew) erg = `<div class="ergebnis neutral"><b>Danke! 👍</b><p>Deine Antwort: ${escHtml(L.antwortText(f, s.meine.a))}</p></div>`;
+    else if (s.meine.r === 1) erg = `<div class="ergebnis ja"><b>✓ Richtig!</b><p>${f.typ === 'schaetzen' ? 'Super geschätzt! Genau: ' + escHtml(L.loesungText(f, l)) : 'Deine Antwort: ' + escHtml(L.antwortText(f, s.meine.a))}</p></div>`;
+    else erg = `<div class="ergebnis nein"><b>${f.typ === 'schaetzen' ? 'Knapp daneben' : 'Leider nicht'}</b><p>Deine Antwort: ${escHtml(L.antwortText(f, s.meine.a))}</p>
+      <p>Richtig ist: <b style="display:inline;font-family:inherit;font-size:1.1rem;color:var(--text)">${escHtml(L.loesungText(f, l))}</b></p></div>`;
+    ansicht.innerHTML = `<div class="box">${kopf}${L.frageHtml(f)}${erg}${l.erklaerung ? `<p class="sub" style="margin-top:.8rem;text-align:center">💡 ${escHtml(l.erklaerung)}</p>` : ''}
+      <p class="sub mitte puls" style="margin-top:1rem">Warte auf die nächste Frage …</p></div>`;
+  }
+
+  // ── Modus „Selbst“: Quiz im eigenen Tempo ──
+  function zeichneSelbst() {
+    const s = stand;
+    if (s.phase === 'warten') {
+      if (schluessel === 'warten') return;
+      schluessel = 'warten';
+      ansicht.innerHTML = `<div class="box mitte"><div class="gross">✅</div><h2>Du bist dabei!</h2><p class="sub">${escHtml(s.titel || '')}</p>
+        <p class="sub puls" style="margin-top:.8rem">Gleich geht's los.</p></div>`;
+      return;
+    }
+    const meine = s.meine || {};
+    Object.keys(meine).forEach(i => beantwortet.add(Number(i)));
+    if (selbstRueck) return;                               // Rückmeldung bleibt stehen, bis „Weiter“ getippt wird
+    const offen = s.fragen.map((_, i) => i).filter(i => meine[i] === undefined);
+    if (selbstNr === null || meine[selbstNr] !== undefined) selbstNr = offen.length ? offen[0] : -1;
+    const neu = 'selbst|' + selbstNr;
+    if (neu === schluessel) return;
+    schluessel = neu;
+    const punkte = `<div class="punkte" aria-hidden="true">${s.fragen.map((f, i) => `<span class="${meine[i] === undefined ? (i === selbstNr ? 'jetzt' : '') : meine[i].r === 1 ? 'ja' : meine[i].r === 0 ? 'nein' : 'da'}"></span>`).join('')}</div>`;
+    if (selbstNr < 0) {
+      const wertbar = Object.values(meine).filter(m => m.r === 0 || m.r === 1).length;
+      const richtig = Object.values(meine).filter(m => m.r === 1).length;
+      ansicht.innerHTML = `<div class="box mitte"><div class="gross">🎉</div><h2>Geschafft!</h2>${punkte}
+        <p class="sub">${wertbar ? `Du hast ${richtig} von ${wertbar} richtig.` : 'Danke fürs Mitmachen!'}</p>
+        <p class="sub puls" style="margin-top:.8rem">Warte, bis deine Lehrkraft die Abfrage beendet.</p></div>`;
+      return;
+    }
+    const f = s.fragen[selbstNr], nr = selbstNr;
+    ansicht.innerHTML = `<div class="box"><div class="leiste"><span>Frage ${nr + 1} von ${s.anzahl}</span></div>${punkte}${L.frageHtml(f)}<div id="eingabe"></div><div class="status warte"></div></div>`;
+    if (f.typ === 'zahl') LW.laden('gemeinsam/ziffernblock.js').catch(() => {});
+    L.antwortUi(document.getElementById('eingabe'), f, {
+      async senden(a) {
+        const st = ansicht.querySelector('.status');
+        st.textContent = 'wird gesendet …';
+        const r = await senden(a, nr, 1);
+        if (!r) { st.textContent = '📡 Antwort wird geschickt, sobald die Verbindung wieder da ist.'; return; }
+        if (r.vorbei || r.fehler) { st.style.color = 'var(--red)'; st.textContent = '⚠ ' + (r.text || r.fehler); return; }
+        meine[nr] = { a: String(a), r: r.richtig };
+        s.meine = meine;
+        selbstRueck = { nr, richtig: r.richtig };
+        const erg = r.richtig === 1 ? '<div class="ergebnis ja"><b>✓ Richtig!</b></div>'
+          : r.richtig === 0 ? '<div class="ergebnis nein"><b>Leider nicht</b><p>Merk dir die Frage – ihr besprecht sie gleich.</p></div>'
+          : '<div class="ergebnis neutral"><b>Danke! 👍</b></div>';
+        ansicht.querySelector('.box').insertAdjacentHTML('beforeend', `${erg}<div class="knoepfe"><button class="knopf" data-weiter>Weiter ›</button></div>`);
+        st.textContent = '';
+        ansicht.querySelector('[data-weiter]').onclick = () => { selbstRueck = null; schluessel = ''; zeichnen(); };
+      },
+    });
+  }
+
+  // ── Ende ──
+  function beendet() {
+    stop();
+    netzWeg(false);
+    if (!dabeiGewesen || !stand) { codeEingabe('Diesen Raum gibt es nicht (mehr). Code richtig?'); return; }
+    if (fertig) return;
+    fertig = true;
+    const b = stand.bilanz || {}, n = Math.max(b.beantwortet || 0, beantwortet.size), anzahl = stand.anzahl || 0;
+    const richtig = Math.max(b.richtig || 0, stand.meine && stand.modus === 'selbst' ? Object.values(stand.meine).filter(m => m.r === 1).length : 0);
+    const wertbar = b.wertbar || 0;
+    try { sessionStorage.removeItem(SPEICHER_KEY); } catch (e) {}
+    ansicht.innerHTML = `<div class="box mitte"><div class="gross">🎉</div><h2>Danke fürs Mitmachen!</h2>
+      <p class="sub">${n ? `Du hast ${n} von ${anzahl} Fragen beantwortet${wertbar ? ` – ${richtig} von ${wertbar} richtig` : ''}.` : 'Die Abfrage ist beendet.'}</p>
+      <div class="knoepfe"><a class="knopf" href="../../index.html">🏠 Zur Lernwelt</a><button class="knopf zweit" data-neu>Neuer Code</button></div></div>`;
+    ansicht.querySelector('[data-neu]').onclick = () => { stand = null; schluessel = ''; dabeiGewesen = false; fertig = false; beantwortet.clear(); selbstNr = null; codeEingabe(); };
+    // XP fürs Mitmachen (nur wenn das Quiz es erlaubt): kleine Runde im Pass, zählt nicht für die Spielsperre (pass.js)
+    if (stand.xp && n > 0 && anzahl > 0) {
+      try { history.replaceState(null, '', location.pathname); } catch (e) {}      // Ergebnis-Schlüssel immer „live.html“
+      LW.laden('gemeinsam/navbar.js').then(() => {
+        if (window.LernApps) LernApps.saveResult({ score: n, max: anzahl, label: `${n} von ${anzahl} beantwortet` });
+      }).catch(() => {});
+    }
+  }
+
+  // ── Los ──
+  const c = codeNorm(new URLSearchParams(location.search).get('raum'));
+  if (c.length === 6) starten(c);
+  else { const alt = lesen(); if (alt.raum && /^[A-Z0-9]{6}$/.test(alt.raum)) starten(alt.raum); else codeEingabe(); }
+})();
+</script>
+</body>
+</html>

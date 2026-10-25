@@ -136,6 +136,7 @@
   }
 
   LWAdmin.anmeldungZeigen = zeigeAnmeldung;            // für Module (Abmelden, abgelaufene Sitzung)
+  LWAdmin.toast = toast;                               // für Teile außerhalb der Module (Live-Abfrage)
 
   // ── Verdrahten ────────────────────────────────────────
   $('lw-version').textContent = (window.LW && LW.versionText) ? LW.versionText() : '';

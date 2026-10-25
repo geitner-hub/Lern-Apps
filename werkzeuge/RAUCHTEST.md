@@ -48,7 +48,7 @@ Erst in der Testumgebung, dort wird nichts gespeichert. Den Admin nicht in zwei 
 | A18 | Start → Übersicht: Kacheln Status, Schnellaktionen, Hinweise; „Auf den Beamer“ | Zahlen stimmen, Zeilen führen zum Modul; QR bildschirmfüllend, Antippen schließt |
 | A19 | Strg+K bzw. 🔍: „spielsperre“, eine App, ein Medium suchen, Enter | jeweils das richtige Modul, bei App/Medium steht der Name im Suchfeld |
 | A20 | Live: „Spiele heute frei“ für eine Gruppe (ohne anderen Entwurf) | wird gleich veröffentlicht, unter Gruppen → Spielsperre steht die Ausnahme „nur heute“ |
-| A21 | Am iPad quer: 🎓 Unterricht | Vollbild ohne Seitenleiste, Uhr, vier große Reiter; „✕ Unterricht beenden“ führt zum Dashboard |
+| A21 | Am iPad quer: 🎓 Unterricht | Vollbild ohne Seitenleiste, Uhr, fünf große Reiter (mit 📊 Live-Abfrage); „✕ Unterricht beenden“ führt zum Dashboard |
 | A22 | Unterricht → App zeigen (Fach wählen, App antippen) und Medien → Sammlung antippen | QR bildschirmfüllend, Handy-Scan öffnet App bzw. Sammlung |
 | A23 | Live: Unterricht → Spiele „Heute frei“ für eine Klasse, nach 2 Min. Kinder-iPad prüfen, dann „Sperre wieder an“ | Spiele offen bzw. wieder gesperrt; ein offener Admin-Entwurf bleibt erhalten |
 | A24 | Live: Unterricht → Fokus für eine Gruppe mit 2 Apps, 45 Min.; danach „Beenden“ | Startseite der Gruppe zeigt nur die 2 Apps, nach Beenden wieder alle |
@@ -66,6 +66,12 @@ Erst in der Testumgebung, dort wird nichts gespeichert. Den Admin nicht in zwei 
 | A37 | Als „Test“: App-QR zeigen, „Spiele heute frei“ für die Gruppe, Fokus 45 Min. starten und beenden | wirkt wie beim Hauptzugang; im Versionsverlauf (Hauptzugang) steht „👥 Test: …“ |
 | A38 | Hauptzugang: Zugang „Test“ sperren; auf dem Kollegen-Gerät neu laden | Anmeldung verlangt wieder einen Code; danach den Test-Zugang löschen |
 | A39 | System → 🧪 Feature-Schalter | ohne Einträge in `daten/features.json` der Hinweis „keine Funktion hinter einem Schalter“ |
+| A40 | Live (einmalig nach dem Worker-Update): `cloudflare/live-test.html`, Admin-Passwort | alle Schritte grün, „einsatzbereit“ |
+| A41 | Inhalte → 📊 Live-Quizze: „🎲 Aus dem Pool“ → Vokabeln Kl. 5 Unit 1, 5 Fragen, mischen, speichern; zweites Quiz mit 3 eigenen Fragen (eine mit „Zweite Runde“) | beide in der Liste, Bearbeiten zeigt die Fragen |
+| A42 | Unterricht → 📊 Live-Abfrage → Quiz starten; 3 iPads scannen den QR-Code (eins tippt den Code ein) | Beamer zählt „3 dabei“, Kinder sehen „Du bist dabei!“ |
+| A43 | Los, alle antworten, Aufdecken, zweite Runde, Lösung, Nächste Frage … bis zum Ende; dazu eine spontane Ampel | Zähler „3 von 3“, Kinder sehen die Lösung erst beim Aufdecken; Balken, Vergleich, Wortwolke, Zahlenstrahl stimmen |
+| A44 | Beenden; Kinder-iPads; Startseite eines Kinder-iPads | Kinder: „Danke fürs Mitmachen“ mit Bilanz; keine Kachel „Live-Abfrage läuft“ mehr; Rückblick beim Quiz (falls angehakt) |
+| A45 | Quiz im Modus „Selbst“ auf dem ältesten iPad | Rückmeldung richtig/falsch je Frage, Beamer zeigt Fortschritt, „📊 Ergebnis zeigen“ zeigt % richtig |
 | A28 | Motivation → Mein Dorf → Einstellungen | gleiche Felder wie unter App-Einstellungen (Auftragsplätze, Tausche, Baukosten), Änderung wirkt wie bisher |
 | A17 | Live: „Wiederherstellen“ bei der vorletzten Fassung, Veröffentlichen, danach die neueste vorherige Fassung wiederherstellen und veröffentlichen | beide Male „Veröffentlicht“, am Ende ist alles wie vorher (braucht den neuen Worker) |
 
