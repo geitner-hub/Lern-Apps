@@ -267,6 +267,22 @@
     .spiel-pill + .cat-count{margin-left:.5rem;}
     .cat-header .spiel-pill{margin-left:auto;}
 
+    /* ── START-KACHELN (v83) ── iPad hochkant 2 Spalten, quer 3, Handy 1 */
+    #start-raster{max-width:980px;margin:1.2rem auto 1.4rem;padding:0 1.4rem;display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:.8rem;align-items:stretch;grid-auto-flow:row dense;}
+    #start-raster > .sk{max-width:none;margin:0;padding:0;min-width:0;display:flex;flex-direction:column;}
+    #start-raster > .sk:empty{display:none;}
+    #start-raster #lernweg-section{grid-column:1/-1;}                       /* der Lernweg ist der Arbeitsauftrag: volle Breite */
+    #start-raster #heute-section h2,#start-raster #lernweg-section h2{margin:0 0 .45rem;}
+    #start-raster .heute-grid{grid-template-columns:1fr;gap:.5rem;flex:1;align-content:start;}
+    #start-raster .pass-card{flex:1;flex-wrap:wrap;gap:.7rem;align-content:center;}
+    #start-raster .pass-main{flex:1 1 calc(100% - 70px);}
+    #start-raster .pass-side{width:100%;justify-content:space-between;gap:.5rem;padding-top:.5rem;border-top:1px solid var(--border);}
+    #start-raster .event-strip{margin-top:.5rem;}
+    #start-raster .dorf-strip{flex:1;align-content:flex-start;}
+    #start-raster .dorf-strip .dh{width:100%;}
+    #start-raster .aod-card{flex:1;padding:1.6rem 1.2rem 2.8rem;}
+    @media (max-width:640px){#start-raster{padding:0 1rem;gap:.65rem;}}
+
     /* ── LERNWELT-PASS ── */
     #pass-section{max-width:980px;margin:1.2rem auto 1.2rem;padding:0 1.4rem;}
     .pass-card{display:flex;align-items:center;gap:1rem;background:linear-gradient(120deg,#1e1b30 0%,#221d3d 60%,#2a2146 100%);border:1px solid rgba(230,168,23,.22);border-radius:18px;padding:.8rem 1rem .8rem .9rem;box-shadow:0 6px 24px rgba(0,0,0,.35);cursor:pointer;transition:border-color .18s,transform .18s;position:relative;overflow:hidden;}
@@ -480,9 +496,16 @@
     /* Regale (Etappe 6): eine Zeile, seitlich wischen */
   .regal { margin-top: 1rem; }
   .regal-kopf { font-weight: 800; font-size: .92rem; opacity: .85; margin: 0 0 .5rem .2rem; }
-  .regal-zeile { display: grid; grid-auto-flow: column; grid-template-columns: none; grid-auto-columns: minmax(220px, 260px);
-    overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x proximity; padding-bottom: .5rem; -webkit-overflow-scrolling: touch; }
-  .regal-zeile > .app-card { scroll-snap-align: start; }
+  /* Regale brechen um wie das normale Raster (vorher seitwärts scrollend – Kacheln am Rand wurden übersehen) */
+  .regal-zeile { padding-bottom: .25rem; }
+  /* Fächer einklappen (Startseite): Kopf antippen, Zustand je Gerät in lernwelt-start-zu */
+  .cat-header { cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent; }
+  .cat-header:focus-visible { outline: 2px solid var(--cat-color, #6366f1); outline-offset: 4px; border-radius: 8px; }
+  .cat-pfeil { font-size: 1rem; opacity: .7; transition: transform .2s; margin-left: .35rem; }
+  .category.zu .cat-pfeil { transform: rotate(-90deg); }
+  .category.zu > .apps-grid, .category.zu > .regal { display: none !important; }
+  .category.zu .cat-header { margin-bottom: 0; }
+  @media (prefers-reduced-motion: reduce) { .cat-pfeil { transition: none; } }
   body.list-view .regal-zeile { grid-auto-flow: row; grid-auto-columns: auto; grid-template-columns: 1fr; overflow-x: visible; }
 </style>
 </head>
@@ -496,7 +519,7 @@
   </div>
   <p>Klick auf eine App und leg los!</p>
   <div class="header-stats">
-    <span class="hstat">Klasse 5–9</span>
+    <span class="hstat" id="stat-kl">Klasse 5–6</span>
     <span class="hstat" id="stat-apps">… Apps</span>
     <span class="hstat" id="stat-played">… gespielt</span>
   </div>
@@ -510,10 +533,14 @@
 
 <div id="ann-banner" role="status" aria-live="polite"></div>
 
-<div id="lernweg-section" aria-label="Mein Lernweg"></div>
-<div id="pass-section"></div>
-<div id="heute-section" aria-label="Heute für dich"></div>
-<div id="dorf-section"></div>
+<!-- Start-Kacheln: Pass, Lernweg, Heute, Dorf, App des Tages nebeneinander statt untereinander -->
+<div id="start-raster">
+  <div id="lernweg-section" class="sk" aria-label="Mein Lernweg"></div>
+  <div id="pass-section" class="sk"></div>
+  <div id="heute-section" class="sk" aria-label="Heute für dich"></div>
+  <div id="dorf-section" class="sk"></div>
+  <div id="aod-section" class="sk"></div>
+</div>
 
 <div class="filter-bar">
   <div class="fi">
@@ -542,8 +569,6 @@
     <div id="filter-info"></div>
   </div>
 </div>
-
-<div id="aod-section"></div>
 
 <main id="main">
   <div id="no-results"><span class="ni">🔍</span>Keine Apps gefunden.<br><small>Versuche einen anderen Filter.</small></div>
@@ -606,19 +631,21 @@ const QR_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strok
 let CONFIG  = ConfigAPI.migrate({});
 let RESULTS = {};
 let fKl = 'all', fTag = 'all', fQ = '';
+let klVorgabe = false;   // true, sobald die Klasse aus URL, Vorschau oder Antippen feststeht – dann nicht mehr aus dem Pass setzen
 
 // ── URL-Parameter (z. B. index.html?kl=5&tag=Vokabeln&q=rechnen) ──
 (function readUrlParams() {
   const p = new URLSearchParams(location.search);
   const kl = p.get('kl');
-  if (kl && KLASSEN.includes(parseInt(kl, 10))) fKl = String(parseInt(kl, 10));
+  if (kl && KLASSEN.includes(parseInt(kl, 10))) { fKl = String(parseInt(kl, 10)); klVorgabe = true; }
+  if (kl === 'alle') klVorgabe = true;
   if (p.get('tag')) fTag = p.get('tag').slice(0, 40);
   if (p.get('q'))   { fQ = p.get('q').slice(0, 60).toLowerCase(); document.getElementById('search').value = p.get('q').slice(0, 60); }
 })();
 
 function syncUrl() {
   const p = new URLSearchParams();
-  if (fKl !== 'all')  p.set('kl', fKl);
+  if (fKl !== 'all' && fKl !== 'mir') p.set('kl', fKl);
   if (fTag !== 'all') p.set('tag', fTag);
   const qs = p.toString();
   try { history.replaceState(null, '', location.pathname + (qs ? '?' + qs : '')); } catch (e) {}
@@ -641,6 +668,7 @@ async function load() {
   if (vorschau) {
     try { const v = JSON.parse(localStorage.getItem('lernwelt-admin-vorschau') || 'null'); if (v && Array.isArray(v.apps)) CONFIG = ConfigAPI.migrate(v); } catch (e) {}
     fKl = /^\d+$/.test(vorschau) ? vorschau : 'all';
+    klVorgabe = true;
     if (!document.getElementById('vorschau-hinweis')) document.body.insertAdjacentHTML('afterbegin',
       `<div id="vorschau-hinweis" style="position:sticky;top:0;z-index:50;background:#e6a817;color:#1b1300;font:800 .9rem Nunito,system-ui,sans-serif;text-align:center;padding:.45rem .8rem">👁 Vorschau ${fKl === 'all' ? 'für alle Klassen' : 'für Klasse ' + escHtml(fKl)} – so wie im Admin gerade eingestellt (auch Unveröffentlichtes)</div>`);
   }
@@ -752,8 +780,27 @@ function buildFokusBanner() {
 }
 window.addEventListener('lernfreigabe:neu', () => { if (CONFIG && CONFIG.apps && CONFIG.apps.length) buildPage(); });
 
+function vorhandeneKlassen() {
+  const s = new Set();
+  visibleApps().forEach(a => (a.klassen || []).forEach(k => s.add(Number(k))));
+  return KLASSEN.filter(k => s.has(k));
+}
+// Klasse aus dem Pass als Filter (nur einmal, solange nichts anderes gewählt ist)
+function klasseAusPass() {
+  if (klVorgabe || !window.LernPass) return;
+  if (passKlasse()) { fKl = 'mir'; klVorgabe = true; }
+}
+// Klasse aus dem Pass – „Meine Klasse“ zeigt alles bis zu dieser Klasse (Kl. 6 sieht auch Kl. 5)
+function passKlasse() { return window.LernPass && LernPass.hasProfile() ? Number((LernPass.profile() || {}).klasse) || 0 : 0; }
+function klassePasst(kl) {
+  if (fKl === 'all' || !kl.length) return true;                                // ohne Klassen (z. B. Spiele) = für alle
+  if (fKl === 'mir') { const m = passKlasse(); return !m || kl.some(k => Number(k) <= m); }
+  return kl.includes(fKl);
+}
 function updateHeaderStats() {
   const apps = visibleApps();
+  const ks = vorhandeneKlassen(), sk = document.getElementById('stat-kl');
+  if (sk) sk.textContent = fKl === 'mir' ? 'Bis Klasse ' + passKlasse() : fKl !== 'all' ? 'Klasse ' + fKl : ks.length ? 'Klasse ' + ks[0] + (ks.length > 1 ? '–' + ks[ks.length - 1] : '') : 'Alle Klassen';
   document.getElementById('stat-apps').innerHTML = `<strong>${apps.length}</strong> Apps`;
   const played = apps.filter(a => RESULTS[resultKey(a.datei)]).length;
   document.getElementById('stat-played').innerHTML = `<strong>${played}</strong> gespielt`;
@@ -776,7 +823,7 @@ function buildAod() {
   const sec = document.getElementById('aod-section');
   if (!aodApp) { sec.style.display = 'none'; sec.innerHTML = ''; return; }
   const idx = CONFIG.apps.indexOf(aodApp);
-  sec.style.display = 'block';
+  sec.style.display = '';
   sec.innerHTML = `
     <a class="aod-card" href="${escHtml(aodApp.datei)}">
       <span class="aod-badge">⭐ App des Tages</span>
@@ -793,8 +840,10 @@ function buildAod() {
 // ── Klassen-Chips ────────────────────────────────────
 function buildKlassenChips() {
   const wrap = document.getElementById('chips-k');
-  wrap.innerHTML = `<span class="chip all${fKl === 'all' ? ' active' : ''}" data-v="all" role="button" tabindex="0">Alle</span>` +
-    KLASSEN.map(k => `<span class="chip${fKl === String(k) ? ' active' : ''}" data-v="${k}" role="button" tabindex="0">Kl. ${k}</span>`).join('');
+  if (fKl === 'mir' && !passKlasse()) fKl = 'all';
+  wrap.innerHTML = (passKlasse() ? `<span class="chip${fKl === 'mir' ? ' active' : ''}" data-v="mir" role="button" tabindex="0" title="Alles bis Klasse ${passKlasse()}">⭐ Meine Klasse</span>` : '') +
+    `<span class="chip all${fKl === 'all' ? ' active' : ''}" data-v="all" role="button" tabindex="0">Alle</span>` +
+    vorhandeneKlassen().map(k => `<span class="chip${fKl === String(k) ? ' active' : ''}" data-v="${k}" role="button" tabindex="0">Kl. ${k}</span>`).join('');
 }
 
 // ── Seite aufbauen ───────────────────────────────────
@@ -943,6 +992,7 @@ function buildLernwege() {
 }
 
 function buildPage() {
+  klasseAusPass();
   buildPassCard();
   buildHeute();
   buildLernwege();
@@ -967,12 +1017,13 @@ function buildPage() {
     const sec = document.createElement('section');
     sec.className = 'category';
     sec.dataset.cat = fach;
+    if (faecherZu().includes(fach)) sec.classList.add('zu');
     sec.style.cssText = `--cat-color:${kat.color};--cat-color2:${kat.color2}`;
     sec.innerHTML = `
-      <div class="cat-header">
+      <div class="cat-header" role="button" tabindex="0" aria-expanded="${faecherZu().includes(fach) ? 'false' : 'true'}">
         <div class="cat-icon">${kat.icon}</div>
         <span class="cat-title">${escHtml(fach)}</span>
-        <span class="cat-count"></span>
+        <span class="cat-count"></span><span class="cat-pfeil" aria-hidden="true">▾</span>
       </div>
       <div class="apps-grid"></div>`;
     const grid = sec.querySelector('.apps-grid');
@@ -1042,7 +1093,7 @@ function applyFilters() {
     const kl = card.dataset.kl ? card.dataset.kl.split(',') : [];
     const ct = card.dataset.ct ? card.dataset.ct.split('|').map(x => x.toLowerCase()) : [];
     const ok = (!fQ || nm.includes(fQ) || ds.includes(fQ) || fc.includes(fQ))
-            && (fKl === 'all' || kl.includes(fKl))
+            && klassePasst(kl)
             && (fTag === 'all' || ct.includes(fTag.toLowerCase()));
     card.classList.toggle('fhide', !ok);
     if (ok) n++;
@@ -1051,6 +1102,8 @@ function applyFilters() {
     r.style.display = r.querySelector('.app-card:not(.fhide)') ? '' : 'none';
   });
   document.querySelectorAll('#main .category').forEach(cat => {
+    cat.classList.toggle('zu', !fQ && faecherZu().includes(cat.dataset.cat));   // beim Suchen immer alles offen
+    const hk = cat.querySelector('.cat-header'); if (hk) hk.setAttribute('aria-expanded', cat.classList.contains('zu') ? 'false' : 'true');
     const g = cat.querySelector(':scope > .apps-grid');
     if (g) g.style.display = g.querySelector('.app-card:not(.placeholder):not(.fhide)') ? '' : 'none';
     const v = cat.querySelectorAll('.app-card:not(.placeholder):not(.fhide)').length;
@@ -1059,7 +1112,7 @@ function applyFilters() {
     if (cnt) cnt.textContent = v + (v === 1 ? ' App' : ' Apps');
   });
   document.getElementById('filter-info').textContent =
-    (fKl !== 'all' || fTag !== 'all' || fQ) ? `${n} App${n !== 1 ? 's' : ''} gefunden` : '';
+    (/^\d+$/.test(fKl) || fTag !== 'all' || fQ) ? `${n} App${n !== 1 ? 's' : ''} gefunden` : '';
   document.getElementById('no-results').style.display = n === 0 ? 'block' : 'none';
 }
 
@@ -1086,7 +1139,7 @@ function closeQR() {
 }
 function pageUrl() {
   const u = new URL(lwBaseUrl());
-  if (fKl !== 'all') u.searchParams.set('kl', fKl);
+  if (fKl !== 'all' && fKl !== 'mir') u.searchParams.set('kl', fKl);
   return u.href;
 }
 
@@ -1101,7 +1154,7 @@ document.getElementById('qr-copy').addEventListener('click', async e => {
   setTimeout(() => btn.textContent = '🔗 Link kopieren', 1800);
 });
 document.getElementById('page-qr-btn').addEventListener('click', () =>
-  openQR('Lernwelt' + (fKl !== 'all' ? ' · Klasse ' + fKl : ''), pageUrl()));
+  openQR('Lernwelt' + (/^\d+$/.test(fKl) ? ' · Klasse ' + fKl : ''), pageUrl()));
 
 // QR-Buttons in Karten (Klick darf die App NICHT öffnen)
 document.addEventListener('click', e => {
@@ -1130,7 +1183,8 @@ onChip('chips-k', (c, wrap) => {
   wrap.querySelectorAll('.chip').forEach(x => x.classList.remove('active'));
   c.classList.add('active');
   fKl = c.dataset.v;
-  syncUrl(); applyFilters();
+  klVorgabe = true;
+  syncUrl(); updateHeaderStats(); applyFilters();
 });
 onChip('chips-t', (c, wrap) => {
   wrap.querySelectorAll('.chip').forEach(x => { x.classList.remove('active'); x.style.cssText = ''; });
@@ -1143,6 +1197,25 @@ document.getElementById('search').addEventListener('input', e => {
   fQ = e.target.value.trim().toLowerCase();
   applyFilters();
 });
+
+// ── Fächer einklappen (je Gerät gemerkt) ─────────────
+function faecherZu() {
+  try { const l = JSON.parse(localStorage.getItem('lernwelt-start-zu') || '[]'); return Array.isArray(l) ? l : []; } catch (e) { return []; }
+}
+function fachUmschalten(fach) {
+  const l = faecherZu(), i = l.indexOf(fach);
+  if (i >= 0) l.splice(i, 1); else l.push(fach);
+  try { localStorage.setItem('lernwelt-start-zu', JSON.stringify(l.slice(0, 30))); } catch (e) {}
+  applyFilters();
+}
+['click', 'keydown'].forEach(t => document.getElementById('main').addEventListener(t, e => {
+  const h = e.target.closest('.cat-header');
+  if (!h || e.target.closest('a, button')) return;
+  if (e.type === 'keydown' && e.key !== 'Enter' && e.key !== ' ') return;
+  e.preventDefault();
+  const cat = h.closest('.category');
+  if (cat && !fQ) fachUmschalten(cat.dataset.cat);
+}));
 
 // ── Ansicht ──────────────────────────────────────────
 function setView(v) {
@@ -1214,7 +1287,7 @@ let passDraft = null, passLastFocus = null;
 function openPass(mode) {
   passLastFocus = document.activeElement;
   const pr = LernPass.profile() || {};
-  passDraft = { name: pr.name || '', klasse: pr.klasse || (fKl !== 'all' ? Number(fKl) : null) };
+  passDraft = { name: pr.name || '', klasse: pr.klasse || (/^\d+$/.test(fKl) ? Number(fKl) : null) };
   if (mode === 'klasse') passDraft.klasse = LernPass.suggestedClass();
   ward.tryOn = {};
   document.getElementById('pass-modal').classList.add('open');
