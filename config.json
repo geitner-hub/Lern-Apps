@@ -133,6 +133,25 @@
       "aod": false
     },
     {
+      "name": "Meine Insel",
+      "datei": "spiele/insel.html",
+      "fach": "Allgemein",
+      "emoji": "🏝️",
+      "beschreibung": "Löse Quests und baue auf deiner eigenen Insel",
+      "hidden": true,
+      "klassen": [
+        5,
+        6
+      ],
+      "customTags": [
+        {
+          "name": "Spiele",
+          "color": 6
+        }
+      ],
+      "aod": false
+    },
+    {
       "name": "Mathe-Trainer Klasse 5",
       "datei": "apps/mathe/mathe-trainer.html?klasse=5",
       "fach": "Mathematik",
@@ -373,16 +392,22 @@
       "aod": false
     },
     {
-      "name": "Practice \"To Be\"",
-      "datei": "apps/typen/uebung.html?inhalt=en.5.to-be",
+      "name": "Room Detective",
+      "datei": "spiele/room-detective.html",
       "fach": "Englisch",
-      "emoji": "👋",
-      "beschreibung": "am, is oder are? Übe die Formen von „to be“",
+      "emoji": "🕵️",
+      "beschreibung": "Decorate your room or find the thief!",
       "hidden": false,
       "klassen": [
-        5
+        5,
+        6
       ],
-      "customTags": [],
+      "customTags": [
+        {
+          "name": "Spiele",
+          "color": 6
+        }
+      ],
       "aod": false
     },
     {
@@ -467,6 +492,20 @@
       "gruppe": "g-grammar"
     },
     {
+      "name": "Practice \"To Be\"",
+      "datei": "apps/typen/uebung.html?inhalt=en.5.to-be",
+      "fach": "Englisch",
+      "emoji": "👋",
+      "beschreibung": "am, is oder are? Übe die Formen von „to be“",
+      "hidden": false,
+      "klassen": [
+        5
+      ],
+      "customTags": [],
+      "aod": false,
+      "gruppe": "g-grammar"
+    },
+    {
       "name": "Länder finden",
       "datei": "apps/gpg/laender-finder.html",
       "fach": "GPG",
@@ -504,44 +543,6 @@
         6
       ],
       "customTags": [],
-      "aod": false
-    },
-    {
-      "name": "Room Detective",
-      "datei": "spiele/room-detective.html",
-      "fach": "Englisch",
-      "emoji": "🕵️",
-      "beschreibung": "Decorate your room or find the thief!",
-      "hidden": false,
-      "klassen": [
-        5,
-        6
-      ],
-      "customTags": [
-        {
-          "name": "Spiele",
-          "color": 6
-        }
-      ],
-      "aod": false
-    },
-    {
-      "name": "Meine Insel",
-      "datei": "spiele/insel.html",
-      "fach": "Allgemein",
-      "emoji": "🏝️",
-      "beschreibung": "Löse Quests und baue auf deiner eigenen Insel",
-      "hidden": true,
-      "klassen": [
-        5,
-        6
-      ],
-      "customTags": [
-        {
-          "name": "Spiele",
-          "color": 6
-        }
-      ],
       "aod": false
     },
     {
