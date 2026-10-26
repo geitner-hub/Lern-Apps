@@ -29,6 +29,7 @@
 #       Einträge in config.json für apps/typen/uebung.html?inhalt=… haben eine Inhaltsdatei.
 #       Quellen je Aufgabe (Quellen-Detektiv): Bild existiert, Fotos (png/jpg/webp) haben einen „nachweis“,
 #       quellenart ist sach/bild/schrift, Methodenkarten in „hilfe“ haben nr und Farbe #rrggbb.
+#       Typ fall (ganzer Fall): titel, Quelle, karten 1–3 mit muster; Hilfen mit frage und optionen.
 #   13. Die Insel: alle Insel-Dateien (spiele/insel.html, gemeinsam/insel-*.js, daten/insel*.json)
 #       stehen in sw.js NACHLADEN (sonst fehlen sie offline).
 #   14. Die Insel: daten/insel.json ist gültig (Karten, Gebiete, Vorlagen, IDs), und Bewohner-Plätze
@@ -560,6 +561,7 @@ for p in sorted(ROOT.glob('daten/inhalte/*/*.json')):
             FI('hilfe: karte braucht nr und farbe im Format #rrggbb')
     stufen = d.get('stufen')
     if not isinstance(stufen, list) or not stufen: FI('keine stufen'); continue
+    fall_stufen = {s.get('id') for s in stufen if isinstance(s, dict) and not s.get('mix') and (s.get('typ') or typ) == 'fall'}
     for st in stufen:
         sid = st.get('id') if isinstance(st, dict) else None
         wo = f'Stufe {sid}'
@@ -568,6 +570,7 @@ for p in sorted(ROOT.glob('daten/inhalte/*/*.json')):
         if not st.get('titel'): FI(f'{wo}: titel fehlt')
         if st.get('mix'):                                        # Neue Lern-Apps Etappe 6: Mix-Stufe
             for a_ in st.get('aus') or []:
+                if a_ in fall_stufen: H(f'{r}: {wo}: aus nennt den ganzen Fall {a_} – Fälle kommen nie in einen Mix')
                 if not isinstance(a_, str) or not KID.fullmatch(a_): FI(f'{wo}: aus enthält ungültige ID „{a_}“')
                 elif katalog is not None and a_ not in ids: FI(f'{wo}: aus nennt {a_}, das nicht im Katalog steht')
             continue
@@ -577,7 +580,7 @@ for p in sorted(ROOT.glob('daten/inhalte/*/*.json')):
         for x in (auf if isinstance(auf, list) else []):                # Quelle je Aufgabe (Quellen-Detektiv)
             if not isinstance(x, dict) or not (x.get('bild') or x.get('quelltext')): continue
             xt = x.get('typ') or styp
-            if xt not in ('zuordnen', 'sortieren', 'lueckentext', 'markieren', 'eingabe'): FI(f'{wo}: bild/quelltext gibt es nur bei zuordnen, sortieren, lueckentext, markieren, eingabe')
+            if xt not in ('zuordnen', 'sortieren', 'lueckentext', 'markieren', 'eingabe', 'fall'): FI(f'{wo}: bild/quelltext gibt es nur bei zuordnen, sortieren, lueckentext, markieren, eingabe, fall')
             if xt == 'eingabe' and isinstance(x.get('antwort'), (int, float)): H(f'{r}: {wo}: Zahl-Aufgabe mit Quelle – die Quelle wird bei der Zifferntastatur nicht gezeigt')
             b_ = x.get('bild')
             if b_:
@@ -594,6 +597,22 @@ for p in sorted(ROOT.glob('daten/inhalte/*/*.json')):
             if not auf and eigen: continue
         typ_ = styp
         if typ_ in ('lueckentext', 'sortieren', 'eingabe', 'markieren'): pruefe_aufgaben(FI, wo, typ_, auf); continue
+        if typ_ == 'fall':                                       # Quellen-Detektiv Etappe 2: ganzer Fall
+            if not auf: FI(f'{wo}: aufgaben (Fälle) fehlen')
+            for i_, x in enumerate(auf or []):
+                wf = f'{wo}, Fall {i_ + 1}'
+                if not isinstance(x, dict) or not x.get('titel') or not (x.get('bild') or x.get('quelltext')): FI(f'{wf}: braucht titel und bild oder quelltext'); continue
+                if x.get('wortspeicher') is not None and not _texte(x['wortspeicher']): FI(f'{wf}: wortspeicher muss eine Liste von Wörtern sein')
+                ka = x.get('karten')
+                nrs = [k.get('nr') for k in ka if isinstance(k, dict)] if isinstance(ka, list) else []
+                if nrs != [1, 2, 3]: FI(f'{wf}: karten mit nr 1, 2, 3 in dieser Reihenfolge nötig'); continue
+                for k in ka:
+                    if not _texte(k.get('muster')): FI(f'{wf}, Karte {k["nr"]}: muster (Musterantwort) fehlt')
+                    for f_ in ('anfaenge', 'check'):
+                        if k.get(f_) is not None and not _texte(k[f_]): FI(f'{wf}, Karte {k["nr"]}: {f_} muss eine Liste von Texten sein')
+                    for h_ in k.get('hilfen') or []:
+                        if not (isinstance(h_, dict) and h_.get('frage') and _texte(h_.get('optionen'), 2)): FI(f'{wf}, Karte {k["nr"]}: jede Hilfe braucht frage und mindestens 2 optionen')
+            continue
         if typ_ == 'zuordnen':
             paare = [q for x in (auf or []) for q in (x.get('paare') or [])] if auf is not None else st.get('paare') or []
             if auf is not None and not all(isinstance(x, dict) and len(x.get('paare') or []) >= 2 for x in auf): FI(f'{wo}: jede Aufgabe braucht mindestens 2 paare')

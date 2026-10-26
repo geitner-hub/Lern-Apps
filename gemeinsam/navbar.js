@@ -12,6 +12,7 @@
 //      skill: 'einmaleins-7', // Kompetenz-Kennung (optional, für später)
 //      inhalt: 'kopf5-mittel' // geübter Stoff für „Meine Themen“ in den Spielen
 //                             // (optional, String oder Array, z. B. 'vok5:unit1/theme1')
+//      selbst: true     // Selbstkontrolle (z. B. ganzer Fall): zählt nicht für die Spielsperre (optional)
 //      thema: 'ma.5.kopf.mittel' // Themen-ID aus daten/katalog.json (optional, String oder Array).
 //                             // Neue Apps melden nur noch thema; alte Apps dürfen inhalt behalten –
 //                             // der Katalog ordnet beides demselben Thema zu.
@@ -157,6 +158,7 @@
         const inhalt = normInhalt(result && result.inhalt);
         if (inhalt.length) entry.inhalt = inhalt;
         if (thema.length) entry.thema = thema;
+        if (result && result.selbst) entry.selbst = true;  // Selbstkontrolle (Typ „fall“): nicht für die Spielsperre
         // „Meine Themen“: alte Inhalt-IDs, wenn die App welche schickt, sonst die Themen-IDs
         const lern = inhalt.length ? inhalt : thema;
         if (window.LernPass) {

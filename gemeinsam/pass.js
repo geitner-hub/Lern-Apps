@@ -603,8 +603,9 @@
       return { xp: 0, lines: [], blocked: 'fast', pct };
     }
 
-    // Spielsperre (freigabe.js): gute Runden in Lern-Apps heute → today.lr (Live-Abfrage: XP fürs Mitmachen, zählt hier nicht)
-    if (!istSpiel(key) && key !== 'live.html' && pct >= sperrSchwelle()) S.today.lr = (S.today.lr || 0) + 1;
+    // Spielsperre (freigabe.js): gute Runden in Lern-Apps heute → today.lr (Live-Abfrage: XP fürs Mitmachen, zählt hier nicht;
+    // Selbstkontrolle r.selbst – ganzer Fall im Quellen-Detektiv – auch nicht, sonst lohnt Durchklicken)
+    if (!istSpiel(key) && key !== 'live.html' && !r.selbst && pct >= sperrSchwelle()) S.today.lr = (S.today.lr || 0) + 1;
 
     // 2) Runden pro App und Tag
     if (a.day !== day) { a.day = day; a.n = 0; }

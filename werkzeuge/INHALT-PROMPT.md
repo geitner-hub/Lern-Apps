@@ -41,6 +41,9 @@ Regeln:
     dazu eine einfache, selbst gezeichnete SVG-Datei
   - bildwort: `"woerter": [{ "bild": "Emoji", "wort": "…", "de": "…" }]`, `"richtung": "bild-wort" | "wort-bild" | "hoeren"`
   - markieren: `"aufgaben": [{ "satz": "She [go] to school.", "richtig": "goes" }]` – genau ein Wort in [ ]
+  - fall (ganzer Fall zu einer Quelle, Quellen-Detektiv): `"aufgaben": [{ "titel", "bild", "alt", "quellenart": "sach"|"bild"|"schrift",
+    "info", "wortspeicher": [...], "karten": [{ "nr": 1, "hilfen": [{ "frage", "optionen": [...] }], "muster": [2–4 kurze Sätze],
+    "check": [ein Punkt nur für diesen Fall] }, { "nr": 2, … }, { "nr": 3, … }] }]` – Karte 1 Beschreiben, 2 Erklären, 3 Deuten
   - gemischt: `"typ": "gemischt"` im Kopf, dann `"typ"` je Stufe; einzelne Aufgaben dürfen einen eigenen `"typ"` haben
     (lueckentext, sortieren, eingabe, markieren). Mix-Stufe: `{ "id", "titel", "mix": true }`
 - Jede Aufgabe gern mit `"tipp"` (kurzer Hinweis) und `"erklaerung"` (warum es so richtig ist, ein Satz).
