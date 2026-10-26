@@ -123,8 +123,8 @@
    "anweisung": "Ist das eine Quelle oder eine Darstellung?",
    "aufgaben": [
     {
-     "bild": "q-faustkeil.svg",
-     "alt": "Ein spitzer Stein mit scharfen Kanten, etwa 15 cm lang",
+     "bild": "foto-faustkeil.jpg",
+     "alt": "Ein heller Faustkeil aus Feuerstein vor schwarzem Hintergrund, unten spitz",
      "quellenart": "sach",
      "text": "Das ist eine ___.",
      "antwort": "Quelle",
@@ -133,11 +133,12 @@
       "Darstellung"
      ],
      "erklaerung": "Der Faustkeil ist ein echter Fund aus der Steinzeit. Er ist eine Quelle.",
-     "tipp": "Wurde es damals gemacht – oder heute?"
+     "tipp": "Wurde es damals gemacht – oder heute?",
+     "nachweis": "Foto: Daderot, gemeinfrei, Wikimedia Commons („Acheulean hand axe … Canterbury Museum“)"
     },
     {
-     "bild": "q-hoehlenmalerei.svg",
-     "alt": "Tiere und eine Hand, an eine Felswand gemalt",
+     "bild": "foto-hoehle-haende.jpg",
+     "alt": "Viele Umrisse von Händen in Rot, Weiß und Schwarz an einer Felswand",
      "quellenart": "bild",
      "text": "Das ist eine ___.",
      "antwort": "Quelle",
@@ -145,8 +146,9 @@
       "Quelle",
       "Darstellung"
      ],
-     "erklaerung": "Menschen der Steinzeit haben die Tiere selbst an die Höhlenwand gemalt. Das Bild ist eine Quelle.",
-     "tipp": "Wurde es damals gemacht – oder heute?"
+     "erklaerung": "Menschen der Steinzeit haben ihre Hände selbst an die Felswand gemalt. Das Bild ist eine Quelle.",
+     "tipp": "Wurde es damals gemacht – oder heute?",
+     "nachweis": "Foto: Mariano, gemeinfrei, Wikimedia Commons („SantaCruz-CuevaManos-P2210651b.jpg“)"
     },
     {
      "bild": "q-dorf-zeichnung.svg",
@@ -185,8 +187,8 @@
      "tipp": "Wurde es damals gemacht – oder heute?"
     },
     {
-     "bild": "q-tongefaess.svg",
-     "alt": "Ein rundes Gefäß aus Ton mit Linien und Punkten",
+     "bild": "foto-bandkeramik.jpg",
+     "alt": "Schwarz-Weiß-Foto: eine runde Schale aus Ton mit Bändern aus vielen kleinen Punkten",
      "quellenart": "sach",
      "text": "Das ist eine ___.",
      "antwort": "Quelle",
@@ -195,11 +197,12 @@
       "Darstellung"
      ],
      "erklaerung": "Das Tongefäß haben Menschen in der Jungsteinzeit gemacht. Es ist eine Quelle.",
-     "tipp": "Wurde es damals gemacht – oder heute?"
+     "tipp": "Wurde es damals gemacht – oder heute?",
+     "nachweis": "Foto: Encyklopedia Powszechna PWN (1975), gemeinfrei, Wikimedia Commons („01975 0037 Gefäße der Linearbandkeramische Kultur.jpg“)"
     },
     {
-     "bild": "q-knochennadel.svg",
-     "alt": "Eine dünne Nadel aus Knochen mit einem Loch",
+     "bild": "foto-knochennadel.jpg",
+     "alt": "Eine schmale Nadel aus Knochen mit einem Loch an einem Ende, vor schwarzem Hintergrund",
      "quellenart": "sach",
      "text": "Das ist eine ___.",
      "antwort": "Quelle",
@@ -208,7 +211,8 @@
       "Darstellung"
      ],
      "erklaerung": "Die Nadel ist ein echter Fund aus der Steinzeit. Sie ist eine Quelle.",
-     "tipp": "Wurde es damals gemacht – oder heute?"
+     "tipp": "Wurde es damals gemacht – oder heute?",
+     "nachweis": "Foto: Vassil, CC0, Wikimedia Commons („Aiguille Paléolithique Musée Saint-Remi 21092016.jpg“)"
     },
     {
      "bild": "q-brief.svg",
@@ -246,8 +250,8 @@
    "anweisung": "Welche Art von Quelle ist das?",
    "aufgaben": [
     {
-     "bild": "q-faustkeil.svg",
-     "alt": "Ein spitzer Stein mit scharfen Kanten, etwa 15 cm lang",
+     "bild": "foto-faustkeil.jpg",
+     "alt": "Ein heller Faustkeil aus Feuerstein vor schwarzem Hintergrund, unten spitz",
      "quellenart": "sach",
      "text": "Das ist eine ___.",
      "antwort": "Sachquelle",
@@ -257,11 +261,12 @@
       "Bildquelle",
       "Schriftquelle"
      ],
-     "tipp": "Ein Gegenstand? Ein Bild? Ein Text?"
+     "tipp": "Ein Gegenstand? Ein Bild? Ein Text?",
+     "nachweis": "Foto: Daderot, gemeinfrei, Wikimedia Commons („Acheulean hand axe … Canterbury Museum“)"
     },
     {
-     "bild": "q-speerspitze.svg",
-     "alt": "Eine kleine spitze Steinspitze, etwa 5 cm lang",
+     "bild": "foto-pfeilspitze.jpg",
+     "alt": "Eine kleine Pfeilspitze aus Feuerstein in Form eines Dreiecks mit zwei Zacken unten",
      "quellenart": "sach",
      "text": "Das ist eine ___.",
      "antwort": "Sachquelle",
@@ -271,11 +276,12 @@
       "Bildquelle",
       "Schriftquelle"
      ],
-     "tipp": "Ein Gegenstand? Ein Bild? Ein Text?"
+     "tipp": "Ein Gegenstand? Ein Bild? Ein Text?",
+     "nachweis": "Foto: Justin Gawke, Hunt Museum, CC0, Wikimedia Commons („Hollow based Arrowhead.jpg“)"
     },
     {
-     "bild": "q-tongefaess.svg",
-     "alt": "Ein rundes Gefäß aus Ton mit Linien und Punkten",
+     "bild": "foto-bandkeramik.jpg",
+     "alt": "Schwarz-Weiß-Foto: eine runde Schale aus Ton mit Bändern aus vielen kleinen Punkten",
      "quellenart": "sach",
      "text": "Das ist eine ___.",
      "antwort": "Sachquelle",
@@ -285,11 +291,12 @@
       "Bildquelle",
       "Schriftquelle"
      ],
-     "tipp": "Ein Gegenstand? Ein Bild? Ein Text?"
+     "tipp": "Ein Gegenstand? Ein Bild? Ein Text?",
+     "nachweis": "Foto: Encyklopedia Powszechna PWN (1975), gemeinfrei, Wikimedia Commons („01975 0037 Gefäße der Linearbandkeramische Kultur.jpg“)"
     },
     {
-     "bild": "q-mahlstein.svg",
-     "alt": "Ein großer flacher Stein, darauf ein kleiner Stein, daneben Körner",
+     "bild": "foto-mahlstein.jpg",
+     "alt": "Ein großer flacher Stein mit einer Mulde, darauf ein runder kleiner Stein – von oben und von der Seite",
      "quellenart": "sach",
      "text": "Das ist eine ___.",
      "antwort": "Sachquelle",
@@ -299,7 +306,8 @@
       "Bildquelle",
       "Schriftquelle"
      ],
-     "tipp": "Ein Gegenstand? Ein Bild? Ein Text?"
+     "tipp": "Ein Gegenstand? Ein Bild? Ein Text?",
+     "nachweis": "Foto: Birmingham Museums Trust, Susheela Burford, CC BY 2.0, Wikimedia Commons („A Neolithic Saddle Quern and Upper Stone (FindID 1016166).jpg“)"
     },
     {
      "bild": "q-schultasche.svg",
@@ -316,8 +324,8 @@
      "tipp": "Ein Gegenstand? Ein Bild? Ein Text?"
     },
     {
-     "bild": "q-hoehlenmalerei.svg",
-     "alt": "Tiere und eine Hand, an eine Felswand gemalt",
+     "bild": "foto-hoehle-haende.jpg",
+     "alt": "Viele Umrisse von Händen in Rot, Weiß und Schwarz an einer Felswand",
      "quellenart": "bild",
      "text": "Das ist eine ___.",
      "antwort": "Bildquelle",
@@ -327,7 +335,8 @@
       "Bildquelle",
       "Schriftquelle"
      ],
-     "tipp": "Ein Gegenstand? Ein Bild? Ein Text?"
+     "tipp": "Ein Gegenstand? Ein Bild? Ein Text?",
+     "nachweis": "Foto: Mariano, gemeinfrei, Wikimedia Commons („SantaCruz-CuevaManos-P2210651b.jpg“)"
     },
     {
      "bild": "q-foto-alt.svg",
@@ -385,8 +394,8 @@
    "anweisung": "Was sieht man wirklich – und was denkt man sich nur dazu?",
    "aufgaben": [
     {
-     "bild": "q-faustkeil.svg",
-     "alt": "Ein spitzer Stein mit scharfen Kanten, etwa 15 cm lang",
+     "bild": "foto-faustkeil.jpg",
+     "alt": "Ein heller Faustkeil aus Feuerstein vor schwarzem Hintergrund, unten spitz",
      "quellenart": "sach",
      "frage": "Was sieht man wirklich?",
      "paare": [
@@ -403,41 +412,43 @@
        "denke ich mir dazu"
       ]
      ],
-     "tipp": "Beim Beschreiben schreibst du nur, was du wirklich siehst."
+     "tipp": "Beim Beschreiben schreibst du nur, was du wirklich siehst.",
+     "nachweis": "Foto: Daderot, gemeinfrei, Wikimedia Commons („Acheulean hand axe … Canterbury Museum“)"
     },
     {
-     "bild": "q-hoehlenmalerei.svg",
-     "alt": "Tiere und eine Hand, an eine Felswand gemalt",
+     "bild": "foto-hoehle-haende.jpg",
+     "alt": "Viele Umrisse von Händen in Rot, Weiß und Schwarz an einer Felswand",
      "quellenart": "bild",
      "frage": "Was sieht man wirklich?",
      "paare": [
       [
-       "Man sieht Tiere in Rot und Schwarz.",
+       "Man sieht viele Hände in Rot, Weiß und Schwarz.",
        "sehe ich wirklich"
       ],
       [
-       "Man sieht den Abdruck einer Hand.",
+       "Die Hände sind an einer Felswand.",
        "sehe ich wirklich"
       ],
       [
-       "Die Menschen wollten Glück bei der Jagd.",
+       "Die Menschen wollten zeigen: Wir waren hier.",
        "denke ich mir dazu"
       ]
      ],
-     "tipp": "Beim Beschreiben schreibst du nur, was du wirklich siehst."
+     "tipp": "Beim Beschreiben schreibst du nur, was du wirklich siehst.",
+     "nachweis": "Foto: Mariano, gemeinfrei, Wikimedia Commons („SantaCruz-CuevaManos-P2210651b.jpg“)"
     },
     {
-     "bild": "q-tongefaess.svg",
-     "alt": "Ein rundes Gefäß aus Ton mit Linien und Punkten",
+     "bild": "foto-bandkeramik.jpg",
+     "alt": "Schwarz-Weiß-Foto: eine runde Schale aus Ton mit Bändern aus vielen kleinen Punkten",
      "quellenart": "sach",
      "frage": "Was sieht man wirklich?",
      "paare": [
       [
-       "Das Gefäß hat Wellenlinien.",
+       "Die Schale hat Bänder aus vielen kleinen Punkten.",
        "sehe ich wirklich"
       ],
       [
-       "Es ist bauchig und rund.",
+       "Sie ist bauchig und rund.",
        "sehe ich wirklich"
       ],
       [
@@ -445,11 +456,12 @@
        "denke ich mir dazu"
       ]
      ],
-     "tipp": "Beim Beschreiben schreibst du nur, was du wirklich siehst."
+     "tipp": "Beim Beschreiben schreibst du nur, was du wirklich siehst.",
+     "nachweis": "Foto: Encyklopedia Powszechna PWN (1975), gemeinfrei, Wikimedia Commons („01975 0037 Gefäße der Linearbandkeramische Kultur.jpg“)"
     },
     {
-     "bild": "q-mahlstein.svg",
-     "alt": "Ein großer flacher Stein, darauf ein kleiner Stein, daneben Körner",
+     "bild": "foto-mahlstein.jpg",
+     "alt": "Ein großer flacher Stein mit einer Mulde, darauf ein runder kleiner Stein – von oben und von der Seite",
      "quellenart": "sach",
      "frage": "Was sieht man wirklich?",
      "paare": [
@@ -458,7 +470,7 @@
        "sehe ich wirklich"
       ],
       [
-       "Daneben liegen Körner.",
+       "Der große Stein hat in der Mitte eine Mulde.",
        "sehe ich wirklich"
       ],
       [
@@ -466,16 +478,17 @@
        "denke ich mir dazu"
       ]
      ],
-     "tipp": "Beim Beschreiben schreibst du nur, was du wirklich siehst."
+     "tipp": "Beim Beschreiben schreibst du nur, was du wirklich siehst.",
+     "nachweis": "Foto: Birmingham Museums Trust, Susheela Burford, CC BY 2.0, Wikimedia Commons („A Neolithic Saddle Quern and Upper Stone (FindID 1016166).jpg“)"
     },
     {
-     "bild": "q-knochennadel.svg",
-     "alt": "Eine dünne Nadel aus Knochen mit einem Loch",
+     "bild": "foto-knochennadel.jpg",
+     "alt": "Eine schmale Nadel aus Knochen mit einem Loch an einem Ende, vor schwarzem Hintergrund",
      "quellenart": "sach",
      "frage": "Was sieht man wirklich?",
      "paare": [
       [
-       "Die Nadel hat oben ein Loch.",
+       "Die Nadel hat an einem Ende ein Loch.",
        "sehe ich wirklich"
       ],
       [
@@ -487,7 +500,8 @@
        "denke ich mir dazu"
       ]
      ],
-     "tipp": "Beim Beschreiben schreibst du nur, was du wirklich siehst."
+     "tipp": "Beim Beschreiben schreibst du nur, was du wirklich siehst.",
+     "nachweis": "Foto: Vassil, CC0, Wikimedia Commons („Aiguille Paléolithique Musée Saint-Remi 21092016.jpg“)"
     },
     {
      "bild": "q-foto-alt.svg",
@@ -520,8 +534,8 @@
    "anweisung": "Wähle die passende Erklärung.",
    "aufgaben": [
     {
-     "bild": "q-faustkeil.svg",
-     "alt": "Ein spitzer Stein mit scharfen Kanten, etwa 15 cm lang",
+     "bild": "foto-faustkeil.jpg",
+     "alt": "Ein heller Faustkeil aus Feuerstein vor schwarzem Hintergrund, unten spitz",
      "quellenart": "sach",
      "text": "Wofür wurde es benutzt? Man benutzte ihn, um zu ___.",
      "antwort": "schneiden, schaben und hacken",
@@ -531,11 +545,12 @@
       "Musik machen"
      ],
      "erklaerung": "Der Faustkeil war ein Werkzeug für viele Arbeiten: schneiden, schaben, hacken.",
-     "tipp": "Denk an das, was du im Unterricht gelernt hast."
+     "tipp": "Denk an das, was du im Unterricht gelernt hast.",
+     "nachweis": "Foto: Daderot, gemeinfrei, Wikimedia Commons („Acheulean hand axe … Canterbury Museum“)"
     },
     {
-     "bild": "q-speerspitze.svg",
-     "alt": "Eine kleine spitze Steinspitze, etwa 5 cm lang",
+     "bild": "foto-pfeilspitze.jpg",
+     "alt": "Eine kleine Pfeilspitze aus Feuerstein in Form eines Dreiecks mit zwei Zacken unten",
      "quellenart": "sach",
      "text": "Wofür wurde es benutzt? Man benutzte sie, um ___.",
      "antwort": "Tiere zu jagen",
@@ -544,12 +559,13 @@
       "Getreide zu mahlen",
       "Kleidung zu nähen"
      ],
-     "erklaerung": "Die Spitze steckte an einem Speer oder Pfeil. Damit jagte man Tiere.",
-     "tipp": "Denk an das, was du im Unterricht gelernt hast."
+     "erklaerung": "Die Spitze steckte vorne an einem Pfeil. Mit Pfeil und Bogen jagte man Tiere.",
+     "tipp": "Denk an das, was du im Unterricht gelernt hast.",
+     "nachweis": "Foto: Justin Gawke, Hunt Museum, CC0, Wikimedia Commons („Hollow based Arrowhead.jpg“)"
     },
     {
-     "bild": "q-knochennadel.svg",
-     "alt": "Eine dünne Nadel aus Knochen mit einem Loch",
+     "bild": "foto-knochennadel.jpg",
+     "alt": "Eine schmale Nadel aus Knochen mit einem Loch an einem Ende, vor schwarzem Hintergrund",
      "quellenart": "sach",
      "text": "Wofür wurde es benutzt? Man benutzte sie, um ___.",
      "antwort": "Kleidung aus Fell zu nähen",
@@ -559,11 +575,12 @@
       "Feuer zu machen"
      ],
      "erklaerung": "Mit der Nadel nähte man Felle zu Kleidung zusammen.",
-     "tipp": "Denk an das, was du im Unterricht gelernt hast."
+     "tipp": "Denk an das, was du im Unterricht gelernt hast.",
+     "nachweis": "Foto: Vassil, CC0, Wikimedia Commons („Aiguille Paléolithique Musée Saint-Remi 21092016.jpg“)"
     },
     {
-     "bild": "q-tongefaess.svg",
-     "alt": "Ein rundes Gefäß aus Ton mit Linien und Punkten",
+     "bild": "foto-bandkeramik.jpg",
+     "alt": "Schwarz-Weiß-Foto: eine runde Schale aus Ton mit Bändern aus vielen kleinen Punkten",
      "quellenart": "sach",
      "text": "Wofür wurde es benutzt? Man benutzte es, um ___.",
      "antwort": "Vorräte aufzubewahren",
@@ -573,11 +590,12 @@
       "Felle zu nähen"
      ],
      "erklaerung": "In Gefäßen aus Ton bewahrte man Vorräte auf und kochte darin.",
-     "tipp": "Denk an das, was du im Unterricht gelernt hast."
+     "tipp": "Denk an das, was du im Unterricht gelernt hast.",
+     "nachweis": "Foto: Encyklopedia Powszechna PWN (1975), gemeinfrei, Wikimedia Commons („01975 0037 Gefäße der Linearbandkeramische Kultur.jpg“)"
     },
     {
-     "bild": "q-mahlstein.svg",
-     "alt": "Ein großer flacher Stein, darauf ein kleiner Stein, daneben Körner",
+     "bild": "foto-mahlstein.jpg",
+     "alt": "Ein großer flacher Stein mit einer Mulde, darauf ein runder kleiner Stein – von oben und von der Seite",
      "quellenart": "sach",
      "text": "Wofür wurde es benutzt? Man benutzte ihn, um ___.",
      "antwort": "Getreide zu Mehl zu mahlen",
@@ -587,7 +605,8 @@
       "Höhlen zu bemalen"
      ],
      "erklaerung": "Mit dem kleinen Stein rieb man die Körner auf dem großen Stein zu Mehl.",
-     "tipp": "Denk an das, was du im Unterricht gelernt hast."
+     "tipp": "Denk an das, was du im Unterricht gelernt hast.",
+     "nachweis": "Foto: Birmingham Museums Trust, Susheela Burford, CC BY 2.0, Wikimedia Commons („A Neolithic Saddle Quern and Upper Stone (FindID 1016166).jpg“)"
     },
     {
      "bild": "q-schultasche.svg",
@@ -604,18 +623,19 @@
      "tipp": "Denk an das, was du im Unterricht gelernt hast."
     },
     {
-     "bild": "q-hoehlenmalerei.svg",
-     "alt": "Tiere und eine Hand, an eine Felswand gemalt",
+     "bild": "foto-hoehle-haende.jpg",
+     "alt": "Viele Umrisse von Händen in Rot, Weiß und Schwarz an einer Felswand",
      "quellenart": "bild",
-     "text": "Wofür wurde es gemacht? Man hat es gemalt, um ___.",
-     "antwort": "Tiere zu zeigen, die wichtig waren",
+     "text": "Wofür wurde es gemacht? Vielleicht hat man die Hände gemalt, um ___.",
+     "antwort": "zu zeigen: Wir waren hier",
      "optionen": [
-      "Tiere zu zeigen, die wichtig waren",
+      "zu zeigen: Wir waren hier",
       "die Höhle zu verkaufen",
-      "den Weg zu zeigen"
+      "den Weg zum Supermarkt zu zeigen"
      ],
-     "erklaerung": "Warum genau, wissen wir nicht sicher. Die Tiere waren für die Menschen aber sehr wichtig.",
-     "tipp": "Denk an das, was du im Unterricht gelernt hast."
+     "erklaerung": "Warum genau, wissen wir nicht sicher. Vielleicht wollten die Menschen zeigen, dass sie an diesem Ort waren.",
+     "tipp": "Denk an das, was du im Unterricht gelernt hast.",
+     "nachweis": "Foto: Mariano, gemeinfrei, Wikimedia Commons („SantaCruz-CuevaManos-P2210651b.jpg“)"
     },
     {
      "bild": "q-brief.svg",
@@ -655,8 +675,8 @@
    "anweisung": "Welcher Schluss passt? Die anderen sind zu weit hergeholt.",
    "aufgaben": [
     {
-     "bild": "q-faustkeil.svg",
-     "alt": "Ein spitzer Stein mit scharfen Kanten, etwa 15 cm lang",
+     "bild": "foto-faustkeil.jpg",
+     "alt": "Ein heller Faustkeil aus Feuerstein vor schwarzem Hintergrund, unten spitz",
      "quellenart": "sach",
      "text": "Daran erkennt man, dass die Menschen ___.",
      "antwort": "Werkzeuge aus Stein herstellen konnten",
@@ -666,11 +686,12 @@
       "alle in Häusern wohnten"
      ],
      "erklaerung": "Der Faustkeil zeigt: Die Menschen machten Werkzeuge aus Stein. Über Metall oder Häuser sagt er nichts.",
-     "tipp": "Welcher Satz passt genau zur Quelle – ohne zu übertreiben?"
+     "tipp": "Welcher Satz passt genau zur Quelle – ohne zu übertreiben?",
+     "nachweis": "Foto: Daderot, gemeinfrei, Wikimedia Commons („Acheulean hand axe … Canterbury Museum“)"
     },
     {
-     "bild": "q-speerspitze.svg",
-     "alt": "Eine kleine spitze Steinspitze, etwa 5 cm lang",
+     "bild": "foto-pfeilspitze.jpg",
+     "alt": "Eine kleine Pfeilspitze aus Feuerstein in Form eines Dreiecks mit zwei Zacken unten",
      "quellenart": "sach",
      "text": "Daran erkennt man, dass die Menschen ___.",
      "antwort": "Tiere jagten",
@@ -680,11 +701,12 @@
       "auf Pferden ritten"
      ],
      "erklaerung": "Die Spitze zeigt die Jagd. Ob sie nur Fleisch aßen, verrät sie nicht.",
-     "tipp": "Welcher Satz passt genau zur Quelle – ohne zu übertreiben?"
+     "tipp": "Welcher Satz passt genau zur Quelle – ohne zu übertreiben?",
+     "nachweis": "Foto: Justin Gawke, Hunt Museum, CC0, Wikimedia Commons („Hollow based Arrowhead.jpg“)"
     },
     {
-     "bild": "q-knochennadel.svg",
-     "alt": "Eine dünne Nadel aus Knochen mit einem Loch",
+     "bild": "foto-knochennadel.jpg",
+     "alt": "Eine schmale Nadel aus Knochen mit einem Loch an einem Ende, vor schwarzem Hintergrund",
      "quellenart": "sach",
      "text": "Daran erkennt man, dass die Menschen ___.",
      "antwort": "Kleidung nähten",
@@ -694,11 +716,12 @@
       "nie gefroren haben"
      ],
      "erklaerung": "Die Nadel zeigt: Die Menschen nähten Kleidung. Mehr verrät sie nicht.",
-     "tipp": "Welcher Satz passt genau zur Quelle – ohne zu übertreiben?"
+     "tipp": "Welcher Satz passt genau zur Quelle – ohne zu übertreiben?",
+     "nachweis": "Foto: Vassil, CC0, Wikimedia Commons („Aiguille Paléolithique Musée Saint-Remi 21092016.jpg“)"
     },
     {
-     "bild": "q-tongefaess.svg",
-     "alt": "Ein rundes Gefäß aus Ton mit Linien und Punkten",
+     "bild": "foto-bandkeramik.jpg",
+     "alt": "Schwarz-Weiß-Foto: eine runde Schale aus Ton mit Bändern aus vielen kleinen Punkten",
      "quellenart": "sach",
      "text": "Daran erkennt man, dass die Menschen ___.",
      "antwort": "Vorräte aufbewahrten",
@@ -708,11 +731,12 @@
       "jeden Tag Suppe aßen"
      ],
      "erklaerung": "Das Gefäß zeigt: Es gab Vorräte. Was es jeden Tag zu essen gab, wissen wir daraus nicht.",
-     "tipp": "Welcher Satz passt genau zur Quelle – ohne zu übertreiben?"
+     "tipp": "Welcher Satz passt genau zur Quelle – ohne zu übertreiben?",
+     "nachweis": "Foto: Encyklopedia Powszechna PWN (1975), gemeinfrei, Wikimedia Commons („01975 0037 Gefäße der Linearbandkeramische Kultur.jpg“)"
     },
     {
-     "bild": "q-mahlstein.svg",
-     "alt": "Ein großer flacher Stein, darauf ein kleiner Stein, daneben Körner",
+     "bild": "foto-mahlstein.jpg",
+     "alt": "Ein großer flacher Stein mit einer Mulde, darauf ein runder kleiner Stein – von oben und von der Seite",
      "quellenart": "sach",
      "text": "Daran erkennt man, dass die Menschen ___.",
      "antwort": "Getreide anbauten und verarbeiteten",
@@ -722,21 +746,23 @@
       "kein Fleisch mehr aßen"
      ],
      "erklaerung": "Der Mahlstein zeigt: Die Menschen hatten Getreide. Bäckereien gab es noch nicht.",
-     "tipp": "Welcher Satz passt genau zur Quelle – ohne zu übertreiben?"
+     "tipp": "Welcher Satz passt genau zur Quelle – ohne zu übertreiben?",
+     "nachweis": "Foto: Birmingham Museums Trust, Susheela Burford, CC BY 2.0, Wikimedia Commons („A Neolithic Saddle Quern and Upper Stone (FindID 1016166).jpg“)"
     },
     {
-     "bild": "q-hoehlenmalerei.svg",
-     "alt": "Tiere und eine Hand, an eine Felswand gemalt",
+     "bild": "foto-hoehle-haende.jpg",
+     "alt": "Viele Umrisse von Händen in Rot, Weiß und Schwarz an einer Felswand",
      "quellenart": "bild",
      "text": "Daran erkennt man, dass die Menschen ___.",
-     "antwort": "malen konnten und Tiere wichtig fanden",
+     "antwort": "Farben herstellen und damit malen konnten",
      "optionen": [
-      "malen konnten und Tiere wichtig fanden",
+      "Farben herstellen und damit malen konnten",
       "nur in Höhlen wohnten",
       "Bilder verkauften"
      ],
-     "erklaerung": "Das Bild zeigt Tiere, gemalt von Menschen. Dass sie nur in Höhlen wohnten, verrät es nicht.",
-     "tipp": "Welcher Satz passt genau zur Quelle – ohne zu übertreiben?"
+     "erklaerung": "Das Bild zeigt: Die Menschen hatten Farben und malten damit. Dass sie nur in Höhlen wohnten, verrät es nicht.",
+     "tipp": "Welcher Satz passt genau zur Quelle – ohne zu übertreiben?",
+     "nachweis": "Foto: Mariano, gemeinfrei, Wikimedia Commons („SantaCruz-CuevaManos-P2210651b.jpg“)"
     },
     {
      "bild": "q-schultasche.svg",
@@ -767,8 +793,8 @@
    "anweisung": "Ordne jeden Satz der richtigen Karte zu.",
    "aufgaben": [
     {
-     "bild": "q-faustkeil.svg",
-     "alt": "Ein spitzer Stein mit scharfen Kanten, etwa 15 cm lang",
+     "bild": "foto-faustkeil.jpg",
+     "alt": "Ein heller Faustkeil aus Feuerstein vor schwarzem Hintergrund, unten spitz",
      "quellenart": "sach",
      "frage": "Zu welcher Karte gehört der Satz?",
      "paare": [
@@ -784,16 +810,17 @@
        "Die Menschen konnten Werkzeuge aus Stein machen.",
        "3 Deuten"
       ]
-     ]
+     ],
+     "nachweis": "Foto: Daderot, gemeinfrei, Wikimedia Commons („Acheulean hand axe … Canterbury Museum“)"
     },
     {
-     "bild": "q-tongefaess.svg",
-     "alt": "Ein rundes Gefäß aus Ton mit Linien und Punkten",
+     "bild": "foto-bandkeramik.jpg",
+     "alt": "Schwarz-Weiß-Foto: eine runde Schale aus Ton mit Bändern aus vielen kleinen Punkten",
      "quellenart": "sach",
      "frage": "Zu welcher Karte gehört der Satz?",
      "paare": [
       [
-       "Ich sehe ein rundes Gefäß mit Wellenlinien.",
+       "Ich sehe eine runde Schale mit Punkt-Bändern.",
        "1 Beschreiben"
       ],
       [
@@ -804,16 +831,17 @@
        "Die Menschen hatten Vorräte und blieben an einem Ort.",
        "3 Deuten"
       ]
-     ]
+     ],
+     "nachweis": "Foto: Encyklopedia Powszechna PWN (1975), gemeinfrei, Wikimedia Commons („01975 0037 Gefäße der Linearbandkeramische Kultur.jpg“)"
     },
     {
-     "bild": "q-mahlstein.svg",
-     "alt": "Ein großer flacher Stein, darauf ein kleiner Stein, daneben Körner",
+     "bild": "foto-mahlstein.jpg",
+     "alt": "Ein großer flacher Stein mit einer Mulde, darauf ein runder kleiner Stein – von oben und von der Seite",
      "quellenart": "sach",
      "frage": "Zu welcher Karte gehört der Satz?",
      "paare": [
       [
-       "Ich sehe einen flachen Stein, einen kleinen Stein und Körner.",
+       "Ich sehe einen flachen Stein und darauf einen kleinen runden Stein.",
        "1 Beschreiben"
       ],
       [
@@ -824,51 +852,54 @@
        "Die Menschen bauten Getreide an.",
        "3 Deuten"
       ]
-     ]
+     ],
+     "nachweis": "Foto: Birmingham Museums Trust, Susheela Burford, CC BY 2.0, Wikimedia Commons („A Neolithic Saddle Quern and Upper Stone (FindID 1016166).jpg“)"
     },
     {
-     "bild": "q-hoehlenmalerei.svg",
-     "alt": "Tiere und eine Hand, an eine Felswand gemalt",
+     "bild": "foto-hoehle-haende.jpg",
+     "alt": "Viele Umrisse von Händen in Rot, Weiß und Schwarz an einer Felswand",
      "quellenart": "bild",
      "frage": "Zu welcher Karte gehört der Satz?",
      "paare": [
       [
-       "Ich sehe Tiere und eine Hand an einer Felswand.",
+       "Ich sehe viele bunte Hände an einer Felswand.",
        "1 Beschreiben"
       ],
       [
-       "Man malte die Tiere, vielleicht für Glück bei der Jagd.",
+       "Man malte die Hände, vielleicht um zu zeigen: Wir waren hier.",
        "2 Erklären"
       ],
       [
-       "Tiere waren für die Menschen sehr wichtig.",
+       "Die Menschen konnten Farben herstellen und malen.",
        "3 Deuten"
       ]
-     ]
+     ],
+     "nachweis": "Foto: Mariano, gemeinfrei, Wikimedia Commons („SantaCruz-CuevaManos-P2210651b.jpg“)"
     },
     {
-     "bild": "q-speerspitze.svg",
-     "alt": "Eine kleine spitze Steinspitze, etwa 5 cm lang",
+     "bild": "foto-pfeilspitze.jpg",
+     "alt": "Eine kleine Pfeilspitze aus Feuerstein in Form eines Dreiecks mit zwei Zacken unten",
      "quellenart": "sach",
      "frage": "Zu welcher Karte gehört der Satz?",
      "paare": [
       [
-       "Ich sehe eine kleine, spitze Steinspitze.",
+       "Ich sehe eine kleine Spitze aus Stein mit zwei Zacken.",
        "1 Beschreiben"
       ],
       [
-       "Man steckte sie an einen Speer, um zu jagen.",
+       "Man steckte sie an einen Pfeil, um zu jagen.",
        "2 Erklären"
       ],
       [
-       "Die Menschen lebten von der Jagd.",
+       "Die Menschen lebten auch von der Jagd.",
        "3 Deuten"
       ]
-     ]
+     ],
+     "nachweis": "Foto: Justin Gawke, Hunt Museum, CC0, Wikimedia Commons („Hollow based Arrowhead.jpg“)"
     },
     {
-     "bild": "q-knochennadel.svg",
-     "alt": "Eine dünne Nadel aus Knochen mit einem Loch",
+     "bild": "foto-knochennadel.jpg",
+     "alt": "Eine schmale Nadel aus Knochen mit einem Loch an einem Ende, vor schwarzem Hintergrund",
      "quellenart": "sach",
      "frage": "Zu welcher Karte gehört der Satz?",
      "paare": [
@@ -884,7 +915,8 @@
        "Die Menschen machten ihre Kleidung selbst.",
        "3 Deuten"
       ]
-     ]
+     ],
+     "nachweis": "Foto: Vassil, CC0, Wikimedia Commons („Aiguille Paléolithique Musée Saint-Remi 21092016.jpg“)"
     }
    ],
    "zielfarben": {
@@ -901,16 +933,17 @@
    "aufgaben": [
     {
      "titel": "Der Faustkeil",
-     "bild": "q-faustkeil.svg",
-     "alt": "Ein spitzer Stein mit scharfen Kanten, etwa 15 cm lang",
+     "bild": "foto-faustkeil.jpg",
+     "alt": "Ein heller Faustkeil aus Feuerstein vor schwarzem Hintergrund, unten spitz",
      "quellenart": "sach",
-     "info": "Gefunden in der Erde. Etwa 15 cm lang. Aus der Altsteinzeit.",
+     "info": "Etwa 450 000 Jahre alt, aus der Altsteinzeit. Heute im Canterbury Museum in Neuseeland.",
      "wortspeicher": [
       "Faustkeil",
       "Feuerstein",
       "Kante",
       "spitz",
       "scharf",
+      "abgeschlagen",
       "schneiden",
       "Jäger und Sammler"
      ],
@@ -929,20 +962,20 @@
         {
          "frage": "Welche Form hat er?",
          "optionen": [
-          "spitz",
-          "rund",
-          "eckig"
+          "oben rund, unten spitz",
+          "ganz rund",
+          "eckig wie ein Würfel"
          ]
         }
        ],
        "muster": [
-        "Ich sehe einen grauen Stein.",
-        "Er ist oben spitz und unten breit.",
-        "An den Seiten hat er scharfe Kanten.",
-        "Er ist etwa 15 cm lang."
+        "Ich sehe einen hellen, gelblichen Stein.",
+        "Er ist oben breit und rund, unten spitz.",
+        "Die Ränder sind scharf und gezackt.",
+        "Man sieht viele Stellen, an denen Stücke abgeschlagen wurden."
        ],
        "check": [
-        "Ich habe die Spitze oder die scharfen Kanten genannt."
+        "Ich habe die Form und die scharfen Ränder genannt."
        ]
       },
       {
@@ -981,52 +1014,54 @@
         "Ohne Werkzeuge wäre das Leben viel schwerer gewesen."
        ]
       }
-     ]
+     ],
+     "nachweis": "Foto: Daderot, gemeinfrei, Wikimedia Commons („Acheulean hand axe … Canterbury Museum“)"
     },
     {
-     "titel": "Das Höhlenbild",
-     "bild": "q-hoehlenmalerei.svg",
-     "alt": "Tiere und eine Hand, an eine Felswand gemalt",
+     "titel": "Die Wand der Hände",
+     "bild": "foto-hoehle-haende.jpg",
+     "alt": "Viele Umrisse von Händen in Rot, Weiß und Schwarz an einer Felswand",
      "quellenart": "bild",
-     "info": "Gemalt an die Wand einer Höhle. Aus der Altsteinzeit.",
+     "info": "Eine Felswand in der „Höhle der Hände“ (Cueva de las Manos) in Argentinien. Die ältesten Bilder sind etwa 9000 Jahre alt.",
      "wortspeicher": [
-      "Höhle",
       "Felswand",
+      "Hand",
+      "Umriss",
       "Farbe",
-      "Tier",
-      "Handabdruck",
-      "Jagd",
-      "Wisent"
+      "rot",
+      "weiß",
+      "schwarz",
+      "Jäger und Sammler"
      ],
      "karten": [
       {
        "nr": 1,
        "hilfen": [
         {
-         "frage": "Was ist auf dem Bild?",
+         "frage": "Was ist an der Wand?",
          "optionen": [
-          "Tiere",
-          "Häuser",
-          "Autos"
+          "viele Hände",
+          "Autos",
+          "Buchstaben"
          ]
         },
         {
          "frage": "Welche Farben siehst du?",
          "optionen": [
-          "rot und schwarz",
+          "rot, weiß und schwarz",
           "blau und grün",
           "gelb und lila"
          ]
         }
        ],
        "muster": [
-        "Ich sehe zwei Tiere auf einer Felswand.",
-        "Links oben ist ein rotes Tier, rechts ein schwarzes Tier.",
-        "Links unten ist eine Hand.",
-        "Oben rechts sind vier rote Punkte."
+        "Ich sehe eine Felswand.",
+        "Darauf sind sehr viele Hände.",
+        "Die Hände sind rot, weiß und schwarz.",
+        "Oft sieht man nur den Umriss der Hand, die Farbe ist rundherum."
        ],
        "check": [
-        "Ich habe die Tiere und die Hand genannt."
+        "Ich habe die Hände und die Farben genannt."
        ]
       },
       {
@@ -1042,9 +1077,9 @@
         }
        ],
        "muster": [
-        "Das ist wohl ein Höhlenbild aus der Steinzeit.",
-        "Menschen haben es mit Farbe aus Erde und Kohle gemalt.",
-        "Vielleicht hat man es gemacht, um von der Jagd zu erzählen oder um Glück für die Jagd zu bekommen. Ganz sicher weiß man das nicht."
+        "Das sind Handbilder aus der Steinzeit.",
+        "Die Menschen legten die Hand an die Wand und bliesen Farbe darüber. So blieb der Umriss.",
+        "Vielleicht wollten sie zeigen: Wir waren hier. Ganz sicher weiß man das nicht."
        ],
        "check": [
         "Ich habe „vielleicht“ gesagt, wo man es nicht sicher weiß."
@@ -1054,36 +1089,37 @@
        "nr": 3,
        "hilfen": [
         {
-         "frage": "Was war den Menschen wichtig?",
+         "frage": "Was zeigen die vielen Hände?",
          "optionen": [
-          "die Tiere und die Jagd",
-          "das Fernsehen",
-          "das Geld"
+          "Viele Menschen waren an diesem Ort.",
+          "Die Menschen hatten Pinsel aus Plastik.",
+          "Niemand war je hier."
          ]
         }
        ],
        "muster": [
-        "Daran erkennt man, dass Tiere für die Menschen sehr wichtig waren.",
-        "Die Menschen damals lebten von der Jagd.",
-        "Sie konnten schon malen und Farben herstellen."
+        "Daran erkennt man, dass viele Menschen an diesem Ort waren.",
+        "Die Menschen damals konnten Farben aus Erde herstellen.",
+        "Der Ort war ihnen wohl wichtig."
        ]
       }
-     ]
+     ],
+     "nachweis": "Foto: Mariano, gemeinfrei, Wikimedia Commons („SantaCruz-CuevaManos-P2210651b.jpg“)"
     },
     {
      "titel": "Das Tongefäß",
-     "bild": "q-tongefaess.svg",
-     "alt": "Ein rundes Gefäß aus Ton mit Linien und Punkten",
+     "bild": "foto-bandkeramik.jpg",
+     "alt": "Schwarz-Weiß-Foto: eine runde Schale aus Ton mit Bändern aus vielen kleinen Punkten",
      "quellenart": "sach",
-     "info": "Gefunden bei einem Dorf. Etwa 20 cm hoch. Aus der Jungsteinzeit.",
+     "info": "Eine Schale der Bandkeramik aus Mitteleuropa, etwa 7000 Jahre alt (Jungsteinzeit). Das Foto ist schwarz-weiß.",
      "wortspeicher": [
       "Ton",
       "Gefäß",
-      "Topf",
+      "Schale",
       "Muster",
-      "Linien",
+      "Punkte",
+      "Bänder",
       "Vorrat",
-      "Getreide",
       "sesshaft"
      ],
      "karten": [
@@ -1101,17 +1137,17 @@
         {
          "frage": "Was ist darauf?",
          "optionen": [
-          "Linien und Punkte",
+          "Bänder aus Punkten",
           "Buchstaben",
           "Fotos"
          ]
         }
        ],
        "muster": [
-        "Ich sehe ein rundes Gefäß.",
-        "Es ist aus brauner Erde, aus Ton.",
-        "Oben hat es eine Öffnung.",
-        "Außen sind Wellenlinien und Punkte."
+        "Ich sehe eine runde, bauchige Schale.",
+        "Sie ist aus Ton.",
+        "Außen sind gebogene Bänder aus vielen kleinen Punkten.",
+        "An den Seiten hat sie kleine Knubbel."
        ],
        "check": [
         "Ich habe das Muster beschrieben."
@@ -1153,14 +1189,15 @@
         "Das Muster zeigt, dass sie Dinge auch schön machen wollten."
        ]
       }
-     ]
+     ],
+     "nachweis": "Foto: Encyklopedia Powszechna PWN (1975), gemeinfrei, Wikimedia Commons („01975 0037 Gefäße der Linearbandkeramische Kultur.jpg“)"
     },
     {
      "titel": "Die Knochennadel",
-     "bild": "q-knochennadel.svg",
-     "alt": "Eine dünne Nadel aus Knochen mit einem Loch",
+     "bild": "foto-knochennadel.jpg",
+     "alt": "Eine schmale Nadel aus Knochen mit einem Loch an einem Ende, vor schwarzem Hintergrund",
      "quellenart": "sach",
-     "info": "Gefunden in einer Höhle. Etwa 6 cm lang. Aus der Altsteinzeit.",
+     "info": "Gefunden in der Dordogne (Frankreich), aus der Altsteinzeit. Heute im Museum Saint-Remi in Reims.",
      "wortspeicher": [
       "Knochen",
       "Nadel",
@@ -1193,10 +1230,9 @@
         }
        ],
        "muster": [
-        "Ich sehe einen dünnen, hellen Gegenstand.",
-        "Er ist aus Knochen.",
-        "Vorne ist er spitz, hinten hat er ein kleines Loch.",
-        "Er ist nur etwa 6 cm lang."
+        "Ich sehe einen dünnen, langen Gegenstand.",
+        "Er ist grau-braun und aus Knochen.",
+        "Rechts ist er spitz, links hat er ein kleines Loch."
        ],
        "check": [
         "Ich habe die Spitze und das Loch genannt."
@@ -1238,22 +1274,23 @@
         "Sie konnten sehr feine Werkzeuge herstellen."
        ]
       }
-     ]
+     ],
+     "nachweis": "Foto: Vassil, CC0, Wikimedia Commons („Aiguille Paléolithique Musée Saint-Remi 21092016.jpg“)"
     },
     {
      "titel": "Der Mahlstein",
-     "bild": "q-mahlstein.svg",
-     "alt": "Ein großer flacher Stein, darauf ein kleiner Stein, daneben Körner",
+     "bild": "foto-mahlstein.jpg",
+     "alt": "Ein großer flacher Stein mit einer Mulde, darauf ein runder kleiner Stein – von oben und von der Seite",
      "quellenart": "sach",
-     "info": "Gefunden in einem Haus. Der große Stein ist etwa 50 cm lang. Aus der Jungsteinzeit.",
+     "info": "Gefunden in England, aus der Jungsteinzeit oder Bronzezeit. Der große Stein ist etwa 20 cm lang. Das Foto zeigt ihn von oben und von der Seite.",
      "wortspeicher": [
       "Mahlstein",
       "Läufer",
+      "Mulde",
       "Körner",
       "Getreide",
       "Mehl",
       "mahlen",
-      "Ackerbau",
       "sesshaft"
      ],
      "karten": [
@@ -1269,22 +1306,22 @@
          ]
         },
         {
-         "frage": "Was liegt daneben?",
+         "frage": "Wie ist die Mitte des großen Steins?",
          "optionen": [
-          "Körner",
-          "Knochen",
-          "Federn"
+          "etwas tiefer, wie eine Mulde",
+          "spitz wie ein Messer",
+          "voller Löcher"
          ]
         }
        ],
        "muster": [
-        "Ich sehe einen großen, flachen Stein.",
-        "Darauf liegt ein kleinerer Stein.",
-        "In der Mitte ist der große Stein ein bisschen hell und glatt.",
-        "Daneben liegen gelbe Körner."
+        "Ich sehe zwei Steine, einmal von oben und einmal von der Seite.",
+        "Unten liegt ein großer, flacher, rotbrauner Stein.",
+        "In der Mitte hat er eine flache Mulde.",
+        "Darauf liegt ein kleiner, runder Stein."
        ],
        "check": [
-        "Ich habe beide Steine und die Körner genannt."
+        "Ich habe beide Steine und die Mulde genannt."
        ]
       },
       {
@@ -1323,22 +1360,24 @@
         "Aus dem Mehl machten sie Brei oder Fladenbrot."
        ]
       }
-     ]
+     ],
+     "nachweis": "Foto: Birmingham Museums Trust, Susheela Burford, CC BY 2.0, Wikimedia Commons („A Neolithic Saddle Quern and Upper Stone (FindID 1016166).jpg“)"
     },
     {
-     "titel": "Die Speerspitze",
-     "bild": "q-speerspitze.svg",
-     "alt": "Eine kleine spitze Steinspitze, etwa 5 cm lang",
+     "titel": "Die Pfeilspitze",
+     "bild": "foto-pfeilspitze.jpg",
+     "alt": "Eine kleine Pfeilspitze aus Feuerstein in Form eines Dreiecks mit zwei Zacken unten",
      "quellenart": "sach",
-     "info": "Gefunden bei einem Lagerplatz. Etwa 5 cm lang. Aus der Steinzeit.",
+     "info": "Aus der Jungsteinzeit, gefunden in Irland. Heute im Hunt Museum in Limerick.",
      "wortspeicher": [
-      "Speerspitze",
+      "Pfeilspitze",
       "Feuerstein",
-      "spitz",
+      "Dreieck",
+      "Zacken",
       "scharf",
-      "Speer",
-      "Jagd",
-      "Tier"
+      "Pfeil",
+      "Bogen",
+      "Jagd"
      ],
      "karten": [
       {
@@ -1353,22 +1392,22 @@
          ]
         },
         {
-         "frage": "Wie groß ist sie?",
+         "frage": "Welche Form hat sie?",
          "optionen": [
-          "klein, etwa 5 cm",
-          "so groß wie ein Tisch",
-          "so groß wie ein Haus"
+          "ein Dreieck mit zwei Zacken",
+          "rund wie ein Ball",
+          "eckig wie ein Würfel"
          ]
         }
        ],
        "muster": [
-        "Ich sehe eine kleine, spitze Steinspitze.",
-        "Sie ist vorne sehr spitz.",
-        "Die Ränder sind scharf.",
-        "Sie ist nur etwa 5 cm lang."
+        "Ich sehe eine kleine Spitze aus Stein.",
+        "Sie hat die Form eines Dreiecks.",
+        "Unten hat sie zwei Zacken.",
+        "Die Ränder sind fein abgeschlagen und scharf."
        ],
        "check": [
-        "Ich habe die Größe genannt."
+        "Ich habe die Form und die Zacken genannt."
        ]
       },
       {
@@ -1377,26 +1416,26 @@
         {
          "frage": "Wofür passt sie gut?",
          "optionen": [
-          "an einem Speer jagen",
+          "an einem Pfeil jagen",
           "Körner mahlen",
           "nähen"
          ]
         }
        ],
        "muster": [
-        "Das ist wohl eine Speerspitze.",
-        "Man band sie vorne an einen langen Holzstab.",
-        "Man benutzte den Speer, um Tiere zu jagen."
+        "Das ist wohl eine Pfeilspitze.",
+        "Man band sie vorne an einen Pfeil aus Holz.",
+        "Mit Pfeil und Bogen jagte man Tiere."
        ],
        "check": [
-        "Ich habe erklärt, dass die Spitze an einem Holzstab saß."
+        "Ich habe erklärt, dass die Spitze an einem Pfeil saß."
        ]
       },
       {
        "nr": 3,
        "hilfen": [
         {
-         "frage": "Was zeigt die Speerspitze?",
+         "frage": "Was zeigt die Pfeilspitze?",
          "optionen": [
           "Die Menschen jagten Tiere.",
           "Die Menschen fuhren Auto.",
@@ -1405,12 +1444,13 @@
         }
        ],
        "muster": [
-        "Daran erkennt man, dass die Menschen Tiere gejagt haben.",
+        "Daran erkennt man, dass die Menschen mit Pfeil und Bogen gejagt haben.",
         "Die Menschen damals brauchten Fleisch und Felle.",
-        "Sie konnten Waffen aus Stein und Holz bauen."
+        "Sie konnten sehr feine Werkzeuge aus Stein machen."
        ]
       }
-     ]
+     ],
+     "nachweis": "Foto: Justin Gawke, Hunt Museum, CC0, Wikimedia Commons („Hollow based Arrowhead.jpg“)"
     }
    ]
   },
@@ -1466,15 +1506,18 @@
      "tipp": "Ist es alt und echt? Sagt jemand ehrlich, dass es nachgemacht ist?"
     },
     {
-     "text": "Das echte Höhlenbild ist empfindlich. Darum malen Künstler es für Besucher in einer zweiten Höhle genau nach. Das ist eine ___.",
+     "text": "In einem Museum in Brünn (Tschechien) haben Künstler Bilder aus der Höhle von Lascaux genau nachgemalt. Ein Schild sagt das. Das ist eine ___.",
      "antwort": "Nachbildung",
      "optionen": [
       "Original",
       "Nachbildung",
       "Fälschung"
      ],
-     "erklaerung": "Die Besucher-Höhle ist ehrlich nachgemacht, damit das echte Bild geschützt bleibt. Das ist eine Nachbildung.",
-     "tipp": "Ist es alt und echt? Sagt jemand ehrlich, dass es nachgemacht ist?"
+     "erklaerung": "Die echte Höhle ist für Besucher geschlossen. Die Bilder im Museum sind ehrlich nachgemalt. Das ist eine Nachbildung.",
+     "tipp": "Ist es alt und echt? Sagt jemand ehrlich, dass es nachgemacht ist?",
+     "bild": "foto-lascaux-nachbildung.jpg",
+     "alt": "Nachgemalte Pferde und andere Tiere an einer Wand im Museum",
+     "nachweis": "Foto: HTO, gemeinfrei, Wikimedia Commons („Lascaux, replica 03.JPG“)"
     },
     {
      "text": "Jemand verkauft im Internet eine „echte Steinzeit-Speerspitze“. Er hat sie letzte Woche selbst gemacht. Das ist eine ___.",
@@ -1957,10 +2000,10 @@
     },
     {
      "titel": "Der Faustkeil im Museum",
-     "bild": "q-faustkeil.svg",
-     "alt": "Ein spitzer Stein mit scharfen Kanten, etwa 15 cm lang",
+     "bild": "foto-faustkeil-museum.jpg",
+     "alt": "Ein brauner Faustkeil aus Feuerstein auf einem Metallständer im Museum",
      "quellenart": "sach",
-     "info": "Im Museum unter Glas. Auf dem Schild steht: Faustkeil, Fund aus Bayern, Altsteinzeit.",
+     "info": "Im Museum in Liestal (Schweiz). Auf dem Schild steht: Faustkeil von Pratteln, Altsteinzeit.",
      "wortspeicher": [
       "Faustkeil",
       "Feuerstein",
@@ -1981,12 +2024,20 @@
           "Holz",
           "Gips"
          ]
+        },
+        {
+         "frage": "Worauf steht er?",
+         "optionen": [
+          "auf einem Ständer im Museum",
+          "im Waldboden",
+          "auf einem Küchentisch"
+         ]
         }
        ],
        "muster": [
-        "Ich sehe einen grauen Stein.",
-        "Er ist oben spitz und unten breit.",
-        "An den Seiten hat er scharfe Kanten."
+        "Ich sehe einen braun-orangen Stein auf einem Metallständer.",
+        "Er ist oben breit und unten schmaler.",
+        "Die Oberfläche hat viele Kanten und Schlagstellen."
        ]
       },
       {
@@ -2041,7 +2092,7 @@
         }
        ],
        "muster": [
-        "Der Faustkeil ist wohl ein Original. Das Museum sagt, dass er ein Fund ist, und Forscher haben ihn geprüft.",
+        "Der Faustkeil ist wohl ein Original. Er steht im Museum, das Schild nennt den Fundort, und Forscher haben ihn geprüft.",
         "Wer ihn gemacht hat, wissen wir nicht. Wir wissen nur ungefähr, wann: in der Altsteinzeit.",
         "Ein Faustkeil will niemandem etwas zeigen. Darum kann ich ihm gut glauben – anders als einem Händler im Internet."
        ],
@@ -2049,7 +2100,8 @@
         "Ich habe gesagt, woher wir wissen, dass er echt ist."
        ]
       }
-     ]
+     ],
+     "nachweis": "Foto: Adrian Michael, bearbeitet von MagentaGreen, CC BY 3.0, Wikimedia Commons („Faustkeil Pratteln (retuschiert).jpg“)"
     }
    ]
   }
