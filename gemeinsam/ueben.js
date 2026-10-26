@@ -29,8 +29,10 @@
 //  cfg.hilfe: { html } – Kachel „📖 So geht's“ mit Erklärung (Neue Lern-Apps Etappe 7; html schon escaped)
 //
 //  Angelegte Anschlüsse (später eingeschaltet):
-//    LernUeben.Freigabe.erlaubt(themaId)  → seit Etappe 7 über gemeinsam/freigabe.js (gesperrt = 🔒 ohne Erklärtext);
-//                                           die App bindet freigabe.js VOR ueben.js ein, ohne sie ist alles offen
+//    LernUeben.Freigabe.erlaubt(themaId, standardZu?) → seit Etappe 7 über gemeinsam/freigabe.js (gesperrt = 🔒 ohne
+//                                           Erklärtext); die App bindet freigabe.js VOR ueben.js ein, ohne sie ist alles offen.
+//                                           Stufe { gesperrt: true } = ohne Freigabe-Eintrag zu; { frei: () => bool } =
+//                                           zusätzliche Bedingung (Quellen-Detektiv Etappe 4: Fälle, die an Themen hängen)
 //    LernUeben.Fehlerheft.merken(eintrag) → sammelt Fehler auf dem Gerät (höchstens 200)
 //    Fehler-Training (Etappe 8): Kachel „🎯 Fehler-Training“, sobald es Fehler aus den Stufen dieser App gibt.
 //      Übt gezielt die falsch gelösten Aufgabentypen; jede richtige Antwort streicht einen Eintrag.
@@ -55,7 +57,7 @@
   // ── Anschlüsse ─────────────────────────────────────────
   const Freigabe = {
     /** Freigaben aus config.json (Etappe 7, gemeinsam/freigabe.js). Ohne freigabe.js: alles offen. */
-    erlaubt(themaId) { return !window.LernFreigabe || LernFreigabe.erlaubt(themaId); },
+    erlaubt(themaId, standardZu) { return !window.LernFreigabe ? !standardZu : LernFreigabe.erlaubt(themaId, standardZu); },
   };
   const FEHLER_KEY = 'lernwelt-fehlerheft';
   const FEHLER_MAX = 200;
@@ -191,6 +193,7 @@
     const MEIST = Object.assign({ prozent: 70, runden: 2 }, cfg.meisterschaft || {});
     const VORLESEN = !!cfg.vorlesen || URLP.get('vorlesen') === '1';
     const alle = [...(cfg.stufen || []), ...(cfg.foerder || [])];
+    const frei = st => !!st && Freigabe.erlaubt(st.id, !!st.gesperrt) && (typeof st.frei !== 'function' || st.frei());
     const S = { stufe: null, aufgaben: [], nr: 0, ergebnis: [], eingabe: '', rest: ['', ''], feld: 0, gesperrt: false, tipp: false, start: 0, foerderOffen: false };
 
     // Meisterschaft aus dem Pass (Lernstand je Thema): beste Runden ≥ Prozent
@@ -201,15 +204,15 @@
       return { gut: (Array.isArray(e.p) ? e.p : []).filter(x => x >= MEIST.prozent).length, best: e.best || 0 };
     }
     function kachel(st, i, foerder) {
-      const frei = Freigabe.erlaubt(st.id), s = stand(st), meister = s.gut >= MEIST.runden;
-      return `<button type="button" class="tile${foerder ? ' f' : ''}${frei ? '' : ' zu'}" data-stufe="${esc(st.id)}" ${frei ? '' : 'disabled aria-disabled="true"'}>
-        <span class="nr">${frei ? (foerder ? '🌱' : i + 1) : '🔒'}</span>
+      const offen = frei(st), s = stand(st), meister = s.gut >= MEIST.runden;
+      return `<button type="button" class="tile${foerder ? ' f' : ''}${offen ? '' : ' zu'}" data-stufe="${esc(st.id)}" ${offen ? '' : 'disabled aria-disabled="true"'}>
+        <span class="nr">${offen ? (foerder ? '🌱' : i + 1) : '🔒'}</span>
         <span><b>${esc(st.titel)}</b><small>${esc(st.kurz || '')}</small></span>
         ${meister ? '<span class="st">⭐ geschafft</span>' : s.best ? `<span class="st" style="color:var(--mut)">${s.best} %</span>` : ''}</button>`;
     }
     // Fehler-Training (Etappe 8): Fehler aus den (freien) Stufen dieser App
     function meineFehler() {
-      return Fehlerheft.liste().filter(x => alle.some(st => st.id === x.thema) && Freigabe.erlaubt(x.thema));
+      return Fehlerheft.liste().filter(x => frei(alle.find(st => st.id === x.thema)));
     }
     function zeigeStart() {
       S.stufe = null;
@@ -226,7 +229,7 @@
 
     function starteRunde(id) {
       const st = alle.find(x => x.id === id);
-      if (!st || !Freigabe.erlaubt(id)) return;
+      if (!frei(st)) return;
       S.stufe = st; S.aufgaben = []; S.ergebnis = []; S.nr = 0; S.start = Date.now();
       const fragen = new Set(), anzahl = st.einzeln ? 1 : Math.max(3, Math.min(RUNDE, Number(st.runde) || RUNDE));
       for (let v = 0; S.aufgaben.length < anzahl && v < anzahl * 8; v++) {

@@ -36,6 +36,9 @@
 //                       Inhaltsdateien oder ganze Inhaltsdateien; ohne "aus": alle anderen Stufen dieser Datei),
 //               "nurGeuebt": true   (optional: nur Stufen, die das Kind schon geübt hat – „Meine Themen“) }
 //
+//  Freigaben (Quellen-Detektiv Etappe 4): Stufe { "gesperrt": true } = ohne Freigabe-Eintrag zu (die Sperre steht im
+//    Repo, nicht in config.json); Aufgabe { "nach": "<Stufen-ID>" } = erst, wenn diese Stufe frei ist (z. B. ein Fall
+//    zur Stunde). Mix-Stufen nehmen nur freie Stufen und Aufgaben; eine Stufe ohne freie Aufgabe zeigt 🔒.
 //  Ganzer Fall (Quellen-Detektiv Etappe 2): Typ „fall“ – eine Runde = ein Fall, Ergebnis = abgehakte Checkliste
 //    (Selbstkontrolle, zählt nicht für die Spielsperre). Format: Kopf von gemeinsam/typen/fall.js. Mix-Stufen
 //    ohne "aus" nehmen Fall-Stufen nicht auf.
@@ -317,28 +320,38 @@
       const P = window.LernPass, ls = P && P.state && P.state.lernstand;
       return !!(ls && ls[q.st.id]);
     }
+    // Freigaben (Quellen-Detektiv Etappe 3/4): Stufe frei? Aufgabe mit "nach": <Stufen-ID> erst, wenn diese Stufe frei ist
+    const stufeFrei = id => LernUeben.Freigabe.erlaubt(id, !!(quellen[id] && quellen[id].st.gesperrt));
+    const aufgabeFrei = (q, k) => { const x = Array.isArray(q.st.aufgaben) ? q.st.aufgaben[k] : null; return !x || !x.nach || stufeFrei(x.nach); };
+    /** Nummern, die jetzt dran sein dürfen (bei Mix fortlaufend über alle Quellen) */
+    function kandidaten(st) {
+      const nummern = [];
+      if (st.mix) {
+        // nur freigegebene Stufen (Kritik und Ägypten kommen erst nach der Freigabe in den Mix)
+        const alle = mixe[st.id] || [], frei = alle.filter(q => stufeFrei(q.st.id));
+        let erlaubt = frei;
+        if (st.nurGeuebt) { const g = frei.filter(geuebt); if (g.length) erlaubt = g; }
+        let basis = 0;
+        alle.forEach(q => { if (erlaubt.includes(q)) for (let k = 0; k < q.n; k++) if (aufgabeFrei(q, k)) nummern.push(basis + k); basis += q.n; });
+      } else if (quellen[st.id]) {
+        const q = quellen[st.id];
+        for (let k = 0; k < q.n; k++) if (aufgabeFrei(q, k)) nummern.push(k);
+      }
+      return nummern;
+    }
     // Jede Stufe zieht ihre Aufgaben aus einem gemischten Stapel – keine Wiederholung, bis alle dran waren
     const stapel = {};
     function ziehe(st) {
-      if (st.mix) {
-        // nur freigegebene Stufen (Quellen-Detektiv Etappe 3: Kritik kommt erst nach der Freigabe in den Mix)
-        const alle = mixe[st.id] || [], frei = alle.filter(q => LernUeben.Freigabe.erlaubt(q.st.id));
-        let erlaubt = frei;
-        if (st.nurGeuebt) { const g = frei.filter(geuebt); if (g.length) erlaubt = g; }
-        const nummern = [];
-        let basis = 0;
-        alle.forEach(q => { if (erlaubt.includes(q)) for (let k = 0; k < q.n; k++) nummern.push(basis + k); basis += q.n; });
-        if (!nummern.length) return null;
-        if (!stapel[st.id] || !stapel[st.id].length) stapel[st.id] = mischen(nummern);
-        return stapel[st.id].pop();
-      }
-      const n = anzahl(st);
-      if (!n) return null;
-      if (!stapel[st.id] || !stapel[st.id].length) stapel[st.id] = mischen([...Array(n).keys()]);
+      const k = kandidaten(st);
+      if (!k.length) return null;
+      stapel[st.id] = (stapel[st.id] || []).filter(n => k.includes(n));   // Freigaben können sich geändert haben
+      if (!stapel[st.id].length) stapel[st.id] = mischen(k);
       return stapel[st.id].pop();
     }
+    const hatNach = st => !st.mix && quellen[st.id] && Array.isArray(st.aufgaben) && st.aufgaben.some(x => x && x.nach);
     const stufen = D.stufen.filter(st => st && st.id && anzahl(st) > 0)
-      .map(st => Object.assign({}, st, einzeln(D, st) ? { runde: 1, einzeln: true } : { runde: st.runde || Math.min(Number(D.runde) || 8, anzahl(st)) }));
+      .map(st => Object.assign({}, st, einzeln(D, st) ? { runde: 1, einzeln: true } : { runde: st.runde || Math.min(Number(D.runde) || 8, anzahl(st)) },
+        st.mix || hatNach(st) ? { frei: () => kandidaten(st).length > 0 } : {}));
     document.title = (D.titel || 'Übung') + ' – Lernwelt';
     host.innerHTML = '';
     return LernUeben.start({

@@ -37,8 +37,14 @@ umbenennen. Neues hinzufügen und Texte ändern geht immer.
 ## Unterrichtsmodus (🎓)
 
 Vollbild fürs iPad, große Knöpfe, keine Einstellungen: 📲 App als QR-Code auf den Beamer, 📁 Medien auf den Beamer,
-🎮 „Spiele heute frei“ (endet um Mitternacht), 🎯 Fokus „heute nur diese Apps“, 📊 Live-Abfrage (siehe unten). Wirkt sofort, ein offener Entwurf bleibt
-unberührt.
+🎮 „Spiele heute frei“ (endet um Mitternacht), 🎯 Fokus „heute nur diese Apps“, 📊 Live-Abfrage (siehe unten),
+🔓 Freischalten (nur Hauptzugang): gesperrte Stufen – z. B. die Ägypten-Quellen im Quellen-Detektiv – am Stundenende für Alle,
+eine Klasse oder Gruppe freigeben. Wirkt sofort, ein offener Entwurf bleibt unberührt; die iPads merken es in 2–3 Minuten
+ohne Neuladen. Wieder sperren oder „frei ab Datum“: Inhalte → 🔐 Freigaben.
+
+**Achtung bei einem alten Entwurf:** Fragt der Admin beim Öffnen, ob ein Entwurf „auf einem älteren Stand“ trotzdem
+übernommen werden soll, ersetzt „Ja“ die ganze Einstellungsdatei durch den alten Stand – Änderungen, die inzwischen dazukamen
+(z. B. aus einem Update), gehen verloren. Im Zweifel „Nein“ und die Änderung neu machen.
 
 ### 📊 Live-Abfrage
 

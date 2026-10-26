@@ -7,7 +7,10 @@
 //    🎯 Fokus        – „heute nur diese Apps“ starten oder beenden
 //    📊 Live-Abfrage – Klassen-Quiz per QR-Code: gespeichertes Quiz oder spontane Frage starten, Beamer-Ansicht
 //                      (gemeinsam/admin/live.js, Worker cloudflare/live.js; Quizze vorbereiten unter Inhalte → Live-Quizze)
-//  Spiele und Fokus wirken sofort (store.sofort: ohne einen offenen Admin-Entwurf mitzunehmen).
+//    🔓 Freischalten – gesperrte Stufe am Stundenende für Alle, eine Klasse oder Gruppe freigeben (Quellen-Detektiv
+//                      Etappe 4; nur Hauptzugang, Kollegen dürfen keine Freigaben schreiben). Nutzt frReihenLaden,
+//                      frStand und frSetzen aus gemeinsam/admin/freigaben.js; die iPads fragen alle 2 Minuten nach.
+//  Spiele, Fokus und Freischalten wirken sofort (store.sofort: ohne einen offenen Admin-Entwurf mitzunehmen).
 //  Tagesausnahmen gelten nur heute (ab = bis = heute) und enden um Mitternacht von selbst.
 //  rechte: Hauptzugang und Kollegen-Zugang (Etappe 10). Kollegen sehen bei Spielen und Fokus nur ihre Gruppen
 //  (der Worker liefert nur diese und lässt auch nur diese speichern) und melden sich hier oben ab.
@@ -16,10 +19,11 @@
 
 LWAdmin.modul({
   id: 'stunde', bereich: 'unterricht', titel: 'Unterricht', symbol: '🎓', reihenfolge: 1, rechte: ['haupt', 'kollege'],
-  suchbegriffe: ['Unterrichtsmodus', 'Stunde', 'Beamer', 'QR', 'Spiele frei', 'Fokus', 'iPad', 'Live-Abfrage', 'Quiz', 'Exit-Ticket', 'Ampel'],
+  suchbegriffe: ['Unterrichtsmodus', 'Stunde', 'Beamer', 'QR', 'Spiele frei', 'Fokus', 'iPad', 'Live-Abfrage', 'Quiz', 'Exit-Ticket', 'Ampel', 'Freischalten', 'Stufe freischalten'],
   zeigen(host, { store, toast }) {
     let aktiv = true, teil = 'app', fach = '', gruppen = [], medien = null, medienFehler = '', fokus = { wer: 'alle', dauer: '45', apps: [] };
     const live = { quizze: null, raeume: [], fehler: '', fach: '', laedt: false };
+    const fs = { reihen: null, wer: 'alle', laedt: false };            // 🔓 Freischalten
     const iso = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
     const uhr = ms => new Date(ms).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
     const klassen = c => { const k = new Set(); (c.apps || []).forEach(a => (a.klassen || []).forEach(x => k.add(x))); return (k.size ? [...k] : KLASSEN.slice(0, 2)).sort((a, b) => a - b); };
@@ -56,7 +60,8 @@ LWAdmin.modul({
       const c = store.daten() || { apps: [] };
       if (!werListe(c).includes(fokus.wer)) fokus.wer = werListe(c)[0] || 'alle';
       const keineGruppe = kollege() && !gruppen.length ? '<p>Dir sind noch keine Gruppen zugeteilt – frag die Lehrkraft, die die Lernwelt betreut.</p>' : '';
-      const reiter = [['app', '📲', 'App zeigen'], ['medien', '📁', 'Medien'], ['spiele', '🎮', 'Spiele'], ['fokus', '🎯', 'Fokus'], ['live', '📊', 'Live-Abfrage']];
+      const reiter = [['app', '📲', 'App zeigen'], ['medien', '📁', 'Medien'], ['spiele', '🎮', 'Spiele'], ['fokus', '🎯', 'Fokus'], ['live', '📊', 'Live-Abfrage'],
+        ...(kollege() ? [] : [['frei', '🔓', 'Freischalten']])];
       let inhalt = '';
       if (teil === 'app') {
         const apps = c.apps.filter(a => !a.hidden && isSafeLink(a.datei) && (!fach || a.fach === fach));
@@ -79,6 +84,8 @@ LWAdmin.modul({
             <p class="lw-klein">„Heute frei“ endet um Mitternacht von selbst. Dauerhafte Einstellungen: Admin → Gruppen → Spielsperre.</p>`;
       } else if (teil === 'live') {
         inhalt = liveInhalt();
+      } else if (teil === 'frei') {
+        inhalt = freiInhalt(c);
       } else {
         const laufend = (c.fokus || []).filter(f => Number(f.bis) > Date.now());
         const appName = d => { const a = c.apps.find(x => x.datei === d); return a ? (a.emoji || '📱') + ' ' + a.name : d; };
@@ -101,6 +108,25 @@ LWAdmin.modul({
             : `<span class="lw-klein">👥 ${escHtml(LWAdmin.zugang().kuerzel || '')}</span><button class="lw-btn" data-abmelden>🔒 Abmelden</button>`}</div>
         <nav class="lw-u-reiter">${reiter.map(([id, s, t]) => `<button class="lw-u-reiter-knopf${id === teil ? ' an' : ''}" data-teil="${id}"><span class="lw-u-sym">${s}</span>${t}</button>`).join('')}</nav>
         <div class="lw-u-inhalt">${inhalt}</div></div>`;
+    }
+
+    // ── Freischalten (gesperrte Stufen, z. B. Ägypten-Quellen nach der Stunde) ──
+    function freiInhalt(c) {
+      if (typeof frReihenLaden !== 'function') return '<p>⚠ Freigaben nicht geladen – bitte Seite neu laden.</p>';
+      if (!fs.reihen) {
+        if (!fs.laedt) { fs.laedt = true; frReihenLaden().then(r => { fs.reihen = r; }).catch(() => { fs.reihen = []; }).then(() => { fs.laedt = false; zeichnen(); }); }
+        return '<p>lädt …</p>';
+      }
+      if (!werListe(c).includes(fs.wer)) fs.wer = 'alle';
+      const gruppenHtml = fs.reihen.map(r => {
+        const zu = r.stufen.filter(s => frGesperrt(frStand(s.id, fs.wer, c).v));
+        return zu.length ? `<h3>${escHtml(r.titel)}</h3><div class="lw-u-liste">${zu.map(s => { const v = frStand(s.id, fs.wer, c).v;
+          return `<div class="lw-u-zeile"><div><b>🔒 ${escHtml(s.titel)}</b>${/^\d{4}/.test(v) ? `<br><span class="lw-klein">frei ab ${escHtml(v.split('-').reverse().join('.'))}</span>` : ''}</div>
+            <button class="lw-u-knopf gold" data-st-frei="${escHtml(s.id)}" data-st-titel="${escHtml(s.titel)}">🔓 Jetzt frei</button></div>`; }).join('')}</div>` : '';
+      }).join('');
+      return `<h3>Für wen?</h3><div class="lw-u-chips">${werListe(c).map(w => `<button class="lw-u-chip${w === fs.wer ? ' an' : ''}" data-st-wer="${escHtml(w)}">${escHtml(werName(w))}</button>`).join('')}</div>
+        ${gruppenHtml || `<p>Für ${escHtml(werName(fs.wer))} ist nichts gesperrt.</p>`}
+        <p class="lw-klein">Gilt sofort; die iPads merken es in höchstens 2–3 Minuten, auch ohne Neuladen. Wieder sperren und „frei ab Datum“: Admin → Inhalte → Freigaben.</p>`;
     }
 
     // ── Live-Abfrage ──
@@ -154,6 +180,12 @@ LWAdmin.modul({
         store.worker('/live/raum/' + d.liveEnde + '/ende', {}).then(() => { toast('📊 Abfrage beendet'); liveLaden(); }).catch(x => toast('⚠ ' + LWAdmin.live.fehlerText(x), true));
       }
       else if (d.fach !== undefined) { fach = d.fach; zeichnen(); }
+      else if (d.stWer) { fs.wer = d.stWer; zeichnen(); }
+      else if (d.stFrei) {
+        const id = d.stFrei, w = fs.wer, t = d.stTitel || id;
+        sofort(`🔓 ${t} für ${werName(w)} freigeschaltet`, cfg => { frSetzen(id, w, 'frei', cfg); if (cfg.freigaben && !Object.keys(cfg.freigaben).length) delete cfg.freigaben; },
+          `🔓 ${t}: frei für ${werName(w)}`);
+      }
       else if (d.app) {
         const a = c.apps.find(x => x.datei === d.app);
         if (a && !LWAdmin.beamer({ titel: (a.emoji ? a.emoji + ' ' : '') + a.name, unter: a.beschreibung || '', link: appUrl(a.datei) })) toast('⚠ QR-Code konnte nicht erzeugt werden', true);

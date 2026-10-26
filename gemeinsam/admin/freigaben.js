@@ -26,7 +26,7 @@ const FR_KATALOG_REIHEN = ['en.5.vok', 'en.5.wortlisten', 'en.6.vok', 'gpg.6.lae
 const FR_BAUKASTEN = 'apps/typen/uebung.html';
 const FR_LERNWEG = 'apps/typen/lernweg.html';          // Lernwege: nur zugeteilt sichtbar          // Etappe 9: jeder Inhalt des Baukastens ist automatisch eine Reihe
 const FR_APP_NAMEN = { kopfrechnen: '🧮', trainer: '📐', laengen: '📏' };
-const FR = { wer: 'alle', offen: '', reihen: null, gruppen: null, gruppenFehler: '', spWer: null };
+const FR = { wer: 'alle', offen: '', reihen: null, gruppen: null, gruppenFehler: '', spWer: null, standardZu: new Set() };
 
 const frEsc = s => escHtml(String(s == null ? '' : s));
 function frHeute() { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
@@ -88,6 +88,23 @@ async function frGruppenLaden() {
   }
 }
 
+// Stufen mit "gesperrt": true in ihrer Inhaltsdatei sind ohne Eintrag zu (Quellen-Detektiv Etappe 4) → FR.standardZu.
+// Einmal je Sitzung; genutzt von Freigaben, Katalog-Baum und Unterrichtsmodus.
+let frStdLaedt = null;
+function frStandardZuLaden() {
+  if (!frStdLaedt) frStdLaedt = (async () => {
+    const K = window.LernKatalog;
+    if (!K) return;
+    await Promise.race([K.bereit, new Promise(r => setTimeout(r, 4000))]);
+    const ids = K.themen({ nurOben: true }).filter(t => t.quelle && t.quelle.app === FR_BAUKASTEN).map(t => t.id);
+    await Promise.all(ids.map(id => fetch(`daten/inhalte/${id.split('.')[0]}/${id}.json`, { cache: 'no-cache' })
+      .then(r => r.ok ? r.json() : null)
+      .then(D => (D && Array.isArray(D.stufen) ? D.stufen : []).forEach(s => { if (s && s.gesperrt === true) FR.standardZu.add(s.id); }))
+      .catch(() => {})));
+  })();
+  return frStdLaedt;
+}
+
 // ── Reihen (was sich freischalten lässt) ───────────────
 async function frReihenLaden() {
   const reihen = [];
@@ -103,6 +120,7 @@ async function frReihenLaden() {
     if (K) {
       await Promise.race([K.bereit, new Promise(r => setTimeout(r, 4000))]);
       const baukasten = K.themen({ nurOben: true }).filter(t => t.quelle && t.quelle.app === FR_BAUKASTEN).map(t => t.id);
+      await frStandardZuLaden();
       FR_KATALOG_REIHEN.concat(baukasten).forEach(id => {
         const t = K.thema(id);
         const ic = { en: '🇬🇧', gpg: '🌍', de: '📝', nut: '🌱', ma: '📏' }[id.split('.')[0]] || '📘';
@@ -113,9 +131,10 @@ async function frReihenLaden() {
   return reihen;
 }
 
-// Was gilt für „wer“ bei dieser Stufe? Eigener Eintrag, sonst Thema darüber, sonst „alle“.
-function frStand(sid, wer) {
-  const F = CONFIG.freigaben || {};
+// Was gilt für „wer“ bei dieser Stufe? Eigener Eintrag, sonst Thema darüber, sonst „alle“,
+// sonst der Standard (zu bei "gesperrt": true in der Inhaltsdatei). cfg: anderer Stand (Unterrichtsmodus)
+function frStand(sid, wer, cfg) {
+  const F = (cfg || CONFIG).freigaben || {};
   const teile = sid.split('.'), kette = [];
   for (let n = teile.length; n >= 2; n--) kette.push(teile.slice(0, n).join('.'));
   const werKette = wer === 'alle' ? ['alle'] : [wer, 'alle'];
@@ -123,7 +142,7 @@ function frStand(sid, wer) {
     const v = F[t] && F[t][w];
     if (v !== undefined) return { v, eigen: t === sid && w === wer, von: w };
   }
-  return { v: 'frei', eigen: false, von: '' };
+  return { v: FR.standardZu.has(sid) ? 'zu' : 'frei', eigen: false, von: '' };
 }
 function frGesperrt(v) { return v === 'zu' || (/^\d{4}-\d{2}-\d{2}$/.test(v) && v > frHeute()); }
 
@@ -179,18 +198,19 @@ function frAktionen(r, s, wer) {
     </div></div>`;
 }
 
-// Eine Stufe für „wer“ setzen. v: 'frei' | 'zu' | 'JJJJ-MM-TT' | 'erben'
-function frSetzen(sid, wer, v) {
-  const F = frCfg();
+// Eine Stufe für „wer“ setzen. v: 'frei' | 'zu' | 'JJJJ-MM-TT' | 'erben'. cfg: anderer Stand (Unterrichtsmodus)
+function frSetzen(sid, wer, v, cfg) {
+  const c = cfg || CONFIG;
+  if (!c.freigaben || typeof c.freigaben !== 'object' || Array.isArray(c.freigaben)) c.freigaben = {};
+  const F = c.freigaben;
   const e = F[sid] || (F[sid] = {});
   delete e[wer];
-  if (v === 'erben') return;
-  if (v === 'frei') {
-    // Nur dann ausdrücklich „offen“, wenn sonst eine Sperre von „Alle“ (oder dem Thema darüber) greifen würde
-    if (frGesperrt(frStand(sid, wer).v)) e[wer] = 'offen';
-    return;
+  if (v !== 'erben') {
+    // „frei“ nur dann ausdrücklich „offen“, wenn sonst eine Sperre greifen würde („Alle“, Thema darüber, "gesperrt": true)
+    if (v !== 'frei') e[wer] = v;
+    else if (frGesperrt(frStand(sid, wer, c).v)) e[wer] = 'offen';
   }
-  e[wer] = v;
+  if (!Object.keys(e).length) delete F[sid];
 }
 
 function frAktion(akt) {

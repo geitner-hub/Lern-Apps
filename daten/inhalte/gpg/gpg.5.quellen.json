@@ -1458,6 +1458,7 @@
    "id": "gpg.5.quellen.echt",
    "titel": "Echt oder nachgemacht?",
    "kurz": "Original, Nachbildung oder Fälschung",
+   "gesperrt": true,
    "typ": "lueckentext",
    "anweisung": "Ist das ein Original, eine Nachbildung oder eine Fälschung?",
    "aufgaben": [
@@ -1569,6 +1570,7 @@
    "id": "gpg.5.quellen.zeitfehler",
    "titel": "Zeitfehler-Check",
    "kurz": "Was passt nicht in die Zeit?",
+   "gesperrt": true,
    "typ": "markieren",
    "anweisung": "Tippe an, was es damals noch nicht gab.",
    "aufgaben": [
@@ -1613,6 +1615,7 @@
    "id": "gpg.5.quellen.glauben",
    "titel": "Kann ich ihr glauben?",
    "kurz": "War die Person dabei? Wollte sie etwas zeigen?",
+   "gesperrt": true,
    "typ": "zuordnen",
    "anweisung": "Kann ich dieser Quelle glauben?",
    "ziele": [
@@ -1661,6 +1664,7 @@
    "id": "gpg.5.quellen.fall-kritik",
    "titel": "Ganzer Fall mit Quellenkritik",
    "kurz": "Alle vier Karten ins Heft – mit Karte 4",
+   "gesperrt": true,
    "typ": "fall",
    "aufgaben": [
     {

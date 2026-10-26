@@ -30,6 +30,7 @@
 #       Quellen je Aufgabe (Quellen-Detektiv): Bild existiert, Fotos (png/jpg/webp) haben einen „nachweis“,
 #       quellenart ist sach/bild/schrift, Methodenkarten in „hilfe“ haben nr und Farbe #rrggbb.
 #       Typ fall (ganzer Fall): titel, Quelle, karten 1–3 (optional 4) mit muster; Hilfen mit frage und optionen.
+#       Freigaben (Etappe 4): gesperrt ist true/false, „nach“ einer Aufgabe nennt eine andere Stufe der Datei.
 #   13. Die Insel: alle Insel-Dateien (spiele/insel.html, gemeinsam/insel-*.js, daten/insel*.json)
 #       stehen in sw.js NACHLADEN (sonst fehlen sie offline).
 #   14. Die Insel: daten/insel.json ist gültig (Karten, Gebiete, Vorlagen, IDs), und Bewohner-Plätze
@@ -562,12 +563,17 @@ for p in sorted(ROOT.glob('daten/inhalte/*/*.json')):
     stufen = d.get('stufen')
     if not isinstance(stufen, list) or not stufen: FI('keine stufen'); continue
     fall_stufen = {s.get('id') for s in stufen if isinstance(s, dict) and not s.get('mix') and (s.get('typ') or typ) == 'fall'}
+    stufen_ids = {s.get('id') for s in stufen if isinstance(s, dict)}
     for st in stufen:
         sid = st.get('id') if isinstance(st, dict) else None
         wo = f'Stufe {sid}'
         if not sid or not str(sid).startswith(str(tid) + '.'): FI(f'{wo}: id muss mit „{tid}.“ beginnen'); continue
         if katalog is not None and sid not in ids: FI(f'{wo} fehlt in daten/katalog.json')
         if not st.get('titel'): FI(f'{wo}: titel fehlt')
+        if st.get('gesperrt') not in (None, True, False): FI(f'{wo}: gesperrt muss true oder false sein')   # Quellen-Detektiv Etappe 4
+        for x in st.get('aufgaben') or []:
+            if isinstance(x, dict) and x.get('nach') is not None and (x['nach'] not in stufen_ids or x['nach'] == sid):
+                FI(f'{wo}: „nach“ muss eine andere Stufe dieser Datei nennen (nicht „{x["nach"]}“)')
         if st.get('mix'):                                        # Neue Lern-Apps Etappe 6: Mix-Stufe
             for a_ in st.get('aus') or []:
                 if a_ in fall_stufen: H(f'{r}: {wo}: aus nennt den ganzen Fall {a_} – Fälle kommen nie in einen Mix')

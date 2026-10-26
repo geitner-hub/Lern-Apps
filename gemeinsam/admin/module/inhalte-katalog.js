@@ -19,12 +19,13 @@ LWAdmin.modul({
     const zu = v => v === 'zu' || (/^\d{4}-\d{2}-\d{2}$/.test(String(v)) && v > heute());
     const datum = v => String(v).split('-').reverse().slice(0, 2).join('.') + '.';
 
-    /** Was gilt für „alle“? Eigener Eintrag, sonst das Thema darüber (wie gemeinsam/freigabe.js) */
+    /** Was gilt für „alle“? Eigener Eintrag, sonst das Thema darüber, sonst der Standard der Inhaltsdatei
+     *  ("gesperrt": true = zu, Quellen-Detektiv Etappe 4) – wie gemeinsam/freigabe.js */
     function stand(c, id, eltern) {
       const F = c.freigaben || {};
       if (F[id] && F[id].alle !== undefined) return { v: F[id].alle, eigen: true };
       if (eltern && F[eltern] && F[eltern].alle !== undefined) return { v: F[eltern].alle, eigen: false };
-      return { v: 'frei', eigen: false };
+      return { v: window.FR && FR.standardZu.has(id) ? 'zu' : 'frei', eigen: false };
     }
     const sonst = (c, id) => Object.keys((c.freigaben || {})[id] || {}).filter(w => w !== 'alle');
 
@@ -129,6 +130,7 @@ LWAdmin.modul({
     const ab1 = store.abonnieren(zeichnen), ab2 = D.abonnieren(zeichnen);
     zeichnen();
     D.laden(KATALOG).catch(x => { fehler = x.message || String(x); }).then(zeichnen);
+    if (typeof frStandardZuLaden === 'function') frStandardZuLaden().then(() => { if (aktiv) zeichnen(); });   // "gesperrt": true kennen
     return () => { aktiv = false; ab1(); ab2(); host.removeEventListener('change', aenderung); host.removeEventListener('input', eingabe); host.removeEventListener('toggle', umschalten, true); };
   },
 });

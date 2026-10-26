@@ -320,7 +320,12 @@ Sicherungskarte verbunden ist – aus der **Kartengruppe** (der Sync-Worker schi
   `{ "en.5.vok.u5": { "alle": "2026-11-10" }, "ma.6.kopf.brueche": { "k6": "zu", "g:<Gruppe>": "offen" } }`.
   Wer: `alle`, `k5` … `k13`, `g:<32 hex>`. Wert: `zu`, `offen` oder Datum (gesperrt bis zu diesem Tag).
   Es entscheidet der genaueste Eintrag: Stufe vor Thema darüber, Gruppe vor Klasse vor „Alle“.
-  **Ohne Eintrag ist alles offen.** Gesperrtes erscheint mit 🔒 ohne Erklärtext.
+  **Ohne Eintrag ist alles offen** – außer bei Stufen mit `"gesperrt": true` in ihrer Inhaltsdatei (Baukasten, v88): die sind
+  ohne Eintrag zu, Freigeben schreibt `offen`. So steht die Grundsperre im Repo und kein alter Admin-Entwurf kann sie aus
+  config.json löschen. Aufgaben mit `"nach": "<Stufen-ID>"` erscheinen erst, wenn diese Stufe frei ist (Fall zur Stunde);
+  Mix-Stufen nehmen nur freie Stufen und Aufgaben. Gesperrtes erscheint mit 🔒 ohne Erklärtext.
+  **Unterrichtsmodus → 🔓 Freischalten** gibt eine Stufe sofort frei (`store.sofort`, nur Hauptzugang); `freigabe.js` fragt
+  alle 2 Minuten nach, solange die Seite sichtbar ist.
 - **Wo es wirkt:** Kopfrechnen, Mathe-Trainer und Vokabeltrainer (über ueben.js), „Meine Themen“ der Spiele
   (gesperrte Starter-Inhalte kommen nicht neu dazu). Dorf-Aufträge gelten je App – dort kann ein Kind ohnehin nur
   Freies üben. Neue Engine-Apps: Reihe in `FR_KATALOG_REIHEN` (`gemeinsam/admin/freigaben.js`) ergänzen.
