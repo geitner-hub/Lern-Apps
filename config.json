@@ -551,7 +551,7 @@
       "fach": "GPG",
       "emoji": "🔍",
       "beschreibung": "Beschreiben, erklären, deuten – werde zum Quellen-Detektiv!",
-      "hidden": false,
+      "hidden": true,
       "klassen": [],
       "customTags": [],
       "aod": false
