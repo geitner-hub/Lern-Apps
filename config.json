@@ -543,6 +543,17 @@
         }
       ],
       "aod": false
+    },
+    {
+      "name": "Quellen Detektiv",
+      "datei": "apps/typen/uebung.html?inhalt=gpg.5.quellen",
+      "fach": "GPG",
+      "emoji": "🔍",
+      "beschreibung": "Beschreiben, erklären, deuten – werde zum Quellen-Detektiv!",
+      "hidden": false,
+      "klassen": [],
+      "customTags": [],
+      "aod": false
     }
   ],
   "customTags": [
