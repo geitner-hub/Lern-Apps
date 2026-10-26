@@ -22,6 +22,15 @@
 //  Satzbau und Eingabe:
 //    Stufe:   { "id": …, "typ": "sortieren", … }               überschreibt "typ" der Datei
 //    Aufgabe: { "typ": "eingabe", "frage": …, "antwort": … }  (nur bei Typen mit "aufgaben")
+//  Quelle je Aufgabe (Quellen-Detektiv Etappe 1) – bei zuordnen, sortieren, lueckentext, markieren, eingabe (Text):
+//    Aufgabe: { …, "bild": "q-faustkeil.svg"  (Datei neben der Inhaltsdatei; antippen = groß),
+//               "quelltext": "…"              (Schriftquelle als Zitat, statt oder zusätzlich zum Bild),
+//               "herkunft": "Brief, 1958"      (optional, steht unter dem Zitat),
+//               "alt": "…"                     (optional, Bildbeschreibung für Vorlesehilfen),
+//               "nachweis": "Foto: Name, CC BY 4.0, Wikimedia Commons"  (Pflicht bei Fotos, ⓘ zeigt ihn),
+//               "quellenart": "sach" | "bild" | "schrift"  (optional; Karte 2 passt ihre Leitfrage daran an) }
+//    Lückentext mit optionen wird dafür zur eigenen Bedienung (Knöpfe unter der Quelle).
+//  „So geht's“ als Methodenkarte: { "titel": "Beschreiben", "text": "Was sehe ich?", "karte": { "nr": 1, "farbe": "#5dbb63" } }
 //  Mix-Stufe: { "id": "en.5.to-be.mix", "titel": "Mix", "mix": true,
 //               "aus": ["en.5.to-be.formen", "en.5.simple-present"]   (optional; Stufen-IDs dieser oder anderer
 //                       Inhaltsdateien oder ganze Inhaltsdateien; ohne "aus": alle anderen Stufen dieser Datei),
@@ -80,6 +89,21 @@
       display:grid;place-items:center;font:900 1rem 'Nunito',sans-serif;box-shadow:0 0 0 4px rgba(230,168,23,.35)}
   .lt-marke.leise{background:rgba(99,102,241,.55);color:#fff;box-shadow:none;width:1.2rem;height:1.2rem;margin:-.6rem 0 0 -.6rem;font-size:0}
   .lt-gross{font-size:clamp(4rem,16vw,6.5rem);line-height:1.1;text-align:center;margin:.2rem 0 .6rem}
+  .lt-quelle{margin:0 auto .8rem;max-width:640px;text-align:center}
+  .lt-q-bild{display:block;margin:0 auto;padding:0;border:0;background:#fff;border-radius:16px;overflow:hidden;cursor:zoom-in;max-width:100%}
+  .lt-q-bild img{display:block;height:min(34vh,360px);width:auto;max-width:100%}
+  .lt-q-text{margin:0 auto;max-width:560px;background:#f6ecd2;color:#2b2116;border-radius:14px;padding:.9rem 1.1rem;text-align:left;
+      font:700 1.15rem/1.5 'Nunito',sans-serif;box-shadow:inset 0 0 0 2px rgba(0,0,0,.08)}
+  .lt-q-text cite{display:block;margin-top:.4rem;font-style:normal;font-size:.85rem;color:#6b5a44}
+  .lt-q-info{margin-top:.3rem;font-size:.8rem;color:var(--mut)}
+  .lt-q-info button{background:none;border:0;color:var(--ind2);font:900 .95rem 'Nunito',sans-serif;cursor:pointer;padding:.2rem .4rem}
+  .lt-zoom{position:fixed;inset:0;z-index:9999;background:rgba(5,5,12,.94);display:flex;align-items:center;justify-content:center;padding:1rem;cursor:zoom-out}
+  .lt-zoom img{max-width:100%;max-height:100%;background:#fff;border-radius:12px}
+  .lt-zoom .lt-q-text{font-size:1.5rem;max-width:760px}
+  .lu .hilfe-text section.lt-karte{color:#fff;border:0;display:flex;gap:1rem;align-items:center;padding:1rem 1.1rem}
+  .lu .hilfe-text section.lt-karte h2{color:#fff;font-size:1.5rem;margin:0}
+  .lu .hilfe-text section.lt-karte p{margin:.15rem 0 0;font-size:1.05rem}
+  .lt-karte-nr{flex:0 0 3.2rem;height:3.2rem;border-radius:50%;background:#fff;display:grid;place-items:center;font:400 1.7rem 'Fredoka One','Nunito',sans-serif}
   @media (prefers-reduced-motion:reduce){.lt-chip:active,.lt-ziel:active{transform:none}}`;
   function stil() {
     if (document.getElementById('lt-css')) return;
@@ -112,16 +136,67 @@
     return esc(b);
   }
 
+  // ── Quelle je Aufgabe (Quellen-Detektiv): Bild oder Zitat über der Bedienung ──
+  const QUELLE_TYPEN = ['zuordnen', 'sortieren', 'lueckentext', 'markieren', 'eingabe'];
+  function quelleHTML(x, D) {
+    const nw = x.nachweis ? `<div class="lt-q-info"><button type="button" data-lt-info aria-label="Bildnachweis zeigen">ⓘ</button><span hidden>${esc(x.nachweis)}</span></div>` : '';
+    const bild = x.bild ? `<button type="button" class="lt-q-bild" data-lt-zoom aria-label="Quelle groß zeigen">${bildHTML(x.bild, D, x.alt || 'Quelle')}</button>` : '';
+    const text = x.quelltext ? `<blockquote class="lt-q-text" data-lt-zoom>${esc(x.quelltext)}${x.herkunft ? `<cite>${esc(x.herkunft)}</cite>` : ''}</blockquote>` : '';
+    return `<figure class="lt-quelle">${bild}${text}${nw}</figure>`;
+  }
+  /** Hängt die Quelle einer Aufgabe vor die Bedienung. Zahl-Aufgaben (Zifferntastatur) bleiben ohne – pruefen.py meldet das. */
+  function mitQuelle(a, x, D) {
+    if (!a || !x || !(x.bild || x.quelltext)) return a;
+    const kopf = quelleHTML(x, D);
+    if (a.art === 'wahl') {
+      const optionen = a.optionen;
+      a.art = 'eigen';
+      a.eingabeText = e => String(e);
+      a.zeige = (box, fertig) => { box.innerHTML = kopf; knoepfe(box, optionen.map(o => ({ wert: o, text: o })), fertig); };
+    } else if (a.art === 'eigen') {
+      const innen = a.zeige;
+      a.zeige = (box, fertig) => { box.innerHTML = kopf + '<div class="lt-innen"></div>'; innen(box.querySelector('.lt-innen'), fertig); };
+    }
+    a.quelle = { bild: x.bild || '', quellenart: x.quellenart || '' };
+    return a;
+  }
+  // Groß zeigen und Bildnachweis – ein Zuhörer für alle Aufgaben
+  document.addEventListener('click', e => {
+    const info = e.target.closest('[data-lt-info]');
+    if (info) { const sp = info.nextElementSibling; if (sp) sp.hidden = !sp.hidden; return; }
+    const z = e.target.closest('.lt-zoom');
+    if (z) { z.remove(); return; }
+    const q = e.target.closest('[data-lt-zoom]');
+    if (!q) return;
+    const ov = document.createElement('div');
+    ov.className = 'lt-zoom'; ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-label', 'Quelle groß – antippen schließt');
+    ov.innerHTML = q.tagName === 'BLOCKQUOTE' ? q.outerHTML.replace(' data-lt-zoom', '') : q.innerHTML;
+    document.body.appendChild(ov);
+  });
+
+  // Methodenkarten „Quellen-Detektiv“ (Karten von Bene, Karte 2 passt sich der Quellenart an)
+  const KARTEN = {
+    1: { titel: 'Beschreiben', frage: () => 'Was sehe ich?', farbe: '#5dbb63' },
+    2: { titel: 'Erklären', frage: art => art === 'bild' || art === 'schrift' ? 'Wofür wurde es gemacht?' : 'Wofür wurde es benutzt?', farbe: '#3c7dc4' },
+    3: { titel: 'Deuten', frage: () => 'Was verrät es über das Leben der Menschen?', farbe: '#f29b38' },
+    4: { titel: 'Quellenkritik', frage: () => 'Kann ich der Quelle trauen?', farbe: '#8e62c4' },
+  };
+
   function typ(name, t) { TYPEN[name] = t; }
 
   /** „So geht's“ aus der Inhaltsdatei: "hilfe": [{ titel, text?, beispiele?: [[en, de]], tabelle?: [[Kopf…], [Zeile…]] }] */
   function hilfeHTML(liste) {
     if (!Array.isArray(liste) || !liste.length) return '';
-    return liste.map(h => `<section>${h.titel ? `<h2>${esc(h.titel)}</h2>` : ''}
+    return liste.map(h => {
+      const k = h.karte, farbe = k && /^#[0-9a-f]{6}$/i.test(k.farbe || '') ? k.farbe : '';
+      if (k && farbe) return `<section class="lt-karte" style="background:${farbe}"><span class="lt-karte-nr" style="color:${farbe}">${esc(k.nr)}</span>
+        <div>${h.titel ? `<h2>${esc(h.titel)}</h2>` : ''}${(Array.isArray(h.text) ? h.text : h.text ? [h.text] : []).map(t => `<p>${esc(t)}</p>`).join('')}</div></section>`;
+      return `<section>${h.titel ? `<h2>${esc(h.titel)}</h2>` : ''}
       ${(Array.isArray(h.text) ? h.text : h.text ? [h.text] : []).map(t => `<p>${esc(t)}</p>`).join('')}
       ${Array.isArray(h.beispiele) && h.beispiele.length ? `<div class="bsp">${h.beispiele.map(b => `<b>${esc(b[0])}</b><span>${esc(b[1] || '')}</span>`).join('')}</div>` : ''}
       ${Array.isArray(h.tabelle) && h.tabelle.length ? `<table><tr>${h.tabelle[0].map(k => `<th>${esc(k)}</th>`).join('')}</tr>
-        ${h.tabelle.slice(1).map(z => `<tr>${z.map(k => `<td>${esc(k)}</td>`).join('')}</tr>`).join('')}</table>` : ''}</section>`).join('');
+        ${h.tabelle.slice(1).map(z => `<tr>${z.map(k => `<td>${esc(k)}</td>`).join('')}</tr>`).join('')}</table>` : ''}</section>`;
+    }).join('');
   }
 
   // Umzug alter Einzel-Apps (Neue Lern-Apps Etappe 7): Ergebnisse, Sterne und Dorf-Aufträge übernehmen.
@@ -178,7 +253,7 @@
         if (!a) return null;
         a._typ = name;
         if (D.sprache && !a.sprache) a.sprache = D.sprache;
-        return a;
+        return QUELLE_TYPEN.includes(name) ? mitQuelle(a, x, D) : a;
       },
     };
   }
@@ -269,5 +344,5 @@
     });
   }
 
-  window.LernTypen = { start, typ, mischen, gleich, norm, esc, textOhneSatzzeichen, knopf, knoepfe, textfeld, bildHTML, NAMEN };
+  window.LernTypen = { start, typ, mischen, gleich, norm, esc, textOhneSatzzeichen, knopf, knoepfe, textfeld, bildHTML, quelleHTML, KARTEN, NAMEN };
 })();

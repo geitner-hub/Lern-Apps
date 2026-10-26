@@ -416,7 +416,19 @@ Eine neue App = **Inhaltsdatei + Katalog-Eintrag + Admin-Eintrag**. Kein neuer C
 
    Jede Aufgabe darf `tipp` und `erklaerung` haben (💡 und Erklärung nach falscher Antwort). Genaues Format: Kopf von
    `gemeinsam/typen/<typ>.js`. **Bilder:** Emojis (laufen überall, keine Lizenz) oder selbst gezeichnete SVG-Dateien
-   neben der Inhaltsdatei; fremde Bilder nur mit freier Lizenz (CC0) und lokal, nie von fremden Servern.
+   neben der Inhaltsdatei; fremde Bilder nur mit freier Lizenz (CC0, gemeinfrei oder CC BY mit Bildnachweis) und lokal,
+   nie von fremden Servern. Schulbuch-Abbildungen nie.
+
+   **Quelle je Aufgabe** (Quellen-Detektiv, v85): Jede Aufgabe in zuordnen, sortieren, lueckentext, markieren und eingabe (Text)
+   darf `bild` (Datei neben der Inhaltsdatei), `quelltext` (+ `herkunft`), `alt`, `nachweis` und `quellenart` (`sach`/`bild`/`schrift`)
+   tragen. Die Quelle steht über der Bedienung, Antippen zeigt sie groß, ⓘ den Bildnachweis. Fotos (png/jpg/webp) brauchen einen
+   `nachweis` (pruefen.py). Lückentext mit optionen wird dafür zur eigenen Bedienung. zuordnen kann `zielfarben` (Ziel → #rrggbb).
+   **Methodenkarten** in „So geht's“: `{ "titel", "text", "karte": { "nr", "farbe": "#rrggbb" } }`. `LernTypen.KARTEN` enthält die
+   Karten „Quellen-Detektiv“ (1 Beschreiben, 2 Erklären – Leitfrage je Quellenart –, 3 Deuten, 4 Quellenkritik).
+   **Quellen-Detektiv** (`daten/inhalte/gpg/gpg.5.quellen.json`, Bilder `q-*.svg` selbst gezeichnet): Detektiv-Ritual (Mix, 5 Aufgaben),
+   Quelle oder Darstellung?, Quellenarten, Sehen oder denken?, Wofür war das?, Passt der Schluss?, Drei Schritte sortieren.
+   Plan: Claude-Docs „Konzept: Geschichte-Apps und Quellen-Werkstatt“ und „Aktionsplan: Quellen-Detektiv“. Geübt wird nur mit
+   Quellen aus Zeiten, die schon dran waren – Ägypten- und Römer-Quellen erst nach der jeweiligen Stunde (Freigaben).
 2. **Katalog:** Thema mit `quelle: { "app": "apps/typen/uebung.html", "parameter": "inhalt=<Themen-ID>" }` und allen
    Stufen eintragen, mit `lehrplan`, `dauer`, `einsatz`.
 3. **Admin:** neue App mit Datei `apps/typen/uebung.html?inhalt=<Themen-ID>`.

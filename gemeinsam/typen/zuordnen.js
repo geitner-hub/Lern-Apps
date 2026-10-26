@@ -7,6 +7,7 @@
 //                        (je Aufgabe ein Paar plus zufällige weitere, höchstens proAufgabe)
 //  Optional: "ziele": ["Nomen", "Verb", "Adjektiv"] – diese Ziele immer zeigen (Kategorien, feste Reihenfolge),
 //            "anweisung": "Ordne jedes Wort seiner Wortart zu." (sonst aus dem Kopf der Datei)
+//            "zielfarben": { "1 Beschreiben": "#5dbb63" } – Ziel in dieser Farbe (z. B. Methodenkarten)
 //  Bedienung: links ein Teil antippen, dann das Ziel. Fertig, wenn alles zugeordnet ist.
 // ═══════════════════════════════════════════════════════
 (function () {
@@ -35,11 +36,13 @@
         eingabeText: e => (e || []).map(p => p[0] + ' → ' + p[1]).join(' · '),
         zeige(box, fertig) {
           const links = T.mischen(paare.map(p => p[0])), wahl = {};
+          const fz = st.zielfarben || {};
+          const farbe = z => /^#[0-9a-f]{6}$/i.test(fz[z] || '') ? ` style="background:${fz[z]};border-color:${fz[z]};color:#fff"` : '';
           let aktiv = 0;
           const zeichnen = () => {
             box.innerHTML = `<div class="lt-chips">${links.map((l, i) => `<button type="button" class="lt-chip${i === aktiv ? ' an' : ''}${wahl[i] !== undefined ? ' fertig' : ''}" data-l="${i}">
                 ${T.esc(l)}${wahl[i] !== undefined ? `<small>→ ${T.esc(wahl[i])}</small>` : ''}</button>`).join('')}</div>
-              <div class="lt-ziele">${ziele.map((z, i) => `<button type="button" class="lt-ziel" data-z="${i}">${T.esc(z)}</button>`).join('')}</div>
+              <div class="lt-ziele">${ziele.map((z, i) => `<button type="button" class="lt-ziel" data-z="${i}"${farbe(z)}>${T.esc(z)}</button>`).join('')}</div>
               <div class="lt-zeile"><button type="button" class="btn p" data-ok ${Object.keys(wahl).length < links.length ? 'disabled style="opacity:.4"' : ''}>✓ Prüfen</button></div>`;
           };
           box.addEventListener('click', e => {
