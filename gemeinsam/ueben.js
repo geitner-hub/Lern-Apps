@@ -116,6 +116,7 @@
   .lu .frage .q{font-family:'Fredoka One','Nunito',sans-serif;font-size:clamp(1.7rem,6vw,2.7rem);line-height:1.2;word-break:break-word}
   .lu .frage .h{color:var(--mut);font-weight:800;font-size:.85rem;margin-top:.3rem}
   .lu .frage .vor{position:absolute;top:.5rem;right:.5rem}
+  .lu .frage:has(.vor) .q.lang{padding:0 2.8rem}
   .lu .ant{display:flex;gap:.6rem;justify-content:center;margin-bottom:.8rem}
   .lu .feld{min-width:9rem;min-height:3.6rem;background:#0b0a14;border:3px solid var(--ind);border-radius:16px;display:flex;align-items:center;justify-content:center;
       font-family:'Fredoka One','Nunito',sans-serif;font-size:2rem;padding:0 .8rem;cursor:pointer}

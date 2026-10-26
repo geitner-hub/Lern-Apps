@@ -29,6 +29,13 @@ Feld **Bild** wie in der Tabelle, Erklärung zum Aufdecken.
 | 8 | `daten/inhalte/gpg/q-brief.svg` | Ein alter Brief einer Oma aus Hirschau, 1958 | Quelle | Die Oma hat den Brief 1958 selbst geschrieben. Er ist eine Quelle aus dieser Zeit. |
 | 9 | `daten/inhalte/gpg/q-foto-alt.svg` | Ein altes Schwarz-Weiß-Foto: Kinder vor einer Schule, 1956 | Quelle | Das Foto wurde 1956 gemacht. Es ist eine Quelle aus dieser Zeit. |
 
+## Zweites Quiz: „Echt oder nachgemacht?“ (ab Etappe 3)
+
+Gleicher Weg über **🎲 Aus dem Pool** mit der Stufe **Echt oder nachgemacht?** (9 Fragen, Antworten Original · Nachbildung ·
+Fälschung). Gut mit **Zweite Runde**: Nachbildung und Fälschung unterscheiden sich nur darin, ob jemand ehrlich sagt, dass es
+nachgemacht ist – darüber lohnt das Partnergespräch. Die Stufe ist im Pool auch dann wählbar, wenn sie für die Kinder noch
+gesperrt ist.
+
 ## Hinweise
 
 - Wenn Fotos echter Funde im Repo liegen (z. B. `daten/inhalte/gpg/foto-faustkeil.jpg` mit Bildnachweis in der Inhaltsdatei),

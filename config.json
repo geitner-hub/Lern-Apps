@@ -704,6 +704,18 @@
     "en.6.lernweg-u1": {
       "g:123676bc75aa3e264f709ce34e6e213e": "offen",
       "g:8dee44b8c52b30c944370c3911111187": "offen"
+    },
+    "gpg.5.quellen.echt": {
+      "alle": "zu"
+    },
+    "gpg.5.quellen.zeitfehler": {
+      "alle": "zu"
+    },
+    "gpg.5.quellen.glauben": {
+      "alle": "zu"
+    },
+    "gpg.5.quellen.fall-kritik": {
+      "alle": "zu"
     }
   }
 }

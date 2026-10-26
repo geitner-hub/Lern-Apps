@@ -36,6 +36,17 @@
    }
   },
   {
+   "titel": "Quellenkritik",
+   "text": [
+    "Kann ich der Quelle trauen?",
+    "Ist sie echt? · Von wem und wann? · Wollte jemand etwas zeigen?"
+   ],
+   "karte": {
+    "nr": 4,
+    "farbe": "#8e62c4"
+   }
+  },
+  {
    "titel": "Profi-Frage: Quelle oder Darstellung?",
    "text": [
     "Eine Quelle stammt aus der Zeit selbst: ein Fund, ein Bild oder ein Text von damals.",
@@ -62,6 +73,27 @@
      "ein Text von damals: Brief, Tagebuch"
     ]
    ]
+  },
+  {
+   "titel": "Echt oder nachgemacht?",
+   "tabelle": [
+    [
+     "Wort",
+     "Das heißt"
+    ],
+    [
+     "Original",
+     "das echte Stück von damals"
+    ],
+    [
+     "Nachbildung",
+     "ehrlich nachgemacht – man sagt, dass es eine Kopie ist"
+    ],
+    [
+     "Fälschung",
+     "nachgemacht, aber man behauptet, es sei echt"
+    ]
+   ]
   }
  ],
  "stufen": [
@@ -77,7 +109,10 @@
     "gpg.5.quellen.sehen",
     "gpg.5.quellen.wofuer",
     "gpg.5.quellen.schluss",
-    "gpg.5.quellen.schritte"
+    "gpg.5.quellen.schritte",
+    "gpg.5.quellen.echt",
+    "gpg.5.quellen.zeitfehler",
+    "gpg.5.quellen.glauben"
    ]
   },
   {
@@ -961,7 +996,6 @@
       "Tier",
       "Handabdruck",
       "Jagd",
-      "Pferd",
       "Wisent"
      ],
      "karten": [
@@ -1374,6 +1408,645 @@
         "Daran erkennt man, dass die Menschen Tiere gejagt haben.",
         "Die Menschen damals brauchten Fleisch und Felle.",
         "Sie konnten Waffen aus Stein und Holz bauen."
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "gpg.5.quellen.echt",
+   "titel": "Echt oder nachgemacht?",
+   "kurz": "Original, Nachbildung oder Fälschung",
+   "typ": "lueckentext",
+   "anweisung": "Ist das ein Original, eine Nachbildung oder eine Fälschung?",
+   "aufgaben": [
+    {
+     "text": "Ein Bauer findet beim Pflügen einen alten Faustkeil in der Erde. Das ist ein ___.",
+     "antwort": "Original",
+     "optionen": [
+      "Original",
+      "Nachbildung",
+      "Fälschung"
+     ],
+     "erklaerung": "Der Faustkeil lag seit der Steinzeit in der Erde. Er ist das echte Stück von damals.",
+     "tipp": "Ist es alt und echt? Sagt jemand ehrlich, dass es nachgemacht ist?"
+    },
+    {
+     "text": "Im Museumsladen kaufst du einen Faustkeil aus Gips. Auf dem Schild steht: Nachbildung. Das ist eine ___.",
+     "antwort": "Nachbildung",
+     "optionen": [
+      "Original",
+      "Nachbildung",
+      "Fälschung"
+     ],
+     "erklaerung": "Er wurde heute gemacht, und das Schild sagt das ehrlich. Das ist eine Nachbildung.",
+     "tipp": "Ist es alt und echt? Sagt jemand ehrlich, dass es nachgemacht ist?"
+    },
+    {
+     "text": "Ein Mann malt heute Tiere an eine Höhlenwand. Er sagt: „Das Bild ist 20 000 Jahre alt.“ Das ist eine ___.",
+     "antwort": "Fälschung",
+     "optionen": [
+      "Original",
+      "Nachbildung",
+      "Fälschung"
+     ],
+     "erklaerung": "Das Bild ist neu, aber der Mann behauptet, es sei alt. Das ist eine Fälschung.",
+     "tipp": "Ist es alt und echt? Sagt jemand ehrlich, dass es nachgemacht ist?"
+    },
+    {
+     "text": "Forscher graben ein Tongefäß aus der Jungsteinzeit aus. Das ist ein ___.",
+     "antwort": "Original",
+     "optionen": [
+      "Original",
+      "Nachbildung",
+      "Fälschung"
+     ],
+     "erklaerung": "Das Gefäß wurde in der Jungsteinzeit gemacht und jetzt gefunden. Es ist ein Original.",
+     "tipp": "Ist es alt und echt? Sagt jemand ehrlich, dass es nachgemacht ist?"
+    },
+    {
+     "text": "Das echte Höhlenbild ist empfindlich. Darum malen Künstler es für Besucher in einer zweiten Höhle genau nach. Das ist eine ___.",
+     "antwort": "Nachbildung",
+     "optionen": [
+      "Original",
+      "Nachbildung",
+      "Fälschung"
+     ],
+     "erklaerung": "Die Besucher-Höhle ist ehrlich nachgemacht, damit das echte Bild geschützt bleibt. Das ist eine Nachbildung.",
+     "tipp": "Ist es alt und echt? Sagt jemand ehrlich, dass es nachgemacht ist?"
+    },
+    {
+     "text": "Jemand verkauft im Internet eine „echte Steinzeit-Speerspitze“. Er hat sie letzte Woche selbst gemacht. Das ist eine ___.",
+     "antwort": "Fälschung",
+     "optionen": [
+      "Original",
+      "Nachbildung",
+      "Fälschung"
+     ],
+     "erklaerung": "Die Spitze ist neu, wird aber als echt verkauft. Das ist eine Fälschung.",
+     "tipp": "Ist es alt und echt? Sagt jemand ehrlich, dass es nachgemacht ist?"
+    },
+    {
+     "text": "Im Museum liegt eine Knochennadel. Auf dem Schild steht: Fund aus einer Höhle, etwa 20 000 Jahre alt. Das ist ein ___.",
+     "antwort": "Original",
+     "optionen": [
+      "Original",
+      "Nachbildung",
+      "Fälschung"
+     ],
+     "erklaerung": "Die Nadel wurde in der Höhle gefunden. Das Museum zeigt das echte Stück.",
+     "tipp": "Ist es alt und echt? Sagt jemand ehrlich, dass es nachgemacht ist?"
+    },
+    {
+     "text": "Im Steinzeitpark steht ein Langhaus. Auf einer Tafel steht: So könnte ein Haus vor 7000 Jahren ausgesehen haben – nachgebaut 2015. Das ist eine ___.",
+     "antwort": "Nachbildung",
+     "optionen": [
+      "Original",
+      "Nachbildung",
+      "Fälschung"
+     ],
+     "erklaerung": "Das Haus wurde 2015 gebaut, und die Tafel sagt das ehrlich. Das ist eine Nachbildung.",
+     "tipp": "Ist es alt und echt? Sagt jemand ehrlich, dass es nachgemacht ist?"
+    },
+    {
+     "text": "Ein Händler ritzt Tiere in einen Knochen und färbt ihn mit Tee alt. Er sagt: „Ein Fund aus der Steinzeit!“ Das ist eine ___.",
+     "antwort": "Fälschung",
+     "optionen": [
+      "Original",
+      "Nachbildung",
+      "Fälschung"
+     ],
+     "erklaerung": "Er macht den Knochen absichtlich alt und lügt über sein Alter. Das ist eine Fälschung.",
+     "tipp": "Ist es alt und echt? Sagt jemand ehrlich, dass es nachgemacht ist?"
+    }
+   ]
+  },
+  {
+   "id": "gpg.5.quellen.zeitfehler",
+   "titel": "Zeitfehler-Check",
+   "kurz": "Was passt nicht in die Zeit?",
+   "typ": "markieren",
+   "anweisung": "Tippe an, was es damals noch nicht gab.",
+   "aufgaben": [
+    {
+     "satz": "Liebe Anni, gestern war ich mit Opa auf dem Markt. Ein Foto davon schicke ich dir mit dem [Handy].",
+     "frage": "Ein Brief aus dem Jahr 1958. Was passt nicht in die Zeit?",
+     "erklaerung": "1958 gab es noch keine Handys. Der Brief ist nicht von 1958 – vielleicht eine Fälschung.",
+     "quellenart": "schrift"
+    },
+    {
+     "satz": "Heute haben wir im Garten Kartoffeln geerntet. Am Abend haben wir [Pizza vom Lieferdienst] gegessen.",
+     "frage": "Ein Tagebuch aus dem Jahr 1961. Was passt nicht in die Zeit?",
+     "erklaerung": "1961 brachte in Hirschau noch kein Lieferdienst Pizza nach Hause. Das passt nicht in die Zeit.",
+     "quellenart": "schrift"
+    },
+    {
+     "satz": "Unser Lehrer schreibt mit Kreide an die Tafel. Wir schreiben alles auf unsere [Tablets].",
+     "frage": "So soll ein Kind im Jahr 1956 über die Schule erzählt haben. Was passt nicht?",
+     "erklaerung": "1956 schrieben die Kinder auf Schiefertafeln und in Hefte. Tablets gab es noch nicht."
+    },
+    {
+     "satz": "Wir sind dem Mammut drei Tage gefolgt. Am Abend sitzen wir am Feuer und essen [Nudeln aus der Packung].",
+     "frage": "So soll ein Jäger in der Altsteinzeit erzählt haben. Was passt nicht?",
+     "erklaerung": "Die Jäger aßen Fleisch, Beeren und Wurzeln. Nudeln aus der Packung gab es nicht. Übrigens: In der Steinzeit konnte noch niemand schreiben."
+    },
+    {
+     "satz": "Wir bauen ein Langhaus aus Holz und Lehm. Das Dach decken wir mit Schilf, in die Fenster kommt [Glas].",
+     "frage": "Ein Bericht über ein Dorf in der Jungsteinzeit. Was passt nicht?",
+     "erklaerung": "In der Jungsteinzeit gab es noch kein Fensterglas. Die Häuser hatten nur kleine Öffnungen."
+    },
+    {
+     "satz": "Auf der Höhlenwand sind zwei Wisente, eine Hand und ein [Fahrrad] gemalt.",
+     "frage": "Ein Händler sagt: Das Bild ist aus der Steinzeit. Was verrät die Fälschung?",
+     "erklaerung": "Fahrräder gibt es erst seit etwa 200 Jahren. Das Bild kann nicht aus der Steinzeit sein – es ist eine Fälschung.",
+     "bild": "q-hoehle-faelschung.svg",
+     "alt": "Eine Höhlenmalerei mit zwei Wisenten, einer Hand und einem Fahrrad",
+     "quellenart": "bild"
+    }
+   ]
+  },
+  {
+   "id": "gpg.5.quellen.glauben",
+   "titel": "Kann ich ihr glauben?",
+   "kurz": "War die Person dabei? Wollte sie etwas zeigen?",
+   "typ": "zuordnen",
+   "anweisung": "Kann ich dieser Quelle glauben?",
+   "ziele": [
+    "eher glaubwürdig",
+    "eher nicht glaubwürdig"
+   ],
+   "proAufgabe": 4,
+   "tipp": "War die Person dabei? Wollte sie etwas Bestimmtes zeigen oder angeben?",
+   "erklaerung": "Eher glaubwürdig ist, wer dabei war und aufschreibt, was passiert ist. Vorsicht bei Werbung, Angeberei und bei Dingen, die jemand nur gehört hat.",
+   "paare": [
+    [
+     "Ein Tagebuch: Ein Mädchen schreibt am Abend auf, was es am Tag erlebt hat.",
+     "eher glaubwürdig"
+    ],
+    [
+     "Ein Foto vom Schulfest, gemacht am Tag des Festes.",
+     "eher glaubwürdig"
+    ],
+    [
+     "Ein Brief von Oma aus dem Jahr 1958: Sie schreibt, dass es im Frühling viel geregnet hat.",
+     "eher glaubwürdig"
+    ],
+    [
+     "Ein Bericht in der Zeitung von einer Reporterin, die beim Fest dabei war.",
+     "eher glaubwürdig"
+    ],
+    [
+     "Ein Werbeplakat: „Unser Saft ist der beste der Welt!“",
+     "eher nicht glaubwürdig"
+    ],
+    [
+     "Ein Mann erzählt von einem Unfall. Er war nicht dabei, er hat nur davon gehört.",
+     "eher nicht glaubwürdig"
+    ],
+    [
+     "Ein Spieler schreibt nach dem Spiel: „Ich war der beste Spieler auf dem Platz!“",
+     "eher nicht glaubwürdig"
+    ],
+    [
+     "Eine Postkarte: „Unser Urlaub ist der allerbeste, alle anderen sind langweilig!“",
+     "eher nicht glaubwürdig"
+    ]
+   ]
+  },
+  {
+   "id": "gpg.5.quellen.fall-kritik",
+   "titel": "Ganzer Fall mit Quellenkritik",
+   "kurz": "Alle vier Karten ins Heft – mit Karte 4",
+   "typ": "fall",
+   "aufgaben": [
+    {
+     "titel": "Der Brief von Oma",
+     "bild": "q-brief.svg",
+     "alt": "Ein alter Brief einer Oma aus Hirschau, 1958",
+     "quellenart": "schrift",
+     "quelltext": "Liebe Anni, bei uns regnet es seit Ostern fast jeden Tag. Opa hat jetzt einen Traktor. Da ist die Arbeit auf dem Feld viel leichter. Deine Oma",
+     "herkunft": "Brief aus Hirschau, 3. Mai 1958",
+     "info": "Gefunden in einer Schachtel auf dem Dachboden.",
+     "wortspeicher": [
+      "Brief",
+      "Handschrift",
+      "Datum",
+      "Anrede",
+      "Oma",
+      "Enkelin",
+      "Traktor",
+      "Neuigkeiten"
+     ],
+     "karten": [
+      {
+       "nr": 1,
+       "hilfen": [
+        {
+         "frage": "Was steht oben rechts?",
+         "optionen": [
+          "Ort und Datum",
+          "eine Telefonnummer",
+          "ein Bild"
+         ]
+        },
+        {
+         "frage": "Wie ist er geschrieben?",
+         "optionen": [
+          "mit der Hand",
+          "mit dem Computer",
+          "mit Kreide"
+         ]
+        }
+       ],
+       "muster": [
+        "Ich sehe einen Brief auf altem Papier.",
+        "Er ist mit der Hand geschrieben.",
+        "Oben rechts steht: Hirschau, 3. Mai 1958.",
+        "Er beginnt mit „Liebe Anni“ und ist von der Oma."
+       ],
+       "check": [
+        "Ich habe Ort und Datum genannt."
+       ]
+      },
+      {
+       "nr": 2,
+       "hilfen": [
+        {
+         "frage": "Warum schreibt man einen Brief?",
+         "optionen": [
+          "um Neuigkeiten zu erzählen",
+          "um zu kochen",
+          "um zu spielen"
+         ]
+        }
+       ],
+       "muster": [
+        "Das ist ein Brief von einer Oma an ihre Enkelin Anni.",
+        "Man hat ihn geschrieben, um Neuigkeiten zu erzählen.",
+        "Damals hatten nur wenige Familien ein Telefon."
+       ]
+      },
+      {
+       "nr": 3,
+       "hilfen": [
+        {
+         "frage": "Was zeigt der Traktor?",
+         "optionen": [
+          "Die Arbeit auf dem Feld wurde leichter.",
+          "Alle hatten ein Auto.",
+          "Niemand arbeitete auf dem Feld."
+         ]
+        }
+       ],
+       "muster": [
+        "Daran erkennt man, dass die Menschen sich Briefe schrieben, um in Kontakt zu bleiben.",
+        "Die Menschen damals arbeiteten viel auf dem Feld.",
+        "Ein Traktor war etwas Neues und machte die Arbeit leichter."
+       ]
+      },
+      {
+       "nr": 4,
+       "hilfen": [
+        {
+         "frage": "War die Oma dabei?",
+         "optionen": [
+          "ja, sie erzählt selbst",
+          "nein, sie hat es nur gehört"
+         ]
+        },
+        {
+         "frage": "Wollte sie angeben?",
+         "optionen": [
+          "eher nicht, es ist ein Brief an die Enkelin",
+          "ja, es ist Werbung"
+         ]
+        }
+       ],
+       "muster": [
+        "Der Brief ist wohl echt: altes Papier, Handschrift, Datum 1958.",
+        "Geschrieben hat ihn die Oma, und sie war selbst dabei.",
+        "Sie wollte nur Neuigkeiten erzählen, nicht angeben. Darum glaube ich dem Brief eher."
+       ],
+       "check": [
+        "Ich habe gesagt, dass die Oma selbst dabei war."
+       ]
+      }
+     ]
+    },
+    {
+     "titel": "Das alte Schulfoto",
+     "bild": "q-foto-alt.svg",
+     "alt": "Ein altes Schwarz-Weiß-Foto: Kinder vor einer Schule, 1956",
+     "quellenart": "bild",
+     "info": "Aus einem Fotoalbum. Unten steht: Schule, 1956.",
+     "wortspeicher": [
+      "Foto",
+      "schwarz-weiß",
+      "Schule",
+      "Kinder",
+      "Baum",
+      "Fotograf",
+      "aufstellen"
+     ],
+     "karten": [
+      {
+       "nr": 1,
+       "hilfen": [
+        {
+         "frage": "Welche Farben hat das Foto?",
+         "optionen": [
+          "schwarz-weiß und grau",
+          "bunt",
+          "nur rot"
+         ]
+        },
+        {
+         "frage": "Wer ist vor dem Haus?",
+         "optionen": [
+          "fünf Kinder",
+          "ein Auto",
+          "Tiere"
+         ]
+        }
+       ],
+       "muster": [
+        "Ich sehe ein altes Schwarz-Weiß-Foto.",
+        "In der Mitte ist ein Haus mit Dach und Schornstein, rechts ein Baum.",
+        "Vor dem Haus stehen fünf Kinder.",
+        "Unten steht: Schule, 1956."
+       ],
+       "check": [
+        "Ich habe die Kinder und das Haus genannt."
+       ]
+      },
+      {
+       "nr": 2,
+       "hilfen": [
+        {
+         "frage": "Warum macht man so ein Foto?",
+         "optionen": [
+          "um sich zu erinnern",
+          "um Werbung zu machen",
+          "um das Haus zu verkaufen"
+         ]
+        }
+       ],
+       "muster": [
+        "Das ist wohl ein Foto von einer Schule und ihren Schülern.",
+        "Man hat es gemacht, um sich später an die Schulzeit zu erinnern."
+       ]
+      },
+      {
+       "nr": 3,
+       "hilfen": [
+        {
+         "frage": "Was zeigt das Foto?",
+         "optionen": [
+          "wie eine Schule damals aussah",
+          "wie man heute lernt",
+          "wie man Häuser baut"
+         ]
+        }
+       ],
+       "muster": [
+        "Daran erkennt man, wie eine kleine Schule im Jahr 1956 aussah.",
+        "Die Kinder damals gingen in ein kleines Schulhaus.",
+        "Fotos waren noch schwarz-weiß."
+       ]
+      },
+      {
+       "nr": 4,
+       "hilfen": [
+        {
+         "frage": "War der Fotograf dabei?",
+         "optionen": [
+          "ja",
+          "nein"
+         ]
+        },
+        {
+         "frage": "Stehen die Kinder zufällig da?",
+         "optionen": [
+          "nein, sie haben sich für das Foto aufgestellt",
+          "ja, sie spielen gerade"
+         ]
+        }
+       ],
+       "muster": [
+        "Das Foto ist wohl echt, es ist alt und steht in einem Album.",
+        "Gemacht hat es ein Fotograf im Jahr 1956, er war dabei.",
+        "Aber die Kinder haben sich für das Foto ordentlich aufgestellt. Das Foto zeigt also nicht, wie ein normaler Schultag war."
+       ],
+       "check": [
+        "Ich habe gesagt, dass sich die Kinder für das Foto aufgestellt haben."
+       ]
+      }
+     ]
+    },
+    {
+     "titel": "Die Schultasche von Opa",
+     "bild": "q-schultasche.svg",
+     "alt": "Eine alte Schultasche aus Leder und eine kleine Schiefertafel",
+     "quellenart": "sach",
+     "info": "Vom Dachboden. Opa sagt: „Das war meine Schultasche, um 1955.“",
+     "wortspeicher": [
+      "Schultasche",
+      "Leder",
+      "Griff",
+      "Schnallen",
+      "Schiefertafel",
+      "Griffel",
+      "abgenutzt"
+     ],
+     "karten": [
+      {
+       "nr": 1,
+       "hilfen": [
+        {
+         "frage": "Woraus ist die Tasche?",
+         "optionen": [
+          "Leder",
+          "Plastik",
+          "Glas"
+         ]
+        },
+        {
+         "frage": "Was steckt darin?",
+         "optionen": [
+          "eine kleine Tafel",
+          "ein Tablet",
+          "ein Buch"
+         ]
+        }
+       ],
+       "muster": [
+        "Ich sehe eine braune Tasche aus Leder.",
+        "Oben hat sie einen Griff, vorne zwei Schnallen.",
+        "Rechts steckt eine kleine dunkle Tafel mit Holzrahmen.",
+        "Auf der Tafel steht „Aa Bb“."
+       ],
+       "check": [
+        "Ich habe die Tafel genannt."
+       ]
+      },
+      {
+       "nr": 2,
+       "hilfen": [
+        {
+         "frage": "Wofür passt sie gut?",
+         "optionen": [
+          "Schulsachen tragen",
+          "kochen",
+          "jagen"
+         ]
+        }
+       ],
+       "muster": [
+        "Das ist wohl eine Schultasche mit einer Schiefertafel.",
+        "Man benutzte die Tasche, um Schulsachen zu tragen.",
+        "Auf der Tafel schrieb man mit einem Griffel."
+       ]
+      },
+      {
+       "nr": 3,
+       "hilfen": [
+        {
+         "frage": "Worauf schrieben die Kinder?",
+         "optionen": [
+          "auf Schiefertafeln",
+          "auf Tablets",
+          "auf Papyrus"
+         ]
+        }
+       ],
+       "muster": [
+        "Daran erkennt man, dass die Kinder damals auf Tafeln schreiben lernten.",
+        "Die Menschen damals benutzten Dinge lange und reparierten sie.",
+        "Die Kinder trugen nicht so viele Bücher wie heute."
+       ]
+      },
+      {
+       "nr": 4,
+       "hilfen": [
+        {
+         "frage": "Woher wissen wir, dass sie von Opa ist?",
+         "optionen": [
+          "Opa erzählt es",
+          "es steht auf einem Schild im Museum"
+         ]
+        },
+        {
+         "frage": "Kann Opa sich irren?",
+         "optionen": [
+          "ja, es ist lange her",
+          "nein, nie"
+         ]
+        }
+       ],
+       "muster": [
+        "Die Tasche ist wohl echt: Das Leder ist alt und abgenutzt.",
+        "Wir wissen von Opa, dass es seine Tasche war. Er war dabei.",
+        "Aber es ist lange her. Bei der Jahreszahl kann er sich irren. Ich glaube ihm, aber das Jahr ist nicht ganz sicher."
+       ],
+       "check": [
+        "Ich habe gesagt, dass Opa sich bei der Jahreszahl irren könnte."
+       ]
+      }
+     ]
+    },
+    {
+     "titel": "Der Faustkeil im Museum",
+     "bild": "q-faustkeil.svg",
+     "alt": "Ein spitzer Stein mit scharfen Kanten, etwa 15 cm lang",
+     "quellenart": "sach",
+     "info": "Im Museum unter Glas. Auf dem Schild steht: Faustkeil, Fund aus Bayern, Altsteinzeit.",
+     "wortspeicher": [
+      "Faustkeil",
+      "Feuerstein",
+      "Museum",
+      "Schild",
+      "Fund",
+      "Forscher",
+      "Altsteinzeit"
+     ],
+     "karten": [
+      {
+       "nr": 1,
+       "hilfen": [
+        {
+         "frage": "Woraus ist er?",
+         "optionen": [
+          "Stein",
+          "Holz",
+          "Gips"
+         ]
+        }
+       ],
+       "muster": [
+        "Ich sehe einen grauen Stein.",
+        "Er ist oben spitz und unten breit.",
+        "An den Seiten hat er scharfe Kanten."
+       ]
+      },
+      {
+       "nr": 2,
+       "hilfen": [
+        {
+         "frage": "Wofür passt er gut?",
+         "optionen": [
+          "schneiden und schaben",
+          "schreiben",
+          "Feuer löschen"
+         ]
+        }
+       ],
+       "muster": [
+        "Das ist ein Faustkeil.",
+        "Man benutzte ihn, um Fleisch zu schneiden und Felle zu schaben."
+       ]
+      },
+      {
+       "nr": 3,
+       "hilfen": [
+        {
+         "frage": "Was zeigt der Faustkeil?",
+         "optionen": [
+          "Die Menschen machten Werkzeuge.",
+          "Die Menschen hatten Maschinen."
+         ]
+        }
+       ],
+       "muster": [
+        "Daran erkennt man, dass die Menschen schon Werkzeuge aus Stein herstellen konnten.",
+        "Sie lebten als Jäger und Sammler."
+       ]
+      },
+      {
+       "nr": 4,
+       "hilfen": [
+        {
+         "frage": "Wer sagt, dass er echt ist?",
+         "optionen": [
+          "das Museum und die Forscher",
+          "ein Händler im Internet"
+         ]
+        },
+        {
+         "frage": "Wissen wir, wer ihn gemacht hat?",
+         "optionen": [
+          "nein, nur ungefähr wann",
+          "ja, mit Namen"
+         ]
+        }
+       ],
+       "muster": [
+        "Der Faustkeil ist wohl ein Original. Das Museum sagt, dass er ein Fund ist, und Forscher haben ihn geprüft.",
+        "Wer ihn gemacht hat, wissen wir nicht. Wir wissen nur ungefähr, wann: in der Altsteinzeit.",
+        "Ein Faustkeil will niemandem etwas zeigen. Darum kann ich ihm gut glauben – anders als einem Händler im Internet."
+       ],
+       "check": [
+        "Ich habe gesagt, woher wir wissen, dass er echt ist."
        ]
       }
      ]

@@ -321,9 +321,10 @@
     const stapel = {};
     function ziehe(st) {
       if (st.mix) {
-        const alle = mixe[st.id] || [];
-        let erlaubt = alle;
-        if (st.nurGeuebt) { const g = alle.filter(geuebt); if (g.length) erlaubt = g; }
+        // nur freigegebene Stufen (Quellen-Detektiv Etappe 3: Kritik kommt erst nach der Freigabe in den Mix)
+        const alle = mixe[st.id] || [], frei = alle.filter(q => LernUeben.Freigabe.erlaubt(q.st.id));
+        let erlaubt = frei;
+        if (st.nurGeuebt) { const g = frei.filter(geuebt); if (g.length) erlaubt = g; }
         const nummern = [];
         let basis = 0;
         alle.forEach(q => { if (erlaubt.includes(q)) for (let k = 0; k < q.n; k++) nummern.push(basis + k); basis += q.n; });

@@ -18,6 +18,7 @@ Live am iPad über das Symbol auf dem Home-Bildschirm, Test in Safari.
 | 11 | Pass → Sicherung → 5× auf die Versionszeile tippen | Diagnose erscheint, „Fehlerprotokoll (0)“ bzw. Einträge ansehen |
 | 12 | Spiel: Meine Insel öffnen, „Los geht's“, mit dem Joystick zu einem Bewohner laufen, 💬 antippen | Insel lädt (ohne 3D: Hinweis statt leerer Seite), Figur läuft flüssig, Bewohner gibt einen Auftrag auf Englisch; ⏸ → „Weiter“ geht, Home-Knopf führt zurück |
 | 13 | GPG: Quellen-Detektiv → „Ganzer Fall“, Niveau ★, bis zur Kontrolle, ein paar Punkte abhaken, Auswerten | Quelle groß, Karten grün/blau/orange, Hilfen antippbar; Musterantwort und Checkliste gut lesbar; Ergebnis „x / y ✓“ |
+| 14 | Quellen-Detektiv: die vier Kritik-Stufen | 🔒 bis zur Freigabe im Admin; danach „Ganzer Fall mit Quellenkritik“ mit lila Karte 4, im Detektiv-Ritual tauchen Kritik-Aufgaben auf |
 
 **Nur in der Testumgebung zusätzlich:** Oben steht „🧪 TEST · vXX“. Im Admin eine Kleinigkeit ändern und
 speichern → Meldung „Testumgebung: Speichern und Sicherung sind hier abgeschaltet“. Danach live den Pass

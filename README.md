@@ -437,6 +437,12 @@ Eine neue App = **Inhaltsdatei + Katalog-Eintrag + Admin-Eintrag**. Kein neuer C
    Stufe `gpg.5.quellen.fall` mit sechs Steinzeit-Fällen (Faustkeil, Höhlenbild, Tongefäß, Knochennadel, Mahlstein,
    Speerspitze). **Fotos statt Zeichnungen:** `bild` auf die jpg/png neben der Inhaltsdatei setzen und `nachweis` ergänzen –
    sonst ändert sich nichts.
+   **Quellenkritik** (Etappe 3, v87): Karte 4 (lila, „Kann ich der Quelle trauen?“ mit den Hilfsfragen) in „So geht's“ und im
+   Fall – ein Fall mit `{ "nr": 4, … }` in `karten` zeigt sie (je Fall einschaltbar). Bausteine `gpg.5.quellen.echt` (Original,
+   Nachbildung, Fälschung), `.zeitfehler` (markieren, auch mit Bild `q-hoehle-faelschung.svg`), `.glauben` (zwei Körbe) und
+   `.fall-kritik` (vier Fälle aus Großelternzeit und Museum). Alle vier stehen in `config.json` → `freigaben` auf `{ "alle": "zu" }`
+   und gehen über Inhalte → 🔐 Freigaben auf („✅ frei“). Mix-Stufen nehmen nur freigegebene Stufen (`typen.js`), darum kommt
+   die Kritik erst nach der Freigabe ins Detektiv-Ritual.
    Plan: Claude-Docs „Konzept: Geschichte-Apps und Quellen-Werkstatt“ und „Aktionsplan: Quellen-Detektiv“. Geübt wird nur mit
    Quellen aus Zeiten, die schon dran waren – Ägypten- und Römer-Quellen erst nach der jeweiligen Stunde (Freigaben).
 2. **Katalog:** Thema mit `quelle: { "app": "apps/typen/uebung.html", "parameter": "inhalt=<Themen-ID>" }` und allen
