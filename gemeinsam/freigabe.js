@@ -11,7 +11,9 @@
 //    Wert: "zu" | "offen" | "JJJJ-MM-TT" (gesperrt bis zu diesem Tag, ab dann offen)
 //    Es entscheidet der genaueste Eintrag: zuerst die Stufe selbst, dann das Thema darüber
 //    ('ma.6.kopf.brueche' → 'ma.6.kopf'); je Eintrag Gruppe vor Klasse vor „alle“.
-//    Ohne Eintrag ist alles offen – genau der Zustand vor Etappe 7.
+//    Ohne Eintrag ist alles offen – genau der Zustand vor Etappe 7. Ausnahme (Quellen-Detektiv Etappe 4): Stufen, die in
+//    ihrer Inhaltsdatei "gesperrt": true tragen, sind ohne Eintrag ZU (erlaubt(id, true)) – so steht die Sperre im Repo
+//    und kein alter Admin-Entwurf kann sie aus config.json löschen. Freigeben schreibt dann 'offen'.
 //
 //  fokus – „Für Gruppe 5a heute nur diese drei Apps“:
 //    [{ id, fuer: "alle"|"k5"|"g:…", apps: ["apps/mathe/kopfrechnen.html", …], ab?: ms, bis: ms }]
@@ -33,20 +35,22 @@
 //  zu ändern) und danach 'lernfreigabe:neu' gefeuert.
 //
 //  API (window.LernFreigabe):
-//    erlaubt(themaId)   → true/false
+//    erlaubt(themaId, standardZu?) → true/false (standardZu: ohne Eintrag gesperrt)
 //    zugeteilt(themaId) → true/false – für Lernwege: OHNE Eintrag ZU (nur ausdrücklich zugeteilt ist offen)
-//    status(themaId)    → { frei, ab? }  (ab = Datum, ab dem es frei wird)
+//    status(themaId, standardZu?) → { frei, ab? }  (ab = Datum, ab dem es frei wird)
 //    wer()              → ['g:…', 'k5', 'alle'] (was für dieses iPad gilt)
 //    fokus()            → { id, apps, bis } oder null
 //    imFokus(datei)     → true, wenn kein Fokus aktiv ist oder die App dazugehört
 //    spielSperre()      → null (heute keine Sperre) oder { noetig, geschafft, frei }
 //    spielGesperrt(datei) → true, wenn diese Datei ein Spiel ist und heute noch gesperrt
 //    neu(config, leise) → mit frischer config.json neu auswerten (Startseite; leise = ohne Ereignis)
+//    admin()            → Hauptzugang auf diesem Gerät angemeldet (Vorschau, z. B. Lernpfad ohne Kette)
 //    feature(id)        → true/false – Feature-Schalter (Admin-Umbau Etappe 10), config.featureSchalter[id]:
 //                         true = an für alle · false/fehlt = aus · { wer: ['admin', 'g:<Gruppe>', 'k5', 'alle'] } =
 //                         nur dort an ('admin' = dieses Gerät ist mit dem Hauptzugang im Admin angemeldet).
 //                         Neue Funktion hinter einen Schalter: Eintrag in daten/features.json + if (LernFreigabe.feature('id')).
-//  Ereignis 'lernfreigabe:neu', wenn sich die Grundlage geändert hat.
+//  Ereignis 'lernfreigabe:neu', wenn sich die Grundlage geändert hat. Solange die Seite sichtbar ist, fragt sie alle
+//  2 Minuten nach (Unterrichtsmodus „Stufe jetzt freischalten“ kommt so ohne Neuladen an).
 // ═══════════════════════════════════════════════════════
 
 (function () {
@@ -85,9 +89,10 @@
     return out;
   }
 
-  function status(themaId) {
+  function status(themaId, standardZu) {
     const F = CFG && CFG.freigaben;
-    if (!themaId || !F || typeof F !== 'object') return { frei: true };
+    if (!themaId) return { frei: true };
+    if (!F || typeof F !== 'object') return { frei: !standardZu };
     const w = wer();
     for (const t of kette(themaId)) {
       const e = F[t];
@@ -100,9 +105,9 @@
         if (typeof v === 'string' && DATUM.test(v)) return heute() >= v ? { frei: true } : { frei: false, ab: v };
       }
     }
-    return { frei: true };
+    return { frei: !standardZu };
   }
-  const erlaubt = themaId => status(themaId).frei;
+  const erlaubt = (themaId, standardZu) => status(themaId, standardZu).frei;
 
   // Lernwege (apps/typen/lernweg.html): umgekehrte Regel – ohne Eintrag gesperrt. Offen nur, wenn für
   // dieses iPad (Gruppe vor Klasse vor „alle“) ausdrücklich 'offen' oder ein erreichtes Datum eingetragen ist.
@@ -186,16 +191,21 @@
   // Offline-Kopie zu alt (oder fehlt)? → frisch holen, nur im Speicher. Kurz warten:
   // Die Startseite lädt config.json ohnehin und reicht sie mit neu() herein.
   const root = (window.LW && LW.ROOT) || new URL('../', (document.currentScript && document.currentScript.src) || location.href).href;
-  setTimeout(function auffrischen() {
-    const ts = Number(localStorage.getItem(CONFIG_TS_KEY)) || 0;
-    if (bekommen || Date.now() - ts < FRISCH_MS || !window.fetch || !navigator.onLine) return;
+  function holen(trotzdem) {
+    if ((bekommen && !trotzdem) || !window.fetch || !navigator.onLine) return;
     fetch(root + 'config.json', { cache: 'no-cache' }).then(r => r.ok ? r.json() : null).then(c => {
-      if (!c || bekommen) return;
+      if (!c || (bekommen && !trotzdem)) return;
       const vorher = JSON.stringify([CFG.freigaben, CFG.fokus, CFG.spielsperre]);
       CFG = c;
       if (JSON.stringify([c.freigaben, c.fokus, c.spielsperre]) !== vorher) melden();
     }).catch(() => {});
+  }
+  setTimeout(() => {
+    const ts = Number(localStorage.getItem(CONFIG_TS_KEY)) || 0;
+    if (Date.now() - ts >= FRISCH_MS) holen(false);
   }, 1500);
+  // Regelmäßig nachfragen, solange die Seite offen und sichtbar ist (Freischalten im Unterricht)
+  setInterval(() => { if (document.visibilityState === 'visible') holen(true); }, 2 * 60 * 1000);
 
   /** Hauptzugang auf diesem Gerät angemeldet? (Schlüssel noch gültig, kein Kollegen-Schlüssel – nur für Vorschauen) */
   function adminHier() {
@@ -210,5 +220,5 @@
     return v.wer.some(w => w === 'admin' ? adminHier() : wer().includes(w));
   }
 
-  window.LernFreigabe = { erlaubt, zugeteilt, status, wer, fokus, imFokus, spielSperre, spielGesperrt, neu, feature };
+  window.LernFreigabe = { erlaubt, zugeteilt, status, wer, fokus, imFokus, spielSperre, spielGesperrt, neu, feature, admin: adminHier };
 })();

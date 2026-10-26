@@ -27,10 +27,17 @@
 //  Stufe: { …, runde? } – eigene Rundengröße (z. B. wenn eine Stufe nur 6 Aufgaben hat);
 //         einzeln: true – die Runde ist genau eine (lange) Aufgabe, z. B. ein ganzer Fall
 //  cfg.hilfe: { html } – Kachel „📖 So geht's“ mit Erklärung (Neue Lern-Apps Etappe 7; html schon escaped)
+//  cfg.pfad: true – Lernpfad statt Kacheln (Quellen-Detektiv Etappe 4): die Stufen sind Stationen einer Kette, eine
+//    Station geht erst auf, wenn alle davor geschafft sind (Bestwert im Lernstand ≥ st.schwelle, sonst 70 %,
+//    Checkpoint 80 %). Stufe { abschnitt } = Überschrift davor, { checkpoint } = große Wiederholung, { extra } = Kachel
+//    über dem Pfad (z. B. Ritual, ohne Kette). Von der Lehrkraft gesperrte Stationen zeigen keinen Titel. Mit
+//    Admin-Anmeldung auf dem Gerät (LernFreigabe.admin) gilt die Kette nicht – zum Ausprobieren.
 //
 //  Angelegte Anschlüsse (später eingeschaltet):
-//    LernUeben.Freigabe.erlaubt(themaId)  → seit Etappe 7 über gemeinsam/freigabe.js (gesperrt = 🔒 ohne Erklärtext);
-//                                           die App bindet freigabe.js VOR ueben.js ein, ohne sie ist alles offen
+//    LernUeben.Freigabe.erlaubt(themaId, standardZu?) → seit Etappe 7 über gemeinsam/freigabe.js (gesperrt = 🔒 ohne
+//                                           Erklärtext); die App bindet freigabe.js VOR ueben.js ein, ohne sie ist alles offen.
+//                                           Stufe { gesperrt: true } = ohne Freigabe-Eintrag zu; { frei: () => bool } =
+//                                           zusätzliche Bedingung (Quellen-Detektiv Etappe 4: Fälle, die an Themen hängen)
 //    LernUeben.Fehlerheft.merken(eintrag) → sammelt Fehler auf dem Gerät (höchstens 200)
 //    Fehler-Training (Etappe 8): Kachel „🎯 Fehler-Training“, sobald es Fehler aus den Stufen dieser App gibt.
 //      Übt gezielt die falsch gelösten Aufgabentypen; jede richtige Antwort streicht einen Eintrag.
@@ -55,7 +62,7 @@
   // ── Anschlüsse ─────────────────────────────────────────
   const Freigabe = {
     /** Freigaben aus config.json (Etappe 7, gemeinsam/freigabe.js). Ohne freigabe.js: alles offen. */
-    erlaubt(themaId) { return !window.LernFreigabe || LernFreigabe.erlaubt(themaId); },
+    erlaubt(themaId, standardZu) { return !window.LernFreigabe ? !standardZu : LernFreigabe.erlaubt(themaId, standardZu); },
   };
   const FEHLER_KEY = 'lernwelt-fehlerheft';
   const FEHLER_MAX = 200;
@@ -161,7 +168,25 @@
   .lu .hilfe-text table{border-collapse:collapse;width:100%;margin:.4rem 0;font-size:.95rem}
   .lu .hilfe-text td,.lu .hilfe-text th{border-bottom:1px solid var(--line);padding:.3rem .4rem;text-align:left}
   .lu .hilfe-text th{color:var(--gold)}
-  @media(max-width:560px){.lu .hilfe-text .bsp{grid-template-columns:1fr}}`;
+  @media(max-width:560px){.lu .hilfe-text .bsp{grid-template-columns:1fr}}
+  .lu .pfad{position:relative;max-width:560px;margin:0 auto;padding-left:1.4rem}
+  .lu .pfad::before{content:'';position:absolute;left:2.65rem;top:1rem;bottom:1rem;width:4px;border-radius:2px;background:var(--card2)}
+  .lu .pfad h2{position:relative;font-family:'Fredoka One','Nunito',sans-serif;font-weight:400;color:var(--ind2);font-size:1.15rem;margin:1rem 0 .5rem -1.4rem;
+      background:var(--bg);padding:.2rem 0}
+  .lu .station{position:relative;display:flex;gap:.8rem;align-items:center;width:100%;text-align:left;background:var(--card);border:2px solid var(--line);
+      border-radius:18px;padding:.7rem .9rem;margin:0 0 .6rem;color:var(--txt);font:inherit;cursor:pointer;min-height:4.2rem}
+  .lu .station .nr{flex:0 0 2.6rem;height:2.6rem;border-radius:50%;display:grid;place-items:center;background:var(--card2);font-size:1.15rem;
+      font-family:'Fredoka One','Nunito',sans-serif;position:relative;z-index:1}
+  .lu .station b{display:block;font-size:1.02rem;line-height:1.2}
+  .lu .station small{display:block;color:var(--mut);font-weight:700;font-size:.8rem;margin-top:.15rem}
+  .lu .station.ok .nr{background:var(--ok);color:#06210f}
+  .lu .station.jetzt{border-color:var(--gold);box-shadow:0 0 0 4px rgba(230,168,23,.18)}
+  .lu .station.jetzt .nr{background:linear-gradient(135deg,var(--gold),#f59e0b);color:#1b1300}
+  .lu .station.cp{border-style:dashed;border-color:rgba(230,168,23,.6)}
+  .lu .station.cp.ok{border-style:solid;border-color:var(--ok)}
+  .lu .station:disabled{opacity:.5;cursor:default}
+  .lu .station .proz{margin-left:auto;font-weight:900;font-size:.8rem;color:var(--mut);white-space:nowrap}
+  .lu .erg .pfadmeldung{margin:.6rem auto 0;max-width:460px;font-weight:900;font-size:1.05rem}`;
 
   // ── Vorlesen ───────────────────────────────────────────
   function sprich(text, sprache) {
@@ -191,6 +216,7 @@
     const MEIST = Object.assign({ prozent: 70, runden: 2 }, cfg.meisterschaft || {});
     const VORLESEN = !!cfg.vorlesen || URLP.get('vorlesen') === '1';
     const alle = [...(cfg.stufen || []), ...(cfg.foerder || [])];
+    const frei = st => !!st && Freigabe.erlaubt(st.id, !!st.gesperrt) && (typeof st.frei !== 'function' || st.frei());
     const S = { stufe: null, aufgaben: [], nr: 0, ergebnis: [], eingabe: '', rest: ['', ''], feld: 0, gesperrt: false, tipp: false, start: 0, foerderOffen: false };
 
     // Meisterschaft aus dem Pass (Lernstand je Thema): beste Runden ≥ Prozent
@@ -201,19 +227,64 @@
       return { gut: (Array.isArray(e.p) ? e.p : []).filter(x => x >= MEIST.prozent).length, best: e.best || 0 };
     }
     function kachel(st, i, foerder) {
-      const frei = Freigabe.erlaubt(st.id), s = stand(st), meister = s.gut >= MEIST.runden;
-      return `<button type="button" class="tile${foerder ? ' f' : ''}${frei ? '' : ' zu'}" data-stufe="${esc(st.id)}" ${frei ? '' : 'disabled aria-disabled="true"'}>
-        <span class="nr">${frei ? (foerder ? '🌱' : i + 1) : '🔒'}</span>
+      const offen = frei(st), s = stand(st), meister = s.gut >= MEIST.runden;
+      return `<button type="button" class="tile${foerder ? ' f' : ''}${offen ? '' : ' zu'}" data-stufe="${esc(st.id)}" ${offen ? '' : 'disabled aria-disabled="true"'}>
+        <span class="nr">${offen ? (foerder ? '🌱' : i + 1) : '🔒'}</span>
         <span><b>${esc(st.titel)}</b><small>${esc(st.kurz || '')}</small></span>
         ${meister ? '<span class="st">⭐ geschafft</span>' : s.best ? `<span class="st" style="color:var(--mut)">${s.best} %</span>` : ''}</button>`;
     }
     // Fehler-Training (Etappe 8): Fehler aus den (freien) Stufen dieser App
     function meineFehler() {
-      return Fehlerheft.liste().filter(x => alle.some(st => st.id === x.thema) && Freigabe.erlaubt(x.thema));
+      return Fehlerheft.liste().filter(x => frei(alle.find(st => st.id === x.thema)));
+    }
+    // ── Lernpfad (cfg.pfad) ──
+    const schwelle = st => Number(st.schwelle) || (st.checkpoint ? 80 : MEIST.prozent);
+    const geschafft = st => stand(st).best >= schwelle(st);
+    const vorschau = () => !!(window.LernFreigabe && LernFreigabe.admin && LernFreigabe.admin());
+    const pfadStufen = () => (cfg.stufen || []).filter(st => !st.extra);
+    /** Kette offen bis hier? (alle Stationen davor geschafft – oder Vorschau) */
+    function ketteOffen(st) {
+      if (!cfg.pfad || st.extra || vorschau()) return true;
+      const l = pfadStufen(), i = l.indexOf(st);
+      return i < 0 || l.slice(0, i).every(geschafft);
+    }
+    function pfadHTML() {
+      let n = 0, jetzt = false;
+      return `<div class="pfad">${pfadStufen().map(st => {
+        n++;
+        const kopf = st.abschnitt ? `<h2>${esc(st.abschnitt)}</h2>` : '';
+        const ok = geschafft(st), kette = ketteOffen(st), lehrkraft = frei(st), s = stand(st);
+        const istJetzt = !ok && kette && lehrkraft && !jetzt;
+        if (istJetzt) jetzt = true;
+        const titel = lehrkraft || ok ? esc(st.titel) : `Station ${n}`;
+        const unter = ok ? `geschafft${s.best ? ' · ' + s.best + ' %' : ''}`
+          : !lehrkraft ? 'wartet auf deine Lehrkraft'
+          : !kette ? 'erst die Stationen davor schaffen'
+          : (st.checkpoint ? `Große Wiederholung · ab ${schwelle(st)} % geht es weiter` : esc(st.kurz || '') + ` · ab ${schwelle(st)} %`);
+        const nr = ok ? '✓' : !lehrkraft ? '🔐' : !kette ? '🔒' : st.checkpoint ? '🏁' : n;
+        const an = lehrkraft && (kette || ok);
+        return `${kopf}<button type="button" class="station${ok ? ' ok' : ''}${istJetzt ? ' jetzt' : ''}${st.checkpoint ? ' cp' : ''}" data-stufe="${esc(st.id)}"
+          ${an ? '' : 'disabled aria-disabled="true"'}><span class="nr">${nr}</span><span><b>${st.checkpoint && (lehrkraft || ok) ? '🏁 ' : ''}${titel}</b>
+          <small>${unter}</small></span>${!ok && s.best && an ? `<span class="proz">bisher ${s.best} %</span>` : ''}</button>`;
+      }).join('')}</div>`;
     }
     function zeigeStart() {
       S.stufe = null;
       const f = cfg.foerder || [], nf = meineFehler().length;
+      if (cfg.pfad) {
+        const extra = (cfg.stufen || []).filter(st => st.extra);
+        root.innerHTML = `<h1>${esc(cfg.titel || 'Üben')}</h1><p class="sub">${esc(cfg.untertitel || '')}</p>
+          ${cfg.hilfe ? `<button type="button" class="tile hilfe" data-hilfe><span class="nr">📖</span>
+            <span><b>So geht's</b><small>Erklärung mit Beispielen</small></span></button>` : ''}
+          ${extra.length ? `<div class="grid" style="margin-bottom:.8rem">${extra.map(st => kachel(st, 0, false).replace('<span class="nr">1</span>', '<span class="nr">🔁</span>')).join('')}</div>` : ''}
+          ${nf ? `<button type="button" class="tile ft" data-fehler><span class="nr">🎯</span>
+            <span><b>Fehler-Training</b><small>${nf} ${nf === 1 ? 'Aufgabe' : 'Aufgaben'} von früher, die noch nicht saßen</small></span></button>` : ''}
+          ${vorschau() ? '<p class="sub">👀 Vorschau (Admin angemeldet): alle Stationen offen.</p>' : ''}
+          ${pfadHTML()}`;
+        const j = root.querySelector('.station.jetzt');
+        if (j && j.getBoundingClientRect().top > window.innerHeight) try { j.scrollIntoView({ block: 'center' }); } catch (e) {}
+        return;
+      }
       root.innerHTML = `<h1>${esc(cfg.titel || 'Üben')}</h1><p class="sub">${esc(cfg.untertitel || 'Wähle eine Stufe')}</p>
         ${nf ? `<button type="button" class="tile ft" data-fehler><span class="nr">🎯</span>
           <span><b>Fehler-Training</b><small>${nf} ${nf === 1 ? 'Aufgabe' : 'Aufgaben'} von früher, die noch nicht saßen</small></span></button>` : ''}
@@ -226,9 +297,9 @@
 
     function starteRunde(id) {
       const st = alle.find(x => x.id === id);
-      if (!st || !Freigabe.erlaubt(id)) return;
+      if (!frei(st) || !(ketteOffen(st) || geschafft(st))) return;
       S.stufe = st; S.aufgaben = []; S.ergebnis = []; S.nr = 0; S.start = Date.now();
-      const fragen = new Set(), anzahl = st.einzeln ? 1 : Math.max(3, Math.min(RUNDE, Number(st.runde) || RUNDE));
+      const fragen = new Set(), anzahl = st.einzeln ? 1 : Math.max(3, Math.min(st.checkpoint ? 20 : RUNDE, Number(st.runde) || RUNDE));   // Checkpoint: große Runde
       for (let v = 0; S.aufgaben.length < anzahl && v < anzahl * 8; v++) {
         const a = cfg.erzeuge(st);
         if (!a) continue;
@@ -353,10 +424,22 @@
       const lob = selbst.length ? (pct === 100 ? 'Alles abgehakt – starke Detektivarbeit! 🔍' : pct >= MEIST.prozent ? 'Gut gemacht! Schau dir die offenen Punkte noch einmal an. 👍'
           : 'Vergleiche dein Heft noch einmal mit der Musterantwort. Beim nächsten Fall klappt es besser! 🙂')
         : pct === 100 ? 'Alles richtig! 💯' : pct >= 80 ? 'Stark gerechnet! 💪' : pct >= MEIST.prozent ? 'Gut gemacht! 👍' : pct >= 40 ? 'Dranbleiben – das wird! 🙂' : 'Probier es gleich nochmal – oder eine leichtere Stufe.';
+      // Lernpfad: Station geschafft? Dann gleich zur nächsten (sie zählt erst ab der Schwelle)
+      let pfad = '', weiterZu = null;
+      if (cfg.pfad && !st.training && !st.extra) {
+        const l = pfadStufen(), i = l.indexOf(st);
+        if (pct >= schwelle(st)) {
+          const naechste = l[i + 1];
+          weiterZu = naechste && frei(naechste) ? naechste : null;
+          pfad = `<div class="pfadmeldung">✅ ${st.checkpoint ? 'Checkpoint' : 'Station'} geschafft!${naechste && !frei(naechste) ? ' Die nächste Station gibt deine Lehrkraft frei.' : ''}</div>`;
+        } else pfad = `<div class="pfadmeldung">Für ${st.checkpoint ? 'den Checkpoint' : 'diese Station'} brauchst du ${schwelle(st)} %. Versuch es gleich noch einmal!</div>`;
+      }
       root.innerHTML = `<div class="top"><button type="button" class="x" data-ende aria-label="Zur Stufenwahl">✕</button><span class="nm">${esc(st.titel)}</span></div>
-        <div class="erg"><div class="gr">${r} / ${n}${selbst.length ? ' ✓' : ''}</div>${selbst.length ? '<div style="color:var(--mut);font-weight:800">Punkte auf deiner Checkliste</div>' : ''}<div style="font-weight:900;font-size:1.15rem">${lob}</div>
+        <div class="erg"><div class="gr">${r} / ${n}${selbst.length ? ' ✓' : ''}</div>${selbst.length ? '<div style="color:var(--mut);font-weight:800">Punkte auf deiner Checkliste</div>' : ''}<div style="font-weight:900;font-size:1.15rem">${lob}</div>${pfad}
           ${falsch.length ? `<div class="liste">${falsch.map(x => `<div><b>${esc(x.frage)}${x.eigen ? ' → ' : ' = '}${esc(x.loesung)}</b> <small>Du hattest: ${esc(x.eingabe)}${x.erklaerung ? ' · ' + esc(x.erklaerung) : ''}</small></div>`).join('')}</div>` : ''}
-          <div class="zeile"><button type="button" class="btn p" data-nochmal>${selbst.length ? '🔍 Nächster Fall' : '🔄 Nochmal'}</button><button type="button" class="btn" data-ende>Andere Stufe</button></div></div>`;
+          <div class="zeile">${weiterZu ? `<button type="button" class="btn p" data-stufe="${esc(weiterZu.id)}">Nächste Station ›</button>` : ''}
+            <button type="button" class="btn${weiterZu ? '' : ' p'}" data-nochmal>${selbst.length ? '🔍 Nächster Fall' : '🔄 Nochmal'}</button>
+            <button type="button" class="btn" data-ende>${cfg.pfad ? 'Zum Pfad' : 'Andere Stufe'}</button></div></div>`;
       S.stufe = null;
       root.dataset.letzte = st.training ? '#fehler' : st.id;
     }

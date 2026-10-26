@@ -36,6 +36,14 @@
 //                       Inhaltsdateien oder ganze Inhaltsdateien; ohne "aus": alle anderen Stufen dieser Datei),
 //               "nurGeuebt": true   (optional: nur Stufen, die das Kind schon geübt hat – „Meine Themen“) }
 //
+//  Freigaben (Quellen-Detektiv Etappe 4): Stufe { "gesperrt": true } = ohne Freigabe-Eintrag zu (die Sperre steht im
+//    Repo, nicht in config.json); Aufgabe { "nach": "<Stufen-ID>" } = erst, wenn diese Stufe frei ist (z. B. ein Fall
+//    zur Stunde). Mix-Stufen nehmen nur freie Stufen und Aufgaben; eine Stufe ohne freie Aufgabe zeigt 🔒.
+//  Lernpfad (Quellen-Detektiv Etappe 4): "pfad": true im Kopf – die Stufen bilden in ihrer Reihenfolge eine Kette
+//    (ueben.js, cfg.pfad). Stufe { "abschnitt": "Ägypten" } beginnt einen Abschnitt, { "checkpoint": true } ist eine
+//    Mix-Stufe über alle Stationen davor (Schwelle 80 %), { "extra": true } steht als Kachel über dem Pfad (Ritual),
+//    { "schwelle": 70 } = ab wie viel Prozent eine Station geschafft ist.
+//  "nurMitFoto": true im Kopf – nur Aufgaben mit echtem Bild (jpg/png/webp) kommen dran; Stufen ohne solche fallen weg.
 //  Ganzer Fall (Quellen-Detektiv Etappe 2): Typ „fall“ – eine Runde = ein Fall, Ergebnis = abgehakte Checkliste
 //    (Selbstkontrolle, zählt nicht für die Spielsperre). Format: Kopf von gemeinsam/typen/fall.js. Mix-Stufen
 //    ohne "aus" nehmen Fall-Stufen nicht auf.
@@ -289,7 +297,8 @@
     const sammle = (Dx) => Dx.stufen.forEach(st => { if (st && st.id && !st.mix) { const q = quelle(Dx, st); if (q && q.n) quellen[st.id] = q; } });
     sammle(D); Object.values(andere).forEach(sammle);
     function mixQuellen(st) {
-      const aus = Array.isArray(st.aus) && st.aus.length ? st.aus : D.stufen.filter(x => x && !x.mix).map(x => x.id);
+      const davor = st.checkpoint ? D.stufen.slice(0, D.stufen.indexOf(st)) : D.stufen;   // Checkpoint: alle Stationen davor
+      const aus = Array.isArray(st.aus) && st.aus.length ? st.aus : davor.filter(x => x && !x.mix).map(x => x.id);
       const ids = [];
       aus.forEach(a => {
         if (quellen[a]) ids.push(a);
@@ -317,33 +326,49 @@
       const P = window.LernPass, ls = P && P.state && P.state.lernstand;
       return !!(ls && ls[q.st.id]);
     }
+    // Freigaben (Quellen-Detektiv Etappe 3/4): Stufe frei? Aufgabe mit "nach": <Stufen-ID> erst, wenn diese Stufe frei ist
+    const stufeFrei = id => LernUeben.Freigabe.erlaubt(id, !!(quellen[id] && quellen[id].st.gesperrt));
+    const aufgabeFrei = (q, k) => { const x = Array.isArray(q.st.aufgaben) ? q.st.aufgaben[k] : null; return !x || !x.nach || stufeFrei(x.nach); };
+    // "nurMitFoto": true im Kopf der Datei – nur Aufgaben mit einem echten Bild (jpg/png/webp) kommen dran;
+    // gezeichnete (svg) und bildlose bleiben in der Datei, bis es Fotos dafür gibt
+    const FOTO = /\.(png|jpe?g|webp)$/i;
+    const sichtbar = (q, k) => { if (!q.D.nurMitFoto) return true; const x = Array.isArray(q.st.aufgaben) ? q.st.aufgaben[k] : null; return !!x && FOTO.test(x.bild || ''); };
+    const sichtbarN = q => { let n = 0; for (let k = 0; k < q.n; k++) if (sichtbar(q, k)) n++; return n; };
+    const anzahlSichtbar = st => st.mix ? (mixe[st.id] || []).reduce((n, q) => n + sichtbarN(q), 0) : quellen[st.id] ? sichtbarN(quellen[st.id]) : 0;
+    /** Nummern, die jetzt dran sein dürfen (bei Mix fortlaufend über alle Quellen) */
+    function kandidaten(st) {
+      const nummern = [];
+      if (st.mix) {
+        // nur freigegebene Stufen (Kritik und Ägypten kommen erst nach der Freigabe in den Mix)
+        const alle = mixe[st.id] || [], frei = alle.filter(q => stufeFrei(q.st.id));
+        let erlaubt = frei;
+        if (st.nurGeuebt) { const g = frei.filter(geuebt); if (g.length) erlaubt = g; }
+        let basis = 0;
+        alle.forEach(q => { if (erlaubt.includes(q)) for (let k = 0; k < q.n; k++) if (sichtbar(q, k) && aufgabeFrei(q, k)) nummern.push(basis + k); basis += q.n; });
+      } else if (quellen[st.id]) {
+        const q = quellen[st.id];
+        for (let k = 0; k < q.n; k++) if (sichtbar(q, k) && aufgabeFrei(q, k)) nummern.push(k);
+      }
+      return nummern;
+    }
     // Jede Stufe zieht ihre Aufgaben aus einem gemischten Stapel – keine Wiederholung, bis alle dran waren
     const stapel = {};
     function ziehe(st) {
-      if (st.mix) {
-        // nur freigegebene Stufen (Quellen-Detektiv Etappe 3: Kritik kommt erst nach der Freigabe in den Mix)
-        const alle = mixe[st.id] || [], frei = alle.filter(q => LernUeben.Freigabe.erlaubt(q.st.id));
-        let erlaubt = frei;
-        if (st.nurGeuebt) { const g = frei.filter(geuebt); if (g.length) erlaubt = g; }
-        const nummern = [];
-        let basis = 0;
-        alle.forEach(q => { if (erlaubt.includes(q)) for (let k = 0; k < q.n; k++) nummern.push(basis + k); basis += q.n; });
-        if (!nummern.length) return null;
-        if (!stapel[st.id] || !stapel[st.id].length) stapel[st.id] = mischen(nummern);
-        return stapel[st.id].pop();
-      }
-      const n = anzahl(st);
-      if (!n) return null;
-      if (!stapel[st.id] || !stapel[st.id].length) stapel[st.id] = mischen([...Array(n).keys()]);
+      const k = kandidaten(st);
+      if (!k.length) return null;
+      stapel[st.id] = (stapel[st.id] || []).filter(n => k.includes(n));   // Freigaben können sich geändert haben
+      if (!stapel[st.id].length) stapel[st.id] = mischen(k);
       return stapel[st.id].pop();
     }
-    const stufen = D.stufen.filter(st => st && st.id && anzahl(st) > 0)
-      .map(st => Object.assign({}, st, einzeln(D, st) ? { runde: 1, einzeln: true } : { runde: st.runde || Math.min(Number(D.runde) || 8, anzahl(st)) }));
+    const hatNach = st => !st.mix && quellen[st.id] && Array.isArray(st.aufgaben) && st.aufgaben.some(x => x && x.nach);
+    const stufen = D.stufen.filter(st => st && st.id && anzahlSichtbar(st) > 0)
+      .map(st => Object.assign({}, st, einzeln(D, st) ? { runde: 1, einzeln: true } : { runde: Math.max(D.pfad ? 5 : 1, st.runde || Math.min(Number(D.runde) || 8, anzahlSichtbar(st))) },   // Pfad: ≥ 5, sonst zählt der Lernstand nicht
+        st.mix || hatNach(st) ? { frei: () => kandidaten(st).length > 0 } : {}));
     document.title = (D.titel || 'Übung') + ' – Lernwelt';
     host.innerHTML = '';
     return LernUeben.start({
       host, titel: (D.emoji ? D.emoji + ' ' : '') + (D.titel || 'Übung'), untertitel: D.untertitel || 'Wähle eine Stufe',
-      stufen, runde: Number(D.runde) || 8, meisterschaft: D.meisterschaft, vorlesen: !!D.vorlesen,
+      stufen, runde: Number(D.runde) || 8, meisterschaft: D.meisterschaft, vorlesen: !!D.vorlesen, pfad: !!D.pfad,
       hilfe: D.hilfe ? { html: hilfeHTML(D.hilfe) } : null,
       erzeuge: st => { const nr = ziehe(st); return nr == null ? null : aufgabe(st, nr); },
       erzeugeTyp: (st, typ) => { const nr = Number(String(typ || '').slice(1)); return /^a\d+$/.test(typ) && nr < anzahl(st) ? aufgabe(st, nr) : null; },

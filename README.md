@@ -320,7 +320,12 @@ Sicherungskarte verbunden ist – aus der **Kartengruppe** (der Sync-Worker schi
   `{ "en.5.vok.u5": { "alle": "2026-11-10" }, "ma.6.kopf.brueche": { "k6": "zu", "g:<Gruppe>": "offen" } }`.
   Wer: `alle`, `k5` … `k13`, `g:<32 hex>`. Wert: `zu`, `offen` oder Datum (gesperrt bis zu diesem Tag).
   Es entscheidet der genaueste Eintrag: Stufe vor Thema darüber, Gruppe vor Klasse vor „Alle“.
-  **Ohne Eintrag ist alles offen.** Gesperrtes erscheint mit 🔒 ohne Erklärtext.
+  **Ohne Eintrag ist alles offen** – außer bei Stufen mit `"gesperrt": true` in ihrer Inhaltsdatei (Baukasten, v88): die sind
+  ohne Eintrag zu, Freigeben schreibt `offen`. So steht die Grundsperre im Repo und kein alter Admin-Entwurf kann sie aus
+  config.json löschen. Aufgaben mit `"nach": "<Stufen-ID>"` erscheinen erst, wenn diese Stufe frei ist (Fall zur Stunde);
+  Mix-Stufen nehmen nur freie Stufen und Aufgaben. Gesperrtes erscheint mit 🔒 ohne Erklärtext.
+  **Unterrichtsmodus → 🔓 Freischalten** gibt eine Stufe sofort frei (`store.sofort`, nur Hauptzugang); `freigabe.js` fragt
+  alle 2 Minuten nach, solange die Seite sichtbar ist.
 - **Wo es wirkt:** Kopfrechnen, Mathe-Trainer und Vokabeltrainer (über ueben.js), „Meine Themen“ der Spiele
   (gesperrte Starter-Inhalte kommen nicht neu dazu). Dorf-Aufträge gelten je App – dort kann ein Kind ohnehin nur
   Freies üben. Neue Engine-Apps: Reihe in `FR_KATALOG_REIHEN` (`gemeinsam/admin/freigaben.js`) ergänzen.
@@ -443,6 +448,21 @@ Eine neue App = **Inhaltsdatei + Katalog-Eintrag + Admin-Eintrag**. Kein neuer C
    Großeltern-Quellen (Brief, Schulfoto, Schultasche – Platz für eigene Fotos). Die alten Fund-SVGs bleiben im Ordner, weil
    gespeicherte Live-Quizze sie nennen können. Lascaux und Chauvet sind geschlossen: Fotos „aus der Höhle“ zeigen fast immer
    Nachbildungen – nie als Quelle verwenden.
+   **Lernpfad** (Etappe 4, v88, `"pfad": true` im Kopf): statt Kacheln eine Kette von Stationen in der Reihenfolge der Datei.
+   Eine Station geht erst auf, wenn alle davor geschafft sind (Bestwert im Lernstand ≥ `schwelle`, sonst 70 %). **Checkpoints**
+   (`"checkpoint": true` an einer Mix-Stufe, ohne `aus` = alle Stationen davor, Runde 10, Schwelle 80 %) sind große
+   Wiederholungen. `"abschnitt"` setzt eine Überschrift, `"extra": true` stellt eine Stufe als Kachel über den Pfad (Ritual, mit
+   `nurGeuebt`). Von der Lehrkraft gesperrte Stationen zeigen nur „Station n · wartet auf deine Lehrkraft“ (kein Titel).
+   Mit Admin-Anmeldung auf dem Gerät gilt die Kette nicht (Vorschau). Pfad-Runden haben mindestens 5 Aufgaben – darunter
+   speichert der Pass keinen Lernstand. Fortschritt = vorhandener Lernstand, nichts wird zurückgesetzt.
+   **Nur mit Foto** (`"nurMitFoto": true`): Aufgaben ohne jpg/png/webp (gezeichnete SVG, reine Texte) kommen nicht dran,
+   Stufen ohne Foto fallen weg (pruefen.py: gelber Hinweis). Sie bleiben in der Datei, bis es Fotos gibt.
+   **Ägypten** (v88): Stationen Nil und Felder, Pyramiden, Pharao (Anlass Quellenkritik), Leben nach dem Tod, Schrift und
+   Schreiber, Alltag – jede `"gesperrt": true`, freischalten nach der Stunde (Unterricht → 🔓). „Ganzer Fall: Ägypten“: jeder
+   Fall hängt mit `"nach"` an seiner Station. Fotos: Grab des Sennedjem (Original) und Kopie von 1922 (Met), Meketre-Modelle,
+   Uschebti, Kanope, Stele (alle Met, CC0), Hunefer-Papyrus, Ramses-Relief, Gizeh; Darstellungen: Langhaus-Nachbau,
+   Gemälde von Charles R. Knight (1911, 1920), Gizeh-3D-Modell. Reihenfolge der Kette: Steinzeit → Ägypten I → Quellenkritik
+   → Ägypten II → Fall. Passt sie nicht zu den Stunden, Stufen in der Datei umstellen.
    **Quellenkritik** (Etappe 3, v87): Karte 4 (lila, „Kann ich der Quelle trauen?“ mit den Hilfsfragen) in „So geht's“ und im
    Fall – ein Fall mit `{ "nr": 4, … }` in `karten` zeigt sie (je Fall einschaltbar). Bausteine `gpg.5.quellen.echt` (Original,
    Nachbildung, Fälschung), `.zeitfehler` (markieren, auch mit Bild `q-hoehle-faelschung.svg`), `.glauben` (zwei Körbe) und
