@@ -5,8 +5,8 @@
       "name": "Rechen-Arena",
       "datei": "apps/mathe/rechen-arena.html",
       "fach": "Allgemein",
-      "emoji": "🧮",
-      "beschreibung": "Knacke deinen Rekord in verschiedenen Spielen!",
+      "emoji": "🏟️",
+      "beschreibung": "Knacke deinen Rekord in vier Rechenspielen!",
       "hidden": false,
       "klassen": [
         5,
@@ -24,8 +24,8 @@
       "name": "RUN!",
       "datei": "spiele/runner.html",
       "fach": "Allgemein",
-      "emoji": "🏃🏻‍♀️ᯓ",
-      "beschreibung": "Wie weit schaffst du es?",
+      "emoji": "🏃",
+      "beschreibung": "Lauf, spring und antworte – wie weit schaffst du es?",
       "hidden": false,
       "klassen": [],
       "customTags": [
@@ -104,8 +104,8 @@
       "name": "Wort des Tages",
       "datei": "spiele/wort-des-tages.html",
       "fach": "Allgemein",
-      "emoji": "📱",
-      "beschreibung": "Finde das richtige Wort heraus!",
+      "emoji": "🔠",
+      "beschreibung": "Errate jeden Tag ein neues englisches Wort!",
       "hidden": true,
       "klassen": [],
       "customTags": [
@@ -121,7 +121,7 @@
       "datei": "spiele/kitchen-chaos.html",
       "fach": "Allgemein",
       "emoji": "🍳",
-      "beschreibung": "",
+      "beschreibung": "Gäste bestellen auf Englisch – servier das Richtige!",
       "hidden": false,
       "klassen": [],
       "customTags": [
@@ -162,8 +162,8 @@
       "name": "Große Zahlen können",
       "datei": "apps/mathe/stellenwerttafel.html",
       "fach": "Mathematik",
-      "emoji": "🧮",
-      "beschreibung": "",
+      "emoji": "🔢",
+      "beschreibung": "Große Zahlen lesen, schreiben und in die Stellenwerttafel eintragen",
       "hidden": false,
       "klassen": [
         5
@@ -195,7 +195,7 @@
       "datei": "apps/mathe/kopfrechnen.html",
       "fach": "Mathematik",
       "emoji": "🧠",
-      "beschreibung": "Übe deine Kopfrechenkünste!",
+      "beschreibung": "Kopfrechnen mit dem Stoff der 5. Klasse",
       "hidden": false,
       "klassen": [
         5
@@ -248,7 +248,7 @@
       "datei": "apps/mathe/kopfrechnen.html?klasse=6",
       "fach": "Mathematik",
       "emoji": "🧠",
-      "beschreibung": "Übe deine Kopfrechenkünste!",
+      "beschreibung": "Kopfrechnen mit dem Stoff der 6. Klasse",
       "hidden": false,
       "klassen": [
         6
@@ -284,7 +284,7 @@
       "datei": "apps/mathe/einmaleins_tafel.html",
       "fach": "Mathematik",
       "emoji": "1️⃣",
-      "beschreibung": "Fülle die Lücken! Trainiere dein Einmaleins",
+      "beschreibung": "Fülle die Lücken in der Einmaleins-Tafel!",
       "hidden": false,
       "klassen": [
         5,
@@ -305,7 +305,7 @@
       "datei": "apps/typen/uebung.html?inhalt=ma.5.geometrie",
       "fach": "Mathematik",
       "emoji": "📐",
-      "beschreibung": "",
+      "beschreibung": "Vierecke, Körper und Würfelnetze erkennen",
       "hidden": false,
       "klassen": [
         5,
@@ -349,7 +349,7 @@
       "datei": "apps/englisch/knowing-english.html",
       "fach": "Englisch",
       "emoji": "🧩",
-      "beschreibung": "",
+      "beschreibung": "Alle Grammatik-Themen auf einen Blick – übe gemischt!",
       "hidden": false,
       "klassen": [
         5,
@@ -363,7 +363,7 @@
       "datei": "apps/englisch/time-dates-numbers.html",
       "fach": "Englisch",
       "emoji": "🕒",
-      "beschreibung": "",
+      "beschreibung": "Uhrzeit, Datum und Zahlen auf Englisch",
       "hidden": false,
       "klassen": [
         5,
@@ -377,7 +377,7 @@
       "datei": "apps/typen/uebung.html?inhalt=en.5.to-be",
       "fach": "Englisch",
       "emoji": "👋",
-      "beschreibung": "",
+      "beschreibung": "am, is oder are? Übe die Formen von „to be“",
       "hidden": false,
       "klassen": [
         5
@@ -427,8 +427,8 @@
       "name": "Simple present",
       "datei": "apps/typen/uebung.html?inhalt=en.5.simple-present",
       "fach": "Englisch",
-      "emoji": "📓",
-      "beschreibung": "Practice simple present! he/she/it + -s",
+      "emoji": "🔁",
+      "beschreibung": "he/she/it – das „s“ muss mit! Übe das simple present",
       "hidden": false,
       "klassen": [
         5
@@ -470,8 +470,8 @@
       "name": "Länder finden",
       "datei": "apps/gpg/laender-finder.html",
       "fach": "GPG",
-      "emoji": "🗺️",
-      "beschreibung": "Wie gut kennst du dich in Deutschland und Europa aus?",
+      "emoji": "🌍",
+      "beschreibung": "Finde Kontinente, Ozeane und Länder auf der ganzen Welt",
       "hidden": false,
       "klassen": [
         6
@@ -483,8 +483,8 @@
       "name": "Entdecker-Expedition",
       "datei": "spiele/expedition.html",
       "fach": "GPG",
-      "emoji": "🧭",
-      "beschreibung": "",
+      "emoji": "🗺️",
+      "beschreibung": "Die Karte liegt im Nebel – folge den Reiseaufträgen!",
       "hidden": true,
       "klassen": [
         6
@@ -497,7 +497,7 @@
       "datei": "apps/gpg/bayern.html",
       "fach": "GPG",
       "emoji": "🦁",
-      "beschreibung": "",
+      "beschreibung": "Bezirke, Städte, Flüsse und Gebirge in Bayern finden",
       "hidden": false,
       "klassen": [
         5,
@@ -511,7 +511,7 @@
       "datei": "spiele/room-detective.html",
       "fach": "Englisch",
       "emoji": "🕵️",
-      "beschreibung": "",
+      "beschreibung": "Decorate your room or find the thief!",
       "hidden": false,
       "klassen": [
         5,
