@@ -1266,7 +1266,8 @@
         { "id": "gpg.5.quellen.sehen", "titel": "Sehen oder denken?" },
         { "id": "gpg.5.quellen.wofuer", "titel": "Wofür war das?" },
         { "id": "gpg.5.quellen.schluss", "titel": "Passt der Schluss?" },
-        { "id": "gpg.5.quellen.schritte", "titel": "Drei Schritte sortieren" }
+        { "id": "gpg.5.quellen.schritte", "titel": "Drei Schritte sortieren" },
+        { "id": "gpg.5.quellen.fall", "titel": "Ganzer Fall" }
        ]
       }
      ]

@@ -9,7 +9,7 @@
 //  Meisterschaft, Ergebnis mit Themen-ID, Infokarte und Dorf-Aufträge gibt es dadurch automatisch.
 //
 //  Inhaltsdatei (gleicher Kopf für alle Typen; pruefen.py prüft das Format):
-//    { "typ": "zuordnen" | "sortieren" | "lueckentext" | "eingabe" | "beschriften" | "bildwort" | "markieren"
+//    { "typ": "zuordnen" | "sortieren" | "lueckentext" | "eingabe" | "beschriften" | "bildwort" | "markieren" | "fall"
 //             | "gemischt" (dann trägt jede Stufe ihren eigenen "typ"),
 //      "thema": "de.5.wortarten", "titel": "Wortarten", "untertitel": "…", "klasse": 5,
 //      "sprache": "en-GB"   (optional: Vorlesen in dieser Sprache),
@@ -36,11 +36,16 @@
 //                       Inhaltsdateien oder ganze Inhaltsdateien; ohne "aus": alle anderen Stufen dieser Datei),
 //               "nurGeuebt": true   (optional: nur Stufen, die das Kind schon geübt hat – „Meine Themen“) }
 //
+//  Ganzer Fall (Quellen-Detektiv Etappe 2): Typ „fall“ – eine Runde = ein Fall, Ergebnis = abgehakte Checkliste
+//    (Selbstkontrolle, zählt nicht für die Spielsperre). Format: Kopf von gemeinsam/typen/fall.js. Mix-Stufen
+//    ohne "aus" nehmen Fall-Stufen nicht auf.
+//
 //  Ein Typ meldet sich so an:
 //    LernTypen.typ('name', {
 //      anzahl(stufe)         → wie viele verschiedene Aufgaben die Stufe hat
 //      aufgabe(stufe, nr, D) → Aufgabe für ueben.js (meist art 'eigen'); nr = Index in der Stufe
 //      pruefe(aufgabe, eingabe) → true/false
+//      einzeln: true         (optional) eine Runde = genau eine Aufgabe (ueben.js: Stufe einzeln)
 //    });
 //  Hilfen für Typen: LernTypen.mischen(liste), .gleich(a, b) (Text ohne Groß/klein, Leerzeichen, Satzzeichen
 //  am Ende), .textOhneSatzzeichen(wort), .esc(text), .knopf(text, attr), .knoepfe(box, optionen, fertig), .textfeld(box, fertig),
@@ -54,7 +59,7 @@
   const HIER = (document.currentScript && document.currentScript.src) || location.href;
   const ROOT = new URL('../', HIER).href;
   const TYPEN = {};
-  const NAMEN = ['zuordnen', 'sortieren', 'lueckentext', 'eingabe', 'beschriften', 'bildwort', 'markieren'];
+  const NAMEN = ['zuordnen', 'sortieren', 'lueckentext', 'eingabe', 'beschriften', 'bildwort', 'markieren', 'fall'];
 
   const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   function mischen(l) { const a = l.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
@@ -279,6 +284,7 @@
     catch (e) { return fehler(host, 'Der Aufgabentyp konnte nicht geladen werden.'); }
     // (NAMEN oben = Dateien in gemeinsam/typen/, pruefen.py prüft das)
 
+    const einzeln = (Dx, st) => !st.mix && !!(TYPEN[typVon(Dx, st)] || {}).einzeln;   // z. B. ganzer Fall
     const quellen = {};                                   // Stufen-ID → Quelle
     const sammle = (Dx) => Dx.stufen.forEach(st => { if (st && st.id && !st.mix) { const q = quelle(Dx, st); if (q && q.n) quellen[st.id] = q; } });
     sammle(D); Object.values(andere).forEach(sammle);
@@ -289,7 +295,7 @@
         if (quellen[a]) ids.push(a);
         else Object.keys(quellen).forEach(k => { if (k.startsWith(a + '.')) ids.push(k); });   // ganze Datei
       });
-      return [...new Set(ids)].map(k => quellen[k]);
+      return [...new Set(ids)].map(k => quellen[k]).filter(q => !einzeln(q.D, q.st));   // ganze Fälle nie im Mix
     }
     const mixe = {};                                      // Stufen-ID → [Quelle …]
     D.stufen.forEach(st => { if (st && st.id && st.mix) mixe[st.id] = mixQuellen(st); });
@@ -331,7 +337,7 @@
       return stapel[st.id].pop();
     }
     const stufen = D.stufen.filter(st => st && st.id && anzahl(st) > 0)
-      .map(st => Object.assign({}, st, { runde: st.runde || Math.min(Number(D.runde) || 8, anzahl(st)) }));
+      .map(st => Object.assign({}, st, einzeln(D, st) ? { runde: 1, einzeln: true } : { runde: st.runde || Math.min(Number(D.runde) || 8, anzahl(st)) }));
     document.title = (D.titel || 'Übung') + ' – Lernwelt';
     host.innerHTML = '';
     return LernUeben.start({

@@ -857,6 +857,528 @@
     "2 Erklären": "#3c7dc4",
     "3 Deuten": "#f29b38"
    }
+  },
+  {
+   "id": "gpg.5.quellen.fall",
+   "titel": "Ganzer Fall",
+   "kurz": "Beschreiben, Erklären, Deuten ins Heft – mit Niveau ★ bis ★★★",
+   "typ": "fall",
+   "aufgaben": [
+    {
+     "titel": "Der Faustkeil",
+     "bild": "q-faustkeil.svg",
+     "alt": "Ein spitzer Stein mit scharfen Kanten, etwa 15 cm lang",
+     "quellenart": "sach",
+     "info": "Gefunden in der Erde. Etwa 15 cm lang. Aus der Altsteinzeit.",
+     "wortspeicher": [
+      "Faustkeil",
+      "Feuerstein",
+      "Kante",
+      "spitz",
+      "scharf",
+      "schneiden",
+      "Jäger und Sammler"
+     ],
+     "karten": [
+      {
+       "nr": 1,
+       "hilfen": [
+        {
+         "frage": "Woraus ist er?",
+         "optionen": [
+          "Stein",
+          "Holz",
+          "Metall"
+         ]
+        },
+        {
+         "frage": "Welche Form hat er?",
+         "optionen": [
+          "spitz",
+          "rund",
+          "eckig"
+         ]
+        }
+       ],
+       "muster": [
+        "Ich sehe einen grauen Stein.",
+        "Er ist oben spitz und unten breit.",
+        "An den Seiten hat er scharfe Kanten.",
+        "Er ist etwa 15 cm lang."
+       ],
+       "check": [
+        "Ich habe die Spitze oder die scharfen Kanten genannt."
+       ]
+      },
+      {
+       "nr": 2,
+       "hilfen": [
+        {
+         "frage": "Wofür passt er gut?",
+         "optionen": [
+          "schneiden und schaben",
+          "kochen",
+          "schreiben"
+         ]
+        }
+       ],
+       "muster": [
+        "Das ist wohl ein Faustkeil.",
+        "Man nahm ihn in die Hand.",
+        "Man benutzte ihn, um Fleisch zu schneiden, Felle zu schaben oder Holz zu bearbeiten."
+       ]
+      },
+      {
+       "nr": 3,
+       "hilfen": [
+        {
+         "frage": "Was zeigt der Faustkeil?",
+         "optionen": [
+          "Die Menschen konnten Werkzeuge machen.",
+          "Die Menschen hatten Autos.",
+          "Die Menschen konnten schreiben."
+         ]
+        }
+       ],
+       "muster": [
+        "Daran erkennt man, dass die Menschen schon Werkzeuge aus Stein herstellen konnten.",
+        "Sie jagten Tiere und zerlegten sie.",
+        "Ohne Werkzeuge wäre das Leben viel schwerer gewesen."
+       ]
+      }
+     ]
+    },
+    {
+     "titel": "Das Höhlenbild",
+     "bild": "q-hoehlenmalerei.svg",
+     "alt": "Tiere und eine Hand, an eine Felswand gemalt",
+     "quellenart": "bild",
+     "info": "Gemalt an die Wand einer Höhle. Aus der Altsteinzeit.",
+     "wortspeicher": [
+      "Höhle",
+      "Felswand",
+      "Farbe",
+      "Tier",
+      "Handabdruck",
+      "Jagd",
+      "Pferd",
+      "Wisent"
+     ],
+     "karten": [
+      {
+       "nr": 1,
+       "hilfen": [
+        {
+         "frage": "Was ist auf dem Bild?",
+         "optionen": [
+          "Tiere",
+          "Häuser",
+          "Autos"
+         ]
+        },
+        {
+         "frage": "Welche Farben siehst du?",
+         "optionen": [
+          "rot und schwarz",
+          "blau und grün",
+          "gelb und lila"
+         ]
+        }
+       ],
+       "muster": [
+        "Ich sehe zwei Tiere auf einer Felswand.",
+        "Links oben ist ein rotes Tier, rechts ein schwarzes Tier.",
+        "Links unten ist eine Hand.",
+        "Oben rechts sind vier rote Punkte."
+       ],
+       "check": [
+        "Ich habe die Tiere und die Hand genannt."
+       ]
+      },
+      {
+       "nr": 2,
+       "hilfen": [
+        {
+         "frage": "Wer hat das Bild gemacht?",
+         "optionen": [
+          "Menschen der Steinzeit",
+          "ein Maler von heute",
+          "ein Computer"
+         ]
+        }
+       ],
+       "muster": [
+        "Das ist wohl ein Höhlenbild aus der Steinzeit.",
+        "Menschen haben es mit Farbe aus Erde und Kohle gemalt.",
+        "Vielleicht hat man es gemacht, um von der Jagd zu erzählen oder um Glück für die Jagd zu bekommen. Ganz sicher weiß man das nicht."
+       ],
+       "check": [
+        "Ich habe „vielleicht“ gesagt, wo man es nicht sicher weiß."
+       ]
+      },
+      {
+       "nr": 3,
+       "hilfen": [
+        {
+         "frage": "Was war den Menschen wichtig?",
+         "optionen": [
+          "die Tiere und die Jagd",
+          "das Fernsehen",
+          "das Geld"
+         ]
+        }
+       ],
+       "muster": [
+        "Daran erkennt man, dass Tiere für die Menschen sehr wichtig waren.",
+        "Die Menschen damals lebten von der Jagd.",
+        "Sie konnten schon malen und Farben herstellen."
+       ]
+      }
+     ]
+    },
+    {
+     "titel": "Das Tongefäß",
+     "bild": "q-tongefaess.svg",
+     "alt": "Ein rundes Gefäß aus Ton mit Linien und Punkten",
+     "quellenart": "sach",
+     "info": "Gefunden bei einem Dorf. Etwa 20 cm hoch. Aus der Jungsteinzeit.",
+     "wortspeicher": [
+      "Ton",
+      "Gefäß",
+      "Topf",
+      "Muster",
+      "Linien",
+      "Vorrat",
+      "Getreide",
+      "sesshaft"
+     ],
+     "karten": [
+      {
+       "nr": 1,
+       "hilfen": [
+        {
+         "frage": "Woraus ist es?",
+         "optionen": [
+          "Ton",
+          "Glas",
+          "Plastik"
+         ]
+        },
+        {
+         "frage": "Was ist darauf?",
+         "optionen": [
+          "Linien und Punkte",
+          "Buchstaben",
+          "Fotos"
+         ]
+        }
+       ],
+       "muster": [
+        "Ich sehe ein rundes Gefäß.",
+        "Es ist aus brauner Erde, aus Ton.",
+        "Oben hat es eine Öffnung.",
+        "Außen sind Wellenlinien und Punkte."
+       ],
+       "check": [
+        "Ich habe das Muster beschrieben."
+       ]
+      },
+      {
+       "nr": 2,
+       "hilfen": [
+        {
+         "frage": "Wofür passt es gut?",
+         "optionen": [
+          "Vorräte aufbewahren",
+          "jagen",
+          "Feuer machen"
+         ]
+        }
+       ],
+       "muster": [
+        "Das ist wohl ein Topf oder ein Vorratsgefäß.",
+        "Man benutzte es, um Getreide, Wasser oder Essen aufzubewahren.",
+        "Man konnte darin auch kochen."
+       ]
+      },
+      {
+       "nr": 3,
+       "hilfen": [
+        {
+         "frage": "Was zeigt das Gefäß?",
+         "optionen": [
+          "Die Menschen hatten Vorräte.",
+          "Die Menschen zogen jeden Tag weiter.",
+          "Die Menschen kauften im Supermarkt."
+         ]
+        }
+       ],
+       "muster": [
+        "Daran erkennt man, dass die Menschen Vorräte hatten.",
+        "Die Menschen damals wohnten an einem festen Ort, denn ein Tontopf ist schwer und zerbricht leicht.",
+        "Das Muster zeigt, dass sie Dinge auch schön machen wollten."
+       ]
+      }
+     ]
+    },
+    {
+     "titel": "Die Knochennadel",
+     "bild": "q-knochennadel.svg",
+     "alt": "Eine dünne Nadel aus Knochen mit einem Loch",
+     "quellenart": "sach",
+     "info": "Gefunden in einer Höhle. Etwa 6 cm lang. Aus der Altsteinzeit.",
+     "wortspeicher": [
+      "Knochen",
+      "Nadel",
+      "Öhr",
+      "Loch",
+      "spitz",
+      "nähen",
+      "Fell",
+      "Kleidung"
+     ],
+     "karten": [
+      {
+       "nr": 1,
+       "hilfen": [
+        {
+         "frage": "Woraus ist sie?",
+         "optionen": [
+          "Knochen",
+          "Metall",
+          "Plastik"
+         ]
+        },
+        {
+         "frage": "Was hat sie am Ende?",
+         "optionen": [
+          "ein Loch",
+          "einen Griff",
+          "eine Feder"
+         ]
+        }
+       ],
+       "muster": [
+        "Ich sehe einen dünnen, hellen Gegenstand.",
+        "Er ist aus Knochen.",
+        "Vorne ist er spitz, hinten hat er ein kleines Loch.",
+        "Er ist nur etwa 6 cm lang."
+       ],
+       "check": [
+        "Ich habe die Spitze und das Loch genannt."
+       ]
+      },
+      {
+       "nr": 2,
+       "hilfen": [
+        {
+         "frage": "Wofür passt sie gut?",
+         "optionen": [
+          "nähen",
+          "schneiden",
+          "jagen"
+         ]
+        }
+       ],
+       "muster": [
+        "Das ist wohl eine Nähnadel.",
+        "Durch das Loch zog man einen Faden aus Tiersehne.",
+        "Man benutzte sie, um Felle zu Kleidung zusammenzunähen."
+       ]
+      },
+      {
+       "nr": 3,
+       "hilfen": [
+        {
+         "frage": "Was zeigt die Nadel?",
+         "optionen": [
+          "Die Menschen machten sich Kleidung.",
+          "Die Menschen hatten Nähmaschinen.",
+          "Die Menschen trugen keine Kleidung."
+         ]
+        }
+       ],
+       "muster": [
+        "Daran erkennt man, dass die Menschen sich Kleidung aus Fell genäht haben.",
+        "Die Menschen damals mussten sich vor der Kälte schützen.",
+        "Sie konnten sehr feine Werkzeuge herstellen."
+       ]
+      }
+     ]
+    },
+    {
+     "titel": "Der Mahlstein",
+     "bild": "q-mahlstein.svg",
+     "alt": "Ein großer flacher Stein, darauf ein kleiner Stein, daneben Körner",
+     "quellenart": "sach",
+     "info": "Gefunden in einem Haus. Der große Stein ist etwa 50 cm lang. Aus der Jungsteinzeit.",
+     "wortspeicher": [
+      "Mahlstein",
+      "Läufer",
+      "Körner",
+      "Getreide",
+      "Mehl",
+      "mahlen",
+      "Ackerbau",
+      "sesshaft"
+     ],
+     "karten": [
+      {
+       "nr": 1,
+       "hilfen": [
+        {
+         "frage": "Was liegt da?",
+         "optionen": [
+          "ein großer und ein kleiner Stein",
+          "ein Messer",
+          "ein Topf"
+         ]
+        },
+        {
+         "frage": "Was liegt daneben?",
+         "optionen": [
+          "Körner",
+          "Knochen",
+          "Federn"
+         ]
+        }
+       ],
+       "muster": [
+        "Ich sehe einen großen, flachen Stein.",
+        "Darauf liegt ein kleinerer Stein.",
+        "In der Mitte ist der große Stein ein bisschen hell und glatt.",
+        "Daneben liegen gelbe Körner."
+       ],
+       "check": [
+        "Ich habe beide Steine und die Körner genannt."
+       ]
+      },
+      {
+       "nr": 2,
+       "hilfen": [
+        {
+         "frage": "Wofür passt er gut?",
+         "optionen": [
+          "Körner zu Mehl mahlen",
+          "Fleisch schneiden",
+          "Feuer machen"
+         ]
+        }
+       ],
+       "muster": [
+        "Das ist wohl ein Mahlstein.",
+        "Man legte Körner auf den großen Stein.",
+        "Mit dem kleinen Stein rieb man hin und her, um die Körner zu Mehl zu mahlen."
+       ]
+      },
+      {
+       "nr": 3,
+       "hilfen": [
+        {
+         "frage": "Was zeigt der Mahlstein?",
+         "optionen": [
+          "Die Menschen bauten Getreide an.",
+          "Die Menschen aßen nur Fleisch.",
+          "Die Menschen kauften Mehl."
+         ]
+        }
+       ],
+       "muster": [
+        "Daran erkennt man, dass die Menschen Getreide angebaut haben.",
+        "Die Menschen damals waren Bauern und wohnten an einem festen Ort.",
+        "Aus dem Mehl machten sie Brei oder Fladenbrot."
+       ]
+      }
+     ]
+    },
+    {
+     "titel": "Die Speerspitze",
+     "bild": "q-speerspitze.svg",
+     "alt": "Eine kleine spitze Steinspitze, etwa 5 cm lang",
+     "quellenart": "sach",
+     "info": "Gefunden bei einem Lagerplatz. Etwa 5 cm lang. Aus der Steinzeit.",
+     "wortspeicher": [
+      "Speerspitze",
+      "Feuerstein",
+      "spitz",
+      "scharf",
+      "Speer",
+      "Jagd",
+      "Tier"
+     ],
+     "karten": [
+      {
+       "nr": 1,
+       "hilfen": [
+        {
+         "frage": "Woraus ist sie?",
+         "optionen": [
+          "Stein",
+          "Holz",
+          "Metall"
+         ]
+        },
+        {
+         "frage": "Wie groß ist sie?",
+         "optionen": [
+          "klein, etwa 5 cm",
+          "so groß wie ein Tisch",
+          "so groß wie ein Haus"
+         ]
+        }
+       ],
+       "muster": [
+        "Ich sehe eine kleine, spitze Steinspitze.",
+        "Sie ist vorne sehr spitz.",
+        "Die Ränder sind scharf.",
+        "Sie ist nur etwa 5 cm lang."
+       ],
+       "check": [
+        "Ich habe die Größe genannt."
+       ]
+      },
+      {
+       "nr": 2,
+       "hilfen": [
+        {
+         "frage": "Wofür passt sie gut?",
+         "optionen": [
+          "an einem Speer jagen",
+          "Körner mahlen",
+          "nähen"
+         ]
+        }
+       ],
+       "muster": [
+        "Das ist wohl eine Speerspitze.",
+        "Man band sie vorne an einen langen Holzstab.",
+        "Man benutzte den Speer, um Tiere zu jagen."
+       ],
+       "check": [
+        "Ich habe erklärt, dass die Spitze an einem Holzstab saß."
+       ]
+      },
+      {
+       "nr": 3,
+       "hilfen": [
+        {
+         "frage": "Was zeigt die Speerspitze?",
+         "optionen": [
+          "Die Menschen jagten Tiere.",
+          "Die Menschen fuhren Auto.",
+          "Die Menschen hatten Gewehre."
+         ]
+        }
+       ],
+       "muster": [
+        "Daran erkennt man, dass die Menschen Tiere gejagt haben.",
+        "Die Menschen damals brauchten Fleisch und Felle.",
+        "Sie konnten Waffen aus Stein und Holz bauen."
+       ]
+      }
+     ]
+    }
+   ]
   }
  ]
 }

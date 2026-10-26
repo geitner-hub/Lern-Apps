@@ -368,11 +368,19 @@
     const antw = x => Array.isArray(x.antwort) ? x.antwort[0] : x.antwort;
     const auf = Array.isArray(stufe && stufe.aufgaben) ? stufe.aufgaben : [];
     const alleAntworten = auf.map(antw).filter(a => a !== undefined && a !== null).map(String);
+    // Quelle je Aufgabe (Quellen-Detektiv): Bild und Erklärung kommen mit ins Quiz
+    const extra = x => {
+      const bild = x.bild ? (o.basis || '') + x.bild : '', erk = kurz(x.erklaerung, 200), f = {};
+      if (BILD.test(bild)) f.bild = bild;
+      if (erk) f.erklaerung = erk;
+      return f;
+    };
     auf.forEach(x => {
       const t = x.typ || typ;
       if (t === 'lueckentext' && x.text && antw(x) !== undefined) {
-        const text = String(x.text).replace(/_{2,}/g, '…');
-        if (Array.isArray(x.optionen) && x.optionen.length >= 2) aus.push(auswahl(text, antw(x), x.optionen));
+        let text = String(x.text).replace(/_{2,}/g, '…');
+        if (x.bild && stufe.anweisung && text.length < 25) text = stufe.anweisung;   // „Das ist eine ….“ → Frage der Stufe
+        if (Array.isArray(x.optionen) && x.optionen.length >= 2) aus.push(auswahl(text, antw(x), x.optionen, extra(x)));
         else if (zahl(antw(x)) !== null) aus.push({ typ: 'zahl', text: kurz(text, 200), wert: zahl(antw(x)) });
         else if (alleAntworten.length >= 3) aus.push(auswahl(text, antw(x), alleAntworten));
       } else if (t === 'eingabe' && x.frage && antw(x) !== undefined) {

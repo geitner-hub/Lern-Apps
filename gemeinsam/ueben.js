@@ -22,7 +22,10 @@
 //    schluessel: gleiche Aufgabe in einer Runde nicht doppelt (sonst zählt die Frage)
 //    ton: Text für 🔊 (immer sichtbar), sprache: z. B. 'en-GB' für Vorlesen und ton; tonAuto: ton gleich vorlesen
 //    loesungZeige(box, eingabe): bei falscher Antwort die Lösung zeichnen (z. B. Zahlenstrahl mit beiden Stellen)
-//  Stufe: { …, runde? } – eigene Rundengröße (z. B. wenn eine Stufe nur 6 Aufgaben hat)
+//    selbst (Quellen-Detektiv Etappe 2, Typ „fall“): Selbstkontrolle – fertig({ punkte, max, zusatz? }) beendet die Runde
+//      gleich mit dieser Punktzahl (abgehakte Checkliste); kein Fehlerheft, zählt nicht für die Spielsperre.
+//  Stufe: { …, runde? } – eigene Rundengröße (z. B. wenn eine Stufe nur 6 Aufgaben hat);
+//         einzeln: true – die Runde ist genau eine (lange) Aufgabe, z. B. ein ganzer Fall
 //  cfg.hilfe: { html } – Kachel „📖 So geht's“ mit Erklärung (Neue Lern-Apps Etappe 7; html schon escaped)
 //
 //  Angelegte Anschlüsse (später eingeschaltet):
@@ -224,7 +227,7 @@
       const st = alle.find(x => x.id === id);
       if (!st || !Freigabe.erlaubt(id)) return;
       S.stufe = st; S.aufgaben = []; S.ergebnis = []; S.nr = 0; S.start = Date.now();
-      const fragen = new Set(), anzahl = Math.max(3, Math.min(RUNDE, Number(st.runde) || RUNDE));
+      const fragen = new Set(), anzahl = st.einzeln ? 1 : Math.max(3, Math.min(RUNDE, Number(st.runde) || RUNDE));
       for (let v = 0; S.aufgaben.length < anzahl && v < anzahl * 8; v++) {
         const a = cfg.erzeuge(st);
         if (!a) continue;
@@ -306,6 +309,11 @@
       const eingabe = a.art === 'wahl' || a.art === 'eigen' ? wahlWert : a.art === 'rest' ? { q: S.rest[0], r: S.rest[1] } : S.eingabe;
       if (a.art === 'rest' ? !S.rest[0] || !S.rest[1] : a.art !== 'eigen' && !String(eingabe || '').trim()) return;
       S.gesperrt = true;
+      if (a.selbst) {                                    // Selbstkontrolle: Punkte = abgehakte Checkliste, gleich zum Ergebnis
+        const e = eingabe || {}, max = Math.max(1, Number(e.max) || 1);
+        S.ergebnis.push({ ok: true, selbst: true, punkte: Math.max(0, Math.min(max, Number(e.punkte) || 0)), max, zusatz: e.zusatz || '' });
+        return ende();
+      }
       const ok = cfg.pruefe(a, eingabe);
       const eingabeText = a.art === 'rest' ? `${S.rest[0]} R ${S.rest[1]}` : a.eingabeText ? a.eingabeText(eingabe) : String(eingabe);
       S.ergebnis.push({ ok, frage: a.frage, loesung: a.text, eingabe: eingabeText, erklaerung: a.erklaerung || '', eigen: a.art === 'eigen' });
@@ -329,18 +337,25 @@
       neueAufgabe();
     }
     function ende() {
-      const st = S.stufe, n = S.aufgaben.length, r = S.ergebnis.filter(x => x.ok).length, pct = Math.round(r / n * 100);
+      const st = S.stufe, selbst = S.ergebnis.filter(x => x.selbst);
+      const n = selbst.length ? selbst.reduce((s, x) => s + x.max, 0) : S.aufgaben.length;
+      const r = selbst.length ? selbst.reduce((s, x) => s + x.punkte, 0) : S.ergebnis.filter(x => x.ok).length, pct = Math.round(r / n * 100);
+      const zusatz = selbst.length && selbst[0].zusatz ? ' ' + selbst[0].zusatz : '';
       try {
         // Fehler-Training: XP ja, aber ohne Thema – es zählt nicht für die Meisterschaft einer Stufe
+        // Selbstkontrolle (selbst): zählt für Pass und Wiederholung, nicht für die Spielsperre (pass.js)
         if (window.LernApps) LernApps.saveResult(st.training ? { score: r, max: n, label: `${r} / ${n} · Fehler-Training` }
-          : { score: r, max: n, label: `${r} / ${n} · ${st.titel}`, thema: st.id, ...(st.inhalt ? { inhalt: st.inhalt } : {}) });
+          : { score: r, max: n, label: `${r} / ${n}${selbst.length ? ' ✓' : ''} · ${st.titel}${zusatz}`, thema: st.id, ...(st.inhalt ? { inhalt: st.inhalt } : {}),
+              ...(selbst.length ? { selbst: true } : {}) });
       } catch (e) {}
       const falsch = S.ergebnis.filter(x => !x.ok);
-      const lob = pct === 100 ? 'Alles richtig! 💯' : pct >= 80 ? 'Stark gerechnet! 💪' : pct >= MEIST.prozent ? 'Gut gemacht! 👍' : pct >= 40 ? 'Dranbleiben – das wird! 🙂' : 'Probier es gleich nochmal – oder eine leichtere Stufe.';
+      const lob = selbst.length ? (pct === 100 ? 'Alles abgehakt – starke Detektivarbeit! 🔍' : pct >= MEIST.prozent ? 'Gut gemacht! Schau dir die offenen Punkte noch einmal an. 👍'
+          : 'Vergleiche dein Heft noch einmal mit der Musterantwort. Beim nächsten Fall klappt es besser! 🙂')
+        : pct === 100 ? 'Alles richtig! 💯' : pct >= 80 ? 'Stark gerechnet! 💪' : pct >= MEIST.prozent ? 'Gut gemacht! 👍' : pct >= 40 ? 'Dranbleiben – das wird! 🙂' : 'Probier es gleich nochmal – oder eine leichtere Stufe.';
       root.innerHTML = `<div class="top"><button type="button" class="x" data-ende aria-label="Zur Stufenwahl">✕</button><span class="nm">${esc(st.titel)}</span></div>
-        <div class="erg"><div class="gr">${r} / ${n}</div><div style="font-weight:900;font-size:1.15rem">${lob}</div>
+        <div class="erg"><div class="gr">${r} / ${n}${selbst.length ? ' ✓' : ''}</div>${selbst.length ? '<div style="color:var(--mut);font-weight:800">Punkte auf deiner Checkliste</div>' : ''}<div style="font-weight:900;font-size:1.15rem">${lob}</div>
           ${falsch.length ? `<div class="liste">${falsch.map(x => `<div><b>${esc(x.frage)}${x.eigen ? ' → ' : ' = '}${esc(x.loesung)}</b> <small>Du hattest: ${esc(x.eingabe)}${x.erklaerung ? ' · ' + esc(x.erklaerung) : ''}</small></div>`).join('')}</div>` : ''}
-          <div class="zeile"><button type="button" class="btn p" data-nochmal>🔄 Nochmal</button><button type="button" class="btn" data-ende>Andere Stufe</button></div></div>`;
+          <div class="zeile"><button type="button" class="btn p" data-nochmal>${selbst.length ? '🔍 Nächster Fall' : '🔄 Nochmal'}</button><button type="button" class="btn" data-ende>Andere Stufe</button></div></div>`;
       S.stufe = null;
       root.dataset.letzte = st.training ? '#fehler' : st.id;
     }

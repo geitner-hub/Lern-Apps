@@ -392,6 +392,7 @@ Eine neue App = **Inhaltsdatei + Katalog-Eintrag + Admin-Eintrag**. Kein neuer C
    | `beschriften` | `bild: "datei.svg"`, `marken: [{ x, y (Prozent), wort }]` | markierten Teil benennen (4 Begriffe) |
    | `bildwort` | `woerter: [{ bild (Emoji oder Datei), wort, de? }]`, `richtung`: bild-wort · wort-bild · hoeren | Bild/Wort antippen, 🔊 in `sprache` |
    | `markieren` | `aufgaben: [{ satz: "She [go] to school.", richtig?, frage? }]` | das Wort in [ ] im Satz antippen (Fehler, Signalwort …) |
+   | `fall` | `aufgaben: [{ titel, bild/quelltext, quellenart, info?, wortspeicher?, karten: [{ nr: 1–3, muster, check?, hilfen?, anfaenge? }] }]` | ganzer Fall: Niveau wählen, Karten ins Heft, Musterantwort und Checkliste selbst abhaken |
 
    **Mehrere Typen in einer Datei** (Neue Lern-Apps Etappe 6): `"typ": "gemischt"` im Kopf und `"typ"` je Stufe –
    oder `"typ"` an einer einzelnen Aufgabe (lueckentext, sortieren, eingabe, markieren), z. B. Kurzantworten als
@@ -427,6 +428,15 @@ Eine neue App = **Inhaltsdatei + Katalog-Eintrag + Admin-Eintrag**. Kein neuer C
    Karten „Quellen-Detektiv“ (1 Beschreiben, 2 Erklären – Leitfrage je Quellenart –, 3 Deuten, 4 Quellenkritik).
    **Quellen-Detektiv** (`daten/inhalte/gpg/gpg.5.quellen.json`, Bilder `q-*.svg` selbst gezeichnet): Detektiv-Ritual (Mix, 5 Aufgaben),
    Quelle oder Darstellung?, Quellenarten, Sehen oder denken?, Wofür war das?, Passt der Schluss?, Drei Schritte sortieren.
+   **Ganzer Fall** (Typ `fall`, `gemeinsam/typen/fall.js`, Etappe 2, v86): eine Runde = ein Fall. Quelle groß, Niveau wählen
+   (★ Satzanfänge + Wortspeicher + Auswahl-Hilfen · ★★ Satzanfänge · ★★★ nur Leitfragen), dann Karte 1 → 2 → 3 in ihren Farben;
+   das Kind schreibt ins Heft und tippt „Fertig“ (unter 20 s fragt die App nach). Danach je Karte Musterantwort und Checkliste
+   (allgemeine Punkte je Karte in `CHECK` + `check` des Falls) zum Selbst-Abhaken. Ergebnis = abgehakte Punkte mit
+   `saveResult({ …, selbst: true })`: zählt für Pass, Meisterschaft und Wiederholung, **nicht für die Spielsperre**, kein
+   Fehler-Training; Fall-Stufen kommen in keinen Mix (`einzeln` im Typ, `ueben.js`: Runde mit einer Aufgabe).
+   Stufe `gpg.5.quellen.fall` mit sechs Steinzeit-Fällen (Faustkeil, Höhlenbild, Tongefäß, Knochennadel, Mahlstein,
+   Speerspitze). **Fotos statt Zeichnungen:** `bild` auf die jpg/png neben der Inhaltsdatei setzen und `nachweis` ergänzen –
+   sonst ändert sich nichts.
    Plan: Claude-Docs „Konzept: Geschichte-Apps und Quellen-Werkstatt“ und „Aktionsplan: Quellen-Detektiv“. Geübt wird nur mit
    Quellen aus Zeiten, die schon dran waren – Ägypten- und Römer-Quellen erst nach der jeweiligen Stunde (Freigaben).
 2. **Katalog:** Thema mit `quelle: { "app": "apps/typen/uebung.html", "parameter": "inhalt=<Themen-ID>" }` und allen
@@ -513,7 +523,8 @@ Kurzes Klassen-Quiz für 2–10 Minuten (Einstieg, Zwischensicherung, Exit-Ticke
   schickt nur richtig/falsch zurück, der Beamer zeigt den Fortschritt und auf Knopfdruck % richtig je Frage).
 - **Quizze:** Admin → Inhalte → **📊 Live-Quizze** (`gemeinsam/admin/module/inhalte-live.js`): anlegen, bearbeiten, kopieren,
   archivieren, löschen; **🎲 Aus dem Pool** (Vokabel-Unit EN→DE/DE→EN, Baukasten-Stufe – Lückentext mit Optionen, Eingabe,
-  Zuordnen, Bild-Wort –, Kopfrechen-Stufe; Freigaben gelten hier nicht). Optionen je Quiz: Modus, Rückblick, XP fürs
+  Zuordnen, Bild-Wort –, Kopfrechen-Stufe; Freigaben gelten hier nicht). Bild und Erklärung einer Aufgabe kommen mit
+  (v86); Vorlage „Quelle oder Darstellung?“: `werkzeuge/LIVE-QUIZ-QUELLEN.md`. Optionen je Quiz: Modus, Rückblick, XP fürs
   Mitmachen, Ampel am Ende. Höchstens 15 Fragen.
 - **Datenschutz:** Quizze und Rückblicke liegen in `SYNC_DB` (nicht im Repo). Raum, Einzelantworten und Teilnehmer-Kennungen
   werden beim Beenden gelöscht, spätestens nach 12 Stunden (Cron). Rückblick (nur mit Haken): je Frage Anzahl, % richtig,
@@ -582,6 +593,7 @@ gpg.5.hauptstaedte   Hauptstädte (nur in den Spielen)
 LernApps.saveResult({ score: 8, max: 10 });                 // Minimum
 LernApps.saveResult({ score: 8, max: 10, label: '8 / 10', skill: 'einmaleins-7' });
 LernApps.saveResult({ score: 8, max: 10, thema: 'ma.5.kopf.mittel' });   // neue Apps: Themen-ID aus dem Katalog
+LernApps.saveResult({ score: 7, max: 9, thema: 'gpg.5.quellen.fall', selbst: true });   // Selbstkontrolle: nicht für die Spielsperre
 ```
 Gespeichert wird pro Gerät im `localStorage` (`lern-apps-results`), Schlüssel =
 Dateiname + URL-Parameter. Pro App: letztes Ergebnis, Bestwert, Anzahl Versuche,
