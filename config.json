@@ -378,6 +378,19 @@
       "aod": false
     },
     {
+      "name": "English Journey Year 6",
+      "datei": "apps/englisch/english-journey.html",
+      "fach": "Englisch",
+      "emoji": "🧭",
+      "beschreibung": "Dein Weg durch Highlight 6 – Station für Station",
+      "hidden": true,
+      "klassen": [
+        6
+      ],
+      "customTags": [],
+      "aod": false
+    },
+    {
       "name": "Time, Date and Numbers",
       "datei": "apps/englisch/time-dates-numbers.html",
       "fach": "Englisch",
