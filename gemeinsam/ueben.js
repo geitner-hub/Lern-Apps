@@ -27,6 +27,7 @@
 //  Stufe: { …, runde? } – eigene Rundengröße (z. B. wenn eine Stufe nur 6 Aufgaben hat);
 //         einzeln: true – die Runde ist genau eine (lange) Aufgabe, z. B. ein ganzer Fall
 //  cfg.hilfe: { html } – Kachel „📖 So geht's“ mit Erklärung (Neue Lern-Apps Etappe 7; html schon escaped)
+//  cfg.nachweise: () => html – kleiner Knopf „📷 Bildnachweise“ unten auf der Startseite (html schon escaped)
 //  cfg.pfad: true – Lernpfad statt Kacheln (Quellen-Detektiv Etappe 4): die Stufen sind Stationen einer Kette, eine
 //    Station geht erst auf, wenn alle davor geschafft sind (Bestwert im Lernstand ≥ st.schwelle, sonst 70 %,
 //    Checkpoint 80 %). Stufe { abschnitt } = Überschrift davor, { checkpoint } = große Wiederholung, { extra } = Kachel
@@ -268,6 +269,7 @@
           <small>${unter}</small></span>${!ok && s.best && an ? `<span class="proz">bisher ${s.best} %</span>` : ''}</button>`;
       }).join('')}</div>`;
     }
+    const nachweisKnopf = () => cfg.nachweise ? '<p style="text-align:center"><button type="button" class="mehr" data-nachweise>📷 Bildnachweise</button></p>' : '';
     function zeigeStart() {
       S.stufe = null;
       const f = cfg.foerder || [], nf = meineFehler().length;
@@ -280,7 +282,7 @@
           ${nf ? `<button type="button" class="tile ft" data-fehler><span class="nr">🎯</span>
             <span><b>Fehler-Training</b><small>${nf} ${nf === 1 ? 'Aufgabe' : 'Aufgaben'} von früher, die noch nicht saßen</small></span></button>` : ''}
           ${vorschau() ? '<p class="sub">👀 Vorschau (Admin angemeldet): alle Stationen offen.</p>' : ''}
-          ${pfadHTML()}`;
+          ${pfadHTML()}${nachweisKnopf()}`;
         const j = root.querySelector('.station.jetzt');
         if (j && j.getBoundingClientRect().top > window.innerHeight) try { j.scrollIntoView({ block: 'center' }); } catch (e) {}
         return;
@@ -292,7 +294,7 @@
           <span><b>So geht's</b><small>Erklärung mit Beispielen</small></span></button>` : ''}
         <div class="grid">${(cfg.stufen || []).map((st, i) => kachel(st, i, false)).join('')}</div>
         ${f.length ? `<button type="button" class="mehr" data-foerder>${S.foerderOffen ? '▾' : '▸'} Leichtere Stufen zum Wiederholen</button>
-          ${S.foerderOffen ? `<div class="grid">${f.map((st, i) => kachel(st, i, true)).join('')}</div>` : ''}` : ''}`;
+          ${S.foerderOffen ? `<div class="grid">${f.map((st, i) => kachel(st, i, true)).join('')}</div>` : ''}` : ''}${nachweisKnopf()}`;
     }
 
     function starteRunde(id) {
@@ -452,6 +454,12 @@
       if (t.hasAttribute('data-foerder')) { S.foerderOffen = !S.foerderOffen; return zeigeStart(); }
       if (t.hasAttribute('data-ende')) return zeigeStart();
       if (t.hasAttribute('data-fehler')) return starteFehlerTraining();
+      if (t.hasAttribute('data-nachweise')) {
+        root.innerHTML = `<div class="top"><button type="button" class="x" data-ende aria-label="Zurück">✕</button>
+          <span class="nm">Bildnachweise</span></div><div class="hilfe-text">${cfg.nachweise()}</div>
+          <div class="zeile"><button type="button" class="btn p" data-ende>Zurück ›</button></div>`;
+        return window.scrollTo(0, 0);
+      }
       if (t.hasAttribute('data-hilfe')) {
         root.innerHTML = `<div class="top"><button type="button" class="x" data-ende aria-label="Zur Stufenwahl">✕</button>
           <span class="nm">So geht's</span></div><div class="hilfe-text">${cfg.hilfe.html}</div>

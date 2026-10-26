@@ -427,7 +427,9 @@ Eine neue App = **Inhaltsdatei + Katalog-Eintrag + Admin-Eintrag**. Kein neuer C
 
    **Quelle je Aufgabe** (Quellen-Detektiv, v85): Jede Aufgabe in zuordnen, sortieren, lueckentext, markieren und eingabe (Text)
    darf `bild` (Datei neben der Inhaltsdatei), `quelltext` (+ `herkunft`), `alt`, `nachweis` und `quellenart` (`sach`/`bild`/`schrift`)
-   tragen. Die Quelle steht über der Bedienung, Antippen zeigt sie groß, ⓘ den Bildnachweis. Fotos (png/jpg/webp) brauchen einen
+   tragen. Die Quelle steht über der Bedienung, Antippen zeigt sie groß. Bildnachweise stehen gesammelt unter „📷 Bildnachweise“
+   unten auf der Startseite der App (v89) – nicht am Bild, ein ⓘ verriete sofort, dass es eine Quelle ist; die Liste zeigt nur
+   Bilder aus freien Stufen. Fotos (png/jpg/webp) brauchen einen
    `nachweis` (pruefen.py). Lückentext mit optionen wird dafür zur eigenen Bedienung. zuordnen kann `zielfarben` (Ziel → #rrggbb).
    **Methodenkarten** in „So geht's“: `{ "titel", "text", "karte": { "nr", "farbe": "#rrggbb" } }`. `LernTypen.KARTEN` enthält die
    Karten „Quellen-Detektiv“ (1 Beschreiben, 2 Erklären – Leitfrage je Quellenart –, 3 Deuten, 4 Quellenkritik).
@@ -442,7 +444,7 @@ Eine neue App = **Inhaltsdatei + Katalog-Eintrag + Admin-Eintrag**. Kein neuer C
    Stufe `gpg.5.quellen.fall` mit sechs Steinzeit-Fällen (Faustkeil, Höhlenbild, Tongefäß, Knochennadel, Mahlstein,
    Pfeilspitze).
    **Echte Fotos (v87):** Funde, die als Quelle gelten, zeigen Fotos von Wikimedia Commons (`foto-*.jpg`, höchstens 900 px,
-   nur gemeinfrei, CC0 oder CC BY – kein BY-SA) mit `nachweis` hinter ⓘ: Faustkeil (Canterbury Museum, Pratteln), Cueva de las
+   nur gemeinfrei, CC0 oder CC BY – kein BY-SA) mit `nachweis` (Liste „📷 Bildnachweise“): Faustkeil (Canterbury Museum, Pratteln), Cueva de las
    Manos (Handbilder, Original), Bandkeramik-Schale, Knochennadel, Mahlstein, Pfeilspitze; die Lascaux-Nachbildung im Museum
    Brünn als Beispiel für „Nachbildung“. Gezeichnet (`q-*.svg`) bleiben nur Darstellungen, Fälschungen und vorerst die
    Großeltern-Quellen (Brief, Schulfoto, Schultasche – Platz für eigene Fotos). Die alten Fund-SVGs bleiben im Ordner, weil

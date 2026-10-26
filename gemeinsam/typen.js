@@ -27,7 +27,8 @@
 //               "quelltext": "…"              (Schriftquelle als Zitat, statt oder zusätzlich zum Bild),
 //               "herkunft": "Brief, 1958"      (optional, steht unter dem Zitat),
 //               "alt": "…"                     (optional, Bildbeschreibung für Vorlesehilfen),
-//               "nachweis": "Foto: Name, CC BY 4.0, Wikimedia Commons"  (Pflicht bei Fotos, ⓘ zeigt ihn),
+//               "nachweis": "Foto: Name, CC BY 4.0, Wikimedia Commons"  (Pflicht bei Fotos; steht gesammelt unter
+//                                               „📷 Bildnachweise“ auf der Startseite, nicht am Bild – ein ⓘ verriete die Quelle),
 //               "quellenart": "sach" | "bild" | "schrift"  (optional; Karte 2 passt ihre Leitfrage daran an) }
 //    Lückentext mit optionen wird dafür zur eigenen Bedienung (Knöpfe unter der Quelle).
 //  „So geht's“ als Methodenkarte: { "titel": "Beschreiben", "text": "Was sehe ich?", "karte": { "nr": 1, "farbe": "#5dbb63" } }
@@ -108,8 +109,9 @@
   .lt-q-text{margin:0 auto;max-width:560px;background:#f6ecd2;color:#2b2116;border-radius:14px;padding:.9rem 1.1rem;text-align:left;
       font:700 1.15rem/1.5 'Nunito',sans-serif;box-shadow:inset 0 0 0 2px rgba(0,0,0,.08)}
   .lt-q-text cite{display:block;margin-top:.4rem;font-style:normal;font-size:.85rem;color:#6b5a44}
-  .lt-q-info{margin-top:.3rem;font-size:.8rem;color:var(--mut)}
-  .lt-q-info button{background:none;border:0;color:var(--ind2);font:900 .95rem 'Nunito',sans-serif;cursor:pointer;padding:.2rem .4rem}
+  .lu .hilfe-text .lt-nw{display:flex;gap:.8rem;align-items:center;padding:.5rem .7rem}
+  .lt-nw img{flex:0 0 4rem;width:4rem;height:4rem;object-fit:cover;border-radius:10px;background:#fff}
+  .lt-nw span{font-size:.85rem;line-height:1.35;overflow-wrap:anywhere}
   .lt-zoom{position:fixed;inset:0;z-index:9999;background:rgba(5,5,12,.94);display:flex;align-items:center;justify-content:center;padding:1rem;cursor:zoom-out}
   .lt-zoom img{max-width:100%;max-height:100%;background:#fff;border-radius:12px}
   .lt-zoom .lt-q-text{font-size:1.5rem;max-width:760px}
@@ -152,10 +154,9 @@
   // ── Quelle je Aufgabe (Quellen-Detektiv): Bild oder Zitat über der Bedienung ──
   const QUELLE_TYPEN = ['zuordnen', 'sortieren', 'lueckentext', 'markieren', 'eingabe'];
   function quelleHTML(x, D) {
-    const nw = x.nachweis ? `<div class="lt-q-info"><button type="button" data-lt-info aria-label="Bildnachweis zeigen">ⓘ</button><span hidden>${esc(x.nachweis)}</span></div>` : '';
     const bild = x.bild ? `<button type="button" class="lt-q-bild" data-lt-zoom aria-label="Quelle groß zeigen">${bildHTML(x.bild, D, x.alt || 'Quelle')}</button>` : '';
     const text = x.quelltext ? `<blockquote class="lt-q-text" data-lt-zoom>${esc(x.quelltext)}${x.herkunft ? `<cite>${esc(x.herkunft)}</cite>` : ''}</blockquote>` : '';
-    return `<figure class="lt-quelle">${bild}${text}${nw}</figure>`;
+    return `<figure class="lt-quelle">${bild}${text}</figure>`;
   }
   /** Hängt die Quelle einer Aufgabe vor die Bedienung. Zahl-Aufgaben (Zifferntastatur) bleiben ohne – pruefen.py meldet das. */
   function mitQuelle(a, x, D) {
@@ -173,10 +174,8 @@
     a.quelle = { bild: x.bild || '', quellenart: x.quellenart || '' };
     return a;
   }
-  // Groß zeigen und Bildnachweis – ein Zuhörer für alle Aufgaben
+  // Groß zeigen – ein Zuhörer für alle Aufgaben
   document.addEventListener('click', e => {
-    const info = e.target.closest('[data-lt-info]');
-    if (info) { const sp = info.nextElementSibling; if (sp) sp.hidden = !sp.hidden; return; }
     const z = e.target.closest('.lt-zoom');
     if (z) { z.remove(); return; }
     const q = e.target.closest('[data-lt-zoom]');
@@ -360,6 +359,19 @@
       if (!stapel[st.id].length) stapel[st.id] = mischen(k);
       return stapel[st.id].pop();
     }
+    /** „📷 Bildnachweise“: nur Bilder aus freien, sichtbaren Aufgaben (sonst verriete die Liste kommende Stunden) */
+    function nachweiseHTML() {
+      const gesehen = new Map();
+      Object.values(quellen).forEach(q => {
+        if (!stufeFrei(q.st.id) || !Array.isArray(q.st.aufgaben)) return;
+        q.st.aufgaben.forEach((x, k) => {
+          if (x && x.bild && x.nachweis && sichtbar(q, k) && aufgabeFrei(q, k) && !gesehen.has(x.bild))
+            gesehen.set(x.bild, `<section class="lt-nw">${bildHTML(x.bild, q.D, '')}<span>${esc(x.nachweis)}</span></section>`);
+        });
+      });
+      return gesehen.size ? [...gesehen.values()].join('') : '<section><p>Noch keine Bilder mit Nachweis.</p></section>';
+    }
+    const hatNachweise = [D, ...Object.values(andere)].some(Dx => Dx.stufen.some(st => Array.isArray(st.aufgaben) && st.aufgaben.some(x => x && x.nachweis)));
     const hatNach = st => !st.mix && quellen[st.id] && Array.isArray(st.aufgaben) && st.aufgaben.some(x => x && x.nach);
     const stufen = D.stufen.filter(st => st && st.id && anzahlSichtbar(st) > 0)
       .map(st => Object.assign({}, st, einzeln(D, st) ? { runde: 1, einzeln: true } : { runde: Math.max(D.pfad ? 5 : 1, st.runde || Math.min(Number(D.runde) || 8, anzahlSichtbar(st))) },   // Pfad: ≥ 5, sonst zählt der Lernstand nicht
@@ -370,6 +382,7 @@
       host, titel: (D.emoji ? D.emoji + ' ' : '') + (D.titel || 'Übung'), untertitel: D.untertitel || 'Wähle eine Stufe',
       stufen, runde: Number(D.runde) || 8, meisterschaft: D.meisterschaft, vorlesen: !!D.vorlesen, pfad: !!D.pfad,
       hilfe: D.hilfe ? { html: hilfeHTML(D.hilfe) } : null,
+      nachweise: hatNachweise ? nachweiseHTML : null,
       erzeuge: st => { const nr = ziehe(st); return nr == null ? null : aufgabe(st, nr); },
       erzeugeTyp: (st, typ) => { const nr = Number(String(typ || '').slice(1)); return /^a\d+$/.test(typ) && nr < anzahl(st) ? aufgabe(st, nr) : null; },
       pruefe: (a, e) => { const T = TYPEN[a._typ]; return !!T && T.pruefe(a, e); },
