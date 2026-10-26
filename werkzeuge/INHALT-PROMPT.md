@@ -44,6 +44,9 @@ Regeln:
   - fall (ganzer Fall zu einer Quelle, Quellen-Detektiv): `"aufgaben": [{ "titel", "bild", "alt", "quellenart": "sach"|"bild"|"schrift",
     "info", "wortspeicher": [...], "karten": [{ "nr": 1, "hilfen": [{ "frage", "optionen": [...] }], "muster": [2–4 kurze Sätze],
     "check": [ein Punkt nur für diesen Fall] }, { "nr": 2, … }, { "nr": 3, … }] }]` – Karte 1 Beschreiben, 2 Erklären, 3 Deuten
+  - Lernpfad (optional): `"pfad": true` im Kopf = Stationen in Dateireihenfolge; Mix-Stufe `{ "checkpoint": true }` =
+    große Wiederholung aller Stationen davor; `"abschnitt": "…"` = Überschrift; `"gesperrt": true` = erst nach Freigabe;
+    Aufgabe `"nach": "<Stufen-ID>"` = erst, wenn diese Stufe frei ist. Je Station mindestens 5 Aufgaben.
   - gemischt: `"typ": "gemischt"` im Kopf, dann `"typ"` je Stufe; einzelne Aufgaben dürfen einen eigenen `"typ"` haben
     (lueckentext, sortieren, eingabe, markieren). Mix-Stufe: `{ "id", "titel", "mix": true }`
 - Jede Aufgabe gern mit `"tipp"` (kurzer Hinweis) und `"erklaerung"` (warum es so richtig ist, ein Satz).

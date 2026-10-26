@@ -17,7 +17,7 @@ Live am iPad über das Symbol auf dem Home-Bildschirm, Test in Safari.
 | 10 | Flugmodus an, Lernwelt neu öffnen, eine App und ein Spiel | beides startet offline (Spiele erst, wenn das iPad sie im Hintergrund geladen hat – nach einem Update etwa einen Schultag) |
 | 11 | Pass → Sicherung → 5× auf die Versionszeile tippen | Diagnose erscheint, „Fehlerprotokoll (0)“ bzw. Einträge ansehen |
 | 12 | Spiel: Meine Insel öffnen, „Los geht's“, mit dem Joystick zu einem Bewohner laufen, 💬 antippen | Insel lädt (ohne 3D: Hinweis statt leerer Seite), Figur läuft flüssig, Bewohner gibt einen Auftrag auf Englisch; ⏸ → „Weiter“ geht, Home-Knopf führt zurück |
-| 13 | GPG: Quellen-Detektiv → „Ganzer Fall“, Niveau ★, bis zur Kontrolle, ein paar Punkte abhaken, Auswerten | Quelle groß, Karten grün/blau/orange, Hilfen antippbar; Musterantwort und Checkliste gut lesbar; Ergebnis „x / y ✓“ |
+| 13 | GPG: Quellen-Detektiv öffnen (ohne Admin-Anmeldung) | Pfad mit Stationen, nur Station 1 offen; Station 1 mit ≥ 70 % → „Station geschafft“, „Nächste Station ›“ öffnet Station 2; nur Fotos, ⓘ zeigt den Bildnachweis |
 | 14 | Quellen-Detektiv: die vier Kritik-Stufen | 🔒 bis zur Freigabe im Admin; danach „Ganzer Fall mit Quellenkritik“ mit lila Karte 4, im Detektiv-Ritual tauchen Kritik-Aufgaben auf |
 | 15 | Admin 🎓 Unterricht → 🔓 Freischalten: eine Ägypten-Stufe des Quellen-Detektivs für eine Testgruppe „Jetzt frei“; Kinder-iPad der Gruppe mit offener Stufenwahl liegen lassen | nach höchstens 3 Minuten ohne Neuladen frei, der Ägypten-Fall dazu erscheint im „Ganzer Fall: Ägypten“; danach unter Inhalte → Freigaben wieder sperren |
 

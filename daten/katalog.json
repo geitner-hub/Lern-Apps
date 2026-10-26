@@ -1271,7 +1271,18 @@
         { "id": "gpg.5.quellen.echt", "titel": "Echt oder nachgemacht?" },
         { "id": "gpg.5.quellen.zeitfehler", "titel": "Zeitfehler-Check" },
         { "id": "gpg.5.quellen.glauben", "titel": "Kann ich ihr glauben?" },
-        { "id": "gpg.5.quellen.fall-kritik", "titel": "Ganzer Fall mit Quellenkritik" }
+        { "id": "gpg.5.quellen.fall-kritik", "titel": "Ganzer Fall mit Quellenkritik" },
+        { "id": "gpg.5.quellen.cp-steinzeit", "titel": "Checkpoint: Quellen untersuchen" },
+        { "id": "gpg.5.quellen.cp-kritik", "titel": "Checkpoint: Quellenkritik" },
+        { "id": "gpg.5.quellen.aeg-nil", "titel": "Ägypten: Nil und Felder" },
+        { "id": "gpg.5.quellen.aeg-pharao", "titel": "Ägypten: Der Pharao" },
+        { "id": "gpg.5.quellen.aeg-pyramiden", "titel": "Ägypten: Pyramiden" },
+        { "id": "gpg.5.quellen.cp-aegypten-1", "titel": "Checkpoint: Ägypten I" },
+        { "id": "gpg.5.quellen.aeg-totenkult", "titel": "Ägypten: Leben nach dem Tod" },
+        { "id": "gpg.5.quellen.aeg-schrift", "titel": "Ägypten: Schrift und Schreiber" },
+        { "id": "gpg.5.quellen.aeg-alltag", "titel": "Ägypten: Alltag" },
+        { "id": "gpg.5.quellen.cp-aegypten-2", "titel": "Checkpoint: Ägypten II" },
+        { "id": "gpg.5.quellen.aeg-fall", "titel": "Ganzer Fall: Ägypten" }
        ]
       }
      ]

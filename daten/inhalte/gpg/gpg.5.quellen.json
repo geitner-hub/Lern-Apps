@@ -3,9 +3,11 @@
  "thema": "gpg.5.quellen",
  "titel": "Quellen-Detektiv",
  "emoji": "🔍",
- "untertitel": "Beschreiben · Erklären · Deuten",
+ "untertitel": "Station für Station zum Quellen-Detektiv",
  "klasse": 5,
  "runde": 6,
+ "pfad": true,
+ "nurMitFoto": true,
  "vorlesen": true,
  "hilfe": [
   {
@@ -100,7 +102,7 @@
   {
    "id": "gpg.5.quellen.ritual",
    "titel": "Detektiv-Ritual",
-   "kurz": "5 Aufgaben gemischt",
+   "kurz": "5 gemischte Aufgaben aus den Stationen, die du schon geübt hast",
    "mix": true,
    "runde": 5,
    "aus": [
@@ -112,12 +114,21 @@
     "gpg.5.quellen.schritte",
     "gpg.5.quellen.echt",
     "gpg.5.quellen.zeitfehler",
-    "gpg.5.quellen.glauben"
-   ]
+    "gpg.5.quellen.glauben",
+    "gpg.5.quellen.aeg-nil",
+    "gpg.5.quellen.aeg-pharao",
+    "gpg.5.quellen.aeg-pyramiden",
+    "gpg.5.quellen.aeg-totenkult",
+    "gpg.5.quellen.aeg-schrift",
+    "gpg.5.quellen.aeg-alltag"
+   ],
+   "extra": true,
+   "nurGeuebt": true
   },
   {
    "id": "gpg.5.quellen.darstellung",
    "titel": "Quelle oder Darstellung?",
+   "abschnitt": "Steinzeit: Quellen untersuchen",
    "kurz": "Profi-Frage",
    "typ": "lueckentext",
    "anweisung": "Ist das eine Quelle oder eine Darstellung?",
@@ -238,6 +249,58 @@
       "Darstellung"
      ],
      "erklaerung": "Das Foto wurde 1956 gemacht. Es ist eine Quelle aus dieser Zeit.",
+     "tipp": "Wurde es damals gemacht – oder heute?"
+    },
+    {
+     "bild": "foto-langhaus-nachbau.jpg",
+     "alt": "Ein nachgebautes Langhaus mit Strohdach und bemaltem Eingang",
+     "nachweis": "Foto: Tim Sheerman-Chase, CC BY 4.0, Wikimedia Commons („Entrance to Horton House.jpg“)",
+     "text": "Dieses Langhaus steht in einem Museumsdorf in England. Es wurde vor wenigen Jahren nach Funden nachgebaut. Das ist eine ___.",
+     "antwort": "Darstellung",
+     "optionen": [
+      "Quelle",
+      "Darstellung"
+     ],
+     "erklaerung": "Das Haus wurde heute gebaut. Es zeigt, wie ein Haus der Jungsteinzeit ausgesehen haben könnte. Das ist eine Darstellung.",
+     "tipp": "Wurde es damals gemacht – oder heute?"
+    },
+    {
+     "bild": "foto-gemaelde-neandertaler.jpg",
+     "alt": "Ein Gemälde: Menschen in Fellen kauern im Schneesturm",
+     "nachweis": "Bild: Charles R. Knight (1911), gemeinfrei, Wikimedia Commons („Snowbound Neanderthals.jpg“)",
+     "text": "Dieses Gemälde hat ein Maler im Jahr 1911 gemalt. Das ist eine ___.",
+     "antwort": "Darstellung",
+     "optionen": [
+      "Quelle",
+      "Darstellung"
+     ],
+     "erklaerung": "Der Maler hat die Steinzeit nie gesehen. Er hat gemalt, wie er sie sich vorstellt. Das ist eine Darstellung.",
+     "tipp": "Wurde es damals gemacht – oder heute?"
+    },
+    {
+     "bild": "foto-lascaux-nachbildung.jpg",
+     "alt": "Nachgemalte Pferde und andere Tiere an einer Wand im Museum",
+     "nachweis": "Foto: HTO, gemeinfrei, Wikimedia Commons („Lascaux, replica 03.JPG“)",
+     "text": "Diese Tierbilder hat man heute in einem Museum genau nach Höhlenbildern nachgemalt. Das ist eine ___.",
+     "antwort": "Darstellung",
+     "optionen": [
+      "Quelle",
+      "Darstellung"
+     ],
+     "erklaerung": "Die Bilder wurden heute gemalt – sie sind keine Quelle aus der Steinzeit, sondern eine Nachbildung.",
+     "tipp": "Wurde es damals gemacht – oder heute?"
+    },
+    {
+     "bild": "foto-gemaelde-hoehlenmaler.jpg",
+     "alt": "Ein Gemälde: Steinzeit-Menschen malen in einer Höhle Mammuts an die Wand",
+     "nachweis": "Bild: Charles R. Knight (1920), gemeinfrei, Wikimedia Commons („Font-de-Gaume.jpg“)",
+     "text": "Dieses Gemälde hat ein Maler im Jahr 1920 gemalt. Es zeigt Menschen, die Mammuts an eine Höhlenwand malen. Das ist eine ___.",
+     "antwort": "Darstellung",
+     "optionen": [
+      "Quelle",
+      "Darstellung"
+     ],
+     "erklaerung": "Der Maler hat sich vorgestellt, wie Höhlenbilder entstanden. Er war nicht dabei. Das ist eine Darstellung.",
      "tipp": "Wurde es damals gemacht – oder heute?"
     }
    ]
@@ -926,6 +989,14 @@
    }
   },
   {
+   "id": "gpg.5.quellen.cp-steinzeit",
+   "titel": "Checkpoint: Quellen untersuchen",
+   "kurz": "Große Wiederholung aller Stationen davor",
+   "mix": true,
+   "checkpoint": true,
+   "runde": 10
+  },
+  {
    "id": "gpg.5.quellen.fall",
    "titel": "Ganzer Fall",
    "kurz": "Beschreiben, Erklären, Deuten ins Heft – mit Niveau ★ bis ★★★",
@@ -1455,13 +1526,382 @@
    ]
   },
   {
+   "id": "gpg.5.quellen.aeg-nil",
+   "titel": "Ägypten: Nil und Felder",
+   "abschnitt": "Ägypten: Nil, Pyramiden, Pharao",
+   "kurz": "Wandbilder vom Pflügen und Ernten",
+   "gesperrt": true,
+   "typ": "lueckentext",
+   "anweisung": "Schau dir die Quelle genau an.",
+   "aufgaben": [
+    {
+     "bild": "foto-aeg-pfluegen.jpg",
+     "alt": "Wandbild: Ein Mann pflügt mit zwei gefleckten Rindern, dazwischen Hieroglyphen",
+     "nachweis": "Foto: gemeinfrei, Wikimedia Commons („Maler der Grabkammer des Sennudem 001.jpg“)",
+     "quellenart": "bild",
+     "text": "Das Wandbild ist eine ___.",
+     "antwort": "Quelle",
+     "optionen": [
+      "Quelle",
+      "Darstellung"
+     ],
+     "erklaerung": "Es wurde vor über 3000 Jahren in das Grab von Sennedjem gemalt. Es ist eine Quelle.",
+     "tipp": "Wurde es damals gemacht – oder heute?"
+    },
+    {
+     "bild": "foto-aeg-pfluegen.jpg",
+     "alt": "Wandbild: Ein Mann pflügt mit zwei gefleckten Rindern, dazwischen Hieroglyphen",
+     "nachweis": "Foto: gemeinfrei, Wikimedia Commons („Maler der Grabkammer des Sennudem 001.jpg“)",
+     "quellenart": "bild",
+     "text": "„Ein Mann führt einen Pflug, davor gehen zwei gefleckte Rinder.“ – Das ___.",
+     "antwort": "sehe ich wirklich",
+     "optionen": [
+      "sehe ich wirklich",
+      "denke ich mir dazu"
+     ],
+     "erklaerung": "Genau das ist im Bild zu sehen.",
+     "tipp": "Ist es im Bild zu sehen – oder weißt oder vermutest du es?"
+    },
+    {
+     "bild": "foto-aeg-pfluegen.jpg",
+     "alt": "Wandbild: Ein Mann pflügt mit zwei gefleckten Rindern, dazwischen Hieroglyphen",
+     "nachweis": "Foto: gemeinfrei, Wikimedia Commons („Maler der Grabkammer des Sennudem 001.jpg“)",
+     "quellenart": "bild",
+     "text": "Wofür benutzte man den Pflug? Man benutzte ihn, um ___.",
+     "antwort": "den Boden aufzureißen und zu lockern",
+     "optionen": [
+      "den Boden aufzureißen und zu lockern",
+      "Brot zu backen",
+      "Fische zu fangen"
+     ],
+     "erklaerung": "Mit dem Pflug lockerte man den Boden, bevor man säte. Die Rinder zogen ihn.",
+     "tipp": "Denk an den Unterricht: Was macht man mit dem Feld, bevor man sät?"
+    },
+    {
+     "bild": "foto-aeg-ernte.jpg",
+     "alt": "Wandbild: Eine Frau und ein Mann ernten hohe grüne Pflanzen",
+     "nachweis": "Foto: gemeinfrei, Wikimedia Commons („Egyptian harvest.jpg“)",
+     "quellenart": "bild",
+     "text": "„Eine Frau und ein Mann reißen hohe grüne Pflanzen aus.“ – Das ___.",
+     "antwort": "sehe ich wirklich",
+     "optionen": [
+      "sehe ich wirklich",
+      "denke ich mir dazu"
+     ],
+     "erklaerung": "Das sieht man im Bild. Die Pflanze ist Flachs – daraus machte man Leinen-Stoff.",
+     "tipp": "Ist es im Bild zu sehen – oder weißt oder vermutest du es?"
+    },
+    {
+     "bild": "foto-aeg-ernte.jpg",
+     "alt": "Wandbild: Eine Frau und ein Mann ernten hohe grüne Pflanzen",
+     "nachweis": "Foto: gemeinfrei, Wikimedia Commons („Egyptian harvest.jpg“)",
+     "quellenart": "bild",
+     "text": "„Die beiden freuen sich über die gute Ernte.“ – Das ___.",
+     "antwort": "denke ich mir dazu",
+     "optionen": [
+      "sehe ich wirklich",
+      "denke ich mir dazu"
+     ],
+     "erklaerung": "Ob sie sich freuen, sieht man nicht. Das denkt man sich dazu.",
+     "tipp": "Ist es im Bild zu sehen – oder weißt oder vermutest du es?"
+    },
+    {
+     "bild": "foto-aeg-ernte.jpg",
+     "alt": "Wandbild: Eine Frau und ein Mann ernten hohe grüne Pflanzen",
+     "nachweis": "Foto: gemeinfrei, Wikimedia Commons („Egyptian harvest.jpg“)",
+     "quellenart": "bild",
+     "text": "Daran erkennt man, dass die Ägypter ___.",
+     "antwort": "Felder hatten und Pflanzen anbauten",
+     "optionen": [
+      "Felder hatten und Pflanzen anbauten",
+      "nur von der Jagd lebten",
+      "Maschinen für die Ernte hatten"
+     ],
+     "erklaerung": "Das Bild zeigt Feldarbeit mit der Hand. Maschinen gab es nicht.",
+     "tipp": "Welcher Satz passt genau zur Quelle – ohne zu übertreiben?"
+    }
+   ]
+  },
+  {
+   "id": "gpg.5.quellen.aeg-pyramiden",
+   "titel": "Ägypten: Pyramiden",
+   "kurz": "Die Pyramiden von Gizeh",
+   "gesperrt": true,
+   "typ": "lueckentext",
+   "anweisung": "Schau dir die Quelle genau an.",
+   "aufgaben": [
+    {
+     "bild": "foto-aeg-pyramiden.jpg",
+     "alt": "Die Pyramiden von Gizeh in der Wüste",
+     "nachweis": "Foto: Walkerssk, CC0, Wikimedia Commons („Pyramids in Giza - Egypt.jpg“)",
+     "quellenart": "sach",
+     "text": "Die Pyramiden selbst sind eine ___.",
+     "antwort": "Sachquelle",
+     "optionen": [
+      "Sachquelle",
+      "Bildquelle",
+      "Schriftquelle"
+     ],
+     "erklaerung": "Auch ein Bauwerk von damals ist eine Sachquelle.",
+     "tipp": "Ein Gegenstand oder Bauwerk? Ein Bild? Ein Text?"
+    },
+    {
+     "bild": "foto-aeg-pyramiden.jpg",
+     "alt": "Die Pyramiden von Gizeh in der Wüste",
+     "nachweis": "Foto: Walkerssk, CC0, Wikimedia Commons („Pyramids in Giza - Egypt.jpg“)",
+     "quellenart": "sach",
+     "text": "Die Pyramiden wurden vor etwa 4500 Jahren gebaut. Das Foto zeigt die echten Bauwerke. Sie sind eine ___.",
+     "antwort": "Quelle",
+     "optionen": [
+      "Quelle",
+      "Darstellung"
+     ],
+     "erklaerung": "Die Bauwerke stammen aus der Zeit selbst. Darum sind sie eine Quelle.",
+     "tipp": "Wurde es damals gemacht – oder heute?"
+    },
+    {
+     "bild": "foto-aeg-gizeh-modell.jpg",
+     "alt": "Ein Computerbild: Pyramiden und Tempel von Gizeh von oben",
+     "nachweis": "Bild: Drummyfish, CC0, Wikimedia Commons („Giza complex from above 3D.jpg“)",
+     "text": "Dieses Bild hat jemand im Jahr 2019 am Computer gemacht. Es zeigt Gizeh von oben. Das ist eine ___.",
+     "antwort": "Darstellung",
+     "optionen": [
+      "Quelle",
+      "Darstellung"
+     ],
+     "erklaerung": "Das Bild ist heute entstanden. Es zeigt, wie Gizeh ausgesehen haben könnte. Das ist eine Darstellung.",
+     "tipp": "Wurde es damals gemacht – oder heute?"
+    },
+    {
+     "bild": "foto-aeg-pyramiden.jpg",
+     "alt": "Die Pyramiden von Gizeh in der Wüste",
+     "nachweis": "Foto: Walkerssk, CC0, Wikimedia Commons („Pyramids in Giza - Egypt.jpg“)",
+     "quellenart": "sach",
+     "text": "„Drei große Pyramiden stehen in der Wüste, davor kleinere.“ – Das ___.",
+     "antwort": "sehe ich wirklich",
+     "optionen": [
+      "sehe ich wirklich",
+      "denke ich mir dazu"
+     ],
+     "erklaerung": "Genau das zeigt das Foto.",
+     "tipp": "Ist es im Bild zu sehen – oder weißt oder vermutest du es?"
+    },
+    {
+     "bild": "foto-aeg-pyramiden.jpg",
+     "alt": "Die Pyramiden von Gizeh in der Wüste",
+     "nachweis": "Foto: Walkerssk, CC0, Wikimedia Commons („Pyramids in Giza - Egypt.jpg“)",
+     "quellenart": "sach",
+     "text": "„Tausende Arbeiter haben viele Jahre daran gebaut.“ – Das ___.",
+     "antwort": "denke ich mir dazu",
+     "optionen": [
+      "sehe ich wirklich",
+      "denke ich mir dazu"
+     ],
+     "erklaerung": "Das weiß man aus anderen Quellen. Im Foto sieht man es nicht.",
+     "tipp": "Ist es im Bild zu sehen – oder weißt oder vermutest du es?"
+    },
+    {
+     "bild": "foto-aeg-pyramiden.jpg",
+     "alt": "Die Pyramiden von Gizeh in der Wüste",
+     "nachweis": "Foto: Walkerssk, CC0, Wikimedia Commons („Pyramids in Giza - Egypt.jpg“)",
+     "quellenart": "sach",
+     "text": "Wofür wurden die Pyramiden gebaut? Man baute sie als ___.",
+     "antwort": "Grab für den Pharao",
+     "optionen": [
+      "Grab für den Pharao",
+      "Wohnhaus für Bauern",
+      "Speicher für Getreide"
+     ],
+     "erklaerung": "Die Pyramiden waren riesige Gräber für Pharaonen.",
+     "tipp": "Denk an den Unterricht."
+    },
+    {
+     "bild": "foto-aeg-pyramiden.jpg",
+     "alt": "Die Pyramiden von Gizeh in der Wüste",
+     "nachweis": "Foto: Walkerssk, CC0, Wikimedia Commons („Pyramids in Giza - Egypt.jpg“)",
+     "quellenart": "sach",
+     "text": "Daran erkennt man, dass die Ägypter ___.",
+     "antwort": "sehr gut bauen und planen konnten",
+     "optionen": [
+      "sehr gut bauen und planen konnten",
+      "Kräne mit Motoren hatten",
+      "in den Pyramiden wohnten"
+     ],
+     "erklaerung": "So große Bauwerke kann man nur mit viel Planung bauen. Maschinen mit Motoren gab es nicht.",
+     "tipp": "Welcher Satz passt genau zur Quelle?"
+    }
+   ]
+  },
+  {
+   "id": "gpg.5.quellen.aeg-pharao",
+   "titel": "Ägypten: Der Pharao",
+   "kurz": "Ein Bild in Stein vom Pharao",
+   "gesperrt": true,
+   "typ": "lueckentext",
+   "anweisung": "Schau dir die Quelle genau an.",
+   "aufgaben": [
+    {
+     "bild": "foto-aeg-pharao.jpg",
+     "alt": "Ein Relief: Der große Pharao packt drei kleine Gefangene an den Haaren",
+     "nachweis": "Foto: AdamSoubhi, CC0, Wikimedia Commons („The theme of the Egyptian kings smiting their enemies is an ancient one.webp“)",
+     "quellenart": "bild",
+     "text": "Das Bild in Stein ist eine ___.",
+     "antwort": "Bildquelle",
+     "optionen": [
+      "Sachquelle",
+      "Bildquelle",
+      "Schriftquelle"
+     ],
+     "erklaerung": "Ein Bild aus der Zeit – hier in Stein gehauen und bemalt – ist eine Bildquelle.",
+     "tipp": "Ein Gegenstand? Ein Bild? Ein Text?"
+    },
+    {
+     "bild": "foto-aeg-pharao.jpg",
+     "alt": "Ein Relief: Der große Pharao packt drei kleine Gefangene an den Haaren",
+     "nachweis": "Foto: AdamSoubhi, CC0, Wikimedia Commons („The theme of the Egyptian kings smiting their enemies is an ancient one.webp“)",
+     "quellenart": "bild",
+     "text": "„Der Pharao ist viel größer als die Gefangenen.“ – Das ___.",
+     "antwort": "sehe ich wirklich",
+     "optionen": [
+      "sehe ich wirklich",
+      "denke ich mir dazu"
+     ],
+     "erklaerung": "Das sieht man: Der Pharao ist mehr als doppelt so groß.",
+     "tipp": "Ist es im Bild zu sehen – oder weißt oder vermutest du es?"
+    },
+    {
+     "bild": "foto-aeg-pharao.jpg",
+     "alt": "Ein Relief: Der große Pharao packt drei kleine Gefangene an den Haaren",
+     "nachweis": "Foto: AdamSoubhi, CC0, Wikimedia Commons („The theme of the Egyptian kings smiting their enemies is an ancient one.webp“)",
+     "quellenart": "bild",
+     "text": "„Der Pharao hat die Feinde ganz allein besiegt.“ – Das ___.",
+     "antwort": "denke ich mir dazu",
+     "optionen": [
+      "sehe ich wirklich",
+      "denke ich mir dazu"
+     ],
+     "erklaerung": "Das zeigt das Bild so – aber ob es wirklich so war, sieht man nicht.",
+     "tipp": "Ist es im Bild zu sehen – oder weißt oder vermutest du es?"
+    },
+    {
+     "bild": "foto-aeg-pharao.jpg",
+     "alt": "Ein Relief: Der große Pharao packt drei kleine Gefangene an den Haaren",
+     "nachweis": "Foto: AdamSoubhi, CC0, Wikimedia Commons („The theme of the Egyptian kings smiting their enemies is an ancient one.webp“)",
+     "quellenart": "bild",
+     "text": "Warum ist der Pharao so groß? Der Künstler wollte zeigen, dass ___.",
+     "antwort": "der Pharao sehr mächtig ist",
+     "optionen": [
+      "der Pharao sehr mächtig ist",
+      "der Pharao ein Riese war",
+      "die Gefangenen Kinder waren"
+     ],
+     "erklaerung": "Der Pharao war kein Riese. Das Bild sollte zeigen, wie mächtig er ist.",
+     "tipp": "Wollte jemand etwas zeigen?"
+    },
+    {
+     "bild": "foto-aeg-pharao.jpg",
+     "alt": "Ein Relief: Der große Pharao packt drei kleine Gefangene an den Haaren",
+     "nachweis": "Foto: AdamSoubhi, CC0, Wikimedia Commons („The theme of the Egyptian kings smiting their enemies is an ancient one.webp“)",
+     "quellenart": "bild",
+     "text": "Kann ich dem Bild glauben, dass der Pharao so riesig war? ___",
+     "antwort": "Nein, das Bild will seine Macht zeigen.",
+     "optionen": [
+      "Nein, das Bild will seine Macht zeigen.",
+      "Ja, Bilder zeigen immer die Wahrheit."
+     ],
+     "erklaerung": "Der Pharao ließ sich so darstellen. Das Bild ist Werbung für seine Macht.",
+     "tipp": "Wer hat das Bild machen lassen?"
+    },
+    {
+     "bild": "foto-aeg-pharao.jpg",
+     "alt": "Ein Relief: Der große Pharao packt drei kleine Gefangene an den Haaren",
+     "nachweis": "Foto: AdamSoubhi, CC0, Wikimedia Commons („The theme of the Egyptian kings smiting their enemies is an ancient one.webp“)",
+     "quellenart": "bild",
+     "text": "Daran erkennt man, dass die Ägypter ___.",
+     "antwort": "ihren Pharao als mächtigen Herrscher zeigen wollten",
+     "optionen": [
+      "ihren Pharao als mächtigen Herrscher zeigen wollten",
+      "keine Feinde hatten",
+      "alle gleich wichtig fanden"
+     ],
+     "erklaerung": "Das Bild zeigt den Pharao groß und stark, die Feinde klein. Es sagt etwas über seine Macht.",
+     "tipp": "Welcher Satz passt genau zur Quelle?"
+    }
+   ]
+  },
+  {
+   "id": "gpg.5.quellen.cp-aegypten-1",
+   "titel": "Checkpoint: Ägypten I",
+   "kurz": "Große Wiederholung aller Stationen davor",
+   "mix": true,
+   "checkpoint": true,
+   "runde": 10
+  },
+  {
    "id": "gpg.5.quellen.echt",
    "titel": "Echt oder nachgemacht?",
+   "abschnitt": "Quellenkritik: Kann ich der Quelle trauen?",
    "kurz": "Original, Nachbildung oder Fälschung",
    "gesperrt": true,
    "typ": "lueckentext",
    "anweisung": "Ist das ein Original, eine Nachbildung oder eine Fälschung?",
    "aufgaben": [
+    {
+     "bild": "foto-faustkeil-museum.jpg",
+     "alt": "Ein brauner Faustkeil aus Feuerstein auf einem Metallständer im Museum",
+     "nachweis": "Foto: Adrian Michael, bearbeitet von MagentaGreen, CC BY 3.0, Wikimedia Commons („Faustkeil Pratteln (retuschiert).jpg“)",
+     "text": "Dieser Faustkeil steht im Museum. Auf dem Schild steht: Fund aus Pratteln, Altsteinzeit. Das ist ein ___.",
+     "antwort": "Original",
+     "optionen": [
+      "Original",
+      "Nachbildung",
+      "Fälschung"
+     ],
+     "erklaerung": "Er wurde gefunden und von Forschern geprüft. Das Museum zeigt das echte Stück.",
+     "tipp": "Ist es alt und echt? Sagt jemand ehrlich, dass es nachgemacht ist?"
+    },
+    {
+     "bild": "foto-hoehle-haende.jpg",
+     "alt": "Viele Umrisse von Händen in Rot, Weiß und Schwarz an einer Felswand",
+     "nachweis": "Foto: Mariano, gemeinfrei, Wikimedia Commons („SantaCruz-CuevaManos-P2210651b.jpg“)",
+     "text": "Diese Hände sind an einer Felswand in Argentinien. Forscher haben die Farbe untersucht: Sie ist etwa 9000 Jahre alt. Das ist ein ___.",
+     "antwort": "Original",
+     "optionen": [
+      "Original",
+      "Nachbildung",
+      "Fälschung"
+     ],
+     "erklaerung": "Die Bilder sind wirklich so alt. Sie sind das Original an der Felswand.",
+     "tipp": "Ist es alt und echt? Sagt jemand ehrlich, dass es nachgemacht ist?"
+    },
+    {
+     "bild": "foto-aeg-pfluegen.jpg",
+     "alt": "Wandbild: Ein Mann pflügt mit zwei gefleckten Rindern, dazwischen Hieroglyphen",
+     "nachweis": "Foto: gemeinfrei, Wikimedia Commons („Maler der Grabkammer des Sennudem 001.jpg“)",
+     "text": "Dieses Wandbild ist im Grab von Sennedjem in Ägypten. Maler haben es vor etwa 3200 Jahren dort an die Wand gemalt. Das ist ein ___.",
+     "antwort": "Original",
+     "optionen": [
+      "Original",
+      "Nachbildung",
+      "Fälschung"
+     ],
+     "erklaerung": "Es ist das echte Bild an der Grabwand, gemalt in der Zeit selbst.",
+     "tipp": "Ist es alt und echt? Sagt jemand ehrlich, dass es nachgemacht ist?"
+    },
+    {
+     "bild": "foto-aeg-kopie-sennedjem.jpg",
+     "alt": "Ein nachgemaltes Wandbild mit Feldern, Menschen, Rindern und Bäumen",
+     "nachweis": "Bild: Charles Wilkinson (1922), Metropolitan Museum of Art, CC0, Wikimedia Commons („Sennedjem and Iineferti in the Fields of Iaru MET DT11771.jpg“)",
+     "text": "Ein Maler hat im Jahr 1922 die ganze Grabwand von Sennedjem abgemalt. Das Bild hängt heute in einem Museum in New York, das Museum nennt es eine Kopie. Das ist eine ___.",
+     "antwort": "Nachbildung",
+     "optionen": [
+      "Original",
+      "Nachbildung",
+      "Fälschung"
+     ],
+     "erklaerung": "Das Bild ist ehrlich nachgemalt. Es ist eine Nachbildung – das Original ist die Wand im Grab.",
+     "tipp": "Ist es alt und echt? Sagt jemand ehrlich, dass es nachgemacht ist?"
+    },
     {
      "text": "Ein Bauer findet beim Pflügen einen alten Faustkeil in der Erde. Das ist ein ___.",
      "antwort": "Original",
@@ -2106,6 +2546,905 @@
       }
      ],
      "nachweis": "Foto: Adrian Michael, bearbeitet von MagentaGreen, CC BY 3.0, Wikimedia Commons („Faustkeil Pratteln (retuschiert).jpg“)"
+    }
+   ]
+  },
+  {
+   "id": "gpg.5.quellen.cp-kritik",
+   "titel": "Checkpoint: Quellenkritik",
+   "kurz": "Große Wiederholung aller Stationen davor",
+   "mix": true,
+   "checkpoint": true,
+   "runde": 10
+  },
+  {
+   "id": "gpg.5.quellen.aeg-totenkult",
+   "titel": "Ägypten: Leben nach dem Tod",
+   "abschnitt": "Ägypten: Glaube, Schrift und Alltag",
+   "kurz": "Grabbeigaben und ein Papyrus",
+   "gesperrt": true,
+   "typ": "lueckentext",
+   "anweisung": "Schau dir die Quelle genau an.",
+   "aufgaben": [
+    {
+     "bild": "foto-aeg-uschebti.jpg",
+     "alt": "Eine helle Steinfigur wie eine Mumie, sie hält zwei Hacken, unten Hieroglyphen",
+     "nachweis": "Foto: Metropolitan Museum of Art, CC0, Wikimedia Commons („Shabti MET 37.5.1 01.jpg“)",
+     "quellenart": "sach",
+     "text": "Diese kleine Figur legte man ins Grab. Sie sollte im Jenseits ___.",
+     "antwort": "für den Toten arbeiten",
+     "optionen": [
+      "für den Toten arbeiten",
+      "mit dem Toten spielen",
+      "Diebe erschrecken"
+     ],
+     "erklaerung": "Uschebti-Figuren sollten im Jenseits die Arbeit für den Toten erledigen. Darum halten sie Hacken in den Händen.",
+     "tipp": "Schau auf die Hände der Figur."
+    },
+    {
+     "bild": "foto-aeg-uschebti.jpg",
+     "alt": "Eine helle Steinfigur wie eine Mumie, sie hält zwei Hacken, unten Hieroglyphen",
+     "nachweis": "Foto: Metropolitan Museum of Art, CC0, Wikimedia Commons („Shabti MET 37.5.1 01.jpg“)",
+     "quellenart": "sach",
+     "text": "„Die Figur hält in jeder Hand ein Werkzeug.“ – Das ___.",
+     "antwort": "sehe ich wirklich",
+     "optionen": [
+      "sehe ich wirklich",
+      "denke ich mir dazu"
+     ],
+     "erklaerung": "Das sieht man: Vor der Brust hält sie zwei Hacken.",
+     "tipp": "Ist es im Bild zu sehen – oder weißt oder vermutest du es?"
+    },
+    {
+     "bild": "foto-aeg-kanope.jpg",
+     "alt": "Ein heller Steinkrug, der Deckel ist ein Kopf, vorne Hieroglyphen",
+     "nachweis": "Foto: Metropolitan Museum of Art, CC0, Wikimedia Commons („Canopic Jar of Manuwai MET DP116106.jpg“)",
+     "quellenart": "sach",
+     "text": "Der Krug mit dem Kopf als Deckel ist eine ___.",
+     "antwort": "Sachquelle",
+     "optionen": [
+      "Sachquelle",
+      "Bildquelle",
+      "Schriftquelle"
+     ],
+     "erklaerung": "Ein Gegenstand von damals ist eine Sachquelle.",
+     "tipp": "Ein Gegenstand? Ein Bild? Ein Text?"
+    },
+    {
+     "bild": "foto-aeg-kanope.jpg",
+     "alt": "Ein heller Steinkrug, der Deckel ist ein Kopf, vorne Hieroglyphen",
+     "nachweis": "Foto: Metropolitan Museum of Art, CC0, Wikimedia Commons („Canopic Jar of Manuwai MET DP116106.jpg“)",
+     "quellenart": "sach",
+     "text": "In solchen Krügen bewahrte man ___ auf.",
+     "antwort": "die Eingeweide des Toten",
+     "optionen": [
+      "die Eingeweide des Toten",
+      "Trinkwasser",
+      "Spielzeug"
+     ],
+     "erklaerung": "Beim Mumifizieren nahm man die Eingeweide heraus und legte sie in solche Krüge. Man nennt sie Kanopen.",
+     "tipp": "Denk an das Mumifizieren."
+    },
+    {
+     "bild": "foto-aeg-totengericht.jpg",
+     "alt": "Papyrus-Bild: Ein Gott mit Falkenkopf führt einen Mann zu einem Gott auf einem Thron",
+     "nachweis": "Foto: gemeinfrei, Wikimedia Commons („The judgement of the dead in the presence of Osiris (cropped).jpg“)",
+     "quellenart": "bild",
+     "text": "„Ein Gott mit Vogelkopf führt einen Mann zu einem Gott auf einem Thron.“ – Das ___.",
+     "antwort": "sehe ich wirklich",
+     "optionen": [
+      "sehe ich wirklich",
+      "denke ich mir dazu"
+     ],
+     "erklaerung": "Das ist zu sehen: Horus mit Falkenkopf führt den Toten zu Osiris.",
+     "tipp": "Ist es im Bild zu sehen – oder weißt oder vermutest du es?"
+    },
+    {
+     "bild": "foto-aeg-totengericht.jpg",
+     "alt": "Papyrus-Bild: Ein Gott mit Falkenkopf führt einen Mann zu einem Gott auf einem Thron",
+     "nachweis": "Foto: gemeinfrei, Wikimedia Commons („The judgement of the dead in the presence of Osiris (cropped).jpg“)",
+     "quellenart": "bild",
+     "text": "Daran erkennt man, dass die Ägypter ___.",
+     "antwort": "an ein Leben nach dem Tod glaubten",
+     "optionen": [
+      "an ein Leben nach dem Tod glaubten",
+      "keine Götter kannten",
+      "nie an den Tod dachten"
+     ],
+     "erklaerung": "Das Bild zeigt, wie der Tote zu Osiris kommt, dem Gott der Toten. Die Ägypter glaubten an ein Leben nach dem Tod.",
+     "tipp": "Welcher Satz passt genau zur Quelle?"
+    },
+    {
+     "bild": "foto-aeg-kopie-sennedjem.jpg",
+     "alt": "Ein nachgemaltes Wandbild mit Feldern, Menschen, Rindern und Bäumen",
+     "nachweis": "Bild: Charles Wilkinson (1922), Metropolitan Museum of Art, CC0, Wikimedia Commons („Sennedjem and Iineferti in the Fields of Iaru MET DT11771.jpg“)",
+     "text": "Ein Maler hat vor etwa 100 Jahren die Wand im Grab von Sennedjem genau abgemalt. Das Bild hängt heute in einem Museum in New York. Das ist eine ___.",
+     "antwort": "Nachbildung",
+     "optionen": [
+      "Original",
+      "Nachbildung",
+      "Fälschung"
+     ],
+     "erklaerung": "Das Bild ist ehrlich nachgemalt – das Museum sagt das. Es ist eine Nachbildung. Das Original ist die Wand im Grab.",
+     "tipp": "Ist es alt und echt? Sagt jemand ehrlich, dass es nachgemacht ist?"
+    },
+    {
+     "bild": "foto-aeg-kopie-sennedjem.jpg",
+     "alt": "Ein nachgemaltes Wandbild mit Feldern, Menschen, Rindern und Bäumen",
+     "nachweis": "Bild: Charles Wilkinson (1922), Metropolitan Museum of Art, CC0, Wikimedia Commons („Sennedjem and Iineferti in the Fields of Iaru MET DT11771.jpg“)",
+     "quellenart": "bild",
+     "text": "Die Felder sind an die Grabwand gemalt. Die Ägypter wünschten sich, dass der Tote ___.",
+     "antwort": "auch im Jenseits Felder und Ernte hat",
+     "optionen": [
+      "auch im Jenseits Felder und Ernte hat",
+      "den Weg zum Nil findet",
+      "die Rinder verkaufen kann"
+     ],
+     "erklaerung": "Was an der Grabwand gemalt war, sollte der Tote im Jenseits haben – auch Felder und Ernte.",
+     "tipp": "Denk an das Leben nach dem Tod."
+    }
+   ]
+  },
+  {
+   "id": "gpg.5.quellen.aeg-schrift",
+   "titel": "Ägypten: Schrift und Schreiber",
+   "kurz": "Hieroglyphen und ein Rat an einen Schreiber",
+   "gesperrt": true,
+   "typ": "lueckentext",
+   "anweisung": "Schau dir die Quelle genau an.",
+   "aufgaben": [
+    {
+     "bild": "foto-aeg-stele.jpg",
+     "alt": "Ein Stein mit Bildern von Menschen und Reihen von Hieroglyphen",
+     "nachweis": "Foto: Metropolitan Museum of Art, CC0, Wikimedia Commons („Stela of Dedu MET 16.10.333.jpg“)",
+     "quellenart": "schrift",
+     "text": "Auf dem Stein steht ein Text in Hieroglyphen. Vor allem ist er eine ___.",
+     "antwort": "Schriftquelle",
+     "optionen": [
+      "Sachquelle",
+      "Bildquelle",
+      "Schriftquelle"
+     ],
+     "erklaerung": "Der Stein trägt einen Text in Hieroglyphen. Darum ist er vor allem eine Schriftquelle – auch wenn Bilder darauf sind.",
+     "tipp": "Was ist das Wichtigste daran: Gegenstand, Bild oder Text?"
+    },
+    {
+     "bild": "foto-aeg-stele.jpg",
+     "alt": "Ein Stein mit Bildern von Menschen und Reihen von Hieroglyphen",
+     "nachweis": "Foto: Metropolitan Museum of Art, CC0, Wikimedia Commons („Stela of Dedu MET 16.10.333.jpg“)",
+     "quellenart": "schrift",
+     "text": "„Auf dem Stein sind Reihen mit kleinen Zeichen.“ – Das ___.",
+     "antwort": "sehe ich wirklich",
+     "optionen": [
+      "sehe ich wirklich",
+      "denke ich mir dazu"
+     ],
+     "erklaerung": "Das sieht man: Die Hieroglyphen stehen in Reihen.",
+     "tipp": "Ist es im Bild zu sehen – oder weißt oder vermutest du es?"
+    },
+    {
+     "bild": "foto-aeg-kornspeicher.jpg",
+     "alt": "Ein Holzmodell mit Räumen voller Körner, Männern mit Säcken und Schreibern",
+     "nachweis": "Foto: Metropolitan Museum of Art, CC0, Wikimedia Commons („Model of a Granary with Scribes MET DT2518.jpg“)",
+     "quellenart": "sach",
+     "text": "„Im Modell sitzen Männer mit Schreibtafeln.“ – Das ___.",
+     "antwort": "sehe ich wirklich",
+     "optionen": [
+      "sehe ich wirklich",
+      "denke ich mir dazu"
+     ],
+     "erklaerung": "Das sieht man unten rechts im Modell.",
+     "tipp": "Ist es im Bild zu sehen – oder weißt oder vermutest du es?"
+    },
+    {
+     "bild": "foto-aeg-kornspeicher.jpg",
+     "alt": "Ein Holzmodell mit Räumen voller Körner, Männern mit Säcken und Schreibern",
+     "nachweis": "Foto: Metropolitan Museum of Art, CC0, Wikimedia Commons („Model of a Granary with Scribes MET DT2518.jpg“)",
+     "quellenart": "sach",
+     "text": "Die Schreiber im Kornspeicher schrieben auf, ___.",
+     "antwort": "wie viel Getreide hineinkam",
+     "optionen": [
+      "wie viel Getreide hineinkam",
+      "welche Lieder sie mochten",
+      "wann sie Geburtstag hatten"
+     ],
+     "erklaerung": "Schreiber zählten die Vorräte und schrieben alles genau auf.",
+     "tipp": "Was machen die Männer mit den Säcken?"
+    },
+    {
+     "bild": "foto-aeg-kornspeicher.jpg",
+     "alt": "Ein Holzmodell mit Schreibern bei der Arbeit (zum Text)",
+     "nachweis": "Foto: Metropolitan Museum of Art, CC0, Wikimedia Commons („Model of a Granary with Scribes MET DT2518.jpg“)",
+     "quellenart": "schrift",
+     "text": "Kann ich dem Text glauben, dass Schreiber der beste Beruf ist? ___",
+     "antwort": "Eher nicht, ein Schreiber lobt seinen eigenen Beruf.",
+     "optionen": [
+      "Eher nicht, ein Schreiber lobt seinen eigenen Beruf.",
+      "Ja, das ist sicher wahr."
+     ],
+     "erklaerung": "Der Schreiber wollte seinen Sohn überreden. Er zeigt nur die guten Seiten seines Berufs.",
+     "tipp": "Wollte jemand etwas Bestimmtes zeigen?",
+     "quelltext": "Werde Schreiber! Dann musst du nicht mit der Hacke auf dem Feld arbeiten und keine schweren Körbe tragen. Der Schreiber gibt den anderen Befehle.",
+     "herkunft": "Ein ägyptischer Schreiber an seinen Sohn, vor etwa 3900 Jahren (in einfache Sprache übertragen)"
+    },
+    {
+     "bild": "foto-aeg-kornspeicher.jpg",
+     "alt": "Ein Holzmodell mit Schreibern bei der Arbeit (zum Text)",
+     "nachweis": "Foto: Metropolitan Museum of Art, CC0, Wikimedia Commons („Model of a Granary with Scribes MET DT2518.jpg“)",
+     "quellenart": "schrift",
+     "text": "Daran erkennt man, dass ___.",
+     "antwort": "Schreiber angesehen waren und nicht schwer arbeiten mussten",
+     "optionen": [
+      "Schreiber angesehen waren und nicht schwer arbeiten mussten",
+      "alle Ägypter lesen konnten",
+      "Bauern den Schreibern Befehle gaben"
+     ],
+     "erklaerung": "Der Text zeigt: Schreiber hatten es besser als Bauern. Dass alle lesen konnten, steht dort nicht – nur wenige konnten es.",
+     "tipp": "Welcher Satz passt genau zur Quelle?",
+     "quelltext": "Werde Schreiber! Dann musst du nicht mit der Hacke auf dem Feld arbeiten und keine schweren Körbe tragen. Der Schreiber gibt den anderen Befehle.",
+     "herkunft": "Ein ägyptischer Schreiber an seinen Sohn, vor etwa 3900 Jahren (in einfache Sprache übertragen)"
+    }
+   ]
+  },
+  {
+   "id": "gpg.5.quellen.aeg-alltag",
+   "titel": "Ägypten: Alltag",
+   "kurz": "Kleine Holzmodelle aus einem Grab",
+   "gesperrt": true,
+   "typ": "lueckentext",
+   "anweisung": "Schau dir die Quelle genau an.",
+   "aufgaben": [
+    {
+     "bild": "foto-aeg-baeckerei.jpg",
+     "alt": "Ein offener Holzkasten mit vielen kleinen Figuren bei der Arbeit",
+     "nachweis": "Foto: Metropolitan Museum of Art, CC0, Wikimedia Commons („Model Bakery and Brewery from the Tomb of Meketre MET DT208237.jpg“)",
+     "quellenart": "sach",
+     "text": "Dieses kleine Holzmodell lag in einem Grab. Es wurde vor etwa 4000 Jahren gemacht. Das ist eine ___.",
+     "antwort": "Quelle",
+     "optionen": [
+      "Quelle",
+      "Darstellung"
+     ],
+     "erklaerung": "Es ist zwar ein Modell – aber es wurde damals gemacht. Darum ist es eine Quelle.",
+     "tipp": "Wurde es damals gemacht – oder heute?"
+    },
+    {
+     "bild": "foto-aeg-baeckerei.jpg",
+     "alt": "Ein offener Holzkasten mit vielen kleinen Figuren bei der Arbeit",
+     "nachweis": "Foto: Metropolitan Museum of Art, CC0, Wikimedia Commons („Model Bakery and Brewery from the Tomb of Meketre MET DT208237.jpg“)",
+     "quellenart": "sach",
+     "text": "„In dem Kasten arbeiten viele kleine Figuren.“ – Das ___.",
+     "antwort": "sehe ich wirklich",
+     "optionen": [
+      "sehe ich wirklich",
+      "denke ich mir dazu"
+     ],
+     "erklaerung": "Das sieht man: Im Kasten stehen und knien viele Figuren bei der Arbeit.",
+     "tipp": "Ist es im Bild zu sehen – oder weißt oder vermutest du es?"
+    },
+    {
+     "bild": "foto-aeg-baeckerei.jpg",
+     "alt": "Ein offener Holzkasten mit vielen kleinen Figuren bei der Arbeit",
+     "nachweis": "Foto: Metropolitan Museum of Art, CC0, Wikimedia Commons („Model Bakery and Brewery from the Tomb of Meketre MET DT208237.jpg“)",
+     "quellenart": "sach",
+     "text": "„Die Figuren backen Brot für ein großes Fest.“ – Das ___.",
+     "antwort": "denke ich mir dazu",
+     "optionen": [
+      "sehe ich wirklich",
+      "denke ich mir dazu"
+     ],
+     "erklaerung": "Für wen und wofür sie backen, sieht man nicht. Das denkt man sich dazu.",
+     "tipp": "Ist es im Bild zu sehen – oder weißt oder vermutest du es?"
+    },
+    {
+     "bild": "foto-aeg-baeckerei.jpg",
+     "alt": "Ein offener Holzkasten mit vielen kleinen Figuren bei der Arbeit",
+     "nachweis": "Foto: Metropolitan Museum of Art, CC0, Wikimedia Commons („Model Bakery and Brewery from the Tomb of Meketre MET DT208237.jpg“)",
+     "quellenart": "sach",
+     "text": "Das Modell kam ins Grab, damit der Tote im Jenseits ___.",
+     "antwort": "immer Brot und Bier hat",
+     "optionen": [
+      "immer Brot und Bier hat",
+      "ein Haus bauen kann",
+      "Spielzeug hat"
+     ],
+     "erklaerung": "Das Modell zeigt eine Bäckerei und Brauerei. Im Jenseits sollte der Tote immer genug zu essen und zu trinken haben.",
+     "tipp": "Denk an das Leben nach dem Tod."
+    },
+    {
+     "bild": "foto-aeg-kornspeicher.jpg",
+     "alt": "Ein Holzmodell mit Räumen voller Körner, Männern mit Säcken und Schreibern",
+     "nachweis": "Foto: Metropolitan Museum of Art, CC0, Wikimedia Commons („Model of a Granary with Scribes MET DT2518.jpg“)",
+     "quellenart": "sach",
+     "text": "Das Modell eines Kornspeichers wurde in einem Grab gefunden und ist etwa 4000 Jahre alt. Das ist ein ___.",
+     "antwort": "Original",
+     "optionen": [
+      "Original",
+      "Nachbildung",
+      "Fälschung"
+     ],
+     "erklaerung": "Es ist ein Modell, aber ein echtes Stück von damals. Darum ist es ein Original.",
+     "tipp": "Ist es alt und echt?"
+    },
+    {
+     "bild": "foto-aeg-kornspeicher.jpg",
+     "alt": "Ein Holzmodell mit Räumen voller Körner, Männern mit Säcken und Schreibern",
+     "nachweis": "Foto: Metropolitan Museum of Art, CC0, Wikimedia Commons („Model of a Granary with Scribes MET DT2518.jpg“)",
+     "quellenart": "sach",
+     "text": "Daran erkennt man, dass die Ägypter ___.",
+     "antwort": "Getreide sammelten und genau zählten",
+     "optionen": [
+      "Getreide sammelten und genau zählten",
+      "nie Vorräte hatten",
+      "Getreide im Supermarkt kauften"
+     ],
+     "erklaerung": "Im Modell tragen Männer Säcke in den Speicher, und Schreiber schreiben alles auf.",
+     "tipp": "Was machen die Figuren im Modell?"
+    }
+   ]
+  },
+  {
+   "id": "gpg.5.quellen.cp-aegypten-2",
+   "titel": "Checkpoint: Ägypten II",
+   "kurz": "Große Wiederholung aller Stationen davor",
+   "mix": true,
+   "checkpoint": true,
+   "runde": 10
+  },
+  {
+   "id": "gpg.5.quellen.aeg-fall",
+   "titel": "Ganzer Fall: Ägypten",
+   "abschnitt": "Zum Schluss",
+   "kurz": "Ein Fall zu den Stunden, die schon dran waren",
+   "typ": "fall",
+   "aufgaben": [
+    {
+     "titel": "Das Bild vom Pflügen",
+     "bild": "foto-aeg-pfluegen.jpg",
+     "alt": "Wandbild: Ein Mann pflügt mit zwei gefleckten Rindern, dazwischen Hieroglyphen",
+     "nachweis": "Foto: gemeinfrei, Wikimedia Commons („Maler der Grabkammer des Sennudem 001.jpg“)",
+     "quellenart": "bild",
+     "nach": "gpg.5.quellen.aeg-nil",
+     "info": "Ein Wandbild im Grab von Sennedjem bei Theben, etwa 3200 Jahre alt.",
+     "wortspeicher": [
+      "Wandbild",
+      "Pflug",
+      "Rinder",
+      "Feld",
+      "Hieroglyphen",
+      "Nil",
+      "Bauer",
+      "Grab"
+     ],
+     "karten": [
+      {
+       "nr": 1,
+       "hilfen": [
+        {
+         "frage": "Was ist in der Mitte?",
+         "optionen": [
+          "ein Mann mit einem Pflug",
+          "ein Boot",
+          "ein Haus"
+         ]
+        },
+        {
+         "frage": "Was zieht den Pflug?",
+         "optionen": [
+          "zwei Rinder",
+          "ein Traktor",
+          "ein Pferd"
+         ]
+        }
+       ],
+       "muster": [
+        "Ich sehe ein buntes Wandbild.",
+        "Links führt ein Mann einen Pflug aus Holz.",
+        "Davor gehen zwei schwarz-weiß gefleckte Rinder.",
+        "Zwischen ihnen stehen Hieroglyphen, unten wachsen Pflanzen."
+       ],
+       "check": [
+        "Ich habe den Mann, den Pflug und die Rinder genannt."
+       ]
+      },
+      {
+       "nr": 2,
+       "hilfen": [
+        {
+         "frage": "Warum ist das Bild im Grab?",
+         "optionen": [
+          "Der Tote sollte auch im Jenseits Felder haben.",
+          "Es sollte Besucher erschrecken.",
+          "Es war ein Werbebild."
+         ]
+        }
+       ],
+       "muster": [
+        "Das Bild wurde in ein Grab gemalt.",
+        "Man hat es gemacht, damit Sennedjem auch nach dem Tod Felder und Ernte hat.",
+        "Es zeigt aber auch, wie die Bauern damals arbeiteten."
+       ]
+      },
+      {
+       "nr": 3,
+       "hilfen": [
+        {
+         "frage": "Was zeigt das Bild über die Bauern?",
+         "optionen": [
+          "Sie pflügten mit Rindern.",
+          "Sie hatten Maschinen.",
+          "Sie lebten von der Jagd."
+         ]
+        }
+       ],
+       "muster": [
+        "Daran erkennt man, dass die Bauern ihre Felder mit Rindern und Pflug bestellten.",
+        "Die Menschen damals lebten vom Ackerbau am Nil.",
+        "Sie glaubten an ein Leben nach dem Tod."
+       ]
+      }
+     ]
+    },
+    {
+     "titel": "Der Pharao und die Gefangenen",
+     "bild": "foto-aeg-pharao.jpg",
+     "alt": "Ein Relief: Der große Pharao packt drei kleine Gefangene an den Haaren",
+     "nachweis": "Foto: AdamSoubhi, CC0, Wikimedia Commons („The theme of the Egyptian kings smiting their enemies is an ancient one.webp“)",
+     "quellenart": "bild",
+     "nach": "gpg.5.quellen.aeg-pharao",
+     "info": "Ein bemaltes Bild in Stein aus Memphis, etwa 3200 Jahre alt. Es zeigt Pharao Ramses II.",
+     "wortspeicher": [
+      "Pharao",
+      "Ramses",
+      "Krone",
+      "Gefangene",
+      "Feinde",
+      "Macht",
+      "Hieroglyphen",
+      "Relief"
+     ],
+     "karten": [
+      {
+       "nr": 1,
+       "hilfen": [
+        {
+         "frage": "Wer ist rechts?",
+         "optionen": [
+          "der Pharao",
+          "ein Bauer",
+          "ein Kind"
+         ]
+        },
+        {
+         "frage": "Was macht der Pharao?",
+         "optionen": [
+          "Er packt Gefangene an den Haaren.",
+          "Er pflügt ein Feld.",
+          "Er schläft."
+         ]
+        }
+       ],
+       "muster": [
+        "Ich sehe ein bemaltes Bild in Stein.",
+        "Rechts steht ein großer Mann mit Krone, der Pharao.",
+        "Er packt drei kleine Männer an den Haaren.",
+        "Oben links stehen Hieroglyphen in zwei Rahmen."
+       ],
+       "check": [
+        "Ich habe die Größe des Pharaos und die Gefangenen genannt."
+       ]
+      },
+      {
+       "nr": 2,
+       "hilfen": [
+        {
+         "frage": "Wofür wurde das Bild gemacht?",
+         "optionen": [
+          "um die Macht des Pharaos zu zeigen",
+          "um Kindern das Lesen beizubringen",
+          "als Spielzeug"
+         ]
+        }
+       ],
+       "muster": [
+        "Das ist ein Bild vom Pharao Ramses II.",
+        "Man hat es gemacht, um zu zeigen, wie mächtig der Pharao ist.",
+        "Er besiegt seine Feinde."
+       ]
+      },
+      {
+       "nr": 3,
+       "hilfen": [
+        {
+         "frage": "Was zeigt das Bild über den Pharao?",
+         "optionen": [
+          "Er war der mächtigste Mensch im Land.",
+          "Er war ein einfacher Bauer.",
+          "Er hatte keine Feinde."
+         ]
+        }
+       ],
+       "muster": [
+        "Daran erkennt man, dass der Pharao als sehr mächtig galt.",
+        "Die Ägypter sahen ihn als Herrscher über alle.",
+        "Es gab Kriege mit anderen Völkern."
+       ]
+      },
+      {
+       "nr": 4,
+       "hilfen": [
+        {
+         "frage": "War der Pharao wirklich so groß?",
+         "optionen": [
+          "nein",
+          "ja"
+         ]
+        },
+        {
+         "frage": "Wer wollte etwas zeigen?",
+         "optionen": [
+          "der Pharao, der das Bild machen ließ",
+          "die Gefangenen"
+         ]
+        }
+       ],
+       "muster": [
+        "Die Quelle ist wohl echt, sie ist alt und steht im Museum.",
+        "Gemacht hat sie ein Künstler für den Pharao.",
+        "Der Pharao wollte seine Macht zeigen. Darum glaube ich nicht alles, was das Bild zeigt."
+       ],
+       "check": [
+        "Ich habe gesagt, dass das Bild die Macht des Pharaos zeigen sollte."
+       ]
+      }
+     ]
+    },
+    {
+     "titel": "Die Pyramiden von Gizeh",
+     "bild": "foto-aeg-pyramiden.jpg",
+     "alt": "Die Pyramiden von Gizeh in der Wüste",
+     "nachweis": "Foto: Walkerssk, CC0, Wikimedia Commons („Pyramids in Giza - Egypt.jpg“)",
+     "quellenart": "sach",
+     "nach": "gpg.5.quellen.aeg-pyramiden",
+     "info": "Die Pyramiden von Gizeh, etwa 4500 Jahre alt. Das Foto ist von 2016.",
+     "wortspeicher": [
+      "Pyramide",
+      "Grab",
+      "Pharao",
+      "Steinblöcke",
+      "Wüste",
+      "bauen",
+      "planen",
+      "Arbeiter"
+     ],
+     "karten": [
+      {
+       "nr": 1,
+       "hilfen": [
+        {
+         "frage": "Wie viele große Pyramiden siehst du?",
+         "optionen": [
+          "drei",
+          "eine",
+          "zehn"
+         ]
+        },
+        {
+         "frage": "Wo stehen sie?",
+         "optionen": [
+          "in der Wüste",
+          "am Meer",
+          "im Wald"
+         ]
+        }
+       ],
+       "muster": [
+        "Ich sehe drei große Pyramiden in der Wüste.",
+        "Davor stehen kleinere Pyramiden.",
+        "Sie sind aus vielen Steinblöcken gebaut.",
+        "Der Himmel ist blau, der Sand gelb."
+       ],
+       "check": [
+        "Ich habe die Steinblöcke genannt."
+       ]
+      },
+      {
+       "nr": 2,
+       "hilfen": [
+        {
+         "frage": "Wofür baute man die Pyramiden?",
+         "optionen": [
+          "als Grab für den Pharao",
+          "als Wohnhaus",
+          "als Getreidespeicher"
+         ]
+        }
+       ],
+       "muster": [
+        "Das sind die Pyramiden von Gizeh.",
+        "Man baute sie als Gräber für Pharaonen.",
+        "Der Pharao sollte darin für immer sicher sein."
+       ]
+      },
+      {
+       "nr": 3,
+       "hilfen": [
+        {
+         "frage": "Was zeigen die Pyramiden über die Ägypter?",
+         "optionen": [
+          "Sie konnten sehr gut planen und bauen.",
+          "Sie hatten Bagger.",
+          "Sie wohnten in Pyramiden."
+         ]
+        }
+       ],
+       "muster": [
+        "Daran erkennt man, dass die Ägypter sehr gut planen und bauen konnten.",
+        "Viele Menschen mussten zusammen arbeiten.",
+        "Der Pharao war so wichtig, dass er ein riesiges Grab bekam."
+       ]
+      }
+     ]
+    },
+    {
+     "titel": "Die Uschebti-Figur",
+     "bild": "foto-aeg-uschebti.jpg",
+     "alt": "Eine helle Steinfigur wie eine Mumie, sie hält zwei Hacken, unten Hieroglyphen",
+     "nachweis": "Foto: Metropolitan Museum of Art, CC0, Wikimedia Commons („Shabti MET 37.5.1 01.jpg“)",
+     "quellenart": "sach",
+     "nach": "gpg.5.quellen.aeg-totenkult",
+     "info": "Eine kleine Figur aus Stein aus einem ägyptischen Grab. Heute im Metropolitan Museum in New York.",
+     "wortspeicher": [
+      "Uschebti",
+      "Figur",
+      "Stein",
+      "Hacke",
+      "Hieroglyphen",
+      "Grab",
+      "Jenseits",
+      "arbeiten"
+     ],
+     "karten": [
+      {
+       "nr": 1,
+       "hilfen": [
+        {
+         "frage": "Woraus ist die Figur?",
+         "optionen": [
+          "Stein",
+          "Plastik",
+          "Metall"
+         ]
+        },
+        {
+         "frage": "Was steht unten auf der Figur?",
+         "optionen": [
+          "Hieroglyphen",
+          "Zahlen",
+          "nichts"
+         ]
+        }
+       ],
+       "muster": [
+        "Ich sehe eine helle Figur aus Stein.",
+        "Sie sieht aus wie eine Mumie mit Kopftuch.",
+        "Vor der Brust hält sie zwei Hacken.",
+        "Unten stehen Reihen mit Hieroglyphen."
+       ],
+       "check": [
+        "Ich habe die Hacken und die Hieroglyphen genannt."
+       ]
+      },
+      {
+       "nr": 2,
+       "hilfen": [
+        {
+         "frage": "Wofür kam die Figur ins Grab?",
+         "optionen": [
+          "Sie sollte im Jenseits arbeiten.",
+          "Sie war ein Spielzeug.",
+          "Sie sollte Diebe fangen."
+         ]
+        }
+       ],
+       "muster": [
+        "Das ist eine Uschebti-Figur.",
+        "Man legte sie ins Grab, damit sie im Jenseits für den Toten arbeitet.",
+        "Darum hält sie Hacken für die Feldarbeit."
+       ]
+      },
+      {
+       "nr": 3,
+       "hilfen": [
+        {
+         "frage": "Was glaubten die Ägypter?",
+         "optionen": [
+          "Auch nach dem Tod muss man arbeiten.",
+          "Nach dem Tod ist alles vorbei.",
+          "Tote brauchen nichts."
+         ]
+        }
+       ],
+       "muster": [
+        "Daran erkennt man, dass die Ägypter an ein Leben nach dem Tod glaubten.",
+        "Sie dachten, dass man auch dort auf dem Feld arbeiten muss.",
+        "Die Menschen bereiteten sich gut auf den Tod vor."
+       ]
+      }
+     ]
+    },
+    {
+     "titel": "Der Kornspeicher",
+     "bild": "foto-aeg-kornspeicher.jpg",
+     "alt": "Ein Holzmodell mit Räumen voller Körner, Männern mit Säcken und Schreibern",
+     "nachweis": "Foto: Metropolitan Museum of Art, CC0, Wikimedia Commons („Model of a Granary with Scribes MET DT2518.jpg“)",
+     "quellenart": "sach",
+     "nach": "gpg.5.quellen.aeg-schrift",
+     "info": "Ein Holzmodell aus dem Grab von Meketre, etwa 4000 Jahre alt. Heute im Metropolitan Museum in New York.",
+     "wortspeicher": [
+      "Modell",
+      "Kornspeicher",
+      "Getreide",
+      "Sack",
+      "Schreiber",
+      "Schreibtafel",
+      "zählen",
+      "Vorrat"
+     ],
+     "karten": [
+      {
+       "nr": 1,
+       "hilfen": [
+        {
+         "frage": "Was tragen die Männer oben?",
+         "optionen": [
+          "Säcke",
+          "Kinder",
+          "Steine"
+         ]
+        },
+        {
+         "frage": "Was machen die Männer unten rechts?",
+         "optionen": [
+          "Sie schreiben.",
+          "Sie schlafen.",
+          "Sie kochen."
+         ]
+        }
+       ],
+       "muster": [
+        "Ich sehe ein Modell aus Holz mit mehreren Räumen.",
+        "Oben tragen Männer Säcke, in den Räumen liegen Körner.",
+        "Unten sitzen Männer mit Schreibtafeln."
+       ],
+       "check": [
+        "Ich habe die Säcke und die Schreiber genannt."
+       ]
+      },
+      {
+       "nr": 2,
+       "hilfen": [
+        {
+         "frage": "Wofür war der Speicher?",
+         "optionen": [
+          "Getreide aufbewahren",
+          "Tiere halten",
+          "Boote bauen"
+         ]
+        }
+       ],
+       "muster": [
+        "Das ist ein Modell eines Kornspeichers.",
+        "Darin bewahrte man Getreide auf.",
+        "Die Schreiber schrieben auf, wie viel Getreide hineinkam."
+       ]
+      },
+      {
+       "nr": 3,
+       "hilfen": [
+        {
+         "frage": "Warum schrieben die Schreiber alles auf?",
+         "optionen": [
+          "damit niemand Getreide stiehlt und man weiß, wie viel da ist",
+          "weil ihnen langweilig war",
+          "um Briefe zu schreiben"
+         ]
+        }
+       ],
+       "muster": [
+        "Daran erkennt man, dass die Ägypter Vorräte anlegten.",
+        "Die Schreiber zählten genau, wie viel Getreide da war.",
+        "Lesen und Schreiben war dafür sehr wichtig."
+       ]
+      }
+     ]
+    },
+    {
+     "titel": "Die Bäckerei",
+     "bild": "foto-aeg-baeckerei.jpg",
+     "alt": "Ein offener Holzkasten mit vielen kleinen Figuren bei der Arbeit",
+     "nachweis": "Foto: Metropolitan Museum of Art, CC0, Wikimedia Commons („Model Bakery and Brewery from the Tomb of Meketre MET DT208237.jpg“)",
+     "quellenart": "sach",
+     "nach": "gpg.5.quellen.aeg-alltag",
+     "info": "Ein Holzmodell aus dem Grab von Meketre, etwa 4000 Jahre alt. Heute im Metropolitan Museum in New York.",
+     "wortspeicher": [
+      "Modell",
+      "Bäckerei",
+      "Brauerei",
+      "Figuren",
+      "Teig",
+      "Brot",
+      "Bier",
+      "Grab"
+     ],
+     "karten": [
+      {
+       "nr": 1,
+       "hilfen": [
+        {
+         "frage": "Woraus ist das Modell?",
+         "optionen": [
+          "Holz",
+          "Glas",
+          "Plastik"
+         ]
+        },
+        {
+         "frage": "Was ist im Kasten?",
+         "optionen": [
+          "viele kleine Figuren",
+          "Tiere",
+          "nichts"
+         ]
+        }
+       ],
+       "muster": [
+        "Ich sehe einen offenen Kasten aus Holz.",
+        "Er hat zwei Räume.",
+        "Darin stehen und knien viele kleine Figuren bei der Arbeit.",
+        "Links stehen Krüge mit dunklen Deckeln."
+       ],
+       "check": [
+        "Ich habe die Figuren und die Krüge genannt."
+       ]
+      },
+      {
+       "nr": 2,
+       "hilfen": [
+        {
+         "frage": "Was machen die Figuren?",
+         "optionen": [
+          "Brot backen und Bier brauen",
+          "tanzen",
+          "Häuser bauen"
+         ]
+        }
+       ],
+       "muster": [
+        "Das ist ein Modell einer Bäckerei und Brauerei.",
+        "Man legte es ins Grab.",
+        "Der Tote sollte im Jenseits immer Brot und Bier haben."
+       ]
+      },
+      {
+       "nr": 3,
+       "hilfen": [
+        {
+         "frage": "Was zeigt das Modell über den Alltag?",
+         "optionen": [
+          "Brot und Bier waren wichtige Lebensmittel.",
+          "Man aß nur Fleisch.",
+          "Es gab Fabriken."
+         ]
+        }
+       ],
+       "muster": [
+        "Daran erkennt man, dass Brot und Bier wichtige Lebensmittel waren.",
+        "Viele Menschen arbeiteten zusammen, um sie herzustellen.",
+        "Reiche Menschen hatten Diener, die für sie arbeiteten."
+       ]
+      }
+     ]
     }
    ]
   }

@@ -31,6 +31,7 @@
 #       quellenart ist sach/bild/schrift, Methodenkarten in „hilfe“ haben nr und Farbe #rrggbb.
 #       Typ fall (ganzer Fall): titel, Quelle, karten 1–3 (optional 4) mit muster; Hilfen mit frage und optionen.
 #       Freigaben (Etappe 4): gesperrt ist true/false, „nach“ einer Aufgabe nennt eine andere Stufe der Datei.
+#       Lernpfad: checkpoint nur an Mix-Stufen, schwelle 1–100; mit nurMitFoto: jede Stufe braucht ≥ 1 Foto-Aufgabe (Hinweis).
 #   13. Die Insel: alle Insel-Dateien (spiele/insel.html, gemeinsam/insel-*.js, daten/insel*.json)
 #       stehen in sw.js NACHLADEN (sonst fehlen sie offline).
 #   14. Die Insel: daten/insel.json ist gültig (Karten, Gebiete, Vorlagen, IDs), und Bewohner-Plätze
@@ -564,6 +565,10 @@ for p in sorted(ROOT.glob('daten/inhalte/*/*.json')):
     if not isinstance(stufen, list) or not stufen: FI('keine stufen'); continue
     fall_stufen = {s.get('id') for s in stufen if isinstance(s, dict) and not s.get('mix') and (s.get('typ') or typ) == 'fall'}
     stufen_ids = {s.get('id') for s in stufen if isinstance(s, dict)}
+    if d.get('nurMitFoto'):                                      # Hinweis: Stufen, die dadurch ganz wegfallen
+        for s in stufen:
+            if isinstance(s, dict) and not s.get('mix') and not any(isinstance(x, dict) and re.search(r'\.(png|jpe?g|webp)$', str(x.get('bild', '')), re.I) for x in s.get('aufgaben') or []):
+                H(f'{r}: Stufe {s.get("id")} hat kein Foto – mit nurMitFoto erscheint sie nicht')
     for st in stufen:
         sid = st.get('id') if isinstance(st, dict) else None
         wo = f'Stufe {sid}'
@@ -571,6 +576,9 @@ for p in sorted(ROOT.glob('daten/inhalte/*/*.json')):
         if katalog is not None and sid not in ids: FI(f'{wo} fehlt in daten/katalog.json')
         if not st.get('titel'): FI(f'{wo}: titel fehlt')
         if st.get('gesperrt') not in (None, True, False): FI(f'{wo}: gesperrt muss true oder false sein')   # Quellen-Detektiv Etappe 4
+        if st.get('checkpoint') and not st.get('mix'): FI(f'{wo}: checkpoint gibt es nur bei Mix-Stufen (mix: true)')      # Lernpfad
+        if st.get('schwelle') is not None and not (isinstance(st['schwelle'], int) and 1 <= st['schwelle'] <= 100): FI(f'{wo}: schwelle muss 1–100 sein')
+        if st.get('abschnitt') is not None and not str(st['abschnitt']).strip(): FI(f'{wo}: abschnitt ist leer')
         for x in st.get('aufgaben') or []:
             if isinstance(x, dict) and x.get('nach') is not None and (x['nach'] not in stufen_ids or x['nach'] == sid):
                 FI(f'{wo}: „nach“ muss eine andere Stufe dieser Datei nennen (nicht „{x["nach"]}“)')

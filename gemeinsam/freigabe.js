@@ -44,6 +44,7 @@
 //    spielSperre()      → null (heute keine Sperre) oder { noetig, geschafft, frei }
 //    spielGesperrt(datei) → true, wenn diese Datei ein Spiel ist und heute noch gesperrt
 //    neu(config, leise) → mit frischer config.json neu auswerten (Startseite; leise = ohne Ereignis)
+//    admin()            → Hauptzugang auf diesem Gerät angemeldet (Vorschau, z. B. Lernpfad ohne Kette)
 //    feature(id)        → true/false – Feature-Schalter (Admin-Umbau Etappe 10), config.featureSchalter[id]:
 //                         true = an für alle · false/fehlt = aus · { wer: ['admin', 'g:<Gruppe>', 'k5', 'alle'] } =
 //                         nur dort an ('admin' = dieses Gerät ist mit dem Hauptzugang im Admin angemeldet).
@@ -219,5 +220,5 @@
     return v.wer.some(w => w === 'admin' ? adminHier() : wer().includes(w));
   }
 
-  window.LernFreigabe = { erlaubt, zugeteilt, status, wer, fokus, imFokus, spielSperre, spielGesperrt, neu, feature };
+  window.LernFreigabe = { erlaubt, zugeteilt, status, wer, fokus, imFokus, spielSperre, spielGesperrt, neu, feature, admin: adminHier };
 })();

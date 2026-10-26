@@ -448,6 +448,21 @@ Eine neue App = **Inhaltsdatei + Katalog-Eintrag + Admin-Eintrag**. Kein neuer C
    Großeltern-Quellen (Brief, Schulfoto, Schultasche – Platz für eigene Fotos). Die alten Fund-SVGs bleiben im Ordner, weil
    gespeicherte Live-Quizze sie nennen können. Lascaux und Chauvet sind geschlossen: Fotos „aus der Höhle“ zeigen fast immer
    Nachbildungen – nie als Quelle verwenden.
+   **Lernpfad** (Etappe 4, v88, `"pfad": true` im Kopf): statt Kacheln eine Kette von Stationen in der Reihenfolge der Datei.
+   Eine Station geht erst auf, wenn alle davor geschafft sind (Bestwert im Lernstand ≥ `schwelle`, sonst 70 %). **Checkpoints**
+   (`"checkpoint": true` an einer Mix-Stufe, ohne `aus` = alle Stationen davor, Runde 10, Schwelle 80 %) sind große
+   Wiederholungen. `"abschnitt"` setzt eine Überschrift, `"extra": true` stellt eine Stufe als Kachel über den Pfad (Ritual, mit
+   `nurGeuebt`). Von der Lehrkraft gesperrte Stationen zeigen nur „Station n · wartet auf deine Lehrkraft“ (kein Titel).
+   Mit Admin-Anmeldung auf dem Gerät gilt die Kette nicht (Vorschau). Pfad-Runden haben mindestens 5 Aufgaben – darunter
+   speichert der Pass keinen Lernstand. Fortschritt = vorhandener Lernstand, nichts wird zurückgesetzt.
+   **Nur mit Foto** (`"nurMitFoto": true`): Aufgaben ohne jpg/png/webp (gezeichnete SVG, reine Texte) kommen nicht dran,
+   Stufen ohne Foto fallen weg (pruefen.py: gelber Hinweis). Sie bleiben in der Datei, bis es Fotos gibt.
+   **Ägypten** (v88): Stationen Nil und Felder, Pyramiden, Pharao (Anlass Quellenkritik), Leben nach dem Tod, Schrift und
+   Schreiber, Alltag – jede `"gesperrt": true`, freischalten nach der Stunde (Unterricht → 🔓). „Ganzer Fall: Ägypten“: jeder
+   Fall hängt mit `"nach"` an seiner Station. Fotos: Grab des Sennedjem (Original) und Kopie von 1922 (Met), Meketre-Modelle,
+   Uschebti, Kanope, Stele (alle Met, CC0), Hunefer-Papyrus, Ramses-Relief, Gizeh; Darstellungen: Langhaus-Nachbau,
+   Gemälde von Charles R. Knight (1911, 1920), Gizeh-3D-Modell. Reihenfolge der Kette: Steinzeit → Ägypten I → Quellenkritik
+   → Ägypten II → Fall. Passt sie nicht zu den Stunden, Stufen in der Datei umstellen.
    **Quellenkritik** (Etappe 3, v87): Karte 4 (lila, „Kann ich der Quelle trauen?“ mit den Hilfsfragen) in „So geht's“ und im
    Fall – ein Fall mit `{ "nr": 4, … }` in `karten` zeigt sie (je Fall einschaltbar). Bausteine `gpg.5.quellen.echt` (Original,
    Nachbildung, Fälschung), `.zeitfehler` (markieren, auch mit Bild `q-hoehle-faelschung.svg`), `.glauben` (zwei Körbe) und
