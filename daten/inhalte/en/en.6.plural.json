@@ -1,0 +1,459 @@
+{
+ "typ": "gemischt",
+ "thema": "en.6.plural",
+ "titel": "Plural (Highlight 6)",
+ "emoji": "🇬🇧",
+ "klasse": 6,
+ "sprache": "en-GB",
+ "runde": 8,
+ "untertitel": "tails, potatoes, pence, children – mit den Wörtern aus Unit 2",
+ "hilfe": [
+  {
+   "titel": "So bildest du den Plural",
+   "text": "Meist hängst du -s an. Ein paar Regeln und Ausnahmen musst du dir merken.",
+   "tabelle": [
+    [
+     "Regel",
+     "Beispiel"
+    ],
+    [
+     "normal: + s",
+     "neighbour → neighbours, ear → ears"
+    ],
+    [
+     "nach s, sh, ch, x: + es",
+     "bus → buses, box → boxes, sandwich → sandwiches"
+    ],
+    [
+     "Konsonant + y: y → ies",
+     "family → families, party → parties"
+    ],
+    [
+     "Vokal + y: + s",
+     "toy → toys, day → days"
+    ],
+    [
+     "-o: oft + es",
+     "potato → potatoes, tomato → tomatoes"
+    ],
+    [
+     "-f/-fe: → ves",
+     "knife → knives, leaf → leaves"
+    ]
+   ]
+  },
+  {
+   "titel": "Unregelmäßige Pluralformen",
+   "tabelle": [
+    [
+     "Einzahl",
+     "Mehrzahl"
+    ],
+    [
+     "man",
+     "men"
+    ],
+    [
+     "woman",
+     "women"
+    ],
+    [
+     "child",
+     "children"
+    ],
+    [
+     "foot",
+     "feet"
+    ],
+    [
+     "tooth",
+     "teeth"
+    ],
+    [
+     "mouse",
+     "mice"
+    ],
+    [
+     "sheep",
+     "sheep"
+    ],
+    [
+     "penny",
+     "pence"
+    ]
+   ]
+  }
+ ],
+ "stufen": [
+  {
+   "id": "en.6.plural.formen",
+   "titel": "Plural bilden",
+   "kurz": "tail → tails",
+   "typ": "eingabe",
+   "anweisung": "Schreibe den Plural.",
+   "aufgaben": [
+    {
+     "frage": "neighbour → ?",
+     "antwort": [
+      "neighbours"
+     ],
+     "tipp": "+s · nach s, sh, ch, x: +es · Konsonant + y: -ies · unregelmäßig lernen"
+    },
+    {
+     "frage": "festival → ?",
+     "antwort": [
+      "festivals"
+     ],
+     "tipp": "+s · nach s, sh, ch, x: +es · Konsonant + y: -ies · unregelmäßig lernen"
+    },
+    {
+     "frage": "bus stop → ?",
+     "antwort": [
+      "bus stops"
+     ],
+     "tipp": "+s · nach s, sh, ch, x: +es · Konsonant + y: -ies · unregelmäßig lernen",
+     "erklaerung": "Bei zwei Wörtern bekommt das letzte das -s."
+    },
+    {
+     "frage": "hairdresser → ?",
+     "antwort": [
+      "hairdressers"
+     ],
+     "tipp": "+s · nach s, sh, ch, x: +es · Konsonant + y: -ies · unregelmäßig lernen"
+    },
+    {
+     "frage": "tail → ?",
+     "antwort": [
+      "tails"
+     ],
+     "tipp": "+s · nach s, sh, ch, x: +es · Konsonant + y: -ies · unregelmäßig lernen"
+    },
+    {
+     "frage": "ear → ?",
+     "antwort": [
+      "ears"
+     ],
+     "tipp": "+s · nach s, sh, ch, x: +es · Konsonant + y: -ies · unregelmäßig lernen"
+    },
+    {
+     "frage": "phone call → ?",
+     "antwort": [
+      "phone calls"
+     ],
+     "tipp": "+s · nach s, sh, ch, x: +es · Konsonant + y: -ies · unregelmäßig lernen"
+    },
+    {
+     "frage": "mask → ?",
+     "antwort": [
+      "masks"
+     ],
+     "tipp": "+s · nach s, sh, ch, x: +es · Konsonant + y: -ies · unregelmäßig lernen"
+    },
+    {
+     "frage": "toy → ?",
+     "antwort": [
+      "toys"
+     ],
+     "tipp": "+s · nach s, sh, ch, x: +es · Konsonant + y: -ies · unregelmäßig lernen",
+     "erklaerung": "Vokal + y: einfach -s."
+    },
+    {
+     "frage": "helper → ?",
+     "antwort": [
+      "helpers"
+     ],
+     "tipp": "+s · nach s, sh, ch, x: +es · Konsonant + y: -ies · unregelmäßig lernen"
+    },
+    {
+     "frage": "potato → ?",
+     "antwort": [
+      "potatoes"
+     ],
+     "tipp": "+s · nach s, sh, ch, x: +es · Konsonant + y: -ies · unregelmäßig lernen",
+     "erklaerung": "potato → potatoes (mit -es)"
+    },
+    {
+     "frage": "penny → ?",
+     "antwort": [
+      "pence"
+     ],
+     "tipp": "+s · nach s, sh, ch, x: +es · Konsonant + y: -ies · unregelmäßig lernen",
+     "erklaerung": "penny → pence (Geld)"
+    },
+    {
+     "frage": "biscuit → ?",
+     "antwort": [
+      "biscuits"
+     ],
+     "tipp": "+s · nach s, sh, ch, x: +es · Konsonant + y: -ies · unregelmäßig lernen"
+    },
+    {
+     "frage": "lantern → ?",
+     "antwort": [
+      "lanterns"
+     ],
+     "tipp": "+s · nach s, sh, ch, x: +es · Konsonant + y: -ies · unregelmäßig lernen"
+    },
+    {
+     "frage": "bonfire → ?",
+     "antwort": [
+      "bonfires"
+     ],
+     "tipp": "+s · nach s, sh, ch, x: +es · Konsonant + y: -ies · unregelmäßig lernen"
+    },
+    {
+     "frage": "box → ?",
+     "antwort": [
+      "boxes"
+     ],
+     "tipp": "+s · nach s, sh, ch, x: +es · Konsonant + y: -ies · unregelmäßig lernen",
+     "erklaerung": "nach x: -es"
+    },
+    {
+     "frage": "bus → ?",
+     "antwort": [
+      "buses"
+     ],
+     "tipp": "+s · nach s, sh, ch, x: +es · Konsonant + y: -ies · unregelmäßig lernen",
+     "erklaerung": "nach s: -es"
+    },
+    {
+     "frage": "sandwich → ?",
+     "antwort": [
+      "sandwiches"
+     ],
+     "tipp": "+s · nach s, sh, ch, x: +es · Konsonant + y: -ies · unregelmäßig lernen",
+     "erklaerung": "nach ch: -es"
+    },
+    {
+     "frage": "family → ?",
+     "antwort": [
+      "families"
+     ],
+     "tipp": "+s · nach s, sh, ch, x: +es · Konsonant + y: -ies · unregelmäßig lernen",
+     "erklaerung": "Konsonant + y: y → ies"
+    },
+    {
+     "frage": "party → ?",
+     "antwort": [
+      "parties"
+     ],
+     "tipp": "+s · nach s, sh, ch, x: +es · Konsonant + y: -ies · unregelmäßig lernen",
+     "erklaerung": "Konsonant + y: y → ies"
+    },
+    {
+     "frage": "child → ?",
+     "antwort": [
+      "children"
+     ],
+     "tipp": "unregelmäßig",
+     "erklaerung": "child → children"
+    },
+    {
+     "frage": "man → ?",
+     "antwort": [
+      "men"
+     ],
+     "tipp": "unregelmäßig",
+     "erklaerung": "man → men"
+    },
+    {
+     "frage": "woman → ?",
+     "antwort": [
+      "women"
+     ],
+     "tipp": "unregelmäßig",
+     "erklaerung": "woman → women"
+    },
+    {
+     "frage": "foot → ?",
+     "antwort": [
+      "feet"
+     ],
+     "tipp": "unregelmäßig",
+     "erklaerung": "foot → feet"
+    },
+    {
+     "frage": "mouse → ?",
+     "antwort": [
+      "mice"
+     ],
+     "tipp": "unregelmäßig",
+     "erklaerung": "mouse → mice"
+    },
+    {
+     "frage": "knife → ?",
+     "antwort": [
+      "knives"
+     ],
+     "tipp": "+s · nach s, sh, ch, x: +es · Konsonant + y: -ies · unregelmäßig lernen",
+     "erklaerung": "-fe → -ves"
+    }
+   ]
+  },
+  {
+   "id": "en.6.plural.saetze",
+   "titel": "Plural im Satz",
+   "kurz": "Two long ears …",
+   "typ": "lueckentext",
+   "anweisung": "Setze das Wort in Klammern im Plural ein.",
+   "aufgaben": [
+    {
+     "text": "The dog has got two long ___. (ear)",
+     "antwort": [
+      "ears"
+     ],
+     "tipp": "+s · nach s, sh, ch, x: +es · Konsonant + y: -ies · unregelmäßig lernen"
+    },
+    {
+     "text": "Three ___ came to the festival. (family)",
+     "antwort": [
+      "families"
+     ],
+     "tipp": "+s · nach s, sh, ch, x: +es · Konsonant + y: -ies · unregelmäßig lernen"
+    },
+    {
+     "text": "We collected 50 ___ for the dogs' home. (penny)",
+     "antwort": [
+      "pence"
+     ],
+     "tipp": "+s · nach s, sh, ch, x: +es · Konsonant + y: -ies · unregelmäßig lernen",
+     "erklaerung": "penny → pence"
+    },
+    {
+     "text": "We put ___ in the bonfire. (potato)",
+     "antwort": [
+      "potatoes"
+     ],
+     "tipp": "+s · nach s, sh, ch, x: +es · Konsonant + y: -ies · unregelmäßig lernen"
+    },
+    {
+     "text": "The ___ are wearing masks. (child)",
+     "antwort": [
+      "children"
+     ],
+     "tipp": "unregelmäßig"
+    },
+    {
+     "text": "Two ___ helped Mrs Trent. (man)",
+     "antwort": [
+      "men"
+     ],
+     "tipp": "unregelmäßig"
+    },
+    {
+     "text": "The ___ are in the box. (toy)",
+     "antwort": [
+      "toys"
+     ],
+     "tipp": "+s · nach s, sh, ch, x: +es · Konsonant + y: -ies · unregelmäßig lernen"
+    },
+    {
+     "text": "My ___ hurt after the long walk. (foot)",
+     "antwort": [
+      "feet"
+     ],
+     "tipp": "unregelmäßig"
+    },
+    {
+     "text": "There are two ___ in our street. (bus stop)",
+     "antwort": [
+      "bus stops"
+     ],
+     "tipp": "+s · nach s, sh, ch, x: +es · Konsonant + y: -ies · unregelmäßig lernen"
+    },
+    {
+     "text": "The ___ sold hot chocolate. (woman)",
+     "antwort": [
+      "women"
+     ],
+     "tipp": "unregelmäßig"
+    },
+    {
+     "text": "We need some ___ for the lanterns. (box)",
+     "antwort": [
+      "boxes"
+     ],
+     "tipp": "+s · nach s, sh, ch, x: +es · Konsonant + y: -ies · unregelmäßig lernen"
+    },
+    {
+     "text": "My ___ are very friendly. (neighbour)",
+     "antwort": [
+      "neighbours"
+     ],
+     "tipp": "+s · nach s, sh, ch, x: +es · Konsonant + y: -ies · unregelmäßig lernen"
+    },
+    {
+     "text": "There are lots of ___ at the festival. (helper)",
+     "antwort": [
+      "helpers"
+     ],
+     "tipp": "+s · nach s, sh, ch, x: +es · Konsonant + y: -ies · unregelmäßig lernen"
+    },
+    {
+     "text": "The two ___ have got short tails. (dog)",
+     "antwort": [
+      "dogs"
+     ],
+     "tipp": "+s · nach s, sh, ch, x: +es · Konsonant + y: -ies · unregelmäßig lernen"
+    }
+   ]
+  },
+  {
+   "id": "en.6.plural.fehler",
+   "titel": "Fehler finden",
+   "kurz": "Tippe den Fehler an",
+   "typ": "markieren",
+   "anweisung": "Ein Wort ist falsch. Tippe es an.",
+   "aufgaben": [
+    {
+     "satz": "The dog has got two long [ear].",
+     "richtig": "ears",
+     "erklaerung": "two → Mehrzahl: ears"
+    },
+    {
+     "satz": "Three [childs] wore masks.",
+     "richtig": "children",
+     "erklaerung": "child → children"
+    },
+    {
+     "satz": "We bought some [potatos].",
+     "richtig": "potatoes",
+     "erklaerung": "potato → potatoes"
+    },
+    {
+     "satz": "I have got 50 [pennys].",
+     "richtig": "pence",
+     "erklaerung": "penny → pence"
+    },
+    {
+     "satz": "There are two [womans] at the bus stop.",
+     "richtig": "women",
+     "erklaerung": "woman → women"
+    },
+    {
+     "satz": "We collected lots of [toies].",
+     "richtig": "toys",
+     "erklaerung": "Vokal + y: toy → toys"
+    },
+    {
+     "satz": "The [mans] built a bonfire.",
+     "richtig": "men",
+     "erklaerung": "man → men"
+    },
+    {
+     "satz": "Two [familys] live in our house.",
+     "richtig": "families",
+     "erklaerung": "Konsonant + y: family → families"
+    }
+   ]
+  },
+  {
+   "id": "en.6.plural.mix",
+   "titel": "Mix",
+   "kurz": "Alles durcheinander",
+   "mix": true,
+   "runde": 10
+  }
+ ]
+}

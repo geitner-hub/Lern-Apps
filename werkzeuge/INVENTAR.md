@@ -13,7 +13,7 @@ Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv
 | `apps/englisch/satzglieder-erkennen.html` | Satzglieder ordnen | `en.5.satzglieder` | Lern-App | Englisch · 5 | sichtbar | ja | ja | – | – | ja | Kern → Engine (Etappe 9) | Wird erste Überführung Typ Zuordnen. Mängel: Rückmeldung nur richtig/falsch ohne Erklärung, kein `thema` |
 | `apps/englisch/simple-past.html` | – | – | Lern-App | – | nicht in config | – | – | – | – | – (nicht in config) | Kern | Gute Rückmeldung (Regel + Beispiel), Verbenliste, Kl. 5/6. Mängel: kein `thema`, keine Stufen im Katalog |
 | `apps/englisch/time-dates-numbers.html` | Time, Date and Numbers | `en.5.zeit` (5 Stufen) | Lern-App | Englisch · 5, 6 | sichtbar | – | – | – | – | ja |  |  |
-| `apps/englisch/vokabeltrainer.html` | Vokabeltrainer 5. Klasse | `en.5.vok` (7 Stufen), `en.5.wortlisten` (8 Stufen), `en.6.vok` (5 Stufen) | Lern-App | Englisch · 5 | sichtbar | ja | ja | ja | – | ja | Engine (Etappe 5, Testphase) | Ein Trainer für alle Wortlisten (?klasse=5/6, ?liste=NAME); ersetzt nach dem Test vokabeltrainer5/6 |
+| `apps/englisch/vokabeltrainer.html` | Vokabeltrainer 5. Klasse | `en.5.vok` (7 Stufen), `en.5.wortlisten` (8 Stufen), `en.6.vok` (40 Stufen) | Lern-App | Englisch · 5 | sichtbar | ja | ja | ja | – | ja | Engine (Etappe 5, Testphase) | Ein Trainer für alle Wortlisten (?klasse=5/6, ?liste=NAME); ersetzt nach dem Test vokabeltrainer5/6 |
 | `apps/englisch/vokabeltrainer5.html` | – | – | Lern-App | – | nicht in config | – | – | – | – | – (nicht in config) | Engine (Etappe 5) | Mit vokabeltrainer6 zu einer Vokabel-Engine. Mängel: Startseite scrollt (iPad quer), ~100 Zeilen doppelt zu Kl. 6 |
 | `apps/englisch/vokabeltrainer6.html` | – | – | Lern-App | – | nicht in config | – | – | – | – | – (nicht in config) | Engine (Etappe 5) | Siehe vokabeltrainer5 |
 | `apps/gpg/bayern.html` | Kennst du dich in Bayern aus? | `gpg.5.bayern` (5 Stufen) | Lern-App | GPG · 5, 6 | sichtbar | ja | ja | – | – | ja |  |  |
@@ -33,7 +33,7 @@ Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv
 | `apps/mathe/zahlenstrahl.html` | Der Zahlenstrahl | `ma.5.zahlenstrahl` (5 Stufen) | Lern-App | Mathematik · 5 | sichtbar | – | – | – | – | ja |  |  |
 | `apps/typen/lernweg.html` | – | `en.6.lernweg-u1`, `en.6.lernweg-u2` | Lern-App | – | nicht in config | – | – | – | – | – (nicht in config) |  |  |
 | `apps/typen/live.html` | – | `allg.5.live-abfrage` | Lern-App | – | nicht in config | ja | ja | – | – | – (nicht in config) |  |  |
-| `apps/typen/uebung.html` | Geometrie-Training | `ma.5.geometrie` (8 Stufen), `en.5.to-be` (6 Stufen), `en.5.simple-present` (8 Stufen), `en.5.simple-past` (7 Stufen), `en.5.have-got` (5 Stufen), `en.5.can` (5 Stufen), `en.5.present-progressive` (5 Stufen), `en.5.nomen` (4 Stufen), `en.5.pronomen` (5 Stufen), `en.5.there-is` (5 Stufen), `en.5.fragen` (3 Stufen), `en.5.praepositionen` (4 Stufen), `en.6.future` (6 Stufen), `en.6.steigerung` (4 Stufen), `en.6.some-any` (4 Stufen), `gpg.5.quellen` (23 Stufen) | Lern-App | Mathematik · 5, 6 | sichtbar | – | – | – | – | ja |  |  |
+| `apps/typen/uebung.html` | Geometrie-Training | `ma.5.geometrie` (8 Stufen), `en.5.to-be` (6 Stufen), `en.5.simple-present` (8 Stufen), `en.5.simple-past` (7 Stufen), `en.5.have-got` (5 Stufen), `en.5.can` (5 Stufen), `en.5.present-progressive` (5 Stufen), `en.5.nomen` (4 Stufen), `en.5.pronomen` (5 Stufen), `en.5.there-is` (5 Stufen), `en.5.fragen` (3 Stufen), `en.5.praepositionen` (4 Stufen), `en.6.future` (6 Stufen), `en.6.steigerung` (4 Stufen), `en.6.some-any` (4 Stufen), `en.6.simple-past` (4 Stufen), `en.6.was-were` (5 Stufen), `en.6.objektpronomen` (4 Stufen), `en.6.there-is` (5 Stufen), `en.6.plural` (4 Stufen), `en.6.can-mustnt` (4 Stufen), `en.6.unit-check` (2 Stufen), `gpg.5.quellen` (23 Stufen) | Lern-App | Mathematik · 5, 6 | sichtbar | – | – | – | – | ja |  |  |
 | `spiele/burg-verteidigung.html` | Tower Defense | – | Spiel | Allgemein · alle | sichtbar | ja | ja | – | ja | – (Spiel) |  |  |
 | `spiele/dorf.html` | Mein Dorf | – | Spiel | Allgemein · alle | sichtbar | – | – | – | – | Dorf selbst |  |  |
 | `spiele/expedition.html` | Entdecker-Expedition | – | Spiel | GPG · 6 | versteckt | über spiel-hilfen.js | ja | – | – | – (Spiel) |  |  |
@@ -49,12 +49,12 @@ Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv
 
 | Datei | KB | Skripte | Speicherschlüssel |
 |---|---|---|---|
-| apps/englisch/knowing-english.html | 8 | katalog.js, freigabe.js, navbar.js | lernwelt-pass, + über navbar.js |
+| apps/englisch/knowing-english.html | 9 | katalog.js, freigabe.js, navbar.js | lernwelt-pass, + über navbar.js |
 | apps/englisch/practice_simple_present.html | 1 | – | – |
 | apps/englisch/satzglieder-erkennen.html | 35 | navbar.js | + über navbar.js |
 | apps/englisch/simple-past.html | 1 | – | – |
 | apps/englisch/time-dates-numbers.html | 24 | freigabe.js, ueben.js, navbar.js | + über navbar.js |
-| apps/englisch/vokabeltrainer.html | 61 | freigabe.js, ueben.js, navbar.js | vokab-history-kl5, vokab-word-stats-kl5, vokab-a11y-kl5, vokab-history-kl6, vokab-word-stats-kl6, vokab-a11y-kl6, + über navbar.js |
+| apps/englisch/vokabeltrainer.html | 64 | freigabe.js, ueben.js, navbar.js, katalog.js (nachgeladen) | vokab-history-kl5, vokab-word-stats-kl5, vokab-a11y-kl5, vokab-history-kl6, vokab-word-stats-kl6, vokab-a11y-kl6, + über navbar.js |
 | apps/englisch/vokabeltrainer5.html | 1 | – | – |
 | apps/englisch/vokabeltrainer6.html | 1 | – | – |
 | apps/gpg/bayern.html | 32 | navbar.js, karten-ansicht.js, freigabe.js, ueben.js | lernwelt-bayern-best, + über navbar.js |

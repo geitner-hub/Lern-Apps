@@ -1,0 +1,164 @@
+{
+ "typ": "gemischt",
+ "thema": "en.6.unit-check",
+ "titel": "Unit-Checks (Highlight 6)",
+ "emoji": "🇬🇧",
+ "klasse": 6,
+ "sprache": "en-GB",
+ "runde": 10,
+ "untertitel": "Das Finale jeder Unit: Wörter und Grammatik zusammen",
+ "hilfe": [
+  {
+   "titel": "Unit-Check",
+   "text": "Hier kommt alles aus einer Unit zusammen: Wörter und Grammatik. Schaffst du zwei Runden mit mindestens 70 %, ist die Unit gemeistert."
+  }
+ ],
+ "stufen": [
+  {
+   "id": "en.6.unit-check.u1",
+   "titel": "Postkarte aus Plymouth",
+   "kurz": "Finale Unit 1",
+   "typ": "lueckentext",
+   "runde": 10,
+   "anweisung": "Fülle die Lücke in der Postkarte.",
+   "aufgaben": [
+    {
+     "text": "Dear Grandma, we ___ in Plymouth last week. (be)",
+     "antwort": [
+      "were"
+     ],
+     "tipp": "we → were",
+     "erklaerung": "be im simple past: we were"
+    },
+    {
+     "text": "The weather ___ fantastic – really sunny! (be)",
+     "antwort": [
+      "was"
+     ],
+     "tipp": "the weather = it → was"
+    },
+    {
+     "text": "It ___ rainy at all. (not / be)",
+     "antwort": [
+      "wasn't",
+      "was not"
+     ],
+     "tipp": "it → wasn't"
+    },
+    {
+     "text": "We ___ to the beach every day. (go)",
+     "antwort": [
+      "went"
+     ],
+     "tipp": "go → went (unregelmäßig)"
+    },
+    {
+     "text": "I ___ a great adventure book. (read)",
+     "antwort": [
+      "read"
+     ],
+     "tipp": "read → read (gleich geschrieben, [red] gesprochen)"
+    },
+    {
+     "text": "Mum ___ the old factory. It was closed. (not / visit)",
+     "antwort": [
+      "didn't visit",
+      "did not visit"
+     ],
+     "tipp": "didn't + Grundform"
+    },
+    {
+     "text": "Plymouth is by the sea, so we were at the ___ every day. (am Meer)",
+     "antwort": [
+      "seaside"
+     ],
+     "tipp": "at the seaside = am Meer"
+    },
+    {
+     "text": "At ___ we ate fish and chips. (mittags)",
+     "antwort": [
+      "lunchtime"
+     ],
+     "tipp": "at lunchtime = mittags"
+    },
+    {
+     "text": "My new friend Leo is nice. I play table tennis with ___. (Leo)",
+     "antwort": [
+      "him"
+     ],
+     "tipp": "Leo = he → him"
+    },
+    {
+     "text": "My cousins were there too. I miss ___ already! (my cousins)",
+     "antwort": [
+      "them"
+     ],
+     "tipp": "my cousins = they → them"
+    },
+    {
+     "text": "I'd like to ___ the sailing club next summer. (beitreten)",
+     "antwort": [
+      "join"
+     ],
+     "tipp": "(to) join = beitreten"
+    },
+    {
+     "text": "The boat trip was a real ___. (Abenteuer)",
+     "antwort": [
+      "adventure"
+     ],
+     "tipp": "adventure = Abenteuer"
+    },
+    {
+     "text": "Our room ___ a big window with a view of the sea. (have)",
+     "antwort": [
+      "had"
+     ],
+     "tipp": "have → had"
+    },
+    {
+     "text": "The rules on the boat were very ___. (streng)",
+     "antwort": [
+      "strict"
+     ],
+     "tipp": "strict = streng"
+    },
+    {
+     "text": "Write back soon and tell ___ about your week! (I)",
+     "antwort": [
+      "me"
+     ],
+     "tipp": "I → me"
+    },
+    {
+     "text": "It was ___ to be together again. (fantastisch)",
+     "antwort": [
+      "fantastic"
+     ],
+     "tipp": "fantastic = fantastisch"
+    }
+   ]
+  },
+  {
+   "id": "en.6.unit-check.u2",
+   "titel": "Revision 1 (Unit 1 + 2)",
+   "kurz": "Finale Unit 2",
+   "mix": true,
+   "runde": 12,
+   "aus": [
+    "en.6.simple-past.didnt",
+    "en.6.was-were.formen",
+    "en.6.was-were.kurzantworten",
+    "en.6.objektpronomen.wahl",
+    "en.6.there-is.formen",
+    "en.6.there-is.some-any",
+    "en.6.simple-past.fragewort",
+    "en.6.simple-past.kurzantworten",
+    "en.6.plural.saetze",
+    "en.6.can-mustnt.can",
+    "en.6.can-mustnt.mustnt",
+    "en.6.unit-check.u1"
+   ]
+  }
+ ]
+}

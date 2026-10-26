@@ -1,0 +1,422 @@
+{
+ "typ": "gemischt",
+ "thema": "en.6.can-mustnt",
+ "titel": "can / can't / mustn't",
+ "emoji": "🇬🇧",
+ "klasse": 6,
+ "sprache": "en-GB",
+ "runde": 8,
+ "untertitel": "Können und Regeln – mit den Wörtern aus Unit 2",
+ "hilfe": [
+  {
+   "titel": "can und can't",
+   "text": "can heißt „können“ oder „dürfen“, can't heißt „nicht können“ oder „nicht dürfen“. Danach kommt die Grundform – ohne to, ohne -s.",
+   "beispiele": [
+    [
+     "Mrs Trent can't walk well.",
+     "Mrs Trent kann nicht gut laufen."
+    ],
+    [
+     "Leo can walk the dog.",
+     "Leo kann mit dem Hund gehen."
+    ],
+    [
+     "Can you help me?",
+     "Kannst du mir helfen?"
+    ]
+   ]
+  },
+  {
+   "titel": "mustn't – Verbote",
+   "text": "mustn't (= must not) heißt „nicht dürfen“. Achtung: Es heißt NICHT „muss nicht“!",
+   "beispiele": [
+    [
+     "You mustn't cross when the lights are red.",
+     "Du darfst nicht gehen, wenn die Ampel rot ist."
+    ],
+    [
+     "Dogs mustn't go into the supermarket.",
+     "Hunde dürfen nicht in den Supermarkt."
+    ]
+   ]
+  }
+ ],
+ "stufen": [
+  {
+   "id": "en.6.can-mustnt.can",
+   "titel": "can oder can't?",
+   "kurz": "Was geht, was nicht?",
+   "typ": "lueckentext",
+   "anweisung": "can oder can't?",
+   "aufgaben": [
+    {
+     "text": "Poor Mrs Trent ___ walk well. She needs help.",
+     "antwort": "can't",
+     "optionen": [
+      "can",
+      "can't"
+     ],
+     "tipp": "can = kann, darf · can't = kann nicht, darf nicht · danach die Grundform"
+    },
+    {
+     "text": "Leo is a good helper. He ___ walk the dog for her.",
+     "antwort": "can",
+     "optionen": [
+      "can",
+      "can't"
+     ],
+     "tipp": "can = kann, darf · can't = kann nicht, darf nicht · danach die Grundform"
+    },
+    {
+     "text": "The dogs' home is closed. We ___ visit it today.",
+     "antwort": "can't",
+     "optionen": [
+      "can",
+      "can't"
+     ],
+     "tipp": "can = kann, darf · can't = kann nicht, darf nicht · danach die Grundform"
+    },
+    {
+     "text": "The supermarket is open. We ___ buy bread now.",
+     "antwort": "can",
+     "optionen": [
+      "can",
+      "can't"
+     ],
+     "tipp": "can = kann, darf · can't = kann nicht, darf nicht · danach die Grundform"
+    },
+    {
+     "text": "The dog has got short legs, but it ___ run fast.",
+     "antwort": "can",
+     "optionen": [
+      "can",
+      "can't"
+     ],
+     "tipp": "can = kann, darf · can't = kann nicht, darf nicht · danach die Grundform"
+    },
+    {
+     "text": "Mrs Trent ___ hear well. Please speak clearly.",
+     "antwort": "can't",
+     "optionen": [
+      "can",
+      "can't"
+     ],
+     "tipp": "can = kann, darf · can't = kann nicht, darf nicht · danach die Grundform"
+    },
+    {
+     "text": "There's space in my bag. You ___ put your toys in it.",
+     "antwort": "can",
+     "optionen": [
+      "can",
+      "can't"
+     ],
+     "tipp": "can = kann, darf · can't = kann nicht, darf nicht · danach die Grundform"
+    },
+    {
+     "text": "My little sister is two. She ___ read.",
+     "antwort": "can't",
+     "optionen": [
+      "can",
+      "can't"
+     ],
+     "tipp": "can = kann, darf · can't = kann nicht, darf nicht · danach die Grundform"
+    },
+    {
+     "text": "We ___ collect pennies for the dogs' home.",
+     "antwort": "can",
+     "optionen": [
+      "can",
+      "can't"
+     ],
+     "tipp": "can = kann, darf · can't = kann nicht, darf nicht · danach die Grundform"
+    },
+    {
+     "text": "It's dark. I ___ see the bus stop.",
+     "antwort": "can't",
+     "optionen": [
+      "can",
+      "can't"
+     ],
+     "tipp": "can = kann, darf · can't = kann nicht, darf nicht · danach die Grundform"
+    },
+    {
+     "text": "The hairdresser is near. We ___ walk there.",
+     "antwort": "can",
+     "optionen": [
+      "can",
+      "can't"
+     ],
+     "tipp": "can = kann, darf · can't = kann nicht, darf nicht · danach die Grundform"
+    },
+    {
+     "text": "The festival is great! You ___ try lots of food.",
+     "antwort": "can",
+     "optionen": [
+      "can",
+      "can't"
+     ],
+     "tipp": "can = kann, darf · can't = kann nicht, darf nicht · danach die Grundform"
+    },
+    {
+     "text": "Mrs Trent can ___ the dogs' home. (phone)",
+     "antwort": [
+      "phone"
+     ],
+     "tipp": "can = kann, darf · can't = kann nicht, darf nicht · danach die Grundform",
+     "erklaerung": "Nach can kommt die Grundform: phone (ohne to, ohne -s)."
+    },
+    {
+     "text": "The dog can't ___ well. (hear)",
+     "antwort": [
+      "hear"
+     ],
+     "tipp": "can = kann, darf · can't = kann nicht, darf nicht · danach die Grundform",
+     "erklaerung": "Nach can't kommt die Grundform."
+    }
+   ]
+  },
+  {
+   "id": "en.6.can-mustnt.mustnt",
+   "titel": "Regeln mit mustn't",
+   "kurz": "Was darf man nicht?",
+   "typ": "lueckentext",
+   "anweisung": "can oder mustn't?",
+   "aufgaben": [
+    {
+     "text": "You ___ cross when the traffic lights are red.",
+     "antwort": "mustn't",
+     "optionen": [
+      "can",
+      "mustn't"
+     ],
+     "tipp": "mustn't = darf nicht (Verbot) – nicht „muss nicht“!"
+    },
+    {
+     "text": "You ___ run in the street. It's dangerous.",
+     "antwort": "mustn't",
+     "optionen": [
+      "can",
+      "mustn't"
+     ],
+     "tipp": "mustn't = darf nicht (Verbot) – nicht „muss nicht“!"
+    },
+    {
+     "text": "You ___ play football in the park. It's OK.",
+     "antwort": "can",
+     "optionen": [
+      "can",
+      "mustn't"
+     ],
+     "tipp": "mustn't = darf nicht (Verbot) – nicht „muss nicht“!"
+    },
+    {
+     "text": "Dogs ___ go into the supermarket.",
+     "antwort": "mustn't",
+     "optionen": [
+      "can",
+      "mustn't"
+     ],
+     "tipp": "mustn't = darf nicht (Verbot) – nicht „muss nicht“!"
+    },
+    {
+     "text": "You ___ park your car at the bus stop.",
+     "antwort": "mustn't",
+     "optionen": [
+      "can",
+      "mustn't"
+     ],
+     "tipp": "mustn't = darf nicht (Verbot) – nicht „muss nicht“!"
+    },
+    {
+     "text": "You ___ skateboard in the park. There's a skate park there.",
+     "antwort": "can",
+     "optionen": [
+      "can",
+      "mustn't"
+     ],
+     "tipp": "mustn't = darf nicht (Verbot) – nicht „muss nicht“!"
+    },
+    {
+     "text": "You ___ be loud – the baby is sleeping.",
+     "antwort": "mustn't",
+     "optionen": [
+      "can",
+      "mustn't"
+     ],
+     "tipp": "mustn't = darf nicht (Verbot) – nicht „muss nicht“!"
+    },
+    {
+     "text": "You ___ eat in the classroom.",
+     "antwort": "mustn't",
+     "optionen": [
+      "can",
+      "mustn't"
+     ],
+     "tipp": "mustn't = darf nicht (Verbot) – nicht „muss nicht“!"
+    },
+    {
+     "text": "You ___ visit the dogs' home on Saturdays. It's open.",
+     "antwort": "can",
+     "optionen": [
+      "can",
+      "mustn't"
+     ],
+     "tipp": "mustn't = darf nicht (Verbot) – nicht „muss nicht“!"
+    },
+    {
+     "text": "You ___ give the dog chocolate. It's bad for dogs.",
+     "antwort": "mustn't",
+     "optionen": [
+      "can",
+      "mustn't"
+     ],
+     "tipp": "mustn't = darf nicht (Verbot) – nicht „muss nicht“!"
+    },
+    {
+     "text": "You ___ cycle in the park. There's a bike path.",
+     "antwort": "can",
+     "optionen": [
+      "can",
+      "mustn't"
+     ],
+     "tipp": "mustn't = darf nicht (Verbot) – nicht „muss nicht“!"
+    },
+    {
+     "text": "You ___ run around near the bonfire.",
+     "antwort": "mustn't",
+     "optionen": [
+      "can",
+      "mustn't"
+     ],
+     "tipp": "mustn't = darf nicht (Verbot) – nicht „muss nicht“!"
+    },
+    {
+     "text": "„Du darfst die Straße hier nicht überqueren.“ – You ___ cross the street here.",
+     "antwort": "mustn't",
+     "optionen": [
+      "mustn't",
+      "don't have to"
+     ],
+     "tipp": "mustn't = darf nicht (Verbot) – nicht „muss nicht“!"
+    }
+   ]
+  },
+  {
+   "id": "en.6.can-mustnt.saetze",
+   "titel": "Sätze bauen",
+   "kurz": "Mrs Trent can't …",
+   "typ": "sortieren",
+   "anweisung": "Bau den Satz.",
+   "aufgaben": [
+    {
+     "teile": [
+      "Mrs Trent",
+      "can't",
+      "walk",
+      "well"
+     ],
+     "loesung": "Mrs Trent can't walk well.",
+     "tipp": "can = kann, darf · can't = kann nicht, darf nicht · danach die Grundform"
+    },
+    {
+     "teile": [
+      "You",
+      "mustn't",
+      "cross",
+      "the street",
+      "here"
+     ],
+     "loesung": "You mustn't cross the street here.",
+     "tipp": "mustn't = darf nicht (Verbot) – nicht „muss nicht“!"
+    },
+    {
+     "frage": "Bau die Frage.",
+     "teile": [
+      "Can",
+      "you",
+      "help",
+      "me"
+     ],
+     "loesung": "Can you help me?",
+     "tipp": "Frage: Can + Person + Grundform?"
+    },
+    {
+     "teile": [
+      "We",
+      "can",
+      "share",
+      "the biscuits"
+     ],
+     "loesung": "We can share the biscuits.",
+     "tipp": "can = kann, darf · can't = kann nicht, darf nicht · danach die Grundform"
+    },
+    {
+     "teile": [
+      "Dogs",
+      "mustn't",
+      "go",
+      "into the shop"
+     ],
+     "loesung": "Dogs mustn't go into the shop.",
+     "tipp": "mustn't = darf nicht (Verbot) – nicht „muss nicht“!"
+    },
+    {
+     "frage": "Bau die Frage.",
+     "teile": [
+      "Can",
+      "I",
+      "try",
+      "the bread"
+     ],
+     "loesung": "Can I try the bread?",
+     "tipp": "Frage: Can + Person + Grundform?"
+    },
+    {
+     "teile": [
+      "You",
+      "mustn't",
+      "park",
+      "at the bus stop"
+     ],
+     "loesung": "You mustn't park at the bus stop.",
+     "tipp": "mustn't = darf nicht (Verbot) – nicht „muss nicht“!"
+    },
+    {
+     "typ": "markieren",
+     "frage": "Ein Wort ist falsch. Tippe es an.",
+     "satz": "She can't [walks] well.",
+     "richtig": "walk",
+     "erklaerung": "Nach can/can't: Grundform ohne -s."
+    },
+    {
+     "typ": "markieren",
+     "frage": "Ein Wort ist falsch. Tippe es an.",
+     "satz": "He can [plays] table tennis.",
+     "richtig": "play",
+     "erklaerung": "Nach can: Grundform ohne -s."
+    },
+    {
+     "typ": "markieren",
+     "frage": "Ein Wort ist falsch. Tippe es an.",
+     "satz": "You mustn't [crossing] here.",
+     "richtig": "cross",
+     "erklaerung": "Nach mustn't: Grundform."
+    },
+    {
+     "typ": "markieren",
+     "frage": "Ein Wort ist falsch. Tippe es an.",
+     "satz": "We [can to] visit the dogs' home.",
+     "richtig": "can",
+     "erklaerung": "Nach can steht kein to."
+    }
+   ]
+  },
+  {
+   "id": "en.6.can-mustnt.mix",
+   "titel": "Mix",
+   "kurz": "Alles durcheinander",
+   "mix": true,
+   "runde": 10
+  }
+ ]
+}

@@ -56,6 +56,9 @@
 #       Antwort und genug Ablenker; ITEMS-Farbvarianten (basis/tausch) zeigen auf ein Teil ohne eigene Basis.
 #   21. Rollen und Feature-Schalter (Admin-Umbau Etappe 10): daten/features.json gültig (IDs eindeutig), jeder Schalter
 #       in config.featureSchalter steht dort (sonst gelb); Admin-Module mit rechte: nur 'haupt'/'kollege'.
+#   22. English Journey (daten/journey*.json): Units und Stationen mit eindeutiger id und gültiger art, jedes thema/start
+#       steht im Katalog (start ist thema selbst oder eine Stufe darunter; Stufen eines Baukasten-Themas stehen in seiner
+#       Inhaltsdatei), jeder Vorgänger in braucht existiert, keine Schleife; das Finale braucht alle Stationen seiner Unit.
 # ═══════════════════════════════════════════════════════
 import gzip, json, math, os, re, subprocess, sys
 from pathlib import Path
@@ -658,6 +661,75 @@ for a in config.get('apps', []):
         m_ = re.search(r'[?&]inhalt=([a-z0-9.-]+)', d)
         if not m_ or m_.group(1) not in inhalt_ids: F(f'config.json: „{a.get("name", "?")}“ – zu {d} gibt es keine Inhaltsdatei')
 I(f'Aufgabentypen: {len(TYPEN)} Typen, {len(inhalt_ids)} Inhaltsdateien')
+
+# ── 22. English Journey (daten/journey*.json) ──────────
+#  Lernweg durch ein Englischbuch (apps/englisch/english-journey.html). Kein Spielstand: Stationen lesen nur die
+#  Meisterschaft ihres thema aus dem Pass – darum muss jedes thema im Katalog stehen.
+JOURNEY_ARTEN = ('woerter', 'grammatik', 'anwenden', 'finale')
+if katalog is not None:
+    k_quelle, k_eltern = {}, {}                  # Themen-ID → Quelle (Stufen erben vom Thema), Stufe → Thema
+    for j_f in katalog.get('faecher', []):
+        for j_b in j_f.get('bereiche', []):
+            for j_th in j_b.get('themen', []):
+                k_quelle[j_th.get('id')] = j_th.get('quelle') or None
+                for j_s in j_th.get('stufen', []):
+                    k_quelle[j_s.get('id')] = j_s.get('quelle') or j_th.get('quelle') or None
+                    k_eltern[j_s.get('id')] = j_th.get('id')
+    for j_p in sorted(ROOT.glob('daten/journey*.json')):
+        j_r = rel(j_p)
+        try: jd = json.loads(j_p.read_text(encoding='utf-8'))
+        except Exception: continue                               # Gültigkeit prüft Abschnitt 1
+        def FJ(msg): F(f'{j_r}: {msg}')
+        units = jd.get('units')
+        if not isinstance(units, list) or not units: FJ('units fehlt'); continue
+        stationen, unit_ids = {}, set()
+        for j_u in units:
+            uid = j_u.get('id') if isinstance(j_u, dict) else None
+            if not uid or uid in unit_ids: FJ(f'Unit ohne id oder doppelt ({uid})'); continue
+            unit_ids.add(uid)
+            if j_u.get('thema') and j_u['thema'] not in katalog_ids: FJ(f'Unit {uid}: thema {j_u["thema"]} fehlt im Katalog')
+            if not isinstance(j_u.get('stationen'), list) or not j_u['stationen']: FJ(f'Unit {uid}: keine stationen'); continue
+            for j_st in j_u['stationen']:
+                sid = j_st.get('id') if isinstance(j_st, dict) else None
+                if not sid or not re.fullmatch(r'[a-z0-9-]+', str(sid)): FJ(f'Unit {uid}: Station ohne gültige id ({sid})'); continue
+                if sid in stationen: FJ(f'Station {sid} doppelt'); continue
+                stationen[sid] = (uid, j_st)
+                if j_st.get('art') not in JOURNEY_ARTEN: FJ(f'Station {sid}: art muss {", ".join(JOURNEY_ARTEN)} sein')
+                if not str(j_st.get('titel') or '').strip(): FJ(f'Station {sid}: titel fehlt')
+                j_t = j_st.get('thema')
+                if j_t not in katalog_ids: FJ(f'Station {sid}: thema {j_t} fehlt im Katalog'); continue
+                j_start = j_st.get('start')
+                if j_start is not None and (j_start not in katalog_ids or not (j_start == j_t or j_start.startswith(j_t + '.'))):
+                    FJ(f'Station {sid}: start {j_start} muss im Katalog stehen und {j_t} selbst oder eine Stufe darunter sein')
+                ziel = j_start or j_t
+                j_q = k_quelle.get(ziel) or {}
+                if j_q.get('app') == 'apps/typen/uebung.html' and ziel in k_eltern:   # Baukasten-Stufe: muss in der Inhaltsdatei stehen
+                    eltern = k_eltern[ziel]
+                    try: ist = {j_x.get('id') for j_x in json.loads(lies(f'daten/inhalte/{eltern.split(".")[0]}/{eltern}.json')).get('stufen', []) if isinstance(j_x, dict)}
+                    except Exception: ist = set()
+                    if ziel not in ist: FJ(f'Station {sid}: Stufe {ziel} fehlt in der Inhaltsdatei von {eltern}')
+        # Vorgänger: vorhanden, keine Schleife; Finale braucht alle Stationen seiner Unit
+        for sid, (uid, j_st) in stationen.items():
+            br = j_st.get('braucht', [])
+            if not isinstance(br, list): FJ(f'Station {sid}: braucht muss eine Liste sein'); continue
+            for b_ in br:
+                if b_ not in stationen: FJ(f'Station {sid}: Vorgänger {b_} gibt es nicht')
+                elif b_ == sid: FJ(f'Station {sid}: braucht sich selbst')
+            if j_st.get('art') == 'finale':
+                fehlt = [j_x for j_x, (u_, s_) in stationen.items() if u_ == uid and j_x != sid and s_.get('art') != 'finale' and j_x not in br]
+                if fehlt: FJ(f'Station {sid}: das Finale braucht alle Stationen der Unit (fehlt: {", ".join(fehlt)})')
+        farbe = {}
+        def schleife(j_x, pfad):
+            if farbe.get(j_x) == 2: return False
+            if farbe.get(j_x) == 1: FJ(f'Schleife in braucht: {" → ".join(pfad + [j_x])}'); return True
+            farbe[j_x] = 1
+            for b_ in (stationen[j_x][1].get('braucht') or []) if isinstance(stationen[j_x][1].get('braucht'), list) else []:
+                if b_ in stationen and schleife(b_, pfad + [j_x]): return True
+            farbe[j_x] = 2
+            return False
+        for sid in stationen:
+            if schleife(sid, []): break
+        I(f'{j_r}: {len(unit_ids)} Units, {len(stationen)} Stationen')
 
 # ── 17. Admin: Module (Admin-Umbau Etappe 1) ───────
 if not Path('admin.html').is_file(): F('admin.html fehlt')

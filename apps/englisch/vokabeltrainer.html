@@ -17,6 +17,9 @@
      meta.sprache ('en-GB', 'de-DE' …)  meta.untertitel  meta.vorne ('🇬🇧 English')  meta.hinten ('🇩🇪 Deutsch')
      je Wort: bild (Emoji oder Bilddatei in daten/bilder/), artikel ('der'|'die'|'das'), silben ('Ap-fel')
    Ergebnisse melden die Themen-ID der Unit; falsche Wörter landen im Fehlerheft (ueben.js).
+   Abschnitte (Themes) mit Stufe im Katalog (<Unit-Thema>.<Abschnitt>, z. B. en.6.vok.u1.theme1) melden zusätzlich ihre
+   eigene Themen-ID – so zählt die Meisterschaft je Theme (English Journey Year 6). Gesperrte Themes zeigen 🔒.
+   Direktstart: ?stufe=<Themen-ID> öffnet gleich die Modus-Wahl dieser Unit bzw. dieses Themes (wenn frei).
    Die alten Seiten vokabeltrainer5/6.html leiten hierher weiter; Ergebnisse, Sterne und Dorf-Aufträge
    ziehen beim ersten Öffnen mit um (LernUeben.uebernehme).
   ═══════════════════════════════════════════════
@@ -391,6 +394,10 @@ let lastFeedbackWord = null;
 //  Klasse aus der Adresse; jede Wortliste hat eigene Speicher (Verlauf, Statistik, Lese-Einstellungen).
 //  Die Schlüssel der Klassen 5 und 6 sind die der bisherigen Trainer → Verlauf bleibt erhalten.
 const PARAM = new URLSearchParams(location.search);
+// Direktstart (?stufe=en.6.vok.u1.theme1): Parameter gleich wieder aus der Adresse nehmen – sonst speichert
+// navbar.js das Ergebnis unter einem anderen Schlüssel und Sterne/Dorf-Aufträge der App zählen nicht (wie ueben.js)
+const DIREKT = (PARAM.get('stufe') || '').replace(/[^a-z0-9.-]/g, '').slice(0, 80);
+if (DIREKT) try { const u = new URL(location.href); u.searchParams.delete('stufe'); history.replaceState(history.state, '', u.pathname + u.search + u.hash); } catch (e) {}
 const LISTE = (PARAM.get('liste') || '').replace(/[^a-z0-9-]/gi, '').slice(0, 40);
 const KL = LISTE ? '' : String(Math.min(6, Math.max(5, parseInt(PARAM.get('klasse') || '5', 10) || 5)));
 const HISTORY_KEY5 = 'vokab-history-kl5', STATS_KEY5 = 'vokab-word-stats-kl5', A11Y_KEY5 = 'vokab-a11y-kl5';
@@ -418,6 +425,7 @@ async function loadConfig() {
     if (M.hinten) document.querySelectorAll('.flip-back .flip-lang').forEach(e => e.textContent = M.hinten);
     showOnly('units');
     renderUnitList();
+    if (DIREKT) { await Promise.race([KATALOG, new Promise(r => setTimeout(r, 1500))]); direktStart(DIREKT); }
   } catch(e) {
     document.getElementById('screen-loading').textContent = '⚠️ Fehler beim Laden der Vokabeln. Bitte Seite neu laden.';
   }
@@ -630,6 +638,14 @@ function getSpecialWords(listKey) {
 // Alle Wörter aus allen Units (ohne Sonderlisten) – Basis für Mix & Schwierige Wörter
 // Freigabe (Etappe 7): gesperrte Units und Listen zeigen 🔒 und fehlen im Mix
 function frei(eintrag) { return !eintrag || !eintrag.thema || !window.LernUeben || LernUeben.Freigabe.erlaubt(eintrag.thema); }
+// Theme-Stufen (English Journey): Themen-ID <Unit-Thema>.<Abschnitt>, aber nur, wenn der Katalog sie kennt
+const KATALOG = window.LW && LW.laden ? LW.laden('gemeinsam/katalog.js').then(() => window.LernKatalog && LernKatalog.bereit).catch(() => {}) : Promise.resolve();
+function themeThema(unitKey, themeKey) {
+  const unit = CONFIG && CONFIG.units && CONFIG.units[unitKey];
+  if (!unit || !unit.thema || !/^[a-z0-9-]+$/.test(themeKey || '')) return null;
+  const id = unit.thema + '.' + themeKey;
+  return window.LernKatalog && LernKatalog.thema(id) ? id : null;
+}
 
 function getAllUnitsOnlyWords() {
   let all = [];
@@ -750,17 +766,34 @@ function showThemes(unitKey) {
     const btn = document.createElement('button');
     btn.className = 'theme-btn';
     btn.innerHTML = `<span>${theme.label}</span><span class="word-count">${theme.words.length} Wörter</span>`;
-    btn.onclick = () => {
-      currentTheme = key;
-      currentWords = theme.words;
-      currentLabel = `${unit.label} – ${theme.label}`;
-      showModeSelection();
-    };
+    if (unit.thema && !frei({ thema: unit.thema + '.' + key })) { btn.disabled = true; btn.style.opacity = '.5'; btn.innerHTML = `<span>🔒 ${esc(theme.label)}</span>`; list.appendChild(btn); return; }
+    btn.onclick = () => waehleTheme(unitKey, key);
     list.appendChild(btn);
   });
 
   showOnly('themes');
   setHeaderBtns(true, false);
+}
+
+function waehleTheme(unitKey, key) {
+  const unit = CONFIG.units[unitKey], theme = unit.themes[key];
+  currentUnit = unitKey;
+  currentTheme = key;
+  currentWords = theme.words;
+  currentLabel = `${unit.label} – ${theme.label}`;
+  showModeSelection();
+}
+
+// Direktstart (?stufe=…): Unit-Thema → alle Wörter der Unit, Theme-Stufe → dieses Theme; gesperrt → Unit-Liste mit 🔒
+function direktStart(id) {
+  const eintrag = Object.entries(CONFIG.units || {}).find(([, u]) => u.thema && (id === u.thema || id.startsWith(u.thema + '.')));
+  if (!eintrag) return;
+  const [key, unit] = eintrag;
+  if (!frei(unit)) return;
+  if (id === unit.thema) { currentUnit = key; return selectAllUnit(); }
+  const tk = Object.keys(unit.themes).find(k => unit.thema + '.' + k === id);
+  if (!tk || !frei({ thema: id })) return showThemes(key);
+  waehleTheme(key, tk);
 }
 
 function selectAllUnit() {
@@ -773,6 +806,13 @@ function selectAllUnit() {
 // ── MODE SELECTION ───────────────────────────────────────────────
 function showModeSelection() {
   document.getElementById('word-info').textContent = `📚 ${currentLabel} · ${currentWords.length} Vokabeln`;
+  // Meisterschaft (2 Runden ab 70 %) zählt nur in den Abfrage-Modi – darauf hinweisen, wenn ein Theme eine eigene Stufe hat
+  if (currentUnit && CONFIG.units[currentUnit] && currentTheme && themeThema(currentUnit, currentTheme)) {
+    const h = document.createElement('div');
+    h.style.cssText = 'font-weight:600;margin-top:4px;color:#6b7280';
+    h.textContent = '⭐ Für die Meisterschaft zählen Quiz, Fill in und Scramble.';
+    document.getElementById('word-info').appendChild(h);
+  }
   showOnly('mode');
   setHeaderBtns(true, true);
 }
@@ -832,6 +872,11 @@ function lernThema() {
   const unit = currentUnit && CONFIG.units[currentUnit];
   return unit && unit.thema ? unit.thema : null;
 }
+/** Themen-ID des geübten Themes (Stufe im Katalog) – oder null */
+function lernThemeThema() {
+  if (!ABFRAGE_MODI.includes(currentMode) || !currentUnit || !CONFIG.units[currentUnit] || !currentTheme) return null;
+  return themeThema(currentUnit, currentTheme);
+}
 function lernInhalt() {
   if (!ABFRAGE_MODI.includes(currentMode)) return null;
   if (currentUnit === 'mix' || currentUnit === 'difficult' || currentTheme === 'difficult') return null;
@@ -854,13 +899,13 @@ function showResult(right, wrong, total, label) {
   renderWrongList();
 
   if (window.LernApps && LernApps.saveResult) {
-    const inhalt = lernInhalt(), thema = lernThema();
+    const inhalt = lernInhalt(), thema = lernThema(), theme = lernThemeThema();
     LernApps.saveResult({
       score: right,
       max: total,
       label: label || (right + ' / ' + total),
-      ...(inhalt ? { inhalt } : {}),
-      ...(thema ? { thema } : {})
+      ...(inhalt ? { inhalt: theme ? [inhalt, theme] : inhalt } : {}),
+      ...(thema ? { thema: theme ? [thema, theme] : thema } : {})
     });
   }
 
