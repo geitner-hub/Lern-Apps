@@ -29,7 +29,7 @@
 #       Einträge in config.json für apps/typen/uebung.html?inhalt=… haben eine Inhaltsdatei.
 #       Quellen je Aufgabe (Quellen-Detektiv): Bild existiert, Fotos (png/jpg/webp) haben einen „nachweis“,
 #       quellenart ist sach/bild/schrift, Methodenkarten in „hilfe“ haben nr und Farbe #rrggbb.
-#       Typ fall (ganzer Fall): titel, Quelle, karten 1–3 mit muster; Hilfen mit frage und optionen.
+#       Typ fall (ganzer Fall): titel, Quelle, karten 1–3 (optional 4) mit muster; Hilfen mit frage und optionen.
 #   13. Die Insel: alle Insel-Dateien (spiele/insel.html, gemeinsam/insel-*.js, daten/insel*.json)
 #       stehen in sw.js NACHLADEN (sonst fehlen sie offline).
 #   14. Die Insel: daten/insel.json ist gültig (Karten, Gebiete, Vorlagen, IDs), und Bewohner-Plätze
@@ -605,7 +605,7 @@ for p in sorted(ROOT.glob('daten/inhalte/*/*.json')):
                 if x.get('wortspeicher') is not None and not _texte(x['wortspeicher']): FI(f'{wf}: wortspeicher muss eine Liste von Wörtern sein')
                 ka = x.get('karten')
                 nrs = [k.get('nr') for k in ka if isinstance(k, dict)] if isinstance(ka, list) else []
-                if nrs != [1, 2, 3]: FI(f'{wf}: karten mit nr 1, 2, 3 in dieser Reihenfolge nötig'); continue
+                if nrs not in ([1, 2, 3], [1, 2, 3, 4]): FI(f'{wf}: karten mit nr 1, 2, 3 (und optional 4) in dieser Reihenfolge nötig'); continue
                 for k in ka:
                     if not _texte(k.get('muster')): FI(f'{wf}, Karte {k["nr"]}: muster (Musterantwort) fehlt')
                     for f_ in ('anfaenge', 'check'):

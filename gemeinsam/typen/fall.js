@@ -2,7 +2,7 @@
 //  Lernwelt – Aufgabentyp „fall“ (Quellen-Detektiv Etappe 2): ganzer Fall mit Niveaus und Selbstkontrolle
 //
 //  Eine Runde = ein Fall: eine Quelle groß, darunter die Karten 1 Beschreiben → 2 Erklären → 3 Deuten
-//  nacheinander in ihren Farben (LernTypen.KARTEN). Das Kind wählt ein Niveau, schreibt ins Heft und tippt
+//  nacheinander in ihren Farben (LernTypen.KARTEN) – und Karte 4 Quellenkritik, wenn der Fall sie hat (Etappe 3). Das Kind wählt ein Niveau, schreibt ins Heft und tippt
 //  „Fertig“. Danach kommen je Karte Musterantwort und Checkliste, die es selbst abhakt.
 //  Ergebnis = abgehakte Punkte (ueben.js: Selbstkontrolle „selbst“) – zählt für Pass und Wiederholung,
 //  aber nicht für die Spielsperre; kein Fehler-Training.
@@ -16,7 +16,7 @@
 //        "bild": "q-faustkeil.svg" | "quelltext": "…" (+ "herkunft"), "alt", "nachweis", "quellenart": "sach"|"bild"|"schrift",
 //        "info": "Gefunden in Frankreich. Etwa 15 cm lang."   (optional: was man über den Fund weiß),
 //        "wortspeicher": ["Faustkeil", "Feuerstein", …]       (Niveau ★),
-//        "karten": [                         ← nr 1, 2, 3 in dieser Reihenfolge (Karte 4 folgt in Etappe 3)
+//        "karten": [                         ← nr 1, 2, 3 in dieser Reihenfolge; dazu nr 4 (Quellenkritik), je Fall einschaltbar
 //          { "nr": 1,
 //            "anfaenge": ["Ich sehe …"]       (optional; sonst die Satzanfänge der Karte unten in ANFAENGE),
 //            "hilfen": [{ "frage": "Woraus ist er?", "optionen": ["Stein", "Holz", "Metall"] }]   (Niveau ★, nur zum Nachdenken),
@@ -33,12 +33,16 @@
     1: () => ['Ich sehe …', 'Oben (unten, links, rechts) ist …', 'Es ist aus …'],
     2: art => art === 'bild' || art === 'schrift' ? ['Das ist wohl ein …', 'Man hat es gemacht, um …'] : ['Das ist wohl ein …', 'Man benutzte es, um …'],
     3: () => ['Daran erkennt man, dass die Menschen …', 'Die Menschen damals …'],
+    4: () => ['Die Quelle ist (nicht) echt, weil …', 'Gemacht hat sie …', 'Ich glaube ihr (nicht), weil …'],
   };
+  // Hilfsfragen von Karte 4 (stehen auf der Karte, darum auf jedem Niveau)
+  const HILFSFRAGEN = { 4: ['Ist sie echt?', 'Von wem und wann?', 'Wollte jemand etwas zeigen?'] };
   const CHECK = {
     1: () => ['Ich habe nur beschrieben, was ich wirklich sehe.', 'Ich habe Form, Farbe oder Material genannt.'],
     2: art => [art === 'bild' || art === 'schrift' ? 'Ich habe gesagt, wofür es gemacht wurde.' : 'Ich habe gesagt, wofür man es benutzt hat.',
       'Ich habe mein Wissen aus dem Unterricht benutzt.'],
     3: () => ['Ich habe etwas über das Leben der Menschen gesagt.', 'Mein Schluss passt zur Quelle und ist nicht zu weit hergeholt.'],
+    4: () => ['Ich habe gesagt, ob die Quelle echt ist, und warum.', 'Ich habe gesagt, ob ich der Quelle glaube, und warum.'],
   };
   const NIVEAUS = [
     { n: 1, sterne: '★', text: 'Satzanfänge, Wortspeicher und Hilfen' },
@@ -60,6 +64,7 @@
   .lf-nr{flex:0 0 2.8rem;height:2.8rem;border-radius:50%;background:#fff;display:grid;place-items:center;font:400 1.5rem 'Fredoka One','Nunito',sans-serif}
   .lf-kopf h3{margin:0;font:400 1.35rem 'Fredoka One','Nunito',sans-serif}
   .lf-kopf p{margin:.1rem 0 0;font-weight:900;font-size:1.1rem}
+  .lf-kopf small{display:block;font-weight:800;font-size:.9rem;opacity:.9;margin-top:.15rem}
   .lf-kopf .lf-vor{margin-left:auto;background:rgba(255,255,255,.22);border:0;border-radius:12px;color:#fff;font-size:1.1rem;min-width:2.6rem;min-height:2.6rem;cursor:pointer}
   .lf-box{background:rgba(0,0,0,.2);border-radius:12px;padding:.55rem .75rem;margin-top:.6rem}
   .lf-box h4{margin:0 0 .3rem;font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;opacity:.85}
@@ -89,7 +94,6 @@
     } catch (e) {}
   }
   const liste = l => (Array.isArray(l) ? l : []).filter(x => typeof x === 'string' && x.trim());
-  const KARTE_NR = [1, 2, 3];
 
   T.typ('fall', {
     einzeln: true,
@@ -98,8 +102,10 @@
       const x = st.aufgaben[nr];
       if (!x || !(x.bild || x.quelltext)) return null;
       const art = x.quellenart || '';
-      const karten = KARTE_NR.map(n => {
-        const k = (Array.isArray(x.karten) ? x.karten : []).find(c => c && Number(c.nr) === n) || {};
+      const kartenRoh = Array.isArray(x.karten) ? x.karten : [];
+      const nummern = kartenRoh.some(c => c && Number(c.nr) === 4) ? [1, 2, 3, 4] : [1, 2, 3];
+      const karten = nummern.map(n => {
+        const k = kartenRoh.find(c => c && Number(c.nr) === n) || {};
         return { nr: n, titel: K[n].titel, frage: K[n].frage(art), farbe: K[n].farbe,
           anfaenge: liste(k.anfaenge).length ? liste(k.anfaenge) : ANFAENGE[n](art),
           hilfen: (Array.isArray(k.hilfen) ? k.hilfen : []).filter(h => h && h.frage && liste(h.optionen).length),
@@ -114,11 +120,11 @@
           const quelle = T.quelleHTML(x, D);
           const W = { schritt: -1, niveau: 0, seit: 0, haken: {}, gewaehlt: {}, nachfrage: false };
           const kartenKopf = k => `<div class="lf-kopf"><span class="lf-nr" style="color:${k.farbe}">${k.nr}</span>
-              <div><h3>${T.esc(k.titel)}</h3><p>${T.esc(k.frage)}</p></div>
+              <div><h3>${T.esc(k.titel)}</h3><p>${T.esc(k.frage)}</p>${HILFSFRAGEN[k.nr] ? `<small>${HILFSFRAGEN[k.nr].map(T.esc).join(' · ')}</small>` : ''}</div>
               <button type="button" class="lf-vor" data-lf-vor="${k.nr}" aria-label="Vorlesen">🔊</button></div>`;
           function wahl() {
             box.innerHTML = `<div class="lf-quelle">${quelle}</div>${x.info ? `<p class="lf-info">${T.esc(x.info)}</p>` : ''}
-              <p class="lt-anw">Wähle dein Niveau. Dann gehst du die drei Karten nacheinander durch und schreibst ins Heft.</p>
+              <p class="lt-anw">Wähle dein Niveau. Dann gehst du die ${karten.length === 4 ? 'vier' : 'drei'} Karten nacheinander durch und schreibst ins Heft.</p>
               <div class="lf-niv">${NIVEAUS.map(v => `<button type="button" data-lf-niveau="${v.n}"><b>${v.sterne}</b><span>${T.esc(v.text)}</span></button>`).join('')}</div>`;
           }
           function karte() {
@@ -155,7 +161,7 @@
             if (b.dataset.lfNiveau) { W.niveau = Number(b.dataset.lfNiveau); W.schritt = 0; W.seit = 0; zeichnen(); return oben(); }
             if (b.dataset.lfVor) {
               const k = karten[Number(b.dataset.lfVor) - 1];
-              const teile = [k.titel + '. ' + k.frage];
+              const teile = [k.titel + '. ' + k.frage, ...(HILFSFRAGEN[k.nr] || [])];
               if (W.schritt >= karten.length) teile.push(...k.muster, ...k.check);
               else if (W.niveau <= 2) teile.push(...k.anfaenge);
               return sprich(teile.join(' '));

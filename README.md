@@ -435,8 +435,20 @@ Eine neue App = **Inhaltsdatei + Katalog-Eintrag + Admin-Eintrag**. Kein neuer C
    `saveResult({ …, selbst: true })`: zählt für Pass, Meisterschaft und Wiederholung, **nicht für die Spielsperre**, kein
    Fehler-Training; Fall-Stufen kommen in keinen Mix (`einzeln` im Typ, `ueben.js`: Runde mit einer Aufgabe).
    Stufe `gpg.5.quellen.fall` mit sechs Steinzeit-Fällen (Faustkeil, Höhlenbild, Tongefäß, Knochennadel, Mahlstein,
-   Speerspitze). **Fotos statt Zeichnungen:** `bild` auf die jpg/png neben der Inhaltsdatei setzen und `nachweis` ergänzen –
-   sonst ändert sich nichts.
+   Pfeilspitze).
+   **Echte Fotos (v87):** Funde, die als Quelle gelten, zeigen Fotos von Wikimedia Commons (`foto-*.jpg`, höchstens 900 px,
+   nur gemeinfrei, CC0 oder CC BY – kein BY-SA) mit `nachweis` hinter ⓘ: Faustkeil (Canterbury Museum, Pratteln), Cueva de las
+   Manos (Handbilder, Original), Bandkeramik-Schale, Knochennadel, Mahlstein, Pfeilspitze; die Lascaux-Nachbildung im Museum
+   Brünn als Beispiel für „Nachbildung“. Gezeichnet (`q-*.svg`) bleiben nur Darstellungen, Fälschungen und vorerst die
+   Großeltern-Quellen (Brief, Schulfoto, Schultasche – Platz für eigene Fotos). Die alten Fund-SVGs bleiben im Ordner, weil
+   gespeicherte Live-Quizze sie nennen können. Lascaux und Chauvet sind geschlossen: Fotos „aus der Höhle“ zeigen fast immer
+   Nachbildungen – nie als Quelle verwenden.
+   **Quellenkritik** (Etappe 3, v87): Karte 4 (lila, „Kann ich der Quelle trauen?“ mit den Hilfsfragen) in „So geht's“ und im
+   Fall – ein Fall mit `{ "nr": 4, … }` in `karten` zeigt sie (je Fall einschaltbar). Bausteine `gpg.5.quellen.echt` (Original,
+   Nachbildung, Fälschung), `.zeitfehler` (markieren, auch mit Bild `q-hoehle-faelschung.svg`), `.glauben` (zwei Körbe) und
+   `.fall-kritik` (vier Fälle aus Großelternzeit und Museum). Alle vier stehen in `config.json` → `freigaben` auf `{ "alle": "zu" }`
+   und gehen über Inhalte → 🔐 Freigaben auf („✅ frei“). Mix-Stufen nehmen nur freigegebene Stufen (`typen.js`), darum kommt
+   die Kritik erst nach der Freigabe ins Detektiv-Ritual.
    Plan: Claude-Docs „Konzept: Geschichte-Apps und Quellen-Werkstatt“ und „Aktionsplan: Quellen-Detektiv“. Geübt wird nur mit
    Quellen aus Zeiten, die schon dran waren – Ägypten- und Römer-Quellen erst nach der jeweiligen Stunde (Freigaben).
 2. **Katalog:** Thema mit `quelle: { "app": "apps/typen/uebung.html", "parameter": "inhalt=<Themen-ID>" }` und allen
