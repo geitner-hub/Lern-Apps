@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600"><defs><radialGradient id="h" cx="50%" cy="45%" r="70%"><stop offset="0" stop-color="#f3efe6"/><stop offset="1" stop-color="#d9d1c1"/></radialGradient><filter id="s" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="6" dy="10" stdDeviation="9" flood-opacity=".28"/></filter></defs><rect width="800" height="600" fill="url(#h)"/><g filter="url(#s)" transform="rotate(-12 400 300)">
+<path d="M400 80 C430 160 465 250 470 330 C472 400 440 450 400 500 C360 450 328 400 330 330 C335 250 370 160 400 80Z" fill="#b39b7a"/>
+<path d="M400 80 C415 130 425 170 420 215 L400 235 L380 215 C375 170 385 130 400 80Z" fill="#c7b08f"/>
+<path d="M420 215 C445 260 462 300 468 340 L425 330 L400 235Z" fill="#a68e6d"/>
+<path d="M380 215 L400 235 L375 330 L332 340 C338 300 355 260 380 215Z" fill="#9c8564"/>
+<path d="M400 235 L425 330 L400 380 L375 330Z" fill="#bfa684"/>
+<path d="M332 340 L375 330 L400 380 L390 455 C360 420 335 385 332 340Z" fill="#a89070"/>
+<path d="M468 340 L425 330 L400 380 L410 455 C440 420 465 385 468 340Z" fill="#94805f"/>
+<path d="M390 455 L400 380 L410 455 L400 500Z" fill="#8a7556"/>
+</g><g font-family="Arial,Helvetica,sans-serif" font-size="18" fill="#333"><rect x="590" y="548" width="50" height="10" fill="#222"/><rect x="640" y="548" width="50" height="10" fill="#fff" stroke="#222" stroke-width="2"/><text x="590" y="540">0</text><text x="690" y="540" text-anchor="end">2 cm</text></g></svg>

@@ -26,6 +26,7 @@ den passenden Abschnitt dort lesen.
 - **Kopfrechen-Aufgaben** müssen für Mittelschüler im Kopf lösbar sein.
 - **Datenschutz (DSGVO):** keine personenbezogenen Daten speichern oder übertragen. Keine externen Dienste, CDNs
   oder Google Fonts: Schriften aus `fonts/` über `gemeinsam/fonts.css`, Bibliotheken in `vendor/`.
+- **Bilder:** selbst gezeichnete SVG, Gemeinfreies, CC0 oder CC BY mit `nachweis` – immer lokal im Repo, nie Schulbuch-Abbildungen.
 - **Sicherheit:** Texte aus der Config immer escapen (`escHtml`), Links über `isSafeLink` prüfen.
 - **Version:** nach Änderungen an ausgelieferten Dateien `VERSION` in `sw.js` **und** in
   `gemeinsam/umgebung.js` gleich erhöhen (pruefen.py prüft das).

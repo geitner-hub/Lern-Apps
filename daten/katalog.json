@@ -1246,6 +1246,30 @@
        "hinweis": "App „Regeln in unserer Gesellschaft“ am 6.10.2026 entfernt – ID bleibt reserviert, nicht neu vergeben."
       }
      ]
+    },
+    {
+     "id": "gpg.geschichte",
+     "titel": "Zeit und Wandel",
+     "themen": [
+      {
+       "id": "gpg.5.quellen",
+       "titel": "Quellen-Detektiv",
+       "klasse": 5,
+       "quelle": {"app": "apps/typen/uebung.html", "parameter": "inhalt=gpg.5.quellen"},
+       "lehrplan": "GPG 5 Zeit und Wandel: Quellen und Darstellungen unterscheiden, Quellen beschreiben, erklären und deuten",
+       "dauer": 5,
+       "einsatz": "5-Minuten-Ritual zum Dreischritt Beschreiben – Erklären – Deuten (Karten „Quellen-Detektiv“); geübt wird mit Quellen aus Zeiten, die schon dran waren, und von heute",
+       "stufen": [
+        { "id": "gpg.5.quellen.ritual", "titel": "Detektiv-Ritual" },
+        { "id": "gpg.5.quellen.darstellung", "titel": "Quelle oder Darstellung?" },
+        { "id": "gpg.5.quellen.arten", "titel": "Welche Quelle ist das?" },
+        { "id": "gpg.5.quellen.sehen", "titel": "Sehen oder denken?" },
+        { "id": "gpg.5.quellen.wofuer", "titel": "Wofür war das?" },
+        { "id": "gpg.5.quellen.schluss", "titel": "Passt der Schluss?" },
+        { "id": "gpg.5.quellen.schritte", "titel": "Drei Schritte sortieren" }
+       ]
+      }
+     ]
     }
    ]
   },
