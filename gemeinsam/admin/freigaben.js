@@ -124,7 +124,15 @@ async function frReihenLaden() {
       FR_KATALOG_REIHEN.concat(baukasten).forEach(id => {
         const t = K.thema(id);
         const ic = { en: '🇬🇧', gpg: '🌍', de: '📝', nut: '🌱', ma: '📏' }[id.split('.')[0]] || '📘';
-        if (t) reihen.push({ id, titel: ic + ' ' + t.titel, klasse: t.klasse, stufen: K.stufen(id).map(s => ({ id: s.id, titel: String(s.titel).replace(t.titel + ' – ', ''), kurz: '' })) });
+        if (!t) return;
+        const alle = K.stufen(id).map(s => ({ id: s.id, titel: String(s.titel).replace(t.titel + ' – ', ''), kurz: '' }));
+        // Stufen unter Stufen (Themes einer Unit: en.6.vok.u1.theme1) bekommen je Unit eine eigene Reihe
+        const eltern = s => alle.find(o => o !== s && s.id.startsWith(o.id + '.'));
+        reihen.push({ id, titel: ic + ' ' + t.titel, klasse: t.klasse, stufen: alle.filter(s => !eltern(s)) });
+        alle.filter(s => !eltern(s)).forEach(o => {
+          const kinder = alle.filter(s => eltern(s) === o);
+          if (kinder.length) reihen.push({ id: o.id, titel: ic + ' ' + t.titel + ' – ' + o.titel + ' (Themes)', klasse: t.klasse, stufen: kinder.map(s => ({ ...s, titel: s.titel.replace(/^Unit \d+ – /, '') })) });
+        });
       });
     }
   } catch (e) { console.warn('[Freigaben] Katalog', e); }

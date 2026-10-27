@@ -698,9 +698,57 @@
          "inhalt": "vok6:unit1"
         },
         {
+         "id": "en.6.vok.u1.grundwortschatz",
+         "titel": "Unit 1 – Grundwortschatz"
+        },
+        {
+         "id": "en.6.vok.u1.theme1",
+         "titel": "Unit 1 – Theme 1"
+        },
+        {
+         "id": "en.6.vok.u1.theme2",
+         "titel": "Unit 1 – Theme 2"
+        },
+        {
+         "id": "en.6.vok.u1.story",
+         "titel": "Unit 1 – Story"
+        },
+        {
+         "id": "en.6.vok.u1.focusonlanguage",
+         "titel": "Unit 1 – Focus on language"
+        },
+        {
+         "id": "en.6.vok.u1.weitere2",
+         "titel": "Unit 1 – Weitere Wörter"
+        },
+        {
          "id": "en.6.vok.u2",
          "titel": "Unit 2: Neighbours",
          "inhalt": "vok6:unit2"
+        },
+        {
+         "id": "en.6.vok.u2.grundwortschatz",
+         "titel": "Unit 2 – Grundwortschatz"
+        },
+        {
+         "id": "en.6.vok.u2.theme1",
+         "titel": "Unit 2 – Theme 1"
+        },
+        {
+         "id": "en.6.vok.u2.weitere2",
+         "titel": "Unit 2 – Weitere Wörter"
+        },
+        {
+         "id": "en.6.vok.u2.theme2",
+         "titel": "Unit 2 – Theme 2"
+        },
+        {
+         "id": "en.6.vok.u2.story",
+         "titel": "Unit 2 – Story"
+        },
+        {
+         "id": "en.6.vok.u2.weitere3",
+         "titel": "Unit 2 – Weitere Wörter 2"
         },
         {
          "id": "en.6.vok.u3",
@@ -708,14 +756,106 @@
          "inhalt": "vok6:unit3"
         },
         {
+         "id": "en.6.vok.u3.grundwortschatz",
+         "titel": "Unit 3 – Grundwortschatz"
+        },
+        {
+         "id": "en.6.vok.u3.theme1",
+         "titel": "Unit 3 – Theme 1"
+        },
+        {
+         "id": "en.6.vok.u3.gegensaetzemitun",
+         "titel": "Unit 3 – Gegensätze mit „un-“"
+        },
+        {
+         "id": "en.6.vok.u3.theme2",
+         "titel": "Unit 3 – Theme 2"
+        },
+        {
+         "id": "en.6.vok.u3.story",
+         "titel": "Unit 3 – Story"
+        },
+        {
+         "id": "en.6.vok.u3.focusonlanguage",
+         "titel": "Unit 3 – Focus on language"
+        },
+        {
+         "id": "en.6.vok.u3.skillstraining",
+         "titel": "Unit 3 – Skills training"
+        },
+        {
          "id": "en.6.vok.u4",
          "titel": "Unit 4: Teenage life",
          "inhalt": "vok6:unit4"
         },
         {
+         "id": "en.6.vok.u4.grundwortschatz",
+         "titel": "Unit 4 – Grundwortschatz"
+        },
+        {
+         "id": "en.6.vok.u4.theme1",
+         "titel": "Unit 4 – Theme 1"
+        },
+        {
+         "id": "en.6.vok.u4.theme2",
+         "titel": "Unit 4 – Theme 2"
+        },
+        {
+         "id": "en.6.vok.u4.weitere2",
+         "titel": "Unit 4 – Weitere Wörter"
+        },
+        {
+         "id": "en.6.vok.u4.story",
+         "titel": "Unit 4 – Story"
+        },
+        {
+         "id": "en.6.vok.u4.weitere3",
+         "titel": "Unit 4 – Weitere Wörter 2"
+        },
+        {
+         "id": "en.6.vok.u4.focusonlanguage",
+         "titel": "Unit 4 – Focus on language"
+        },
+        {
+         "id": "en.6.vok.u4.skillstraining",
+         "titel": "Unit 4 – Skills training"
+        },
+        {
          "id": "en.6.vok.u5",
          "titel": "Unit 5: Dartmoor adventures",
          "inhalt": "vok6:unit5"
+        },
+        {
+         "id": "en.6.vok.u5.grundwortschatz",
+         "titel": "Unit 5 – Grundwortschatz"
+        },
+        {
+         "id": "en.6.vok.u5.theme1",
+         "titel": "Unit 5 – Theme 1"
+        },
+        {
+         "id": "en.6.vok.u5.theme2",
+         "titel": "Unit 5 – Theme 2"
+        },
+        {
+         "id": "en.6.vok.u5.story",
+         "titel": "Unit 5 – Story"
+        },
+        {
+         "id": "en.6.vok.u5.focusonlanguage",
+         "titel": "Unit 5 – Focus on language"
+        },
+        {
+         "id": "en.6.vok.u5.weitere2",
+         "titel": "Unit 5 – Weitere Wörter"
+        },
+        {
+         "id": "en.6.vok.u5.skillstraining",
+         "titel": "Unit 5 – Skills Training"
+        },
+        {
+         "id": "en.6.vok.u5.weitere3",
+         "titel": "Unit 5 – Weitere Wörter 2"
         }
        ]
       }
@@ -999,6 +1139,216 @@
        ]
       },
       {
+       "id": "en.6.simple-past",
+       "titel": "Simple past (Highlight 6)",
+       "klasse": 6,
+       "quelle": {
+        "app": "apps/typen/uebung.html",
+        "parameter": "inhalt=en.6.simple-past"
+       },
+       "lehrplan": "E6 Grammatik (Highlight 6, Unit 1–2): simple past – Verneinung mit didn't, Fragen mit did und Fragewort, Kurzantworten",
+       "dauer": 8,
+       "einsatz": "English Journey Year 6 (Station) oder als eigene App im Admin; Fehler-Training zur Wiederholung",
+       "stufen": [
+        { "id": "en.6.simple-past.didnt", "titel": "didn't" },
+        { "id": "en.6.simple-past.fragewort", "titel": "Fragen mit Fragewort" },
+        { "id": "en.6.simple-past.kurzantworten", "titel": "Did …? – Kurzantworten" },
+        { "id": "en.6.simple-past.mix", "titel": "Mix" }
+       ]
+      },
+      {
+       "id": "en.6.was-were",
+       "titel": "was / were",
+       "klasse": 6,
+       "quelle": {
+        "app": "apps/typen/uebung.html",
+        "parameter": "inhalt=en.6.was-were"
+       },
+       "lehrplan": "E6 Grammatik (Highlight 6, Unit 1): simple past von be – was/were, Verneinung, Fragen und Kurzantworten",
+       "dauer": 8,
+       "einsatz": "English Journey Year 6 (Station) oder als eigene App im Admin; Fehler-Training zur Wiederholung",
+       "stufen": [
+        { "id": "en.6.was-were.formen", "titel": "was oder were?" },
+        { "id": "en.6.was-were.verneinung", "titel": "wasn't / weren't" },
+        { "id": "en.6.was-were.kurzantworten", "titel": "Fragen und Kurzantworten" },
+        { "id": "en.6.was-were.fehler", "titel": "Fehler finden" },
+        { "id": "en.6.was-were.mix", "titel": "Mix" }
+       ]
+      },
+      {
+       "id": "en.6.objektpronomen",
+       "titel": "Objektpronomen",
+       "klasse": 6,
+       "quelle": {
+        "app": "apps/typen/uebung.html",
+        "parameter": "inhalt=en.6.objektpronomen"
+       },
+       "lehrplan": "E6 Grammatik (Highlight 6, Unit 1): Objektpronomen me, you, him, her, it, us, them",
+       "dauer": 8,
+       "einsatz": "English Journey Year 6 (Station) oder als eigene App im Admin; Fehler-Training zur Wiederholung",
+       "stufen": [
+        { "id": "en.6.objektpronomen.wahl", "titel": "Welches Pronomen?" },
+        { "id": "en.6.objektpronomen.ersetzen", "titel": "Wörter ersetzen" },
+        { "id": "en.6.objektpronomen.fehler", "titel": "Fehler finden" },
+        { "id": "en.6.objektpronomen.mix", "titel": "Mix" }
+       ]
+      },
+      {
+       "id": "en.6.there-is",
+       "titel": "there is / are + some / any",
+       "klasse": 6,
+       "quelle": {
+        "app": "apps/typen/uebung.html",
+        "parameter": "inhalt=en.6.there-is"
+       },
+       "lehrplan": "E6 Grammatik (Highlight 6, Unit 2): there is / there are mit some / any, Fragen und Kurzantworten",
+       "dauer": 8,
+       "einsatz": "English Journey Year 6 (Station) oder als eigene App im Admin; Fehler-Training zur Wiederholung",
+       "stufen": [
+        { "id": "en.6.there-is.formen", "titel": "There is oder There are?" },
+        { "id": "en.6.there-is.some-any", "titel": "some oder any?" },
+        { "id": "en.6.there-is.saetze", "titel": "Sätze bauen" },
+        { "id": "en.6.there-is.fehler", "titel": "Fehler finden" },
+        { "id": "en.6.there-is.mix", "titel": "Mix" }
+       ]
+      },
+      {
+       "id": "en.6.plural",
+       "titel": "Plural (Highlight 6)",
+       "klasse": 6,
+       "quelle": {
+        "app": "apps/typen/uebung.html",
+        "parameter": "inhalt=en.6.plural"
+       },
+       "lehrplan": "E6 Grammatik (Highlight 6, Unit 2): Pluralbildung, Schreibregeln und unregelmäßige Formen",
+       "dauer": 8,
+       "einsatz": "English Journey Year 6 (Station) oder als eigene App im Admin; Fehler-Training zur Wiederholung",
+       "stufen": [
+        { "id": "en.6.plural.formen", "titel": "Plural bilden" },
+        { "id": "en.6.plural.saetze", "titel": "Plural im Satz" },
+        { "id": "en.6.plural.fehler", "titel": "Fehler finden" },
+        { "id": "en.6.plural.mix", "titel": "Mix" }
+       ]
+      },
+      {
+       "id": "en.6.can-mustnt",
+       "titel": "can / can't / mustn't",
+       "klasse": 6,
+       "quelle": {
+        "app": "apps/typen/uebung.html",
+        "parameter": "inhalt=en.6.can-mustnt"
+       },
+       "lehrplan": "E6 Grammatik (Highlight 6, Unit 2): can / can't (Fähigkeit, Erlaubnis) und mustn't (Verbot)",
+       "dauer": 8,
+       "einsatz": "English Journey Year 6 (Station) oder als eigene App im Admin; Fehler-Training zur Wiederholung",
+       "stufen": [
+        { "id": "en.6.can-mustnt.can", "titel": "can oder can't?" },
+        { "id": "en.6.can-mustnt.mustnt", "titel": "Regeln mit mustn't" },
+        { "id": "en.6.can-mustnt.saetze", "titel": "Sätze bauen" },
+        { "id": "en.6.can-mustnt.mix", "titel": "Mix" }
+       ]
+      },
+      {
+       "id": "en.6.should",
+       "titel": "should / shouldn't",
+       "klasse": 6,
+       "lehrplan": "E6 Grammatik (Highlight 6, Unit 3 und 5): should / shouldn't für Ratschläge und Regeln",
+       "dauer": 8,
+       "einsatz": "Reserviert für English Journey Year 6 – Inhalte folgen (noch ohne App)",
+       "stufen": [
+        { "id": "en.6.should.rat", "titel": "Ratschläge (Unit 3)" },
+        { "id": "en.6.should.regeln", "titel": "Regeln (Unit 5)" }
+       ]
+      },
+      {
+       "id": "en.6.much-many",
+       "titel": "much / many / lots of",
+       "klasse": 6,
+       "lehrplan": "E6 Grammatik (Highlight 6, Unit 3): Mengenangaben much, many, lots of",
+       "dauer": 8,
+       "einsatz": "Reserviert für English Journey Year 6 – Inhalte folgen (noch ohne App)",
+       "stufen": [
+        { "id": "en.6.much-many.formen", "titel": "much, many oder lots of?" }
+       ]
+      },
+      {
+       "id": "en.6.good-better-best",
+       "titel": "good – better – best",
+       "klasse": 6,
+       "lehrplan": "E6 Grammatik (Highlight 6, Unit 4): unregelmäßige Steigerung (good, bad, …)",
+       "dauer": 8,
+       "einsatz": "Reserviert für English Journey Year 6 – Inhalte folgen (noch ohne App)",
+       "stufen": [
+        { "id": "en.6.good-better-best.formen", "titel": "Unregelmäßige Steigerung" }
+       ]
+      },
+      {
+       "id": "en.6.superlativ",
+       "titel": "Superlativ",
+       "klasse": 6,
+       "lehrplan": "E6 Grammatik (Highlight 6, Unit 4): Superlativ mit -est und most",
+       "dauer": 8,
+       "einsatz": "Reserviert für English Journey Year 6 – Inhalte folgen (noch ohne App)",
+       "stufen": [
+        { "id": "en.6.superlativ.formen", "titel": "the biggest, the most …" }
+       ]
+      },
+      {
+       "id": "en.6.have-to",
+       "titel": "have to / I'd like to",
+       "klasse": 6,
+       "lehrplan": "E6 Grammatik (Highlight 6, Unit 4): have to (müssen) und I'd like to (möchte gern)",
+       "dauer": 8,
+       "einsatz": "Reserviert für English Journey Year 6 – Inhalte folgen (noch ohne App)",
+       "stufen": [
+        { "id": "en.6.have-to.formen", "titel": "have to oder I'd like to?" }
+       ]
+      },
+      {
+       "id": "en.6.zeitangaben",
+       "titel": "on / in / at (Zeit)",
+       "klasse": 6,
+       "lehrplan": "E6 Grammatik (Highlight 6, Unit 4): Zeitangaben mit on, in, at",
+       "dauer": 8,
+       "einsatz": "Reserviert für English Journey Year 6 – Inhalte folgen (noch ohne App)",
+       "stufen": [
+        { "id": "en.6.zeitangaben.formen", "titel": "on, in oder at?" }
+       ]
+      },
+      {
+       "id": "en.6.simple-past-story",
+       "titel": "Simple past: Story",
+       "klasse": 6,
+       "lehrplan": "E6 Grammatik (Highlight 6, Unit 4): simple past beim Erzählen",
+       "dauer": 8,
+       "einsatz": "Reserviert für English Journey Year 6 – Inhalte folgen (noch ohne App)",
+       "stufen": [
+        { "id": "en.6.simple-past-story.erzaehlen", "titel": "Eine Geschichte erzählen" }
+       ]
+      },
+      {
+       "id": "en.6.will-meinung",
+       "titel": "I think / I'm sure / maybe + will",
+       "klasse": 6,
+       "lehrplan": "E6 Grammatik (Highlight 6, Unit 5): will-future mit I think, I'm sure, maybe",
+       "dauer": 8,
+       "einsatz": "Reserviert für English Journey Year 6 – Inhalte folgen (noch ohne App)",
+       "stufen": [
+        { "id": "en.6.will-meinung.formen", "titel": "Vermutungen über die Zukunft" }
+       ]
+      },
+      {
+       "id": "en.6.wortstellung",
+       "titel": "Wortstellung S-P-O",
+       "klasse": 6,
+       "lehrplan": "E6 Grammatik (Highlight 6, Unit 5): Wortstellung im Aussagesatz (subject – verb – object)",
+       "dauer": 8,
+       "einsatz": "Reserviert für English Journey Year 6 – Inhalte folgen (noch ohne App)",
+       "stufen": [
+        { "id": "en.6.wortstellung.saetze", "titel": "Subjekt – Prädikat – Objekt" }
+       ]
+      },
+      {
        "id": "en.5.knowing-english",
        "titel": "Knowing English: Mixed",
        "klasse": 5,
@@ -1080,6 +1430,56 @@
        "lehrplan": "E6 Unit 2 (Highlight 6): simple past Fragen (Fragewort + did, Kurzantworten), Plural, can/mustn't, some/any, Wortschatz, Lesen, Schreiben (Brief), Sprechen (Wegbeschreibung)",
        "dauer": 45,
        "einsatz": "Stationenarbeit mit Niveaus (★/★★/★★★), Pflicht- und Wahlstationen, App-Schritte mit automatischem Haken, Kontroll-Code an der Kontrollstation"
+      }
+     ]
+    },
+    {
+     "id": "en.journey",
+     "titel": "English Journey",
+     "themen": [
+      {
+       "id": "en.6.unit-check",
+       "titel": "Unit-Checks (Highlight 6)",
+       "klasse": 6,
+       "quelle": {
+        "app": "apps/typen/uebung.html",
+        "parameter": "inhalt=en.6.unit-check"
+       },
+       "lehrplan": "E6 Highlight 6: Wortschatz und Grammatik einer Unit zusammen (Finale der Stationen)",
+       "dauer": 8,
+       "einsatz": "Finale jeder Unit im English Journey Year 6; auch als Wiederholung vor der Schulaufgabe",
+       "stufen": [
+        { "id": "en.6.unit-check.u1", "titel": "Postkarte aus Plymouth" },
+        { "id": "en.6.unit-check.u2", "titel": "Revision 1 (Unit 1 + 2)" }
+       ]
+      },
+      {
+       "id": "en.6.revision",
+       "titel": "Finale Unit 3–5 (English Journey)",
+       "klasse": 6,
+       "lehrplan": "E6 Highlight 6: Wortschatz und Grammatik einer Unit zusammen (Finale der Stationen Unit 3–5)",
+       "dauer": 8,
+       "einsatz": "Reserviert für English Journey Year 6 – Inhalte folgen (noch ohne App)",
+       "stufen": [
+        { "id": "en.6.revision.u3", "titel": "Finale Unit 3" },
+        { "id": "en.6.revision.u4", "titel": "Revision 2 (Unit 3 + 4)" },
+        { "id": "en.6.revision.u5", "titel": "Finale Unit 5" }
+       ]
+      },
+      {
+       "id": "en.6.anwenden",
+       "titel": "Anwenden (English Journey)",
+       "klasse": 6,
+       "lehrplan": "E6 Highlight 6: Gelerntes anwenden – Texte ordnen, linking words, Präpositionen, Wegbeschreibung",
+       "dauer": 8,
+       "einsatz": "Reserviert für English Journey Year 6 – Inhalte folgen (noch ohne App)",
+       "stufen": [
+        { "id": "en.6.anwenden.u1", "titel": "Berry's holiday blog" },
+        { "id": "en.6.anwenden.u2", "titel": "Den Weg beschreiben" },
+        { "id": "en.6.anwenden.u3", "titel": "Anwenden Unit 3" },
+        { "id": "en.6.anwenden.u4", "titel": "Anwenden Unit 4" },
+        { "id": "en.6.anwenden.u5", "titel": "Anwenden Unit 5" }
+       ]
       }
      ]
     },

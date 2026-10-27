@@ -1,0 +1,823 @@
+{
+ "typ": "gemischt",
+ "thema": "en.6.simple-past",
+ "titel": "Simple past (Highlight 6)",
+ "emoji": "🇬🇧",
+ "klasse": 6,
+ "sprache": "en-GB",
+ "runde": 8,
+ "untertitel": "didn't, Fragen mit did und Kurzantworten – mit den Wörtern aus Unit 1 und 2",
+ "hilfe": [
+  {
+   "titel": "Verneinung: didn't + Grundform",
+   "text": "Im simple past verneinst du mit didn't (= did not). Danach kommt die Grundform – auch bei he, she und it. Bei be gibt es kein didn't: wasn't / weren't.",
+   "beispiele": [
+    [
+     "We didn't go to the seaside.",
+     "Wir sind nicht ans Meer gefahren."
+    ],
+    [
+     "Leo didn't read the book.",
+     "Leo hat das Buch nicht gelesen."
+    ],
+    [
+     "It didn't rain in Spain.",
+     "In Spanien hat es nicht geregnet."
+    ]
+   ]
+  },
+  {
+   "titel": "Fragen mit Fragewort",
+   "text": "Fragewort + did + Person + Grundform? Die Fragewörter: What, Where, When, Who, Why, How, Which.",
+   "tabelle": [
+    [
+     "Fragewort",
+     "did",
+     "Person",
+     "Grundform",
+     "…"
+    ],
+    [
+     "Where",
+     "did",
+     "the dog",
+     "run",
+     "?"
+    ],
+    [
+     "What",
+     "did",
+     "you",
+     "eat",
+     "at the festival?"
+    ],
+    [
+     "When",
+     "did",
+     "Mrs Trent",
+     "phone",
+     "the dogs' home?"
+    ]
+   ]
+  },
+  {
+   "titel": "Did …? und Kurzantworten",
+   "text": "Ja/Nein-Fragen beginnen mit Did. In der Kurzantwort wiederholst du did: Yes, I did. / No, she didn't.",
+   "beispiele": [
+    [
+     "Did you find the dog? – Yes, we did.",
+     "Habt ihr den Hund gefunden? – Ja."
+    ],
+    [
+     "Did Mrs Trent walk the dog? – No, she didn't.",
+     "Ist Mrs Trent mit dem Hund gegangen? – Nein."
+    ]
+   ]
+  }
+ ],
+ "stufen": [
+  {
+   "id": "en.6.simple-past.didnt",
+   "titel": "didn't",
+   "kurz": "didn't + Grundform",
+   "typ": "lueckentext",
+   "anweisung": "Schreibe die Verneinung mit didn't.",
+   "aufgaben": [
+    {
+     "text": "Last week we ___ to the seaside. (not / go)",
+     "antwort": [
+      "didn't go",
+      "did not go"
+     ],
+     "tipp": "didn't + Grundform",
+     "erklaerung": "Nach didn't steht immer die Grundform – didn't zeigt schon die Vergangenheit."
+    },
+    {
+     "text": "It ___ in Spain last summer – it was sunny every day. (not / rain)",
+     "antwort": [
+      "didn't rain",
+      "did not rain"
+     ],
+     "tipp": "didn't + Grundform",
+     "erklaerung": "Nach didn't steht immer die Grundform – didn't zeigt schon die Vergangenheit."
+    },
+    {
+     "text": "Leo ___ a book in the holidays. (not / read)",
+     "antwort": [
+      "didn't read",
+      "did not read"
+     ],
+     "tipp": "didn't + Grundform",
+     "erklaerung": "Nach didn't steht immer die Grundform – didn't zeigt schon die Vergangenheit."
+    },
+    {
+     "text": "We ___ the stadium in Munich. (not / visit)",
+     "antwort": [
+      "didn't visit",
+      "did not visit"
+     ],
+     "tipp": "didn't + Grundform",
+     "erklaerung": "Nach didn't steht immer die Grundform – didn't zeigt schon die Vergangenheit."
+    },
+    {
+     "text": "My aunt ___ the mountain in Turkey. (not / climb)",
+     "antwort": [
+      "didn't climb",
+      "did not climb"
+     ],
+     "tipp": "didn't + Grundform",
+     "erklaerung": "Nach didn't steht immer die Grundform – didn't zeigt schon die Vergangenheit."
+    },
+    {
+     "text": "Maya ___ alone at lunchtime. She ate with her friends. (not / eat)",
+     "antwort": [
+      "didn't eat",
+      "did not eat"
+     ],
+     "tipp": "didn't + Grundform",
+     "erklaerung": "Nach didn't steht immer die Grundform – didn't zeigt schon die Vergangenheit."
+    },
+    {
+     "text": "I ___ the drama club last year. (not / join)",
+     "antwort": [
+      "didn't join",
+      "did not join"
+     ],
+     "tipp": "didn't + Grundform",
+     "erklaerung": "Nach didn't steht immer die Grundform – didn't zeigt schon die Vergangenheit."
+    },
+    {
+     "text": "Ben ___ table tennis in the sports hall yesterday. (not / play)",
+     "antwort": [
+      "didn't play",
+      "did not play"
+     ],
+     "tipp": "didn't + Grundform",
+     "erklaerung": "Nach didn't steht immer die Grundform – didn't zeigt schon die Vergangenheit."
+    },
+    {
+     "text": "My dad ___ in a factory last year. (not / work)",
+     "antwort": [
+      "didn't work",
+      "did not work"
+     ],
+     "tipp": "didn't + Grundform",
+     "erklaerung": "Nach didn't steht immer die Grundform – didn't zeigt schon die Vergangenheit."
+    },
+    {
+     "text": "Emma ___ the missing words. (not / put in)",
+     "antwort": [
+      "didn't put in",
+      "did not put in"
+     ],
+     "tipp": "didn't + Grundform",
+     "erklaerung": "Nach didn't steht immer die Grundform – didn't zeigt schon die Vergangenheit."
+    },
+    {
+     "text": "The guys ___ English in the US. They learned it at school. (not / learn)",
+     "antwort": [
+      "didn't learn",
+      "did not learn"
+     ],
+     "tipp": "didn't + Grundform",
+     "erklaerung": "Nach didn't steht immer die Grundform – didn't zeigt schon die Vergangenheit."
+    },
+    {
+     "text": "Our strict teacher ___ angry. (not / get)",
+     "antwort": [
+      "didn't get",
+      "did not get"
+     ],
+     "tipp": "didn't + Grundform",
+     "erklaerung": "Nach didn't steht immer die Grundform – didn't zeigt schon die Vergangenheit."
+    },
+    {
+     "text": "We went to the seaside, but we ___ a lot. (not / swim)",
+     "antwort": [
+      "didn't swim",
+      "did not swim"
+     ],
+     "tipp": "didn't + Grundform",
+     "erklaerung": "Nach didn't steht immer die Grundform – didn't zeigt schon die Vergangenheit."
+    },
+    {
+     "text": "Berry ___ the window. It was cold. (not / open)",
+     "antwort": [
+      "didn't open",
+      "did not open"
+     ],
+     "tipp": "didn't + Grundform",
+     "erklaerung": "Nach didn't steht immer die Grundform – didn't zeigt schon die Vergangenheit."
+    },
+    {
+     "text": "Leo ___ in the play. (not / act)",
+     "antwort": [
+      "didn't act"
+     ],
+     "optionen": [
+      "didn't act",
+      "didn't acted",
+      "not acted"
+     ],
+     "tipp": "didn't + Grundform",
+     "erklaerung": "Nach didn't steht immer die Grundform – didn't zeigt schon die Vergangenheit."
+    },
+    {
+     "text": "We ___ to Munich by car. (not / go)",
+     "antwort": [
+      "didn't go"
+     ],
+     "optionen": [
+      "didn't go",
+      "didn't went",
+      "not went"
+     ],
+     "tipp": "didn't + Grundform",
+     "erklaerung": "Nach didn't steht immer die Grundform – didn't zeigt schon die Vergangenheit."
+    },
+    {
+     "text": "Maya ___ her dream. (not / tell)",
+     "antwort": [
+      "didn't tell"
+     ],
+     "optionen": [
+      "didn't tell",
+      "didn't told",
+      "doesn't tell"
+     ],
+     "tipp": "didn't + Grundform",
+     "erklaerung": "Nach didn't steht immer die Grundform – didn't zeigt schon die Vergangenheit."
+    },
+    {
+     "text": "The weather was rainy, so we ___ the mountain. (not / climb)",
+     "antwort": [
+      "didn't climb"
+     ],
+     "optionen": [
+      "didn't climb",
+      "didn't climbed",
+      "don't climb"
+     ],
+     "tipp": "didn't + Grundform",
+     "erklaerung": "Nach didn't steht immer die Grundform – didn't zeigt schon die Vergangenheit."
+    },
+    {
+     "typ": "sortieren",
+     "frage": "Bau den Satz.",
+     "teile": [
+      "We",
+      "didn't",
+      "go",
+      "to the seaside",
+      "last week"
+     ],
+     "loesung": "We didn't go to the seaside last week.",
+     "tipp": "Person + didn't + Grundform"
+    },
+    {
+     "typ": "sortieren",
+     "frage": "Bau den Satz.",
+     "teile": [
+      "Leo",
+      "didn't",
+      "join",
+      "the club"
+     ],
+     "loesung": "Leo didn't join the club.",
+     "tipp": "Person + didn't + Grundform"
+    },
+    {
+     "typ": "sortieren",
+     "frage": "Bau den Satz.",
+     "teile": [
+      "It",
+      "didn't",
+      "rain",
+      "in Spain"
+     ],
+     "loesung": "It didn't rain in Spain.",
+     "tipp": "Person + didn't + Grundform"
+    },
+    {
+     "typ": "markieren",
+     "frage": "Ein Wort ist falsch. Tippe es an.",
+     "satz": "We [didn't went] to Spain last summer.",
+     "richtig": "didn't go",
+     "erklaerung": "Nach didn't steht immer die Grundform – didn't zeigt schon die Vergangenheit."
+    },
+    {
+     "typ": "markieren",
+     "frage": "Ein Wort ist falsch. Tippe es an.",
+     "satz": "She [didn't joined] the drama club.",
+     "richtig": "didn't join",
+     "erklaerung": "Nach didn't steht immer die Grundform – didn't zeigt schon die Vergangenheit."
+    },
+    {
+     "typ": "markieren",
+     "frage": "Ein Wort ist falsch. Tippe es an.",
+     "satz": "It [not rained] in Munich last week.",
+     "richtig": "didn't rain",
+     "erklaerung": "Verneinung im simple past: didn't + Grundform."
+    },
+    {
+     "typ": "markieren",
+     "frage": "Ein Wort ist falsch. Tippe es an.",
+     "satz": "They [don't visit] the stadium last week.",
+     "richtig": "didn't visit",
+     "erklaerung": "last week → Vergangenheit → didn't."
+    }
+   ]
+  },
+  {
+   "id": "en.6.simple-past.fragewort",
+   "titel": "Fragen mit Fragewort",
+   "kurz": "Where did …?",
+   "typ": "sortieren",
+   "anweisung": "Fragen mit Fragewort + did",
+   "aufgaben": [
+    {
+     "frage": "Bau die Frage.",
+     "teile": [
+      "Where",
+      "did",
+      "the dog",
+      "run"
+     ],
+     "loesung": "Where did the dog run?",
+     "tipp": "Fragewort + did + Person + Grundform?"
+    },
+    {
+     "frage": "Bau die Frage.",
+     "teile": [
+      "When",
+      "did",
+      "you",
+      "lose",
+      "your dog"
+     ],
+     "loesung": "When did you lose your dog?",
+     "tipp": "Fragewort + did + Person + Grundform?"
+    },
+    {
+     "frage": "Bau die Frage.",
+     "teile": [
+      "What",
+      "did",
+      "you",
+      "eat",
+      "at the festival"
+     ],
+     "loesung": "What did you eat at the festival?",
+     "tipp": "Fragewort + did + Person + Grundform?"
+    },
+    {
+     "frage": "Bau die Frage.",
+     "teile": [
+      "Why",
+      "did",
+      "Mrs Trent",
+      "worry",
+      "about her dog"
+     ],
+     "loesung": "Why did Mrs Trent worry about her dog?",
+     "tipp": "Fragewort + did + Person + Grundform?"
+    },
+    {
+     "frage": "Bau die Frage.",
+     "teile": [
+      "Who",
+      "did",
+      "you",
+      "meet",
+      "at the bus stop"
+     ],
+     "loesung": "Who did you meet at the bus stop?",
+     "tipp": "Fragewort + did + Person + Grundform?"
+    },
+    {
+     "frage": "Bau die Frage.",
+     "teile": [
+      "Where",
+      "did",
+      "they",
+      "find",
+      "the dog"
+     ],
+     "loesung": "Where did they find the dog?",
+     "tipp": "Fragewort + did + Person + Grundform?"
+    },
+    {
+     "frage": "Bau die Frage.",
+     "teile": [
+      "What",
+      "did",
+      "you",
+      "buy",
+      "at the supermarket"
+     ],
+     "loesung": "What did you buy at the supermarket?",
+     "tipp": "Fragewort + did + Person + Grundform?"
+    },
+    {
+     "frage": "Bau die Frage.",
+     "teile": [
+      "When",
+      "did",
+      "the festival",
+      "start"
+     ],
+     "loesung": "When did the festival start?",
+     "tipp": "Fragewort + did + Person + Grundform?"
+    },
+    {
+     "frage": "Bau die Frage.",
+     "teile": [
+      "Which bread",
+      "did",
+      "you",
+      "try"
+     ],
+     "loesung": "Which bread did you try?",
+     "tipp": "Fragewort + did + Person + Grundform?"
+    },
+    {
+     "frage": "Bau die Frage.",
+     "teile": [
+      "How",
+      "did",
+      "you",
+      "get",
+      "to the dogs' home"
+     ],
+     "loesung": "How did you get to the dogs' home?",
+     "tipp": "Fragewort + did + Person + Grundform?"
+    },
+    {
+     "typ": "lueckentext",
+     "text": "___ did you go after school? – To the hairdresser.",
+     "antwort": "Where",
+     "optionen": [
+      "Where",
+      "When",
+      "What",
+      "Who"
+     ],
+     "tipp": "Gefragt ist ein Ort."
+    },
+    {
+     "typ": "lueckentext",
+     "text": "___ did you buy at the supermarket? – Bread and mineral water.",
+     "antwort": "What",
+     "optionen": [
+      "Where",
+      "When",
+      "What",
+      "Who"
+     ],
+     "tipp": "Gefragt ist eine Sache."
+    },
+    {
+     "typ": "lueckentext",
+     "text": "___ did the fireworks start? – At eight o'clock.",
+     "antwort": "When",
+     "optionen": [
+      "Where",
+      "When",
+      "What",
+      "Why"
+     ],
+     "tipp": "Gefragt ist eine Zeit."
+    },
+    {
+     "typ": "lueckentext",
+     "text": "___ did you phone? – The dogs' home.",
+     "antwort": "Who",
+     "optionen": [
+      "Who",
+      "When",
+      "Where",
+      "How"
+     ],
+     "tipp": "Gefragt ist, wen du angerufen hast."
+    },
+    {
+     "typ": "lueckentext",
+     "text": "___ did the dog run away? – It was scared of the fireworks.",
+     "antwort": "Why",
+     "optionen": [
+      "Why",
+      "Where",
+      "Which",
+      "How"
+     ],
+     "tipp": "Gefragt ist ein Grund."
+    },
+    {
+     "typ": "lueckentext",
+     "text": "___ did you get to the festival? – By bus.",
+     "antwort": "How",
+     "optionen": [
+      "How",
+      "Who",
+      "What",
+      "When"
+     ],
+     "tipp": "Gefragt ist, wie."
+    },
+    {
+     "typ": "lueckentext",
+     "text": "Where did the dog ___ away? (run)",
+     "antwort": [
+      "run"
+     ],
+     "tipp": "Fragewort + did + Person + Grundform?",
+     "erklaerung": "Nach did kommt die Grundform: run (nicht ran)."
+    },
+    {
+     "typ": "lueckentext",
+     "text": "What did you ___ at the festival? (eat)",
+     "antwort": [
+      "eat"
+     ],
+     "tipp": "Fragewort + did + Person + Grundform?",
+     "erklaerung": "Nach did kommt die Grundform: eat (nicht ate)."
+    },
+    {
+     "typ": "lueckentext",
+     "text": "Who did you ___ at the bus stop? (meet)",
+     "antwort": [
+      "meet"
+     ],
+     "tipp": "Fragewort + did + Person + Grundform?",
+     "erklaerung": "Nach did kommt die Grundform: meet (nicht met)."
+    },
+    {
+     "typ": "lueckentext",
+     "text": "Where ___ you lose your dog? (do)",
+     "antwort": [
+      "did"
+     ],
+     "tipp": "Frage im simple past → did",
+     "erklaerung": "Fragen in der Vergangenheit bildest du mit did."
+    },
+    {
+     "typ": "markieren",
+     "frage": "Ein Wort ist falsch. Tippe es an.",
+     "satz": "Where did you [went] last weekend?",
+     "richtig": "go",
+     "erklaerung": "In der Frage steht did – das Verb danach bleibt in der Grundform."
+    },
+    {
+     "typ": "markieren",
+     "frage": "Ein Wort ist falsch. Tippe es an.",
+     "satz": "When did the dog [ran] away?",
+     "richtig": "run",
+     "erklaerung": "In der Frage steht did – das Verb danach bleibt in der Grundform."
+    },
+    {
+     "typ": "markieren",
+     "frage": "Ein Wort ist falsch. Tippe es an.",
+     "satz": "What [you did] eat at the festival?",
+     "richtig": "did you",
+     "erklaerung": "Fragewort + did + Person + Grundform: What did you eat …?"
+    },
+    {
+     "typ": "markieren",
+     "frage": "Ein Wort ist falsch. Tippe es an.",
+     "satz": "Why [do] you worry yesterday?",
+     "richtig": "did",
+     "erklaerung": "yesterday → Vergangenheit → did."
+    }
+   ]
+  },
+  {
+   "id": "en.6.simple-past.kurzantworten",
+   "titel": "Did …? – Kurzantworten",
+   "kurz": "Yes, I did. / No, I didn't.",
+   "typ": "lueckentext",
+   "anweisung": "Fragen mit Did und Kurzantworten",
+   "aufgaben": [
+    {
+     "text": "Did you find the dog? – Yes, we ___.",
+     "antwort": "did",
+     "optionen": [
+      "did",
+      "didn't",
+      "do"
+     ],
+     "tipp": "Kurzantwort mit did: Yes, I did. / No, I didn't."
+    },
+    {
+     "text": "Did Mrs Trent walk the dog? – No, she ___. She can't walk well.",
+     "antwort": "didn't",
+     "optionen": [
+      "did",
+      "didn't",
+      "doesn't"
+     ],
+     "tipp": "Kurzantwort mit did: Yes, I did. / No, I didn't."
+    },
+    {
+     "text": "Did the dog run away? – Yes, it ___.",
+     "antwort": "did",
+     "optionen": [
+      "did",
+      "didn't",
+      "was"
+     ],
+     "tipp": "Kurzantwort mit did: Yes, I did. / No, I didn't."
+    },
+    {
+     "text": "Did you cross at the traffic lights? – Yes, we ___.",
+     "antwort": "did",
+     "optionen": [
+      "did",
+      "were",
+      "do"
+     ],
+     "tipp": "Kurzantwort mit did: Yes, I did. / No, I didn't."
+    },
+    {
+     "text": "Did they get a reward? – Yes, they ___.",
+     "antwort": "did",
+     "optionen": [
+      "did",
+      "didn't",
+      "got"
+     ],
+     "tipp": "Kurzantwort mit did: Yes, I did. / No, I didn't."
+    },
+    {
+     "text": "Did you see the fireworks? – No, I ___. I was at home.",
+     "antwort": "didn't",
+     "optionen": [
+      "did",
+      "didn't",
+      "wasn't"
+     ],
+     "tipp": "Kurzantwort mit did: Yes, I did. / No, I didn't."
+    },
+    {
+     "text": "Did Leo go to the hairdresser? – No, he ___.",
+     "antwort": "didn't",
+     "optionen": [
+      "didn't",
+      "doesn't",
+      "wasn't"
+     ],
+     "tipp": "Kurzantwort mit did: Yes, I did. / No, I didn't."
+    },
+    {
+     "text": "Did your neighbours help? – Yes, they ___.",
+     "antwort": "did",
+     "optionen": [
+      "did",
+      "were",
+      "helped"
+     ],
+     "tipp": "Kurzantwort mit did: Yes, I did. / No, I didn't."
+    },
+    {
+     "text": "Did you try the bread? – No, I ___.",
+     "antwort": "didn't",
+     "optionen": [
+      "didn't",
+      "don't",
+      "wasn't"
+     ],
+     "tipp": "Kurzantwort mit did: Yes, I did. / No, I didn't."
+    },
+    {
+     "text": "Did the people from the dogs' home phone you? – Yes, they ___.",
+     "antwort": "did",
+     "optionen": [
+      "did",
+      "were",
+      "do"
+     ],
+     "tipp": "Kurzantwort mit did: Yes, I did. / No, I didn't."
+    },
+    {
+     "text": "___ you go to the festival? – Yes, I did.",
+     "antwort": "Did",
+     "optionen": [
+      "Did",
+      "Do",
+      "Were"
+     ],
+     "tipp": "Frage im simple past → Did …?"
+    },
+    {
+     "text": "___ Mrs Trent lose her dog? – Yes, she did.",
+     "antwort": "Did",
+     "optionen": [
+      "Did",
+      "Does",
+      "Was"
+     ],
+     "tipp": "Frage im simple past → Did …?"
+    },
+    {
+     "text": "Did you share the biscuits? – Yes, we ___.",
+     "antwort": [
+      "did"
+     ],
+     "tipp": "Kurzantwort mit did: Yes, I did. / No, I didn't.",
+     "erklaerung": "Kurzantwort: Yes, we did."
+    },
+    {
+     "text": "Did the dog have a long tail? – No, it ___.",
+     "antwort": [
+      "didn't",
+      "did not"
+     ],
+     "tipp": "Kurzantwort mit did: Yes, I did. / No, I didn't.",
+     "erklaerung": "Kurzantwort: No, it didn't."
+    },
+    {
+     "typ": "sortieren",
+     "frage": "Bau die Frage.",
+     "teile": [
+      "Did",
+      "you",
+      "go",
+      "to the festival"
+     ],
+     "loesung": "Did you go to the festival?",
+     "tipp": "Did + Person + Grundform?"
+    },
+    {
+     "typ": "sortieren",
+     "frage": "Bau die Frage.",
+     "teile": [
+      "Did",
+      "your neighbour",
+      "find",
+      "the dog"
+     ],
+     "loesung": "Did your neighbour find the dog?",
+     "tipp": "Did + Person + Grundform?"
+    },
+    {
+     "typ": "sortieren",
+     "frage": "Bau die Frage.",
+     "teile": [
+      "Did",
+      "the dog",
+      "have",
+      "a long tail"
+     ],
+     "loesung": "Did the dog have a long tail?",
+     "tipp": "Did + Person + Grundform?"
+    },
+    {
+     "typ": "sortieren",
+     "frage": "Bau die Frage.",
+     "teile": [
+      "Did",
+      "they",
+      "cross",
+      "the street"
+     ],
+     "loesung": "Did they cross the street?",
+     "tipp": "Did + Person + Grundform?"
+    },
+    {
+     "typ": "markieren",
+     "frage": "Ein Wort ist falsch. Tippe es an.",
+     "satz": "Did you [found] your dog?",
+     "richtig": "find",
+     "erklaerung": "Nach Did kommt die Grundform."
+    },
+    {
+     "typ": "markieren",
+     "frage": "Ein Wort ist falsch. Tippe es an.",
+     "satz": "Did she phone the dogs' home? – Yes, she [phoned].",
+     "richtig": "did",
+     "erklaerung": "Kurzantwort mit did: Yes, she did."
+    },
+    {
+     "typ": "markieren",
+     "frage": "Ein Wort ist falsch. Tippe es an.",
+     "satz": "Did they see the fireworks? – No, they [don't].",
+     "richtig": "didn't",
+     "erklaerung": "Kurzantwort im simple past: No, they didn't."
+    },
+    {
+     "typ": "markieren",
+     "frage": "Ein Wort ist falsch. Tippe es an.",
+     "satz": "[Do] you go to the festival last Saturday?",
+     "richtig": "Did",
+     "erklaerung": "last Saturday → Vergangenheit → Did …?"
+    }
+   ]
+  },
+  {
+   "id": "en.6.simple-past.mix",
+   "titel": "Mix",
+   "kurz": "Alles durcheinander",
+   "mix": true,
+   "runde": 10
+  }
+ ]
+}

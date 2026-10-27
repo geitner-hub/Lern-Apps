@@ -410,7 +410,7 @@ Eine neue App = **Inhaltsdatei + Katalog-Eintrag + Admin-Eintrag**. Kein neuer C
    Tabelle `UMZUG`). **„So geht's“:** `"hilfe": [{ titel, text, beispiele: [[en, de]], tabelle: [[…]] }]` im Kopf
    einer Inhaltsdatei zeigt eine Erklär-Kachel vor den Stufen.
    **Knowing English** (`apps/englisch/knowing-english.html`, Etappe 7): Übersicht aller Grammatik-Strukturen
-   (14 Inhaltsdateien `en.5.*`/`en.6.*`) mit Fortschritt; „Mixed“, „Welche Zeit passt?“ und „Meine Themen“ sind
+   (20 Inhaltsdateien `en.5.*`/`en.6.*`, seit v90 auch die Highlight-6-Strukturen des English Journey) mit Fortschritt; „Mixed“, „Welche Zeit passt?“ und „Meine Themen“ sind
    Mix-Stufen in `en.5.knowing-english.json`. Strukturen über der Klasse aus dem Pass erscheinen nicht.
    Neue Struktur: Inhaltsdatei + Katalog + Eintrag in `STRUKTUREN` + in `aus` der Mixed-Stufen.
    **Geometrie-Trainer** (`daten/inhalte/ma/ma.5.geometrie.json`, Etappe 10): 88 SVG-Bilder `geo-*.svg` daneben, einmalig per
@@ -538,6 +538,37 @@ selbst im Admin unter Inhalte → 🔐 Freigaben), Wiederholung, Fehler-Training
 - **Erster Lernweg:** `en.6.lernweg-u1` (Highlight 6, Unit 1 „Together again“, 7 Stationen; Hören macht die Lehrkraft im Unterricht,
   Extras sind nummerierte Arbeitsblätter am Pult – die Kinder haben kein Workbook).
 - **Unit 2:** `en.6.lernweg-u2` (10 Stationen: 7 Pflicht mit Niveaus, 2 Wahl, Checkpoint; App-Schritte, Kontroll-Codes, Auto-Start).
+
+## English Journey Year 6 (Highlight 6, v90)
+
+Lernweg durch das Englischbuch Highlight 6 (Klasse 6, Units 1–5): Wörter → Grammatik → Wörter → Grammatik → Anwenden → Finale.
+Plan: Claude-Doc „Aktionsplan: English Journey (Klasse 6, Highlight 6)“. Etappe 1+2 (dieser Stand): Gerüst und Inhalte Unit 1–2;
+der 3D-Weg (`apps/englisch/english-journey.html`) folgt als eigene Etappe.
+
+- **daten/journey6.json:** `units` → `stationen` mit `id`, `art` (`woerter` · `grammatik` · `anwenden` · `finale`), `thema`
+  (Katalog-ID, deren Meisterschaft zählt), `titel`, `ort` (Platz im Ort der Unit), `braucht` (Liste von Station-IDs), optional
+  `start` (Stufe, mit der die Übung direkt beginnt – z. B. Thema `en.5.simple-past`, Start `en.5.simple-past.mix`, damit alte
+  Erfolge aus allen Stufen zählen). Je Unit: `thema` (Unit der Vokabeln, sperrt die ganze Unit), `ort`, `szene`, `postkarte`,
+  optional `bewohner` (Sätze von Figuren, z. B. „Have you ever been to …?“ in Unit 5).
+- **Regeln:** kein eigener Spielstand und kein neuer Speicher-Schlüssel – der Weg liest nur die Meisterschaft aus dem Pass
+  (2 Runden ≥ 70 %, `LernPass.themaStand(id).frei`). Eine Station ist offen, wenn die Lehrkraft Unit-Thema **und** `thema`
+  freigegeben hat (Freigaben, wird immer zuerst geprüft) **und** alle Stationen aus `braucht` gemeistert sind. Wörter-Stationen
+  hängen aneinander (über die Units hinweg), jede Grammatik-Station an ihrer Wörter-Station davor, das Finale an allen Stationen der
+  Unit. Stationen, deren `thema` noch keine App hat (`en.6.anwenden.*`, Unit 3–5), zeigen „wird gebaut“ und zählen nicht für das Finale.
+  Eine spätere Sperre nimmt nichts weg: Gemeistertes bleibt gemeistert.
+- **Wörter:** Theme-Stufen im Katalog unter `en.6.vok` (`en.6.vok.u1.theme1` …, ohne `inhalt`). Der Vokabeltrainer startet sie direkt
+  (`vokabeltrainer.html?klasse=6&stufe=en.6.vok.u1.theme1`) und meldet in Quiz, Fill in und Scramble zusätzlich die Theme-ID
+  (`thema: [Unit, Theme]`, Lernstand auch unter der Theme-ID). Die Unit-ID bleibt an erster Stelle – Lernwege zählen weiter danach.
+  Gesperrte Themes zeigen 🔒. Admin → Freigaben: je Unit eine eigene Reihe „(Themes)“.
+- **Grammatik Unit 1–2** (Baukasten, Sätze aus den Wörtern der Unit): `en.6.simple-past` (didn't, Fragen mit Fragewort,
+  Did …? + Kurzantworten), `en.6.was-were`, `en.6.objektpronomen`, `en.6.there-is` (mit some/any), `en.6.plural`,
+  `en.6.can-mustnt`; Finale `en.6.unit-check` (Postkarte aus Plymouth, Revision 1 als Mix aus Unit 1 + 2). Die Stationen starten die
+  Mix-Stufe bzw. die passende Stufe direkt. Präpositionen und linking words gibt es nur in der Anwenden-Station.
+- **Reserviert (ohne App, Inhalte folgen):** `en.6.anwenden` (u1–u5), `en.6.revision` (Finale Unit 3–5), `en.6.should` (rat, regeln),
+  `en.6.much-many`, `en.6.good-better-best`, `en.6.superlativ`, `en.6.have-to`, `en.6.zeitangaben`, `en.6.simple-past-story`,
+  `en.6.will-meinung`, `en.6.wortstellung`. Neue Inhalte: Inhaltsdatei mit genau diesen Stufen-IDs + `quelle` im Katalog + sw.js.
+- **pruefen.py (Regel 22):** jede Station hat gültige `id`/`art`, `thema` und `start` stehen im Katalog (Baukasten-Stufen auch in der
+  Inhaltsdatei), jeder Vorgänger existiert, keine Schleife, das Finale braucht alle Stationen seiner Unit.
 
 ## Live-Abfrage im Unterricht (v84)
 

@@ -1,0 +1,574 @@
+{
+ "typ": "gemischt",
+ "thema": "en.6.was-were",
+ "titel": "was / were",
+ "emoji": "🇬🇧",
+ "klasse": 6,
+ "sprache": "en-GB",
+ "runde": 8,
+ "untertitel": "was, were, wasn't, weren't und Kurzantworten – mit den Wörtern aus Unit 1",
+ "hilfe": [
+  {
+   "titel": "was oder were?",
+   "text": "be hat im simple past zwei Formen.",
+   "tabelle": [
+    [
+     "Person",
+     "Aussage",
+     "Verneinung"
+    ],
+    [
+     "I, he, she, it",
+     "was",
+     "wasn't"
+    ],
+    [
+     "you, we, they",
+     "were",
+     "weren't"
+    ]
+   ]
+  },
+  {
+   "titel": "Fragen und Kurzantworten",
+   "text": "Bei be brauchst du kein did: Was/Were steht vorne. In der Kurzantwort wiederholst du was oder were.",
+   "beispiele": [
+    [
+     "Were you at the seaside? – Yes, I was.",
+     "Warst du am Meer? – Ja."
+    ],
+    [
+     "Was the weather sunny? – No, it wasn't.",
+     "War das Wetter sonnig? – Nein."
+    ],
+    [
+     "Where were you last week?",
+     "Wo warst du letzte Woche?"
+    ]
+   ]
+  }
+ ],
+ "stufen": [
+  {
+   "id": "en.6.was-were.formen",
+   "titel": "was oder were?",
+   "kurz": "Die richtige Form wählen",
+   "typ": "lueckentext",
+   "anweisung": "was oder were?",
+   "aufgaben": [
+    {
+     "text": "The weather ___ fantastic in Spain.",
+     "antwort": "was",
+     "optionen": [
+      "was",
+      "were"
+     ],
+     "tipp": "I, he, she, it → was · you, we, they → were"
+    },
+    {
+     "text": "We ___ at the seaside last week.",
+     "antwort": "were",
+     "optionen": [
+      "was",
+      "were"
+     ],
+     "tipp": "I, he, she, it → was · you, we, they → were"
+    },
+    {
+     "text": "It ___ rainy in Munich.",
+     "antwort": "was",
+     "optionen": [
+      "was",
+      "were"
+     ],
+     "tipp": "I, he, she, it → was · you, we, they → were"
+    },
+    {
+     "text": "My parents ___ in Turkey in the summer.",
+     "antwort": "were",
+     "optionen": [
+      "was",
+      "were"
+     ],
+     "tipp": "I, he, she, it → was · you, we, they → were",
+     "erklaerung": "my parents = they → were"
+    },
+    {
+     "text": "The test ___ easy.",
+     "antwort": "was",
+     "optionen": [
+      "was",
+      "were"
+     ],
+     "tipp": "I, he, she, it → was · you, we, they → were",
+     "erklaerung": "the test = it → was"
+    },
+    {
+     "text": "Our new teacher ___ very strict.",
+     "antwort": "was",
+     "optionen": [
+      "was",
+      "were"
+     ],
+     "tipp": "I, he, she, it → was · you, we, they → were"
+    },
+    {
+     "text": "I ___ alone at lunchtime.",
+     "antwort": "was",
+     "optionen": [
+      "was",
+      "were"
+     ],
+     "tipp": "I, he, she, it → was · you, we, they → were"
+    },
+    {
+     "text": "You ___ in the sports hall yesterday.",
+     "antwort": "were",
+     "optionen": [
+      "was",
+      "were"
+     ],
+     "tipp": "I, he, she, it → was · you, we, they → were"
+    },
+    {
+     "text": "The mountains ___ beautiful.",
+     "antwort": "were",
+     "optionen": [
+      "was",
+      "were"
+     ],
+     "tipp": "I, he, she, it → was · you, we, they → were",
+     "erklaerung": "the mountains = they → were"
+    },
+    {
+     "text": "Leo and Emma ___ in the US.",
+     "antwort": "were",
+     "optionen": [
+      "was",
+      "were"
+     ],
+     "tipp": "I, he, she, it → was · you, we, they → were",
+     "erklaerung": "Leo and Emma = they → were"
+    },
+    {
+     "text": "The stadium ___ full.",
+     "antwort": "was",
+     "optionen": [
+      "was",
+      "were"
+     ],
+     "tipp": "I, he, she, it → was · you, we, they → were"
+    },
+    {
+     "text": "The adventure ___ really interesting.",
+     "antwort": "was",
+     "optionen": [
+      "was",
+      "were"
+     ],
+     "tipp": "I, he, she, it → was · you, we, they → were"
+    },
+    {
+     "text": "The windows in the factory ___ open.",
+     "antwort": "were",
+     "optionen": [
+      "was",
+      "were"
+     ],
+     "tipp": "I, he, she, it → was · you, we, they → were"
+    },
+    {
+     "text": "Berry ___ happy to be together again.",
+     "antwort": "was",
+     "optionen": [
+      "was",
+      "were"
+     ],
+     "tipp": "I, he, she, it → was · you, we, they → were"
+    },
+    {
+     "text": "The guys ___ in the drama club.",
+     "antwort": "were",
+     "optionen": [
+      "was",
+      "were"
+     ],
+     "tipp": "I, he, she, it → was · you, we, they → were"
+    },
+    {
+     "text": "My dream ___ really strange.",
+     "antwort": "was",
+     "optionen": [
+      "was",
+      "were"
+     ],
+     "tipp": "I, he, she, it → was · you, we, they → were"
+    }
+   ]
+  },
+  {
+   "id": "en.6.was-were.verneinung",
+   "titel": "wasn't / weren't",
+   "kurz": "Verneinung",
+   "typ": "lueckentext",
+   "anweisung": "wasn't oder weren't?",
+   "aufgaben": [
+    {
+     "text": "It was rainy. It ___ sunny.",
+     "antwort": "wasn't",
+     "optionen": [
+      "wasn't",
+      "weren't"
+     ],
+     "tipp": "I, he, she, it → was · you, we, they → were"
+    },
+    {
+     "text": "We ___ at home last week. We were at the seaside.",
+     "antwort": "weren't",
+     "optionen": [
+      "wasn't",
+      "weren't"
+     ],
+     "tipp": "I, he, she, it → was · you, we, they → were"
+    },
+    {
+     "text": "The test ___ difficult. It was easy.",
+     "antwort": "wasn't",
+     "optionen": [
+      "wasn't",
+      "weren't"
+     ],
+     "tipp": "I, he, she, it → was · you, we, they → were"
+    },
+    {
+     "text": "The guys ___ in the factory.",
+     "antwort": "weren't",
+     "optionen": [
+      "wasn't",
+      "weren't"
+     ],
+     "tipp": "I, he, she, it → was · you, we, they → were"
+    },
+    {
+     "text": "Maya ___ alone. She was with her friends.",
+     "antwort": "wasn't",
+     "optionen": [
+      "wasn't",
+      "weren't"
+     ],
+     "tipp": "I, he, she, it → was · you, we, they → were"
+    },
+    {
+     "text": "The teachers ___ strict on the first day.",
+     "antwort": "weren't",
+     "optionen": [
+      "wasn't",
+      "weren't"
+     ],
+     "tipp": "I, he, she, it → was · you, we, they → were"
+    },
+    {
+     "text": "I ___ in Munich. I was in Spain.",
+     "antwort": "wasn't",
+     "optionen": [
+      "wasn't",
+      "weren't"
+     ],
+     "tipp": "I, he, she, it → was · you, we, they → were"
+    },
+    {
+     "text": "The sentences ___ easy.",
+     "antwort": "weren't",
+     "optionen": [
+      "wasn't",
+      "weren't"
+     ],
+     "tipp": "I, he, she, it → was · you, we, they → were"
+    },
+    {
+     "text": "The film ___ interesting.",
+     "antwort": "wasn't",
+     "optionen": [
+      "wasn't",
+      "weren't"
+     ],
+     "tipp": "I, he, she, it → was · you, we, they → were"
+    },
+    {
+     "text": "You ___ in the sports hall at lunchtime.",
+     "antwort": "weren't",
+     "optionen": [
+      "wasn't",
+      "weren't"
+     ],
+     "tipp": "I, he, she, it → was · you, we, they → were"
+    },
+    {
+     "text": "The weather ___ good. (not / be)",
+     "antwort": [
+      "wasn't",
+      "was not"
+     ],
+     "tipp": "I, he, she, it → was · you, we, they → were",
+     "erklaerung": "the weather = it → wasn't"
+    },
+    {
+     "text": "My friends ___ at the stadium. (not / be)",
+     "antwort": [
+      "weren't",
+      "were not"
+     ],
+     "tipp": "I, he, she, it → was · you, we, they → were",
+     "erklaerung": "my friends = they → weren't"
+    },
+    {
+     "text": "I ___ sad. I was happy! (not / be)",
+     "antwort": [
+      "wasn't",
+      "was not"
+     ],
+     "tipp": "I, he, she, it → was · you, we, they → were"
+    },
+    {
+     "text": "We ___ in Turkey last summer. (not / be)",
+     "antwort": [
+      "weren't",
+      "were not"
+     ],
+     "tipp": "I, he, she, it → was · you, we, they → were"
+    }
+   ]
+  },
+  {
+   "id": "en.6.was-were.kurzantworten",
+   "titel": "Fragen und Kurzantworten",
+   "kurz": "Were you …? – Yes, I was.",
+   "typ": "lueckentext",
+   "anweisung": "Wähle die passende Form.",
+   "aufgaben": [
+    {
+     "text": "Were you at the seaside? – Yes, I ___.",
+     "antwort": "was",
+     "optionen": [
+      "was",
+      "were",
+      "did"
+     ],
+     "tipp": "Kurzantwort mit was/were – passend zur Person in der Antwort"
+    },
+    {
+     "text": "Was the weather sunny? – No, it ___.",
+     "antwort": "wasn't",
+     "optionen": [
+      "wasn't",
+      "weren't",
+      "didn't"
+     ],
+     "tipp": "I, he, she, it → was · you, we, they → were"
+    },
+    {
+     "text": "Were your friends in Spain? – Yes, they ___.",
+     "antwort": "were",
+     "optionen": [
+      "was",
+      "were",
+      "did"
+     ],
+     "tipp": "I, he, she, it → was · you, we, they → were"
+    },
+    {
+     "text": "Was the test easy? – Yes, it ___.",
+     "antwort": "was",
+     "optionen": [
+      "was",
+      "were",
+      "is"
+     ],
+     "tipp": "I, he, she, it → was · you, we, they → were"
+    },
+    {
+     "text": "Were you alone? – No, we ___.",
+     "antwort": "weren't",
+     "optionen": [
+      "wasn't",
+      "weren't",
+      "didn't"
+     ],
+     "tipp": "I, he, she, it → was · you, we, they → were"
+    },
+    {
+     "text": "Was Mr Hill strict? – Yes, he ___.",
+     "antwort": "was",
+     "optionen": [
+      "was",
+      "were",
+      "did"
+     ],
+     "tipp": "I, he, she, it → was · you, we, they → were"
+    },
+    {
+     "text": "Were the mountains high? – Yes, they ___.",
+     "antwort": "were",
+     "optionen": [
+      "was",
+      "were",
+      "are"
+     ],
+     "tipp": "I, he, she, it → was · you, we, they → were"
+    },
+    {
+     "text": "Was it rainy in Munich? – No, it ___.",
+     "antwort": "wasn't",
+     "optionen": [
+      "wasn't",
+      "weren't",
+      "isn't"
+     ],
+     "tipp": "I, he, she, it → was · you, we, they → were"
+    },
+    {
+     "text": "___ the weather fantastic? – Yes, it was.",
+     "antwort": "Was",
+     "optionen": [
+      "Was",
+      "Were",
+      "Did"
+     ],
+     "tipp": "Bei be kein did: Was/Were vorne"
+    },
+    {
+     "text": "___ you in Turkey? – No, I wasn't.",
+     "antwort": "Were",
+     "optionen": [
+      "Was",
+      "Were",
+      "Did"
+     ],
+     "tipp": "Frage an you → Were"
+    },
+    {
+     "text": "___ your parents in the US? – Yes, they were.",
+     "antwort": "Were",
+     "optionen": [
+      "Was",
+      "Were",
+      "Did"
+     ],
+     "tipp": "I, he, she, it → was · you, we, they → were"
+    },
+    {
+     "text": "Where ___ you last week? – At the seaside.",
+     "antwort": "were",
+     "optionen": [
+      "was",
+      "were",
+      "did"
+     ],
+     "tipp": "Fragewort + was/were + Person"
+    },
+    {
+     "typ": "sortieren",
+     "frage": "Bau die Frage.",
+     "teile": [
+      "Were",
+      "you",
+      "at the seaside",
+      "last week"
+     ],
+     "loesung": "Were you at the seaside last week?",
+     "tipp": "Was/Were + Person …?"
+    },
+    {
+     "typ": "sortieren",
+     "frage": "Bau die Frage.",
+     "teile": [
+      "Was",
+      "the stadium",
+      "full"
+     ],
+     "loesung": "Was the stadium full?",
+     "tipp": "Was/Were + Person …?"
+    },
+    {
+     "typ": "sortieren",
+     "frage": "Bau die Frage.",
+     "teile": [
+      "Where",
+      "were",
+      "you",
+      "last summer"
+     ],
+     "loesung": "Where were you last summer?",
+     "tipp": "Fragewort + was/were + Person …?"
+    },
+    {
+     "typ": "sortieren",
+     "frage": "Bau die Frage.",
+     "teile": [
+      "Was",
+      "the new teacher",
+      "strict"
+     ],
+     "loesung": "Was the new teacher strict?",
+     "tipp": "Was/Were + Person …?"
+    }
+   ]
+  },
+  {
+   "id": "en.6.was-were.fehler",
+   "titel": "Fehler finden",
+   "kurz": "Tippe die falsche Form an",
+   "typ": "markieren",
+   "anweisung": "Ein Wort ist falsch. Tippe es an.",
+   "aufgaben": [
+    {
+     "satz": "Were you in Spain? – Yes, I [were].",
+     "richtig": "was",
+     "erklaerung": "I, he, she, it → was · you, we, they → were"
+    },
+    {
+     "satz": "[Was] your parents at home?",
+     "richtig": "Were",
+     "erklaerung": "I, he, she, it → was · you, we, they → were"
+    },
+    {
+     "satz": "The weather [were] sunny.",
+     "richtig": "was",
+     "erklaerung": "I, he, she, it → was · you, we, they → were"
+    },
+    {
+     "satz": "We [wasn't] at school yesterday.",
+     "richtig": "weren't",
+     "erklaerung": "I, he, she, it → was · you, we, they → were"
+    },
+    {
+     "satz": "The mountains [was] beautiful.",
+     "richtig": "were",
+     "erklaerung": "I, he, she, it → was · you, we, they → were"
+    },
+    {
+     "satz": "[Did] you at the seaside last week?",
+     "richtig": "Were",
+     "erklaerung": "Bei be kein did: Were you at the seaside?"
+    },
+    {
+     "satz": "The test [weren't] difficult.",
+     "richtig": "wasn't",
+     "erklaerung": "I, he, she, it → was · you, we, they → were"
+    },
+    {
+     "satz": "Leo and Maya [was] in the drama club.",
+     "richtig": "were",
+     "erklaerung": "I, he, she, it → was · you, we, they → were"
+    }
+   ]
+  },
+  {
+   "id": "en.6.was-were.mix",
+   "titel": "Mix",
+   "kurz": "Alles durcheinander",
+   "mix": true,
+   "runde": 10
+  }
+ ]
+}

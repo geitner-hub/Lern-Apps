@@ -1,0 +1,614 @@
+{
+ "version": 1,
+ "titel": "English Journey Year 6",
+ "buch": "Highlight 6",
+ "klasse": 6,
+ "hinweis": "Lernweg durch Highlight 6 (Units 1–5) für apps/englisch/english-journey.html. Kein eigener Spielstand: Eine Station gilt als gemeistert, wenn ihr thema im Pass gemeistert ist (2 Runden ≥ 70 %). Sie öffnet sich, wenn die Lehrkraft sie freigegeben hat (Unit-Thema und thema) UND alle Stationen aus braucht gemeistert sind. start = Stufe, mit der die Übung direkt beginnt (sonst thema). Stationen, deren thema noch keine App hat, zeigen „wird gebaut“ und zählen nicht für das Finale. Station-IDs nicht umbenennen. Format: README → English Journey.",
+ "units": [
+  {
+   "id": "u1",
+   "nr": 1,
+   "titel": "Together again",
+   "thema": "en.6.vok.u1",
+   "ort": "Hafen von Plymouth",
+   "szene": "hafen",
+   "postkarte": {
+    "gruss": "Greetings from Plymouth!",
+    "text": "Unit 1 geschafft! Du hast den Hafen von Plymouth erkundet – mit allen Wörtern und der Grammatik von „Together again“."
+   },
+   "stationen": [
+    {
+     "id": "u1-grundwortschatz",
+     "art": "woerter",
+     "thema": "en.6.vok.u1.grundwortschatz",
+     "titel": "Grundwortschatz",
+     "ort": "Am Kai",
+     "braucht": []
+    },
+    {
+     "id": "u1-simple-past",
+     "art": "grammatik",
+     "thema": "en.5.simple-past",
+     "titel": "simple past (Wiederholung)",
+     "ort": "Fischmarkt",
+     "braucht": [
+      "u1-grundwortschatz"
+     ],
+     "start": "en.5.simple-past.mix"
+    },
+    {
+     "id": "u1-theme1",
+     "art": "woerter",
+     "thema": "en.6.vok.u1.theme1",
+     "titel": "Theme 1",
+     "ort": "Hafencafé",
+     "braucht": [
+      "u1-grundwortschatz"
+     ]
+    },
+    {
+     "id": "u1-didnt",
+     "art": "grammatik",
+     "thema": "en.6.simple-past.didnt",
+     "titel": "didn't",
+     "ort": "Leuchtturm",
+     "braucht": [
+      "u1-theme1"
+     ]
+    },
+    {
+     "id": "u1-was-were",
+     "art": "grammatik",
+     "thema": "en.6.was-were.mix",
+     "titel": "was / were + Kurzantworten",
+     "ort": "Bootssteg",
+     "braucht": [
+      "u1-theme1"
+     ]
+    },
+    {
+     "id": "u1-theme2",
+     "art": "woerter",
+     "thema": "en.6.vok.u1.theme2",
+     "titel": "Theme 2",
+     "ort": "Schule",
+     "braucht": [
+      "u1-theme1"
+     ]
+    },
+    {
+     "id": "u1-objektpronomen",
+     "art": "grammatik",
+     "thema": "en.6.objektpronomen.mix",
+     "titel": "Objektpronomen",
+     "ort": "Schulhof",
+     "braucht": [
+      "u1-theme2"
+     ]
+    },
+    {
+     "id": "u1-anwenden",
+     "art": "anwenden",
+     "thema": "en.6.anwenden.u1",
+     "titel": "Berry's holiday blog",
+     "ort": "Bank am Wasser",
+     "braucht": [
+      "u1-objektpronomen"
+     ]
+    },
+    {
+     "id": "u1-finale",
+     "art": "finale",
+     "thema": "en.6.unit-check.u1",
+     "titel": "Postkarte aus Plymouth",
+     "ort": "Smeaton's Tower",
+     "braucht": [
+      "u1-grundwortschatz",
+      "u1-simple-past",
+      "u1-theme1",
+      "u1-didnt",
+      "u1-was-were",
+      "u1-theme2",
+      "u1-objektpronomen",
+      "u1-anwenden"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "u2",
+   "nr": 2,
+   "titel": "Neighbours",
+   "thema": "en.6.vok.u2",
+   "ort": "Wohnstraße mit Läden",
+   "szene": "strasse",
+   "postkarte": {
+    "gruss": "Greetings from the neighbourhood!",
+    "text": "Unit 2 geschafft! Du kennst jetzt die Nachbarschaft – und hast Unit 1 und 2 zusammen wiederholt."
+   },
+   "stationen": [
+    {
+     "id": "u2-grundwortschatz",
+     "art": "woerter",
+     "thema": "en.6.vok.u2.grundwortschatz",
+     "titel": "Grundwortschatz",
+     "ort": "Bushaltestelle",
+     "braucht": [
+      "u1-theme2"
+     ]
+    },
+    {
+     "id": "u2-there-is",
+     "art": "grammatik",
+     "thema": "en.6.there-is.mix",
+     "titel": "there is / are + some / any",
+     "ort": "Supermarkt",
+     "braucht": [
+      "u2-grundwortschatz"
+     ]
+    },
+    {
+     "id": "u2-theme2",
+     "art": "woerter",
+     "thema": "en.6.vok.u2.theme2",
+     "titel": "Theme 2",
+     "ort": "Hundeheim",
+     "braucht": [
+      "u2-grundwortschatz"
+     ]
+    },
+    {
+     "id": "u2-did-fragewort",
+     "art": "grammatik",
+     "thema": "en.6.simple-past.fragewort",
+     "titel": "Fragen mit did + Fragewort",
+     "ort": "Ampel",
+     "braucht": [
+      "u2-theme2"
+     ]
+    },
+    {
+     "id": "u2-did-kurz",
+     "art": "grammatik",
+     "thema": "en.6.simple-past.kurzantworten",
+     "titel": "Did …? + Kurzantworten",
+     "ort": "Frisör",
+     "braucht": [
+      "u2-theme2"
+     ]
+    },
+    {
+     "id": "u2-plural",
+     "art": "grammatik",
+     "thema": "en.6.plural.mix",
+     "titel": "Plural",
+     "ort": "Markt",
+     "braucht": [
+      "u2-theme2"
+     ]
+    },
+    {
+     "id": "u2-can-mustnt",
+     "art": "grammatik",
+     "thema": "en.6.can-mustnt.mix",
+     "titel": "can / mustn't",
+     "ort": "Park",
+     "braucht": [
+      "u2-theme2"
+     ]
+    },
+    {
+     "id": "u2-anwenden",
+     "art": "anwenden",
+     "thema": "en.6.anwenden.u2",
+     "titel": "Den Weg beschreiben",
+     "ort": "Straßenecke",
+     "braucht": [
+      "u2-can-mustnt"
+     ]
+    },
+    {
+     "id": "u2-finale",
+     "art": "finale",
+     "thema": "en.6.unit-check.u2",
+     "titel": "Revision 1 (Unit 1 + 2)",
+     "ort": "Straßenfest",
+     "braucht": [
+      "u2-grundwortschatz",
+      "u2-there-is",
+      "u2-theme2",
+      "u2-did-fragewort",
+      "u2-did-kurz",
+      "u2-plural",
+      "u2-can-mustnt",
+      "u2-anwenden"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "u3",
+   "nr": 3,
+   "titel": "I'm feeling great!",
+   "thema": "en.6.vok.u3",
+   "ort": "Sportplatz und Markt",
+   "szene": "sport",
+   "postkarte": {
+    "gruss": "Feeling great!",
+    "text": "Unit 3 geschafft! Gesund, sportlich und mit allen Wörtern von „I'm feeling great!“."
+   },
+   "stationen": [
+    {
+     "id": "u3-grundwortschatz",
+     "art": "woerter",
+     "thema": "en.6.vok.u3.grundwortschatz",
+     "titel": "Grundwortschatz",
+     "ort": "Sportplatz",
+     "braucht": [
+      "u2-theme2"
+     ]
+    },
+    {
+     "id": "u3-present-progressive",
+     "art": "grammatik",
+     "thema": "en.5.present-progressive",
+     "titel": "present progressive (Wiederholung)",
+     "ort": "Tribüne",
+     "braucht": [
+      "u3-grundwortschatz"
+     ],
+     "start": "en.5.present-progressive.mix"
+    },
+    {
+     "id": "u3-theme1",
+     "art": "woerter",
+     "thema": "en.6.vok.u3.theme1",
+     "titel": "Theme 1",
+     "ort": "Marktstand",
+     "braucht": [
+      "u3-grundwortschatz"
+     ]
+    },
+    {
+     "id": "u3-theme2",
+     "art": "woerter",
+     "thema": "en.6.vok.u3.theme2",
+     "titel": "Theme 2",
+     "ort": "Arztpraxis",
+     "braucht": [
+      "u3-theme1"
+     ]
+    },
+    {
+     "id": "u3-should",
+     "art": "grammatik",
+     "thema": "en.6.should.rat",
+     "titel": "should / shouldn't",
+     "ort": "Apotheke",
+     "braucht": [
+      "u3-theme2"
+     ]
+    },
+    {
+     "id": "u3-focus",
+     "art": "woerter",
+     "thema": "en.6.vok.u3.focusonlanguage",
+     "titel": "Focus on language",
+     "ort": "Einkaufsliste",
+     "braucht": [
+      "u3-theme2"
+     ]
+    },
+    {
+     "id": "u3-much-many",
+     "art": "grammatik",
+     "thema": "en.6.much-many.formen",
+     "titel": "much / many / lots of",
+     "ort": "Laden",
+     "braucht": [
+      "u3-focus"
+     ]
+    },
+    {
+     "id": "u3-anwenden",
+     "art": "anwenden",
+     "thema": "en.6.anwenden.u3",
+     "titel": "Anwenden",
+     "ort": "Picknickwiese",
+     "braucht": [
+      "u3-much-many"
+     ]
+    },
+    {
+     "id": "u3-finale",
+     "art": "finale",
+     "thema": "en.6.revision.u3",
+     "titel": "Finale Unit 3",
+     "ort": "Ziellinie",
+     "braucht": [
+      "u3-grundwortschatz",
+      "u3-present-progressive",
+      "u3-theme1",
+      "u3-theme2",
+      "u3-should",
+      "u3-focus",
+      "u3-much-many",
+      "u3-anwenden"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "u4",
+   "nr": 4,
+   "titel": "Teenage life",
+   "thema": "en.6.vok.u4",
+   "ort": "Einkaufsstraße mit Charity Shop",
+   "szene": "stadt",
+   "postkarte": {
+    "gruss": "Greetings from town!",
+    "text": "Unit 4 geschafft! Teenage life – vom Taschengeld bis zum Charity Shop."
+   },
+   "stationen": [
+    {
+     "id": "u4-grundwortschatz",
+     "art": "woerter",
+     "thema": "en.6.vok.u4.grundwortschatz",
+     "titel": "Grundwortschatz",
+     "ort": "Bank am Platz",
+     "braucht": [
+      "u3-focus"
+     ]
+    },
+    {
+     "id": "u4-komparativ",
+     "art": "grammatik",
+     "thema": "en.6.steigerung.vergleiche",
+     "titel": "Komparativ + than",
+     "ort": "Schaufenster",
+     "braucht": [
+      "u4-grundwortschatz"
+     ]
+    },
+    {
+     "id": "u4-theme1",
+     "art": "woerter",
+     "thema": "en.6.vok.u4.theme1",
+     "titel": "Theme 1",
+     "ort": "Zeitungskiosk",
+     "braucht": [
+      "u4-grundwortschatz"
+     ]
+    },
+    {
+     "id": "u4-superlativ",
+     "art": "grammatik",
+     "thema": "en.6.superlativ.formen",
+     "titel": "Superlativ",
+     "ort": "Kino",
+     "braucht": [
+      "u4-theme1"
+     ]
+    },
+    {
+     "id": "u4-have-to",
+     "art": "grammatik",
+     "thema": "en.6.have-to.formen",
+     "titel": "have to / I'd like to",
+     "ort": "Wohnhaus",
+     "braucht": [
+      "u4-theme1"
+     ]
+    },
+    {
+     "id": "u4-story",
+     "art": "woerter",
+     "thema": "en.6.vok.u4.story",
+     "titel": "Story",
+     "ort": "Charity Shop",
+     "braucht": [
+      "u4-theme1"
+     ]
+    },
+    {
+     "id": "u4-story-past",
+     "art": "grammatik",
+     "thema": "en.6.simple-past-story.erzaehlen",
+     "titel": "simple past: Story",
+     "ort": "Bücherkiste",
+     "braucht": [
+      "u4-story"
+     ]
+    },
+    {
+     "id": "u4-focus",
+     "art": "woerter",
+     "thema": "en.6.vok.u4.focusonlanguage",
+     "titel": "Focus on language",
+     "ort": "Theater",
+     "braucht": [
+      "u4-story"
+     ]
+    },
+    {
+     "id": "u4-good-better-best",
+     "art": "grammatik",
+     "thema": "en.6.good-better-best.formen",
+     "titel": "good / better / best",
+     "ort": "Eisbahn",
+     "braucht": [
+      "u4-focus"
+     ]
+    },
+    {
+     "id": "u4-zeitangaben",
+     "art": "grammatik",
+     "thema": "en.6.zeitangaben.formen",
+     "titel": "on / in / at (Zeit)",
+     "ort": "Kalender am Rathaus",
+     "braucht": [
+      "u4-focus"
+     ]
+    },
+    {
+     "id": "u4-anwenden",
+     "art": "anwenden",
+     "thema": "en.6.anwenden.u4",
+     "titel": "Anwenden",
+     "ort": "Café",
+     "braucht": [
+      "u4-zeitangaben"
+     ]
+    },
+    {
+     "id": "u4-finale",
+     "art": "finale",
+     "thema": "en.6.revision.u4",
+     "titel": "Revision 2 (Unit 3 + 4)",
+     "ort": "Stadtplatz",
+     "braucht": [
+      "u4-grundwortschatz",
+      "u4-komparativ",
+      "u4-theme1",
+      "u4-superlativ",
+      "u4-have-to",
+      "u4-story",
+      "u4-story-past",
+      "u4-focus",
+      "u4-good-better-best",
+      "u4-zeitangaben",
+      "u4-anwenden"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "u5",
+   "nr": 5,
+   "titel": "Dartmoor adventures",
+   "thema": "en.6.vok.u5",
+   "ort": "Dartmoor",
+   "szene": "moor",
+   "bewohner": [
+    {
+     "ort": "Bahnhof",
+     "satz": "Have you ever been to Dartmoor? – No, I haven't. But I'd love to go!"
+    }
+   ],
+   "postkarte": {
+    "gruss": "Greetings from Dartmoor!",
+    "text": "Unit 5 geschafft – und damit das ganze Buch! Was für eine Reise."
+   },
+   "stationen": [
+    {
+     "id": "u5-grundwortschatz",
+     "art": "woerter",
+     "thema": "en.6.vok.u5.grundwortschatz",
+     "titel": "Grundwortschatz",
+     "ort": "Parkplatz am Moor",
+     "braucht": [
+      "u4-focus"
+     ]
+    },
+    {
+     "id": "u5-will",
+     "art": "grammatik",
+     "thema": "en.6.future.will",
+     "titel": "will-future",
+     "ort": "Wetterstation",
+     "braucht": [
+      "u5-grundwortschatz"
+     ]
+    },
+    {
+     "id": "u5-theme1",
+     "art": "woerter",
+     "thema": "en.6.vok.u5.theme1",
+     "titel": "Theme 1",
+     "ort": "Zeltplatz",
+     "braucht": [
+      "u5-grundwortschatz"
+     ]
+    },
+    {
+     "id": "u5-will-meinung",
+     "art": "grammatik",
+     "thema": "en.6.will-meinung.formen",
+     "titel": "I think / I'm sure / maybe + will",
+     "ort": "Wegweiser",
+     "braucht": [
+      "u5-theme1"
+     ]
+    },
+    {
+     "id": "u5-theme2",
+     "art": "woerter",
+     "thema": "en.6.vok.u5.theme2",
+     "titel": "Theme 2",
+     "ort": "Brücke",
+     "braucht": [
+      "u5-theme1"
+     ]
+    },
+    {
+     "id": "u5-should",
+     "art": "grammatik",
+     "thema": "en.6.should.regeln",
+     "titel": "should (Regeln)",
+     "ort": "Infotafel",
+     "braucht": [
+      "u5-theme2"
+     ]
+    },
+    {
+     "id": "u5-story",
+     "art": "woerter",
+     "thema": "en.6.vok.u5.story",
+     "titel": "Story",
+     "ort": "Cottage",
+     "braucht": [
+      "u5-theme2"
+     ]
+    },
+    {
+     "id": "u5-wortstellung",
+     "art": "grammatik",
+     "thema": "en.6.wortstellung.saetze",
+     "titel": "Wortstellung S-P-O",
+     "ort": "Steinkreis",
+     "braucht": [
+      "u5-story"
+     ]
+    },
+    {
+     "id": "u5-anwenden",
+     "art": "anwenden",
+     "thema": "en.6.anwenden.u5",
+     "titel": "Anwenden",
+     "ort": "Fluss",
+     "braucht": [
+      "u5-wortstellung"
+     ]
+    },
+    {
+     "id": "u5-finale",
+     "art": "finale",
+     "thema": "en.6.revision.u5",
+     "titel": "Finale Unit 5",
+     "ort": "Gipfel (Tor)",
+     "braucht": [
+      "u5-grundwortschatz",
+      "u5-will",
+      "u5-theme1",
+      "u5-will-meinung",
+      "u5-theme2",
+      "u5-should",
+      "u5-story",
+      "u5-wortstellung",
+      "u5-anwenden"
+     ]
+    }
+   ]
+  }
+ ]
+}

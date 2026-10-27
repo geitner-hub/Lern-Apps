@@ -1,0 +1,490 @@
+{
+ "typ": "gemischt",
+ "thema": "en.6.there-is",
+ "titel": "there is / are + some / any",
+ "emoji": "🇬🇧",
+ "klasse": 6,
+ "sprache": "en-GB",
+ "runde": 8,
+ "untertitel": "Was gibt es in der Nachbarschaft? – mit den Wörtern aus Unit 2",
+ "hilfe": [
+  {
+   "titel": "there is oder there are?",
+   "text": "there is (there's) für eine Sache und für Unzählbares (bread, water). there are für mehrere Sachen.",
+   "beispiele": [
+    [
+     "There is a bus stop near my house.",
+     "Es gibt eine Bushaltestelle in der Nähe meines Hauses."
+    ],
+    [
+     "There are two hairdressers in our street.",
+     "In unserer Straße gibt es zwei Friseure."
+    ],
+    [
+     "Is there a supermarket? – Yes, there is.",
+     "Gibt es einen Supermarkt? – Ja."
+    ]
+   ]
+  },
+  {
+   "titel": "some oder any?",
+   "text": "some in Aussagen, Bitten und Angeboten · any in Fragen und Verneinungen.",
+   "beispiele": [
+    [
+     "There is some bread on the table.",
+     "Auf dem Tisch ist etwas Brot."
+    ],
+    [
+     "There aren't any traffic lights.",
+     "Es gibt keine Ampeln."
+    ],
+    [
+     "Are there any shops near you?",
+     "Gibt es Läden in deiner Nähe?"
+    ]
+   ]
+  }
+ ],
+ "stufen": [
+  {
+   "id": "en.6.there-is.formen",
+   "titel": "There is oder There are?",
+   "kurz": "In meiner Nachbarschaft …",
+   "typ": "lueckentext",
+   "anweisung": "There is oder There are?",
+   "aufgaben": [
+    {
+     "text": "___ a bus stop near my house.",
+     "antwort": "There is",
+     "optionen": [
+      "There is",
+      "There are"
+     ],
+     "tipp": "Einzahl (und Unzählbares wie bread) → there is · Mehrzahl → there are"
+    },
+    {
+     "text": "___ two hairdressers in our street.",
+     "antwort": "There are",
+     "optionen": [
+      "There is",
+      "There are"
+     ],
+     "tipp": "Einzahl (und Unzählbares wie bread) → there is · Mehrzahl → there are"
+    },
+    {
+     "text": "___ traffic lights at the corner.",
+     "antwort": "There are",
+     "optionen": [
+      "There is",
+      "There are"
+     ],
+     "tipp": "Einzahl (und Unzählbares wie bread) → there is · Mehrzahl → there are",
+     "erklaerung": "traffic lights ist Mehrzahl → There are"
+    },
+    {
+     "text": "___ a big supermarket in the centre.",
+     "antwort": "There is",
+     "optionen": [
+      "There is",
+      "There are"
+     ],
+     "tipp": "Einzahl (und Unzählbares wie bread) → there is · Mehrzahl → there are"
+    },
+    {
+     "text": "___ lots of friendly neighbours in my house.",
+     "antwort": "There are",
+     "optionen": [
+      "There is",
+      "There are"
+     ],
+     "tipp": "Einzahl (und Unzählbares wie bread) → there is · Mehrzahl → there are"
+    },
+    {
+     "text": "___ a festival in our neighbourhood today.",
+     "antwort": "There is",
+     "optionen": [
+      "There is",
+      "There are"
+     ],
+     "tipp": "Einzahl (und Unzählbares wie bread) → there is · Mehrzahl → there are"
+    },
+    {
+     "text": "___ fireworks at the festival.",
+     "antwort": "There are",
+     "optionen": [
+      "There is",
+      "There are"
+     ],
+     "tipp": "Einzahl (und Unzählbares wie bread) → there is · Mehrzahl → there are"
+    },
+    {
+     "text": "___ some mineral water in the fridge.",
+     "antwort": "There is",
+     "optionen": [
+      "There is",
+      "There are"
+     ],
+     "tipp": "Einzahl (und Unzählbares wie bread) → there is · Mehrzahl → there are",
+     "erklaerung": "water ist unzählbar → There is"
+    },
+    {
+     "text": "___ some bread on the table.",
+     "antwort": "There is",
+     "optionen": [
+      "There is",
+      "There are"
+     ],
+     "tipp": "Einzahl (und Unzählbares wie bread) → there is · Mehrzahl → there are",
+     "erklaerung": "bread ist unzählbar → There is"
+    },
+    {
+     "text": "___ three dogs in the street.",
+     "antwort": "There are",
+     "optionen": [
+      "There is",
+      "There are"
+     ],
+     "tipp": "Einzahl (und Unzählbares wie bread) → there is · Mehrzahl → there are"
+    },
+    {
+     "text": "___ a dogs' home near the centre.",
+     "antwort": "There is",
+     "optionen": [
+      "There is",
+      "There are"
+     ],
+     "tipp": "Einzahl (und Unzählbares wie bread) → there is · Mehrzahl → there are"
+    },
+    {
+     "text": "___ lots of people at the bus stop.",
+     "antwort": "There are",
+     "optionen": [
+      "There is",
+      "There are"
+     ],
+     "tipp": "Einzahl (und Unzählbares wie bread) → there is · Mehrzahl → there are"
+    },
+    {
+     "text": "Is there a hairdresser in your street? – Yes, there ___.",
+     "antwort": "is",
+     "optionen": [
+      "is",
+      "are"
+     ],
+     "tipp": "Kurzantwort: Yes, there is. / No, there aren't."
+    },
+    {
+     "text": "Are there any traffic lights? – No, there ___.",
+     "antwort": "aren't",
+     "optionen": [
+      "isn't",
+      "aren't"
+     ],
+     "tipp": "Kurzantwort: Yes, there is. / No, there aren't."
+    },
+    {
+     "text": "Is there any bread? – No, there ___.",
+     "antwort": "isn't",
+     "optionen": [
+      "isn't",
+      "aren't"
+     ],
+     "tipp": "Kurzantwort: Yes, there is. / No, there aren't."
+    },
+    {
+     "text": "Are there any shops near the bus stop? – Yes, there ___.",
+     "antwort": "are",
+     "optionen": [
+      "is",
+      "are"
+     ],
+     "tipp": "Kurzantwort: Yes, there is. / No, there aren't."
+    }
+   ]
+  },
+  {
+   "id": "en.6.there-is.some-any",
+   "titel": "some oder any?",
+   "kurz": "Aussage, Frage, Verneinung",
+   "typ": "lueckentext",
+   "anweisung": "some oder any?",
+   "aufgaben": [
+    {
+     "text": "There is ___ bread on the table.",
+     "antwort": "some",
+     "optionen": [
+      "some",
+      "any"
+     ],
+     "tipp": "some in Aussagen, Bitten und Angeboten · any in Fragen und Verneinungen"
+    },
+    {
+     "text": "Is there ___ mineral water?",
+     "antwort": "any",
+     "optionen": [
+      "some",
+      "any"
+     ],
+     "tipp": "some in Aussagen, Bitten und Angeboten · any in Fragen und Verneinungen"
+    },
+    {
+     "text": "There aren't ___ hairdressers in our street.",
+     "antwort": "any",
+     "optionen": [
+      "some",
+      "any"
+     ],
+     "tipp": "some in Aussagen, Bitten und Angeboten · any in Fragen und Verneinungen"
+    },
+    {
+     "text": "We need ___ bread from the supermarket.",
+     "antwort": "some",
+     "optionen": [
+      "some",
+      "any"
+     ],
+     "tipp": "some in Aussagen, Bitten und Angeboten · any in Fragen und Verneinungen"
+    },
+    {
+     "text": "Are there ___ fireworks at the festival?",
+     "antwort": "any",
+     "optionen": [
+      "some",
+      "any"
+     ],
+     "tipp": "some in Aussagen, Bitten und Angeboten · any in Fragen und Verneinungen"
+    },
+    {
+     "text": "There are ___ nice neighbours in my house.",
+     "antwort": "some",
+     "optionen": [
+      "some",
+      "any"
+     ],
+     "tipp": "some in Aussagen, Bitten und Angeboten · any in Fragen und Verneinungen"
+    },
+    {
+     "text": "There isn't ___ lemonade.",
+     "antwort": "any",
+     "optionen": [
+      "some",
+      "any"
+     ],
+     "tipp": "some in Aussagen, Bitten und Angeboten · any in Fragen und Verneinungen"
+    },
+    {
+     "text": "Can I have ___ biscuits, please?",
+     "antwort": "some",
+     "optionen": [
+      "some",
+      "any"
+     ],
+     "tipp": "some in Aussagen, Bitten und Angeboten · any in Fragen und Verneinungen",
+     "erklaerung": "Eine Bitte (Can I have …?) → some"
+    },
+    {
+     "text": "I haven't got ___ money for the bus.",
+     "antwort": "any",
+     "optionen": [
+      "some",
+      "any"
+     ],
+     "tipp": "some in Aussagen, Bitten und Angeboten · any in Fragen und Verneinungen"
+    },
+    {
+     "text": "There are ___ nuts in the cake.",
+     "antwort": "some",
+     "optionen": [
+      "some",
+      "any"
+     ],
+     "tipp": "some in Aussagen, Bitten und Angeboten · any in Fragen und Verneinungen"
+    },
+    {
+     "text": "Are there ___ supermarkets near your house?",
+     "antwort": "any",
+     "optionen": [
+      "some",
+      "any"
+     ],
+     "tipp": "some in Aussagen, Bitten und Angeboten · any in Fragen und Verneinungen"
+    },
+    {
+     "text": "Let's try ___ British food at the festival.",
+     "antwort": "some",
+     "optionen": [
+      "some",
+      "any"
+     ],
+     "tipp": "some in Aussagen, Bitten und Angeboten · any in Fragen und Verneinungen"
+    },
+    {
+     "text": "Would you like ___ hot chocolate?",
+     "antwort": "some",
+     "optionen": [
+      "some",
+      "any"
+     ],
+     "tipp": "some in Aussagen, Bitten und Angeboten · any in Fragen und Verneinungen",
+     "erklaerung": "Ein Angebot (Would you like …?) → some"
+    },
+    {
+     "text": "We didn't see ___ bus stops.",
+     "antwort": "any",
+     "optionen": [
+      "some",
+      "any"
+     ],
+     "tipp": "some in Aussagen, Bitten und Angeboten · any in Fragen und Verneinungen"
+    }
+   ]
+  },
+  {
+   "id": "en.6.there-is.saetze",
+   "titel": "Sätze bauen",
+   "kurz": "Is there a …?",
+   "typ": "sortieren",
+   "anweisung": "Bau den Satz.",
+   "aufgaben": [
+    {
+     "frage": "Bau die Frage.",
+     "teile": [
+      "Is there",
+      "a bus stop",
+      "near",
+      "your house"
+     ],
+     "loesung": "Is there a bus stop near your house?",
+     "tipp": "Frage: Is there / Are there …?"
+    },
+    {
+     "frage": "Bau die Frage.",
+     "teile": [
+      "Are there",
+      "any",
+      "traffic lights",
+      "in your street"
+     ],
+     "loesung": "Are there any traffic lights in your street?",
+     "tipp": "Frage: Are there any …?"
+    },
+    {
+     "teile": [
+      "There isn't",
+      "any",
+      "bread"
+     ],
+     "loesung": "There isn't any bread.",
+     "tipp": "Verneinung: There isn't / There aren't any …"
+    },
+    {
+     "teile": [
+      "There are",
+      "some",
+      "nice shops",
+      "in my neighbourhood"
+     ],
+     "loesung": "There are some nice shops in my neighbourhood.",
+     "tipp": "some in Aussagen, Bitten und Angeboten · any in Fragen und Verneinungen"
+    },
+    {
+     "teile": [
+      "There aren't",
+      "any",
+      "fireworks",
+      "today"
+     ],
+     "loesung": "There aren't any fireworks today.",
+     "tipp": "Verneinung: There aren't any …"
+    },
+    {
+     "frage": "Bau die Frage.",
+     "teile": [
+      "Is there",
+      "any",
+      "mineral water"
+     ],
+     "loesung": "Is there any mineral water?",
+     "tipp": "Frage mit any"
+    },
+    {
+     "teile": [
+      "There is",
+      "a hairdresser",
+      "near",
+      "the supermarket"
+     ],
+     "loesung": "There is a hairdresser near the supermarket.",
+     "tipp": "Einzahl (und Unzählbares wie bread) → there is · Mehrzahl → there are"
+    },
+    {
+     "frage": "Bau die Frage.",
+     "teile": [
+      "Are there",
+      "any",
+      "dogs",
+      "in the dogs' home"
+     ],
+     "loesung": "Are there any dogs in the dogs' home?",
+     "tipp": "Frage: Are there any …?"
+    }
+   ]
+  },
+  {
+   "id": "en.6.there-is.fehler",
+   "titel": "Fehler finden",
+   "kurz": "Tippe den Fehler an",
+   "typ": "markieren",
+   "anweisung": "Ein Wort ist falsch. Tippe es an.",
+   "aufgaben": [
+    {
+     "satz": "[There are] a supermarket near the bus stop.",
+     "richtig": "There is",
+     "erklaerung": "Einzahl (und Unzählbares wie bread) → there is · Mehrzahl → there are"
+    },
+    {
+     "satz": "There [is] two hairdressers in my neighbourhood.",
+     "richtig": "are",
+     "erklaerung": "Einzahl (und Unzählbares wie bread) → there is · Mehrzahl → there are"
+    },
+    {
+     "satz": "Is there [some] mineral water?",
+     "richtig": "any",
+     "erklaerung": "some in Aussagen, Bitten und Angeboten · any in Fragen und Verneinungen"
+    },
+    {
+     "satz": "There aren't [some] fireworks today.",
+     "richtig": "any",
+     "erklaerung": "some in Aussagen, Bitten und Angeboten · any in Fragen und Verneinungen"
+    },
+    {
+     "satz": "There is [any] bread on the table.",
+     "richtig": "some",
+     "erklaerung": "some in Aussagen, Bitten und Angeboten · any in Fragen und Verneinungen"
+    },
+    {
+     "satz": "[Is] there any traffic lights?",
+     "richtig": "Are",
+     "erklaerung": "traffic lights ist Mehrzahl → Are there …?"
+    },
+    {
+     "satz": "There [are] some bread in the bag.",
+     "richtig": "is",
+     "erklaerung": "bread ist unzählbar → There is"
+    },
+    {
+     "satz": "Are there [some] shops in your street?",
+     "richtig": "any",
+     "erklaerung": "some in Aussagen, Bitten und Angeboten · any in Fragen und Verneinungen"
+    }
+   ]
+  },
+  {
+   "id": "en.6.there-is.mix",
+   "titel": "Mix",
+   "kurz": "Alles durcheinander",
+   "mix": true,
+   "runde": 10
+  }
+ ]
+}

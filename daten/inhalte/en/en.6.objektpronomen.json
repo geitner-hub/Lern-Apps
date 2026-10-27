@@ -1,0 +1,397 @@
+{
+ "typ": "gemischt",
+ "thema": "en.6.objektpronomen",
+ "titel": "Objektpronomen",
+ "emoji": "🇬🇧",
+ "klasse": 6,
+ "sprache": "en-GB",
+ "runde": 8,
+ "untertitel": "me, you, him, her, it, us, them – mit den Wörtern aus Unit 1",
+ "hilfe": [
+  {
+   "titel": "Objektpronomen",
+   "text": "Nach dem Verb und nach Präpositionen (with, for, to …) steht das Objektpronomen.",
+   "tabelle": [
+    [
+     "Subjekt",
+     "Objekt",
+     "Deutsch"
+    ],
+    [
+     "I",
+     "me",
+     "mich, mir"
+    ],
+    [
+     "you",
+     "you",
+     "dich, dir, euch"
+    ],
+    [
+     "he",
+     "him",
+     "ihn, ihm"
+    ],
+    [
+     "she",
+     "her",
+     "sie, ihr"
+    ],
+    [
+     "it",
+     "it",
+     "es, ihn, sie"
+    ],
+    [
+     "we",
+     "us",
+     "uns"
+    ],
+    [
+     "they",
+     "them",
+     "sie, ihnen"
+    ]
+   ]
+  },
+  {
+   "titel": "Beispiele",
+   "beispiele": [
+    [
+     "Can you help me?",
+     "Kannst du mir helfen?"
+    ],
+    [
+     "I play table tennis with him.",
+     "Ich spiele mit ihm Tischtennis."
+    ],
+    [
+     "The club is great. I'd like to join it.",
+     "Der Klub ist toll. Ich würde ihm gern beitreten."
+    ]
+   ]
+  }
+ ],
+ "stufen": [
+  {
+   "id": "en.6.objektpronomen.wahl",
+   "titel": "Welches Pronomen?",
+   "kurz": "me, him, her …",
+   "typ": "lueckentext",
+   "anweisung": "Welches Pronomen passt?",
+   "aufgaben": [
+    {
+     "text": "The drama club is great. I'd like to join ___.",
+     "antwort": "it",
+     "optionen": [
+      "it",
+      "them",
+      "him"
+     ],
+     "tipp": "I → me · he → him · she → her · it → it · we → us · you → you · they → them"
+    },
+    {
+     "text": "Leo is in the table tennis club. I play with ___ at lunchtime.",
+     "antwort": "him",
+     "optionen": [
+      "he",
+      "him",
+      "his"
+     ],
+     "tipp": "I → me · he → him · she → her · it → it · we → us · you → you · they → them"
+    },
+    {
+     "text": "Emma acts very well. Everybody watches ___.",
+     "antwort": "her",
+     "optionen": [
+      "she",
+      "her",
+      "them"
+     ],
+     "tipp": "I → me · he → him · she → her · it → it · we → us · you → you · they → them"
+    },
+    {
+     "text": "Our teachers are strict, but we like ___.",
+     "antwort": "them",
+     "optionen": [
+      "they",
+      "them",
+      "us"
+     ],
+     "tipp": "I → me · he → him · she → her · it → it · we → us · you → you · they → them"
+    },
+    {
+     "text": "We're new here. Can you show ___ the sports hall?",
+     "antwort": "us",
+     "optionen": [
+      "we",
+      "us",
+      "our"
+     ],
+     "tipp": "I → me · he → him · she → her · it → it · we → us · you → you · they → them"
+    },
+    {
+     "text": "I've got a question. Can you help ___?",
+     "antwort": "me",
+     "optionen": [
+      "I",
+      "me",
+      "my"
+     ],
+     "tipp": "I → me · he → him · she → her · it → it · we → us · you → you · they → them"
+    },
+    {
+     "text": "Where's my book? I can't find ___.",
+     "antwort": "it",
+     "optionen": [
+      "it",
+      "him",
+      "them"
+     ],
+     "tipp": "I → me · he → him · she → her · it → it · we → us · you → you · they → them"
+    },
+    {
+     "text": "Ben and Jack are my friends. I meet ___ after school.",
+     "antwort": "them",
+     "optionen": [
+      "they",
+      "them",
+      "him"
+     ],
+     "tipp": "I → me · he → him · she → her · it → it · we → us · you → you · they → them"
+    },
+    {
+     "text": "Mrs Brown is our new teacher. We like ___.",
+     "antwort": "her",
+     "optionen": [
+      "she",
+      "her",
+      "him"
+     ],
+     "tipp": "I → me · he → him · she → her · it → it · we → us · you → you · they → them"
+    },
+    {
+     "text": "You're in my class! I sat next to ___ in Maths.",
+     "antwort": "you",
+     "optionen": [
+      "you",
+      "your",
+      "me"
+     ],
+     "tipp": "I → me · he → him · she → her · it → it · we → us · you → you · they → them"
+    },
+    {
+     "text": "Give ___ five, Leo!",
+     "antwort": "me",
+     "optionen": [
+      "I",
+      "me",
+      "my"
+     ],
+     "tipp": "I → me · he → him · she → her · it → it · we → us · you → you · they → them"
+    },
+    {
+     "text": "The windows are dirty. Can you clean ___?",
+     "antwort": "them",
+     "optionen": [
+      "it",
+      "they",
+      "them"
+     ],
+     "tipp": "I → me · he → him · she → her · it → it · we → us · you → you · they → them"
+    },
+    {
+     "text": "My aunt lives in Munich. I visited ___ last week.",
+     "antwort": "her",
+     "optionen": [
+      "her",
+      "she",
+      "him"
+     ],
+     "tipp": "I → me · he → him · she → her · it → it · we → us · you → you · they → them"
+    },
+    {
+     "text": "My grandad lives in Turkey. I phone ___ every week.",
+     "antwort": "him",
+     "optionen": [
+      "he",
+      "him",
+      "her"
+     ],
+     "tipp": "I → me · he → him · she → her · it → it · we → us · you → you · they → them"
+    },
+    {
+     "text": "Maya and I are in the same club. Come with ___!",
+     "antwort": "us",
+     "optionen": [
+      "we",
+      "us",
+      "them"
+     ],
+     "tipp": "I → me · he → him · she → her · it → it · we → us · you → you · they → them"
+    },
+    {
+     "text": "This adventure book is interesting. I read ___ in two days.",
+     "antwort": "it",
+     "optionen": [
+      "it",
+      "him",
+      "them"
+     ],
+     "tipp": "I → me · he → him · she → her · it → it · we → us · you → you · they → them"
+    }
+   ]
+  },
+  {
+   "id": "en.6.objektpronomen.ersetzen",
+   "titel": "Wörter ersetzen",
+   "kurz": "Leo → him",
+   "typ": "lueckentext",
+   "anweisung": "Ersetze die Wörter in Klammern durch ein Pronomen.",
+   "aufgaben": [
+    {
+     "text": "We met ___ at the stadium. (Leo)",
+     "antwort": [
+      "him"
+     ],
+     "tipp": "I → me · he → him · she → her · it → it · we → us · you → you · they → them"
+    },
+    {
+     "text": "I like ___. (Emma and Maya)",
+     "antwort": [
+      "them"
+     ],
+     "tipp": "I → me · he → him · she → her · it → it · we → us · you → you · they → them"
+    },
+    {
+     "text": "Can you help ___? (my sister and me)",
+     "antwort": [
+      "us"
+     ],
+     "tipp": "I → me · he → him · she → her · it → it · we → us · you → you · they → them",
+     "erklaerung": "my sister and me = we → us"
+    },
+    {
+     "text": "I read ___ in one day. (the book)",
+     "antwort": [
+      "it"
+     ],
+     "tipp": "I → me · he → him · she → her · it → it · we → us · you → you · they → them"
+    },
+    {
+     "text": "Berry wrote a postcard to ___. (Mr Hill)",
+     "antwort": [
+      "him"
+     ],
+     "tipp": "I → me · he → him · she → her · it → it · we → us · you → you · they → them"
+    },
+    {
+     "text": "Ask ___! (your aunt)",
+     "antwort": [
+      "her"
+     ],
+     "tipp": "I → me · he → him · she → her · it → it · we → us · you → you · they → them"
+    },
+    {
+     "text": "We visited ___ last week. (the factory)",
+     "antwort": [
+      "it"
+     ],
+     "tipp": "I → me · he → him · she → her · it → it · we → us · you → you · they → them"
+    },
+    {
+     "text": "I'm waiting for ___. (Ben and Jack)",
+     "antwort": [
+      "them"
+     ],
+     "tipp": "I → me · he → him · she → her · it → it · we → us · you → you · they → them"
+    },
+    {
+     "text": "Sit with ___ at lunchtime! (Maya)",
+     "antwort": [
+      "her"
+     ],
+     "tipp": "I → me · he → him · she → her · it → it · we → us · you → you · they → them"
+    },
+    {
+     "text": "Do you know ___? (the new guys)",
+     "antwort": [
+      "them"
+     ],
+     "tipp": "I → me · he → him · she → her · it → it · we → us · you → you · they → them"
+    },
+    {
+     "text": "Can you show ___ the sports hall? (Leo and me)",
+     "antwort": [
+      "us"
+     ],
+     "tipp": "I → me · he → him · she → her · it → it · we → us · you → you · they → them"
+    },
+    {
+     "text": "The teacher looked at ___. (I)",
+     "antwort": [
+      "me"
+     ],
+     "tipp": "I → me · he → him · she → her · it → it · we → us · you → you · they → them",
+     "erklaerung": "Nach dem Verb + at: me (nicht I)."
+    }
+   ]
+  },
+  {
+   "id": "en.6.objektpronomen.fehler",
+   "titel": "Fehler finden",
+   "kurz": "Tippe das falsche Pronomen an",
+   "typ": "markieren",
+   "anweisung": "Ein Wort ist falsch. Tippe es an.",
+   "aufgaben": [
+    {
+     "satz": "Can you help [I]?",
+     "richtig": "me",
+     "erklaerung": "I → me · he → him · she → her · it → it · we → us · you → you · they → them"
+    },
+    {
+     "satz": "I like Leo. I play table tennis with [he].",
+     "richtig": "him",
+     "erklaerung": "I → me · he → him · she → her · it → it · we → us · you → you · they → them"
+    },
+    {
+     "satz": "Emma is nice. Everybody likes [she].",
+     "richtig": "her",
+     "erklaerung": "I → me · he → him · she → her · it → it · we → us · you → you · they → them"
+    },
+    {
+     "satz": "We're new. Please show [we] the school.",
+     "richtig": "us",
+     "erklaerung": "I → me · he → him · she → her · it → it · we → us · you → you · they → them"
+    },
+    {
+     "satz": "The club is great. I'd like to join [them].",
+     "richtig": "it",
+     "erklaerung": "the club = it → it"
+    },
+    {
+     "satz": "My friends are funny. I love [they].",
+     "richtig": "them",
+     "erklaerung": "I → me · he → him · she → her · it → it · we → us · you → you · they → them"
+    },
+    {
+     "satz": "Give [my] five!",
+     "richtig": "me",
+     "erklaerung": "I → me · he → him · she → her · it → it · we → us · you → you · they → them"
+    },
+    {
+     "satz": "Mrs Brown is strict. We are scared of [him].",
+     "richtig": "her",
+     "erklaerung": "Mrs Brown = she → her"
+    }
+   ]
+  },
+  {
+   "id": "en.6.objektpronomen.mix",
+   "titel": "Mix",
+   "kurz": "Alles durcheinander",
+   "mix": true,
+   "runde": 10
+  }
+ ]
+}
