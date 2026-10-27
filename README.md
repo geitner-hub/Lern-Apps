@@ -69,6 +69,7 @@ werkzeuge/            Prüfskript (pruefen.py), Inventar (inventar.py → INVENT
 | `insel-bauen.js` | „Die Insel“: Bauen auf Bauplätzen – Raster, Antippen, Inventar, Bauplan prüfen, Spielstand (`LernInselBauen`) |
 | `insel-karte.js` | „Die Insel“: Schatzkarte (aus den Weltdaten gezeichnet, Planquadrate, Maßstab) und Kompass (`LernInselKarte`) |
 | `insel-steuerung.js` | „Die Insel“: Joystick, Kamera (dritte Person), Kollision mit dem Blockgitter, Hochsteigen, Sperre geschlossener Gebiete (`LernInselSteuerung`) |
+| `journey-kern.js` | English Journey Year 6: Zustände der Stationen (Lehrer-Grenze, Vorgänger, gemeistert, Nebel) und „nächste Station“ (`LernJourney`) – für den Weg und „Heute für dich“ |
 | `journey-welt.js` | English Journey Year 6: 3D-Ort im Klötzchen-Stil mit Weg und Stationen, Figur läuft zur Station (`LernJourneyWelt`), nur in `apps/englisch/english-journey.html` |
 | `spiel-hilfen.js` | Kleine Bausteine für die neuen Spiele: Runde melden, Endlos-XP, robuste Zeiger (mehrere Finger), wiederholbarer Zufall |
 | `qrcode.js` | QR-Code-Erzeugung im Browser (MIT-Lizenz, Kazuhiko Arase) |
@@ -599,6 +600,14 @@ Etappe 3 (v91): 3D-Weg als Prototyp mit dem Ort von Unit 1. Etappe 4 (v93): alle
   mit Ablenkern gleicher Person/Tätigkeit), **u4** Shops vergleichen (cheapest, best, nearest, cheaper than … but better than … – genau ein Laden
   passt), **u5** Klassenfahrt planen (Wettervorhersage und Bahnhofsdurchsage 🔊 bestimmen Tag und Gleis, Packliste; ohne englische Stimme gleich als Text).
   Szenen in HTML/SVG, ohne WebGL. Neue Bausteine: Daten oben in der Datei (BLOGS, ORTE2, TUN, LAEDEN, WETTER, PACKEN).
+- **Anbindung** (Etappe 6, v95): Die Regeln für die Stationen stehen in `gemeinsam/journey-kern.js` (`LernJourney.berechne`, `naechste`) –
+  eine Quelle für den Weg und die Startseite. **„Heute für dich“** zeigt die Karte „🧭 Nächste Station: …“ (erste offene Station in
+  Buch-Reihenfolge, Link `english-journey.html#u=…&s=…`), sobald die Journey für das Kind sichtbar ist (in `config.json` nicht versteckt,
+  passende Klasse); journey-kern.js wird dafür erst bei Bedarf geladen. **Nebel:** Ist bei einer gemeisterten Station eine Wiederholung fällig
+  (`LernWiederholung.faellig()`, 7/21/60 Tage – auch eine Stufe unter ihrem Thema), ziehen Wolken über die Station, das Schild sagt
+  „🌫️ Zeit zum Wiederholen“, die Karte bietet „🌫️ Wiederholen“. Nach einer Runde verzieht sich der Nebel (Rücksprung mit `&n=1` → „✨ Die Station
+  glänzt wieder!“). Gemeistert bleibt gemeistert – Nebel nimmt nichts weg. **Sich füllende Orte:** Neben jeder gemeisterten Wörter-Station steht ein
+  Holzschild mit drei Wörtern aus der Unit (`daten/vokabeln6.json`). Kein neuer Speicher-Schlüssel, Sync und Worker unverändert.
 - **pruefen.py (Regel 22):** jede Station hat gültige `id`/`art`, `thema` und `start` stehen im Katalog (Baukasten-Stufen auch in der
   Inhaltsdatei), jeder Vorgänger existiert, keine Schleife, das Finale braucht alle Stationen seiner Unit.
 
