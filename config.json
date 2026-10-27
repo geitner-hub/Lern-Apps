@@ -364,20 +364,6 @@
       "gruppe": "g-geometrie"
     },
     {
-      "name": "Knowing English",
-      "datei": "apps/englisch/knowing-english.html",
-      "fach": "Englisch",
-      "emoji": "🧩",
-      "beschreibung": "Alle Grammatik-Themen auf einen Blick – übe gemischt!",
-      "hidden": false,
-      "klassen": [
-        5,
-        6
-      ],
-      "customTags": [],
-      "aod": false
-    },
-    {
       "name": "English Journey Year 6",
       "datei": "apps/englisch/english-journey.html",
       "fach": "Englisch",
@@ -388,40 +374,8 @@
         6
       ],
       "customTags": [],
-      "aod": false
-    },
-    {
-      "name": "Time, Date and Numbers",
-      "datei": "apps/englisch/time-dates-numbers.html",
-      "fach": "Englisch",
-      "emoji": "🕒",
-      "beschreibung": "Uhrzeit, Datum und Zahlen auf Englisch",
-      "hidden": false,
-      "klassen": [
-        5,
-        6
-      ],
-      "customTags": [],
-      "aod": false
-    },
-    {
-      "name": "Room Detective",
-      "datei": "spiele/room-detective.html",
-      "fach": "Englisch",
-      "emoji": "🕵️",
-      "beschreibung": "Decorate your room or find the thief!",
-      "hidden": false,
-      "klassen": [
-        5,
-        6
-      ],
-      "customTags": [
-        {
-          "name": "Spiele",
-          "color": 6
-        }
-      ],
-      "aod": false
+      "aod": false,
+      "gruppe": "g-meine-reise-durch-die-6-"
     },
     {
       "name": "Vokabeltrainer 5. Klasse",
@@ -517,6 +471,56 @@
       "customTags": [],
       "aod": false,
       "gruppe": "g-grammar"
+    },
+    {
+      "name": "Time, Date and Numbers",
+      "datei": "apps/englisch/time-dates-numbers.html",
+      "fach": "Englisch",
+      "emoji": "🕒",
+      "beschreibung": "Uhrzeit, Datum und Zahlen auf Englisch",
+      "hidden": false,
+      "klassen": [
+        5,
+        6
+      ],
+      "customTags": [],
+      "aod": false,
+      "gruppe": "g-grammar"
+    },
+    {
+      "name": "Knowing English",
+      "datei": "apps/englisch/knowing-english.html",
+      "fach": "Englisch",
+      "emoji": "🧩",
+      "beschreibung": "Alle Grammatik-Themen auf einen Blick – übe gemischt!",
+      "hidden": false,
+      "klassen": [
+        5,
+        6
+      ],
+      "customTags": [],
+      "aod": false,
+      "gruppe": "g-training"
+    },
+    {
+      "name": "Room Detective",
+      "datei": "spiele/room-detective.html",
+      "fach": "Englisch",
+      "emoji": "🕵️",
+      "beschreibung": "Decorate your room or find the thief!",
+      "hidden": false,
+      "klassen": [
+        5,
+        6
+      ],
+      "customTags": [
+        {
+          "name": "Spiele",
+          "color": 6
+        }
+      ],
+      "aod": false,
+      "gruppe": "g-training"
     },
     {
       "name": "Länder finden",
@@ -652,6 +656,11 @@
       "name": "Geometrie"
     },
     {
+      "id": "g-meine-reise-durch-die-6-",
+      "fach": "Englisch",
+      "name": "Meine Reise durch die 6. Klasse"
+    },
+    {
       "id": "g-vocabulary",
       "fach": "Englisch",
       "name": "Vocabulary"
@@ -660,6 +669,11 @@
       "id": "g-grammar",
       "fach": "Englisch",
       "name": "Grammar"
+    },
+    {
+      "id": "g-training",
+      "fach": "Englisch",
+      "name": "Training"
     }
   ],
   "spielsperre": {
