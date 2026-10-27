@@ -7,7 +7,7 @@
   <title>English Journey Year 6 – Lernwelt</title>
   <!--
   ═══════════════════════════════════════════════
-   LERNWELT – English Journey Year 6 (Etappe 3: 3D-Weg, Prototyp mit dem Ort von Unit 1)
+   LERNWELT – English Journey Year 6 (Etappe 3: 3D-Weg; Etappe 4: alle fünf Orte, Brücken zwischen den Orten)
    Ein Weg durch Highlight 6: Stationen aus daten/journey6.json, je Station eine Übung (Vokabeltrainer oder Baukasten).
    Kein eigener Spielstand: Gemeistert heißt „im Pass gemeistert“ (LernPass.themaStand(thema).frei, 2 Runden ≥ 70 %).
    Offen ist eine Station, wenn die Lehrkraft Unit und Station freigegeben hat (LernFreigabe, immer zuerst geprüft)
@@ -16,6 +16,8 @@
    Rückweg: Vor dem Start einer Übung merkt sich die Seite ihre Adresse mit #u=…&s=…&m=0|1 in lernwelt-lernweg-zurueck
    (sessionStorage, wie bei den Lernwegen) → dort erscheint „🧭 Zurück zum Weg“; zurück steht die Figur an derselben Station
    und jubelt, wenn die Station neu gemeistert ist (m=0 → jetzt gemeistert).
+   Brücke: Am Ende jedes Orts führt ein Tor zum nächsten; es öffnet sich mit dem Finale der Unit (die erste Station
+   der nächsten Unit braucht dieses Finale, steht in journey6.json).
    Links: english-journey.html#u=u2   Unit vorwählen
   ═══════════════════════════════════════════════
   -->
@@ -109,6 +111,7 @@
     .pk-bild .turm::before { content: ''; position: absolute; left: -4px; right: -4px; top: -18px; height: 18px; background: #fff2b0; border: 4px solid #3b3f4a; border-bottom: 0; border-radius: 4px 4px 0 0; }
     .pk-bild .boot { position: absolute; left: 14%; bottom: 22%; width: 90px; height: 22px; background: #d9534f; border-radius: 0 0 30px 30px; }
     .pk-bild .boot::after { content: ''; position: absolute; left: 28px; bottom: 22px; width: 0; height: 0; border-left: 22px solid transparent; border-right: 22px solid transparent; border-bottom: 48px solid #f6f1e7; }
+    .pk-emoji { position: absolute; right: 8%; bottom: 22%; font-size: 3.4rem; letter-spacing: .3rem; filter: drop-shadow(0 4px 6px rgba(0,0,0,.25)); }
     .pk-text { padding: 1rem 1.2rem 1.2rem; display: grid; grid-template-columns: 1fr auto; gap: .8rem; }
     .pk-text p { font-weight: 700; line-height: 1.4; color: var(--tinte2); }
     .pk-text .stempel { width: 4.4rem; height: 5rem; border: 3px dashed #c9a96e; border-radius: 6px; display: grid; place-items: center; font-family: 'Fredoka One', 'Nunito', sans-serif; color: #b07a12; transform: rotate(6deg); text-align: center; font-size: .85rem; }
@@ -215,14 +218,18 @@ function zeichneKopf() {
 }
 function zeichneListe() {
   const u = A.unit, hat3d = kann3d(u);
-  const info = !hat3d ? (A.gl === false ? 'Auf diesem Gerät gibt es den Weg als Liste.' : `Den 3D-Ort für Unit ${u.nr} bauen wir noch – alle Stationen sind schon hier.`) : '';
+  const info = !hat3d ? 'Auf diesem Gerät gibt es den Weg als Liste.' : '';
+  const n = naechsteUnit(u);
   $('liste-innen').innerHTML = `<h2>Unit ${u.nr}: ${esc(u.titel)}</h2><div class="ort">📍 ${esc(u.ort)}</div>
     ${info ? `<div class="hinweis">${esc(info)} Gemeistert ist eine Station nach 2 Runden mit mindestens 70 %.</div>` : ''}
     ${stationen(u).map(s => `<button type="button" class="reihe ${s.zustand}" data-station="${esc(s.id)}">
       <span class="nr">${s.zustand === 'gemeistert' ? '⭐' : s.zustand === 'zu' ? '🔒' : s.nr}</span>
       <span class="txt"><b>${ART[s.art][0]} ${esc(s.titel)}</b><small>${esc(s.ort)} · ${ART[s.art][1]}</small></span>
       <span class="zst">${s.naechste ? '👉 Nächstes Ziel' : { zu: 'noch zu', offen: 'offen', gemeistert: 'gemeistert', bau: '🚧 wird gebaut' }[s.zustand]}</span></button>`).join('')}
-    ${(u.bewohner || []).map(b => `<div class="bewohner"><small>💬 ${esc(b.ort || 'Jemand')} fragt:</small>${esc(b.satz)}</div>`).join('')}`;
+    ${(u.bewohner || []).map(b => `<div class="bewohner"><small>💬 ${esc(b.ort || 'Jemand')} fragt:</small>${esc(b.satz)}</div>`).join('')}
+    ${n ? `<button type="button" class="reihe ${finaleGemeistert(u) ? 'offen' : 'zu'}" ${finaleGemeistert(u) ? `data-weiter-unit="${esc(n.id)}"` : 'disabled'}>
+      <span class="nr">${finaleGemeistert(u) ? '🌉' : '🔒'}</span><span class="txt"><b>Brücke zu Unit ${n.nr}: ${esc(n.titel)}</b>
+      <small>${finaleGemeistert(u) ? 'Offen – auf zum nächsten Ort!' : 'Öffnet sich mit dem Finale dieser Unit'}</small></span></button>` : ''}`;
 }
 
 function zeigeKarte(id) {
@@ -268,7 +275,8 @@ function starte(id) {
 function zeigePostkarte(u) {
   const p = u.postkarte || {};
   $('pk').innerHTML = `<div class="postkarte" role="dialog" aria-label="Postkarte">
-    <div class="pk-bild"><div class="gruss">${esc(p.gruss || 'Greetings!')}</div><div class="turm"></div><div class="boot"></div></div>
+    <div class="pk-bild"><div class="gruss">${esc(p.gruss || 'Greetings!')}</div>${u.szene === 'hafen' ? '<div class="turm"></div><div class="boot"></div>'
+      : `<div class="pk-emoji" aria-hidden="true">${{ strasse: '🏘️🐕🚦', sport: '🏏🥕⚽', stadt: '🏙️🛍️🎬', moor: '⛰️🐴🚂' }[u.szene] || '⭐'}</div>`}</div>
     <div class="pk-text"><p>${esc(p.text || '')}</p><div class="stempel">Unit ${u.nr}<br>⭐</div>
     <button type="button" class="knopf gold" data-pk-zu>Weiter ›</button></div></div>`;
   $('pk').hidden = false;
@@ -276,7 +284,7 @@ function zeigePostkarte(u) {
 function toast(text) { const t = document.createElement('div'); t.className = 'toast'; t.textContent = text; document.body.appendChild(t); setTimeout(() => t.remove(), 2700); }
 
 // ── 3D ──
-const ORTE_3D = ['hafen'];                         // Orte, die journey-welt.js schon bauen kann (Prototyp: Unit 1)
+const ORTE_3D = ['hafen', 'strasse', 'sport', 'stadt', 'moor'];   // Orte, die journey-welt.js bauen kann (SZENEN)
 const kann3d = u => A.gl !== false && ORTE_3D.includes(u.szene);
 async function baue3d(aktuell) {
   if (A.welt) { A.welt.stop(); A.welt = null; }
@@ -287,7 +295,9 @@ async function baue3d(aktuell) {
       [A.figur] = await Promise.all([LernAvatar.figur(null), LW.laden('gemeinsam/journey-welt.js')]);
     } else await LW.laden('gemeinsam/journey-welt.js');
     if (!LernJourneyWelt.SZENEN.includes(A.unit.szene)) return false;
-    A.welt = await LernJourneyWelt.start($('stage'), { figur: A.figur, szene: A.unit.szene, stationen: stationen(A.unit), aktuell, onTippen: getippt });
+    const naechste = naechsteUnit(A.unit);
+    A.welt = await LernJourneyWelt.start($('stage'), { figur: A.figur, szene: A.unit.szene, stationen: stationen(A.unit), aktuell, onTippen: getippt,
+      bruecke: naechste ? { titel: `Unit ${naechste.nr}: ${naechste.titel}`, offen: finaleGemeistert(A.unit) } : null, onBruecke: brueckeGetippt });
     return true;
   } catch (e) { console.warn('[Journey] 3D nicht möglich', e); A.gl = false; return false; }
 }
@@ -298,8 +308,31 @@ function getippt(id) {
   else { if (A.welt) A.welt.zeige(id); zeigeKarte(id); }
 }
 
+// ── Brücke zum nächsten Ort: offen, sobald das Finale der Unit gemeistert ist ──
+const naechsteUnit = u => A.J.units[A.J.units.indexOf(u) + 1] || null;
+function brueckeGetippt() {
+  const n = naechsteUnit(A.unit); if (!n) return;
+  schliesseKarte();
+  if (finaleGemeistert(A.unit) && A.welt) A.welt.zurBruecke().then(() => zeigeBrueckeKarte());
+  else zeigeBrueckeKarte();
+}
+function zeigeBrueckeKarte() {
+  const n = naechsteUnit(A.unit), offen = finaleGemeistert(A.unit), fin = A.unit.stationen.find(st => st.art === 'finale');
+  $('karte').innerHTML = `<button type="button" class="x" data-zu aria-label="Schließen">✕</button>
+    <div class="marke2" aria-hidden="true">${offen ? '🌉' : '🔒'}</div>
+    <div class="klein">Brücke · Unit ${n.nr} · ${esc(n.ort)}</div>
+    <h3>${esc(n.titel)}</h3>
+    <p>${offen ? `Die Brücke ist offen! Auf zum nächsten Ort: ${esc(n.ort)}.` : `Die Brücke öffnet sich, wenn du das Finale „${esc(fin ? fin.titel : 'Finale')}“ gemeistert hast.`}</p>
+    <div class="zeile">${offen ? `<button type="button" class="los" data-weiter-unit="${esc(n.id)}">🌉 Über die Brücke</button>` : fin ? `<button type="button" class="neben" data-station="${esc(fin.id)}">🏁 ${esc(fin.titel)}</button>` : ''}</div>`;
+  $('karte').hidden = false;
+  A.karte = null;
+}
+
+// Wo die Figur steht: nächstes Ziel, sonst die zuletzt gemeisterte Station der Unit
+const standort = u => (u.stationen.find(st => A.z[st.id].naechste) || u.stationen.slice().reverse().find(st => A.z[st.id].zustand === 'gemeistert') || {}).id;
 async function waehleUnit(u, aktuell) {
   A.unit = u; schliesseKarte();
+  if (!aktuell) aktuell = standort(u);
   zeichneKopf();
   const d3 = await baue3d(aktuell);
   A.liste = !d3;
@@ -313,7 +346,7 @@ async function waehleUnit(u, aktuell) {
 function aktualisieren() {
   if (!A.J) return;
   berechne(); zeichneKopf(); zeichneListe();
-  if (A.welt) A.welt.zustand(stationen(A.unit));
+  if (A.welt) { A.welt.zustand(stationen(A.unit)); A.welt.bruecke(finaleGemeistert(A.unit)); }
   if (A.karte) zeigeKarte(A.karte);
 }
 
@@ -322,6 +355,7 @@ document.addEventListener('click', e => {
   const b = e.target.closest('button'); if (!b) return;
   if (b.dataset.unit) { const u = A.J.units.find(x => x.id === b.dataset.unit); if (u && u !== A.unit) waehleUnit(u); return; }
   if (b.dataset.los) return starte(b.dataset.los);
+  if (b.dataset.weiterUnit) { const n = A.J.units.find(x => x.id === b.dataset.weiterUnit); if (n) waehleUnit(n, (n.stationen.find(st => A.z[st.id].naechste) || n.stationen[0]).id); return; }
   if (b.dataset.station) { const id = b.dataset.station, x = A.alle[id]; if (x && x.unit !== A.unit) return waehleUnit(x.unit, id).then(() => getippt(id)); return A.welt ? getippt(id) : zeigeKarte(id); }
   if (b.hasAttribute('data-zu')) return schliesseKarte();
   if (b.hasAttribute('data-pk-zu')) { $('pk').hidden = true; return; }
@@ -349,7 +383,7 @@ window.addEventListener('pageshow', e => { if (e.persisted) aktualisieren(); });
     const vonS = HASH.get('s') && A.alle[HASH.get('s')] ? HASH.get('s') : null;
     const unit = (vonS && A.alle[vonS].unit) || J.units.find(u => u.id === HASH.get('u'))
       || J.units.find(u => u.stationen.some(st => A.z[st.id].naechste)) || J.units[0];
-    const aktuell = vonS || (unit.stationen.find(st => A.z[st.id].naechste) || {}).id;
+    const aktuell = vonS || standort(unit);
     await waehleUnit(unit, aktuell);
     $('laden').hidden = true;
     // Neu gemeistert? → Jubel (wie der Avatar-Auftritt im Pass); nach dem Finale die Postkarte

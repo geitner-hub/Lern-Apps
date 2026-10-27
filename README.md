@@ -544,18 +544,22 @@ selbst im Admin unter Inhalte → 🔐 Freigaben), Wiederholung, Fehler-Training
 
 Lernweg durch das Englischbuch Highlight 6 (Klasse 6, Units 1–5): Wörter → Grammatik → Wörter → Grammatik → Anwenden → Finale.
 Plan: Claude-Doc „Aktionsplan: English Journey (Klasse 6, Highlight 6)“. Etappe 1+2 (v90): Gerüst und Inhalte Unit 1–2;
-Etappe 3 (v91): 3D-Weg als Prototyp mit dem Ort von Unit 1.
+Etappe 3 (v91): 3D-Weg als Prototyp mit dem Ort von Unit 1. Etappe 4 (v93): alle fünf Orte, Inhalte Unit 3–5, Postkarten, Brücken.
 
 - **Seite:** `apps/englisch/english-journey.html` (Lern-App, keine Spielsperre; zählt selbst keine Runden – die Übungen tun das).
   Lädt Weg (`daten/journey6.json`), Pass, Freigabe und Katalog; Unit-Wahl U1–U5, Stand „⭐ gemeistert / Stationen“, Karte je Station im
   Postkarten-Look (Start, Grund für 🔒: Lehrkraft oder fehlende Vorgänger mit Sprung dorthin, „wird gebaut“), Postkarte nach dem Finale.
   Mit Admin-Anmeldung: Vorschau, alles offen. Orte ohne 3D (Unit 2–5) und Geräte ohne WebGL zeigen die Stationen als Liste.
 - **3D:** `gemeinsam/journey-welt.js` (`LernJourneyWelt`), three.js aus `vendor/` über `avatar3d.js` wie RUN!, eigene Pass-Figur über
-  `LernAvatar.figur()`. Ort „hafen“ (Plymouth: Kai, Fischmarkt, Hafencafé, Kran, Bootssteg, Schule, Schulhof, Bank am Wasser, Smeaton's
-  Tower, Barbican-Häuser, Boote, Möwen, Wolken). Station antippen → die Figur läuft auf dem Weg hin, Kamera folgt weich → Karte mit
+  `LernAvatar.figur()`. Orte „hafen“ (Unit 1, Plymouth: Kai, Fischmarkt, Hafencafé, Kran, Bootssteg, Schule, Smeaton's Tower, Boote, Möwen),
+  „strasse“ (Unit 2: Bushaltestelle, Supermarkt, Hundeheim, Ampel, Frisör, Park, Straßenfest), „sport“ (Unit 3: Imbiss, Sportplatz,
+  Arztpraxis, Apotheke, Marktstand, Tribüne, Laufbahn, Teich), „stadt“ (Unit 4: Kiosk, Schaufenster, Kino, Kaufhaus, Charity Shop,
+  Rathausuhr, Café, Brunnen) und „moor“ (Unit 5: Parkplatz, Wetterstation, Wegweiser, Holzbrücke über dem Fluss, Infotafel, Steinkreuz,
+  Bahnhof mit Zug, Tor mit Fahne, Ponys). Am Ende jedes Wegs ein Steintor zum nächsten Ort: Schranke zu, bis das Finale gemeistert ist,
+  dann offen (Antippen → die Figur läuft hin → „Über die Brücke“). Station antippen → die Figur läuft auf dem Weg hin, Kamera folgt weich → Karte mit
   „▶ Los geht's“ (Direktstart `?stufe=`). Zustände: zu (grauer Sockel, 🔒 am Schild), offen (Leuchtring, 👉 nächstes Ziel mit Pfeil),
   gemeistert (goldener Sockel, Flagge); jedes Wahrzeichen bleibt grau, bis seine Station gemeistert ist (der Ort füllt sich).
-  Ziehen verschiebt die Sicht. Neuer Ort = Eintrag in `SZENEN` (Wegpunkte, Plätze, Wahrzeichen) + Name in `ORTE_3D` der Seite.
+  Ziehen verschiebt die Sicht. Neuer Ort = Eintrag in `SZENEN` (Plätze, Boden, Wahrzeichen je Station) + Name in `ORTE_3D` der Seite.
 - **Zurück zum Weg:** Vor dem Start merkt sich die Seite ihre Adresse mit `#u=…&s=…&m=0|1` im vorhandenen Schlüssel
   `lernwelt-lernweg-zurueck` (sessionStorage, kein neuer Schlüssel); `lernweg-zurueck.js` zeigt dann „🧭 Zurück zum Weg“ (nach der Runde
   golden). Zurück steht die Figur an derselben Station; ist sie neu gemeistert (`m=0`), jubelt die Figur (Konfetti), nach dem Finale
@@ -572,8 +576,8 @@ Etappe 3 (v91): 3D-Weg als Prototyp mit dem Ort von Unit 1.
 - **Regeln:** kein eigener Spielstand und kein neuer Speicher-Schlüssel – der Weg liest nur die Meisterschaft aus dem Pass
   (2 Runden ≥ 70 %, `LernPass.themaStand(id).frei`). Eine Station ist offen, wenn die Lehrkraft Unit-Thema **und** `thema`
   freigegeben hat (Freigaben, wird immer zuerst geprüft) **und** alle Stationen aus `braucht` gemeistert sind. Wörter-Stationen
-  hängen aneinander (über die Units hinweg), jede Grammatik-Station an ihrer Wörter-Station davor, das Finale an allen Stationen der
-  Unit. Stationen, deren `thema` noch keine App hat (`en.6.anwenden.*`, Unit 3–5), zeigen „wird gebaut“ und zählen nicht für das Finale.
+  hängen aneinander, jede Grammatik-Station an ihrer Wörter-Station davor, das Finale an allen Stationen der Unit, und die erste
+  Station einer Unit am Finale der Unit davor („Brücke zum nächsten Ort“). Stationen, deren `thema` noch keine App hat (`en.6.anwenden.*`, Unit 3–5), zeigen „wird gebaut“ und zählen nicht für das Finale.
   Eine spätere Sperre nimmt nichts weg: Gemeistertes bleibt gemeistert.
 - **Wörter:** Theme-Stufen im Katalog unter `en.6.vok` (`en.6.vok.u1.theme1` …, ohne `inhalt`). Der Vokabeltrainer startet sie direkt
   (`vokabeltrainer.html?klasse=6&stufe=en.6.vok.u1.theme1`) und meldet in Quiz, Fill in und Scramble zusätzlich die Theme-ID
@@ -583,9 +587,11 @@ Etappe 3 (v91): 3D-Weg als Prototyp mit dem Ort von Unit 1.
   Did …? + Kurzantworten), `en.6.was-were`, `en.6.objektpronomen`, `en.6.there-is` (mit some/any), `en.6.plural`,
   `en.6.can-mustnt`; Finale `en.6.unit-check` (Postkarte aus Plymouth, Revision 1 als Mix aus Unit 1 + 2). Die Stationen starten die
   Mix-Stufe bzw. die passende Stufe direkt. Präpositionen und linking words gibt es nur in der Anwenden-Station.
-- **Reserviert (ohne App, Inhalte folgen):** `en.6.anwenden` (u1–u5), `en.6.revision` (Finale Unit 3–5), `en.6.should` (rat, regeln),
-  `en.6.much-many`, `en.6.good-better-best`, `en.6.superlativ`, `en.6.have-to`, `en.6.zeitangaben`, `en.6.simple-past-story`,
-  `en.6.will-meinung`, `en.6.wortstellung`. Neue Inhalte: Inhaltsdatei mit genau diesen Stufen-IDs + `quelle` im Katalog + sw.js.
+- **Grammatik Unit 3–5** (Etappe 4, Sätze aus den Wörtern der Unit): `en.6.should` (rat · regeln), `en.6.much-many`, `en.6.good-better-best`,
+  `en.6.superlativ`, `en.6.have-to`, `en.6.zeitangaben`, `en.6.simple-past-story`, `en.6.will-meinung`, `en.6.wortstellung`; Wiederholungen
+  über bestehende IDs (`en.5.present-progressive`, `en.6.steigerung.vergleiche`, `en.6.future.will`). Finale `en.6.revision`
+  (Postkarte vom Sportplatz, Revision 2 als Mix aus Unit 3 + 4, Postkarte aus Dartmoor).
+- **Reserviert (ohne App, Etappe 5):** `en.6.anwenden` (u1–u5). Neue Inhalte: Inhaltsdatei mit genau diesen Stufen-IDs + `quelle` im Katalog + sw.js.
 - **pruefen.py (Regel 22):** jede Station hat gültige `id`/`art`, `thema` und `start` stehen im Katalog (Baukasten-Stufen auch in der
   Inhaltsdatei), jeder Vorgänger existiert, keine Schleife, das Finale braucht alle Stationen seiner Unit.
 

@@ -1,0 +1,258 @@
+{
+ "typ": "gemischt",
+ "thema": "en.6.revision",
+ "titel": "Finale Unit 3–5 (English Journey)",
+ "emoji": "🇬🇧",
+ "klasse": 6,
+ "sprache": "en-GB",
+ "runde": 8,
+ "untertitel": "Postkarten und Revision – Wörter und Grammatik zusammen",
+ "hilfe": [
+  {
+   "titel": "Finale",
+   "text": "Hier kommt alles aus einer Unit zusammen: Wörter und Grammatik. Schaffst du zwei Runden mit mindestens 70 %, ist die Unit gemeistert."
+  }
+ ],
+ "stufen": [
+  {
+   "id": "en.6.revision.u3",
+   "titel": "Postkarte vom Sportplatz",
+   "kurz": "Finale Unit 3",
+   "typ": "lueckentext",
+   "runde": 10,
+   "anweisung": "Fülle die Lücke in der Postkarte.",
+   "aufgaben": [
+    {
+     "text": "Dear Leo, I'm at the sports ground and the kids ___ cricket. (play)",
+     "antwort": [
+      "are playing",
+      "'re playing"
+     ],
+     "tipp": "present progressive: am/is/are + -ing"
+    },
+    {
+     "text": "My friend Mia ___ a carrot right now. (eat)",
+     "antwort": [
+      "is eating",
+      "'s eating"
+     ],
+     "tipp": "right now → present progressive"
+    },
+    {
+     "text": "I ___ well today. (not / feel)",
+     "antwort": [
+      "'m not feeling",
+      "am not feeling"
+     ],
+     "tipp": "I'm not + -ing"
+    },
+    {
+     "text": "I have a ___ – my head hurts. (Kopfschmerzen)",
+     "antwort": [
+      "headache"
+     ],
+     "tipp": "headache = Kopfschmerzen"
+    },
+    {
+     "text": "Mum says I ___ go to bed early. (sollte)",
+     "antwort": [
+      "should"
+     ],
+     "tipp": "should = sollte"
+    },
+    {
+     "text": "You ___ eat so much junk food! (solltest nicht)",
+     "antwort": [
+      "shouldn't"
+     ],
+     "tipp": "shouldn't = solltest nicht"
+    },
+    {
+     "text": "How ___ pasties did you eat yesterday? (viele)",
+     "antwort": [
+      "many"
+     ],
+     "tipp": "pasties ist Mehrzahl → many"
+    },
+    {
+     "text": "There isn't ___ yogurt left. (viel)",
+     "antwort": [
+      "much"
+     ],
+     "tipp": "yogurt ist unzählbar → much"
+    },
+    {
+     "text": "Pasties are tasty, but they aren't very ___. (gesund)",
+     "antwort": [
+      "healthy"
+     ],
+     "tipp": "healthy = gesund"
+    },
+    {
+     "text": "Look! The boys ___ street surfing. (do)",
+     "antwort": [
+      "are doing",
+      "'re doing"
+     ],
+     "tipp": "Look! → present progressive"
+    },
+    {
+     "text": "___! These pasties are great! (lecker)",
+     "antwort": [
+      "Yum",
+      "Yum!"
+     ],
+     "tipp": "yum! = lecker!"
+    },
+    {
+     "text": "I'm ___ that you can come to the match. (froh)",
+     "antwort": [
+      "glad"
+     ],
+     "tipp": "I'm glad = ich bin froh"
+    },
+    {
+     "text": "There are ___ activities in the park. (viele, Aussage)",
+     "antwort": [
+      "lots of"
+     ],
+     "tipp": "Aussage → lots of"
+    },
+    {
+     "text": "Write back soon! ___ for this: we won! (Stell dir vor)",
+     "antwort": [
+      "Wait"
+     ],
+     "tipp": "Wait for this. = Stell dir nur vor!"
+    }
+   ]
+  },
+  {
+   "id": "en.6.revision.u4",
+   "titel": "Revision 2 (Unit 3 + 4)",
+   "kurz": "Finale Unit 4",
+   "mix": true,
+   "runde": 12,
+   "aus": [
+    "en.5.present-progressive.saetze",
+    "en.6.should.rat",
+    "en.6.much-many.formen",
+    "en.6.steigerung.vergleiche",
+    "en.6.good-better-best.formen",
+    "en.6.superlativ.formen",
+    "en.6.have-to.formen",
+    "en.6.zeitangaben.formen",
+    "en.6.simple-past-story.erzaehlen",
+    "en.6.revision.u3"
+   ]
+  },
+  {
+   "id": "en.6.revision.u5",
+   "titel": "Postkarte aus Dartmoor",
+   "kurz": "Finale Unit 5",
+   "typ": "lueckentext",
+   "runde": 10,
+   "anweisung": "Fülle die Lücke in der Postkarte.",
+   "aufgaben": [
+    {
+     "text": "Greetings from Dartmoor! It's a big ___ in the south-west of England. (Nationalpark)",
+     "antwort": [
+      "national park"
+     ],
+     "tipp": "national park = Nationalpark"
+    },
+    {
+     "text": "Yesterday it was ___, so we couldn't see much. (nebelig)",
+     "antwort": [
+      "foggy"
+     ],
+     "tipp": "foggy = nebelig"
+    },
+    {
+     "text": "I think it ___ rain tomorrow. (wird nicht)",
+     "antwort": [
+      "won't"
+     ],
+     "tipp": "won't = wird nicht"
+    },
+    {
+     "text": "We ___ to the top of a hill. (climb)",
+     "antwort": [
+      "climbed"
+     ],
+     "tipp": "simple past: climb → climbed"
+    },
+    {
+     "text": "My leg ___ sore after the hike. (be)",
+     "antwort": [
+      "was"
+     ],
+     "tipp": "be → was"
+    },
+    {
+     "text": "You ___ always stay on the track. (solltest)",
+     "antwort": [
+      "should"
+     ],
+     "tipp": "should = solltest"
+    },
+    {
+     "text": "We ___ a photo of an old bridge. (take)",
+     "antwort": [
+      "took"
+     ],
+     "tipp": "take → took"
+    },
+    {
+     "text": "Maybe we ___ go hang-gliding tomorrow! (werden)",
+     "antwort": [
+      "will"
+     ],
+     "tipp": "maybe + will"
+    },
+    {
+     "text": "I'm sure you ___ love it here. (wirst)",
+     "antwort": [
+      "will"
+     ],
+     "tipp": "I'm sure + will"
+    },
+    {
+     "text": "Don't forget your ___ – it's very muddy! (Stiefel, Mehrzahl)",
+     "antwort": [
+      "boots"
+     ],
+     "tipp": "boot = Stiefel"
+    },
+    {
+     "text": "We put our rubbish in a ___ bag. (Plastik-)",
+     "antwort": [
+      "plastic"
+     ],
+     "tipp": "plastic bag = Plastiktüte"
+    },
+    {
+     "text": "Have you ever ___ to Dartmoor? (be)",
+     "antwort": [
+      "been"
+     ],
+     "tipp": "Have you ever been to …?"
+    },
+    {
+     "text": "Our cottage is next to a ___. (Fluss)",
+     "antwort": [
+      "river"
+     ],
+     "tipp": "river = Fluss"
+    },
+    {
+     "text": "We packed our ___ last night. (Schlafsäcke)",
+     "antwort": [
+      "sleeping bags"
+     ],
+     "tipp": "sleeping bag = Schlafsack"
+    }
+   ]
+  }
+ ]
+}

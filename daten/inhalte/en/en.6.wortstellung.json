@@ -1,0 +1,225 @@
+{
+ "typ": "gemischt",
+ "thema": "en.6.wortstellung",
+ "titel": "Wortstellung S-P-O",
+ "emoji": "🇬🇧",
+ "klasse": 6,
+ "sprache": "en-GB",
+ "runde": 8,
+ "untertitel": "Subject – verb – object – mit den Wörtern aus Unit 5",
+ "hilfe": [
+  {
+   "titel": "Die Wortstellung im englischen Satz",
+   "text": "Im englischen Aussagesatz steht fast immer zuerst das Subjekt (wer?), dann das Prädikat (Verb), dann das Objekt (wen/was?). Danach kommen Ort und Zeit – Ort vor Zeit.",
+   "tabelle": [
+    [
+     "Subjekt",
+     "Prädikat",
+     "Objekt",
+     "Ort",
+     "Zeit"
+    ],
+    [
+     "We",
+     "packed",
+     "our rucksacks",
+     "at home",
+     "yesterday"
+    ],
+    [
+     "My dad",
+     "drove",
+     "us",
+     "to the national park",
+     "on Saturday"
+    ]
+   ]
+  }
+ ],
+ "stufen": [
+  {
+   "id": "en.6.wortstellung.saetze",
+   "titel": "Subjekt – Prädikat – Objekt",
+   "kurz": "We packed our rucksacks.",
+   "typ": "sortieren",
+   "anweisung": "Bau den Satz: Subjekt – Prädikat – Objekt – Ort – Zeit.",
+   "aufgaben": [
+    {
+     "teile": [
+      "We",
+      "packed",
+      "our rucksacks",
+      "yesterday"
+     ],
+     "loesung": "We packed our rucksacks yesterday.",
+     "tipp": "Subjekt – Prädikat – Objekt; danach Ort vor Zeit"
+    },
+    {
+     "teile": [
+      "Tom",
+      "took",
+      "a photo",
+      "of the bridge"
+     ],
+     "loesung": "Tom took a photo of the bridge.",
+     "tipp": "Subjekt – Prädikat – Objekt; danach Ort vor Zeit"
+    },
+    {
+     "teile": [
+      "I",
+      "heard",
+      "a whistle",
+      "in the fog"
+     ],
+     "loesung": "I heard a whistle in the fog.",
+     "tipp": "Subjekt – Prädikat – Objekt; danach Ort vor Zeit"
+    },
+    {
+     "teile": [
+      "Mia",
+      "put on",
+      "her boots"
+     ],
+     "loesung": "Mia put on her boots.",
+     "tipp": "Subjekt – Prädikat – Objekt; danach Ort vor Zeit"
+    },
+    {
+     "teile": [
+      "We",
+      "saw",
+      "an old stone cross",
+      "on the track"
+     ],
+     "loesung": "We saw an old stone cross on the track.",
+     "tipp": "Subjekt – Prädikat – Objekt; danach Ort vor Zeit"
+    },
+    {
+     "teile": [
+      "My dad",
+      "drove",
+      "us",
+      "to the national park",
+      "on Saturday"
+     ],
+     "loesung": "My dad drove us to the national park on Saturday.",
+     "tipp": "Subjekt – Prädikat – Objekt; danach Ort vor Zeit (Ort vor Zeit)"
+    },
+    {
+     "teile": [
+      "The children",
+      "enjoyed",
+      "the hike",
+      "very much"
+     ],
+     "loesung": "The children enjoyed the hike very much.",
+     "tipp": "Subjekt – Prädikat – Objekt; danach Ort vor Zeit"
+    },
+    {
+     "teile": [
+      "She",
+      "read",
+      "a poem",
+      "in the cottage"
+     ],
+     "loesung": "She read a poem in the cottage.",
+     "tipp": "Subjekt – Prädikat – Objekt; danach Ort vor Zeit"
+    },
+    {
+     "teile": [
+      "We",
+      "left",
+      "the station",
+      "at 10 o'clock"
+     ],
+     "loesung": "We left the station at 10 o'clock.",
+     "tipp": "Subjekt – Prädikat – Objekt; danach Ort vor Zeit"
+    },
+    {
+     "teile": [
+      "Leo",
+      "found",
+      "a plastic bag",
+      "near the river"
+     ],
+     "loesung": "Leo found a plastic bag near the river.",
+     "tipp": "Subjekt – Prädikat – Objekt; danach Ort vor Zeit"
+    },
+    {
+     "teile": [
+      "I",
+      "checked",
+      "the forecast",
+      "this morning"
+     ],
+     "loesung": "I checked the forecast this morning.",
+     "tipp": "Subjekt – Prädikat – Objekt; danach Ort vor Zeit"
+    },
+    {
+     "teile": [
+      "We",
+      "climbed",
+      "the hill",
+      "in the afternoon"
+     ],
+     "loesung": "We climbed the hill in the afternoon.",
+     "tipp": "Subjekt – Prädikat – Objekt; danach Ort vor Zeit"
+    },
+    {
+     "teile": [
+      "The girls",
+      "packed",
+      "their sleeping bags",
+      "in the car",
+      "last night"
+     ],
+     "loesung": "The girls packed their sleeping bags in the car last night.",
+     "tipp": "Subjekt – Prädikat – Objekt; danach Ort vor Zeit (Ort vor Zeit)"
+    },
+    {
+     "typ": "markieren",
+     "satz": "[Tom] took a photo of the bridge.",
+     "frage": "Tippe das Subjekt an (wer?)."
+    },
+    {
+     "typ": "markieren",
+     "satz": "We [heard] a whistle in the fog.",
+     "frage": "Tippe das Prädikat an (das Verb)."
+    },
+    {
+     "typ": "markieren",
+     "satz": "Mia packed [her rucksack] in the morning.",
+     "frage": "Tippe das Objekt an (wen oder was?)."
+    },
+    {
+     "typ": "markieren",
+     "satz": "[My dad] drove us to Dartmoor.",
+     "frage": "Tippe das Subjekt an (wer?)."
+    },
+    {
+     "typ": "markieren",
+     "satz": "The children [enjoyed] the hike.",
+     "frage": "Tippe das Prädikat an (das Verb)."
+    },
+    {
+     "typ": "markieren",
+     "satz": "We saw [an old stone cross] on the track.",
+     "frage": "Tippe das Objekt an (wen oder was?)."
+    },
+    {
+     "typ": "markieren",
+     "satz": "We [yesterday] packed our rucksacks.",
+     "richtig": "We packed our rucksacks yesterday.",
+     "frage": "Ein Teil steht an der falschen Stelle. Tippe ihn an.",
+     "erklaerung": "Die Zeit steht am Ende: We packed our rucksacks yesterday."
+    },
+    {
+     "typ": "markieren",
+     "satz": "Tom [a photo] took of the bridge.",
+     "richtig": "Tom took a photo of the bridge.",
+     "frage": "Ein Teil steht an der falschen Stelle. Tippe ihn an.",
+     "erklaerung": "Subjekt – Prädikat – Objekt: Tom took a photo."
+    }
+   ]
+  }
+ ]
+}

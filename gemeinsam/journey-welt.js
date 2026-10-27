@@ -14,13 +14,15 @@
 //      „Bewegung reduzieren“ → nur noch bei Änderungen zeichnen, Laufen als kurzer Sprung
 //
 //  API (window.LernJourneyWelt):
-//    start(host, o) → Promise(welt)
+//    start(host, o) → Promise(welt)   Orte: hafen (Unit 1), strasse, sport, stadt, moor (Unit 2–5)
 //      o = { figur (LernAvatar.figur), szene: 'hafen', stationen: [{ id, nr, titel, ort, art, zustand }], aktuell: id,
 //            onTippen(id) }      zustand: 'zu' | 'offen' | 'gemeistert' | 'bau' (wird gebaut), dazu optional naechste: true
 //    welt.zustand(stationen)  Zustände neu setzen (Farben, Schilder, Flaggen; Wahrzeichen färben sich bei „gemeistert“)
 //    welt.laufeZu(id)         → Promise, sobald die Figur angekommen ist
 //    welt.zeige(id)           Kamera zur Station (Figur bleibt stehen)
 //    welt.jubel()             Figur jubelt (wie der Avatar-Auftritt im Pass)
+//    welt.bruecke(offen)      Brücke zum nächsten Ort öffnen/schließen (o.bruecke = { titel, offen }, Antippen → o.onBruecke())
+//    welt.zurBruecke()        → Promise, die Figur läuft bis zur Brücke
 //    welt.stop()              alles aufräumen
 //    welt.info()              Draw Calls, Dreiecke, DPR des letzten Bildes (Diagnose auf dem iPad)
 //  Neue Orte: Eintrag in SZENEN (Wegpunkte, Plätze der Stationen, Bau-Funktion).
@@ -158,10 +160,143 @@
     },
   };
 
+  // ── Weitere Orte (Etappe 4): Weg durch die Plätze, Boden je Ort, Wahrzeichen je Station ──
+  //  welle(plaetze): Weg vom Start links bis hinter die letzte Station (dort steht die Brücke zum nächsten Ort)
+  const welle = pl => [[pl[0][0] - 16, pl[0][1] - 2], ...pl, [pl[pl.length - 1][0] + 10, pl[pl.length - 1][1] - 3]];
+  function boden(B, farbe) {             // Klötze 4 × 4, farbe(x, z) → Farbe oder null (kein Klotz)
+    for (let x = -128; x < 112; x += 4) for (let z = -64; z < 48; z += 4) { const f = farbe(x + 2, z + 2); if (f !== null) B.box(x + 2, -2, z + 2, 4, 2, 4, f); }
+  }
+  function hintergrund(B, farbe, n = 14) {   // Hügel am Horizont
+    for (let x = -130; x < 115; x += n) B.box(x, -2, -62, n + 1, 7 + ((x * 7) & 5), 6, variiere(farbe, 0.06));
+  }
+  function auto(B, x, z, farbe, ry = 0) {
+    const cs = Math.cos(ry), sn = Math.sin(ry), p = (lx, lz) => [x + lx * cs + lz * sn, z - lx * sn + lz * cs];
+    let q = p(0, 0); B.box(q[0], 0.35, q[1], 1.9, 0.9, 4, farbe, ry); B.box(q[0], 1.25, q[1], 1.7, 0.8, 2.2, 0xcfe6f2, ry);
+    [[-0.95, -1.2], [0.95, -1.2], [-0.95, 1.2], [0.95, 1.2]].forEach(([a, b]) => { q = p(a, b); B.box(q[0], 0, q[1], 0.35, 0.7, 0.7, 0x2b2b2b, ry); });
+  }
+  function bank(B, x, z) { B.box(x, 0.55, z, 2.4, 0.18, 0.7, C.holz); B.box(x, 0.73, z - 0.3, 2.4, 0.7, 0.12, C.holz); [-1, 1].forEach(d => B.box(x + d, 0, z, 0.18, 0.55, 0.6, 0x3b3f4a)); }
+  function zaun(B, x1, x2, z, farbe = C.weiss) { for (let x = x1; x <= x2; x += 1.2) B.box(x, 0, z, 0.2, 1, 0.2, farbe); B.box((x1 + x2) / 2, 0.7, z, x2 - x1, 0.14, 0.1, farbe); }
+  function laden(B, x, z, w, wand, markise, ry = 0) {   // Laden mit großem Fenster und gestreifter Markise
+    haus(B, x, z, w, 5, 5, wand, C.dach, ry, false);
+    B.box(x, 0.6, z + 2.56, w * 0.7, 1.8, 0.1, 0xbfe1f0); B.box(x, 3.4, z + 2.56, w * 0.9, 0.8, 0.12, C.weiss);
+    for (let i = 0; i < 6; i++) B.box(x - w * 0.45 + (i + 0.5) * w * 0.15, 2.6, z + 3.1, w * 0.15, 0.25, 1.2, i % 2 ? C.weiss : markise);
+  }
+  function pony(B, x, z, farbe = 0x7a4b2a) { B.box(x, 0.9, z, 1, 1, 2, farbe); B.box(x, 1.6, z + 1.2, 0.6, 0.9, 0.8, farbe); [[-0.35, -0.7], [0.35, -0.7], [-0.35, 0.7], [0.35, 0.7]].forEach(([a, b]) => B.box(x + a, 0, z + b, 0.25, 0.9, 0.25, 0x4a2c18)); B.box(x, 1.9, z - 1.1, 0.2, 0.6, 0.2, 0x3a2414); }
+  function fels(B, x, z, s = 1) { B.box(x, 0, z, 2.6 * s, 1.4 * s, 2.2 * s, variiere(0x9a948a, 0.08)); B.box(x + 0.3 * s, 1.4 * s, z, 1.6 * s, 1 * s, 1.5 * s, variiere(0x8a847a, 0.08)); }
+
+  Object.assign(SZENEN, {
+    strasse: {   // Unit 2: Wohnstraße mit Läden
+      himmel: ['#86c7f0', '#c6e6f7', '#fbe7cf'], nebel: 0xefe4d2,
+      plaetze: [[-58, 6], [-44, 1], [-30, 6], [-16, 1], [-2, 6], [12, 1], [26, 6], [40, 1], [54, 5]],
+      bauen(B) {
+        boden(B, (x, z) => z > 14 && z < 22 ? variiere(0x5f6670, 0.02) : z >= 9 && z <= 14 ? variiere(0xc9c4ba, 0.02) : variiere(C.gras, 0.035));
+        for (let x = -92; x < 96; x += 6) B.box(x, 0.02, 18, 2.6, 0.03, 0.35, C.weiss);   // Mittellinie
+        const wand = [0xb8634d, C.creme, 0xa95a46, C.hellblau, 0xc47456, C.mint];
+        for (let x = -92, i = 0; x < 92; i++) { const w = 5 + (i % 2); haus(B, x + w / 2, -16, w, 6, 6 + (i % 3), wand[i % wand.length], i % 3 ? C.dach : C.dach2); B.box(x + w / 2, 0, -12.9, 1.1, 2.2, 0.15, [C.rot, C.blau, C.gruen, C.gelb][i % 4]); x += w + 0.1; }
+        [[-80, 16, C.rot], [-36, 20, C.blau], [10, 16, C.gelb], [62, 20, C.weiss]].forEach(([x, z, f], i) => auto(B, x, z, f, i % 2 ? Math.PI / 2 : -Math.PI / 2));
+        for (let x = -86; x < 90; x += 22) { baum(B, x, 28, 0.9); zaun(B, x + 6, x + 14, 26, C.weiss); B.box(x + 10, 0, 32, 6, 0.3, 4, 0x6fb86a); }
+        hintergrund(B, 0x7fae6a);
+      },
+      wahrzeichen: [
+        (B, x, z) => { B.box(x, 0, z - 1, 3.4, 0.15, 1.6, 0x3b3f4a); B.box(x, 0.15, z - 1.7, 3.4, 2.4, 0.12, 0xbfe1f0); B.box(x, 2.55, z - 1, 3.6, 0.2, 1.8, C.rot); B.box(x + 2.2, 0, z - 1, 0.15, 3.2, 0.15, 0x3b3f4a); B.box(x + 2.2, 3.2, z - 1, 0.9, 0.9, 0.12, C.rot); },
+        (B, x, z) => { laden(B, x, z - 5, 9, C.weiss, C.gruen); B.box(x, 5.6, z - 2.4, 5, 1, 0.15, C.gruen); [-2, -1].forEach(d => B.box(x + d - 2, 0, z - 0.8, 0.9, 1, 1.3, 0x9aa3ad)); },
+        (B, x, z) => { haus(B, x, z - 4, 6, 4, 3.4, C.gelb, C.dach2); [-1.5, 0, 1.5].forEach((d, i) => { B.box(x + d, 0, z - 0.8, 1, 0.9, 1.3, C.holz); B.box(x + d, 0.9, z - 0.8, 1.1, 0.4, 1.4, C.rot); }); B.box(x + 2.6, 0.4, z + 0.2, 0.6, 0.5, 1, 0xd9a066); B.box(x + 2.6, 0.7, z + 0.8, 0.4, 0.4, 0.4, 0xd9a066); },
+        (B, x, z) => { B.box(x, 0, z, 0.3, 4, 0.3, 0x3b3f4a); B.box(x, 4, z, 0.8, 2.2, 0.6, 0x2b2b2b); [[C.rot, 5.6], [C.gelb, 4.9], [0x3ec46d, 4.2]].forEach(([f, y]) => B.box(x, y, z + 0.32, 0.5, 0.5, 0.06, f)); for (let i = 0; i < 5; i++) B.box(x - 2.4 + i * 1.2, 0.03, 14, 0.7, 0.03, 4.5, C.weiss); },
+        (B, x, z) => { laden(B, x, z - 5, 6, C.rosa, C.rosa); for (let i = 0; i < 5; i++) B.box(x + 3.4, 0.5 + i * 0.5, z - 2.2, 0.35, 0.5, 0.35, i % 2 ? C.weiss : C.rot); },
+        (B, x, z) => { laden(B, x, z - 5, 7, C.creme, C.orange); [-2, 0, 2].forEach((d, i) => { B.box(x + d, 0, z - 1, 1.6, 0.8, 1.1, C.holz); B.box(x + d, 0.8, z - 1, 1.4, 0.3, 0.9, [0xc89b5a, 0xe86b3a, 0x7cb342][i]); }); },
+        (B, x, z) => { zaun(B, x - 4, x + 4, z - 0.5, C.gruen); baum(B, x - 2.5, z - 4); baum(B, x + 2.8, z - 5, 1.2); bank(B, x, z - 2.5); B.box(x + 0.5, 0, z - 6, 3, 0.15, 2, 0xe2c27a); },
+        (B, x, z) => { B.box(x, 0, z - 1, 0.3, 4.4, 0.3, C.weiss); [[C.blau, 3.8, 0.4], [C.rot, 3.1, -0.3], [C.gruen, 2.4, 0.2]].forEach(([f, y, r]) => B.box(x + 1, y, z - 1, 2.2, 0.5, 0.12, f, r)); },
+        (B, x, z) => { for (let i = 0; i < 4; i++) B.box(x + 2, 0.4 * i, z - 3, 2.6 - i * 0.5, 0.4, 2.6 - i * 0.5, i ? 0x8a5a33 : 0x6b4428); B.box(x + 2, 1.6, z - 3, 0.8, 1.2, 0.8, C.orange); B.box(x + 2, 2.8, z - 3, 0.4, 0.7, 0.4, C.gelb);
+                         B.box(x - 2, 0.7, z - 2, 3, 0.15, 1.2, C.holz); for (let i = 0; i < 7; i++) B.box(x - 4 + i * 1.3, 3.4 - Math.abs(i - 3) * 0.2, z - 4, 0.5, 0.6, 0.5, [C.rot, C.gelb, C.blau, C.orange][i % 4]); },
+      ],
+    },
+    sport: {     // Unit 3: Sportplatz und Park
+      himmel: ['#78c0f2', '#c2e5f8', '#f6f1d8'], nebel: 0xe8efdf,
+      plaetze: [[-58, 6], [-42, 1], [-26, 6], [-8, 1], [10, 6], [28, 1], [48, 5]],
+      bauen(B) {
+        boden(B, (x, z) => z < -10 && z > -42 && x > -50 && x < 34 ? variiere(((x / 4 | 0) % 2) ? 0x76c25c : 0x84cc66, 0.015) : z > 14 && z < 22 ? variiere(0xc4704e, 0.02) : variiere(C.gras, 0.035));
+        [15.9, 18, 20.1].forEach(z => B.box(-16, 0.02, z, 224, 0.03, 0.15, C.weiss));   // Laufbahn mit Bahnen
+        for (let i = 0; i < 16; i++) { const x = -84 + i * 11 + zufall() * 4, z = 28 + zufall() * 10; B.box(x, 0, z, 2.2, 0.35, 1.6, 0x5aa85a); [0, 1, 2].forEach(k => B.box(x - 0.6 + k * 0.6, 0.35, z, 0.35, 0.35, 0.35, [C.rot, C.gelb, C.rosa][(i + k) % 3])); }
+        [[-49, 34, -11], [-49, 34, -41]].forEach(([a, b, z]) => B.box((a + b) / 2, 0.02, z, b - a, 0.03, 0.3, C.weiss));
+        [-49, 34, -7.5].forEach(x => B.box(x, 0.02, -26, 0.3, 0.03, 30, C.weiss));
+        [-43, 28].forEach(x => { B.box(x, 0, -26, 0.25, 2.4, 0.25, C.weiss); B.box(x, 2.4, -26, 0.25, 0.25, 7, C.weiss); B.box(x, 0, -29.4, 0.25, 2.4, 0.25, C.weiss); B.box(x, 0, -22.6, 0.25, 2.4, 0.25, C.weiss); });
+        for (let x = -60; x < 50; x += 3) B.box(x, 0, -45, 0.2, 1.4, 0.2, 0x3b8a4a);
+        B.box(-5, 1.2, -45, 110, 0.12, 0.1, 0x3b8a4a);
+        [[-80, -8], [-74, 12], [-88, 22], [60, -20], [70, -6], [78, 14], [64, 24], [-66, -30], [50, -40]].forEach(([x, z], i) => baum(B, x, z, 0.9 + (i % 3) * 0.15));
+        B.box(70, -0.5, 30, 14, 0.6, 9, C.wasser); B.box(70, -0.6, 30, 15, 0.5, 10, C.sand);   // Teich im Park
+        hintergrund(B, 0x88b870);
+      },
+      wahrzeichen: [
+        (B, x, z) => { B.box(x, 0, z - 3, 4.5, 3, 3, C.creme); B.box(x, 1.2, z - 1.45, 3.4, 1.2, 0.12, 0x3b3f4a); for (let i = 0; i < 6; i++) B.box(x - 2.1 + i * 0.84, 3, z - 1.2, 0.84, 0.3, 1.4, i % 2 ? C.weiss : C.orange); B.box(x, 3.6, z - 3, 3, 0.9, 0.15, C.orange); },
+        (B, x, z) => { [-0.4, 0, 0.4].forEach(d => B.box(x + d, 0, z - 4, 0.12, 1.4, 0.12, 0xf3e3c3)); B.box(x, 1.4, z - 4, 1, 0.08, 0.15, 0xf3e3c3); B.box(x + 2, 0, z - 6, 0.5, 0.5, 0.5, C.rot); for (let i = 0; i < 3; i++) B.box(x - 3 + i * 3, 0, z - 9, 0.7, 1.6, 0.5, [C.blau, C.gelb, C.rot][i]); },
+        (B, x, z) => { haus(B, x, z - 5, 7, 5, 4, C.weiss, C.dach); B.box(x, 2.8, z - 2.4, 1.6, 0.5, 0.15, C.rot); B.box(x, 2.45, z - 2.4, 0.5, 1.2, 0.15, C.rot); },
+        (B, x, z) => { laden(B, x, z - 5, 6, C.mint, C.gruen); B.box(x + 3.2, 3, z - 2.4, 1.2, 0.4, 0.2, 0x2fa84f); B.box(x + 3.2, 2.6, z - 2.4, 0.4, 1.2, 0.2, 0x2fa84f); },
+        (B, x, z) => { B.box(x, 0, z - 2, 4, 1, 1.6, C.holz); for (let i = 0; i < 4; i++) B.box(x - 1.5 + i, 1, z - 2, 0.8, 0.35, 1.2, [C.orange, 0xd6c94a, C.rot, 0x8bc34a][i]); [-1.9, 1.9].forEach(d => B.box(x + d, 1, z - 2.6, 0.15, 1.8, 0.15, C.holz2)); for (let i = 0; i < 5; i++) B.box(x - 2 + i, 2.8, z - 2, 1, 0.25, 2, i % 2 ? C.weiss : C.blau); },
+        (B, x, z) => { baum(B, x - 3, z - 4, 1.1); baum(B, x + 3, z - 6); bank(B, x, z - 2); B.box(x + 1, 0, z - 8, 0.15, 3, 0.15, 0x666666); B.box(x + 1.6, 3, z - 8, 1.2, 1.2, 0.08, C.rot, 0.6); },
+        (B, x, z) => { for (let i = 0; i < 4; i++) B.box(x + 1, i * 0.9, z - 4 - i * 1.2, 9, 0.9, 1.2, i % 2 ? C.blau : C.rot); B.box(x + 1, 3.6, z - 9, 9.6, 0.3, 2, C.weiss); [-3.5, 1, 5.5].forEach(d => { B.box(x + d, 3.9, z - 9, 0.12, 2.4, 0.12, 0xdddddd); B.box(x + d + 0.5, 5.6, z - 9, 1, 0.6, 0.06, C.gelb); }); },
+      ],
+    },
+    stadt: {     // Unit 4: Stadtzentrum
+      himmel: ['#8ac6ec', '#cbe5f4', '#f7e3cc'], nebel: 0xe9e1d6,
+      plaetze: [[-60, 6], [-47, 1], [-34, 6], [-21, 1], [-8, 6], [5, 1], [18, 6], [31, 1], [44, 6], [57, 3]],
+      bauen(B) {
+        boden(B, (x, z) => z > -12 && z < 22 ? variiere(((x + z) / 4 & 1) ? 0xd8cfc0 : 0xcbc1b0, 0.02) : variiere(C.gras2, 0.035));
+        const wand = [0xd9c3a5, 0xb7c9d6, 0xe3b9a6, 0xc8d6b5, 0xe8d8a8, 0xc9b8d8];
+        for (let x = -92, i = 0; x < 92; i++) { const w = 6 + (i % 3); haus(B, x + w / 2, -19, w, 7, 9 + (i * 3 % 4), wand[i % wand.length], i % 2 ? C.dach : 0x7a6a5a); x += w + 0.2; }
+        for (let x = -100; x < 100; x += 12) B.box(x, 0, -34, 10, 14 + ((x * 5) & 7), 8, variiere(0xb9b2a8, 0.06));
+        for (let x = -86; x < 90; x += 16) { laterne(B, x, 24); baum(B, x + 8, 28, 0.8); B.box(x + 3, 0, 30, 1.6, 0.8, 1.6, C.stein); B.box(x + 3, 0.8, 30, 1.2, 0.5, 1.2, [C.rot, C.gelb, C.rosa][(x >> 4) & 1]); bank(B, x + 12, 34); }
+        hintergrund(B, 0x8fae80);
+      },
+      wahrzeichen: [
+        (B, x, z) => { B.box(x, 0, z - 2.5, 3, 2.6, 2, C.gruen); B.box(x, 2.6, z - 2.5, 3.4, 0.3, 2.4, C.gruen); for (let i = 0; i < 4; i++) B.box(x - 1.1 + i * 0.75, 0.8, z - 1.45, 0.6, 0.8, 0.1, [C.weiss, C.gelb, C.rot, C.hellblau][i]); },
+        (B, x, z) => { laden(B, x, z - 5, 8, C.weiss, C.rot); [-2, 0, 2].forEach((d, i) => { B.box(x + d, 0.6, z - 2.3, 1.2, 1.2, 0.3, [C.blau, C.gelb, C.rosa][i]); B.box(x + d, 1.9, z - 2.3, 0.8, 0.4, 0.06, C.weiss); }); },
+        (B, x, z) => { haus(B, x, z - 6, 9, 6, 7, 0x6b4f7a, C.dach, 0, false); B.box(x, 4, z - 2.8, 8, 1.6, 0.9, 0x3b2f4a); for (let i = 0; i < 9; i++) B.box(x - 3.6 + i * 0.9, 4.2, z - 2.3, 0.3, 0.3, 0.1, 0xfff2b0); B.box(x, 0, z - 2.95, 2.4, 2.8, 0.1, 0x2b2b2b); },
+        (B, x, z) => { haus(B, x, z - 6, 10, 6, 12, 0xdccfb8, C.dach); B.box(x, 9, z - 2.9, 6, 1.2, 0.15, C.indigo); },
+        (B, x, z) => { laden(B, x, z - 5, 7, 0xd8e6ef, C.rosa); B.box(x, 5.6, z - 2.4, 1.3, 1.1, 0.15, C.rot); B.box(x - 2, 0.6, z - 2.3, 0.9, 1.6, 0.3, C.gelb); B.box(x + 2, 0.6, z - 2.3, 1.2, 1.2, 0.3, C.hellblau); },
+        (B, x, z) => { haus(B, x, z - 5, 6, 5, 6, 0xc47456, C.dach2); B.box(x, 0, z - 2.45, 1.1, 2.2, 0.15, C.blau); B.box(x + 2, 0, z - 1.5, 0.8, 1, 0.8, 0x3b3f4a); },
+        (B, x, z) => { haus(B, x, z - 6, 6, 6, 5, 0xe7dccb, C.dach); B.box(x, 5, z - 6, 2.6, 6, 2.6, 0xe7dccb); B.box(x, 9, z - 4.65, 1.8, 1.8, 0.1, C.weiss); B.box(x, 9.5, z - 4.58, 0.12, 0.8, 0.06, 0x222222); B.box(x, 11, z - 6, 3, 0.6, 3, C.dach); B.box(x, 11.6, z - 6, 1.6, 1.2, 1.6, C.dach); },
+        (B, x, z) => { haus(B, x, z - 5, 6, 4, 3.6, C.mint, C.dach2); [-1.8, 0, 1.8].forEach((d, i) => { B.box(x + d, 0, z - 1.2, 0.2, 2.1, 0.2, 0xffffff); B.box(x + d, 2.1, z - 1.2, 1.6, 0.2, 1.6, [C.rot, C.gelb, C.blau][i]); B.box(x + d, 0, z - 0.6, 0.8, 0.7, 0.8, C.holz); }); },
+        (B, x, z) => [-3, 0, 3].forEach((d, i) => { B.box(x + d, 0, z - 2, 2.2, 1, 1.4, C.holz); B.box(x + d, 1, z - 2, 2, 0.2, 1.2, [C.rot, C.blau, C.gelb][i]); B.box(x + d, 1.2, z - 1.4, 0.9, 0.6, 0.06, C.weiss); [-0.9, 0.9].forEach(p => B.box(x + d + p, 1, z - 2.6, 0.12, 1.6, 0.12, C.holz2)); B.box(x + d, 2.6, z - 2, 2.4, 0.15, 1.6, [C.rot, C.blau, C.gelb][i]); }),
+        (B, x, z) => { B.box(x + 2, 0, z - 3, 4, 0.6, 4, C.stein); B.box(x + 2, 0.6, z - 3, 3.2, 0.2, 3.2, C.wasser); B.box(x + 2, 0.6, z - 3, 0.8, 2, 0.8, C.stein2); B.box(x + 2, 2.6, z - 3, 1.6, 0.3, 1.6, C.stein); },
+      ],
+    },
+    moor: {      // Unit 5: Moor mit Bahnhof
+      himmel: ['#8fb7d6', '#cfdde8', '#ece4d4'], nebel: 0xdfe2dc,
+      plaetze: [[-58, 6], [-43, 1], [-28, 6], [-12, 3], [4, 6], [20, 1], [36, 6], [54, 2]],
+      fluss: -12,                      // Fluss quer zum Weg (bei x = -12), darüber die Holzbrücke
+      bauen(B, S) {
+        const fleck = (x, z) => ((x * 73856093) ^ (z * 19349663)) >>> 0;   // fester „Zufall“ je Klotz
+        boden(B, (x, z) => { if (Math.abs(x - S.fluss) < 3) return null; const h = fleck(x, z) % 100;
+          return variiere(h < 7 ? 0xa78fa2 : h < 16 ? 0x9e9068 : 0x93a05c, 0.035); });
+        B.box(S.fluss, -3, -10, 6, 1.4, 108, 0x6b5a44);   // Flussbett
+        for (let i = 0; i < 12; i++) fels(B, -84 + zufall() * 168, -50 + zufall() * 30, 0.8 + zufall());
+        [[-70, 22], [-30, 26], [16, 24], [60, 22], [-50, 34], [36, 32], [-4, 38]].forEach(([x, z]) => fels(B, x, z, 0.9));
+        [[-20, 28], [44, 26]].forEach(([x, z], i) => pony(B, x, z, i ? 0x5a3b26 : 0x8a5a33));
+        [[-46, -14], [-40, -18], [28, -16], [34, -12], [64, 14]].forEach(([x, z], i) => pony(B, x, z, i % 2 ? 0x7a4b2a : 0x4a3426));
+        for (let x = -100; x < 100; x += 18) B.box(x, -2, -60, 19, 10 + ((x * 3) & 7), 10, variiere(0x8a9a6a, 0.06));
+      },
+      wahrzeichen: [
+        (B, x, z) => { auto(B, x - 2, z - 3, C.rot); auto(B, x + 1, z - 3, C.blau); B.box(x + 3.4, 0, z - 1.5, 0.2, 2.6, 0.2, 0x3b3f4a); B.box(x + 3.4, 2.6, z - 1.5, 1.2, 1.2, 0.12, C.blau); B.box(x + 3.4, 3, z - 1.42, 0.5, 0.6, 0.06, C.weiss); },
+        (B, x, z) => { B.box(x, 0, z - 3, 0.3, 5, 0.3, 0xdddddd); B.box(x, 5, z - 3, 2, 0.12, 0.12, 0xdddddd); [-1, 1].forEach(d => B.box(x + d, 5.2, z - 3, 0.4, 0.4, 0.4, C.weiss)); B.box(x + 1.6, 0, z - 2, 1.4, 1.4, 1.2, C.weiss); B.box(x + 1.6, 1.4, z - 2, 1.6, 0.15, 1.4, 0x9aa3ad); },
+        (B, x, z) => { B.box(x, 0, z - 1.5, 0.3, 3.6, 0.3, C.holz2); [[2.8, 0.3], [2.2, -0.4], [1.6, 0.2]].forEach(([y, r]) => B.box(x + 0.9, y, z - 1.5, 2, 0.45, 0.12, C.holz, r)); },
+        (B, x, z) => { B.box(x, -0.12, z + 3.4, 7.4, 0.16, 3.6, C.holz); [-1.6, 1.6].forEach(d => { B.box(x - 3.4, 0.4, z + 3.4 + d, 0.2, 1, 0.2, C.holz2); B.box(x + 3.4, 0.4, z + 3.4 + d, 0.2, 1, 0.2, C.holz2); B.box(x, 1.3, z + 3.4 + d, 7, 0.15, 0.15, C.holz2); }); },
+        (B, x, z) => { [-1.2, 1.2].forEach(d => B.box(x + d, 0, z - 2, 0.25, 2.4, 0.25, C.holz2)); B.box(x, 1.4, z - 2, 3, 1.8, 0.2, C.holz); B.box(x, 1.6, z - 1.88, 2.5, 1.3, 0.06, 0xf3e3c3); },
+        (B, x, z) => { B.box(x, 0, z - 2.5, 1.4, 0.5, 1.2, 0x8a847a); B.box(x, 0.5, z - 2.5, 0.6, 3.2, 0.5, 0x9a948a); B.box(x, 2.6, z - 2.5, 2.2, 0.5, 0.5, 0x9a948a); },
+        (B, x, z) => { B.box(x + 1, 0, z - 6, 16, 0.9, 3.4, 0xa9a196); haus(B, x - 1, z - 10, 7, 4, 3.6, 0xc47456, C.dach); B.box(x + 1, 0, z - 13, 22, 0.25, 0.3, 0x5a5a5a); B.box(x + 1, 0, z - 14.4, 22, 0.25, 0.3, 0x5a5a5a);
+                         B.box(x + 6, 0.3, z - 13.7, 7, 2.6, 2.2, C.gruen); B.box(x + 6, 2.9, z - 13.7, 7.2, 0.3, 2.4, 0x3b3f4a); for (let i = 0; i < 3; i++) B.box(x + 3.6 + i * 2.4, 1.6, z - 12.58, 1.4, 0.9, 0.06, 0xbfe1f0); B.box(x + 1, 0.9, z - 4.4, 0.2, 2.4, 0.2, 0x3b3f4a); B.box(x + 1, 3.3, z - 4.4, 2.2, 0.7, 0.15, C.blau); },
+        (B, x, z) => { for (let i = 0; i < 4; i++) B.box(x + 3, i * 1.5, z - 4, 7 - i * 1.4, 1.5, 6 - i * 1.2, variiere(0x948e84, 0.05)); fels(B, x + 5, z - 2, 0.8); B.box(x + 3, 6, z - 4, 0.15, 2.6, 0.15, 0xeeeeee); B.box(x + 3.7, 7.8, z - 4, 1.3, 0.8, 0.06, C.gold); },
+      ],
+    },
+  });
+  // Schon vorhandene Szene „hafen“: Meer, Boote, Möwen
+  Object.assign(SZENEN.hafen, { wasser: { x: 0, z: 73, w: 260, d: 110, y: -1.4 }, boote: true, moewen: true });
+  Object.assign(SZENEN.moor, { wasser: { x: -12, z: -10, w: 6, d: 108, y: -1.1 } });
+  Object.values(SZENEN).forEach(S => { if (!S.weg) S.weg = welle(S.plaetze); if (!S.start) S.start = S.weg[0]; if (!S.seite) S.seite = []; });
+
   function baueHafen(B, S) {
     const kai = S.kai;
     // Boden: Klötze 4 × 4 – Kai (gepflastert) am Wasser, dahinter Gras; leicht unterschiedlich gefärbt
-    for (let x = -96; x < 96; x += 4) for (let z = -64; z < kai; z += 4) {
+    for (let x = -128; x < 112; x += 4) for (let z = -64; z < kai; z += 4) {
       const amKai = z >= kai - 12 && x > -84 && x < 48;
       B.box(x + 2, -2, z + 2, 4, 2, 4, amKai ? variiere(C.kai, 0.03) : variiere(C.gras, 0.035));
     }
@@ -262,19 +397,20 @@
     }
 
     // Wasser: Low-Poly-Fläche mit sanften Wellen (Phong mit flacher Schattierung, Normalen aus dem Shader)
-    const wGeo = new T.PlaneGeometry(260, 110, 52, 22); wGeo.rotateX(-Math.PI / 2); wGeo.translate(0, -1.4, S.kai + 55);
+    const WS = S.wasser || { x: 0, z: 0, w: 1, d: 1, y: -50 };
+    const wGeo = new T.PlaneGeometry(WS.w, WS.d, Math.max(1, Math.round(WS.w / 5)), Math.max(1, Math.round(WS.d / 5))); wGeo.rotateX(-Math.PI / 2); wGeo.translate(WS.x, WS.y, WS.z);
     const wPos = wGeo.attributes.position, wBasis = Float32Array.from(wPos.array);
     const wasser = merke(new T.Mesh(wGeo, new T.MeshPhongMaterial({ color: C.wasser, flatShading: true, shininess: 70, specular: 0x9fd9ee, transparent: true, opacity: 0.94 })));
-    wasser.receiveShadow = true; scene.add(wasser);
+    wasser.receiveShadow = true; wasser.visible = !!S.wasser; scene.add(wasser);
     function wellen(t) {
-      if (reduce) return;
+      if (reduce || !S.wasser) return;
       const a = wPos.array;
       for (let i = 0; i < a.length; i += 3) a[i + 1] = wBasis[i + 1] + Math.sin(wBasis[i] * 0.21 + t * 1.1) * 0.22 + Math.cos(wBasis[i + 2] * 0.27 + t * 0.8) * 0.18;
       wPos.needsUpdate = true;
     }
 
     // Boote auf dem Wasser (schaukeln), Wolken (ziehen), Möwen (kreisen)
-    const boote = [[-40, 30, C.rot, 0.4], [-12, 27, C.blau, -0.3], [22, 34, C.gelb, 1.2], [-70, 36, C.gruen, 2.2]].map(([x, z, f, ry]) => {
+    const boote = (S.boote ? [[-40, 30, C.rot, 0.4], [-12, 27, C.blau, -0.3], [22, 34, C.gelb, 1.2], [-70, 36, C.gruen, 2.2]] : []).map(([x, z, f, ry]) => {
       const BB = Bau(); boot(BB, 0, 0, f, 0);
       const m = merke(new T.Mesh(BB.geometrie(), vcMat)); m.position.set(x, -1.5, z); m.rotation.y = ry; m.castShadow = true; scene.add(m);
       return m;
@@ -286,7 +422,7 @@
       const m = merke(new T.Mesh(W.geometrie(), new T.MeshLambertMaterial({ vertexColors: true, emissive: 0x666666 })));
       m.position.set(-120 + i * 45 + zufall() * 20, 34 + zufall() * 12, -40 - zufall() * 50); scene.add(m); wolken.push(m);
     }
-    const moewen = [0, 1, 2].map(i => {
+    const moewen = (S.moewen ? [0, 1, 2] : []).map(i => {
       const g = new T.Group(), mat = new T.MeshLambertMaterial({ color: 0xffffff });
       const k = new T.Mesh(new T.BoxGeometry(0.5, 0.4, 1.2), mat); g.add(k);
       const fl = [-1, 1].map(sd => { const f = new T.Mesh(new T.BoxGeometry(1.6, 0.1, 0.6), mat); f.geometry.translate(sd * 0.8, 0, 0); g.add(f); return f; });
@@ -345,6 +481,32 @@
     zeug.push(sockelGeo, ringGeo, fahneGeo, pfeilGeo, pfeilMat, ...Object.values(sockelMat));
     const nachId = id => ST.find(s => s.st.id === id);
 
+    // Brücke zum nächsten Ort am Ende des Wegs: Steintor mit Schranke; offen, sobald das Finale der Unit gemeistert ist
+    let tor = null;
+    if (o.bruecke) {
+      const ende = kurve.getPointAt(1), tg = kurve.getTangentAt(1), ry = Math.atan2(tg.x, tg.z);
+      const cs = Math.cos(ry), sn = Math.sin(ry), at = (lx, lz) => [ende.x + lx * cs + lz * sn, ende.z - lx * sn + lz * cs];
+      const TB = Bau();
+      [-2.6, 2.6].forEach(lx => { const q = at(lx, 1.5); TB.box(q[0], 0, q[1], 1.1, 4.2, 1.1, C.stein); TB.box(q[0], 4.2, q[1], 1.4, 0.4, 1.4, C.stein2); });
+      let q = at(0, 1.5); TB.box(q[0], 4.6, q[1], 6.8, 0.8, 1.2, C.stein, ry); TB.box(q[0], 5.4, q[1], 2.2, 0.8, 1.2, C.stein2, ry);
+      const torMesh = merke(new T.Mesh(TB.geometrie(), vcMat)); torMesh.castShadow = torMesh.receiveShadow = true; scene.add(torMesh);
+      const SB = Bau(); for (let i = 0; i < 4; i++) { q = at(-1.7 + i * 1.15, 1.5); SB.box(q[0], 0.9, q[1], 1.15, 0.3, 0.3, i % 2 ? C.weiss : C.rot, ry); }
+      const schranke = merke(new T.Mesh(SB.geometrie(), vcMat)); scene.add(schranke);
+      const g = new T.Group(); q = at(0, 1.5); g.position.set(q[0], 0, q[1]); scene.add(g);
+      const ring = new T.Mesh(ringGeo, new T.MeshBasicMaterial({ color: C.gold, transparent: true, opacity: 0.6, depthWrite: false })); ring.scale.set(1.3, 1, 1.3); ring.position.y = 0.05; g.add(ring); zeug.push(ring.material);
+      const info = { id: '#bruecke', nr: '➜', art: '', titel: o.bruecke.titel, ort: 'Weg zum nächsten Ort', zustand: o.bruecke.offen ? 'offen' : 'zu' };
+      const tex = schildTextur(info), schild = new T.Sprite(new T.SpriteMaterial({ map: tex, depthWrite: false })); schild.position.y = 7.4; schild.renderOrder = 2; g.add(schild); zeug.push(tex, schild.material);
+      const hit = new T.Mesh(new T.BoxGeometry(7, 8, 4), new T.MeshBasicMaterial({ visible: false })); hit.position.y = 3; g.add(hit); zeug.push(hit.geometry, hit.material);
+      tor = { info, tex, schild, schranke, ring, hit, u: 1 };
+    }
+    function setzeTor(offen) {
+      if (!tor) return;
+      tor.info.zustand = offen ? 'offen' : 'zu';
+      schildTextur(tor.info, tor.tex);
+      tor.schranke.visible = !offen; tor.ring.visible = offen;
+      renderer.shadowMap.needsUpdate = true; bitte();
+    }
+
     function setzeZustand(liste) {
       liste.forEach(n => {
         const s = nachId(n.id); if (!s) return;
@@ -388,6 +550,7 @@
       camera.aspect = w / h; breit = w / h; camera.fov = breit < 0.8 ? 50 : 40; camera.updateProjectionMatrix();
       const sk = breit < 0.8 ? 10.5 : 8.5;                    // Schilder auf schmalen Bildschirmen größer (lesbar)
       ST.forEach(s => { s.schild.scale.set(sk, sk * 224 / 512, 1); s.schild.position.y = 4.4 + sk * 0.12; });
+      if (tor) tor.schild.scale.set(sk, sk * 224 / 512, 1);
       bitte();
     }
     const ro = new ResizeObserver(resize); ro.observe(host); resize();
@@ -415,8 +578,9 @@
       const r = el.getBoundingClientRect();
       maus.set((e.clientX - r.left) / r.width * 2 - 1, -(e.clientY - r.top) / r.height * 2 + 1);
       ray.setFromCamera(maus, camera);
-      const treffer = ray.intersectObjects(ST.map(s => s.hit).concat(ST.map(s => s.schild)), false)[0];
+      const treffer = ray.intersectObjects(ST.map(s => s.hit).concat(ST.map(s => s.schild), tor ? [tor.hit, tor.schild] : []), false)[0];
       if (!treffer) return;
+      if (tor && (treffer.object === tor.hit || treffer.object === tor.schild)) { if (o.onBruecke) o.onBruecke(); return; }
       const s = ST.find(x => x.hit === treffer.object || x.schild === treffer.object);
       if (s && o.onTippen) o.onTippen(s.st.id);
     });
@@ -471,6 +635,7 @@
           if (s.fahne.visible) s.fahne.rotation.y = Math.sin(t * 3 + s.i) * 0.25;
           if (s.pfeil.visible) { s.pfeil.position.y = 6.9 + Math.sin(t * 2.2) * 0.35; s.pfeil.rotation.y = t; }
         });
+        if (tor && tor.ring.visible) { const q = 1.3 + Math.sin(t * 2.4) * 0.12; tor.ring.scale.set(q, 1, q); }
       }
       if (bewegt || idle || wach) { renderer.render(scene, camera); wach = false; }
       if (bewegt || !reduce) raf = requestAnimationFrame(schritt);
@@ -479,6 +644,7 @@
     document.addEventListener('visibilitychange', sichtbar);
 
     setzeZustand(o.stationen);
+    if (tor) setzeTor(!!o.bruecke.offen);
     // Kamera gleich am Ziel
     sicht.copy(spieler.position); renderer.shadowMap.needsUpdate = true; bitte();
 
@@ -490,6 +656,14 @@
         schwenk.set(0, 0, 0);
         if (reduce || Math.abs(s.u - F.u) * LAENGE < 0.5) { F.u = s.u; F.ziel = null; renderer.shadowMap.needsUpdate = true; bitte(); return Promise.resolve(); }
         return new Promise(res => { if (F.fertig) F.fertig(); F.ziel = s.u; F.fertig = res; bitte(); });
+      },
+      bruecke: setzeTor,
+      /** Figur läuft bis zur Brücke am Ende des Wegs → Promise */
+      zurBruecke() {
+        if (!tor) return Promise.resolve();
+        schwenk.set(0, 0, 0);
+        if (reduce) { F.u = 1; bitte(); return Promise.resolve(); }
+        return new Promise(res => { if (F.fertig) F.fertig(); F.ziel = 1; F.fertig = res; bitte(); });
       },
       zeige(id) { const s = nachId(id); if (!s) return; schwenk.set(s.p.x - spieler.position.x, 0, Math.max(-16, Math.min(16, s.p.z - spieler.position.z))); bitte(); },
       jubel() { F.jubelT = 0; figur.gesicht('cheer'); bitte(); },

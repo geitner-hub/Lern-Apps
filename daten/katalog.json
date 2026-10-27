@@ -1252,9 +1252,13 @@
        "id": "en.6.should",
        "titel": "should / shouldn't",
        "klasse": 6,
+       "quelle": {
+        "app": "apps/typen/uebung.html",
+        "parameter": "inhalt=en.6.should"
+       },
        "lehrplan": "E6 Grammatik (Highlight 6, Unit 3 und 5): should / shouldn't für Ratschläge und Regeln",
        "dauer": 8,
-       "einsatz": "Reserviert für English Journey Year 6 – Inhalte folgen (noch ohne App)",
+       "einsatz": "English Journey Year 6 (Station) oder als eigene App im Admin; Fehler-Training zur Wiederholung",
        "stufen": [
         { "id": "en.6.should.rat", "titel": "Ratschläge (Unit 3)" },
         { "id": "en.6.should.regeln", "titel": "Regeln (Unit 5)" }
@@ -1264,9 +1268,13 @@
        "id": "en.6.much-many",
        "titel": "much / many / lots of",
        "klasse": 6,
+       "quelle": {
+        "app": "apps/typen/uebung.html",
+        "parameter": "inhalt=en.6.much-many"
+       },
        "lehrplan": "E6 Grammatik (Highlight 6, Unit 3): Mengenangaben much, many, lots of",
        "dauer": 8,
-       "einsatz": "Reserviert für English Journey Year 6 – Inhalte folgen (noch ohne App)",
+       "einsatz": "English Journey Year 6 (Station) oder als eigene App im Admin; Fehler-Training zur Wiederholung",
        "stufen": [
         { "id": "en.6.much-many.formen", "titel": "much, many oder lots of?" }
        ]
@@ -1275,9 +1283,13 @@
        "id": "en.6.good-better-best",
        "titel": "good – better – best",
        "klasse": 6,
+       "quelle": {
+        "app": "apps/typen/uebung.html",
+        "parameter": "inhalt=en.6.good-better-best"
+       },
        "lehrplan": "E6 Grammatik (Highlight 6, Unit 4): unregelmäßige Steigerung (good, bad, …)",
        "dauer": 8,
-       "einsatz": "Reserviert für English Journey Year 6 – Inhalte folgen (noch ohne App)",
+       "einsatz": "English Journey Year 6 (Station) oder als eigene App im Admin; Fehler-Training zur Wiederholung",
        "stufen": [
         { "id": "en.6.good-better-best.formen", "titel": "Unregelmäßige Steigerung" }
        ]
@@ -1286,9 +1298,13 @@
        "id": "en.6.superlativ",
        "titel": "Superlativ",
        "klasse": 6,
+       "quelle": {
+        "app": "apps/typen/uebung.html",
+        "parameter": "inhalt=en.6.superlativ"
+       },
        "lehrplan": "E6 Grammatik (Highlight 6, Unit 4): Superlativ mit -est und most",
        "dauer": 8,
-       "einsatz": "Reserviert für English Journey Year 6 – Inhalte folgen (noch ohne App)",
+       "einsatz": "English Journey Year 6 (Station) oder als eigene App im Admin; Fehler-Training zur Wiederholung",
        "stufen": [
         { "id": "en.6.superlativ.formen", "titel": "the biggest, the most …" }
        ]
@@ -1297,9 +1313,13 @@
        "id": "en.6.have-to",
        "titel": "have to / I'd like to",
        "klasse": 6,
+       "quelle": {
+        "app": "apps/typen/uebung.html",
+        "parameter": "inhalt=en.6.have-to"
+       },
        "lehrplan": "E6 Grammatik (Highlight 6, Unit 4): have to (müssen) und I'd like to (möchte gern)",
        "dauer": 8,
-       "einsatz": "Reserviert für English Journey Year 6 – Inhalte folgen (noch ohne App)",
+       "einsatz": "English Journey Year 6 (Station) oder als eigene App im Admin; Fehler-Training zur Wiederholung",
        "stufen": [
         { "id": "en.6.have-to.formen", "titel": "have to oder I'd like to?" }
        ]
@@ -1308,9 +1328,13 @@
        "id": "en.6.zeitangaben",
        "titel": "on / in / at (Zeit)",
        "klasse": 6,
+       "quelle": {
+        "app": "apps/typen/uebung.html",
+        "parameter": "inhalt=en.6.zeitangaben"
+       },
        "lehrplan": "E6 Grammatik (Highlight 6, Unit 4): Zeitangaben mit on, in, at",
        "dauer": 8,
-       "einsatz": "Reserviert für English Journey Year 6 – Inhalte folgen (noch ohne App)",
+       "einsatz": "English Journey Year 6 (Station) oder als eigene App im Admin; Fehler-Training zur Wiederholung",
        "stufen": [
         { "id": "en.6.zeitangaben.formen", "titel": "on, in oder at?" }
        ]
@@ -1319,9 +1343,13 @@
        "id": "en.6.simple-past-story",
        "titel": "Simple past: Story",
        "klasse": 6,
+       "quelle": {
+        "app": "apps/typen/uebung.html",
+        "parameter": "inhalt=en.6.simple-past-story"
+       },
        "lehrplan": "E6 Grammatik (Highlight 6, Unit 4): simple past beim Erzählen",
        "dauer": 8,
-       "einsatz": "Reserviert für English Journey Year 6 – Inhalte folgen (noch ohne App)",
+       "einsatz": "English Journey Year 6 (Station) oder als eigene App im Admin; Fehler-Training zur Wiederholung",
        "stufen": [
         { "id": "en.6.simple-past-story.erzaehlen", "titel": "Eine Geschichte erzählen" }
        ]
@@ -1330,9 +1358,13 @@
        "id": "en.6.will-meinung",
        "titel": "I think / I'm sure / maybe + will",
        "klasse": 6,
+       "quelle": {
+        "app": "apps/typen/uebung.html",
+        "parameter": "inhalt=en.6.will-meinung"
+       },
        "lehrplan": "E6 Grammatik (Highlight 6, Unit 5): will-future mit I think, I'm sure, maybe",
        "dauer": 8,
-       "einsatz": "Reserviert für English Journey Year 6 – Inhalte folgen (noch ohne App)",
+       "einsatz": "English Journey Year 6 (Station) oder als eigene App im Admin; Fehler-Training zur Wiederholung",
        "stufen": [
         { "id": "en.6.will-meinung.formen", "titel": "Vermutungen über die Zukunft" }
        ]
@@ -1341,9 +1373,13 @@
        "id": "en.6.wortstellung",
        "titel": "Wortstellung S-P-O",
        "klasse": 6,
+       "quelle": {
+        "app": "apps/typen/uebung.html",
+        "parameter": "inhalt=en.6.wortstellung"
+       },
        "lehrplan": "E6 Grammatik (Highlight 6, Unit 5): Wortstellung im Aussagesatz (subject – verb – object)",
        "dauer": 8,
-       "einsatz": "Reserviert für English Journey Year 6 – Inhalte folgen (noch ohne App)",
+       "einsatz": "English Journey Year 6 (Station) oder als eigene App im Admin; Fehler-Training zur Wiederholung",
        "stufen": [
         { "id": "en.6.wortstellung.saetze", "titel": "Subjekt – Prädikat – Objekt" }
        ]
@@ -1468,13 +1504,17 @@
        "id": "en.6.revision",
        "titel": "Finale Unit 3–5 (English Journey)",
        "klasse": 6,
+       "quelle": {
+        "app": "apps/typen/uebung.html",
+        "parameter": "inhalt=en.6.revision"
+       },
        "lehrplan": "E6 Highlight 6: Wortschatz und Grammatik einer Unit zusammen (Finale der Stationen Unit 3–5)",
        "dauer": 8,
-       "einsatz": "Reserviert für English Journey Year 6 – Inhalte folgen (noch ohne App)",
+       "einsatz": "Finale der Units 3–5 im English Journey Year 6; auch als Wiederholung vor der Schulaufgabe",
        "stufen": [
-        { "id": "en.6.revision.u3", "titel": "Finale Unit 3" },
+        { "id": "en.6.revision.u3", "titel": "Postkarte vom Sportplatz" },
         { "id": "en.6.revision.u4", "titel": "Revision 2 (Unit 3 + 4)" },
-        { "id": "en.6.revision.u5", "titel": "Finale Unit 5" }
+        { "id": "en.6.revision.u5", "titel": "Postkarte aus Dartmoor" }
        ]
       },
       {

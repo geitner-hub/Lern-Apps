@@ -1,0 +1,437 @@
+{
+ "typ": "gemischt",
+ "thema": "en.6.should",
+ "titel": "should / shouldn't",
+ "emoji": "🇬🇧",
+ "klasse": 6,
+ "sprache": "en-GB",
+ "runde": 8,
+ "untertitel": "Ratschläge geben (Unit 3) und Regeln nennen (Unit 5)",
+ "hilfe": [
+  {
+   "titel": "should und shouldn't",
+   "text": "Mit should gibst du einen Rat oder nennst eine Regel: Das ist eine gute Idee. Mit shouldn't sagst du: Das ist keine gute Idee. Danach kommt die Grundform – ohne to und ohne -s, auch bei he/she/it.",
+   "beispiele": [
+    [
+     "You should see a doctor.",
+     "Du solltest zum Arzt gehen."
+    ],
+    [
+     "You shouldn't eat so much junk food.",
+     "Du solltest nicht so viel Junkfood essen."
+    ],
+    [
+     "What should I do?",
+     "Was soll ich tun?"
+    ],
+    [
+     "You should stay on the track.",
+     "Man sollte auf dem Weg bleiben."
+    ]
+   ]
+  }
+ ],
+ "stufen": [
+  {
+   "id": "en.6.should.rat",
+   "titel": "Ratschläge (Unit 3)",
+   "kurz": "You should see a doctor.",
+   "typ": "lueckentext",
+   "anweisung": "should oder shouldn't?",
+   "aufgaben": [
+    {
+     "text": "I have a headache. – You ___ go to bed early.",
+     "antwort": "should",
+     "optionen": [
+      "should",
+      "shouldn't"
+     ],
+     "tipp": "should = solltest · shouldn't = solltest nicht · danach die Grundform (ohne to)"
+    },
+    {
+     "text": "You ___ eat so much junk food. It's unhealthy.",
+     "antwort": "shouldn't",
+     "optionen": [
+      "should",
+      "shouldn't"
+     ],
+     "tipp": "should = solltest · shouldn't = solltest nicht · danach die Grundform (ohne to)"
+    },
+    {
+     "text": "I have a sore throat. – You ___ drink some hot tea.",
+     "antwort": "should",
+     "optionen": [
+      "should",
+      "shouldn't"
+     ],
+     "tipp": "should = solltest · shouldn't = solltest nicht · danach die Grundform (ohne to)"
+    },
+    {
+     "text": "You ___ go to school with a temperature.",
+     "antwort": "shouldn't",
+     "optionen": [
+      "should",
+      "shouldn't"
+     ],
+     "tipp": "should = solltest · shouldn't = solltest nicht · danach die Grundform (ohne to)"
+    },
+    {
+     "text": "She isn't feeling well. She ___ see a doctor.",
+     "antwort": "should",
+     "optionen": [
+      "should",
+      "shouldn't"
+     ],
+     "tipp": "should = solltest · shouldn't = solltest nicht · danach die Grundform (ohne to)"
+    },
+    {
+     "text": "You ___ skive school. It's not a good idea!",
+     "antwort": "shouldn't",
+     "optionen": [
+      "should",
+      "shouldn't"
+     ],
+     "tipp": "should = solltest · shouldn't = solltest nicht · danach die Grundform (ohne to)"
+    },
+    {
+     "text": "Carrots are healthy. We ___ eat more vegetables.",
+     "antwort": "should",
+     "optionen": [
+      "should",
+      "shouldn't"
+     ],
+     "tipp": "should = solltest · shouldn't = solltest nicht · danach die Grundform (ohne to)"
+    },
+    {
+     "text": "Sugary drinks are unhealthy. You ___ drink them every day.",
+     "antwort": "shouldn't",
+     "optionen": [
+      "should",
+      "shouldn't"
+     ],
+     "tipp": "should = solltest · shouldn't = solltest nicht · danach die Grundform (ohne to)"
+    },
+    {
+     "text": "You ___ watch TV for five hours. Go outside!",
+     "antwort": "shouldn't",
+     "optionen": [
+      "should",
+      "shouldn't"
+     ],
+     "tipp": "should = solltest · shouldn't = solltest nicht · danach die Grundform (ohne to)"
+    },
+    {
+     "text": "He's ill. He ___ play cricket today.",
+     "antwort": "shouldn't",
+     "optionen": [
+      "should",
+      "shouldn't"
+     ],
+     "tipp": "should = solltest · shouldn't = solltest nicht · danach die Grundform (ohne to)"
+    },
+    {
+     "text": "A yogurt is a healthy snack. You ___ try one.",
+     "antwort": "should",
+     "optionen": [
+      "should",
+      "shouldn't"
+     ],
+     "tipp": "should = solltest · shouldn't = solltest nicht · danach die Grundform (ohne to)"
+    },
+    {
+     "text": "We ___ do more sport. Let's go street surfing!",
+     "antwort": "should",
+     "optionen": [
+      "should",
+      "shouldn't"
+     ],
+     "tipp": "should = solltest · shouldn't = solltest nicht · danach die Grundform (ohne to)"
+    },
+    {
+     "text": "You should ___ more water. (drink)",
+     "antwort": [
+      "drink"
+     ],
+     "tipp": "should = solltest · shouldn't = solltest nicht · danach die Grundform (ohne to)",
+     "erklaerung": "Nach should kommt die Grundform: drink."
+    },
+    {
+     "text": "He shouldn't ___ to bed so late. (go)",
+     "antwort": [
+      "go"
+     ],
+     "tipp": "should = solltest · shouldn't = solltest nicht · danach die Grundform (ohne to)",
+     "erklaerung": "Nach shouldn't kommt die Grundform: go."
+    },
+    {
+     "typ": "sortieren",
+     "frage": "Bau den Satz.",
+     "teile": [
+      "You",
+      "should",
+      "see",
+      "a doctor"
+     ],
+     "loesung": "You should see a doctor.",
+     "tipp": "should = solltest · shouldn't = solltest nicht · danach die Grundform (ohne to)"
+    },
+    {
+     "typ": "sortieren",
+     "frage": "Bau den Satz.",
+     "teile": [
+      "You",
+      "shouldn't",
+      "eat",
+      "so much junk food"
+     ],
+     "loesung": "You shouldn't eat so much junk food.",
+     "tipp": "should = solltest · shouldn't = solltest nicht · danach die Grundform (ohne to)"
+    },
+    {
+     "typ": "sortieren",
+     "frage": "Bau die Frage.",
+     "teile": [
+      "What",
+      "should",
+      "I",
+      "do"
+     ],
+     "loesung": "What should I do?",
+     "tipp": "Fragewort + should + Person + Grundform?"
+    },
+    {
+     "typ": "sortieren",
+     "frage": "Bau die Frage.",
+     "teile": [
+      "Should",
+      "I",
+      "stay",
+      "at home"
+     ],
+     "loesung": "Should I stay at home?",
+     "tipp": "Should + Person + Grundform?"
+    },
+    {
+     "typ": "markieren",
+     "frage": "Ein Wort ist falsch. Tippe es an.",
+     "satz": "You should [goes] to the doctor.",
+     "richtig": "go",
+     "erklaerung": "Nach should: Grundform ohne -s."
+    },
+    {
+     "typ": "markieren",
+     "frage": "Ein Wort ist falsch. Tippe es an.",
+     "satz": "She [shoulds] eat more fruit.",
+     "richtig": "should",
+     "erklaerung": "should bekommt nie ein -s."
+    },
+    {
+     "typ": "markieren",
+     "frage": "Ein Wort ist falsch. Tippe es an.",
+     "satz": "You [don't should] eat junk food.",
+     "richtig": "shouldn't",
+     "erklaerung": "Verneinung: shouldn't (nicht don't should)."
+    },
+    {
+     "typ": "markieren",
+     "frage": "Ein Wort ist falsch. Tippe es an.",
+     "satz": "You should [to drink] more water.",
+     "richtig": "drink",
+     "erklaerung": "Nach should steht kein to."
+    }
+   ]
+  },
+  {
+   "id": "en.6.should.regeln",
+   "titel": "Regeln (Unit 5)",
+   "kurz": "You should stay on the track.",
+   "typ": "lueckentext",
+   "anweisung": "Regeln im Nationalpark: should oder shouldn't?",
+   "aufgaben": [
+    {
+     "text": "You ___ leave rubbish on the track.",
+     "antwort": "shouldn't",
+     "optionen": [
+      "should",
+      "shouldn't"
+     ],
+     "tipp": "should = solltest · shouldn't = solltest nicht · danach die Grundform (ohne to)"
+    },
+    {
+     "text": "You ___ take a first-aid kit.",
+     "antwort": "should",
+     "optionen": [
+      "should",
+      "shouldn't"
+     ],
+     "tipp": "should = solltest · shouldn't = solltest nicht · danach die Grundform (ohne to)"
+    },
+    {
+     "text": "You ___ check the weather forecast before you go.",
+     "antwort": "should",
+     "optionen": [
+      "should",
+      "shouldn't"
+     ],
+     "tipp": "should = solltest · shouldn't = solltest nicht · danach die Grundform (ohne to)"
+    },
+    {
+     "text": "You ___ go hiking alone when it's foggy.",
+     "antwort": "shouldn't",
+     "optionen": [
+      "should",
+      "shouldn't"
+     ],
+     "tipp": "should = solltest · shouldn't = solltest nicht · danach die Grundform (ohne to)"
+    },
+    {
+     "text": "You ___ wear good boots – there is lots of mud.",
+     "antwort": "should",
+     "optionen": [
+      "should",
+      "shouldn't"
+     ],
+     "tipp": "should = solltest · shouldn't = solltest nicht · danach die Grundform (ohne to)"
+    },
+    {
+     "text": "You ___ feed the ponies.",
+     "antwort": "shouldn't",
+     "optionen": [
+      "should",
+      "shouldn't"
+     ],
+     "tipp": "should = solltest · shouldn't = solltest nicht · danach die Grundform (ohne to)"
+    },
+    {
+     "text": "You ___ stay on the track.",
+     "antwort": "should",
+     "optionen": [
+      "should",
+      "shouldn't"
+     ],
+     "tipp": "should = solltest · shouldn't = solltest nicht · danach die Grundform (ohne to)"
+    },
+    {
+     "text": "You ___ climb on the old stone crosses.",
+     "antwort": "shouldn't",
+     "optionen": [
+      "should",
+      "shouldn't"
+     ],
+     "tipp": "should = solltest · shouldn't = solltest nicht · danach die Grundform (ohne to)"
+    },
+    {
+     "text": "You ___ listen carefully to the guide.",
+     "antwort": "should",
+     "optionen": [
+      "should",
+      "shouldn't"
+     ],
+     "tipp": "should = solltest · shouldn't = solltest nicht · danach die Grundform (ohne to)"
+    },
+    {
+     "text": "Put your rubbish in a plastic bag. You ___ take it home.",
+     "antwort": "should",
+     "optionen": [
+      "should",
+      "shouldn't"
+     ],
+     "tipp": "should = solltest · shouldn't = solltest nicht · danach die Grundform (ohne to)"
+    },
+    {
+     "text": "You ___ swim in the river when the water is fast.",
+     "antwort": "shouldn't",
+     "optionen": [
+      "should",
+      "shouldn't"
+     ],
+     "tipp": "should = solltest · shouldn't = solltest nicht · danach die Grundform (ohne to)"
+    },
+    {
+     "text": "You ___ be careful near the river.",
+     "antwort": "should",
+     "optionen": [
+      "should",
+      "shouldn't"
+     ],
+     "tipp": "should = solltest · shouldn't = solltest nicht · danach die Grundform (ohne to)"
+    },
+    {
+     "text": "You ___ drive fast in the national park.",
+     "antwort": "shouldn't",
+     "optionen": [
+      "should",
+      "shouldn't"
+     ],
+     "tipp": "should = solltest · shouldn't = solltest nicht · danach die Grundform (ohne to)"
+    },
+    {
+     "text": "You should ___ your rucksack the night before. (pack)",
+     "antwort": [
+      "pack"
+     ],
+     "tipp": "should = solltest · shouldn't = solltest nicht · danach die Grundform (ohne to)",
+     "erklaerung": "Nach should kommt die Grundform: pack."
+    },
+    {
+     "typ": "sortieren",
+     "frage": "Bau den Satz.",
+     "teile": [
+      "You",
+      "should",
+      "stay",
+      "on the track"
+     ],
+     "loesung": "You should stay on the track.",
+     "tipp": "should = solltest · shouldn't = solltest nicht · danach die Grundform (ohne to)"
+    },
+    {
+     "typ": "sortieren",
+     "frage": "Bau den Satz.",
+     "teile": [
+      "You",
+      "shouldn't",
+      "leave",
+      "rubbish",
+      "in the park"
+     ],
+     "loesung": "You shouldn't leave rubbish in the park.",
+     "tipp": "should = solltest · shouldn't = solltest nicht · danach die Grundform (ohne to)"
+    },
+    {
+     "typ": "sortieren",
+     "frage": "Bau den Satz.",
+     "teile": [
+      "You",
+      "should",
+      "check",
+      "the forecast"
+     ],
+     "loesung": "You should check the forecast.",
+     "tipp": "should = solltest · shouldn't = solltest nicht · danach die Grundform (ohne to)"
+    },
+    {
+     "typ": "markieren",
+     "frage": "Ein Wort ist falsch. Tippe es an.",
+     "satz": "You [should to] take a whistle.",
+     "richtig": "should",
+     "erklaerung": "Nach should steht kein to."
+    },
+    {
+     "typ": "markieren",
+     "frage": "Ein Wort ist falsch. Tippe es an.",
+     "satz": "Hikers [shoulds] be careful.",
+     "richtig": "should",
+     "erklaerung": "should bekommt nie ein -s."
+    },
+    {
+     "typ": "markieren",
+     "frage": "Ein Wort ist falsch. Tippe es an.",
+     "satz": "You should [stays] on the track.",
+     "richtig": "stay",
+     "erklaerung": "Nach should: Grundform ohne -s."
+    }
+   ]
+  }
+ ]
+}

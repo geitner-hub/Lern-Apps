@@ -1,0 +1,267 @@
+{
+ "typ": "gemischt",
+ "thema": "en.6.much-many",
+ "titel": "much / many / lots of",
+ "emoji": "🇬🇧",
+ "klasse": 6,
+ "sprache": "en-GB",
+ "runde": 8,
+ "untertitel": "Mengen beim Einkaufen und Essen – mit den Wörtern aus Unit 3",
+ "hilfe": [
+  {
+   "titel": "much, many oder lots of?",
+   "text": "much steht bei Dingen, die man nicht zählen kann (butter, water, time), many bei Dingen in der Mehrzahl (carrots, spoons). In Fragen und Verneinungen nimmst du much/many, in Aussagen meist lots of.",
+   "tabelle": [
+    [
+     "",
+     "Unzählbar",
+     "Zählbar (Mehrzahl)"
+    ],
+    [
+     "Frage",
+     "How much butter …?",
+     "How many carrots …?"
+    ],
+    [
+     "Verneinung",
+     "There isn't much yogurt.",
+     "There aren't many apples."
+    ],
+    [
+     "Aussage",
+     "lots of water",
+     "lots of carrots"
+    ]
+   ]
+  }
+ ],
+ "stufen": [
+  {
+   "id": "en.6.much-many.formen",
+   "titel": "much, many oder lots of?",
+   "kurz": "How many carrots …?",
+   "typ": "lueckentext",
+   "anweisung": "much, many oder lots of?",
+   "aufgaben": [
+    {
+     "text": "How ___ carrots do you want?",
+     "antwort": "many",
+     "optionen": [
+      "much",
+      "many",
+      "lots of"
+     ],
+     "tipp": "much + Unzählbares (butter, water) · many + Mehrzahl (carrots) · lots of in Aussagen"
+    },
+    {
+     "text": "How ___ butter is there?",
+     "antwort": "much",
+     "optionen": [
+      "much",
+      "many",
+      "lots of"
+     ],
+     "tipp": "much + Unzählbares (butter, water) · many + Mehrzahl (carrots) · lots of in Aussagen"
+    },
+    {
+     "text": "We haven't got ___ time.",
+     "antwort": "much",
+     "optionen": [
+      "much",
+      "many",
+      "lots of"
+     ],
+     "tipp": "much + Unzählbares (butter, water) · many + Mehrzahl (carrots) · lots of in Aussagen"
+    },
+    {
+     "text": "There aren't ___ apples left.",
+     "antwort": "many",
+     "optionen": [
+      "much",
+      "many",
+      "lots of"
+     ],
+     "tipp": "much + Unzählbares (butter, water) · many + Mehrzahl (carrots) · lots of in Aussagen"
+    },
+    {
+     "text": "She eats ___ fruit. It's healthy.",
+     "antwort": "lots of",
+     "optionen": [
+      "much",
+      "many",
+      "lots of"
+     ],
+     "tipp": "much + Unzählbares (butter, water) · many + Mehrzahl (carrots) · lots of in Aussagen"
+    },
+    {
+     "text": "He doesn't drink ___ water.",
+     "antwort": "much",
+     "optionen": [
+      "much",
+      "many",
+      "lots of"
+     ],
+     "tipp": "much + Unzählbares (butter, water) · many + Mehrzahl (carrots) · lots of in Aussagen"
+    },
+    {
+     "text": "There are ___ people at the cricket match.",
+     "antwort": "lots of",
+     "optionen": [
+      "much",
+      "many",
+      "lots of"
+     ],
+     "tipp": "much + Unzählbares (butter, water) · many + Mehrzahl (carrots) · lots of in Aussagen"
+    },
+    {
+     "text": "How ___ sugar is in this drink?",
+     "antwort": "much",
+     "optionen": [
+      "much",
+      "many",
+      "lots of"
+     ],
+     "tipp": "much + Unzählbares (butter, water) · many + Mehrzahl (carrots) · lots of in Aussagen"
+    },
+    {
+     "text": "I don't know ___ people in this group.",
+     "antwort": "many",
+     "optionen": [
+      "much",
+      "many",
+      "lots of"
+     ],
+     "tipp": "much + Unzählbares (butter, water) · many + Mehrzahl (carrots) · lots of in Aussagen"
+    },
+    {
+     "text": "There's ___ pepper on my pizza!",
+     "antwort": "lots of",
+     "optionen": [
+      "much",
+      "many",
+      "lots of"
+     ],
+     "tipp": "much + Unzählbares (butter, water) · many + Mehrzahl (carrots) · lots of in Aussagen"
+    },
+    {
+     "text": "How ___ spoons do we need?",
+     "antwort": "many",
+     "optionen": [
+      "much",
+      "many",
+      "lots of"
+     ],
+     "tipp": "much + Unzählbares (butter, water) · many + Mehrzahl (carrots) · lots of in Aussagen"
+    },
+    {
+     "text": "Don't eat too ___ junk food!",
+     "antwort": "much",
+     "optionen": [
+      "much",
+      "many",
+      "lots of"
+     ],
+     "tipp": "much + Unzählbares (butter, water) · many + Mehrzahl (carrots) · lots of in Aussagen"
+    },
+    {
+     "text": "Too ___ sugary drinks are bad for your health.",
+     "antwort": "many",
+     "optionen": [
+      "much",
+      "many",
+      "lots of"
+     ],
+     "tipp": "much + Unzählbares (butter, water) · many + Mehrzahl (carrots) · lots of in Aussagen"
+    },
+    {
+     "text": "There's ___ meat in a pasty.",
+     "antwort": "lots of",
+     "optionen": [
+      "much",
+      "many",
+      "lots of"
+     ],
+     "tipp": "much + Unzählbares (butter, water) · many + Mehrzahl (carrots) · lots of in Aussagen"
+    },
+    {
+     "text": "How ___ hours do you sleep?",
+     "antwort": "many",
+     "optionen": [
+      "much",
+      "many",
+      "lots of"
+     ],
+     "tipp": "much + Unzählbares (butter, water) · many + Mehrzahl (carrots) · lots of in Aussagen"
+    },
+    {
+     "text": "There isn't ___ yogurt in the fridge.",
+     "antwort": "much",
+     "optionen": [
+      "much",
+      "many",
+      "lots of"
+     ],
+     "tipp": "much + Unzählbares (butter, water) · many + Mehrzahl (carrots) · lots of in Aussagen"
+    },
+    {
+     "typ": "sortieren",
+     "frage": "Bau die Frage.",
+     "teile": [
+      "How much",
+      "butter",
+      "do",
+      "we",
+      "need"
+     ],
+     "loesung": "How much butter do we need?",
+     "tipp": "much + Unzählbares (butter, water) · many + Mehrzahl (carrots) · lots of in Aussagen"
+    },
+    {
+     "typ": "sortieren",
+     "frage": "Bau die Frage.",
+     "teile": [
+      "How many",
+      "carrots",
+      "are",
+      "on the shopping list"
+     ],
+     "loesung": "How many carrots are on the shopping list?",
+     "tipp": "much + Unzählbares (butter, water) · many + Mehrzahl (carrots) · lots of in Aussagen"
+    },
+    {
+     "typ": "sortieren",
+     "frage": "Bau den Satz.",
+     "teile": [
+      "There are",
+      "lots of",
+      "activities",
+      "in the park"
+     ],
+     "loesung": "There are lots of activities in the park.",
+     "tipp": "much + Unzählbares (butter, water) · many + Mehrzahl (carrots) · lots of in Aussagen"
+    },
+    {
+     "typ": "markieren",
+     "frage": "Ein Wort ist falsch. Tippe es an.",
+     "satz": "How [much] carrots do you want?",
+     "richtig": "many",
+     "erklaerung": "carrots ist Mehrzahl → many"
+    },
+    {
+     "typ": "markieren",
+     "frage": "Ein Wort ist falsch. Tippe es an.",
+     "satz": "There isn't [many] butter.",
+     "richtig": "much",
+     "erklaerung": "butter ist unzählbar → much"
+    },
+    {
+     "typ": "markieren",
+     "frage": "Ein Wort ist falsch. Tippe es an.",
+     "satz": "How [many] sugar do you take?",
+     "richtig": "much",
+     "erklaerung": "sugar ist unzählbar → much"
+    }
+   ]
+  }
+ ]
+}

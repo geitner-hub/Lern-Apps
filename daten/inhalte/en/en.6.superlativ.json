@@ -1,0 +1,215 @@
+{
+ "typ": "gemischt",
+ "thema": "en.6.superlativ",
+ "titel": "Superlativ",
+ "emoji": "🇬🇧",
+ "klasse": 6,
+ "sprache": "en-GB",
+ "runde": 8,
+ "untertitel": "the cheapest, the most comfortable – mit den Wörtern aus Unit 4",
+ "hilfe": [
+  {
+   "titel": "So bildest du den Superlativ",
+   "text": "Vor dem Superlativ steht the. Kurze Adjektive bekommen -est, lange Adjektive (ab drei Silben, meist auch zwei) bekommen most.",
+   "tabelle": [
+    [
+     "Regel",
+     "Beispiel"
+    ],
+    [
+     "kurz: the + -est",
+     "cheap → the cheapest, old → the oldest"
+    ],
+    [
+     "endet auf -e: + st",
+     "nice → the nicest"
+    ],
+    [
+     "Konsonant + y: -iest",
+     "busy → the busiest, funny → the funniest"
+    ],
+    [
+     "kurzer Vokal + Konsonant: verdoppeln",
+     "big → the biggest"
+    ],
+    [
+     "lang: the most …",
+     "comfortable → the most comfortable"
+    ]
+   ]
+  }
+ ],
+ "stufen": [
+  {
+   "id": "en.6.superlativ.formen",
+   "titel": "the cheapest, the most …",
+   "kurz": "Superlativ bilden",
+   "typ": "lueckentext",
+   "anweisung": "Setze den Superlativ ein.",
+   "aufgaben": [
+    {
+     "text": "They are the ___ parents in the world! (mean)",
+     "antwort": [
+      "meanest"
+     ],
+     "tipp": "kurze Adjektive: the + -est (cheapest) · lange: the most (most comfortable)"
+    },
+    {
+     "text": "This is the ___ shop in town. (cheap)",
+     "antwort": [
+      "cheapest"
+     ],
+     "tipp": "kurze Adjektive: the + -est (cheapest) · lange: the most (most comfortable)"
+    },
+    {
+     "text": "That sofa is the ___ in the shop. (comfortable)",
+     "antwort": [
+      "most comfortable"
+     ],
+     "tipp": "kurze Adjektive: the + -est (cheapest) · lange: the most (most comfortable)"
+    },
+    {
+     "text": "My sister is the ___ in our family. (old)",
+     "antwort": [
+      "oldest"
+     ],
+     "tipp": "kurze Adjektive: the + -est (cheapest) · lange: the most (most comfortable)"
+    },
+    {
+     "text": "Saturday is the ___ day in the charity shop. (busy)",
+     "antwort": [
+      "busiest"
+     ],
+     "tipp": "kurze Adjektive: the + -est (cheapest) · lange: the most (most comfortable)"
+    },
+    {
+     "text": "This is the ___ magazine of all. (interesting)",
+     "antwort": [
+      "most interesting"
+     ],
+     "tipp": "kurze Adjektive: the + -est (cheapest) · lange: the most (most comfortable)"
+    },
+    {
+     "text": "The 90s dress was the ___ thing in the shop. (expensive)",
+     "antwort": [
+      "most expensive"
+     ],
+     "tipp": "kurze Adjektive: the + -est (cheapest) · lange: the most (most comfortable)"
+    },
+    {
+     "text": "Who does the ___ paper round in town? (long)",
+     "antwort": [
+      "longest"
+     ],
+     "tipp": "kurze Adjektive: the + -est (cheapest) · lange: the most (most comfortable)"
+    },
+    {
+     "text": "This is the ___ shop in the street. (big)",
+     "antwort": [
+      "biggest"
+     ],
+     "tipp": "kurze Adjektive: the + -est (cheapest) · lange: the most (most comfortable)",
+     "erklaerung": "big → the biggest (g verdoppeln)"
+    },
+    {
+     "text": "He tells the ___ jokes. (funny)",
+     "antwort": [
+      "funniest"
+     ],
+     "tipp": "kurze Adjektive: the + -est (cheapest) · lange: the most (most comfortable)",
+     "erklaerung": "funny → the funniest (y → i)"
+    },
+    {
+     "text": "That was the ___ circus show ever! (nice)",
+     "antwort": [
+      "nicest"
+     ],
+     "tipp": "kurze Adjektive: the + -est (cheapest) · lange: the most (most comfortable)"
+    },
+    {
+     "text": "This is the ___ place for a day out. (popular)",
+     "antwort": [
+      "most popular"
+     ],
+     "tipp": "kurze Adjektive: the + -est (cheapest) · lange: the most (most comfortable)"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "cheap → the ?",
+     "antwort": [
+      "cheapest"
+     ],
+     "tipp": "kurze Adjektive: the + -est (cheapest) · lange: the most (most comfortable)"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "busy → the ?",
+     "antwort": [
+      "busiest"
+     ],
+     "tipp": "kurze Adjektive: the + -est (cheapest) · lange: the most (most comfortable)"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "comfortable → the ?",
+     "antwort": [
+      "most comfortable"
+     ],
+     "tipp": "kurze Adjektive: the + -est (cheapest) · lange: the most (most comfortable)"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "big → the ?",
+     "antwort": [
+      "biggest"
+     ],
+     "tipp": "kurze Adjektive: the + -est (cheapest) · lange: the most (most comfortable)"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "mean → the ?",
+     "antwort": [
+      "meanest"
+     ],
+     "tipp": "kurze Adjektive: the + -est (cheapest) · lange: the most (most comfortable)"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "interesting → the ?",
+     "antwort": [
+      "most interesting"
+     ],
+     "tipp": "kurze Adjektive: the + -est (cheapest) · lange: the most (most comfortable)"
+    },
+    {
+     "typ": "markieren",
+     "frage": "Ein Wort ist falsch. Tippe es an.",
+     "satz": "It's the [most cheap] shop in town.",
+     "richtig": "cheapest",
+     "erklaerung": "cheap ist kurz → the cheapest"
+    },
+    {
+     "typ": "markieren",
+     "frage": "Ein Wort ist falsch. Tippe es an.",
+     "satz": "This is the [comfortablest] chair.",
+     "richtig": "most comfortable",
+     "erklaerung": "comfortable ist lang → the most comfortable"
+    },
+    {
+     "typ": "markieren",
+     "frage": "Ein Wort ist falsch. Tippe es an.",
+     "satz": "They are the [meaner] parents in the world.",
+     "richtig": "meanest",
+     "erklaerung": "Superlativ: the meanest"
+    },
+    {
+     "typ": "markieren",
+     "frage": "Ein Wort ist falsch. Tippe es an.",
+     "satz": "This is the [bigest] shop.",
+     "richtig": "biggest",
+     "erklaerung": "big → the biggest (g verdoppeln)"
+    }
+   ]
+  }
+ ]
+}
