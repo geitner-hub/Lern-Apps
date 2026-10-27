@@ -1,0 +1,231 @@
+{
+ "typ": "gemischt",
+ "thema": "en.6.good-better-best",
+ "titel": "good – better – best",
+ "emoji": "🇬🇧",
+ "klasse": 6,
+ "sprache": "en-GB",
+ "runde": 8,
+ "untertitel": "Unregelmäßige Steigerung – mit den Wörtern aus Unit 4",
+ "hilfe": [
+  {
+   "titel": "Unregelmäßige Steigerung",
+   "text": "Ein paar Adjektive haben eigene Formen. Die musst du lernen.",
+   "tabelle": [
+    [
+     "Grundform",
+     "Komparativ (+ than)",
+     "Superlativ (the …)"
+    ],
+    [
+     "good",
+     "better",
+     "the best"
+    ],
+    [
+     "bad",
+     "worse",
+     "the worst"
+    ],
+    [
+     "many / much",
+     "more",
+     "the most"
+    ]
+   ],
+   "beispiele": [
+    [
+     "Ice skating is better than skateboarding.",
+     "Schlittschuhlaufen ist besser als Skateboardfahren."
+    ],
+    [
+     "That was the worst day out ever!",
+     "Das war der schlimmste Ausflug aller Zeiten!"
+    ]
+   ]
+  }
+ ],
+ "stufen": [
+  {
+   "id": "en.6.good-better-best.formen",
+   "titel": "good, better, best",
+   "kurz": "bad – worse – worst",
+   "typ": "lueckentext",
+   "anweisung": "Setze die richtige Form ein.",
+   "aufgaben": [
+    {
+     "text": "My chores are bad, but your chores are ___. (bad)",
+     "antwort": [
+      "worse"
+     ],
+     "tipp": "good – better – best · bad – worse – worst",
+     "erklaerung": "Komparativ von bad: worse"
+    },
+    {
+     "text": "This is the ___ film of the year! (good)",
+     "antwort": [
+      "best"
+     ],
+     "tipp": "good – better – best · bad – worse – worst",
+     "erklaerung": "Superlativ von good: the best"
+    },
+    {
+     "text": "Ice skating is ___ than skateboarding. (good)",
+     "antwort": [
+      "better"
+     ],
+     "tipp": "good – better – best · bad – worse – worst"
+    },
+    {
+     "text": "That was the ___ day out ever! (bad)",
+     "antwort": [
+      "worst"
+     ],
+     "tipp": "good – better – best · bad – worse – worst"
+    },
+    {
+     "text": "Our team is ___ than last year. (good)",
+     "antwort": [
+      "better"
+     ],
+     "tipp": "good – better – best · bad – worse – worst"
+    },
+    {
+     "text": "The weather today is ___ than yesterday. (bad)",
+     "antwort": [
+      "worse"
+     ],
+     "tipp": "good – better – best · bad – worse – worst"
+    },
+    {
+     "text": "Who is the ___ player in your team? (good)",
+     "antwort": [
+      "best"
+     ],
+     "tipp": "good – better – best · bad – worse – worst"
+    },
+    {
+     "text": "My brother has the ___ room – it's never tidy! (bad)",
+     "antwort": [
+      "worst"
+     ],
+     "tipp": "good – better – best · bad – worse – worst"
+    },
+    {
+     "text": "The circus was good, but the theatre was even ___. (good)",
+     "antwort": [
+      "better"
+     ],
+     "tipp": "good – better – best · bad – worse – worst"
+    },
+    {
+     "text": "A paper round is ___ than hoovering, I think. (good)",
+     "antwort": [
+      "better"
+     ],
+     "tipp": "good – better – best · bad – worse – worst"
+    },
+    {
+     "text": "This magazine is ___ than that one.",
+     "antwort": "better",
+     "optionen": [
+      "better",
+      "gooder",
+      "more good"
+     ],
+     "tipp": "good – better – best · bad – worse – worst"
+    },
+    {
+     "text": "Monday is the ___ day of the week!",
+     "antwort": "worst",
+     "optionen": [
+      "worst",
+      "baddest",
+      "most bad"
+     ],
+     "tipp": "good – better – best · bad – worse – worst"
+    },
+    {
+     "text": "My marks are ___ than last year. 🙁",
+     "antwort": "worse",
+     "optionen": [
+      "worse",
+      "badder",
+      "worst"
+     ],
+     "tipp": "good – better – best · bad – worse – worst"
+    },
+    {
+     "text": "Lucky you! You have the ___ parents.",
+     "antwort": "best",
+     "optionen": [
+      "best",
+      "better",
+      "goodest"
+     ],
+     "tipp": "good – better – best · bad – worse – worst"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "good → better → ?",
+     "antwort": [
+      "best"
+     ],
+     "tipp": "good – better – best · bad – worse – worst"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "bad → ? (Komparativ)",
+     "antwort": [
+      "worse"
+     ],
+     "tipp": "good – better – best · bad – worse – worst"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "bad → worse → ?",
+     "antwort": [
+      "worst"
+     ],
+     "tipp": "good – better – best · bad – worse – worst"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "good → ? (Komparativ)",
+     "antwort": [
+      "better"
+     ],
+     "tipp": "good – better – best · bad – worse – worst"
+    },
+    {
+     "typ": "markieren",
+     "frage": "Ein Wort ist falsch. Tippe es an.",
+     "satz": "This pizza is [gooder] than that one.",
+     "richtig": "better",
+     "erklaerung": "good – better – best"
+    },
+    {
+     "typ": "markieren",
+     "frage": "Ein Wort ist falsch. Tippe es an.",
+     "satz": "It was the [baddest] day of my life.",
+     "richtig": "worst",
+     "erklaerung": "bad – worse – the worst"
+    },
+    {
+     "typ": "markieren",
+     "frage": "Ein Wort ist falsch. Tippe es an.",
+     "satz": "My marks are [more bad] than last year.",
+     "richtig": "worse",
+     "erklaerung": "bad – worse – the worst"
+    },
+    {
+     "typ": "markieren",
+     "frage": "Ein Wort ist falsch. Tippe es an.",
+     "satz": "She is the [goodest] player in the team.",
+     "richtig": "best",
+     "erklaerung": "good – better – the best"
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,257 @@
+{
+ "typ": "gemischt",
+ "thema": "en.6.have-to",
+ "titel": "have to / I'd like to",
+ "emoji": "🇬🇧",
+ "klasse": 6,
+ "sprache": "en-GB",
+ "runde": 8,
+ "untertitel": "Pflichten und Wünsche – mit den Wörtern aus Unit 4",
+ "hilfe": [
+  {
+   "titel": "have to und I'd like to",
+   "text": "have to heißt „müssen“ (he/she/it: has to). don't have to heißt „nicht müssen“ – nicht verwechseln mit mustn't (nicht dürfen)! I'd like to (= I would like to) heißt „ich möchte gern“.",
+   "beispiele": [
+    [
+     "I have to do my chores.",
+     "Ich muss meine Hausarbeiten erledigen."
+    ],
+    [
+     "She has to empty the dishwasher.",
+     "Sie muss die Spülmaschine ausräumen."
+    ],
+    [
+     "On Sunday I don't have to work.",
+     "Am Sonntag muss ich nicht arbeiten."
+    ],
+    [
+     "I'd like to go ice skating.",
+     "Ich möchte gern Schlittschuh laufen gehen."
+    ]
+   ]
+  }
+ ],
+ "stufen": [
+  {
+   "id": "en.6.have-to.formen",
+   "titel": "have to oder I'd like to?",
+   "kurz": "I have to … / I'd like to …",
+   "typ": "lueckentext",
+   "anweisung": "Wähle die richtige Form.",
+   "aufgaben": [
+    {
+     "text": "I ___ do my chores every Saturday.",
+     "antwort": "have to",
+     "optionen": [
+      "have to",
+      "has to"
+     ],
+     "tipp": "have to / has to = müssen · don't have to = nicht müssen · I'd like to = ich möchte gern"
+    },
+    {
+     "text": "My brother ___ hoover the living room.",
+     "antwort": "has to",
+     "optionen": [
+      "have to",
+      "has to"
+     ],
+     "tipp": "have to / has to = müssen · don't have to = nicht müssen · I'd like to = ich möchte gern"
+    },
+    {
+     "text": "She ___ empty the dishwasher every day.",
+     "antwort": "has to",
+     "optionen": [
+      "have to",
+      "has to"
+     ],
+     "tipp": "have to / has to = müssen · don't have to = nicht müssen · I'd like to = ich möchte gern"
+    },
+    {
+     "text": "We ___ tidy our rooms before we can go out.",
+     "antwort": "have to",
+     "optionen": [
+      "have to",
+      "has to"
+     ],
+     "tipp": "have to / has to = müssen · don't have to = nicht müssen · I'd like to = ich möchte gern"
+    },
+    {
+     "text": "Dad ___ cut the grass once a week.",
+     "antwort": "has to",
+     "optionen": [
+      "have to",
+      "has to"
+     ],
+     "tipp": "have to / has to = müssen · don't have to = nicht müssen · I'd like to = ich möchte gern"
+    },
+    {
+     "text": "„Ich möchte gern in den Zirkus gehen.“ – ___ go to the circus.",
+     "antwort": "I'd like to",
+     "optionen": [
+      "I'd like to",
+      "I have to"
+     ],
+     "tipp": "have to / has to = müssen · don't have to = nicht müssen · I'd like to = ich möchte gern"
+    },
+    {
+     "text": "„Ich muss Zeitungen austragen.“ – ___ do a paper round.",
+     "antwort": "I have to",
+     "optionen": [
+      "I'd like to",
+      "I have to"
+     ],
+     "tipp": "have to / has to = müssen · don't have to = nicht müssen · I'd like to = ich möchte gern"
+    },
+    {
+     "text": "„Ich möchte gern Schlittschuh laufen gehen.“ – ___ go ice skating.",
+     "antwort": "I'd like to",
+     "optionen": [
+      "I'd like to",
+      "I have to"
+     ],
+     "tipp": "have to / has to = müssen · don't have to = nicht müssen · I'd like to = ich möchte gern"
+    },
+    {
+     "text": "„Ich muss heute mein Zimmer aufräumen.“ – ___ tidy my room today.",
+     "antwort": "I have to",
+     "optionen": [
+      "I'd like to",
+      "I have to"
+     ],
+     "tipp": "have to / has to = müssen · don't have to = nicht müssen · I'd like to = ich möchte gern"
+    },
+    {
+     "text": "„Ich würde nicht gern den ganzen Tag arbeiten.“ – ___ work all day.",
+     "antwort": "I wouldn't like to",
+     "optionen": [
+      "I wouldn't like to",
+      "I don't have to"
+     ],
+     "tipp": "have to / has to = müssen · don't have to = nicht müssen · I'd like to = ich möchte gern"
+    },
+    {
+     "text": "„Am Sonntag muss ich nicht arbeiten.“ – On Sunday I ___ work.",
+     "antwort": "don't have to",
+     "optionen": [
+      "don't have to",
+      "mustn't"
+     ],
+     "tipp": "have to / has to = müssen · don't have to = nicht müssen · I'd like to = ich möchte gern",
+     "erklaerung": "nicht müssen = don't have to · nicht dürfen = mustn't"
+    },
+    {
+     "text": "My little sister ___ do chores. She's only four.",
+     "antwort": "doesn't have to",
+     "optionen": [
+      "doesn't have to",
+      "don't have to"
+     ],
+     "tipp": "have to / has to = müssen · don't have to = nicht müssen · I'd like to = ich möchte gern"
+    },
+    {
+     "text": "Do you ___ fill the dishwasher? – Yes, I do.",
+     "antwort": "have to",
+     "optionen": [
+      "have to",
+      "has to"
+     ],
+     "tipp": "Frage: Do/Does + Person + have to …?"
+    },
+    {
+     "text": "Does he ___ wash the car?",
+     "antwort": "have to",
+     "optionen": [
+      "have to",
+      "has to"
+     ],
+     "tipp": "Nach does: have to (ohne s)"
+    },
+    {
+     "text": "I ___ buy a new magazine with my pocket money. (möchte gern)",
+     "antwort": [
+      "'d like to"
+     ],
+     "tipp": "have to / has to = müssen · don't have to = nicht müssen · I'd like to = ich möchte gern",
+     "erklaerung": "I'd like to = ich möchte gern"
+    },
+    {
+     "typ": "sortieren",
+     "frage": "Bau den Satz.",
+     "teile": [
+      "I",
+      "have to",
+      "do",
+      "a paper round"
+     ],
+     "loesung": "I have to do a paper round.",
+     "tipp": "have to / has to = müssen · don't have to = nicht müssen · I'd like to = ich möchte gern"
+    },
+    {
+     "typ": "sortieren",
+     "frage": "Bau den Satz.",
+     "teile": [
+      "She",
+      "has to",
+      "empty",
+      "the dishwasher"
+     ],
+     "loesung": "She has to empty the dishwasher.",
+     "tipp": "have to / has to = müssen · don't have to = nicht müssen · I'd like to = ich möchte gern"
+    },
+    {
+     "typ": "sortieren",
+     "frage": "Bau den Satz.",
+     "teile": [
+      "I'd like to",
+      "go",
+      "ice skating",
+      "next time"
+     ],
+     "loesung": "I'd like to go ice skating next time.",
+     "tipp": "have to / has to = müssen · don't have to = nicht müssen · I'd like to = ich möchte gern"
+    },
+    {
+     "typ": "sortieren",
+     "frage": "Bau die Frage.",
+     "teile": [
+      "Do",
+      "you",
+      "have to",
+      "hoover",
+      "your room"
+     ],
+     "loesung": "Do you have to hoover your room?",
+     "tipp": "Do + Person + have to + Grundform?"
+    },
+    {
+     "typ": "markieren",
+     "frage": "Ein Wort ist falsch. Tippe es an.",
+     "satz": "He [have to] tidy his room.",
+     "richtig": "has to",
+     "erklaerung": "he/she/it: has to"
+    },
+    {
+     "typ": "markieren",
+     "frage": "Ein Wort ist falsch. Tippe es an.",
+     "satz": "She has to [cuts] the grass.",
+     "richtig": "cut",
+     "erklaerung": "Nach has to: Grundform"
+    },
+    {
+     "typ": "markieren",
+     "frage": "Ein Wort ist falsch. Tippe es an.",
+     "satz": "I'd like [go] to the circus.",
+     "richtig": "to go",
+     "erklaerung": "I'd like to + Grundform"
+    },
+    {
+     "typ": "markieren",
+     "frage": "Ein Wort ist falsch. Tippe es an.",
+     "satz": "Does she [has to] help?",
+     "richtig": "have to",
+     "erklaerung": "Nach does: have to"
+    }
+   ]
+  }
+ ]
+}

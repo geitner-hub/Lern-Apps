@@ -1,0 +1,256 @@
+{
+ "typ": "gemischt",
+ "thema": "en.6.zeitangaben",
+ "titel": "on / in / at (Zeit)",
+ "emoji": "🇬🇧",
+ "klasse": 6,
+ "sprache": "en-GB",
+ "runde": 8,
+ "untertitel": "Wann? – mit den Wörtern aus Unit 4",
+ "hilfe": [
+  {
+   "titel": "on, in oder at?",
+   "tabelle": [
+    [
+     "Präposition",
+     "wann?",
+     "Beispiele"
+    ],
+    [
+     "on",
+     "Tage, Datum",
+     "on Monday, on 5th May, on Saturday morning"
+    ],
+    [
+     "in",
+     "Monate, Jahreszeiten, Jahre, Tageszeiten",
+     "in May, in winter, in 1990, in the 90s, in the morning"
+    ],
+    [
+     "at",
+     "Uhrzeit und feste Wendungen",
+     "at 7 o'clock, at the weekend, at night, at lunchtime, at Christmas"
+    ]
+   ]
+  }
+ ],
+ "stufen": [
+  {
+   "id": "en.6.zeitangaben.formen",
+   "titel": "on, in oder at?",
+   "kurz": "on Monday, in winter, at 7",
+   "typ": "lueckentext",
+   "anweisung": "on, in oder at?",
+   "aufgaben": [
+    {
+     "text": "I do my paper round ___ Saturday.",
+     "antwort": "on",
+     "optionen": [
+      "on",
+      "in",
+      "at"
+     ],
+     "tipp": "on + Tag/Datum · in + Monat/Jahreszeit/Jahr/Tageszeit · at + Uhrzeit/the weekend/night/Christmas"
+    },
+    {
+     "text": "We go ice skating ___ winter.",
+     "antwort": "in",
+     "optionen": [
+      "on",
+      "in",
+      "at"
+     ],
+     "tipp": "on + Tag/Datum · in + Monat/Jahreszeit/Jahr/Tageszeit · at + Uhrzeit/the weekend/night/Christmas"
+    },
+    {
+     "text": "The circus starts ___ 7 o'clock.",
+     "antwort": "at",
+     "optionen": [
+      "on",
+      "in",
+      "at"
+     ],
+     "tipp": "on + Tag/Datum · in + Monat/Jahreszeit/Jahr/Tageszeit · at + Uhrzeit/the weekend/night/Christmas"
+    },
+    {
+     "text": "My birthday is ___ 12th May.",
+     "antwort": "on",
+     "optionen": [
+      "on",
+      "in",
+      "at"
+     ],
+     "tipp": "on + Tag/Datum · in + Monat/Jahreszeit/Jahr/Tageszeit · at + Uhrzeit/the weekend/night/Christmas"
+    },
+    {
+     "text": "My mum wore this dress ___ the 90s.",
+     "antwort": "in",
+     "optionen": [
+      "on",
+      "in",
+      "at"
+     ],
+     "tipp": "on + Tag/Datum · in + Monat/Jahreszeit/Jahr/Tageszeit · at + Uhrzeit/the weekend/night/Christmas"
+    },
+    {
+     "text": "I have to tidy my room ___ the weekend.",
+     "antwort": "at",
+     "optionen": [
+      "on",
+      "in",
+      "at"
+     ],
+     "tipp": "on + Tag/Datum · in + Monat/Jahreszeit/Jahr/Tageszeit · at + Uhrzeit/the weekend/night/Christmas"
+    },
+    {
+     "text": "We eat sandwiches ___ lunchtime.",
+     "antwort": "at",
+     "optionen": [
+      "on",
+      "in",
+      "at"
+     ],
+     "tipp": "on + Tag/Datum · in + Monat/Jahreszeit/Jahr/Tageszeit · at + Uhrzeit/the weekend/night/Christmas"
+    },
+    {
+     "text": "The theatre is closed ___ Mondays.",
+     "antwort": "on",
+     "optionen": [
+      "on",
+      "in",
+      "at"
+     ],
+     "tipp": "on + Tag/Datum · in + Monat/Jahreszeit/Jahr/Tageszeit · at + Uhrzeit/the weekend/night/Christmas"
+    },
+    {
+     "text": "I read the newspaper ___ the morning.",
+     "antwort": "in",
+     "optionen": [
+      "on",
+      "in",
+      "at"
+     ],
+     "tipp": "on + Tag/Datum · in + Monat/Jahreszeit/Jahr/Tageszeit · at + Uhrzeit/the weekend/night/Christmas"
+    },
+    {
+     "text": "We have a day out ___ July.",
+     "antwort": "in",
+     "optionen": [
+      "on",
+      "in",
+      "at"
+     ],
+     "tipp": "on + Tag/Datum · in + Monat/Jahreszeit/Jahr/Tageszeit · at + Uhrzeit/the weekend/night/Christmas"
+    },
+    {
+     "text": "The charity shop opens ___ 9 o'clock.",
+     "antwort": "at",
+     "optionen": [
+      "on",
+      "in",
+      "at"
+     ],
+     "tipp": "on + Tag/Datum · in + Monat/Jahreszeit/Jahr/Tageszeit · at + Uhrzeit/the weekend/night/Christmas"
+    },
+    {
+     "text": "I hoover my room ___ Friday afternoon.",
+     "antwort": "on",
+     "optionen": [
+      "on",
+      "in",
+      "at"
+     ],
+     "tipp": "on + Tag/Datum · in + Monat/Jahreszeit/Jahr/Tageszeit · at + Uhrzeit/the weekend/night/Christmas"
+    },
+    {
+     "text": "My grandparents met ___ 1990.",
+     "antwort": "in",
+     "optionen": [
+      "on",
+      "in",
+      "at"
+     ],
+     "tipp": "on + Tag/Datum · in + Monat/Jahreszeit/Jahr/Tageszeit · at + Uhrzeit/the weekend/night/Christmas"
+    },
+    {
+     "text": "The shops are busy ___ Christmas.",
+     "antwort": "at",
+     "optionen": [
+      "on",
+      "in",
+      "at"
+     ],
+     "tipp": "on + Tag/Datum · in + Monat/Jahreszeit/Jahr/Tageszeit · at + Uhrzeit/the weekend/night/Christmas"
+    },
+    {
+     "text": "I can't sleep ___ night.",
+     "antwort": "at",
+     "optionen": [
+      "on",
+      "in",
+      "at"
+     ],
+     "tipp": "on + Tag/Datum · in + Monat/Jahreszeit/Jahr/Tageszeit · at + Uhrzeit/the weekend/night/Christmas"
+    },
+    {
+     "text": "We go skating ___ Sunday.",
+     "antwort": "on",
+     "optionen": [
+      "on",
+      "in",
+      "at"
+     ],
+     "tipp": "on + Tag/Datum · in + Monat/Jahreszeit/Jahr/Tageszeit · at + Uhrzeit/the weekend/night/Christmas"
+    },
+    {
+     "text": "It gets dark early ___ the evening.",
+     "antwort": "in",
+     "optionen": [
+      "on",
+      "in",
+      "at"
+     ],
+     "tipp": "on + Tag/Datum · in + Monat/Jahreszeit/Jahr/Tageszeit · at + Uhrzeit/the weekend/night/Christmas"
+    },
+    {
+     "text": "I get my pocket money ___ the first day of the month.",
+     "antwort": "on",
+     "optionen": [
+      "on",
+      "in",
+      "at"
+     ],
+     "tipp": "on + Tag/Datum · in + Monat/Jahreszeit/Jahr/Tageszeit · at + Uhrzeit/the weekend/night/Christmas"
+    },
+    {
+     "typ": "markieren",
+     "frage": "Ein Wort ist falsch. Tippe es an.",
+     "satz": "I'll see you [in] Monday.",
+     "richtig": "on",
+     "erklaerung": "on + Tag/Datum · in + Monat/Jahreszeit/Jahr/Tageszeit · at + Uhrzeit/the weekend/night/Christmas"
+    },
+    {
+     "typ": "markieren",
+     "frage": "Ein Wort ist falsch. Tippe es an.",
+     "satz": "The film starts [on] 8 o'clock.",
+     "richtig": "at",
+     "erklaerung": "on + Tag/Datum · in + Monat/Jahreszeit/Jahr/Tageszeit · at + Uhrzeit/the weekend/night/Christmas"
+    },
+    {
+     "typ": "markieren",
+     "frage": "Ein Wort ist falsch. Tippe es an.",
+     "satz": "It's cold [at] winter.",
+     "richtig": "in",
+     "erklaerung": "on + Tag/Datum · in + Monat/Jahreszeit/Jahr/Tageszeit · at + Uhrzeit/the weekend/night/Christmas"
+    },
+    {
+     "typ": "markieren",
+     "frage": "Ein Wort ist falsch. Tippe es an.",
+     "satz": "I go to bed late [in] the weekend.",
+     "richtig": "at",
+     "erklaerung": "on + Tag/Datum · in + Monat/Jahreszeit/Jahr/Tageszeit · at + Uhrzeit/the weekend/night/Christmas"
+    }
+   ]
+  }
+ ]
+}

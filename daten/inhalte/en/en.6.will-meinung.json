@@ -1,0 +1,244 @@
+{
+ "typ": "gemischt",
+ "thema": "en.6.will-meinung",
+ "titel": "I think / I'm sure / maybe + will",
+ "emoji": "🇬🇧",
+ "klasse": 6,
+ "sprache": "en-GB",
+ "runde": 8,
+ "untertitel": "Vermutungen über die Zukunft – mit den Wörtern aus Unit 5",
+ "hilfe": [
+  {
+   "titel": "Vermutungen mit will",
+   "text": "Mit will sagst du, was du für die Zukunft erwartest. I think = ich glaube, I'm sure = ich bin sicher, maybe = vielleicht. Die Verneinung ist won't. Bei I don't think steht will.",
+   "beispiele": [
+    [
+     "I think it will be windy.",
+     "Ich glaube, es wird windig."
+    ],
+    [
+     "I'm sure you won't need a hairdryer.",
+     "Ich bin sicher, du brauchst keinen Föhn."
+    ],
+    [
+     "Maybe we will see the river.",
+     "Vielleicht sehen wir den Fluss."
+    ],
+    [
+     "I don't think it will rain.",
+     "Ich glaube nicht, dass es regnet."
+    ]
+   ]
+  }
+ ],
+ "stufen": [
+  {
+   "id": "en.6.will-meinung.formen",
+   "titel": "Vermutungen über die Zukunft",
+   "kurz": "I think it will rain.",
+   "typ": "lueckentext",
+   "anweisung": "Setze will oder won't mit dem Verb ein.",
+   "aufgaben": [
+    {
+     "text": "I'm sure it ___ windy on Dartmoor. (be)",
+     "antwort": [
+      "will be",
+      "'ll be"
+     ],
+     "tipp": "I think / I'm sure / maybe + will + Grundform · Verneinung: won't (= will not)"
+    },
+    {
+     "text": "I don't think it ___ tomorrow. (rain)",
+     "antwort": [
+      "will rain"
+     ],
+     "tipp": "I think / I'm sure / maybe + will + Grundform · Verneinung: won't (= will not)",
+     "erklaerung": "Bei I don't think steht will (nicht won't)."
+    },
+    {
+     "text": "Maybe we ___ some ponies. (see)",
+     "antwort": [
+      "will see",
+      "'ll see"
+     ],
+     "tipp": "I think / I'm sure / maybe + will + Grundform · Verneinung: won't (= will not)"
+    },
+    {
+     "text": "I think it ___ foggy. (not / be)",
+     "antwort": [
+      "won't be",
+      "will not be"
+     ],
+     "tipp": "I think / I'm sure / maybe + will + Grundform · Verneinung: won't (= will not)"
+    },
+    {
+     "text": "I'm sure you ___ the hike. (enjoy)",
+     "antwort": [
+      "will enjoy",
+      "'ll enjoy"
+     ],
+     "tipp": "I think / I'm sure / maybe + will + Grundform · Verneinung: won't (= will not)"
+    },
+    {
+     "text": "Maybe it ___ cloudy in the afternoon. (be)",
+     "antwort": [
+      "will be",
+      "'ll be"
+     ],
+     "tipp": "I think / I'm sure / maybe + will + Grundform · Verneinung: won't (= will not)"
+    },
+    {
+     "text": "I think we ___ our boots. (need)",
+     "antwort": [
+      "will need",
+      "'ll need"
+     ],
+     "tipp": "I think / I'm sure / maybe + will + Grundform · Verneinung: won't (= will not)"
+    },
+    {
+     "text": "I'm sure the train ___ late. (not / be)",
+     "antwort": [
+      "won't be",
+      "will not be"
+     ],
+     "tipp": "I think / I'm sure / maybe + will + Grundform · Verneinung: won't (= will not)"
+    },
+    {
+     "text": "Maybe we ___ hang-gliding next year. (go)",
+     "antwort": [
+      "will go",
+      "'ll go"
+     ],
+     "tipp": "I think / I'm sure / maybe + will + Grundform · Verneinung: won't (= will not)"
+    },
+    {
+     "text": "I think you ___ your hairdryer. (not / need)",
+     "antwort": [
+      "won't need",
+      "will not need"
+     ],
+     "tipp": "I think / I'm sure / maybe + will + Grundform · Verneinung: won't (= will not)"
+    },
+    {
+     "text": "___ it will be sunny. (Ich glaube)",
+     "antwort": "I think",
+     "optionen": [
+      "I think",
+      "I'm sure",
+      "Maybe"
+     ],
+     "tipp": "I think = ich glaube"
+    },
+    {
+     "text": "___ it will rain – look at the dark clouds! (Ich bin sicher)",
+     "antwort": "I'm sure",
+     "optionen": [
+      "I think",
+      "I'm sure",
+      "Maybe"
+     ],
+     "tipp": "I'm sure = ich bin sicher"
+    },
+    {
+     "text": "___ we will go hiking tomorrow. (Vielleicht)",
+     "antwort": "Maybe",
+     "optionen": [
+      "I think",
+      "I'm sure",
+      "Maybe"
+     ],
+     "tipp": "maybe = vielleicht"
+    },
+    {
+     "text": "Will it rain tomorrow? – No, it ___.",
+     "antwort": "won't",
+     "optionen": [
+      "won't",
+      "will",
+      "doesn't"
+     ],
+     "tipp": "Kurzantwort: Yes, it will. / No, it won't."
+    },
+    {
+     "typ": "sortieren",
+     "frage": "Bau den Satz.",
+     "teile": [
+      "I think",
+      "it",
+      "will",
+      "be",
+      "windy"
+     ],
+     "loesung": "I think it will be windy.",
+     "tipp": "I think / I'm sure / maybe + will + Grundform · Verneinung: won't (= will not)"
+    },
+    {
+     "typ": "sortieren",
+     "frage": "Bau den Satz.",
+     "teile": [
+      "Maybe",
+      "we",
+      "will",
+      "see",
+      "the river"
+     ],
+     "loesung": "Maybe we will see the river.",
+     "tipp": "I think / I'm sure / maybe + will + Grundform · Verneinung: won't (= will not)"
+    },
+    {
+     "typ": "sortieren",
+     "frage": "Bau den Satz.",
+     "teile": [
+      "I'm sure",
+      "you",
+      "won't",
+      "need",
+      "a hairdryer"
+     ],
+     "loesung": "I'm sure you won't need a hairdryer.",
+     "tipp": "I think / I'm sure / maybe + will + Grundform · Verneinung: won't (= will not)"
+    },
+    {
+     "typ": "sortieren",
+     "frage": "Bau die Frage.",
+     "teile": [
+      "Will",
+      "it",
+      "rain",
+      "tomorrow"
+     ],
+     "loesung": "Will it rain tomorrow?",
+     "tipp": "Frage: Will + Person + Grundform?"
+    },
+    {
+     "typ": "markieren",
+     "frage": "Ein Wort ist falsch. Tippe es an.",
+     "satz": "I think it [will to] rain.",
+     "richtig": "will",
+     "erklaerung": "Nach will steht kein to."
+    },
+    {
+     "typ": "markieren",
+     "frage": "Ein Wort ist falsch. Tippe es an.",
+     "satz": "Maybe we [wills] go hiking.",
+     "richtig": "will",
+     "erklaerung": "will bekommt nie ein -s."
+    },
+    {
+     "typ": "markieren",
+     "frage": "Ein Wort ist falsch. Tippe es an.",
+     "satz": "I think it [rains] tomorrow.",
+     "richtig": "will rain",
+     "erklaerung": "tomorrow + Vermutung → will rain"
+    },
+    {
+     "typ": "markieren",
+     "frage": "Ein Wort ist falsch. Tippe es an.",
+     "satz": "I'm sure it [won't is] foggy.",
+     "richtig": "won't be",
+     "erklaerung": "won't + Grundform: won't be"
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,243 @@
+{
+ "typ": "gemischt",
+ "thema": "en.6.simple-past-story",
+ "titel": "Simple past: Story",
+ "emoji": "🇬🇧",
+ "klasse": 6,
+ "sprache": "en-GB",
+ "runde": 8,
+ "untertitel": "Eine Geschichte erzählen – mit den Wörtern aus Unit 4",
+ "hilfe": [
+  {
+   "titel": "Eine Geschichte im simple past",
+   "text": "Geschichten erzählt man im simple past. Wörter wie first, then, after that und in the end zeigen die Reihenfolge.",
+   "tabelle": [
+    [
+     "Grundform",
+     "simple past"
+    ],
+    [
+     "go",
+     "went"
+    ],
+    [
+     "find",
+     "found"
+    ],
+    [
+     "pay",
+     "paid"
+    ],
+    [
+     "buy",
+     "bought"
+    ],
+    [
+     "take",
+     "took"
+    ],
+    [
+     "wear",
+     "wore"
+    ],
+    [
+     "say",
+     "said"
+    ],
+    [
+     "see",
+     "saw"
+    ],
+    [
+     "get",
+     "got"
+    ],
+    [
+     "cost",
+     "cost"
+    ]
+   ]
+  }
+ ],
+ "stufen": [
+  {
+   "id": "en.6.simple-past-story.erzaehlen",
+   "titel": "Eine Geschichte erzählen",
+   "kurz": "Jack went to the charity shop …",
+   "typ": "lueckentext",
+   "anweisung": "Setze das Verb im simple past ein.",
+   "aufgaben": [
+    {
+     "text": "Last Saturday Jack ___ to the charity shop. (go)",
+     "antwort": [
+      "went"
+     ],
+     "tipp": "simple past: regelmäßig -ed, unregelmäßig eigene Form (go – went, find – found, pay – paid)"
+    },
+    {
+     "text": "He ___ an old dress from the 90s for his sister. (find)",
+     "antwort": [
+      "found"
+     ],
+     "tipp": "simple past: regelmäßig -ed, unregelmäßig eigene Form (go – went, find – found, pay – paid)"
+    },
+    {
+     "text": "The dress ___ only five pounds. (cost)",
+     "antwort": [
+      "cost"
+     ],
+     "tipp": "simple past: regelmäßig -ed, unregelmäßig eigene Form (go – went, find – found, pay – paid)"
+    },
+    {
+     "text": "Jack ___ with his pocket money. (pay)",
+     "antwort": [
+      "paid"
+     ],
+     "tipp": "simple past: regelmäßig -ed, unregelmäßig eigene Form (go – went, find – found, pay – paid)"
+    },
+    {
+     "text": "Then he ___ a newspaper for his dad. (buy)",
+     "antwort": [
+      "bought"
+     ],
+     "tipp": "simple past: regelmäßig -ed, unregelmäßig eigene Form (go – went, find – found, pay – paid)"
+    },
+    {
+     "text": "His sister ___ the dress. (love)",
+     "antwort": [
+      "loved"
+     ],
+     "tipp": "simple past: regelmäßig -ed, unregelmäßig eigene Form (go – went, find – found, pay – paid)"
+    },
+    {
+     "text": "She ___ it at the party. (wear)",
+     "antwort": [
+      "wore"
+     ],
+     "tipp": "simple past: regelmäßig -ed, unregelmäßig eigene Form (go – went, find – found, pay – paid)"
+    },
+    {
+     "text": "They ___ their old CDs to the shop. (take)",
+     "antwort": [
+      "took"
+     ],
+     "tipp": "simple past: regelmäßig -ed, unregelmäßig eigene Form (go – went, find – found, pay – paid)"
+    },
+    {
+     "text": "The woman in the shop ___ them. (thank)",
+     "antwort": [
+      "thanked"
+     ],
+     "tipp": "simple past: regelmäßig -ed, unregelmäßig eigene Form (go – went, find – found, pay – paid)"
+    },
+    {
+     "text": "Everybody ___ a great time. (have)",
+     "antwort": [
+      "had"
+     ],
+     "tipp": "simple past: regelmäßig -ed, unregelmäßig eigene Form (go – went, find – found, pay – paid)"
+    },
+    {
+     "text": "Jack ___ a comfortable chair, but he didn't buy it. (see)",
+     "antwort": [
+      "saw"
+     ],
+     "tipp": "simple past: regelmäßig -ed, unregelmäßig eigene Form (go – went, find – found, pay – paid)"
+    },
+    {
+     "text": "His friend ___ , „It's a deal!“ (say)",
+     "antwort": [
+      "said"
+     ],
+     "tipp": "simple past: regelmäßig -ed, unregelmäßig eigene Form (go – went, find – found, pay – paid)"
+    },
+    {
+     "text": "We ___ the door and went in. (open)",
+     "antwort": [
+      "opened"
+     ],
+     "tipp": "simple past: regelmäßig -ed, unregelmäßig eigene Form (go – went, find – found, pay – paid)"
+    },
+    {
+     "text": "I ___ some gloves for the winter. (get)",
+     "antwort": [
+      "got"
+     ],
+     "tipp": "simple past: regelmäßig -ed, unregelmäßig eigene Form (go – went, find – found, pay – paid)"
+    },
+    {
+     "text": "They ___ find any good CDs. (not)",
+     "antwort": [
+      "didn't"
+     ],
+     "tipp": "Verneinung: didn't + Grundform"
+    },
+    {
+     "typ": "sortieren",
+     "frage": "Bring die Geschichte in die richtige Reihenfolge.",
+     "trenner": " ",
+     "teile": [
+      "First Jack went to the charity shop.",
+      "Then he found an old dress.",
+      "He paid five pounds.",
+      "In the end his sister loved it!"
+     ],
+     "loesung": "First Jack went to the charity shop. Then he found an old dress. He paid five pounds. In the end his sister loved it!",
+     "tipp": "first – then – in the end"
+    },
+    {
+     "typ": "sortieren",
+     "frage": "Bring die Geschichte in die richtige Reihenfolge.",
+     "teile": [
+      "First we opened the door.",
+      "Then we saw lots of old stuff.",
+      "After that we paid for a magazine.",
+      "In the end we went home."
+     ],
+     "loesung": "First we opened the door. Then we saw lots of old stuff. After that we paid for a magazine. In the end we went home.",
+     "tipp": "first – then – after that – in the end"
+    },
+    {
+     "typ": "sortieren",
+     "frage": "Bring die Geschichte in die richtige Reihenfolge.",
+     "teile": [
+      "First Mia did her chores.",
+      "Then she got her pocket money.",
+      "After that she bought a new magazine.",
+      "In the end she read it on the sofa."
+     ],
+     "loesung": "First Mia did her chores. Then she got her pocket money. After that she bought a new magazine. In the end she read it on the sofa.",
+     "tipp": "first – then – after that – in the end"
+    },
+    {
+     "typ": "markieren",
+     "frage": "Ein Wort ist falsch. Tippe es an.",
+     "satz": "Yesterday we [go] to the charity shop.",
+     "richtig": "went",
+     "erklaerung": "simple past: regelmäßig -ed, unregelmäßig eigene Form (go – went, find – found, pay – paid)"
+    },
+    {
+     "typ": "markieren",
+     "frage": "Ein Wort ist falsch. Tippe es an.",
+     "satz": "She [buyed] a magazine.",
+     "richtig": "bought",
+     "erklaerung": "buy – bought"
+    },
+    {
+     "typ": "markieren",
+     "frage": "Ein Wort ist falsch. Tippe es an.",
+     "satz": "He [payed] three pounds.",
+     "richtig": "paid",
+     "erklaerung": "pay – paid"
+    },
+    {
+     "typ": "markieren",
+     "frage": "Ein Wort ist falsch. Tippe es an.",
+     "satz": "They didn't [found] anything.",
+     "richtig": "find",
+     "erklaerung": "Nach didn't: Grundform"
+    }
+   ]
+  }
+ ]
+}
