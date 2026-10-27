@@ -30,7 +30,7 @@
   'use strict';
   if (window.LW && window.LW.UMGEBUNG) return;          // doppeltes Laden verhindern
 
-  const VERSION = 'v95';                                 // ⚙ bei jedem Upload mit sw.js zusammen erhöhen
+  const VERSION = 'v96';                                 // ⚙ bei jedem Upload mit sw.js zusammen erhöhen
 
   // ── Umgebung erkennen ────────────────────────────────
   //  GitHub Pages: erster Pfadteil = Repo-Name (Lern-Apps bzw. Lern-Apps-test)
@@ -71,7 +71,7 @@
     ['lernwelt-admin-schluessel',   'local',   'gemeinsam/config-api.js',  'Admin-Anmeldung (Schlüssel, 7 Tage gültig)', false],
     ['lernwelt-admin-pw',           'session', 'gemeinsam/config-api.js',  'ALT: früher Passwort im Tab, wird nur noch gelöscht', false],
     // Startseite
-    ['lern-apps-view',              'local',   'index.html',               'Ansicht der Startseite (Kacheln/Liste)', false],
+    ['lern-apps-view',              'local',   'index.html',               'Ansicht der Startseite (Kacheln/Liste, bis v95 – wird beim Öffnen gelöscht)', false],
     ['lernwelt-gruss',              'local',   'index.html',               'Begrüßung heute schon gezeigt', false],
     ['lernwelt-start-zu',           'local',   'index.html',               'Startseite: eingeklappte Fächer (bis v91; die Startseite löscht ihn, seit Fächer Kacheln sind)', false],
     // Mein Dorf

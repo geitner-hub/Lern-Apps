@@ -8,7 +8,7 @@ Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv
 
 | Datei | Name | Themen-ID | Art | Fach · Klassen | Sichtbar | Ergebnis | Pass-XP | liefert „Meine Themen“ | nutzt „Meine Themen“ | Dorf-Aufträge | Entscheidung | Notiz |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
-| `apps/englisch/english-journey.html` | English Journey Year 6 | `en.6.journey` | Lern-App | Englisch · 6 | versteckt | – | – | – | – | nur wenn sichtbar |  |  |
+| `apps/englisch/english-journey.html` | English Journey Year 6 | `en.6.journey` | Lern-App | Englisch · 6 | sichtbar | – | – | – | – | ja |  |  |
 | `apps/englisch/journey-anwenden.html` | – | `en.6.anwenden` (5 Stufen) | Lern-App | – | nicht in config | – | – | – | – | – (nicht in config) |  |  |
 | `apps/englisch/knowing-english.html` | Knowing English | `en.5.knowing-english` (5 Stufen) | Lern-App | Englisch · 5, 6 | sichtbar | – | – | – | – | ja |  |  |
 | `apps/englisch/practice_simple_present.html` | – | – | Lern-App | – | nicht in config | – | – | – | – | – (nicht in config) | Kern | Gut: nur Antippen, Tipp-Knopf. Mängel: meldet kein `thema`; Satzstellung später Typ Sortieren (Etappe 9) |

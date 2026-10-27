@@ -616,7 +616,7 @@ Etappe 3 (v91): 3D-Weg als Prototyp mit dem Ort von Unit 1. Etappe 4 (v93): alle
 Kurzes Klassen-Quiz für 2–10 Minuten (Einstieg, Zwischensicherung, Exit-Ticket). Plan: Claude-Doc „Aktionsplan: Live-Abfrage im Unterricht“.
 
 - **Ablauf:** Admin → 🎓 Unterricht → **📊 Live-Abfrage** → vorbereitetes Quiz oder spontane Frage (🚦 Ampel, A–D, Wahr/Falsch,
-  Ein Wort) starten. Der Beamer zeigt QR-Code und 6-stelligen Code (ohne 0/O, 1/I/L). Die Kinder scannen mit „📷 QR scannen“
+  Ein Wort) starten. Der Beamer zeigt QR-Code und 6-stelligen Code (ohne 0/O, 1/I/L). Die Kinder scannen mit „📷 Scannen“
   oder tippen den Code auf `apps/typen/live.html` ein und antworten anonym. Phasen: warten → sammeln (Zähler „18 von 24“,
   Zeitlimit) → aufdecken (Verteilung; mit „Zweite Runde“ erst ohne Lösung, dann „Nochmal nach Partnergespräch“, Vergleich
   vorher/nachher, dann Lösung) → nächste Frage. Spontane Fragen lassen sich jederzeit anhängen; bei A–D/Wahr-Falsch ohne
@@ -718,10 +718,15 @@ und das Enter im Eingabefeld mit `e.stopPropagation()` abschließen. Abschalten:
 ## Links mit Voreinstellungen (Unterricht)
 
 - `index.html?kl=5` – Startseite nur mit Klasse-5-Apps (auch als QR über „QR zur Startseite“)
-- `index.html?tag=Vokabeln`, `index.html?q=rechnen`
 - `index.html?fach=Englisch` – öffnet gleich die Apps eines Fachs. Seit v92 zeigt die Startseite die Fächer als große Kacheln;
-  Antippen zeigt die Apps des Fachs („← Alle Fächer“ oder die Zurück-Geste führt zurück), die Suche zeigt alle Treffer über alle Fächer.
+  Antippen zeigt die Apps des Fachs („← Alle Fächer“, die Marke „Lernwelt“ oder die Zurück-Geste führt zurück).
   Ist nur ein Fach sichtbar (z. B. im Fokus), kommen seine Apps sofort.
+- **Aufbau der Startseite (v96):** Kopfleiste (bleibt oben) mit „📷 Scannen“, „🏘️ Mein Dorf“ (Zahl = offene Aufträge, nur mit Pass und
+  wenn Mein Dorf in config.json sichtbar ist), „🎁 Truhen“ (Zahl = Truhen zum Öffnen) und dem Profil (Avatar, Name, Level → Pass);
+  ohne Pass „🧭 Pass starten“. Darunter Lernweg/Live (falls da), Pass-Karte links und „Heute für dich“ rechts (Handy: untereinander),
+  Dorf-Aufträge, App des Tages, dann „Deine Fächer“. Suche, Tag-Filter, Klassen-Chips und Listenansicht gibt es nicht mehr:
+  die Klasse kommt aus dem Pass („Meine Klasse“ = alles bis zur eigenen Klasse) oder aus `?kl=`. „📲 QR zur Startseite“ und
+  „⚙ Admin“ stehen in der Fußzeile.
 - `spiele/insel.html?gebiet=tal` – Die Insel startet am Eingang dieses Gebiets (`hafen`, `tal`, `hochland`), wenn es für das
   Kind schon offen ist (sonst Hinweis, wie man hinkommt); `&stufe=2` spielt für diese Sitzung Stufe 1–3 (wird nicht
   gespeichert und schaltet nichts frei; Freigaben der Lehrkraft gelten weiter). Ohne `gebiet` gilt `stufe` überall.
@@ -798,7 +803,7 @@ in `RULES` am Anfang von `pass.js` und können dort angepasst werden.
 - Schutz vor Datenverlust: Symbol auf dem Home-Bildschirm (`APP-SYMBOL.md`, eigener Speicher ohne
   Safari-Löschregel), `navigator.storage.persist()`, Sicherungskarte. Achtung: App-Symbol und
   Safari haben getrennte Speicher – Übernahme per „📷 QR scannen“ (Sicherungskarte).
-- **📷 QR scannen** (Startseite): öffnet gescannte Lernwelt-Apps innerhalb der Lernwelt (wichtig für das
+- **📷 Scannen** (Kopfleiste der Startseite): öffnet gescannte Lernwelt-Apps innerhalb der Lernwelt (wichtig für das
   App-Symbol, weil die Kamera-App immer Safari öffnet), liest Sicherungskarten ein, lehnt fremde Codes ab.
 - **Safari-Hinweis:** Auf iPad/iPhone in Safari (nicht im App-Symbol) erscheint oben einmal pro Tag der
   Hinweis, das Lernwelt-Symbol zu benutzen (nicht im Admin).
