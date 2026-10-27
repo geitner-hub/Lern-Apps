@@ -1438,6 +1438,17 @@
      "titel": "English Journey",
      "themen": [
       {
+       "id": "en.6.journey",
+       "titel": "English Journey Year 6",
+       "klasse": 6,
+       "quelle": {
+        "app": "apps/englisch/english-journey.html"
+       },
+       "lehrplan": "E6 Highlight 6, Units 1–5: Wortschatz und Grammatik verzahnt als Weg (Stationen aus den Themen der Units)",
+       "dauer": 15,
+       "einsatz": "Selbstständiges Üben entlang des Buchs; Grenze über die Freigaben der Stationen (Theme-Stufen, Grammatik-Stufen)"
+      },
+      {
        "id": "en.6.unit-check",
        "titel": "Unit-Checks (Highlight 6)",
        "klasse": 6,

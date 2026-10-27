@@ -97,7 +97,8 @@ und gelbe Hinweise. Manuelle Checkliste nach Uploads: `werkzeuge/RAUCHTEST.md`.
   ohne diese Felder müssen unverändert funktionieren (die Kinder nutzen sie).
 - **English Journey Year 6** (`daten/journey6.json`, pruefen.py Regel 22): Stationen durch Highlight 6 mit `thema`, `braucht`,
   optional `start`. Kein eigener Spielstand – liest nur die Meisterschaft aus dem Pass; Lehrer-Freigabe zuerst, dann Vorgänger.
-  Theme-Stufen `en.6.vok.uN.<abschnitt>` im Vokabeltrainer (`?stufe=`). README → English Journey Year 6.
+  Theme-Stufen `en.6.vok.uN.<abschnitt>` im Vokabeltrainer (`?stufe=`). 3D-Weg: `apps/englisch/english-journey.html` +
+  `gemeinsam/journey-welt.js` (Orte in `SZENEN`); Rückweg über `lernwelt-lernweg-zurueck`. README → English Journey Year 6.
 - **Live-Abfrage** (Unterrichtsmodus → 📊, Kinder-Seite `apps/typen/live.html?raum=CODE`, keine App in config.json, ohne Navbar):
   Worker-Teil `cloudflare/live.js` (Räume, Antworten, Quizze, Rückblicke in `SYNC_DB`; Räume nach dem Beenden gelöscht),
   Fragetypen `gemeinsam/live-fragen.js` (`LernLive`), Beamer `gemeinsam/admin/live.js`, Quiz-Editor Inhalte → Live-Quizze.
