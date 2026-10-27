@@ -383,7 +383,7 @@
       "fach": "Englisch",
       "emoji": "🧭",
       "beschreibung": "Dein Weg durch Highlight 6 – Station für Station",
-      "hidden": true,
+      "hidden": false,
       "klassen": [
         6
       ],
