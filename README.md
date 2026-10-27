@@ -724,7 +724,7 @@ und das Enter im Eingabefeld mit `e.stopPropagation()` abschließen. Abschalten:
 - **Aufbau der Startseite (v96):** Kopfleiste (bleibt oben) mit „📷 Scannen“, „🏘️ Mein Dorf“ (Zahl = offene Aufträge, nur mit Pass und
   wenn Mein Dorf in config.json sichtbar ist), „🎁 Truhen“ (Zahl = Truhen zum Öffnen) und dem Profil (Avatar, Name, Level → Pass);
   ohne Pass „🧭 Pass starten“. Darunter Lernweg/Live (falls da), Pass-Karte links und „Heute für dich“ rechts (Handy: untereinander),
-  Dorf-Aufträge, App des Tages, dann „Deine Fächer“. Suche, Tag-Filter, Klassen-Chips und Listenansicht gibt es nicht mehr:
+  App des Tages (die Zeile mit den Dorf-Aufträgen entfällt seit v97 – die rote Zahl an „Mein Dorf“ reicht), dann „Deine Fächer“. Suche, Tag-Filter, Klassen-Chips und Listenansicht gibt es nicht mehr:
   die Klasse kommt aus dem Pass („Meine Klasse“ = alles bis zur eigenen Klasse) oder aus `?kl=`. „📲 QR zur Startseite“ und
   „⚙ Admin“ stehen in der Fußzeile.
 - `spiele/insel.html?gebiet=tal` – Die Insel startet am Eingang dieses Gebiets (`hafen`, `tal`, `hochland`), wenn es für das
@@ -980,7 +980,7 @@ Plan und Stand: Claude-Doc „Aktionsplan: Aufbauspiel „Mein Dorf““.
     Querformat (ab 900 px) mit zwei Spalten: Dorf links (bleibt stehen), Aufträge und Brett rechts.
     Neuigkeiten und „Willkommen zurück“ (eigener Speicher `lernwelt-dorf-besuch`, nicht im Sicherungscode)
     stehen in einem Kasten unter den Aufträgen.
-  - **Startseite:** Zeile „🏘️ Dorf-Aufträge“ unter dem Pass und „📌 Dorf 1/2“ an den App-Kacheln
+  - **Startseite:** rote Zahl am Knopf „🏘️ Mein Dorf“ in der Kopfleiste (offene Aufträge, seit v97 ohne eigene Zeile) und „📌 Dorf 1/2“ an den App-Kacheln
     (`index.html` lädt dafür `gemeinsam/dorf-kern.js`; nur, wenn das Dorf begonnen und freigeschaltet ist).
   - **Sparziel** (`zg` im Spielstand): „🎯 Als Ziel merken“ in der Bau-Tafel; Anzeige im Dorf und in der
     Meldung der Lern-Apps. Verschwindet von selbst, wenn gebaut.

@@ -190,8 +190,6 @@
     body.qr-open{overflow:hidden;}
 
     /* ── MEIN DORF: offene Aufträge (gemeinsam/dorf-kern.js) ── */
-    #dorf-section{max-width:980px;margin:-.4rem auto 1.2rem;padding:0 1.4rem;}
-    #dorf-section:empty{display:none;}
     /* „Heute für dich“ (Etappe 8): höchstens drei Karten */
     #heute-section{max-width:980px;margin:-.4rem auto 1.2rem;padding:0 1.4rem;}
     #heute-section:empty{display:none;}
@@ -220,14 +218,6 @@
     .heute-karte small{display:block;color:var(--muted,rgba(241,240,251,.6));font-weight:700;font-size:.78rem;margin-top:.15rem;}
     .heute-karte.lk{border-color:rgba(230,168,23,.55);}
     @media (prefers-reduced-motion:reduce){.heute-karte{transition:none;}.heute-karte:hover{transform:none;}}
-    .dorf-strip{display:flex;align-items:center;gap:.55rem;flex-wrap:wrap;background:linear-gradient(110deg,#2a1d12,#1f1a2e);border:1px solid rgba(154,101,56,.55);border-radius:16px;padding:.6rem .7rem;}
-    .dorf-strip .dh{font-weight:900;font-size:.9rem;color:#fde7c4;margin-right:.2rem;white-space:nowrap;text-decoration:none;}
-    .dorf-chip{display:inline-flex;align-items:center;gap:.4rem;background:#f6ecd2;color:#3b2a1a;text-decoration:none;border-radius:10px;padding:.35rem .6rem;font-weight:800;font-size:.85rem;box-shadow:0 3px 0 rgba(0,0,0,.35);}
-    .dorf-chip:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(0,0,0,.35);}
-    .dorf-chip small{font-weight:900;color:#7a6248;}
-    .dorf-chip.lk{background:#e0f2fe;}
-    .dorf-strip .zum{margin-left:auto;color:#fde7c4;font-weight:800;font-size:.85rem;text-decoration:none;white-space:nowrap;}
-    .dorf-strip .leer{color:rgba(253,231,196,.8);font-weight:700;font-size:.85rem;}
     .app-tag.dorf{background:#f6ecd2;color:#3b2a1a;border-color:#9a6538;font-weight:900;}
     .app-card.gesperrt{filter:grayscale(.7);opacity:.6;}
     .app-tag.sperre{background:rgba(230,168,23,.16);color:#fde68a;border-color:rgba(230,168,23,.5);font-weight:900;}
@@ -241,7 +231,7 @@
     #start-raster{max-width:980px;margin:1.3rem auto 0;padding:0 1.4rem;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:.9rem;align-items:stretch;}
     #start-raster > .sk{max-width:none;margin:0;padding:0;min-width:0;display:flex;flex-direction:column;}
     #start-raster > .sk:empty{display:none;}
-    #start-raster #lernweg-section,#start-raster #live-section,#start-raster #dorf-section,#start-raster #aod-section{grid-column:1/-1;}
+    #start-raster #lernweg-section,#start-raster #live-section,#start-raster #aod-section{grid-column:1/-1;}
     #start-raster.ohne-heute #pass-section{grid-column:1/-1;}
     #start-raster #heute-section h2,#start-raster #lernweg-section h2{margin:0 0 .45rem;}
     #start-raster .heute-grid{grid-template-columns:1fr;gap:.55rem;flex:1;align-content:start;}
@@ -523,7 +513,6 @@
   <div id="lernweg-section" class="sk" aria-label="Mein Lernweg"></div>
   <div id="pass-section" class="sk"></div>
   <div id="heute-section" class="sk" aria-label="Heute für dich"></div>
-  <div id="dorf-section" class="sk"></div>
   <div id="aod-section" class="sk"></div>
 </div>
 
@@ -836,25 +825,17 @@ function buildAod() {
 }
 
 // ── Seite aufbauen ───────────────────────────────────
-// ── Mein Dorf: offene Aufträge oben und als Pin an den Apps ──
+// ── Mein Dorf: offene Aufträge als Pin an den Apps (die Zahl steht am Knopf „Mein Dorf“ in der Kopfleiste) ──
 let DORF_PINS = {};
 function dorfDa() {
   return !!window.LernDorf && LernDorf.gestartet() && LernPass.hasProfile()
     && (CONFIG.apps || []).some(a => a && a.datei === 'spiele/dorf.html' && !a.hidden);
 }
-function buildDorfStrip() {
-  const sec = document.getElementById('dorf-section');
+function buildDorfPins() {
   DORF_PINS = {};
-  if (!sec) return;
-  if (!dorfDa()) { sec.innerHTML = ''; return; }
-  const liste = LernDorf.offeneAuftraege().filter(x => x.c < x.n);
-  liste.forEach(x => { if (!DORF_PINS[x.app] || x.art === 'tag' || x.art === 'lehrer') DORF_PINS[x.app] = { c: x.c, n: x.n }; });
-  const vorname = { lehrer: '📣 ', fleiss: '💪 ', bewohner: '✉️ ', gast: '🎁 ', woche: '📅 ' };
-  const chips = liste.slice(0, 6).map(x => {
-    const a = LernDorf.appInfo(x.app);
-    return a.link ? `<a class="dorf-chip${x.art === 'lehrer' ? ' lk' : ''}" href="${escHtml(a.link)}">${vorname[x.art] || ''}${escHtml(a.emoji)} ${escHtml(a.name)} <small>${x.c}/${x.n}</small></a>` : '';
-  }).join('');
-  sec.innerHTML = `<div class="dorf-strip"><a class="dh" href="spiele/dorf.html">🏘️ Dorf-Aufträge ›</a>${chips || '<span class="leer">Alles erledigt – super! Morgen gibt es neue.</span>'}</div>`;
+  if (!dorfDa()) return;
+  LernDorf.offeneAuftraege().filter(x => x.c < x.n)
+    .forEach(x => { if (!DORF_PINS[x.app] || x.art === 'tag' || x.art === 'lehrer') DORF_PINS[x.app] = { c: x.c, n: x.n }; });
 }
 // Der Dorf-Kern lädt nur, wenn auf diesem iPad schon ein Dorf gegründet wurde (Etappe 2)
 function dorfAnbinden() {
@@ -999,7 +980,7 @@ function buildPage() {
   buildPassCard();
   buildHeute();
   buildLernwege();
-  buildDorfStrip();
+  buildDorfPins();
   buildAnnouncement();
   buildFokusBanner();
   buildAod();
