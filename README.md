@@ -69,6 +69,7 @@ werkzeuge/            Prüfskript (pruefen.py), Inventar (inventar.py → INVENT
 | `insel-bauen.js` | „Die Insel“: Bauen auf Bauplätzen – Raster, Antippen, Inventar, Bauplan prüfen, Spielstand (`LernInselBauen`) |
 | `insel-karte.js` | „Die Insel“: Schatzkarte (aus den Weltdaten gezeichnet, Planquadrate, Maßstab) und Kompass (`LernInselKarte`) |
 | `insel-steuerung.js` | „Die Insel“: Joystick, Kamera (dritte Person), Kollision mit dem Blockgitter, Hochsteigen, Sperre geschlossener Gebiete (`LernInselSteuerung`) |
+| `journey-welt.js` | English Journey Year 6: 3D-Ort im Klötzchen-Stil mit Weg und Stationen, Figur läuft zur Station (`LernJourneyWelt`), nur in `apps/englisch/english-journey.html` |
 | `spiel-hilfen.js` | Kleine Bausteine für die neuen Spiele: Runde melden, Endlos-XP, robuste Zeiger (mehrere Finger), wiederholbarer Zufall |
 | `qrcode.js` | QR-Code-Erzeugung im Browser (MIT-Lizenz, Kazuhiko Arase) |
 | `fonts.css` | Lokal gehostete Schriften aus `fonts/` (kein Google Fonts → DSGVO) |
@@ -542,8 +543,26 @@ selbst im Admin unter Inhalte → 🔐 Freigaben), Wiederholung, Fehler-Training
 ## English Journey Year 6 (Highlight 6, v90)
 
 Lernweg durch das Englischbuch Highlight 6 (Klasse 6, Units 1–5): Wörter → Grammatik → Wörter → Grammatik → Anwenden → Finale.
-Plan: Claude-Doc „Aktionsplan: English Journey (Klasse 6, Highlight 6)“. Etappe 1+2 (dieser Stand): Gerüst und Inhalte Unit 1–2;
-der 3D-Weg (`apps/englisch/english-journey.html`) folgt als eigene Etappe.
+Plan: Claude-Doc „Aktionsplan: English Journey (Klasse 6, Highlight 6)“. Etappe 1+2 (v90): Gerüst und Inhalte Unit 1–2;
+Etappe 3 (v91): 3D-Weg als Prototyp mit dem Ort von Unit 1.
+
+- **Seite:** `apps/englisch/english-journey.html` (Lern-App, keine Spielsperre; zählt selbst keine Runden – die Übungen tun das).
+  Lädt Weg (`daten/journey6.json`), Pass, Freigabe und Katalog; Unit-Wahl U1–U5, Stand „⭐ gemeistert / Stationen“, Karte je Station im
+  Postkarten-Look (Start, Grund für 🔒: Lehrkraft oder fehlende Vorgänger mit Sprung dorthin, „wird gebaut“), Postkarte nach dem Finale.
+  Mit Admin-Anmeldung: Vorschau, alles offen. Orte ohne 3D (Unit 2–5) und Geräte ohne WebGL zeigen die Stationen als Liste.
+- **3D:** `gemeinsam/journey-welt.js` (`LernJourneyWelt`), three.js aus `vendor/` über `avatar3d.js` wie RUN!, eigene Pass-Figur über
+  `LernAvatar.figur()`. Ort „hafen“ (Plymouth: Kai, Fischmarkt, Hafencafé, Kran, Bootssteg, Schule, Schulhof, Bank am Wasser, Smeaton's
+  Tower, Barbican-Häuser, Boote, Möwen, Wolken). Station antippen → die Figur läuft auf dem Weg hin, Kamera folgt weich → Karte mit
+  „▶ Los geht's“ (Direktstart `?stufe=`). Zustände: zu (grauer Sockel, 🔒 am Schild), offen (Leuchtring, 👉 nächstes Ziel mit Pfeil),
+  gemeistert (goldener Sockel, Flagge); jedes Wahrzeichen bleibt grau, bis seine Station gemeistert ist (der Ort füllt sich).
+  Ziehen verschiebt die Sicht. Neuer Ort = Eintrag in `SZENEN` (Wegpunkte, Plätze, Wahrzeichen) + Name in `ORTE_3D` der Seite.
+- **Zurück zum Weg:** Vor dem Start merkt sich die Seite ihre Adresse mit `#u=…&s=…&m=0|1` im vorhandenen Schlüssel
+  `lernwelt-lernweg-zurueck` (sessionStorage, kein neuer Schlüssel); `lernweg-zurueck.js` zeigt dann „🧭 Zurück zum Weg“ (nach der Runde
+  golden). Zurück steht die Figur an derselben Station; ist sie neu gemeistert (`m=0`), jubelt die Figur (Konfetti), nach dem Finale
+  kommt die Postkarte.
+- **iPad:** zusammengeführte Geometrie mit Vertex-Farben (~50 Draw Calls, ~21 000 Dreiecke; `welt.info()` in der Konsole), DPR ≤ 1,5,
+  kein Post-Processing, Schattenkarte nur neu bei Bewegung der Figur, volle Bildrate nur bei Bewegung, sonst ~15 Bilder/s für Wasser
+  und Wolken; „Bewegung reduzieren“ → kein Laufen (Sprung), keine Umgebungsbewegung, Zeichnen nur bei Änderungen.
 
 - **daten/journey6.json:** `units` → `stationen` mit `id`, `art` (`woerter` · `grammatik` · `anwenden` · `finale`), `thema`
   (Katalog-ID, deren Meisterschaft zählt), `titel`, `ort` (Platz im Ort der Unit), `braucht` (Liste von Station-IDs), optional
@@ -678,6 +697,9 @@ und das Enter im Eingabefeld mit `e.stopPropagation()` abschließen. Abschalten:
 
 - `index.html?kl=5` – Startseite nur mit Klasse-5-Apps (auch als QR über „QR zur Startseite“)
 - `index.html?tag=Vokabeln`, `index.html?q=rechnen`
+- `index.html?fach=Englisch` – öffnet gleich die Apps eines Fachs. Seit v92 zeigt die Startseite die Fächer als große Kacheln;
+  Antippen zeigt die Apps des Fachs („← Alle Fächer“ oder die Zurück-Geste führt zurück), die Suche zeigt alle Treffer über alle Fächer.
+  Ist nur ein Fach sichtbar (z. B. im Fokus), kommen seine Apps sofort.
 - `spiele/insel.html?gebiet=tal` – Die Insel startet am Eingang dieses Gebiets (`hafen`, `tal`, `hochland`), wenn es für das
   Kind schon offen ist (sonst Hinweis, wie man hinkommt); `&stufe=2` spielt für diese Sitzung Stufe 1–3 (wird nicht
   gespeichert und schaltet nichts frei; Freigaben der Lehrkraft gelten weiter). Ohne `gebiet` gilt `stufe` überall.

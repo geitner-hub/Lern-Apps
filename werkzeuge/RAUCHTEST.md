@@ -6,7 +6,7 @@ Live am iPad über das Symbol auf dem Home-Bildschirm, Test in Safari.
 | # | Schritt | Erwartung |
 |---|---|---|
 | 1 | GitHub → Repo → oben beim letzten Commit | ✅ grüner Haken (rotes ✗ → „Details“ ansehen) |
-| 2 | Startseite öffnen | Apps erscheinen, Pass-Leiste mit Level, keine Fehlermeldung |
+| 2 | Startseite öffnen, ein Fach antippen, „← Alle Fächer“ | Fächer als Kacheln, nach dem Antippen die Apps des Fachs, Pass-Leiste mit Level, keine Fehlermeldung |
 | 3 | Mathe: Kopfrechnen Klasse 5, eine Runde | Ergebnis-Abzeichen, XP-Meldung, ggf. „Dorf-Auftrag 1 von 2“ |
 | 4 | Englisch: Vokabeltrainer 5, eine kurze Runde | läuft, Ergebnis wird gemeldet |
 | 5 | GPG: Länder-Finder öffnen | Karte erscheint und reagiert auf Antippen |

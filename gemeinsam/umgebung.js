@@ -30,7 +30,7 @@
   'use strict';
   if (window.LW && window.LW.UMGEBUNG) return;          // doppeltes Laden verhindern
 
-  const VERSION = 'v90';                                 // ⚙ bei jedem Upload mit sw.js zusammen erhöhen
+  const VERSION = 'v92';                                 // ⚙ bei jedem Upload mit sw.js zusammen erhöhen
 
   // ── Umgebung erkennen ────────────────────────────────
   //  GitHub Pages: erster Pfadteil = Repo-Name (Lern-Apps bzw. Lern-Apps-test)
@@ -73,7 +73,7 @@
     // Startseite
     ['lern-apps-view',              'local',   'index.html',               'Ansicht der Startseite (Kacheln/Liste)', false],
     ['lernwelt-gruss',              'local',   'index.html',               'Begrüßung heute schon gezeigt', false],
-    ['lernwelt-start-zu',           'local',   'index.html',               'Startseite: eingeklappte Fächer', false],
+    ['lernwelt-start-zu',           'local',   'index.html',               'Startseite: eingeklappte Fächer (bis v91; die Startseite löscht ihn, seit Fächer Kacheln sind)', false],
     // Mein Dorf
     ['lernwelt-dorf',               'local',   'gemeinsam/dorf-kern.js',   'Spielstand „Mein Dorf“', true],
     ['lernwelt-dorf-inhalte-cache', 'local',   'gemeinsam/dorf-kern.js',   'Offline-Kopie von daten/dorf-inhalte.json', false],
@@ -94,7 +94,7 @@
     ['lernwelt-room-detective',     'local',   'spiele/room-detective.html', 'Room Detective: Stufen, Zähler und letzte Wahl', false],
     // Lern-Apps mit eigenem Speicher
     ['lernwelt-lernweg',            'local',   'apps/typen/lernweg.html', 'Lernweg: abgehakte Schritte, Niveau, Smileys, Start und letzter Besuch je Lernweg (nur dieses Gerät)', false],
-    ['lernwelt-lernweg-zurueck',    'session', 'gemeinsam/lernweg-zurueck.js', 'Adresse des Lernwegs, aus dem eine App geöffnet wurde (Knopf „Zurück zum Lernweg“)', false],
+    ['lernwelt-lernweg-zurueck',    'session', 'gemeinsam/lernweg-zurueck.js', 'Adresse des Lernwegs bzw. English Journey, aus dem eine App geöffnet wurde (Knopf „Zurück zum Lernweg/Weg“)', false],
     ['lernwelt-live',               'session', 'apps/typen/live.html',     'Live-Abfrage: Raum-Code, zufällige Teilnehmer-Kennung des Tabs, noch nicht angekommene Antwort', false],
     ['laender-finder-best',         'local',   'apps/gpg/laender-finder.html', 'Länder-Finder: Bestzeiten je Modus', false],
     ['lernwelt-bayern-best',        'local',   'apps/gpg/bayern.html',     'Auskennen in Bayern: Bestwerte je Modus', false],
