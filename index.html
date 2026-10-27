@@ -1831,6 +1831,11 @@ document.getElementById('pass-section').addEventListener('click', e => {
   const c = e.target.closest('[data-open-pass]');
   if (c) openPass(LernPass.hasProfile() ? c.dataset.openPass : 'setup');
 });
+// Kopfleiste (v96): Truhen und Profil öffnen den Pass – echte Knöpfe, Enter/Leertaste lösen selbst „click“ aus
+document.querySelector('.kopf-aktionen').addEventListener('click', e => {
+  const c = e.target.closest('[data-open-pass]');
+  if (c) openPass(LernPass.hasProfile() ? c.dataset.openPass : 'setup');
+});
 document.getElementById('pass-section').addEventListener('keydown', e => {
   const c = e.target.closest('[data-open-pass]');
   if (c && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); openPass(LernPass.hasProfile() ? c.dataset.openPass : 'setup'); }
