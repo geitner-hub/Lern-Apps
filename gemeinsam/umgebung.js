@@ -30,7 +30,7 @@
   'use strict';
   if (window.LW && window.LW.UMGEBUNG) return;          // doppeltes Laden verhindern
 
-  const VERSION = 'v91';                                 // ⚙ bei jedem Upload mit sw.js zusammen erhöhen
+  const VERSION = 'v92';                                 // ⚙ bei jedem Upload mit sw.js zusammen erhöhen
 
   // ── Umgebung erkennen ────────────────────────────────
   //  GitHub Pages: erster Pfadteil = Repo-Name (Lern-Apps bzw. Lern-Apps-test)
@@ -73,7 +73,7 @@
     // Startseite
     ['lern-apps-view',              'local',   'index.html',               'Ansicht der Startseite (Kacheln/Liste)', false],
     ['lernwelt-gruss',              'local',   'index.html',               'Begrüßung heute schon gezeigt', false],
-    ['lernwelt-start-zu',           'local',   'index.html',               'Startseite: eingeklappte Fächer', false],
+    ['lernwelt-start-zu',           'local',   'index.html',               'Startseite: eingeklappte Fächer (bis v91; die Startseite löscht ihn, seit Fächer Kacheln sind)', false],
     // Mein Dorf
     ['lernwelt-dorf',               'local',   'gemeinsam/dorf-kern.js',   'Spielstand „Mein Dorf“', true],
     ['lernwelt-dorf-inhalte-cache', 'local',   'gemeinsam/dorf-kern.js',   'Offline-Kopie von daten/dorf-inhalte.json', false],

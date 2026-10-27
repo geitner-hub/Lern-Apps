@@ -697,6 +697,9 @@ und das Enter im Eingabefeld mit `e.stopPropagation()` abschließen. Abschalten:
 
 - `index.html?kl=5` – Startseite nur mit Klasse-5-Apps (auch als QR über „QR zur Startseite“)
 - `index.html?tag=Vokabeln`, `index.html?q=rechnen`
+- `index.html?fach=Englisch` – öffnet gleich die Apps eines Fachs. Seit v92 zeigt die Startseite die Fächer als große Kacheln;
+  Antippen zeigt die Apps des Fachs („← Alle Fächer“ oder die Zurück-Geste führt zurück), die Suche zeigt alle Treffer über alle Fächer.
+  Ist nur ein Fach sichtbar (z. B. im Fokus), kommen seine Apps sofort.
 - `spiele/insel.html?gebiet=tal` – Die Insel startet am Eingang dieses Gebiets (`hafen`, `tal`, `hochland`), wenn es für das
   Kind schon offen ist (sonst Hinweis, wie man hinkommt); `&stufe=2` spielt für diese Sitzung Stufe 1–3 (wird nicht
   gespeichert und schaltet nichts frei; Freigaben der Lehrkraft gelten weiter). Ohne `gebiet` gilt `stufe` überall.
