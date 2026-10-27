@@ -145,6 +145,8 @@
 
 <script src="../../gemeinsam/freigabe.js"></script>
 <script src="../../gemeinsam/katalog.js"></script>
+<script src="../../gemeinsam/wiederholung.js"></script>
+<script src="../../gemeinsam/journey-kern.js"></script>
 <script>
 'use strict';
 const $ = id => document.getElementById(id);
@@ -170,33 +172,22 @@ function passBereit() {
 function webglOk() { try { const c = document.createElement('canvas'); return !!(c.getContext('webgl') || c.getContext('experimental-webgl')); } catch (e) { return false; } }
 
 // ── Zustände: Lehrer-Grenze zuerst, dann Vorgänger; Gemeistertes bleibt gemeistert ──
+//  Regeln in gemeinsam/journey-kern.js (LernJourney) – dieselben wie „Heute für dich“ auf der Startseite
 const stand = id => { try { return (window.LernPass && LernPass.themaStand && LernPass.themaStand(id)) || null; } catch (e) { return null; } };
-const gemeistert = id => { const s = stand(id); return !!(s && s.frei); };
-function hatApp(st) { const K = window.LernKatalog, t = K && K.thema(st.start || st.thema); return !!(t && t.quelle && t.quelle.app && !/^archiv\//.test(t.quelle.app)); }
-function lehrer(unit, st) {
-  const F = window.LernFreigabe;
-  if (!F || A.admin) return { frei: true };
-  for (const id of [unit.thema, st.thema, st.start].filter(Boolean)) { const s = F.status(id); if (!s.frei) return s; }
-  return { frei: true };
+const hatApp = st => LernJourney.hatApp(st);
+function berechne() { const r = LernJourney.berechne(A.J, { admin: A.admin }); A.alle = r.alle; A.z = r.z; }
+// Die Orte füllen sich mit Sprache: zu jeder gemeisterten Wörter-Station ein Schild mit Wörtern daraus (aus daten/vokabeln6.json)
+function woerterFuer(st) {
+  const m = /^en\.6\.vok\.u(\d+)\.([a-z0-9-]+)$/.exec(st.thema || ''), V = A.vok;
+  const th = m && V && V.units && V.units['unit' + m[1]] && V.units['unit' + m[1]].themes[m[2]];
+  if (!th) return null;
+  const kurz = th.words.map(w => String(w.en).replace(/^\(to\)\s*/, '').replace(/\s*\(.*?\)/g, '').trim())
+    .filter(w => w && w.length <= 14 && !/[\/,;=!?.]/.test(w));
+  let h = 0; for (const c of st.id) h = (h * 31 + c.charCodeAt(0)) >>> 0;               // feste Auswahl je Station
+  return kurz.length ? [0, 1, 2].map(i => kurz[(h + i * 7) % kurz.length]).filter((w, i, l) => l.indexOf(w) === i) : null;
 }
-function berechne() {
-  const alle = {};
-  A.J.units.forEach(u => u.stationen.forEach(st => { alle[st.id] = { st, unit: u, gem: gemeistert(st.thema), bau: !hatApp(st) }; }));
-  const z = {};
-  Object.values(alle).forEach(x => {
-    const { st, unit } = x;
-    if (x.gem) { z[st.id] = { zustand: 'gemeistert' }; return; }
-    if (x.bau) { z[st.id] = { zustand: 'bau' }; return; }
-    const l = lehrer(unit, st);
-    if (!l.frei) { z[st.id] = { zustand: 'zu', grund: 'lehrer', ab: l.ab }; return; }
-    // Stationen, die noch gebaut werden, halten niemanden auf
-    const fehlt = (st.braucht || []).filter(b => alle[b] && !alle[b].gem && !alle[b].bau);
-    z[st.id] = fehlt.length && !A.admin ? { zustand: 'zu', grund: 'vorgaenger', fehlt } : { zustand: 'offen' };
-  });
-  A.J.units.forEach(u => { const n = u.stationen.find(st => z[st.id].zustand === 'offen'); if (n) z[n.id].naechste = true; });
-  A.alle = alle; A.z = z;
-}
-const stationen = u => u.stationen.map((st, i) => Object.assign({ id: st.id, nr: i + 1, titel: st.titel, ort: st.ort, art: st.art }, A.z[st.id]));
+const stationen = u => u.stationen.map((st, i) => Object.assign({ id: st.id, nr: i + 1, titel: st.titel, ort: st.ort, art: st.art,
+  woerter: st.art === 'woerter' && A.z[st.id].zustand === 'gemeistert' ? woerterFuer(st) : null }, A.z[st.id]));
 const unitFertig = u => u.stationen.filter(st => !A.alle[st.id].bau).every(st => A.z[st.id].zustand === 'gemeistert');
 const finaleGemeistert = u => u.stationen.some(st => st.art === 'finale' && A.z[st.id].zustand === 'gemeistert');
 
@@ -223,9 +214,9 @@ function zeichneListe() {
   $('liste-innen').innerHTML = `<h2>Unit ${u.nr}: ${esc(u.titel)}</h2><div class="ort">📍 ${esc(u.ort)}</div>
     ${info ? `<div class="hinweis">${esc(info)} Gemeistert ist eine Station nach 2 Runden mit mindestens 70 %.</div>` : ''}
     ${stationen(u).map(s => `<button type="button" class="reihe ${s.zustand}" data-station="${esc(s.id)}">
-      <span class="nr">${s.zustand === 'gemeistert' ? '⭐' : s.zustand === 'zu' ? '🔒' : s.nr}</span>
+      <span class="nr">${s.nebel ? '🌫️' : s.zustand === 'gemeistert' ? '⭐' : s.zustand === 'zu' ? '🔒' : s.nr}</span>
       <span class="txt"><b>${ART[s.art][0]} ${esc(s.titel)}</b><small>${esc(s.ort)} · ${ART[s.art][1]}</small></span>
-      <span class="zst">${s.naechste ? '👉 Nächstes Ziel' : { zu: 'noch zu', offen: 'offen', gemeistert: 'gemeistert', bau: '🚧 wird gebaut' }[s.zustand]}</span></button>`).join('')}
+      <span class="zst">${s.nebel ? '🌫️ wiederholen' : s.naechste ? '👉 Nächstes Ziel' : { zu: 'noch zu', offen: 'offen', gemeistert: 'gemeistert', bau: '🚧 wird gebaut' }[s.zustand]}</span></button>`).join('')}
     ${(u.bewohner || []).map(b => `<div class="bewohner"><small>💬 ${esc(b.ort || 'Jemand')} fragt:</small>${esc(b.satz)}</div>`).join('')}
     ${n ? `<button type="button" class="reihe ${finaleGemeistert(u) ? 'offen' : 'zu'}" ${finaleGemeistert(u) ? `data-weiter-unit="${esc(n.id)}"` : 'disabled'}>
       <span class="nr">${finaleGemeistert(u) ? '🌉' : '🔒'}</span><span class="txt"><b>Brücke zu Unit ${n.nr}: ${esc(n.titel)}</b>
@@ -241,9 +232,10 @@ function zeigeKarte(id) {
   const gute = e && Array.isArray(e.p) ? e.p.filter(v => v >= sp.schwelle).length : 0;
   let text = '', knoepfe = '';
   if (z.zustand === 'offen' || z.zustand === 'gemeistert') {
-    text = z.zustand === 'gemeistert' ? 'Gemeistert! Du kannst jederzeit wieder üben – das hält die Wörter frisch.'
+    text = z.nebel ? 'Hier liegt Nebel: Zeit für eine Wiederholung! Eine gute Runde lässt die Station wieder glänzen.'
+      : z.zustand === 'gemeistert' ? 'Gemeistert! Du kannst jederzeit wieder üben – das hält die Wörter frisch.'
       : (st.art === 'woerter' ? 'Übe die Wörter mit Quiz, Fill in oder Scramble. ' : '') + `Gemeistert nach ${sp.runden} Runden mit mindestens ${sp.schwelle} %.` + (s.best ? ` Dein Bestwert: ${s.best} %.` : '');
-    knoepfe = `<button type="button" class="los" data-los="${esc(id)}">${z.zustand === 'gemeistert' ? '🔁 Nochmal üben' : '▶ Los geht\'s'}</button>`;
+    knoepfe = `<button type="button" class="los" data-los="${esc(id)}">${z.nebel ? '🌫️ Wiederholen' : z.zustand === 'gemeistert' ? '🔁 Nochmal üben' : '▶ Los geht\'s'}</button>`;
   } else if (z.zustand === 'bau') {
     text = 'Diese Station wird gerade gebaut. Bald geht es hier weiter!';
   } else if (z.grund === 'lehrer') {
@@ -254,7 +246,7 @@ function zeigeKarte(id) {
   }
   const fort = z.zustand === 'gemeistert' ? sp.runden : Math.min(gute, sp.runden);
   $('karte').innerHTML = `<button type="button" class="x" data-zu aria-label="Schließen">✕</button>
-    <div class="marke2" aria-hidden="true">${z.zustand === 'gemeistert' ? '⭐' : z.zustand === 'zu' ? '🔒' : z.zustand === 'bau' ? '🚧' : ART[st.art][0]}</div>
+    <div class="marke2" aria-hidden="true">${z.nebel ? '🌫️' : z.zustand === 'gemeistert' ? '⭐' : z.zustand === 'zu' ? '🔒' : z.zustand === 'bau' ? '🚧' : ART[st.art][0]}</div>
     <div class="klein">Station ${nr} · ${ART[st.art][1]} · ${esc(st.ort)}</div>
     <h3>${esc(st.titel)}</h3><p>${esc(text)}</p>
     ${z.zustand === 'offen' || z.zustand === 'gemeistert' ? `<div class="fort" aria-label="${fort} von ${sp.runden} guten Runden">${Array.from({ length: sp.runden }, (_, i) => `<i class="${i < fort ? 'an' : ''}"></i>`).join('')}</div>` : ''}
@@ -267,7 +259,7 @@ const schliesseKarte = () => { $('karte').hidden = true; A.karte = null; };
 
 function starte(id) {
   const x = A.alle[id]; if (!x || !hatApp(x.st)) return;
-  const zurueck = location.pathname + location.search + '#u=' + encodeURIComponent(x.unit.id) + '&s=' + encodeURIComponent(id) + '&m=' + (A.z[id].zustand === 'gemeistert' ? 1 : 0);
+  const zurueck = location.pathname + location.search + '#u=' + encodeURIComponent(x.unit.id) + '&s=' + encodeURIComponent(id) + '&m=' + (A.z[id].zustand === 'gemeistert' ? 1 : 0) + (A.z[id].nebel ? '&n=1' : '');
   try { sessionStorage.setItem(ZURUECK_KEY, new URL(zurueck, location.href).href); } catch (e) {}
   location.href = link(x.st);
 }
@@ -372,7 +364,8 @@ window.addEventListener('pageshow', e => { if (e.persisted) aktualisieren(); });
 (async function init() {
   try {
     const [J] = await Promise.all([
-      fetch('../../daten/journey6.json', { cache: 'no-cache' }).then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); }),
+      LernJourney.laden(),
+      fetch('../../daten/vokabeln6.json').then(r => r.ok ? r.json() : null).then(v => { A.vok = v; }).catch(() => {}),
       passBereit(),
       window.LernKatalog ? Promise.race([LernKatalog.bereit, warte(4000)]) : null,
     ]);
@@ -393,6 +386,11 @@ window.addEventListener('pageshow', e => { if (e.persisted) aktualisieren(); });
       toast('⭐ Station gemeistert!');
       try { if (window.LernPass && LernPass.celebrate && !reduce) LernPass.celebrate('konfetti'); } catch (e) {}
       if (A.alle[vonS].st.art === 'finale') setTimeout(() => zeigePostkarte(A.alle[vonS].unit), 1800);
+    } else if (vonS && HASH.get('n') === '1' && !A.z[vonS].nebel && A.z[vonS].zustand === 'gemeistert') {
+      // Wiederholung geschafft: der Nebel ist weg
+      await warte(450);
+      if (A.welt) A.welt.jubel();
+      toast('✨ Die Station glänzt wieder!');
     } else if (vonS) zeigeKarte(vonS);
   } catch (e) {
     console.warn('[Journey]', e);

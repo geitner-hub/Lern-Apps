@@ -15,9 +15,10 @@
 //
 //  API (window.LernJourneyWelt):
 //    start(host, o) → Promise(welt)   Orte: hafen (Unit 1), strasse, sport, stadt, moor (Unit 2–5)
-//      o = { figur (LernAvatar.figur), szene: 'hafen', stationen: [{ id, nr, titel, ort, art, zustand }], aktuell: id,
+//      o = { figur (LernAvatar.figur), szene: 'hafen', stationen: [{ id, nr, titel, ort, art, zustand, nebel?, woerter? }], aktuell: id,
 //            onTippen(id) }      zustand: 'zu' | 'offen' | 'gemeistert' | 'bau' (wird gebaut), dazu optional naechste: true
-//    welt.zustand(stationen)  Zustände neu setzen (Farben, Schilder, Flaggen; Wahrzeichen färben sich bei „gemeistert“)
+//    welt.zustand(stationen)  Zustände neu setzen (Farben, Schilder, Flaggen; Wahrzeichen färben sich bei „gemeistert“;
+//                             nebel: Wolke über der Station und halb verblasst; woerter: Holzschild mit gemeisterten Wörtern)
 //    welt.laufeZu(id)         → Promise, sobald die Figur angekommen ist
 //    welt.zeige(id)           Kamera zur Station (Figur bleibt stehen)
 //    welt.jubel()             Figur jubelt (wie der Avatar-Auftritt im Pass)
@@ -338,9 +339,32 @@
     x.font = '800 30px "Nunito", sans-serif'; x.fillStyle = zu ? '#6f675d' : '#6b5a48';
     x.fillText(st.ort || '', 128, 136);
     x.font = '800 30px "Nunito", sans-serif'; x.fillStyle = zu ? '#6f675d' : gold ? '#a06d00' : '#4f46e5';
-    x.fillText(st.naechste && st.zustand === 'offen' ? '👉 Dein nächstes Ziel' : ZUSTAND[st.zustand] || '', 40, 184);
+    x.fillText(st.naechste && st.zustand === 'offen' ? '👉 Dein nächstes Ziel' : st.nebel ? '🌫️ Zeit zum Wiederholen' : ZUSTAND[st.zustand] || '', 40, 184);
     if (alt) { alt.needsUpdate = true; return alt; }
     const t = new T.CanvasTexture(c); t.anisotropy = 2; return t;
+  }
+
+  // Kleines Holzschild mit gemeisterten Wörtern (die Orte füllen sich mit Sprache)
+  function woerterTextur(woerter) {
+    const c = document.createElement('canvas'); c.width = 512; c.height = 64 + 52 * woerter.length;
+    const x = c.getContext('2d'), h = c.height;
+    x.fillStyle = '#7d5434'; x.fillRect(240, h - 30, 32, 30);
+    x.fillStyle = '#c8955d'; x.strokeStyle = '#7d5434'; x.lineWidth = 8;
+    x.beginPath(); x.roundRect ? x.roundRect(8, 8, 496, h - 44, 18) : x.rect(8, 8, 496, h - 44); x.fill(); x.stroke();
+    x.fillStyle = '#2b1a0c'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.font = '40px "Fredoka One", "Nunito", sans-serif';
+    woerter.forEach((w, i) => x.fillText(w, 256, 44 + i * 52));
+    return new T.CanvasTexture(c);
+  }
+  let nebelTex = null;
+  function nebelTextur() {   // weiche, helle Wolke (einmal gezeichnet, von allen Stationen geteilt)
+    if (nebelTex) return nebelTex;
+    const c = document.createElement('canvas'); c.width = c.height = 128;
+    const x = c.getContext('2d');
+    [[64, 70, 50], [40, 76, 34], [88, 74, 36], [62, 52, 34]].forEach(([cx, cy, r]) => {
+      const g = x.createRadialGradient(cx, cy, 0, cx, cy, r); g.addColorStop(0, 'rgba(255,255,255,.85)'); g.addColorStop(1, 'rgba(255,255,255,0)');
+      x.fillStyle = g; x.fillRect(0, 0, 128, 128);
+    });
+    return (nebelTex = new T.CanvasTexture(c));
   }
 
   // ── Welt starten ───────────────────────────────────────
@@ -476,7 +500,10 @@
       // Tippfläche: großer unsichtbarer Klotz um Sockel und Schild
       const hit = new T.Mesh(new T.BoxGeometry(5, 7, 5), new T.MeshBasicMaterial({ visible: false })); hit.position.y = 3; g.add(hit); zeug.push(hit.geometry, hit.material);
       hit.userData.id = st.id;
-      return { st, i, u, p, g, sockel, ring, mast, fahne, pfeil, schild, tex, lm, farben, grau, hit, zustand: '' };
+      // Nebel bei fälliger Wiederholung (zwei Wolken, ziehen langsam)
+      const nebel = [0, 1].map(k => { const n = new T.Sprite(new T.SpriteMaterial({ map: nebelTextur(), transparent: true, depthWrite: false, opacity: 0.85 }));
+        n.scale.set(9 - k * 2, 5 - k, 1); n.position.set(k ? 2 : -1, 1.6 + k * 1.2, 1); n.renderOrder = 3; n.visible = false; g.add(n); zeug.push(n.material); return n; });
+      return { st, i, u, p, g, wp, sockel, ring, mast, fahne, pfeil, schild, tex, lm, farben, grau, hit, nebel, wort: null, zustand: '' };
     });
     zeug.push(sockelGeo, ringGeo, fahneGeo, pfeilGeo, pfeilMat, ...Object.values(sockelMat));
     const nachId = id => ST.find(s => s.st.id === id);
@@ -517,7 +544,22 @@
         s.mast.visible = s.fahne.visible = z === 'gemeistert';
         s.pfeil.visible = !!s.st.naechste && z === 'offen';
         schildTextur(s.st, s.tex);
-        if (s.lm) { s.lm.geometry.attributes.color.array.set(z === 'gemeistert' ? s.farben : s.grau); s.lm.geometry.attributes.color.needsUpdate = true; }
+        const neb = z === 'gemeistert' && !!s.st.nebel;
+        s.nebel.forEach(n => { n.visible = neb; });
+        if (s.lm) {   // gemeistert = Farbe; mit Nebel halb verblasst; sonst grau
+          const a = s.lm.geometry.attributes.color.array;
+          if (z !== 'gemeistert') a.set(s.grau); else if (!neb) a.set(s.farben); else for (let k = 0; k < a.length; k++) a[k] = (s.farben[k] + s.grau[k]) / 2;
+          s.lm.geometry.attributes.color.needsUpdate = true;
+        }
+        // Wörter-Schild neben dem Wahrzeichen
+        const wk = (s.st.woerter || []).join('|');
+        if (wk !== (s.wort ? s.wort.userData.k : '')) {
+          if (s.wort) { scene.remove(s.wort); s.wort.material.map.dispose(); s.wort.material.dispose(); s.wort = null; }
+          if (wk) {
+            const tx = woerterTextur(s.st.woerter), sp = new T.Sprite(new T.SpriteMaterial({ map: tx, depthWrite: false }));
+            const hgt = tx.image.height / 512 * 4.6; sp.scale.set(4.6, hgt, 1); sp.position.set(s.wp.x + 3.2, hgt / 2 + 0.1, s.wp.z + 0.8); sp.userData.k = wk; scene.add(sp); s.wort = sp;
+          }
+        }
       });
       renderer.shadowMap.needsUpdate = true;
       bitte();
@@ -634,6 +676,7 @@
           if (s.ring.visible) { const q = 1 + Math.sin(t * 2.4 + s.i) * 0.12; s.ring.scale.set(q, 1, q); s.ring.material.opacity = 0.45 + Math.sin(t * 2.4 + s.i) * 0.2; }
           if (s.fahne.visible) s.fahne.rotation.y = Math.sin(t * 3 + s.i) * 0.25;
           if (s.pfeil.visible) { s.pfeil.position.y = 6.9 + Math.sin(t * 2.2) * 0.35; s.pfeil.rotation.y = t; }
+          if (s.nebel[0].visible) s.nebel.forEach((n, k) => { n.position.x = (k ? 2 : -1) + Math.sin(t * 0.4 + k * 2 + s.i) * 0.8; n.material.opacity = 0.7 + Math.sin(t * 0.6 + k) * 0.15; });
         });
         if (tor && tor.ring.visible) { const q = 1.3 + Math.sin(t * 2.4) * 0.12; tor.ring.scale.set(q, 1, q); }
       }
@@ -671,6 +714,8 @@
       stop() {
         laeuft = false; cancelAnimationFrame(raf); ro.disconnect(); document.removeEventListener('visibilitychange', sichtbar);
         zeug.forEach(z => { try { if (z.geometry) z.geometry.dispose(); if (z.dispose) z.dispose(); } catch (e) {} });
+        ST.forEach(s => { if (s.wort) { s.wort.material.map.dispose(); s.wort.material.dispose(); } });
+        if (nebelTex) { nebelTex.dispose(); nebelTex = null; }
         wGeo.dispose(); vcMat.dispose(); scene.background.dispose(); renderer.dispose(); el.remove();
       },
     };

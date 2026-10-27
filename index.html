@@ -738,7 +738,7 @@ function visibleApps() {
 
 // ── „Heute für dich“ (Etappe 8): Auftrag der Lehrkraft · fällige Wiederholung · nächstes Pass-Ziel ──
 //  Abschaltbar im Admin (config.heute = false). Katalog und wiederholung.js laden erst bei Bedarf.
-let heuteLaden = null;
+let heuteLaden = null, journeyLaden = null, journeyDaten = null;
 function heuteIso() { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
 function buildHeute() {
   const sec = document.getElementById('heute-section');
@@ -765,7 +765,21 @@ function buildHeute() {
   const w = window.LernWiederholung ? LernWiederholung.faellig().find(x => x.link && sichtbar.some(a => ohneParam(a.datei) === ohneParam(x.link))) : null;
   if (w) karten.push(`<a class="heute-karte" href="${escHtml(w.link)}"><span class="hk-ic">🔁</span>
       <span><b>Wiederholen: ${escHtml(w.titel)}</b><small>${w.tage > 0 ? 'Seit ' + w.tage + (w.tage === 1 ? ' Tag' : ' Tagen') + ' fällig' : 'Heute fällig'} – damit es nicht verblasst</small></span></a>`);
-  // 3. Nächstes Ziel im Pass
+  // 3. English Journey (Etappe 6): nächste Station – nur, wenn der Weg auf der Startseite steht und zur Klasse passt
+  const ja = sichtbar.find(a => ohneParam(a.datei) === 'apps/englisch/english-journey.html'
+    && (!(a.klassen || []).length || !passKlasse() || a.klassen.some(k => Number(k) <= passKlasse())));
+  if (ja && !journeyDaten && !journeyLaden) {
+    journeyLaden = (heuteLaden || Promise.resolve()).then(() => LW.laden('gemeinsam/journey-kern.js')).then(() => LernJourney.laden())
+      .then(J => { journeyDaten = J; buildHeute(); }).catch(() => {});
+  }
+  if (ja && journeyDaten && window.LernJourney && window.LernKatalog) {
+    try {
+      const n = LernJourney.naechste(journeyDaten, LernJourney.berechne(journeyDaten).z);
+      if (n) karten.push(`<a class="heute-karte" href="${escHtml(ohneParam(ja.datei))}#u=${encodeURIComponent(n.unit.id)}&s=${encodeURIComponent(n.st.id)}"><span class="hk-ic">🧭</span>
+        <span><b>Nächste Station: ${escHtml(n.st.titel)}</b><small>English Journey · Unit ${n.unit.nr} · ${escHtml(n.st.ort || '')}</small></span></a>`);
+    } catch (e) {}
+  }
+  // 4. Nächstes Ziel im Pass
   const wk = LernPass.weekInfo(), li = LernPass.levelInfo();
   const ziel = !wk.done
     ? { ic: '📅', t: `Wochenziel: noch ${wk.goal - wk.goodDays} ${wk.goal - wk.goodDays === 1 ? 'Tag' : 'Tage'} üben`, k: `${wk.goodDays} von ${wk.goal} Tagen geschafft` }
