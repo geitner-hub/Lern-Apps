@@ -44,27 +44,34 @@
       color:var(--text);min-height:100vh;
     }
 
-    /* ── HEADER ── */
-    header{background:var(--hbg);padding:2.6rem 2rem 2rem;text-align:center;position:relative;overflow:hidden;}
-    header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 15% 60%,rgba(45,31,110,.75) 0%,transparent 52%),radial-gradient(ellipse at 85% 20%,rgba(79,29,150,.55) 0%,transparent 50%),radial-gradient(ellipse at 50% 110%,rgba(99,102,241,.18) 0%,transparent 50%);}
-    header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--accent),transparent);}
-    .header-deco{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
-    .header-deco::before{content:'';position:absolute;right:-40px;top:-40px;width:180px;height:180px;border-radius:50%;border:30px solid rgba(99,102,241,.07);}
-    .header-deco::after{content:'';position:absolute;left:-20px;bottom:-60px;width:140px;height:140px;border-radius:50%;border:24px solid rgba(230,168,23,.06);}
-
-    .wordmark{font-family:'Fredoka One',cursive;font-size:clamp(2rem,5vw,3rem);position:relative;letter-spacing:-.5px;display:inline-flex;align-items:center;gap:.4rem;color:#fff;}
-    .wordmark-icon{font-size:clamp(1.6rem,4vw,2.4rem);filter:drop-shadow(0 0 14px rgba(230,168,23,.45));}
+    /* ── KOPFLEISTE (v96): Marke links, Schnellzugriff rechts (Scannen, Dorf, Truhen, Profil) – bleibt oben ── */
+    header.kopf{position:sticky;top:0;z-index:100;display:flex;align-items:center;gap:.8rem;padding:.6rem max(1.4rem,calc((100% - 980px) / 2 + 1.4rem));
+      background:rgba(19,17,34,.92);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-bottom:1px solid rgba(230,168,23,.25);box-shadow:0 4px 24px rgba(0,0,0,.35);}
+    .wordmark{font-family:'Fredoka One',cursive;font-size:1.7rem;letter-spacing:-.3px;display:inline-flex;align-items:center;gap:.35rem;color:#fff;text-decoration:none;white-space:nowrap;}
+    .wordmark-icon{font-size:1.45rem;filter:drop-shadow(0 0 10px rgba(230,168,23,.45));}
     .wordmark em{color:var(--accent);font-style:normal;}
-    header p{margin-top:.4rem;font-size:.93rem;color:var(--muted);position:relative;}
-
-    .header-stats{display:flex;gap:.5rem;justify-content:center;margin-top:1rem;position:relative;flex-wrap:wrap;}
-    .hstat{background:rgba(255,255,255,.07);border:0.5px solid var(--border2);border-radius:99px;font-size:.74rem;color:var(--text2);padding:.24rem .85rem;font-weight:700;}
-    .hstat strong{color:var(--accent);}
-    .admin-link{display:inline-block;margin-top:.7rem;font-size:.7rem;color:rgba(255,255,255,.18);text-decoration:none;position:relative;}
-    .admin-link:hover{color:rgba(255,255,255,.45);}
+    .kopf-aktionen{margin-left:auto;display:flex;align-items:center;gap:.45rem;}
+    .kopf-btn{position:relative;display:inline-flex;align-items:center;gap:.4rem;min-height:44px;padding:0 .85rem;border-radius:12px;border:1px solid var(--border2);
+      background:rgba(255,255,255,.05);color:var(--text);font:800 .88rem 'Nunito',sans-serif;text-decoration:none;cursor:pointer;white-space:nowrap;-webkit-tap-highlight-color:transparent;}
+    .kopf-btn:hover,.kopf-btn:focus-visible{border-color:rgba(230,168,23,.5);color:var(--accent);outline:none;}
+    .kopf-btn .ki{font-size:1.15rem;line-height:1;}
+    .kopf-btn.scan{background:rgba(230,168,23,.14);border-color:rgba(230,168,23,.45);color:var(--accent);}
+    .kopf-btn[hidden],.kopf-profil[hidden]{display:none;}
+    .kopf-badge{position:absolute;top:-6px;right:-6px;min-width:20px;height:20px;padding:0 .3rem;border-radius:99px;background:#f43f5e;color:#fff;font-size:.7rem;font-weight:900;line-height:20px;text-align:center;border:2px solid #131122;}
+    .kopf-profil{display:inline-flex;align-items:center;gap:.55rem;min-height:44px;padding:.2rem .8rem .2rem .25rem;border-radius:99px;border:1px solid rgba(230,168,23,.4);
+      background:linear-gradient(120deg,#221d3d,#2a2146);color:#fff;font:800 .88rem 'Nunito',sans-serif;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+    .kopf-profil:hover,.kopf-profil:focus-visible{border-color:var(--accent);outline:none;}
+    .kopf-profil .pass-avatar{width:36px;height:36px;font-size:1.3rem;border-width:2px;box-shadow:none;}
+    .kopf-profil .pass-lvl{display:none;}
+    .kopf-profil .kp-txt{display:flex;flex-direction:column;align-items:flex-start;line-height:1.1;}
+    .kopf-profil .kp-txt small{font-size:.68rem;color:var(--accent);font-weight:900;}
+    .kopf-profil.neu{background:var(--accent);color:#1b1300;border-color:var(--accent);padding:0 1rem;}
+    @media (max-width:700px){ .kopf-btn span:not(.ki):not(.kopf-badge){display:none;} .kopf-btn{padding:0 .7rem;} .kopf-profil .kp-txt small{display:none;} }
+    @media (max-width:430px){ header.kopf{padding:.5rem .8rem;gap:.4rem;} .wordmark{font-size:1.35rem;} .wordmark-icon{font-size:1.15rem;} .kopf-profil .kp-txt{display:none;} .kopf-profil{padding:.2rem;} .kopf-aktionen{gap:.35rem;} }
 
     /* ── SYNC BAR ── */
     #sync-bar{background:#0a0914;color:#4a4868;font-size:.71rem;font-weight:700;text-align:center;padding:.27rem 1rem;display:flex;align-items:center;justify-content:center;gap:.5rem;min-height:25px;border-bottom:1px solid rgba(255,255,255,.04);}
+    #sync-bar:not(.syncing):not(.ok):not(.error):not(.cached){display:none;}   /* leer = keine Leiste */
     #sync-bar.syncing{color:var(--accent);}
     #sync-bar.ok{color:#4ade80;}
     #sync-bar.error{color:#f87171;}
@@ -75,40 +82,14 @@
     @keyframes syncPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.9);opacity:.35}}
     @keyframes syncPop{0%{transform:scale(1)}50%{transform:scale(2.2)}100%{transform:scale(1)}}
 
-    /* ── FILTER BAR ── */
-    .filter-bar{background:var(--bg2);border-bottom:1px solid var(--border);padding:.85rem 1.4rem;position:sticky;top:0;z-index:100;box-shadow:0 4px 28px rgba(0,0,0,.45);}
-    .fi{max-width:980px;margin:0 auto;}
-    .filter-top-row{display:flex;align-items:center;gap:.6rem;}
-    .filter-search{flex:1;padding:.53rem 1rem .53rem 2.35rem;border:1px solid var(--border2);border-radius:10px;font-size:.88rem;font-family:'Nunito',sans-serif;outline:none;transition:border-color .2s,background .2s;background:var(--bg3) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='15' height='15' viewBox='0 0 24 24' fill='none' stroke='rgba(241,240,251,.22)' stroke-width='2.5'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E") no-repeat .72rem center;color:var(--text);}
-    .filter-search:focus{border-color:rgba(230,168,23,.4);background:rgba(15,14,26,.8);}
-    .filter-search::placeholder{color:var(--muted);}
-
-    .scan-btn{flex-shrink:0;display:flex;align-items:center;gap:.35rem;background:rgba(230,168,23,.14);border:1px solid rgba(230,168,23,.45);color:var(--accent);border-radius:10px;padding:.45rem .8rem;font-family:inherit;font-weight:900;font-size:.84rem;cursor:pointer;white-space:nowrap;}
-    .scan-btn:hover{background:rgba(230,168,23,.22);}
-    @media (max-width:480px){.scan-btn span{display:none;}}
+    /* ── QR-SCANNER ── */
     .scan-box{width:min(460px,100%);text-align:center;}
     .scan-view{position:relative;margin:.8rem auto .4rem;width:100%;aspect-ratio:1;max-width:380px;border-radius:16px;overflow:hidden;background:#000;}
     .scan-view video{width:100%;height:100%;object-fit:cover;display:block;}
     .scan-frame{position:absolute;inset:14%;border:3px solid rgba(230,168,23,.9);border-radius:14px;box-shadow:0 0 0 999px rgba(0,0,0,.35);pointer-events:none;}
     .scan-view.hit .scan-frame{border-color:#4ade80;}
-    .view-toggle{display:flex;background:rgba(255,255,255,.05);border-radius:9px;padding:3px;gap:2px;flex-shrink:0;border:1px solid var(--border);}
-    .view-btn{width:30px;height:30px;border:none;border-radius:6px;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted);transition:all .15s;}
-    .view-btn.active{background:rgba(230,168,23,.14);color:var(--accent);}
-    .view-btn:hover:not(.active){color:var(--text2);}
-
-    .filter-rows{margin-top:.58rem;display:flex;flex-direction:column;gap:.36rem;}
-    .filter-row{display:flex;align-items:center;gap:.52rem;flex-wrap:wrap;}
-    .filter-label{font-size:.67rem;font-weight:800;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);min-width:52px;}
-    .chips{display:flex;flex-wrap:wrap;gap:.27rem;}
-    .chip{padding:.22rem .68rem;border-radius:99px;font-size:.76rem;font-weight:700;border:1px solid var(--border2);background:rgba(255,255,255,.04);color:var(--muted);cursor:pointer;transition:all .14s;user-select:none;}
-    .chip:hover{border-color:rgba(230,168,23,.4);color:var(--accent);background:rgba(230,168,23,.06);}
-    .chip.active{background:rgba(230,168,23,.14);border-color:rgba(230,168,23,.45);color:var(--accent);}
-    .chip.all.active{background:rgba(99,102,241,.18);border-color:rgba(99,102,241,.38);color:var(--indigo2);}
-    .chip.ctag.active{background:rgba(244,114,182,.13);border-color:rgba(244,114,182,.35);color:#f472b6;}
-    #filter-info{font-size:.74rem;color:var(--muted);margin-top:.3rem;min-height:1rem;}
-
     /* ── APP OF DAY ── */
-    #aod-section{max-width:980px;margin:2rem auto 0;padding:0 1.4rem;display:none;}
+    #aod-section{max-width:980px;margin:2rem auto 0;padding:0 1.4rem;}
     .aod-card{background:linear-gradient(135deg,#1e1b30,#2d1f6e);border-radius:18px;padding:1.3rem 1.5rem;display:flex;align-items:center;gap:1.2rem;text-decoration:none;color:var(--text);box-shadow:0 8px 32px rgba(0,0,0,.45),0 0 0 1px rgba(230,168,23,.14);transition:transform .18s,box-shadow .18s;position:relative;overflow:hidden;}
     .aod-card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 80% 50%,rgba(230,168,23,.11),transparent 60%);}
     .aod-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(230,168,23,.28),transparent);}
@@ -121,7 +102,7 @@
     .aod-desc{font-size:.82rem;color:var(--text2);margin-top:.2rem;}
 
     /* ── MAIN ── */
-    main{max-width:980px;margin:0 auto;padding:2rem 1.4rem 5rem;}
+    main{max-width:980px;margin:0 auto;padding:1.8rem 1.4rem 3rem;}
     .category{margin-bottom:2.8rem;}
 
     .cat-header{display:flex;align-items:center;gap:12px;margin-bottom:1.2rem;padding-bottom:.68rem;border-bottom:1.5px solid color-mix(in srgb,var(--cat-color,#6366f1) 50%,rgba(255,255,255,.05));}
@@ -168,21 +149,10 @@
     .result-pct{font-size:.65rem;font-weight:800;color:var(--muted);flex-shrink:0;}
 
     /* ── LISTENANSICHT ── */
-    body.list-view .apps-grid{grid-template-columns:1fr;gap:.48rem;}
-    body.list-view .app-card:not(.placeholder){flex-direction:row;align-items:center;padding:.78rem 1.1rem;gap:.8rem;}
-    body.list-view .app-card::before{top:0;left:0;bottom:0;right:auto;width:3px;height:100%;}
-    body.list-view .app-card::after{display:none;}
-    body.list-view .app-emoji{font-size:1.4rem;flex-shrink:0;}
-    body.list-view .app-name{font-size:.9rem;}
-    body.list-view .app-desc{font-size:.75rem;flex:1;}
-    body.list-view .app-foot{margin-left:auto;align-self:center;flex-shrink:0;margin-top:0;}
-    body.list-view .result-badge{display:none;}
-    body.list-view .app-card.placeholder{min-height:50px;}
-
     #no-results{text-align:center;padding:4rem 1rem;color:var(--muted);font-size:1rem;display:none;}
     #no-results .ni{font-size:3rem;display:block;margin-bottom:.6rem;}
 
-    footer{text-align:center;padding:1.4rem;font-size:.76rem;color:var(--muted);border-top:1px solid var(--border);}
+    footer{text-align:center;padding:1.4rem 1.4rem 5.5rem;font-size:.76rem;color:var(--muted);border-top:1px solid var(--border);}
     footer span{color:var(--accent);}
   
     /* ── ANKÜNDIGUNG ── */
@@ -200,10 +170,9 @@
     .qr-btn:hover,.qr-btn:focus-visible{color:var(--accent);border-color:rgba(230,168,23,.45);background:rgba(230,168,23,.08);outline:none;}
     .qr-btn svg{width:13px;height:13px;}
     .aod-card .qr-btn{position:absolute;right:1rem;bottom:.85rem;}
-    .header-links{display:flex;gap:.9rem;justify-content:center;margin-top:.7rem;position:relative;}
-    .header-links .admin-link{margin-top:0;}
-    .page-qr-link{font-size:.7rem;color:rgba(255,255,255,.3);background:none;border:none;cursor:pointer;font-family:inherit;padding:0;}
-    .page-qr-link:hover{color:var(--accent);}
+    footer .fuss-links{display:flex;gap:1.1rem;justify-content:center;margin-top:.5rem;}
+    footer .fuss-links a,footer .fuss-links button{font:700 .74rem 'Nunito',sans-serif;color:var(--muted);background:none;border:none;cursor:pointer;padding:0;text-decoration:none;}
+    footer .fuss-links a:hover,footer .fuss-links button:hover{color:var(--accent);}
 
     /* ── QR-MODAL ── */
     #qr-modal{position:fixed;inset:0;z-index:10000;background:rgba(5,4,12,.78);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:1rem;}
@@ -252,7 +221,7 @@
     .heute-karte.lk{border-color:rgba(230,168,23,.55);}
     @media (prefers-reduced-motion:reduce){.heute-karte{transition:none;}.heute-karte:hover{transform:none;}}
     .dorf-strip{display:flex;align-items:center;gap:.55rem;flex-wrap:wrap;background:linear-gradient(110deg,#2a1d12,#1f1a2e);border:1px solid rgba(154,101,56,.55);border-radius:16px;padding:.6rem .7rem;}
-    .dorf-strip .dh{font-weight:900;font-size:.9rem;color:#fde7c4;margin-right:.2rem;white-space:nowrap;}
+    .dorf-strip .dh{font-weight:900;font-size:.9rem;color:#fde7c4;margin-right:.2rem;white-space:nowrap;text-decoration:none;}
     .dorf-chip{display:inline-flex;align-items:center;gap:.4rem;background:#f6ecd2;color:#3b2a1a;text-decoration:none;border-radius:10px;padding:.35rem .6rem;font-weight:800;font-size:.85rem;box-shadow:0 3px 0 rgba(0,0,0,.35);}
     .dorf-chip:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(0,0,0,.35);}
     .dorf-chip small{font-weight:900;color:#7a6248;}
@@ -268,19 +237,25 @@
     .cat-header .spiel-pill{margin-left:auto;}
 
     /* ── START-KACHELN (v83) ── iPad hochkant 2 Spalten, quer 3, Handy 1 */
-    #start-raster{max-width:980px;margin:1.2rem auto 1.4rem;padding:0 1.4rem;display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:.8rem;align-items:stretch;grid-auto-flow:row dense;}
+    /* Start (v96): Pass links, „Heute für dich“ rechts – darunter Dorf-Aufträge, App des Tages; Lernweg/Live ganz oben */
+    #start-raster{max-width:980px;margin:1.3rem auto 0;padding:0 1.4rem;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:.9rem;align-items:stretch;}
     #start-raster > .sk{max-width:none;margin:0;padding:0;min-width:0;display:flex;flex-direction:column;}
     #start-raster > .sk:empty{display:none;}
-    #start-raster #lernweg-section,#start-raster #live-section{grid-column:1/-1;}   /* Lernweg und laufende Live-Abfrage: volle Breite */
+    #start-raster #lernweg-section,#start-raster #live-section,#start-raster #dorf-section,#start-raster #aod-section{grid-column:1/-1;}
+    #start-raster.ohne-heute #pass-section{grid-column:1/-1;}
     #start-raster #heute-section h2,#start-raster #lernweg-section h2{margin:0 0 .45rem;}
-    #start-raster .heute-grid{grid-template-columns:1fr;gap:.5rem;flex:1;align-content:start;}
-    #start-raster .pass-card{flex:1;flex-wrap:wrap;gap:.7rem;align-content:center;}
-    #start-raster .pass-main{flex:1 1 calc(100% - 70px);}
-    #start-raster .pass-side{width:100%;justify-content:space-between;gap:.5rem;padding-top:.5rem;border-top:1px solid var(--border);}
-    #start-raster .event-strip{margin-top:.5rem;}
-    #start-raster .dorf-strip{flex:1;align-content:flex-start;}
-    #start-raster .dorf-strip .dh{width:100%;}
-    #start-raster .aod-card{flex:1;padding:1.6rem 1.2rem 2.8rem;}
+    #start-raster .heute-grid{grid-template-columns:1fr;gap:.55rem;flex:1;align-content:start;}
+    #start-raster .pass-card{flex:1;flex-direction:column;align-items:stretch;justify-content:center;gap:.9rem;padding:1.1rem 1.15rem;}
+    #start-raster .pass-kopf{display:flex;align-items:center;gap:1rem;}
+    #start-raster .pass-card .pass-avatar{width:76px;height:76px;font-size:2.7rem;}
+    #start-raster .pass-name{font-size:1.4rem;}
+    #start-raster .pass-side{justify-content:space-around;gap:.5rem;padding-top:.75rem;border-top:1px solid var(--border);}
+    #start-raster .pass-stat .v{font-size:1.05rem;}
+    #start-raster .event-strip{margin-top:.55rem;}
+    #start-raster .aod-card{padding:1.3rem 1.2rem 1.3rem;}
+    .faecher-titel{font:400 1.05rem 'Fredoka One','Nunito',sans-serif;color:#818cf8;margin:0 0 .6rem;}
+    body.fach-offen .faecher-titel{display:none;}
+    @media (max-width:700px){#start-raster{grid-template-columns:1fr;}}
     @media (max-width:640px){#start-raster{padding:0 1rem;gap:.65rem;}}
 
     /* ── LERNWELT-PASS ── */
@@ -524,27 +499,18 @@
   @media (max-width: 560px) { .fach-kacheln { grid-template-columns: 1fr 1fr; gap: .7rem; } .fach-kachel { min-height: 140px; padding: .9rem; border-radius: 18px; }
     .fk-icon { font-size: 2.2rem; right: .6rem; top: .55rem; } .fk-name { font-size: 1.2rem; margin-top: 2.2rem; } .fk-info { font-size: .75rem; } }
   @media (prefers-reduced-motion: reduce) { .fach-kachel { transition: none; } .fach-kachel:hover, .fach-kachel:active { transform: none; } }
-  body.list-view .regal-zeile { grid-auto-flow: row; grid-auto-columns: auto; grid-template-columns: 1fr; overflow-x: visible; }
 </style>
 </head>
 <body>
 
-<header>
-  <div class="header-deco"></div>
-  <div class="wordmark">
-    <span class="wordmark-icon">🧭</span>
-    <span>Lern<em>welt</em></span>
-  </div>
-  <p>Klick auf eine App und leg los!</p>
-  <div class="header-stats">
-    <span class="hstat" id="stat-kl">Klasse 5–6</span>
-    <span class="hstat" id="stat-apps">… Apps</span>
-    <span class="hstat" id="stat-played">… gespielt</span>
-  </div>
-  <div class="header-links">
-    <button type="button" class="page-qr-link" id="page-qr-btn" title="QR-Code zu dieser Seite (mit aktuellem Klassenfilter)">📲 QR zur Startseite</button>
-    <a href="admin.html" class="admin-link">⚙ Admin</a>
-  </div>
+<header class="kopf">
+  <a class="wordmark" href="./" id="kopf-marke" aria-label="Lernwelt – zu den Fächern"><span class="wordmark-icon">🧭</span><span>Lern<em>welt</em></span></a>
+  <nav class="kopf-aktionen" aria-label="Schnellzugriff">
+    <button type="button" class="kopf-btn scan" id="scan-btn" title="QR-Code der Lehrkraft scannen – die App öffnet sich hier in der Lernwelt"><span class="ki">📷</span><span>Scannen</span></button>
+    <a class="kopf-btn" id="kopf-dorf" href="spiele/dorf.html" hidden><span class="ki">🏘️</span><span>Mein Dorf</span></a>
+    <button type="button" class="kopf-btn" id="kopf-truhen" data-open-pass="chests" hidden><span class="ki">🎁</span><span>Truhen</span></button>
+    <button type="button" class="kopf-profil" id="kopf-profil" hidden></button>
+  </nav>
 </header>
 
 <div id="sync-bar"><span class="sync-dot"></span><span id="sync-msg">Wird geladen …</span></div>
@@ -561,41 +527,16 @@
   <div id="aod-section" class="sk"></div>
 </div>
 
-<div class="filter-bar">
-  <div class="fi">
-    <div class="filter-top-row">
-      <input type="search" class="filter-search" id="search" placeholder="App suchen …" autocomplete="off" aria-label="App suchen"/>
-      <button type="button" class="scan-btn" id="scan-btn" title="QR-Code der Lehrkraft scannen – die App öffnet sich hier in der Lernwelt">📷 <span>QR scannen</span></button>
-      <div class="view-toggle">
-        <button type="button" class="view-btn active" id="btn-grid" title="Kachelansicht" aria-label="Kachelansicht">
-          <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1.5" fill="currentColor"/><rect x="9" y="1" width="6" height="6" rx="1.5" fill="currentColor"/><rect x="1" y="9" width="6" height="6" rx="1.5" fill="currentColor"/><rect x="9" y="9" width="6" height="6" rx="1.5" fill="currentColor"/></svg>
-        </button>
-        <button type="button" class="view-btn" id="btn-list" title="Listenansicht" aria-label="Listenansicht">
-          <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><rect x="1" y="2" width="14" height="2.5" rx="1.2" fill="currentColor"/><rect x="1" y="6.75" width="14" height="2.5" rx="1.2" fill="currentColor"/><rect x="1" y="11.5" width="14" height="2.5" rx="1.2" fill="currentColor"/></svg>
-        </button>
-      </div>
-    </div>
-    <div class="filter-rows">
-      <div class="filter-row">
-        <span class="filter-label">Klasse</span>
-        <div class="chips" id="chips-k"></div>
-      </div>
-      <div class="filter-row" id="tag-row" style="display:none">
-        <span class="filter-label">Tags</span>
-        <div class="chips" id="chips-t"></div>
-      </div>
-    </div>
-    <div id="filter-info"></div>
-  </div>
-</div>
-
 <main id="main">
   <div id="fach-kopf" hidden><button type="button" class="fach-zurueck" id="fach-zurueck">← Alle Fächer</button></div>
+  <h2 class="faecher-titel" id="faecher-titel">Deine Fächer</h2>
   <div id="fach-kacheln" class="fach-kacheln" aria-label="Fächer"></div>
-  <div id="no-results"><span class="ni">🔍</span>Keine Apps gefunden.<br><small>Versuche einen anderen Filter.</small></div>
+  <div id="no-results"><span class="ni">📭</span>Hier gibt es gerade keine Apps.</div>
 </main>
 
-<footer>🧭 <span>Lernwelt</span> · geitner-hub.github.io</footer>
+<footer>🧭 <span>Lernwelt</span> · geitner-hub.github.io
+  <div class="fuss-links"><button type="button" id="page-qr-btn" title="QR-Code zur Startseite (für die Lehrkraft)">📲 QR zur Startseite</button><a href="admin.html">⚙ Admin</a></div>
+</footer>
 
 <!-- ── QR-Modal ── -->
 <div id="scan-modal" class="lw-modal" role="dialog" aria-modal="true" aria-labelledby="scan-title">
@@ -651,25 +592,22 @@ const QR_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strok
 
 let CONFIG  = ConfigAPI.migrate({});
 let RESULTS = {};
-let fKl = 'all', fTag = 'all', fQ = '';
+let fKl = 'all';
 let fFach = '';          // gewähltes Fach (leer = Fächer-Kacheln); steht als ?fach= in der Adresse (Zurück-Geste)
 let klVorgabe = false;   // true, sobald die Klasse aus URL, Vorschau oder Antippen feststeht – dann nicht mehr aus dem Pass setzen
 
-// ── URL-Parameter (z. B. index.html?kl=5&tag=Vokabeln&q=rechnen) ──
+// ── URL-Parameter (z. B. index.html?kl=5&fach=Englisch) – Suche und Tag-Filter gibt es seit v96 nicht mehr ──
 (function readUrlParams() {
   const p = new URLSearchParams(location.search);
   const kl = p.get('kl');
   if (kl && KLASSEN.includes(parseInt(kl, 10))) { fKl = String(parseInt(kl, 10)); klVorgabe = true; }
   if (kl === 'alle') klVorgabe = true;
-  if (p.get('tag')) fTag = p.get('tag').slice(0, 40);
-  if (p.get('q'))   { fQ = p.get('q').slice(0, 60).toLowerCase(); document.getElementById('search').value = p.get('q').slice(0, 60); }
   if (p.get('fach')) fFach = p.get('fach').slice(0, 40);
 })();
 
 function urlMitFach(fach) {
   const p = new URLSearchParams();
   if (fKl !== 'all' && fKl !== 'mir') p.set('kl', fKl);
-  if (fTag !== 'all') p.set('tag', fTag);
   if (fach) p.set('fach', fach);
   const qs = p.toString();
   return location.pathname + (qs ? '?' + qs : '');
@@ -828,6 +766,7 @@ function vorhandeneKlassen() {
 }
 // Klasse aus dem Pass als Filter (nur einmal, solange nichts anderes gewählt ist)
 function klasseAusPass() {
+  if (fKl === 'mir' && !passKlasse()) fKl = 'all';                    // Pass gelöscht
   if (klVorgabe || !window.LernPass) return;
   if (passKlasse()) { fKl = 'mir'; klVorgabe = true; }
 }
@@ -838,13 +777,31 @@ function klassePasst(kl) {
   if (fKl === 'mir') { const m = passKlasse(); return !m || kl.some(k => Number(k) <= m); }
   return kl.includes(fKl);
 }
-function updateHeaderStats() {
-  const apps = visibleApps();
-  const ks = vorhandeneKlassen(), sk = document.getElementById('stat-kl');
-  if (sk) sk.textContent = fKl === 'mir' ? 'Bis Klasse ' + passKlasse() : fKl !== 'all' ? 'Klasse ' + fKl : ks.length ? 'Klasse ' + ks[0] + (ks.length > 1 ? '–' + ks[ks.length - 1] : '') : 'Alle Klassen';
-  document.getElementById('stat-apps').innerHTML = `<strong>${apps.length}</strong> Apps`;
-  const played = apps.filter(a => RESULTS[resultKey(a.datei)]).length;
-  document.getElementById('stat-played').innerHTML = `<strong>${played}</strong> gespielt`;
+// Start-Raster: ohne „Heute für dich“ nimmt der Pass die ganze Breite (Heute wird teils später nachgebaut)
+new MutationObserver(() => document.getElementById('start-raster').classList.toggle('ohne-heute', !document.getElementById('heute-section').innerHTML.trim()))
+  .observe(document.getElementById('heute-section'), { childList: true });
+document.getElementById('start-raster').classList.add('ohne-heute');
+
+// ── Kopfleiste (v96): Dorf, Truhen und Profil – nur mit Pass ──
+function buildKopf() {
+  const P = LernPass, mit = P.hasProfile();
+  const dorf = document.getElementById('kopf-dorf'), truhen = document.getElementById('kopf-truhen'), prof = document.getElementById('kopf-profil');
+  dorf.hidden = !(mit && (CONFIG.apps || []).some(a => a && a.datei === 'spiele/dorf.html' && !a.hidden));
+  if (!dorf.hidden) {
+    const offen = window.LernDorf && LernDorf.gestartet() ? LernDorf.offeneAuftraege().filter(x => x.c < x.n).length : 0;
+    dorf.innerHTML = `<span class="ki">🏘️</span><span>Mein Dorf</span>${offen ? `<span class="kopf-badge" title="Offene Dorf-Aufträge">${offen}</span>` : ''}`;
+  }
+  const ch = mit ? P.chestInfo().available : 0;
+  truhen.hidden = !mit;
+  truhen.innerHTML = `<span class="ki">🎁</span><span>Truhen</span>${ch ? `<span class="kopf-badge">${ch}</span>` : ''}`;
+  truhen.setAttribute('aria-label', ch ? ch + (ch === 1 ? ' Truhe' : ' Truhen') + ' zum Öffnen' : 'Truhen');
+  prof.hidden = false;
+  prof.classList.toggle('neu', !mit);
+  if (!mit) { prof.dataset.openPass = 'setup'; prof.innerHTML = '🧭 Pass starten'; prof.removeAttribute('aria-label'); return; }
+  const lv = P.levelInfo();
+  prof.dataset.openPass = 'wardrobe';
+  prof.setAttribute('aria-label', 'Mein Pass: ' + P.profile().name + ', Level ' + lv.level);
+  prof.innerHTML = `${P.avatarHTML({ level: lv.level })}<span class="kp-txt">${escHtml(P.profile().name)}<small>Level ${lv.level}</small></span>`;
 }
 
 // ── Ankündigung ──────────────────────────────────────
@@ -878,15 +835,6 @@ function buildAod() {
     </a>`;
 }
 
-// ── Klassen-Chips ────────────────────────────────────
-function buildKlassenChips() {
-  const wrap = document.getElementById('chips-k');
-  if (fKl === 'mir' && !passKlasse()) fKl = 'all';
-  wrap.innerHTML = (passKlasse() ? `<span class="chip${fKl === 'mir' ? ' active' : ''}" data-v="mir" role="button" tabindex="0" title="Alles bis Klasse ${passKlasse()}">⭐ Meine Klasse</span>` : '') +
-    `<span class="chip all${fKl === 'all' ? ' active' : ''}" data-v="all" role="button" tabindex="0">Alle</span>` +
-    vorhandeneKlassen().map(k => `<span class="chip${fKl === String(k) ? ' active' : ''}" data-v="${k}" role="button" tabindex="0">Kl. ${k}</span>`).join('');
-}
-
 // ── Seite aufbauen ───────────────────────────────────
 // ── Mein Dorf: offene Aufträge oben und als Pin an den Apps ──
 let DORF_PINS = {};
@@ -906,8 +854,7 @@ function buildDorfStrip() {
     const a = LernDorf.appInfo(x.app);
     return a.link ? `<a class="dorf-chip${x.art === 'lehrer' ? ' lk' : ''}" href="${escHtml(a.link)}">${vorname[x.art] || ''}${escHtml(a.emoji)} ${escHtml(a.name)} <small>${x.c}/${x.n}</small></a>` : '';
   }).join('');
-  sec.innerHTML = `<div class="dorf-strip"><span class="dh">🏘️ Dorf-Aufträge</span>${chips || '<span class="leer">Alles erledigt – super! Morgen gibt es neue.</span>'}
-    <a class="zum" href="spiele/dorf.html">Zum Dorf ›</a></div>`;
+  sec.innerHTML = `<div class="dorf-strip"><a class="dh" href="spiele/dorf.html">🏘️ Dorf-Aufträge ›</a>${chips || '<span class="leer">Alles erledigt – super! Morgen gibt es neue.</span>'}</div>`;
 }
 // Der Dorf-Kern lädt nur, wenn auf diesem iPad schon ein Dorf gegründet wurde (Etappe 2)
 function dorfAnbinden() {
@@ -1056,9 +1003,7 @@ function buildPage() {
   buildAnnouncement();
   buildFokusBanner();
   buildAod();
-  buildKlassenChips();
-  refreshTagChips();
-  updateHeaderStats();
+  buildKopf();
 
   const main = document.getElementById('main');
   main.querySelectorAll('.category').forEach(e => e.remove());
@@ -1116,40 +1061,12 @@ function buildPage() {
   applyFilters();
 }
 
-// ── Tags ─────────────────────────────────────────────
-function refreshTagChips() {
-  const tags = (CONFIG.customTags || []).filter(t => tagName(t));
-  const wrap = document.getElementById('chips-t');
-  const row  = document.getElementById('tag-row');
-  if (fTag !== 'all' && !tags.some(t => tagName(t) === fTag)) fTag = 'all';
-  wrap.innerHTML = `<span class="chip all${fTag === 'all' ? ' active' : ''}" data-v="all" role="button" tabindex="0">Alle</span>`;
-  tags.forEach(t => {
-    const nm = tagName(t), col = tagColor(t);
-    const c = document.createElement('span');
-    c.className = 'chip ctag' + (fTag === nm ? ' active' : '');
-    c.setAttribute('role', 'button');
-    c.tabIndex = 0;
-    if (fTag === nm) c.style.cssText = `background:${col.bg};border-color:${col.border};color:${col.text};`;
-    c.dataset.v = nm;
-    c.dataset.bg = col.bg; c.dataset.border = col.border; c.dataset.color = col.text;
-    c.textContent = nm;
-    wrap.appendChild(c);
-  });
-  row.style.display = tags.length ? '' : 'none';
-}
-
 // ── Filter ───────────────────────────────────────────
 function applyFilters() {
   let n = 0;
   document.querySelectorAll('#main .app-card:not(.placeholder)').forEach(card => {
-    const nm = (card.dataset.name || '').toLowerCase();
-    const ds = (card.querySelector('.app-desc')?.textContent || '').toLowerCase();
-    const fc = (card.dataset.fach || '').toLowerCase();
     const kl = card.dataset.kl ? card.dataset.kl.split(',') : [];
-    const ct = card.dataset.ct ? card.dataset.ct.split('|').map(x => x.toLowerCase()) : [];
-    const ok = (!fQ || nm.includes(fQ) || ds.includes(fQ) || fc.includes(fQ))
-            && klassePasst(kl)
-            && (fTag === 'all' || ct.includes(fTag.toLowerCase()));
+    const ok = klassePasst(kl);
     card.classList.toggle('fhide', !ok);
     if (ok) n++;
   });
@@ -1165,17 +1082,16 @@ function applyFilters() {
     if (cnt) cnt.textContent = v + (v === 1 ? ' App' : ' Apps');
     if (v) sichtbar.push(cat);
   });
-  // Ansicht: Suche → alle Treffer · ein Fach gewählt (oder nur eines da, z. B. im Fokus) → dessen Apps · sonst Fächer-Kacheln
+  // Ansicht: ein Fach gewählt (oder nur eines da, z. B. im Fokus) → dessen Apps · sonst Fächer-Kacheln
   const gewaehlt = sichtbar.find(c => c.dataset.cat === fFach);
-  const einFach = !fQ && (gewaehlt || (sichtbar.length === 1 ? sichtbar[0] : null));
+  const einFach = gewaehlt || (sichtbar.length === 1 ? sichtbar[0] : null);
   document.querySelectorAll('#main .category').forEach(cat => {
-    cat.style.display = sichtbar.includes(cat) && (fQ || cat === einFach) ? '' : 'none';
+    cat.style.display = sichtbar.includes(cat) && cat === einFach ? '' : 'none';
   });
-  document.body.classList.toggle('fach-offen', !!gewaehlt && !fQ);
-  document.getElementById('fach-kopf').hidden = !gewaehlt || !!fQ || sichtbar.length < 2;
-  buildFachKacheln(fQ || einFach ? [] : sichtbar);
-  document.getElementById('filter-info').textContent =
-    (/^\d+$/.test(fKl) || fTag !== 'all' || fQ) ? `${n} App${n !== 1 ? 's' : ''} gefunden` : '';
+  document.body.classList.toggle('fach-offen', !!gewaehlt);
+  document.getElementById('fach-kopf').hidden = !gewaehlt || sichtbar.length < 2;
+  document.getElementById('faecher-titel').hidden = !!einFach || !sichtbar.length;
+  buildFachKacheln(einFach ? [] : sichtbar);
   document.getElementById('no-results').style.display = n === 0 ? 'block' : 'none';
 }
 
@@ -1229,39 +1145,7 @@ document.addEventListener('click', e => {
   if (app) openQR(app.name, appUrl(app.datei));
 });
 
-// ── Filter-Events ────────────────────────────────────
-function onChip(wrapId, handler) {
-  const wrap = document.getElementById(wrapId);
-  const act = e => {
-    const c = e.target.closest('.chip');
-    if (!c) return;
-    if (e.type === 'keydown' && e.key !== 'Enter' && e.key !== ' ') return;
-    e.preventDefault();
-    handler(c, wrap);
-  };
-  wrap.addEventListener('click', act);
-  wrap.addEventListener('keydown', act);
-}
-onChip('chips-k', (c, wrap) => {
-  wrap.querySelectorAll('.chip').forEach(x => x.classList.remove('active'));
-  c.classList.add('active');
-  fKl = c.dataset.v;
-  klVorgabe = true;
-  syncUrl(); updateHeaderStats(); applyFilters();
-});
-onChip('chips-t', (c, wrap) => {
-  wrap.querySelectorAll('.chip').forEach(x => { x.classList.remove('active'); x.style.cssText = ''; });
-  c.classList.add('active');
-  fTag = c.dataset.v;
-  if (fTag !== 'all' && c.dataset.bg) c.style.cssText = `background:${c.dataset.bg};border-color:${c.dataset.border};color:${c.dataset.color};`;
-  syncUrl(); applyFilters();
-});
-document.getElementById('search').addEventListener('input', e => {
-  fQ = e.target.value.trim().toLowerCase();
-  applyFilters();
-});
-
-// ── Fächer als Kacheln (v92): Fach antippen → seine Apps; „← Alle Fächer“ bzw. Zurück-Geste → Kacheln ──
+// ── Fächer als Kacheln (v92): Fach antippen → seine Apps; „← Alle Fächer“, Marke im Kopf oder Zurück-Geste → Kacheln ──
 //  Das Fach steht als ?fach= in der Adresse (eigener Verlaufs-Eintrag) – kein Speicher-Schlüssel nötig.
 try { localStorage.removeItem('lernwelt-start-zu'); } catch (e) {}   // eingeklappte Fächer (bis v91) gibt es nicht mehr
 function buildFachKacheln(cats) {
@@ -1294,22 +1178,16 @@ document.getElementById('fach-zurueck').addEventListener('click', () => {
   if (history.state && history.state.fach) history.back();      // zurück zum Eintrag mit den Kacheln
   else zeigeFach('');
 });
+document.getElementById('kopf-marke').addEventListener('click', e => {
+  e.preventDefault();
+  if (fFach) document.getElementById('fach-zurueck').click(); else window.scrollTo({ top: 0, behavior: 'smooth' });
+});
 window.addEventListener('popstate', () => {
   fFach = (new URLSearchParams(location.search).get('fach') || '').slice(0, 40);
   applyFilters();
 });
 
-// ── Ansicht ──────────────────────────────────────────
-function setView(v) {
-  const isGrid = v === 'grid';
-  document.body.classList.toggle('list-view', !isGrid);
-  document.getElementById('btn-grid').classList.toggle('active', isGrid);
-  document.getElementById('btn-list').classList.toggle('active', !isGrid);
-  try { localStorage.setItem('lern-apps-view', v); } catch (e) {}
-}
-document.getElementById('btn-grid').addEventListener('click', () => setView('grid'));
-document.getElementById('btn-list').addEventListener('click', () => setView('list'));
-try { if (localStorage.getItem('lern-apps-view') === 'list') setView('list'); } catch (e) {}
+try { localStorage.removeItem('lern-apps-view'); } catch (e) {}   // Listenansicht (bis v95) gibt es nicht mehr
 
 // Beim Zurückkehren aus einer App (Browser-Zurück) Ergebnisse auffrischen
 window.addEventListener('pageshow', e => { if (e.persisted) { loadResults(); buildPage(); } });
@@ -1331,34 +1209,33 @@ function buildPassCard() {
     const xp = P.state.xp;
     sec.innerHTML = `
       <div class="pass-card new" role="button" tabindex="0" data-open-pass="setup">
-        <div class="pass-avatar">🧭</div>
+        <div class="pass-kopf"><div class="pass-avatar">🧭</div>
         <div class="pass-main">
           <div class="pass-top"><span class="pass-name">Dein Lernwelt-Pass</span></div>
           <div class="pass-sub" style="margin-top:.25rem">${xp > 0
             ? `Du hast schon <b style="color:var(--accent)">${xp} XP</b> gesammelt – richte deinen Pass ein!`
             : 'Sammle XP, steige Level auf und verdiene Sterne, Abzeichen & Truhen.'}</div>
-        </div>
-        <div class="pass-side"><button type="button" class="pass-open" tabindex="-1">Pass starten ›</button></div>
+        </div></div>
+        <button type="button" class="pass-open" tabindex="-1">Pass starten ›</button>
       </div>${eventStripHTML()}`;
     return;
   }
-  const pr = P.profile(), lv = P.levelInfo(), wk = P.weekInfo(), ch = P.chestInfo(), ss = P.starsSummary();
+  const pr = P.profile(), lv = P.levelInfo(), wk = P.weekInfo(), ss = P.starsSummary();
   const dots = Array.from({ length: wk.goal }, (_, i) => `<i class="${i < wk.goodDays ? 'on' : ''}"></i>`).join('');
   const bg = P.cardBackground();
   sec.innerHTML = `
     <div class="pass-card${bg ? ' has-bg' : ''}" role="button" tabindex="0" data-open-pass="wardrobe" aria-label="Lernwelt-Pass öffnen"${bg ? ` style="background:${escHtml(bg)}"` : ''}>
-      ${P.avatarHTML({ level: lv.level })}
+      <div class="pass-kopf">${P.avatarHTML({ level: lv.level })}
       <div class="pass-main">
         <div class="pass-top"><span class="pass-name">${escHtml(pr.name)}</span><span class="pass-title">${escHtml(lv.title)}</span></div>
         <div class="pass-bar"><div class="pass-fill" style="width:${lv.pct}%"></div></div>
         <div class="pass-sub">Level ${lv.level} · ${lv.into} / ${lv.need} XP</div>
-      </div>
+      </div></div>
       <div class="pass-side">
         <div class="pass-stat" title="Wochenziel: an ${wk.goal} Tagen gut üben"><div class="week-dots">${dots}</div><div class="l">${wk.done ? 'Woche ✓' : 'Diese Woche'}</div></div>
         <div class="pass-stat" title="Wochen in Folge mit erreichtem Ziel"><div class="v">🔥 ${wk.streak}</div><div class="l">Serie</div></div>
         <div class="pass-stat" title="Gold-Sterne"><div class="v">🥇 ${ss[3]}</div><div class="l">Gold</div></div>
-        <div class="pass-stat chest-dot" title="Truhen zum Öffnen" data-open-pass="chests"><div class="v">🎁${ch.available ? `<span class="badge">${ch.available}</span>` : ''}</div><div class="l">Truhen</div></div>
-        <button type="button" class="pass-open" tabindex="-1">Mein Pass ›</button>
+        <div class="pass-stat" title="Alle Sterne"><div class="v">⭐ ${ss[1] + ss[2] + ss[3]}</div><div class="l">Sterne</div></div>
       </div>
     </div>${eventStripHTML()}`;
 }
@@ -2098,10 +1975,10 @@ function whenPassReady(fn) {
   if (window.LernPass) fn();
   else window.addEventListener('lernpass:ready', fn, { once: true });
 }
-buildKlassenChips();
 whenPassReady(() => {
-  LernPass.onChange(() => { if (document.visibilityState === 'visible') buildPassCard(); });
+  LernPass.onChange(() => { if (document.visibilityState === 'visible') { buildPassCard(); buildKopf(); } });
   buildPassCard();
+  buildKopf();
   load().then(() => {
     checkAlteKarte();
     // Etappe 2: alles Weitere erst, wenn die Seite steht
