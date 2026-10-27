@@ -84,6 +84,10 @@ OHNE_NAVBAR = {
     'apps/englisch/english-dialog-vorlagen.html',   # Arbeitsblatt-Vorlagen, versteckt; Entscheidung in Etappe 3
     'apps/typen/live.html',                         # Live-Abfrage: schlanke Seite ohne Pass, navbar.js erst am Ende für die XP
 }
+# Lern-Apps, die bewusst nicht auf der Startseite stehen (kein Hinweis „steht nicht in config.json“) – mit Grund
+NUR_UEBER_LINK = {
+    'apps/englisch/journey-anwenden.html',          # Anwenden-Stationen: nur über den English Journey (Direktstart ?stufe=)
+}
 
 fehler, hinweise, infos = [], [], []
 def F(msg): fehler.append(msg)
@@ -924,7 +928,7 @@ for p in ALLE:
 # ── Hinweise ────────────────────────────────────────────
 for p in sorted(list(ROOT.glob('apps/*/*.html')) + list(ROOT.glob('spiele/*.html'))):
     r = rel(p)
-    if r.startswith('apps/vorlage/') or r.startswith('apps/typen/') or 'LW-WEITERLEITUNG' in p.read_text(encoding='utf-8'): continue
+    if r.startswith('apps/vorlage/') or r.startswith('apps/typen/') or r in NUR_UEBER_LINK or 'LW-WEITERLEITUNG' in p.read_text(encoding='utf-8'): continue
     if r not in config_dateien: H(f'{r} steht nicht in config.json (nicht auf der Startseite)')
 
 # ── Ausgabe ─────────────────────────────────────────────

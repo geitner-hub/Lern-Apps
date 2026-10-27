@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<script src="../../gemeinsam/umgebung.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>English Journey: Anwenden – Lernwelt</title>
+<!--
+  ═══════════════════════════════════════════════
+   LERNWELT – English Journey Year 6: Anwenden-Stationen (Etappe 5)
+   In jeder Station entscheidet die Sprache, was in der Szene passiert – keine Frage als Tor:
+     u1  Berry's holiday blog   Absätze nach den Zeitangaben ordnen, Sätze mit and/but/so/because verbinden,
+                                Präposition zum Foto wählen – der Blog wächst mit jeder richtigen Entscheidung
+     u2  Den Weg beschreiben    Wegbeschreibung aus Sätzen bauen → die Figur läuft genau so; oder eine Beschreibung
+                                lesen und antippen, wo man ankommt
+     u3  Was passiert im Park?  Personen im Park über Sätze finden (present progressive + Ortspräpositionen)
+     u4  Shops vergleichen      Mit Steigerungen entscheiden, in welchem Laden eingekauft wird
+     u5  Klassenfahrt planen    Wettervorhersage und Bahnhofsdurchsage (🔊) bestimmen Tag, Gleis und Gepäck
+   Läuft auf dem Übungs-Rahmen (ueben.js): Stufen = Katalog en.6.anwenden.u1–u5, Runde, Rückmeldung, Meisterschaft,
+   Freigabe, Direktstart ?stufe=… (vom English Journey). Szenen in HTML/SVG – kein WebGL nötig.
+   Aufgaben entstehen aus den Bausteinen unten (Wörter aus Highlight 6, Units 1–5).
+  ═══════════════════════════════════════════════
+-->
+<link rel="stylesheet" href="../../gemeinsam/fonts.css">
+<style>
+  html, body { margin: 0; background: #0f0e1a; }
+  #app { padding-top: env(safe-area-inset-top, 0px); }
+  .aw-k { background: #252238; border: 2px solid rgba(255,255,255,.12); border-radius: 14px; color: #f1f0fb; font: 800 1.05rem 'Nunito', sans-serif;
+    padding: .6rem .95rem; min-height: 3rem; cursor: pointer; touch-action: manipulation; }
+  .aw-k:active { transform: scale(.96); } .aw-k.an { border-color: #e6a817; background: rgba(230,168,23,.16); }
+  .aw-k:disabled { opacity: .4; cursor: default; }
+  .aw-knoepfe { display: flex; flex-wrap: wrap; gap: .5rem; justify-content: center; margin: .6rem 0; }
+  .aw-p { background: #e6a817; color: #1b1300; border-color: transparent; }
+  /* Blog (Postkarten-Papier) */
+  .blog { background: #fbf3e1; color: #2b2118; border-radius: 16px; padding: .8rem 1rem; margin-bottom: .7rem; box-shadow: 0 8px 22px rgba(0,0,0,.3); }
+  .blog h3 { font: 400 1.25rem 'Fredoka One', 'Nunito', sans-serif; margin: 0 0 .4rem; color: #b5530f; }
+  .blog .abs { display: flex; gap: .6rem; align-items: center; font-weight: 700; margin: .3rem 0; line-height: 1.35; }
+  .blog .abs .e { font-size: 1.6rem; flex-shrink: 0; width: 2.2rem; text-align: center; }
+  .blog .abs.neu { animation: rein .4s ease-out; }
+  .blog .leer { color: #a8987f; font-weight: 800; border: 2px dashed #d8c7a6; border-radius: 10px; padding: .35rem .6rem; margin-top: .4rem; }
+  .karte-a { background: #252238; border: 2px solid rgba(255,255,255,.12); border-radius: 14px; color: #f1f0fb; font: 700 1rem 'Nunito', sans-serif;
+    padding: .65rem .8rem; text-align: left; display: flex; gap: .6rem; align-items: center; width: 100%; margin: .35rem 0; cursor: pointer; }
+  .karte-a .e { font-size: 1.5rem; }
+  .bild { position: relative; width: 220px; height: 150px; margin: .3rem auto .5rem; background: #fde9c8; border-radius: 14px; border: 6px solid #fff; box-shadow: 0 6px 16px rgba(0,0,0,.3); transform: rotate(-2deg); }
+  .bild span { position: absolute; font-size: 3rem; line-height: 1; transform: translate(-50%, -50%); }
+  /* Karte (Straßen) und Szenen */
+  .szene { display: block; width: 100%; max-width: 560px; height: auto; margin: 0 auto .5rem; border-radius: 16px; touch-action: manipulation; }
+  .szene text { font-family: 'Nunito', sans-serif; }
+  .szene .tipp-ziel { cursor: pointer; }
+  .szene .tipp-ziel:hover .ring, .szene .tipp-ziel:focus .ring { stroke: #e6a817; }
+  .weg-liste { background: #0b0a14; border: 3px dashed rgba(129,140,248,.5); border-radius: 14px; min-height: 3rem; padding: .5rem .8rem; color: #f1f0fb;
+    font-weight: 800; margin: .3rem 0 .5rem; line-height: 1.6; }
+  .weg-liste:empty::after { content: 'Tippe die Sätze der Reihe nach an'; color: rgba(255,255,255,.3); }
+  .sprechblase { background: #fbf3e1; color: #2b2118; border-radius: 14px; padding: .7rem .9rem; font-weight: 800; margin: .3rem 0 .6rem; position: relative; line-height: 1.45; }
+  .sprechblase small { display: block; color: #6b5a48; font-weight: 700; }
+  .shops { display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem; margin: .4rem 0; }
+  .shop { background: #252238; border: 2px solid rgba(255,255,255,.12); border-radius: 16px; color: #f1f0fb; padding: .6rem .4rem; text-align: center; cursor: pointer; font-family: 'Nunito', sans-serif; }
+  .shop .dach { height: 10px; border-radius: 8px 8px 0 0; margin: -.6rem -.4rem .4rem; background: repeating-linear-gradient(90deg, var(--f) 0 14px, #fff 14px 28px); }
+  .shop b { display: block; font-size: .95rem; } .shop .preis { font: 900 1.4rem 'Nunito', sans-serif; color: #fde68a; margin: .2rem 0; }
+  .shop small { display: block; color: rgba(241,240,251,.7); font-weight: 700; font-size: .8rem; }
+  .shop.an { border-color: #e6a817; } .shop .tuete { font-size: 1.6rem; height: 1.8rem; }
+  .tage { display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem; margin: .4rem 0; }
+  .tag { background: #252238; border: 2px solid rgba(255,255,255,.12); border-radius: 16px; color: #f1f0fb; padding: .7rem .3rem; text-align: center; cursor: pointer; font: 900 1.05rem 'Nunito', sans-serif; }
+  .tag .w { font-size: 2rem; display: block; min-height: 2.4rem; }
+  .tag.an { border-color: #e6a817; }
+  .text-zeigen { background: none; border: 0; color: #818cf8; font: 800 .95rem 'Nunito', sans-serif; text-decoration: underline; cursor: pointer; }
+  @keyframes rein { from { opacity: 0; transform: translateY(8px); } }
+  @media (prefers-reduced-motion: reduce) { .aw-k:active { transform: none; } .blog .abs.neu { animation: none; } }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script src="../../gemeinsam/freigabe.js"></script>
+<script src="../../gemeinsam/ueben.js"></script>
+<script>
+'use strict';
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const mischen = l => { const a = l.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const pick = l => l[Math.floor(Math.random() * l.length)];
+const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+const warte = ms => new Promise(r => setTimeout(r, reduce ? 0 : ms));
+const SPRACHE = 'en-GB';
+const stimmeDa = () => { try { return !!window.speechSynthesis && speechSynthesis.getVoices().some(v => /^en/i.test(v.lang)); } catch (e) { return false; } };
+try { if (window.speechSynthesis) speechSynthesis.getVoices(); } catch (e) {}
+/** Knöpfe: Antippen markiert, fertig(wert) nach kurzer Szene */
+function knoepfe(box, optionen, fertig, vorher) {
+  const k = document.createElement('div'); k.className = 'aw-knoepfe';
+  k.innerHTML = optionen.map((o, i) => `<button type="button" class="aw-k" data-i="${i}">${esc(o)}</button>`).join('');
+  box.appendChild(k);
+  k.addEventListener('click', async e => {
+    const b = e.target.closest('[data-i]'); if (!b || k.dataset.zu) return;
+    k.dataset.zu = '1'; b.classList.add('an');
+    const wert = optionen[Number(b.dataset.i)];
+    if (vorher) await vorher(wert);
+    fertig(wert);
+  });
+}
+
+// ═══ u1 Berry's holiday blog ═══════════════════════════════
+//  Ein Blog je Runde: Absätze nach Wochentagen ordnen (3×), Sätze verbinden (3×), Präposition zum Foto (2×).
+const BLOGS = [
+  { titel: "Berry's blog: A week in Spain",
+    abs: [['🛫', 'On Sunday we flew to Spain.'], ['🏖️', 'On Monday we went to the seaside. The weather was fantastic!'], ['🏛️', 'On Tuesday it was rainy, so we visited a museum.'],
+          ['⛰️', 'On Wednesday we climbed a mountain near our hotel.'], ['🏠', 'In the end we flew home on Saturday. What an adventure!']],
+    links: [['We wanted to swim', 'the water was too cold.', 'but'], ['It was very sunny', 'we bought ice cream.', 'so'],
+            ["I didn't go to the museum", 'I felt sick.', 'because'], ['We played volleyball', 'we built a sandcastle.', 'and']],
+    praep: [['My basket is ___ the umbrella.', '⛱️', '🧺', 'under'], ['The ball is ___ the bucket.', '🪣', '⚽', 'next to'], ['A crab is hiding ___ the rock.', '🪨', '🦀', 'behind']] },
+  { titel: "Berry's blog: Munich",
+    abs: [['🚆', 'On Friday we took the train to Munich.'], ['🏟️', 'On Saturday we visited the big stadium.'], ['📚', 'On Sunday morning it was rainy, so we stayed in the hotel and read.'],
+          ['🌳', 'On Sunday afternoon the weather was sunny again. We went to a park.'], ['🏠', 'In the end we went home on Monday. I was sad!']],
+    links: [['The stadium was fantastic', 'we saw a football match.', 'and'], ['We wanted to go to the zoo', 'it was closed.', 'but'],
+            ['We were hungry', 'we had lunch in a café.', 'so'], ['My little brother cried', 'he lost his cap.', 'because']],
+    praep: [['The cat is sleeping ___ the bed.', '🛏️', '🐈', 'under'], ['My book is ___ the chair.', '🪑', '📕', 'on'], ['My bike is ___ the tree.', '🌳', '🚲', 'next to']] },
+  { titel: "Berry's blog: Holidays in Turkey",
+    abs: [['✈️', 'On Monday we flew to Turkey.'], ['🏖️', 'On Tuesday we went to the beach and swam in the sea.'], ['⛵', 'On Wednesday Berry joined a sailing club.'],
+          ['🏘️', 'On Thursday we visited an old town with a market.'], ['🏠', 'In the end, on Friday, we flew home. Nice to be home again!']],
+    links: [['The sea was warm', 'we swam every day.', 'so'], ['Berry was a bit scared', 'the boat was very fast.', 'because'],
+            ['The sailing teacher was strict', 'he was very nice.', 'but'], ['We ate fish', 'we drank lemonade.', 'and']],
+    praep: [['A dog is sitting ___ the door.', '🚪', '🐕', 'in front of'], ['A bird is sitting ___ the house.', '🏠', '🐦', 'on'], ['The cat is hiding ___ the boat.', '⛵', '🐈', 'behind']] },
+];
+const PRAEP = ['under', 'on', 'next to', 'behind', 'in front of'];
+const LAGE = { under: [[110, 50, 1.2], [110, 112, .7]], on: [[110, 98, 1.2], [110, 40, .75]], 'next to': [[80, 80, 1.1], [150, 88, .85]],
+               behind: [[110, 92, 1.2], [128, 62, .6]], 'in front of': [[110, 64, 1], [104, 112, 1]] };
+function bildHTML(a, b, lage) {
+  const [pa, pb] = LAGE[lage], z = lage === 'behind' ? 0 : 2;
+  return `<div class="bild" aria-hidden="true"><span style="left:${pa[0]}px;top:${pa[1]}px;font-size:${3.4 * pa[2]}rem;z-index:1">${a}</span>
+    <span style="left:${pb[0]}px;top:${pb[1]}px;font-size:${3.4 * pb[2]}rem;z-index:${z}">${b}</span></div>`;
+}
+let blogPlan = [], blogZeit = 0;
+function blogAufgaben() {
+  const B = pick(BLOGS), links = mischen(B.links).slice(0, 3), praep = mischen(B.praep).slice(0, 2);
+  const folge = ['abs', 'link', 'praep', 'abs', 'link', 'praep', 'abs', 'link'];
+  const zust = { teile: [{ e: B.abs[0][0], t: B.abs[0][1] }] };   // was schon im Blog steht
+  let a = 1, l = 0, p = 0;
+  return folge.map((art, nr) => {
+    const vorher = zust.teile.slice();
+    let auf;
+    if (art === 'abs') {
+      const richtig = B.abs[a], rest = B.abs.slice(a);
+      auf = { frage: 'Was kommt als Nächstes in Berrys Blog?', hinweis: 'Achte auf die Wochentage.', text: richtig[1],
+        tipp: 'Sunday → Monday → Tuesday → Wednesday → … · In the end = am Ende', erklaerung: 'Die Wochentage zeigen die Reihenfolge.',
+        pruef: e => e === richtig[1], kandidaten: mischen(rest), neu: { e: richtig[0], t: richtig[1] } };
+      a++;
+      if (a === B.abs.length - 1) { zust.teile.push(auf.neu); auf.danach = { e: B.abs[a][0], t: B.abs[a][1] }; zust.teile.push(auf.danach); a++; }
+      else zust.teile.push(auf.neu);
+    } else if (art === 'link') {
+      const [x, y, w] = links[l++];
+      const satz = `${x}, ${w} ${y}`.replace(', and', ' and');
+      auf = { frage: `${x} ___ ${y}`, hinweis: 'Welches Wort verbindet die Sätze?', text: w, tipp: 'and = und · but = aber · so = deshalb · because = weil',
+        erklaerung: { and: 'and verbindet zwei Dinge, die zusammenpassen.', but: 'but zeigt einen Gegensatz.', so: 'so nennt die Folge (deshalb).', because: 'because nennt den Grund (weil).' }[w],
+        pruef: e => e === w, optionen: ['and', 'but', 'so', 'because'], neu: { e: '✏️', t: satz[0].toUpperCase() + satz.slice(1) } };
+      zust.teile.push(auf.neu);
+    } else {
+      const [s, oa, ob, w] = praep[p++];
+      const opt = mischen([w, ...mischen(PRAEP.filter(x => x !== w)).slice(0, 3)]);
+      auf = { frage: s, hinweis: 'Schau aufs Foto: Welche Präposition passt?', text: w, tipp: 'under = unter · on = auf · next to = neben · behind = hinter · in front of = vor',
+        pruef: e => e === w, optionen: opt, bild: [oa, ob, w], neu: { e: '📷', t: s.replace('___', w) } };
+      zust.teile.push(auf.neu);
+    }
+    return Object.assign(auf, { art: 'eigen', typ: 'blog-' + art, sprache: SPRACHE, titel: B.titel, vorher, schluessel: B.titel + nr,
+      zeige(box, fertig) {
+        const blog = document.createElement('div'); blog.className = 'blog';
+        const zeichne = (mit) => { blog.innerHTML = `<h3>${esc(this.titel)}</h3>${this.vorher.map(x => `<div class="abs"><span class="e">${x.e}</span><span>${esc(x.t)}</span></div>`).join('')}
+          ${mit ? `<div class="abs neu"><span class="e">${mit.e}</span><span>${esc(mit.t)}</span></div>` : '<div class="leer">… dein nächster Teil …</div>'}`; };
+        zeichne(null); box.appendChild(blog);
+        const zeigeNeu = async wert => { if (this.pruef(wert)) { zeichne(this.neu); await warte(900); } };
+        if (this.kandidaten) {
+          const l2 = document.createElement('div');
+          l2.innerHTML = this.kandidaten.map((k, i) => `<button type="button" class="karte-a" data-k="${i}"><span class="e">${k[0]}</span><span>${esc(k[1])}</span></button>`).join('');
+          box.appendChild(l2);
+          l2.addEventListener('click', async e => { const b = e.target.closest('[data-k]'); if (!b || l2.dataset.zu) return; l2.dataset.zu = 1; b.style.borderColor = '#e6a817';
+            const w = this.kandidaten[Number(b.dataset.k)][1]; await zeigeNeu(w); fertig(w); });
+        } else {
+          if (this.bild) box.insertAdjacentHTML('beforeend', bildHTML(...this.bild));
+          knoepfe(box, this.optionen, fertig, zeigeNeu);
+        }
+      } });
+  });
+}
+
+// ═══ u2 Den Weg beschreiben ═════════════════════════════════
+//  Straßenkarte 4 × 3 Kreuzungen. „Go along the street.“ = einen Block geradeaus, „Turn left/right.“ = abbiegen und einen Block.
+const ORTE2 = [['🏪', 'the supermarket'], ['🚏', 'the bus stop'], ['💈', 'the hairdresser'], ['🐕', "the dogs' home"], ['🌳', 'the park'], ['📮', 'the post office'], ['🎪', 'the festival'], ['🍞', 'the bakery']];
+const SPALTEN = 4, ZEILEN = 3, START2 = [1, 2];
+const BEFEHLE = { gerade: 'Go along the street.', links: 'Turn left.', rechts: 'Turn right.' };
+const RICHT = [[0, -1], [1, 0], [0, 1], [-1, 0]];   // Norden, Osten, Süden, Westen
+function lauf(befehle) {   // → Liste der Kreuzungen oder null (Figur käme von der Karte)
+  let [x, y] = START2, r = 0; const weg = [[x, y]];
+  for (const b of befehle) {
+    if (b === 'links') r = (r + 3) % 4; if (b === 'rechts') r = (r + 1) % 4;
+    x += RICHT[r][0]; y += RICHT[r][1];
+    if (x < 0 || y < 0 || x >= SPALTEN || y >= ZEILEN) return null;
+    weg.push([x, y]);
+  }
+  return weg;
+}
+function kurzerWeg(ziel) {   // Breitensuche über Befehlsfolgen (höchstens 5)
+  const q = [[]];
+  while (q.length) { const w = q.shift(), l = lauf(w); if (!l) continue; const e = l[l.length - 1]; if (w.length && e[0] === ziel[0] && e[1] === ziel[1]) return w; if (w.length < 5) ['gerade', 'links', 'rechts'].forEach(b => q.push(w.concat(b))); }
+  return null;
+}
+const KX = x => 60 + x * 100, KY = y => 50 + y * 90;
+function karteSVG(orte, figur, weg) {
+  const linien = [];
+  for (let y = 0; y < ZEILEN; y++) linien.push(`<line x1="${KX(0)}" y1="${KY(y)}" x2="${KX(SPALTEN - 1)}" y2="${KY(y)}"/>`);
+  for (let x = 0; x < SPALTEN; x++) linien.push(`<line x1="${KX(x)}" y1="${KY(0)}" x2="${KX(x)}" y2="${KY(ZEILEN - 1)}"/>`);
+  return `<svg class="szene" viewBox="0 0 420 290" role="img" aria-label="Straßenkarte">
+    <rect width="420" height="290" fill="#8cc66a"/>
+    <g stroke="#6b7280" stroke-width="22" stroke-linecap="round">${linien.join('')}</g>
+    <g stroke="#f6f1e7" stroke-width="2" stroke-dasharray="8 8">${linien.join('')}</g>
+    ${weg ? `<polyline points="${weg.map(([x, y]) => KX(x) + ',' + KY(y)).join(' ')}" fill="none" stroke="#e6a817" stroke-width="5" stroke-dasharray="2 8" stroke-linecap="round"/>` : ''}
+    ${orte.map(o => `<g class="tipp-ziel" data-ort="${o.x},${o.y}" tabindex="0" role="button" aria-label="${esc(o.name)}"><circle class="ring" cx="${KX(o.x)}" cy="${KY(o.y)}" r="21" fill="#fbf3e1" stroke="#9a6b43" stroke-width="3"/>
+      <text x="${KX(o.x)}" y="${KY(o.y) + 9}" text-anchor="middle" font-size="24">${o.e}</text></g>`).join('')}
+    <g class="figur" style="transition:transform .45s ease-in-out" transform="translate(${KX(figur[0])},${KY(figur[1])})"><circle r="13" fill="#6366f1" stroke="#fff" stroke-width="3"/><text y="6" text-anchor="middle" font-size="16">🧑</text></g>
+    <text x="${KX(START2[0])}" y="${KY(START2[1]) + 34}" text-anchor="middle" font-size="12" font-weight="800" fill="#1b2a12">START ↑</text>
+  </svg>`;
+}
+function wegAufgabe(lesen) {
+  for (let v = 0; v < 40; v++) {
+    const plaetze = []; for (let y = 0; y < ZEILEN; y++) for (let x = 0; x < SPALTEN; x++) if (!(x === START2[0] && y === START2[1])) plaetze.push([x, y]);
+    const orte = mischen(plaetze).slice(0, 6).map((p, i) => ({ x: p[0], y: p[1] })), namen = mischen(ORTE2);
+    orte.forEach((o, i) => { o.e = namen[i][0]; o.name = namen[i][1]; });
+    const ziel = pick(orte), w = kurzerWeg([ziel.x, ziel.y]);
+    if (!w || w.length < 2) continue;
+    const text = w.map(b => BEFEHLE[b]).join(' ');
+    const basis = { art: 'eigen', typ: lesen ? 'weg-lesen' : 'weg-bauen', sprache: SPRACHE, schluessel: ziel.name + text + lesen };
+    if (lesen) return Object.assign(basis, {
+      frage: `“Excuse me, how do I get to ${ziel.name}?” – “${text}”`, hinweis: 'Lies die Wegbeschreibung und tippe an, wo man ankommt.',
+      text: `${ziel.e} ${ziel.name}`, ton: text, tipp: 'Start: Die Figur schaut nach oben (Norden). Abbiegen + einen Block.',
+      pruef: e => e === ziel.x + ',' + ziel.y, eingabeText: e => { const o = orte.find(o => o.x + ',' + o.y === e); return o ? o.name : '–'; },
+      zeige(box, fertig) {
+        box.innerHTML = karteSVG(orte, START2);
+        const svg = box.querySelector('svg');
+        svg.addEventListener('click', async e => {
+          const g = e.target.closest('[data-ort]'); if (!g || svg.dataset.zu) return; svg.dataset.zu = 1;
+          g.querySelector('.ring').setAttribute('stroke', '#e6a817');
+          await laufen(svg, lauf(w)); fertig(g.dataset.ort);
+        });
+      } });
+    return Object.assign(basis, {
+      frage: `Lotse die Figur zu ${ziel.e} ${ziel.name}.`, hinweis: 'Bau die Wegbeschreibung – die Figur macht genau, was du sagst.',
+      text, tipp: 'Die Figur schaut am Start nach oben. „Turn left/right.“ = abbiegen und einen Block weiter.',
+      pruef: e => { const l = lauf(e); return !!l && l[l.length - 1][0] === ziel.x && l[l.length - 1][1] === ziel.y; },
+      eingabeText: e => e.map(b => BEFEHLE[b]).join(' ') || '–',
+      zeige(box, fertig) {
+        box.innerHTML = karteSVG(orte, START2) + '<div class="weg-liste" aria-live="polite"></div><div class="aw-knoepfe"></div>';
+        const svg = box.querySelector('svg'), liste = box.querySelector('.weg-liste'), kn = box.querySelector('.aw-knoepfe'), plan = [];
+        const neu = () => { liste.textContent = plan.map(b => BEFEHLE[b]).join(' '); kn.querySelector('[data-los]').disabled = !plan.length; };
+        kn.innerHTML = Object.entries(BEFEHLE).map(([k, t]) => `<button type="button" class="aw-k" data-b="${k}">${t}</button>`).join('')
+          + '<button type="button" class="aw-k" data-weg aria-label="Letzten Satz löschen">⌫</button><button type="button" class="aw-k aw-p" data-los disabled>▶ Los!</button>';
+        kn.addEventListener('click', async e => {
+          const b = e.target.closest('button'); if (!b || kn.dataset.zu) return;
+          if (b.dataset.b && plan.length < 6) { plan.push(b.dataset.b); try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(BEFEHLE[b.dataset.b]); u.lang = SPRACHE; speechSynthesis.speak(u); } catch (er) {} }
+          if (b.hasAttribute('data-weg')) plan.pop();
+          neu();
+          if (b.hasAttribute('data-los')) { kn.dataset.zu = 1; await laufen(svg, lauf(plan) || lauf(plan.slice(0, plan.findIndex((_, i) => !lauf(plan.slice(0, i + 1)))))); fertig(plan.slice()); }
+        });
+      } });
+  }
+}
+async function laufen(svg, weg) {
+  const f = svg.querySelector('.figur');
+  for (const [x, y] of (weg || []).slice(1)) { f.setAttribute('transform', `translate(${KX(x)},${KY(y)})`); await warte(480); }
+  await warte(250);
+}
+
+// ═══ u3 Was passiert im Park? ═══════════════════════════════
+const ORTE3 = { tree: [80, 95, '🌳', 'the tree'], bench: [215, 90, '', 'the bench'], pond: [345, 95, '', 'the pond'], slide: [85, 215, '🛝', 'the slide'], fountain: [215, 210, '⛲', 'the fountain'], van: [345, 215, '🚐', 'the ice cream van'] };
+const LAGEN3 = { 'next to': [44, 4, 1], behind: [0, -36, .8], 'in front of': [0, 38, 1.05] };
+const LEUTE = [['👦', 'the boy'], ['👧', 'the girl'], ['🧔', 'the man'], ['👩', 'the woman'], ['👴', 'the old man'], ['👵', 'the old woman']];
+const TUN = [['📖', 'is reading a book'], ['🍦', 'is eating an ice cream'], ['⚽', 'is playing football'], ['🎧', 'is listening to music'], ['🐕', 'is walking a dog'],
+             ['🪁', 'is flying a kite'], ['🛹', 'is skateboarding'], ['💤', 'is sleeping'], ['📱', 'is talking on the phone'], ['🥤', 'is drinking lemonade'], ['🏏', 'is playing cricket']];
+function parkAufgabe() {
+  for (let v = 0; v < 60; v++) {
+    const plaetze = mischen(Object.keys(ORTE3).flatMap(o => Object.keys(LAGEN3).map(l => [o, l]))).slice(0, 7);
+    const ziel = { p: LEUTE[Math.floor(Math.random() * LEUTE.length)], t: pick(TUN), o: plaetze[0] };
+    const leute = [ziel];
+    // Ablenker: gleiche Person und Tätigkeit woanders, gleicher Ort mit anderer Person/Tätigkeit
+    leute.push({ p: ziel.p, t: ziel.t, o: plaetze[1] });
+    leute.push({ p: pick(LEUTE.filter(x => x !== ziel.p)), t: ziel.t, o: plaetze[2] });
+    leute.push({ p: ziel.p, t: pick(TUN.filter(x => x !== ziel.t)), o: plaetze[3] });
+    for (let i = 4; i < 7; i++) leute.push({ p: pick(LEUTE), t: pick(TUN), o: plaetze[i] });
+    const passt = l => l.p === ziel.p && l.t === ziel.t && l.o[0] === ziel.o[0] && l.o[1] === ziel.o[1];
+    if (leute.filter(passt).length !== 1) continue;
+    // Gleicher Landmarken-Ort darf nicht mehrdeutig sein: niemand sonst mit Person+Tätigkeit an derselben Landmarke mit derselben Lage
+    const satz = `${ziel.p[1][0].toUpperCase()}${ziel.p[1].slice(1)} ${ziel.o[1]} ${ORTE3[ziel.o[0]][3]} ${ziel.t[1]}.`;
+    const frage = Math.random() < .5 ? `Find the person: ${satz}` : `Who ${ziel.t[1].replace(/^is /, 'is ')} ${ziel.o[1]} ${ORTE3[ziel.o[0]][3]}? Tap ${ziel.p[1]}.`;
+    const gemischt = mischen(leute);
+    return { art: 'eigen', typ: 'park', sprache: SPRACHE, frage, ton: frage.replace(/^Find the person: /, '').replace(/ Tap .*$/, ''), schluessel: satz,
+      hinweis: 'Tippe die richtige Person im Park an.', text: satz, tipp: 'next to = neben · behind = hinter · in front of = vor · -ing = gerade jetzt',
+      pruef: e => e === gemischt.indexOf(ziel), eingabeText: e => { const l = gemischt[e]; return l ? `${l.p[1]} ${l.o[1]} ${ORTE3[l.o[0]][3]} ${l.t[1]}` : '–'; },
+      zeige(box, fertig) {
+        const bank = (x, y) => `<rect x="${x - 26}" y="${y - 4}" width="52" height="8" rx="2" fill="#9a6b43"/><rect x="${x - 26}" y="${y - 16}" width="52" height="7" rx="2" fill="#7d5434"/>
+          <rect x="${x - 22}" y="${y + 4}" width="5" height="12" fill="#3b3f4a"/><rect x="${x + 17}" y="${y + 4}" width="5" height="12" fill="#3b3f4a"/>`;
+        const orte = Object.entries(ORTE3).map(([k, [x, y, e, n]]) => k === 'bench' ? bank(x, y) : k === 'pond'
+          ? `<ellipse cx="${x}" cy="${y}" rx="44" ry="22" fill="#4fa8d8" stroke="#3b8ab8" stroke-width="3"/><text x="${x}" y="${y + 5}" text-anchor="middle" font-size="12" fill="#e8f6ff" font-weight="800">pond</text>`
+          : `<text x="${x}" y="${y + 14}" text-anchor="middle" font-size="40">${e}</text>`).join('');
+        const leuteSVG = gemischt.map((l, i) => { const [ox, oy] = ORTE3[l.o[0]], [dx, dy, s] = LAGEN3[l.o[1]], x = ox + dx, y = oy + dy;
+          return `<g class="tipp-ziel" data-p="${i}" tabindex="0" role="button" aria-label="${esc(l.p[1])}"><circle class="ring" cx="${x}" cy="${y}" r="${19 * s}" fill="rgba(255,255,255,.55)" stroke="transparent" stroke-width="3"/>
+            <text x="${x - 2}" y="${y + 9 * s}" text-anchor="middle" font-size="${26 * s}">${l.p[0]}</text><text x="${x + 14 * s}" y="${y - 6 * s}" text-anchor="middle" font-size="${15 * s}">${l.t[0]}</text></g>`; });
+        // Leute weiter hinten zuerst zeichnen
+        const reihen = gemischt.map((l, i) => [ORTE3[l.o[0]][1] + LAGEN3[l.o[1]][1], leuteSVG[i]]).sort((a, b) => a[0] - b[0]).map(x => x[1]).join('');
+        box.innerHTML = `<svg class="szene" viewBox="0 0 430 290" role="img" aria-label="Park"><rect width="430" height="290" fill="#8cc66a"/>
+          <path d="M0 150 Q 215 130 430 160" stroke="#e7d3a3" stroke-width="18" fill="none"/>${orte}${reihen}</svg>`;
+        const svg = box.querySelector('svg');
+        svg.addEventListener('click', async e => { const g = e.target.closest('[data-p]'); if (!g || svg.dataset.zu) return; svg.dataset.zu = 1;
+          g.querySelector('.ring').setAttribute('stroke', '#e6a817'); await warte(350); fertig(Number(g.dataset.p)); });
+      } };
+  }
+}
+
+// ═══ u4 Shops vergleichen ══════════════════════════════════
+const LAEDEN = [['Charity Corner', '#d9534f'], ['Teen Style', '#6366f1'], ['Mega Store', '#3ea36b'], ['Second-Hand Sam', '#e6a817'], ['Happy Shop', '#e86b9a']];
+const DINGE = [['🧤', 'gloves', true], ['📰', 'a magazine'], ['👗', 'a dress'], ['💿', 'CDs', true], ['🛹', 'a skateboard'], ['👟', 'trainers', true], ['🎒', 'a rucksack'], ['🧣', 'a scarf']];
+const NAMEN4 = ['Mia', 'Jack', 'Leo', 'Emma', 'Ben', 'Lily'];
+const sterne = n => `<span style="color:#fbbf24">${'★'.repeat(n)}</span><span style="opacity:.3">${'★'.repeat(5 - n)}</span> <span>${n}/5</span>`;
+function shopAufgabe() {
+  for (let v = 0; v < 80; v++) {
+    const ld = mischen(LAEDEN).slice(0, 3), [e, ding, mehrzahl] = pick(DINGE), wer = pick(NAMEN4);
+    const preise = mischen([3, 5, 8, 12, 15, 20]).slice(0, 3), noten = mischen([1, 2, 3, 4, 5]).slice(0, 3), meilen = mischen([0.5, 1, 2, 3]).slice(0, 3);
+    const shops = ld.map((l, i) => ({ name: l[0], f: l[1], preis: preise[i], note: noten[i], meilen: meilen[i] }));
+    const es = mehrzahl ? 'them' : 'it', welche = mehrzahl ? 'ones' : 'one';
+    const art = pick(['billig', 'teuer', 'gut', 'nah', 'kombi1', 'kombi2', 'kombi3']);
+    const A = shops[0], B = shops[1];
+    let satz, passt, regel;
+    if (art === 'billig') { satz = `${wer} wants ${ding}. ${wer === 'Mia' || wer === 'Emma' || wer === 'Lily' ? 'She' : 'He'} wants the cheapest ${welche}.`; passt = s => s.preis === Math.min(...preise); regel = 'the cheapest = der niedrigste Preis'; }
+    else if (art === 'teuer') { satz = `${wer} has lots of pocket money and wants the most expensive ${ding.replace(/^a /, '')}.`; passt = s => s.preis === Math.max(...preise); regel = 'the most expensive = der höchste Preis'; }
+    else if (art === 'gut') { satz = `${wer} wants ${ding} from the best shop – the one with the most stars.`; passt = s => s.note === Math.max(...noten); regel = 'the best = die meisten Sterne'; }
+    else if (art === 'nah') { satz = `${wer} can't walk far. Which shop is the nearest?`; passt = s => s.meilen === Math.min(...meilen); regel = 'the nearest = am nächsten (die wenigsten Meilen)'; }
+    else if (art === 'kombi1') { satz = `${wer} wants ${ding}. The shop must be cheaper than ${A.name} but better than ${B.name}.`; passt = s => s.preis < A.preis && s.note > B.note; regel = 'cheaper than = billiger als · better than = besser als (mehr Sterne)'; }
+    else if (art === 'kombi2') { satz = `Find the shop that is more expensive than ${A.name} but nearer than ${B.name}.`; passt = s => s.preis > A.preis && s.meilen < B.meilen; regel = 'more expensive than = teurer als · nearer than = näher als'; }
+    else { satz = `${wer} wants ${ding}. It must not be worse than ${A.name}, and it must be cheaper than ${B.name}.`; passt = s => s.note >= A.note && s.preis < B.preis && s !== B; regel = 'worse than = schlechter als · cheaper than = billiger als'; }
+    const treffer = shops.filter(passt);
+    if (treffer.length !== 1) continue;
+    const ziel = treffer[0], gem = mischen(shops);
+    return { art: 'eigen', typ: 'shop-' + art, sprache: SPRACHE, frage: satz, ton: satz, schluessel: satz + preise.join(), hinweis: `Tippe den Laden an, in dem ${wer} einkauft.`,
+      text: ziel.name, tipp: regel, erklaerung: regel, pruef: x => x === ziel.name, eingabeText: x => x,
+      zeige(box, fertig) {
+        box.innerHTML = `<div class="shops">${gem.map((s, i) => `<button type="button" class="shop" data-s="${i}" style="--f:${s.f}"><div class="dach"></div><b>${esc(s.name)}</b>
+          <div class="preis">£${s.preis}</div><small>${sterne(s.note)}</small><small>📍 ${s.meilen} ${s.meilen === 1 ? 'mile' : 'miles'}</small><div class="tuete"></div></button>`).join('')}</div>
+          <div style="text-align:center;font-size:2.2rem" aria-hidden="true">${e}</div>`;
+        const k = box.querySelector('.shops');
+        k.addEventListener('click', async ev => { const b = ev.target.closest('[data-s]'); if (!b || k.dataset.zu) return; k.dataset.zu = 1; b.classList.add('an');
+          b.querySelector('.tuete').textContent = '🛍️'; await warte(600); fertig(gem[Number(b.dataset.s)].name); });
+      } };
+  }
+}
+
+// ═══ u5 Klassenfahrt planen ═════════════════════════════════
+const WETTER = {
+  windy: ['💨', 'it will be windy, but it won\'t rain'], rainy: ['🌧️', 'it will rain all day'],
+  foggy: ['🌫️', 'it won\'t rain, but it will be foggy'], warm: ['☀️', 'it will be warm and sunny'],
+};
+const PLAN = { windy: 'Which day is best for hang-gliding?', rainy: 'Which day should we visit the museum? We will need a roof!',
+               foggy: "On which day shouldn't we climb the tor? We won't see anything!", warm: 'Which day can we swim in the lake?' };
+const TAGE = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+const ZIELE5 = ['Princetown', 'Plymouth', 'Exeter', 'Okehampton'];
+const UHR = ['ten fifteen', 'half past nine', 'eleven o\'clock', 'quarter to ten', 'twelve thirty'];
+const PACKEN = [
+  ['It will be very muddy on the tracks. What should you pack?', 'boots', ['boots', 'hairdryer', 'sunglasses']],
+  ['We will sleep in tents, and it will be cold at night. What should you pack?', 'sleeping bag', ['sleeping bag', 'hairdryer', 'swimsuit']],
+  ["We'll sleep in tents. There won't be any electricity. What won't you need?", 'hairdryer', ['hairdryer', 'rucksack', 'boots']],
+  ['Somebody might fall and hurt their leg. What should you pack?', 'first-aid kit', ['first-aid kit', 'hairdryer', 'skateboard']],
+  ['We will walk for six hours with our things. What should you carry them in?', 'rucksack', ['rucksack', 'suitcase', 'plastic bag']],
+];
+const PACK_E = { boots: '🥾', hairdryer: '💇', sunglasses: '🕶️', 'sleeping bag': '🛌', swimsuit: '🩱', rucksack: '🎒', 'first-aid kit': '🩹', skateboard: '🛹', suitcase: '🧳', 'plastic bag': '🛍️' };
+function textBox(box, text) {   // Hörtext: mit Stimme erst verdeckt, ohne Stimme gleich lesbar
+  const d = document.createElement('div'); d.className = 'sprechblase';
+  if (stimmeDa()) { d.innerHTML = `<small>🔊 Hör gut zu (oben auf 🔊 tippen).</small><button type="button" class="text-zeigen">📄 Text zeigen</button>`;
+    d.querySelector('button').onclick = () => { d.innerHTML = `<small>📄</small>${esc(text)}`; }; }
+  else d.innerHTML = `<small>📄 Lies genau:</small>${esc(text)}`;
+  box.appendChild(d);
+}
+function reiseAufgabe(art) {
+  if (art === 'wetter') {
+    const typen = mischen(Object.keys(WETTER)).slice(0, 3), start = Math.floor(Math.random() * 3), tage = TAGE.slice(start, start + 3);
+    const text = 'Here is the weather forecast for Dartmoor. ' + tage.map((t, i) => `On ${t} ${WETTER[typen[i]][1]}.`).join(' ');
+    const z = Math.floor(Math.random() * 3), frage = PLAN[typen[z]];
+    return { art: 'eigen', typ: 'reise-wetter', sprache: SPRACHE, frage, ton: text, tonAuto: stimmeDa(), schluessel: text + frage, hinweis: 'Hör (oder lies) die Wettervorhersage und tippe den Tag an.',
+      text: tage[z], tipp: "will = wird · won't = wird nicht · windy = windig · foggy = nebelig", erklaerung: `On ${tage[z]} ${WETTER[typen[z]][1]}.`,
+      pruef: e => e === tage[z],
+      zeige(box, fertig) {
+        textBox(box, text);
+        box.insertAdjacentHTML('beforeend', `<div class="tage">${tage.map((t, i) => `<button type="button" class="tag" data-t="${i}"><span class="w">❔</span>${t}</button>`).join('')}</div>`);
+        const k = box.querySelector('.tage');
+        k.addEventListener('click', async ev => { const b = ev.target.closest('[data-t]'); if (!b || k.dataset.zu) return; k.dataset.zu = 1; b.classList.add('an');
+          k.querySelectorAll('.tag').forEach((x, i) => { x.querySelector('.w').textContent = WETTER[typen[i]][0]; }); await warte(900); fertig(tage[Number(b.dataset.t)]); });
+      } };
+  }
+  if (art === 'gleis') {
+    const ziele = mischen(ZIELE5).slice(0, 2), gleise = mischen([1, 2, 3, 4]), uhr = mischen(UHR);
+    const text = `Attention please. The train to ${ziele[0]} will leave from platform ${gleise[0]} at ${uhr[0]}. The train to ${ziele[1]} won't leave from platform ${gleise[1]} today. It will leave from platform ${gleise[2]} at ${uhr[1]}.`;
+    const z = Math.random() < .5 ? 0 : 1, richtig = z ? gleise[2] : gleise[0];
+    const frage = `Our class is going to ${ziele[z]}. Which platform do we need?`;
+    return { art: 'eigen', typ: 'reise-gleis', sprache: SPRACHE, frage, ton: text, tonAuto: stimmeDa(), schluessel: text + z, hinweis: 'Hör die Durchsage am Bahnhof und tippe das Gleis an.',
+      text: 'platform ' + richtig, tipp: "won't leave from = fährt nicht ab von", erklaerung: z ? `Der Zug nach ${ziele[1]} fährt heute NICHT von Gleis ${gleise[1]}, sondern von Gleis ${gleise[2]}.` : `The train to ${ziele[0]} will leave from platform ${gleise[0]}.`,
+      pruef: e => e === richtig, eingabeText: e => 'platform ' + e,
+      zeige(box, fertig) {
+        textBox(box, text);
+        box.insertAdjacentHTML('beforeend', `<svg class="szene" viewBox="0 0 420 200" role="img" aria-label="Bahnhof"><rect width="420" height="200" fill="#cfd8dc"/>
+          ${[1, 2, 3, 4].map(g => { const y = 20 + (g - 1) * 45; return `<g class="tipp-ziel" data-g="${g}" tabindex="0" role="button" aria-label="Gleis ${g}">
+            <rect class="ring" x="20" y="${y}" width="380" height="34" rx="8" fill="#a9a196" stroke="transparent" stroke-width="4"/>
+            <rect x="20" y="${y + 34}" width="380" height="6" fill="#5a5a5a"/><circle cx="48" cy="${y + 17}" r="13" fill="#1b4f9c"/>
+            <text x="48" y="${y + 23}" text-anchor="middle" font-size="16" font-weight="900" fill="#fff">${g}</text>
+            <text class="zug" x="380" y="${y + 26}" text-anchor="end" font-size="24" opacity="0">🚆</text></g>`; }).join('')}</svg>`);
+        const svg = box.querySelector('svg');
+        svg.addEventListener('click', async ev => { const g = ev.target.closest('[data-g]'); if (!g || svg.dataset.zu) return; svg.dataset.zu = 1;
+          g.querySelector('.ring').setAttribute('stroke', '#e6a817');
+          const zug = svg.querySelector(`[data-g="${richtig}"] .zug`); zug.setAttribute('opacity', '1'); await warte(900); fertig(Number(g.dataset.g)); });
+      } };
+  }
+  const [frage, w, opt] = pick(PACKEN), o = mischen(opt);
+  return { art: 'eigen', typ: 'reise-packen', sprache: SPRACHE, frage, ton: frage, schluessel: frage, hinweis: 'Pack deinen Rucksack für Dartmoor.', text: w,
+    tipp: "will = wird · won't = wird nicht · should = sollte", pruef: e => e === w,
+    zeige(box, fertig) {
+      box.insertAdjacentHTML('beforeend', `<div class="aw-knoepfe">${o.map((x, i) => `<button type="button" class="aw-k" data-p="${i}" style="min-width:7rem"><span style="font-size:2rem;display:block">${PACK_E[x] || '🎒'}</span>${esc(x)}</button>`).join('')}</div>`);
+      const k = box.querySelector('.aw-knoepfe');
+      k.addEventListener('click', async ev => { const b = ev.target.closest('[data-p]'); if (!b || k.dataset.zu) return; k.dataset.zu = 1; b.classList.add('an'); await warte(400); fertig(o[Number(b.dataset.p)]); });
+    } };
+}
+
+// ═══ Stufen und Start ══════════════════════════════════════
+let reiseNr = 0;
+const STUFEN = [
+  { id: 'en.6.anwenden.u1', titel: "Berry's holiday blog", kurz: 'Ordnen, verbinden, Präpositionen', runde: 8,
+    erzeuge: () => {   // ueben.js holt alle Aufgaben einer Runde auf einmal → nach einer Pause beginnt ein neuer Blog
+      if (Date.now() - blogZeit > 1000) blogPlan = [];
+      blogZeit = Date.now();
+      if (!blogPlan.length) blogPlan = blogAufgaben();
+      return blogPlan.shift();
+    } },
+  { id: 'en.6.anwenden.u2', titel: 'Den Weg beschreiben', kurz: 'Go along the street. Turn left.', runde: 6, erzeuge: () => wegAufgabe(Math.random() < .5) },
+  { id: 'en.6.anwenden.u3', titel: 'Was passiert im Park?', kurz: 'The girl next to the pond is …', runde: 6, erzeuge: parkAufgabe },
+  { id: 'en.6.anwenden.u4', titel: 'Shops vergleichen', kurz: 'cheaper, better, the best', runde: 6, erzeuge: shopAufgabe },
+  { id: 'en.6.anwenden.u5', titel: 'Klassenfahrt planen', kurz: 'Wetter und Durchsage 🔊', runde: 6, erzeuge: () => reiseAufgabe(['wetter', 'gleis', 'packen'][reiseNr++ % 3]) },
+];
+const HILFE = `<section><h2>Anwenden</h2><p>Hier wird nicht abgefragt – hier <b>passiert</b> etwas: Dein Englisch baut den Blog, lotst die Figur,
+  findet Leute im Park, wählt den Laden und plant die Klassenfahrt. Jede Entscheidung zählt. Gemeistert nach 2 Runden mit mindestens 70 %.</p></section>
+  <section><h2>Linking words</h2><p><b>and</b> = und · <b>but</b> = aber · <b>so</b> = deshalb · <b>because</b> = weil</p></section>
+  <section><h2>Wegbeschreibung</h2><p><b>Go along the street.</b> = Geh die Straße entlang. · <b>Turn left/right.</b> = Bieg links/rechts ab.</p></section>
+  <section><h2>Wo?</h2><p><b>next to</b> neben · <b>behind</b> hinter · <b>in front of</b> vor · <b>under</b> unter · <b>on</b> auf</p></section>`;
+window.LernUeben && LernUeben.start({
+  host: document.getElementById('app'), titel: '🧭 English Journey: Anwenden', untertitel: 'Dein Englisch entscheidet, was passiert',
+  stufen: STUFEN.map(s => ({ id: s.id, titel: s.titel, kurz: s.kurz, runde: s.runde })), runde: 8, hilfe: { html: HILFE },
+  erzeuge: st => { const s = STUFEN.find(x => x.id === st.id); return s ? s.erzeuge() : null; },
+  pruefe: (a, e) => { try { return !!a.pruef(e); } catch (err) { return false; } },
+});
+</script>
+<script src="../../gemeinsam/navbar.js"></script>
+</body>
+</html>
