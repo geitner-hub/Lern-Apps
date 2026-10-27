@@ -577,7 +577,7 @@ Etappe 3 (v91): 3D-Weg als Prototyp mit dem Ort von Unit 1. Etappe 4 (v93): alle
   (2 Runden ≥ 70 %, `LernPass.themaStand(id).frei`). Eine Station ist offen, wenn die Lehrkraft Unit-Thema **und** `thema`
   freigegeben hat (Freigaben, wird immer zuerst geprüft) **und** alle Stationen aus `braucht` gemeistert sind. Wörter-Stationen
   hängen aneinander, jede Grammatik-Station an ihrer Wörter-Station davor, das Finale an allen Stationen der Unit, und die erste
-  Station einer Unit am Finale der Unit davor („Brücke zum nächsten Ort“). Stationen, deren `thema` noch keine App hat (`en.6.anwenden.*`, Unit 3–5), zeigen „wird gebaut“ und zählen nicht für das Finale.
+  Station einer Unit am Finale der Unit davor („Brücke zum nächsten Ort“). Stationen, deren `thema` noch keine App hat, zeigen „wird gebaut“ und zählen nicht für das Finale (seit v94 haben alle Stationen eine App).
   Eine spätere Sperre nimmt nichts weg: Gemeistertes bleibt gemeistert.
 - **Wörter:** Theme-Stufen im Katalog unter `en.6.vok` (`en.6.vok.u1.theme1` …, ohne `inhalt`). Der Vokabeltrainer startet sie direkt
   (`vokabeltrainer.html?klasse=6&stufe=en.6.vok.u1.theme1`) und meldet in Quiz, Fill in und Scramble zusätzlich die Theme-ID
@@ -591,7 +591,14 @@ Etappe 3 (v91): 3D-Weg als Prototyp mit dem Ort von Unit 1. Etappe 4 (v93): alle
   `en.6.superlativ`, `en.6.have-to`, `en.6.zeitangaben`, `en.6.simple-past-story`, `en.6.will-meinung`, `en.6.wortstellung`; Wiederholungen
   über bestehende IDs (`en.5.present-progressive`, `en.6.steigerung.vergleiche`, `en.6.future.will`). Finale `en.6.revision`
   (Postkarte vom Sportplatz, Revision 2 als Mix aus Unit 3 + 4, Postkarte aus Dartmoor).
-- **Reserviert (ohne App, Etappe 5):** `en.6.anwenden` (u1–u5). Neue Inhalte: Inhaltsdatei mit genau diesen Stufen-IDs + `quelle` im Katalog + sw.js.
+- **Anwenden-Stationen** (Etappe 5, v94): `apps/englisch/journey-anwenden.html` auf dem Übungs-Rahmen (`ueben.js`, Aufgabenart `eigen`),
+  Stufen `en.6.anwenden.u1`–`u5`, Direktstart `?stufe=` vom Weg, nicht auf der Startseite (pruefen.py `NUR_UEBER_LINK`). Die Sprache entscheidet,
+  was passiert: **u1** Berry's holiday blog (Absätze nach Wochentagen ordnen, mit and/but/so/because verbinden, Präposition zum Foto – der Blog
+  wächst; 3 Blogs), **u2** Den Weg beschreiben (Wegbeschreibung aus „Go along the street. / Turn left. / Turn right.“ bauen → die Figur läuft genau
+  so; oder lesen und antippen, wo man ankommt), **u3** Was passiert im Park? (Person über present progressive + next to/behind/in front of finden,
+  mit Ablenkern gleicher Person/Tätigkeit), **u4** Shops vergleichen (cheapest, best, nearest, cheaper than … but better than … – genau ein Laden
+  passt), **u5** Klassenfahrt planen (Wettervorhersage und Bahnhofsdurchsage 🔊 bestimmen Tag und Gleis, Packliste; ohne englische Stimme gleich als Text).
+  Szenen in HTML/SVG, ohne WebGL. Neue Bausteine: Daten oben in der Datei (BLOGS, ORTE2, TUN, LAEDEN, WETTER, PACKEN).
 - **pruefen.py (Regel 22):** jede Station hat gültige `id`/`art`, `thema` und `start` stehen im Katalog (Baukasten-Stufen auch in der
   Inhaltsdatei), jeder Vorgänger existiert, keine Schleife, das Finale braucht alle Stationen seiner Unit.
 

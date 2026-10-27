@@ -1521,15 +1521,21 @@
        "id": "en.6.anwenden",
        "titel": "Anwenden (English Journey)",
        "klasse": 6,
+       "quelle": {
+        "app": "apps/englisch/journey-anwenden.html"
+       },
+       "ergebnis": [
+        "journey-anwenden.html"
+       ],
        "lehrplan": "E6 Highlight 6: Gelerntes anwenden – Texte ordnen, linking words, Präpositionen, Wegbeschreibung",
        "dauer": 8,
-       "einsatz": "Reserviert für English Journey Year 6 – Inhalte folgen (noch ohne App)",
+       "einsatz": "Anwenden-Stationen im English Journey Year 6: die Sprache entscheidet, was in der Szene passiert (Blog, Weg, Park, Shops, Klassenfahrt)",
        "stufen": [
         { "id": "en.6.anwenden.u1", "titel": "Berry's holiday blog" },
         { "id": "en.6.anwenden.u2", "titel": "Den Weg beschreiben" },
-        { "id": "en.6.anwenden.u3", "titel": "Anwenden Unit 3" },
-        { "id": "en.6.anwenden.u4", "titel": "Anwenden Unit 4" },
-        { "id": "en.6.anwenden.u5", "titel": "Anwenden Unit 5" }
+        { "id": "en.6.anwenden.u3", "titel": "Was passiert im Park?" },
+        { "id": "en.6.anwenden.u4", "titel": "Shops vergleichen" },
+        { "id": "en.6.anwenden.u5", "titel": "Klassenfahrt planen" }
        ]
       }
      ]
