@@ -530,7 +530,8 @@
       "beschreibung": "Finde Kontinente, Ozeane und Länder auf der ganzen Welt",
       "hidden": false,
       "klassen": [
-        6
+        6,
+        5
       ],
       "customTags": [],
       "aod": false
