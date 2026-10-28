@@ -106,7 +106,7 @@
       "fach": "Allgemein",
       "emoji": "🔠",
       "beschreibung": "Errate jeden Tag ein neues englisches Wort!",
-      "hidden": false,
+      "hidden": true,
       "klassen": [],
       "customTags": [
         {
