@@ -299,7 +299,8 @@
     // Boden: Klötze 4 × 4 – Kai (gepflastert) am Wasser, dahinter Gras; leicht unterschiedlich gefärbt
     for (let x = -128; x < 112; x += 4) for (let z = -64; z < kai; z += 4) {
       const amKai = z >= kai - 12 && x > -84 && x < 48;
-      B.box(x + 2, -2, z + 2, 4, 2, 4, amKai ? variiere(C.kai, 0.03) : variiere(C.gras, 0.035));
+      const d = Math.min(4, kai - z);                          // letzte Reihe endet an der Kaimauer (sonst gleiche Höhe wie die Mauer → Flimmern)
+      B.box(x + 2, -2, z + d / 2, 4, 2, d, amKai ? variiere(C.kai, 0.03) : variiere(C.gras, 0.035));
     }
     B.box(0, -4, kai + 0.5, 192, 4, 1, C.mauer);              // Kaimauer
     for (let x = -94; x < 96; x += 3) B.box(x, -3.9, kai + 1.02, 2.8, 0.5, 0.06, C.stein2);
@@ -426,10 +427,18 @@
     const wPos = wGeo.attributes.position, wBasis = Float32Array.from(wPos.array);
     const wasser = merke(new T.Mesh(wGeo, new T.MeshPhongMaterial({ color: C.wasser, flatShading: true, shininess: 70, specular: 0x9fd9ee, transparent: true, opacity: 0.94 })));
     wasser.receiveShadow = true; wasser.visible = !!S.wasser; scene.add(wasser);
+    // Am Rand (Kaimauer, Ufer) bleibt das Wasser ruhig: sonst springt die Schnittlinie mit der Mauer bei jedem Bild (Flimmern).
+    // Die ersten zwei Gitterreihen (Abstand ≤ 5,5) stehen still, ab 10 volle Wellen.
+    const wRuhe = new Float32Array(wPos.count);
+    for (let i = 0; i < wPos.count; i++) {
+      const vx = wBasis[i * 3], vz = wBasis[i * 3 + 2];
+      const rand = Math.min(vx - (WS.x - WS.w / 2), WS.x + WS.w / 2 - vx, vz - (WS.z - WS.d / 2), WS.z + WS.d / 2 - vz);
+      wRuhe[i] = Math.max(0, Math.min(1, (rand - 5.5) / 4.5));
+    }
     function wellen(t) {
       if (reduce || !S.wasser) return;
       const a = wPos.array;
-      for (let i = 0; i < a.length; i += 3) a[i + 1] = wBasis[i + 1] + Math.sin(wBasis[i] * 0.21 + t * 1.1) * 0.22 + Math.cos(wBasis[i + 2] * 0.27 + t * 0.8) * 0.18;
+      for (let i = 0, k = 0; i < a.length; i += 3, k++) a[i + 1] = wBasis[i + 1] + wRuhe[k] * (Math.sin(wBasis[i] * 0.21 + t * 1.1) * 0.22 + Math.cos(wBasis[i + 2] * 0.27 + t * 0.8) * 0.18);
       wPos.needsUpdate = true;
     }
 
