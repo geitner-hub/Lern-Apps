@@ -569,7 +569,7 @@
       "fach": "GPG",
       "emoji": "🔍",
       "beschreibung": "Beschreiben, erklären, deuten – werde zum Quellen-Detektiv!",
-      "hidden": true,
+      "hidden": false,
       "klassen": [],
       "customTags": [],
       "aod": false
