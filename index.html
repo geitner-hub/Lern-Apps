@@ -804,6 +804,13 @@ function buildAnnouncement() {
   wrap.style.display = 'block';
 }
 
+// Spiele (Ordner spiele/ oder Tag „Spiele“) bekommen keinen QR-Knopf: Ein gescannter Code öffnet das Spiel
+// in Safari statt in der Lernwelt-App – dort fehlte bisher die Spielsperre (Kinder haben sich Codes gezeigt).
+function ohneQR(app) {
+  return /(^|\/)spiele\//.test(String(app && app.datei || ''))
+    || ((app && app.customTags) || []).some(t => String(tagName(t)).trim().toLowerCase() === 'spiele');
+}
+
 // ── App des Tages ────────────────────────────────────
 function buildAod() {
   const aodApp = visibleApps().find(a => a.aod);
@@ -820,7 +827,7 @@ function buildAod() {
         <div class="aod-name">${escHtml(aodApp.name)}</div>
         <div class="aod-desc">${escHtml(aodApp.beschreibung || '')}</div>
       </div>
-      <button type="button" class="qr-btn" data-qr="${idx}" aria-label="QR-Code für ${escHtml(aodApp.name)} anzeigen">${QR_SVG}QR</button>
+      ${ohneQR(aodApp) ? '' : `<button type="button" class="qr-btn" data-qr="${idx}" aria-label="QR-Code für ${escHtml(aodApp.name)} anzeigen">${QR_SVG}QR</button>`}
     </a>`;
 }
 
@@ -896,7 +903,7 @@ function appKarte(app, fach) {
           }).join('')}
         </div>
         <div class="app-foot">
-          <button type="button" class="qr-btn" data-qr="${idx}" title="QR-Code anzeigen" aria-label="QR-Code für ${escHtml(app.name)} anzeigen">${QR_SVG}QR</button>
+          ${ohneQR(app) ? '' : `<button type="button" class="qr-btn" data-qr="${idx}" title="QR-Code anzeigen" aria-label="QR-Code für ${escHtml(app.name)} anzeigen">${QR_SVG}QR</button>`}
           <span class="app-arrow" aria-hidden="true">→</span>
         </div>`;
       return card;
@@ -1123,7 +1130,7 @@ document.addEventListener('click', e => {
   e.preventDefault();
   e.stopPropagation();
   const app = CONFIG.apps[parseInt(btn.dataset.qr, 10)];
-  if (app) openQR(app.name, appUrl(app.datei));
+  if (app && !ohneQR(app)) openQR(app.name, appUrl(app.datei));
 });
 
 // ── Fächer als Kacheln (v92): Fach antippen → seine Apps; „← Alle Fächer“, Marke im Kopf oder Zurück-Geste → Kacheln ──
