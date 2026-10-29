@@ -102,6 +102,8 @@ und gelbe Hinweise. Manuelle Checkliste nach Uploads: `werkzeuge/RAUCHTEST.md`.
   „Heute für dich“). README → English Journey Year 6. **Lernweg im Journey** (ab v101, löst `apps/typen/lernweg.html` ab): je Unit
   `abschnitte` → `schritte` (Hefteintrag, Übung, App …) in journey6.json, Inhalte in `daten/journey/bausteine-en6.json`, Schuljahr/Freigaben/
   HE-Nummern in `config.journey` (pruefen.py Regel 23). Abschnitt-, Schritt- und Baustein-IDs nie umbenennen (Lernstand `jw:<ID>`).
+  Laufzettel: `gemeinsam/journey-lernweg.js` (`LernJourneyWeg`), Haken nur über `LernPass.wegMerken` (zählt für nichts, reist mit dem Sync);
+  bis Etappe 3 hinter Feature-Schalter `journey-lernweg`.
 - **Live-Abfrage** (Unterrichtsmodus → 📊, Kinder-Seite `apps/typen/live.html?raum=CODE`, keine App in config.json, ohne Navbar):
   Worker-Teil `cloudflare/live.js` (Räume, Antworten, Quizze, Rückblicke in `SYNC_DB`; Räume nach dem Beenden gelöscht),
   Fragetypen `gemeinsam/live-fragen.js` (`LernLive`), Beamer `gemeinsam/admin/live.js`, Quiz-Editor Inhalte → Live-Quizze.

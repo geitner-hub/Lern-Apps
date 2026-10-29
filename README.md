@@ -627,7 +627,28 @@ Etappe 3 (v91): 3D-Weg als Prototyp mit dem Ort von Unit 1. Etappe 4 (v93): alle
 
 Der English Journey wird der einzige Weg durch Highlight 6: Buchseiten, Hefteinträge, Übungen fürs Übungsheft und Apps hängen dort
 zusammen. Die Lernweg-Seite (`apps/typen/lernweg.html`) geht darin auf und wird in Etappe 3 gelöscht. Plan: Claude-Doc
-„Aktionsplan: Lernweg im English Journey“. **Etappe 1 (v101): Format und Gerüst** – nur Daten und Prüfung, die Kinder sehen noch nichts davon.
+„Aktionsplan: Lernweg im English Journey“. **Etappe 1 (v101): Format und Gerüst** – nur Daten und Prüfung. Unit 1–2 sind nach der Übergabe
+„Inhalte Englisch 6“ (29.10.2026) gegliedert: Abschnitte wie im Buch (Lead-in, Theme 1/2, Story, Focus, Skills, Finale), Buchaufgaben mit
+Niveau (★ alle · ★★ Standard und Profi · ★★★ Profi), Hören macht die Lehrkraft im Unterricht (steht nicht im Weg). **Etappe 2 (v102): Laufzettel im Weg**
+– bis zum Umstieg (Etappe 3) nur mit Admin-Anmeldung oder Feature-Schalter `journey-lernweg` (Admin → System → Feature-Schalter).
+
+- **Laufzettel** (`gemeinsam/journey-lernweg.js`, `LernJourneyWeg`, nachgeladen über den Knopf „📒 Laufzettel“ im English Journey): Abschnitte
+  der Unit mit Fortschritt und Symbolen je Schritt, darunter Wahlstationen und „Zum Schluss“. Ein Abschnitt zeigt die Materialleiste (📖 Buch S. …
+  · 📒 Heft · ✏️ Übungsheft · 📘 Vokabelheft · 👥 Partner), die Niveau-Wahl (★/★★/★★★, Standard vorgewählt, je Abschnitt), Merkzeilen und die
+  Schritte als Karten: **Hefteintrag** im Heft-Schema (mit „🖥️ Groß zeigen“ für den Beamer, Haken „Steht in meinem Heft“), **Buchaufgabe**
+  („📖 Buch S. 34 Ü 1b“ + Auftrag, Haken „Ins Übungsheft geschrieben“), **eigene Übung** (Aufgabe wie im alten Lernweg → „Ins Übungsheft
+  geschrieben“ → Lösung klappt auf → „Verbessert – fertig“), **App** (Station: hakt sich ab, wenn sie im Pass gemeistert ist; Thema: wenn
+  `ziel.runden` Runden ≥ `ziel.prozent` im Lernstand stehen; „▶ Los geht's“ mit Rücksprung `#u=…&w=<Abschnitt>`), Lesen/Vokabelheft/Partner/Extra
+  mit Haken (Extra zählt nicht). Im Finale „🎯 Fit für die Probe?“ mit Smileys und Sprung zum Abschnitt bei 😟/😐; mit `zieleVorher` vorher
+  „Meine Ziele“. **📒 Mein Heft** (Heft-Spiegel): alle sichtbaren Hefteinträge des Schuljahres der Reihe nach, erledigte mit ✅.
+- **Speicher:** nur im Pass über `LernPass.wegMerken(id, { e | nv | s | v })` als Lernstand `jw:<ID>` (Hefteintrag: Baustein-ID, sonst Schritt-ID;
+  Niveau: Abschnitt-ID; Kann-Satz: Baustein-ID). Ohne Runden und ohne `f` – zählt nie für XP, Sterne, „Meine Themen“ oder Wiederholungen,
+  reist aber mit der Sicherungskarte. Kein neuer Speicher-Schlüssel.
+- **Sichtbarkeit:** `LernFreigabe.journey('journey6')` liefert `config.journey.wege.journey6`; ein Abschnitt ist sichtbar, wenn `bis` für eines
+  der Gerät-`wer` (alle, Klasse, Gruppe) auf ihn oder einen späteren zeigt. Ohne Block alle, mit Admin-Anmeldung immer alle. HE-Nummern aus `he`
+  (ohne Nummer steht „Hefteintrag“).
+- **Lösungen:** `loesung` an der Übung – Liste (je Aufgabe eine Zeile, beim Sortieren je Spalte; pruefen.py prüft die Länge) oder Mustertext
+  mit „Beispiel:“ und Prüfzeile bei Schreibaufgaben. Offen: die zwei „Right or wrong?“-Aufgaben zu den Buchgeschichten (Buchtext nötig).
 
 - **daten/journey6.json** (erweitert): je Unit `abschnitte` in Heft-Reihenfolge, gegliedert wie das Buch. Ein Abschnitt hat `id`
   (`u1-a-…`), `titel`, optional `kurz`, `ico`, `buch: { von, bis }` (Buchseiten), `kompetenz`, `niveaus` (★/★★/★★★), `wahl`, `schluss`,
@@ -640,16 +661,17 @@ zusammen. Die Lernweg-Seite (`apps/typen/lernweg.html`) geht darin auf und wird 
     `thema` (Katalog-ID) mit `ziel: { runden, prozent }` und `text` (zusätzliche Übung wie im alten Lernweg)
   - `lesen`, `vokabeln` (📘 Vokabelheft), `partner`, `hoeren`, `extra` – `text`, optional `buch`, bei `extra` optional `thema`
   - alle: optional `niveau: [1, 2]` (nur auf diesen Niveaus)
-  Je Unit außerdem `kann` (Kann-Sätze fürs Finale: `{ baustein, abschnitt }`), optional `wahlAnzahl` und `zieleVorher` wie im alten Lernweg.
+  Je Unit außerdem `kann` (Kann-Sätze fürs Finale: `{ baustein, abschnitt, imUnterricht? }`), optional `wahlAnzahl` und `zieleVorher` wie im alten Lernweg.
   Die `stationen` bleiben unverändert – Meisterschaft, Freigaben und 3D lesen weiter nur sie.
 - **daten/journey/bausteine-en6.json:** `weg` (die journey-Datei) und `bausteine` mit fester `id`: `hefteintrag` (`titel`, `zeilen`
-  `[[text, stil], …]` mit stil `g` = grün, `b` = fett, `merke`; `nurImHeft: true` = steht schon in den Heften, Inhalt fehlt noch),
+  `[[text, stil], …]` mit stil `g` = grün, `b` = fett, `merke`; `nurImHeft: true` = steht schon in den Heften, Inhalt fehlt noch;
+  `entwurf: true` = mit dem echten Heft abgleichen),
   `uebung` (`typ` wie im alten Lernweg: `wahl` · `zuordnen` · `luecken` · `saetze` · `sortieren` · `schreiben` · `mediation` · `frei`, die
   Felder der Aufgabe, `loesung` zum Aufklappen) und `kann` (`teil`, `text`).
 - **IDs:** Abschnitt-, Schritt- und Baustein-IDs sind zusammen eindeutig und werden nie umbenannt – Erledigtes kommt ab Etappe 2 als
   Lernstand `jw:<ID>` in den Pass (zählt nie für XP, Sterne, „Meine Themen“ oder Dorf). `alt` (an Unit, Abschnitt und Schritt) merkt sich
   Lernweg, alte Stationsnummer und alten Schritt-Schlüssel für die einmalige Übernahme der Häkchen aus `lernwelt-lernweg` (Etappe 3).
-- **config.json → `journey`** (vom Admin gepflegt, im Worker schon erlaubt – erst mit Etappe 3 in Benutzung):
+- **config.json → `journey`** (vom Admin gepflegt, im Worker erlaubt, der Laufzettel liest ihn schon; anlegen ab Etappe 3):
   `{ schuljahr: "2026/27", wege: { journey6: { bis: { <wer>: <Abschnitt-ID> }, he: { <Hefteintrag-ID>: Nr }, sperren: { <wer>: true } } } }`.
   `bis` = Freigabe bis einschließlich dieses Abschnitts je Gruppe/Klasse, `he` = HE-Nummern (fortlaufend durchs Schuljahr, bei der Freigabe
   vergeben, nie doppelt), `sperren` = Sperr-Schalter je Gruppe (vorbereitet, noch ohne Wirkung). Ein Schuljahreswechsel setzt nur

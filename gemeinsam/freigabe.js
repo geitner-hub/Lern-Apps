@@ -49,6 +49,7 @@
 //                         true = an für alle · false/fehlt = aus · { wer: ['admin', 'g:<Gruppe>', 'k5', 'alle'] } =
 //                         nur dort an ('admin' = dieses Gerät ist mit dem Hauptzugang im Admin angemeldet).
 //                         Neue Funktion hinter einen Schalter: Eintrag in daten/features.json + if (LernFreigabe.feature('id')).
+//    journey(weg)       → config.journey.wege[weg] oder null – English Journey: Freigabe „bis Abschnitt“, HE-Nummern
 //  Ereignis 'lernfreigabe:neu', wenn sich die Grundlage geändert hat. Solange die Seite sichtbar ist, fragt sie alle
 //  2 Minuten nach (Unterrichtsmodus „Stufe jetzt freischalten“ kommt so ohne Neuladen an).
 // ═══════════════════════════════════════════════════════
@@ -220,5 +221,7 @@
     return v.wer.some(w => w === 'admin' ? adminHier() : wer().includes(w));
   }
 
-  window.LernFreigabe = { erlaubt, zugeteilt, status, wer, fokus, imFokus, spielSperre, spielGesperrt, neu, feature, admin: adminHier };
+  function journey(weg) { const w = CFG && CFG.journey && CFG.journey.wege; return (w && typeof w === 'object' && w[weg] && typeof w[weg] === 'object') ? w[weg] : null; }
+
+  window.LernFreigabe = { erlaubt, zugeteilt, status, wer, fokus, imFokus, spielSperre, spielGesperrt, neu, feature, journey, admin: adminHier };
 })();

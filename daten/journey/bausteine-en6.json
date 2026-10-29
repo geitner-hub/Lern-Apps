@@ -350,6 +350,16 @@
     "visit → ___",
     "help → ___",
     "carry → ___"
+   ],
+   "loesung": [
+    "play – played",
+    "watch – watched",
+    "like – liked",
+    "stop – stopped",
+    "try – tried",
+    "visit – visited",
+    "help – helped",
+    "carry – carried"
    ]
   },
   {
@@ -382,6 +392,18 @@
     "take (nehmen) → ___",
     "make (machen) → ___",
     "read (lesen) → ___"
+   ],
+   "loesung": [
+    "go – went",
+    "see – saw",
+    "have – had",
+    "eat – ate",
+    "come – came",
+    "get – got",
+    "buy – bought",
+    "take – took",
+    "make – made",
+    "read – read"
    ]
   },
   {
@@ -396,6 +418,12 @@
     "Mia went to the beach.",
     "We watched TV.",
     "Luca ate a pizza."
+   ],
+   "loesung": [
+    "I didn’t play football.",
+    "Mia didn’t go to the beach.",
+    "We didn’t watch TV.",
+    "Luca didn’t eat a pizza."
    ]
   },
   {
@@ -470,6 +498,14 @@
     "Mitleid haben mit",
     "eifersüchtig",
     "überrascht"
+   ],
+   "loesung": [
+    "sad – traurig",
+    "lonely – einsam",
+    "happy – glücklich",
+    "surprised – überrascht",
+    "jealous – eifersüchtig",
+    "(to) feel sorry for – Mitleid haben mit"
    ]
   },
   {
@@ -493,6 +529,14 @@
     "I don’t ___ this word. Can you help me?",
     "It was rainy. ___ we stayed at home.",
     "On Monday we went to the beach. ___ we went to the park."
+   ],
+   "loesung": [
+    "I have no friends here. I feel lonely.",
+    "Please wait for me! I’m coming.",
+    "The film is very sad. I want to cry.",
+    "I don’t understand this word. Can you help me?",
+    "It was rainy. That’s why we stayed at home.",
+    "On Monday we went to the beach. The next day we went to the park."
    ]
   },
   {
@@ -508,6 +552,14 @@
     "Mia and Ellie ___ sad.",
     "___ you at home yesterday?",
     "Luca ___ in Munich last week."
+   ],
+   "loesung": [
+    "I was at the seaside.",
+    "The weather was sunny.",
+    "We were in Spain.",
+    "Mia and Ellie were sad.",
+    "Were you at home yesterday?",
+    "Luca was in Munich last week."
    ]
   },
   {
@@ -520,6 +572,11 @@
     "It ___ rainy.",
     "They ___ at school.",
     "I ___ tired."
+   ],
+   "loesung": [
+    "It wasn’t rainy.",
+    "They weren’t at school.",
+    "I wasn’t tired."
    ]
   },
   {
@@ -534,6 +591,12 @@
     "Mia / go to the beach? (✗)",
     "they / watch a film? (✓)",
     "Luca / eat pizza? (✗)"
+   ],
+   "loesung": [
+    "Did you play football yesterday? – Yes, I did.",
+    "Did Mia go to the beach? – No, she didn’t.",
+    "Did they watch a film? – Yes, they did.",
+    "Did Luca eat pizza? – No, he didn’t."
    ]
   },
   {
@@ -552,6 +615,16 @@
     "we → ___",
     "you → ___",
     "they → ___"
+   ],
+   "loesung": [
+    "I → me",
+    "you → you",
+    "he → him",
+    "she → her",
+    "it → it",
+    "we → us",
+    "you → you",
+    "they → them"
    ]
   },
   {
@@ -567,6 +640,14 @@
     "I can’t find *the ball*.",
     "Can you help *Mia and me*?",
     "Adam sees *Ellie*."
+   ],
+   "loesung": [
+    "I like her.",
+    "Ellie helps him.",
+    "We call them.",
+    "I can’t find it.",
+    "Can you help us?",
+    "Adam sees her."
    ]
   },
   {
@@ -604,6 +685,12 @@
       "me"
      ]
     }
+   ],
+   "loesung": [
+    "Berry is in the US. Luca calls him.",
+    "Mia is sad. Ellie talks to her.",
+    "My friends are great. I love them.",
+    "Can you help me?"
    ]
   },
   {
@@ -636,6 +723,18 @@
     "Traum → ___",
     "Auge → ___",
     "Tante → ___"
+   ],
+   "loesung": [
+    "Wetter – weather",
+    "Berg – mountain",
+    "Satz – sentence",
+    "Stadion – stadium",
+    "Fabrik – factory",
+    "Fenster – window",
+    "Abenteuer – adventure",
+    "Traum – dream",
+    "Auge – eye",
+    "Tante – aunt"
    ]
   },
   {
@@ -657,6 +756,13 @@
     "alone ↔ ___",
     "(to) smile ↔ ___",
     "last week ↔ ___"
+   ],
+   "loesung": [
+    "happy ↔ sad",
+    "sunny ↔ rainy",
+    "alone ↔ together",
+    "(to) smile ↔ (to) cry",
+    "last week ↔ next week"
    ]
   },
   {
@@ -684,7 +790,12 @@
     "school 🏫",
     "feelings 🙂"
    ],
-   "zeilen": 4
+   "zeilen": 4,
+   "loesung": [
+    "weather ☀️: sunny, rainy, cold, warm",
+    "school 🏫: sentence, classroom, sports hall, club",
+    "feelings 🙂: sad, lonely, jealous, surprised"
+   ]
   },
   {
    "id": "ue-u1-linking-words-a",
@@ -701,6 +812,16 @@
     "I was tired, ___ I went to bed.",
     "It was sunny ___ it was cold.",
     "Ellie was happy ___ she saw her friends."
+   ],
+   "loesung": [
+    "I was at the seaside and I swam in the sea.",
+    "It was rainy, so we stayed at home.",
+    "I like football but I don’t like tennis.",
+    "Mia was sad because she missed her home.",
+    "We went to the park and we played football.",
+    "I was tired, so I went to bed.",
+    "It was sunny but it was cold.",
+    "Ellie was happy because she saw her friends."
    ]
   },
   {
@@ -720,6 +841,12 @@
     "because she saw Mia.",
     "and they went to the cinema.",
     "but the water was cold."
+   ],
+   "loesung": [
+    "Ellie was happy because she saw Mia.",
+    "I was ill, so I didn’t go to school.",
+    "We wanted to swim but the water was cold.",
+    "Luca met Adam and they went to the cinema."
    ]
   },
   {
@@ -743,7 +870,8 @@
     "Ich habe das simple past benutzt (played, went …).",
     "Ich habe 2 linking words benutzt.",
     "Satzanfang und I schreibe ich groß."
-   ]
+   ],
+   "loesung": "Beispiel:\nHi Luca,\nlast weekend was great! On Saturday I went to the park with my friends and we played football. It was sunny but it was cold. On Sunday I visited my grandma because it was her birthday. We ate cake and I was very happy.\nSee you soon!\nPrüfe mit der Checkliste: 5 Sätze im simple past? 2 linking words?"
   },
   {
    "id": "ue-u1-mediation-a",
@@ -791,6 +919,15 @@
     "Was ist verboten?",
     "Darf ich einen Freund mitbringen?",
     "Wen kann ich fragen?"
+   ],
+   "loesung": [
+    "Am Dienstag (jeden Dienstag).",
+    "Von 15:30 bis 16:30 Uhr.",
+    "In der Sporthalle.",
+    "Turnschuhe, ein T-Shirt und eine Flasche Wasser.",
+    "In der Sporthalle essen. (Und: Du darfst nicht zu spät kommen.)",
+    "Ja, du darfst einen Freund mitbringen.",
+    "Mr Brown in Raum 12."
    ]
   },
   {
@@ -1089,6 +1226,18 @@
     "Keks → ___",
     "Kartoffel → ___",
     "Brot → ___"
+   ],
+   "loesung": [
+    "Nachbar – neighbour",
+    "Ampel – traffic lights",
+    "Bushaltestelle – bus stop",
+    "Friseur – hairdresser",
+    "Supermarkt – supermarket",
+    "Feuerwerkskörper – firework",
+    "Laterne – lantern",
+    "Keks – biscuit",
+    "Kartoffel – potato",
+    "Brot – bread"
    ]
   },
   {
@@ -1112,6 +1261,11 @@
     "food & drinks 🍞",
     "in town 🏙️",
     "Guy Fawkes night 🎆"
+   ],
+   "loesung": [
+    "food & drinks 🍞: bread, lemonade, biscuits",
+    "in town 🏙️: bus stop, supermarket, traffic lights",
+    "Guy Fawkes night 🎆: bonfire, fireworks, mask"
    ]
   },
   {
@@ -1138,6 +1292,11 @@
     "food & drinks 🍞",
     "in town 🏙️",
     "Guy Fawkes night 🎆"
+   ],
+   "loesung": [
+    "food & drinks 🍞: bread, lemonade, biscuits, hot chocolate",
+    "in town 🏙️: bus stop, supermarket, traffic lights, hairdresser",
+    "Guy Fawkes night 🎆: bonfire, fireworks, mask, guy"
    ]
   },
   {
@@ -1190,6 +1349,14 @@
       "any"
      ]
     }
+   ],
+   "loesung": [
+    "We need some sausages for the party.",
+    "There aren’t any biscuits.",
+    "Have you got any lemonade?",
+    "I’d like some hot chocolate, please.",
+    "We haven’t got any bread.",
+    "Would you like some potatoes?"
    ]
   },
   {
@@ -1278,6 +1445,14 @@
     "Feuerwerkskörper",
     "Spielzeug",
     "Helfer/in"
+   ],
+   "loesung": [
+    "mask – Maske",
+    "toy – Spielzeug",
+    "helper – Helfer/in",
+    "(to) collect – sammeln",
+    "(to) be scared (of) – Angst haben (vor)",
+    "firework – Feuerwerkskörper"
    ]
   },
   {
@@ -1315,6 +1490,12 @@
       "eat"
      ]
     }
+   ],
+   "loesung": [
+    "Ellie brings a toy dog.",
+    "Luca comes in with a mask.",
+    "The poor dog is scared of fireworks.",
+    "Let’s collect some money for the dogs’ home."
    ]
   },
   {
@@ -1338,6 +1519,14 @@
     "The poor dog is ___ of fireworks.",
     "Let’s ___ some money for the dogs’ home.",
     "Please put a pound in the old guy’s ___."
+   ],
+   "loesung": [
+    "Ellie brings a toy dog.",
+    "Luca comes in with a mask.",
+    "“Wait a minute. We need two helpers.”",
+    "The poor dog is scared of fireworks.",
+    "Let’s collect some money for the dogs’ home.",
+    "Please put a pound in the old guy’s hat."
    ]
   },
   {
@@ -1407,6 +1596,14 @@
       "How"
      ]
     }
+   ],
+   "loesung": [
+    "Where did you go on Saturday? – I went to the park.",
+    "What did you eat? – I ate a pizza.",
+    "When did the party start? – At 7 o’clock.",
+    "Who did you meet in town? – I met Mia.",
+    "How did you go to town? – By bus.",
+    "What did you buy? – A new T-shirt."
    ]
   },
   {
@@ -1421,6 +1618,12 @@
     "What ___ you eat?",
     "Where ___ they watch the fireworks?",
     "Who ___ you meet?"
+   ],
+   "loesung": [
+    "When did the party start?",
+    "What did you eat?",
+    "Where did they watch the fireworks?",
+    "Who did you meet?"
    ]
   },
   {
@@ -1436,6 +1639,13 @@
     "Where / they / watch / the fireworks?",
     "Who / Luca / invite?",
     "How / you / go / to Luca’s house?"
+   ],
+   "loesung": [
+    "What did you eat at the party?",
+    "When did the fireworks start?",
+    "Where did they watch the fireworks?",
+    "Who did Luca invite?",
+    "How did you go to Luca’s house?"
    ]
   },
   {
@@ -1445,7 +1655,8 @@
    "titel": "Profi: Fragen an Mia",
    "heft": "Schreibe ins Heft.",
    "beispiel": "Where did you sleep? – Who did you meet?",
-   "text": "Mia war am Wochenende in London. Schreibe 4 Fragen an Mia mit verschiedenen Fragewörtern (What, Where, When, Who, How)."
+   "text": "Mia war am Wochenende in London. Schreibe 4 Fragen an Mia mit verschiedenen Fragewörtern (What, Where, When, Who, How).",
+   "loesung": "Beispiel:\nWhat did you see in London?\nWhere did you sleep?\nWhen did you go home?\nWho did you meet?\nPrüfe: Fragewort + did + Person + Grundform? Fragezeichen am Ende?"
   },
   {
    "id": "ue-u2-did-kurz-a",
@@ -1496,6 +1707,14 @@
       "it did"
      ]
     }
+   ],
+   "loesung": [
+    "Did Mia walk with a lantern? – Yes, she did.",
+    "Did Luca and Adam watch the fireworks? – Yes, they did.",
+    "Did you have a party? – No, I didn’t.",
+    "Did Ellie wear a mask? – No, she didn’t.",
+    "Did Adam phone the dogs’ home? – No, he didn’t.",
+    "Did the children collect money? – Yes, they did."
    ]
   },
   {
@@ -1509,6 +1728,12 @@
     "___ Ellie ___ the dog? (bring)",
     "___ they ___ sausages? (eat)",
     "___ Mia ___ songs? (sing)"
+   ],
+   "loesung": [
+    "Did you watch the fireworks?",
+    "Did Ellie bring the dog?",
+    "Did they eat sausages?",
+    "Did Mia sing songs?"
    ]
   },
   {
@@ -1523,6 +1748,12 @@
     "Ellie / bring the toy dog?",
     "they / collect money?",
     "Mia / sing songs?"
+   ],
+   "loesung": [
+    "Did you have a bonfire?",
+    "Did Ellie bring the toy dog?",
+    "Did they collect money?",
+    "Did Mia sing songs?"
    ]
   },
   {
@@ -1532,7 +1763,8 @@
    "titel": "Profi: Und du?",
    "heft": "Schreibe die Fragen und deine Antworten ins Heft.",
    "beispiel": "Did you watch fireworks at New Year? – Yes, I did. I watched them with my family.",
-   "text": "Antworte mit Kurzantwort und einem Satz mehr: 1 Did you watch fireworks at New Year? 2 Did you go to town last weekend? 3 Did you play football yesterday?"
+   "text": "Antworte mit Kurzantwort und einem Satz mehr: 1 Did you watch fireworks at New Year? 2 Did you go to town last weekend? 3 Did you play football yesterday?",
+   "loesung": "Beispiel:\n1 Yes, I did. I watched them with my family.\n2 No, I didn’t. I stayed at home.\n3 Yes, I did. I played with my friends.\nPrüfe: Kurzantwort mit did / didn’t und dann ein ganzer Satz im simple past?"
   },
   {
    "id": "ue-u2-plural-a",
@@ -1550,6 +1782,16 @@
     "sandwich → ___",
     "family → ___",
     "party → ___"
+   ],
+   "loesung": [
+    "friend – friends",
+    "dog – dogs",
+    "box – boxes",
+    "bus – buses",
+    "potato – potatoes",
+    "sandwich – sandwiches",
+    "family – families",
+    "party – parties"
    ]
   },
   {
@@ -1574,6 +1816,14 @@
     "person → ___",
     "foot → ___",
     "mouse → ___"
+   ],
+   "loesung": [
+    "child – children",
+    "man – men",
+    "woman – women",
+    "person – people",
+    "foot – feet",
+    "mouse – mice"
    ]
   },
   {
@@ -1588,6 +1838,12 @@
     "I have one sister. (three)",
     "There is one woman in the park. (two)",
     "There is one child at the party. (five)"
+   ],
+   "loesung": [
+    "There are two bonfires.",
+    "I have three sisters.",
+    "There are two women in the park.",
+    "There are five children at the party."
    ]
   },
   {
@@ -1597,7 +1853,8 @@
    "titel": "Profi: Bonfire night",
    "heft": "Schreibe ins Heft.",
    "beispiel": "The children watched the fireworks.",
-   "text": "Schreibe 4 Sätze über eine Guy-Fawkes-Party. Benutze in jedem Satz einen Plural (sausages, fireworks, children, people …)."
+   "text": "Schreibe 4 Sätze über eine Guy-Fawkes-Party. Benutze in jedem Satz einen Plural (sausages, fireworks, children, people …).",
+   "loesung": "Beispiel:\nThe children watched the fireworks.\nWe ate sausages and potatoes.\nMany people stood around the bonfire.\nMy friends had lanterns.\nPrüfe: In jedem Satz ein Plural?"
   },
   {
    "id": "ue-u2-can-mustnt-a",
@@ -1648,6 +1905,14 @@
       "mustn’t"
      ]
     }
+   ],
+   "loesung": [
+    "You mustn’t run in the corridor.",
+    "You can eat your sandwich at lunchtime.",
+    "You mustn’t use your phone in the lesson.",
+    "You can play football in the playground.",
+    "You mustn’t be late for school.",
+    "You can ask the teacher for help."
    ]
   },
   {
@@ -1671,6 +1936,14 @@
     "Rasen nicht betreten",
     "Radfahren verboten",
     "Parken verboten"
+   ],
+   "loesung": [
+    "No entry – Kein Zutritt",
+    "Keep dogs on leads – Hunde an die Leine",
+    "Keep off the grass – Rasen nicht betreten",
+    "No parking – Parken verboten",
+    "No ball games – Ballspiele verboten",
+    "No cycling – Radfahren verboten"
    ]
   },
   {
@@ -1680,7 +1953,8 @@
    "titel": "Profi: Our classroom rules",
    "heft": "Schreibe ins Heft.",
    "beispiel": "You can ask a partner for help. You mustn’t shout.",
-   "text": "Schreibe 4 Regeln für unser Klassenzimmer: 2 mit can und 2 mit mustn’t."
+   "text": "Schreibe 4 Regeln für unser Klassenzimmer: 2 mit can und 2 mit mustn’t.",
+   "loesung": "Beispiel:\nYou can ask a partner for help.\nYou can drink water in the lesson.\nYou mustn’t shout.\nYou mustn’t eat in the classroom.\nPrüfe: 2 Regeln mit can, 2 mit mustn’t – danach die Grundform?"
   },
   {
    "id": "ue-u2-fest-a",
@@ -1702,7 +1976,8 @@
     "Ich habe das simple past benutzt (went, ate, saw …).",
     "Ich habe gesagt, warum es mir gefallen hat (because …).",
     "Satzanfang und I schreibe ich groß."
-   ]
+   ],
+   "loesung": "Beispiel:\nLast year I went to a summer festival in my town. I went there with my family. We ate ice cream and sausages. There was music and we danced. In the evening we watched fireworks. It was a great day!\nPrüfe: 6 Sätze im simple past?"
   },
   {
    "id": "ue-u2-brief-a",
@@ -1727,7 +2002,8 @@
     "Stelle ich zwei Fragen über das Wochenende?",
     "Endet der Brief mit „Love“, „Lots of love“ oder „Best wishes“?",
     "Hat mein Brief genug Wörter?"
-   ]
+   ],
+   "loesung": "Beispiel:\nDear Jenny,\nlast weekend I went to the park. I played football with my friends. How was your weekend? What did you do?\nLove, …\nPrüfe mit der Checkliste."
   },
   {
    "id": "ue-u2-brief-a2",
@@ -1752,7 +2028,8 @@
     "Stelle ich zwei Fragen über das Wochenende?",
     "Endet der Brief mit „Love“, „Lots of love“ oder „Best wishes“?",
     "Hat mein Brief genug Wörter?"
-   ]
+   ],
+   "loesung": "Beispiel:\nDear Jenny,\nhow are you? Last weekend was fun. On Saturday I went to the park with my friends and we played football. On Sunday I visited my grandma. We ate cake. What did you do last weekend? Did you go to a party?\nLove, …\nPrüfe mit der Checkliste."
   },
   {
    "id": "ue-u2-brief-a3",
@@ -1769,7 +2046,8 @@
     "Stelle ich zwei Fragen über das Wochenende?",
     "Endet der Brief mit „Love“, „Lots of love“ oder „Best wishes“?",
     "Hat mein Brief genug Wörter?"
-   ]
+   ],
+   "loesung": "Beispiel:\nDear Jenny,\nhow are you? Last weekend was great. On Saturday I went to a Halloween party because my friend Lea invited me. We wore masks and we danced. On Sunday it was rainy, so I stayed at home and watched a film. In the evening I visited my grandma and we ate pizza. It was a really nice weekend! What did you do last weekend? Did you watch the fireworks?\nLove, …\nPrüfe mit der Checkliste: 70 Wörter? simple past? and, but, so, because?"
   },
   {
    "id": "ue-u2-weg-a",
@@ -1792,6 +2070,14 @@
     "Überquere die Straße.",
     "Biege rechts ab.",
     "Geh an der Bank vorbei."
+   ],
+   "loesung": [
+    "Turn left. – Biege links ab.",
+    "Turn right. – Biege rechts ab.",
+    "Go along the street. – Geh die Straße entlang.",
+    "Go past the bank. – Geh an der Bank vorbei.",
+    "Cross the road. – Überquere die Straße.",
+    "It’s on the right. – Es ist auf der rechten Seite."
    ]
   },
   {

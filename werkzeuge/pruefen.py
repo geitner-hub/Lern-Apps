@@ -780,6 +780,11 @@ for jw_p in sorted(ROOT.glob('daten/journey/bausteine-*.json')):
         elif art == 'uebung':
             if b.get('typ') not in JW_UEBUNGEN: F(f'{jw_r}: Übung {bid} – typ muss {", ".join(JW_UEBUNGEN)} sein')
             if not str(b.get('titel') or '').strip(): F(f'{jw_r}: Übung {bid} ohne titel')
+            lo = b.get('loesung')                # Liste (je Aufgabe eine Zeile, beim Sortieren je Spalte) oder Mustertext
+            soll = len(b.get('spalten') or []) if b.get('typ') == 'sortieren' else len(b.get('links') or b.get('items') or []) if b.get('typ') in ('wahl', 'zuordnen', 'luecken', 'saetze', 'mediation') else None
+            if lo is not None and not ((isinstance(lo, str) and lo.strip()) or (isinstance(lo, list) and lo and all(isinstance(x, str) and x.strip() for x in lo))):
+                F(f'{jw_r}: Übung {bid} – loesung muss ein Text oder eine Liste von Texten sein')
+            elif isinstance(lo, list) and soll and len(lo) != soll: F(f'{jw_r}: Übung {bid} – loesung hat {len(lo)} Zeilen, die Aufgabe {soll}')
         elif art == 'kann':
             if not str(b.get('text') or '').strip() or not str(b.get('teil') or '').strip(): F(f'{jw_r}: Kann-Satz {bid} braucht teil und text')
         else: F(f'{jw_r}: Baustein {bid} – art muss hefteintrag, uebung oder kann sein')
