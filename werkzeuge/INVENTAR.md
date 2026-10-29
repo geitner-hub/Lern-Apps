@@ -51,7 +51,7 @@ Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv
 
 | Datei | KB | Skripte | Speicherschlüssel |
 |---|---|---|---|
-| apps/englisch/english-journey.html | 30 | freigabe.js, katalog.js, wiederholung.js, journey-kern.js, navbar.js, avatar3d.js (nachgeladen), journey-welt.js (nachgeladen), journey-welt.js (nachgeladen) | lernwelt-lernweg, lernwelt-lernweg-zurueck, + über navbar.js |
+| apps/englisch/english-journey.html | 31 | freigabe.js, katalog.js, wiederholung.js, journey-kern.js, navbar.js, avatar3d.js (nachgeladen), journey-welt.js (nachgeladen), journey-welt.js (nachgeladen) | lernwelt-lernweg, lernwelt-lernweg-zurueck, + über navbar.js |
 | apps/englisch/journey-anwenden.html | 40 | freigabe.js, ueben.js, navbar.js | + über navbar.js |
 | apps/englisch/knowing-english.html | 9 | katalog.js, freigabe.js, navbar.js | lernwelt-pass, + über navbar.js |
 | apps/englisch/practice_simple_present.html | 1 | – | – |
