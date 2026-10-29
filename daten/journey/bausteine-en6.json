@@ -1,0 +1,1765 @@
+{
+ "version": 1,
+ "weg": "daten/journey6.json",
+ "hinweis": "Bausteine des English Journey Year 6: Hefteinträge (zeilen [text, stil], stil g = grün, b = fett), eigene Übungen (typ wie im alten Lernweg, loesung zum Aufklappen) und Kann-Sätze fürs Finale. Die Reihenfolge und die Buchverweise stehen in daten/journey6.json (units → abschnitte → schritte). IDs nie umbenennen: Erledigtes steht als Lernstand jw:<ID> im Pass. Format: README → English Journey.",
+ "bausteine": [
+  {
+   "id": "he-u1-simple-past",
+   "art": "hefteintrag",
+   "titel": "Simple past",
+   "zeilen": [],
+   "nurImHeft": true
+  },
+  {
+   "id": "he-u1-objektpronomen",
+   "art": "hefteintrag",
+   "titel": "Objektpronomen – me, him, her …",
+   "zeilen": [
+    [
+     [
+      "Wenn ich einen Namen nicht wiederholen will,",
+      ""
+     ]
+    ],
+    [
+     [
+      "ersetze ich ihn durch ein Pronomen.",
+      ""
+     ]
+    ],
+    [
+     [
+      "Nach dem Verb steht das ",
+      ""
+     ],
+     [
+      "Objektpronomen",
+      "g"
+     ],
+     [
+      ".",
+      ""
+     ]
+    ],
+    [
+     [
+      "I → ",
+      ""
+     ],
+     [
+      "me",
+      "g"
+     ],
+     [
+      "     you → ",
+      ""
+     ],
+     [
+      "you",
+      "g"
+     ],
+     [
+      "     he → ",
+      ""
+     ],
+     [
+      "him",
+      "g"
+     ],
+     [
+      "     she → ",
+      ""
+     ],
+     [
+      "her",
+      "g"
+     ]
+    ],
+    [
+     [
+      "it → ",
+      ""
+     ],
+     [
+      "it",
+      "g"
+     ],
+     [
+      "     we → ",
+      ""
+     ],
+     [
+      "us",
+      "g"
+     ],
+     [
+      "     you → ",
+      ""
+     ],
+     [
+      "you",
+      "g"
+     ],
+     [
+      "     they → ",
+      ""
+     ],
+     [
+      "them",
+      "g"
+     ]
+    ],
+    [
+     [
+      "Mia is sad. Ellie helps ",
+      ""
+     ],
+     [
+      "her",
+      "g"
+     ],
+     [
+      ".  (her = Mia)",
+      ""
+     ]
+    ],
+    [
+     [
+      "Adam and Luca are nice. I like ",
+      ""
+     ],
+     [
+      "them",
+      "g"
+     ],
+     [
+      ".",
+      ""
+     ]
+    ]
+   ],
+   "merke": "Nach dem Verb: me, you, him, her, it, us, them!"
+  },
+  {
+   "id": "he-u1-linking-words",
+   "art": "hefteintrag",
+   "titel": "Linking words – Sätze verbinden",
+   "zeilen": [
+    [
+     [
+      "Mit ",
+      ""
+     ],
+     [
+      "linking words",
+      "g"
+     ],
+     [
+      " verbinde ich zwei Sätze zu einem.",
+      ""
+     ]
+    ],
+    [
+     [
+      "and",
+      "g"
+     ],
+     [
+      " = und:  I played football ",
+      ""
+     ],
+     [
+      "and",
+      "b"
+     ],
+     [
+      " I went swimming.",
+      ""
+     ]
+    ],
+    [
+     [
+      "but",
+      "g"
+     ],
+     [
+      " = aber:  It was sunny ",
+      ""
+     ],
+     [
+      "but",
+      "b"
+     ],
+     [
+      " it was cold.",
+      ""
+     ]
+    ],
+    [
+     [
+      "so",
+      "g"
+     ],
+     [
+      " = also, deshalb:  It was rainy, ",
+      ""
+     ],
+     [
+      "so",
+      "b"
+     ],
+     [
+      " I stayed at home.",
+      ""
+     ]
+    ],
+    [
+     [
+      "because",
+      "g"
+     ],
+     [
+      " = weil:  I was happy ",
+      ""
+     ],
+     [
+      "because",
+      "b"
+     ],
+     [
+      " I saw my friends.",
+      ""
+     ]
+    ],
+    [
+     [
+      "Nach because: Satzstellung bleibt gleich (because I saw …).",
+      ""
+     ]
+    ]
+   ],
+   "merke": "Mit linking words werden meine Sätze länger und besser!"
+  },
+  {
+   "id": "ue-u1-story-a",
+   "art": "uebung",
+   "typ": "wahl",
+   "titel": "Right or wrong?",
+   "heft": "Schreibe die ganzen Sätze ab und right oder wrong dahinter: 1 Mia is new at Eggy. – right",
+   "items": [
+    {
+     "t": "Mia is new at Eggy.",
+     "o": [
+      "right",
+      "wrong"
+     ]
+    },
+    {
+     "t": "Mia comes from Spain.",
+     "o": [
+      "right",
+      "wrong"
+     ]
+    },
+    {
+     "t": "Mia feels lonely at the new school.",
+     "o": [
+      "right",
+      "wrong"
+     ]
+    },
+    {
+     "t": "Ellie is happy all the time.",
+     "o": [
+      "right",
+      "wrong"
+     ]
+    },
+    {
+     "t": "Mia misses her home.",
+     "o": [
+      "right",
+      "wrong"
+     ]
+    },
+    {
+     "t": "At the end Ellie and Mia are friends.",
+     "o": [
+      "right",
+      "wrong"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "ue-u1-story-b",
+   "art": "uebung",
+   "typ": "zuordnen",
+   "titel": "Feelings: Welches deutsche Wort passt?",
+   "heft": "Schreibe die Wortpaare ins Heft: 1 sad – traurig",
+   "links": [
+    "sad",
+    "lonely",
+    "happy",
+    "surprised",
+    "jealous",
+    "(to) feel sorry for"
+   ],
+   "rechts": [
+    "einsam",
+    "glücklich",
+    "traurig",
+    "Mitleid haben mit",
+    "eifersüchtig",
+    "überrascht"
+   ]
+  },
+  {
+   "id": "ue-u1-story-c",
+   "art": "uebung",
+   "typ": "luecken",
+   "titel": "Fill in. Nimm die Wörter aus dem Kasten.",
+   "heft": "Schreibe die ganzen Sätze ins Heft: 1 I have no friends here. I feel lonely.",
+   "kasten": [
+    "lonely",
+    "cry",
+    "wait",
+    "understand",
+    "That’s why",
+    "The next day"
+   ],
+   "items": [
+    "I have no friends here. I feel ___.",
+    "Please ___ for me! I’m coming.",
+    "The film is very sad. I want to ___.",
+    "I don’t ___ this word. Can you help me?",
+    "It was rainy. ___ we stayed at home.",
+    "On Monday we went to the beach. ___ we went to the park."
+   ]
+  },
+  {
+   "id": "ue-u1-simple-past-a",
+   "art": "uebung",
+   "typ": "luecken",
+   "titel": "Regelmäßige Verben: -ed. Schreibe das simple past.",
+   "heft": "Schreibe beide Formen ins Heft: play – played",
+   "tipp": "like → liked · stop → stopped · try → tried",
+   "spalten": 2,
+   "items": [
+    "play → ___",
+    "watch → ___",
+    "like → ___",
+    "stop → ___",
+    "try → ___",
+    "visit → ___",
+    "help → ___",
+    "carry → ___"
+   ]
+  },
+  {
+   "id": "ue-u1-simple-past-b",
+   "art": "uebung",
+   "typ": "luecken",
+   "titel": "Unregelmäßige Verben: kein -ed! Nimm die Wörter aus dem Kasten.",
+   "heft": "Schreibe beide Formen ins Heft: go – went",
+   "kasten": [
+    "ate",
+    "bought",
+    "came",
+    "got",
+    "had",
+    "made",
+    "read",
+    "saw",
+    "took",
+    "went"
+   ],
+   "spalten": 2,
+   "items": [
+    "go (gehen) → ___",
+    "see (sehen) → ___",
+    "have (haben) → ___",
+    "eat (essen) → ___",
+    "come (kommen) → ___",
+    "get (bekommen) → ___",
+    "buy (kaufen) → ___",
+    "take (nehmen) → ___",
+    "make (machen) → ___",
+    "read (lesen) → ___"
+   ]
+  },
+  {
+   "id": "ue-u1-simple-past-c",
+   "art": "uebung",
+   "typ": "saetze",
+   "titel": "Verneinung: didn’t + Grundform. Schreibe den Satz verneint.",
+   "heft": "Schreibe den ganzen Satz ins Heft.",
+   "beispiel": "I played tennis. → I didn’t play tennis.",
+   "items": [
+    "I played football.",
+    "Mia went to the beach.",
+    "We watched TV.",
+    "Luca ate a pizza."
+   ]
+  },
+  {
+   "id": "ue-u1-was-were-a",
+   "art": "uebung",
+   "typ": "luecken",
+   "titel": "was or were?",
+   "heft": "Schreibe die ganzen Sätze ins Heft: 1 I was at the seaside.",
+   "items": [
+    "I ___ at the seaside.",
+    "The weather ___ sunny.",
+    "We ___ in Spain.",
+    "Mia and Ellie ___ sad.",
+    "___ you at home yesterday?",
+    "Luca ___ in Munich last week."
+   ]
+  },
+  {
+   "id": "ue-u1-was-were-b",
+   "art": "uebung",
+   "typ": "luecken",
+   "titel": "wasn’t or weren’t?",
+   "heft": "Schreibe die ganzen Sätze ins Heft: 1 It wasn’t rainy.",
+   "items": [
+    "It ___ rainy.",
+    "They ___ at school.",
+    "I ___ tired."
+   ]
+  },
+  {
+   "id": "ue-u1-was-were-c",
+   "art": "uebung",
+   "typ": "saetze",
+   "titel": "Fragen mit Did + Grundform. Schreibe die Frage und die Kurzantwort.",
+   "heft": "Schreibe die ganze Frage und die Kurzantwort ins Heft.",
+   "beispiel": "you / play tennis? (✓) → Did you play tennis? – Yes, I did.",
+   "items": [
+    "you / play football yesterday? (✓)",
+    "Mia / go to the beach? (✗)",
+    "they / watch a film? (✓)",
+    "Luca / eat pizza? (✗)"
+   ]
+  },
+  {
+   "id": "ue-u1-objektpronomen-a",
+   "art": "uebung",
+   "typ": "luecken",
+   "titel": "Ergänze die Tabelle.",
+   "heft": "Schreibe die Paare ins Heft: I – me, you – you …",
+   "spalten": 4,
+   "items": [
+    "I → ___",
+    "you → ___",
+    "he → ___",
+    "she → ___",
+    "it → ___",
+    "we → ___",
+    "you → ___",
+    "they → ___"
+   ]
+  },
+  {
+   "id": "ue-u1-objektpronomen-b",
+   "art": "uebung",
+   "typ": "saetze",
+   "titel": "Ersetze den unterstrichenen Namen durch me, him, her, it, us oder them.",
+   "heft": "Schreibe den ganzen Satz ins Heft.",
+   "items": [
+    "I like *Mia*.",
+    "Ellie helps *Adam*.",
+    "We call *Luca and Berry*.",
+    "I can’t find *the ball*.",
+    "Can you help *Mia and me*?",
+    "Adam sees *Ellie*."
+   ]
+  },
+  {
+   "id": "ue-u1-objektpronomen-c",
+   "art": "uebung",
+   "typ": "wahl",
+   "titel": "Welches Wort ist richtig?",
+   "heft": "Schreibe die ganzen Sätze ins Heft: 1 Berry is in the US. Luca calls him.",
+   "items": [
+    {
+     "t": "Berry is in the US. Luca calls ___.",
+     "o": [
+      "him",
+      "her"
+     ]
+    },
+    {
+     "t": "Mia is sad. Ellie talks to ___.",
+     "o": [
+      "them",
+      "her"
+     ]
+    },
+    {
+     "t": "My friends are great. I love ___.",
+     "o": [
+      "them",
+      "us"
+     ]
+    },
+    {
+     "t": "Can you help ___?",
+     "o": [
+      "I",
+      "me"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "ue-u1-linking-words-a",
+   "art": "uebung",
+   "typ": "luecken",
+   "titel": "and, but, so or because?",
+   "heft": "Schreibe die ganzen Sätze ins Heft: 1 I was at the seaside and I swam in the sea.",
+   "items": [
+    "I was at the seaside ___ I swam in the sea.",
+    "It was rainy, ___ we stayed at home.",
+    "I like football ___ I don’t like tennis.",
+    "Mia was sad ___ she missed her home.",
+    "We went to the park ___ we played football.",
+    "I was tired, ___ I went to bed.",
+    "It was sunny ___ it was cold.",
+    "Ellie was happy ___ she saw her friends."
+   ]
+  },
+  {
+   "id": "ue-u1-linking-words-b",
+   "art": "uebung",
+   "typ": "zuordnen",
+   "titel": "Was passt zusammen?",
+   "heft": "Schreibe den ganzen Satz ins Heft.",
+   "links": [
+    "Ellie was happy",
+    "I was ill,",
+    "We wanted to swim",
+    "Luca met Adam"
+   ],
+   "rechts": [
+    "so I didn’t go to school.",
+    "because she saw Mia.",
+    "and they went to the cinema.",
+    "but the water was cold."
+   ]
+  },
+  {
+   "id": "ue-u1-linking-words-c",
+   "art": "uebung",
+   "typ": "schreiben",
+   "titel": "A message to Luca",
+   "text": "Luca fragt dich: “What did you do last weekend?” Schreibe ihm eine Nachricht.",
+   "regel": "Mindestens 5 Sätze im simple past · mindestens 2 linking words (and, but, so, because)",
+   "hilfe": [
+    "Last weekend I was … (at home / at my grandma’s / in …).",
+    "The weather was … (sunny / rainy / cold / warm).",
+    "On Saturday I … (played / watched / went / met …) and …",
+    "On Sunday I … but …",
+    "I was happy / tired because …",
+    "What did you do?  Bye, …"
+   ],
+   "anfang": "Hi Luca,",
+   "checkliste": [
+    "Ich habe mindestens 5 Sätze geschrieben.",
+    "Ich habe das simple past benutzt (played, went …).",
+    "Ich habe 2 linking words benutzt.",
+    "Satzanfang und I schreibe ich groß."
+   ]
+  },
+  {
+   "id": "ue-u1-vocabulary-a",
+   "art": "uebung",
+   "typ": "luecken",
+   "titel": "Wie heißt das auf Englisch? Nimm die Wörter aus dem Kasten.",
+   "heft": "Schreibe die Wortpaare ins Heft: 1 Wetter – weather",
+   "kasten": [
+    "adventure",
+    "aunt",
+    "dream",
+    "eye",
+    "factory",
+    "mountain",
+    "sentence",
+    "stadium",
+    "weather",
+    "window"
+   ],
+   "spalten": 2,
+   "items": [
+    "Wetter → ___",
+    "Berg → ___",
+    "Satz → ___",
+    "Stadion → ___",
+    "Fabrik → ___",
+    "Fenster → ___",
+    "Abenteuer → ___",
+    "Traum → ___",
+    "Auge → ___",
+    "Tante → ___"
+   ]
+  },
+  {
+   "id": "ue-u1-vocabulary-b",
+   "art": "uebung",
+   "typ": "luecken",
+   "titel": "Opposites: Schreibe das Gegenteil.",
+   "heft": "Schreibe die Wortpaare ins Heft: happy – sad",
+   "kasten": [
+    "sad",
+    "next week",
+    "(to) cry",
+    "rainy",
+    "together"
+   ],
+   "items": [
+    "happy ↔ ___",
+    "sunny ↔ ___",
+    "alone ↔ ___",
+    "(to) smile ↔ ___",
+    "last week ↔ ___"
+   ]
+  },
+  {
+   "id": "ue-u1-vocabulary-c",
+   "art": "uebung",
+   "typ": "sortieren",
+   "titel": "Word fields: Schreibe jedes Wort in die richtige Spalte.",
+   "heft": "Zeichne die Tabelle ins Heft.",
+   "kasten": [
+    "sunny",
+    "sad",
+    "sentence",
+    "rainy",
+    "lonely",
+    "classroom",
+    "cold",
+    "jealous",
+    "sports hall",
+    "warm",
+    "club",
+    "surprised"
+   ],
+   "spalten": [
+    "weather ☀️",
+    "school 🏫",
+    "feelings 🙂"
+   ],
+   "zeilen": 4
+  },
+  {
+   "id": "ue-u1-mediation-a",
+   "art": "uebung",
+   "typ": "mediation",
+   "titel": "Eggy Football Club",
+   "heft": "Schreibe ganze Sätze ins Heft: 1 Das Training ist jeden Dienstag.",
+   "tipp": "Nicht Wort für Wort übersetzen! Antworte in ganzen Sätzen auf Deutsch.",
+   "text": "Du bist mit deinem Bruder Jonas in Plymouth. Er möchte mitspielen, versteht aber kein Englisch. Beantworte seine Fragen auf Deutsch.",
+   "plakat": [
+    [
+     "⚽  EGGY FOOTBALL CLUB  ⚽",
+     "h"
+    ],
+    [
+     "For students in Year 7 and Year 8",
+     ""
+    ],
+    [
+     "When?  Every Tuesday, 3:30 – 4:30 pm",
+     "b"
+    ],
+    [
+     "Where?  In the sports hall",
+     "b"
+    ],
+    [
+     "What do you need?  Trainers and a T-shirt. Bring a bottle of water!",
+     "b"
+    ],
+    [
+     "Rules:  You must be on time.  You mustn’t eat in the sports hall.  You can bring a friend.",
+     ""
+    ],
+    [
+     "Questions? Ask Mr Brown in Room 12.",
+     ""
+    ]
+   ],
+   "items": [
+    "An welchem Tag ist das Training?",
+    "Um wie viel Uhr?",
+    "Wo spielen sie?",
+    "Was muss ich mitbringen?",
+    "Was ist verboten?",
+    "Darf ich einen Freund mitbringen?",
+    "Wen kann ich fragen?"
+   ]
+  },
+  {
+   "id": "kann-u1-1",
+   "art": "kann",
+   "teil": "Hören",
+   "text": "kurze Hörtexte über Schule und Clubs verstehen."
+  },
+  {
+   "id": "kann-u1-2",
+   "art": "kann",
+   "teil": "Schreiben",
+   "text": "eine Nachricht über mein Wochenende schreiben (simple past, linking words)."
+  },
+  {
+   "id": "kann-u1-3",
+   "art": "kann",
+   "teil": "Grammatik",
+   "text": "das simple past bilden: played, went, saw …"
+  },
+  {
+   "id": "kann-u1-4",
+   "art": "kann",
+   "teil": "Grammatik",
+   "text": "verneinen mit didn’t und fragen mit Did …?"
+  },
+  {
+   "id": "kann-u1-5",
+   "art": "kann",
+   "teil": "Grammatik",
+   "text": "was und were richtig benutzen."
+  },
+  {
+   "id": "kann-u1-6",
+   "art": "kann",
+   "teil": "Grammatik",
+   "text": "me, you, him, her, it, us, them benutzen."
+  },
+  {
+   "id": "kann-u1-7",
+   "art": "kann",
+   "teil": "Grammatik",
+   "text": "Sätze mit and, but, so, because verbinden."
+  },
+  {
+   "id": "kann-u1-8",
+   "art": "kann",
+   "teil": "Vokabeln",
+   "text": "die Wörter aus Unit 1."
+  },
+  {
+   "id": "kann-u1-9",
+   "art": "kann",
+   "teil": "Mediation",
+   "text": "englische Infos (Plakat, Regeln) auf Deutsch weitergeben."
+  },
+  {
+   "id": "he-u2-did-fragen",
+   "art": "hefteintrag",
+   "titel": "Fragen im simple past",
+   "zeilen": [
+    [
+     [
+      "Fragen im simple past bilde ich mit ",
+      ""
+     ],
+     [
+      "did",
+      "g"
+     ],
+     [
+      " + Grundform.",
+      ""
+     ]
+    ],
+    [
+     [
+      "Fragewort",
+      "g"
+     ],
+     [
+      " + did + Person + Grundform:",
+      ""
+     ]
+    ],
+    [
+     [
+      "Where did you go?  –  I ",
+      ""
+     ],
+     [
+      "went",
+      "b"
+     ],
+     [
+      " to the park.",
+      ""
+     ]
+    ],
+    [
+     [
+      "What did she eat?  –  She ",
+      ""
+     ],
+     [
+      "ate",
+      "b"
+     ],
+     [
+      " a pizza.",
+      ""
+     ]
+    ],
+    [
+     [
+      "Ja/Nein-Fragen",
+      "g"
+     ],
+     [
+      " beginnen mit ",
+      ""
+     ],
+     [
+      "Did",
+      "g"
+     ],
+     [
+      ":",
+      ""
+     ]
+    ],
+    [
+     [
+      "Did you watch the fireworks?  –  ",
+      ""
+     ],
+     [
+      "Yes, I did.",
+      "b"
+     ],
+     [
+      "  /  ",
+      ""
+     ],
+     [
+      "No, I didn’t.",
+      "b"
+     ]
+    ]
+   ],
+   "merke": "Frage: did + Grundform – Antwort: Vergangenheitsform!"
+  },
+  {
+   "id": "he-u2-plural",
+   "art": "hefteintrag",
+   "titel": "Plural – die Mehrzahl",
+   "zeilen": [
+    [
+     [
+      "Plural",
+      "g"
+     ],
+     [
+      " meistens mit ",
+      ""
+     ],
+     [
+      "-s",
+      "g"
+     ],
+     [
+      ":  one friend → two friends",
+      ""
+     ]
+    ],
+    [
+     [
+      "nach s, sh, ch, x, o: ",
+      ""
+     ],
+     [
+      "-es",
+      "g"
+     ],
+     [
+      ":  box → boxes,  potato → potatoes",
+      ""
+     ]
+    ],
+    [
+     [
+      "Konsonant + y: ",
+      ""
+     ],
+     [
+      "y → ies",
+      "g"
+     ],
+     [
+      ":  family → families,  party → parties",
+      ""
+     ]
+    ],
+    [
+     [
+      "Besondere Pluralformen",
+      "g"
+     ],
+     [
+      " muss ich lernen:",
+      ""
+     ]
+    ],
+    [
+     [
+      "child → ",
+      ""
+     ],
+     [
+      "children",
+      "b"
+     ],
+     [
+      "     man → ",
+      ""
+     ],
+     [
+      "men",
+      "b"
+     ],
+     [
+      "     woman → ",
+      ""
+     ],
+     [
+      "women",
+      "b"
+     ]
+    ],
+    [
+     [
+      "person → ",
+      ""
+     ],
+     [
+      "people",
+      "b"
+     ],
+     [
+      "     foot → ",
+      ""
+     ],
+     [
+      "feet",
+      "b"
+     ],
+     [
+      "     mouse → ",
+      ""
+     ],
+     [
+      "mice",
+      "b"
+     ]
+    ]
+   ],
+   "merke": "Meistens -s, manchmal ein eigener Plural!"
+  },
+  {
+   "id": "ue-u2-story-a",
+   "art": "uebung",
+   "typ": "wahl",
+   "titel": "Right or wrong?",
+   "heft": "Schreibe die ganzen Sätze ab und right oder wrong dahinter: 1 Ellie brings a real dog. – wrong",
+   "items": [
+    {
+     "t": "Ellie brings a real dog.",
+     "o": [
+      "right",
+      "wrong"
+     ]
+    },
+    {
+     "t": "The play needs two helpers.",
+     "o": [
+      "right",
+      "wrong"
+     ]
+    },
+    {
+     "t": "The helpers say “WHIIIZZ! BANG!” when they hear the word “fireworks”.",
+     "o": [
+      "right",
+      "wrong"
+     ]
+    },
+    {
+     "t": "The dog likes fireworks.",
+     "o": [
+      "right",
+      "wrong"
+     ]
+    },
+    {
+     "t": "The dog runs away.",
+     "o": [
+      "right",
+      "wrong"
+     ]
+    },
+    {
+     "t": "Mia phones the dogs’ home.",
+     "o": [
+      "right",
+      "wrong"
+     ]
+    },
+    {
+     "t": "The children collect money for a new school bag.",
+     "o": [
+      "right",
+      "wrong"
+     ]
+    },
+    {
+     "t": "At the end they say: “Remember the animals too!”",
+     "o": [
+      "right",
+      "wrong"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "ue-u2-story-b",
+   "art": "uebung",
+   "typ": "zuordnen",
+   "titel": "Story words: Welches deutsche Wort passt?",
+   "heft": "Schreibe die Wortpaare ins Heft: 1 mask – Maske",
+   "links": [
+    "mask",
+    "toy",
+    "helper",
+    "(to) collect",
+    "(to) be scared (of)",
+    "firework"
+   ],
+   "rechts": [
+    "sammeln",
+    "Angst haben (vor)",
+    "Maske",
+    "Feuerwerkskörper",
+    "Spielzeug",
+    "Helfer/in"
+   ]
+  },
+  {
+   "id": "ue-u2-story-c",
+   "art": "uebung",
+   "typ": "wahl",
+   "titel": "Welches Wort ist richtig?",
+   "heft": "Schreibe die ganzen Sätze ins Heft: 1 Ellie brings a toy dog.",
+   "items": [
+    {
+     "t": "Ellie brings a ___ dog.",
+     "o": [
+      "toy",
+      "real"
+     ]
+    },
+    {
+     "t": "Luca comes in with a ___.",
+     "o": [
+      "mask",
+      "cake"
+     ]
+    },
+    {
+     "t": "The poor dog is ___ of fireworks.",
+     "o": [
+      "happy",
+      "scared"
+     ]
+    },
+    {
+     "t": "Let’s ___ some money for the dogs’ home.",
+     "o": [
+      "collect",
+      "eat"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "ue-u2-story-c2",
+   "art": "uebung",
+   "typ": "luecken",
+   "titel": "Fill in. Nimm die Wörter aus dem Kasten.",
+   "heft": "Schreibe die ganzen Sätze ins Heft: 1 Ellie brings a toy dog.",
+   "kasten": [
+    "collect",
+    "hat",
+    "helpers",
+    "mask",
+    "scared",
+    "toy"
+   ],
+   "items": [
+    "Ellie brings a ___ dog.",
+    "Luca comes in with a ___.",
+    "“Wait a minute. We need two ___.”",
+    "The poor dog is ___ of fireworks.",
+    "Let’s ___ some money for the dogs’ home.",
+    "Please put a pound in the old guy’s ___."
+   ]
+  },
+  {
+   "id": "ue-u2-did-fragewort-a",
+   "art": "uebung",
+   "typ": "wahl",
+   "titel": "Welches Fragewort passt?",
+   "heft": "Schreibe die ganzen Fragen und Antworten ins Heft: 1 Where did you go on Saturday? – I went to the park.",
+   "items": [
+    {
+     "t": "___ did you go on Saturday? – I went to the park.",
+     "o": [
+      "What",
+      "Where",
+      "When",
+      "Who",
+      "How"
+     ]
+    },
+    {
+     "t": "___ did you eat? – I ate a pizza.",
+     "o": [
+      "What",
+      "Where",
+      "When",
+      "Who",
+      "How"
+     ]
+    },
+    {
+     "t": "___ did the party start? – At 7 o’clock.",
+     "o": [
+      "What",
+      "Where",
+      "When",
+      "Who",
+      "How"
+     ]
+    },
+    {
+     "t": "___ did you meet in town? – I met Mia.",
+     "o": [
+      "What",
+      "Where",
+      "When",
+      "Who",
+      "How"
+     ]
+    },
+    {
+     "t": "___ did you go to town? – By bus.",
+     "o": [
+      "What",
+      "Where",
+      "When",
+      "Who",
+      "How"
+     ]
+    },
+    {
+     "t": "___ did you buy? – A new T-shirt.",
+     "o": [
+      "What",
+      "Where",
+      "When",
+      "Who",
+      "How"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "ue-u2-did-fragewort-b",
+   "art": "uebung",
+   "typ": "luecken",
+   "titel": "Setze did ein.",
+   "heft": "Schreibe die ganzen Fragen ins Heft: 1 When did the party start?",
+   "tipp": "Nach dem Fragewort kommt did.",
+   "items": [
+    "When ___ the party start?",
+    "What ___ you eat?",
+    "Where ___ they watch the fireworks?",
+    "Who ___ you meet?"
+   ]
+  },
+  {
+   "id": "ue-u2-did-fragewort-b2",
+   "art": "uebung",
+   "typ": "saetze",
+   "titel": "Baue die Frage: Fragewort + did + Person + Grundform.",
+   "heft": "Schreibe die ganzen Fragen ins Heft.",
+   "beispiel": "Where / you / go? → Where did you go?",
+   "items": [
+    "What / you / eat / at the party?",
+    "When / the fireworks / start?",
+    "Where / they / watch / the fireworks?",
+    "Who / Luca / invite?",
+    "How / you / go / to Luca’s house?"
+   ]
+  },
+  {
+   "id": "ue-u2-did-fragewort-c",
+   "art": "uebung",
+   "typ": "frei",
+   "titel": "Profi: Fragen an Mia",
+   "heft": "Schreibe ins Heft.",
+   "beispiel": "Where did you sleep? – Who did you meet?",
+   "text": "Mia war am Wochenende in London. Schreibe 4 Fragen an Mia mit verschiedenen Fragewörtern (What, Where, When, Who, How)."
+  },
+  {
+   "id": "ue-u2-did-kurz-a",
+   "art": "uebung",
+   "typ": "wahl",
+   "titel": "Welche Kurzantwort passt?",
+   "heft": "Schreibe die ganzen Sätze ins Heft: 1 Did Mia walk with a lantern? – Yes, she did.",
+   "items": [
+    {
+     "t": "Did Mia walk with a lantern? – Yes, ___.",
+     "o": [
+      "she did",
+      "he did"
+     ]
+    },
+    {
+     "t": "Did Luca and Adam watch the fireworks? – Yes, ___.",
+     "o": [
+      "they did",
+      "we did"
+     ]
+    },
+    {
+     "t": "Did you have a party? – No, ___.",
+     "o": [
+      "I didn’t",
+      "you didn’t"
+     ]
+    },
+    {
+     "t": "Did Ellie wear a mask? – No, ___.",
+     "o": [
+      "she didn’t",
+      "he didn’t"
+     ]
+    },
+    {
+     "t": "Did Adam phone the dogs’ home? – No, ___.",
+     "o": [
+      "he didn’t",
+      "she didn’t"
+     ]
+    },
+    {
+     "t": "Did the children collect money? – Yes, ___.",
+     "o": [
+      "they did",
+      "it did"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "ue-u2-did-kurz-b",
+   "art": "uebung",
+   "typ": "luecken",
+   "titel": "Setze Did und die Grundform ein.",
+   "heft": "Schreibe die ganzen Fragen ins Heft: 1 Did you watch the fireworks?",
+   "items": [
+    "___ you ___ the fireworks? (watch)",
+    "___ Ellie ___ the dog? (bring)",
+    "___ they ___ sausages? (eat)",
+    "___ Mia ___ songs? (sing)"
+   ]
+  },
+  {
+   "id": "ue-u2-did-kurz-b2",
+   "art": "uebung",
+   "typ": "saetze",
+   "titel": "Schreibe die Did-Frage.",
+   "heft": "Schreibe die ganzen Fragen ins Heft.",
+   "beispiel": "you / watch the fireworks? → Did you watch the fireworks?",
+   "items": [
+    "you / have a bonfire?",
+    "Ellie / bring the toy dog?",
+    "they / collect money?",
+    "Mia / sing songs?"
+   ]
+  },
+  {
+   "id": "ue-u2-did-kurz-c",
+   "art": "uebung",
+   "typ": "frei",
+   "titel": "Profi: Und du?",
+   "heft": "Schreibe die Fragen und deine Antworten ins Heft.",
+   "beispiel": "Did you watch fireworks at New Year? – Yes, I did. I watched them with my family.",
+   "text": "Antworte mit Kurzantwort und einem Satz mehr: 1 Did you watch fireworks at New Year? 2 Did you go to town last weekend? 3 Did you play football yesterday?"
+  },
+  {
+   "id": "ue-u2-plural-a",
+   "art": "uebung",
+   "typ": "luecken",
+   "titel": "Plural mit -s, -es oder -ies",
+   "heft": "Schreibe beide Formen ins Heft: friend – friends",
+   "spalten": 2,
+   "items": [
+    "friend → ___",
+    "dog → ___",
+    "box → ___",
+    "bus → ___",
+    "potato → ___",
+    "sandwich → ___",
+    "family → ___",
+    "party → ___"
+   ]
+  },
+  {
+   "id": "ue-u2-plural-b",
+   "art": "uebung",
+   "typ": "luecken",
+   "titel": "Besondere Pluralformen. Nimm die Wörter aus dem Kasten.",
+   "heft": "Schreibe beide Formen ins Heft: child – children",
+   "kasten": [
+    "children",
+    "feet",
+    "men",
+    "mice",
+    "people",
+    "women"
+   ],
+   "spalten": 2,
+   "items": [
+    "child → ___",
+    "man → ___",
+    "woman → ___",
+    "person → ___",
+    "foot → ___",
+    "mouse → ___"
+   ]
+  },
+  {
+   "id": "ue-u2-plural-c",
+   "art": "uebung",
+   "typ": "saetze",
+   "titel": "Schreibe den Satz im Plural.",
+   "heft": "Schreibe die ganzen Sätze ins Heft.",
+   "beispiel": "There is one dog. (two) → There are two dogs.",
+   "items": [
+    "There is one bonfire. (two)",
+    "I have one sister. (three)",
+    "There is one woman in the park. (two)",
+    "There is one child at the party. (five)"
+   ]
+  },
+  {
+   "id": "ue-u2-plural-d",
+   "art": "uebung",
+   "typ": "frei",
+   "titel": "Profi: Bonfire night",
+   "heft": "Schreibe ins Heft.",
+   "beispiel": "The children watched the fireworks.",
+   "text": "Schreibe 4 Sätze über eine Guy-Fawkes-Party. Benutze in jedem Satz einen Plural (sausages, fireworks, children, people …)."
+  },
+  {
+   "id": "ue-u2-can-mustnt-a",
+   "art": "uebung",
+   "typ": "wahl",
+   "titel": "School rules: can or mustn’t?",
+   "heft": "Schreibe die ganzen Sätze ins Heft: 1 You mustn’t run in the corridor.",
+   "items": [
+    {
+     "t": "You ___ run in the corridor.",
+     "o": [
+      "can",
+      "mustn’t"
+     ]
+    },
+    {
+     "t": "You ___ eat your sandwich at lunchtime.",
+     "o": [
+      "can",
+      "mustn’t"
+     ]
+    },
+    {
+     "t": "You ___ use your phone in the lesson.",
+     "o": [
+      "can",
+      "mustn’t"
+     ]
+    },
+    {
+     "t": "You ___ play football in the playground.",
+     "o": [
+      "can",
+      "mustn’t"
+     ]
+    },
+    {
+     "t": "You ___ be late for school.",
+     "o": [
+      "can",
+      "mustn’t"
+     ]
+    },
+    {
+     "t": "You ___ ask the teacher for help.",
+     "o": [
+      "can",
+      "mustn’t"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "ue-u2-can-mustnt-b",
+   "art": "uebung",
+   "typ": "zuordnen",
+   "titel": "Was bedeuten die Schilder?",
+   "heft": "Schreibe die Paare ins Heft: 1 No entry – Kein Zutritt",
+   "links": [
+    "No entry",
+    "Keep dogs on leads",
+    "Keep off the grass",
+    "No parking",
+    "No ball games",
+    "No cycling"
+   ],
+   "rechts": [
+    "Hunde an die Leine",
+    "Kein Zutritt",
+    "Ballspiele verboten",
+    "Rasen nicht betreten",
+    "Radfahren verboten",
+    "Parken verboten"
+   ]
+  },
+  {
+   "id": "ue-u2-can-mustnt-c",
+   "art": "uebung",
+   "typ": "frei",
+   "titel": "Profi: Our classroom rules",
+   "heft": "Schreibe ins Heft.",
+   "beispiel": "You can ask a partner for help. You mustn’t shout.",
+   "text": "Schreibe 4 Regeln für unser Klassenzimmer: 2 mit can und 2 mit mustn’t."
+  },
+  {
+   "id": "ue-u2-vocabulary-a",
+   "art": "uebung",
+   "typ": "luecken",
+   "titel": "Wie heißt das auf Englisch? Nimm die Wörter aus dem Kasten.",
+   "heft": "Schreibe die Wortpaare ins Heft: 1 Nachbar – neighbour",
+   "kasten": [
+    "biscuit",
+    "bread",
+    "bus stop",
+    "firework",
+    "hairdresser",
+    "lantern",
+    "neighbour",
+    "potato",
+    "supermarket",
+    "traffic lights"
+   ],
+   "spalten": 2,
+   "items": [
+    "Nachbar → ___",
+    "Ampel → ___",
+    "Bushaltestelle → ___",
+    "Friseur → ___",
+    "Supermarkt → ___",
+    "Feuerwerkskörper → ___",
+    "Laterne → ___",
+    "Keks → ___",
+    "Kartoffel → ___",
+    "Brot → ___"
+   ]
+  },
+  {
+   "id": "ue-u2-vocabulary-b",
+   "art": "uebung",
+   "typ": "sortieren",
+   "titel": "Word fields: Schreibe jedes Wort in die richtige Spalte.",
+   "heft": "Zeichne die Tabelle ins Heft.",
+   "kasten": [
+    "bread",
+    "bus stop",
+    "bonfire",
+    "lemonade",
+    "supermarket",
+    "fireworks",
+    "biscuits",
+    "traffic lights",
+    "mask"
+   ],
+   "spalten": [
+    "food & drinks 🍞",
+    "in town 🏙️",
+    "Guy Fawkes night 🎆"
+   ]
+  },
+  {
+   "id": "ue-u2-vocabulary-b2",
+   "art": "uebung",
+   "typ": "sortieren",
+   "titel": "Word fields: Schreibe jedes Wort in die richtige Spalte.",
+   "heft": "Zeichne die Tabelle ins Heft.",
+   "kasten": [
+    "bread",
+    "bus stop",
+    "bonfire",
+    "lemonade",
+    "supermarket",
+    "fireworks",
+    "biscuits",
+    "traffic lights",
+    "mask",
+    "hot chocolate",
+    "hairdresser",
+    "guy"
+   ],
+   "spalten": [
+    "food & drinks 🍞",
+    "in town 🏙️",
+    "Guy Fawkes night 🎆"
+   ]
+  },
+  {
+   "id": "ue-u2-vocabulary-c",
+   "art": "uebung",
+   "typ": "wahl",
+   "titel": "some or any?",
+   "heft": "Schreibe die ganzen Sätze ins Heft: 1 We need some sausages for the party.",
+   "tipp": "some: + Satz und Angebote (Would you like …?) · any: Fragen und verneinte Sätze",
+   "items": [
+    {
+     "t": "We need ___ sausages for the party.",
+     "o": [
+      "some",
+      "any"
+     ]
+    },
+    {
+     "t": "There aren’t ___ biscuits.",
+     "o": [
+      "some",
+      "any"
+     ]
+    },
+    {
+     "t": "Have you got ___ lemonade?",
+     "o": [
+      "some",
+      "any"
+     ]
+    },
+    {
+     "t": "I’d like ___ hot chocolate, please.",
+     "o": [
+      "some",
+      "any"
+     ]
+    },
+    {
+     "t": "We haven’t got ___ bread.",
+     "o": [
+      "some",
+      "any"
+     ]
+    },
+    {
+     "t": "Would you like ___ potatoes?",
+     "o": [
+      "some",
+      "any"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "ue-u2-brief-a",
+   "art": "uebung",
+   "typ": "schreiben",
+   "titel": "A letter to Jenny",
+   "text": "Schreibe einen kurzen Brief an deine englische Freundin Jenny. Erzähle ihr zwei Dinge über dein letztes Wochenende. Stelle ihr zwei Fragen.",
+   "regel": "Mindestens 30 Wörter · benutze die Satzanfänge",
+   "hilfe": [
+    "I had a great day on Saturday / Sunday.",
+    "I went to … and I played …",
+    "Then we went to …",
+    "How was your weekend?",
+    "Did you go to town?",
+    "Best wishes, …"
+   ],
+   "anfang": "Dear Jenny,",
+   "checkliste": [
+    "Stehen Adresse und Datum rechts oben?",
+    "Beginnt der Brief mit „Dear …“ oder „Hi …“?",
+    "Erzähle ich zwei Dinge über das letzte Wochenende?",
+    "Stelle ich zwei Fragen über das Wochenende?",
+    "Endet der Brief mit „Love“, „Lots of love“ oder „Best wishes“?",
+    "Hat mein Brief genug Wörter?"
+   ]
+  },
+  {
+   "id": "ue-u2-brief-a2",
+   "art": "uebung",
+   "typ": "schreiben",
+   "titel": "A letter to Jenny",
+   "text": "Schreibe einen kurzen Brief an deine englische Freundin Jenny. Erzähle ihr zwei Dinge über dein letztes Wochenende. Stelle ihr zwei Fragen.",
+   "regel": "Mindestens 50 Wörter · simple past",
+   "hilfe": [
+    "I had a great day on Saturday / Sunday.",
+    "I went to … and I played …",
+    "Then we went to …",
+    "How was your weekend?",
+    "Did you go to town?",
+    "Best wishes, …"
+   ],
+   "anfang": "Dear Jenny,",
+   "checkliste": [
+    "Stehen Adresse und Datum rechts oben?",
+    "Beginnt der Brief mit „Dear …“ oder „Hi …“?",
+    "Erzähle ich zwei Dinge über das letzte Wochenende?",
+    "Stelle ich zwei Fragen über das Wochenende?",
+    "Endet der Brief mit „Love“, „Lots of love“ oder „Best wishes“?",
+    "Hat mein Brief genug Wörter?"
+   ]
+  },
+  {
+   "id": "ue-u2-brief-a3",
+   "art": "uebung",
+   "typ": "schreiben",
+   "titel": "A letter to Jenny",
+   "text": "Schreibe einen Brief an deine englische Freundin Jenny. Erzähle ihr drei Dinge über dein letztes Wochenende und wie es dir gefallen hat. Stelle ihr zwei Fragen.",
+   "regel": "Mindestens 70 Wörter · simple past · and, but, so, because",
+   "anfang": "Dear Jenny,",
+   "checkliste": [
+    "Stehen Adresse und Datum rechts oben?",
+    "Beginnt der Brief mit „Dear …“ oder „Hi …“?",
+    "Erzähle ich zwei Dinge über das letzte Wochenende?",
+    "Stelle ich zwei Fragen über das Wochenende?",
+    "Endet der Brief mit „Love“, „Lots of love“ oder „Best wishes“?",
+    "Hat mein Brief genug Wörter?"
+   ]
+  },
+  {
+   "id": "ue-u2-weg-a",
+   "art": "uebung",
+   "typ": "zuordnen",
+   "titel": "Den Weg beschreiben: Was passt zusammen?",
+   "heft": "Schreibe die Paare ins Heft: 1 Turn left. – Biege links ab.",
+   "links": [
+    "Turn left.",
+    "Turn right.",
+    "Go along the street.",
+    "Go past the bank.",
+    "Cross the road.",
+    "It’s on the right."
+   ],
+   "rechts": [
+    "Geh die Straße entlang.",
+    "Biege links ab.",
+    "Es ist auf der rechten Seite.",
+    "Überquere die Straße.",
+    "Biege rechts ab.",
+    "Geh an der Bank vorbei."
+   ]
+  },
+  {
+   "id": "ue-u2-fest-a",
+   "art": "uebung",
+   "typ": "schreiben",
+   "titel": "My festival",
+   "text": "Warst du letztes Jahr auf einem Fest oder einer Party? Schreibe darüber.",
+   "regel": "Mindestens 6 Sätze im simple past",
+   "hilfe": [
+    "Last year I went to … with …",
+    "It was … (sunny / cold / great)",
+    "We ate … and we drank …",
+    "There was / There were …",
+    "I liked it because …"
+   ],
+   "anfang": "Last year I went to …",
+   "checkliste": [
+    "Ich habe mindestens 6 Sätze geschrieben.",
+    "Ich habe das simple past benutzt (went, ate, saw …).",
+    "Ich habe gesagt, warum es mir gefallen hat (because …).",
+    "Satzanfang und I schreibe ich groß."
+   ]
+  },
+  {
+   "id": "kann-u2-1",
+   "art": "kann",
+   "teil": "Lesen",
+   "text": "ein Theaterstück und kurze Texte verstehen."
+  },
+  {
+   "id": "kann-u2-2",
+   "art": "kann",
+   "teil": "Grammatik",
+   "text": "Fragen mit Fragewort und did stellen (Where did you go?)."
+  },
+  {
+   "id": "kann-u2-3",
+   "art": "kann",
+   "teil": "Grammatik",
+   "text": "Did-Fragen mit Kurzantwort beantworten (Yes, I did. / No, I didn’t.)."
+  },
+  {
+   "id": "kann-u2-4",
+   "art": "kann",
+   "teil": "Grammatik",
+   "text": "den Plural bilden: friends, potatoes, children …"
+  },
+  {
+   "id": "kann-u2-5",
+   "art": "kann",
+   "teil": "Grammatik",
+   "text": "Regeln mit can und mustn’t verstehen und schreiben."
+  },
+  {
+   "id": "kann-u2-6",
+   "art": "kann",
+   "teil": "Grammatik",
+   "text": "some und any richtig benutzen."
+  },
+  {
+   "id": "kann-u2-7",
+   "art": "kann",
+   "teil": "Vokabeln",
+   "text": "die Wörter aus Unit 2."
+  },
+  {
+   "id": "kann-u2-8",
+   "art": "kann",
+   "teil": "Schreiben",
+   "text": "einen Brief über mein Wochenende schreiben."
+  },
+  {
+   "id": "kann-u2-9",
+   "art": "kann",
+   "teil": "Sprechen",
+   "text": "nach dem Weg fragen und den Weg beschreiben."
+  },
+  {
+   "id": "kann-u2-10",
+   "art": "kann",
+   "teil": "Hören",
+   "text": "kurze Hörtexte verstehen."
+  }
+ ]
+}

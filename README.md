@@ -623,6 +623,45 @@ Etappe 3 (v91): 3D-Weg als Prototyp mit dem Ort von Unit 1. Etappe 4 (v93): alle
 - **pruefen.py (Regel 22):** jede Station hat gültige `id`/`art`, `thema` und `start` stehen im Katalog (Baukasten-Stufen auch in der
   Inhaltsdatei), jeder Vorgänger existiert, keine Schleife, das Finale braucht alle Stationen seiner Unit.
 
+### Lernweg im English Journey (ab v101)
+
+Der English Journey wird der einzige Weg durch Highlight 6: Buchseiten, Hefteinträge, Übungen fürs Übungsheft und Apps hängen dort
+zusammen. Die Lernweg-Seite (`apps/typen/lernweg.html`) geht darin auf und wird in Etappe 3 gelöscht. Plan: Claude-Doc
+„Aktionsplan: Lernweg im English Journey“. **Etappe 1 (v101): Format und Gerüst** – nur Daten und Prüfung, die Kinder sehen noch nichts davon.
+
+- **daten/journey6.json** (erweitert): je Unit `abschnitte` in Heft-Reihenfolge, gegliedert wie das Buch. Ein Abschnitt hat `id`
+  (`u1-a-…`), `titel`, optional `kurz`, `ico`, `buch: { von, bis }` (Buchseiten), `kompetenz`, `niveaus` (★/★★/★★★), `wahl`, `schluss`,
+  `merk` (Merkzeilen), `platz` (Station, an der Tafel und Werkbank im 3D-Ort stehen; sonst die erste App) und `schritte`
+  (die Stationen des Abschnitts). Schritt: `id`, `art` und je nach Art:
+  - `hefteintrag` – `baustein` (Hefteintrag aus den Bausteinen), optional `wiederholen: true` („noch einmal lesen“)
+  - `uebung` – Buchaufgabe mit `buch: { seite, bis?, uebung }` und `text` (nur der Arbeitsauftrag; „Buch S. 34 Ü 1b: …“ entsteht aus den
+    Daten) **oder** eigene Aufgabe mit `baustein`
+  - `app` – `station` (eine Station der Unit aus `stationen`, Wahrzeichen im 3D-Ort; jede Station höchstens in einem Abschnitt) **oder**
+    `thema` (Katalog-ID) mit `ziel: { runden, prozent }` und `text` (zusätzliche Übung wie im alten Lernweg)
+  - `lesen`, `vokabeln` (📘 Vokabelheft), `partner`, `hoeren`, `extra` – `text`, optional `buch`, bei `extra` optional `thema`
+  - alle: optional `niveau: [1, 2]` (nur auf diesen Niveaus)
+  Je Unit außerdem `kann` (Kann-Sätze fürs Finale: `{ baustein, abschnitt }`), optional `wahlAnzahl` und `zieleVorher` wie im alten Lernweg.
+  Die `stationen` bleiben unverändert – Meisterschaft, Freigaben und 3D lesen weiter nur sie.
+- **daten/journey/bausteine-en6.json:** `weg` (die journey-Datei) und `bausteine` mit fester `id`: `hefteintrag` (`titel`, `zeilen`
+  `[[text, stil], …]` mit stil `g` = grün, `b` = fett, `merke`; `nurImHeft: true` = steht schon in den Heften, Inhalt fehlt noch),
+  `uebung` (`typ` wie im alten Lernweg: `wahl` · `zuordnen` · `luecken` · `saetze` · `sortieren` · `schreiben` · `mediation` · `frei`, die
+  Felder der Aufgabe, `loesung` zum Aufklappen) und `kann` (`teil`, `text`).
+- **IDs:** Abschnitt-, Schritt- und Baustein-IDs sind zusammen eindeutig und werden nie umbenannt – Erledigtes kommt ab Etappe 2 als
+  Lernstand `jw:<ID>` in den Pass (zählt nie für XP, Sterne, „Meine Themen“ oder Dorf). `alt` (an Unit, Abschnitt und Schritt) merkt sich
+  Lernweg, alte Stationsnummer und alten Schritt-Schlüssel für die einmalige Übernahme der Häkchen aus `lernwelt-lernweg` (Etappe 3).
+- **config.json → `journey`** (vom Admin gepflegt, im Worker schon erlaubt – erst mit Etappe 3 in Benutzung):
+  `{ schuljahr: "2026/27", wege: { journey6: { bis: { <wer>: <Abschnitt-ID> }, he: { <Hefteintrag-ID>: Nr }, sperren: { <wer>: true } } } }`.
+  `bis` = Freigabe bis einschließlich dieses Abschnitts je Gruppe/Klasse, `he` = HE-Nummern (fortlaufend durchs Schuljahr, bei der Freigabe
+  vergeben, nie doppelt), `sperren` = Sperr-Schalter je Gruppe (vorbereitet, noch ohne Wirkung). Ein Schuljahreswechsel setzt nur
+  diesen Block neu. In den Heften stehen schon HE 1 `he-u1-simple-past`, HE 2 `he-u1-objektpronomen`, HE 3 `he-u1-linking-words`,
+  HE 4 `he-u2-did-fragen`, HE 5 `he-u2-plural`.
+- **Umwandlung Unit 1–2:** `python3 werkzeuge/lernweg-umwandeln.py` macht aus `daten/lernwege/en.6.lernweg-u1.json` und `-u2.json` die
+  Abschnitte und Bausteine (Zuordnung alte Station → Abschnitt → Stationen oben im Skript). Läuft es erneut, bleiben von Hand ergänzte
+  Lösungen erhalten. Die „So arbeitest du“-Regeln und Kontroll-Codes des Papier-Laufzettels entfallen.
+- **pruefen.py (Regel 23):** Bausteine vorhanden und von der richtigen Art, Stationen und Themen vorhanden, Buchverweise im Format,
+  IDs eindeutig; `config.journey`: HE-Nummern je Weg nicht doppelt (rot; dieselbe Regel prüft der Admin vor dem Veröffentlichen).
+  Gelb: Abschnitte ohne Buchseiten, Übungen ohne Lösung, Kann-Sätze ohne Abschnitt, Hefteinträge nur im Heft, Stationen ohne Abschnitt.
+
 ## Live-Abfrage im Unterricht (v84)
 
 Kurzes Klassen-Quiz für 2–10 Minuten (Einstieg, Zwischensicherung, Exit-Ticket). Plan: Claude-Doc „Aktionsplan: Live-Abfrage im Unterricht“.

@@ -59,6 +59,11 @@
 #   22. English Journey (daten/journey*.json): Units und Stationen mit eindeutiger id und gültiger art, jedes thema/start/mit
 #       steht im Katalog (start ist thema selbst oder eine Stufe darunter; Stufen eines Baukasten-Themas stehen in seiner
 #       Inhaltsdatei), jeder Vorgänger in braucht existiert, keine Schleife; das Finale braucht alle Stationen seiner Unit.
+#   23. English Journey – Abschnitte (Aktionsplan „Lernweg im English Journey“): units[].abschnitte[].schritte und
+#       daten/journey/bausteine-*.json passen zusammen (Bausteine vorhanden und von der richtigen Art, Stationen der Unit
+#       höchstens in einem Abschnitt, Themen im Katalog, Buchverweise {seite, bis?, uebung?}, Abschnitt-, Schritt- und
+#       Baustein-IDs zusammen eindeutig); config.journey: HE-Nummern je Weg nicht doppelt. Gelb: Abschnitte ohne Buchseiten,
+#       Übungen ohne Lösung, Kann-Sätze ohne Abschnitt, Hefteinträge nur im Heft, Stationen ohne Abschnitt.
 # ═══════════════════════════════════════════════════════
 import gzip, json, math, os, re, subprocess, sys
 from pathlib import Path
@@ -740,6 +745,139 @@ if katalog is not None:
         for sid in stationen:
             if schleife(sid, []): break
         I(f'{j_r}: {len(unit_ids)} Units, {len(stationen)} Stationen')
+
+# ── 23. English Journey: Abschnitte und Bausteine (Aktionsplan „Lernweg im English Journey“) ──
+#  journey*.json → units[].abschnitte[].schritte verweisen auf Stationen der Unit, Katalog-Themen und Bausteine aus
+#  daten/journey/bausteine-*.json (weg = die journey-Datei). Erledigtes steht als Lernstand jw:<ID> im Pass –
+#  darum sind Abschnitt-, Schritt- und Baustein-IDs zusammen eindeutig und werden nie umbenannt.
+JW_SCHRITTE = ('hefteintrag', 'uebung', 'app', 'lesen', 'vokabeln', 'partner', 'hoeren', 'extra')
+JW_UEBUNGEN = ('wahl', 'zuordnen', 'luecken', 'saetze', 'sortieren', 'schreiben', 'mediation', 'frei')
+JW_ID = re.compile(r'[a-z0-9]+(?:-[a-z0-9]+)*')
+jw_wege = {}                                     # journey-Datei → { abschnitte: {id: unit}, he: Baustein-IDs der Hefteinträge }
+jw_bausteine = {}                                # journey-Datei → { Baustein-ID: Baustein }
+for jw_p in sorted(ROOT.glob('daten/journey/bausteine-*.json')):
+    jw_r = rel(jw_p)
+    try: jb = json.loads(jw_p.read_text(encoding='utf-8'))
+    except Exception: continue
+    weg = jb.get('weg')
+    if not isinstance(weg, str) or not Path(weg).is_file(): F(f'{jw_r}: weg {weg} – journey-Datei fehlt'); continue
+    if weg in jw_bausteine: F(f'{jw_r}: für {weg} gibt es schon eine Baustein-Datei'); continue
+    alle = jw_bausteine[weg] = {}
+    for b in jb.get('bausteine') or []:
+        bid = b.get('id') if isinstance(b, dict) else None
+        if not bid or not JW_ID.fullmatch(str(bid)): F(f'{jw_r}: Baustein ohne gültige id ({bid})'); continue
+        if bid in alle: F(f'{jw_r}: Baustein {bid} doppelt'); continue
+        alle[bid] = b
+        art = b.get('art')
+        if art == 'hefteintrag':
+            if not str(b.get('titel') or '').strip(): F(f'{jw_r}: Hefteintrag {bid} ohne titel')
+            z = b.get('zeilen')
+            if not isinstance(z, list) or not all(isinstance(zl, list) and all(isinstance(t, list) and len(t) == 2 and isinstance(t[0], str)
+                                                                                and t[1] in ('', 'g', 'b') for t in zl) for zl in z):
+                F(f'{jw_r}: Hefteintrag {bid} – zeilen müssen [[text, stil], …] sein (stil "", "g" oder "b")')
+            elif not z: H(f'{jw_r}: Hefteintrag {bid} steht nur im Heft – Inhalt noch nachtragen')
+        elif art == 'uebung':
+            if b.get('typ') not in JW_UEBUNGEN: F(f'{jw_r}: Übung {bid} – typ muss {", ".join(JW_UEBUNGEN)} sein')
+            if not str(b.get('titel') or '').strip(): F(f'{jw_r}: Übung {bid} ohne titel')
+        elif art == 'kann':
+            if not str(b.get('text') or '').strip() or not str(b.get('teil') or '').strip(): F(f'{jw_r}: Kann-Satz {bid} braucht teil und text')
+        else: F(f'{jw_r}: Baustein {bid} – art muss hefteintrag, uebung oder kann sein')
+    ohne_l = [bid for bid, b in alle.items() if b.get('art') == 'uebung' and not b.get('loesung')]
+    if ohne_l: H(f'{jw_r}: {len(ohne_l)} von {sum(1 for b in alle.values() if b.get("art") == "uebung")} eigenen Übungen ohne Lösung (z. B. {ohne_l[0]})')
+    I(f'{jw_r}: {len(alle)} Bausteine')
+
+for jw_p in sorted(ROOT.glob('daten/journey*.json')):
+    jw_r = rel(jw_p)
+    try: jd = json.loads(jw_p.read_text(encoding='utf-8'))
+    except Exception: continue
+    alle = jw_bausteine.get(jw_r, {})
+    ids = dict.fromkeys(alle, 'Baustein')        # gemeinsamer Namensraum für den Lernstand jw:<ID>
+    abschnitte, he_ids, in_abschnitt, genutzt = {}, set(), {}, set()
+    def FA(msg): F(f'{jw_r}: {msg}')
+    def neu_id(i, was):
+        if not i or not JW_ID.fullmatch(str(i)): FA(f'{was} ohne gültige id ({i})'); return False
+        if i in ids: FA(f'{was} {i}: id schon vergeben ({ids[i]})'); return False
+        ids[i] = was
+        return True
+    for u in jd.get('units') or []:
+        if not isinstance(u, dict) or 'abschnitte' not in u: continue
+        uid, st_ids = u.get('id'), {s.get('id') for s in u.get('stationen') or [] if isinstance(s, dict)}
+        if not isinstance(u['abschnitte'], list): FA(f'Unit {uid}: abschnitte muss eine Liste sein'); continue
+        for a in u['abschnitte']:
+            aid = a.get('id') if isinstance(a, dict) else None
+            if not neu_id(aid, 'Abschnitt'): continue
+            abschnitte[aid] = uid
+            if not str(a.get('titel') or '').strip(): FA(f'Abschnitt {aid}: titel fehlt')
+            bu = a.get('buch')
+            if bu is None:
+                if not a.get('schluss') and any(s.get('art') != 'app' for s in a.get('schritte') or [] if isinstance(s, dict)): H(f'{jw_r}: Abschnitt {aid} hat keine Buchseiten')
+            elif not (isinstance(bu, dict) and set(bu) == {'von', 'bis'} and all(isinstance(bu[k], int) and bu[k] > 0 for k in bu) and bu['von'] <= bu['bis']):
+                FA(f'Abschnitt {aid}: buch muss {{"von": Seite, "bis": Seite}} sein')
+            if a.get('platz') is not None and a['platz'] not in st_ids: FA(f'Abschnitt {aid}: platz {a["platz"]} ist keine Station der Unit')
+            if not isinstance(a.get('schritte'), list) or not a['schritte']: FA(f'Abschnitt {aid}: keine schritte'); continue
+            for s in a['schritte']:
+                sid = s.get('id') if isinstance(s, dict) else None
+                if not neu_id(sid, 'Schritt'): continue
+                art = s.get('art')
+                if art not in JW_SCHRITTE: FA(f'Schritt {sid}: art muss {", ".join(JW_SCHRITTE)} sein'); continue
+                nv = s.get('niveau')
+                if nv is not None and not (isinstance(nv, list) and nv and all(n in (1, 2, 3) for n in nv)): FA(f'Schritt {sid}: niveau muss eine Liste aus 1, 2, 3 sein')
+                bu = s.get('buch')
+                if bu is not None and not (isinstance(bu, dict) and isinstance(bu.get('seite'), int) and bu['seite'] > 0
+                                           and (bu.get('bis') is None or (isinstance(bu['bis'], int) and bu['bis'] >= bu['seite']))
+                                           and (bu.get('uebung') is None or (isinstance(bu['uebung'], str) and bu['uebung'].strip()))
+                                           and set(bu) <= {'seite', 'bis', 'uebung'}):
+                    FA(f'Schritt {sid}: buch muss {{"seite": Zahl, "bis"?: Zahl, "uebung"?: Text}} sein')
+                b_ = s.get('baustein')
+                if art in ('hefteintrag', 'uebung') and b_ is not None:
+                    if b_ not in alle: FA(f'Schritt {sid}: Baustein {b_} gibt es nicht')
+                    elif alle[b_].get('art') != art: FA(f'Schritt {sid}: Baustein {b_} ist kein {art}')
+                    else: genutzt.add(b_)
+                    if art == 'hefteintrag': he_ids.add(b_)
+                elif b_ is not None: FA(f'Schritt {sid}: baustein nur bei Hefteintrag und Übung')
+                if art == 'hefteintrag' and b_ is None: FA(f'Schritt {sid}: Hefteintrag ohne baustein')
+                if art == 'uebung' and b_ is None and bu is None: FA(f'Schritt {sid}: Übung braucht baustein (eigene Aufgabe) oder buch (Buchaufgabe)')
+                if art == 'app':
+                    if (s.get('station') is None) == (s.get('thema') is None): FA(f'Schritt {sid}: App braucht genau eins von station oder thema')
+                    elif s.get('station') is not None:
+                        if s['station'] not in st_ids: FA(f'Schritt {sid}: Station {s["station"]} gibt es in Unit {uid} nicht')
+                        elif s['station'] in in_abschnitt: FA(f'Station {s["station"]} steht in zwei Abschnitten ({in_abschnitt[s["station"]]}, {aid})')
+                        else: in_abschnitt[s['station']] = aid
+                    elif katalog is not None and s['thema'] not in katalog_ids: FA(f'Schritt {sid}: thema {s["thema"]} fehlt im Katalog')
+                    z = s.get('ziel')
+                    if z is not None and not (isinstance(z, dict) and set(z) <= {'runden', 'prozent'} and isinstance(z.get('runden', 1), int)
+                                              and 1 <= z.get('runden', 1) <= 10 and isinstance(z.get('prozent', 70), int) and 50 <= z.get('prozent', 70) <= 100):
+                        FA(f'Schritt {sid}: ziel muss {{"runden": 1–10, "prozent": 50–100}} sein')
+                elif art == 'extra' and s.get('thema') is not None and katalog is not None and s['thema'] not in katalog_ids:
+                    FA(f'Schritt {sid}: thema {s["thema"]} fehlt im Katalog')
+                if art not in ('hefteintrag', 'uebung', 'app') and not str(s.get('text') or '').strip(): FA(f'Schritt {sid}: text fehlt')
+        fehlen = [s for s in st_ids if s not in in_abschnitt]
+        if fehlen: H(f'{jw_r}: Unit {uid} – Stationen ohne Abschnitt: {", ".join(sorted(fehlen))}')
+        for k in u.get('kann') or []:
+            kb_ = k.get('baustein') if isinstance(k, dict) else None
+            if kb_ not in alle or alle[kb_].get('art') != 'kann': FA(f'Unit {uid}: Kann-Satz {kb_} gibt es nicht'); continue
+            genutzt.add(kb_)
+            if k.get('abschnitt') is None: H(f'{jw_r}: Kann-Satz {kb_} („{alle[kb_].get("text")}“) ist mit keinem Abschnitt verknüpft')
+            elif k['abschnitt'] not in abschnitte or abschnitte[k['abschnitt']] != uid: FA(f'Unit {uid}: Kann-Satz {kb_} – Abschnitt {k["abschnitt"]} gibt es in der Unit nicht')
+    ungenutzt = [b for b in alle if b not in genutzt]
+    if ungenutzt: H(f'{jw_r}: Bausteine, die kein Schritt nutzt: {", ".join(ungenutzt[:5])}{" …" if len(ungenutzt) > 5 else ""}')
+    jw_wege[jw_r] = {'abschnitte': abschnitte, 'he': he_ids}
+    if abschnitte: I(f'{jw_r}: {len(abschnitte)} Abschnitte, {sum(1 for v in ids.values() if v == "Schritt")} Schritte')
+
+# config.json → journey (vom Admin gepflegt): { schuljahr, wege: { journey6: { bis: { wer: Abschnitt }, he: { Hefteintrag: Nr },
+#   sperren: { wer: true } } } } – Freigabe „bis Abschnitt“ je Gruppe, HE-Nummern fortlaufend durchs Schuljahr, Sperr-Schalter vorbereitet
+jc = config.get('journey')
+if isinstance(jc, dict):
+    for wname, w in (jc.get('wege') or {}).items():
+        jw = jw_wege.get(f'daten/{wname}.json')
+        if jw is None: H(f'config.json: journey.wege.{wname} – daten/{wname}.json hat keine Abschnitte (wirkt nicht)'); continue
+        for a in set((w.get('bis') or {}).values()):
+            if a not in jw['abschnitte']: H(f'config.json: journey.wege.{wname}.bis nennt den unbekannten Abschnitt {a} (wirkt nicht)')
+        he = w.get('he') or {}
+        for b in he:
+            if b not in jw['he']: H(f'config.json: journey.wege.{wname}.he nennt den unbekannten Hefteintrag {b}')
+        doppelt = sorted({n for n in he.values() if list(he.values()).count(n) > 1})
+        if doppelt: F(f'config.json: journey.wege.{wname}.he – HE-Nummer doppelt vergeben: {", ".join(map(str, doppelt))}')
 
 # ── 17. Admin: Module (Admin-Umbau Etappe 1) ───────
 if not Path('admin.html').is_file(): F('admin.html fehlt')
