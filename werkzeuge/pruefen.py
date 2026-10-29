@@ -56,7 +56,7 @@
 #       Antwort und genug Ablenker; ITEMS-Farbvarianten (basis/tausch) zeigen auf ein Teil ohne eigene Basis.
 #   21. Rollen und Feature-Schalter (Admin-Umbau Etappe 10): daten/features.json gültig (IDs eindeutig), jeder Schalter
 #       in config.featureSchalter steht dort (sonst gelb); Admin-Module mit rechte: nur 'haupt'/'kollege'.
-#   22. English Journey (daten/journey*.json): Units und Stationen mit eindeutiger id und gültiger art, jedes thema/start
+#   22. English Journey (daten/journey*.json): Units und Stationen mit eindeutiger id und gültiger art, jedes thema/start/mit
 #       steht im Katalog (start ist thema selbst oder eine Stufe darunter; Stufen eines Baukasten-Themas stehen in seiner
 #       Inhaltsdatei), jeder Vorgänger in braucht existiert, keine Schleife; das Finale braucht alle Stationen seiner Unit.
 # ═══════════════════════════════════════════════════════
@@ -705,6 +705,12 @@ if katalog is not None:
                 j_start = j_st.get('start')
                 if j_start is not None and (j_start not in katalog_ids or not (j_start == j_t or j_start.startswith(j_t + '.'))):
                     FJ(f'Station {sid}: start {j_start} muss im Katalog stehen und {j_t} selbst oder eine Stufe darunter sein')
+                j_mit = j_st.get('mit')
+                if j_mit is not None:   # weitere Abschnitte derselben Vokabel-Unit (Wörter-Stationen)
+                    if j_st.get('art') != 'woerter' or not isinstance(j_mit, list) or not j_u.get('thema'): FJ(f'Station {sid}: mit nur an Wörter-Stationen, als Liste')
+                    else:
+                        for j_m in j_mit:
+                            if f'{j_u["thema"]}.{j_m}' not in katalog_ids: FJ(f'Station {sid}: mit {j_m} – Stufe {j_u["thema"]}.{j_m} fehlt im Katalog')
                 ziel = j_start or j_t
                 j_q = k_quelle.get(ziel) or {}
                 if j_q.get('app') == 'apps/typen/uebung.html' and ziel in k_eltern:   # Baukasten-Stufe: muss in der Inhaltsdatei stehen

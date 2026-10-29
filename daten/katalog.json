@@ -1385,6 +1385,43 @@
        ]
       },
       {
+       "id": "en.6.linking-words",
+       "titel": "linking words",
+       "klasse": 6,
+       "quelle": {
+        "app": "apps/typen/uebung.html",
+        "parameter": "inhalt=en.6.linking-words"
+       },
+       "lehrplan": "E6 Grammatik (Highlight 6, Unit 1): Sätze verbinden mit and, but, so, because; Reihenfolge mit first, then, after that, finally",
+       "dauer": 8,
+       "einsatz": "English Journey Year 6 (Station) oder als eigene App im Admin; Fehler-Training zur Wiederholung",
+       "stufen": [
+        { "id": "en.6.linking-words.verbinden", "titel": "and, but, so, because" },
+        { "id": "en.6.linking-words.reihenfolge", "titel": "First, then, after that …" },
+        { "id": "en.6.linking-words.saetze", "titel": "Sätze verbinden" },
+        { "id": "en.6.linking-words.fehler", "titel": "Fehler finden" },
+        { "id": "en.6.linking-words.mix", "titel": "Mix" }
+       ]
+      },
+      {
+       "id": "en.6.praepositionen",
+       "titel": "Präpositionen (Ort)",
+       "klasse": 6,
+       "quelle": {
+        "app": "apps/typen/uebung.html",
+        "parameter": "inhalt=en.6.praepositionen"
+       },
+       "lehrplan": "E6 Grammatik (Highlight 6, Unit 3): Präpositionen des Ortes, neu opposite, near, above",
+       "dauer": 8,
+       "einsatz": "English Journey Year 6 (Station) oder als eigene App im Admin; Fehler-Training zur Wiederholung",
+       "stufen": [
+        { "id": "en.6.praepositionen.wo", "titel": "Wo ist es?" },
+        { "id": "en.6.praepositionen.saetze", "titel": "Sätze bauen" },
+        { "id": "en.6.praepositionen.fehler", "titel": "Fehler finden" },
+        { "id": "en.6.praepositionen.mix", "titel": "Mix" }
+       ]
+      },
+      {
        "id": "en.5.knowing-english",
        "titel": "Knowing English: Mixed",
        "klasse": 5,

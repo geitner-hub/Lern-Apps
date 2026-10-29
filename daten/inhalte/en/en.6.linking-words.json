@@ -1,0 +1,568 @@
+{
+ "typ": "gemischt",
+ "thema": "en.6.linking-words",
+ "titel": "linking words",
+ "emoji": "🇬🇧",
+ "klasse": 6,
+ "sprache": "en-GB",
+ "runde": 8,
+ "untertitel": "Sätze verbinden und erzählen (Unit 1)",
+ "hilfe": [
+  {
+   "titel": "and, but, so, because",
+   "text": "Mit linking words verbindest du zwei Sätze. and = und (noch etwas dazu), but = aber (Gegensatz), so = also/deshalb (was daraus folgt), because = weil (der Grund).",
+   "beispiele": [
+    [
+     "It was sunny and warm.",
+     "Es war sonnig und warm."
+    ],
+    [
+     "It was sunny but cold.",
+     "Es war sonnig, aber kalt."
+    ],
+    [
+     "It was rainy, so we stayed inside.",
+     "Es regnete, also blieben wir drinnen."
+    ],
+    [
+     "I was happy because my friends were there.",
+     "Ich war froh, weil meine Freunde da waren."
+    ]
+   ]
+  },
+  {
+   "titel": "Erzählen in der richtigen Reihenfolge",
+   "text": "First (zuerst) – Then (dann) – After that (danach) – Finally (zum Schluss). At first = anfangs (später war es anders).",
+   "beispiele": [
+    [
+     "First we went to the beach.",
+     "Zuerst gingen wir zum Strand."
+    ],
+    [
+     "After that, we had lunch.",
+     "Danach aßen wir zu Mittag."
+    ],
+    [
+     "Finally, we were at home.",
+     "Zum Schluss waren wir zu Hause."
+    ]
+   ]
+  }
+ ],
+ "stufen": [
+  {
+   "id": "en.6.linking-words.verbinden",
+   "titel": "and, but, so, because",
+   "kurz": "It was rainy, so we stayed inside.",
+   "typ": "lueckentext",
+   "anweisung": "Welches linking word passt?",
+   "aufgaben": [
+    {
+     "text": "We went to the seaside ___ we swam in the sea.",
+     "antwort": "and",
+     "optionen": [
+      "and",
+      "but",
+      "so",
+      "because"
+     ],
+     "tipp": "and = und (noch etwas dazu) · but = aber (Gegensatz) · so = also, deshalb (Folge) · because = weil (Grund)"
+    },
+    {
+     "text": "It was sunny ___ very windy.",
+     "antwort": "but",
+     "optionen": [
+      "and",
+      "but",
+      "so",
+      "because"
+     ],
+     "tipp": "and = und (noch etwas dazu) · but = aber (Gegensatz) · so = also, deshalb (Folge) · because = weil (Grund)"
+    },
+    {
+     "text": "It was rainy, ___ we stayed in the hotel.",
+     "antwort": "so",
+     "optionen": [
+      "and",
+      "but",
+      "so",
+      "because"
+     ],
+     "tipp": "and = und (noch etwas dazu) · but = aber (Gegensatz) · so = also, deshalb (Folge) · because = weil (Grund)"
+    },
+    {
+     "text": "I was happy ___ my friends were there.",
+     "antwort": "because",
+     "optionen": [
+      "and",
+      "but",
+      "so",
+      "because"
+     ],
+     "tipp": "and = und (noch etwas dazu) · but = aber (Gegensatz) · so = also, deshalb (Folge) · because = weil (Grund)"
+    },
+    {
+     "text": "We visited Munich ___ we saw the big stadium.",
+     "antwort": "and",
+     "optionen": [
+      "and",
+      "but",
+      "so",
+      "because"
+     ],
+     "tipp": "and = und (noch etwas dazu) · but = aber (Gegensatz) · so = also, deshalb (Folge) · because = weil (Grund)"
+    },
+    {
+     "text": "The mountain was high, ___ we didn't go to the top.",
+     "antwort": "so",
+     "optionen": [
+      "and",
+      "but",
+      "so",
+      "because"
+     ],
+     "tipp": "and = und (noch etwas dazu) · but = aber (Gegensatz) · so = also, deshalb (Folge) · because = weil (Grund)"
+    },
+    {
+     "text": "Berry was sad ___ he was alone.",
+     "antwort": "because",
+     "optionen": [
+      "and",
+      "but",
+      "so",
+      "because"
+     ],
+     "tipp": "and = und (noch etwas dazu) · but = aber (Gegensatz) · so = also, deshalb (Folge) · because = weil (Grund)"
+    },
+    {
+     "text": "The test was easy, ___ I got a good mark.",
+     "antwort": "so",
+     "optionen": [
+      "and",
+      "but",
+      "so",
+      "because"
+     ],
+     "tipp": "and = und (noch etwas dazu) · but = aber (Gegensatz) · so = also, deshalb (Folge) · because = weil (Grund)"
+    },
+    {
+     "text": "Our teacher is strict ___ very nice.",
+     "antwort": "but",
+     "optionen": [
+      "and",
+      "but",
+      "so",
+      "because"
+     ],
+     "tipp": "and = und (noch etwas dazu) · but = aber (Gegensatz) · so = also, deshalb (Folge) · because = weil (Grund)"
+    },
+    {
+     "text": "I'd like to join the drama club ___ I like acting.",
+     "antwort": "because",
+     "optionen": [
+      "and",
+      "but",
+      "so",
+      "because"
+     ],
+     "tipp": "and = und (noch etwas dazu) · but = aber (Gegensatz) · so = also, deshalb (Folge) · because = weil (Grund)"
+    },
+    {
+     "text": "I wanted to play table tennis, ___ the sports hall was closed.",
+     "antwort": "but",
+     "optionen": [
+      "and",
+      "but",
+      "so",
+      "because"
+     ],
+     "tipp": "and = und (noch etwas dazu) · but = aber (Gegensatz) · so = also, deshalb (Folge) · because = weil (Grund)"
+    },
+    {
+     "text": "We ate pizza ___ ice cream at lunchtime.",
+     "antwort": "and",
+     "optionen": [
+      "and",
+      "but",
+      "so",
+      "because"
+     ],
+     "tipp": "and = und (noch etwas dazu) · but = aber (Gegensatz) · so = also, deshalb (Folge) · because = weil (Grund)"
+    },
+    {
+     "text": "The weather was fantastic, ___ we went to the beach every day.",
+     "antwort": "so",
+     "optionen": [
+      "and",
+      "but",
+      "so",
+      "because"
+     ],
+     "tipp": "and = und (noch etwas dazu) · but = aber (Gegensatz) · so = also, deshalb (Folge) · because = weil (Grund)"
+    },
+    {
+     "text": "My aunt lives in Turkey ___ I visited her last week.",
+     "antwort": "and",
+     "optionen": [
+      "and",
+      "but",
+      "so",
+      "because"
+     ],
+     "tipp": "and = und (noch etwas dazu) · but = aber (Gegensatz) · so = also, deshalb (Folge) · because = weil (Grund)"
+    },
+    {
+     "text": "I didn't call you ___ my phone was broken.",
+     "antwort": "because",
+     "optionen": [
+      "and",
+      "but",
+      "so",
+      "because"
+     ],
+     "tipp": "and = und (noch etwas dazu) · but = aber (Gegensatz) · so = also, deshalb (Folge) · because = weil (Grund)"
+    },
+    {
+     "text": "Spain was great, ___ the flight was very long.",
+     "antwort": "but",
+     "optionen": [
+      "and",
+      "but",
+      "so",
+      "because"
+     ],
+     "tipp": "and = und (noch etwas dazu) · but = aber (Gegensatz) · so = also, deshalb (Folge) · because = weil (Grund)"
+    },
+    {
+     "text": "It was my first day, ___ I felt a bit lonely.",
+     "antwort": "so",
+     "optionen": [
+      "and",
+      "but",
+      "so",
+      "because"
+     ],
+     "tipp": "and = und (noch etwas dazu) · but = aber (Gegensatz) · so = also, deshalb (Folge) · because = weil (Grund)"
+    },
+    {
+     "text": "Max cried ___ his cat died.",
+     "antwort": "because",
+     "optionen": [
+      "and",
+      "but",
+      "so",
+      "because"
+     ],
+     "tipp": "and = und (noch etwas dazu) · but = aber (Gegensatz) · so = also, deshalb (Folge) · because = weil (Grund)"
+    },
+    {
+     "text": "I like comedies, ___ I don't like soaps.",
+     "antwort": "but",
+     "optionen": [
+      "and",
+      "but",
+      "so",
+      "because"
+     ],
+     "tipp": "and = und (noch etwas dazu) · but = aber (Gegensatz) · so = also, deshalb (Folge) · because = weil (Grund)"
+    },
+    {
+     "text": "We waited for the bus ___ then we went home.",
+     "antwort": "and",
+     "optionen": [
+      "and",
+      "but",
+      "so",
+      "because"
+     ],
+     "tipp": "and = und (noch etwas dazu) · but = aber (Gegensatz) · so = also, deshalb (Folge) · because = weil (Grund)"
+    }
+   ]
+  },
+  {
+   "id": "en.6.linking-words.reihenfolge",
+   "titel": "First, then, after that …",
+   "kurz": "Erzählen in der richtigen Reihenfolge",
+   "typ": "lueckentext",
+   "anweisung": "Welches Wort passt?",
+   "aufgaben": [
+    {
+     "text": "___, we packed our bags. Then we drove to the airport.",
+     "antwort": "First",
+     "optionen": [
+      "First",
+      "Then",
+      "Finally"
+     ],
+     "tipp": "Reihenfolge: First … · Then … · After that … · Finally … (zum Schluss)"
+    },
+    {
+     "text": "First we went to the beach. ___ we had lunch in a café.",
+     "antwort": "Then",
+     "optionen": [
+      "First",
+      "Then",
+      "Finally"
+     ],
+     "tipp": "Reihenfolge: First … · Then … · After that … · Finally … (zum Schluss)"
+    },
+    {
+     "text": "We visited the museum. ___ that, we went shopping.",
+     "antwort": "After",
+     "optionen": [
+      "After",
+      "First",
+      "Finally"
+     ],
+     "tipp": "Reihenfolge: First … · Then … · After that … · Finally … (zum Schluss)"
+    },
+    {
+     "text": "We walked for hours. ___, we were back at the hotel.",
+     "antwort": "Finally",
+     "optionen": [
+      "First",
+      "Then",
+      "Finally"
+     ],
+     "tipp": "Reihenfolge: First … · Then … · After that … · Finally … (zum Schluss)"
+    },
+    {
+     "text": "___, I was a bit scared. But then I felt fine.",
+     "antwort": "At first",
+     "optionen": [
+      "At first",
+      "Finally",
+      "After that"
+     ],
+     "tipp": "At first = zuerst, anfangs (später war es anders)"
+    },
+    {
+     "text": "___ we went to Spain, then we went to Turkey.",
+     "antwort": "First",
+     "optionen": [
+      "First",
+      "Finally",
+      "After"
+     ],
+     "tipp": "Reihenfolge: First … · Then … · After that … · Finally … (zum Schluss)"
+    },
+    {
+     "text": "I did my homework. ___ that I watched a cartoon.",
+     "antwort": "After",
+     "optionen": [
+      "After",
+      "Then",
+      "First"
+     ],
+     "tipp": "after that = danach"
+    },
+    {
+     "text": "We waited and waited. ___ the bus came.",
+     "antwort": "Finally",
+     "optionen": [
+      "Finally",
+      "First",
+      "At first"
+     ],
+     "tipp": "Reihenfolge: First … · Then … · After that … · Finally … (zum Schluss)"
+    },
+    {
+     "typ": "sortieren",
+     "frage": "Bau den Satz.",
+     "teile": [
+      "First",
+      "we",
+      "went",
+      "to",
+      "the",
+      "stadium."
+     ],
+     "loesung": "First we went to the stadium.",
+     "tipp": "Reihenfolge: First … · Then … · After that … · Finally … (zum Schluss)"
+    },
+    {
+     "typ": "sortieren",
+     "frage": "Bau den Satz.",
+     "teile": [
+      "After",
+      "that,",
+      "we",
+      "had",
+      "pizza."
+     ],
+     "loesung": "After that, we had pizza.",
+     "tipp": "Reihenfolge: First … · Then … · After that … · Finally … (zum Schluss)"
+    },
+    {
+     "typ": "sortieren",
+     "frage": "Bau den Satz.",
+     "teile": [
+      "Finally,",
+      "we",
+      "were",
+      "at",
+      "home."
+     ],
+     "loesung": "Finally, we were at home.",
+     "tipp": "Reihenfolge: First … · Then … · After that … · Finally … (zum Schluss)"
+    },
+    {
+     "typ": "sortieren",
+     "frage": "Bau den Satz.",
+     "teile": [
+      "Then",
+      "we",
+      "visited",
+      "my",
+      "aunt."
+     ],
+     "loesung": "Then we visited my aunt.",
+     "tipp": "Reihenfolge: First … · Then … · After that … · Finally … (zum Schluss)"
+    }
+   ]
+  },
+  {
+   "id": "en.6.linking-words.saetze",
+   "titel": "Sätze verbinden",
+   "kurz": "Zwei Sätze zu einem bauen",
+   "typ": "lueckentext",
+   "anweisung": "Aus zwei Sätzen wird einer.",
+   "aufgaben": [
+    {
+     "typ": "sortieren",
+     "frage": "Verbinde mit because.",
+     "teile": [
+      "I stayed at home",
+      "because",
+      "I was ill."
+     ],
+     "loesung": "I stayed at home because I was ill.",
+     "tipp": "because + Grund"
+    },
+    {
+     "typ": "sortieren",
+     "frage": "Verbinde mit so.",
+     "teile": [
+      "It was rainy,",
+      "so",
+      "we watched a film."
+     ],
+     "loesung": "It was rainy, so we watched a film.",
+     "tipp": "so + Folge"
+    },
+    {
+     "typ": "sortieren",
+     "frage": "Verbinde mit but.",
+     "teile": [
+      "The hotel was nice,",
+      "but",
+      "the food was bad."
+     ],
+     "loesung": "The hotel was nice, but the food was bad.",
+     "tipp": "but + Gegensatz"
+    },
+    {
+     "typ": "sortieren",
+     "frage": "Verbinde mit and.",
+     "teile": [
+      "We swam in the sea",
+      "and",
+      "we played volleyball."
+     ],
+     "loesung": "We swam in the sea and we played volleyball.",
+     "tipp": "and + noch etwas"
+    },
+    {
+     "typ": "sortieren",
+     "frage": "Verbinde mit because.",
+     "teile": [
+      "Berry was happy",
+      "because",
+      "he had a new friend."
+     ],
+     "loesung": "Berry was happy because he had a new friend.",
+     "tipp": "because + Grund"
+    },
+    {
+     "typ": "sortieren",
+     "frage": "Verbinde mit so.",
+     "teile": [
+      "I was tired,",
+      "so",
+      "I went to bed early."
+     ],
+     "loesung": "I was tired, so I went to bed early.",
+     "tipp": "so + Folge"
+    },
+    {
+     "typ": "sortieren",
+     "frage": "Verbinde mit but.",
+     "teile": [
+      "I like football,",
+      "but",
+      "I don't like cricket."
+     ],
+     "loesung": "I like football, but I don't like cricket.",
+     "tipp": "but + Gegensatz"
+    },
+    {
+     "typ": "sortieren",
+     "frage": "Verbinde mit because.",
+     "teile": [
+      "I'd like to join the club",
+      "because",
+      "it's interesting."
+     ],
+     "loesung": "I'd like to join the club because it's interesting.",
+     "tipp": "because + Grund"
+    }
+   ]
+  },
+  {
+   "id": "en.6.linking-words.fehler",
+   "titel": "Fehler finden",
+   "kurz": "Tippe das falsche linking word an",
+   "typ": "markieren",
+   "anweisung": "Ein Wort passt nicht. Tippe es an.",
+   "aufgaben": [
+    {
+     "satz": "It was rainy, [because] we stayed inside.",
+     "richtig": "so",
+     "erklaerung": "Folge → so: It was rainy, so we stayed inside."
+    },
+    {
+     "satz": "I was sad [so] my friend was ill.",
+     "richtig": "because",
+     "erklaerung": "Grund → because: I was sad because my friend was ill."
+    },
+    {
+     "satz": "The weather was sunny [because] very cold.",
+     "richtig": "but",
+     "erklaerung": "Gegensatz → but: sunny but very cold."
+    },
+    {
+     "satz": "We went to Munich [but] we visited the stadium.",
+     "richtig": "and",
+     "erklaerung": "noch etwas dazu → and."
+    },
+    {
+     "satz": "I didn't go to school [so] I had a headache.",
+     "richtig": "because",
+     "erklaerung": "Grund → because."
+    },
+    {
+     "satz": "I was hungry, [because] I ate a pasty.",
+     "richtig": "so",
+     "erklaerung": "Folge → so: I was hungry, so I ate a pasty."
+    }
+   ]
+  },
+  {
+   "id": "en.6.linking-words.mix",
+   "titel": "Mix",
+   "kurz": "Alles durcheinander",
+   "mix": true,
+   "runde": 10
+  }
+ ]
+}

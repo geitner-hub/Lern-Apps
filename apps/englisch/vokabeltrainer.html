@@ -19,7 +19,10 @@
    Ergebnisse melden die Themen-ID der Unit; falsche Wörter landen im Fehlerheft (ueben.js).
    Abschnitte (Themes) mit Stufe im Katalog (<Unit-Thema>.<Abschnitt>, z. B. en.6.vok.u1.theme1) melden zusätzlich ihre
    eigene Themen-ID – so zählt die Meisterschaft je Theme (English Journey Year 6). Gesperrte Themes zeigen 🔒.
-   Direktstart: ?stufe=<Themen-ID> öffnet gleich die Modus-Wahl dieser Unit bzw. dieses Themes (wenn frei).
+   Direktstart: ?stufe=<Themen-ID> öffnet gleich die Modus-Wahl dieser Unit bzw. dieses Themes (wenn frei);
+   &mit=abschnitt,abschnitt nimmt weitere Abschnitte derselben Unit dazu (kleine Abschnitte, English Journey) – gemeldet wird die Stufe.
+   Flashcards (v100): nur noch zentral in der ersten Auswahl („🃏 Flashcards“), nicht in der Modus-Wahl der Themes. Die Kinder bewerten
+   sich dort selbst – darum melden Flashcards kein Ergebnis (keine XP, keine Sterne, keine Meisterschaft, keine Spielsperre).
    Die alten Seiten vokabeltrainer5/6.html leiten hierher weiter; Ergebnisse, Sterne und Dorf-Aufträge
    ziehen beim ersten Öffnen mit um (LernUeben.uebernehme).
   ═══════════════════════════════════════════════
@@ -228,7 +231,7 @@ body.a11y-dyslexic, body.a11y-dyslexic * { font-family: 'Atkinson Hyperlegible',
 
   <!-- UNIT SELECTION -->
   <div id="screen-units" class="hidden">
-    <div class="section-title">Einheit wählen</div>
+    <div class="section-title" id="units-title">Einheit wählen</div>
     <div class="unit-list" id="unit-list"></div>
   </div>
 
@@ -244,7 +247,6 @@ body.a11y-dyslexic, body.a11y-dyslexic * { font-family: 'Atkinson Hyperlegible',
     <div class="word-info" id="word-info"></div>
     <div class="section-title">Spielmodus wählen</div>
     <div class="mode-grid">
-      <div class="mode-card" onclick="startMode('flashcard')"><div class="icon">🃏</div><h3>Flashcards</h3><p>Flip &amp; learn</p></div>
       <div class="mode-card" onclick="startMode('quiz')"><div class="icon">🧠</div><h3>Quiz</h3><p>Multiple choice</p></div>
       <div class="mode-card" onclick="startMode('memory')"><div class="icon">🎴</div><h3>Memory</h3><p>Paare finden</p></div>
       <div class="mode-card" onclick="startMode('fill')"><div class="icon">✏️</div><h3>Fill in</h3><p>Wort eingeben</p></div>
@@ -350,11 +352,12 @@ body.a11y-dyslexic, body.a11y-dyslexic * { font-family: 'Atkinson Hyperlegible',
       <div class="r-emoji" id="res-emoji"></div>
       <div class="r-pct" id="res-pct"></div>
       <div class="r-sub" id="res-sub"></div>
+      <div class="r-sub hidden" id="res-karten" style="margin-top:6px;font-size:13px">🃏 Flashcards sind zum Lernen – sie zählen nicht für Sterne. Für Sterne: Quiz, Fill in oder Scramble.</div>
       <div id="res-wrong-box" class="wrong-box hidden"></div>
       <div class="result-btns">
         <button class="btn-primary" onclick="retryMode()">Nochmal 🔄</button>
         <button class="btn-secondary hidden" id="res-retry-wrong-btn" onclick="retryWrongWords()">🔁 Schwierige üben</button>
-        <button class="btn-secondary" onclick="goBack()">Anderen Modus</button>
+        <button class="btn-secondary" id="res-anders" onclick="goBack()">Anderen Modus</button>
         <button class="btn-secondary" onclick="goHome()">🏠 Home</button>
       </div>
     </div>
@@ -379,6 +382,7 @@ let currentTheme = null;
 let currentWords = [];
 let currentMode = null;
 let currentLabel = '';
+let karten = false;        // Flashcards-Auswahl aus der ersten Seite: nach der Wahl von Unit/Theme gleich die Karten
 
 // per-mode
 let fcIdx, fcFlipped, fcRight, fcWrong;
@@ -397,7 +401,8 @@ const PARAM = new URLSearchParams(location.search);
 // Direktstart (?stufe=en.6.vok.u1.theme1): Parameter gleich wieder aus der Adresse nehmen – sonst speichert
 // navbar.js das Ergebnis unter einem anderen Schlüssel und Sterne/Dorf-Aufträge der App zählen nicht (wie ueben.js)
 const DIREKT = (PARAM.get('stufe') || '').replace(/[^a-z0-9.-]/g, '').slice(0, 80);
-if (DIREKT) try { const u = new URL(location.href); u.searchParams.delete('stufe'); history.replaceState(history.state, '', u.pathname + u.search + u.hash); } catch (e) {}
+const MIT = (PARAM.get('mit') || '').split(',').map(x => x.replace(/[^a-z0-9-]/g, '')).filter(Boolean).slice(0, 4);
+if (DIREKT) try { const u = new URL(location.href); u.searchParams.delete('stufe'); u.searchParams.delete('mit'); history.replaceState(history.state, '', u.pathname + u.search + u.hash); } catch (e) {}
 const LISTE = (PARAM.get('liste') || '').replace(/[^a-z0-9-]/gi, '').slice(0, 40);
 const KL = LISTE ? '' : String(Math.min(6, Math.max(5, parseInt(PARAM.get('klasse') || '5', 10) || 5)));
 const HISTORY_KEY5 = 'vokab-history-kl5', STATS_KEY5 = 'vokab-word-stats-kl5', A11Y_KEY5 = 'vokab-a11y-kl5';
@@ -673,6 +678,18 @@ function startDifficultWords(words) {
 function renderUnitList() {
   const list = document.getElementById('unit-list');
   list.innerHTML = '';
+  document.getElementById('units-title').textContent = karten ? '🃏 Flashcards – was willst du lernen?' : 'Einheit wählen';
+
+  // Flashcards (zum Lernen, zählen nicht) – zentral hier statt in jedem Theme
+  if (!karten) {
+    const fcBtn = document.createElement('button');
+    fcBtn.className = 'unit-btn';
+    fcBtn.style.borderColor = '#7c6af7';
+    fcBtn.style.color = '#7c6af7';
+    fcBtn.innerHTML = `<span>🃏 Flashcards – Wörter lernen</span><span style="display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:#9ca3af;font-weight:600">zählt nicht für Sterne</span><span class="arrow">›</span></span>`;
+    fcBtn.onclick = () => { karten = true; renderUnitList(); };
+    list.appendChild(fcBtn);
+  }
 
   // Special lists first
   if (CONFIG.specialLists && Object.keys(CONFIG.specialLists).length) {
@@ -722,7 +739,7 @@ function renderUnitList() {
     list.appendChild(btn);
   });
 
-  setHeaderBtns(false, false);
+  setHeaderBtns(karten, false);
 }
 
 // ── SPECIAL LISTS ────────────────────────────────────────────────
@@ -794,6 +811,12 @@ function direktStart(id) {
   const tk = Object.keys(unit.themes).find(k => unit.thema + '.' + k === id);
   if (!tk || !frei({ thema: id })) return showThemes(key);
   waehleTheme(key, tk);
+  const dazu = MIT.filter(k => k !== tk && unit.themes[k]);
+  if (dazu.length) {
+    currentWords = dazu.reduce((w, k) => w.concat(unit.themes[k].words), unit.themes[tk].words.slice());
+    currentLabel += ' + ' + dazu.map(k => unit.themes[k].label).join(' + ');
+    showModeSelection();
+  }
 }
 
 function selectAllUnit() {
@@ -805,6 +828,7 @@ function selectAllUnit() {
 
 // ── MODE SELECTION ───────────────────────────────────────────────
 function showModeSelection() {
+  if (karten) { startMode('flashcard'); return; }
   document.getElementById('word-info').textContent = `📚 ${currentLabel} · ${currentWords.length} Vokabeln`;
   // Meisterschaft (2 Runden ab 70 %) zählt nur in den Abfrage-Modi – darauf hinweisen, wenn ein Theme eine eigene Stufe hat
   if (currentUnit && CONFIG.units[currentUnit] && currentTheme && themeThema(currentUnit, currentTheme)) {
@@ -818,22 +842,22 @@ function showModeSelection() {
 }
 
 function goBack() {
+  if (karten && !document.getElementById('screen-units').classList.contains('hidden')) { karten = false; renderUnitList(); return; }
   if (currentUnit === null || currentUnit === 'special' || currentUnit === 'mix' || currentUnit === 'difficult') {
-    renderUnitList();
     showOnly('units');
-    setHeaderBtns(false, false);
+    renderUnitList();
   } else if (currentTheme !== null) {
     currentTheme = null;
     currentWords = [];
     showThemes(currentUnit);
   } else {
-    renderUnitList();
     showOnly('units');
-    setHeaderBtns(false, false);
+    renderUnitList();
   }
 }
 
 function goHome() {
+  karten = false;
   currentUnit = null;
   currentTheme = null;
   currentWords = [];
@@ -897,8 +921,11 @@ function showResult(right, wrong, total, label) {
   document.getElementById('res-sub').textContent = `${right} richtig, ${wrong} falsch von ${total}`;
 
   renderWrongList();
+  document.getElementById('res-karten').classList.toggle('hidden', currentMode !== 'flashcard');
+  document.getElementById('res-anders').textContent = karten ? 'Andere Wörter' : 'Anderen Modus';
 
-  if (window.LernApps && LernApps.saveResult) {
+  // Flashcards: Selbsteinschätzung – kein Ergebnis an Pass, Sterne, Meisterschaft oder Spielsperre
+  if (currentMode !== 'flashcard' && window.LernApps && LernApps.saveResult) {
     const inhalt = lernInhalt(), thema = lernThema(), theme = lernThemeThema();
     LernApps.saveResult({
       score: right,
