@@ -560,7 +560,12 @@ Etappe 3 (v91): 3D-Weg als Prototyp mit dem Ort von Unit 1. Etappe 4 (v93): alle
   dann offen (Antippen → die Figur läuft hin → „Über die Brücke“). Station antippen → die Figur läuft auf dem Weg hin, Kamera folgt weich → Karte mit
   „▶ Los geht's“ (Direktstart `?stufe=`). Zustände: zu (grauer Sockel, 🔒 am Schild), offen (Leuchtring, 👉 nächstes Ziel mit Pfeil),
   gemeistert (goldener Sockel, Flagge); jedes Wahrzeichen bleibt grau, bis seine Station gemeistert ist (der Ort füllt sich).
-  Ziehen verschiebt die Sicht. Neuer Ort = Eintrag in `SZENEN` (Plätze, Boden, Wahrzeichen je Station) + Name in `ORTE_3D` der Seite.
+  Ziehen verschiebt die Sicht. Neuer Ort = Eintrag in `SZENEN` (Boden, Wahrzeichen) + `LAYOUT` + Name in `ORTE_3D` der Seite.
+  **Plätze nach ID (v100):** `LAYOUT` in journey-welt.js ordnet jedem Ort die Stations-IDs zu (`reihe` in Weg-Reihenfolge, `alt` =
+  Reihenfolge der Wahrzeichen-Liste bis v99, `neu` = Wahrzeichen neuer Stationen, optional `z`/`seite`/`zEnde`/`zFest`) und verteilt die
+  Plätze im Abstand von 12 mittig um x = 0. Bäume, Felsen und Ponys weichen den Plätzen aus (`imWeg`); Häuserlücke vor der Schule,
+  Hoe-Hügel (Unit 1) und Fluss mit Holzbrücke (Unit 5) richten sich nach ihren Stationen. Neue Station = Eintrag in journey6.json +
+  ID in `reihe` + Wahrzeichen in `neu` (ohne Eintrag: gleichmäßig verteilt, ohne Wahrzeichen).
 - **Zurück zum Weg:** Vor dem Start merkt sich die Seite ihre Adresse mit `#u=…&s=…&m=0|1` im vorhandenen Schlüssel
   `lernwelt-lernweg-zurueck` (sessionStorage, kein neuer Schlüssel); `lernweg-zurueck.js` zeigt dann „🧭 Zurück zum Weg“ (nach der Runde
   golden). Zurück steht die Figur an derselben Station; ist sie neu gemeistert (`m=0`), jubelt die Figur (Konfetti), nach dem Finale
@@ -587,7 +592,14 @@ Etappe 3 (v91): 3D-Weg als Prototyp mit dem Ort von Unit 1. Etappe 4 (v93): alle
 - **Grammatik Unit 1–2** (Baukasten, Sätze aus den Wörtern der Unit): `en.6.simple-past` (didn't, Fragen mit Fragewort,
   Did …? + Kurzantworten), `en.6.was-were`, `en.6.objektpronomen`, `en.6.there-is` (mit some/any), `en.6.plural`,
   `en.6.can-mustnt`; Finale `en.6.unit-check` (Postkarte aus Plymouth, Revision 1 als Mix aus Unit 1 + 2). Die Stationen starten die
-  Mix-Stufe bzw. die passende Stufe direkt. Präpositionen und linking words gibt es nur in der Anwenden-Station.
+  Mix-Stufe bzw. die passende Stufe direkt.
+- **Ausbau v100 (60 Stationen):** Alle Wortschatz-Abschnitte von Highlight 6 sind jetzt Wörter-Stationen (Story, Focus on language,
+  Skills training, Weitere Wörter, fehlende Themes). Kleine Abschnitte hängen an einer Nachbar-Station: `mit` (Liste von Abschnitten
+  derselben Vokabel-Unit) – der Vokabeltrainer startet dann mit `&mit=…` alle Wörter zusammen, gemeldet und gemeistert wird `thema`
+  (z. B. `u4-theme1` mit Grundwortschatz und Theme 2, `u1-story` mit Focus on language). Neue Grammatik-Stationen: `en.6.linking-words`
+  (Unit 1: and/but/so/because, First/Then/After that/Finally, Sätze verbinden, Fehler finden) und `en.6.praepositionen` (Unit 3: Ort,
+  neu opposite/near/above). Aufgestockt: `en.6.steigerung.vergleiche` und `en.6.future.will` (je 24–26 Aufgaben). Bestehende
+  Stationen behalten ID, Thema und Voraussetzungen; nur die Finales brauchen die neuen Stationen dazu – Gemeistertes bleibt gemeistert.
 - **Grammatik Unit 3–5** (Etappe 4, Sätze aus den Wörtern der Unit): `en.6.should` (rat · regeln), `en.6.much-many`, `en.6.good-better-best`,
   `en.6.superlativ`, `en.6.have-to`, `en.6.zeitangaben`, `en.6.simple-past-story`, `en.6.will-meinung`, `en.6.wortstellung`; Wiederholungen
   über bestehende IDs (`en.5.present-progressive`, `en.6.steigerung.vergleiche`, `en.6.future.will`). Finale `en.6.revision`
@@ -649,7 +661,10 @@ Kurzes Klassen-Quiz für 2–10 Minuten (Einstieg, Zwischensicherung, Exit-Ticke
 ## Vokabel-Engine (Infrastruktur Etappe 5)
 
 - **apps/englisch/vokabeltrainer.html** – ein Trainer für alle Wortlisten, alle Modi wie bisher
-  (Flashcards, Quiz, Memory, Fill in, Scramble, Speed, schwierige Wörter, Lese-Einstellungen):
+  (Flashcards, Quiz, Memory, Fill in, Scramble, Speed, schwierige Wörter, Lese-Einstellungen).
+  **Flashcards (v100)** stehen nur noch in der ersten Auswahl („🃏 Flashcards – Wörter lernen“ → Unit/Theme → gleich die Karten), nicht
+  mehr in der Modus-Wahl der Themes. Die Kinder bewerten sich dabei selbst – darum melden Flashcards kein Ergebnis (keine XP, Sterne,
+  Meisterschaft, Spielsperre); die Ergebnisseite sagt das. Für die Meisterschaft zählen Quiz, Fill in und Scramble.
   `?klasse=5` → `daten/vokabeln5.json`, `?klasse=6` → `daten/vokabeln6.json`, `?liste=NAME` → `daten/NAME.json`.
 - Format unverändert, ergänzt um `thema` je Unit/Sonderliste (Themen-ID aus dem Katalog; pruefen.py prüft das).
   Optional: `meta.sprache`, `meta.titel`, `meta.untertitel`, `meta.vorne`/`meta.hinten`; je Wort `bild` (Emoji oder

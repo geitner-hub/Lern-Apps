@@ -120,14 +120,12 @@
   }
 
   // ── Orte ───────────────────────────────────────────────
-  //  plaetze: Stellen der Stationen am Weg (x, z) in Reihenfolge; seite: wohin Sockel und Wahrzeichen vom Weg aus stehen.
+  //  plaetze/seite/wahrzeichen: Stand bis v99 je Station in alter Reihenfolge – seit v100 ordnet LAYOUT (unten) sie den Stations-IDs zu
+  //  und verteilt die Plätze neu. seite: wohin Sockel und Wahrzeichen vom Weg aus stehen.
   //  weg: Wegpunkte (x, z) – der Weg geht durch alle Plätze. wahrzeichen[i](B, x, z): wird grau, bis Station i gemeistert ist.
   const SZENEN = {
     hafen: {
       himmel: ['#7cc3ef', '#bfe3f7', '#fde9c8'], nebel: 0xf3e6cf,
-      start: [-74, 6],
-      weg: [[-74, 6], [-66, 10], [-58, 12], [-51, 8], [-44, 2], [-37, 6], [-30, 11], [-23, 9], [-16, 4], [-9, 8], [-2, 12],
-            [3, 4], [10, -6], [17, -6], [24, -2], [30, 5], [36, 10], [43, 7], [52, 2], [58, -2]],
       plaetze: [[-58, 12], [-44, 2], [-30, 11], [-16, 4], [-2, 12], [10, -6], [24, -2], [36, 10], [52, 2]],
       seite: [[0, -1], [0, -1], [0, -1], [0, -1], [0, 1], [0, -1], [0, -1], [0, 1], [1, -1]],
       kai: 18,                        // Kaimauer bei z = 18, südlich davon das Meer
@@ -223,7 +221,7 @@
         [-43, 28].forEach(x => { B.box(x, 0, -26, 0.25, 2.4, 0.25, C.weiss); B.box(x, 2.4, -26, 0.25, 0.25, 7, C.weiss); B.box(x, 0, -29.4, 0.25, 2.4, 0.25, C.weiss); B.box(x, 0, -22.6, 0.25, 2.4, 0.25, C.weiss); });
         for (let x = -60; x < 50; x += 3) B.box(x, 0, -45, 0.2, 1.4, 0.2, 0x3b8a4a);
         B.box(-5, 1.2, -45, 110, 0.12, 0.1, 0x3b8a4a);
-        [[-80, -8], [-74, 12], [-88, 22], [60, -20], [70, -6], [78, 14], [64, 24], [-66, -30], [50, -40]].forEach(([x, z], i) => baum(B, x, z, 0.9 + (i % 3) * 0.15));
+        [[-80, -8], [-74, 12], [-88, 22], [60, -20], [70, -6], [78, 14], [64, 24], [-66, -30], [50, -40]].forEach(([x, z], i) => { if (!imWeg(SZENEN.sport, x, z)) baum(B, x, z, 0.9 + (i % 3) * 0.15); });
         B.box(70, -0.5, 30, 14, 0.6, 9, C.wasser); B.box(70, -0.6, 30, 15, 0.5, 10, C.sand);   // Teich im Park
         hintergrund(B, 0x88b870);
       },
@@ -273,7 +271,7 @@
         for (let i = 0; i < 12; i++) fels(B, -84 + zufall() * 168, -50 + zufall() * 30, 0.8 + zufall());
         [[-70, 22], [-30, 26], [16, 24], [60, 22], [-50, 34], [36, 32], [-4, 38]].forEach(([x, z]) => fels(B, x, z, 0.9));
         [[-20, 28], [44, 26]].forEach(([x, z], i) => pony(B, x, z, i ? 0x5a3b26 : 0x8a5a33));
-        [[-46, -14], [-40, -18], [28, -16], [34, -12], [64, 14]].forEach(([x, z], i) => pony(B, x, z, i % 2 ? 0x7a4b2a : 0x4a3426));
+        [[-46, -14], [-40, -18], [28, -16], [34, -12], [64, 14]].forEach(([x, z], i) => { if (!imWeg(S, x, z)) pony(B, x, z, i % 2 ? 0x7a4b2a : 0x4a3426); });
         for (let x = -100; x < 100; x += 18) B.box(x, -2, -60, 19, 10 + ((x * 3) & 7), 10, variiere(0x8a9a6a, 0.06));
       },
       wahrzeichen: [
@@ -289,32 +287,123 @@
       ],
     },
   });
+  // ── Stationen je Ort nach ID (v100: mehr Wörter-Stationen, linking words, Präpositionen) ──
+  //  reihe: Stations-IDs in Weg-Reihenfolge (wie daten/journey6.json) · alt: Reihenfolge der Wahrzeichen-Liste oben (bis v99)
+  //  z/seite: je Station in reihe · neu: Wahrzeichen der neuen Stationen. Plätze im Abstand von 12, mittig um x = 0.
+  //  Station nicht in reihe (z. B. neue Station in journey6.json ohne Platz): gleichmäßig verteilt, ohne Wahrzeichen.
+  const ABSTAND = 12;
+  const LAYOUT = {
+    hafen: {
+      reihe: ['u1-grundwortschatz', 'u1-simple-past', 'u1-theme1', 'u1-didnt', 'u1-was-were', 'u1-theme2', 'u1-objektpronomen', 'u1-story', 'u1-weitere', 'u1-linking-words', 'u1-anwenden', 'u1-finale'],
+      z: [12, 2, 11, 4, 12, -6, -2, 4, 10, 3, 10, 2],
+      seite: [[0, -1], [0, -1], [0, -1], [0, -1], [0, 1], [0, -1], [0, -1], [0, -1], [0, -1], [0, -1], [0, 1], [1, -1]],
+      alt: ['u1-grundwortschatz', 'u1-simple-past', 'u1-theme1', 'u1-didnt', 'u1-was-were', 'u1-theme2', 'u1-objektpronomen', 'u1-anwenden', 'u1-finale'],
+      neu: {
+        'u1-story': (B, x, z) => {   // Aquarium: blaues Haus mit Fisch
+          haus(B, x, z - 6, 8, 5, 5, C.hellblau, C.dach, 0, false); B.box(x, 0, z - 3.45, 2.2, 2.6, 0.12, 0x2f6f8f); B.box(x, 1.4, z - 3.4, 6.5, 0.9, 0.1, 0x9fd9ee);
+          B.box(x - 0.3, 5.4, z - 3.4, 2.4, 1.2, 0.2, C.orange); B.box(x + 1.3, 5.5, z - 3.4, 0.8, 1, 0.2, C.orange); B.box(x - 1, 5.9, z - 3.28, 0.25, 0.25, 0.08, 0x222222);
+        },
+        'u1-weitere': (B, x, z) => {   // Eisdiele: Kiosk mit Sonnenschirm und großer Eistüte
+          B.box(x - 1, 0, z - 3, 3.4, 2.4, 2.2, C.rosa); for (let i = 0; i < 5; i++) B.box(x - 2.4 + i * 0.7, 2.4, z - 2.6, 0.7, 0.25, 3, i % 2 ? C.weiss : C.rosa);
+          B.box(x + 2.6, 0, z - 1.6, 0.6, 1.4, 0.6, 0xd9a066); B.box(x + 2.6, 1.4, z - 1.6, 0.9, 0.7, 0.9, C.weiss); B.box(x + 2.6, 2.1, z - 1.6, 0.7, 0.5, 0.7, C.rosa);
+          B.box(x - 3.2, 0, z - 0.6, 0.15, 2.6, 0.15, 0xdddddd); B.box(x - 3.2, 2.6, z - 0.6, 2.4, 0.2, 2.4, C.gelb);
+        },
+        'u1-linking-words': (B, x, z) => {   // Postamt mit rotem Briefkasten
+          haus(B, x, z - 5, 6, 4, 4, C.creme, C.dach2); B.box(x, 3, z - 2.9, 3.4, 0.7, 0.12, C.rot);
+          B.box(x + 3.8, 0, z - 1.6, 0.8, 1.4, 0.8, C.rot); B.box(x + 3.8, 1.4, z - 1.6, 0.95, 0.25, 0.95, C.rot); B.box(x + 3.8, 1, z - 1.18, 0.5, 0.1, 0.06, 0x222222);
+        },
+      },
+    },
+    strasse: {
+      reihe: ['u2-grundwortschatz', 'u2-theme1', 'u2-there-is', 'u2-theme2', 'u2-did-fragewort', 'u2-did-kurz', 'u2-plural', 'u2-can-mustnt', 'u2-story', 'u2-weitere', 'u2-anwenden', 'u2-finale'],
+      alt: ['u2-grundwortschatz', 'u2-there-is', 'u2-theme2', 'u2-did-fragewort', 'u2-did-kurz', 'u2-plural', 'u2-can-mustnt', 'u2-anwenden', 'u2-finale'], zEnde: 5,
+      neu: {
+        'u2-theme1': (B, x, z) => { laden(B, x, z - 5, 7, 0xe8c9a0, 0x8a5a33); [-2, 0, 2].forEach((d, i) => B.box(x + d, 0.7, z - 2.3, 1.3, 0.6, 0.3, [0xc89b5a, 0xd9a066, 0xb07a3a][i])); B.box(x, 5.6, z - 2.4, 4, 0.9, 0.15, 0x8a5a33); },
+        'u2-story': (B, x, z) => { haus(B, x, z - 6, 9, 5, 6, 0xb7c9d6, C.dach); B.box(x, 0, z - 3.45, 1.8, 2.6, 0.15, C.holz2);
+                                   for (let i = 0; i < 5; i++) B.box(x + 3, i * 0.35, z - 1.8, 1.2 - (i % 2) * 0.2, 0.35, 0.9, [C.rot, C.blau, C.gelb, C.gruen, C.orange][i]); B.box(x, 4.4, z - 3.4, 4.4, 0.8, 0.12, C.indigo); },
+        'u2-weitere': (B, x, z) => { B.box(x - 2, 0, z - 3, 0.2, 3, 0.2, C.rot); B.box(x + 1, 0, z - 3, 0.2, 3, 0.2, C.rot); B.box(x - 0.5, 3, z - 3, 3.4, 0.2, 0.2, C.rot); [-1.4, 0.4].forEach(d => B.box(x + d, 0.8, z - 3, 0.8, 0.12, 0.5, C.gelb));
+                                     B.box(x + 3, 0, z - 4, 1, 2.4, 1, C.blau); for (let i = 0; i < 5; i++) B.box(x + 3, 2.2 - i * 0.45, z - 2.8 + i * 0.6, 1, 0.15, 0.7, C.gelb); B.box(x - 3.5, 0, z - 1, 2, 0.3, 2, C.sand); },
+      },
+    },
+    sport: {
+      reihe: ['u3-theme1', 'u3-present-progressive', 'u3-gegensaetze', 'u3-theme2', 'u3-should', 'u3-much-many', 'u3-story', 'u3-skills', 'u3-praepositionen', 'u3-anwenden', 'u3-finale'],
+      alt: ['u3-theme1', 'u3-present-progressive', 'u3-theme2', 'u3-should', 'u3-much-many', 'u3-anwenden', 'u3-finale'], zEnde: 5,
+      neu: {
+        'u3-gegensaetze': (B, x, z) => { haus(B, x, z - 6, 9, 5, 5, 0xb9b2a8, 0x7a6a5a, 0, false); B.box(x, 0, z - 3.45, 2.4, 2.6, 0.12, C.blau); B.box(x, 3.4, z - 3.4, 5, 0.8, 0.12, C.weiss); for (let i = 0; i < 4; i++) B.box(x - 3.4 + i * 2.3, 1.6, z - 3.42, 1.2, 0.8, 0.06, 0xbfe1f0); },
+        'u3-story': (B, x, z) => { B.box(x, 0, z - 4, 8, 0.4, 5, C.weiss); B.box(x, 0.1, z - 4, 7, 0.32, 4, C.wasser); [-2.6, 2.6].forEach(d => { B.box(x + d, 0.4, z - 1.8, 0.12, 1.2, 0.12, 0xdddddd); B.box(x + d, 1.6, z - 1.8, 0.12, 0.12, 0.8, 0xdddddd); });
+                                   B.box(x + 3.2, 0, z - 7.2, 0.4, 2.6, 0.4, C.weiss); B.box(x + 3.2, 2.6, z - 6.6, 0.8, 0.15, 1.6, C.blau); },
+        'u3-skills': (B, x, z) => { B.box(x, 0, z - 4, 6, 6, 0.8, 0x9a948a); for (let i = 0; i < 14; i++) B.box(x - 2.6 + (i * 37 % 52) / 10, 0.6 + (i * 23 % 50) / 10, z - 3.55, 0.35, 0.3, 0.15, [C.rot, C.gelb, C.blau, C.gruen][i % 4]); B.box(x, 0, z - 2.6, 6, 0.3, 2, 0x3b8a4a); },
+        'u3-praepositionen': (B, x, z) => {   // Spielplatz: Rutsche, Kiste, Ball unter der Bank, Ball auf der Kiste – Präpositionen zum Anschauen
+          B.box(x - 2.5, 0, z - 4, 1.4, 2.6, 1.4, C.rot); for (let i = 0; i < 6; i++) B.box(x - 2.5, 2.4 - i * 0.42, z - 2.6 + i * 0.55, 1, 0.15, 0.6, C.gelb);
+          bank(B, x + 2, z - 2.4); B.box(x + 2, 0, z - 2.4, 0.45, 0.45, 0.45, C.blau); B.box(x + 2.5, 0, z - 5, 1.2, 1.2, 1.2, C.holz); B.box(x + 2.5, 1.2, z - 5, 0.5, 0.5, 0.5, C.orange);
+        },
+      },
+    },
+    stadt: {
+      reihe: ['u4-theme1', 'u4-komparativ', 'u4-good-better-best', 'u4-superlativ', 'u4-weitere', 'u4-story', 'u4-have-to', 'u4-zeitangaben', 'u4-story-past', 'u4-focus', 'u4-skills', 'u4-anwenden', 'u4-finale'],
+      alt: ['u4-theme1', 'u4-komparativ', 'u4-good-better-best', 'u4-superlativ', 'u4-story', 'u4-have-to', 'u4-zeitangaben', 'u4-story-past', 'u4-anwenden', 'u4-finale'], zEnde: 3,
+      neu: {
+        'u4-weitere': (B, x, z) => { laden(B, x, z - 5, 7, 0x3b3f4a, C.gelb); B.box(x - 1, 0.8, z - 2.3, 0.9, 1.2, 0.2, 0xc8873a); B.box(x - 1, 2, z - 2.3, 0.3, 1.4, 0.2, 0x5a3b26); [1, 2].forEach(d => B.box(x + d, 0.8, z - 2.3, 0.7, 0.7, 0.2, d % 2 ? C.rot : C.weiss)); },
+        'u4-focus': (B, x, z) => { haus(B, x, z - 6, 8, 5, 7, 0xe3b9a6, C.dach); B.box(x, 0, z - 3.45, 1.8, 2.6, 0.15, C.holz2); for (let i = 0; i < 4; i++) B.box(x - 3 + i * 0.5, 0, z - 1.5, 0.45, 1.2 + (i % 2) * 0.3, 0.9, [C.blau, C.rot, C.gelb, C.gruen][i]); },
+        'u4-skills': (B, x, z) => { haus(B, x - 1, z - 6, 7, 5, 5, C.orange, C.dach2); B.box(x - 1, 3, z - 3.4, 4, 0.8, 0.12, C.indigo);
+                                    B.box(x + 4, 0, z - 3, 0.25, 3.6, 0.25, 0x3b3f4a); B.box(x + 4, 3.4, z - 2.6, 1.4, 1, 0.1, C.weiss); B.box(x + 4, 3.2, z - 2.1, 0.8, 0.08, 0.8, C.orange); B.box(x + 3, 0, z - 1, 0.6, 0.6, 0.6, C.orange); },
+      },
+    },
+    moor: {
+      reihe: ['u5-grundwortschatz', 'u5-theme1', 'u5-will', 'u5-will-meinung', 'u5-theme2', 'u5-should', 'u5-wortstellung', 'u5-story', 'u5-weitere', 'u5-skills', 'u5-anwenden', 'u5-finale'],
+      alt: ['u5-grundwortschatz', 'u5-will', 'u5-will-meinung', 'u5-theme2', 'u5-should', 'u5-wortstellung', 'u5-anwenden', 'u5-finale'], zEnde: 2, zFest: { 'u5-theme2': 3 },
+      neu: {
+        'u5-theme1': (B, x, z) => [[-2.2, C.orange], [1.6, C.gruen]].forEach(([d, f]) => { for (let i = 0; i < 4; i++) B.box(x + d, i * 0.5, z - 3, 2.6 - i * 0.65, 0.5, 2.8, f); B.box(x + d, 0, z - 1.58, 0.6, 0.9, 0.06, 0x3b3f4a); }),
+        'u5-story': (B, x, z) => { haus(B, x, z - 6, 9, 5, 4.4, 0x9a948a, 0x5a5a5a); B.box(x, 0, z - 3.45, 1.6, 2.4, 0.15, C.holz2); B.box(x + 2.6, 3.6, z - 3.4, 3, 0.7, 0.12, C.gruen); B.box(x - 3.4, 0, z - 2, 0.9, 1.2, 0.9, C.holz); },
+        'u5-weitere': (B, x, z) => { zaun(B, x - 4, x + 4, z - 0.6, C.holz2); [[-2.4, -3], [0.4, -4.5], [2.6, -2.6]].forEach(([a, b]) => { B.box(x + a, 0.5, z + b, 1.1, 0.9, 1.6, C.weiss); B.box(x + a, 0.9, z + b + 1, 0.6, 0.6, 0.5, 0x2b2b2b);
+                                     [[-0.35, -0.5], [0.35, -0.5], [-0.35, 0.5], [0.35, 0.5]].forEach(([c, d]) => B.box(x + a + c, 0, z + b + d, 0.2, 0.5, 0.2, 0x2b2b2b)); }); },
+        'u5-skills': (B, x, z) => { B.box(x, 0.8, z - 3, 3.2, 0.2, 1.4, C.holz); [-1.2, 1.2].forEach(d => B.box(x + d, 0, z - 3, 0.2, 0.8, 1.2, C.holz2)); [-1.5, 1.5].forEach(d => B.box(x, 0.45, z - 3 + d, 3.2, 0.15, 0.5, C.holz));
+                                    B.box(x + 0.6, 1, z - 3, 0.9, 0.5, 0.6, 0xc8873a); B.box(x - 0.8, 1, z - 3, 0.6, 0.05, 0.6, C.rot); fels(B, x + 4, z - 5, 0.6); },
+      },
+    },
+  };
+  Object.entries(LAYOUT).forEach(([name, L]) => {
+    const S = SZENEN[name], n = L.reihe.length, x0 = -(n - 1) * ABSTAND / 2;
+    const altZ = {}; L.alt.forEach((id, i) => { if (S.plaetze[i]) altZ[id] = S.plaetze[i][1]; });
+    S.reihe = L.reihe;
+    S.plaetze = L.reihe.map((id, i) => [x0 + i * ABSTAND, L.z ? L.z[i] : L.zFest && L.zFest[id] != null ? L.zFest[id] : i === n - 1 && L.zEnde != null ? L.zEnde : i % 2 ? 1 : 6]);
+    S.seite = L.seite || [];
+    S.wahrzeichen = L.reihe.map(id => L.neu[id] || S.wahrzeichen[L.alt.indexOf(id)] || null);
+    S.weg = null; S.start = null;
+  });
+  // Ein Platz-Rechteck (Weg, Sockel, Wahrzeichen) frei halten: Bäume, Felsen, Ponys weichen aus
+  const imWeg = (S, x, z) => S.plaetze.some(([px, pz]) => Math.abs(x - px) < 7 && z > pz - 15 && z < pz + 6);
+  SZENEN.hafen.platz = id => SZENEN.hafen.plaetze[SZENEN.hafen.reihe.indexOf(id)];
+  SZENEN.moor.fluss = SZENEN.moor.plaetze[SZENEN.moor.reihe.indexOf('u5-theme2')][0];   // Holzbrücke über dem Fluss
+
   // Schon vorhandene Szene „hafen“: Meer, Boote, Möwen
   Object.assign(SZENEN.hafen, { wasser: { x: 0, z: 73, w: 260, d: 110, y: -1.4 }, boote: true, moewen: true });
-  Object.assign(SZENEN.moor, { wasser: { x: -12, z: -10, w: 6, d: 108, y: -1.1 } });
+  Object.assign(SZENEN.moor, { wasser: { x: SZENEN.moor.fluss, z: -10, w: 6, d: 108, y: -1.1 } });
   Object.values(SZENEN).forEach(S => { if (!S.weg) S.weg = welle(S.plaetze); if (!S.start) S.start = S.weg[0]; if (!S.seite) S.seite = []; });
 
   function baueHafen(B, S) {
     const kai = S.kai;
     // Boden: Klötze 4 × 4 – Kai (gepflastert) am Wasser, dahinter Gras; leicht unterschiedlich gefärbt
     for (let x = -128; x < 112; x += 4) for (let z = -64; z < kai; z += 4) {
-      const amKai = z >= kai - 12 && x > -84 && x < 48;
+      const amKai = z >= kai - 12 && x > -84 && x < 84;
       const d = Math.min(4, kai - z);                          // letzte Reihe endet an der Kaimauer (sonst gleiche Höhe wie die Mauer → Flimmern)
       B.box(x + 2, -2, z + d / 2, 4, 2, d, amKai ? variiere(C.kai, 0.03) : variiere(C.gras, 0.035));
     }
     B.box(0, -4, kai + 0.5, 192, 4, 1, C.mauer);              // Kaimauer
     for (let x = -94; x < 96; x += 3) B.box(x, -3.9, kai + 1.02, 2.8, 0.5, 0.06, C.stein2);
-    for (let x = -80; x < 48; x += 6) poller(B, x, kai - 0.6);
-    for (let x = -70; x < 48; x += 16) laterne(B, x + 5, kai - 2.2);
+    for (let x = -80; x < 80; x += 6) poller(B, x, kai - 0.6);
+    for (let x = -70; x < 80; x += 16) laterne(B, x + 5, kai - 2.2);
     // Barbican: bunte Reihenhäuser im Norden, dahinter Hügel von Devon
     const wand = [C.creme, C.rosa, C.hellblau, C.mint, C.gelb, C.weiss];
-    for (let x = -92, i = 0; x < 92; i++) { const w = 4.5 + (i % 3); if (x + w / 2 < -8 || x - w / 2 > 32) haus(B, x + w / 2, -22, w, 7, 5 + (i * 5 % 3), wand[i % wand.length], i % 4 ? C.dach : C.dach2); x += w + 0.2; }
+    const luecke = [S.platz('u1-theme2')[0] - 18, S.platz('u1-objektpronomen')[0] + 8];   // vor der Schule keine Reihenhäuser
+    for (let x = -92, i = 0; x < 92; i++) { const w = 4.5 + (i % 3); if (x + w / 2 < luecke[0] || x - w / 2 > luecke[1]) haus(B, x + w / 2, -22, w, 7, 5 + (i * 5 % 3), wand[i % wand.length], i % 4 ? C.dach : C.dach2); x += w + 0.2; }
     for (let x = -96; x < 96; x += 8) B.box(x + 4, -2, -46 - (x * 13 & 7), 8 + (x & 4), 4 + ((x * 3) & 3), 10, variiere(C.gras2, 0.08));
     for (let x = -100; x < 100; x += 14) B.box(x, -2, -62, 15, 8 + ((x * 7) & 5), 6, variiere(0x7fae6a, 0.06));
     [[-80, -10], [-70, -14], [-62, -6], [-36, -12], [-20, -14], [-6, -16], [38, -12], [46, -16], [62, -10], [70, -4], [78, -14], [64, 8], [74, 10], [-88, 2], [-86, 12]]
-      .forEach(([x, z], i) => baum(B, x, z, 0.8 + (i % 3) * 0.15));
+      .forEach(([x, z], i) => { if (!imWeg(S, x, z)) baum(B, x, z, 0.8 + (i % 3) * 0.15); });
     // Grüner Hügel des Hoe hinter Smeaton's Tower
-    B.box(66, 0, -4, 18, 1, 16, C.gras3); B.box(68, 1, -6, 12, 1, 10, C.gras);
+    const hoe = S.platz('u1-finale')[0] + 14;
+    B.box(hoe, 0, -4, 18, 1, 16, C.gras3); B.box(hoe + 2, 1, -6, 12, 1, 10, C.gras);
   }
 
   // ── Schilder (lesbar, immer zur Kamera) ─────────────────
@@ -478,9 +567,10 @@
     const pfeilGeo = new T.OctahedronGeometry(0.7, 0);
     const pfeilMat = new T.MeshLambertMaterial({ color: C.gold, emissive: 0x8a5a00, emissiveIntensity: 0.6 });
     const ST = o.stationen.map((st, i) => {
-      const pl = S.plaetze[i], u = pl ? uFuer(pl[0], pl[1]) : (i + 0.5) / N;   // mehr Stationen als Plätze: gleichmäßig verteilt
+      const k = S.reihe ? S.reihe.indexOf(st.id) : i;                                   // Platz der Station im Ort (über die ID)
+      const pl = S.plaetze[k], u = pl ? uFuer(pl[0], pl[1]) : (i + 0.5) / N;   // Station ohne Platz: gleichmäßig verteilt
       const p = kurve.getPointAt(u), tg = kurve.getTangentAt(u);
-      const sd = S.seite[i] || [0, -1];
+      const sd = S.seite[k] || [0, -1];
       const nord = new T.Vector3(-tg.z, 0, tg.x); if (nord.z > 0) nord.negate();            // die von der Kamera abgewandte Seite
       const quer = sd[1] < 0 ? nord : nord.clone().negate();                                // Seite des Wahrzeichens
       // Sockel und Schild immer hinter dem Weg – so verdeckt das Schild nie die Figur
@@ -497,7 +587,7 @@
       zeug.push(tex, schild.material);
       // Wahrzeichen (grau, bis die Station gemeistert ist)
       let lm = null, farben = null, grau = null;
-      const wz = S.wahrzeichen && S.wahrzeichen[i];
+      const wz = k >= 0 && S.wahrzeichen && S.wahrzeichen[k];
       if (wz) {
         const LB = Bau(); wz(LB, wp.x, wp.z);
         if (!LB.leer()) {

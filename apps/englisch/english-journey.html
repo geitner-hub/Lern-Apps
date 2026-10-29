@@ -194,6 +194,7 @@ const finaleGemeistert = u => u.stationen.some(st => st.art === 'finale' && A.z[
 function link(st) {
   const id = st.start || st.thema, t = LernKatalog.thema(id), q = t.quelle, p = new URLSearchParams(q.parameter || '');
   if (t.eltern || st.start) p.set('stufe', id);
+  if (Array.isArray(st.mit) && st.mit.length) p.set('mit', st.mit.join(','));   // kleine Abschnitte derselben Unit dazu (Vokabeltrainer)
   return '../../' + q.app + (p.toString() ? '?' + p : '');
 }
 

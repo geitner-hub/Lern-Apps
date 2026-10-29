@@ -1,0 +1,397 @@
+{
+ "typ": "gemischt",
+ "thema": "en.6.praepositionen",
+ "titel": "Präpositionen (Ort)",
+ "emoji": "🇬🇧",
+ "klasse": 6,
+ "sprache": "en-GB",
+ "runde": 8,
+ "untertitel": "Wo ist es? (Unit 3)",
+ "hilfe": [
+  {
+   "titel": "Präpositionen des Ortes",
+   "text": "Sie sagen, wo etwas ist. Neu in Klasse 6: opposite (gegenüber), near (in der Nähe von), above (über, ohne Berührung). on = auf (mit Berührung), above = über (ohne Berührung). between braucht zwei Dinge: between the park and the station.",
+   "beispiele": [
+    [
+     "The chemist's is opposite the school.",
+     "Die Apotheke ist gegenüber der Schule."
+    ],
+    [
+     "There's a café near the stadium.",
+     "In der Nähe des Stadions gibt es ein Café."
+    ],
+    [
+     "The lamp is above the table.",
+     "Die Lampe hängt über dem Tisch."
+    ],
+    [
+     "The ball is under the car.",
+     "Der Ball ist unter dem Auto."
+    ]
+   ]
+  }
+ ],
+ "stufen": [
+  {
+   "id": "en.6.praepositionen.wo",
+   "titel": "Wo ist es?",
+   "kurz": "The café is opposite the park.",
+   "typ": "lueckentext",
+   "anweisung": "Welche Präposition passt?",
+   "aufgaben": [
+    {
+     "text": "The ball is ___ the goal. (im Tor)",
+     "antwort": "in",
+     "optionen": [
+      "in",
+      "on",
+      "behind"
+     ],
+     "tipp": "in = in · on = auf · under = unter · next to = neben · behind = hinter · in front of = vor · between = zwischen · opposite = gegenüber · near = in der Nähe von · above = über"
+    },
+    {
+     "text": "The doctor's is ___ the chemist's. (neben)",
+     "antwort": "next to",
+     "optionen": [
+      "next to",
+      "opposite",
+      "under"
+     ],
+     "tipp": "in = in · on = auf · under = unter · next to = neben · behind = hinter · in front of = vor · between = zwischen · opposite = gegenüber · near = in der Nähe von · above = über"
+    },
+    {
+     "text": "Our school is ___ the sports centre. (gegenüber)",
+     "antwort": "opposite",
+     "optionen": [
+      "opposite",
+      "between",
+      "in"
+     ],
+     "tipp": "in = in · on = auf · under = unter · next to = neben · behind = hinter · in front of = vor · between = zwischen · opposite = gegenüber · near = in der Nähe von · above = über"
+    },
+    {
+     "text": "The kitten is sleeping ___ the bench. (unter)",
+     "antwort": "under",
+     "optionen": [
+      "under",
+      "on",
+      "above"
+     ],
+     "tipp": "in = in · on = auf · under = unter · next to = neben · behind = hinter · in front of = vor · between = zwischen · opposite = gegenüber · near = in der Nähe von · above = über"
+    },
+    {
+     "text": "The café is ___ the park and the station. (zwischen)",
+     "antwort": "between",
+     "optionen": [
+      "between",
+      "next to",
+      "behind"
+     ],
+     "tipp": "in = in · on = auf · under = unter · next to = neben · behind = hinter · in front of = vor · between = zwischen · opposite = gegenüber · near = in der Nähe von · above = über"
+    },
+    {
+     "text": "The boys are playing cricket ___ the trees. (hinter)",
+     "antwort": "behind",
+     "optionen": [
+      "behind",
+      "in front of",
+      "on"
+     ],
+     "tipp": "in = in · on = auf · under = unter · next to = neben · behind = hinter · in front of = vor · between = zwischen · opposite = gegenüber · near = in der Nähe von · above = über"
+    },
+    {
+     "text": "There's a bike ___ the door. (vor)",
+     "antwort": "in front of",
+     "optionen": [
+      "in front of",
+      "behind",
+      "under"
+     ],
+     "tipp": "in = in · on = auf · under = unter · next to = neben · behind = hinter · in front of = vor · between = zwischen · opposite = gegenüber · near = in der Nähe von · above = über"
+    },
+    {
+     "text": "The yogurt is ___ the table. (auf)",
+     "antwort": "on",
+     "optionen": [
+      "on",
+      "in",
+      "under"
+     ],
+     "tipp": "in = in · on = auf · under = unter · next to = neben · behind = hinter · in front of = vor · between = zwischen · opposite = gegenüber · near = in der Nähe von · above = über"
+    },
+    {
+     "text": "There's a lamp ___ the table. (über)",
+     "antwort": "above",
+     "optionen": [
+      "above",
+      "on",
+      "under"
+     ],
+     "tipp": "in = in · on = auf · under = unter · next to = neben · behind = hinter · in front of = vor · between = zwischen · opposite = gegenüber · near = in der Nähe von · above = über"
+    },
+    {
+     "text": "I live ___ the park, so I go running there every day. (in der Nähe)",
+     "antwort": "near",
+     "optionen": [
+      "near",
+      "opposite",
+      "in"
+     ],
+     "tipp": "in = in · on = auf · under = unter · next to = neben · behind = hinter · in front of = vor · between = zwischen · opposite = gegenüber · near = in der Nähe von · above = über"
+    },
+    {
+     "text": "The carrots are ___ the shopping bag. (in)",
+     "antwort": "in",
+     "optionen": [
+      "in",
+      "on",
+      "between"
+     ],
+     "tipp": "in = in · on = auf · under = unter · next to = neben · behind = hinter · in front of = vor · between = zwischen · opposite = gegenüber · near = in der Nähe von · above = über"
+    },
+    {
+     "text": "Tom is standing ___ Lisa and Max. (zwischen)",
+     "antwort": "between",
+     "optionen": [
+      "between",
+      "behind",
+      "next to"
+     ],
+     "tipp": "in = in · on = auf · under = unter · next to = neben · behind = hinter · in front of = vor · between = zwischen · opposite = gegenüber · near = in der Nähe von · above = über"
+    },
+    {
+     "text": "The pharmacy is ___ the bus stop – just cross the street. (gegenüber)",
+     "antwort": "opposite",
+     "optionen": [
+      "opposite",
+      "under",
+      "in"
+     ],
+     "tipp": "in = in · on = auf · under = unter · next to = neben · behind = hinter · in front of = vor · between = zwischen · opposite = gegenüber · near = in der Nähe von · above = über"
+    },
+    {
+     "text": "My glasses are ___ the sofa! (unter)",
+     "antwort": "under",
+     "optionen": [
+      "under",
+      "in front of",
+      "above"
+     ],
+     "tipp": "in = in · on = auf · under = unter · next to = neben · behind = hinter · in front of = vor · between = zwischen · opposite = gegenüber · near = in der Nähe von · above = über"
+    },
+    {
+     "text": "The judo club is ___ the swimming pool. (neben)",
+     "antwort": "next to",
+     "optionen": [
+      "next to",
+      "between",
+      "on"
+     ],
+     "tipp": "in = in · on = auf · under = unter · next to = neben · behind = hinter · in front of = vor · between = zwischen · opposite = gegenüber · near = in der Nähe von · above = über"
+    },
+    {
+     "text": "Please wait ___ the gym – not inside. (vor)",
+     "antwort": "in front of",
+     "optionen": [
+      "in front of",
+      "in",
+      "above"
+     ],
+     "tipp": "in = in · on = auf · under = unter · next to = neben · behind = hinter · in front of = vor · between = zwischen · opposite = gegenüber · near = in der Nähe von · above = über"
+    },
+    {
+     "text": "There's a climbing wall ___ the sports hall. (in)",
+     "antwort": "in",
+     "optionen": [
+      "in",
+      "on",
+      "opposite"
+     ],
+     "tipp": "in = in · on = auf · under = unter · next to = neben · behind = hinter · in front of = vor · between = zwischen · opposite = gegenüber · near = in der Nähe von · above = über"
+    },
+    {
+     "text": "The skateboard is ___ the garage, behind the car. (in)",
+     "antwort": "in",
+     "optionen": [
+      "in",
+      "on",
+      "under"
+     ],
+     "tipp": "in = in · on = auf · under = unter · next to = neben · behind = hinter · in front of = vor · between = zwischen · opposite = gegenüber · near = in der Nähe von · above = über"
+    },
+    {
+     "text": "The sun is ___ the trees. (über)",
+     "antwort": "above",
+     "optionen": [
+      "above",
+      "under",
+      "between"
+     ],
+     "tipp": "in = in · on = auf · under = unter · next to = neben · behind = hinter · in front of = vor · between = zwischen · opposite = gegenüber · near = in der Nähe von · above = über"
+    },
+    {
+     "text": "Is there a doctor ___ here? (in der Nähe)",
+     "antwort": "near",
+     "optionen": [
+      "near",
+      "next",
+      "between"
+     ],
+     "tipp": "in = in · on = auf · under = unter · next to = neben · behind = hinter · in front of = vor · between = zwischen · opposite = gegenüber · near = in der Nähe von · above = über"
+    }
+   ]
+  },
+  {
+   "id": "en.6.praepositionen.saetze",
+   "titel": "Sätze bauen",
+   "kurz": "Wörter in die richtige Reihenfolge",
+   "typ": "lueckentext",
+   "anweisung": "Wo ist es? Sag es in einem Satz.",
+   "aufgaben": [
+    {
+     "typ": "sortieren",
+     "frage": "Bau den Satz.",
+     "teile": [
+      "The ball",
+      "is",
+      "under",
+      "the car."
+     ],
+     "loesung": "The ball is under the car.",
+     "tipp": "in = in · on = auf · under = unter · next to = neben · behind = hinter · in front of = vor · between = zwischen · opposite = gegenüber · near = in der Nähe von · above = über"
+    },
+    {
+     "typ": "sortieren",
+     "frage": "Bau den Satz.",
+     "teile": [
+      "The chemist's",
+      "is",
+      "next to",
+      "the doctor's."
+     ],
+     "loesung": "The chemist's is next to the doctor's.",
+     "tipp": "in = in · on = auf · under = unter · next to = neben · behind = hinter · in front of = vor · between = zwischen · opposite = gegenüber · near = in der Nähe von · above = über"
+    },
+    {
+     "typ": "sortieren",
+     "frage": "Bau den Satz.",
+     "teile": [
+      "The park",
+      "is",
+      "opposite",
+      "our school."
+     ],
+     "loesung": "The park is opposite our school.",
+     "tipp": "in = in · on = auf · under = unter · next to = neben · behind = hinter · in front of = vor · between = zwischen · opposite = gegenüber · near = in der Nähe von · above = über"
+    },
+    {
+     "typ": "sortieren",
+     "frage": "Bau den Satz.",
+     "teile": [
+      "My bag",
+      "is",
+      "behind",
+      "the door."
+     ],
+     "loesung": "My bag is behind the door.",
+     "tipp": "in = in · on = auf · under = unter · next to = neben · behind = hinter · in front of = vor · between = zwischen · opposite = gegenüber · near = in der Nähe von · above = über"
+    },
+    {
+     "typ": "sortieren",
+     "frage": "Bau den Satz.",
+     "teile": [
+      "The kitten",
+      "is sitting",
+      "between",
+      "the two chairs."
+     ],
+     "loesung": "The kitten is sitting between the two chairs.",
+     "tipp": "in = in · on = auf · under = unter · next to = neben · behind = hinter · in front of = vor · between = zwischen · opposite = gegenüber · near = in der Nähe von · above = über"
+    },
+    {
+     "typ": "sortieren",
+     "frage": "Bau den Satz.",
+     "teile": [
+      "We",
+      "are waiting",
+      "in front of",
+      "the gym."
+     ],
+     "loesung": "We are waiting in front of the gym.",
+     "tipp": "in = in · on = auf · under = unter · next to = neben · behind = hinter · in front of = vor · between = zwischen · opposite = gegenüber · near = in der Nähe von · above = über"
+    },
+    {
+     "typ": "sortieren",
+     "frage": "Bau die Frage.",
+     "teile": [
+      "Is",
+      "there",
+      "a café",
+      "near",
+      "the stadium?"
+     ],
+     "loesung": "Is there a café near the stadium?",
+     "tipp": "in = in · on = auf · under = unter · next to = neben · behind = hinter · in front of = vor · between = zwischen · opposite = gegenüber · near = in der Nähe von · above = über"
+    },
+    {
+     "typ": "sortieren",
+     "frage": "Bau den Satz.",
+     "teile": [
+      "The poster",
+      "is",
+      "above",
+      "my bed."
+     ],
+     "loesung": "The poster is above my bed.",
+     "tipp": "in = in · on = auf · under = unter · next to = neben · behind = hinter · in front of = vor · between = zwischen · opposite = gegenüber · near = in der Nähe von · above = über"
+    }
+   ]
+  },
+  {
+   "id": "en.6.praepositionen.fehler",
+   "titel": "Fehler finden",
+   "kurz": "Tippe die falsche Präposition an",
+   "typ": "markieren",
+   "anweisung": "Eine Präposition passt nicht. Tippe sie an.",
+   "aufgaben": [
+    {
+     "satz": "The cat is sleeping [on] the bed. It's dark there and nobody can see it.",
+     "richtig": "under",
+     "erklaerung": "Niemand sieht sie, es ist dunkel → unter dem Bett: under the bed."
+    },
+    {
+     "satz": "The café is [between] the station. Just cross the street.",
+     "richtig": "opposite",
+     "erklaerung": "Über die Straße → gegenüber: opposite the station. between braucht zwei Dinge."
+    },
+    {
+     "satz": "Stand [behind] the door so I can see you.",
+     "richtig": "in front of",
+     "erklaerung": "Damit ich dich sehe → vor der Tür: in front of the door."
+    },
+    {
+     "satz": "The pasties are [under] the shop window. You can see them from the street.",
+     "richtig": "in",
+     "erklaerung": "Man sieht sie im Schaufenster → in the shop window."
+    },
+    {
+     "satz": "Lisa is sitting [next] Tom and Max.",
+     "richtig": "between",
+     "erklaerung": "Zwischen zwei Personen → between Tom and Max."
+    },
+    {
+     "satz": "The poster is [under] my bed, on the wall.",
+     "richtig": "above",
+     "erklaerung": "An der Wand über dem Bett → above my bed."
+    }
+   ]
+  },
+  {
+   "id": "en.6.praepositionen.mix",
+   "titel": "Mix",
+   "kurz": "Alles durcheinander",
+   "mix": true,
+   "runde": 10
+  }
+ ]
+}

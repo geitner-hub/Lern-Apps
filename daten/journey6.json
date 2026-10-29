@@ -3,7 +3,7 @@
  "titel": "English Journey Year 6",
  "buch": "Highlight 6",
  "klasse": 6,
- "hinweis": "Lernweg durch Highlight 6 (Units 1–5) für apps/englisch/english-journey.html. Kein eigener Spielstand: Eine Station gilt als gemeistert, wenn ihr thema im Pass gemeistert ist (2 Runden ≥ 70 %). Sie öffnet sich, wenn die Lehrkraft sie freigegeben hat (Unit-Thema und thema) UND alle Stationen aus braucht gemeistert sind. start = Stufe, mit der die Übung direkt beginnt (sonst thema). Die erste Station einer Unit braucht das Finale der Unit davor (die Brücke zum nächsten Ort). Stationen, deren thema noch keine App hat, zeigen „wird gebaut“ und zählen nicht für das Finale. Station-IDs nicht umbenennen. Format: README → English Journey.",
+ "hinweis": "Lernweg durch Highlight 6 (Units 1–5) für apps/englisch/english-journey.html. Kein eigener Spielstand: Eine Station gilt als gemeistert, wenn ihr thema im Pass gemeistert ist (2 Runden ≥ 70 %). Sie öffnet sich, wenn die Lehrkraft sie freigegeben hat (Unit-Thema und thema) UND alle Stationen aus braucht gemeistert sind. start = Stufe, mit der die Übung direkt beginnt (sonst thema). Die erste Station einer Unit braucht das Finale der Unit davor (die Brücke zum nächsten Ort). Stationen, deren thema noch keine App hat, zeigen „wird gebaut“ und zählen nicht für das Finale. Station-IDs nicht umbenennen. Format: README → English Journey. mit = weitere Abschnitte derselben Vokabel-Unit, die die Wörter-Station dazunimmt (kleine Abschnitte); gezählt wird thema.",
  "units": [
   {
    "id": "u1",
@@ -87,6 +87,40 @@
      ]
     },
     {
+     "id": "u1-story",
+     "art": "woerter",
+     "thema": "en.6.vok.u1.story",
+     "mit": [
+      "focusonlanguage"
+     ],
+     "titel": "Story + Focus on language",
+     "ort": "Aquarium",
+     "braucht": [
+      "u1-theme2"
+     ]
+    },
+    {
+     "id": "u1-weitere",
+     "art": "woerter",
+     "thema": "en.6.vok.u1.weitere2",
+     "titel": "Weitere Wörter",
+     "ort": "Eisdiele",
+     "braucht": [
+      "u1-story"
+     ]
+    },
+    {
+     "id": "u1-linking-words",
+     "art": "grammatik",
+     "thema": "en.6.linking-words",
+     "start": "en.6.linking-words.mix",
+     "titel": "linking words (and, but, so, because)",
+     "ort": "Postamt",
+     "braucht": [
+      "u1-story"
+     ]
+    },
+    {
      "id": "u1-anwenden",
      "art": "anwenden",
      "thema": "en.6.anwenden.u1",
@@ -110,6 +144,9 @@
       "u1-was-were",
       "u1-theme2",
       "u1-objektpronomen",
+      "u1-story",
+      "u1-weitere",
+      "u1-linking-words",
       "u1-anwenden"
      ]
     }
@@ -135,6 +172,19 @@
      "ort": "Bushaltestelle",
      "braucht": [
       "u1-finale"
+     ]
+    },
+    {
+     "id": "u2-theme1",
+     "art": "woerter",
+     "thema": "en.6.vok.u2.theme1",
+     "mit": [
+      "weitere2"
+     ],
+     "titel": "Theme 1 + Weitere Wörter",
+     "ort": "Bäckerei",
+     "braucht": [
+      "u2-grundwortschatz"
      ]
     },
     {
@@ -198,6 +248,26 @@
      ]
     },
     {
+     "id": "u2-story",
+     "art": "woerter",
+     "thema": "en.6.vok.u2.story",
+     "titel": "Story",
+     "ort": "Bücherei",
+     "braucht": [
+      "u2-theme2"
+     ]
+    },
+    {
+     "id": "u2-weitere",
+     "art": "woerter",
+     "thema": "en.6.vok.u2.weitere3",
+     "titel": "Weitere Wörter 2",
+     "ort": "Spielplatz",
+     "braucht": [
+      "u2-story"
+     ]
+    },
+    {
      "id": "u2-anwenden",
      "art": "anwenden",
      "thema": "en.6.anwenden.u2",
@@ -215,12 +285,15 @@
      "ort": "Straßenfest",
      "braucht": [
       "u2-grundwortschatz",
+      "u2-theme1",
       "u2-there-is",
       "u2-theme2",
       "u2-did-fragewort",
       "u2-did-kurz",
       "u2-plural",
       "u2-can-mustnt",
+      "u2-story",
+      "u2-weitere",
       "u2-anwenden"
      ]
     }
@@ -242,6 +315,9 @@
      "id": "u3-theme1",
      "art": "woerter",
      "thema": "en.6.vok.u3.theme1",
+     "mit": [
+      "grundwortschatz"
+     ],
      "titel": "Theme 1",
      "ort": "Imbiss",
      "braucht": [
@@ -258,6 +334,16 @@
       "u3-theme1"
      ],
      "start": "en.5.present-progressive.mix"
+    },
+    {
+     "id": "u3-gegensaetze",
+     "art": "woerter",
+     "thema": "en.6.vok.u3.gegensaetzemitun",
+     "titel": "Gegensätze mit „un-“",
+     "ort": "Turnhalle",
+     "braucht": [
+      "u3-theme1"
+     ]
     },
     {
      "id": "u3-theme2",
@@ -290,6 +376,40 @@
      ]
     },
     {
+     "id": "u3-story",
+     "art": "woerter",
+     "thema": "en.6.vok.u3.story",
+     "mit": [
+      "focusonlanguage"
+     ],
+     "titel": "Story + Focus on language",
+     "ort": "Schwimmbad",
+     "braucht": [
+      "u3-theme2"
+     ]
+    },
+    {
+     "id": "u3-skills",
+     "art": "woerter",
+     "thema": "en.6.vok.u3.skillstraining",
+     "titel": "Skills training",
+     "ort": "Kletterwand",
+     "braucht": [
+      "u3-story"
+     ]
+    },
+    {
+     "id": "u3-praepositionen",
+     "art": "grammatik",
+     "thema": "en.6.praepositionen",
+     "start": "en.6.praepositionen.mix",
+     "titel": "Präpositionen (Ort)",
+     "ort": "Spielplatz",
+     "braucht": [
+      "u3-story"
+     ]
+    },
+    {
      "id": "u3-anwenden",
      "art": "anwenden",
      "thema": "en.6.anwenden.u3",
@@ -308,9 +428,13 @@
      "braucht": [
       "u3-theme1",
       "u3-present-progressive",
+      "u3-gegensaetze",
       "u3-theme2",
       "u3-should",
       "u3-much-many",
+      "u3-story",
+      "u3-skills",
+      "u3-praepositionen",
       "u3-anwenden"
      ]
     }
@@ -332,6 +456,10 @@
      "id": "u4-theme1",
      "art": "woerter",
      "thema": "en.6.vok.u4.theme1",
+     "mit": [
+      "grundwortschatz",
+      "theme2"
+     ],
      "titel": "Theme 1",
      "ort": "Zeitungskiosk",
      "braucht": [
@@ -364,6 +492,19 @@
      "thema": "en.6.superlativ.formen",
      "titel": "Superlativ",
      "ort": "Kaufhaus",
+     "braucht": [
+      "u4-theme1"
+     ]
+    },
+    {
+     "id": "u4-weitere",
+     "art": "woerter",
+     "thema": "en.6.vok.u4.weitere2",
+     "mit": [
+      "weitere3"
+     ],
+     "titel": "Weitere Wörter 1 + 2",
+     "ort": "Musikladen",
      "braucht": [
       "u4-theme1"
      ]
@@ -409,6 +550,26 @@
      ]
     },
     {
+     "id": "u4-focus",
+     "art": "woerter",
+     "thema": "en.6.vok.u4.focusonlanguage",
+     "titel": "Focus on language",
+     "ort": "Bücherei",
+     "braucht": [
+      "u4-story"
+     ]
+    },
+    {
+     "id": "u4-skills",
+     "art": "woerter",
+     "thema": "en.6.vok.u4.skillstraining",
+     "titel": "Skills training",
+     "ort": "Jugendzentrum",
+     "braucht": [
+      "u4-focus"
+     ]
+    },
+    {
      "id": "u4-anwenden",
      "art": "anwenden",
      "thema": "en.6.anwenden.u4",
@@ -429,10 +590,13 @@
       "u4-komparativ",
       "u4-good-better-best",
       "u4-superlativ",
+      "u4-weitere",
       "u4-story",
       "u4-have-to",
       "u4-zeitangaben",
       "u4-story-past",
+      "u4-focus",
+      "u4-skills",
       "u4-anwenden"
      ]
     }
@@ -464,6 +628,16 @@
      "ort": "Parkplatz am Moor",
      "braucht": [
       "u4-finale"
+     ]
+    },
+    {
+     "id": "u5-theme1",
+     "art": "woerter",
+     "thema": "en.6.vok.u5.theme1",
+     "titel": "Theme 1",
+     "ort": "Zeltplatz",
+     "braucht": [
+      "u5-grundwortschatz"
      ]
     },
     {
@@ -517,6 +691,42 @@
      ]
     },
     {
+     "id": "u5-story",
+     "art": "woerter",
+     "thema": "en.6.vok.u5.story",
+     "titel": "Story",
+     "ort": "Jugendherberge",
+     "braucht": [
+      "u5-theme2"
+     ]
+    },
+    {
+     "id": "u5-weitere",
+     "art": "woerter",
+     "thema": "en.6.vok.u5.weitere2",
+     "mit": [
+      "focusonlanguage"
+     ],
+     "titel": "Weitere Wörter + Focus on language",
+     "ort": "Schafweide",
+     "braucht": [
+      "u5-story"
+     ]
+    },
+    {
+     "id": "u5-skills",
+     "art": "woerter",
+     "thema": "en.6.vok.u5.skillstraining",
+     "mit": [
+      "weitere3"
+     ],
+     "titel": "Skills training + Weitere Wörter 2",
+     "ort": "Picknickplatz",
+     "braucht": [
+      "u5-weitere"
+     ]
+    },
+    {
      "id": "u5-anwenden",
      "art": "anwenden",
      "thema": "en.6.anwenden.u5",
@@ -534,11 +744,15 @@
      "ort": "Gipfel (Tor)",
      "braucht": [
       "u5-grundwortschatz",
+      "u5-theme1",
       "u5-will",
       "u5-will-meinung",
       "u5-theme2",
       "u5-should",
       "u5-wortstellung",
+      "u5-story",
+      "u5-weitere",
+      "u5-skills",
       "u5-anwenden"
      ]
     }
