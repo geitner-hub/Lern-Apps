@@ -776,6 +776,7 @@ for jw_p in sorted(ROOT.glob('daten/journey/bausteine-*.json')):
                                                                                 and t[1] in ('', 'g', 'b') for t in zl) for zl in z):
                 F(f'{jw_r}: Hefteintrag {bid} – zeilen müssen [[text, stil], …] sein (stil "", "g" oder "b")')
             elif not z: H(f'{jw_r}: Hefteintrag {bid} steht nur im Heft – Inhalt noch nachtragen')
+            if b.get('entwurf'): H(f'{jw_r}: Hefteintrag {bid} („{b.get("titel")}“) ist ein Entwurf – mit dem echten Heft abgleichen')
         elif art == 'uebung':
             if b.get('typ') not in JW_UEBUNGEN: F(f'{jw_r}: Übung {bid} – typ muss {", ".join(JW_UEBUNGEN)} sein')
             if not str(b.get('titel') or '').strip(): F(f'{jw_r}: Übung {bid} ohne titel')
@@ -857,7 +858,8 @@ for jw_p in sorted(ROOT.glob('daten/journey*.json')):
             kb_ = k.get('baustein') if isinstance(k, dict) else None
             if kb_ not in alle or alle[kb_].get('art') != 'kann': FA(f'Unit {uid}: Kann-Satz {kb_} gibt es nicht'); continue
             genutzt.add(kb_)
-            if k.get('abschnitt') is None: H(f'{jw_r}: Kann-Satz {kb_} („{alle[kb_].get("text")}“) ist mit keinem Abschnitt verknüpft')
+            if k.get('abschnitt') is None:
+                if not k.get('imUnterricht'): H(f'{jw_r}: Kann-Satz {kb_} („{alle[kb_].get("text")}“) ist mit keinem Abschnitt verknüpft')
             elif k['abschnitt'] not in abschnitte or abschnitte[k['abschnitt']] != uid: FA(f'Unit {uid}: Kann-Satz {kb_} – Abschnitt {k["abschnitt"]} gibt es in der Unit nicht')
     ungenutzt = [b for b in alle if b not in genutzt]
     if ungenutzt: H(f'{jw_r}: Bausteine, die kein Schritt nutzt: {", ".join(ungenutzt[:5])}{" …" if len(ungenutzt) > 5 else ""}')

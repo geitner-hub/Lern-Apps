@@ -154,157 +154,87 @@
    "alt": "en.6.lernweg-u1",
    "abschnitte": [
     {
-     "id": "u1-a-grundwortschatz",
-     "titel": "Grundwortschatz",
-     "schritte": [
-      {
-       "id": "u1-a-grundwortschatz-u1-grundwortschatz",
-       "art": "app",
-       "station": "u1-grundwortschatz"
-      }
-     ]
-    },
-    {
-     "id": "u1-a-theme1",
-     "titel": "Theme 1",
-     "schritte": [
-      {
-       "id": "u1-a-theme1-u1-theme1",
-       "art": "app",
-       "station": "u1-theme1"
-      }
-     ]
-    },
-    {
-     "id": "u1-a-theme2",
-     "titel": "Theme 2",
-     "schritte": [
-      {
-       "id": "u1-a-theme2-u1-theme2",
-       "art": "app",
-       "station": "u1-theme2"
-      }
-     ]
-    },
-    {
-     "id": "u1-a-story",
-     "titel": "Everybody needs friends",
-     "kurz": "Lesen · Vokabeln",
-     "ico": "📖",
-     "buch": {
-      "von": 14,
-      "bis": 15
-     },
-     "alt": {
-      "nr": 1,
-      "kontrolle": "3"
-     },
-     "schritte": [
-      {
-       "id": "u1-a-story-lesen",
-       "art": "lesen",
-       "buch": {
-        "seite": 14,
-        "bis": 15
-       },
-       "text": "Lies die Geschichte.",
-       "alt": "0"
-      },
-      {
-       "id": "u1-a-story-buch",
-       "art": "uebung",
-       "buch": {
-        "seite": 15,
-        "uebung": "2 und 3"
-       },
-       "text": "Schreibe die ganzen Sätze ins Heft.",
-       "alt": "1"
-      },
-      {
-       "id": "u1-a-story-ue",
-       "art": "uebung",
-       "baustein": "ue-u1-story-a",
-       "alt": "2"
-      },
-      {
-       "id": "u1-a-story-ue2",
-       "art": "uebung",
-       "baustein": "ue-u1-story-b",
-       "alt": "2"
-      },
-      {
-       "id": "u1-a-story-ue3",
-       "art": "uebung",
-       "baustein": "ue-u1-story-c",
-       "alt": "2"
-      },
-      {
-       "id": "u1-a-story-extra",
-       "art": "extra",
-       "text": "Arbeitsblatt 1 (am Pult holen).",
-       "alt": "4"
-      },
-      {
-       "id": "u1-a-story-u1-story",
-       "art": "app",
-       "station": "u1-story"
-      }
-     ]
-    },
-    {
      "id": "u1-a-simple-past",
-     "titel": "Simple past",
+     "titel": "Simple past (Wiederholung)",
      "kurz": "Grammatik · Hefteintrag 1",
      "ico": "⏪",
      "buch": {
       "von": 16,
       "bis": 17
      },
+     "niveaus": true,
      "alt": {
       "nr": 2,
-      "kontrolle": "3"
+      "kontrolle": "2.3"
      },
      "schritte": [
       {
        "id": "u1-a-simple-past-he",
        "art": "hefteintrag",
        "baustein": "he-u1-simple-past",
-       "alt": "0"
+       "alt": "2.0"
+      },
+      {
+       "id": "u1-a-simple-past-buch",
+       "art": "uebung",
+       "buch": {
+        "seite": 16,
+        "uebung": "2a"
+       },
+       "text": "Schreibe die ganzen Sätze ins Heft."
+      },
+      {
+       "id": "u1-a-simple-past-buch2",
+       "art": "uebung",
+       "buch": {
+        "seite": 17,
+        "uebung": "3"
+       },
+       "text": "Schreibe die ganzen Sätze ins Heft."
       },
       {
        "id": "u1-a-simple-past-ue",
        "art": "uebung",
        "baustein": "ue-u1-simple-past-a",
-       "alt": "1"
+       "alt": "2.1"
       },
       {
        "id": "u1-a-simple-past-ue2",
        "art": "uebung",
        "baustein": "ue-u1-simple-past-b",
-       "alt": "1"
+       "alt": "2.1"
       },
       {
        "id": "u1-a-simple-past-ue3",
        "art": "uebung",
        "baustein": "ue-u1-simple-past-c",
-       "alt": "1"
+       "alt": "2.1"
       },
       {
-       "id": "u1-a-simple-past-buch",
+       "id": "u1-a-simple-past-buch3",
        "art": "uebung",
        "buch": {
         "seite": 17,
         "uebung": "6"
        },
        "text": "„Mia’s first days at school“: Schreibe die ganzen Sätze ins Heft.",
-       "alt": "2"
+       "niveau": [
+        2,
+        3
+       ],
+       "alt": "2.2"
       },
       {
        "id": "u1-a-simple-past-extra",
        "art": "extra",
        "text": "Arbeitsblatt 2 (am Pult holen) · Lernwelt-App „Simple Past“.",
        "thema": "en.5.simple-past",
-       "alt": "4"
+       "alt": "2.4"
+      },
+      {
+       "id": "u1-a-simple-past-u1-grundwortschatz",
+       "art": "app",
+       "station": "u1-grundwortschatz"
       },
       {
        "id": "u1-a-simple-past-u1-simple-past",
@@ -319,8 +249,192 @@
      ]
     },
     {
+     "id": "u1-a-lead-in",
+     "titel": "Lead-in: After the holidays",
+     "kurz": "Einstieg · Wörter",
+     "ico": "🏖️",
+     "buch": {
+      "von": 8,
+      "bis": 9
+     },
+     "schritte": [
+      {
+       "id": "u1-a-lead-in-buch",
+       "art": "uebung",
+       "buch": {
+        "seite": 9,
+        "uebung": "2"
+       },
+       "text": "Satzbaukasten: Baue Sätze und schreibe sie ganz ins Heft."
+      }
+     ]
+    },
+    {
+     "id": "u1-a-theme1",
+     "titel": "Theme 1: Back at school",
+     "kurz": "Wörter · Schreiben",
+     "ico": "🏫",
+     "buch": {
+      "von": 10,
+      "bis": 11
+     },
+     "niveaus": true,
+     "schritte": [
+      {
+       "id": "u1-a-theme1-buch",
+       "art": "uebung",
+       "buch": {
+        "seite": 10,
+        "uebung": "2"
+       },
+       "text": "Begrüßungen: Schreibe die ganzen Sätze ins Heft."
+      },
+      {
+       "id": "u1-a-theme1-buch2",
+       "art": "uebung",
+       "buch": {
+        "seite": 11,
+        "uebung": "5"
+       },
+       "text": "Mias E-Mail (A/B): Schreibe die ganzen Sätze ins Heft."
+      },
+      {
+       "id": "u1-a-theme1-buch3",
+       "art": "uebung",
+       "buch": {
+        "seite": 11,
+        "uebung": "6a"
+       },
+       "text": "Dein Schultag: Schreibe mit dem Schreibgerüst ins Heft.",
+       "niveau": [
+        2,
+        3
+       ]
+      },
+      {
+       "id": "u1-a-theme1-u1-theme1",
+       "art": "app",
+       "station": "u1-theme1"
+      }
+     ]
+    },
+    {
+     "id": "u1-a-theme2",
+     "titel": "Theme 2: School clubs",
+     "kurz": "Wörter",
+     "ico": "⚽",
+     "buch": {
+      "von": 12,
+      "bis": 13
+     },
+     "schritte": [
+      {
+       "id": "u1-a-theme2-buch",
+       "art": "uebung",
+       "buch": {
+        "seite": 12,
+        "uebung": "1"
+       },
+       "text": "Welcher Club passt? Schreibe die ganzen Sätze ins Heft."
+      },
+      {
+       "id": "u1-a-theme2-u1-theme2",
+       "art": "app",
+       "station": "u1-theme2"
+      }
+     ]
+    },
+    {
+     "id": "u1-a-story",
+     "titel": "Story: Everybody needs friends",
+     "kurz": "Lesen · Wörter",
+     "ico": "📖",
+     "buch": {
+      "von": 14,
+      "bis": 15
+     },
+     "niveaus": true,
+     "alt": {
+      "nr": 1,
+      "kontrolle": "1.3"
+     },
+     "schritte": [
+      {
+       "id": "u1-a-story-lesen",
+       "art": "lesen",
+       "buch": {
+        "seite": 14,
+        "bis": 15
+       },
+       "text": "Lies die Geschichte.",
+       "alt": "1.0"
+      },
+      {
+       "id": "u1-a-story-buch",
+       "art": "uebung",
+       "buch": {
+        "seite": 15,
+        "uebung": "2"
+       },
+       "text": "was / were: Schreibe die ganzen Sätze ins Heft.",
+       "alt": "1.1"
+      },
+      {
+       "id": "u1-a-story-buch2",
+       "art": "uebung",
+       "buch": {
+        "seite": 15,
+        "uebung": "3"
+       },
+       "text": "Gefühle: Schreibe die ganzen Sätze ins Heft.",
+       "alt": "1.1"
+      },
+      {
+       "id": "u1-a-story-buch3",
+       "art": "uebung",
+       "buch": {
+        "seite": 15,
+        "uebung": "4"
+       },
+       "text": "Mia’s story: Schreibe die Geschichte ins Heft.",
+       "niveau": [
+        3
+       ]
+      },
+      {
+       "id": "u1-a-story-ue",
+       "art": "uebung",
+       "baustein": "ue-u1-story-a",
+       "alt": "1.2"
+      },
+      {
+       "id": "u1-a-story-ue2",
+       "art": "uebung",
+       "baustein": "ue-u1-story-b",
+       "alt": "1.2"
+      },
+      {
+       "id": "u1-a-story-ue3",
+       "art": "uebung",
+       "baustein": "ue-u1-story-c",
+       "alt": "1.2"
+      },
+      {
+       "id": "u1-a-story-extra",
+       "art": "extra",
+       "text": "Arbeitsblatt 1 (am Pult holen).",
+       "alt": "1.4"
+      },
+      {
+       "id": "u1-a-story-u1-story",
+       "art": "app",
+       "station": "u1-story"
+      }
+     ]
+    },
+    {
      "id": "u1-a-was-were",
-     "titel": "was / were & Did …?",
+     "titel": "Focus on language: was / were, Did …?",
      "kurz": "Grammatik · Fragen und Kurzantworten",
      "ico": "❓",
      "buch": {
@@ -333,26 +447,26 @@
      ],
      "alt": {
       "nr": 3,
-      "kontrolle": "2"
+      "kontrolle": "3.2"
      },
      "schritte": [
       {
        "id": "u1-a-was-were-ue",
        "art": "uebung",
        "baustein": "ue-u1-was-were-a",
-       "alt": "0"
+       "alt": "3.0"
       },
       {
        "id": "u1-a-was-were-ue2",
        "art": "uebung",
        "baustein": "ue-u1-was-were-b",
-       "alt": "0"
+       "alt": "3.0"
       },
       {
        "id": "u1-a-was-were-ue3",
        "art": "uebung",
        "baustein": "ue-u1-was-were-c",
-       "alt": "0"
+       "alt": "3.0"
       },
       {
        "id": "u1-a-was-were-buch",
@@ -362,13 +476,13 @@
         "uebung": "8a und 8b"
        },
        "text": "Schreibe die ganzen Sätze ins Heft.",
-       "alt": "1"
+       "alt": "3.1"
       },
       {
        "id": "u1-a-was-were-extra",
        "art": "extra",
        "text": "Arbeitsblatt 3 (am Pult holen).",
-       "alt": "3"
+       "alt": "3.3"
       },
       {
        "id": "u1-a-was-were-u1-was-were",
@@ -379,23 +493,24 @@
     },
     {
      "id": "u1-a-objektpronomen",
-     "titel": "me, him, her …",
+     "titel": "Focus on language: me, him, her …",
      "kurz": "Grammatik · Hefteintrag 2",
-     "ico": "👤",
+     "ico": "👉",
      "buch": {
       "von": 18,
-      "bis": 18
+      "bis": 19
      },
+     "niveaus": true,
      "alt": {
       "nr": 4,
-      "kontrolle": "3"
+      "kontrolle": "4.3"
      },
      "schritte": [
       {
        "id": "u1-a-objektpronomen-he",
        "art": "hefteintrag",
        "baustein": "he-u1-objektpronomen",
-       "alt": "0"
+       "alt": "4.0"
       },
       {
        "id": "u1-a-objektpronomen-buch",
@@ -405,32 +520,45 @@
         "uebung": "7"
        },
        "text": "Lies den Dialog (7a). Schreibe dann die Sätze aus 7b mit Pronomen ins Heft.",
-       "alt": "1"
+       "alt": "4.1"
+      },
+      {
+       "id": "u1-a-objektpronomen-buch2",
+       "art": "uebung",
+       "buch": {
+        "seite": 19,
+        "uebung": "10"
+       },
+       "text": "Präpositionen: Schreibe die ganzen Sätze ins Heft.",
+       "niveau": [
+        2,
+        3
+       ]
       },
       {
        "id": "u1-a-objektpronomen-ue",
        "art": "uebung",
        "baustein": "ue-u1-objektpronomen-a",
-       "alt": "2"
+       "alt": "4.2"
       },
       {
        "id": "u1-a-objektpronomen-ue2",
        "art": "uebung",
        "baustein": "ue-u1-objektpronomen-b",
-       "alt": "2"
+       "alt": "4.2"
       },
       {
        "id": "u1-a-objektpronomen-ue3",
        "art": "uebung",
        "baustein": "ue-u1-objektpronomen-c",
-       "alt": "2"
+       "alt": "4.2"
       },
       {
        "id": "u1-a-objektpronomen-extra",
        "art": "extra",
        "text": "Lernwelt-App „Pronomen“.",
        "thema": "en.5.pronomen",
-       "alt": "4"
+       "alt": "4.4"
       },
       {
        "id": "u1-a-objektpronomen-u1-objektpronomen",
@@ -440,84 +568,18 @@
      ]
     },
     {
-     "id": "u1-a-linking-words",
-     "titel": "Linking words & Writing",
-     "kurz": "Grammatik · Schreiben · Hefteintrag 3",
-     "ico": "🔗",
-     "buch": {
-      "von": 21,
-      "bis": 21
-     },
-     "alt": {
-      "nr": 5,
-      "kontrolle": "4"
-     },
-     "schritte": [
-      {
-       "id": "u1-a-linking-words-he",
-       "art": "hefteintrag",
-       "baustein": "he-u1-linking-words",
-       "alt": "0"
-      },
-      {
-       "id": "u1-a-linking-words-buch",
-       "art": "uebung",
-       "buch": {
-        "seite": 21,
-        "uebung": "1 und 2"
-       },
-       "text": "Schreibe die ganzen Texte ins Heft.",
-       "alt": "1"
-      },
-      {
-       "id": "u1-a-linking-words-ue",
-       "art": "uebung",
-       "baustein": "ue-u1-linking-words-a",
-       "alt": "2"
-      },
-      {
-       "id": "u1-a-linking-words-ue2",
-       "art": "uebung",
-       "baustein": "ue-u1-linking-words-b",
-       "alt": "2"
-      },
-      {
-       "id": "u1-a-linking-words-ue3",
-       "art": "uebung",
-       "baustein": "ue-u1-linking-words-c",
-       "text": "Schreibe die Nachricht an Luca ins Heft. Dann Checkliste mit einem Partner (flüstern!).",
-       "alt": "3"
-      },
-      {
-       "id": "u1-a-linking-words-extra",
-       "art": "extra",
-       "text": "Arbeitsblatt 4 (am Pult holen).",
-       "alt": "5"
-      },
-      {
-       "id": "u1-a-linking-words-u1-linking-words",
-       "art": "app",
-       "station": "u1-linking-words"
-      },
-      {
-       "id": "u1-a-linking-words-u1-anwenden",
-       "art": "app",
-       "station": "u1-anwenden"
-      }
-     ]
-    },
-    {
      "id": "u1-a-vocabulary",
-     "titel": "Vocabulary",
-     "kurz": "Wortschatz Unit 1",
+     "titel": "Skills: Learning words",
+     "kurz": "Wortschatz",
      "ico": "🔤",
      "buch": {
       "von": 20,
       "bis": 20
      },
+     "niveaus": true,
      "alt": {
       "nr": 6,
-      "kontrolle": "2"
+      "kontrolle": "6.2"
      },
      "schritte": [
       {
@@ -525,28 +587,52 @@
        "art": "uebung",
        "buch": {
         "seite": 20,
-        "uebung": "1a, 2 und 3"
+        "uebung": "1a"
        },
-       "text": "Schreibe die Listen, Wortpaare und ganzen Sätze ins Heft.",
-       "alt": "0"
+       "text": "Schreibe die Liste ins Heft.",
+       "alt": "6.0"
+      },
+      {
+       "id": "u1-a-vocabulary-buch2",
+       "art": "uebung",
+       "buch": {
+        "seite": 20,
+        "uebung": "2"
+       },
+       "text": "Opposites: Schreibe die Wortpaare ins Heft.",
+       "alt": "6.0"
+      },
+      {
+       "id": "u1-a-vocabulary-buch3",
+       "art": "uebung",
+       "buch": {
+        "seite": 20,
+        "uebung": "3"
+       },
+       "text": "Schreibe die ganzen Sätze ins Heft.",
+       "niveau": [
+        2,
+        3
+       ],
+       "alt": "6.0"
       },
       {
        "id": "u1-a-vocabulary-ue",
        "art": "uebung",
        "baustein": "ue-u1-vocabulary-a",
-       "alt": "1"
+       "alt": "6.1"
       },
       {
        "id": "u1-a-vocabulary-ue2",
        "art": "uebung",
        "baustein": "ue-u1-vocabulary-b",
-       "alt": "1"
+       "alt": "6.1"
       },
       {
        "id": "u1-a-vocabulary-ue3",
        "art": "uebung",
        "baustein": "ue-u1-vocabulary-c",
-       "alt": "1"
+       "alt": "6.1"
       },
       {
        "id": "u1-a-vocabulary-app",
@@ -557,13 +643,13 @@
         "prozent": 70
        },
        "text": "Vokabeltrainer Klasse 6, Unit 1: mindestens 2 Runden.",
-       "alt": "3"
+       "alt": "6.3"
       },
       {
        "id": "u1-a-vocabulary-extra",
        "art": "extra",
        "text": "Arbeitsblatt 5 (am Pult holen).",
-       "alt": "4"
+       "alt": "6.4"
       },
       {
        "id": "u1-a-vocabulary-u1-weitere",
@@ -573,8 +659,106 @@
      ]
     },
     {
+     "id": "u1-a-linking-words",
+     "titel": "Skills: Writing – linking words",
+     "kurz": "Grammatik · Schreiben · Hefteintrag 3",
+     "ico": "🔗",
+     "buch": {
+      "von": 21,
+      "bis": 21
+     },
+     "niveaus": true,
+     "alt": {
+      "nr": 5,
+      "kontrolle": "5.4"
+     },
+     "schritte": [
+      {
+       "id": "u1-a-linking-words-he",
+       "art": "hefteintrag",
+       "baustein": "he-u1-linking-words",
+       "alt": "5.0"
+      },
+      {
+       "id": "u1-a-linking-words-buch",
+       "art": "uebung",
+       "buch": {
+        "seite": 21,
+        "uebung": "1"
+       },
+       "text": "Schreibe die ganzen Texte ins Heft.",
+       "alt": "5.1"
+      },
+      {
+       "id": "u1-a-linking-words-buch2",
+       "art": "uebung",
+       "buch": {
+        "seite": 21,
+        "uebung": "2"
+       },
+       "text": "Schreibe die ganzen Texte ins Heft.",
+       "alt": "5.1"
+      },
+      {
+       "id": "u1-a-linking-words-buch3",
+       "art": "uebung",
+       "buch": {
+        "seite": 21,
+        "uebung": "3"
+       },
+       "text": "Schreibe die ganzen Sätze ins Heft.",
+       "niveau": [
+        2,
+        3
+       ]
+      },
+      {
+       "id": "u1-a-linking-words-buch4",
+       "art": "uebung",
+       "buch": {
+        "seite": 21,
+        "uebung": "4"
+       },
+       "text": "Schreibe einen eigenen Text ins Heft.",
+       "niveau": [
+        3
+       ]
+      },
+      {
+       "id": "u1-a-linking-words-ue",
+       "art": "uebung",
+       "baustein": "ue-u1-linking-words-a",
+       "alt": "5.2"
+      },
+      {
+       "id": "u1-a-linking-words-ue2",
+       "art": "uebung",
+       "baustein": "ue-u1-linking-words-b",
+       "alt": "5.2"
+      },
+      {
+       "id": "u1-a-linking-words-ue3",
+       "art": "uebung",
+       "baustein": "ue-u1-linking-words-c",
+       "text": "Schreibe die Nachricht an Luca ins Heft. Dann Checkliste mit einem Partner (flüstern!).",
+       "alt": "5.3"
+      },
+      {
+       "id": "u1-a-linking-words-extra",
+       "art": "extra",
+       "text": "Arbeitsblatt 4 (am Pult holen).",
+       "alt": "5.5"
+      },
+      {
+       "id": "u1-a-linking-words-u1-linking-words",
+       "art": "app",
+       "station": "u1-linking-words"
+      }
+     ]
+    },
+    {
      "id": "u1-a-mediation",
-     "titel": "Mediation",
+     "titel": "Skills: Mediation – School rules",
      "kurz": "Englisch → Deutsch · mit Partner",
      "ico": "🗣️",
      "buch": {
@@ -583,7 +767,7 @@
      },
      "alt": {
       "nr": 7,
-      "kontrolle": "2"
+      "kontrolle": "7.2"
      },
      "schritte": [
       {
@@ -594,46 +778,59 @@
         "uebung": "1"
        },
        "text": "Mit einem Partner (Rollen A und B, flüstern!).",
-       "alt": "0"
+       "alt": "7.0"
       },
       {
        "id": "u1-a-mediation-ue",
        "art": "uebung",
        "baustein": "ue-u1-mediation-a",
-       "alt": "1"
+       "alt": "7.1"
       },
       {
        "id": "u1-a-mediation-extra",
        "art": "extra",
        "text": "Arbeitsblatt 6 (am Pult holen).",
-       "alt": "3"
+       "alt": "7.3"
       }
      ]
     },
     {
-     "id": "u1-a-schluss",
-     "titel": "Mein Vokabelheft",
-     "kurz": "Zum Schluss · alle Vokabeln aus Unit 1",
-     "ico": "📘",
+     "id": "u1-a-finale",
+     "titel": "Finale: Test and check",
+     "kurz": "Wiederholung vor der Probe · Vokabelheft",
+     "ico": "🎯",
+     "buch": {
+      "von": 24,
+      "bis": 24
+     },
      "schluss": true,
      "alt": {
       "nr": 8
      },
      "schritte": [
       {
-       "id": "u1-a-schluss-vok",
+       "id": "u1-a-finale-buch",
+       "art": "uebung",
+       "buch": {
+        "seite": 24,
+        "uebung": "1–4"
+       },
+       "text": "Test and check: Löse die Aufgaben im Heft. Kontrolliere mit den Lösungen auf S. 216 und verbessere mit Grün."
+      },
+      {
+       "id": "u1-a-finale-vok",
        "art": "vokabeln",
        "text": "Schreibe alle Vokabeln aus Unit 1 in dein Vokabelheft: Buch ab S. 163 (Vocabulary, Unit 1). Links Englisch, rechts Deutsch.",
-       "alt": "0"
+       "alt": "8.0"
       },
       {
-       "id": "u1-a-schluss-vok2",
+       "id": "u1-a-finale-vok2",
        "art": "vokabeln",
        "text": "Kontrolliere: Fehlt keine Vokabel? Ist alles richtig geschrieben? Verbessere mit Grün.",
-       "alt": "1"
+       "alt": "8.1"
       },
       {
-       "id": "u1-a-schluss-app",
+       "id": "u1-a-finale-app",
        "art": "app",
        "thema": "en.6.vok.u1",
        "ziel": {
@@ -641,16 +838,21 @@
         "prozent": 80
        },
        "text": "Übe im Vokabeltrainer Klasse 6 → Unit 1: 1 Runde mit mindestens 80 %.",
-       "alt": "2"
+       "alt": "8.2"
       },
       {
-       "id": "u1-a-schluss-vok3",
+       "id": "u1-a-finale-vok3",
        "art": "vokabeln",
        "text": "Zeig dein Vokabelheft deiner Lehrkraft.",
-       "alt": "3"
+       "alt": "8.3"
       },
       {
-       "id": "u1-a-schluss-u1-finale",
+       "id": "u1-a-finale-u1-anwenden",
+       "art": "app",
+       "station": "u1-anwenden"
+      },
+      {
+       "id": "u1-a-finale-u1-finale",
        "art": "app",
        "station": "u1-finale"
       }
@@ -660,7 +862,8 @@
    "kann": [
     {
      "baustein": "kann-u1-1",
-     "abschnitt": null
+     "abschnitt": null,
+     "imUnterricht": true
     },
     {
      "baustein": "kann-u1-2",
@@ -847,20 +1050,168 @@
    "zieleVorher": true,
    "abschnitte": [
     {
-     "id": "u2-a-grundwortschatz",
-     "titel": "Grundwortschatz",
+     "id": "u2-a-lead-in",
+     "titel": "Lead-in: A new neighbour",
+     "kurz": "Wortschatz · some und any",
+     "ico": "🏠",
+     "buch": {
+      "von": 26,
+      "bis": 27
+     },
+     "kompetenz": "Wortschatz",
+     "niveaus": true,
+     "alt": {
+      "nr": 6,
+      "kontrolle": "6.4"
+     },
      "schritte": [
       {
-       "id": "u2-a-grundwortschatz-u2-grundwortschatz",
+       "id": "u2-a-lead-in-buch",
+       "art": "uebung",
+       "buch": {
+        "seite": 26,
+        "uebung": "1"
+       },
+       "text": "true or false? Schreibe die ganzen Sätze ins Heft."
+      },
+      {
+       "id": "u2-a-lead-in-buch2",
+       "art": "uebung",
+       "buch": {
+        "seite": 27,
+        "uebung": "3"
+       },
+       "text": "My neighbourhood: Schreibe über deine Nachbarschaft ins Heft.",
+       "niveau": [
+        2,
+        3
+       ]
+      },
+      {
+       "id": "u2-a-lead-in-ue",
+       "art": "uebung",
+       "baustein": "ue-u2-lead-in-a",
+       "alt": "6.0"
+      },
+      {
+       "id": "u2-a-lead-in-ue2",
+       "art": "uebung",
+       "baustein": "ue-u2-lead-in-b",
+       "niveau": [
+        1
+       ],
+       "alt": "6.0"
+      },
+      {
+       "id": "u2-a-lead-in-ue3",
+       "art": "uebung",
+       "baustein": "ue-u2-lead-in-b2",
+       "niveau": [
+        2,
+        3
+       ],
+       "alt": "6.0"
+      },
+      {
+       "id": "u2-a-lead-in-ue4",
+       "art": "uebung",
+       "baustein": "ue-u2-lead-in-c",
+       "alt": "6.0"
+      },
+      {
+       "id": "u2-a-lead-in-app",
+       "art": "app",
+       "thema": "en.6.vok.u2",
+       "ziel": {
+        "runden": 2,
+        "prozent": 70
+       },
+       "text": "Vokabeltrainer Klasse 6 → Unit 2: 2 Runden mit mindestens 70 %.",
+       "alt": "6.1"
+      },
+      {
+       "id": "u2-a-lead-in-app2",
+       "art": "app",
+       "thema": "en.6.some-any.some-any",
+       "ziel": {
+        "runden": 1,
+        "prozent": 70
+       },
+       "text": "Übe in der Lernwelt: „some / any“ → some oder any?",
+       "alt": "6.2"
+      },
+      {
+       "id": "u2-a-lead-in-vok",
+       "art": "vokabeln",
+       "text": "Schreibe diese Wörter mit der deutschen Bedeutung in dein Vokabelheft (Buch hinten, Vocabulary Unit 2): neighbour, neighbourhood, true, false, traffic lights, (to) cross, hairdresser, supermarket, bus stop, dogs’ home, phone call, poor Mrs Trent, she can’t walk well, (to) be closed / open, near, centre, long, short, tail, ear, space, (to) share.",
+       "alt": "6.v"
+      },
+      {
+       "id": "u2-a-lead-in-u2-grundwortschatz",
        "art": "app",
        "station": "u2-grundwortschatz"
+      },
+      {
+       "id": "u2-a-lead-in-u2-there-is",
+       "art": "app",
+       "station": "u2-there-is"
       }
      ]
     },
     {
      "id": "u2-a-theme1",
-     "titel": "Theme 1",
+     "titel": "Theme 1: Good neighbours",
+     "kurz": "Wörter · Suchplakat",
+     "ico": "🤝",
+     "buch": {
+      "von": 28,
+      "bis": 29
+     },
+     "niveaus": true,
      "schritte": [
+      {
+       "id": "u2-a-theme1-buch",
+       "art": "uebung",
+       "buch": {
+        "seite": 28,
+        "uebung": "1b und 1c"
+       },
+       "text": "Schreibe die ganzen Sätze ins Heft."
+      },
+      {
+       "id": "u2-a-theme1-buch2",
+       "art": "uebung",
+       "buch": {
+        "seite": 29,
+        "uebung": "2b"
+       },
+       "text": "Kurzantworten: Schreibe die ganzen Sätze ins Heft."
+      },
+      {
+       "id": "u2-a-theme1-buch3",
+       "art": "uebung",
+       "buch": {
+        "seite": 29,
+        "uebung": "3a"
+       },
+       "text": "Suchplakat: Schreibe den Text ins Heft.",
+       "niveau": [
+        2,
+        3
+       ]
+      },
+      {
+       "id": "u2-a-theme1-buch4",
+       "art": "uebung",
+       "buch": {
+        "seite": 29,
+        "uebung": "3b"
+       },
+       "text": "Gestalte ein eigenes Suchplakat im Heft.",
+       "niveau": [
+        3
+       ]
+      },
       {
        "id": "u2-a-theme1-u2-theme1",
        "art": "app",
@@ -870,8 +1221,37 @@
     },
     {
      "id": "u2-a-theme2",
-     "titel": "Theme 2",
+     "titel": "Theme 2: At the dogs' home",
+     "kurz": "Wörter · Lesen",
+     "ico": "🐶",
+     "buch": {
+      "von": 30,
+      "bis": 31
+     },
+     "niveaus": true,
      "schritte": [
+      {
+       "id": "u2-a-theme2-buch",
+       "art": "uebung",
+       "buch": {
+        "seite": 30,
+        "uebung": "1b"
+       },
+       "text": "true, false or not in the text? Schreibe die ganzen Sätze ins Heft."
+      },
+      {
+       "id": "u2-a-theme2-buch2",
+       "art": "uebung",
+       "buch": {
+        "seite": 31,
+        "uebung": "3a"
+       },
+       "text": "Welches Haustier passt? Schreibe die ganzen Sätze ins Heft.",
+       "niveau": [
+        2,
+        3
+       ]
+      },
       {
        "id": "u2-a-theme2-u2-theme2",
        "art": "app",
@@ -881,7 +1261,7 @@
     },
     {
      "id": "u2-a-story",
-     "titel": "A play for Guy Fawkes day",
+     "titel": "Story: A play for Guy Fawkes day",
      "kurz": "Story · Lesen und Wortschatz",
      "ico": "🎭",
      "buch": {
@@ -892,7 +1272,7 @@
      "niveaus": true,
      "alt": {
       "nr": 1,
-      "kontrolle": "3"
+      "kontrolle": "1.3"
      },
      "schritte": [
       {
@@ -903,19 +1283,19 @@
         "bis": 33
        },
        "text": "Lies das Theaterstück.",
-       "alt": "0"
+       "alt": "1.0"
       },
       {
        "id": "u2-a-story-ue",
        "art": "uebung",
        "baustein": "ue-u2-story-a",
-       "alt": "1"
+       "alt": "1.1"
       },
       {
        "id": "u2-a-story-ue2",
        "art": "uebung",
        "baustein": "ue-u2-story-b",
-       "alt": "1"
+       "alt": "1.1"
       },
       {
        "id": "u2-a-story-ue3",
@@ -924,7 +1304,7 @@
        "niveau": [
         1
        ],
-       "alt": "1"
+       "alt": "1.1"
       },
       {
        "id": "u2-a-story-ue4",
@@ -934,7 +1314,7 @@
         2,
         3
        ],
-       "alt": "1"
+       "alt": "1.1"
       },
       {
        "id": "u2-a-story-buch",
@@ -947,19 +1327,19 @@
        "niveau": [
         3
        ],
-       "alt": "2"
+       "alt": "1.2"
       },
       {
        "id": "u2-a-story-vok",
        "art": "vokabeln",
        "text": "Schreibe diese Wörter mit der deutschen Bedeutung in dein Vokabelheft (Buch hinten, Vocabulary Unit 2): (to) act, play, (to) come in, mask, (to) put, toy, helper, (to) stand up, (to) get sth., (to) collect, (to) stand, line, if, 50p will do, penny, pl pence, (to) like sth. better / best, ugly.",
-       "alt": "v"
+       "alt": "1.v"
       },
       {
        "id": "u2-a-story-extra",
        "art": "extra",
        "text": "Arbeitsblatt 1 (Unit 2, am Pult holen).",
-       "alt": "4"
+       "alt": "1.4"
       },
       {
        "id": "u2-a-story-u2-story",
@@ -970,9 +1350,9 @@
     },
     {
      "id": "u2-a-did-fragewort",
-     "titel": "Where did you go?",
+     "titel": "Focus on language: Where did you go?",
      "kurz": "Grammatik · Fragen mit Fragewort · Hefteintrag 4",
-     "ico": "❓",
+     "ico": "🧭",
      "buch": {
       "von": 34,
       "bis": 34
@@ -981,14 +1361,14 @@
      "niveaus": true,
      "alt": {
       "nr": 2,
-      "kontrolle": "5"
+      "kontrolle": "2.5"
      },
      "schritte": [
       {
        "id": "u2-a-did-fragewort-he",
        "art": "hefteintrag",
        "baustein": "he-u2-did-fragen",
-       "alt": "0"
+       "alt": "2.0"
       },
       {
        "id": "u2-a-did-fragewort-buch",
@@ -998,7 +1378,7 @@
         "uebung": "1b"
        },
        "text": "Schreibe jede Frage mit der passenden Antwort ins Heft.",
-       "alt": "1"
+       "alt": "2.1"
       },
       {
        "id": "u2-a-did-fragewort-buch2",
@@ -1012,13 +1392,13 @@
         2,
         3
        ],
-       "alt": "2"
+       "alt": "2.2"
       },
       {
        "id": "u2-a-did-fragewort-ue",
        "art": "uebung",
        "baustein": "ue-u2-did-fragewort-a",
-       "alt": "3"
+       "alt": "2.3"
       },
       {
        "id": "u2-a-did-fragewort-ue2",
@@ -1027,7 +1407,7 @@
        "niveau": [
         1
        ],
-       "alt": "3"
+       "alt": "2.3"
       },
       {
        "id": "u2-a-did-fragewort-ue3",
@@ -1037,7 +1417,7 @@
         2,
         3
        ],
-       "alt": "3"
+       "alt": "2.3"
       },
       {
        "id": "u2-a-did-fragewort-ue4",
@@ -1046,7 +1426,7 @@
        "niveau": [
         3
        ],
-       "alt": "3"
+       "alt": "2.3"
       },
       {
        "id": "u2-a-did-fragewort-app",
@@ -1057,19 +1437,19 @@
         "prozent": 70
        },
        "text": "Übe in der Lernwelt: „Fragen“ → Welches Fragewort?",
-       "alt": "4"
+       "alt": "2.4"
       },
       {
        "id": "u2-a-did-fragewort-vok",
        "art": "vokabeln",
        "text": "Schreibe diese Wörter mit der deutschen Bedeutung in dein Vokabelheft (Buch hinten, Vocabulary Unit 2): bonfire, (to) finish, firework, in the street, (to) run, (to) be scared (of), we’ll find him, (to) lose, (to) worry (about), missing, friendly, reward.",
-       "alt": "v"
+       "alt": "2.v"
       },
       {
        "id": "u2-a-did-fragewort-extra",
        "art": "extra",
        "text": "Arbeitsblatt 2 (Unit 2, am Pult holen).",
-       "alt": "6"
+       "alt": "2.6"
       },
       {
        "id": "u2-a-did-fragewort-u2-did-fragewort",
@@ -1080,7 +1460,7 @@
     },
     {
      "id": "u2-a-did-kurz",
-     "titel": "Did you …? – Yes, I did.",
+     "titel": "Focus on language: Did you …? – Yes, I did.",
      "kurz": "Grammatik · Ja/Nein-Fragen und Kurzantworten",
      "ico": "✅",
      "buch": {
@@ -1091,7 +1471,7 @@
      "niveaus": true,
      "alt": {
       "nr": 3,
-      "kontrolle": "4"
+      "kontrolle": "3.4"
      },
      "schritte": [
       {
@@ -1099,23 +1479,32 @@
        "art": "hefteintrag",
        "baustein": "he-u2-did-fragen",
        "wiederholen": true,
-       "alt": "0"
+       "alt": "3.0"
       },
       {
        "id": "u2-a-did-kurz-buch",
        "art": "uebung",
        "buch": {
         "seite": 35,
+        "uebung": "3"
+       },
+       "text": "Schreibe die ganzen Sätze ins Heft."
+      },
+      {
+       "id": "u2-a-did-kurz-buch2",
+       "art": "uebung",
+       "buch": {
+        "seite": 35,
         "uebung": "4a und 4b"
        },
        "text": "Schreibe den ganzen Dialog ins Heft.",
-       "alt": "1"
+       "alt": "3.1"
       },
       {
        "id": "u2-a-did-kurz-ue",
        "art": "uebung",
        "baustein": "ue-u2-did-kurz-a",
-       "alt": "2"
+       "alt": "3.2"
       },
       {
        "id": "u2-a-did-kurz-ue2",
@@ -1124,7 +1513,7 @@
        "niveau": [
         1
        ],
-       "alt": "2"
+       "alt": "3.2"
       },
       {
        "id": "u2-a-did-kurz-ue3",
@@ -1134,7 +1523,7 @@
         2,
         3
        ],
-       "alt": "2"
+       "alt": "3.2"
       },
       {
        "id": "u2-a-did-kurz-ue4",
@@ -1143,7 +1532,7 @@
        "niveau": [
         3
        ],
-       "alt": "2"
+       "alt": "3.2"
       },
       {
        "id": "u2-a-did-kurz-app",
@@ -1154,19 +1543,19 @@
         "prozent": 70
        },
        "text": "Übe in der Lernwelt: „Simple Past“ → Fragen und Kurzantworten.",
-       "alt": "3"
+       "alt": "3.3"
       },
       {
        "id": "u2-a-did-kurz-vok",
        "art": "vokabeln",
        "text": "Schreibe diese Wörter mit der deutschen Bedeutung in dein Vokabelheft (Buch hinten, Vocabulary Unit 2): festival, lantern, (to) celebrate, biscuit, warm, more popular, (Great) Britain, without, bread, the same (as), mineral water, (to) try.",
-       "alt": "v"
+       "alt": "3.v"
       },
       {
        "id": "u2-a-did-kurz-extra",
        "art": "extra",
        "text": "Arbeitsblatt 3 (Unit 2, am Pult holen).",
-       "alt": "5"
+       "alt": "3.5"
       },
       {
        "id": "u2-a-did-kurz-u2-did-kurz",
@@ -1177,9 +1566,9 @@
     },
     {
      "id": "u2-a-plural",
-     "titel": "Plurals",
+     "titel": "Focus on language: Plurals",
      "kurz": "Grammatik · Mehrzahl · Hefteintrag 5",
-     "ico": "🎆",
+     "ico": "🥔",
      "buch": {
       "von": 36,
       "bis": 36
@@ -1188,14 +1577,14 @@
      "niveaus": true,
      "alt": {
       "nr": 4,
-      "kontrolle": "4"
+      "kontrolle": "4.4"
      },
      "schritte": [
       {
        "id": "u2-a-plural-he",
        "art": "hefteintrag",
        "baustein": "he-u2-plural",
-       "alt": "0"
+       "alt": "4.0"
       },
       {
        "id": "u2-a-plural-buch",
@@ -1205,19 +1594,32 @@
         "uebung": "6"
        },
        "text": "Schreibe die ganzen Sätze im Plural ins Heft.",
-       "alt": "1"
+       "alt": "4.1"
+      },
+      {
+       "id": "u2-a-plural-buch2",
+       "art": "uebung",
+       "buch": {
+        "seite": 36,
+        "uebung": "7a"
+       },
+       "text": "Schreibe deine Einkaufsliste für die Guy-Fawkes-Party: 6 Dinge mit some (some sausages, some …).",
+       "niveau": [
+        3
+       ],
+       "alt": "6.3"
       },
       {
        "id": "u2-a-plural-ue",
        "art": "uebung",
        "baustein": "ue-u2-plural-a",
-       "alt": "2"
+       "alt": "4.2"
       },
       {
        "id": "u2-a-plural-ue2",
        "art": "uebung",
        "baustein": "ue-u2-plural-b",
-       "alt": "2"
+       "alt": "4.2"
       },
       {
        "id": "u2-a-plural-ue3",
@@ -1227,7 +1629,7 @@
         2,
         3
        ],
-       "alt": "2"
+       "alt": "4.2"
       },
       {
        "id": "u2-a-plural-ue4",
@@ -1236,7 +1638,7 @@
        "niveau": [
         3
        ],
-       "alt": "2"
+       "alt": "4.2"
       },
       {
        "id": "u2-a-plural-app",
@@ -1247,13 +1649,13 @@
         "prozent": 70
        },
        "text": "Übe in der Lernwelt: „Nomen“ → Plural.",
-       "alt": "3"
+       "alt": "4.3"
       },
       {
        "id": "u2-a-plural-vok",
        "art": "vokabeln",
        "text": "Schreibe diese Wörter mit der deutschen Bedeutung in dein Vokabelheft (Buch hinten, Vocabulary Unit 2): potato, pl potatoes, young, hot chocolate, nut, lemonade, (to) drink.",
-       "alt": "v"
+       "alt": "4.v"
       },
       {
        "id": "u2-a-plural-u2-plural",
@@ -1264,22 +1666,22 @@
     },
     {
      "id": "u2-a-can-mustnt",
-     "titel": "Rules: can and mustn’t",
-     "kurz": "Grammatik · Lesen · Schilder und Regeln",
-     "ico": "🚫",
+     "titel": "Focus on language: Rules – can and mustn’t",
+     "kurz": "Grammatik · Schilder und Regeln",
+     "ico": "🚸",
      "buch": {
       "von": 36,
       "bis": 38
      },
      "kompetenz": "Grammatik",
-     "niveaus": true,
      "merk": [
       "can = darf / kann",
       "mustn’t = darf nicht"
      ],
+     "niveaus": true,
      "alt": {
       "nr": 5,
-      "kontrolle": "3"
+      "kontrolle": "5.3"
      },
      "schritte": [
       {
@@ -1290,7 +1692,7 @@
         "uebung": "1"
        },
        "text": "Welches Schild passt? Schreibe die ganzen Sätze mit dem Buchstaben ins Heft.",
-       "alt": "0"
+       "alt": "5.0"
       },
       {
        "id": "u2-a-can-mustnt-buch2",
@@ -1300,13 +1702,13 @@
         "uebung": "8a"
        },
        "text": "Schreibe die Regeln 1–6 ganz ins Heft. Profi: Erfinde noch Regel 7 und 8.",
-       "alt": "1"
+       "alt": "5.1"
       },
       {
        "id": "u2-a-can-mustnt-ue",
        "art": "uebung",
        "baustein": "ue-u2-can-mustnt-a",
-       "alt": "2"
+       "alt": "5.2"
       },
       {
        "id": "u2-a-can-mustnt-ue2",
@@ -1316,7 +1718,7 @@
         2,
         3
        ],
-       "alt": "2"
+       "alt": "5.2"
       },
       {
        "id": "u2-a-can-mustnt-ue3",
@@ -1325,19 +1727,19 @@
        "niveau": [
         3
        ],
-       "alt": "2"
+       "alt": "5.2"
       },
       {
        "id": "u2-a-can-mustnt-vok",
        "art": "vokabeln",
        "text": "Schreibe diese Wörter mit der deutschen Bedeutung in dein Vokabelheft (Buch hinten, Vocabulary Unit 2): (to) do better, grass, (to) park (a car), (to) run around, (to) skateboard, (to) cycle.",
-       "alt": "v"
+       "alt": "5.v"
       },
       {
        "id": "u2-a-can-mustnt-extra",
        "art": "extra",
        "text": "Arbeitsblatt 4 (Unit 2, am Pult holen).",
-       "alt": "4"
+       "alt": "5.4"
       },
       {
        "id": "u2-a-can-mustnt-u2-can-mustnt",
@@ -1347,100 +1749,40 @@
      ]
     },
     {
-     "id": "u2-a-vocabulary",
-     "titel": "Vocabulary",
-     "kurz": "Wortschatz Unit 2 · some und any",
-     "ico": "🍞",
+     "id": "u2-a-fest",
+     "titel": "A festival in my neighbourhood",
+     "kurz": "Lesen · Schreiben · Feste",
+     "ico": "🎆",
      "buch": {
-      "von": 36,
-      "bis": 36
+      "von": 37,
+      "bis": 37
      },
-     "kompetenz": "Wortschatz",
-     "niveaus": true,
+     "kompetenz": "Schreiben",
+     "wahl": true,
      "alt": {
-      "nr": 6,
-      "kontrolle": "4"
+      "nr": 9,
+      "kontrolle": "9.2"
      },
      "schritte": [
       {
-       "id": "u2-a-vocabulary-ue",
-       "art": "uebung",
-       "baustein": "ue-u2-vocabulary-a",
-       "alt": "0"
-      },
-      {
-       "id": "u2-a-vocabulary-ue2",
-       "art": "uebung",
-       "baustein": "ue-u2-vocabulary-b",
-       "niveau": [
-        1
-       ],
-       "alt": "0"
-      },
-      {
-       "id": "u2-a-vocabulary-ue3",
-       "art": "uebung",
-       "baustein": "ue-u2-vocabulary-b2",
-       "niveau": [
-        2,
-        3
-       ],
-       "alt": "0"
-      },
-      {
-       "id": "u2-a-vocabulary-ue4",
-       "art": "uebung",
-       "baustein": "ue-u2-vocabulary-c",
-       "alt": "0"
-      },
-      {
-       "id": "u2-a-vocabulary-app",
-       "art": "app",
-       "thema": "en.6.vok.u2",
-       "ziel": {
-        "runden": 2,
-        "prozent": 70
-       },
-       "text": "Vokabeltrainer Klasse 6 → Unit 2: 2 Runden mit mindestens 70 %.",
-       "alt": "1"
-      },
-      {
-       "id": "u2-a-vocabulary-app2",
-       "art": "app",
-       "thema": "en.6.some-any.some-any",
-       "ziel": {
-        "runden": 1,
-        "prozent": 70
-       },
-       "text": "Übe in der Lernwelt: „some / any“ → some oder any?",
-       "alt": "2"
-      },
-      {
-       "id": "u2-a-vocabulary-buch",
+       "id": "u2-a-fest-buch",
        "art": "uebung",
        "buch": {
-        "seite": 36,
-        "uebung": "7a"
+        "seite": 37,
+        "uebung": "10a"
        },
-       "text": "Schreibe deine Einkaufsliste für die Guy-Fawkes-Party: 6 Dinge mit some (some sausages, some …).",
-       "niveau": [
-        3
-       ],
-       "alt": "3"
+       "text": "Lies Mias Text. Beantworte die Fragen 1–3 in ganzen Sätzen im Heft.",
+       "alt": "9.0"
       },
       {
-       "id": "u2-a-vocabulary-vok",
-       "art": "vokabeln",
-       "text": "Schreibe diese Wörter mit der deutschen Bedeutung in dein Vokabelheft (Buch hinten, Vocabulary Unit 2): neighbour, neighbourhood, true, false, traffic lights, (to) cross, hairdresser, supermarket, bus stop, dogs’ home, phone call, poor Mrs Trent, she can’t walk well, (to) be closed / open, near, centre, long, short, tail, ear, space, (to) share.",
-       "alt": "v"
+       "id": "u2-a-fest-ue",
+       "art": "uebung",
+       "baustein": "ue-u2-fest-a",
+       "text": "Schreibe über ein Fest oder eine Party ins Heft.",
+       "alt": "9.1"
       },
       {
-       "id": "u2-a-vocabulary-u2-there-is",
-       "art": "app",
-       "station": "u2-there-is"
-      },
-      {
-       "id": "u2-a-vocabulary-u2-weitere",
+       "id": "u2-a-fest-u2-weitere",
        "art": "app",
        "station": "u2-weitere"
       }
@@ -1448,7 +1790,7 @@
     },
     {
      "id": "u2-a-brief",
-     "titel": "A letter about last weekend",
+     "titel": "Skills: Do better in tests – a letter",
      "kurz": "Schreiben · Brief an eine englische Freundin",
      "ico": "✉️",
      "buch": {
@@ -1459,7 +1801,7 @@
      "niveaus": true,
      "alt": {
       "nr": 7,
-      "kontrolle": "3"
+      "kontrolle": "7.3"
      },
      "schritte": [
       {
@@ -1471,7 +1813,7 @@
         "uebung": "3a"
        },
        "text": "Lies die Aufgabe und den Tipp-Kasten.",
-       "alt": "0"
+       "alt": "7.0"
       },
       {
        "id": "u2-a-brief-buch2",
@@ -1481,7 +1823,7 @@
         "uebung": "3c"
        },
        "text": "Prüfe Simons Brief mit den Fragen 1–6. Schreibe die Fragen mit Yes oder No ins Heft.",
-       "alt": "1"
+       "alt": "7.1"
       },
       {
        "id": "u2-a-brief-ue",
@@ -1491,7 +1833,7 @@
        "niveau": [
         1
        ],
-       "alt": "2"
+       "alt": "7.2"
       },
       {
        "id": "u2-a-brief-ue2",
@@ -1501,7 +1843,7 @@
        "niveau": [
         2
        ],
-       "alt": "2"
+       "alt": "7.2"
       },
       {
        "id": "u2-a-brief-ue3",
@@ -1511,25 +1853,25 @@
        "niveau": [
         3
        ],
-       "alt": "2"
+       "alt": "7.2"
       },
       {
        "id": "u2-a-brief-vok",
        "art": "vokabeln",
        "text": "Schreibe diese Wörter mit der deutschen Bedeutung in dein Vokabelheft (Buch hinten, Vocabulary Unit 2): at least, penfriend, game, (to) visit.",
-       "alt": "v"
+       "alt": "7.v"
       },
       {
        "id": "u2-a-brief-extra",
        "art": "extra",
        "text": "Arbeitsblatt 5 (Unit 2, am Pult holen).",
-       "alt": "4"
+       "alt": "7.4"
       }
      ]
     },
     {
      "id": "u2-a-weg",
-     "titel": "Telling the way",
+     "titel": "Skills: Speaking – Telling the way",
      "kurz": "Sprechen · nach dem Weg fragen · mit Partner",
      "ico": "🗺️",
      "buch": {
@@ -1540,9 +1882,14 @@
      "wahl": true,
      "alt": {
       "nr": 8,
-      "kontrolle": "4"
+      "kontrolle": "8.4"
      },
      "schritte": [
+      {
+       "id": "u2-a-weg-he",
+       "art": "hefteintrag",
+       "baustein": "he-u2-weg"
+      },
       {
        "id": "u2-a-weg-buch",
        "art": "uebung",
@@ -1551,7 +1898,7 @@
         "uebung": "1"
        },
        "text": "Lies den Dialog. Wie heißt der Pet Shop? Schreibe den Namen ins Heft.",
-       "alt": "0"
+       "alt": "8.0"
       },
       {
        "id": "u2-a-weg-buch2",
@@ -1561,13 +1908,13 @@
         "uebung": "2a"
        },
        "text": "Schreibe den ganzen Dialog mit den fehlenden Wörtern ins Heft.",
-       "alt": "1"
+       "alt": "8.1"
       },
       {
        "id": "u2-a-weg-ue",
        "art": "uebung",
        "baustein": "ue-u2-weg-a",
-       "alt": "2"
+       "alt": "8.2"
       },
       {
        "id": "u2-a-weg-partner",
@@ -1577,13 +1924,23 @@
         "uebung": "3"
        },
        "text": "Mit einem Partner: A schaut auf die Karte, B auf S. 106. Fragt nach dem Weg – flüstern!",
-       "alt": "3"
+       "alt": "8.3"
+      },
+      {
+       "id": "u2-a-weg-app",
+       "art": "app",
+       "thema": "en.5.praepositionen",
+       "ziel": {
+        "runden": 1,
+        "prozent": 70
+       },
+       "text": "Übe in der Lernwelt: „Präpositionen“ (next to, opposite …)."
       },
       {
        "id": "u2-a-weg-extra",
        "art": "extra",
        "text": "Arbeitsblatt 6 (Unit 2, am Pult holen).",
-       "alt": "5"
+       "alt": "8.5"
       },
       {
        "id": "u2-a-weg-u2-anwenden",
@@ -1593,54 +1950,32 @@
      ]
     },
     {
-     "id": "u2-a-fest",
-     "titel": "A festival in my neighbourhood",
-     "kurz": "Lesen · Schreiben · Feste",
-     "ico": "🎉",
-     "buch": {
-      "von": 37,
-      "bis": 37
-     },
-     "kompetenz": "Schreiben",
-     "wahl": true,
-     "alt": {
-      "nr": 9,
-      "kontrolle": "2"
-     },
-     "schritte": [
-      {
-       "id": "u2-a-fest-buch",
-       "art": "uebung",
-       "buch": {
-        "seite": 37,
-        "uebung": "10a"
-       },
-       "text": "Lies Mias Text. Beantworte die Fragen 1–3 in ganzen Sätzen im Heft.",
-       "alt": "0"
-      },
-      {
-       "id": "u2-a-fest-ue",
-       "art": "uebung",
-       "baustein": "ue-u2-fest-a",
-       "text": "Schreibe über ein Fest oder eine Party ins Heft.",
-       "alt": "1"
-      }
-     ]
-    },
-    {
-     "id": "u2-a-schluss",
-     "titel": "Checkpoint",
-     "kurz": "Wiederholung vor der Probe · in der Lernwelt",
+     "id": "u2-a-finale",
+     "titel": "Finale: Test and check · Revision 1",
+     "kurz": "Wiederholung vor der Probe",
      "ico": "🎯",
+     "buch": {
+      "von": 42,
+      "bis": 45
+     },
      "kompetenz": "Wiederholung",
      "schluss": true,
      "alt": {
       "nr": 10,
-      "probe": "3"
+      "probe": "10.4"
      },
      "schritte": [
       {
-       "id": "u2-a-schluss-app",
+       "id": "u2-a-finale-buch",
+       "art": "uebung",
+       "buch": {
+        "seite": 42,
+        "uebung": "1–3"
+       },
+       "text": "Test and check: Löse die Aufgaben im Heft. Kontrolliere mit den Lösungen auf S. 217 und verbessere mit Grün."
+      },
+      {
+       "id": "u2-a-finale-app",
        "art": "app",
        "thema": "en.5.simple-past.mix",
        "ziel": {
@@ -1648,10 +1983,10 @@
         "prozent": 70
        },
        "text": "Lernwelt „Simple Past“ → Mix: 1 Runde mit mindestens 70 %.",
-       "alt": "0"
+       "alt": "10.0"
       },
       {
-       "id": "u2-a-schluss-app2",
+       "id": "u2-a-finale-app2",
        "art": "app",
        "thema": "en.5.nomen.mix",
        "ziel": {
@@ -1659,10 +1994,10 @@
         "prozent": 70
        },
        "text": "Lernwelt „Nomen“ → Mix: 1 Runde mit mindestens 70 %.",
-       "alt": "1"
+       "alt": "10.1"
       },
       {
-       "id": "u2-a-schluss-app3",
+       "id": "u2-a-finale-app3",
        "art": "app",
        "thema": "en.6.vok.u2",
        "ziel": {
@@ -1670,16 +2005,16 @@
         "prozent": 80
        },
        "text": "Vokabeltrainer Unit 2: noch 1 Runde mit mindestens 80 % (insgesamt 3).",
-       "alt": "2"
+       "alt": "10.2"
       },
       {
-       "id": "u2-a-schluss-vok",
+       "id": "u2-a-finale-vok",
        "art": "vokabeln",
        "text": "Schreibe die Wörter zum Weg (Buch S. 40) mit Deutsch ins Vokabelheft: (to) tell sb. the way, (to) ask sb. the way, Excuse me, …, (to) turn right / left, along the street, for 100 metres. Dann prüfe: Stehen jetzt alle Wörter aus Unit 2 in deinem Vokabelheft?",
-       "alt": "v"
+       "alt": "10.v"
       },
       {
-       "id": "u2-a-schluss-u2-finale",
+       "id": "u2-a-finale-u2-finale",
        "art": "app",
        "station": "u2-finale"
       }
@@ -1709,11 +2044,11 @@
     },
     {
      "baustein": "kann-u2-6",
-     "abschnitt": "u2-a-vocabulary"
+     "abschnitt": "u2-a-lead-in"
     },
     {
      "baustein": "kann-u2-7",
-     "abschnitt": "u2-a-vocabulary"
+     "abschnitt": "u2-a-lead-in"
     },
     {
      "baustein": "kann-u2-8",
@@ -1725,7 +2060,8 @@
     },
     {
      "baustein": "kann-u2-10",
-     "abschnitt": null
+     "abschnitt": null,
+     "imUnterricht": true
     }
    ]
   },
