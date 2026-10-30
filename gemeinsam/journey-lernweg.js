@@ -13,8 +13,12 @@
 //    Hefteintrag → jw:<Baustein-ID> (derselbe Eintrag zählt in jedem Abschnitt) · andere Schritte → jw:<Schritt-ID>
 //    Niveau eines Abschnitts → jw:<Abschnitt-ID> { nv } · Kann-Satz → jw:<Baustein-ID> { s (jetzt), v (vorher) }
 //  App-Schritte haken sich selbst ab: Station = im Pass gemeistert, Thema = so viele gute Runden im Lernstand.
-//  Sichtbar ist ein Abschnitt, wenn config.journey.wege.journey6.bis ihn (oder einen späteren) für das Gerät freigibt;
-//  ohne diesen Block alle (bis Etappe 3), mit Admin-Anmeldung immer alle. Nicht freigegebene Hefteinträge bleiben unsichtbar.
+//  Sichtbar ist ein Abschnitt, wenn config.journey.wege.journey6.bis ihn (oder einen späteren) für das Gerät freigibt –
+//  Vorrang wie bei den Freigaben: Gruppe vor Klasse vor „alle“. Ohne Eintrag nichts, mit Admin-Anmeldung immer alles.
+//  Nicht freigegebene Hefteinträge bleiben unsichtbar.
+//
+//    LernJourneyWeg.uebernehmen(J)      → Zahl – einmalig die Haken aus dem alten Lernweg (lernwelt-lernweg) in den Pass
+//    LernJourneyWeg.stand({ J, z, cfg }) → { unit, fertig, soll, naechste } für das Banner auf der Startseite
 // ═══════════════════════════════════════════════════════
 'use strict';
 
@@ -34,11 +38,11 @@
   // ── Freigabe „bis Abschnitt“ und HE-Nummern (config.journey.wege.journey6) ──
   const alleAbschnitte = () => O.J.units.flatMap(u => u.abschnitte || []);
   function sichtbarBis() {
-    const bis = O.cfg && O.cfg.bis;
-    if (O.admin || !bis || typeof bis !== 'object') return Infinity;
+    if (O.admin) return Infinity;
+    const bis = O.cfg && O.cfg.bis && typeof O.cfg.bis === 'object' ? O.cfg.bis : {};
     const wer = (window.LernFreigabe && LernFreigabe.wer && LernFreigabe.wer()) || ['alle'];
-    const liste = alleAbschnitte().map(a => a.id);
-    return Math.max(-1, ...wer.map(w => liste.indexOf(bis[w])));
+    const w = wer.find(x => typeof bis[x] === 'string');
+    return w ? alleAbschnitte().map(a => a.id).indexOf(bis[w]) : -1;
   }
   const sichtbar = a => alleAbschnitte().indexOf(a) <= sichtbarBis();
   const heNr = bid => (O.cfg && O.cfg.he && O.cfg.he[bid]) || null;
@@ -347,7 +351,57 @@ ul.jw-hilfe { list-style: none; display: grid; gap: .3rem; margin: .4rem 0 .7rem
     document.head.appendChild(st);
   }
 
+  // ── Einmalige Übernahme aus dem alten Lernweg (apps/typen/lernweg.html, Speicher lernwelt-lernweg nur auf dem Gerät) ──
+  //  Jeder Schritt kennt in „alt“ seinen alten Schlüssel „<Station>.<Schritt>“ (werkzeuge: Umwandlung Etappe 1). Abgehakt
+  //  oder an der alten Station kontrolliert → erledigt. Niveau je Station → Niveau des Abschnitts, Smileys „Fit für die Probe?“
+  //  (p) und „vorher“ (v) → Kann-Sätze in derselben Reihenfolge. Danach steht _journey im alten Speicher: nie ein zweites Mal.
+  function uebernehmen(J) {
+    let alt = null;
+    try { alt = JSON.parse(localStorage.getItem('lernwelt-lernweg') || 'null'); } catch (e) { return 0; }
+    if (!alt || typeof alt !== 'object' || alt._journey || !P() || !P().wegMerken) return 0;
+    let n = 0;
+    (J.units || []).forEach(u => {
+      const st = u.alt && alt[u.alt];
+      if (!st || typeof st !== 'object' || !Array.isArray(u.abschnitte)) return;
+      const s = st.s || {}, kontrolle = {};
+      u.abschnitte.forEach(a => { if (a.alt && a.alt.kontrolle && s[a.alt.kontrolle]) kontrolle[a.alt.nr] = true; });
+      u.abschnitte.forEach(a => {
+        a.schritte.forEach(x => {
+          if (!x.alt || x.art === 'app') return;
+          const k = x.art === 'hefteintrag' ? x.baustein : x.id;
+          if ((s[x.alt] || kontrolle[x.alt.split('.')[0]]) && !(lies(k) || {}).e) { merke(k, { e: 1 }); n++; }
+        });
+        const nv = a.alt && st.n && Number(st.n[a.alt.nr]);
+        if (a.niveaus && nv >= 1 && nv <= 3 && !lies(a.id)) merke(a.id, { nv });
+      });
+      (u.kann || []).forEach((k, i) => {
+        const w = { s: st.p && st.p[i], v: st.v && st.v[i] };
+        if ((w.s || w.v) && !lies(k.baustein)) merke(k.baustein, w);
+      });
+    });
+    alt._journey = new Date().toISOString().slice(0, 10);
+    try { localStorage.setItem('lernwelt-lernweg', JSON.stringify(alt)); } catch (e) {}
+    return n;
+  }
+
+  // ── Stand für die Startseite: aktuelle Unit = Unit des letzten freigegebenen Abschnitts ──
+  function stand(o) {
+    const vorher = O; O = Object.assign({ admin: false }, o);
+    try {
+      const ab = alleAbschnitte().filter(sichtbar);
+      if (!ab.length) return null;
+      const unit = O.J.units.find(u => (u.abschnitte || []).includes(ab[ab.length - 1]));
+      O.unit = unit;
+      const eigene = (unit.abschnitte || []).filter(sichtbar), pf = eigene.filter(a => !a.wahl), wa = eigene.filter(a => a.wahl);
+      const wSoll = Math.min(unit.wahlAnzahl || 1, wa.length);
+      const fertig = pf.filter(a => fortschritt(a).fertig).length + Math.min(wSoll, wa.filter(a => fortschritt(a).fertig).length);
+      const naechste = ab.find(a => !a.wahl && !fortschritt(a).fertig) || null;
+      return { unit, fertig, soll: pf.length + wSoll, naechste, naechsteUnit: naechste && O.J.units.find(u => (u.abschnitte || []).includes(naechste)) };
+    } finally { O = vorher; }
+  }
+
   window.LernJourneyWeg = {
+    uebernehmen, stand,
     /** Laufzettel in host zeichnen. o: { J, unit, bausteine: { id: Baustein }, cfg (journey.wege.journey6), admin,
      *  z (Zustände der Stationen), starte(ziel, abschnittId), wechsleUnit(unit, abschnittId), abschnitt? } */
     zeige(h, o) {

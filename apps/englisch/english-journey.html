@@ -19,8 +19,10 @@
    Brücke: Am Ende jedes Orts führt ein Tor zum nächsten; es öffnet sich mit dem Finale der Unit (die erste Station
    der nächsten Unit braucht dieses Finale, steht in journey6.json).
    Laufzettel (Aktionsplan „Lernweg im English Journey“, Etappe 2): Abschnitte wie im Buch mit Buchseiten, Hefteinträgen,
-   Übungen und Apps – gemeinsam/journey-lernweg.js (LernJourneyWeg), nachgeladen beim ersten Öffnen. Bis zum Umstieg
-   (Etappe 3) nur mit Admin-Anmeldung oder Feature-Schalter „journey-lernweg“. Rücksprung aus einer App: #…&w=<Abschnitt>.
+   Übungen und Apps – gemeinsam/journey-lernweg.js (LernJourneyWeg), nachgeladen beim ersten Öffnen. Zu sehen, sobald die
+   Lehrkraft für dieses Gerät Abschnitte freigegeben hat (config.journey, Admin → Gruppen → 📒 Laufzettel); mit Admin-Anmeldung
+   immer. Rücksprung aus einer App: #…&w=<Abschnitt>. Beim ersten Öffnen übernimmt die Seite einmal die Haken aus dem alten
+   Lernweg (lernwelt-lernweg, Etappe 3).
    Links: english-journey.html#u=u2   Unit vorwählen · #u=u2&w=   Laufzettel öffnen
   ═══════════════════════════════════════════════
   -->
@@ -284,8 +286,22 @@ function starteThema(thema, weg) {
 }
 
 // ── Laufzettel (Lernweg im Journey): Abschnitte mit Buch, Hefteintrag, Übung, App – gemeinsam/journey-lernweg.js ──
-const wegErlaubt = () => A.admin || !!(window.LernFreigabe && LernFreigabe.feature && LernFreigabe.feature('journey-lernweg'));
+// Freigegeben, wenn für eines der Gerät-„wer“ (Gruppe, Klasse, alle) ein „bis“ eingetragen ist – welche Abschnitte, rechnet der Laufzettel
+const wegCfg = () => (window.LernFreigabe && LernFreigabe.journey ? LernFreigabe.journey('journey6') : null);
+const wegErlaubt = () => { if (A.admin) return true; const b = (wegCfg() || {}).bis || {}, F = window.LernFreigabe;
+  return !!(F && F.wer && F.wer().some(w => typeof b[w] === 'string')); };
 const wegDa = u => wegErlaubt() && Array.isArray(u.abschnitte) && u.abschnitte.length > 0;
+async function wegModul() {
+  if (!window.LernJourneyWeg) await LW.laden('gemeinsam/journey-lernweg.js');
+  return window.LernJourneyWeg;
+}
+// Einmalig: Haken aus dem alten Lernweg (nur auf diesem Gerät gespeichert) in den Pass übernehmen
+async function altUebernehmen() {
+  let alt = null; try { alt = JSON.parse(localStorage.getItem('lernwelt-lernweg') || 'null'); } catch (e) {}
+  if (!alt || alt._journey || !A.J.units.some(u => u.alt && alt[u.alt])) return;
+  try { const n = (await wegModul()).uebernehmen(A.J); if (n) toast('✅ Deine Haken aus dem Lernweg sind jetzt im Laufzettel'); }
+  catch (e) { console.warn('[Journey] Übernahme', e); }
+}
 async function zeigeWeg(abschnitt) {
   if (!wegDa(A.unit)) return;
   try {
@@ -301,7 +317,7 @@ async function zeigeWeg(abschnitt) {
 }
 function wegDaten(abschnitt) {
   const o = { J: A.J, unit: A.unit, bausteine: A.bausteine, admin: A.admin, z: A.z,
-    cfg: window.LernFreigabe && LernFreigabe.journey ? LernFreigabe.journey('journey6') : null,
+    cfg: wegCfg(),
     starte: (ziel, weg) => ziel.station ? starte(ziel.station, weg) : starteThema(ziel.thema, weg),
     wechsleUnit: (u, weg) => waehleUnit(u).then(() => zeigeWeg(weg)) };
   if (abschnitt !== undefined) o.abschnitt = abschnitt;
@@ -446,6 +462,7 @@ window.addEventListener('pageshow', e => { if (e.persisted) aktualisieren(); });
       if (A.welt) A.welt.jubel();
       toast('✨ Die Station glänzt wieder!');
     } else if (vonS && !HASH.has('w')) zeigeKarte(vonS);
+    await altUebernehmen();
     if (HASH.has('w')) await zeigeWeg(HASH.get('w') || null);
   } catch (e) {
     console.warn('[Journey]', e);
