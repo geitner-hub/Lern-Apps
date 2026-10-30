@@ -601,6 +601,18 @@ zusammen. Die Lernweg-Seite (`apps/typen/lernweg.html`) geht darin auf und wird 
 „Inhalte Englisch 6“ (29.10.2026) gegliedert: Abschnitte wie im Buch (Lead-in, Theme 1/2, Story, Focus, Skills, Finale), Buchaufgaben mit
 Niveau (★ alle · ★★ Standard und Profi · ★★★ Profi), Hören macht die Lehrkraft im Unterricht (steht nicht im Weg). **Etappe 2 (v102): Laufzettel im Weg**
 **Etappe 3 (v103): Übernahme und Umstieg** – der Laufzettel ersetzt die Lernwege (siehe unten: Übernahme, Freigabe im Admin, Startseite).
+**Etappe 4 (v105): Verzahnung** – die Kinder sehen selbst, was zusammengehört:
+
+- **Eine Kennung überall:** „📒 HE 4 · Titel“ am Hefteintrag, „📒 Nutze HE 4“ an jeder Übung des Abschnitts, „📒 HE 4 zuerst“ (Schild) an den
+  App-Schritten, bis der Hefteintrag erledigt ist – empfehlen, nicht sperren. Ohne vergebene Nummer heißt es „Hefteintrag“.
+- **Stationskarte im Weg** (3D und Liste): „📖 S. 36 · 📒 HE 5“, Schild „HE 5 zuerst“ und Knopf zum Abschnitt im Laufzettel – nur, wenn der
+  Abschnitt für das Gerät freigegeben ist (`LernJourneyWeg.bezug`, das Modul lädt beim Öffnen des Journey mit).
+- **In den Apps** (`gemeinsam/lernweg-zurueck.js`, nur wenn aus dem Journey geöffnet): Knopf „📒 HE 4“ unter „Zurück zum Weg“ zeigt den
+  Hefteintrag groß mit der Buchaufgabe darunter. **Rückverweis:** nach einer Runde unter 70 % „Schau nochmal in 📒 HE 4 und mach 📖 S. 34 Ü 1b“.
+  Station → Abschnitt über `#s=`, Zusatz-Apps über `#w=`; bei „Zum Schluss“ (Finale) alle freigegebenen Hefteinträge der Unit.
+- **Buchleiste** über dem Laufzettel: die Seiten der Unit je Abschnitt (grün fertig, gold „du bist gerade hier“, blau frei, grau noch zu).
+- **Finale mit Brücken:** jeder Kann-Satz zeigt Hefteintrag, Buchseite, App und Abschnitt; bei 😟/😐 hervorgehoben („👉 Schau hier nach“).
+- Grammatik-Stationen ohne eigenen Hefteintrag (U1 was/were, U2 can/mustn't) führen zur Buchseite; ein HE kommt nur, wenn er im Heft steht.
 
 - **Laufzettel** (`gemeinsam/journey-lernweg.js`, `LernJourneyWeg`, nachgeladen über den Knopf „📒 Laufzettel“ im English Journey): Abschnitte
   der Unit mit Fortschritt und Symbolen je Schritt, darunter Wahlstationen und „Zum Schluss“. Ein Abschnitt zeigt die Materialleiste (📖 Buch S. …
