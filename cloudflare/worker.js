@@ -61,7 +61,8 @@
 //    featureSchalter – { name: true | false | { wer: ['admin' | 'alle' | 'k5' | 'g:<32 hex>', …] } } (Etappe 10: nur für dich oder Testgruppen)
 //    appEinstellungen – { appId: { schluessel: wert } } (Etappe 7, Schema in daten/apps/<id>.json)
 //    journey       – { schuljahr: 'JJJJ/JJ', wege: { journey6: { bis: { wer: Abschnitt-ID }, he: { Hefteintrag-ID: 1–999 },
-//                      sperren: { wer: true } } } } English Journey: Freigabe bis Abschnitt, HE-Nummern, Sperre (vorbereitet)
+//                      niveau: { wer: 1–3 }, sperren: { wer: true } } } } English Journey: Freigabe bis Abschnitt, HE-Nummern,
+//                      Mindestniveau im Laufzettel, Sperre (vorbereitet)
 //    Andere Felder oben in config.json werden abgelehnt.
 //
 //  Medien (Okt. 2026, cloudflare/medien.js, Anleitung: ANLEITUNG-MEDIEN.md):
@@ -444,7 +445,7 @@ function validateConfig(cfg) {
       p.push('appEinstellungen ungültig');
   }
   // English Journey (Aktionsplan „Lernweg im English Journey“): Schuljahr, je Weg Freigabe „bis Abschnitt“ je Gruppe,
-  // HE-Nummern (fortlaufend, nicht doppelt) und Sperr-Schalter (vorbereitet, noch ohne Wirkung). Ob Abschnitte und
+  // HE-Nummern (fortlaufend, nicht doppelt), Mindestniveau (1–3) und Sperr-Schalter (vorbereitet, noch ohne Wirkung). Ob Abschnitte und
   // Hefteinträge existieren, prüfen pruefen.py und der Admin – hier nur Form und Größe.
   const jy = cfg.journey;
   if (jy !== undefined) {
@@ -455,8 +456,9 @@ function validateConfig(cfg) {
       && mapOk(w.bis, 60, k => WER.test(k), v => isStr(v, 60) && JID.test(v))
       && mapOk(w.he, 300, k => k.length <= 60 && JID.test(k), v => Number.isInteger(v) && v >= 1 && v <= 999)
       && (w.he === undefined || new Set(Object.values(w.he)).size === Object.keys(w.he).length)
+      && mapOk(w.niveau, 60, k => WER.test(k), v => [1, 2, 3].includes(v))
       && mapOk(w.sperren, 60, k => WER.test(k), v => v === true)
-      && Object.keys(w).every(k => ['bis', 'he', 'sperren'].includes(k));
+      && Object.keys(w).every(k => ['bis', 'he', 'niveau', 'sperren'].includes(k));
     if (!jy || typeof jy !== 'object' || Array.isArray(jy)
         || (jy.schuljahr !== undefined && !(typeof jy.schuljahr === 'string' && /^\d{4}\/\d{2}$/.test(jy.schuljahr)))
         || !mapOk(jy.wege, 10, k => /^journey[0-9a-z-]{0,20}$/.test(k), wegOk)

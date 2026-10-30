@@ -6,15 +6,184 @@
   {
    "id": "he-u1-simple-past",
    "art": "hefteintrag",
-   "titel": "Simple past (Wiederholung)",
-   "zeilen": [],
-   "nurImHeft": true
+   "titel": "Grammar: Simple Past",
+   "zeilen": [
+    [
+     [
+      "Die Vergangenheit für Verben heißt simple past.",
+      ""
+     ]
+    ],
+    [
+     [
+      "Um die simple past Form zu bilden gibt es Regeln:",
+      ""
+     ]
+    ],
+    [
+     [
+      "  • ",
+      ""
+     ],
+     [
+      "Regular verbs",
+      "g"
+     ],
+     [
+      ":",
+      ""
+     ]
+    ],
+    [
+     [
+      "      ◦ normal: man hängt ein „",
+      ""
+     ],
+     [
+      "-ed",
+      "g"
+     ],
+     [
+      "“ an das Ende",
+      ""
+     ]
+    ],
+    [
+     [
+      "         des verbs (Beispiel: walk → walked)",
+      ""
+     ]
+    ],
+    [
+     [
+      "      ◦ wenn am ",
+      ""
+     ],
+     [
+      "Ende ein Konsonant steht und",
+      "g"
+     ]
+    ],
+    [
+     [
+      "         ",
+      ""
+     ],
+     [
+      "davor ein Vokal",
+      "g"
+     ],
+     [
+      ", wird der Konsonant",
+      ""
+     ]
+    ],
+    [
+     [
+      "         ",
+      ""
+     ],
+     [
+      "verdoppelt",
+      "g"
+     ],
+     [
+      " (Beispiel: stop → stopped)",
+      ""
+     ]
+    ],
+    [
+     [
+      "      ◦ ist am Ende des Wortes ein „",
+      ""
+     ],
+     [
+      "y",
+      "g"
+     ],
+     [
+      "“ wird daraus",
+      ""
+     ]
+    ],
+    [
+     [
+      "         meistens ein „",
+      ""
+     ],
+     [
+      "-ied",
+      "g"
+     ],
+     [
+      "“ (Beispiel: carry → carried)",
+      ""
+     ]
+    ],
+    [
+     [
+      "  • ",
+      ""
+     ],
+     [
+      "irregular verbs",
+      "g"
+     ],
+     [
+      ":",
+      ""
+     ]
+    ],
+    [
+     [
+      "      ◦ Es gibt keine Regeln, man muss es ",
+      ""
+     ],
+     [
+      "auswendig",
+      "g"
+     ]
+    ],
+    [
+     [
+      "         lernen",
+      ""
+     ]
+    ],
+    [
+     [
+      "  • ",
+      ""
+     ],
+     [
+      "Verneinung",
+      "g"
+     ],
+     [
+      ": ",
+      ""
+     ],
+     [
+      "didn’t + Grundform",
+      "g"
+     ],
+     [
+      " (Beispiel: he",
+      ""
+     ]
+    ],
+    [
+     [
+      "     didn’t walk to school)",
+      ""
+     ]
+    ]
+   ]
   },
   {
    "id": "he-u2-weg",
    "art": "hefteintrag",
    "titel": "Nach dem Weg fragen",
-   "entwurf": true,
    "zeilen": [
     [
      [

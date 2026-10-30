@@ -49,7 +49,14 @@
   const heName = bid => { const n = heNr(bid); return n ? `HE ${n}` : 'Hefteintrag'; };
 
   // ── Niveau und Schritte eines Abschnitts ─────────────
-  const niveau = a => a.niveaus ? ((lies(a.id) || {}).nv || 2) : 0;
+  // Mindestniveau der Lehrkraft (config.journey…niveau, Gruppe vor Klasse vor „alle“): das Kind wählt frei, aber nicht darunter
+  function mindest() {
+    const m = O.cfg && O.cfg.niveau && typeof O.cfg.niveau === 'object' ? O.cfg.niveau : {};
+    const wer = (window.LernFreigabe && LernFreigabe.wer && LernFreigabe.wer()) || ['alle'];
+    const w = wer.find(x => [1, 2, 3].includes(m[x]));
+    return w ? m[w] : 1;
+  }
+  const niveau = a => a.niveaus ? Math.max(mindest(), (lies(a.id) || {}).nv || 2) : 0;
   const passt = (s, nv) => !nv || !Array.isArray(s.niveau) || s.niveau.includes(nv);
   const schritte = a => a.schritte.filter(s => passt(s, niveau(a)));
   function themaGeschafft(s) {
@@ -214,7 +221,8 @@
     return `<button type="button" class="jw-zurueck" data-jw-zettel>‹ Laufzettel</button>
       <div class="jw-kopf"><h2>${esc(a.ico || '')} ${esc(a.titel)}</h2>
         <p class="jw-klein">${esc(a.kurz || a.kompetenz || '')} · ${f.n} von ${f.von} erledigt</p>${material(a)}</div>
-      ${a.niveaus ? `<div class="jw-niveaus"><b>Mein Niveau:</b><div>${[1, 2, 3].map(n => `<button type="button" class="${nv === n ? 'an' : ''}" data-jw-niveau="${n}">
+      ${a.niveaus ? `<div class="jw-niveaus"><b>Mein Niveau:</b>${mindest() > 1 ? `<span class="jw-klein"> Deine Lehrkraft: mindestens ${NIVEAU[mindest()][0]}</span>` : ''}
+        <div>${[1, 2, 3].map(n => `<button type="button" class="${nv === n ? 'an' : ''}" data-jw-niveau="${n}"${n < mindest() ? ' disabled' : ''}>
         ${NIVEAU[n][0]}<small>${NIVEAU[n][1]}</small></button>`).join('')}</div></div>` : ''}
       ${a.merk ? `<div class="jw-merk">${a.merk.map(m => `<div>${esc(m)}</div>`).join('')}</div>` : ''}
       ${schritte(a).map(s => schrittHTML(s, a)).join('')}
@@ -299,7 +307,7 @@
 .jw-material { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .6rem; } .jw-material span { background: rgba(230,168,23,.14); border: 1px solid rgba(230,168,23,.4); border-radius: 999px; padding: .25rem .7rem; font-weight: 800; font-size: .9rem; }
 .jw-niveaus { background: var(--surface); border-radius: 16px; padding: .8rem; margin-bottom: .9rem; } .jw-niveaus > div { display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem; margin-top: .4rem; }
 .jw-niveaus button { background: var(--surface2); border: 2px solid transparent; border-radius: 14px; padding: .55rem; font-weight: 900; } .jw-niveaus button small { display: block; color: var(--muted); font-size: .78rem; }
-.jw-niveaus button.an { border-color: var(--accent); background: rgba(230,168,23,.16); }
+.jw-niveaus button:disabled { opacity: .35; } .jw-niveaus button.an { border-color: var(--accent); background: rgba(230,168,23,.16); }
 .jw-merk { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: .5rem; margin-bottom: .9rem; } .jw-merk div { background: rgba(230,168,23,.14); border: 1px solid rgba(230,168,23,.4); border-radius: 12px; padding: .6rem; font-weight: 900; text-align: center; }
 .jw-schritt { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 1rem 1.1rem; margin-bottom: .8rem; }
 .jw-schritt.fertig { border-color: rgba(74,222,128,.5); } .jw-schritt h4 { font-size: 1.08rem; font-weight: 900; margin-bottom: .35rem; } .jw-schritt > p { color: var(--text2); font-weight: 700; margin: .3rem 0; line-height: 1.4; }

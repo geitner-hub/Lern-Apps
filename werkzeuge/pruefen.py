@@ -872,7 +872,7 @@ for jw_p in sorted(ROOT.glob('daten/journey*.json')):
     if abschnitte: I(f'{jw_r}: {len(abschnitte)} Abschnitte, {sum(1 for v in ids.values() if v == "Schritt")} Schritte')
 
 # config.json → journey (vom Admin gepflegt): { schuljahr, wege: { journey6: { bis: { wer: Abschnitt }, he: { Hefteintrag: Nr },
-#   sperren: { wer: true } } } } – Freigabe „bis Abschnitt“ je Gruppe, HE-Nummern fortlaufend durchs Schuljahr, Sperr-Schalter vorbereitet
+#   niveau: { wer: 1–3 } (Mindestniveau), sperren: { wer: true } } } } – Freigabe „bis Abschnitt“ je Gruppe, HE-Nummern fortlaufend durchs Schuljahr, Sperr-Schalter vorbereitet
 jc = config.get('journey')
 if isinstance(jc, dict):
     for wname, w in (jc.get('wege') or {}).items():
@@ -885,6 +885,8 @@ if isinstance(jc, dict):
             if b not in jw['he']: H(f'config.json: journey.wege.{wname}.he nennt den unbekannten Hefteintrag {b}')
         doppelt = sorted({n for n in he.values() if list(he.values()).count(n) > 1})
         if doppelt: F(f'config.json: journey.wege.{wname}.he – HE-Nummer doppelt vergeben: {", ".join(map(str, doppelt))}')
+        for wer_, n in (w.get('niveau') or {}).items():
+            if n not in (1, 2, 3): F(f'config.json: journey.wege.{wname}.niveau – Mindestniveau für {wer_} muss 1, 2 oder 3 sein')
 
 # ── 17. Admin: Module (Admin-Umbau Etappe 1) ───────
 if not Path('admin.html').is_file(): F('admin.html fehlt')

@@ -619,7 +619,8 @@ Niveau (★ alle · ★★ Standard und Profi · ★★★ Profi), Hören macht 
   keinen Laufzettel-Knopf und kein Banner; mit Admin-Anmeldung immer alles. HE-Nummern aus `he` (ohne Nummer steht „Hefteintrag“).
 - **Freigeben (Admin → Gruppen → 📒 Laufzettel, `module/gruppen-laufzettel.js`):** je Gruppe, Klasse oder „Alle“ „frei bis“ einen Abschnitt
   wählen; dabei bekommen die neu sichtbaren Hefteinträge ihre HE-Nummer, fortlaufend in Weg-Reihenfolge (vergebene bleiben fest), und
-  `schuljahr` wird gesetzt. Stand v103: die zwei Gruppen mit dem alten Lernweg Unit 1 haben „frei bis Finale Unit 1“, HE 1–3.
+  `schuljahr` wird gesetzt. Daneben je Zeile das **Mindestniveau** (`niveau: { wer: 2|3 }`): die Kinder wählen ★/★★/★★★ weiter selbst,
+  aber nicht darunter (gleicher Vorrang). Stand v103: die zwei Gruppen mit dem alten Lernweg Unit 1 haben „frei bis Finale Unit 1“, HE 1–3.
 - **Übernahme (einmal je iPad, `LernJourneyWeg.uebernehmen`):** beim Öffnen des Journey werden die Haken aus `lernwelt-lernweg` über die
   `alt`-Schlüssel der Schritte übernommen; eine kontrollierte alte Station zählt alle ihre Schritte als erledigt; Niveau je Station → Niveau
   des Abschnitts; „Fit für die Probe?“ (`p`) und „vorher“ (`v`) → Kann-Sätze in derselben Reihenfolge. Danach `_journey` im alten Speicher.
@@ -650,7 +651,7 @@ Niveau (★ alle · ★★ Standard und Profi · ★★★ Profi), Hören macht 
   Lernstand `jw:<ID>` in den Pass (zählt nie für XP, Sterne, „Meine Themen“ oder Dorf). `alt` (an Unit, Abschnitt und Schritt) merkt sich
   Lernweg, alte Stationsnummer und alten Schritt-Schlüssel für die einmalige Übernahme der Häkchen aus `lernwelt-lernweg` (Etappe 3).
 - **config.json → `journey`** (vom Admin gepflegt über Gruppen → 📒 Laufzettel, im Worker geprüft):
-  `{ schuljahr: "2026/27", wege: { journey6: { bis: { <wer>: <Abschnitt-ID> }, he: { <Hefteintrag-ID>: Nr }, sperren: { <wer>: true } } } }`.
+  `{ schuljahr: "2026/27", wege: { journey6: { bis: { <wer>: <Abschnitt-ID> }, he: { <Hefteintrag-ID>: Nr }, niveau: { <wer>: 1–3 }, sperren: { <wer>: true } } } }`.
   `bis` = Freigabe bis einschließlich dieses Abschnitts je Gruppe/Klasse, `he` = HE-Nummern (fortlaufend durchs Schuljahr, bei der Freigabe
   vergeben, nie doppelt), `sperren` = Sperr-Schalter je Gruppe (vorbereitet, noch ohne Wirkung). Ein Schuljahreswechsel setzt nur
   diesen Block neu. In den Heften stehen schon HE 1 `he-u1-simple-past`, HE 2 `he-u1-objektpronomen`, HE 3 `he-u1-linking-words`,
