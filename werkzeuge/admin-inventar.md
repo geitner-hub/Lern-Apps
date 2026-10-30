@@ -49,7 +49,7 @@ Bereiche im neuen Admin: **Start · Inhalte · Gruppen · Motivation · Medien �
 | 🎯 Unterricht | Ausnahmen von der Spielsperre (enden von selbst) | `freigaben.js` | `spielsperre.ausnahmen[]` | Gruppen (+ Unterrichtsmodus) | Spiele frei | ☑ #/gruppen/spielsperre, „Heute frei“ in #/unterricht |
 | 🎯 Unterricht | Freigaben je Stufe/Unit (zu, offen, ab Datum) | `freigaben.js` | `freigaben` | Inhalte (Etappe 8: Katalog-Baum) | Freigabe, Sperre, Stufe | ☑ #/inhalte/freigaben, „für alle“ auch in #/inhalte/katalog |
 | 🎯 Unterricht | Gruppen-Auswertung (anonyme Summen je Thema) | `freigaben.js` | `/sync/admin/statistik` | Gruppen | Auswertung, Fortschritt | ☑ #/gruppen/auswertung |
-| 🗺️ Lernwege | Lernwege Gruppen/Klassen zuteilen, Vorschau, Klassen-Übersicht | `freigaben.js` (`buildLernwegeTab`) | `freigaben[ID][wer] = 'offen'`, `/sync/admin/statistik` | Gruppen | Lernweg, Stationen | ☑ #/gruppen/lernwege |
+| 📒 Laufzettel (bis v102: 🗺️ Lernwege) | English Journey: frei bis Abschnitt je Gruppe/Klasse, HE-Nummern | `module/gruppen-laufzettel.js` | `journey.wege.journey6` (`bis`, `he`) | Gruppen | Laufzettel, Lernweg, Hefteintrag | ☑ #/gruppen/laufzettel |
 | 📁 Medien | Hochladen (auch in Teilen), Untertitel, Ordner, Sammlungen, Ein/Aus, Löschen, QR, Beamer, Speicheranzeige | `medien.js` (fertig, wirkt sofort) | `/medien/admin/*` (R2 + `SYNC_DB`) | Medien | Datei, QR, Beamer | ☑ #/medien/dateien |
 
 **Eigene Seiten neben dem Admin** (bleiben, werden aus dem neuen Admin verlinkt):
@@ -94,7 +94,7 @@ Secrets/Bindings: `ADMIN_PASSWORD`, `GITHUB_TOKEN`, optional `LOGIN_KV`, `SYNC_D
 | `pass` – `seasons`, `avatar`, `events` | Pass | ja |
 | `spiele` – `auswahl`, `schwelle`, `runden`, `starter`, `wortBis` | Pass (`spiele.js`) | ja (seit Etappe 1, vorher nicht) |
 | `dorf` – `plaetze`, `rerollsProTag`, `rerollsMax`, `kostenfaktor`, `wochen`, `challenges`, `challengeRotation`, `lehrerZettel` | Dorf | ja |
-| `freigaben` | Unterricht, Lernwege | ja |
+| `freigaben` | Unterricht, English Journey (Unit öffnen) | ja |
 | `fokus[]` | Unterricht | ja |
 | `spielsperre` – `schwelle`, `runden`, `ausnahmen` | Unterricht | ja |
 | `heute` | Unterricht | ja (nur `false`) |

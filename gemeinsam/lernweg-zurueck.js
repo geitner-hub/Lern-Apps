@@ -1,10 +1,9 @@
 // ═══════════════════════════════════════════════════════
 //  Lernwelt – lernweg-zurueck.js
-//  Knopf „🧭 Zurück zum Lernweg“ oben auf App-Seiten, die aus einem Lernweg geöffnet wurden.
-//  Der Lernweg (apps/typen/lernweg.html) merkt sich beim Antippen eines App-Links seine Adresse
-//  in sessionStorage (lernwelt-lernweg-zurueck, nur dieser Tab); navbar.js lädt diese Datei nur dann.
-//  English Journey (apps/englisch/english-journey.html) nutzt denselben Schlüssel: „🧭 Zurück zum Weg“,
-//  nach einer Runde (lernapps:result) leuchtet der Knopf auf.
+//  Knopf „🧭 Zurück zum Weg“ oben auf App-Seiten, die aus dem English Journey (apps/englisch/english-journey.html,
+//  auch aus dem Laufzettel) geöffnet wurden. Der Weg merkt sich vorher seine Adresse in sessionStorage
+//  (lernwelt-lernweg-zurueck, nur dieser Tab; Name aus der Zeit der Lernwege); navbar.js lädt diese Datei nur dann.
+//  Nach einer Runde (lernapps:result) leuchtet der Knopf auf.
 // ═══════════════════════════════════════════════════════
 (function () {
   'use strict';
@@ -12,8 +11,7 @@
   try { ziel = sessionStorage.getItem('lernwelt-lernweg-zurueck') || ''; } catch (e) { return; }
   let url;
   try { url = new URL(ziel, location.href); } catch (e) { return; }
-  const journey = /\/apps\/englisch\/english-journey\.html$/.test(url.pathname);
-  if (url.origin !== location.origin || !(journey || /\/apps\/typen\/lernweg\.html$/.test(url.pathname))) return;
+  if (url.origin !== location.origin || !/\/apps\/englisch\/english-journey\.html$/.test(url.pathname)) return;
   if (document.getElementById('lw-zurueck')) return;
   const st = document.createElement('style');
   st.textContent = `#lw-zurueck{position:fixed;top:max(.6rem,env(safe-area-inset-top));right:.7rem;z-index:9998;display:flex;align-items:center;gap:.4rem;
@@ -25,7 +23,7 @@
     @media (prefers-reduced-motion:reduce){#lw-zurueck:active{transform:none}#lw-zurueck.fertig{animation:none}}`;
   document.head.appendChild(st);
   const a = document.createElement('a');
-  a.id = 'lw-zurueck'; a.href = url.href; a.textContent = journey ? '🧭 Zurück zum Weg' : '🧭 Zurück zum Lernweg';
+  a.id = 'lw-zurueck'; a.href = url.href; a.textContent = '🧭 Zurück zum Weg';
   document.body.appendChild(a);
-  if (journey) window.addEventListener('lernapps:result', () => { a.classList.add('fertig'); a.textContent = '✓ Zurück zum Weg'; });
+  window.addEventListener('lernapps:result', () => { a.classList.add('fertig'); a.textContent = '✓ Zurück zum Weg'; });
 })();

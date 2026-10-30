@@ -110,8 +110,9 @@
   }
   const erlaubt = (themaId, standardZu) => status(themaId, standardZu).frei;
 
-  // Lernwege (apps/typen/lernweg.html): umgekehrte Regel – ohne Eintrag gesperrt. Offen nur, wenn für
-  // dieses iPad (Gruppe vor Klasse vor „alle“) ausdrücklich 'offen' oder ein erreichtes Datum eingetragen ist.
+  // Umgekehrte Regel – ohne Eintrag gesperrt (früher für die Lernwege, heute „Unit geöffnet“ im English Journey,
+  // gemeinsam/journey-kern.js). Offen nur, wenn für dieses iPad (Gruppe vor Klasse vor „alle“) ausdrücklich 'offen'
+  // oder ein erreichtes Datum eingetragen ist.
   function zugeteilt(themaId) {
     const F = CFG && CFG.freigaben, e = F && typeof F === 'object' ? F[themaId] : null;
     if (!e || typeof e !== 'object') return false;

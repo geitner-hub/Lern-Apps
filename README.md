@@ -498,48 +498,13 @@ selbst im Admin unter Inhalte → 🔐 Freigaben), Wiederholung, Fehler-Training
 - **Länder-Finder** bleibt eigener Typ (Karte antippen) und ist an den Rahmen angeschlossen: Modi = Stufen
   `gpg.6.laender.europa` / `.bundeslaender` (Freigabe mit 🔒, Ergebnis mit Themen-ID).
 
-## Lernwege (Stationenarbeit mit digitalem Laufzettel)
+## Lernwege (bis v102, entfernt)
 
-- **Seite:** `apps/typen/lernweg.html?weg=<ID>` zeigt `daten/lernwege/<ID>.json` – Laufzettel mit Stationen,
-  „So arbeitest du“ zum Abhaken, Hefteinträge im Heft-Schema, Aufgaben (Lücken, Zuordnen, Sätze, Schreiben, Mediation)
-  und „Fit für die Probe?“ mit Smileys. Die Kinder schreiben alles ins Heft und kontrollieren an der Kontrollstation
-  mit dem gedruckten Lösungsheft; **keine automatische Kontrolle, kein Ergebnis für Pass/Sterne**.
-  Gespeichert wird nur auf dem Gerät (`lernwelt-lernweg`: abgehakte Schritte, Smileys).
-- **Nur für zugeteilte Gruppen:** Ein Lernweg ist keine App in config.json. Ohne Eintrag ist er gesperrt
-  (`LernFreigabe.zugeteilt(id)` – umgekehrt zu `erlaubt`). Admin → Gruppen → **🗺️ Lernwege**: Gruppe
-  (Sicherungskarten) oder Klasse antippen → `freigaben[<ID>][wer] = 'offen'`, dann veröffentlichen. Zugeteilte
-  Lernwege erscheinen oben auf der Startseite unter „🧭 Mein Lernweg“. Mit Admin-Anmeldung auf dem Gerät ist jeder
-  Lernweg als Vorschau zu sehen (Beamer).
-- **Neuer Lernweg:** JSON-Datei `daten/lernwege/<ID>.json` (ID mit `.lernweg-`, z. B. `en.6.lernweg-u2`), Thema im
-  Katalog (Bereich „Lernwege“ des Fachs, `quelle: { app: "apps/typen/lernweg.html", parameter: "weg=<ID>" }`),
-  Datei in `sw.js` → `NACHLADEN`. Format: siehe `daten/lernwege/en.6.lernweg-u1.json` (stationen → schritte,
-  aufgaben mit art `luecken` · `wahl` · `zuordnen` · `saetze` · `sortieren` · `schreiben` · `mediation`;
-  `hefteintraege` mit zeilen `[text, stil]`, stil `g` = grün, `b` = fett).
-- **Bausteine (seit v58, alle freiwillig – ohne sie verhält sich ein Lernweg wie Unit 1):**
-  - Kopf: `wahlAnzahl` (so viele Wahlstationen zählen), `zieleVorher: true` (Start-Einschätzung mit den `probe`-Sätzen,
-    „Fit für die Probe?“ zeigt vorher/jetzt), `autostart: "taeglich"` (Startseite öffnet den Lernweg beim ersten Besuch am Tag).
-  - Station: `niveaus: true` (Kind wählt ★ Basis / ★★ Standard / ★★★ Profi, Standard vorgewählt), `wahl: true` (Wahlstation),
-    `schluss: true` (unter „Zum Schluss“, z. B. Checkpoint), `code` (Kontroll-Code: „kontrolliert“ erst nach Eingabe),
-    `kompetenz` (Etikett, z. B. „Grammatik“). Stationen ohne Kontroll-Schritt gelten als fertig, wenn alle Schritte erledigt sind.
-  - Schritt/Aufgabe: `niveau: [1, 2]` (nur auf diesen Niveaus sichtbar). Schritt `art: "app"` mit
-    `ziel: { thema: <Stufen-ID>, runden, prozent }` hakt sich selbst ab: gezählt werden gute Runden ab dem ersten Öffnen des
-    Lernwegs aus dem Verlauf in `lern-apps-results` (navbar.js speichert dafür je Runde die Themen-ID `s`).
-  - Aufgabenart `frei` (offene Schreibaufgabe mit `text` und `beispiel`).
-  - Schritt `id`: fester Schlüssel statt Position. Wer in einen Lernweg, den Kinder schon nutzen, Schritte **einfügt**, gibt allen
-    bestehenden Schritten ihre alte Position als `id` ("0", "1", …) und dem neuen eine eigene (z. B. "v") – sonst verrutschen Haken.
-  - Schritt `art: "vokabeln"` (📘): die Wörter der Unit **thematisch in den Stationen**, die sie brauchen – keine große
-    „Schreib alle Vokabeln ab“-Station (Unit 1 hat sie als Ausnahme am Ende).
-- **Zurück zum Lernweg:** Wer aus dem Lernweg eine App öffnet, bekommt dort oben den Knopf „🧭 Zurück zum Lernweg“
-  (`gemeinsam/lernweg-zurueck.js`, nur nachgeladen, wenn `lernwelt-lernweg-zurueck` im Tab gesetzt ist).
-- **Startseite:** zugeteilte Lernwege stehen ganz oben als großes Banner mit Fortschrittsring und nächster Station.
-- **Klassen-Übersicht (Admin → Gruppen → 🗺️ Lernwege → „📊 Stand der Klasse“):** Jedes iPad mit Sicherungskarte in einer Gruppe meldet
-  je Station einmal „begonnen“ und einmal „kontrolliert“ (mit Niveau) über die vorhandene Gruppenauswertung
-  (`LernSync.lernwegMelden`, Thema `lw:<ID>:<Station>:b` bzw. `:k<0–3>`). Der Worker addiert nur Summen je Gruppe – keine
-  Kennung, keine Namen; dafür war keine Worker-Änderung nötig. Die normale Gruppen-Auswertung unter Gruppen → 📊 Auswertung
-  blendet diese Einträge aus. iPads ohne Karte fehlen in der Übersicht (dafür der Klassen-Laufzettel).
-- **Erster Lernweg:** `en.6.lernweg-u1` (Highlight 6, Unit 1 „Together again“, 7 Stationen; Hören macht die Lehrkraft im Unterricht,
-  Extras sind nummerierte Arbeitsblätter am Pult – die Kinder haben kein Workbook).
-- **Unit 2:** `en.6.lernweg-u2` (10 Stationen: 7 Pflicht mit Niveaus, 2 Wahl, Checkpoint; App-Schritte, Kontroll-Codes, Auto-Start).
+Die Lernwege (`apps/typen/lernweg.html`, `daten/lernwege/`, Admin-Reiter „🗺️ Lernwege“) sind im **Laufzettel des English Journey**
+aufgegangen – siehe „Lernweg im English Journey“ unten. Beim ersten Öffnen des Journey übernimmt jedes iPad seine alten Haken einmal aus
+`lernwelt-lernweg` in den Pass. Alte Links auf `lernweg.html` leitet `404.html` zum Journey um. Die Katalog-IDs `en.6.lernweg-u1`/`-u2`
+bleiben reserviert (ohne Quelle). `LernFreigabe.zugeteilt` bleibt (Journey: „Unit öffnen“), `LernSync.lernwegMelden` wird mit der
+Klassen-Übersicht im Admin (Etappe 6) verallgemeinert.
 
 ## English Journey Year 6 (Highlight 6, v90)
 
@@ -635,7 +600,7 @@ zusammen. Die Lernweg-Seite (`apps/typen/lernweg.html`) geht darin auf und wird 
 „Aktionsplan: Lernweg im English Journey“. **Etappe 1 (v101): Format und Gerüst** – nur Daten und Prüfung. Unit 1–2 sind nach der Übergabe
 „Inhalte Englisch 6“ (29.10.2026) gegliedert: Abschnitte wie im Buch (Lead-in, Theme 1/2, Story, Focus, Skills, Finale), Buchaufgaben mit
 Niveau (★ alle · ★★ Standard und Profi · ★★★ Profi), Hören macht die Lehrkraft im Unterricht (steht nicht im Weg). **Etappe 2 (v102): Laufzettel im Weg**
-– bis zum Umstieg (Etappe 3) nur mit Admin-Anmeldung oder Feature-Schalter `journey-lernweg` (Admin → System → Feature-Schalter).
+**Etappe 3 (v103): Übernahme und Umstieg** – der Laufzettel ersetzt die Lernwege (siehe unten: Übernahme, Freigabe im Admin, Startseite).
 
 - **Laufzettel** (`gemeinsam/journey-lernweg.js`, `LernJourneyWeg`, nachgeladen über den Knopf „📒 Laufzettel“ im English Journey): Abschnitte
   der Unit mit Fortschritt und Symbolen je Schritt, darunter Wahlstationen und „Zum Schluss“. Ein Abschnitt zeigt die Materialleiste (📖 Buch S. …
@@ -649,9 +614,17 @@ Niveau (★ alle · ★★ Standard und Profi · ★★★ Profi), Hören macht 
 - **Speicher:** nur im Pass über `LernPass.wegMerken(id, { e | nv | s | v })` als Lernstand `jw:<ID>` (Hefteintrag: Baustein-ID, sonst Schritt-ID;
   Niveau: Abschnitt-ID; Kann-Satz: Baustein-ID). Ohne Runden und ohne `f` – zählt nie für XP, Sterne, „Meine Themen“ oder Wiederholungen,
   reist aber mit der Sicherungskarte. Kein neuer Speicher-Schlüssel.
-- **Sichtbarkeit:** `LernFreigabe.journey('journey6')` liefert `config.journey.wege.journey6`; ein Abschnitt ist sichtbar, wenn `bis` für eines
-  der Gerät-`wer` (alle, Klasse, Gruppe) auf ihn oder einen späteren zeigt. Ohne Block alle, mit Admin-Anmeldung immer alle. HE-Nummern aus `he`
-  (ohne Nummer steht „Hefteintrag“).
+- **Sichtbarkeit:** `LernFreigabe.journey('journey6')` liefert `config.journey.wege.journey6`. Es gilt der erste `bis`-Eintrag für das Gerät
+  (Gruppe vor Klasse vor „alle“): sichtbar sind alle Abschnitte bis einschließlich diesem, quer über die Units. Ohne Eintrag sieht das Gerät
+  keinen Laufzettel-Knopf und kein Banner; mit Admin-Anmeldung immer alles. HE-Nummern aus `he` (ohne Nummer steht „Hefteintrag“).
+- **Freigeben (Admin → Gruppen → 📒 Laufzettel, `module/gruppen-laufzettel.js`):** je Gruppe, Klasse oder „Alle“ „frei bis“ einen Abschnitt
+  wählen; dabei bekommen die neu sichtbaren Hefteinträge ihre HE-Nummer, fortlaufend in Weg-Reihenfolge (vergebene bleiben fest), und
+  `schuljahr` wird gesetzt. Stand v103: die zwei Gruppen mit dem alten Lernweg Unit 1 haben „frei bis Finale Unit 1“, HE 1–3.
+- **Übernahme (einmal je iPad, `LernJourneyWeg.uebernehmen`):** beim Öffnen des Journey werden die Haken aus `lernwelt-lernweg` über die
+  `alt`-Schlüssel der Schritte übernommen; eine kontrollierte alte Station zählt alle ihre Schritte als erledigt; Niveau je Station → Niveau
+  des Abschnitts; „Fit für die Probe?“ (`p`) und „vorher“ (`v`) → Kann-Sätze in derselben Reihenfolge. Danach `_journey` im alten Speicher.
+- **Startseite:** Banner „📒 Mein Laufzettel“ (Fortschritt der aktuellen Unit, „Weiter mit …“) statt „🧭 Mein Lernweg“, Rechnung aus
+  `LernJourneyWeg.stand`; die Dateien laden erst, wenn für das Gerät etwas freigegeben ist. Den täglichen Auto-Start gibt es nicht mehr.
 - **Lösungen:** `loesung` an der Übung – Liste (je Aufgabe eine Zeile, beim Sortieren je Spalte; pruefen.py prüft die Länge) oder Mustertext
   mit „Beispiel:“ und Prüfzeile bei Schreibaufgaben. Offen: die zwei „Right or wrong?“-Aufgaben zu den Buchgeschichten (Buchtext nötig).
 
@@ -676,15 +649,14 @@ Niveau (★ alle · ★★ Standard und Profi · ★★★ Profi), Hören macht 
 - **IDs:** Abschnitt-, Schritt- und Baustein-IDs sind zusammen eindeutig und werden nie umbenannt – Erledigtes kommt ab Etappe 2 als
   Lernstand `jw:<ID>` in den Pass (zählt nie für XP, Sterne, „Meine Themen“ oder Dorf). `alt` (an Unit, Abschnitt und Schritt) merkt sich
   Lernweg, alte Stationsnummer und alten Schritt-Schlüssel für die einmalige Übernahme der Häkchen aus `lernwelt-lernweg` (Etappe 3).
-- **config.json → `journey`** (vom Admin gepflegt, im Worker erlaubt, der Laufzettel liest ihn schon; anlegen ab Etappe 3):
+- **config.json → `journey`** (vom Admin gepflegt über Gruppen → 📒 Laufzettel, im Worker geprüft):
   `{ schuljahr: "2026/27", wege: { journey6: { bis: { <wer>: <Abschnitt-ID> }, he: { <Hefteintrag-ID>: Nr }, sperren: { <wer>: true } } } }`.
   `bis` = Freigabe bis einschließlich dieses Abschnitts je Gruppe/Klasse, `he` = HE-Nummern (fortlaufend durchs Schuljahr, bei der Freigabe
   vergeben, nie doppelt), `sperren` = Sperr-Schalter je Gruppe (vorbereitet, noch ohne Wirkung). Ein Schuljahreswechsel setzt nur
   diesen Block neu. In den Heften stehen schon HE 1 `he-u1-simple-past`, HE 2 `he-u1-objektpronomen`, HE 3 `he-u1-linking-words`,
   HE 4 `he-u2-did-fragen`, HE 5 `he-u2-plural`.
-- **Umwandlung Unit 1–2:** `python3 werkzeuge/lernweg-umwandeln.py` macht aus `daten/lernwege/en.6.lernweg-u1.json` und `-u2.json` die
-  Abschnitte und Bausteine (Zuordnung alte Station → Abschnitt → Stationen oben im Skript). Läuft es erneut, bleiben von Hand ergänzte
-  Lösungen erhalten. Die „So arbeitest du“-Regeln und Kontroll-Codes des Papier-Laufzettels entfallen.
+- **Umwandlung Unit 1–2 (Etappe 1, Skript mit den Lernwegen gelöscht):** aus den alten Lernweg-Dateien entstanden Abschnitte und Bausteine;
+  die „So arbeitest du“-Regeln und Kontroll-Codes des Papier-Laufzettels entfielen.
 - **pruefen.py (Regel 23):** Bausteine vorhanden und von der richtigen Art, Stationen und Themen vorhanden, Buchverweise im Format,
   IDs eindeutig; `config.journey`: HE-Nummern je Weg nicht doppelt (rot; dieselbe Regel prüft der Admin vor dem Veröffentlichen).
   Gelb: Abschnitte ohne Buchseiten, Übungen ohne Lösung, Kann-Sätze ohne Abschnitt, Hefteinträge nur im Heft, Stationen ohne Abschnitt.

@@ -29,7 +29,7 @@ LWAdmin.kachel({
           <div class="lw-knoepfe lw-knoepfe-eng">
             <a class="lw-btn klein gold" href="#/unterricht">🎓 Unterrichtsmodus</a><a class="lw-btn klein" href="#/inhalte/apps">📱 Apps</a><a class="lw-btn klein" href="#/start/banner">📢 Banner</a>
             <a class="lw-btn klein" href="#/gruppen/fokus">🎯 Fokus</a><a class="lw-btn klein" href="#/gruppen/spielsperre">🎮 Spielsperre</a>
-            <a class="lw-btn klein" href="#/gruppen/lernwege">🗺️ Lernwege</a><a class="lw-btn klein" href="#/inhalte/freigaben">🔐 Freigaben</a>
+            <a class="lw-btn klein" href="#/gruppen/laufzettel">📒 Laufzettel</a><a class="lw-btn klein" href="#/inhalte/freigaben">🔐 Freigaben</a>
             <a class="lw-btn klein" href="#/motivation/dorf">🏘️ Dorf</a><a class="lw-btn klein" href="#/medien/dateien">📁 Medium hochladen</a>
           </div></div>`;
       host.querySelector('[data-a="beamer"]').onclick = () => {

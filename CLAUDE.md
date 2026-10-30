@@ -87,14 +87,6 @@ und gelbe Hinweise. Manuelle Checkliste nach Uploads: `werkzeuge/RAUCHTEST.md`.
   eingabe, beschriften, bildwort). Neue App = Inhaltsdatei + Katalog-Thema (quelle uebung.html, parameter
   `inhalt=<ID>`) + Eintrag in `sw.js` NACHLADEN; Format: README → Aufgabentyp-Baukasten, Vorlage für Claude:
   `werkzeuge/INHALT-PROMPT.md`. Eine eigene App nur, wenn kein Typ passt (Spiele, besondere Mechaniken).
-- **Lernwege** (`apps/typen/lernweg.html?weg=<ID>` + `daten/lernwege/<ID>.json`, ID mit `.lernweg-`): Stationenarbeit
-  mit digitalem Laufzettel, Arbeit im Heft, Kontrolle mit gedrucktem Lösungsheft – bewusst ohne automatische Kontrolle und
-  ohne `saveResult`. **Keine normale App** (nicht in config.json): ohne Zuteilung gesperrt (`LernFreigabe.zugeteilt`,
-  umgekehrt zu `erlaubt`); Zuteilung im Admin unter Gruppen → 🗺️ Lernwege schreibt `freigaben[ID][wer] = 'offen'`.
-  Zugeteilte Lernwege zeigt die Startseite unter „🧭 Mein Lernweg“; mit Admin-Anmeldung immer als Vorschau.
-  Neuer Lernweg = JSON-Datei + Katalog-Thema (quelle `apps/typen/lernweg.html`, parameter `weg=<ID>`) + sw.js NACHLADEN.
-  Bausteine (Niveaus, Wahl, App-Schritte mit Auto-Haken, Kontroll-Code, Auto-Start): README → Lernwege. Bestehende Lernwege
-  ohne diese Felder müssen unverändert funktionieren (die Kinder nutzen sie).
 - **English Journey Year 6** (`daten/journey6.json`, pruefen.py Regel 22): Stationen durch Highlight 6 mit `thema`, `braucht`,
   optional `start` und `mit` (weitere Vokabel-Abschnitte). Kein eigener Spielstand – liest nur die Meisterschaft aus dem Pass; Lehrer-Freigabe zuerst, dann Vorgänger.
   Theme-Stufen `en.6.vok.uN.<abschnitt>` im Vokabeltrainer (`?stufe=`). 3D-Weg: `apps/englisch/english-journey.html` +
@@ -103,7 +95,8 @@ und gelbe Hinweise. Manuelle Checkliste nach Uploads: `werkzeuge/RAUCHTEST.md`.
   `abschnitte` → `schritte` (Hefteintrag, Übung, App …) in journey6.json, Inhalte in `daten/journey/bausteine-en6.json`, Schuljahr/Freigaben/
   HE-Nummern in `config.journey` (pruefen.py Regel 23). Abschnitt-, Schritt- und Baustein-IDs nie umbenennen (Lernstand `jw:<ID>`).
   Laufzettel: `gemeinsam/journey-lernweg.js` (`LernJourneyWeg`), Haken nur über `LernPass.wegMerken` (zählt für nichts, reist mit dem Sync);
-  bis Etappe 3 hinter Feature-Schalter `journey-lernweg`.
+  Freigabe „bis Abschnitt“ und HE-Nummern im Admin unter Gruppen → 📒 Laufzettel. Die alten Lernwege (`apps/typen/lernweg.html`) sind seit
+  v103 entfernt; `lernwelt-lernweg` wird nur noch einmal übernommen.
 - **Live-Abfrage** (Unterrichtsmodus → 📊, Kinder-Seite `apps/typen/live.html?raum=CODE`, keine App in config.json, ohne Navbar):
   Worker-Teil `cloudflare/live.js` (Räume, Antworten, Quizze, Rückblicke in `SYNC_DB`; Räume nach dem Beenden gelöscht),
   Fragetypen `gemeinsam/live-fragen.js` (`LernLive`), Beamer `gemeinsam/admin/live.js`, Quiz-Editor Inhalte → Live-Quizze.
