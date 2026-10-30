@@ -182,7 +182,7 @@ function webglOk() { try { const c = document.createElement('canvas'); return !!
 //  Regeln in gemeinsam/journey-kern.js (LernJourney) – dieselben wie „Heute für dich“ auf der Startseite
 const stand = id => { try { return (window.LernPass && LernPass.themaStand && LernPass.themaStand(id)) || null; } catch (e) { return null; } };
 const hatApp = st => LernJourney.hatApp(st);
-function berechne() { const r = LernJourney.berechne(A.J, { admin: A.admin }); A.alle = r.alle; A.z = r.z; }
+function berechne() { const r = LernJourney.berechne(A.J, { admin: A.admin }); A.alle = r.alle; A.z = r.z; A.geoeffnet = r.geoeffnet || {}; }
 // Die Orte füllen sich mit Sprache: zu jeder gemeisterten Wörter-Station ein Schild mit Wörtern daraus (aus daten/vokabeln6.json)
 function woerterFuer(st) {
   const m = /^en\.6\.vok\.u(\d+)\.([a-z0-9-]+)$/.exec(st.thema || ''), V = A.vok;
@@ -197,6 +197,8 @@ const stationen = u => u.stationen.map((st, i) => Object.assign({ id: st.id, nr:
   woerter: st.art === 'woerter' && A.z[st.id].zustand === 'gemeistert' ? woerterFuer(st) : null }, A.z[st.id]));
 const unitFertig = u => u.stationen.filter(st => !A.alle[st.id].bau).every(st => A.z[st.id].zustand === 'gemeistert');
 const finaleGemeistert = u => u.stationen.some(st => st.art === 'finale' && A.z[st.id].zustand === 'gemeistert');
+// Brücke offen: Finale gemeistert – oder die Lehrkraft hat die nächste Unit schon geöffnet (Finale lässt sich nachholen)
+const brueckeOffen = u => { const n = naechsteUnit(u); return finaleGemeistert(u) || !!(n && A.geoeffnet && A.geoeffnet[n.id]); };
 
 function link(st) {
   const id = st.start || st.thema, t = LernKatalog.thema(id), q = t.quelle, p = new URLSearchParams(q.parameter || '');
@@ -227,9 +229,9 @@ function zeichneListe() {
       <span class="txt"><b>${ART[s.art][0]} ${esc(s.titel)}</b><small>${esc(s.ort)} · ${ART[s.art][1]}</small></span>
       <span class="zst">${s.nebel ? '🌫️ wiederholen' : s.naechste ? '👉 Nächstes Ziel' : { zu: 'noch zu', offen: 'offen', gemeistert: 'gemeistert', bau: '🚧 wird gebaut' }[s.zustand]}</span></button>`).join('')}
     ${(u.bewohner || []).map(b => `<div class="bewohner"><small>💬 ${esc(b.ort || 'Jemand')} fragt:</small>${esc(b.satz)}</div>`).join('')}
-    ${n ? `<button type="button" class="reihe ${finaleGemeistert(u) ? 'offen' : 'zu'}" ${finaleGemeistert(u) ? `data-weiter-unit="${esc(n.id)}"` : 'disabled'}>
-      <span class="nr">${finaleGemeistert(u) ? '🌉' : '🔒'}</span><span class="txt"><b>Brücke zu Unit ${n.nr}: ${esc(n.titel)}</b>
-      <small>${finaleGemeistert(u) ? 'Offen – auf zum nächsten Ort!' : 'Öffnet sich mit dem Finale dieser Unit'}</small></span></button>` : ''}`;
+    ${n ? `<button type="button" class="reihe ${brueckeOffen(u) ? 'offen' : 'zu'}" ${brueckeOffen(u) ? `data-weiter-unit="${esc(n.id)}"` : 'disabled'}>
+      <span class="nr">${brueckeOffen(u) ? '🌉' : '🔒'}</span><span class="txt"><b>Brücke zu Unit ${n.nr}: ${esc(n.titel)}</b>
+      <small>${finaleGemeistert(u) ? 'Offen – auf zum nächsten Ort!' : brueckeOffen(u) ? 'Von deiner Lehrkraft geöffnet – Stationen hier später nachholen' : 'Öffnet sich mit dem Finale dieser Unit'}</small></span></button>` : ''}`;
 }
 
 function zeigeKarte(id) {
@@ -336,7 +338,7 @@ async function baue3d(aktuell) {
     if (!LernJourneyWelt.SZENEN.includes(A.unit.szene)) return false;
     const naechste = naechsteUnit(A.unit);
     A.welt = await LernJourneyWelt.start($('stage'), { figur: A.figur, szene: A.unit.szene, stationen: stationen(A.unit), aktuell, onTippen: getippt,
-      bruecke: naechste ? { titel: `Unit ${naechste.nr}: ${naechste.titel}`, offen: finaleGemeistert(A.unit) } : null, onBruecke: brueckeGetippt });
+      bruecke: naechste ? { titel: `Unit ${naechste.nr}: ${naechste.titel}`, offen: brueckeOffen(A.unit) } : null, onBruecke: brueckeGetippt });
     return true;
   } catch (e) { console.warn('[Journey] 3D nicht möglich', e); A.gl = false; return false; }
 }
@@ -352,16 +354,18 @@ const naechsteUnit = u => A.J.units[A.J.units.indexOf(u) + 1] || null;
 function brueckeGetippt() {
   const n = naechsteUnit(A.unit); if (!n) return;
   schliesseKarte();
-  if (finaleGemeistert(A.unit) && A.welt) A.welt.zurBruecke().then(() => zeigeBrueckeKarte());
+  if (brueckeOffen(A.unit) && A.welt) A.welt.zurBruecke().then(() => zeigeBrueckeKarte());
   else zeigeBrueckeKarte();
 }
 function zeigeBrueckeKarte() {
-  const n = naechsteUnit(A.unit), offen = finaleGemeistert(A.unit), fin = A.unit.stationen.find(st => st.art === 'finale');
+  const n = naechsteUnit(A.unit), offen = brueckeOffen(A.unit), fin = A.unit.stationen.find(st => st.art === 'finale');
+  const lehrkraft = offen && !finaleGemeistert(A.unit);   // geöffnet von der Lehrkraft, Finale hier noch offen
   $('karte').innerHTML = `<button type="button" class="x" data-zu aria-label="Schließen">✕</button>
     <div class="marke2" aria-hidden="true">${offen ? '🌉' : '🔒'}</div>
     <div class="klein">Brücke · Unit ${n.nr} · ${esc(n.ort)}</div>
     <h3>${esc(n.titel)}</h3>
-    <p>${offen ? `Die Brücke ist offen! Auf zum nächsten Ort: ${esc(n.ort)}.` : `Die Brücke öffnet sich, wenn du das Finale „${esc(fin ? fin.titel : 'Finale')}“ gemeistert hast.`}</p>
+    <p>${lehrkraft ? `Deine Lehrkraft hat den nächsten Ort schon geöffnet: ${esc(n.ort)}. Die Stationen hier kannst du später nachholen.`
+      : offen ? `Die Brücke ist offen! Auf zum nächsten Ort: ${esc(n.ort)}.` : `Die Brücke öffnet sich, wenn du das Finale „${esc(fin ? fin.titel : 'Finale')}“ gemeistert hast.`}</p>
     <div class="zeile">${offen ? `<button type="button" class="los" data-weiter-unit="${esc(n.id)}">🌉 Über die Brücke</button>` : fin ? `<button type="button" class="neben" data-station="${esc(fin.id)}">🏁 ${esc(fin.titel)}</button>` : ''}</div>`;
   $('karte').hidden = false;
   A.karte = null;
@@ -385,7 +389,7 @@ async function waehleUnit(u, aktuell) {
 function aktualisieren() {
   if (!A.J) return;
   berechne(); zeichneKopf(); zeichneListe();
-  if (A.welt) { A.welt.zustand(stationen(A.unit)); A.welt.bruecke(finaleGemeistert(A.unit)); }
+  if (A.welt) { A.welt.zustand(stationen(A.unit)); A.welt.bruecke(brueckeOffen(A.unit)); }
   if (A.karte) zeigeKarte(A.karte);
   if (A.weg && window.LernJourneyWeg) { if (wegDa(A.unit)) LernJourneyWeg.aktualisieren(wegDaten()); else schliesseWeg(); }
 }

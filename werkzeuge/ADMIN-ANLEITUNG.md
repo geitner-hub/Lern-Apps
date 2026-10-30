@@ -42,6 +42,12 @@ Vollbild fürs iPad, große Knöpfe, keine Einstellungen: 📲 App als QR-Code a
 eine Klasse oder Gruppe freigeben. Wirkt sofort, ein offener Entwurf bleibt unberührt; die iPads merken es in 2–3 Minuten
 ohne Neuladen. Wieder sperren oder „frei ab Datum“: Inhalte → 🔐 Freigaben.
 
+**English Journey – nächste Unit öffnen:** Normalerweise beginnt eine Unit erst, wenn das Finale der Unit davor geschafft
+ist. Ist die Klasse im Buch schon weiter, öffnest du sie für alle, die noch nicht so weit sind: Inhalte → 🔐 Freigaben →
+Vokabeln Klasse 6 → Unit antippen → „🧭 Journey: Unit öffnen“ (für Alle, eine Klasse oder Gruppe). Auch ein erreichtes
+„📅 frei ab Datum“ öffnet die Unit. Die Kinder beginnen dann an der ersten Station der Unit; was davor noch fehlt, bleibt
+offen zum Nachholen. „↺ Journey: Öffnung zurücknehmen“ macht es rückgängig (Gemeistertes bleibt).
+
 **Achtung bei einem alten Entwurf:** Fragt der Admin beim Öffnen, ob ein Entwurf „auf einem älteren Stand“ trotzdem
 übernommen werden soll, ersetzt „Ja“ die ganze Einstellungsdatei durch den alten Stand – Änderungen, die inzwischen dazukamen
 (z. B. aus einem Update), gehen verloren. Im Zweifel „Nein“ und die Änderung neu machen.

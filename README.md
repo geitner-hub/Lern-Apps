@@ -585,6 +585,11 @@ Etappe 3 (v91): 3D-Weg als Prototyp mit dem Ort von Unit 1. Etappe 4 (v93): alle
   hängen aneinander, jede Grammatik-Station an ihrer Wörter-Station davor, das Finale an allen Stationen der Unit, und die erste
   Station einer Unit am Finale der Unit davor („Brücke zum nächsten Ort“). Stationen, deren `thema` noch keine App hat, zeigen „wird gebaut“ und zählen nicht für das Finale (seit v94 haben alle Stationen eine App).
   Eine spätere Sperre nimmt nichts weg: Gemeistertes bleibt gemeistert.
+- **Unit öffnen (v101):** Steht das Unit-Thema (`en.6.vok.uN`) in den Freigaben ausdrücklich auf `offen` oder auf einem
+  erreichten Datum (`LernFreigabe.zugeteilt`), zählen Vorgänger aus anderen Units nicht – die Unit beginnt auch ohne das Finale
+  davor; die Brücke am Ende des Orts davor ist offen („Deine Lehrkraft hat den nächsten Ort schon geöffnet …“). Innerhalb der
+  Unit bleibt die Reihenfolge, die Stationen davor bleiben zum Nachholen offen. Admin: Freigaben → Unit-Chip →
+  „🧭 Journey: Unit öffnen“ (schreibt `freigaben[<Unit-Thema>][wer] = 'offen'`, auch wenn die Unit ohnehin frei ist; Chip mit 🧭).
 - **Wörter:** Theme-Stufen im Katalog unter `en.6.vok` (`en.6.vok.u1.theme1` …, ohne `inhalt`). Der Vokabeltrainer startet sie direkt
   (`vokabeltrainer.html?klasse=6&stufe=en.6.vok.u1.theme1`) und meldet in Quiz, Fill in und Scramble zusätzlich die Theme-ID
   (`thema: [Unit, Theme]`, Lernstand auch unter der Theme-ID). Die Unit-ID bleibt an erster Stelle – Lernwege zählen weiter danach.

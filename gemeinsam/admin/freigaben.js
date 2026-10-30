@@ -19,6 +19,11 @@
 //  Lernwege (apps/typen/lernweg.html, eigener Tab „🗺️ Lernwege“): umgekehrte Regel – ohne Eintrag für niemanden sichtbar. „Zuteilen“ schreibt
 //  freigaben[<Lernweg-ID>][wer] = 'offen' (gleiches Format, der Worker prüft es schon), ausgewertet mit
 //  LernFreigabe.zugeteilt(). Liste = Katalog-Themen mit quelle apps/typen/lernweg.html.
+//
+//  English Journey (v101): Bei den Units aus daten/journey6.json (Chips „Unit 1 …“ in Vokabeln Klasse 6) öffnet
+//  „🧭 Journey: Unit öffnen“ die Unit ausdrücklich – freigaben[<Unit-Thema>][wer] = 'offen' (auch wenn sie ohnehin frei ist).
+//  Dann beginnt die Unit im Weg auch ohne das Finale der Unit davor (gemeinsam/journey-kern.js). Ein erreichtes
+//  „📅 frei ab Datum“ wirkt genauso. Chip mit 🧭 = für diese Auswahl geöffnet.
 // ═══════════════════════════════════════════════════════
 'use strict';
 
@@ -26,7 +31,7 @@ const FR_KATALOG_REIHEN = ['en.5.vok', 'en.5.wortlisten', 'en.6.vok', 'gpg.6.lae
 const FR_BAUKASTEN = 'apps/typen/uebung.html';
 const FR_LERNWEG = 'apps/typen/lernweg.html';          // Lernwege: nur zugeteilt sichtbar          // Etappe 9: jeder Inhalt des Baukastens ist automatisch eine Reihe
 const FR_APP_NAMEN = { kopfrechnen: '🧮', trainer: '📐', laengen: '📏' };
-const FR = { wer: 'alle', offen: '', reihen: null, gruppen: null, gruppenFehler: '', spWer: null, standardZu: new Set() };
+const FR = { wer: 'alle', offen: '', reihen: null, gruppen: null, gruppenFehler: '', spWer: null, standardZu: new Set(), journey: new Set() };
 
 const frEsc = s => escHtml(String(s == null ? '' : s));
 function frHeute() { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
@@ -136,7 +141,21 @@ async function frReihenLaden() {
       });
     }
   } catch (e) { console.warn('[Freigaben] Katalog', e); }
+  try {   // Units der English Journey: Unit-Themen, die sich ausdrücklich öffnen lassen
+    const J = await fetch('daten/journey6.json', { cache: 'no-cache' }).then(r => r.json());
+    FR.journey = new Set((J.units || []).map(u => u.thema).filter(Boolean));
+  } catch (e) { console.warn('[Freigaben] journey6.json', e); }
   return reihen;
+}
+// Für „wer“ ausdrücklich geöffnet ('offen' oder erreichtes Datum, eigener Eintrag oder von „Alle“) – wie LernFreigabe.zugeteilt
+function frJourneyOffen(sid, wer) {
+  const e = (CONFIG.freigaben || {})[sid] || {};
+  for (const w of wer === 'alle' ? ['alle'] : [wer, 'alle']) {
+    const v = e[w];
+    if (v === undefined) continue;
+    return v === 'offen' || (/^\d{4}-\d{2}-\d{2}$/.test(v) && v <= frHeute());
+  }
+  return false;
 }
 
 // Was gilt für „wer“ bei dieser Stufe? Eigener Eintrag, sonst Thema darüber, sonst „alle“,
@@ -176,8 +195,9 @@ async function buildFreigaben() {
       const st = frStand(s.id, wer), zu = frGesperrt(st.v), datum = /^\d{4}/.test(st.v);
       const ic = !zu ? '✅' : datum ? '📅' : '🔒';
       const zusatz = datum ? (zu ? ' ab ' + frDatum(st.v) : '') : '';
+      const jo = FR.journey.has(s.id) && frJourneyOffen(s.id, wer) ? ' 🧭' : '';
       return `<button type="button" class="fr-chip${zu ? ' zu' : ''}${st.eigen ? '' : ' geerbt'}${FR.offen === s.id ? ' offen' : ''}" data-fr-stufe="${frEsc(s.id)}" data-fr-reihe="${frEsc(r.id)}"
-        title="${frEsc(s.kurz || s.titel)}">${ic} ${i + 1}. ${frEsc(s.titel)}${frEsc(zusatz)}</button>`;
+        title="${frEsc(s.kurz || s.titel)}${jo ? ' – English Journey: geöffnet, auch ohne das Finale davor' : ''}">${ic} ${i + 1}. ${frEsc(s.titel)}${frEsc(zusatz)}${jo}</button>`;
     }).join('');
     const aktiv = r.stufen.some(s => frStand(s.id, wer).eigen);
     const offen = r.stufen.find(s => s.id === FR.offen);
@@ -203,7 +223,16 @@ function frAktionen(r, s, wer) {
       <span class="fr-ab"><input type="date" id="fr-datum" min="${frHeute()}" value="${/^\d{4}/.test(st.v) && st.v > frHeute() ? st.v : morgen}" aria-label="Frei ab Datum">
         <button class="btn sm" data-fr-akt="datum">📅 frei ab Datum</button></span>
       <button class="btn sm" data-fr-akt="schliessen" aria-label="Schließen">✕</button>
-    </div></div>`;
+    </div>${FR.journey.has(s.id) ? frJourneyKnopf(s, wer) : ''}</div>`;
+}
+function frJourneyKnopf(s, wer) {
+  const e = (CONFIG.freigaben || {})[s.id] || {}, eigen = e[wer] === 'offen', offen = frJourneyOffen(s.id, wer);
+  return `<div class="fr-knoepfe" style="margin-top:.4rem">
+      ${eigen ? '<button class="btn sm" data-fr-akt="journey-zu">↺ Journey: Öffnung zurücknehmen</button>'
+        : offen ? '<span class="fr-hinweis" style="margin:0">🧭 In der English Journey geöffnet (über „Alle“ oder ein Datum).</span>'
+        : '<button class="btn sm" data-fr-akt="journey">🧭 Journey: Unit öffnen</button>'}
+      <span class="fr-hinweis" style="margin:0">English Journey: Eine geöffnete Unit beginnt auch ohne das Finale der Unit davor – für Kinder, die noch nicht so weit sind. Die Stationen davor bleiben offen zum Nachholen.</span>
+    </div>`;
 }
 
 // Eine Stufe für „wer“ setzen. v: 'frei' | 'zu' | 'JJJJ-MM-TT' | 'erben'. cfg: anderer Stand (Unterrichtsmodus)
@@ -235,6 +264,11 @@ function frAktion(akt) {
     if (!/^\d{4}-\d{2}-\d{2}$/.test(d) || d <= frHeute()) { showToast('⚠ Bitte ein Datum ab morgen wählen', true); return; }
     frSetzen(s.id, wer, d);
     msg = `📅 ${wn}: ${r.titel} – ${s.titel} frei ab ${frDatum(d)}`;
+  } else if (akt === 'journey' || akt === 'journey-zu') {
+    const F = CONFIG.freigaben && typeof CONFIG.freigaben === 'object' && !Array.isArray(CONFIG.freigaben) ? CONFIG.freigaben : (CONFIG.freigaben = {});
+    const e = F[s.id] || (F[s.id] = {});
+    if (akt === 'journey') e[wer] = 'offen'; else delete e[wer];
+    msg = `🧭 ${wn}: English Journey ${r.titel.replace(/^\S+ /, '')} – ${s.titel} ${akt === 'journey' ? 'geöffnet (ohne Finale davor)' : 'Öffnung zurückgenommen'}`;
   } else if (akt === 'grenze') {
     const i = r.stufen.indexOf(s);
     r.stufen.forEach((x, j) => frSetzen(x.id, wer, j <= i ? 'frei' : 'zu'));
