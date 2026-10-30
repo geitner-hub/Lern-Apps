@@ -49,6 +49,7 @@
 //                         true = an für alle · false/fehlt = aus · { wer: ['admin', 'g:<Gruppe>', 'k5', 'alle'] } =
 //                         nur dort an ('admin' = dieses Gerät ist mit dem Hauptzugang im Admin angemeldet).
 //                         Neue Funktion hinter einen Schalter: Eintrag in daten/features.json + if (LernFreigabe.feature('id')).
+//    journey(weg)       → config.journey.wege[weg] oder null – English Journey: Freigabe „bis Abschnitt“, HE-Nummern
 //  Ereignis 'lernfreigabe:neu', wenn sich die Grundlage geändert hat. Solange die Seite sichtbar ist, fragt sie alle
 //  2 Minuten nach (Unterrichtsmodus „Stufe jetzt freischalten“ kommt so ohne Neuladen an).
 // ═══════════════════════════════════════════════════════
@@ -109,8 +110,9 @@
   }
   const erlaubt = (themaId, standardZu) => status(themaId, standardZu).frei;
 
-  // Lernwege (apps/typen/lernweg.html): umgekehrte Regel – ohne Eintrag gesperrt. Offen nur, wenn für
-  // dieses iPad (Gruppe vor Klasse vor „alle“) ausdrücklich 'offen' oder ein erreichtes Datum eingetragen ist.
+  // Umgekehrte Regel – ohne Eintrag gesperrt (früher für die Lernwege, heute „Unit geöffnet“ im English Journey,
+  // gemeinsam/journey-kern.js). Offen nur, wenn für dieses iPad (Gruppe vor Klasse vor „alle“) ausdrücklich 'offen'
+  // oder ein erreichtes Datum eingetragen ist.
   function zugeteilt(themaId) {
     const F = CFG && CFG.freigaben, e = F && typeof F === 'object' ? F[themaId] : null;
     if (!e || typeof e !== 'object') return false;
@@ -220,5 +222,7 @@
     return v.wer.some(w => w === 'admin' ? adminHier() : wer().includes(w));
   }
 
-  window.LernFreigabe = { erlaubt, zugeteilt, status, wer, fokus, imFokus, spielSperre, spielGesperrt, neu, feature, admin: adminHier };
+  function journey(weg) { const w = CFG && CFG.journey && CFG.journey.wege; return (w && typeof w === 'object' && w[weg] && typeof w[weg] === 'object') ? w[weg] : null; }
+
+  window.LernFreigabe = { erlaubt, zugeteilt, status, wer, fokus, imFokus, spielSperre, spielGesperrt, neu, feature, journey, admin: adminHier };
 })();

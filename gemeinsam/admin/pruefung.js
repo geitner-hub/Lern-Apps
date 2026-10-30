@@ -105,6 +105,20 @@ window.LWAdmin = window.LWAdmin || {};
       } catch (e) { /* offline: nicht prüfbar */ }
     }
 
+    // English Journey: HE-Nummern je Weg nicht doppelt (pruefen.py: rot), Freigabe „bis“ nennt Abschnitte des Wegs (gelb)
+    const wege = ((cfg.journey || {}).wege) || {};
+    for (const [name, w] of Object.entries(wege)) {
+      const nr = Object.values((w && w.he) || {});
+      const doppelt = [...new Set(nr.filter((n, i) => nr.indexOf(n) !== i))];
+      if (doppelt.length) fehler.push(`English Journey (${name}): HE-Nummer doppelt vergeben: ${doppelt.join(', ')}`);
+      try {
+        const jd = await fetch(ROOT + 'daten/' + name + '.json', { cache: 'no-store' }).then(r => r.json());
+        const ab = new Set((jd.units || []).flatMap(u => (u.abschnitte || []).map(a => a.id)));
+        [...new Set(Object.values((w && w.bis) || {}))].filter(a => !ab.has(a)).forEach(a =>
+          warnungen.push(`English Journey (${name}): Freigabe bis zum unbekannten Abschnitt ${a} (wirkt nicht)`));
+      } catch (e) { /* offline: nicht prüfbar */ }
+    }
+
     return { fehler, warnungen };
   }
 

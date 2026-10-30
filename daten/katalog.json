@@ -1484,10 +1484,6 @@
        "id": "en.6.lernweg-u1",
        "titel": "Lernweg Unit 1: Together again",
        "klasse": 6,
-       "quelle": {
-        "app": "apps/typen/lernweg.html",
-        "parameter": "weg=en.6.lernweg-u1"
-       },
        "lehrplan": "E6 Unit 1 (Highlight 6): simple past, was/were, Objektpronomen, linking words, Wortschatz, Sprachmittlung",
        "dauer": 45,
        "einsatz": "Stationenarbeit vor der Probe: Laufzettel und Aufgaben auf dem iPad, Arbeit im Heft, Kontrolle mit gedrucktem Lösungsheft"
@@ -1496,10 +1492,6 @@
        "id": "en.6.lernweg-u2",
        "titel": "Lernweg Unit 2: Neighbours",
        "klasse": 6,
-       "quelle": {
-        "app": "apps/typen/lernweg.html",
-        "parameter": "weg=en.6.lernweg-u2"
-       },
        "lehrplan": "E6 Unit 2 (Highlight 6): simple past Fragen (Fragewort + did, Kurzantworten), Plural, can/mustn't, some/any, Wortschatz, Lesen, Schreiben (Brief), Sprechen (Wegbeschreibung)",
        "dauer": 45,
        "einsatz": "Stationenarbeit mit Niveaus (★/★★/★★★), Pflicht- und Wahlstationen, App-Schritte mit automatischem Haken, Kontroll-Code an der Kontrollstation"

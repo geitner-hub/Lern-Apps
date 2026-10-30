@@ -59,14 +59,12 @@ let selectedNewTagColor = 0;
   const SICHTBAR = {
     dorf:        ['dorf'],
     freigaben:   ['freigaben', 'fokus', 'spielsperre', 'auswertung'],
-    lernwege:    ['lernwege'],
   };
   const zuSehen = gruppe => SICHTBAR[gruppe].includes(aktuell);
   window.buildAll = function buildAll() {
     buildPassAdmin();
     if (zuSehen('dorf')) buildDorfAdmin();
     if (zuSehen('freigaben')) buildFreigaben();
-    if (zuSehen('lernwege')) buildLernwegeTab();
     buildDashboard();
     buildAppList();
     buildOrdnen();

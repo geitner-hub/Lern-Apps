@@ -510,7 +510,7 @@
 <!-- Start-Kacheln: Pass, Lernweg, Heute, Dorf, App des Tages nebeneinander statt untereinander -->
 <div id="start-raster">
   <div id="live-section" class="sk" aria-label="Live-Abfrage"></div>
-  <div id="lernweg-section" class="sk" aria-label="Mein Lernweg"></div>
+  <div id="lernweg-section" class="sk" aria-label="Mein Laufzettel"></div>
   <div id="pass-section" class="sk"></div>
   <div id="heute-section" class="sk" aria-label="Heute für dich"></div>
   <div id="aod-section" class="sk"></div>
@@ -909,62 +909,29 @@ function appKarte(app, fach) {
       return card;
 }
 
-// ── Lernwege: nur sichtbar, wenn im Admin dieser Gruppe/Klasse zugeteilt (LernFreigabe.zugeteilt) ──
-//  Großes Banner mit Fortschritt; "autostart": "taeglich" in daten/lernwege/<ID>.json öffnet den Lernweg beim ersten
-//  Besuch am Tag direkt (Stand aus lernwelt-lernweg, den der Lernweg selbst schreibt).
-let lernwegKatalog = null, lernwegAutoWeg = false;
-const lernwegDaten = {};
-function lernwegStand(id) { try { return (JSON.parse(localStorage.getItem('lernwelt-lernweg') || '{}') || {})[id] || {}; } catch (e) { return {}; } }
-function lernwegFortschritt(id) {
-  const D = lernwegDaten[id];
-  if (!D || !Array.isArray(D.stationen)) return null;
-  const s = lernwegStand(id).s || {};
-  const fertig = st => {
-    const l = st.schritte.map((x, i) => ({ x, i: x.id != null ? String(x.id) : String(i) })).filter(o => o.x.art !== 'extra');
-    const k = l.find(o => o.x.art === 'kontrolle');
-    return k ? !!s[st.nr + '.' + k.i] : l.length > 0 && l.every(o => s[st.nr + '.' + o.i]);
-  };
-  const pf = D.stationen.filter(x => !x.wahl), wa = D.stationen.filter(x => x.wahl);
-  const wSoll = wa.length ? Math.min(Number(D.wahlAnzahl) || 1, wa.length) : 0;
-  const nGeschafft = pf.filter(fertig).length + Math.min(wSoll, wa.filter(fertig).length);
-  const naechste = pf.find(x => !fertig(x)) || (wa.filter(fertig).length < wSoll ? wa.find(x => !fertig(x)) : null);
-  return { fertig: nGeschafft, soll: pf.length + wSoll, naechste };
-}
+// ── Laufzettel im English Journey (Aktionsplan „Lernweg im English Journey“, Etappe 3; löst die Lernwege ab) ──
+//  Banner nur, wenn die Lehrkraft für dieses Gerät Abschnitte freigegeben hat (config.journey.wege.journey6.bis, Gruppe vor
+//  Klasse vor „alle“). Der Fortschritt kommt aus gemeinsam/journey-lernweg.js – erst dann nachgeladen.
+let laufzettelLaden = null, laufzettelJ = null;
 function buildLernwege() {
   const sec = document.getElementById('lernweg-section');
   if (!sec) return;
-  const F = window.LernFreigabe;
-  const ids = F && F.zugeteilt ? Object.keys(CONFIG.freigaben || {}).filter(id => /\.lernweg-/.test(id) && F.zugeteilt(id)) : [];
-  if (!ids.length) { sec.innerHTML = ''; return; }
-  if (!window.LernKatalog || !LernKatalog.geladen()) {
-    if (!lernwegKatalog) lernwegKatalog = LW.laden('gemeinsam/katalog.js').then(() => LernKatalog.bereit).then(buildLernwege).catch(() => {});
-    if (!window.LernKatalog || !LernKatalog.geladen()) return;
+  const F = window.LernFreigabe, cfg = F && F.journey ? F.journey('journey6') : null, bis = (cfg && cfg.bis) || {};
+  if (!F || !F.wer || !F.wer().some(w => typeof bis[w] === 'string')) { sec.innerHTML = ''; return; }
+  if (!laufzettelJ) {
+    if (!laufzettelLaden) laufzettelLaden = LW.laden('gemeinsam/katalog.js').then(() => LernKatalog.bereit)
+      .then(() => LW.laden('gemeinsam/journey-kern.js')).then(() => LW.laden('gemeinsam/journey-lernweg.js')).then(() => LernJourney.laden())
+      .then(J => { laufzettelJ = J; buildLernwege(); }).catch(() => { laufzettelLaden = null; });
+    return;
   }
-  const wege = ids.map(id => LernKatalog.thema(id)).filter(t => t && t.quelle && t.quelle.app === 'apps/typen/lernweg.html');
-  const href = t => t.quelle.app + (t.quelle.parameter ? '?' + t.quelle.parameter : '');
-  // Daten für den Fortschritt nachladen (einmal je Seitenaufruf)
-  wege.forEach(t => {
-    if (lernwegDaten[t.id] !== undefined) return;
-    lernwegDaten[t.id] = null;
-    fetch('daten/lernwege/' + t.id + '.json', { cache: 'no-cache' }).then(r => r.ok ? r.json() : null)
-      .then(d => {
-        if (!d) return;
-        lernwegDaten[t.id] = d;
-        // Auto-Start: einmal am Tag (erster Besuch), nur ohne besondere Adresse (Vorschau, Filter, Pass-Link)
-        if (d.autostart === 'taeglich' && !lernwegAutoWeg && lernwegStand(t.id).a !== heuteIso() && !location.hash && !location.search && isSafeLink(href(t))) {
-          lernwegAutoWeg = true; location.href = href(t); return;
-        }
-        buildLernwege();
-      }).catch(() => {});
-  });
-  sec.innerHTML = wege.length ? `<h2>🧭 Mein Lernweg</h2><div class="lw-banner-liste">${wege.map(t => {
-    if (!isSafeLink(href(t))) return '';
-    const f = lernwegFortschritt(t.id), pct = f ? Math.round(100 * f.fertig / Math.max(1, f.soll)) : 0;
-    const weiter = f ? (f.naechste ? `Weiter mit Station ${f.naechste.nr}: ${f.naechste.titel}` : '🎉 Alle Stationen geschafft – jetzt: Fit für die Probe?') : 'Stationen, Laufzettel und Hefteinträge';
-    return `<a class="lw-banner" href="${escHtml(href(t))}">
-      <span class="lw-ring" style="--p:${pct}"><span>${f ? f.fertig + '/' + f.soll : '🧭'}</span></span>
-      <span class="lw-txt"><b>${escHtml(t.titel)}</b><small>${escHtml(weiter)}</small></span><span class="lw-los">Los ›</span></a>`;
-  }).join('')}</div>` : '';
+  let st = null;
+  try { st = LernJourneyWeg.stand({ J: laufzettelJ, z: LernJourney.berechne(laufzettelJ).z, cfg }); } catch (e) {}
+  if (!st) { sec.innerHTML = ''; return; }
+  const pct = Math.round(100 * st.fertig / Math.max(1, st.soll)), u = st.naechsteUnit || st.unit;
+  const weiter = st.naechste ? `Weiter mit: ${st.naechste.titel}` : '🎉 Alles geschafft – jetzt: Fit für die Probe?';
+  sec.innerHTML = `<h2>📒 Mein Laufzettel</h2><div class="lw-banner-liste"><a class="lw-banner" href="apps/englisch/english-journey.html#u=${encodeURIComponent(u.id)}&w=${encodeURIComponent(st.naechste ? st.naechste.id : '')}">
+      <span class="lw-ring" style="--p:${pct}"><span>${st.fertig}/${st.soll}</span></span>
+      <span class="lw-txt"><b>English Journey · Unit ${escHtml(st.unit.nr)}: ${escHtml(st.unit.titel)}</b><small>${escHtml(weiter)}</small></span><span class="lw-los">Los ›</span></a></div>`;
 }
 
 // ── Live-Abfrage: Kachel, solange der Raum offen ist, in dem dieses iPad (dieser Tab) war (apps/typen/live.html) ──

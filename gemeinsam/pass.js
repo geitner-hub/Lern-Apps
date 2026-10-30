@@ -828,6 +828,17 @@
     save();
     return true;
   }
+  /** Lernweg im English Journey: erledigt (e), Niveau (nv), Einschätzung jetzt/vorher (s/v) als Lernstand 'jw:<ID>'.
+   *  Ohne Runden und ohne f – zählt nie für XP, Sterne, „Meine Themen“ oder Wiederholungen; reist mit der Sicherung. */
+  function wegMerken(id, wert) {
+    if (!/^[a-z0-9-]{1,80}$/.test(String(id))) return false;
+    const k = 'jw:' + id, e = {};
+    ['e', 'nv', 's', 'v'].forEach(x => { const n = Number(wert && wert[x]); if (n >= 1 && n <= 3) e[x] = Math.round(n); });
+    if (!Object.keys(e).length) delete S.lernstand[k];
+    else { ensureProfile(); e.d = dayKey(); S.lernstand[k] = e; }
+    save();
+    return true;
+  }
   /** Inhalt-IDs, die mit den aktuellen Einstellungen freigeschaltet sind */
   function freigeschaltet() {
     const sp = readSettings().spiele;
@@ -954,7 +965,7 @@
     get state()   { return S; },
     get settings(){ return readSettings(); },
     get lernstand() { return S.lernstand; },
-    setSettings, setSpiele, lernstandMelden, freigeschaltet, themaStand, activeEvents, seasonsOn, seasonId, levelXp, pastSeasons,
+    setSettings, setSpiele, lernstandMelden, wegMerken, freigeschaltet, themaStand, activeEvents, seasonsOn, seasonId, levelXp, pastSeasons,
     openChest, equip, equippedItem, owns, ownedCount, checkBadges, badgeProgress, setLook, look,
     avatarHTML, cardBackground, itemPreviewHTML, itemSourceText,
     hasProfile()  { return !!(S.profile && S.profile.name); },

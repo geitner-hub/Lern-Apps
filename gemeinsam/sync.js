@@ -502,7 +502,8 @@
   }
   // Lernwege (apps/typen/lernweg.html): „Station begonnen / kontrolliert“ als eigenes Thema der Gruppenauswertung,
   //  was = 'lw:<Lernweg-ID>:<Station>:b' bzw. ':k<Niveau 0–3>'. Der Lernweg meldet jedes Ereignis nur einmal je iPad;
-  //  im Admin (Tab 🗺️ Lernwege) wird daraus „so viele iPads haben Station 3 kontrolliert“. Keine Kennung, keine Namen.
+  //  im Admin wurde daraus „so viele iPads haben Station 3 kontrolliert“. Keine Kennung, keine Namen. Seit v103 ruft es niemand –
+  //  wird mit der Klassen-Übersicht des Laufzettels (Etappe 6) verallgemeinert.
   const LW_WAS = /^lw:[a-z]+(\.[a-z0-9-]+){1,5}:\d{1,2}:(b|k[0-3])$/;
   function lernwegMelden(was) {
     if (TEST || !ST || ST.ungueltig || !ST.gruppe || !LW_WAS.test(String(was)) || !STAT_WAS.test(String(was))) return false;
