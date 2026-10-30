@@ -22,6 +22,12 @@
 //    LernJourneyWeg.bezug({ J, cfg, station | abschnitt }) → { unit, abschnitt, he: [{ id, nr, erledigt }], buch, buchUebung } oder null
 //        – wozu gehört eine Station/App? Nur freigegebene Abschnitte (Etappe 4: Verzahnung, Hilfe-Knopf und Rückverweis in den Apps)
 //    LernJourneyWeg.heZeigen(baustein, nr) → Hefteintrag groß über der Seite (auch auf App-Seiten)
+//    LernJourneyWeg.plaetze({ J, cfg, z, admin }) → { Stations-ID: { abschnitte: [IDs], tafel, werkbank } } – Tafel (Hefteintrag) und
+//        Werkbank (Übungen) im 3D-Ort: 'offen' | 'fertig' | fehlt. Abschnitte ohne eigene App-Station stehen an `platz` bzw. an der
+//        Station des Abschnitts davor (sonst danach) – „Auch an diesem Platz“.
+//
+//  Etappe 5 (alles in die Stationen): zeige(host, { …, panel: true, schliessen }) zeigt einen Abschnitt als Seitenleiste am 3D-Ort
+//  (✕ statt „‹ Laufzettel“); als Liste ersetzt der Laufzettel die Stationsliste (o.fuss() → HTML unter dem Laufzettel, z. B. die Brücke).
 //
 //  Verzahnung (Etappe 4): eine Kennung überall – „📒 HE 4 · Titel“ am Hefteintrag, „Nutze 📒 HE 4“ an jeder Übung des Abschnitts,
 //  „📒 HE 4 zuerst“ an den App-Schritten, bis der Hefteintrag erledigt ist (empfehlen, nicht sperren), Buchleiste über dem
@@ -84,6 +90,16 @@
   const heIn = a => [...new Set(a.schritte.filter(s => s.art === 'hefteintrag').map(s => s.baustein))];
   const heErledigt = bid => !!(lies(bid) || {}).e;
   const heChip = (bid, text) => `<button type="button" class="jw-chip" data-jw-gross="${esc(bid)}">📒 ${esc(text || '')}${esc(heName(bid))}</button>`;
+
+  // ── Platz eines Abschnitts im Ort: platz, eigene App-Station, sonst die Station des Abschnitts davor (bzw. danach) ──
+  function platzVon(u, a) {
+    const eigen = x => x.platz || (x.schritte.find(s => s.station) || {}).station || null;
+    if (eigen(a)) return eigen(a);
+    const l = u.abschnitte || [], i = l.indexOf(a);
+    for (let k = i - 1; k >= 0; k--) if (eigen(l[k])) return eigen(l[k]);
+    for (let k = i + 1; k < l.length; k++) if (eigen(l[k])) return eigen(l[k]);
+    return null;
+  }
 
   // ── Texte aus den Daten ──────────────────────────────
   const seiten = b => b ? (b.bis && b.bis !== b.seite ? `S. ${b.seite}–${b.bis}` : `S. ${b.seite}`) : '';
@@ -172,7 +188,12 @@
         kopf = `🎮 ${esc(st.titel || s.station)}`;
         const offenHE = heIn(a).filter(h => !heErledigt(h));
         if (offenHE.length && !an) kopf += ` <span class="jw-schild">📒 ${esc(heName(offenHE[0]))} zuerst</span>`;
-        innen = `<p>${x.zustand === 'gemeistert' ? '⭐ Gemeistert! Du kannst jederzeit wieder üben.' : x.zustand === 'zu' ? '🔒 Diese Station ist noch zu.' : x.zustand === 'bau' ? '🚧 Wird gebaut.' : 'Übe in der Lernwelt: 2 Runden mit mindestens 70 % – dann ist die Station gemeistert.'}</p>`;
+        const titelVon = id => { for (const u of O.J.units) for (const y of u.stationen) if (y.id === id) return y.titel; return id; };
+        innen = x.grund === 'heft' ? `<p>🔒 Erst müssen alle Hefteinträge der Unit in deinem Heft stehen:</p><div class="jw-chips">${(x.heft || []).map(h => heChip(h)).join('')}</div>`
+          : x.grund === 'vorgaenger' ? `<p>🔒 Die App öffnet sich, wenn du davor ⭐ geholt hast – Hefteintrag und Übungen kannst du schon machen:</p>
+            <div class="jw-chips">${(x.fehlt || []).map(f => `<button type="button" class="jw-chip" data-jw-station="${esc(f)}">🎮 ${esc(titelVon(f))}</button>`).join('')}</div>`
+          : x.grund === 'lehrer' ? '<p>🔒 Deine Lehrkraft gibt diese App bald frei. Hefteintrag und Übungen kannst du schon machen.</p>'
+          : `<p>${x.zustand === 'gemeistert' ? '⭐ Gemeistert! Du kannst jederzeit wieder üben.' : x.zustand === 'zu' ? '🔒 Diese Station ist noch zu.' : x.zustand === 'bau' ? '🚧 Wird gebaut.' : 'Übe in der Lernwelt: 2 Runden mit mindestens 70 % – dann ist die Station gemeistert.'}</p>`;
         fuss = `<div class="jw-auto${an ? ' an' : ''}"><i>${an ? '✓' : ''}</i>${an ? 'Gemeistert' : 'Hakt sich selbst ab'}</div>`
           + (x.zustand === 'offen' || x.zustand === 'gemeistert' ? `<button type="button" class="jw-los" data-jw-station="${esc(s.station)}">${an ? '🔁 Nochmal' : '▶ Los geht\'s'}</button>` : '');
       } else {
@@ -246,19 +267,24 @@
     const pflicht = ab.filter(a => !a.wahl && !a.schluss), wahl = ab.filter(a => a.wahl), schluss = ab.filter(a => a.schluss);
     const alle = pflicht.concat(schluss).map(fortschritt), fertig = alle.filter(f => f.fertig).length;
     const zieleVorher = u.zieleVorher && !(u.kann || []).some(k => (lies(k.baustein) || {}).v);
-    return `<div class="jw-kopf"><h2>📒 Laufzettel · Unit ${u.nr}: ${esc(u.titel)}</h2>
+    const fin = u.stationen.find(st => st.art === 'finale'), fz = fin && O.z[fin.id];
+    return `<div class="jw-kopf"><h2>Unit ${u.nr}: ${esc(u.titel)}</h2><p class="jw-klein">📍 ${esc(u.ort || '')} · 📒 Laufzettel</p>
         <p class="jw-klein">${fertig} von ${alle.length} Abschnitten fertig${wahl.length ? ` · dazu ${u.wahlAnzahl || 1} von ${wahl.length} Wahlstationen` : ''}. Arbeite der Reihe nach – alles kommt in dein Heft oder Übungsheft.</p>
         ${O.admin ? '<p class="jw-vorschau">👀 Vorschau (Admin): alle Abschnitte sichtbar</p>' : ''}
         ${buchleiste(u)}
         <div class="jw-knoepfe"><button type="button" class="jw-neben" data-jw-spiegel>📒 Mein Heft</button></div></div>
+      ${fz && fz.grund === 'heft' ? `<div class="jw-hinweis">🏁 Das Finale öffnet sich, wenn alle Hefteinträge in deinem Heft stehen. Noch abhaken:
+        <div class="jw-chips">${(fz.heft || []).map(h => heChip(h)).join('')}</div></div>` : ''}
       ${zieleVorher ? kannHTML(u, 'v') : ''}
       ${pflicht.map(zeileHTML).join('') || '<p class="jw-klein">Deine Lehrkraft gibt die ersten Abschnitte bald frei.</p>'}
       ${wahl.length ? `<h3 class="jw-gruppe">⭐ Wahlstationen – such dir ${u.wahlAnzahl || 1} aus</h3>${wahl.map(zeileHTML).join('')}` : ''}
-      ${schluss.length ? `<h3 class="jw-gruppe">🎯 Zum Schluss</h3>${schluss.map(zeileHTML).join('')}` : ''}`;
+      ${schluss.length ? `<h3 class="jw-gruppe">🎯 Zum Schluss</h3>${schluss.map(zeileHTML).join('')}` : ''}
+      ${O.fuss ? O.fuss() : ''}`;
   }
   function abschnittHTML(a) {
     const u = O.unit, f = fortschritt(a), nv = niveau(a);
-    return `<button type="button" class="jw-zurueck" data-jw-zettel>‹ Laufzettel</button>
+    const platz = platzVon(u, a), auch = O.panel && platz ? (u.abschnitte || []).filter(x => x !== a && sichtbar(x) && platzVon(u, x) === platz) : [];
+    return `${O.panel ? '<button type="button" class="jw-zurueck" data-jw-zu>✕ Schließen</button>' : '<button type="button" class="jw-zurueck" data-jw-zettel>‹ Laufzettel</button>'}
       <div class="jw-kopf"><h2>${esc(a.ico || '')} ${esc(a.titel)}</h2>
         <p class="jw-klein">${esc(a.kurz || a.kompetenz || '')} · ${f.n} von ${f.von} erledigt</p>${material(a)}</div>
       ${a.niveaus ? `<div class="jw-niveaus"><b>Mein Niveau:</b>${mindest() > 1 ? `<span class="jw-klein"> Deine Lehrkraft: mindestens ${NIVEAU[mindest()][0]}</span>` : ''}
@@ -267,7 +293,8 @@
       ${a.merk ? `<div class="jw-merk">${a.merk.map(m => `<div>${esc(m)}</div>`).join('')}</div>` : ''}
       ${schritte(a).map(s => schrittHTML(s, a)).join('')}
       ${a.schluss ? kannHTML(u, 's') : ''}
-      ${f.fertig ? '<p class="jw-geschafft">✅ Abschnitt geschafft – weiter so!</p>' : ''}`;
+      ${f.fertig ? '<p class="jw-geschafft">✅ Abschnitt geschafft – weiter so!</p>' : ''}
+      ${auch.length ? `<div class="jw-auch"><b>📍 Auch an diesem Platz:</b>${auch.map(x => `<button type="button" class="jw-chip" data-jw-abschnitt="${esc(x.id)}">${esc(x.ico || '')} ${esc(x.titel)}${fortschritt(x).fertig ? ' ✅' : ''}</button>`).join('')}</div>` : ''}`;
   }
   function spiegel() {
     // Alle freigegebenen Hefteinträge des Schuljahres in Weg-Reihenfolge (jeder einmal) – so sieht dein Heft jetzt aus
@@ -309,6 +336,7 @@
       if (d.jwZiel) { const s = (O.unit.abschnitte.find(a => a.id === offen) || { schritte: [] }).schritte.find(y => y.baustein === d.jwZiel), el = s && document.getElementById('jw-' + s.id); if (el) el.scrollIntoView({ block: 'start' }); }
       return;
     }
+    if (d.jwZu !== undefined || (O.panel && d.jwZettel !== undefined)) { if (O.schliessen) O.schliessen(); return; }
     if (d.jwZettel !== undefined) { offen = null; ansicht = 'zettel'; zeichne(); host.scrollTop = 0; return; }
     if (d.jwSpiegel !== undefined) { ansicht = 'spiegel'; zeichne(); host.scrollTop = 0; return; }
     if (d.jwNiveau) { merke(offen, { nv: Number(d.jwNiveau) }); return zeichne(); }
@@ -404,6 +432,8 @@ ul.jw-hilfe { list-style: none; display: grid; gap: .3rem; margin: .4rem 0 .7rem
 .jw-kann-zeile small { display: block; color: var(--accent); font-size: .8rem; text-transform: uppercase; letter-spacing: .04em; }
 .jw-smileys { display: flex; gap: .4rem; } .jw-smileys button { font-size: 1.6rem; width: 3rem; height: 3rem; border-radius: 14px; background: var(--surface2); border: 2px solid transparent; filter: grayscale(.6); opacity: .65; }
 .jw-smileys button.an { border-color: var(--accent); filter: none; opacity: 1; background: rgba(230,168,23,.18); }
+.jw-hinweis { background: rgba(230,168,23,.14); border: 1px solid rgba(230,168,23,.45); border-radius: 14px; padding: .7rem .9rem; margin: .6rem 0 1rem; font-weight: 800; }
+.jw-auch { display: flex; flex-wrap: wrap; gap: .4rem; align-items: center; margin: 1rem 0; padding-top: .8rem; border-top: 1px dashed var(--line); }
 .jw-geschafft { text-align: center; font-weight: 900; color: var(--gruen); font-size: 1.1rem; margin: 1rem 0; }
 @media (prefers-reduced-motion: reduce) { .jw * { scroll-behavior: auto; } }`;
     document.head.appendChild(st);
@@ -476,10 +506,33 @@ ul.jw-hilfe { list-style: none; display: grid; gap: .3rem; margin: .4rem 0 .7rem
       return { unit, abschnitt: a, he: he.map(id => ({ id, nr: heNr(id), erledigt: heErledigt(id) })), buch: a.buch || null, buchUebung };
     } finally { O = vorher; }
   }
+  // ── Tafel und Werkbank je Station im 3D-Ort ──
+  function plaetze(o) {
+    const vorher = O; O = Object.assign({ admin: false, z: {} }, o);
+    const out = {};
+    try {
+      (O.J.units || []).forEach(u => (u.abschnitte || []).forEach(a => {
+        if (!sichtbar(a)) return;
+        const p = platzVon(u, a); if (!p) return;
+        O.unit = u;
+        const x = out[p] || (out[p] = { abschnitte: [], he: [], ue: [] });
+        x.abschnitte.push(a.id);
+        schritte(a).forEach(s => { if (s.art === 'hefteintrag') x.he.push(s); else if (s.art === 'uebung') x.ue.push(s); });
+      }));
+      Object.values(out).forEach(x => {
+        x.tafel = x.he.length ? (x.he.every(erledigt) ? 'fertig' : 'offen') : null;
+        x.werkbank = x.ue.length ? (x.ue.every(erledigt) ? 'fertig' : 'offen') : null;
+        delete x.he; delete x.ue;
+      });
+      return out;
+    } finally { O = vorher; }
+  }
   const buchKurz = s => s && s.buch ? `📖 ${seiten(s.buch)}${s.buch.uebung ? ' Ü ' + esc(s.buch.uebung) : ''}` : '';   // fertiges HTML (escapt)
 
   window.LernJourneyWeg = {
-    uebernehmen, stand, bezug, heZeigen, buchKurz, seitenA,
+    uebernehmen, stand, bezug, heZeigen, buchKurz, seitenA, plaetze,
+    /** Abschnitt-ID zu einer Station (oder null) – für das Antippen im 3D-Ort */
+    abschnittVon(J, station) { for (const u of J.units) for (const a of u.abschnitte || []) if (a.schritte.some(s => s.station === station)) return a.id; return null; },
     /** Laufzettel in host zeichnen. o: { J, unit, bausteine: { id: Baustein }, cfg (journey.wege.journey6), admin,
      *  z (Zustände der Stationen), starte(ziel, abschnittId), wechsleUnit(unit, abschnittId), abschnitt? } */
     zeige(h, o) {

@@ -18,7 +18,9 @@
 //      o = { figur (LernAvatar.figur), szene: 'hafen', stationen: [{ id, nr, titel, ort, art, zustand, nebel?, woerter? }], aktuell: id,
 //            onTippen(id) }      zustand: 'zu' | 'offen' | 'gemeistert' | 'bau' (wird gebaut), dazu optional naechste: true
 //    welt.zustand(stationen)  Zustände neu setzen (Farben, Schilder, Flaggen; Wahrzeichen färben sich bei „gemeistert“;
-//                             nebel: Wolke über der Station und halb verblasst; woerter: Holzschild mit gemeisterten Wörtern)
+//                             nebel: Wolke über der Station und halb verblasst; woerter: Holzschild mit gemeisterten Wörtern;
+//                             heft: { tafel, werkbank } = 'offen' | 'fertig' – Tafel (Hefteintrag) links und Werkbank (Übungen)
+//                             rechts neben dem Sockel, mit goldenem Stempel, wenn erledigt; alle zusammen ein Mesh, Lernweg Etappe 5)
 //    welt.laufeZu(id)         → Promise, sobald die Figur angekommen ist
 //    welt.zeige(id)           Kamera zur Station (Figur bleibt stehen)
 //    welt.jubel()             Figur jubelt (wie der Avatar-Auftritt im Pass)
@@ -602,7 +604,7 @@
       // Nebel bei fälliger Wiederholung (zwei Wolken, ziehen langsam)
       const nebel = [0, 1].map(k => { const n = new T.Sprite(new T.SpriteMaterial({ map: nebelTextur(), transparent: true, depthWrite: false, opacity: 0.85 }));
         n.scale.set(9 - k * 2, 5 - k, 1); n.position.set(k ? 2 : -1, 1.6 + k * 1.2, 1); n.renderOrder = 3; n.visible = false; g.add(n); zeug.push(n.material); return n; });
-      return { st, i, u, p, g, wp, sockel, ring, mast, fahne, pfeil, schild, tex, lm, farben, grau, hit, nebel, wort: null, zustand: '' };
+      return { st, i, u, p, tg, sp, g, wp, sockel, ring, mast, fahne, pfeil, schild, tex, lm, farben, grau, hit, nebel, wort: null, zustand: '' };
     });
     zeug.push(sockelGeo, ringGeo, fahneGeo, pfeilGeo, pfeilMat, ...Object.values(sockelMat));
     const nachId = id => ST.find(s => s.st.id === id);
@@ -660,8 +662,46 @@
           }
         }
       });
+      setzeHeft();
       renderer.shadowMap.needsUpdate = true;
       bitte();
+    }
+
+    // Tafel und Werkbank (Lernweg im Journey): ein zusammengeführtes Mesh für alle Stationen, neu gebaut nur bei Änderungen
+    let heftMesh = null, heftSig = '';
+    function setzeHeft() {
+      const sig = ST.map(s => s.st.heft ? (s.st.heft.tafel || '-') + (s.st.heft.werkbank || '-') : '').join('|');
+      if (sig === heftSig) return;
+      heftSig = sig;
+      if (heftMesh) { scene.remove(heftMesh); heftMesh.geometry.dispose(); heftMesh = null; }
+      const HB = Bau();
+      ST.forEach(s => {
+        const h = s.st.heft; if (!h || (!h.tafel && !h.werkbank)) return;
+        const ry = Math.atan2(s.tg.x, s.tg.z) - Math.PI / 2, cs = Math.cos(ry), sn = Math.sin(ry);   // lokales x = entlang des Wegs
+        const nord = new T.Vector3(-s.tg.z, 0, s.tg.x); if (nord.z > 0) nord.negate();
+        const at = (lx, lz) => [s.sp.x + lx * cs + lz * sn, s.sp.z - lx * sn + lz * cs];
+        const seite = (lx) => { const q = at(lx, 0); return [q[0] - nord.x * 1.4, q[1] - nord.z * 1.4]; };   // etwas näher am Weg
+        const L = (x, z, lx) => [x + lx * cs, z - lx * sn];                          // entlang des Wegs verschieben
+        if (h.tafel) {             // Tafel auf zwei Beinen: dunkelgrün mit Kreidezeilen, erledigt mit goldenem Stempel
+          const [x, z] = seite(-3.6);
+          [-1.3, 1.3].forEach(d => { const q = L(x, z, d); HB.box(q[0], 0, q[1], 0.22, 3.4, 0.22, C.holz2, ry); });
+          HB.box(x, 1.3, z, 3.2, 2.1, 0.2, C.holz, ry);
+          HB.box(x, 1.42, z, 2.9, 1.85, 0.24, 0x2f5d3a, ry);
+          [0, 1, 2].forEach(k => { const q = L(x, z, -0.2 - k * 0.1); HB.box(q[0], 2.75 - k * 0.45, q[1], 1.9 - k * 0.4, 0.08, 0.28, 0xe8f0e0, ry); });
+          if (h.tafel === 'fertig') { const q = L(x, z, 1.0); HB.box(q[0], 1.55, q[1], 0.7, 0.7, 0.32, C.gold, ry); }
+        }
+        if (h.werkbank) {          // Werkbank mit Übungsheft, erledigt mit goldenem Stempel
+          const [x, z] = seite(3.6);
+          [[-1.1, -0.45], [1.1, -0.45], [-1.1, 0.45], [1.1, 0.45]].forEach(([a, b]) => { const q = [x + a * cs + b * sn, z - a * sn + b * cs]; HB.box(q[0], 0, q[1], 0.2, 1.4, 0.2, C.holz2, ry); });
+          HB.box(x, 1.4, z, 2.8, 0.2, 1.3, C.holz, ry);
+          let q = L(x, z, -0.45); HB.box(q[0], 1.6, q[1], 1.1, 0.12, 0.8, 0x6b8de3, ry); HB.box(q[0], 1.72, q[1], 1, 0.05, 0.7, 0xfbf3e1, ry);
+          q = L(x, z, 0.75);
+          if (h.werkbank === 'fertig') HB.box(q[0], 1.6, q[1], 0.6, 0.3, 0.6, C.gold, ry);
+          else HB.box(q[0], 1.6, q[1], 0.9, 0.14, 0.14, 0xd9534f, ry);       // Stift: hier gibt's was zu tun
+        }
+      });
+      if (HB.leer()) return;
+      heftMesh = new T.Mesh(HB.geometrie(), vcMat); heftMesh.castShadow = heftMesh.receiveShadow = true; scene.add(heftMesh);
     }
 
     // Figur
@@ -812,6 +852,7 @@
       info: () => ({ drawCalls: renderer.info.render.calls, dreiecke: renderer.info.render.triangles, dpr: renderer.getPixelRatio() }),   // Diagnose (Konsole)
       stop() {
         laeuft = false; cancelAnimationFrame(raf); ro.disconnect(); document.removeEventListener('visibilitychange', sichtbar);
+        if (heftMesh) heftMesh.geometry.dispose();
         zeug.forEach(z => { try { if (z.geometry) z.geometry.dispose(); if (z.dispose) z.dispose(); } catch (e) {} });
         ST.forEach(s => { if (s.wort) { s.wort.material.map.dispose(); s.wort.material.dispose(); } });
         if (nebelTex) { nebelTex.dispose(); nebelTex = null; }
