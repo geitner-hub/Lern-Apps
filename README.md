@@ -677,6 +677,12 @@ Niveau (★ alle · ★★ Standard und Profi · ★★★ Profi), Hören macht 
   Gruppen → 📒 Laufzettel wählbar (`reihenfolge: { wer: 'frei'|'schritt'|'streng' }`, gleicher Vorrang): **Schritt für Schritt** (Standard,
   ohne Eintrag) = alle Schritte außer Apps und Extras abgehakt, **streng** = auch die Apps, **frei** = keine Kette. Wahl-Abschnitte sind nie
   gesperrt, mit Admin-Anmeldung keine Sperre.
+- **Ein Hefteintrag, mehrere Stationen (v111):** Hat ein Abschnitt mehrere App-Stationen, gehört der Hefteintrag zur ersten
+  (Schild „📒 HE 9 zuerst“ in Karte und Laufzettel). Weitere Stationen zeigen nur „📒 Lies vorher noch einmal HE 9“ (`bezug().heHier === false`).
+- **Bezug zum Hefteintrag (v112):** Übungen und App-Schritte ohne Bezug zum Hefteintrag des Abschnitts (reine Wortschatz-Übungen,
+  Vokabel-Stationen, Leseverständnis) tragen `"he": false` – dann kein „📒 Nutze HE …“, kein „HE … zuerst“ und kein HE in Karte und
+  Hilfe-Knopf; „zuerst“ trägt die erste Station *mit* Bezug. Im Admin-Editor: Häkchen „📒 gehört zum Hefteintrag des Abschnitts“.
+  Faustregel beim Anlegen: dieselbe Übung nicht zweimal als Pflicht (Station und Lernwelt-App mit gleichem Inhalt → die App als Extra).
 - **Übernahme (einmal je iPad, `LernJourneyWeg.uebernehmen`):** beim Öffnen des Journey werden die Haken aus `lernwelt-lernweg` über die
   `alt`-Schlüssel der Schritte übernommen; eine kontrollierte alte Station zählt alle ihre Schritte als erledigt; Niveau je Station → Niveau
   des Abschnitts; „Fit für die Probe?“ (`p`) und „vorher“ (`v`) → Kann-Sätze in derselben Reihenfolge. Danach `_journey` im alten Speicher.

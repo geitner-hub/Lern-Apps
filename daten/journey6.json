@@ -225,16 +225,10 @@
        "alt": "2.2"
       },
       {
-       "id": "u1-a-simple-past-extra",
-       "art": "extra",
-       "text": "Lernwelt-App „Simple Past“.",
-       "thema": "en.5.simple-past",
-       "alt": "2.4"
-      },
-      {
        "id": "u1-a-simple-past-u1-grundwortschatz",
        "art": "app",
-       "station": "u1-grundwortschatz"
+       "station": "u1-grundwortschatz",
+       "he": false
       },
       {
        "id": "u1-a-simple-past-u1-simple-past",
@@ -521,7 +515,8 @@
        "niveau": [
         2,
         3
-       ]
+       ],
+       "he": false
       },
       {
        "id": "u1-a-objektpronomen-ue",
@@ -1047,7 +1042,8 @@
         "seite": 26,
         "uebung": "1"
        },
-       "text": "true or false? Schreibe die ganzen Sätze ins Heft."
+       "text": "true or false? Schreibe die ganzen Sätze ins Heft.",
+       "he": false
       },
       {
        "id": "u2-a-lead-in-buch2",
@@ -1066,7 +1062,8 @@
        "id": "u2-a-lead-in-ue",
        "art": "uebung",
        "baustein": "ue-u2-lead-in-a",
-       "alt": "6.0"
+       "alt": "6.0",
+       "he": false
       },
       {
        "id": "u2-a-lead-in-ue2",
@@ -1075,7 +1072,8 @@
        "niveau": [
         1
        ],
-       "alt": "6.0"
+       "alt": "6.0",
+       "he": false
       },
       {
        "id": "u2-a-lead-in-ue3",
@@ -1085,7 +1083,8 @@
         2,
         3
        ],
-       "alt": "6.0"
+       "alt": "6.0",
+       "he": false
       },
       {
        "id": "u2-a-lead-in-ue4",
@@ -1102,17 +1101,14 @@
         "prozent": 70
        },
        "text": "Vokabeltrainer Klasse 6 → Unit 2: 2 Runden mit mindestens 70 %.",
-       "alt": "6.1"
+       "alt": "6.1",
+       "he": false
       },
       {
        "id": "u2-a-lead-in-app2",
-       "art": "app",
-       "thema": "en.6.some-any.some-any",
-       "ziel": {
-        "runden": 1,
-        "prozent": 70
-       },
-       "text": "Übe in der Lernwelt: „some / any“ → some oder any?",
+       "art": "extra",
+       "thema": "en.6.some-any",
+       "text": "Extra: Noch mehr some / any üben (something, anybody …) in der Lernwelt-App „some / any“.",
        "alt": "6.2"
       },
       {
@@ -1124,7 +1120,8 @@
       {
        "id": "u2-a-lead-in-u2-grundwortschatz",
        "art": "app",
-       "station": "u2-grundwortschatz"
+       "station": "u2-grundwortschatz",
+       "he": false
       },
       {
        "id": "u2-a-lead-in-u2-there-is",
@@ -2316,7 +2313,8 @@
         "seite": 50,
         "uebung": "1b"
        },
-       "text": "True or false? Schreibe die ganzen Sätze mit ✓ oder ✗ ins Heft."
+       "text": "True or false? Schreibe die ganzen Sätze mit ✓ oder ✗ ins Heft.",
+       "he": false
       },
       {
        "id": "u3-a-theme2-buch2",
@@ -2488,7 +2486,8 @@
         "seite": 54,
         "uebung": "1a"
        },
-       "text": "Bring die Bilder in die richtige Reihenfolge und schreibe die Buchstaben ins Heft."
+       "text": "Bring die Bilder in die richtige Reihenfolge und schreibe die Buchstaben ins Heft.",
+       "he": false
       },
       {
        "id": "u3-a-present-progressive-buch2",
@@ -2596,7 +2595,8 @@
         "seite": 56,
         "uebung": "7a"
        },
-       "text": "Schreibe die Ratschläge mit should oder shouldn’t ganz ins Heft."
+       "text": "Schreibe die Ratschläge mit should oder shouldn’t ganz ins Heft.",
+       "he": false
       },
       {
        "id": "u3-a-much-many-buch2",
@@ -3391,7 +3391,8 @@
         "seite": 72,
         "uebung": "1a"
        },
-       "text": "Beantworte die Fragen in ganzen Sätzen im Heft (Dartmoor Zoo isn’t in Plymouth.)."
+       "text": "Beantworte die Fragen in ganzen Sätzen im Heft (Dartmoor Zoo isn’t in Plymouth.).",
+       "he": false
       },
       {
        "id": "u4-a-comparison-buch2",
@@ -3561,7 +3562,8 @@
         "seite": 74,
         "uebung": "7a"
        },
-       "text": "Luca’s garage: Schreibe die Nummern mit den Wörtern ins Heft (1 – garage)."
+       "text": "Luca’s garage: Schreibe die Nummern mit den Wörtern ins Heft (1 – garage).",
+       "he": false
       },
       {
        "id": "u4-a-have-to-buch2",
@@ -3570,7 +3572,8 @@
         "seite": 74,
         "uebung": "7b"
        },
-       "text": "Schreibe Lucas Nachricht an Berry mit den Verben aus dem Kasten ab."
+       "text": "Schreibe Lucas Nachricht an Berry mit den Verben aus dem Kasten ab.",
+       "he": false
       },
       {
        "id": "u4-a-have-to-buch3",
@@ -3639,7 +3642,8 @@
       {
        "id": "u4-a-have-to-u4-focus",
        "art": "app",
-       "station": "u4-focus"
+       "station": "u4-focus",
+       "he": false
       }
      ]
     },
@@ -4229,12 +4233,14 @@
         "seite": 88,
         "uebung": "1d"
        },
-       "text": "Welcher Satz passt zu welchem Bild? Schreibe die Sätze mit dem Buchstaben ins Heft."
+       "text": "Welcher Satz passt zu welchem Bild? Schreibe die Sätze mit dem Buchstaben ins Heft.",
+       "he": false
       },
       {
        "id": "u5-a-theme2-ue",
        "art": "uebung",
-       "baustein": "ue-u5-theme2-a"
+       "baustein": "ue-u5-theme2-a",
+       "he": false
       },
       {
        "id": "u5-a-theme2-partner2",
@@ -4276,7 +4282,8 @@
       {
        "id": "u5-a-theme2-u5-theme2",
        "art": "app",
-       "station": "u5-theme2"
+       "station": "u5-theme2",
+       "he": false
       },
       {
        "id": "u5-a-theme2-u5-should",
@@ -4596,7 +4603,8 @@
       {
        "id": "u5-a-postkarte-u5-weitere",
        "art": "app",
-       "station": "u5-weitere"
+       "station": "u5-weitere",
+       "he": false
       }
      ]
     },

@@ -179,6 +179,11 @@ LWAdmin.modul({
         return `<label>Hefteintrag <select data-sf="baustein" ${at}>${Object.values(by).filter(x => x.art === 'hefteintrag').map(x => `<option value="${e(x.id)}"${x.id === s.baustein ? ' selected' : ''}>${e(heName(x.id))} · ${e(x.titel)}</option>`).join('')}</select></label>
           <label class="lw-klein"><input type="checkbox" data-sf="wiederholen" ${at}${s.wiederholen ? ' checked' : ''}> nur noch einmal lesen (steht schon im Heft)</label>${b.id ? heEditor(b) : ''}`;
       }
+      const heHaken = a.schritte.some(x => x.art === 'hefteintrag') && (s.art === 'uebung' || s.art === 'app')
+        ? `<label class="lw-klein"><input type="checkbox" data-sf="he" ${at}${s.he === false ? '' : ' checked'}> 📒 gehört zum Hefteintrag des Abschnitts (zeigt „Nutze HE …“ bzw. „HE … zuerst“)</label>` : '';
+      return heHaken + schrittFelder(u, a, s, by, at, buchFelder);
+    }
+    function schrittFelder(u, a, s, by, at, buchFelder) {
       if (s.art === 'uebung' && s.baustein) return niveauWahl(s, `data-sf="niveau" ${at}`) + `<label>Zusatz zum Auftrag (optional) <input data-sf="text" ${at} value="${e(s.text || '')}"></label>` + (by[s.baustein] ? uebungEditor(by[s.baustein]) : '');
       if (s.art === 'uebung') return buchFelder + niveauWahl(s, `data-sf="niveau" ${at}`) + `<label>Arbeitsauftrag <input data-sf="text" ${at} value="${e(s.text || '')}" maxlength="600"></label>`;
       if (s.art === 'app' && s.station !== undefined) {
@@ -421,6 +426,7 @@ LWAdmin.modul({
       }
       if (k === 'runden' || k === 'prozent') { s.ziel = Object.assign({ runden: 1, prozent: 70 }, s.ziel || {}, { [k]: Number(wert) }); return; }
       if (k === 'wiederholen') { if (el.checked) s.wiederholen = true; else delete s.wiederholen; return; }
+      if (k === 'he') { if (el.checked) delete s.he; else s.he = false; return; }
       if (wert === '' && k === 'text') delete s.text; else s[k] = wert;
     }
     function feldBaustein(b, k, wert, el) {

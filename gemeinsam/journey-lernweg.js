@@ -19,7 +19,8 @@
 //
 //    LernJourneyWeg.uebernehmen(J)      → Zahl – einmalig die Haken aus dem alten Lernweg (lernwelt-lernweg) in den Pass
 //    LernJourneyWeg.stand({ J, z, cfg }) → { unit, fertig, soll, naechste } für das Banner auf der Startseite
-//    LernJourneyWeg.bezug({ J, cfg, station | abschnitt }) → { unit, abschnitt, he: [{ id, nr, erledigt }], buch, buchUebung } oder null
+//    LernJourneyWeg.bezug({ J, cfg, station | abschnitt }) → { unit, abschnitt, he: [{ id, nr, erledigt }], heHier, buch, buchUebung } oder null
+//        heHier = false: die Station ist nicht die erste des Abschnitts – der Hefteintrag wird dort nur noch einmal gelesen
 //        – wozu gehört eine Station/App? Nur freigegebene Abschnitte (Etappe 4: Verzahnung, Hilfe-Knopf und Rückverweis in den Apps)
 //    LernJourneyWeg.heZeigen(baustein, nr) → Hefteintrag groß über der Seite (auch auf App-Seiten)
 //    LernJourneyWeg.plaetze({ J, cfg, z, admin }) → { Stations-ID: { abschnitte: [IDs], tafel, werkbank } } – Tafel (Hefteintrag) und
@@ -138,6 +139,10 @@
   // ── Hefteinträge eines Abschnitts (Reihenfolge wie im Abschnitt) ──
   const heIn = a => [...new Set(a.schritte.filter(s => s.art === 'hefteintrag').map(s => s.baustein))];
   const heErledigt = bid => !!(lies(bid) || {}).e;
+  // Bezug zum Hefteintrag: Schritte mit he: false (z. B. reine Wortschatz-Übungen) zeigen keinen HE-Hinweis.
+  // Der Hefteintrag gehört zur ersten App-Station mit Bezug; weitere Stationen verweisen nur zum Lesen darauf (nicht doppelt „zuerst“).
+  const heBezug = s => s.he !== false;
+  const heStation = a => (a.schritte.find(s => s.art === 'app' && s.station && heBezug(s)) || {}).station || null;
   const heChip = (bid, text) => `<button type="button" class="jw-chip" data-jw-gross="${esc(bid)}">📒 ${esc(text || '')}${esc(heName(bid))}</button>`;
 
   // ── Platz eines Abschnitts im Ort: platz, eigene App-Station, sonst die Station des Abschnitts davor (bzw. danach) ──
@@ -223,7 +228,7 @@
       const b = s.baustein ? O.bausteine[s.baustein] || {} : null;
       kopf = b ? `✏️ ${esc(b.titel || 'Übung')}` : `✏️ ${buchText(s.buch)}`;
       innen = (s.text ? `<p>${esc(s.text)}</p>` : '') + (b ? aufgabe(b) : '')
-        + (heIn(a).length ? `<div class="jw-chips">${heIn(a).map(h => heChip(h, 'Nutze ')).join('')}</div>` : '');
+        + (heIn(a).length && heBezug(s) ? `<div class="jw-chips">${heIn(a).map(h => heChip(h, 'Nutze ')).join('')}</div>` : '');
       if (an) fuss = haken(s, '');
       else if (b && geschrieben.has(s.id)) {
         const l = loesung(b);
@@ -235,14 +240,15 @@
       if (s.station) {
         const x = O.z[s.station] || {}, st = O.unit.stationen.find(y => y.id === s.station) || {};
         kopf = `🎮 ${esc(st.titel || s.station)}`;
-        const offenHE = heIn(a).filter(h => !heErledigt(h));
-        if (offenHE.length && !an) kopf += ` <span class="jw-schild">📒 ${esc(heName(offenHE[0]))} zuerst</span>`;
+        const offenHE = heBezug(s) ? heIn(a).filter(h => !heErledigt(h)) : [], heHier = heStation(a) === s.station;
+        if (heHier && offenHE.length && !an) kopf += ` <span class="jw-schild">📒 ${esc(heName(offenHE[0]))} zuerst</span>`;
         const titelVon = id => { for (const u of O.J.units) for (const y of u.stationen) if (y.id === id) return y.titel; return id; };
         innen = x.grund === 'heft' ? `<p>🔒 Erst müssen alle Hefteinträge der Unit in deinem Heft stehen:</p><div class="jw-chips">${(x.heft || []).map(h => heChip(h)).join('')}</div>`
           : x.grund === 'vorgaenger' ? `<p>🔒 Die App öffnet sich, wenn du davor ⭐ geholt hast – Hefteintrag und Übungen kannst du schon machen:</p>
             <div class="jw-chips">${(x.fehlt || []).map(f => `<button type="button" class="jw-chip" data-jw-station="${esc(f)}">🎮 ${esc(titelVon(f))}</button>`).join('')}</div>`
           : x.grund === 'lehrer' ? '<p>🔒 Deine Lehrkraft gibt diese App bald frei. Hefteintrag und Übungen kannst du schon machen.</p>'
           : `<p>${x.zustand === 'gemeistert' ? '⭐ Gemeistert! Du kannst jederzeit wieder üben.' : x.zustand === 'zu' ? '🔒 Diese Station ist noch zu.' : x.zustand === 'bau' ? '🚧 Wird gebaut.' : 'Übe in der Lernwelt: 2 Runden mit mindestens 70 % – dann ist die Station gemeistert.'}</p>`;
+        if (!heHier && heBezug(s) && heIn(a).length && !an) innen += `<div class="jw-chips">${heIn(a).map(h => heChip(h, 'Lies vorher noch einmal ')).join('')}</div>`;
         fuss = `<div class="jw-auto${an ? ' an' : ''}"><i>${an ? '✓' : ''}</i>${an ? 'Gemeistert' : 'Hakt sich selbst ab'}</div>`
           + (x.zustand === 'offen' || x.zustand === 'gemeistert' ? `<button type="button" class="jw-los" data-jw-station="${esc(s.station)}">${an ? '🔁 Nochmal' : '▶ Los geht\'s'}</button>` : '');
       } else {
@@ -562,8 +568,10 @@ ul.jw-hilfe { list-style: none; display: grid; gap: .3rem; margin: .4rem 0 .7rem
       const nv = niveau(a);
       const buchUebung = a.schritte.find(s => s.art === 'uebung' && s.buch && passt(s, nv)) || null;
       // Finale („Zum Schluss“): alle freigegebenen Hefteinträge der Unit – Wiederholung vor der Probe
-      const he = a.schluss ? [...new Set(unit.abschnitte.filter(x => sichtbar(x)).flatMap(heIn))] : heIn(a);
-      return { unit, abschnitt: a, he: he.map(id => ({ id, nr: heNr(id), erledigt: heErledigt(id) })), buch: a.buch || null, buchUebung };
+      const stS = o.station && a.schritte.find(s => s.station === o.station);
+      const he = stS && !heBezug(stS) ? [] : a.schluss ? [...new Set(unit.abschnitte.filter(x => sichtbar(x)).flatMap(heIn))] : heIn(a);
+      const heHier = !o.station || !heStation(a) || heStation(a) === o.station;   // false: Hefteintrag nur noch einmal lesen
+      return { unit, abschnitt: a, he: he.map(id => ({ id, nr: heNr(id), erledigt: heErledigt(id) })), heHier, buch: a.buch || null, buchUebung };
     } finally { O = vorher; }
   }
   // ── Tafel und Werkbank je Station im 3D-Ort ──
