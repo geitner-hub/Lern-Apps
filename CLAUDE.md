@@ -95,7 +95,10 @@ und gelbe Hinweise. Manuelle Checkliste nach Uploads: `werkzeuge/RAUCHTEST.md`.
   `abschnitte` → `schritte` (Hefteintrag, Übung, App …) in journey6.json, Inhalte in `daten/journey/bausteine-en6.json`, Schuljahr/Freigaben/
   HE-Nummern in `config.journey` (pruefen.py Regel 23). Abschnitt-, Schritt- und Baustein-IDs nie umbenennen (Lernstand `jw:<ID>`).
   Laufzettel: `gemeinsam/journey-lernweg.js` (`LernJourneyWeg`), Haken nur über `LernPass.wegMerken` (zählt für nichts, reist mit dem Sync);
-  Freigabe „bis Abschnitt“ und HE-Nummern im Admin unter Gruppen → 📒 Laufzettel. Die alten Lernwege (`apps/typen/lernweg.html`) sind seit
+  Freigabe „bis Abschnitt“, HE-Nummern und Mindestniveau im Admin unter Gruppen → 📒 Laufzettel. Verzahnung (HE-Kennung, Hilfe-Knopf und
+  Rückverweis < 70 % in den Apps über `lernweg-zurueck.js`, Buchleiste, Kann-Brücken) über `LernJourneyWeg.bezug`. Etappe 5: Station antippen →
+  Seitenleiste mit dem Abschnitt, „☰ Liste“ = Laufzettel, Tafel/Werkbank im 3D-Ort; das Finale öffnet sich erst, wenn alle freigegebenen
+  Hefteinträge der Unit abgehakt sind (`LernJourney.heftFehlt`, grund `heft`). Die alten Lernwege (`apps/typen/lernweg.html`) sind seit
   v103 entfernt; `lernwelt-lernweg` wird nur noch einmal übernommen.
 - **Live-Abfrage** (Unterrichtsmodus → 📊, Kinder-Seite `apps/typen/live.html?raum=CODE`, keine App in config.json, ohne Navbar):
   Worker-Teil `cloudflare/live.js` (Räume, Antworten, Quizze, Rückblicke in `SYNC_DB`; Räume nach dem Beenden gelöscht),

@@ -601,8 +601,35 @@ zusammen. Die Lernweg-Seite (`apps/typen/lernweg.html`) geht darin auf und wird 
 „Inhalte Englisch 6“ (29.10.2026) gegliedert: Abschnitte wie im Buch (Lead-in, Theme 1/2, Story, Focus, Skills, Finale), Buchaufgaben mit
 Niveau (★ alle · ★★ Standard und Profi · ★★★ Profi), Hören macht die Lehrkraft im Unterricht (steht nicht im Weg). **Etappe 2 (v102): Laufzettel im Weg**
 **Etappe 3 (v103): Übernahme und Umstieg** – der Laufzettel ersetzt die Lernwege (siehe unten: Übernahme, Freigabe im Admin, Startseite).
+**Etappe 4 (v105): Verzahnung** – die Kinder sehen selbst, was zusammengehört:
 
-- **Laufzettel** (`gemeinsam/journey-lernweg.js`, `LernJourneyWeg`, nachgeladen über den Knopf „📒 Laufzettel“ im English Journey): Abschnitte
+- **Eine Kennung überall:** „📒 HE 4 · Titel“ am Hefteintrag, „📒 Nutze HE 4“ an jeder Übung des Abschnitts, „📒 HE 4 zuerst“ (Schild) an den
+  App-Schritten, bis der Hefteintrag erledigt ist – empfehlen, nicht sperren. Ohne vergebene Nummer heißt es „Hefteintrag“.
+- **Stationskarte im Weg** (3D und Liste): „📖 S. 36 · 📒 HE 5“, Schild „HE 5 zuerst“ und Knopf zum Abschnitt im Laufzettel – nur, wenn der
+  Abschnitt für das Gerät freigegeben ist (`LernJourneyWeg.bezug`, das Modul lädt beim Öffnen des Journey mit).
+- **In den Apps** (`gemeinsam/lernweg-zurueck.js`, nur wenn aus dem Journey geöffnet): Knopf „📒 HE 4“ unter „Zurück zum Weg“ zeigt den
+  Hefteintrag groß mit der Buchaufgabe darunter. **Rückverweis:** nach einer Runde unter 70 % „Schau nochmal in 📒 HE 4 und mach 📖 S. 34 Ü 1b“.
+  Station → Abschnitt über `#s=`, Zusatz-Apps über `#w=`; bei „Zum Schluss“ (Finale) alle freigegebenen Hefteinträge der Unit.
+- **Buchleiste** über dem Laufzettel: die Seiten der Unit je Abschnitt (grün fertig, gold „du bist gerade hier“, blau frei, grau noch zu).
+- **Finale mit Brücken:** jeder Kann-Satz zeigt Hefteintrag, Buchseite, App und Abschnitt; bei 😟/😐 hervorgehoben („👉 Schau hier nach“).
+- Grammatik-Stationen ohne eigenen Hefteintrag (U1 was/were, U2 can/mustn't) führen zur Buchseite; ein HE kommt nur, wenn er im Heft steht.
+
+**Etappe 5 (v106): alles in den Stationen, Heft vor dem Finale** – Laufzettel und Stationen sind eins (für Geräte mit Laufzettel-Freigabe):
+
+- **Station antippen** (3D-Ort) → die Figur läuft hin → **Seitenleiste** mit dem ganzen Abschnitt: Materialleiste, Niveau, 📒 Hefteintrag, ✏️ Übungen,
+  🎮 App (rechts, auf schmalen Geräten von unten; `LernJourneyWeg.zeige(…, { panel: true, schliessen })`). Auch an gesperrten Stationen:
+  Hefteintrag und Übungen gehen schon, die App sagt, was davor fehlt. Abschnitte ohne eigene App-Station (z. B. Mediation, Brief) stehen
+  „📍 Auch an diesem Platz“ an der Station davor (`platz` im Abschnitt setzt den Platz ausdrücklich).
+- **Tafel und Werkbank** an der Station (`journey-welt.js`, `heft: { tafel, werkbank }` aus `LernJourneyWeg.plaetze`): Tafel = Hefteintrag,
+  Werkbank = Übungen, goldener Stempel, wenn erledigt; roter Stift, solange Übungen offen sind. Alle zusammen ein Mesh (+1 Draw Call).
+- **„☰ Liste“ ist der Laufzettel** (Abschnitte mit ihren Stationen, Buchleiste, Wahlstationen, „Zum Schluss“, darunter Bewohner und Brücke).
+  Der eigene Laufzettel-Knopf entfällt. Geräte ohne Freigabe und Units ohne Abschnitte zeigen die bisherige Stationsliste.
+- **Heft vor dem Finale** (`LernJourney.heftFehlt`, `berechne` → `zustand 'zu', grund 'heft', heft: [Baustein-IDs]`): Das Finale einer Unit öffnet
+  sich erst, wenn alle für das Gerät freigegebenen Hefteinträge der Unit auf „steht in meinem Heft“ stehen; die Brücke zum nächsten Ort
+  ebenso (eine von der Lehrkraft geöffnete Unit bleibt offen). Karte, Laufzettel und Finale-Schritt zeigen, welche HE fehlen. Ohne
+  Laufzettel-Freigabe und mit Admin-Anmeldung keine Sperre; Gemeistertes bleibt gemeistert.
+
+- **Laufzettel** (`gemeinsam/journey-lernweg.js`, `LernJourneyWeg`; seit Etappe 5 als „☰ Liste“ und Seitenleiste der Stationen): Abschnitte
   der Unit mit Fortschritt und Symbolen je Schritt, darunter Wahlstationen und „Zum Schluss“. Ein Abschnitt zeigt die Materialleiste (📖 Buch S. …
   · 📒 Heft · ✏️ Übungsheft · 📘 Vokabelheft · 👥 Partner), die Niveau-Wahl (★/★★/★★★, Standard vorgewählt, je Abschnitt), Merkzeilen und die
   Schritte als Karten: **Hefteintrag** im Heft-Schema (mit „🖥️ Groß zeigen“ für den Beamer, Haken „Steht in meinem Heft“), **Buchaufgabe**
@@ -616,7 +643,7 @@ Niveau (★ alle · ★★ Standard und Profi · ★★★ Profi), Hören macht 
   reist aber mit der Sicherungskarte. Kein neuer Speicher-Schlüssel.
 - **Sichtbarkeit:** `LernFreigabe.journey('journey6')` liefert `config.journey.wege.journey6`. Es gilt der erste `bis`-Eintrag für das Gerät
   (Gruppe vor Klasse vor „alle“): sichtbar sind alle Abschnitte bis einschließlich diesem, quer über die Units. Ohne Eintrag sieht das Gerät
-  keinen Laufzettel-Knopf und kein Banner; mit Admin-Anmeldung immer alles. HE-Nummern aus `he` (ohne Nummer steht „Hefteintrag“).
+  keinen Laufzettel (bisherige Stationsliste) und kein Banner; mit Admin-Anmeldung immer alles. HE-Nummern aus `he` (ohne Nummer steht „Hefteintrag“).
 - **Freigeben (Admin → Gruppen → 📒 Laufzettel, `module/gruppen-laufzettel.js`):** je Gruppe, Klasse oder „Alle“ „frei bis“ einen Abschnitt
   wählen; dabei bekommen die neu sichtbaren Hefteinträge ihre HE-Nummer, fortlaufend in Weg-Reihenfolge (vergebene bleiben fest), und
   `schuljahr` wird gesetzt. Daneben je Zeile das **Mindestniveau** (`niveau: { wer: 2|3 }`): die Kinder wählen ★/★★/★★★ weiter selbst,

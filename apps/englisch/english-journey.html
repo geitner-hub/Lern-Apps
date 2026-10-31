@@ -18,11 +18,16 @@
    und jubelt, wenn die Station neu gemeistert ist (m=0 → jetzt gemeistert).
    Brücke: Am Ende jedes Orts führt ein Tor zum nächsten; es öffnet sich mit dem Finale der Unit (die erste Station
    der nächsten Unit braucht dieses Finale, steht in journey6.json).
-   Laufzettel (Aktionsplan „Lernweg im English Journey“, Etappe 2): Abschnitte wie im Buch mit Buchseiten, Hefteinträgen,
-   Übungen und Apps – gemeinsam/journey-lernweg.js (LernJourneyWeg), nachgeladen beim ersten Öffnen. Zu sehen, sobald die
-   Lehrkraft für dieses Gerät Abschnitte freigegeben hat (config.journey, Admin → Gruppen → 📒 Laufzettel); mit Admin-Anmeldung
-   immer. Rücksprung aus einer App: #…&w=<Abschnitt>. Beim ersten Öffnen übernimmt die Seite einmal die Haken aus dem alten
-   Lernweg (lernwelt-lernweg, Etappe 3).
+   Laufzettel (Aktionsplan „Lernweg im English Journey“): Abschnitte wie im Buch mit Buchseiten, Hefteinträgen, Übungen und
+   Apps – gemeinsam/journey-lernweg.js (LernJourneyWeg). Hat die Lehrkraft für dieses Gerät Abschnitte freigegeben (config.journey,
+   Admin → Gruppen → 📒 Laufzettel; mit Admin-Anmeldung immer), ist alles in den Stationen (Etappe 5):
+     - Station im 3D-Ort antippen → die Figur läuft hin → Seitenleiste mit dem ganzen Abschnitt (Buch → Hefteintrag → Übung → App);
+       Tafel (Hefteintrag) und Werkbank (Übungen) stehen an der Station, mit Stempel, wenn erledigt
+     - „☰ Liste“ ist der Laufzettel (Abschnitte mit ihren Stationen); ohne Freigabe die bisherige Stationsliste
+     - Heft vor dem Finale: das Finale (und damit die Brücke) öffnet sich erst, wenn alle freigegebenen Hefteinträge der Unit im Heft
+       stehen (journey-kern.js, grund 'heft')
+   Rücksprung aus einer App: #…&w=<Abschnitt> (leer = Laufzettel-Liste). Beim ersten Öffnen übernimmt die Seite einmal die Haken
+   aus dem alten Lernweg (lernwelt-lernweg).
    Links: english-journey.html#u=u2   Unit vorwählen · #u=u2&w=   Laufzettel öffnen
   ═══════════════════════════════════════════════
   -->
@@ -86,8 +91,15 @@
     .reihe .txt { flex: 1; min-width: 0; } .reihe b { display: block; font-size: 1.05rem; } .reihe small { color: var(--text2); font-weight: 700; }
     .reihe .zst { font-size: .85rem; font-weight: 900; color: var(--muted); white-space: nowrap; }
     .reihe.offen .zst { color: var(--indigo2); } .reihe.gemeistert .zst { color: var(--accent); }
-    .liste.weg { z-index: 11; }
-    @media (max-width: 640px) { .liste.weg { padding-top: calc(max(.6rem, env(safe-area-inset-top)) + 11.5rem); } }
+    /* Seitenleiste am 3D-Ort: ein Abschnitt des Laufzettels (gemeinsam/journey-lernweg.js) */
+    .seite { position: fixed; z-index: 25; right: 0; top: calc(max(.6rem, env(safe-area-inset-top)) + 4.4rem); bottom: 0; width: min(460px, 100%);
+      background: rgba(15,14,26,.96); border-left: 1px solid var(--line); border-top-left-radius: 20px; overflow-y: auto; -webkit-overflow-scrolling: touch;
+      padding: 1rem 1rem 6rem; box-shadow: -12px 0 30px rgba(0,0,0,.3); animation: seiteRein .25s ease-out; }
+    @keyframes seiteRein { from { transform: translateX(40px); opacity: 0; } }
+    @media (max-width: 700px) { .seite { top: auto; height: 74vh; width: 100%; border-left: 0; border-top: 1px solid var(--line); border-radius: 20px 20px 0 0; animation-name: seiteHoch; } }
+    @keyframes seiteHoch { from { transform: translateY(40px); opacity: 0; } }
+    @media (max-width: 640px) { .liste.lz { padding-top: calc(max(.6rem, env(safe-area-inset-top)) + 11.5rem); } }
+    @media (prefers-reduced-motion: reduce) { .seite { animation: none; } }
     .bewohner { background: var(--papier); color: var(--tinte); border-radius: 16px; padding: .7rem 1rem; margin: 1rem 0; font-weight: 800; position: relative; }
     .bewohner small { display: block; color: var(--tinte2); font-weight: 700; }
 
@@ -103,6 +115,8 @@
     .karte p { font-weight: 700; color: var(--tinte2); margin: .35rem 4.4rem .2rem 0; line-height: 1.35; }
     .karte .zeile { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .9rem; }
     .karte .los { background: linear-gradient(135deg, #6366f1, #818cf8); color: #fff; border-radius: 999px; padding: .8rem 1.4rem; font-weight: 900; font-size: 1.1rem; box-shadow: 0 6px 16px rgba(99,102,241,.35); }
+    .karte .bezug { display: flex; flex-wrap: wrap; gap: .4rem; align-items: center; margin-top: .8rem; padding-top: .6rem; border-top: 1px dashed #c9a96e; font-weight: 800; color: var(--tinte2); font-size: .92rem; }
+    .karte .schild { background: #fde68a; color: #3b2a00; border-radius: 8px; padding: .15rem .55rem; font-weight: 900; transform: rotate(-2deg); }
     .karte .neben { background: #eadcbd; color: var(--tinte); border-radius: 999px; padding: .7rem 1.1rem; font-weight: 800; }
     .karte .fort { display: flex; gap: 4px; margin-top: .4rem; } .karte .fort i { width: 26px; height: 8px; border-radius: 4px; background: #e2d4b4; } .karte .fort i.an { background: var(--accent); }
     .karte .x { position: absolute; top: -.7rem; right: -.5rem; width: 2.4rem; height: 2.4rem; border-radius: 50%; background: var(--surface); color: #fff; font-weight: 900; box-shadow: 0 4px 12px rgba(0,0,0,.3); }
@@ -141,14 +155,13 @@
     <div class="rechts">
       <span class="knopf stand" id="stand" aria-live="polite"></span>
       <button class="knopf gold" id="pk-knopf" hidden>💌 Postkarte</button>
-      <button class="knopf" id="weg-knopf" hidden>📒 Laufzettel</button>
       <button class="knopf" id="ansicht" hidden>☰ Liste</button>
     </div>
   </header>
   <div class="unitbanner" id="unitbanner" hidden></div>
 
   <section class="liste" id="liste" hidden><div class="innen" id="liste-innen"></div></section>
-  <section class="liste weg" id="weg" hidden></section>
+  <aside class="seite" id="seite" hidden aria-label="Abschnitt"></aside>
   <div class="karte" id="karte" hidden role="dialog" aria-live="polite"></div>
   <div class="pk-hg" id="pk" hidden></div>
 
@@ -169,7 +182,7 @@ const ZURUECK_KEY = 'lernwelt-lernweg-zurueck';      // vorhandener Schlüssel d
 const HASH = new URLSearchParams(location.hash.slice(1));
 if (location.hash) try { history.replaceState(history.state, '', location.pathname + location.search); } catch (e) {}
 
-const A = { J: null, unit: null, z: {}, welt: null, figur: null, liste: false, gl: null, karte: null, admin: false, weg: false, bausteine: null };
+const A = { J: null, unit: null, z: {}, welt: null, figur: null, liste: false, gl: null, karte: null, admin: false, seite: null, bausteine: null, heft: {} };
 
 function passBereit() {
   return new Promise(res => {
@@ -184,7 +197,7 @@ function webglOk() { try { const c = document.createElement('canvas'); return !!
 //  Regeln in gemeinsam/journey-kern.js (LernJourney) – dieselben wie „Heute für dich“ auf der Startseite
 const stand = id => { try { return (window.LernPass && LernPass.themaStand && LernPass.themaStand(id)) || null; } catch (e) { return null; } };
 const hatApp = st => LernJourney.hatApp(st);
-function berechne() { const r = LernJourney.berechne(A.J, { admin: A.admin }); A.alle = r.alle; A.z = r.z; A.geoeffnet = r.geoeffnet || {}; }
+function berechne() { const r = LernJourney.berechne(A.J, { admin: A.admin }); A.alle = r.alle; A.z = r.z; A.geoeffnet = r.geoeffnet || {}; A.heft = r.heft || {}; }
 // Die Orte füllen sich mit Sprache: zu jeder gemeisterten Wörter-Station ein Schild mit Wörtern daraus (aus daten/vokabeln6.json)
 function woerterFuer(st) {
   const m = /^en\.6\.vok\.u(\d+)\.([a-z0-9-]+)$/.exec(st.thema || ''), V = A.vok;
@@ -195,12 +208,17 @@ function woerterFuer(st) {
   let h = 0; for (const c of st.id) h = (h * 31 + c.charCodeAt(0)) >>> 0;               // feste Auswahl je Station
   return kurz.length ? [0, 1, 2].map(i => kurz[(h + i * 7) % kurz.length]).filter((w, i, l) => l.indexOf(w) === i) : null;
 }
-const stationen = u => u.stationen.map((st, i) => Object.assign({ id: st.id, nr: i + 1, titel: st.titel, ort: st.ort, art: st.art,
-  woerter: st.art === 'woerter' && A.z[st.id].zustand === 'gemeistert' ? woerterFuer(st) : null }, A.z[st.id]));
+const stationen = u => {
+  const pl = wegDa(u) && window.LernJourneyWeg ? LernJourneyWeg.plaetze({ J: A.J, cfg: wegCfg(), z: A.z, admin: A.admin }) : {};
+  return u.stationen.map((st, i) => Object.assign({ id: st.id, nr: i + 1, titel: st.titel, ort: st.ort, art: st.art,
+    woerter: st.art === 'woerter' && A.z[st.id].zustand === 'gemeistert' ? woerterFuer(st) : null,
+    heft: pl[st.id] ? { tafel: pl[st.id].tafel, werkbank: pl[st.id].werkbank } : null }, A.z[st.id]));
+};
 const unitFertig = u => u.stationen.filter(st => !A.alle[st.id].bau).every(st => A.z[st.id].zustand === 'gemeistert');
 const finaleGemeistert = u => u.stationen.some(st => st.art === 'finale' && A.z[st.id].zustand === 'gemeistert');
 // Brücke offen: Finale gemeistert – oder die Lehrkraft hat die nächste Unit schon geöffnet (Finale lässt sich nachholen)
-const brueckeOffen = u => { const n = naechsteUnit(u); return finaleGemeistert(u) || !!(n && A.geoeffnet && A.geoeffnet[n.id]); };
+const heftOk = u => !(A.heft[u.id] || []).length;
+const brueckeOffen = u => { const n = naechsteUnit(u); return (finaleGemeistert(u) && heftOk(u)) || !!(n && A.geoeffnet && A.geoeffnet[n.id]); };
 
 function link(st) {
   const id = st.start || st.thema, t = LernKatalog.thema(id), q = t.quelle, p = new URLSearchParams(q.parameter || '');
@@ -217,23 +235,32 @@ function zeichneKopf() {
   $('stand').textContent = `⭐ ${n} / ${zaehl.length}`;
   $('stand').title = `${n} von ${zaehl.length} Stationen gemeistert`;
   $('pk-knopf').hidden = !finaleGemeistert(A.unit);
-  $('weg-knopf').hidden = !wegDa(A.unit);
   $('unitbanner').innerHTML = `Unit ${A.unit.nr}: <b>${esc(A.unit.titel)}</b> · ${esc(A.unit.ort)}${A.admin ? ' · 👀 Vorschau (Admin)' : ''}`;
 }
 function zeichneListe() {
   const u = A.unit, hat3d = kann3d(u);
+  $('liste').classList.toggle('lz', wegDa(u) && !!A.bausteine);
+  if (wegDa(u) && A.bausteine) {                         // Liste = Laufzettel (Abschnitte mit ihren Stationen)
+    if (A.liste || !A.welt) LernJourneyWeg.zeige($('liste-innen'), wegDaten());
+    return;
+  }
   const info = !hat3d ? 'Auf diesem Gerät gibt es den Weg als Liste.' : '';
-  const n = naechsteUnit(u);
   $('liste-innen').innerHTML = `<h2>Unit ${u.nr}: ${esc(u.titel)}</h2><div class="ort">📍 ${esc(u.ort)}</div>
     ${info ? `<div class="hinweis">${esc(info)} Gemeistert ist eine Station nach 2 Runden mit mindestens 70 %.</div>` : ''}
     ${stationen(u).map(s => `<button type="button" class="reihe ${s.zustand}" data-station="${esc(s.id)}">
       <span class="nr">${s.nebel ? '🌫️' : s.zustand === 'gemeistert' ? '⭐' : s.zustand === 'zu' ? '🔒' : s.nr}</span>
       <span class="txt"><b>${ART[s.art][0]} ${esc(s.titel)}</b><small>${esc(s.ort)} · ${ART[s.art][1]}</small></span>
       <span class="zst">${s.nebel ? '🌫️ wiederholen' : s.naechste ? '👉 Nächstes Ziel' : { zu: 'noch zu', offen: 'offen', gemeistert: 'gemeistert', bau: '🚧 wird gebaut' }[s.zustand]}</span></button>`).join('')}
-    ${(u.bewohner || []).map(b => `<div class="bewohner"><small>💬 ${esc(b.ort || 'Jemand')} fragt:</small>${esc(b.satz)}</div>`).join('')}
+    ${fussHTML(u)}`;
+}
+// Unter der Liste (auch unter dem Laufzettel): Bewohner und die Brücke zur nächsten Unit
+function fussHTML(u) {
+  const n = naechsteUnit(u);
+  return `${(u.bewohner || []).map(b => `<div class="bewohner"><small>💬 ${esc(b.ort || 'Jemand')} fragt:</small>${esc(b.satz)}</div>`).join('')}
     ${n ? `<button type="button" class="reihe ${brueckeOffen(u) ? 'offen' : 'zu'}" ${brueckeOffen(u) ? `data-weiter-unit="${esc(n.id)}"` : 'disabled'}>
       <span class="nr">${brueckeOffen(u) ? '🌉' : '🔒'}</span><span class="txt"><b>Brücke zu Unit ${n.nr}: ${esc(n.titel)}</b>
-      <small>${finaleGemeistert(u) ? 'Offen – auf zum nächsten Ort!' : brueckeOffen(u) ? 'Von deiner Lehrkraft geöffnet – Stationen hier später nachholen' : 'Öffnet sich mit dem Finale dieser Unit'}</small></span></button>` : ''}`;
+      <small>${brueckeOffen(u) ? (finaleGemeistert(u) ? 'Offen – auf zum nächsten Ort!' : 'Von deiner Lehrkraft geöffnet – Stationen hier später nachholen')
+        : finaleGemeistert(u) && !heftOk(u) ? '📒 Erst alle Hefteinträge ins Heft' : 'Öffnet sich mit dem Finale dieser Unit'}</small></span></button>` : ''}`;
 }
 
 function zeigeKarte(id) {
@@ -251,6 +278,10 @@ function zeigeKarte(id) {
     knoepfe = `<button type="button" class="los" data-los="${esc(id)}">${z.nebel ? '🌫️ Wiederholen' : z.zustand === 'gemeistert' ? '🔁 Nochmal üben' : '▶ Los geht\'s'}</button>`;
   } else if (z.zustand === 'bau') {
     text = 'Diese Station wird gerade gebaut. Bald geht es hier weiter!';
+  } else if (z.grund === 'heft') {
+    text = 'Erst müssen alle Hefteinträge dieser Unit in deinem Heft stehen. Hake sie im Laufzettel ab: „Steht in meinem Heft“.';
+    knoepfe = (z.heft || []).map(h => { const a = abschnittMitHE(h), nr = ((wegCfg() || {}).he || {})[h];
+      return a ? `<button type="button" class="neben" data-weg-abschnitt="${esc(a)}">📒 ${nr ? 'HE ' + nr : 'Hefteintrag'}</button>` : ''; }).join('');
   } else if (z.grund === 'lehrer') {
     text = z.ab ? `Deine Lehrkraft gibt diese Station am ${z.ab.split('-').reverse().join('.')} frei.` : 'Deine Lehrkraft hat diese Station noch nicht freigegeben.';
   } else {
@@ -263,10 +294,21 @@ function zeigeKarte(id) {
     <div class="klein">Station ${nr} · ${ART[st.art][1]} · ${esc(st.ort)}</div>
     <h3>${esc(st.titel)}</h3><p>${esc(text)}</p>
     ${z.zustand === 'offen' || z.zustand === 'gemeistert' ? `<div class="fort" aria-label="${fort} von ${sp.runden} guten Runden">${Array.from({ length: sp.runden }, (_, i) => `<i class="${i < fort ? 'an' : ''}"></i>`).join('')}</div>` : ''}
-    ${knoepfe ? `<div class="zeile">${knoepfe}</div>` : ''}`;
+    ${knoepfe ? `<div class="zeile">${knoepfe}</div>` : ''}${bezugHTML(id)}`;
   $('karte').hidden = false;
   A.karte = id;
   const los = $('karte').querySelector('.los'); if (los) los.focus({ preventScroll: true });
+}
+const abschnittMitHE = bid => { for (const u of A.J.units) for (const a of u.abschnitte || []) if (a.schritte.some(s => s.baustein === bid)) return a.id; return null; };
+// Verzahnung (Etappe 4): Buchseiten und Hefteintrag des Abschnitts, zu dem die Station gehört; „📒 HE 4 zuerst“ empfiehlt, sperrt nicht
+function bezugHTML(id) {
+  if (!window.LernJourneyWeg || !wegErlaubt() || (A.z[id] && A.z[id].grund === 'heft')) return '';
+  const bz = LernJourneyWeg.bezug({ J: A.J, cfg: wegCfg(), station: id, admin: A.admin, z: A.z });
+  if (!bz) return '';
+  const he = bz.he.map(h => '📒 ' + (h.nr ? 'HE ' + h.nr : 'Hefteintrag')), offen = bz.he.find(h => !h.erledigt);
+  return `<div class="bezug">${bz.buch ? `<span>📖 ${esc(LernJourneyWeg.seitenA(bz.abschnitt))}</span>` : ''}${he.length ? `<span>${esc(he.join(' · '))}</span>` : ''}
+    ${offen ? `<span class="schild">📒 ${esc(offen.nr ? 'HE ' + offen.nr : 'Hefteintrag')} zuerst</span>` : ''}
+    <button type="button" class="neben" data-weg-abschnitt="${esc(bz.abschnitt.id)}">📒 ${offen ? 'Zum Hefteintrag' : 'Laufzettel'}</button></div>`;
 }
 const schliesseKarte = () => { $('karte').hidden = true; A.karte = null; };
 
@@ -302,31 +344,44 @@ async function altUebernehmen() {
   try { const n = (await wegModul()).uebernehmen(A.J); if (n) toast('✅ Deine Haken aus dem Lernweg sind jetzt im Laufzettel'); }
   catch (e) { console.warn('[Journey] Übernahme', e); }
 }
-async function zeigeWeg(abschnitt) {
-  if (!wegDa(A.unit)) return;
+// Laufzettel-Daten (Bausteine) und Modul einmal laden
+async function ladeLaufzettel() {
+  if (A.bausteine) return true;
   try {
-    if (!A.bausteine) {
-      const [b] = await Promise.all([fetch('../../daten/journey/bausteine-en6.json').then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); }),
-        LW.laden('gemeinsam/journey-lernweg.js')]);
-      A.bausteine = {}; (b.bausteine || []).forEach(x => { A.bausteine[x.id] = x; });
-    }
-  } catch (e) { console.warn('[Journey] Laufzettel', e); toast('⚠️ Laufzettel nicht geladen'); return; }
-  A.weg = true; schliesseKarte();
-  $('weg').hidden = false; $('weg-knopf').textContent = '✕ Laufzettel'; $('unitbanner').hidden = true; $('ansicht').hidden = true;
-  LernJourneyWeg.zeige($('weg'), wegDaten(abschnitt));
+    const [b] = await Promise.all([fetch('../../daten/journey/bausteine-en6.json').then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); }), wegModul()]);
+    A.bausteine = {}; (b.bausteine || []).forEach(x => { A.bausteine[x.id] = x; });
+    return true;
+  } catch (e) { console.warn('[Journey] Laufzettel', e); return false; }
 }
-function wegDaten(abschnitt) {
-  const o = { J: A.J, unit: A.unit, bausteine: A.bausteine, admin: A.admin, z: A.z,
-    cfg: wegCfg(),
-    starte: (ziel, weg) => ziel.station ? starte(ziel.station, weg) : starteThema(ziel.thema, weg),
-    wechsleUnit: (u, weg) => waehleUnit(u).then(() => zeigeWeg(weg)) };
-  if (abschnitt !== undefined) o.abschnitt = abschnitt;
-  return o;
+function wegDaten() {
+  return { J: A.J, unit: A.unit, bausteine: A.bausteine, admin: A.admin, z: A.z, cfg: wegCfg(), fuss: () => fussHTML(A.unit),
+    starte: (ziel, weg) => {
+      if (ziel.thema) return starteThema(ziel.thema, weg);
+      const z = A.z[ziel.station] && A.z[ziel.station].zustand;
+      return z === 'offen' || z === 'gemeistert' ? starte(ziel.station, weg) : getippt(ziel.station);   // zu → zur Station
+    },
+    wechsleUnit: (u, weg) => waehleUnit(u).then(() => oeffneAbschnitt(weg)) };
 }
-function schliesseWeg() {
-  if (!A.weg) return;
-  A.weg = false; $('weg').hidden = true; $('weg-knopf').textContent = '📒 Laufzettel';
-  $('unitbanner').hidden = !A.welt || A.liste; $('ansicht').hidden = !A.welt;
+// Einen Abschnitt öffnen: am 3D-Ort als Seitenleiste, sonst in der Liste (Laufzettel)
+async function oeffneAbschnitt(id) {
+  if (!wegDa(A.unit) || !(await ladeLaufzettel())) return;
+  schliesseKarte();
+  if (A.welt && !A.liste && id) {
+    A.seite = id; $('seite').hidden = false; $('seite').scrollTop = 0;
+    LernJourneyWeg.zeige($('seite'), Object.assign(wegDaten(), { abschnitt: id, panel: true, schliessen: schliesseSeite }));
+    return;
+  }
+  if (A.welt && !A.liste) zeigeListe(true);
+  schliesseSeite();
+  LernJourneyWeg.zeige($('liste-innen'), Object.assign(wegDaten(), { abschnitt: id || null, panel: false }));
+}
+function schliesseSeite() { if (!A.seite) return; A.seite = null; $('seite').hidden = true; }
+function zeigeListe(an) {
+  if (!A.welt) return;
+  A.liste = an; $('liste').hidden = !an; $('ansicht').textContent = an ? '🗺️ Weg' : '☰ Liste'; $('unitbanner').hidden = an;
+  schliesseKarte(); schliesseSeite();
+  if (an && wegDa(A.unit) && A.bausteine) LernJourneyWeg.zeige($('liste-innen'), Object.assign(wegDaten(), { abschnitt: null }));
+  else if (an) zeichneListe();
 }
 
 function zeigePostkarte(u) {
@@ -361,6 +416,17 @@ async function baue3d(aktuell) {
 function getippt(id) {
   const z = A.z[id] && A.z[id].zustand;
   schliesseKarte();
+  const ab = wegDa(A.unit) && window.LernJourneyWeg && LernJourneyWeg.bezug({ J: A.J, cfg: wegCfg(), station: id, admin: A.admin, z: A.z });
+  if (ab && z !== 'zu') {                                  // alles in der Station: Buch, Hefteintrag, Übungen, App
+    if (A.welt && !A.liste) { schliesseSeite(); A.welt.laufeZu(id).then(() => oeffneAbschnitt(ab.abschnitt.id)); }
+    else oeffneAbschnitt(ab.abschnitt.id);
+    return;
+  }
+  if (ab && z === 'zu' && A.z[id].grund !== 'heft') {     // zu: trotzdem schon Hefteintrag und Übungen
+    if (A.welt && !A.liste) { schliesseSeite(); A.welt.zeige(id); }
+    oeffneAbschnitt(ab.abschnitt.id);
+    return;
+  }
   if (A.welt && (z === 'offen' || z === 'gemeistert')) A.welt.laufeZu(id).then(() => zeigeKarte(id));
   else { if (A.welt) A.welt.zeige(id); zeigeKarte(id); }
 }
@@ -374,15 +440,17 @@ function brueckeGetippt() {
   else zeigeBrueckeKarte();
 }
 function zeigeBrueckeKarte() {
-  const n = naechsteUnit(A.unit), offen = brueckeOffen(A.unit), fin = A.unit.stationen.find(st => st.art === 'finale');
+  const n = naechsteUnit(A.unit), offen = brueckeOffen(A.unit), fin = A.unit.stationen.find(st => st.art === 'finale'), heftFehlt = finaleGemeistert(A.unit) && !heftOk(A.unit);
   const lehrkraft = offen && !finaleGemeistert(A.unit);   // geöffnet von der Lehrkraft, Finale hier noch offen
   $('karte').innerHTML = `<button type="button" class="x" data-zu aria-label="Schließen">✕</button>
     <div class="marke2" aria-hidden="true">${offen ? '🌉' : '🔒'}</div>
     <div class="klein">Brücke · Unit ${n.nr} · ${esc(n.ort)}</div>
     <h3>${esc(n.titel)}</h3>
     <p>${lehrkraft ? `Deine Lehrkraft hat den nächsten Ort schon geöffnet: ${esc(n.ort)}. Die Stationen hier kannst du später nachholen.`
-      : offen ? `Die Brücke ist offen! Auf zum nächsten Ort: ${esc(n.ort)}.` : `Die Brücke öffnet sich, wenn du das Finale „${esc(fin ? fin.titel : 'Finale')}“ gemeistert hast.`}</p>
-    <div class="zeile">${offen ? `<button type="button" class="los" data-weiter-unit="${esc(n.id)}">🌉 Über die Brücke</button>` : fin ? `<button type="button" class="neben" data-station="${esc(fin.id)}">🏁 ${esc(fin.titel)}</button>` : ''}</div>`;
+      : offen ? `Die Brücke ist offen! Auf zum nächsten Ort: ${esc(n.ort)}.` : heftFehlt ? 'Die Brücke öffnet sich, wenn alle Hefteinträge dieser Unit in deinem Heft stehen.'
+      : `Die Brücke öffnet sich, wenn du das Finale „${esc(fin ? fin.titel : 'Finale')}“ gemeistert hast.`}</p>
+    <div class="zeile">${offen ? `<button type="button" class="los" data-weiter-unit="${esc(n.id)}">🌉 Über die Brücke</button>`
+      : heftFehlt ? (A.heft[A.unit.id] || []).map(h => { const a = abschnittMitHE(h); return a ? `<button type="button" class="neben" data-weg-abschnitt="${esc(a)}">📒 ${esc((((wegCfg() || {}).he || {})[h]) ? 'HE ' + wegCfg().he[h] : 'Hefteintrag')}</button>` : ''; }).join('') : fin ? `<button type="button" class="neben" data-station="${esc(fin.id)}">🏁 ${esc(fin.titel)}</button>` : ''}</div>`;
   $('karte').hidden = false;
   A.karte = null;
 }
@@ -390,8 +458,9 @@ function zeigeBrueckeKarte() {
 // Wo die Figur steht: nächstes Ziel, sonst die zuletzt gemeisterte Station der Unit
 const standort = u => (u.stationen.find(st => A.z[st.id].naechste) || u.stationen.slice().reverse().find(st => A.z[st.id].zustand === 'gemeistert') || {}).id;
 async function waehleUnit(u, aktuell) {
-  A.unit = u; schliesseKarte(); schliesseWeg();
+  A.unit = u; schliesseKarte(); schliesseSeite();
   if (!aktuell) aktuell = standort(u);
+  if (wegDa(u)) await ladeLaufzettel();
   zeichneKopf();
   const d3 = await baue3d(aktuell);
   A.liste = !d3;
@@ -407,7 +476,7 @@ function aktualisieren() {
   berechne(); zeichneKopf(); zeichneListe();
   if (A.welt) { A.welt.zustand(stationen(A.unit)); A.welt.bruecke(brueckeOffen(A.unit)); }
   if (A.karte) zeigeKarte(A.karte);
-  if (A.weg && window.LernJourneyWeg) { if (wegDa(A.unit)) LernJourneyWeg.aktualisieren(wegDaten()); else schliesseWeg(); }
+  if (A.seite && window.LernJourneyWeg) { if (wegDa(A.unit)) LernJourneyWeg.aktualisieren(wegDaten()); else schliesseSeite(); }
 }
 
 // ── Bedienung ──
@@ -420,12 +489,10 @@ document.addEventListener('click', e => {
   if (b.hasAttribute('data-zu')) return schliesseKarte();
   if (b.hasAttribute('data-pk-zu')) { $('pk').hidden = true; return; }
   if (b.id === 'pk-knopf') return zeigePostkarte(A.unit);
-  if (b.id === 'weg-knopf') return A.weg ? schliesseWeg() : zeigeWeg();
-  if (b.id === 'ansicht') {
-    if (A.welt) { A.liste = !A.liste; $('liste').hidden = !A.liste; b.textContent = A.liste ? '🗺️ Weg' : '☰ Liste'; $('unitbanner').hidden = A.liste; schliesseKarte(); }
-  }
+  if (b.dataset.wegAbschnitt) return oeffneAbschnitt(b.dataset.wegAbschnitt);
+  if (b.id === 'ansicht') return zeigeListe(!A.liste);
 });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') { schliesseKarte(); $('pk').hidden = true; } });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { schliesseKarte(); schliesseSeite(); $('pk').hidden = true; } });
 window.addEventListener('lernfreigabe:neu', aktualisieren);
 window.addEventListener('pageshow', e => { if (e.persisted) aktualisieren(); });   // Zurück-Taste (Seite aus dem Speicher)
 
@@ -439,7 +506,7 @@ window.addEventListener('pageshow', e => { if (e.persisted) aktualisieren(); });
       window.LernKatalog ? Promise.race([LernKatalog.bereit, warte(4000)]) : null,
     ]);
     A.J = J;
-    if (window.LernPass && LernPass.onChange) LernPass.onChange(() => { if (A.weg && window.LernJourneyWeg) LernJourneyWeg.aktualisieren(); });
+    if (window.LernPass && LernPass.onChange) LernPass.onChange(() => { clearTimeout(A.neuT); A.neuT = setTimeout(aktualisieren, 60); });
     A.admin = !!(window.LernFreigabe && LernFreigabe.admin && LernFreigabe.admin());
     A.gl = webglOk() ? null : false;
     berechne();
@@ -447,6 +514,9 @@ window.addEventListener('pageshow', e => { if (e.persisted) aktualisieren(); });
     const unit = (vonS && A.alle[vonS].unit) || J.units.find(u => u.id === HASH.get('u'))
       || J.units.find(u => u.stationen.some(st => A.z[st.id].naechste)) || J.units[0];
     const aktuell = vonS || standort(unit);
+    await altUebernehmen();
+    if (wegErlaubt()) await ladeLaufzettel();
+    berechne();
     await waehleUnit(unit, aktuell);
     $('laden').hidden = true;
     // Neu gemeistert? → Jubel (wie der Avatar-Auftritt im Pass); nach dem Finale die Postkarte
@@ -462,8 +532,7 @@ window.addEventListener('pageshow', e => { if (e.persisted) aktualisieren(); });
       if (A.welt) A.welt.jubel();
       toast('✨ Die Station glänzt wieder!');
     } else if (vonS && !HASH.has('w')) zeigeKarte(vonS);
-    await altUebernehmen();
-    if (HASH.has('w')) await zeigeWeg(HASH.get('w') || null);
+    if (HASH.has('w')) await oeffneAbschnitt(HASH.get('w') || null);
   } catch (e) {
     console.warn('[Journey]', e);
     $('laden').textContent = '⚠️ Der Weg konnte nicht geladen werden. Bitte mit Internet neu öffnen.';

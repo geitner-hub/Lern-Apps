@@ -19,6 +19,19 @@
 //
 //    LernJourneyWeg.uebernehmen(J)      → Zahl – einmalig die Haken aus dem alten Lernweg (lernwelt-lernweg) in den Pass
 //    LernJourneyWeg.stand({ J, z, cfg }) → { unit, fertig, soll, naechste } für das Banner auf der Startseite
+//    LernJourneyWeg.bezug({ J, cfg, station | abschnitt }) → { unit, abschnitt, he: [{ id, nr, erledigt }], buch, buchUebung } oder null
+//        – wozu gehört eine Station/App? Nur freigegebene Abschnitte (Etappe 4: Verzahnung, Hilfe-Knopf und Rückverweis in den Apps)
+//    LernJourneyWeg.heZeigen(baustein, nr) → Hefteintrag groß über der Seite (auch auf App-Seiten)
+//    LernJourneyWeg.plaetze({ J, cfg, z, admin }) → { Stations-ID: { abschnitte: [IDs], tafel, werkbank } } – Tafel (Hefteintrag) und
+//        Werkbank (Übungen) im 3D-Ort: 'offen' | 'fertig' | fehlt. Abschnitte ohne eigene App-Station stehen an `platz` bzw. an der
+//        Station des Abschnitts davor (sonst danach) – „Auch an diesem Platz“.
+//
+//  Etappe 5 (alles in die Stationen): zeige(host, { …, panel: true, schliessen }) zeigt einen Abschnitt als Seitenleiste am 3D-Ort
+//  (✕ statt „‹ Laufzettel“); als Liste ersetzt der Laufzettel die Stationsliste (o.fuss() → HTML unter dem Laufzettel, z. B. die Brücke).
+//
+//  Verzahnung (Etappe 4): eine Kennung überall – „📒 HE 4 · Titel“ am Hefteintrag, „Nutze 📒 HE 4“ an jeder Übung des Abschnitts,
+//  „📒 HE 4 zuerst“ an den App-Schritten, bis der Hefteintrag erledigt ist (empfehlen, nicht sperren), Buchleiste über dem
+//  Laufzettel, Kann-Sätze mit Brücken zu Hefteintrag, Buchseite und App.
 // ═══════════════════════════════════════════════════════
 'use strict';
 
@@ -45,7 +58,7 @@
     return w ? alleAbschnitte().map(a => a.id).indexOf(bis[w]) : -1;
   }
   const sichtbar = a => alleAbschnitte().indexOf(a) <= sichtbarBis();
-  const heNr = bid => (O.cfg && O.cfg.he && O.cfg.he[bid]) || null;
+  const heNr = bid => (O && O.cfg && O.cfg.he && O.cfg.he[bid]) || null;
   const heName = bid => { const n = heNr(bid); return n ? `HE ${n}` : 'Hefteintrag'; };
 
   // ── Niveau und Schritte eines Abschnitts ─────────────
@@ -73,6 +86,21 @@
     return { n, von: l.length, fertig: l.length > 0 && n === l.length };
   }
 
+  // ── Hefteinträge eines Abschnitts (Reihenfolge wie im Abschnitt) ──
+  const heIn = a => [...new Set(a.schritte.filter(s => s.art === 'hefteintrag').map(s => s.baustein))];
+  const heErledigt = bid => !!(lies(bid) || {}).e;
+  const heChip = (bid, text) => `<button type="button" class="jw-chip" data-jw-gross="${esc(bid)}">📒 ${esc(text || '')}${esc(heName(bid))}</button>`;
+
+  // ── Platz eines Abschnitts im Ort: platz, eigene App-Station, sonst die Station des Abschnitts davor (bzw. danach) ──
+  function platzVon(u, a) {
+    const eigen = x => x.platz || (x.schritte.find(s => s.station) || {}).station || null;
+    if (eigen(a)) return eigen(a);
+    const l = u.abschnitte || [], i = l.indexOf(a);
+    for (let k = i - 1; k >= 0; k--) if (eigen(l[k])) return eigen(l[k]);
+    for (let k = i + 1; k < l.length; k++) if (eigen(l[k])) return eigen(l[k]);
+    return null;
+  }
+
   // ── Texte aus den Daten ──────────────────────────────
   const seiten = b => b ? (b.bis && b.bis !== b.seite ? `S. ${b.seite}–${b.bis}` : `S. ${b.seite}`) : '';
   const buchText = b => `📖 Buch ${seiten(b)}${b.uebung ? ' Ü ' + esc(b.uebung) : ''}`;
@@ -88,9 +116,9 @@
   }
 
   // ── Hefteintrag (Heft-Schema wie im echten Heft) und eigene Aufgaben (wie im alten Lernweg) ──
-  function papier(b, gross) {
+  function papier(b, gross, nr) {
     const zeile = z => `<p>${z.map(([t, s]) => s ? `<span class="${s === 'g' ? 'g' : 'b'}">${esc(t)}</span>` : esc(t)).join('')}</p>`;
-    const n = heNr(b.id);
+    const n = nr !== undefined ? nr : heNr(b.id);
     return `<div class="jw-papier${gross ? ' gross' : ''}"><div class="ue"><span class="kreis">${n || '📒'}</span><span class="ti">${esc(b.titel)}</span><span class="datum"></span></div>
       <p></p>${(b.zeilen || []).map(zeile).join('')}${b.merke ? `<p><span class="merke">Merke:</span> <span class="mu">${esc(b.merke)}</span></p>` : ''}</div>`;
   }
@@ -145,7 +173,8 @@
     } else if (s.art === 'uebung') {
       const b = s.baustein ? O.bausteine[s.baustein] || {} : null;
       kopf = b ? `✏️ ${esc(b.titel || 'Übung')}` : `✏️ ${buchText(s.buch)}`;
-      innen = (s.text ? `<p>${esc(s.text)}</p>` : '') + (b ? aufgabe(b) : '');
+      innen = (s.text ? `<p>${esc(s.text)}</p>` : '') + (b ? aufgabe(b) : '')
+        + (heIn(a).length ? `<div class="jw-chips">${heIn(a).map(h => heChip(h, 'Nutze ')).join('')}</div>` : '');
       if (an) fuss = haken(s, '');
       else if (b && geschrieben.has(s.id)) {
         const l = loesung(b);
@@ -157,7 +186,14 @@
       if (s.station) {
         const x = O.z[s.station] || {}, st = O.unit.stationen.find(y => y.id === s.station) || {};
         kopf = `🎮 ${esc(st.titel || s.station)}`;
-        innen = `<p>${x.zustand === 'gemeistert' ? '⭐ Gemeistert! Du kannst jederzeit wieder üben.' : x.zustand === 'zu' ? '🔒 Diese Station ist noch zu.' : x.zustand === 'bau' ? '🚧 Wird gebaut.' : 'Übe in der Lernwelt: 2 Runden mit mindestens 70 % – dann ist die Station gemeistert.'}</p>`;
+        const offenHE = heIn(a).filter(h => !heErledigt(h));
+        if (offenHE.length && !an) kopf += ` <span class="jw-schild">📒 ${esc(heName(offenHE[0]))} zuerst</span>`;
+        const titelVon = id => { for (const u of O.J.units) for (const y of u.stationen) if (y.id === id) return y.titel; return id; };
+        innen = x.grund === 'heft' ? `<p>🔒 Erst müssen alle Hefteinträge der Unit in deinem Heft stehen:</p><div class="jw-chips">${(x.heft || []).map(h => heChip(h)).join('')}</div>`
+          : x.grund === 'vorgaenger' ? `<p>🔒 Die App öffnet sich, wenn du davor ⭐ geholt hast – Hefteintrag und Übungen kannst du schon machen:</p>
+            <div class="jw-chips">${(x.fehlt || []).map(f => `<button type="button" class="jw-chip" data-jw-station="${esc(f)}">🎮 ${esc(titelVon(f))}</button>`).join('')}</div>`
+          : x.grund === 'lehrer' ? '<p>🔒 Deine Lehrkraft gibt diese App bald frei. Hefteintrag und Übungen kannst du schon machen.</p>'
+          : `<p>${x.zustand === 'gemeistert' ? '⭐ Gemeistert! Du kannst jederzeit wieder üben.' : x.zustand === 'zu' ? '🔒 Diese Station ist noch zu.' : x.zustand === 'bau' ? '🚧 Wird gebaut.' : 'Übe in der Lernwelt: 2 Runden mit mindestens 70 % – dann ist die Station gemeistert.'}</p>`;
         fuss = `<div class="jw-auto${an ? ' an' : ''}"><i>${an ? '✓' : ''}</i>${an ? 'Gemeistert' : 'Hakt sich selbst ab'}</div>`
           + (x.zustand === 'offen' || x.zustand === 'gemeistert' ? `<button type="button" class="jw-los" data-jw-station="${esc(s.station)}">${an ? '🔁 Nochmal' : '▶ Los geht\'s'}</button>` : '');
       } else {
@@ -186,11 +222,35 @@
         const b = O.bausteine[k.baustein] || {}, w = lies(k.baustein) || {}, a = (u.abschnitte || []).find(x => x.id === k.abschnitt);
         return `<div class="jw-kann-zeile"><div><small>${esc(b.teil || '')}</small>Ich kann ${esc(b.text || '')}
           ${feld === 's' && w.v ? `<span class="jw-klein"> · vorher ${SMILEY[w.v - 1]}</span>` : ''}
-          ${feld === 's' && a && w.s && w.s < 3 ? `<button type="button" class="jw-link" data-jw-abschnitt="${esc(a.id)}">→ ${esc(a.titel)}</button>` : ''}
-          ${k.imUnterricht ? '<span class="jw-klein"> · im Unterricht</span>' : ''}</div>
+          ${k.imUnterricht ? '<span class="jw-klein"> · im Unterricht</span>' : ''}
+          ${feld === 's' && a ? bruecken(a, w.s && w.s < 3) : ''}</div>
           <div class="jw-smileys">${SMILEY.map((x, i) => `<button type="button" data-jw-kann="${esc(k.baustein)}" data-feld="${feld}" data-wert="${i + 1}" class="${w[feld] === i + 1 ? 'an' : ''}"
             aria-label="${['noch schwer', 'geht so', 'kann ich gut'][i]}">${x}</button>`).join('')}</div></div>`;
       }).join('')}</section>`;
+  }
+
+  // Brücken eines Kann-Satzes: Hefteintrag, Buchseite, App und der Abschnitt selbst – bei 😟/😐 hervorgehoben
+  function bruecken(a, nachschauen) {
+    const app = a.schritte.find(s => s.art === 'app' && s.station && O.z[s.station] && ['offen', 'gemeistert'].includes(O.z[s.station].zustand));
+    const st = app && O.unit.stationen.find(y => y.id === app.station);
+    const l = heIn(a).map(h => heChip(h))
+      .concat(seitenA(a) ? [`<span class="jw-chip still">📖 Buch ${esc(seitenA(a))}</span>`] : [])
+      .concat(app ? [`<button type="button" class="jw-chip" data-jw-station="${esc(app.station)}">🎮 ${esc(st ? st.titel : app.station)}</button>`] : [])
+      .concat([`<button type="button" class="jw-chip" data-jw-abschnitt="${esc(a.id)}">→ ${esc(a.titel)}</button>`]);
+    return `<div class="jw-chips${nachschauen ? ' hervor' : ''}">${nachschauen ? '<b>👉 Schau hier nach:</b>' : ''}${l.join('')}</div>`;
+  }
+
+  // Buchleiste: die Seiten der Unit in Weg-Reihenfolge – frei bis wohin, wo das Kind gerade ist
+  function buchleiste(u) {
+    const ab = (u.abschnitte || []).filter(a => a.buch);
+    if (!ab.length) return '';
+    const von = Math.min(...ab.map(a => a.buch.von)), bis = Math.max(...ab.map(a => a.buch.bis));
+    const jetzt = ab.find(a => sichtbar(a) && !a.wahl && !fortschritt(a).fertig);
+    return `<div class="jw-buchleiste" aria-label="Buch Seite ${von} bis ${bis}"><span class="jw-klein">📖 S. ${von}</span><div>${ab.map(a => {
+      const k = !sichtbar(a) ? 'zu' : a === jetzt ? 'jetzt' : fortschritt(a).fertig ? 'fertig' : 'frei';
+      return `<i class="${k}" style="flex:${a.buch.bis - a.buch.von + 1}" title="${esc(seitenA(a))}: ${esc(a.titel)}${k === 'zu' ? ' (noch nicht frei)' : ''}"></i>`;
+    }).join('')}</div><span class="jw-klein">S. ${bis}</span></div>
+      ${jetzt ? `<p class="jw-klein">Du bist gerade bei 📖 ${esc(seitenA(jetzt))}: ${esc(jetzt.titel)}</p>` : ''}`;
   }
 
   // ── Ansichten ────────────────────────────────────────
@@ -207,18 +267,24 @@
     const pflicht = ab.filter(a => !a.wahl && !a.schluss), wahl = ab.filter(a => a.wahl), schluss = ab.filter(a => a.schluss);
     const alle = pflicht.concat(schluss).map(fortschritt), fertig = alle.filter(f => f.fertig).length;
     const zieleVorher = u.zieleVorher && !(u.kann || []).some(k => (lies(k.baustein) || {}).v);
-    return `<div class="jw-kopf"><h2>📒 Laufzettel · Unit ${u.nr}: ${esc(u.titel)}</h2>
+    const fin = u.stationen.find(st => st.art === 'finale'), fz = fin && O.z[fin.id];
+    return `<div class="jw-kopf"><h2>Unit ${u.nr}: ${esc(u.titel)}</h2><p class="jw-klein">📍 ${esc(u.ort || '')} · 📒 Laufzettel</p>
         <p class="jw-klein">${fertig} von ${alle.length} Abschnitten fertig${wahl.length ? ` · dazu ${u.wahlAnzahl || 1} von ${wahl.length} Wahlstationen` : ''}. Arbeite der Reihe nach – alles kommt in dein Heft oder Übungsheft.</p>
         ${O.admin ? '<p class="jw-vorschau">👀 Vorschau (Admin): alle Abschnitte sichtbar</p>' : ''}
+        ${buchleiste(u)}
         <div class="jw-knoepfe"><button type="button" class="jw-neben" data-jw-spiegel>📒 Mein Heft</button></div></div>
+      ${fz && fz.grund === 'heft' ? `<div class="jw-hinweis">🏁 Das Finale öffnet sich, wenn alle Hefteinträge in deinem Heft stehen. Noch abhaken:
+        <div class="jw-chips">${(fz.heft || []).map(h => heChip(h)).join('')}</div></div>` : ''}
       ${zieleVorher ? kannHTML(u, 'v') : ''}
       ${pflicht.map(zeileHTML).join('') || '<p class="jw-klein">Deine Lehrkraft gibt die ersten Abschnitte bald frei.</p>'}
       ${wahl.length ? `<h3 class="jw-gruppe">⭐ Wahlstationen – such dir ${u.wahlAnzahl || 1} aus</h3>${wahl.map(zeileHTML).join('')}` : ''}
-      ${schluss.length ? `<h3 class="jw-gruppe">🎯 Zum Schluss</h3>${schluss.map(zeileHTML).join('')}` : ''}`;
+      ${schluss.length ? `<h3 class="jw-gruppe">🎯 Zum Schluss</h3>${schluss.map(zeileHTML).join('')}` : ''}
+      ${O.fuss ? O.fuss() : ''}`;
   }
   function abschnittHTML(a) {
     const u = O.unit, f = fortschritt(a), nv = niveau(a);
-    return `<button type="button" class="jw-zurueck" data-jw-zettel>‹ Laufzettel</button>
+    const platz = platzVon(u, a), auch = O.panel && platz ? (u.abschnitte || []).filter(x => x !== a && sichtbar(x) && platzVon(u, x) === platz) : [];
+    return `${O.panel ? '<button type="button" class="jw-zurueck" data-jw-zu>✕ Schließen</button>' : '<button type="button" class="jw-zurueck" data-jw-zettel>‹ Laufzettel</button>'}
       <div class="jw-kopf"><h2>${esc(a.ico || '')} ${esc(a.titel)}</h2>
         <p class="jw-klein">${esc(a.kurz || a.kompetenz || '')} · ${f.n} von ${f.von} erledigt</p>${material(a)}</div>
       ${a.niveaus ? `<div class="jw-niveaus"><b>Mein Niveau:</b>${mindest() > 1 ? `<span class="jw-klein"> Deine Lehrkraft: mindestens ${NIVEAU[mindest()][0]}</span>` : ''}
@@ -227,7 +293,8 @@
       ${a.merk ? `<div class="jw-merk">${a.merk.map(m => `<div>${esc(m)}</div>`).join('')}</div>` : ''}
       ${schritte(a).map(s => schrittHTML(s, a)).join('')}
       ${a.schluss ? kannHTML(u, 's') : ''}
-      ${f.fertig ? '<p class="jw-geschafft">✅ Abschnitt geschafft – weiter so!</p>' : ''}`;
+      ${f.fertig ? '<p class="jw-geschafft">✅ Abschnitt geschafft – weiter so!</p>' : ''}
+      ${auch.length ? `<div class="jw-auch"><b>📍 Auch an diesem Platz:</b>${auch.map(x => `<button type="button" class="jw-chip" data-jw-abschnitt="${esc(x.id)}">${esc(x.ico || '')} ${esc(x.titel)}${fortschritt(x).fertig ? ' ✅' : ''}</button>`).join('')}</div>` : ''}`;
   }
   function spiegel() {
     // Alle freigegebenen Hefteinträge des Schuljahres in Weg-Reihenfolge (jeder einmal) – so sieht dein Heft jetzt aus
@@ -248,11 +315,12 @@
     const a = offen && (O.unit.abschnitte || []).find(x => x.id === offen && sichtbar(x));
     host.innerHTML = `<div class="jw">${ansicht === 'spiegel' ? spiegel() : a ? abschnittHTML(a) : zettel()}</div>`;
   }
-  function grossZeigen(bid) {
-    const b = O.bausteine[bid]; if (!b) return;
+  function grossZeigen(bid) { const b = O.bausteine[bid]; if (b) heZeigen(b, heNr(bid)); }
+  function heZeigen(b, nr, unten) {
+    stile();
     const d = document.createElement('div');
     d.className = 'jw-gross'; d.setAttribute('role', 'dialog');
-    d.innerHTML = `<button type="button" class="jw-x" aria-label="Schließen">✕</button>${papier(b, true)}`;
+    d.innerHTML = `<button type="button" class="jw-x" aria-label="Schließen">✕</button>${papier(b, true, nr || null)}${unten || ''}`;
     d.addEventListener('click', e => { if (e.target === d || e.target.closest('.jw-x')) d.remove(); });
     document.body.appendChild(d);
   }
@@ -268,6 +336,7 @@
       if (d.jwZiel) { const s = (O.unit.abschnitte.find(a => a.id === offen) || { schritte: [] }).schritte.find(y => y.baustein === d.jwZiel), el = s && document.getElementById('jw-' + s.id); if (el) el.scrollIntoView({ block: 'start' }); }
       return;
     }
+    if (d.jwZu !== undefined || (O.panel && d.jwZettel !== undefined)) { if (O.schliessen) O.schliessen(); return; }
     if (d.jwZettel !== undefined) { offen = null; ansicht = 'zettel'; zeichne(); host.scrollTop = 0; return; }
     if (d.jwSpiegel !== undefined) { ansicht = 'spiegel'; zeichne(); host.scrollTop = 0; return; }
     if (d.jwNiveau) { merke(offen, { nv: Number(d.jwNiveau) }); return zeichne(); }
@@ -345,8 +414,17 @@ ul.jw-hilfe { list-style: none; display: grid; gap: .3rem; margin: .4rem 0 .7rem
 .jw-papier .g { color: #3d9b3d; font-weight: 700; } .jw-papier .b { font-weight: 700; } .jw-papier .merke { color: #ff5050; font-weight: 700; }
 .jw-papier .mu { text-decoration: underline; text-decoration-color: #ff5050; text-decoration-thickness: 2px; text-underline-offset: 4px; }
 .jw-papier.gross { font-size: 1.6em; max-width: 1200px; margin: 0 auto; } .jw-papier.gross p { height: 3.6rem; line-height: 4.4rem; font-size: 1.7rem; } .jw-papier.gross .ue { height: 5rem; } .jw-papier.gross .ti { font-size: 2rem; }
-.jw-gross { position: fixed; inset: 0; z-index: 60; background: rgba(15,14,26,.92); overflow: auto; padding: 3.5rem 1rem 2rem; }
-.jw-x { position: fixed; top: 1rem; right: 1rem; width: 3rem; height: 3rem; border-radius: 50%; background: var(--surface); color: #fff; font-weight: 900; font-size: 1.2rem; }
+.jw-gross { position: fixed; inset: 0; z-index: 10000; background: rgba(15,14,26,.92); overflow: auto; padding: 3.5rem 1rem 2rem; font-family: 'Nunito', system-ui, sans-serif; }
+.jw-gross .jw-unten { max-width: 1200px; margin: 1rem auto 0; color: #f1f0fb; font-weight: 800; font-size: 1.15rem; line-height: 1.5; }
+.jw-x { position: fixed; top: 1rem; right: 1rem; width: 3rem; height: 3rem; border-radius: 50%; border: 0; background: var(--surface, #1b1929); color: #fff; font-weight: 900; font-size: 1.2rem; cursor: pointer; }
+.jw-chips { display: flex; flex-wrap: wrap; gap: .4rem; align-items: center; margin-top: .45rem; } .jw-chips.hervor { background: rgba(230,168,23,.14); border-radius: 12px; padding: .4rem .5rem; }
+.jw-chips b { font-size: .88rem; color: var(--accent2); }
+.jw-chip { background: rgba(99,102,241,.2); border: 1px solid rgba(129,140,248,.45); color: var(--text); border-radius: 999px; padding: .3rem .75rem; font-weight: 800; font-size: .88rem; }
+.jw-chip.still { background: rgba(230,168,23,.12); border-color: rgba(230,168,23,.4); }
+.jw-schild { display: inline-block; margin-left: .4rem; background: #fde68a; color: #3b2a00; border-radius: 8px; padding: .1rem .5rem; font-size: .82rem; font-weight: 900; transform: rotate(-2deg); }
+.jw-buchleiste { display: flex; align-items: center; gap: .5rem; margin-top: .6rem; } .jw-buchleiste > div { flex: 1; display: flex; gap: 2px; height: .9rem; }
+.jw-buchleiste i { border-radius: 3px; background: rgba(129,140,248,.45); min-width: 4px; } .jw-buchleiste i.fertig { background: var(--gruen); }
+.jw-buchleiste i.jetzt { background: var(--accent); box-shadow: 0 0 0 2px rgba(230,168,23,.45); } .jw-buchleiste i.zu { background: rgba(255,255,255,.1); }
 .jw-kann { background: linear-gradient(135deg, rgba(99,102,241,.25), rgba(230,168,23,.12)); border: 1px solid rgba(129,140,248,.45); border-radius: 16px; padding: 1rem; margin: 1rem 0; }
 .jw-kann h3 { font-family: 'Fredoka One', 'Nunito', sans-serif; font-weight: 400; font-size: 1.25rem; margin-bottom: .3rem; }
 .jw-kann-zeile { display: flex; justify-content: space-between; align-items: center; gap: .8rem; flex-wrap: wrap; padding: .6rem 0; border-top: 1px solid var(--line); font-weight: 800; }
@@ -354,6 +432,8 @@ ul.jw-hilfe { list-style: none; display: grid; gap: .3rem; margin: .4rem 0 .7rem
 .jw-kann-zeile small { display: block; color: var(--accent); font-size: .8rem; text-transform: uppercase; letter-spacing: .04em; }
 .jw-smileys { display: flex; gap: .4rem; } .jw-smileys button { font-size: 1.6rem; width: 3rem; height: 3rem; border-radius: 14px; background: var(--surface2); border: 2px solid transparent; filter: grayscale(.6); opacity: .65; }
 .jw-smileys button.an { border-color: var(--accent); filter: none; opacity: 1; background: rgba(230,168,23,.18); }
+.jw-hinweis { background: rgba(230,168,23,.14); border: 1px solid rgba(230,168,23,.45); border-radius: 14px; padding: .7rem .9rem; margin: .6rem 0 1rem; font-weight: 800; }
+.jw-auch { display: flex; flex-wrap: wrap; gap: .4rem; align-items: center; margin: 1rem 0; padding-top: .8rem; border-top: 1px dashed var(--line); }
 .jw-geschafft { text-align: center; font-weight: 900; color: var(--gruen); font-size: 1.1rem; margin: 1rem 0; }
 @media (prefers-reduced-motion: reduce) { .jw * { scroll-behavior: auto; } }`;
     document.head.appendChild(st);
@@ -408,8 +488,51 @@ ul.jw-hilfe { list-style: none; display: grid; gap: .3rem; margin: .4rem 0 .7rem
     } finally { O = vorher; }
   }
 
+  // ── Wozu gehört eine Station oder ein Abschnitt? (Hilfe-Knopf und Rückverweis auf App-Seiten, Karte im Weg) ──
+  function bezug(o) {
+    const vorher = O; O = Object.assign({ admin: false, z: {} }, o);
+    try {
+      let a = null;
+      for (const u of O.J.units || []) for (const x of u.abschnitte || []) {
+        if ((o.abschnitt && x.id === o.abschnitt) || (o.station && x.schritte.some(s => s.station === o.station))) { a = x; break; }
+      }
+      if (!a || !sichtbar(a)) return null;
+      const unit = O.J.units.find(u => (u.abschnitte || []).includes(a));
+      O.unit = unit;
+      const nv = niveau(a);
+      const buchUebung = a.schritte.find(s => s.art === 'uebung' && s.buch && passt(s, nv)) || null;
+      // Finale („Zum Schluss“): alle freigegebenen Hefteinträge der Unit – Wiederholung vor der Probe
+      const he = a.schluss ? [...new Set(unit.abschnitte.filter(x => sichtbar(x)).flatMap(heIn))] : heIn(a);
+      return { unit, abschnitt: a, he: he.map(id => ({ id, nr: heNr(id), erledigt: heErledigt(id) })), buch: a.buch || null, buchUebung };
+    } finally { O = vorher; }
+  }
+  // ── Tafel und Werkbank je Station im 3D-Ort ──
+  function plaetze(o) {
+    const vorher = O; O = Object.assign({ admin: false, z: {} }, o);
+    const out = {};
+    try {
+      (O.J.units || []).forEach(u => (u.abschnitte || []).forEach(a => {
+        if (!sichtbar(a)) return;
+        const p = platzVon(u, a); if (!p) return;
+        O.unit = u;
+        const x = out[p] || (out[p] = { abschnitte: [], he: [], ue: [] });
+        x.abschnitte.push(a.id);
+        schritte(a).forEach(s => { if (s.art === 'hefteintrag') x.he.push(s); else if (s.art === 'uebung') x.ue.push(s); });
+      }));
+      Object.values(out).forEach(x => {
+        x.tafel = x.he.length ? (x.he.every(erledigt) ? 'fertig' : 'offen') : null;
+        x.werkbank = x.ue.length ? (x.ue.every(erledigt) ? 'fertig' : 'offen') : null;
+        delete x.he; delete x.ue;
+      });
+      return out;
+    } finally { O = vorher; }
+  }
+  const buchKurz = s => s && s.buch ? `📖 ${seiten(s.buch)}${s.buch.uebung ? ' Ü ' + esc(s.buch.uebung) : ''}` : '';   // fertiges HTML (escapt)
+
   window.LernJourneyWeg = {
-    uebernehmen, stand,
+    uebernehmen, stand, bezug, heZeigen, buchKurz, seitenA, plaetze,
+    /** Abschnitt-ID zu einer Station (oder null) – für das Antippen im 3D-Ort */
+    abschnittVon(J, station) { for (const u of J.units) for (const a of u.abschnitte || []) if (a.schritte.some(s => s.station === station)) return a.id; return null; },
     /** Laufzettel in host zeichnen. o: { J, unit, bausteine: { id: Baustein }, cfg (journey.wege.journey6), admin,
      *  z (Zustände der Stationen), starte(ziel, abschnittId), wechsleUnit(unit, abschnittId), abschnitt? } */
     zeige(h, o) {

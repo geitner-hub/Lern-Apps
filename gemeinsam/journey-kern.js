@@ -19,6 +19,13 @@
 //        erreichten Datum (LernFreigabe.zugeteilt), zählen Vorgänger aus anderen Units nicht – die Unit beginnt auch ohne das
 //        Finale davor. Innerhalb der Unit bleibt die Reihenfolge. Ohne Eintrag wie bisher.
 //    naechste(J, z)          → { st, unit } – das nächste Ziel in Buch-Reihenfolge oder null
+//    freiBis(J, cfg, admin)  → Index des letzten freigegebenen Laufzettel-Abschnitts (alle Units in Weg-Reihenfolge), -1 = nichts,
+//                              Infinity = alles (Admin). cfg = config.journey.wege.journey6; Gruppe vor Klasse vor „alle“
+//    heftFehlt(J, unit, o)   → Baustein-IDs der freigegebenen Hefteinträge der Unit, die noch nicht „steht in meinem Heft“ sind
+//
+//  Heft vor dem Finale (Lernweg im Journey, Etappe 5): Hat die Lehrkraft für das Gerät Laufzettel-Abschnitte freigegeben, öffnet sich
+//  das Finale einer Unit erst, wenn alle freigegebenen Hefteinträge der Unit abgehakt sind (Lernstand jw:<Baustein-ID>, e) –
+//  zustand 'zu', grund 'heft', heft: [Baustein-IDs]. Gemeistertes bleibt gemeistert; mit Admin-Anmeldung keine Sperre.
 // ═══════════════════════════════════════════════════════
 (function () {
   'use strict';
@@ -58,8 +65,26 @@
   /** Unit ausdrücklich geöffnet (Freigaben: 'offen' oder erreichtes Datum für dieses iPad) */
   function geoeffnet(unit) { const F = window.LernFreigabe; try { return !!(F && F.zugeteilt && unit.thema && F.zugeteilt(unit.thema)); } catch (e) { return false; } }
 
+  // ── Laufzettel: Freigabe „bis Abschnitt“ (gleiche Regel wie gemeinsam/journey-lernweg.js) und Hefteinträge ──
+  const cfgVon = o => (o && o.cfg !== undefined ? o.cfg : (window.LernFreigabe && LernFreigabe.journey ? LernFreigabe.journey('journey6') : null));
+  function freiBis(J, cfg, admin) {
+    if (admin) return Infinity;
+    const bis = cfg && cfg.bis && typeof cfg.bis === 'object' ? cfg.bis : {};
+    const wer = (window.LernFreigabe && LernFreigabe.wer && LernFreigabe.wer()) || ['alle'];
+    const w = wer.find(x => typeof bis[x] === 'string');
+    return w ? J.units.flatMap(u => u.abschnitte || []).map(a => a.id).indexOf(bis[w]) : -1;
+  }
+  function heftFehlt(J, unit, o = {}) {
+    if (o.admin || !Array.isArray(unit.abschnitte)) return [];
+    const bis = freiBis(J, cfgVon(o), false), liste = J.units.flatMap(u => u.abschnitte || []), L = (window.LernPass && LernPass.lernstand) || {};
+    const he = new Set();
+    unit.abschnitte.forEach(a => { if (liste.indexOf(a) <= bis) a.schritte.forEach(s => { if (s.art === 'hefteintrag') he.add(s.baustein); }); });
+    return [...he].filter(id => !(L['jw:' + id] && L['jw:' + id].e));
+  }
+
   function berechne(J, o = {}) {
-    const alle = {}, z = {}, admin = !!o.admin, f = faellig(), offenU = {};
+    const alle = {}, z = {}, admin = !!o.admin, f = faellig(), offenU = {}, heft = {};
+    J.units.forEach(u => { heft[u.id] = heftFehlt(J, u, o); });
     J.units.forEach(u => { if (geoeffnet(u)) offenU[u.id] = true; });
     J.units.forEach(u => u.stationen.forEach(st => { alle[st.id] = { st, unit: u, gem: gemeistert(st.thema), bau: !hatApp(st) }; }));
     Object.values(alle).forEach(x => {
@@ -75,10 +100,12 @@
       if (!l.frei) { z[st.id] = { zustand: 'zu', grund: 'lehrer', ab: l.ab }; return; }
       const fehlt = (st.braucht || []).filter(b => alle[b] && !alle[b].gem && !alle[b].bau      // Stationen ohne App halten niemanden auf
         && !(offenU[unit.id] && alle[b].unit !== unit));                                           // geöffnete Unit: Brücke von der Unit davor entfällt
-      z[st.id] = fehlt.length && !admin ? { zustand: 'zu', grund: 'vorgaenger', fehlt } : { zustand: 'offen' };
+      if (fehlt.length && !admin) { z[st.id] = { zustand: 'zu', grund: 'vorgaenger', fehlt }; return; }
+      if (st.art === 'finale' && heft[unit.id].length) { z[st.id] = { zustand: 'zu', grund: 'heft', heft: heft[unit.id] }; return; }
+      z[st.id] = { zustand: 'offen' };
     });
     J.units.forEach(u => { const n = u.stationen.find(st => z[st.id].zustand === 'offen'); if (n) z[n.id].naechste = true; });
-    return { alle, z, geoeffnet: offenU };
+    return { alle, z, geoeffnet: offenU, heft };
   }
 
   function naechste(J, z) {
@@ -86,5 +113,5 @@
     return null;
   }
 
-  window.LernJourney = { laden, berechne, naechste, hatApp };
+  window.LernJourney = { laden, berechne, naechste, hatApp, freiBis, heftFehlt };
 })();
