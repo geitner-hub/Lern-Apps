@@ -14,8 +14,8 @@ Kurzanleitung für den Admin (`admin.html`, Stand Admin-Umbau Etappe 10). Techni
 | Bereich | Was dort steht |
 |---|---|
 | 🏠 Start | Dashboard: Status, Schnellaktionen (Beamer, Spiele heute frei), Hinweise für die nächsten 7 Tage, Banner |
-| 📚 Inhalte | Apps (Kacheln), Ordnen und Regale, Tags und Klassen, Freigaben, App-Einstellungen, 🌳 Katalog, 📖 Vokabeln, 🎯 Aufgaben-Pools |
-| 👥 Gruppen | Sicherungskarten, Fokus, Spielsperre, Lernwege, Gruppen-Auswertung |
+| 📚 Inhalte | Apps (Kacheln), Ordnen und Regale, Tags und Klassen, Freigaben, App-Einstellungen, 🌳 Katalog, 📖 Vokabeln, 🎯 Aufgaben-Pools, 🧭 English Journey |
+| 👥 Gruppen | Sicherungskarten, Fokus, Spielsperre, 📒 Laufzettel (Freigabe, Mindestniveau), Gruppen-Auswertung |
 | 🏆 Motivation | Pass (Saison, Events, „Meine Themen“), 🎁 Avatar-Teile (Loot-Pool, Titel, Übersicht), Mein Dorf, Kalender |
 | 📁 Medien | Dateien hochladen, QR-Codes und Kurzlinks, Sammlungen |
 | ⚙️ System | Anmeldung, 👥 Kollegen, Entwurf und Versionen, 🧪 Feature-Schalter, Diagnose, weitere Seiten |
@@ -28,11 +28,33 @@ Kurzanleitung für den Admin (`admin.html`, Stand Admin-Umbau Etappe 10). Techni
    Änderungen sammeln sich oben als „ungespeicherte Änderungen“. Vor dem Veröffentlichen prüft der Admin alles; Fehler
    halten an, Warnungen fragen nach. Nach ca. 1 Minute ist es auf den iPads. Unter System → 🕓 Entwurf und Versionen stehen
    die letzten 30 Veröffentlichungen – jede lässt sich ansehen und wiederherstellen.
-2. **💾 Speichern direkt ins Repo** (die Editoren: Katalog, Vokabeln, Aufgaben-Pools, Avatar-Teile/Titel). Jede Datei hat
+2. **💾 Speichern direkt ins Repo** (die Editoren: Katalog, Vokabeln, Aufgaben-Pools, Avatar-Teile/Titel, English Journey). Jede Datei hat
    ihren eigenen Knopf „💾 Speichern“; nach 1–2 Minuten ist es live. Ungespeichertes bleibt auf dem Gerät erhalten.
 
 **Was nie geht** (damit Kinder nichts verlieren): Units, Abschnitte, Pools, Avatar-Teile oder Katalog-IDs löschen oder
 umbenennen. Neues hinzufügen und Texte ändern geht immer.
+
+## English Journey: Laufzettel (Inhalte → 🧭 English Journey, Gruppen → 📒 Laufzettel)
+
+Der Laufzettel führt die Kinder durch Highlight 6: je Abschnitt Buchseiten → 📒 Hefteintrag → ✏️ Übungen → 🎮 App. Die Kinder
+arbeiten im Heft und im Übungsheft und haken selbst ab; das **Finale einer Unit öffnet sich erst, wenn alle freigegebenen
+Hefteinträge abgehakt sind**.
+
+- **📋 Übersicht:** je Unit alle Abschnitte mit Buchseiten, Hefteintrag, Übungen, Apps, „frei für“ und Klassenstand; ⚠ zeigt Lücken
+  (z. B. Übung ohne Lösung, Abschnitt ohne Buchseiten). **„frei bis hier …“** gibt einer Gruppe oder Klasse den Abschnitt und alle
+  davor frei und vergibt die HE-Nummern (fortlaufend, bleiben fest) – danach oben 🚀 Veröffentlichen. 👀 zeigt den Abschnitt wie ein Kind.
+- **✏️ Bearbeiten:** Abschnitt aufklappen → Titel, Buchseiten, Niveaus, Wahl/Extra; Schritte mit ✏️ öffnen, mit ▲▼ ordnen, mit ✕ löschen;
+  „＋ Schritt“ für Hefteintrag, Buchaufgabe, eigene Übung, App-Station, Zusatz-App, Lesen, Vokabelheft … Im **Hefteintrag** steht jede
+  Heftzeile in einer Zeile; Wörter markieren und „🟩 grün“ oder „F fett“ tippen, rechts siehst du das Heft. Bei **eigenen Übungen** die
+  Lösung eintragen (eine Zeile je Aufgabe, bei Schreibaufgaben „Mustertext“). Unten die **Kann-Sätze** fürs Finale. Dann 💾 Inhalte
+  speichern. Hefteinträge nur in Pflicht-Abschnitten (nicht in Wahl/Extra). Abschnitte lassen sich nicht löschen.
+- **👥 Klasse:** Gruppe wählen → wie viele iPads je Abschnitt Hefteintrag, Übungen und Abschnitt geschafft haben (mit Niveau) und
+  „💡 Hier hakt es“ (Hefteintrag, bei dem viele Kinder unter 70 % zurückgeschickt wurden). Nur Summen, nur iPads mit Sicherungskarte.
+- **📅 Schuljahr:** setzt Freigaben, HE-Nummern und Mindestniveau zurück; Inhalte bleiben.
+- **🖨️ Drucken:** Lösungsheft (liegt im Klassenzimmer aus: je Abschnitt Station und Buchseiten, eigene Übungen mit Lösung,
+  Buchaufgaben mit Platz für die Kopie aus dem Lehrerband), Papier-Laufzettel, Hefteinträge.
+- **Gruppen → 📒 Laufzettel:** dieselbe Freigabe als Liste je Gruppe/Klasse, dazu das **Mindestniveau** (die Kinder wählen ★/★★/★★★
+  selbst, aber nicht darunter).
 
 ## Unterrichtsmodus (🎓)
 

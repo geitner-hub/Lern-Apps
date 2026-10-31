@@ -10,6 +10,33 @@
 // ═══════════════════════════════════════════════════════
 'use strict';
 
+/** Freigabe „bis Abschnitt“ für wer (aid = '' → Eintrag weg, samt Mindestniveau) und HE-Nummern für die neu sichtbaren
+ *  Hefteinträge (fortlaufend in Weg-Reihenfolge, vergebene bleiben). Auch für Inhalte → 🧭 English Journey („frei bis hier“). */
+LWAdmin.laufzettelFreigeben = function (store, J, wer, aid, text) {
+  const WEG = 'journey6';
+  const liste = J.units.flatMap(u => u.abschnitte || []);
+  const schuljahr = () => { const d = new Date(), y = d.getMonth() >= 7 ? d.getFullYear() : d.getFullYear() - 1; return `${y}/${String((y + 1) % 100).padStart(2, '0')}`; };
+  store.aendern(text, c => {
+    const jy = c.journey && typeof c.journey === 'object' ? c.journey : (c.journey = {});
+    if (!jy.schuljahr) jy.schuljahr = schuljahr();
+    const wege = jy.wege && typeof jy.wege === 'object' ? jy.wege : (jy.wege = {});
+    const w = wege[WEG] && typeof wege[WEG] === 'object' ? wege[WEG] : (wege[WEG] = {});
+    const bis = w.bis && typeof w.bis === 'object' ? w.bis : (w.bis = {});
+    if (aid) bis[wer] = aid; else { delete bis[wer]; if (w.niveau) { delete w.niveau[wer]; if (!Object.keys(w.niveau).length) delete w.niveau; } }
+    const ids = liste.map(a => a.id), max = Math.max(-1, ...Object.values(bis).map(x => ids.indexOf(x)));
+    const he = w.he && typeof w.he === 'object' ? w.he : (w.he = {});
+    let nr = Math.max(0, ...Object.values(he).map(Number).filter(Number.isFinite));
+    const gesehen = new Set();
+    liste.slice(0, max + 1).forEach(a => a.schritte.forEach(s => {
+      if (s.art !== 'hefteintrag' || gesehen.has(s.baustein)) return;
+      gesehen.add(s.baustein);
+      if (!he[s.baustein]) he[s.baustein] = ++nr;
+    }));
+    if (!Object.keys(bis).length) delete w.bis;
+    if (!Object.keys(he).length) delete w.he;
+  });
+};
+
 LWAdmin.modul({
   id: 'laufzettel', bereich: 'gruppen', titel: 'Laufzettel', symbol: '📒', reihenfolge: 3,
   suchbegriffe: ['Laufzettel', 'Lernweg', 'English Journey', 'Hefteintrag', 'HE-Nummer', 'Abschnitt', 'freigeben', 'Stationen'],
@@ -18,38 +45,17 @@ LWAdmin.modul({
     const ROOT = new URL('./', location.href).href, WEG = 'journey6';
     let aktiv = true, J = null, fehler = '', gruppen = [], neuWer = '';
 
-    // Alle Abschnitte in Weg-Reihenfolge, je mit den Hefteinträgen, die darin zum ersten Mal vorkommen
+    // Alle Abschnitte in Weg-Reihenfolge
     const abschnitte = () => (J ? J.units.flatMap(u => (u.abschnitte || []).map(a => ({ a, u }))) : []);
-    const hefteintraege = bisIndex => {
-      const l = [], gesehen = new Set();
-      abschnitte().slice(0, bisIndex + 1).forEach(({ a }) => a.schritte.forEach(s => {
-        if (s.art === 'hefteintrag' && !gesehen.has(s.baustein)) { gesehen.add(s.baustein); l.push(s.baustein); }
-      }));
-      return l;
-    };
     const weg = c => ((c.journey || {}).wege || {})[WEG] || {};
     const klassen = c => { const k = new Set(); (c.apps || []).forEach(a => (a.klassen || []).forEach(x => k.add(x))); return [...k].sort((a, b) => a - b); };
     const werName = w => w === 'alle' ? '👥 Alle' : /^k\d+$/.test(w) ? '🎒 Klasse ' + w.slice(1)
       : '🪪 ' + (gruppen.find(g => 'g:' + g.id === w) || { name: 'Gruppe ' + w.slice(2, 8) + '…' }).name;
-    const schuljahr = () => { const d = new Date(), y = d.getMonth() >= 7 ? d.getFullYear() : d.getFullYear() - 1; return `${y}/${String((y + 1) % 100).padStart(2, '0')}`; };
 
     /** bis setzen (aid = '' → Eintrag weg) und neu sichtbare Hefteinträge nummerieren */
     function setzen(wer, aid) {
       const titel = aid ? (abschnitte().find(x => x.a.id === aid) || { a: { titel: aid } }).a.titel : '';
-      store.aendern(`📒 Laufzettel ${werName(wer).replace(/^\S+ /, '')}: ${aid ? 'frei bis „' + titel + '“' : 'nichts frei'}`, c => {
-        const jy = c.journey && typeof c.journey === 'object' ? c.journey : (c.journey = {});
-        if (!jy.schuljahr) jy.schuljahr = schuljahr();
-        const wege = jy.wege && typeof jy.wege === 'object' ? jy.wege : (jy.wege = {});
-        const w = wege[WEG] && typeof wege[WEG] === 'object' ? wege[WEG] : (wege[WEG] = {});
-        const bis = w.bis && typeof w.bis === 'object' ? w.bis : (w.bis = {});
-        if (aid) bis[wer] = aid; else { delete bis[wer]; if (w.niveau) { delete w.niveau[wer]; if (!Object.keys(w.niveau).length) delete w.niveau; } }
-        const ids = abschnitte().map(x => x.a.id), max = Math.max(-1, ...Object.values(bis).map(x => ids.indexOf(x)));
-        const he = w.he && typeof w.he === 'object' ? w.he : (w.he = {});
-        let nr = Math.max(0, ...Object.values(he).map(Number).filter(Number.isFinite));
-        hefteintraege(max).forEach(b => { if (!he[b]) he[b] = ++nr; });
-        if (!Object.keys(bis).length) delete w.bis;
-        if (!Object.keys(he).length) delete w.he;
-      });
+      LWAdmin.laufzettelFreigeben(store, J, wer, aid, `📒 Laufzettel ${werName(wer).replace(/^\S+ /, '')}: ${aid ? 'frei bis „' + titel + '“' : 'nichts frei'}`);
     }
 
     /** Mindestniveau setzen (1 = keine Vorgabe) */

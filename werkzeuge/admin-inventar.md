@@ -49,6 +49,7 @@ Bereiche im neuen Admin: **Start · Inhalte · Gruppen · Motivation · Medien �
 | 🎯 Unterricht | Ausnahmen von der Spielsperre (enden von selbst) | `freigaben.js` | `spielsperre.ausnahmen[]` | Gruppen (+ Unterrichtsmodus) | Spiele frei | ☑ #/gruppen/spielsperre, „Heute frei“ in #/unterricht |
 | 🎯 Unterricht | Freigaben je Stufe/Unit (zu, offen, ab Datum) | `freigaben.js` | `freigaben` | Inhalte (Etappe 8: Katalog-Baum) | Freigabe, Sperre, Stufe | ☑ #/inhalte/freigaben, „für alle“ auch in #/inhalte/katalog |
 | 🎯 Unterricht | Gruppen-Auswertung (anonyme Summen je Thema) | `freigaben.js` | `/sync/admin/statistik` | Gruppen | Auswertung, Fortschritt | ☑ #/gruppen/auswertung |
+| 🧭 English Journey (Inhalte) | Übersicht mit Lückenprüfung und „frei bis hier“, Editoren ohne JSON, Klassen-Übersicht, Schuljahr, Druck | `module/inhalte-journey.js`, `journey-druck.js` | `daten/journey6.json`, `daten/journey/bausteine-en6.json` (dateien), `journey` (config), `/sync/admin/statistik` | Inhalte | Journey, Laufzettel, Hefteintrag, Lösungsheft | ☑ #/inhalte/journey |
 | 📒 Laufzettel (bis v102: 🗺️ Lernwege) | English Journey: frei bis Abschnitt je Gruppe/Klasse, HE-Nummern | `module/gruppen-laufzettel.js` | `journey.wege.journey6` (`bis`, `he`) | Gruppen | Laufzettel, Lernweg, Hefteintrag | ☑ #/gruppen/laufzettel |
 | 📁 Medien | Hochladen (auch in Teilen), Untertitel, Ordner, Sammlungen, Ein/Aus, Löschen, QR, Beamer, Speicheranzeige | `medien.js` (fertig, wirkt sofort) | `/medien/admin/*` (R2 + `SYNC_DB`) | Medien | Datei, QR, Beamer | ☑ #/medien/dateien |
 

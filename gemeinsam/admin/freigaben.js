@@ -500,8 +500,8 @@ function buildAuswertung() {
   else if (AW.fehler) tabelle = `<p style="color:var(--red);font-size:.85rem">⚠ ${frEsc(AW.fehler)}</p>`;
   else if (AW.zeilen) {
     const sum = {};
-    // Lernweg-Meldungen (lw:…, bis v102) gehören nicht in die Auswertung
-    AW.zeilen.filter(z => !String(z.was).startsWith('lw:')).forEach(z => { const x = sum[z.was] || (sum[z.was] = { was: z.was, runden: 0, aufgaben: 0, richtig: 0 }); x.runden += z.runden; x.aufgaben += z.aufgaben; x.richtig += z.richtig; });
+    // Lernweg-Meldungen (lw:…, bis v102) und Laufzettel-Meldungen (jw:…) gehören nicht in die Auswertung
+    AW.zeilen.filter(z => !/^(lw|jw):/.test(String(z.was))).forEach(z => { const x = sum[z.was] || (sum[z.was] = { was: z.was, runden: 0, aufgaben: 0, richtig: 0 }); x.runden += z.runden; x.aufgaben += z.aufgaben; x.richtig += z.richtig; });
     const liste = Object.values(sum).map(x => ({ ...x, pct: x.aufgaben ? Math.round(x.richtig / x.aufgaben * 100) : 0 }))
       .sort((a, b) => (a.runden < AW_WENIG) - (b.runden < AW_WENIG) || a.pct - b.pct);
     const farbe = p => p >= 80 ? 'var(--green)' : p >= 60 ? 'var(--accent)' : 'var(--red)';

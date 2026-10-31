@@ -613,6 +613,25 @@ Niveau (★ alle · ★★ Standard und Profi · ★★★ Profi), Hören macht 
 - **Buchleiste** über dem Laufzettel: die Seiten der Unit je Abschnitt (grün fertig, gold „du bist gerade hier“, blau frei, grau noch zu).
 - **Finale mit Brücken:** jeder Kann-Satz zeigt Hefteintrag, Buchseite, App und Abschnitt; bei 😟/😐 hervorgehoben („👉 Schau hier nach“).
 - Grammatik-Stationen ohne eigenen Hefteintrag (U1 was/were) führen zur Buchseite; ein HE kommt nur, wenn er im Heft steht.
+**Etappe 6 (v108): Admin-Modul Inhalte → 🧭 English Journey** (`gemeinsam/admin/module/inhalte-journey.js`):
+
+- **📋 Übersicht** je Unit: Abschnitt, Buchseiten, Hefteintrag (HE-Nr.), Übungen (Buch/eigene), Apps, frei für, Klassenstand, Lückenprüfung
+  (Übung ohne Lösung, keine Buchseiten, HE in Wahl, Thema fehlt, Seiten überschneiden sich, Stationen ohne Abschnitt); „frei bis hier …“ je
+  Gruppe/Klasse über `LWAdmin.laufzettelFreigeben` (in `module/gruppen-laufzettel.js`, vergibt die HE-Nummern); 👀 Vorschau als Kind.
+- **✏️ Bearbeiten** ohne JSON: Abschnitte anlegen/ordnen/ändern (nicht löschen), Schritte anlegen/ordnen/löschen/ändern; Hefteintrag mit
+  `*grün*`/`**fett**` (Knöpfe) und Live-Vorschau (`LernJourneyWeg.papierHTML`); eigene Übung je Typ mit Lösung (Liste oder Mustertext);
+  App-Station (eine je Abschnitt), Zusatz-App (Katalog-Thema), Kann-Sätze. Gespeichert über `LWAdmin.dateien` (beide Dateien, ein Commit);
+  der Worker prüft mit `dateienPruefeJourney` / `dateienPruefeBausteine` in `cloudflare/dateien.js` (Stationen unverändert, Abschnitt- und
+  Baustein-IDs bleiben, IDs eindeutig, HE nur in Pflicht-Abschnitten). Vorher prüft der Editor dieselben harten Regeln.
+- **👥 Klasse:** jedes iPad mit Sicherungskarte meldet einmal (Merker `m`/`f`/`r` am Lernstand `jw:…`): `jw:<ID>` erledigt, `jw:<Abschnitt>:f<Niveau>`
+  fertig, `jw:<Hefteintrag>:r` Rückverweis unter 70 % – über `LernSync.lernwegMelden` (Muster erweitert) in die Gruppenauswertung; der Admin
+  liest `/sync/admin/statistik` (30 Wochen) und zeigt Summen je Abschnitt und „💡 Hier hakt es“ (≥ 3 Rückverweise).
+- **📅 Schuljahr:** neues Schuljahr (config.journey.schuljahr) setzt `bis`, `he`, `niveau` zurück; Inhalte bleiben.
+- **🖨️ Drucken** (`gemeinsam/journey-druck.js`, `LernJourneyDruck`): Lösungsheft je Unit (Station und Buchseiten je Abschnitt, eigene Übungen
+  mit Lösung, Buchaufgaben mit Platz für die Lehrerband-Kopie – die Lösungen der Buchaufgaben stehen bewusst nicht in der App), Papier-Laufzettel,
+  Hefteinträge.
+- `daten/journey6.json` und `daten/journey/bausteine-en6.json` sind damit **admin-gepflegt** (pruefen.py Regel 19).
+
 - **Unit 2 (v107):** eigene kurze Hefteinträge für some/any (Lead-in) und can/mustn't; HE-Nummern fortlaufend ab Unit 1 (HE 4 some/any,
   5 Fragen im simple past, 6 Plural, 7 can/mustn't, 8 Nach dem Weg fragen). „Telling the way“ ist Pflicht, „A festival“ freiwilliges Extra
   (`wahlAnzahl: 0` = Wahlabschnitte zählen nicht). **Hefteinträge nur in Pflicht-Abschnitten** (pruefen.py rot), weil das Finale auf jeden

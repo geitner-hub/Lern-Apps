@@ -974,7 +974,8 @@ if Path('apps/vorlage/manifest-beispiel.json').is_file():
 I(f'App-Manifeste: {len(dateien_m)} ({", ".join(dateien_m)})')
 
 # ── 19. Admin-gepflegte Dateien (Admin-Umbau Etappe 8) ──
-ADMIN_DATEIEN = ['daten/katalog.json', 'daten/aufgaben-pools.json', 'daten/lernwelt-inhalte.json'] + sorted(rel(p) for p in ROOT.glob('daten/vokabeln*.json'))
+ADMIN_DATEIEN = ['daten/katalog.json', 'daten/aufgaben-pools.json', 'daten/lernwelt-inhalte.json',
+                 'daten/journey6.json', 'daten/journey/bausteine-en6.json'] + sorted(rel(p) for p in ROOT.glob('daten/vokabeln*.json'))   # Journey: Etappe 6
 _dj = lies('cloudflare/dateien.js') if Path('cloudflare/dateien.js').is_file() else ''
 _muster = [re.compile(m.replace('\\/', '/')) for m in re.findall(r"muster: /(.+?)/,", _dj)]
 if _dj and not _muster: F('cloudflare/dateien.js: Liste DATEIEN_ERLAUBT nicht gefunden')

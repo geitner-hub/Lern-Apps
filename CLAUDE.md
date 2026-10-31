@@ -98,7 +98,9 @@ und gelbe Hinweise. Manuelle Checkliste nach Uploads: `werkzeuge/RAUCHTEST.md`.
   Freigabe „bis Abschnitt“, HE-Nummern und Mindestniveau im Admin unter Gruppen → 📒 Laufzettel. Verzahnung (HE-Kennung, Hilfe-Knopf und
   Rückverweis < 70 % in den Apps über `lernweg-zurueck.js`, Buchleiste, Kann-Brücken) über `LernJourneyWeg.bezug`. Etappe 5: Station antippen →
   Seitenleiste mit dem Abschnitt, „☰ Liste“ = Laufzettel, Tafel/Werkbank im 3D-Ort; das Finale öffnet sich erst, wenn alle freigegebenen
-  Hefteinträge der Unit abgehakt sind (`LernJourney.heftFehlt`, grund `heft`). Die alten Lernwege (`apps/typen/lernweg.html`) sind seit
+  Hefteinträge der Unit abgehakt sind (`LernJourney.heftFehlt`, grund `heft`). Etappe 6: Admin Inhalte → 🧭 English Journey
+  (`module/inhalte-journey.js`: Übersicht, Editoren, Klassen-Übersicht über `jw:`-Meldungen, Schuljahr, Druck über `journey-druck.js`);
+  Hefteinträge nur in Pflicht-Abschnitten (Finale wartet auf jeden). Die alten Lernwege (`apps/typen/lernweg.html`) sind seit
   v103 entfernt; `lernwelt-lernweg` wird nur noch einmal übernommen.
 - **Live-Abfrage** (Unterrichtsmodus → 📊, Kinder-Seite `apps/typen/live.html?raum=CODE`, keine App in config.json, ohne Navbar):
   Worker-Teil `cloudflare/live.js` (Räume, Antworten, Quizze, Rückblicke in `SYNC_DB`; Räume nach dem Beenden gelöscht),
@@ -131,7 +133,8 @@ und gelbe Hinweise. Manuelle Checkliste nach Uploads: `werkzeuge/RAUCHTEST.md`.
   (`LWAdmin.dateien`) und den Worker-Teil `cloudflare/dateien.js` (feste Pfadliste + Formatprüfung je Datei, ein Commit).
   Etappe 9: Aufgaben-Pools der Spiele (`daten/aufgaben-pools.json`, geladen von `aufgaben.js`) und Loot-Pool/Titel
   (`daten/lernwelt-inhalte.json`, neue Teile nur als Farbvariante `basis` + `tausch`) ebenso.
-  `daten/katalog.json`, `daten/vokabeln*.json`, `daten/aufgaben-pools.json` und `daten/lernwelt-inhalte.json` sind damit **admin-gepflegt**: vor Änderungen den Stand von main holen,
+  `daten/katalog.json`, `daten/vokabeln*.json`, `daten/aufgaben-pools.json`, `daten/lernwelt-inhalte.json`, `daten/journey6.json` und
+  `daten/journey/bausteine-en6.json` (Journey-Editor, Lernweg Etappe 6) sind damit **admin-gepflegt**: vor Änderungen den Stand von main holen,
   nie mit altem Stand überschreiben (pruefen.py Regel 19 warnt). Neue beschreibbare Datei = Muster in `DATEIEN_ERLAUBT`
   + eigene Prüffunktion dort.
 - **Rollen (Etappe 10):** Hauptzugang und Kollegen-Zugänge (`cloudflare/kollegen.js`, Admin System → Kollegen). Kollegen

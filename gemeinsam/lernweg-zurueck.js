@@ -67,6 +67,11 @@
   window.addEventListener('lernapps:result', e => {
     const p = Number(e.detail && e.detail.percent);
     if (!bz || !(p < 70) || (!bz.he.length && !buch())) return;
+    // Klassen-Übersicht: „HE 5 sitzt nicht“ – einmal je iPad und Hefteintrag (anonym, nur iPads in einer Gruppe)
+    const he0 = bz.he[0], L = window.LernPass && LernPass.lernstand, w0 = he0 && L ? (L['jw:' + he0.id] || {}) : null;
+    if (w0 && !w0.r && window.LernSync && LernSync.lernwegMelden && LernSync.lernwegMelden('jw:' + he0.id + ':r')) {
+      const n = Object.assign({}, w0, { r: 1 }); delete n.d; LernPass.wegMerken(he0.id, n);
+    }
     const alt = document.getElementById('lw-rueck'); if (alt) alt.remove();
     const d = document.createElement('div');
     d.id = 'lw-rueck'; d.setAttribute('role', 'status');

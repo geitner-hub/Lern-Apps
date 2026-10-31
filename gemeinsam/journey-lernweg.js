@@ -46,6 +46,25 @@
   const P = () => window.LernPass;
   const lies = id => { const L = P() && P().lernstand; return (L && L['jw:' + id]) || null; };
   const merke = (id, wert) => { if (P() && P().wegMerken) P().wegMerken(id, wert); };
+  // Merker „schon gemeldet“ bleiben beim Ab- und Anhaken erhalten (jedes iPad zählt nur einmal)
+  const merker = id => { const w = lies(id) || {}, o = {}; ['m', 'f', 'r', 'nv'].forEach(k => { if (w[k]) o[k] = w[k]; }); return o; };
+  // ── Klassen-Übersicht: anonym über die Gruppenauswertung (LernSync.lernwegMelden), nur iPads in einer Gruppe ──
+  function meldeStand() {
+    const S = window.LernSync;
+    if (!S || !S.lernwegMelden || !O || !O.J || O.admin) return;
+    (O.J.units || []).forEach(u => (u.abschnitte || []).forEach(a => {
+      if (!sichtbar(a)) return;
+      const vorher = O.unit; O.unit = u;
+      a.schritte.forEach(s => {
+        if (s.art === 'app' || s.art === 'extra') return;
+        const k = schluessel(s), w = lies(k);
+        if (w && w.e && !w.m && S.lernwegMelden('jw:' + k)) merke(k, Object.assign({}, w, { m: 1 }));
+      });
+      const w = lies(a.id) || {};
+      if (!w.f && fortschritt(a).fertig && S.lernwegMelden('jw:' + a.id + ':f' + (a.niveaus ? niveau(a) : 0))) merke(a.id, Object.assign({}, w, { f: 1 }));
+      O.unit = vorher;
+    }));
+  }
   const schluessel = s => s.art === 'hefteintrag' ? s.baustein : s.id;
 
   // ── Freigabe „bis Abschnitt“ und HE-Nummern (config.journey.wege.journey6) ──
@@ -317,6 +336,7 @@
     if (!host || !O) return;
     const a = offen && (O.unit.abschnitte || []).find(x => x.id === offen && sichtbar(x));
     host.innerHTML = `<div class="jw">${ansicht === 'spiegel' ? spiegel() : a ? abschnittHTML(a) : zettel()}</div>`;
+    try { meldeStand(); } catch (e) { console.warn('[Laufzettel] Meldung', e); }
   }
   function grossZeigen(bid) { const b = O.bausteine[bid]; if (b) heZeigen(b, heNr(bid)); }
   function heZeigen(b, nr, unten) {
@@ -342,11 +362,12 @@
     if (d.jwZu !== undefined || (O.panel && d.jwZettel !== undefined)) { if (O.schliessen) O.schliessen(); return; }
     if (d.jwZettel !== undefined) { offen = null; ansicht = 'zettel'; zeichne(); host.scrollTop = 0; return; }
     if (d.jwSpiegel !== undefined) { ansicht = 'spiegel'; zeichne(); host.scrollTop = 0; return; }
-    if (d.jwNiveau) { merke(offen, { nv: Number(d.jwNiveau) }); return zeichne(); }
+    if (d.jwNiveau) { merke(offen, Object.assign(merker(offen), { nv: Number(d.jwNiveau) })); return zeichne(); }
     if (d.jwGeschrieben) { geschrieben.add(d.jwGeschrieben); return zeichne(); }
     if (d.jwHaken) {
       const s = findeSchritt(d.jwHaken); if (!s) return;
-      merke(schluessel(s), erledigt(s) ? null : { e: 1 });
+      const k = schluessel(s);
+      merke(k, erledigt(s) ? merker(k) : Object.assign(merker(k), { e: 1 }));
       geschrieben.delete(s.id);
       return zeichne();
     }
@@ -534,6 +555,8 @@ ul.jw-hilfe { list-style: none; display: grid; gap: .3rem; margin: .4rem 0 .7rem
 
   window.LernJourneyWeg = {
     uebernehmen, stand, bezug, heZeigen, buchKurz, seitenA, plaetze,
+    /** Hefteintrag im Heft-Schema als HTML (Vorschau im Admin-Editor); lädt die Stile mit */
+    papierHTML(b, nr) { stile(); return papier(b, false, nr || null); },
     /** Abschnitt-ID zu einer Station (oder null) – für das Antippen im 3D-Ort */
     abschnittVon(J, station) { for (const u of J.units) for (const a of u.abschnitte || []) if (a.schritte.some(s => s.station === station)) return a.id; return null; },
     /** Laufzettel in host zeichnen. o: { J, unit, bausteine: { id: Baustein }, cfg (journey.wege.journey6), admin,

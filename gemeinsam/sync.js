@@ -504,7 +504,9 @@
   //  was = 'lw:<Lernweg-ID>:<Station>:b' bzw. ':k<Niveau 0–3>'. Der Lernweg meldet jedes Ereignis nur einmal je iPad;
   //  im Admin wurde daraus „so viele iPads haben Station 3 kontrolliert“. Keine Kennung, keine Namen. Seit v103 ruft es niemand –
   //  wird mit der Klassen-Übersicht des Laufzettels (Etappe 6) verallgemeinert.
-  const LW_WAS = /^lw:[a-z]+(\.[a-z0-9-]+){1,5}:\d{1,2}:(b|k[0-3])$/;
+  //  Laufzettel im English Journey (ab v108): 'jw:<Baustein- oder Schritt-ID>' erledigt, 'jw:<Abschnitt-ID>:f<Niveau 0–3>' fertig,
+  //  'jw:<Hefteintrag-ID>:r' Rückverweis unter 70 % – ebenfalls einmal je iPad (Merker im Pass), Admin → Inhalte → 🧭 English Journey.
+  const LW_WAS = /^(lw:[a-z]+(\.[a-z0-9-]+){1,5}:\d{1,2}:(b|k[0-3])|jw:[a-z0-9]+(-[a-z0-9]+)*(:(f[0-3]|r))?)$/;
   function lernwegMelden(was) {
     if (TEST || !ST || ST.ungueltig || !ST.gruppe || !LW_WAS.test(String(was)) || !STAT_WAS.test(String(was))) return false;
     const l = statLesen(), k = was + '|' + montag();
