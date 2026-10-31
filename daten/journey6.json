@@ -156,7 +156,7 @@
     {
      "id": "u1-a-simple-past",
      "titel": "Simple past (Wiederholung)",
-     "kurz": "Grammatik · Hefteintrag 1",
+     "kurz": "Grammatik",
      "ico": "⏪",
      "buch": {
       "von": 16,
@@ -227,7 +227,7 @@
       {
        "id": "u1-a-simple-past-extra",
        "art": "extra",
-       "text": "Arbeitsblatt 2 (am Pult holen) · Lernwelt-App „Simple Past“.",
+       "text": "Lernwelt-App „Simple Past“.",
        "thema": "en.5.simple-past",
        "alt": "2.4"
       },
@@ -420,12 +420,6 @@
        "alt": "1.2"
       },
       {
-       "id": "u1-a-story-extra",
-       "art": "extra",
-       "text": "Arbeitsblatt 1 (am Pult holen).",
-       "alt": "1.4"
-      },
-      {
        "id": "u1-a-story-u1-story",
        "art": "app",
        "station": "u1-story"
@@ -479,12 +473,6 @@
        "alt": "3.1"
       },
       {
-       "id": "u1-a-was-were-extra",
-       "art": "extra",
-       "text": "Arbeitsblatt 3 (am Pult holen).",
-       "alt": "3.3"
-      },
-      {
        "id": "u1-a-was-were-u1-was-were",
        "art": "app",
        "station": "u1-was-were"
@@ -494,7 +482,7 @@
     {
      "id": "u1-a-objektpronomen",
      "titel": "Focus on language: me, him, her …",
-     "kurz": "Grammatik · Hefteintrag 2",
+     "kurz": "Grammatik",
      "ico": "👉",
      "buch": {
       "von": 18,
@@ -646,12 +634,6 @@
        "alt": "6.3"
       },
       {
-       "id": "u1-a-vocabulary-extra",
-       "art": "extra",
-       "text": "Arbeitsblatt 5 (am Pult holen).",
-       "alt": "6.4"
-      },
-      {
        "id": "u1-a-vocabulary-u1-weitere",
        "art": "app",
        "station": "u1-weitere"
@@ -661,7 +643,7 @@
     {
      "id": "u1-a-linking-words",
      "titel": "Skills: Writing – linking words",
-     "kurz": "Grammatik · Schreiben · Hefteintrag 3",
+     "kurz": "Grammatik · Schreiben",
      "ico": "🔗",
      "buch": {
       "von": 21,
@@ -744,12 +726,6 @@
        "alt": "5.3"
       },
       {
-       "id": "u1-a-linking-words-extra",
-       "art": "extra",
-       "text": "Arbeitsblatt 4 (am Pult holen).",
-       "alt": "5.5"
-      },
-      {
        "id": "u1-a-linking-words-u1-linking-words",
        "art": "app",
        "station": "u1-linking-words"
@@ -785,12 +761,6 @@
        "art": "uebung",
        "baustein": "ue-u1-mediation-a",
        "alt": "7.1"
-      },
-      {
-       "id": "u1-a-mediation-extra",
-       "art": "extra",
-       "text": "Arbeitsblatt 6 (am Pult holen).",
-       "alt": "7.3"
       }
      ]
     },
@@ -1046,7 +1016,7 @@
     }
    ],
    "alt": "en.6.lernweg-u2",
-   "wahlAnzahl": 1,
+   "wahlAnzahl": 0,
    "zieleVorher": true,
    "abschnitte": [
     {
@@ -1065,6 +1035,11 @@
       "kontrolle": "6.4"
      },
      "schritte": [
+      {
+       "id": "u2-a-lead-in-he",
+       "art": "hefteintrag",
+       "baustein": "he-u2-some-any"
+      },
       {
        "id": "u2-a-lead-in-buch",
        "art": "uebung",
@@ -1253,6 +1228,11 @@
        ]
       },
       {
+       "id": "u2-a-theme2-vok",
+       "art": "vokabeln",
+       "text": "Schreibe diese Wörter mit der deutschen Bedeutung in dein Vokabelheft (Buch hinten, Vocabulary Unit 2): dogs’ home, she can’t walk well, (to) be closed / (to) be open."
+      },
+      {
        "id": "u2-a-theme2-u2-theme2",
        "art": "app",
        "station": "u2-theme2"
@@ -1336,12 +1316,6 @@
        "alt": "1.v"
       },
       {
-       "id": "u2-a-story-extra",
-       "art": "extra",
-       "text": "Arbeitsblatt 1 (Unit 2, am Pult holen).",
-       "alt": "1.4"
-      },
-      {
        "id": "u2-a-story-u2-story",
        "art": "app",
        "station": "u2-story"
@@ -1351,7 +1325,7 @@
     {
      "id": "u2-a-did-fragewort",
      "titel": "Focus on language: Where did you go?",
-     "kurz": "Grammatik · Fragen mit Fragewort · Hefteintrag 4",
+     "kurz": "Grammatik · Fragen mit Fragewort",
      "ico": "🧭",
      "buch": {
       "von": 34,
@@ -1444,12 +1418,6 @@
        "art": "vokabeln",
        "text": "Schreibe diese Wörter mit der deutschen Bedeutung in dein Vokabelheft (Buch hinten, Vocabulary Unit 2): bonfire, (to) finish, firework, in the street, (to) run, (to) be scared (of), we’ll find him, (to) lose, (to) worry (about), missing, friendly, reward.",
        "alt": "2.v"
-      },
-      {
-       "id": "u2-a-did-fragewort-extra",
-       "art": "extra",
-       "text": "Arbeitsblatt 2 (Unit 2, am Pult holen).",
-       "alt": "2.6"
       },
       {
        "id": "u2-a-did-fragewort-u2-did-fragewort",
@@ -1552,12 +1520,6 @@
        "alt": "3.v"
       },
       {
-       "id": "u2-a-did-kurz-extra",
-       "art": "extra",
-       "text": "Arbeitsblatt 3 (Unit 2, am Pult holen).",
-       "alt": "3.5"
-      },
-      {
        "id": "u2-a-did-kurz-u2-did-kurz",
        "art": "app",
        "station": "u2-did-kurz"
@@ -1567,7 +1529,7 @@
     {
      "id": "u2-a-plural",
      "titel": "Focus on language: Plurals",
-     "kurz": "Grammatik · Mehrzahl · Hefteintrag 5",
+     "kurz": "Grammatik · Mehrzahl",
      "ico": "🥔",
      "buch": {
       "von": 36,
@@ -1685,6 +1647,11 @@
      },
      "schritte": [
       {
+       "id": "u2-a-can-mustnt-he",
+       "art": "hefteintrag",
+       "baustein": "he-u2-can-mustnt"
+      },
+      {
        "id": "u2-a-can-mustnt-buch",
        "art": "uebung",
        "buch": {
@@ -1736,12 +1703,6 @@
        "alt": "5.v"
       },
       {
-       "id": "u2-a-can-mustnt-extra",
-       "art": "extra",
-       "text": "Arbeitsblatt 4 (Unit 2, am Pult holen).",
-       "alt": "5.4"
-      },
-      {
        "id": "u2-a-can-mustnt-u2-can-mustnt",
        "art": "app",
        "station": "u2-can-mustnt"
@@ -1780,6 +1741,11 @@
        "baustein": "ue-u2-fest-a",
        "text": "Schreibe über ein Fest oder eine Party ins Heft.",
        "alt": "9.1"
+      },
+      {
+       "id": "u2-a-fest-vok",
+       "art": "vokabeln",
+       "text": "Schreibe diese Wörter mit der deutschen Bedeutung in dein Vokabelheft (Buch hinten, Vocabulary Unit 2): (to) skateboard; skateboard."
       },
       {
        "id": "u2-a-fest-u2-weitere",
@@ -1860,12 +1826,6 @@
        "art": "vokabeln",
        "text": "Schreibe diese Wörter mit der deutschen Bedeutung in dein Vokabelheft (Buch hinten, Vocabulary Unit 2): at least, penfriend, game, (to) visit.",
        "alt": "7.v"
-      },
-      {
-       "id": "u2-a-brief-extra",
-       "art": "extra",
-       "text": "Arbeitsblatt 5 (Unit 2, am Pult holen).",
-       "alt": "7.4"
       }
      ]
     },
@@ -1879,7 +1839,6 @@
       "bis": 40
      },
      "kompetenz": "Sprechen",
-     "wahl": true,
      "alt": {
       "nr": 8,
       "kontrolle": "8.4"
@@ -1935,12 +1894,6 @@
         "prozent": 70
        },
        "text": "Übe in der Lernwelt: „Präpositionen“ (next to, opposite …)."
-      },
-      {
-       "id": "u2-a-weg-extra",
-       "art": "extra",
-       "text": "Arbeitsblatt 6 (Unit 2, am Pult holen).",
-       "alt": "8.5"
       },
       {
        "id": "u2-a-weg-u2-anwenden",

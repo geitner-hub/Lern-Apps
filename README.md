@@ -612,7 +612,12 @@ Niveau (★ alle · ★★ Standard und Profi · ★★★ Profi), Hören macht 
   Station → Abschnitt über `#s=`, Zusatz-Apps über `#w=`; bei „Zum Schluss“ (Finale) alle freigegebenen Hefteinträge der Unit.
 - **Buchleiste** über dem Laufzettel: die Seiten der Unit je Abschnitt (grün fertig, gold „du bist gerade hier“, blau frei, grau noch zu).
 - **Finale mit Brücken:** jeder Kann-Satz zeigt Hefteintrag, Buchseite, App und Abschnitt; bei 😟/😐 hervorgehoben („👉 Schau hier nach“).
-- Grammatik-Stationen ohne eigenen Hefteintrag (U1 was/were, U2 can/mustn't) führen zur Buchseite; ein HE kommt nur, wenn er im Heft steht.
+- Grammatik-Stationen ohne eigenen Hefteintrag (U1 was/were) führen zur Buchseite; ein HE kommt nur, wenn er im Heft steht.
+- **Unit 2 (v107):** eigene kurze Hefteinträge für some/any (Lead-in) und can/mustn't; HE-Nummern fortlaufend ab Unit 1 (HE 4 some/any,
+  5 Fragen im simple past, 6 Plural, 7 can/mustn't, 8 Nach dem Weg fragen). „Telling the way“ ist Pflicht, „A festival“ freiwilliges Extra
+  (`wahlAnzahl: 0` = Wahlabschnitte zählen nicht). **Hefteinträge nur in Pflicht-Abschnitten** (pruefen.py rot), weil das Finale auf jeden
+  freigegebenen Hefteintrag wartet. Die Arbeitsblätter „am Pult holen“ sind in Unit 1 und 2 gestrichen. Lösungen der Buchaufgaben stehen
+  nicht in der App – sie liegen im Lösungsheft aus (Druckansicht im Admin, Etappe 6).
 
 **Etappe 5 (v106): alles in den Stationen, Heft vor dem Finale** – Laufzettel und Stationen sind eins (für Geräte mit Laufzettel-Freigabe):
 

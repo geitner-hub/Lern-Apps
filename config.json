@@ -740,7 +740,12 @@
         "he": {
           "he-u1-simple-past": 1,
           "he-u1-objektpronomen": 2,
-          "he-u1-linking-words": 3
+          "he-u1-linking-words": 3,
+          "he-u2-some-any": 4,
+          "he-u2-did-fragen": 5,
+          "he-u2-plural": 6,
+          "he-u2-can-mustnt": 7,
+          "he-u2-weg": 8
         }
       }
     }

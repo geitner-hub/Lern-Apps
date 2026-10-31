@@ -63,7 +63,8 @@
 #       daten/journey/bausteine-*.json passen zusammen (Bausteine vorhanden und von der richtigen Art, Stationen der Unit
 #       höchstens in einem Abschnitt, Themen im Katalog, Buchverweise {seite, bis?, uebung?}, Abschnitt-, Schritt- und
 #       Baustein-IDs zusammen eindeutig); config.journey: HE-Nummern je Weg nicht doppelt. Gelb: Abschnitte ohne Buchseiten,
-#       Übungen ohne Lösung, Kann-Sätze ohne Abschnitt, Hefteinträge nur im Heft, Stationen ohne Abschnitt.
+#       Übungen ohne Lösung, Kann-Sätze ohne Abschnitt, Hefteinträge nur im Heft, Stationen ohne Abschnitt. Hefteinträge nur in
+#       Pflicht-Abschnitten (rot), weil das Finale auf jeden freigegebenen Hefteintrag wartet.
 # ═══════════════════════════════════════════════════════
 import gzip, json, math, os, re, subprocess, sys
 from pathlib import Path
@@ -842,6 +843,7 @@ for jw_p in sorted(ROOT.glob('daten/journey*.json')):
                     if art == 'hefteintrag': he_ids.add(b_)
                 elif b_ is not None: FA(f'Schritt {sid}: baustein nur bei Hefteintrag und Übung')
                 if art == 'hefteintrag' and b_ is None: FA(f'Schritt {sid}: Hefteintrag ohne baustein')
+                if art == 'hefteintrag' and a.get('wahl'): FA(f'Schritt {sid}: Hefteinträge nur in Pflicht-Abschnitten – {aid} ist eine Wahlstation (das Finale wartet auf jeden Hefteintrag)')
                 if art == 'uebung' and b_ is None and bu is None: FA(f'Schritt {sid}: Übung braucht baustein (eigene Aufgabe) oder buch (Buchaufgabe)')
                 if art == 'app':
                     if (s.get('station') is None) == (s.get('thema') is None): FA(f'Schritt {sid}: App braucht genau eins von station oder thema')

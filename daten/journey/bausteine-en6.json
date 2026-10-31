@@ -181,6 +181,196 @@
    ]
   },
   {
+   "id": "he-u2-some-any",
+   "art": "hefteintrag",
+   "titel": "some und any",
+   "zeilen": [
+    [
+     [
+      "some",
+      "g"
+     ],
+     [
+      " = etwas, einige  →  in ",
+      ""
+     ],
+     [
+      "positiven Sätzen",
+      "b"
+     ]
+    ],
+    [
+     [
+      "We need ",
+      ""
+     ],
+     [
+      "some",
+      "b"
+     ],
+     [
+      " sausages for the party.",
+      ""
+     ]
+    ],
+    [
+     [
+      "any",
+      "g"
+     ],
+     [
+      " = (irgend)welche, etwas  →  in ",
+      ""
+     ],
+     [
+      "Fragen",
+      "b"
+     ],
+     [
+      " und ",
+      ""
+     ],
+     [
+      "verneinten Sätzen",
+      "b"
+     ]
+    ],
+    [
+     [
+      "Have you got ",
+      ""
+     ],
+     [
+      "any",
+      "b"
+     ],
+     [
+      " lemonade?   There aren’t ",
+      ""
+     ],
+     [
+      "any",
+      "b"
+     ],
+     [
+      " biscuits.",
+      ""
+     ]
+    ],
+    [
+     [
+      "Ausnahme: ",
+      ""
+     ],
+     [
+      "Angebote und Bitten",
+      "g"
+     ],
+     [
+      " mit some:  Would you like ",
+      ""
+     ],
+     [
+      "some",
+      "b"
+     ],
+     [
+      " cake?",
+      ""
+     ]
+    ]
+   ],
+   "merke": "Positiv: some – Frage oder nicht: any!"
+  },
+  {
+   "id": "he-u2-can-mustnt",
+   "art": "hefteintrag",
+   "titel": "can und mustn’t – Regeln",
+   "zeilen": [
+    [
+     [
+      "can",
+      "g"
+     ],
+     [
+      " = darf, kann:  You ",
+      ""
+     ],
+     [
+      "can",
+      "b"
+     ],
+     [
+      " play football in the playground.",
+      ""
+     ]
+    ],
+    [
+     [
+      "mustn’t",
+      "g"
+     ],
+     [
+      " = darf nicht (",
+      ""
+     ],
+     [
+      "Verbot",
+      "b"
+     ],
+     [
+      "):  You ",
+      ""
+     ],
+     [
+      "mustn’t",
+      "b"
+     ],
+     [
+      " run in the corridor.",
+      ""
+     ]
+    ],
+    [
+     [
+      "Achtung: ",
+      ""
+     ],
+     [
+      "mustn’t",
+      "g"
+     ],
+     [
+      " heißt ",
+      ""
+     ],
+     [
+      "nicht",
+      "b"
+     ],
+     [
+      " „muss nicht“!",
+      ""
+     ]
+    ],
+    [
+     [
+      "Nach can und mustn’t steht die ",
+      ""
+     ],
+     [
+      "Grundform",
+      "g"
+     ],
+     [
+      " (ohne to).",
+      ""
+     ]
+    ]
+   ],
+   "merke": "can = darf – mustn’t = darf nicht!"
+  },
+  {
    "id": "he-u2-weg",
    "art": "hefteintrag",
    "titel": "Nach dem Weg fragen",
@@ -1571,7 +1761,7 @@
      ]
     },
     {
-     "t": "Mia phones the dogs’ home.",
+     "t": "Mia talks to the dogs’ home on the phone.",
      "o": [
       "right",
       "wrong"
@@ -1591,6 +1781,16 @@
       "wrong"
      ]
     }
+   ],
+   "loesung": [
+    "Ellie brings a real dog. – wrong",
+    "The play needs two helpers. – right",
+    "The helpers say “WHIIIZZ! BANG!” when they hear the word “fireworks”. – right",
+    "The dog likes fireworks. – wrong",
+    "The dog runs away. – right",
+    "Mia talks to the dogs’ home on the phone. – right",
+    "The children collect money for a new school bag. – wrong",
+    "At the end they say: “Remember the animals too!” – right"
    ]
   },
   {

@@ -86,6 +86,9 @@
     return { n, von: l.length, fertig: l.length > 0 && n === l.length };
   }
 
+  // Wahlabschnitte: so viele zählen (wahlAnzahl, Standard 1; 0 = alle Wahlabschnitte sind freiwilliges Extra)
+  const wahlSoll = u => (Number.isInteger(u.wahlAnzahl) && u.wahlAnzahl >= 0 ? u.wahlAnzahl : 1);
+
   // ── Hefteinträge eines Abschnitts (Reihenfolge wie im Abschnitt) ──
   const heIn = a => [...new Set(a.schritte.filter(s => s.art === 'hefteintrag').map(s => s.baustein))];
   const heErledigt = bid => !!(lies(bid) || {}).e;
@@ -269,7 +272,7 @@
     const zieleVorher = u.zieleVorher && !(u.kann || []).some(k => (lies(k.baustein) || {}).v);
     const fin = u.stationen.find(st => st.art === 'finale'), fz = fin && O.z[fin.id];
     return `<div class="jw-kopf"><h2>Unit ${u.nr}: ${esc(u.titel)}</h2><p class="jw-klein">📍 ${esc(u.ort || '')} · 📒 Laufzettel</p>
-        <p class="jw-klein">${fertig} von ${alle.length} Abschnitten fertig${wahl.length ? ` · dazu ${u.wahlAnzahl || 1} von ${wahl.length} Wahlstationen` : ''}. Arbeite der Reihe nach – alles kommt in dein Heft oder Übungsheft.</p>
+        <p class="jw-klein">${fertig} von ${alle.length} Abschnitten fertig${wahl.length && wahlSoll(u) ? ` · dazu ${wahlSoll(u)} von ${wahl.length} Wahlstationen` : ''}. Arbeite der Reihe nach – alles kommt in dein Heft oder Übungsheft.</p>
         ${O.admin ? '<p class="jw-vorschau">👀 Vorschau (Admin): alle Abschnitte sichtbar</p>' : ''}
         ${buchleiste(u)}
         <div class="jw-knoepfe"><button type="button" class="jw-neben" data-jw-spiegel>📒 Mein Heft</button></div></div>
@@ -277,7 +280,7 @@
         <div class="jw-chips">${(fz.heft || []).map(h => heChip(h)).join('')}</div></div>` : ''}
       ${zieleVorher ? kannHTML(u, 'v') : ''}
       ${pflicht.map(zeileHTML).join('') || '<p class="jw-klein">Deine Lehrkraft gibt die ersten Abschnitte bald frei.</p>'}
-      ${wahl.length ? `<h3 class="jw-gruppe">⭐ Wahlstationen – such dir ${u.wahlAnzahl || 1} aus</h3>${wahl.map(zeileHTML).join('')}` : ''}
+      ${wahl.length ? `<h3 class="jw-gruppe">${wahlSoll(u) ? `⭐ Wahlstationen – such dir ${wahlSoll(u)} aus` : '⭐ Extra – freiwillig'}</h3>${wahl.map(zeileHTML).join('')}` : ''}
       ${schluss.length ? `<h3 class="jw-gruppe">🎯 Zum Schluss</h3>${schluss.map(zeileHTML).join('')}` : ''}
       ${O.fuss ? O.fuss() : ''}`;
   }
@@ -481,7 +484,7 @@ ul.jw-hilfe { list-style: none; display: grid; gap: .3rem; margin: .4rem 0 .7rem
       const unit = O.J.units.find(u => (u.abschnitte || []).includes(ab[ab.length - 1]));
       O.unit = unit;
       const eigene = (unit.abschnitte || []).filter(sichtbar), pf = eigene.filter(a => !a.wahl), wa = eigene.filter(a => a.wahl);
-      const wSoll = Math.min(unit.wahlAnzahl || 1, wa.length);
+      const wSoll = Math.min(wahlSoll(unit), wa.length);
       const fertig = pf.filter(a => fortschritt(a).fertig).length + Math.min(wSoll, wa.filter(a => fortschritt(a).fertig).length);
       const naechste = ab.find(a => !a.wahl && !fortschritt(a).fertig) || null;
       return { unit, fertig, soll: pf.length + wSoll, naechste, naechsteUnit: naechste && O.J.units.find(u => (u.abschnitte || []).includes(naechste)) };
