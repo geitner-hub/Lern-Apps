@@ -63,7 +63,8 @@
 #       daten/journey/bausteine-*.json passen zusammen (Bausteine vorhanden und von der richtigen Art, Stationen der Unit
 #       höchstens in einem Abschnitt, Themen im Katalog, Buchverweise {seite, bis?, uebung?}, Abschnitt-, Schritt- und
 #       Baustein-IDs zusammen eindeutig); config.journey: HE-Nummern je Weg nicht doppelt. Gelb: Abschnitte ohne Buchseiten,
-#       Übungen ohne Lösung, Kann-Sätze ohne Abschnitt, Hefteinträge nur im Heft, Stationen ohne Abschnitt.
+#       Übungen ohne Lösung, Kann-Sätze ohne Abschnitt, Hefteinträge nur im Heft, Stationen ohne Abschnitt. Hefteinträge nur in
+#       Pflicht-Abschnitten (rot), weil das Finale auf jeden freigegebenen Hefteintrag wartet.
 # ═══════════════════════════════════════════════════════
 import gzip, json, math, os, re, subprocess, sys
 from pathlib import Path
@@ -842,6 +843,7 @@ for jw_p in sorted(ROOT.glob('daten/journey*.json')):
                     if art == 'hefteintrag': he_ids.add(b_)
                 elif b_ is not None: FA(f'Schritt {sid}: baustein nur bei Hefteintrag und Übung')
                 if art == 'hefteintrag' and b_ is None: FA(f'Schritt {sid}: Hefteintrag ohne baustein')
+                if art == 'hefteintrag' and a.get('wahl'): FA(f'Schritt {sid}: Hefteinträge nur in Pflicht-Abschnitten – {aid} ist eine Wahlstation (das Finale wartet auf jeden Hefteintrag)')
                 if art == 'uebung' and b_ is None and bu is None: FA(f'Schritt {sid}: Übung braucht baustein (eigene Aufgabe) oder buch (Buchaufgabe)')
                 if art == 'app':
                     if (s.get('station') is None) == (s.get('thema') is None): FA(f'Schritt {sid}: App braucht genau eins von station oder thema')
@@ -872,7 +874,7 @@ for jw_p in sorted(ROOT.glob('daten/journey*.json')):
     if abschnitte: I(f'{jw_r}: {len(abschnitte)} Abschnitte, {sum(1 for v in ids.values() if v == "Schritt")} Schritte')
 
 # config.json → journey (vom Admin gepflegt): { schuljahr, wege: { journey6: { bis: { wer: Abschnitt }, he: { Hefteintrag: Nr },
-#   niveau: { wer: 1–3 } (Mindestniveau), sperren: { wer: true } } } } – Freigabe „bis Abschnitt“ je Gruppe, HE-Nummern fortlaufend durchs Schuljahr, Sperr-Schalter vorbereitet
+#   niveau: { wer: 1–3 } (Mindestniveau), reihenfolge: { wer: frei|schritt|streng } (Abschnitt-Kette), sperren: { wer: true } } } } – Freigabe „bis Abschnitt“ je Gruppe, HE-Nummern fortlaufend durchs Schuljahr, Sperr-Schalter vorbereitet
 jc = config.get('journey')
 if isinstance(jc, dict):
     for wname, w in (jc.get('wege') or {}).items():
@@ -887,6 +889,8 @@ if isinstance(jc, dict):
         if doppelt: F(f'config.json: journey.wege.{wname}.he – HE-Nummer doppelt vergeben: {", ".join(map(str, doppelt))}')
         for wer_, n in (w.get('niveau') or {}).items():
             if n not in (1, 2, 3): F(f'config.json: journey.wege.{wname}.niveau – Mindestniveau für {wer_} muss 1, 2 oder 3 sein')
+        for wer_, r in (w.get('reihenfolge') or {}).items():
+            if r not in ('frei', 'schritt', 'streng'): F(f'config.json: journey.wege.{wname}.reihenfolge – für {wer_} frei, schritt oder streng')
 
 # ── 17. Admin: Module (Admin-Umbau Etappe 1) ───────
 if not Path('admin.html').is_file(): F('admin.html fehlt')
@@ -972,7 +976,8 @@ if Path('apps/vorlage/manifest-beispiel.json').is_file():
 I(f'App-Manifeste: {len(dateien_m)} ({", ".join(dateien_m)})')
 
 # ── 19. Admin-gepflegte Dateien (Admin-Umbau Etappe 8) ──
-ADMIN_DATEIEN = ['daten/katalog.json', 'daten/aufgaben-pools.json', 'daten/lernwelt-inhalte.json'] + sorted(rel(p) for p in ROOT.glob('daten/vokabeln*.json'))
+ADMIN_DATEIEN = ['daten/katalog.json', 'daten/aufgaben-pools.json', 'daten/lernwelt-inhalte.json',
+                 'daten/journey6.json', 'daten/journey/bausteine-en6.json'] + sorted(rel(p) for p in ROOT.glob('daten/vokabeln*.json'))   # Journey: Etappe 6
 _dj = lies('cloudflare/dateien.js') if Path('cloudflare/dateien.js').is_file() else ''
 _muster = [re.compile(m.replace('\\/', '/')) for m in re.findall(r"muster: /(.+?)/,", _dj)]
 if _dj and not _muster: F('cloudflare/dateien.js: Liste DATEIEN_ERLAUBT nicht gefunden')

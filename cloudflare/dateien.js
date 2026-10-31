@@ -8,6 +8,10 @@
 //    daten/aufgaben-pools.json – Frage-Antwort-Pools der Spiele; bestehende Pool-IDs bleiben (Etappe 9)
 //    daten/lernwelt-inhalte.json – nur ITEMS (Loot-Pool) und TITEL: neue Teile als Farbvariante eines
 //                               vorhandenen Teils; bestehende Teile behalten ID und Platz (Etappe 9)
+//    daten/journey6.json      – English Journey: nur Abschnitte, Kann-Sätze und Wahl-Anzahl je Unit; die Stationen
+//                               (Meisterschaft, braucht, 3D-Plätze) bleiben, wie sie sind; Abschnitt-IDs bleiben
+//    daten/journey/bausteine-en6.json – Hefteinträge, eigene Übungen, Kann-Sätze; bestehende IDs und Arten bleiben
+//                               (Lernweg im English Journey, Etappe 6 – gleiche Regeln wie pruefen.py Regel 23)
 //
 //  Endpunkte (Header: Authorization: Bearer <schlüssel>):
 //    POST /dateien/lesen      Body { pfade: [..] }  → { dateien: { pfad: { daten, sha } } }
@@ -30,6 +34,8 @@ const DATEIEN_ERLAUBT = [
   { muster: /^daten\/vokabeln(?:[5-9]|10)\.json$/, art: 'vokabeln' },
   { muster: /^daten\/aufgaben-pools\.json$/,       art: 'aufgaben' },
   { muster: /^daten\/lernwelt-inhalte\.json$/,     art: 'inhalte' },
+  { muster: /^daten\/journey6\.json$/,              art: 'journey' },
+  { muster: /^daten\/journey\/bausteine-en6\.json$/, art: 'bausteine' },
 ];
 const dateienArt = pfad => (DATEIEN_ERLAUBT.find(e => e.muster.test(String(pfad))) || {}).art || null;
 
@@ -102,12 +108,22 @@ async function dateienSpeichern(env, cors, body, h) {
   liste.filter(d => dateienArt(d.pfad) === 'vokabeln').forEach(d => probleme.push(...dateienPruefeVokabeln(d.daten, alt[d.pfad], ids).map(x => d.pfad + ': ' + x)));
   liste.filter(d => dateienArt(d.pfad) === 'aufgaben').forEach(d => probleme.push(...dateienPruefeAufgaben(d.daten, alt[d.pfad], ids).map(x => d.pfad + ': ' + x)));
   liste.filter(d => dateienArt(d.pfad) === 'inhalte').forEach(d => probleme.push(...dateienPruefeInhalte(d.daten, alt[d.pfad]).map(x => d.pfad + ': ' + x)));
+  // English Journey: Weg und Bausteine gehören zusammen – fehlt einer in der Anfrage, gilt der Stand von main
+  const jw = liste.find(d => dateienArt(d.pfad) === 'journey'), bs = liste.find(d => dateienArt(d.pfad) === 'bausteine');
+  if (jw || bs) {
+    const wegDaten = jw ? jw.daten : (await dateienHolen(env, h, 'daten/journey6.json', basis) || {}).daten;
+    const bausteine = bs ? bs.daten : (await dateienHolen(env, h, 'daten/journey/bausteine-en6.json', basis) || {}).daten;
+    if (!katalog) { const k = await dateienHolen(env, h, 'daten/katalog.json', basis); katalog = k ? k.daten : null; }
+    if (bs) probleme.push(...dateienPruefeBausteine(bs.daten, alt[bs.pfad]).map(x => bs.pfad + ': ' + x));
+    probleme.push(...dateienPruefeJourney(wegDaten, jw ? alt[jw.pfad] : wegDaten, bausteine, dateienKatalogIds(katalog)).map(x => 'daten/journey6.json: ' + x));
+  }
   if (probleme.length) return h.json({ error: 'Ungültig: ' + probleme.slice(0, 6).join('; ') }, 422, cors);
 
   const baum = liste.map(d => {
     const art = dateienArt(d.pfad);
     const text = art === 'vokabeln' ? dateienFormatVokabeln(d.daten) : art === 'katalog' ? JSON.stringify(d.daten, null, 1) + '\n'
-      : art === 'aufgaben' ? dateienFormatPools(d.daten) : dateienFormatZeilen(d.daten);
+      : art === 'aufgaben' ? dateienFormatPools(d.daten) : art === 'journey' || art === 'bausteine' ? JSON.stringify(d.daten, null, 1) + '\n'
+      : dateienFormatZeilen(d.daten);
     return { path: d.pfad, mode: '100644', type: 'blob', content: text };
   });
   if (baum.some(b => new TextEncoder().encode(b.content).length > DATEIEN_MAX_DATEI)) return h.json({ error: 'Datei zu groß' }, 413, cors);
@@ -312,6 +328,101 @@ function dateienPruefeInhalte(neu, alt) {
     herkunftOk(i, wo);
   });
   alt.ITEMS.forEach(i => { if (!gesehen.has(i.id)) p.push('Teil ' + i.id + ' fehlt (IDs nie löschen)'); });
+  return p;
+}
+
+// ── English Journey (Lernweg im Journey, Etappe 6) ──
+const DATEIEN_JID = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+const dateienZeile = (v, max) => typeof v === 'string' && v.length <= max && !/[<>\u0000-\u001f]/.test(v);   // darf leer sein
+const DATEIEN_UEBUNGEN = ['wahl', 'zuordnen', 'luecken', 'saetze', 'sortieren', 'schreiben', 'mediation', 'frei'];
+const DATEIEN_SCHRITTE = ['hefteintrag', 'uebung', 'app', 'lesen', 'vokabeln', 'partner', 'hoeren', 'extra'];
+
+/** Bausteine: Hefteinträge (zeilen [[text, ''|'g'|'b']]), eigene Übungen (typ, loesung), Kann-Sätze. IDs bleiben (Lernstand jw:<ID>). */
+function dateienPruefeBausteine(neu, alt) {
+  const p = [];
+  if (!dateienObj(neu) || neu.weg !== alt.weg || !Array.isArray(neu.bausteine) || neu.bausteine.length > 600) return ['Aufbau ungültig (weg, bausteine)'];
+  const altBy = new Map((alt.bausteine || []).map(b => [b.id, b])), ids = new Set();
+  const mehrzeilig = (v, max) => typeof v === 'string' && v.length <= max && !/[<>\u0000-\u0009\u000b-\u001f]/.test(v);   // Zeilenumbruch erlaubt (Mustertexte)
+  const textTief = (v, tiefe = 0) => tiefe > 4 ? false : typeof v === 'string' ? mehrzeilig(v, 3000)
+    : typeof v === 'number' || typeof v === 'boolean' || v === null ? true
+    : Array.isArray(v) ? v.length <= 60 && v.every(x => textTief(x, tiefe + 1))
+    : dateienObj(v) ? Object.keys(v).length <= 30 && Object.values(v).every(x => textTief(x, tiefe + 1)) : false;
+  neu.bausteine.forEach((b, i) => {
+    const wo = 'Baustein ' + (b && b.id || i + 1);
+    if (!dateienObj(b) || typeof b.id !== 'string' || !DATEIEN_JID.test(b.id) || b.id.length > 60 || ids.has(b.id)) return p.push(wo + ': ID fehlt, ungültig oder doppelt');
+    ids.add(b.id);
+    const a = altBy.get(b.id);
+    if (a && a.art !== b.art) return p.push(wo + ': die Art darf sich nicht ändern');
+    if (!textTief(b)) return p.push(wo + ': Texte ungültig (keine < >, nicht zu lang)');
+    if (b.art === 'hefteintrag') {
+      if (!dateienText(b.titel, 80)) p.push(wo + ': Titel fehlt');
+      if (!Array.isArray(b.zeilen) || b.zeilen.length > 30 || !b.zeilen.every(z => Array.isArray(z) && z.length <= 12
+          && z.every(t => Array.isArray(t) && t.length === 2 && dateienZeile(t[0], 200) && ['', 'g', 'b'].includes(t[1])))) p.push(wo + ': Zeilen ungültig');
+      if (b.merke !== undefined && !dateienZeile(b.merke, 200)) p.push(wo + ': Merksatz ungültig');
+    } else if (b.art === 'uebung') {
+      if (!DATEIEN_UEBUNGEN.includes(b.typ) || !dateienText(b.titel, 200)) p.push(wo + ': typ oder Titel ungültig');
+      const l = b.loesung;
+      if (l !== undefined && !(mehrzeilig(l, 3000) && l.trim()) && !(Array.isArray(l) && l.length && l.length <= 40 && l.every(x => dateienText(x, 300)))) p.push(wo + ': Lösung ungültig');
+    } else if (b.art === 'kann') {
+      if (!dateienText(b.teil, 40) || !dateienText(b.text, 200)) p.push(wo + ': teil und text nötig');
+    } else p.push(wo + ': art muss hefteintrag, uebung oder kann sein');
+  });
+  altBy.forEach((_, id) => { if (!ids.has(id)) p.push('Baustein ' + id + ' fehlt (IDs nie löschen – Erledigtes steht im Pass)'); });
+  return p;
+}
+
+/** Weg: nur abschnitte, kann, wahlAnzahl je Unit ändern sich; Stationen bleiben; Abschnitt-IDs bleiben; IDs eindeutig */
+function dateienPruefeJourney(neu, alt, bausteine, katalogIds) {
+  const p = [];
+  if (!dateienObj(neu) || !Array.isArray(neu.units) || neu.units.length !== alt.units.length) return ['Units dürfen sich nicht ändern'];
+  if (!dateienGleich(ohne(neu, 'units'), ohne(alt, 'units'))) p.push('Kopf der Datei darf sich nicht ändern');
+  const B = new Map(((bausteine || {}).bausteine || []).map(b => [b.id, b]));
+  const ids = new Set(B.keys()), altAb = new Set(alt.units.flatMap(u => (u.abschnitte || []).map(a => a.id)));
+  const fest = u => { const c = { ...u }; ['abschnitte', 'kann', 'wahlAnzahl'].forEach(k => delete c[k]); return c; };
+  const id = (v, wo) => { if (typeof v !== 'string' || !DATEIEN_JID.test(v) || v.length > 80 || ids.has(v)) { p.push(wo + ': ID fehlt, ungültig oder doppelt (' + v + ')'); return false; } ids.add(v); return true; };
+  const zahl = (v, lo, hi) => Number.isInteger(v) && v >= lo && v <= hi;
+  const buchOk = b => dateienObj(b) && zahl(b.seite, 1, 400) && (b.bis === undefined || zahl(b.bis, b.seite, 400))
+    && (b.uebung === undefined || dateienText(b.uebung, 40)) && Object.keys(b).every(k => ['seite', 'bis', 'uebung'].includes(k));
+  neu.units.forEach((u, ui) => {
+    const a0 = alt.units[ui];
+    if (!dateienObj(u) || !dateienGleich(fest(u), fest(a0))) return p.push('Unit ' + (a0.id || ui + 1) + ': nur Abschnitte, Kann-Sätze und Wahl-Anzahl änderbar');
+    if (u.wahlAnzahl !== undefined && !zahl(u.wahlAnzahl, 0, 10)) p.push('Unit ' + u.id + ': wahlAnzahl 0–10');
+    const st = new Set(u.stationen.map(s => s.id)), inAb = new Set();
+    if (u.abschnitte === undefined) return;
+    if (!Array.isArray(u.abschnitte) || u.abschnitte.length > 40) return p.push('Unit ' + u.id + ': abschnitte ungültig');
+    u.abschnitte.forEach(a => {
+      const wo = 'Abschnitt ' + (a && a.id);
+      if (!dateienObj(a) || !id(a.id, wo)) return;
+      if (!dateienText(a.titel, 120)) p.push(wo + ': Titel fehlt');
+      ['kurz', 'ico', 'kompetenz'].forEach(k => { if (a[k] !== undefined && !dateienZeile(a[k], 120)) p.push(wo + ': ' + k + ' ungültig'); });
+      if (a.buch !== undefined && !(dateienObj(a.buch) && zahl(a.buch.von, 1, 400) && zahl(a.buch.bis, a.buch.von, 400) && Object.keys(a.buch).length === 2)) p.push(wo + ': Buchseiten ungültig');
+      if (a.platz !== undefined && !st.has(a.platz)) p.push(wo + ': platz ist keine Station der Unit');
+      if (a.merk !== undefined && !(Array.isArray(a.merk) && a.merk.length <= 6 && a.merk.every(x => dateienText(x, 120)))) p.push(wo + ': merk ungültig');
+      if (!Array.isArray(a.schritte) || !a.schritte.length || a.schritte.length > 40) return p.push(wo + ': Schritte fehlen');
+      a.schritte.forEach(s => {
+        const ws = 'Schritt ' + (s && s.id);
+        if (!dateienObj(s) || !id(s.id, ws)) return;
+        if (!DATEIEN_SCHRITTE.includes(s.art)) return p.push(ws + ': art ungültig');
+        if (s.niveau !== undefined && !(Array.isArray(s.niveau) && s.niveau.length && s.niveau.every(n => [1, 2, 3].includes(n)))) p.push(ws + ': niveau ungültig');
+        if (s.buch !== undefined && !buchOk(s.buch)) p.push(ws + ': Buchverweis ungültig');
+        if (s.text !== undefined && !dateienZeile(s.text, 600)) p.push(ws + ': Text ungültig');
+        if (s.art === 'hefteintrag' || (s.art === 'uebung' && s.baustein !== undefined)) {
+          const b = B.get(s.baustein);
+          if (!b || b.art !== s.art) p.push(ws + ': Baustein ' + s.baustein + ' fehlt oder passt nicht');
+          if (s.art === 'hefteintrag' && a.wahl) p.push(ws + ': Hefteinträge nur in Pflicht-Abschnitten');
+        } else if (s.art === 'uebung' && s.buch === undefined) p.push(ws + ': Übung braucht Buchverweis oder Baustein');
+        if (s.art === 'app') {
+          if ((s.station === undefined) === (s.thema === undefined)) p.push(ws + ': station oder thema');
+          else if (s.station !== undefined && (!st.has(s.station) || inAb.has(s.station))) p.push(ws + ': Station fehlt oder steht doppelt');
+          else if (s.thema !== undefined && katalogIds && !katalogIds.has(s.thema)) p.push(ws + ': Thema fehlt im Katalog');
+          if (s.station) inAb.add(s.station);
+        }
+      });
+    });
+    if (u.kann !== undefined && !(Array.isArray(u.kann) && u.kann.length <= 30 && u.kann.every(k => dateienObj(k) && B.has(k.baustein) && B.get(k.baustein).art === 'kann'
+        && (k.abschnitt == null || u.abschnitte.some(a => a.id === k.abschnitt))))) p.push('Unit ' + u.id + ': Kann-Sätze ungültig');
+  });
+  altAb.forEach(x => { if (!ids.has(x)) p.push('Abschnitt ' + x + ' fehlt (IDs nie löschen)'); });
   return p;
 }
 

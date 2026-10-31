@@ -612,7 +612,31 @@ Niveau (★ alle · ★★ Standard und Profi · ★★★ Profi), Hören macht 
   Station → Abschnitt über `#s=`, Zusatz-Apps über `#w=`; bei „Zum Schluss“ (Finale) alle freigegebenen Hefteinträge der Unit.
 - **Buchleiste** über dem Laufzettel: die Seiten der Unit je Abschnitt (grün fertig, gold „du bist gerade hier“, blau frei, grau noch zu).
 - **Finale mit Brücken:** jeder Kann-Satz zeigt Hefteintrag, Buchseite, App und Abschnitt; bei 😟/😐 hervorgehoben („👉 Schau hier nach“).
-- Grammatik-Stationen ohne eigenen Hefteintrag (U1 was/were, U2 can/mustn't) führen zur Buchseite; ein HE kommt nur, wenn er im Heft steht.
+- Grammatik-Stationen ohne eigenen Hefteintrag (U1 was/were) führen zur Buchseite; ein HE kommt nur, wenn er im Heft steht.
+**Etappe 6 (v108): Admin-Modul Inhalte → 🧭 English Journey** (`gemeinsam/admin/module/inhalte-journey.js`):
+
+- **📋 Übersicht** je Unit: Abschnitt, Buchseiten, Hefteintrag (HE-Nr.), Übungen (Buch/eigene), Apps, frei für, Klassenstand, Lückenprüfung
+  (Übung ohne Lösung, keine Buchseiten, HE in Wahl, Thema fehlt, Seiten überschneiden sich, Stationen ohne Abschnitt); „frei bis hier …“ je
+  Gruppe/Klasse über `LWAdmin.laufzettelFreigeben` (in `module/gruppen-laufzettel.js`, vergibt die HE-Nummern); 👀 Vorschau als Kind.
+- **✏️ Bearbeiten** ohne JSON: Abschnitte anlegen/ordnen/ändern (nicht löschen), Schritte anlegen/ordnen/löschen/ändern; Hefteintrag mit
+  `*grün*`/`**fett**` (Knöpfe) und Live-Vorschau (`LernJourneyWeg.papierHTML`); eigene Übung je Typ mit Lösung (Liste oder Mustertext);
+  App-Station (eine je Abschnitt), Zusatz-App (Katalog-Thema), Kann-Sätze. Gespeichert über `LWAdmin.dateien` (beide Dateien, ein Commit);
+  der Worker prüft mit `dateienPruefeJourney` / `dateienPruefeBausteine` in `cloudflare/dateien.js` (Stationen unverändert, Abschnitt- und
+  Baustein-IDs bleiben, IDs eindeutig, HE nur in Pflicht-Abschnitten). Vorher prüft der Editor dieselben harten Regeln.
+- **👥 Klasse:** jedes iPad mit Sicherungskarte meldet einmal (Merker `m`/`f`/`r` am Lernstand `jw:…`): `jw:<ID>` erledigt, `jw:<Abschnitt>:f<Niveau>`
+  fertig, `jw:<Hefteintrag>:r` Rückverweis unter 70 % – über `LernSync.lernwegMelden` (Muster erweitert) in die Gruppenauswertung; der Admin
+  liest `/sync/admin/statistik` (30 Wochen) und zeigt Summen je Abschnitt und „💡 Hier hakt es“ (≥ 3 Rückverweise).
+- **📅 Schuljahr:** neues Schuljahr (config.journey.schuljahr) setzt `bis`, `he`, `niveau` zurück; Inhalte bleiben.
+- **🖨️ Drucken** (`gemeinsam/journey-druck.js`, `LernJourneyDruck`): Lösungsheft je Unit (Station und Buchseiten je Abschnitt, eigene Übungen
+  mit Lösung, Buchaufgaben mit Platz für die Lehrerband-Kopie – die Lösungen der Buchaufgaben stehen bewusst nicht in der App), Papier-Laufzettel,
+  Hefteinträge.
+- `daten/journey6.json` und `daten/journey/bausteine-en6.json` sind damit **admin-gepflegt** (pruefen.py Regel 19).
+
+- **Unit 2 (v107):** eigene kurze Hefteinträge für some/any (Lead-in) und can/mustn't; HE-Nummern fortlaufend ab Unit 1 (HE 4 some/any,
+  5 Fragen im simple past, 6 Plural, 7 can/mustn't, 8 Nach dem Weg fragen). „Telling the way“ ist Pflicht, „A festival“ freiwilliges Extra
+  (`wahlAnzahl: 0` = Wahlabschnitte zählen nicht). **Hefteinträge nur in Pflicht-Abschnitten** (pruefen.py rot), weil das Finale auf jeden
+  freigegebenen Hefteintrag wartet. Die Arbeitsblätter „am Pult holen“ sind in Unit 1 und 2 gestrichen. Lösungen der Buchaufgaben stehen
+  nicht in der App – sie liegen im Lösungsheft aus (Druckansicht im Admin, Etappe 6).
 
 **Etappe 5 (v106): alles in den Stationen, Heft vor dem Finale** – Laufzettel und Stationen sind eins (für Geräte mit Laufzettel-Freigabe):
 
@@ -648,6 +672,11 @@ Niveau (★ alle · ★★ Standard und Profi · ★★★ Profi), Hören macht 
   wählen; dabei bekommen die neu sichtbaren Hefteinträge ihre HE-Nummer, fortlaufend in Weg-Reihenfolge (vergebene bleiben fest), und
   `schuljahr` wird gesetzt. Daneben je Zeile das **Mindestniveau** (`niveau: { wer: 2|3 }`): die Kinder wählen ★/★★/★★★ weiter selbst,
   aber nicht darunter (gleicher Vorrang). Stand v103: die zwei Gruppen mit dem alten Lernweg Unit 1 haben „frei bis Finale Unit 1“, HE 1–3.
+- **Abschnitt-Kette (v109):** innerhalb einer Unit öffnet sich ein Pflicht-Abschnitt erst, wenn die Pflicht-Abschnitte davor fertig sind
+  (Liste und Station zeigen 🔒 „Erst „…“ fertig machen“ mit Sprung dorthin; `LernJourneyWeg.sperre`). Je Gruppe/Klasse im Admin unter
+  Gruppen → 📒 Laufzettel wählbar (`reihenfolge: { wer: 'frei'|'schritt'|'streng' }`, gleicher Vorrang): **Schritt für Schritt** (Standard,
+  ohne Eintrag) = alle Schritte außer Apps und Extras abgehakt, **streng** = auch die Apps, **frei** = keine Kette. Wahl-Abschnitte sind nie
+  gesperrt, mit Admin-Anmeldung keine Sperre.
 - **Übernahme (einmal je iPad, `LernJourneyWeg.uebernehmen`):** beim Öffnen des Journey werden die Haken aus `lernwelt-lernweg` über die
   `alt`-Schlüssel der Schritte übernommen; eine kontrollierte alte Station zählt alle ihre Schritte als erledigt; Niveau je Station → Niveau
   des Abschnitts; „Fit für die Probe?“ (`p`) und „vorher“ (`v`) → Kann-Sätze in derselben Reihenfolge. Danach `_journey` im alten Speicher.
@@ -678,11 +707,20 @@ Niveau (★ alle · ★★ Standard und Profi · ★★★ Profi), Hören macht 
   Lernstand `jw:<ID>` in den Pass (zählt nie für XP, Sterne, „Meine Themen“ oder Dorf). `alt` (an Unit, Abschnitt und Schritt) merkt sich
   Lernweg, alte Stationsnummer und alten Schritt-Schlüssel für die einmalige Übernahme der Häkchen aus `lernwelt-lernweg` (Etappe 3).
 - **config.json → `journey`** (vom Admin gepflegt über Gruppen → 📒 Laufzettel, im Worker geprüft):
-  `{ schuljahr: "2026/27", wege: { journey6: { bis: { <wer>: <Abschnitt-ID> }, he: { <Hefteintrag-ID>: Nr }, niveau: { <wer>: 1–3 }, sperren: { <wer>: true } } } }`.
+  `{ schuljahr: "2026/27", wege: { journey6: { bis: { <wer>: <Abschnitt-ID> }, he: { <Hefteintrag-ID>: Nr }, niveau: { <wer>: 1–3 }, reihenfolge: { <wer>: 'frei'|'schritt'|'streng' }, sperren: { <wer>: true } } } }`.
   `bis` = Freigabe bis einschließlich dieses Abschnitts je Gruppe/Klasse, `he` = HE-Nummern (fortlaufend durchs Schuljahr, bei der Freigabe
   vergeben, nie doppelt), `sperren` = Sperr-Schalter je Gruppe (vorbereitet, noch ohne Wirkung). Ein Schuljahreswechsel setzt nur
   diesen Block neu. In den Heften stehen schon HE 1 `he-u1-simple-past`, HE 2 `he-u1-objektpronomen`, HE 3 `he-u1-linking-words`,
-  HE 4 `he-u2-did-fragen`, HE 5 `he-u2-plural`.
+  HE 4 `he-u2-some-any`, HE 5 `he-u2-did-fragen`, HE 6 `he-u2-plural`, HE 7 `he-u2-can-mustnt`, HE 8 `he-u2-weg`; für Unit 3 vorgesehen
+  HE 9 `he-u3-should`, HE 10 `he-u3-present-progressive`, HE 11 `he-u3-much-many`, HE 12 `he-u3-bild`.
+- **Unit 3 (v109):** neun Abschnitte nach Highlight 6 S. 46–62 (Lead-in, Theme 1, Theme 2 mit HE should/shouldn't, Story, Present
+  progressive, much/many/lots of, Dictionary skills, Ein Bild beschreiben, Finale); eigene Übungen mit Lösung, Kann-Sätze `kann-u3-1…9`.
+  Listenings, Projekt und Unterrichtsteile stehen nicht im Laufzettel. Der Hefteintrag-Auftrag lautet überall „mit Farbe, den Merksatz mit Rot“.
+- **Unit 4 und 5 (v110):** je zehn Abschnitte nach Highlight 6 S. 64–83 und S. 84–100 (Story Unit 5 mit beiden Teams, S. 108–109).
+  HE 13 `he-u4-verabreden` (mit on/in/at), HE 14 `he-u4-comparison`, HE 15 `he-u4-superlative`, HE 16 `he-u4-have-to`, HE 17 `he-u5-will`,
+  HE 18 `he-u5-wortstellung`, HE 19 `he-u5-postkarte`; Unit 5 Theme 2 zeigt HE 9 (should) zum Wiederholen. Kurzvortrag (S. 77) wird
+  vorbereitet, gehalten im Unterricht. Finale Unit 4 = Test and check + Revision 2, Finale Unit 5 = Test and check + eigene Revision
+  (Unit 4 und 5). Listenings, Viewing, Songs, Pronunciation, Your task und More practice stehen nicht im Laufzettel.
 - **Umwandlung Unit 1–2 (Etappe 1, Skript mit den Lernwegen gelöscht):** aus den alten Lernweg-Dateien entstanden Abschnitte und Bausteine;
   die „So arbeitest du“-Regeln und Kontroll-Codes des Papier-Laufzettels entfielen.
 - **pruefen.py (Regel 23):** Bausteine vorhanden und von der richtigen Art, Stationen und Themen vorhanden, Buchverweise im Format,

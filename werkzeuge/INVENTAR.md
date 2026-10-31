@@ -1,6 +1,6 @@
 # Inventar der Lern-Apps und Spiele
 
-Automatisch erzeugt am 30.10.2026 mit `python3 werkzeuge/inventar.py` (Angaben aus dem Code). Nur die Spalten **Entscheidung** und **Notiz** von Hand pflegen – sie bleiben beim Neu-Erzeugen erhalten.
+Automatisch erzeugt am 31.10.2026 mit `python3 werkzeuge/inventar.py` (Angaben aus dem Code). Nur die Spalten **Entscheidung** und **Notiz** von Hand pflegen – sie bleiben beim Neu-Erzeugen erhalten.
 
 Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv**
 
@@ -50,7 +50,7 @@ Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv
 
 | Datei | KB | Skripte | Speicherschlüssel |
 |---|---|---|---|
-| apps/englisch/english-journey.html | 35 | freigabe.js, katalog.js, wiederholung.js, journey-kern.js, navbar.js, journey-lernweg.js (nachgeladen), journey-lernweg.js (nachgeladen), avatar3d.js (nachgeladen), journey-welt.js (nachgeladen), journey-welt.js (nachgeladen) | lernwelt-lernweg, lernwelt-lernweg-zurueck, + über navbar.js |
+| apps/englisch/english-journey.html | 42 | freigabe.js, katalog.js, wiederholung.js, journey-kern.js, navbar.js, journey-lernweg.js (nachgeladen), avatar3d.js (nachgeladen), journey-welt.js (nachgeladen), journey-welt.js (nachgeladen) | lernwelt-lernweg, lernwelt-lernweg-zurueck, + über navbar.js |
 | apps/englisch/journey-anwenden.html | 40 | freigabe.js, ueben.js, navbar.js | + über navbar.js |
 | apps/englisch/knowing-english.html | 9 | katalog.js, freigabe.js, navbar.js | lernwelt-pass, + über navbar.js |
 | apps/englisch/practice_simple_present.html | 1 | – | – |
