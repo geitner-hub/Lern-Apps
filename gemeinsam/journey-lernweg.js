@@ -26,6 +26,10 @@
 //        Werkbank (Übungen) im 3D-Ort: 'offen' | 'fertig' | fehlt. Abschnitte ohne eigene App-Station stehen an `platz` bzw. an der
 //        Station des Abschnitts davor (sonst danach) – „Auch an diesem Platz“.
 //
+//  Abschnitt-Kette (v109): Pflicht-Abschnitte öffnen sich nacheinander innerhalb einer Unit – config.journey…reihenfolge je Gruppe/Klasse
+//  'schritt' (Standard: alles außer Apps abgehakt) | 'streng' (auch Apps) | 'frei'. Gesperrte stehen mit 🔒 im Laufzettel.
+//    LernJourneyWeg.sperre({ J, cfg, z, admin, station }) → { abschnitt, durch } oder null (Karte und Start im Weg)
+//
 //  Etappe 5 (alles in die Stationen): zeige(host, { …, panel: true, schliessen }) zeigt einen Abschnitt als Seitenleiste am 3D-Ort
 //  (✕ statt „‹ Laufzettel“); als Liste ersetzt der Laufzettel die Stationsliste (o.fuss() → HTML unter dem Laufzettel, z. B. die Brücke).
 //
@@ -89,6 +93,13 @@
     return w ? m[w] : 1;
   }
   const niveau = a => a.niveaus ? Math.max(mindest(), (lies(a.id) || {}).nv || 2) : 0;
+  // Reihenfolge (config.journey…reihenfolge je Gruppe/Klasse, Vorrang wie oben): 'frei' | 'schritt' (Standard) | 'streng'
+  function reihenfolge() {
+    const r = O.cfg && O.cfg.reihenfolge && typeof O.cfg.reihenfolge === 'object' ? O.cfg.reihenfolge : {};
+    const wer = (window.LernFreigabe && LernFreigabe.wer && LernFreigabe.wer()) || ['alle'];
+    const w = wer.find(x => ['frei', 'schritt', 'streng'].includes(r[x]));
+    return w ? r[w] : 'schritt';
+  }
   const passt = (s, nv) => !nv || !Array.isArray(s.niveau) || s.niveau.includes(nv);
   const schritte = a => a.schritte.filter(s => passt(s, niveau(a)));
   function themaGeschafft(s) {
@@ -98,6 +109,22 @@
   function erledigt(s) {
     if (s.art === 'app') return s.station ? !!(O.z[s.station] && O.z[s.station].zustand === 'gemeistert') : themaGeschafft(s);
     return !!(lies(schluessel(s)) || {}).e;
+  }
+  // ── Abschnitt-Kette: ein Pflicht-Abschnitt öffnet sich, wenn die Pflicht-Abschnitte davor (in derselben Unit) fertig sind –
+  //  „Schritt für Schritt“: alles außer Apps abgehakt (Apps laufen nebenher), „streng“: auch die Apps, „frei“: keine Kette.
+  //  Wahl/Extra hält nicht auf und ist nie gesperrt. Mit Admin-Anmeldung offen. → der Abschnitt, der aufhält, oder null
+  function kettenFertig(x) {
+    const streng = reihenfolge() === 'streng';
+    return schritte(x).filter(s => s.art !== 'extra' && (streng || s.art !== 'app')).every(erledigt);
+  }
+  function gesperrtDurch(a) {
+    if (!O || O.admin || a.wahl || reihenfolge() === 'frei') return null;
+    const u = (O.J.units || []).find(x => (x.abschnitte || []).includes(a)); if (!u) return null;
+    const vorher = O.unit; O.unit = u;
+    try {
+      for (const x of u.abschnitte) { if (x === a) return null; if (!x.wahl && sichtbar(x) && !kettenFertig(x)) return x; }
+      return null;
+    } finally { O.unit = vorher; }
   }
   function fortschritt(a) {
     const l = schritte(a).filter(s => s.art !== 'extra');
@@ -189,7 +216,7 @@
       const b = O.bausteine[s.baustein] || {};
       kopf = `📒 ${heName(s.baustein)} · ${esc(b.titel || '')}`;
       if (!b.zeilen || !b.zeilen.length) innen = `<p>Dieser Hefteintrag steht schon in deinem Heft. Lies ihn dir noch einmal genau durch.</p>`;
-      else innen = (s.wiederholen ? '<p>Lies deinen Hefteintrag noch einmal genau durch.</p>' : '<p>Schreibe den Hefteintrag genau so in dein Heft: Überschrift grün, Schlüsselwörter grün, Merksatz rot.</p>')
+      else innen = (s.wiederholen ? '<p>Lies deinen Hefteintrag noch einmal genau durch.</p>' : '<p>Schreibe den Hefteintrag genau so in dein Heft: mit Farbe, den Merksatz mit Rot.</p>')
         + papier(b) + `<button type="button" class="jw-neben" data-jw-gross="${esc(s.baustein)}">🖥️ Groß zeigen</button>`;
       fuss = haken(s, s.wiederholen || !b.zeilen || !b.zeilen.length ? 'Gelesen' : 'Steht in meinem Heft');
     } else if (s.art === 'uebung') {
@@ -277,10 +304,10 @@
 
   // ── Ansichten ────────────────────────────────────────
   function zeileHTML(a) {
-    const f = fortschritt(a), l = schritte(a).filter(s => s.art !== 'extra');
-    return `<button type="button" class="jw-zeile${f.fertig ? ' fertig' : f.n ? ' arbeit' : ''}" data-jw-abschnitt="${esc(a.id)}">
-      <span class="jw-ico">${f.fertig ? '✅' : esc(a.ico || '📍')}</span>
-      <span class="jw-txt"><b>${esc(a.titel)}</b><small>${esc([seitenA(a) && '📖 ' + seitenA(a), a.kurz].filter(Boolean).join(' · '))}</small>
+    const f = fortschritt(a), l = schritte(a).filter(s => s.art !== 'extra'), zu = gesperrtDurch(a);
+    return `<button type="button" class="jw-zeile${f.fertig ? ' fertig' : zu ? ' zu' : f.n ? ' arbeit' : ''}" data-jw-abschnitt="${esc(a.id)}">
+      <span class="jw-ico">${f.fertig ? '✅' : zu ? '🔒' : esc(a.ico || '📍')}</span>
+      <span class="jw-txt"><b>${esc(a.titel)}</b><small>${zu ? `Erst „${esc(zu.titel)}“ fertig machen` : esc([seitenA(a) && '📖 ' + seitenA(a), a.kurz].filter(Boolean).join(' · '))}</small>
         <span class="jw-punkte" aria-hidden="true">${l.map(s => `<i class="${erledigt(s) ? 'an' : ''}" title="${esc(s.art)}">${SYM[s.art]}</i>`).join('')}</span></span>
       <span class="jw-zahl">${f.n}/${f.von}</span></button>`;
   }
@@ -303,7 +330,15 @@
       ${schluss.length ? `<h3 class="jw-gruppe">🎯 Zum Schluss</h3>${schluss.map(zeileHTML).join('')}` : ''}
       ${O.fuss ? O.fuss() : ''}`;
   }
+  function gesperrtHTML(a, zu) {
+    return `${O.panel ? '<button type="button" class="jw-zurueck" data-jw-zu>✕ Schließen</button>' : '<button type="button" class="jw-zurueck" data-jw-zettel>‹ Laufzettel</button>'}
+      <div class="jw-kopf"><h2>🔒 ${esc(a.titel)}</h2><p class="jw-klein">${esc(seitenA(a) ? '📖 ' + seitenA(a) : '')}</p></div>
+      <div class="jw-hinweis">Dieser Abschnitt öffnet sich, wenn du „${esc(zu.titel)}“ fertig hast: ${reihenfolge() === 'streng' ? 'Hefteintrag, Übungen und die App' : 'Hefteintrag und Übungen'} abhaken.
+        <div class="jw-chips"><button type="button" class="jw-chip" data-jw-abschnitt="${esc(zu.id)}">→ ${esc(zu.ico || '')} ${esc(zu.titel)}</button></div></div>`;
+  }
   function abschnittHTML(a) {
+    const zu = gesperrtDurch(a);
+    if (zu) return gesperrtHTML(a, zu);
     const u = O.unit, f = fortschritt(a), nv = niveau(a);
     const platz = platzVon(u, a), auch = O.panel && platz ? (u.abschnitte || []).filter(x => x !== a && sichtbar(x) && platzVon(u, x) === platz) : [];
     return `${O.panel ? '<button type="button" class="jw-zurueck" data-jw-zu>✕ Schließen</button>' : '<button type="button" class="jw-zurueck" data-jw-zettel>‹ Laufzettel</button>'}
@@ -389,6 +424,7 @@
 .jw-knoepfe { display: flex; gap: .5rem; margin-top: .6rem; flex-wrap: wrap; }
 .jw-gruppe { font-family: 'Fredoka One', 'Nunito', sans-serif; font-weight: 400; color: var(--accent2); font-size: 1.15rem; margin: 1.2rem 0 .5rem; }
 .jw-zeile { width: 100%; display: flex; align-items: center; gap: .8rem; text-align: left; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: .75rem .9rem; margin-bottom: .55rem; }
+.jw-zeile.zu { opacity: .6; }
 .jw-zeile.arbeit { border-color: rgba(129,140,248,.6); } .jw-zeile.fertig { border-color: rgba(74,222,128,.55); background: linear-gradient(135deg, rgba(74,222,128,.1), var(--surface)); }
 .jw-ico { font-size: 1.8rem; width: 2.4rem; text-align: center; flex-shrink: 0; }
 .jw-txt { flex: 1; min-width: 0; } .jw-txt b { display: block; font-size: 1.05rem; } .jw-txt small { color: var(--text2); font-weight: 700; }
@@ -553,7 +589,21 @@ ul.jw-hilfe { list-style: none; display: grid; gap: .3rem; margin: .4rem 0 .7rem
   }
   const buchKurz = s => s && s.buch ? `📖 ${seiten(s.buch)}${s.buch.uebung ? ' Ü ' + esc(s.buch.uebung) : ''}` : '';   // fertiges HTML (escapt)
 
+  /** Ist der Abschnitt einer Station gerade gesperrt (Abschnitt-Kette)? → { abschnitt, durch } oder null */
+  function sperre(o) {
+    const vorher = O; O = Object.assign({ admin: false, z: {} }, o);
+    try {
+      for (const u of O.J.units || []) for (const a of u.abschnitte || []) if (a.schritte.some(s => s.station === o.station)) {
+        if (!sichtbar(a)) return null;
+        const d = gesperrtDurch(a);
+        return d ? { abschnitt: a, durch: d } : null;
+      }
+      return null;
+    } finally { O = vorher; }
+  }
+
   window.LernJourneyWeg = {
+    sperre,
     uebernehmen, stand, bezug, heZeigen, buchKurz, seitenA, plaetze,
     /** Hefteintrag im Heft-Schema als HTML (Vorschau im Admin-Editor); lädt die Stile mit */
     papierHTML(b, nr) { stile(); return papier(b, false, nr || null); },

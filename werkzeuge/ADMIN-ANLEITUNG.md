@@ -50,11 +50,14 @@ Hefteinträge abgehakt sind**.
   speichern. Hefteinträge nur in Pflicht-Abschnitten (nicht in Wahl/Extra). Abschnitte lassen sich nicht löschen.
 - **👥 Klasse:** Gruppe wählen → wie viele iPads je Abschnitt Hefteintrag, Übungen und Abschnitt geschafft haben (mit Niveau) und
   „💡 Hier hakt es“ (Hefteintrag, bei dem viele Kinder unter 70 % zurückgeschickt wurden). Nur Summen, nur iPads mit Sicherungskarte.
-- **📅 Schuljahr:** setzt Freigaben, HE-Nummern und Mindestniveau zurück; Inhalte bleiben.
+- **📅 Schuljahr:** setzt Freigaben, HE-Nummern, Mindestniveau und Reihenfolge zurück; Inhalte bleiben.
 - **🖨️ Drucken:** Lösungsheft (liegt im Klassenzimmer aus: je Abschnitt Station und Buchseiten, eigene Übungen mit Lösung,
   Buchaufgaben mit Platz für die Kopie aus dem Lehrerband), Papier-Laufzettel, Hefteinträge.
 - **Gruppen → 📒 Laufzettel:** dieselbe Freigabe als Liste je Gruppe/Klasse, dazu das **Mindestniveau** (die Kinder wählen ★/★★/★★★
   selbst, aber nicht darunter).
+  Und die **Reihenfolge**: *Schritt für Schritt* (Standard) – der nächste Pflicht-Abschnitt öffnet sich erst, wenn im vorigen alles außer
+  den Apps abgehakt ist; *streng* – auch die Apps müssen geschafft sein; *frei* – die Kinder springen im freigegebenen Bereich hin und her.
+  Wahl-Abschnitte sind nie gesperrt.
 
 ## Unterrichtsmodus (🎓)
 

@@ -2157,6 +2157,722 @@
       "u3-anwenden"
      ]
     }
+   ],
+   "abschnitte": [
+    {
+     "id": "u3-a-lead-in",
+     "titel": "Lead-in: Sports and exercises",
+     "kurz": "Einstieg · Sportarten",
+     "ico": "🏏",
+     "buch": {
+      "von": 46,
+      "bis": 47
+     },
+     "niveaus": true,
+     "schritte": [
+      {
+       "id": "u3-a-lead-in-buch",
+       "art": "uebung",
+       "buch": {
+        "seite": 46,
+        "uebung": "1a"
+       },
+       "text": "Welches Foto passt zu welchem Satz? Schreibe die ganzen Sätze mit dem Buchstaben ins Heft."
+      },
+      {
+       "id": "u3-a-lead-in-buch2",
+       "art": "uebung",
+       "buch": {
+        "seite": 47,
+        "uebung": "2b"
+       },
+       "text": "true or false? Schreibe die ganzen Sätze mit ✓ oder ✗ ins Heft."
+      },
+      {
+       "id": "u3-a-lead-in-ue",
+       "art": "uebung",
+       "baustein": "ue-u3-lead-in-a"
+      },
+      {
+       "id": "u3-a-lead-in-vok",
+       "art": "vokabeln",
+       "text": "Schreibe diese Wörter mit der deutschen Bedeutung in dein Vokabelheft (Buch hinten, Vocabulary Unit 3): these kids, street surfing, cricket, hand, up, arm."
+      }
+     ]
+    },
+    {
+     "id": "u3-a-theme1",
+     "titel": "Theme 1: Good for you?",
+     "kurz": "Wörter · Essen",
+     "ico": "🥕",
+     "buch": {
+      "von": 48,
+      "bis": 49
+     },
+     "niveaus": true,
+     "schritte": [
+      {
+       "id": "u3-a-theme1-lesen",
+       "art": "lesen",
+       "buch": {
+        "seite": 48
+       },
+       "text": "Lies den Dialog „In the school canteen“."
+      },
+      {
+       "id": "u3-a-theme1-buch",
+       "art": "uebung",
+       "buch": {
+        "seite": 48,
+        "uebung": "1b"
+       },
+       "text": "Wer isst was? Schreibe die Namen mit dem richtigen Buchstaben ins Heft."
+      },
+      {
+       "id": "u3-a-theme1-buch2",
+       "art": "uebung",
+       "buch": {
+        "seite": 48,
+        "uebung": "1d"
+       },
+       "text": "Healthy or unhealthy? Lege die Tabelle im Heft an und sortiere das Essen der Freunde.",
+       "niveau": [
+        2,
+        3
+       ]
+      },
+      {
+       "id": "u3-a-theme1-buch3",
+       "art": "uebung",
+       "buch": {
+        "seite": 49,
+        "uebung": "2"
+       },
+       "text": "Zeichne das Wordweb „My food“ ins Heft und schreibe die Wörter hinein. Profi: Ergänze eigene Wörter."
+      },
+      {
+       "id": "u3-a-theme1-ue",
+       "art": "uebung",
+       "baustein": "ue-u3-theme1-a"
+      },
+      {
+       "id": "u3-a-theme1-ue2",
+       "art": "uebung",
+       "baustein": "ue-u3-theme1-b"
+      },
+      {
+       "id": "u3-a-theme1-ue3",
+       "art": "uebung",
+       "baustein": "ue-u3-theme1-c",
+       "niveau": [
+        3
+       ]
+      },
+      {
+       "id": "u3-a-theme1-vok",
+       "art": "vokabeln",
+       "text": "Schreibe diese Wörter mit der deutschen Bedeutung in dein Vokabelheft (Buch hinten, Vocabulary Unit 3): pasty, meat, yum!, yogurt, carrot, healthy, junk food, unhealthy, uninteresting, unpopular, unreal, unsure, uncool, unfriendly, unhappy."
+      },
+      {
+       "id": "u3-a-theme1-u3-theme1",
+       "art": "app",
+       "station": "u3-theme1"
+      },
+      {
+       "id": "u3-a-theme1-u3-gegensaetze",
+       "art": "app",
+       "station": "u3-gegensaetze"
+      }
+     ]
+    },
+    {
+     "id": "u3-a-theme2",
+     "titel": "Theme 2: What’s wrong with Ellie?",
+     "kurz": "Wörter · Grammatik should",
+     "ico": "🤒",
+     "buch": {
+      "von": 50,
+      "bis": 51
+     },
+     "niveaus": true,
+     "schritte": [
+      {
+       "id": "u3-a-theme2-he",
+       "art": "hefteintrag",
+       "baustein": "he-u3-should"
+      },
+      {
+       "id": "u3-a-theme2-lesen",
+       "art": "lesen",
+       "buch": {
+        "seite": 50
+       },
+       "text": "Lies den Dialog „Is Ellie ill?“ und Ellies Nachricht."
+      },
+      {
+       "id": "u3-a-theme2-buch",
+       "art": "uebung",
+       "buch": {
+        "seite": 50,
+        "uebung": "1b"
+       },
+       "text": "True or false? Schreibe die ganzen Sätze mit ✓ oder ✗ ins Heft."
+      },
+      {
+       "id": "u3-a-theme2-buch2",
+       "art": "uebung",
+       "buch": {
+        "seite": 50,
+        "uebung": "1c"
+       },
+       "text": "Schreibe zu jedem Bild den ganzen Satz ins Heft."
+      },
+      {
+       "id": "u3-a-theme2-buch3",
+       "art": "uebung",
+       "buch": {
+        "seite": 51,
+        "uebung": "3c"
+       },
+       "text": "Lege die Tabelle „Ellie, you should … / Ellie, you shouldn’t …“ im Heft an und ergänze sie mit den Ideen aus dem Kasten.",
+       "niveau": [
+        2,
+        3
+       ]
+      },
+      {
+       "id": "u3-a-theme2-ue",
+       "art": "uebung",
+       "baustein": "ue-u3-theme2-a"
+      },
+      {
+       "id": "u3-a-theme2-ue2",
+       "art": "uebung",
+       "baustein": "ue-u3-theme2-b"
+      },
+      {
+       "id": "u3-a-theme2-ue3",
+       "art": "uebung",
+       "baustein": "ue-u3-theme2-c",
+       "niveau": [
+        3
+       ]
+      },
+      {
+       "id": "u3-a-theme2-partner",
+       "art": "partner",
+       "buch": {
+        "seite": 51,
+        "uebung": "4"
+       },
+       "text": "Mit einem Partner: Spielt das Rollenspiel „How are you feeling today?“ – dann tauscht die Rollen. Flüstern!"
+      },
+      {
+       "id": "u3-a-theme2-vok",
+       "art": "vokabeln",
+       "text": "Schreibe diese Wörter mit der deutschen Bedeutung in dein Vokabelheft (Buch hinten, Vocabulary Unit 3): What’s wrong with …?, ill, (to) skive, maybe, she isn’t feeling well, (to) find out, (to) have a headache, doctor, I have a sore throat., I have a temperature., you should / you shouldn’t."
+      },
+      {
+       "id": "u3-a-theme2-u3-theme2",
+       "art": "app",
+       "station": "u3-theme2"
+      },
+      {
+       "id": "u3-a-theme2-u3-should",
+       "art": "app",
+       "station": "u3-should"
+      }
+     ]
+    },
+    {
+     "id": "u3-a-story",
+     "titel": "Story: I don’t feel like it!",
+     "kurz": "Story · Lesen",
+     "ico": "💬",
+     "buch": {
+      "von": 52,
+      "bis": 53
+     },
+     "niveaus": true,
+     "schritte": [
+      {
+       "id": "u3-a-story-lesen",
+       "art": "lesen",
+       "buch": {
+        "seite": 52,
+        "bis": 53
+       },
+       "text": "Lies den Comic „I don’t feel like it!“."
+      },
+      {
+       "id": "u3-a-story-buch",
+       "art": "uebung",
+       "buch": {
+        "seite": 53,
+        "uebung": "1"
+       },
+       "text": "Who …? Schreibe die Fragen mit der richtigen Antwort ins Heft."
+      },
+      {
+       "id": "u3-a-story-buch2",
+       "art": "uebung",
+       "buch": {
+        "seite": 53,
+        "uebung": "3"
+       },
+       "text": "Tell the story: Schreibe die richtigen Sätze ganz ins Heft."
+      },
+      {
+       "id": "u3-a-story-buch3",
+       "art": "uebung",
+       "buch": {
+        "seite": 53,
+        "uebung": "2"
+       },
+       "text": "What’s in the pictures? Schreibe die ganzen Sätze ins Heft.",
+       "niveau": [
+        2,
+        3
+       ]
+      },
+      {
+       "id": "u3-a-story-ue",
+       "art": "uebung",
+       "baustein": "ue-u3-story-a"
+      },
+      {
+       "id": "u3-a-story-ue2",
+       "art": "uebung",
+       "baustein": "ue-u3-story-b"
+      },
+      {
+       "id": "u3-a-story-vok",
+       "art": "vokabeln",
+       "text": "Schreibe diese Wörter mit der deutschen Bedeutung in dein Vokabelheft (Buch hinten, Vocabulary Unit 3): I don’t feel like it., (to) ring, disappointed (with sb./sth.), kitten, (to) miss/like/love sb. so much, chat; (to) chat, (to) have to do sth., of course, Wait for this., (to) change, lifestyle."
+      },
+      {
+       "id": "u3-a-story-u3-story",
+       "art": "app",
+       "station": "u3-story"
+      }
+     ]
+    },
+    {
+     "id": "u3-a-present-progressive",
+     "titel": "Focus on language: What are you doing?",
+     "kurz": "Grammatik · present progressive",
+     "ico": "📸",
+     "buch": {
+      "von": 54,
+      "bis": 55
+     },
+     "niveaus": true,
+     "schritte": [
+      {
+       "id": "u3-a-present-progressive-he",
+       "art": "hefteintrag",
+       "baustein": "he-u3-present-progressive"
+      },
+      {
+       "id": "u3-a-present-progressive-lesen",
+       "art": "lesen",
+       "buch": {
+        "seite": 54
+       },
+       "text": "Lies den Dialog „Photos on Adam’s phone“."
+      },
+      {
+       "id": "u3-a-present-progressive-buch",
+       "art": "uebung",
+       "buch": {
+        "seite": 54,
+        "uebung": "1a"
+       },
+       "text": "Bring die Bilder in die richtige Reihenfolge und schreibe die Buchstaben ins Heft."
+      },
+      {
+       "id": "u3-a-present-progressive-buch2",
+       "art": "uebung",
+       "buch": {
+        "seite": 54,
+        "uebung": "2a"
+       },
+       "text": "Schreibe die Tabellen mit den Fragen und Antworten ins Heft."
+      },
+      {
+       "id": "u3-a-present-progressive-buch3",
+       "art": "uebung",
+       "buch": {
+        "seite": 55,
+        "uebung": "3"
+       },
+       "text": "Schreibe die Verben mit -ing ins Heft."
+      },
+      {
+       "id": "u3-a-present-progressive-buch4",
+       "art": "uebung",
+       "buch": {
+        "seite": 55,
+        "uebung": "4a"
+       },
+       "text": "Schreibe die ganzen Sätze ins Heft."
+      },
+      {
+       "id": "u3-a-present-progressive-buch5",
+       "art": "uebung",
+       "buch": {
+        "seite": 55,
+        "uebung": "4b"
+       },
+       "text": "Schreibe die ganzen Sätze ins Heft.",
+       "niveau": [
+        2,
+        3
+       ]
+      },
+      {
+       "id": "u3-a-present-progressive-ue",
+       "art": "uebung",
+       "baustein": "ue-u3-pp-a"
+      },
+      {
+       "id": "u3-a-present-progressive-ue2",
+       "art": "uebung",
+       "baustein": "ue-u3-pp-b"
+      },
+      {
+       "id": "u3-a-present-progressive-ue3",
+       "art": "uebung",
+       "baustein": "ue-u3-pp-c",
+       "niveau": [
+        2,
+        3
+       ]
+      },
+      {
+       "id": "u3-a-present-progressive-buch6",
+       "art": "uebung",
+       "buch": {
+        "seite": 55,
+        "uebung": "6b"
+       },
+       "text": "AND YOU? Was macht deine Familie gerade? Schreibe so viele Sätze wie möglich ins Heft.",
+       "niveau": [
+        3
+       ]
+      },
+      {
+       "id": "u3-a-present-progressive-vok",
+       "art": "vokabeln",
+       "text": "Schreibe diese Wörter mit der deutschen Bedeutung in dein Vokabelheft (Buch hinten, Vocabulary Unit 3): I’m glad., somebody / someone, everybody / everyone, group, special."
+      },
+      {
+       "id": "u3-a-present-progressive-u3-present-progressive",
+       "art": "app",
+       "station": "u3-present-progressive"
+      }
+     ]
+    },
+    {
+     "id": "u3-a-much-many",
+     "titel": "Focus on language: should, much and many",
+     "kurz": "Grammatik · should · much / many",
+     "ico": "🛒",
+     "buch": {
+      "von": 56,
+      "bis": 56
+     },
+     "niveaus": true,
+     "schritte": [
+      {
+       "id": "u3-a-much-many-he",
+       "art": "hefteintrag",
+       "baustein": "he-u3-much-many"
+      },
+      {
+       "id": "u3-a-much-many-buch",
+       "art": "uebung",
+       "buch": {
+        "seite": 56,
+        "uebung": "7a"
+       },
+       "text": "Schreibe die Ratschläge mit should oder shouldn’t ganz ins Heft."
+      },
+      {
+       "id": "u3-a-much-many-buch2",
+       "art": "uebung",
+       "buch": {
+        "seite": 56,
+        "uebung": "8"
+       },
+       "text": "Lies den Dialog. Schreibe die Sätze mit much oder many ganz ins Heft."
+      },
+      {
+       "id": "u3-a-much-many-ue",
+       "art": "uebung",
+       "baustein": "ue-u3-mm-a"
+      },
+      {
+       "id": "u3-a-much-many-ue2",
+       "art": "uebung",
+       "baustein": "ue-u3-mm-b",
+       "niveau": [
+        2,
+        3
+       ]
+      },
+      {
+       "id": "u3-a-much-many-buch3",
+       "art": "uebung",
+       "buch": {
+        "seite": 56,
+        "uebung": "9a"
+       },
+       "text": "Schreibe fünf Fragen mit How much oder How many ins Heft.",
+       "niveau": [
+        3
+       ]
+      },
+      {
+       "id": "u3-a-much-many-vok",
+       "art": "vokabeln",
+       "text": "Schreibe diese Wörter mit der deutschen Bedeutung in dein Vokabelheft (Buch hinten, Vocabulary Unit 3): hour, loud, shopping list, sugary, health, butter, pepper, activity, spoon."
+      },
+      {
+       "id": "u3-a-much-many-u3-much-many",
+       "art": "app",
+       "station": "u3-much-many"
+      }
+     ]
+    },
+    {
+     "id": "u3-a-dictionary",
+     "titel": "Skills: Using a dictionary",
+     "kurz": "Wörterbuch",
+     "ico": "📕",
+     "buch": {
+      "von": 58,
+      "bis": 58
+     },
+     "niveaus": true,
+     "schritte": [
+      {
+       "id": "u3-a-dictionary-buch",
+       "art": "uebung",
+       "buch": {
+        "seite": 58,
+        "uebung": "1b"
+       },
+       "text": "Schreibe die blauen Wörter mit der richtigen deutschen Bedeutung ins Heft."
+      },
+      {
+       "id": "u3-a-dictionary-buch2",
+       "art": "uebung",
+       "buch": {
+        "seite": 58,
+        "uebung": "2"
+       },
+       "text": "Schreibe die Wörter mit der richtigen deutschen Bedeutung ins Heft."
+      },
+      {
+       "id": "u3-a-dictionary-buch3",
+       "art": "uebung",
+       "buch": {
+        "seite": 58,
+        "uebung": "3"
+       },
+       "text": "Who is it? Schreibe den Namen und einen ganzen Satz dazu ins Heft.",
+       "niveau": [
+        2,
+        3
+       ]
+      },
+      {
+       "id": "u3-a-dictionary-ue",
+       "art": "uebung",
+       "baustein": "ue-u3-dict-a"
+      },
+      {
+       "id": "u3-a-dictionary-vok",
+       "art": "vokabeln",
+       "text": "Schreibe diese Wörter mit der deutschen Bedeutung in dein Vokabelheft (Buch hinten, Vocabulary Unit 3): tall, hair, glasses (pl), sporty, ginger, spot, kind, kind of."
+      },
+      {
+       "id": "u3-a-dictionary-u3-skills",
+       "art": "app",
+       "station": "u3-skills"
+      }
+     ]
+    },
+    {
+     "id": "u3-a-bild",
+     "titel": "Skills: Describing a picture",
+     "kurz": "Schreiben · Bild beschreiben",
+     "ico": "🖼️",
+     "buch": {
+      "von": 59,
+      "bis": 59
+     },
+     "niveaus": true,
+     "schritte": [
+      {
+       "id": "u3-a-bild-he",
+       "art": "hefteintrag",
+       "baustein": "he-u3-bild"
+      },
+      {
+       "id": "u3-a-bild-buch",
+       "art": "uebung",
+       "buch": {
+        "seite": 59,
+        "uebung": "1a"
+       },
+       "text": "Verbinde die Satzhälften und schreibe die ganzen Sätze ins Heft."
+      },
+      {
+       "id": "u3-a-bild-buch2",
+       "art": "uebung",
+       "buch": {
+        "seite": 59,
+        "uebung": "1c"
+       },
+       "text": "What are the people doing? Bilde Sätze mit der Tabelle und schreibe sie ins Heft.",
+       "niveau": [
+        2,
+        3
+       ]
+      },
+      {
+       "id": "u3-a-bild-ue",
+       "art": "uebung",
+       "baustein": "ue-u3-bild-a"
+      },
+      {
+       "id": "u3-a-bild-buch3",
+       "art": "uebung",
+       "buch": {
+        "seite": 59,
+        "uebung": "1d"
+       },
+       "text": "Schreibe so viele Sätze über das Bild wie möglich ins Heft.",
+       "niveau": [
+        3
+       ]
+      },
+      {
+       "id": "u3-a-bild-ue2",
+       "art": "uebung",
+       "baustein": "ue-u3-bild-b",
+       "niveau": [
+        3
+       ]
+      },
+      {
+       "id": "u3-a-bild-vok",
+       "art": "vokabeln",
+       "text": "Schreibe diese Wörter mit der deutschen Bedeutung in dein Vokabelheft (Buch hinten, Vocabulary Unit 3): (to) describe, between."
+      },
+      {
+       "id": "u3-a-bild-u3-praepositionen",
+       "art": "app",
+       "station": "u3-praepositionen"
+      },
+      {
+       "id": "u3-a-bild-u3-anwenden",
+       "art": "app",
+       "station": "u3-anwenden"
+      }
+     ]
+    },
+    {
+     "id": "u3-a-finale",
+     "titel": "Finale: Test and check",
+     "kurz": "Wiederholung vor der Probe",
+     "ico": "🎯",
+     "buch": {
+      "von": 62,
+      "bis": 62
+     },
+     "niveaus": true,
+     "schluss": true,
+     "schritte": [
+      {
+       "id": "u3-a-finale-buch",
+       "art": "uebung",
+       "buch": {
+        "seite": 62,
+        "uebung": "1, 2 und 4"
+       },
+       "text": "Test and check: Löse die Aufgaben im Heft. Kontrolliere mit den Lösungen auf S. 218 und verbessere mit Grün."
+      },
+      {
+       "id": "u3-a-finale-buch2",
+       "art": "uebung",
+       "buch": {
+        "seite": 62,
+        "uebung": "5"
+       },
+       "text": "Writing: Beschreibe das Bild mit so vielen Sätzen wie möglich. Denk an deinen Hefteintrag „Ein Bild beschreiben“.",
+       "niveau": [
+        2,
+        3
+       ]
+      },
+      {
+       "id": "u3-a-finale-vok",
+       "art": "vokabeln",
+       "text": "Schreibe diese Wörter mit der deutschen Bedeutung in dein Vokabelheft (Buch hinten, Vocabulary Unit 3): gymnastics, aerobics, difficult, judo, diving, climbing, scary, skiing."
+      },
+      {
+       "id": "u3-a-finale-vok2",
+       "art": "vokabeln",
+       "text": "Kontrolliere dein Vokabelheft: Stehen alle Wörter aus Unit 3 drin? Verbessere mit Grün."
+      },
+      {
+       "id": "u3-a-finale-u3-finale",
+       "art": "app",
+       "station": "u3-finale"
+      }
+     ]
+    }
+   ],
+   "kann": [
+    {
+     "baustein": "kann-u3-1",
+     "abschnitt": "u3-a-lead-in"
+    },
+    {
+     "baustein": "kann-u3-2",
+     "abschnitt": "u3-a-theme1"
+    },
+    {
+     "baustein": "kann-u3-3",
+     "abschnitt": "u3-a-theme2"
+    },
+    {
+     "baustein": "kann-u3-4",
+     "abschnitt": "u3-a-story"
+    },
+    {
+     "baustein": "kann-u3-5",
+     "abschnitt": "u3-a-present-progressive"
+    },
+    {
+     "baustein": "kann-u3-6",
+     "abschnitt": "u3-a-much-many"
+    },
+    {
+     "baustein": "kann-u3-7",
+     "abschnitt": "u3-a-dictionary"
+    },
+    {
+     "baustein": "kann-u3-8",
+     "abschnitt": "u3-a-bild"
+    },
+    {
+     "baustein": "kann-u3-9",
+     "abschnitt": "u3-a-finale"
+    }
    ]
   },
   {

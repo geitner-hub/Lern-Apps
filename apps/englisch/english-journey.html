@@ -26,6 +26,8 @@
      - „☰ Liste“ ist der Laufzettel (Abschnitte mit ihren Stationen); ohne Freigabe die bisherige Stationsliste
      - Heft vor dem Finale: das Finale (und damit die Brücke) öffnet sich erst, wenn alle freigegebenen Hefteinträge der Unit im Heft
        stehen (journey-kern.js, grund 'heft')
+   Abschnitt-Kette (v109): Abschnitte öffnen sich nacheinander (config.journey…reihenfolge, Standard „Schritt für Schritt“) –
+   eine offene App-Station in einem noch gesperrten Abschnitt startet nicht, die Karte zeigt, was davor fertig sein muss.
    Rücksprung aus einer App: #…&w=<Abschnitt> (leer = Laufzettel-Liste). Beim ersten Öffnen übernimmt die Seite einmal die Haken
    aus dem alten Lernweg (lernwelt-lernweg).
    Links: english-journey.html#u=u2   Unit vorwählen · #u=u2&w=   Laufzettel öffnen
@@ -271,7 +273,11 @@ function zeigeKarte(id) {
   const e = window.LernPass && LernPass.lernstand && LernPass.lernstand[st.start || st.thema];
   const gute = e && Array.isArray(e.p) ? e.p.filter(v => v >= sp.schwelle).length : 0;
   let text = '', knoepfe = '';
-  if (z.zustand === 'offen' || z.zustand === 'gemeistert') {
+  const kz = z.zustand === 'offen' ? kette(id) : null;
+  if (kz) {                                                   // Abschnitt-Kette: erst den Abschnitt davor fertig machen
+    text = `Diese Station gehört zu „${kz.abschnitt.titel}“. Mach erst „${kz.durch.titel}“ fertig – Hefteintrag und Übungen abhaken.`;
+    knoepfe = `<button type="button" class="neben" data-weg-abschnitt="${esc(kz.durch.id)}">📒 ${esc(kz.durch.titel)}</button>`;
+  } else if (z.zustand === 'offen' || z.zustand === 'gemeistert') {
     text = z.nebel ? 'Hier liegt Nebel: Zeit für eine Wiederholung! Eine gute Runde lässt die Station wieder glänzen.'
       : z.zustand === 'gemeistert' ? 'Gemeistert! Du kannst jederzeit wieder üben – das hält die Wörter frisch.'
       : (st.art === 'woerter' ? 'Übe die Wörter mit Quiz, Fill in oder Scramble. ' : '') + `Gemeistert nach ${sp.runden} Runden mit mindestens ${sp.schwelle} %.` + (s.best ? ` Dein Bestwert: ${s.best} %.` : '');
@@ -312,8 +318,12 @@ function bezugHTML(id) {
 }
 const schliesseKarte = () => { $('karte').hidden = true; A.karte = null; };
 
+// Abschnitt-Kette (Laufzettel): gesperrter Abschnitt der Station → { abschnitt, durch } oder null
+const kette = id => (window.LernJourneyWeg && LernJourneyWeg.sperre && wegErlaubt() ? LernJourneyWeg.sperre({ J: A.J, cfg: wegCfg(), z: A.z, admin: A.admin, station: id }) : null);
 function starte(id, weg) {
   const x = A.alle[id]; if (!x || !hatApp(x.st)) return;
+  const sp = A.z[id].zustand === 'offen' ? kette(id) : null;
+  if (sp) return oeffneAbschnitt(sp.durch.id);
   const zurueck = location.pathname + location.search + '#u=' + encodeURIComponent(x.unit.id) + '&s=' + encodeURIComponent(id) + '&m=' + (A.z[id].zustand === 'gemeistert' ? 1 : 0) + (A.z[id].nebel ? '&n=1' : '')
     + (weg !== undefined ? '&w=' + encodeURIComponent(weg || '') : '');
   try { sessionStorage.setItem(ZURUECK_KEY, new URL(zurueck, location.href).href); } catch (e) {}

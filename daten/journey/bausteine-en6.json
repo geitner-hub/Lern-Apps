@@ -800,7 +800,7 @@
      ]
     },
     {
-     "t": "Mia comes from Spain.",
+     "t": "Mia’s mum died last year.",
      "o": [
       "right",
       "wrong"
@@ -834,6 +834,14 @@
       "wrong"
      ]
     }
+   ],
+   "loesung": [
+    "Mia is new at Eggy. – right",
+    "Mia’s mum died last year. – right",
+    "Mia feels lonely at the new school. – right",
+    "Ellie is happy all the time. – wrong",
+    "Mia misses her home. – right",
+    "At the end Ellie and Mia are friends. – right"
    ]
   },
   {
@@ -2508,6 +2516,1090 @@
    "art": "kann",
    "teil": "Hören",
    "text": "kurze Hörtexte verstehen."
+  },
+  {
+   "id": "ue-u3-lead-in-a",
+   "art": "uebung",
+   "typ": "luecken",
+   "titel": "Sports: Welcher Sport ist das? Nimm die Wörter aus dem Kasten.",
+   "heft": "Schreibe die ganzen Sätze ins Heft.",
+   "kasten": [
+    "badminton",
+    "cricket",
+    "football",
+    "rugby",
+    "street surfing",
+    "table tennis"
+   ],
+   "items": [
+    "In ___ you play with a racket and a shuttlecock.",
+    "In ___ you play with a bat and a small red ball.",
+    "In ___ you kick a round ball into a goal.",
+    "In ___ you can carry the ball in your hands.",
+    "For ___ you need a board with two wheels.",
+    "You play ___ at a table with a small white ball."
+   ],
+   "loesung": [
+    "In badminton you play with a racket and a shuttlecock.",
+    "In cricket you play with a bat and a small red ball.",
+    "In football you kick a round ball into a goal.",
+    "In rugby you can carry the ball in your hands.",
+    "For street surfing you need a board with two wheels.",
+    "You play table tennis at a table with a small white ball."
+   ]
+  },
+  {
+   "id": "ue-u3-theme1-a",
+   "art": "uebung",
+   "typ": "sortieren",
+   "titel": "Healthy or unhealthy? Schreibe jedes Wort in die richtige Spalte.",
+   "spalten": [
+    "healthy 🥗",
+    "unhealthy 🍟"
+   ],
+   "kasten": [
+    "apples",
+    "carrots",
+    "crisps",
+    "chocolate",
+    "salad",
+    "junk food",
+    "yogurt",
+    "lemonade",
+    "vegetables",
+    "sweets",
+    "fish",
+    "cake"
+   ],
+   "loesung": [
+    "healthy 🥗: apples, carrots, salad, yogurt, vegetables, fish",
+    "unhealthy 🍟: crisps, chocolate, junk food, lemonade, sweets, cake"
+   ]
+  },
+  {
+   "id": "ue-u3-theme1-b",
+   "art": "uebung",
+   "typ": "luecken",
+   "titel": "Opposites mit un-: Schreibe das Gegenteil.",
+   "heft": "Schreibe beide Wörter ins Heft: happy – unhappy",
+   "spalten": 2,
+   "items": [
+    "happy ↔ ___",
+    "healthy ↔ ___",
+    "friendly ↔ ___",
+    "popular ↔ ___",
+    "cool ↔ ___",
+    "interesting ↔ ___",
+    "sure ↔ ___",
+    "real ↔ ___"
+   ],
+   "loesung": [
+    "happy – unhappy",
+    "healthy – unhealthy",
+    "friendly – unfriendly",
+    "popular – unpopular",
+    "cool – uncool",
+    "interesting – uninteresting",
+    "sure – unsure",
+    "real – unreal"
+   ]
+  },
+  {
+   "id": "ue-u3-theme1-c",
+   "art": "uebung",
+   "typ": "frei",
+   "titel": "Profi: My lunch",
+   "text": "Was isst und trinkst du mittags? Schreibe 4 Sätze. Sag auch, was gesund und was ungesund ist.",
+   "beispiel": "I often have a sandwich and an apple. Apples are healthy. Sometimes I eat crisps. Crisps are unhealthy.",
+   "loesung": "Beispiel:\nI often have a sandwich and an apple for lunch.\nApples are healthy.\nI drink water.\nSometimes I eat crisps, but crisps are unhealthy.\nPrüfe: 4 Sätze? healthy / unhealthy richtig benutzt?"
+  },
+  {
+   "id": "he-u3-should",
+   "art": "hefteintrag",
+   "titel": "What’s wrong? – should / shouldn’t",
+   "zeilen": [
+    [
+     [
+      "What’s wrong?",
+      "g"
+     ],
+     [
+      " = Was fehlt dir?",
+      ""
+     ]
+    ],
+    [
+     [
+      "I have a ",
+      ""
+     ],
+     [
+      "headache",
+      "g"
+     ],
+     [
+      ". (Kopfschmerzen)   I have a ",
+      ""
+     ],
+     [
+      "sore throat",
+      "g"
+     ],
+     [
+      ". (Halsschmerzen)",
+      ""
+     ]
+    ],
+    [
+     [
+      "I have a ",
+      ""
+     ],
+     [
+      "temperature",
+      "g"
+     ],
+     [
+      ". (Fieber)   I’m ",
+      ""
+     ],
+     [
+      "tired",
+      "g"
+     ],
+     [
+      ". (müde)",
+      ""
+     ]
+    ],
+    [
+     [
+      "Einen ",
+      ""
+     ],
+     [
+      "Ratschlag",
+      "g"
+     ],
+     [
+      " gebe ich mit ",
+      ""
+     ],
+     [
+      "should",
+      "g"
+     ],
+     [
+      " + Grundform:",
+      ""
+     ]
+    ],
+    [
+     [
+      "You ",
+      ""
+     ],
+     [
+      "should",
+      "b"
+     ],
+     [
+      " drink lots of water.   (Du solltest …)",
+      ""
+     ]
+    ],
+    [
+     [
+      "You ",
+      ""
+     ],
+     [
+      "shouldn’t",
+      "b"
+     ],
+     [
+      " go to bed late.   (Du solltest nicht …)",
+      ""
+     ]
+    ]
+   ],
+   "merke": "should = sollte – shouldn’t = sollte nicht – danach die Grundform!"
+  },
+  {
+   "id": "ue-u3-theme2-a",
+   "art": "uebung",
+   "typ": "zuordnen",
+   "titel": "What’s wrong? Welcher Ratschlag passt?",
+   "heft": "Schreibe die ganzen Sätze ins Heft: 1 I have a headache. – You should …",
+   "links": [
+    "I have a headache.",
+    "I have a sore throat.",
+    "I have a temperature.",
+    "I’m often tired.",
+    "I’m worried."
+   ],
+   "rechts": [
+    "You should go home and stay in bed.",
+    "You should talk to a friend.",
+    "You should drink lots of water.",
+    "You should sleep more.",
+    "You should drink hot tea."
+   ],
+   "loesung": [
+    "I have a headache. – You should drink lots of water.",
+    "I have a sore throat. – You should drink hot tea.",
+    "I have a temperature. – You should go home and stay in bed.",
+    "I’m often tired. – You should sleep more.",
+    "I’m worried. – You should talk to a friend."
+   ]
+  },
+  {
+   "id": "ue-u3-theme2-b",
+   "art": "uebung",
+   "typ": "wahl",
+   "titel": "should or shouldn’t?",
+   "heft": "Schreibe die ganzen Sätze ins Heft.",
+   "items": [
+    {
+     "t": "You ___ eat lots of junk food.",
+     "o": [
+      "should",
+      "shouldn’t"
+     ]
+    },
+    {
+     "t": "You ___ eat some fruit every day.",
+     "o": [
+      "should",
+      "shouldn’t"
+     ]
+    },
+    {
+     "t": "You ___ go to bed late every night.",
+     "o": [
+      "should",
+      "shouldn’t"
+     ]
+    },
+    {
+     "t": "You ___ drink lots of water.",
+     "o": [
+      "should",
+      "shouldn’t"
+     ]
+    },
+    {
+     "t": "You ___ watch TV in bed.",
+     "o": [
+      "should",
+      "shouldn’t"
+     ]
+    },
+    {
+     "t": "You ___ do some sport every week.",
+     "o": [
+      "should",
+      "shouldn’t"
+     ]
+    }
+   ],
+   "loesung": [
+    "You shouldn’t eat lots of junk food.",
+    "You should eat some fruit every day.",
+    "You shouldn’t go to bed late every night.",
+    "You should drink lots of water.",
+    "You shouldn’t watch TV in bed.",
+    "You should do some sport every week."
+   ]
+  },
+  {
+   "id": "ue-u3-theme2-c",
+   "art": "uebung",
+   "typ": "frei",
+   "titel": "Profi: Tipps für einen Freund",
+   "text": "Dein Freund hat Halsschmerzen und ist sehr müde. Schreibe 4 Ratschläge: 2 mit should und 2 mit shouldn’t.",
+   "beispiel": "You should drink hot tea. You shouldn’t go to football today.",
+   "loesung": "Beispiel:\nYou should drink hot tea.\nYou should go to bed early.\nYou shouldn’t go to football today.\nYou shouldn’t watch TV all night.\nPrüfe: 2 × should, 2 × shouldn’t, danach die Grundform?"
+  },
+  {
+   "id": "ue-u3-story-a",
+   "art": "uebung",
+   "typ": "wahl",
+   "titel": "Right or wrong?",
+   "heft": "Schreibe die ganzen Sätze ab und right oder wrong dahinter.",
+   "items": [
+    {
+     "t": "On Saturday morning Ellie is at her mum’s flat.",
+     "o": [
+      "right",
+      "wrong"
+     ]
+    },
+    {
+     "t": "Ellie’s dad has a new job in Plymouth.",
+     "o": [
+      "right",
+      "wrong"
+     ]
+    },
+    {
+     "t": "Mia has a new kitten.",
+     "o": [
+      "right",
+      "wrong"
+     ]
+    },
+    {
+     "t": "Ellie goes to the concert with Luca.",
+     "o": [
+      "right",
+      "wrong"
+     ]
+    },
+    {
+     "t": "On Sunday Ellie has a chat with her dad.",
+     "o": [
+      "right",
+      "wrong"
+     ]
+    },
+    {
+     "t": "On Monday Ellie eats crisps for lunch.",
+     "o": [
+      "right",
+      "wrong"
+     ]
+    }
+   ],
+   "loesung": [
+    "On Saturday morning Ellie is at her mum’s flat. – right",
+    "Ellie’s dad has a new job in Plymouth. – wrong (in London)",
+    "Mia has a new kitten. – right",
+    "Ellie goes to the concert with Luca. – wrong",
+    "On Sunday Ellie has a chat with her dad. – right",
+    "On Monday Ellie eats crisps for lunch. – wrong (a brown bread sandwich, fruit and water)"
+   ]
+  },
+  {
+   "id": "ue-u3-story-b",
+   "art": "uebung",
+   "typ": "zuordnen",
+   "titel": "Story words: Welches deutsche Wort passt?",
+   "heft": "Schreibe die Wortpaare ins Heft: 1 disappointed – enttäuscht",
+   "links": [
+    "disappointed",
+    "kitten",
+    "of course",
+    "lifestyle",
+    "(to) chat",
+    "I don’t feel like it."
+   ],
+   "rechts": [
+    "natürlich",
+    "Ich habe keine Lust dazu.",
+    "enttäuscht",
+    "plaudern",
+    "Kätzchen",
+    "Lebensstil"
+   ],
+   "loesung": [
+    "disappointed – enttäuscht",
+    "kitten – Kätzchen",
+    "of course – natürlich",
+    "lifestyle – Lebensstil",
+    "(to) chat – plaudern",
+    "I don’t feel like it. – Ich habe keine Lust dazu."
+   ]
+  },
+  {
+   "id": "he-u3-present-progressive",
+   "art": "hefteintrag",
+   "titel": "Present progressive – was gerade passiert",
+   "zeilen": [
+    [
+     [
+      "Mit dem ",
+      ""
+     ],
+     [
+      "present progressive",
+      "g"
+     ],
+     [
+      " sage ich, was ",
+      ""
+     ],
+     [
+      "gerade jetzt",
+      "b"
+     ],
+     [
+      " passiert,",
+      ""
+     ]
+    ],
+    [
+     [
+      "oder ich beschreibe ein Bild.",
+      ""
+     ]
+    ],
+    [
+     [
+      "I + ",
+      ""
+     ],
+     [
+      "’m",
+      "g"
+     ],
+     [
+      " + Verb + ",
+      ""
+     ],
+     [
+      "-ing",
+      "g"
+     ],
+     [
+      ":   I’m ",
+      ""
+     ],
+     [
+      "reading",
+      "b"
+     ],
+     [
+      ".",
+      ""
+     ]
+    ],
+    [
+     [
+      "he / she / it + ",
+      ""
+     ],
+     [
+      "’s",
+      "g"
+     ],
+     [
+      " + Verb + ",
+      ""
+     ],
+     [
+      "-ing",
+      "g"
+     ],
+     [
+      ":   She’s ",
+      ""
+     ],
+     [
+      "doing",
+      "b"
+     ],
+     [
+      " exercises.",
+      ""
+     ]
+    ],
+    [
+     [
+      "you / we / they + ",
+      ""
+     ],
+     [
+      "’re",
+      "g"
+     ],
+     [
+      " + Verb + ",
+      ""
+     ],
+     [
+      "-ing",
+      "g"
+     ],
+     [
+      ":   They’re ",
+      ""
+     ],
+     [
+      "watching",
+      "b"
+     ],
+     [
+      " TV.",
+      ""
+     ]
+    ],
+    [
+     [
+      "Frage:",
+      "g"
+     ],
+     [
+      " What are you doing? – I’m dancing.",
+      ""
+     ]
+    ],
+    [
+     [
+      "Verneinung:",
+      "g"
+     ],
+     [
+      " She isn’t sleeping. They aren’t playing.",
+      ""
+     ]
+    ],
+    [
+     [
+      "Achtung:",
+      "g"
+     ],
+     [
+      " make → making,  swim → swimming",
+      ""
+     ]
+    ]
+   ],
+   "merke": "am / is / are + Verb mit -ing = gerade jetzt!"
+  },
+  {
+   "id": "ue-u3-pp-a",
+   "art": "uebung",
+   "typ": "luecken",
+   "titel": "Verb + -ing: Schreibe die -ing-Form.",
+   "heft": "Schreibe beide Formen ins Heft: play – playing",
+   "spalten": 2,
+   "tipp": "make → making (e fällt weg) · swim → swimming (Buchstabe doppelt)",
+   "items": [
+    "play → ___",
+    "read → ___",
+    "make → ___",
+    "dance → ___",
+    "ride → ___",
+    "swim → ___",
+    "sit → ___",
+    "run → ___"
+   ],
+   "loesung": [
+    "play – playing",
+    "read – reading",
+    "make – making",
+    "dance – dancing",
+    "ride – riding",
+    "swim – swimming",
+    "sit – sitting",
+    "run – running"
+   ]
+  },
+  {
+   "id": "ue-u3-pp-b",
+   "art": "uebung",
+   "typ": "wahl",
+   "titel": "am, is or are?",
+   "heft": "Schreibe die ganzen Sätze ins Heft.",
+   "items": [
+    {
+     "t": "I ___ helping my dad in the kitchen.",
+     "o": [
+      "am",
+      "is",
+      "are"
+     ]
+    },
+    {
+     "t": "Mia ___ doing some exercises.",
+     "o": [
+      "am",
+      "is",
+      "are"
+     ]
+    },
+    {
+     "t": "Luca and Adam ___ playing football.",
+     "o": [
+      "am",
+      "is",
+      "are"
+     ]
+    },
+    {
+     "t": "The dog ___ sleeping on the sofa.",
+     "o": [
+      "am",
+      "is",
+      "are"
+     ]
+    },
+    {
+     "t": "We ___ watching a film.",
+     "o": [
+      "am",
+      "is",
+      "are"
+     ]
+    },
+    {
+     "t": "What ___ you doing?",
+     "o": [
+      "am",
+      "is",
+      "are"
+     ]
+    }
+   ],
+   "loesung": [
+    "I am helping my dad in the kitchen.",
+    "Mia is doing some exercises.",
+    "Luca and Adam are playing football.",
+    "The dog is sleeping on the sofa.",
+    "We are watching a film.",
+    "What are you doing?"
+   ]
+  },
+  {
+   "id": "ue-u3-pp-c",
+   "art": "uebung",
+   "typ": "saetze",
+   "titel": "Was passiert gerade? Schreibe den Satz im present progressive.",
+   "heft": "Schreibe die ganzen Sätze ins Heft.",
+   "beispiel": "Mia / dance → Mia is dancing.",
+   "items": [
+    "Adam / play football",
+    "Ellie and Mia / eat sandwiches",
+    "I / read a book",
+    "Luca / ride his bike",
+    "My parents / watch TV"
+   ],
+   "loesung": [
+    "Adam is playing football.",
+    "Ellie and Mia are eating sandwiches.",
+    "I’m reading a book.",
+    "Luca is riding his bike.",
+    "My parents are watching TV."
+   ]
+  },
+  {
+   "id": "he-u3-much-many",
+   "art": "hefteintrag",
+   "titel": "much – many – lots of",
+   "zeilen": [
+    [
+     [
+      "much",
+      "g"
+     ],
+     [
+      " = viel  →  bei Dingen, die ich ",
+      ""
+     ],
+     [
+      "nicht zählen",
+      "b"
+     ],
+     [
+      " kann:",
+      ""
+     ]
+    ],
+    [
+     [
+      "much water,  much bread,  much fruit",
+      ""
+     ]
+    ],
+    [
+     [
+      "many",
+      "g"
+     ],
+     [
+      " = viele  →  bei Dingen, die ich ",
+      ""
+     ],
+     [
+      "zählen",
+      "b"
+     ],
+     [
+      " kann:",
+      ""
+     ]
+    ],
+    [
+     [
+      "many apples,  many bottles,  many carrots",
+      ""
+     ]
+    ],
+    [
+     [
+      "Fragen:  ",
+      ""
+     ],
+     [
+      "How much",
+      "g"
+     ],
+     [
+      " water …?   ",
+      ""
+     ],
+     [
+      "How many",
+      "g"
+     ],
+     [
+      " apples …?",
+      ""
+     ]
+    ],
+    [
+     [
+      "lots of",
+      "g"
+     ],
+     [
+      " = viel / viele  →  geht immer: lots of water, lots of apples",
+      ""
+     ]
+    ]
+   ],
+   "merke": "Zählen kann ich → many. Nicht zählen → much!"
+  },
+  {
+   "id": "ue-u3-mm-a",
+   "art": "uebung",
+   "typ": "wahl",
+   "titel": "much or many?",
+   "heft": "Schreibe die ganzen Sätze ins Heft.",
+   "items": [
+    {
+     "t": "We don’t have ___ bread.",
+     "o": [
+      "much",
+      "many"
+     ]
+    },
+    {
+     "t": "I don’t eat ___ carrots.",
+     "o": [
+      "much",
+      "many"
+     ]
+    },
+    {
+     "t": "How ___ water do you drink?",
+     "o": [
+      "much",
+      "many"
+     ]
+    },
+    {
+     "t": "How ___ apples do you eat?",
+     "o": [
+      "much",
+      "many"
+     ]
+    },
+    {
+     "t": "There isn’t ___ juice.",
+     "o": [
+      "much",
+      "many"
+     ]
+    },
+    {
+     "t": "She doesn’t have ___ friends here.",
+     "o": [
+      "much",
+      "many"
+     ]
+    },
+    {
+     "t": "You drink too ___ lemonade!",
+     "o": [
+      "much",
+      "many"
+     ]
+    },
+    {
+     "t": "How ___ bottles do we need?",
+     "o": [
+      "much",
+      "many"
+     ]
+    }
+   ],
+   "loesung": [
+    "We don’t have much bread.",
+    "I don’t eat many carrots.",
+    "How much water do you drink?",
+    "How many apples do you eat?",
+    "There isn’t much juice.",
+    "She doesn’t have many friends here.",
+    "You drink too much lemonade!",
+    "How many bottles do we need?"
+   ]
+  },
+  {
+   "id": "ue-u3-mm-b",
+   "art": "uebung",
+   "typ": "saetze",
+   "titel": "How much or how many? Schreibe die Frage.",
+   "heft": "Schreibe die ganzen Sätze ins Heft.",
+   "beispiel": "fruit / eat → How much fruit do you eat?",
+   "items": [
+    "vegetables / eat",
+    "water / drink",
+    "sweets / eat",
+    "milk / drink",
+    "bottles of lemonade / drink"
+   ],
+   "loesung": [
+    "How many vegetables do you eat?",
+    "How much water do you drink?",
+    "How many sweets do you eat?",
+    "How much milk do you drink?",
+    "How many bottles of lemonade do you drink?"
+   ]
+  },
+  {
+   "id": "ue-u3-dict-a",
+   "art": "uebung",
+   "typ": "wahl",
+   "titel": "Welche Bedeutung passt? Lies den ganzen Satz.",
+   "heft": "Schreibe den Satz und die passende deutsche Bedeutung ins Heft.",
+   "items": [
+    {
+     "t": "My brother is very tall.",
+     "o": [
+      "groß",
+      "hoch"
+     ]
+    },
+    {
+     "t": "I need two tickets for the concert, please.",
+     "o": [
+      "Karte",
+      "Strafzettel"
+     ]
+    },
+    {
+     "t": "My grandma wears glasses.",
+     "o": [
+      "Gläser",
+      "Brille"
+     ]
+    },
+    {
+     "t": "Our teacher is very kind.",
+     "o": [
+      "Sorte",
+      "freundlich"
+     ]
+    },
+    {
+     "t": "Ellie has ginger hair.",
+     "o": [
+      "Ingwer",
+      "rotblond"
+     ]
+    }
+   ],
+   "loesung": [
+    "My brother is very tall. – groß",
+    "I need two tickets for the concert, please. – Karte",
+    "My grandma wears glasses. – Brille",
+    "Our teacher is very kind. – freundlich",
+    "Ellie has ginger hair. – rotblond"
+   ]
+  },
+  {
+   "id": "he-u3-bild",
+   "art": "hefteintrag",
+   "titel": "Ein Bild beschreiben",
+   "zeilen": [
+    [
+     [
+      "So beschreibe ich ein Bild:",
+      ""
+     ]
+    ],
+    [
+     [
+      "On the left",
+      "g"
+     ],
+     [
+      " …   ",
+      ""
+     ],
+     [
+      "In the middle",
+      "g"
+     ],
+     [
+      " …   ",
+      ""
+     ],
+     [
+      "On the right",
+      "g"
+     ],
+     [
+      " …",
+      ""
+     ]
+    ],
+    [
+     [
+      "Wo?  ",
+      ""
+     ],
+     [
+      "next to, behind, in front of, between, under, on",
+      "b"
+     ]
+    ],
+    [
+     [
+      "There is",
+      "g"
+     ],
+     [
+      " a bike.   ",
+      ""
+     ],
+     [
+      "There are",
+      "g"
+     ],
+     [
+      " two dogs.",
+      ""
+     ]
+    ],
+    [
+     [
+      "Was passiert?  →  ",
+      ""
+     ],
+     [
+      "present progressive",
+      "g"
+     ],
+     [
+      ":  Two men are working.",
+      ""
+     ]
+    ],
+    [
+     [
+      "I can see a red bike. It’s behind the tree.",
+      ""
+     ]
+    ]
+   ],
+   "merke": "Erst sagen, wo – dann, was passiert!"
+  },
+  {
+   "id": "ue-u3-bild-a",
+   "art": "uebung",
+   "typ": "luecken",
+   "titel": "Wo ist was? Nimm die Wörter aus dem Kasten.",
+   "heft": "Schreibe die ganzen Sätze ins Heft.",
+   "kasten": [
+    "on",
+    "under",
+    "in front of",
+    "behind",
+    "next to",
+    "between"
+   ],
+   "items": [
+    "The bananas are ___ the table.",
+    "The two dogs are ___ the table.",
+    "The bike is ___ the tree.",
+    "The ball is ___ the baby.",
+    "The cat is ___ the two birds.",
+    "The bird is ___ the apples."
+   ],
+   "loesung": [
+    "The bananas are on the table.",
+    "The two dogs are under the table.",
+    "The bike is behind the tree.",
+    "The ball is in front of the baby.",
+    "The cat is between the two birds.",
+    "The bird is next to the apples."
+   ]
+  },
+  {
+   "id": "ue-u3-bild-b",
+   "art": "uebung",
+   "typ": "frei",
+   "titel": "Profi: Mein Bild",
+   "text": "Such dir ein Foto aus dem Buch (S. 46–47) aus. Beschreibe es mit 5 Sätzen: on the left / in the middle / on the right, There is / There are und present progressive.",
+   "beispiel": "On the left two girls are playing football. In the middle there is a ball.",
+   "loesung": "Beispiel (Foto A):\nOn the left there is a girl in a red shirt.\nShe is playing football.\nOn the right there is a girl in a yellow shirt.\nShe is kicking the ball.\nThe ball is in front of the girls.\nPrüfe: Wo-Wörter? There is / There are? Verb + -ing?"
+  },
+  {
+   "id": "kann-u3-1",
+   "art": "kann",
+   "teil": "Sprechen",
+   "text": "über Sportarten sprechen."
+  },
+  {
+   "id": "kann-u3-2",
+   "art": "kann",
+   "teil": "Wortschatz",
+   "text": "über gesundes und ungesundes Essen sprechen."
+  },
+  {
+   "id": "kann-u3-3",
+   "art": "kann",
+   "teil": "Grammatik",
+   "text": "sagen, was mir fehlt, und Ratschläge mit should / shouldn’t geben."
+  },
+  {
+   "id": "kann-u3-4",
+   "art": "kann",
+   "teil": "Lesen",
+   "text": "einen Comic lesen und verstehen."
+  },
+  {
+   "id": "kann-u3-5",
+   "art": "kann",
+   "teil": "Grammatik",
+   "text": "sagen, was gerade passiert (present progressive)."
+  },
+  {
+   "id": "kann-u3-6",
+   "art": "kann",
+   "teil": "Grammatik",
+   "text": "much und many richtig benutzen."
+  },
+  {
+   "id": "kann-u3-7",
+   "art": "kann",
+   "teil": "Wörterbuch",
+   "text": "die richtige Bedeutung im Wörterbuch finden."
+  },
+  {
+   "id": "kann-u3-8",
+   "art": "kann",
+   "teil": "Schreiben",
+   "text": "ein Bild beschreiben."
+  },
+  {
+   "id": "kann-u3-9",
+   "art": "kann",
+   "teil": "Vokabeln",
+   "text": "die Wörter aus Unit 3."
   }
  ]
 }

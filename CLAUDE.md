@@ -100,7 +100,7 @@ und gelbe Hinweise. Manuelle Checkliste nach Uploads: `werkzeuge/RAUCHTEST.md`.
   Seitenleiste mit dem Abschnitt, „☰ Liste“ = Laufzettel, Tafel/Werkbank im 3D-Ort; das Finale öffnet sich erst, wenn alle freigegebenen
   Hefteinträge der Unit abgehakt sind (`LernJourney.heftFehlt`, grund `heft`). Etappe 6: Admin Inhalte → 🧭 English Journey
   (`module/inhalte-journey.js`: Übersicht, Editoren, Klassen-Übersicht über `jw:`-Meldungen, Schuljahr, Druck über `journey-druck.js`);
-  Hefteinträge nur in Pflicht-Abschnitten (Finale wartet auf jeden). Die alten Lernwege (`apps/typen/lernweg.html`) sind seit
+  Hefteinträge nur in Pflicht-Abschnitten (Finale wartet auf jeden). Abschnitt-Kette (v109): Pflicht-Abschnitte öffnen sich der Reihe nach (`config.journey…reihenfolge` je wer: frei/schritt/streng, Standard schritt; `LernJourneyWeg.sperre`). Die alten Lernwege (`apps/typen/lernweg.html`) sind seit
   v103 entfernt; `lernwelt-lernweg` wird nur noch einmal übernommen.
 - **Live-Abfrage** (Unterrichtsmodus → 📊, Kinder-Seite `apps/typen/live.html?raum=CODE`, keine App in config.json, ohne Navbar):
   Worker-Teil `cloudflare/live.js` (Räume, Antworten, Quizze, Rückblicke in `SYNC_DB`; Räume nach dem Beenden gelöscht),

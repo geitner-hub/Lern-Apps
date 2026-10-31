@@ -295,7 +295,7 @@ LWAdmin.modul({
         <p>Ein neues Schuljahr setzt nur die Einstellungen für die Klasse zurück – alle Inhalte (Abschnitte, Hefteinträge, Übungen, Lösungen) bleiben.</p>
         <ul class="lw-liste"><li>Freigaben „bis Abschnitt“: <b>${Object.keys(w.bis || {}).length}</b> → werden gelöscht</li>
           <li>HE-Nummern: <b>${Object.keys(w.he || {}).length}</b> → werden gelöscht und beim Freigeben neu vergeben</li>
-          <li>Mindestniveau: <b>${Object.keys(w.niveau || {}).length}</b> → wird gelöscht</li>
+          <li>Mindestniveau und Reihenfolge: <b>${Object.keys(w.niveau || {}).length + Object.keys(w.reihenfolge || {}).length}</b> → werden gelöscht (Standard: Schritt für Schritt)</li>
           <li>Haken der Kinder bleiben in ihrem Pass (Vorjahr) – ein neues Kind beginnt leer</li></ul>
         <div class="lw-knoepfe"><button type="button" class="lw-btn gold" data-jz="schuljahr-neu">Neues Schuljahr ${e(neu)} beginnen</button></div>
         <p class="lw-klein">Wirkt nach dem Veröffentlichen (oben). Rückgängig über System → Verlauf.</p></div>`;
@@ -541,12 +541,12 @@ LWAdmin.modul({
       if (akt === 'kann-weg') { const i = Number(d.ki); aendernWeg('Kann-Satz entfernt', j => { j.units.find(y => y.id === u.id).kann.splice(i, 1); }); return zeichnen(); }
       if (akt === 'schuljahr-neu') {
         const jy = (store.daten() || {}).journey || {}, neu = naechstesJahr(jy.schuljahr);
-        LWAdmin.dialog({ titel: `Neues Schuljahr ${neu} beginnen?`, text: 'Freigaben, HE-Nummern und Mindestniveau werden zurückgesetzt. Inhalte bleiben.', ja: 'Ja, beginnen' }).then(ok => {
+        LWAdmin.dialog({ titel: `Neues Schuljahr ${neu} beginnen?`, text: 'Freigaben, HE-Nummern, Mindestniveau und Reihenfolge werden zurückgesetzt. Inhalte bleiben.', ja: 'Ja, beginnen' }).then(ok => {
           if (!ok) return;
           store.aendern(`📅 English Journey: neues Schuljahr ${neu}`, c => {
             const j = c.journey && typeof c.journey === 'object' ? c.journey : (c.journey = {});
             j.schuljahr = neu;
-            Object.values(j.wege || {}).forEach(w => { delete w.bis; delete w.he; delete w.niveau; });
+            Object.values(j.wege || {}).forEach(w => { delete w.bis; delete w.he; delete w.niveau; delete w.reihenfolge; });
           });
           toast(`📅 Schuljahr ${neu} – jetzt oben veröffentlichen`); zeichnen();
         });

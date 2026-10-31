@@ -745,7 +745,11 @@
           "he-u2-did-fragen": 5,
           "he-u2-plural": 6,
           "he-u2-can-mustnt": 7,
-          "he-u2-weg": 8
+          "he-u2-weg": 8,
+          "he-u3-should": 9,
+          "he-u3-present-progressive": 10,
+          "he-u3-much-many": 11,
+          "he-u3-bild": 12
         }
       }
     }
