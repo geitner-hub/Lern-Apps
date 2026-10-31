@@ -311,7 +311,12 @@ function bezugHTML(id) {
   if (!window.LernJourneyWeg || !wegErlaubt() || (A.z[id] && A.z[id].grund === 'heft')) return '';
   const bz = LernJourneyWeg.bezug({ J: A.J, cfg: wegCfg(), station: id, admin: A.admin, z: A.z });
   if (!bz) return '';
-  const he = bz.he.map(h => '📒 ' + (h.nr ? 'HE ' + h.nr : 'Hefteintrag')), offen = bz.he.find(h => !h.erledigt);
+  const he = bz.he.map(h => '📒 ' + (h.nr ? 'HE ' + h.nr : 'Hefteintrag')), offen = bz.heHier === false ? null : bz.he.find(h => !h.erledigt);
+  if (bz.heHier === false && bz.he.length) {                 // weitere Station des Abschnitts: Hefteintrag nur noch einmal lesen
+    const n = bz.he.map(h => h.nr ? 'HE ' + h.nr : 'den Hefteintrag').join(' und ');
+    return `<div class="bezug">${bz.buch ? `<span>📖 ${esc(LernJourneyWeg.seitenA(bz.abschnitt))}</span>` : ''}<span>📒 Lies vorher noch einmal ${esc(n)}.</span>
+      <button type="button" class="neben" data-weg-abschnitt="${esc(bz.abschnitt.id)}">📒 ${esc(n.replace(/^den /, ''))} lesen</button></div>`;
+  }
   return `<div class="bezug">${bz.buch ? `<span>📖 ${esc(LernJourneyWeg.seitenA(bz.abschnitt))}</span>` : ''}${he.length ? `<span>${esc(he.join(' · '))}</span>` : ''}
     ${offen ? `<span class="schild">📒 ${esc(offen.nr ? 'HE ' + offen.nr : 'Hefteintrag')} zuerst</span>` : ''}
     <button type="button" class="neben" data-weg-abschnitt="${esc(bz.abschnitt.id)}">📒 ${offen ? 'Zum Hefteintrag' : 'Laufzettel'}</button></div>`;
