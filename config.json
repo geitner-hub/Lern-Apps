@@ -749,7 +749,14 @@
           "he-u3-should": 9,
           "he-u3-present-progressive": 10,
           "he-u3-much-many": 11,
-          "he-u3-bild": 12
+          "he-u3-bild": 12,
+          "he-u4-verabreden": 13,
+          "he-u4-comparison": 14,
+          "he-u4-superlative": 15,
+          "he-u4-have-to": 16,
+          "he-u5-will": 17,
+          "he-u5-wortstellung": 18,
+          "he-u5-postkarte": 19
         }
       }
     }

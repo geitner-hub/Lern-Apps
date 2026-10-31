@@ -716,6 +716,11 @@ Niveau (★ alle · ★★ Standard und Profi · ★★★ Profi), Hören macht 
 - **Unit 3 (v109):** neun Abschnitte nach Highlight 6 S. 46–62 (Lead-in, Theme 1, Theme 2 mit HE should/shouldn't, Story, Present
   progressive, much/many/lots of, Dictionary skills, Ein Bild beschreiben, Finale); eigene Übungen mit Lösung, Kann-Sätze `kann-u3-1…9`.
   Listenings, Projekt und Unterrichtsteile stehen nicht im Laufzettel. Der Hefteintrag-Auftrag lautet überall „mit Farbe, den Merksatz mit Rot“.
+- **Unit 4 und 5 (v110):** je zehn Abschnitte nach Highlight 6 S. 64–83 und S. 84–100 (Story Unit 5 mit beiden Teams, S. 108–109).
+  HE 13 `he-u4-verabreden` (mit on/in/at), HE 14 `he-u4-comparison`, HE 15 `he-u4-superlative`, HE 16 `he-u4-have-to`, HE 17 `he-u5-will`,
+  HE 18 `he-u5-wortstellung`, HE 19 `he-u5-postkarte`; Unit 5 Theme 2 zeigt HE 9 (should) zum Wiederholen. Kurzvortrag (S. 77) wird
+  vorbereitet, gehalten im Unterricht. Finale Unit 4 = Test and check + Revision 2, Finale Unit 5 = Test and check + eigene Revision
+  (Unit 4 und 5). Listenings, Viewing, Songs, Pronunciation, Your task und More practice stehen nicht im Laufzettel.
 - **Umwandlung Unit 1–2 (Etappe 1, Skript mit den Lernwegen gelöscht):** aus den alten Lernweg-Dateien entstanden Abschnitte und Bausteine;
   die „So arbeitest du“-Regeln und Kontroll-Codes des Papier-Laufzettels entfielen.
 - **pruefen.py (Regel 23):** Bausteine vorhanden und von der richtigen Art, Stationen und Themen vorhanden, Buchverweise im Format,

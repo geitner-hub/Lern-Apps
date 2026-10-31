@@ -3600,6 +3600,2305 @@
    "art": "kann",
    "teil": "Vokabeln",
    "text": "die Wörter aus Unit 3."
+  },
+  {
+   "id": "ue-u4-lead-in-a",
+   "art": "uebung",
+   "typ": "zuordnen",
+   "titel": "Free time: Welches deutsche Wort passt?",
+   "heft": "Schreibe die Wortpaare ins Heft: 1 chilling – chillen, entspannen",
+   "links": [
+    "chilling",
+    "doing sport",
+    "watching sport",
+    "shopping",
+    "going out",
+    "doing something with my family",
+    "messaging friends"
+   ],
+   "rechts": [
+    "Sport anschauen",
+    "einkaufen gehen",
+    "etwas mit meiner Familie machen",
+    "Freunden Nachrichten schreiben",
+    "chillen, entspannen",
+    "Sport machen",
+    "ausgehen"
+   ],
+   "loesung": [
+    "chilling – chillen, entspannen",
+    "doing sport – Sport machen",
+    "watching sport – Sport anschauen",
+    "shopping – einkaufen gehen",
+    "going out – ausgehen",
+    "doing something with my family – etwas mit meiner Familie machen",
+    "messaging friends – Freunden Nachrichten schreiben"
+   ]
+  },
+  {
+   "id": "ue-u4-lead-in-b",
+   "art": "uebung",
+   "typ": "frei",
+   "titel": "Profi: My perfect weekend",
+   "text": "Schreibe 4 Sätze über dein perfektes Wochenende. Sag auch, warum: because it’s fun / exciting / interesting / easy.",
+   "beispiel": "On my perfect weekend I go bowling with my friends because it’s exciting.",
+   "loesung": "Beispiel:\nOn my perfect weekend I sleep late.\nThen I go bowling with my friends because it’s exciting.\nIn the afternoon I chill in my room.\nI don’t like shopping. I prefer football because it’s fun.\nPrüfe: 4 Sätze? because …?"
+  },
+  {
+   "id": "ue-u4-theme1-a",
+   "art": "uebung",
+   "typ": "luecken",
+   "titel": "Chores at home: Nimm die Wörter aus dem Kasten.",
+   "heft": "Schreibe die ganzen Sätze ins Heft.",
+   "kasten": [
+    "hoover",
+    "fill",
+    "empty",
+    "cut",
+    "tidy",
+    "do",
+    "wash"
+   ],
+   "items": [
+    "I ___ the house every Saturday.",
+    "I ___ the dishwasher after dinner.",
+    "Then I ___ the dishwasher in the morning.",
+    "My dad and I ___ the grass in the garden.",
+    "I ___ my room on Sundays.",
+    "Ellie has a job: she ___es a paper round.",
+    "I ___ up after lunch."
+   ],
+   "loesung": [
+    "I hoover the house every Saturday.",
+    "I fill the dishwasher after dinner.",
+    "Then I empty the dishwasher in the morning.",
+    "My dad and I cut the grass in the garden.",
+    "I tidy my room on Sundays.",
+    "Ellie has a job: she does a paper round.",
+    "I wash up after lunch."
+   ]
+  },
+  {
+   "id": "ue-u4-theme1-b",
+   "art": "uebung",
+   "typ": "wahl",
+   "titel": "Right or wrong? Lies noch einmal den Dialog auf S. 67.",
+   "heft": "Schreibe die ganzen Sätze ab und right oder wrong dahinter.",
+   "items": [
+    {
+     "t": "Mia hoovers the house.",
+     "o": [
+      "right",
+      "wrong"
+     ]
+    },
+    {
+     "t": "Ellie fills and empties the dishwasher.",
+     "o": [
+      "right",
+      "wrong"
+     ]
+    },
+    {
+     "t": "Adam cuts the grass and tidies his room.",
+     "o": [
+      "right",
+      "wrong"
+     ]
+    },
+    {
+     "t": "Luca helps a lot in the house.",
+     "o": [
+      "right",
+      "wrong"
+     ]
+    },
+    {
+     "t": "Adam gets £5 a week.",
+     "o": [
+      "right",
+      "wrong"
+     ]
+    },
+    {
+     "t": "Ellie does a paper round every Saturday morning.",
+     "o": [
+      "right",
+      "wrong"
+     ]
+    }
+   ],
+   "loesung": [
+    "Mia hoovers the house. – right",
+    "Ellie fills and empties the dishwasher. – right",
+    "Adam cuts the grass and tidies his room. – right",
+    "Luca helps a lot in the house. – wrong (he doesn’t help in the house)",
+    "Adam gets £5 a week. – wrong (£10 a week)",
+    "Ellie does a paper round every Saturday morning. – right"
+   ]
+  },
+  {
+   "id": "he-u4-verabreden",
+   "art": "hefteintrag",
+   "titel": "Sich verabreden – Let’s meet!",
+   "zeilen": [
+    [
+     [
+      "Vorschlag:",
+      "g"
+     ],
+     [
+      "  Let’s meet at the weekend.  –  Great idea!",
+      ""
+     ]
+    ],
+    [
+     [
+      "Zeit fragen:",
+      "g"
+     ],
+     [
+      "  Are you free on Saturday morning?",
+      ""
+     ]
+    ],
+    [
+     [
+      "Ja:  ",
+      ""
+     ],
+     [
+      "Yes, I am. / OK, I’m free.",
+      "b"
+     ]
+    ],
+    [
+     [
+      "Nein:  ",
+      ""
+     ],
+     [
+      "Sorry, I’m busy.",
+      "b"
+     ],
+     [
+      " I have to …",
+      ""
+     ]
+    ],
+    [
+     [
+      "Neuer Vorschlag:",
+      "g"
+     ],
+     [
+      "  What about Saturday afternoon then?",
+      ""
+     ]
+    ],
+    [
+     [
+      "Abmachen:",
+      "g"
+     ],
+     [
+      "  Let’s meet at 2 o’clock at my house.  See you!",
+      ""
+     ]
+    ],
+    [
+     [
+      "on",
+      "g"
+     ],
+     [
+      " + Tag:  on Saturday, on Saturday afternoon",
+      ""
+     ]
+    ],
+    [
+     [
+      "in",
+      "g"
+     ],
+     [
+      " + Tageszeit:  in the morning, in the afternoon, in the evening",
+      ""
+     ]
+    ],
+    [
+     [
+      "at",
+      "g"
+     ],
+     [
+      " + Uhrzeit:  at 6 o’clock, at 5 pm   ·   ohne Präposition: all day, next time",
+      ""
+     ]
+    ]
+   ],
+   "merke": "on + Tag – in + Tageszeit – at + Uhrzeit!"
+  },
+  {
+   "id": "ue-u4-theme2-a",
+   "art": "uebung",
+   "typ": "wahl",
+   "titel": "on, in or at?",
+   "heft": "Schreibe die ganzen Sätze ins Heft.",
+   "items": [
+    {
+     "t": "Let’s meet ___ Saturday.",
+     "o": [
+      "on",
+      "in",
+      "at"
+     ]
+    },
+    {
+     "t": "I’m busy ___ the morning.",
+     "o": [
+      "on",
+      "in",
+      "at"
+     ]
+    },
+    {
+     "t": "The film starts ___ 7 o’clock.",
+     "o": [
+      "on",
+      "in",
+      "at"
+     ]
+    },
+    {
+     "t": "Are you free ___ Sunday afternoon?",
+     "o": [
+      "on",
+      "in",
+      "at"
+     ]
+    },
+    {
+     "t": "I do my homework ___ the evening.",
+     "o": [
+      "on",
+      "in",
+      "at"
+     ]
+    },
+    {
+     "t": "The class finishes ___ 5 pm.",
+     "o": [
+      "on",
+      "in",
+      "at"
+     ]
+    },
+    {
+     "t": "Ellie does her paper round ___ Saturday morning.",
+     "o": [
+      "on",
+      "in",
+      "at"
+     ]
+    },
+    {
+     "t": "We go swimming ___ the afternoon.",
+     "o": [
+      "on",
+      "in",
+      "at"
+     ]
+    }
+   ],
+   "loesung": [
+    "Let’s meet on Saturday.",
+    "I’m busy in the morning.",
+    "The film starts at 7 o’clock.",
+    "Are you free on Sunday afternoon?",
+    "I do my homework in the evening.",
+    "The class finishes at 5 pm.",
+    "Ellie does her paper round on Saturday morning.",
+    "We go swimming in the afternoon."
+   ]
+  },
+  {
+   "id": "ue-u4-theme2-b",
+   "art": "uebung",
+   "typ": "luecken",
+   "titel": "Plans for the weekend: Ergänze den Dialog.",
+   "heft": "Schreibe den ganzen Dialog ins Heft.",
+   "kasten": [
+    "meet",
+    "idea",
+    "about",
+    "busy",
+    "have to",
+    "free",
+    "See you"
+   ],
+   "items": [
+    "A: Let’s ___ at the weekend.",
+    "B: Great ___! What about Saturday morning?",
+    "A: Sorry, I’m ___. I ___ help my mum.",
+    "B: What ___ Saturday afternoon then?",
+    "A: OK, I’m ___. Let’s meet at 3 o’clock at my house.",
+    "B: OK. 3 o’clock at your house. ___!"
+   ],
+   "loesung": [
+    "A: Let’s meet at the weekend.",
+    "B: Great idea! What about Saturday morning?",
+    "A: Sorry, I’m busy. I have to help my mum.",
+    "B: What about Saturday afternoon then?",
+    "A: OK, I’m free. Let’s meet at 3 o’clock at my house.",
+    "B: OK. 3 o’clock at your house. See you!"
+   ]
+  },
+  {
+   "id": "ue-u4-theme2-c",
+   "art": "uebung",
+   "typ": "frei",
+   "titel": "Profi: Eine Verabredung",
+   "text": "Schreibe einen eigenen Dialog mit einem Freund: Ihr wollt euch am Wochenende treffen, aber ihr habt nicht immer Zeit. Mindestens 6 Sätze, mit on / in / at.",
+   "beispiel": "A: Let’s meet on Sunday. – B: Great idea! What about Sunday morning?",
+   "loesung": "Beispiel:\nA: Let’s meet on Sunday.\nB: Great idea! Are you free in the morning?\nA: Sorry, I’m busy. I have to visit my grandma.\nB: What about Sunday afternoon then?\nA: OK, I’m free. Let’s meet at 3 o’clock at the park.\nB: OK. 3 o’clock at the park. See you!\nPrüfe: on + Tag, in + Tageszeit, at + Uhrzeit?"
+  },
+  {
+   "id": "ue-u4-story-a",
+   "art": "uebung",
+   "typ": "wahl",
+   "titel": "It’s a deal! Right or wrong?",
+   "heft": "Schreibe die ganzen Sätze ab und right oder wrong dahinter.",
+   "items": [
+    {
+     "t": "It was a sunny Saturday morning.",
+     "o": [
+      "right",
+      "wrong"
+     ]
+    },
+    {
+     "t": "Luca needed money for ice skating.",
+     "o": [
+      "right",
+      "wrong"
+     ]
+    },
+    {
+     "t": "Luca’s dad gave him £10 for the chore.",
+     "o": [
+      "right",
+      "wrong"
+     ]
+    },
+    {
+     "t": "Luca’s dad danced to a Spice Girls CD.",
+     "o": [
+      "right",
+      "wrong"
+     ]
+    },
+    {
+     "t": "The woman in the CD shop gave Luca £25 for the CDs.",
+     "o": [
+      "right",
+      "wrong"
+     ]
+    },
+    {
+     "t": "Mia found an old dress in a wardrobe.",
+     "o": [
+      "right",
+      "wrong"
+     ]
+    },
+    {
+     "t": "The friends went ice skating in the evening.",
+     "o": [
+      "right",
+      "wrong"
+     ]
+    }
+   ],
+   "loesung": [
+    "It was a sunny Saturday morning. – wrong (a rainy Saturday morning)",
+    "Luca needed money for ice skating. – right",
+    "Luca’s dad gave him £10 for the chore. – wrong (£7.50)",
+    "Luca’s dad danced to a Spice Girls CD. – right",
+    "The woman in the CD shop gave Luca £25 for the CDs. – right",
+    "Mia found an old dress in a wardrobe. – right",
+    "The friends went ice skating in the evening. – wrong (they had a 90s party)"
+   ]
+  },
+  {
+   "id": "ue-u4-story-b",
+   "art": "uebung",
+   "typ": "luecken",
+   "titel": "Simple past aus der Story: Schreibe die Vergangenheitsform.",
+   "heft": "Schreibe beide Formen ins Heft: need – needed",
+   "spalten": 2,
+   "items": [
+    "need → ___",
+    "think → ___",
+    "say → ___",
+    "take → ___",
+    "put → ___",
+    "find → ___",
+    "go → ___",
+    "give → ___",
+    "come → ___",
+    "have → ___"
+   ],
+   "loesung": [
+    "need – needed",
+    "think – thought",
+    "say – said",
+    "take – took",
+    "put – put",
+    "find – found",
+    "go – went",
+    "give – gave",
+    "come – came",
+    "have – had"
+   ]
+  },
+  {
+   "id": "he-u4-comparison",
+   "art": "hefteintrag",
+   "titel": "Comparisons – Dinge vergleichen",
+   "zeilen": [
+    [
+     [
+      "So vergleiche ich zwei Dinge oder Personen:",
+      ""
+     ]
+    ],
+    [
+     [
+      "kurzes Adjektiv + ",
+      ""
+     ],
+     [
+      "-er",
+      "g"
+     ],
+     [
+      " + ",
+      ""
+     ],
+     [
+      "than",
+      "g"
+     ],
+     [
+      " (= als)",
+      ""
+     ]
+    ],
+    [
+     [
+      "cheap → ",
+      ""
+     ],
+     [
+      "cheaper than",
+      "b"
+     ],
+     [
+      "     old → ",
+      ""
+     ],
+     [
+      "older than",
+      "b"
+     ]
+    ],
+    [
+     [
+      "nice → ",
+      ""
+     ],
+     [
+      "nicer than",
+      "b"
+     ],
+     [
+      "  (nur -r)",
+      ""
+     ]
+    ],
+    [
+     [
+      "big → ",
+      ""
+     ],
+     [
+      "bigger than",
+      "b"
+     ],
+     [
+      "  (Buchstabe doppelt)",
+      ""
+     ]
+    ],
+    [
+     [
+      "friendly → ",
+      ""
+     ],
+     [
+      "friendlier than",
+      "b"
+     ],
+     [
+      "  (y wird zu i)",
+      ""
+     ]
+    ],
+    [
+     [
+      "A tennis ball is ",
+      ""
+     ],
+     [
+      "smaller than",
+      "g"
+     ],
+     [
+      " a football.",
+      ""
+     ]
+    ],
+    [
+     [
+      "Achtung:",
+      "g"
+     ],
+     [
+      "  good → ",
+      ""
+     ],
+     [
+      "better than",
+      "b"
+     ],
+     [
+      "     bad → ",
+      ""
+     ],
+     [
+      "worse than",
+      "b"
+     ]
+    ]
+   ],
+   "merke": "Vergleichen: -er + than – good → better!"
+  },
+  {
+   "id": "ue-u4-comp-a",
+   "art": "uebung",
+   "typ": "luecken",
+   "titel": "Schreibe die Steigerung mit -er.",
+   "heft": "Schreibe beide Formen ins Heft: cheap – cheaper",
+   "spalten": 2,
+   "tipp": "nice → nicer · big → bigger · funny → funnier · good → better",
+   "items": [
+    "cheap → ___",
+    "old → ___",
+    "nice → ___",
+    "big → ___",
+    "funny → ___",
+    "hot → ___",
+    "easy → ___",
+    "late → ___",
+    "good → ___",
+    "bad → ___"
+   ],
+   "loesung": [
+    "cheap – cheaper",
+    "old – older",
+    "nice – nicer",
+    "big – bigger",
+    "funny – funnier",
+    "hot – hotter",
+    "easy – easier",
+    "late – later",
+    "good – better",
+    "bad – worse"
+   ]
+  },
+  {
+   "id": "ue-u4-comp-b",
+   "art": "uebung",
+   "typ": "saetze",
+   "titel": "Vergleiche: Schreibe den Satz mit -er + than.",
+   "heft": "Schreibe die ganzen Sätze ins Heft.",
+   "beispiel": "A bike / cheap / a car → A bike is cheaper than a car.",
+   "items": [
+    "A cat / small / a dog",
+    "My brother / old / me",
+    "Football / easy / rugby",
+    "Plymouth / big / my town",
+    "Pizza / good / salad (I think)",
+    "London / noisy / a village"
+   ],
+   "loesung": [
+    "A cat is smaller than a dog.",
+    "My brother is older than me.",
+    "Football is easier than rugby.",
+    "Plymouth is bigger than my town.",
+    "I think pizza is better than salad.",
+    "London is noisier than a village."
+   ]
+  },
+  {
+   "id": "he-u4-superlative",
+   "art": "hefteintrag",
+   "titel": "Superlatives – am besten, am schönsten",
+   "zeilen": [
+    [
+     [
+      "So sage ich, was ",
+      ""
+     ],
+     [
+      "am …-sten",
+      "b"
+     ],
+     [
+      " ist:",
+      ""
+     ]
+    ],
+    [
+     [
+      "the",
+      "g"
+     ],
+     [
+      " + kurzes Adjektiv + ",
+      ""
+     ],
+     [
+      "-est",
+      "g"
+     ]
+    ],
+    [
+     [
+      "cheap → ",
+      ""
+     ],
+     [
+      "the cheapest",
+      "b"
+     ],
+     [
+      "     great → ",
+      ""
+     ],
+     [
+      "the greatest",
+      "b"
+     ]
+    ],
+    [
+     [
+      "nice → ",
+      ""
+     ],
+     [
+      "the nicest",
+      "b"
+     ],
+     [
+      "     big → ",
+      ""
+     ],
+     [
+      "the biggest",
+      "b"
+     ]
+    ],
+    [
+     [
+      "funny → ",
+      ""
+     ],
+     [
+      "the funniest",
+      "b"
+     ],
+     [
+      "     friendly → ",
+      ""
+     ],
+     [
+      "the friendliest",
+      "b"
+     ]
+    ],
+    [
+     [
+      "Plymouth is ",
+      ""
+     ],
+     [
+      "the greenest",
+      "g"
+     ],
+     [
+      " city in the south-west.",
+      ""
+     ]
+    ],
+    [
+     [
+      "Besondere Formen:",
+      "g"
+     ]
+    ],
+    [
+     [
+      "good → better → ",
+      ""
+     ],
+     [
+      "best",
+      "b"
+     ],
+     [
+      "     bad → worse → ",
+      ""
+     ],
+     [
+      "worst",
+      "b"
+     ]
+    ]
+   ],
+   "merke": "Am …-sten: the + -est – good → the best!"
+  },
+  {
+   "id": "ue-u4-sup-a",
+   "art": "uebung",
+   "typ": "luecken",
+   "titel": "Schreibe alle drei Formen.",
+   "heft": "Schreibe die drei Formen ins Heft: cheap – cheaper – the cheapest",
+   "spalten": 2,
+   "items": [
+    "cheap → ___ → ___",
+    "old → ___ → ___",
+    "nice → ___ → ___",
+    "big → ___ → ___",
+    "funny → ___ → ___",
+    "busy → ___ → ___",
+    "good → ___ → ___",
+    "bad → ___ → ___"
+   ],
+   "loesung": [
+    "cheap – cheaper – the cheapest",
+    "old – older – the oldest",
+    "nice – nicer – the nicest",
+    "big – bigger – the biggest",
+    "funny – funnier – the funniest",
+    "busy – busier – the busiest",
+    "good – better – the best",
+    "bad – worse – the worst"
+   ]
+  },
+  {
+   "id": "ue-u4-sup-b",
+   "art": "uebung",
+   "typ": "wahl",
+   "titel": "Vergleich oder Superlativ?",
+   "heft": "Schreibe die ganzen Sätze ins Heft.",
+   "items": [
+    {
+     "t": "An elephant is ___ than a dog.",
+     "o": [
+      "bigger",
+      "the biggest"
+     ]
+    },
+    {
+     "t": "The blue whale is ___ animal in the world.",
+     "o": [
+      "bigger",
+      "the biggest"
+     ]
+    },
+    {
+     "t": "This is ___ pizza in town!",
+     "o": [
+      "better",
+      "the best"
+     ]
+    },
+    {
+     "t": "My sister is ___ than me.",
+     "o": [
+      "older",
+      "the oldest"
+     ]
+    },
+    {
+     "t": "Monday is ___ day of the week.",
+     "o": [
+      "worse",
+      "the worst"
+     ]
+    },
+    {
+     "t": "The bus is ___ than the train.",
+     "o": [
+      "cheaper",
+      "the cheapest"
+     ]
+    }
+   ],
+   "loesung": [
+    "An elephant is bigger than a dog.",
+    "The blue whale is the biggest animal in the world.",
+    "This is the best pizza in town!",
+    "My sister is older than me.",
+    "Monday is the worst day of the week.",
+    "The bus is cheaper than the train."
+   ]
+  },
+  {
+   "id": "he-u4-have-to",
+   "art": "hefteintrag",
+   "titel": "have to – I’d like to – I want to",
+   "zeilen": [
+    [
+     [
+      "have to",
+      "g"
+     ],
+     [
+      " = müssen (eine Pflicht, ein Muss)",
+      ""
+     ]
+    ],
+    [
+     [
+      "I ",
+      ""
+     ],
+     [
+      "have to",
+      "b"
+     ],
+     [
+      " tidy my room.     You ",
+      ""
+     ],
+     [
+      "have to",
+      "b"
+     ],
+     [
+      " help.",
+      ""
+     ]
+    ],
+    [
+     [
+      "he / she / it:  Luca ",
+      ""
+     ],
+     [
+      "has to",
+      "b"
+     ],
+     [
+      " clean the garage.",
+      ""
+     ]
+    ],
+    [
+     [
+      "Verneinung:  I ",
+      ""
+     ],
+     [
+      "don’t have to",
+      "b"
+     ],
+     [
+      " cook.  (= ich muss nicht)",
+      ""
+     ]
+    ],
+    [
+     [
+      "I want to",
+      "g"
+     ],
+     [
+      " = ich will     ",
+      ""
+     ],
+     [
+      "I’d like to",
+      "g"
+     ],
+     [
+      " = ich möchte (höflich)",
+      ""
+     ]
+    ],
+    [
+     [
+      "I’d like to go skating, ",
+      ""
+     ],
+     [
+      "but first I have to",
+      "g"
+     ],
+     [
+      " do my homework.",
+      ""
+     ]
+    ],
+    [
+     [
+      "Danach immer die ",
+      ""
+     ],
+     [
+      "Grundform",
+      "b"
+     ],
+     [
+      " des Verbs.",
+      ""
+     ]
+    ]
+   ],
+   "merke": "have to = müssen – he / she / it has to!"
+  },
+  {
+   "id": "ue-u4-have-a",
+   "art": "uebung",
+   "typ": "wahl",
+   "titel": "have to or has to?",
+   "heft": "Schreibe die ganzen Sätze ins Heft.",
+   "items": [
+    {
+     "t": "I ___ tidy my room.",
+     "o": [
+      "have to",
+      "has to"
+     ]
+    },
+    {
+     "t": "Ellie ___ do her paper round.",
+     "o": [
+      "have to",
+      "has to"
+     ]
+    },
+    {
+     "t": "We ___ go to school on Monday.",
+     "o": [
+      "have to",
+      "has to"
+     ]
+    },
+    {
+     "t": "My dad ___ work on Saturday.",
+     "o": [
+      "have to",
+      "has to"
+     ]
+    },
+    {
+     "t": "Luca and his dad ___ clean the garage.",
+     "o": [
+      "have to",
+      "has to"
+     ]
+    },
+    {
+     "t": "Mia ___ hoover the house.",
+     "o": [
+      "have to",
+      "has to"
+     ]
+    }
+   ],
+   "loesung": [
+    "I have to tidy my room.",
+    "Ellie has to do her paper round.",
+    "We have to go to school on Monday.",
+    "My dad has to work on Saturday.",
+    "Luca and his dad have to clean the garage.",
+    "Mia has to hoover the house."
+   ]
+  },
+  {
+   "id": "ue-u4-have-b",
+   "art": "uebung",
+   "typ": "saetze",
+   "titel": "I’d like to …, but first I have to …",
+   "heft": "Schreibe die ganzen Sätze ins Heft.",
+   "beispiel": "go skating / tidy my room → I’d like to go skating, but first I have to tidy my room.",
+   "items": [
+    "meet a friend / do my homework",
+    "play football / wash my dog",
+    "go to town / clean the kitchen",
+    "chill in my room / make lunch"
+   ],
+   "loesung": [
+    "I’d like to meet a friend, but first I have to do my homework.",
+    "I’d like to play football, but first I have to wash my dog.",
+    "I’d like to go to town, but first I have to clean the kitchen.",
+    "I’d like to chill in my room, but first I have to make lunch."
+   ]
+  },
+  {
+   "id": "ue-u4-talk-a",
+   "art": "uebung",
+   "typ": "zuordnen",
+   "titel": "Phrases for a talk: Was passt zusammen?",
+   "heft": "Schreibe die Satzpaare ins Heft.",
+   "links": [
+    "Heute möchte ich über … sprechen.",
+    "Ich möchte euch ein paar Fotos zeigen.",
+    "Das ist das Ende meines Vortrags.",
+    "Danke fürs Zuhören.",
+    "Habt ihr Fragen?",
+    "Mein Hobby ist …"
+   ],
+   "rechts": [
+    "Thank you for listening.",
+    "Do you have any questions?",
+    "My hobby is …",
+    "Today I’d like to talk about …",
+    "That’s the end of my talk.",
+    "I want to show you some photos."
+   ],
+   "loesung": [
+    "Heute möchte ich über … sprechen. – Today I’d like to talk about …",
+    "Ich möchte euch ein paar Fotos zeigen. – I want to show you some photos.",
+    "Das ist das Ende meines Vortrags. – That’s the end of my talk.",
+    "Danke fürs Zuhören. – Thank you for listening.",
+    "Habt ihr Fragen? – Do you have any questions?",
+    "Mein Hobby ist … – My hobby is …"
+   ]
+  },
+  {
+   "id": "ue-u4-tv-a",
+   "art": "uebung",
+   "typ": "zuordnen",
+   "titel": "TV programmes: Was passt?",
+   "heft": "Schreibe die Paare ins Heft: crime series – Tatort",
+   "links": [
+    "crime series",
+    "comedy show",
+    "cartoon",
+    "soap",
+    "sports show",
+    "reality show",
+    "talk show"
+   ],
+   "rechts": [
+    "Leute erzählen im Studio von sich",
+    "eine lustige Sendung",
+    "Zeichentrick",
+    "eine Serie über eine Familie oder eine Straße",
+    "Krimiserie",
+    "Fußball, Rugby …",
+    "echte Leute in einer Show"
+   ],
+   "loesung": [
+    "crime series – Krimiserie",
+    "comedy show – eine lustige Sendung",
+    "cartoon – Zeichentrick",
+    "soap – eine Serie über eine Familie oder eine Straße",
+    "sports show – Fußball, Rugby …",
+    "reality show – echte Leute in einer Show",
+    "talk show – Leute erzählen im Studio von sich"
+   ]
+  },
+  {
+   "id": "ue-u5-lead-in-a",
+   "art": "uebung",
+   "typ": "luecken",
+   "titel": "Visit Dartmoor: Nimm die Wörter aus dem Kasten.",
+   "heft": "Schreibe die ganzen Sätze ins Heft.",
+   "kasten": [
+    "national park",
+    "rivers",
+    "ponies",
+    "careful",
+    "hiking",
+    "foggy",
+    "sheep"
+   ],
+   "items": [
+    "Dartmoor is a ___ in the south-west of England.",
+    "It has lots of hills and ___.",
+    "There are wild ___. You shouldn’t feed them.",
+    "There are lots of ___ on the roads too.",
+    "So be ___ when you drive.",
+    "You can go ___, mud running or hang-gliding.",
+    "Dartmoor can be scary when it’s windy or ___."
+   ],
+   "loesung": [
+    "Dartmoor is a national park in the south-west of England.",
+    "It has lots of hills and rivers.",
+    "There are wild ponies. You shouldn’t feed them.",
+    "There are lots of sheep on the roads too.",
+    "So be careful when you drive.",
+    "You can go hiking, mud running or hang-gliding.",
+    "Dartmoor can be scary when it’s windy or foggy."
+   ]
+  },
+  {
+   "id": "ue-u5-theme1-a",
+   "art": "uebung",
+   "typ": "zuordnen",
+   "titel": "The weather: Welches deutsche Wort passt?",
+   "heft": "Schreibe die Wortpaare ins Heft: rainy – regnerisch",
+   "links": [
+    "rainy",
+    "sunny",
+    "windy",
+    "foggy",
+    "cloudy",
+    "cold",
+    "hot"
+   ],
+   "rechts": [
+    "neblig",
+    "heiß",
+    "regnerisch",
+    "bewölkt",
+    "sonnig",
+    "kalt",
+    "windig"
+   ],
+   "loesung": [
+    "rainy – regnerisch",
+    "sunny – sonnig",
+    "windy – windig",
+    "foggy – neblig",
+    "cloudy – bewölkt",
+    "cold – kalt",
+    "hot – heiß"
+   ]
+  },
+  {
+   "id": "ue-u5-theme1-b",
+   "art": "uebung",
+   "typ": "sortieren",
+   "titel": "Packing for Dartmoor: Was nimmst du mit, was bleibt zu Hause?",
+   "heft": "Zeichne die Tabelle ins Heft.",
+   "spalten": [
+    "I’ll take it 🎒",
+    "I won’t take it 🏠"
+   ],
+   "kasten": [
+    "boots",
+    "rain trousers",
+    "a rain jacket",
+    "a first-aid kit",
+    "a rucksack",
+    "a hairdryer",
+    "a computer game",
+    "a sleeping bag",
+    "a TV",
+    "a map"
+   ],
+   "loesung": [
+    "I’ll take it 🎒: boots, rain trousers, a rain jacket, a first-aid kit, a rucksack, a sleeping bag, a map",
+    "I won’t take it 🏠: a hairdryer, a computer game, a TV"
+   ]
+  },
+  {
+   "id": "ue-u5-theme2-a",
+   "art": "uebung",
+   "typ": "zuordnen",
+   "titel": "Directions: Was passt zusammen?",
+   "heft": "Schreibe die Satzpaare ins Heft.",
+   "links": [
+    "Go straight on.",
+    "Turn left.",
+    "Turn right.",
+    "Go back a bit.",
+    "Walk slowly.",
+    "Stop!",
+    "There’s a chair in front of you."
+   ],
+   "rechts": [
+    "Geh langsam.",
+    "Geh ein Stück zurück.",
+    "Bieg rechts ab.",
+    "Vor dir ist ein Stuhl.",
+    "Geh geradeaus.",
+    "Halt!",
+    "Bieg links ab."
+   ],
+   "loesung": [
+    "Go straight on. – Geh geradeaus.",
+    "Turn left. – Bieg links ab.",
+    "Turn right. – Bieg rechts ab.",
+    "Go back a bit. – Geh ein Stück zurück.",
+    "Walk slowly. – Geh langsam.",
+    "Stop! – Halt!",
+    "There’s a chair in front of you. – Vor dir ist ein Stuhl."
+   ]
+  },
+  {
+   "id": "ue-u5-theme2-b",
+   "art": "uebung",
+   "typ": "wahl",
+   "titel": "Rules to be safe on Dartmoor: should or shouldn’t?",
+   "heft": "Schreibe die ganzen Sätze ins Heft.",
+   "items": [
+    {
+     "t": "You ___ wear good boots.",
+     "o": [
+      "should",
+      "shouldn’t"
+     ]
+    },
+    {
+     "t": "You ___ feed the ponies.",
+     "o": [
+      "should",
+      "shouldn’t"
+     ]
+    },
+    {
+     "t": "You ___ take a map and a whistle.",
+     "o": [
+      "should",
+      "shouldn’t"
+     ]
+    },
+    {
+     "t": "You ___ leave the track.",
+     "o": [
+      "should",
+      "shouldn’t"
+     ]
+    },
+    {
+     "t": "You ___ walk when it’s foggy.",
+     "o": [
+      "should",
+      "shouldn’t"
+     ]
+    },
+    {
+     "t": "If you need help, you ___ stay together.",
+     "o": [
+      "should",
+      "shouldn’t"
+     ]
+    }
+   ],
+   "loesung": [
+    "You should wear good boots.",
+    "You shouldn’t feed the ponies.",
+    "You should take a map and a whistle.",
+    "You shouldn’t leave the track.",
+    "You shouldn’t walk when it’s foggy.",
+    "If you need help, you should stay together."
+   ]
+  },
+  {
+   "id": "ue-u5-story-a",
+   "art": "uebung",
+   "typ": "wahl",
+   "titel": "Dartmoor adventure: Right or wrong?",
+   "heft": "Schreibe die ganzen Sätze ab und right oder wrong dahinter.",
+   "items": [
+    {
+     "t": "Luca put a jacket on a scarecrow.",
+     "o": [
+      "right",
+      "wrong"
+     ]
+    },
+    {
+     "t": "The jacket was Nico’s.",
+     "o": [
+      "right",
+      "wrong"
+     ]
+    },
+    {
+     "t": "Luca fell into the river.",
+     "o": [
+      "right",
+      "wrong"
+     ]
+    },
+    {
+     "t": "The red team crossed the river at the bridge.",
+     "o": [
+      "right",
+      "wrong"
+     ]
+    },
+    {
+     "t": "Merve put joke hairy hands on the blue team’s food.",
+     "o": [
+      "right",
+      "wrong"
+     ]
+    },
+    {
+     "t": "The blue team climbed Hound Tor.",
+     "o": [
+      "right",
+      "wrong"
+     ]
+    },
+    {
+     "t": "Hannah fell on the wet stones.",
+     "o": [
+      "right",
+      "wrong"
+     ]
+    },
+    {
+     "t": "The scary noise was a wild dog.",
+     "o": [
+      "right",
+      "wrong"
+     ]
+    }
+   ],
+   "loesung": [
+    "Luca put a jacket on a scarecrow. – right",
+    "The jacket was Nico’s. – right",
+    "Luca fell into the river. – wrong (Adam fell into the river)",
+    "The red team crossed the river at the bridge. – right",
+    "Merve put joke hairy hands on the blue team’s food. – right",
+    "The blue team climbed Hound Tor. – wrong (they couldn’t see anything because it was foggy)",
+    "Hannah fell on the wet stones. – right",
+    "The scary noise was a wild dog. – wrong (it was Luca)"
+   ]
+  },
+  {
+   "id": "ue-u5-story-b",
+   "art": "uebung",
+   "typ": "luecken",
+   "titel": "Simple past aus der Story: Schreibe die Vergangenheitsform.",
+   "heft": "Schreibe beide Formen ins Heft: walk – walked",
+   "spalten": 2,
+   "items": [
+    "walk → ___",
+    "see → ___",
+    "find → ___",
+    "cross → ___",
+    "fall → ___",
+    "run → ___",
+    "hear → ___",
+    "scream → ___",
+    "can → ___",
+    "make → ___"
+   ],
+   "loesung": [
+    "walk – walked",
+    "see – saw",
+    "find – found",
+    "cross – crossed",
+    "fall – fell",
+    "run – ran",
+    "hear – heard",
+    "scream – screamed",
+    "can – could",
+    "make – made"
+   ]
+  },
+  {
+   "id": "he-u5-will",
+   "art": "hefteintrag",
+   "titel": "The will-future – was sein wird",
+   "zeilen": [
+    [
+     [
+      "Mit dem ",
+      ""
+     ],
+     [
+      "will-future",
+      "g"
+     ],
+     [
+      " sage ich, was in der Zukunft",
+      ""
+     ]
+    ],
+    [
+     [
+      "passieren ",
+      ""
+     ],
+     [
+      "könnte",
+      "b"
+     ],
+     [
+      ". Oft mit: I think, maybe, I’m sure, I hope",
+      ""
+     ]
+    ],
+    [
+     [
+      "will",
+      "g"
+     ],
+     [
+      " + Grundform:  Sally ",
+      ""
+     ],
+     [
+      "will take",
+      "b"
+     ],
+     [
+      " a map.",
+      ""
+     ]
+    ],
+    [
+     [
+      "Kurzform:  ",
+      ""
+     ],
+     [
+      "’ll",
+      "g"
+     ],
+     [
+      "  →  She’ll take food.  I’ll go home.",
+      ""
+     ]
+    ],
+    [
+     [
+      "Verneinung:  ",
+      ""
+     ],
+     [
+      "won’t",
+      "g"
+     ],
+     [
+      " (= will not) + Grundform:  It ",
+      ""
+     ],
+     [
+      "won’t rain",
+      "b"
+     ],
+     [
+      ".",
+      ""
+     ]
+    ],
+    [
+     [
+      "Frage:  What ",
+      ""
+     ],
+     [
+      "will",
+      "g"
+     ],
+     [
+      " the ponies do?   ",
+      ""
+     ],
+     [
+      "Will",
+      "g"
+     ],
+     [
+      " they leave rubbish?",
+      ""
+     ]
+    ],
+    [
+     [
+      "I think it’ll be sunny tomorrow. Maybe we won’t go.",
+      ""
+     ]
+    ]
+   ],
+   "merke": "I will heißt ich werde – nicht: ich will!"
+  },
+  {
+   "id": "ue-u5-will-a",
+   "art": "uebung",
+   "typ": "wahl",
+   "titel": "will or won’t?",
+   "heft": "Schreibe die ganzen Sätze ins Heft.",
+   "items": [
+    {
+     "t": "It’s cloudy. I think it ___ rain.",
+     "o": [
+      "will",
+      "won’t"
+     ]
+    },
+    {
+     "t": "It’s 30 °C. It ___ be cold today.",
+     "o": [
+      "will",
+      "won’t"
+     ]
+    },
+    {
+     "t": "Take your rain trousers! You ___ need them.",
+     "o": [
+      "’ll",
+      "won’t"
+     ]
+    },
+    {
+     "t": "Adam is scared of cows. He ___ go near them.",
+     "o": [
+      "will",
+      "won’t"
+     ]
+    },
+    {
+     "t": "I’m sure Mia ___ take her sunglasses.",
+     "o": [
+      "will",
+      "won’t"
+     ]
+    },
+    {
+     "t": "The ponies are hungry. Maybe they ___ eat the rubbish.",
+     "o": [
+      "will",
+      "won’t"
+     ]
+    }
+   ],
+   "loesung": [
+    "It’s cloudy. I think it will rain.",
+    "It’s 30 °C. It won’t be cold today.",
+    "Take your rain trousers! You’ll need them.",
+    "Adam is scared of cows. He won’t go near them.",
+    "I’m sure Mia will take her sunglasses.",
+    "The ponies are hungry. Maybe they will eat the rubbish."
+   ]
+  },
+  {
+   "id": "ue-u5-will-b",
+   "art": "uebung",
+   "typ": "saetze",
+   "titel": "Schreibe Sätze im will-future.",
+   "heft": "Schreibe die ganzen Sätze ins Heft.",
+   "beispiel": "I think / it / be sunny tomorrow → I think it will be sunny tomorrow.",
+   "items": [
+    "Maybe / we / go to the beach",
+    "I’m sure / you / have fun",
+    "I hope / it / not rain",
+    "I think / Luca / not like the cows",
+    "What / you / do next weekend ?"
+   ],
+   "loesung": [
+    "Maybe we will go to the beach.",
+    "I’m sure you will have fun.",
+    "I hope it won’t rain.",
+    "I think Luca won’t like the cows.",
+    "What will you do next weekend?"
+   ]
+  },
+  {
+   "id": "ue-u5-will-c",
+   "art": "uebung",
+   "typ": "frei",
+   "titel": "Profi: My future",
+   "text": "Wie wird dein Leben in zehn Jahren sein? Schreibe 5 Sätze mit I think / I’m sure / I hope / Maybe + will oder won’t.",
+   "beispiel": "I think I’ll live in Bavaria. I hope I’ll have a good job.",
+   "loesung": "Beispiel:\nI think I’ll live in Munich.\nI hope I’ll have a good job.\nMaybe I’ll be a firefighter.\nI’m sure I’ll have a dog.\nI won’t live in a houseboat.\nPrüfe: will / won’t + Grundform?"
+  },
+  {
+   "id": "ue-u5-will-d",
+   "art": "uebung",
+   "typ": "luecken",
+   "titel": "The weather forecast: Nimm die Wörter aus dem Kasten.",
+   "heft": "Schreibe die ganzen Sätze ins Heft.",
+   "kasten": [
+    "will",
+    "won’t",
+    "windy",
+    "sunny",
+    "warmer",
+    "coldest"
+   ],
+   "items": [
+    "Tomorrow it will be ___ and rainy in the north.",
+    "In the east it will be ___ than in the north.",
+    "In the west it ___ rain.",
+    "In the south it will be ___ all day.",
+    "I think it ___ be cold in the north.",
+    "The north will be the ___ part of the country."
+   ],
+   "loesung": [
+    "Tomorrow it will be windy and rainy in the north.",
+    "In the east it will be warmer than in the north.",
+    "In the west it won’t rain.",
+    "In the south it will be sunny all day.",
+    "I think it will be cold in the north.",
+    "The north will be the coldest part of the country."
+   ]
+  },
+  {
+   "id": "he-u5-wortstellung",
+   "art": "hefteintrag",
+   "titel": "Wortstellung im englischen Satz: S – P – O",
+   "zeilen": [
+    [
+     [
+      "Im englischen Aussagesatz ist die Reihenfolge ",
+      ""
+     ],
+     [
+      "fest",
+      "b"
+     ],
+     [
+      ":",
+      ""
+     ]
+    ],
+    [
+     [
+      "Subjekt",
+      "g"
+     ],
+     [
+      "  |  ",
+      ""
+     ],
+     [
+      "Prädikat (Verb)",
+      "b"
+     ],
+     [
+      "  |  Objekt",
+      ""
+     ]
+    ],
+    [
+     [
+      "The dog",
+      "g"
+     ],
+     [
+      "  |  ",
+      ""
+     ],
+     [
+      "ran",
+      "b"
+     ],
+     [
+      ".",
+      ""
+     ]
+    ],
+    [
+     [
+      "She",
+      "g"
+     ],
+     [
+      "  |  ",
+      ""
+     ],
+     [
+      "ate",
+      "b"
+     ],
+     [
+      "  |  an ice cream.",
+      ""
+     ]
+    ],
+    [
+     [
+      "We",
+      "g"
+     ],
+     [
+      "  |  ",
+      ""
+     ],
+     [
+      "didn’t buy",
+      "b"
+     ],
+     [
+      "  |  chocolate.",
+      ""
+     ]
+    ],
+    [
+     [
+      "Auch nach ",
+      ""
+     ],
+     [
+      "Then / First / So",
+      "b"
+     ],
+     [
+      " bleibt S – P – O:",
+      ""
+     ]
+    ],
+    [
+     [
+      "Then ",
+      ""
+     ],
+     [
+      "they",
+      "g"
+     ],
+     [
+      " ",
+      ""
+     ],
+     [
+      "heard",
+      "b"
+     ],
+     [
+      " the German kids.",
+      ""
+     ]
+    ],
+    [
+     [
+      "Nicht:",
+      "g"
+     ],
+     [
+      " Then heard they the German kids.",
+      ""
+     ]
+    ]
+   ],
+   "merke": "Erst wer (S) – dann was tut er (P) – dann was (O)!"
+  },
+  {
+   "id": "ue-u5-wort-a",
+   "art": "uebung",
+   "typ": "saetze",
+   "titel": "Bringe die Wörter in die richtige Reihenfolge (S – P – O).",
+   "heft": "Schreibe die ganzen Sätze ins Heft.",
+   "beispiel": "took / Adam / a photo → Adam took a photo.",
+   "items": [
+    "Ellie / a tent / made",
+    "Then / the red team / heard / a scary noise",
+    "First / Luca / a jacket / found",
+    "Mia / the bag / wanted",
+    "So / see / the four friends / couldn’t / anything"
+   ],
+   "loesung": [
+    "Ellie made a tent.",
+    "Then the red team heard a scary noise.",
+    "First Luca found a jacket.",
+    "Mia wanted the bag.",
+    "So the four friends couldn’t see anything."
+   ]
+  },
+  {
+   "id": "he-u5-postkarte",
+   "art": "hefteintrag",
+   "titel": "Eine Postkarte schreiben",
+   "zeilen": [
+    [
+     [
+      "Anrede:",
+      "g"
+     ],
+     [
+      "  Dear Luca / Dear Amy",
+      ""
+     ]
+    ],
+    [
+     [
+      "Wo bin ich?",
+      "g"
+     ],
+     [
+      "  Hello from … We’re here on holiday for …",
+      ""
+     ]
+    ],
+    [
+     [
+      "Wetter:",
+      "g"
+     ],
+     [
+      "  The weather is OK. It’s often sunny.",
+      ""
+     ]
+    ],
+    [
+     [
+      "Gestern:",
+      "g"
+     ],
+     [
+      "  Yesterday we ",
+      ""
+     ],
+     [
+      "did",
+      "b"
+     ],
+     [
+      " a bike trip.  (",
+      ""
+     ],
+     [
+      "simple past",
+      "b"
+     ],
+     [
+      ")",
+      ""
+     ]
+    ],
+    [
+     [
+      "Morgen:",
+      "g"
+     ],
+     [
+      "  Tomorrow we’",
+      ""
+     ],
+     [
+      "ll",
+      "b"
+     ],
+     [
+      " go to the beach.  (",
+      ""
+     ],
+     [
+      "will-future",
+      "b"
+     ],
+     [
+      ")",
+      ""
+     ]
+    ],
+    [
+     [
+      "Schluss:",
+      "g"
+     ],
+     [
+      "  Love / Best wishes, Alex",
+      ""
+     ]
+    ],
+    [
+     [
+      "Adresse:",
+      "g"
+     ],
+     [
+      "  Name  –  9 Windsor Street  –  Plymouth PL3 6QL  –  England",
+      ""
+     ]
+    ],
+    [
+     [
+      "Hausnummer ",
+      ""
+     ],
+     [
+      "vor",
+      "b"
+     ],
+     [
+      " der Straße, Postleitzahl ",
+      ""
+     ],
+     [
+      "nach",
+      "b"
+     ],
+     [
+      " dem Ort.",
+      ""
+     ]
+    ],
+    [
+     [
+      "Groß: Satzanfang, I, Namen, Länder, Sprachen (English, Denmark)",
+      ""
+     ]
+    ]
+   ],
+   "merke": "Gestern → simple past, morgen → will!"
+  },
+  {
+   "id": "ue-u5-karte-a",
+   "art": "uebung",
+   "typ": "saetze",
+   "titel": "Finde den Fehler und schreibe den Satz richtig.",
+   "heft": "Schreibe die ganzen Sätze ins Heft.",
+   "beispiel": "hello from blavand. → Hello from Blavand.",
+   "items": [
+    "We are here for three week.",
+    "Yesterday we do a bike trip.",
+    "We spoke english together.",
+    "On the first day i met two girls.",
+    "Tomorrow we go to the beach. (Zukunft!)",
+    "We arrive here last week."
+   ],
+   "loesung": [
+    "We are here for three weeks.",
+    "Yesterday we did a bike trip.",
+    "We spoke English together.",
+    "On the first day I met two girls.",
+    "Tomorrow we’ll go to the beach.",
+    "We arrived here last week."
+   ]
+  },
+  {
+   "id": "ue-u5-ever-a",
+   "art": "uebung",
+   "typ": "luecken",
+   "titel": "Holiday plans: Ergänze den Dialog.",
+   "heft": "Schreibe den ganzen Dialog ins Heft.",
+   "kasten": [
+    "ever",
+    "will",
+    "Lucky",
+    "sounds",
+    "I’ll",
+    "been"
+   ],
+   "items": [
+    "A: We have six weeks’ holiday in July and August.",
+    "B: ___ you! And what ___ you do?",
+    "A: I think ___ go to London.",
+    "B: That ___ cool.",
+    "A: Have you ___ been to London?",
+    "B: No, I haven’t ___ there. Maybe one day!"
+   ],
+   "loesung": [
+    "A: We have six weeks’ holiday in July and August.",
+    "B: Lucky you! And what will you do?",
+    "A: I think I’ll go to London.",
+    "B: That sounds cool.",
+    "A: Have you ever been to London?",
+    "B: No, I haven’t been there. Maybe one day!"
+   ]
+  },
+  {
+   "id": "ue-u5-check-a",
+   "art": "uebung",
+   "typ": "zuordnen",
+   "titel": "Typische Fehler: Welche Regel passt?",
+   "heft": "Schreibe den richtigen Satz und die Nummer der Regel ins Heft.",
+   "links": [
+    "hello from Munich.",
+    "Last Friday i played football.",
+    "The Weather is great.",
+    "Yesterday I go swimming."
+   ],
+   "rechts": [
+    "3 Fast alles klein – auch Nomen.",
+    "1 Am Satzanfang groß.",
+    "4 last Friday / yesterday → simple past",
+    "2 I schreibt man immer groß."
+   ],
+   "loesung": [
+    "hello from Munich. → Hello from Munich. (1 Am Satzanfang groß.)",
+    "Last Friday i played football. → Last Friday I played football. (2 I immer groß.)",
+    "The Weather is great. → The weather is great. (3 fast alles klein)",
+    "Yesterday I go swimming. → Yesterday I went swimming. (4 simple past)"
+   ]
+  },
+  {
+   "id": "ue-u5-rev-a",
+   "art": "uebung",
+   "typ": "wahl",
+   "titel": "Revision: Vergleich oder Superlativ?",
+   "heft": "Schreibe die ganzen Sätze ins Heft.",
+   "items": [
+    {
+     "t": "Dartmoor is ___ than Plymouth.",
+     "o": [
+      "wilder",
+      "the wildest"
+     ]
+    },
+    {
+     "t": "This is ___ day of my life!",
+     "o": [
+      "better",
+      "the best"
+     ]
+    },
+    {
+     "t": "The train is ___ than the bus.",
+     "o": [
+      "faster",
+      "the fastest"
+     ]
+    },
+    {
+     "t": "Hound Tor is ___ hill on our trip.",
+     "o": [
+      "higher",
+      "the highest"
+     ]
+    },
+    {
+     "t": "Today the weather is ___ than yesterday.",
+     "o": [
+      "worse",
+      "the worst"
+     ]
+    }
+   ],
+   "loesung": [
+    "Dartmoor is wilder than Plymouth.",
+    "This is the best day of my life!",
+    "The train is faster than the bus.",
+    "Hound Tor is the highest hill on our trip.",
+    "Today the weather is worse than yesterday."
+   ]
+  },
+  {
+   "id": "ue-u5-rev-b",
+   "art": "uebung",
+   "typ": "wahl",
+   "titel": "Revision: have to, should or will?",
+   "heft": "Schreibe die ganzen Sätze ins Heft.",
+   "items": [
+    {
+     "t": "It’s cloudy. I think it ___ rain.",
+     "o": [
+      "will",
+      "has to"
+     ]
+    },
+    {
+     "t": "You ___ feed the ponies.",
+     "o": [
+      "shouldn’t",
+      "won’t have"
+     ]
+    },
+    {
+     "t": "Luca ___ clean the garage before he can go out.",
+     "o": [
+      "has to",
+      "will to"
+     ]
+    },
+    {
+     "t": "You have a sore throat. You ___ drink hot tea.",
+     "o": [
+      "should",
+      "have"
+     ]
+    },
+    {
+     "t": "Sorry, I’m busy. I ___ do my paper round.",
+     "o": [
+      "have to",
+      "will to"
+     ]
+    },
+    {
+     "t": "Tomorrow we ___ go hiking on Dartmoor.",
+     "o": [
+      "will",
+      "should to"
+     ]
+    }
+   ],
+   "loesung": [
+    "It’s cloudy. I think it will rain.",
+    "You shouldn’t feed the ponies.",
+    "Luca has to clean the garage before he can go out.",
+    "You have a sore throat. You should drink hot tea.",
+    "Sorry, I’m busy. I have to do my paper round.",
+    "Tomorrow we will go hiking on Dartmoor."
+   ]
+  },
+  {
+   "id": "ue-u5-rev-c",
+   "art": "uebung",
+   "typ": "luecken",
+   "titel": "Revision: on, in or at? – und Zeitformen",
+   "heft": "Schreibe die ganzen Sätze ins Heft.",
+   "items": [
+    "Let’s meet ___ Saturday ___ 3 o’clock.",
+    "Yesterday we ___ (go) to Dartmoor.",
+    "Look! The ponies ___ (eat) the rubbish.",
+    "Next week I think I ___ (visit) my grandma.",
+    "Ellie ___ (do) a paper round every Saturday.",
+    "I’m busy ___ the morning."
+   ],
+   "loesung": [
+    "Let’s meet on Saturday at 3 o’clock.",
+    "Yesterday we went to Dartmoor.",
+    "Look! The ponies are eating the rubbish.",
+    "Next week I think I’ll visit my grandma.",
+    "Ellie does a paper round every Saturday.",
+    "I’m busy in the morning."
+   ]
+  },
+  {
+   "id": "ue-u5-rev-d",
+   "art": "uebung",
+   "typ": "frei",
+   "titel": "Profi: An online message",
+   "text": "Du zeltest mit Freunden. Schreibe eine Nachricht an Richard: wo du bist, wie das Wetter ist, was du gestern gemacht hast, was du morgen machst. Mindestens 6 Sätze.",
+   "beispiel": "Hi Richard, hello from Dartmoor! We’re camping near a river.",
+   "loesung": "Beispiel:\nHi Richard,\nhello from Dartmoor! We’re camping near a river with some friends.\nThe weather isn’t great. It’s rainy and windy.\nYesterday we went hiking and we climbed a big rock.\nTomorrow we’ll go swimming in the lake.\nI think it will be sunny then.\nLove, …\nPrüfe: gestern → simple past, morgen → will? Großschreibung?"
+  },
+  {
+   "id": "kann-u4-1",
+   "art": "kann",
+   "teil": "Sprechen",
+   "text": "sagen, was ich am Wochenende gerne tue."
+  },
+  {
+   "id": "kann-u4-2",
+   "art": "kann",
+   "teil": "Wortschatz",
+   "text": "über Taschengeld und Pflichten zu Hause sprechen."
+  },
+  {
+   "id": "kann-u4-3",
+   "art": "kann",
+   "teil": "Sprechen",
+   "text": "mich verabreden (on / in / at)."
+  },
+  {
+   "id": "kann-u4-4",
+   "art": "kann",
+   "teil": "Lesen",
+   "text": "eine Geschichte mit Bildern verstehen."
+  },
+  {
+   "id": "kann-u4-5",
+   "art": "kann",
+   "teil": "Grammatik",
+   "text": "Dinge und Personen vergleichen (-er than)."
+  },
+  {
+   "id": "kann-u4-6",
+   "art": "kann",
+   "teil": "Grammatik",
+   "text": "sagen, was am besten ist (Superlativ)."
+  },
+  {
+   "id": "kann-u4-7",
+   "art": "kann",
+   "teil": "Grammatik",
+   "text": "sagen, was ich tun möchte und was ich tun muss (have to)."
+  },
+  {
+   "id": "kann-u4-8",
+   "art": "kann",
+   "teil": "Sprechen",
+   "text": "einen Kurzvortrag vorbereiten und halten."
+  },
+  {
+   "id": "kann-u4-9",
+   "art": "kann",
+   "teil": "Lesen",
+   "text": "ein Fernsehprogramm schnell nach Infos absuchen."
+  },
+  {
+   "id": "kann-u4-10",
+   "art": "kann",
+   "teil": "Vokabeln",
+   "text": "die Wörter aus Unit 4."
+  },
+  {
+   "id": "kann-u5-1",
+   "art": "kann",
+   "teil": "Lesen",
+   "text": "einer Broschüre Infos entnehmen."
+  },
+  {
+   "id": "kann-u5-2",
+   "art": "kann",
+   "teil": "Wortschatz",
+   "text": "über das Wetter sprechen und einen Ausflug planen."
+  },
+  {
+   "id": "kann-u5-3",
+   "art": "kann",
+   "teil": "Sprechen",
+   "text": "Wege beschreiben und Sicherheitsregeln nennen (should)."
+  },
+  {
+   "id": "kann-u5-4",
+   "art": "kann",
+   "teil": "Lesen",
+   "text": "eine Abenteuergeschichte verstehen und Infos austauschen."
+  },
+  {
+   "id": "kann-u5-5",
+   "art": "kann",
+   "teil": "Grammatik",
+   "text": "sagen, was in der Zukunft passieren wird (will / won’t)."
+  },
+  {
+   "id": "kann-u5-6",
+   "art": "kann",
+   "teil": "Grammatik",
+   "text": "Sätze in der richtigen Reihenfolge S – P – O schreiben."
+  },
+  {
+   "id": "kann-u5-7",
+   "art": "kann",
+   "teil": "Schreiben",
+   "text": "eine Postkarte schreiben."
+  },
+  {
+   "id": "kann-u5-8",
+   "art": "kann",
+   "teil": "Sprechen",
+   "text": "fragen, wo jemand schon gewesen ist."
+  },
+  {
+   "id": "kann-u5-9",
+   "art": "kann",
+   "teil": "Schreiben",
+   "text": "typische Fehler in einem Text finden und verbessern."
+  },
+  {
+   "id": "kann-u5-10",
+   "art": "kann",
+   "teil": "Vokabeln",
+   "text": "die Wörter aus Unit 4 und 5."
   }
  ]
 }

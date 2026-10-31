@@ -3035,6 +3035,877 @@
       "u4-anwenden"
      ]
     }
+   ],
+   "abschnitte": [
+    {
+     "id": "u4-a-lead-in",
+     "titel": "Lead-in: What makes a perfect weekend?",
+     "kurz": "Einstieg · Freizeit",
+     "ico": "🎳",
+     "buch": {
+      "von": 64,
+      "bis": 65
+     },
+     "niveaus": true,
+     "schritte": [
+      {
+       "id": "u4-a-lead-in-buch",
+       "art": "uebung",
+       "buch": {
+        "seite": 65,
+        "uebung": "2"
+       },
+       "text": "My perfect weekend: Schreibe deine drei Lieblings-Aktivitäten wie im Beispiel ins Heft (1 going bowling – it’s exciting)."
+      },
+      {
+       "id": "u4-a-lead-in-ue",
+       "art": "uebung",
+       "baustein": "ue-u4-lead-in-a"
+      },
+      {
+       "id": "u4-a-lead-in-ue2",
+       "art": "uebung",
+       "baustein": "ue-u4-lead-in-b",
+       "niveau": [
+        3
+       ]
+      },
+      {
+       "id": "u4-a-lead-in-partner",
+       "art": "partner",
+       "buch": {
+        "seite": 65,
+        "uebung": "3"
+       },
+       "text": "APPOINTMENTS: Verabrede dich mit zwei Partnern (Are you free at 1 o’clock?) und erzählt euch, was ihr am Wochenende gern macht."
+      },
+      {
+       "id": "u4-a-lead-in-vok",
+       "art": "vokabeln",
+       "text": "Schreibe diese Wörter mit der deutschen Bedeutung in dein Vokabelheft (Buch hinten, Vocabulary Unit 4): (to) message, What makes a perfect weekend?, (to) prefer sth. to sth."
+      }
+     ]
+    },
+    {
+     "id": "u4-a-theme1",
+     "titel": "Theme 1: Money questions",
+     "kurz": "Wörter · Taschengeld und Pflichten",
+     "ico": "💷",
+     "buch": {
+      "von": 66,
+      "bis": 67
+     },
+     "niveaus": true,
+     "schritte": [
+      {
+       "id": "u4-a-theme1-lesen",
+       "art": "lesen",
+       "buch": {
+        "seite": 66
+       },
+       "text": "Lies die Nachricht an teen! magazine und die Antwort."
+      },
+      {
+       "id": "u4-a-theme1-buch",
+       "art": "uebung",
+       "buch": {
+        "seite": 66,
+        "uebung": "1a"
+       },
+       "text": "True or false? Schreibe die ganzen Sätze mit ✓ oder ✗ ins Heft."
+      },
+      {
+       "id": "u4-a-theme1-buch2",
+       "art": "uebung",
+       "buch": {
+        "seite": 66,
+        "uebung": "1b"
+       },
+       "text": "Wer hat die Nachricht geschrieben? Schreibe: I think … wrote the letter because …",
+       "niveau": [
+        2,
+        3
+       ]
+      },
+      {
+       "id": "u4-a-theme1-lesen2",
+       "art": "lesen",
+       "buch": {
+        "seite": 67
+       },
+       "text": "Lies den Dialog „Chores at home“."
+      },
+      {
+       "id": "u4-a-theme1-buch3",
+       "art": "uebung",
+       "buch": {
+        "seite": 67,
+        "uebung": "3a"
+       },
+       "text": "How is Luca different? Schreibe die drei Sätze (He doesn’t help … / have … / get …) ins Heft."
+      },
+      {
+       "id": "u4-a-theme1-buch4",
+       "art": "uebung",
+       "buch": {
+        "seite": 67,
+        "uebung": "3b"
+       },
+       "text": "Schreibe zu jedem Bild A–E den passenden Satz ins Heft."
+      },
+      {
+       "id": "u4-a-theme1-buch5",
+       "art": "uebung",
+       "buch": {
+        "seite": 67,
+        "uebung": "4a"
+       },
+       "text": "Lege die zwei Listen im Heft an: I do these chores / I don’t do these chores – mindestens fünf Chores."
+      },
+      {
+       "id": "u4-a-theme1-ue",
+       "art": "uebung",
+       "baustein": "ue-u4-theme1-a"
+      },
+      {
+       "id": "u4-a-theme1-ue2",
+       "art": "uebung",
+       "baustein": "ue-u4-theme1-b"
+      },
+      {
+       "id": "u4-a-theme1-buch6",
+       "art": "uebung",
+       "buch": {
+        "seite": 67,
+        "uebung": "4b"
+       },
+       "text": "Chores at home: Schreibe einen Text mit mindestens acht Sätzen ins Heft.",
+       "niveau": [
+        3
+       ]
+      },
+      {
+       "id": "u4-a-theme1-vok",
+       "art": "vokabeln",
+       "text": "Schreibe diese Wörter mit der deutschen Bedeutung in dein Vokabelheft (Buch hinten, Vocabulary Unit 4): magazine, pocket money, mean, older than me, until, (to) do chores, once, twice, once a week, (to) hoover, (to) fill, (to) empty, dishwasher, (to) cut, (to) tidy, (to) do a paper round, Poor you! / Lucky you!, the meanest parents."
+      },
+      {
+       "id": "u4-a-theme1-u4-theme1",
+       "art": "app",
+       "station": "u4-theme1"
+      }
+     ]
+    },
+    {
+     "id": "u4-a-theme2",
+     "titel": "Theme 2: Plans for Saturday",
+     "kurz": "Sich verabreden · on / in / at",
+     "ico": "⛸️",
+     "buch": {
+      "von": 68,
+      "bis": 69
+     },
+     "niveaus": true,
+     "schritte": [
+      {
+       "id": "u4-a-theme2-he",
+       "art": "hefteintrag",
+       "baustein": "he-u4-verabreden"
+      },
+      {
+       "id": "u4-a-theme2-lesen",
+       "art": "lesen",
+       "buch": {
+        "seite": 68
+       },
+       "text": "Lies den Dialog „Ice skating with Mia“."
+      },
+      {
+       "id": "u4-a-theme2-buch",
+       "art": "uebung",
+       "buch": {
+        "seite": 68,
+        "uebung": "1b"
+       },
+       "text": "Welche vier Antworten in der Tabelle sind falsch? Schreibe die richtigen Sätze ins Heft (Ellie is free in the afternoon.)."
+      },
+      {
+       "id": "u4-a-theme2-buch2",
+       "art": "uebung",
+       "buch": {
+        "seite": 68,
+        "uebung": "1c"
+       },
+       "text": "Schreibe die Sätze mit den richtigen Zeitangaben ganz ins Heft."
+      },
+      {
+       "id": "u4-a-theme2-ue",
+       "art": "uebung",
+       "baustein": "ue-u4-theme2-a"
+      },
+      {
+       "id": "u4-a-theme2-ue2",
+       "art": "uebung",
+       "baustein": "ue-u4-theme2-b"
+      },
+      {
+       "id": "u4-a-theme2-ue3",
+       "art": "uebung",
+       "baustein": "ue-u4-theme2-c",
+       "niveau": [
+        3
+       ]
+      },
+      {
+       "id": "u4-a-theme2-partner",
+       "art": "partner",
+       "buch": {
+        "seite": 69,
+        "uebung": "2a und 2b"
+       },
+       "text": "Mit einem Partner: Übt den Dialog aus 2a. Dann sucht ihr mit eurem Kalender einen freien Termin (Partner B: S. 106)."
+      },
+      {
+       "id": "u4-a-theme2-vok",
+       "art": "vokabeln",
+       "text": "Schreibe diese Wörter mit der deutschen Bedeutung in dein Vokabelheft (Buch hinten, Vocabulary Unit 4): ice skating, all day, (to) be busy, Let’s see., cheap, It’s cheaper than that., still, next time, glove, enough."
+      },
+      {
+       "id": "u4-a-theme2-u4-zeitangaben",
+       "art": "app",
+       "station": "u4-zeitangaben"
+      },
+      {
+       "id": "u4-a-theme2-u4-weitere",
+       "art": "app",
+       "station": "u4-weitere"
+      }
+     ]
+    },
+    {
+     "id": "u4-a-story",
+     "titel": "Story: It’s a deal!",
+     "kurz": "Story · Lesen",
+     "ico": "🎸",
+     "buch": {
+      "von": 70,
+      "bis": 71
+     },
+     "niveaus": true,
+     "schritte": [
+      {
+       "id": "u4-a-story-buch",
+       "art": "uebung",
+       "buch": {
+        "seite": 70,
+        "uebung": "1"
+       },
+       "text": "Before you read: Welche Überschrift passt zu welchem Bild? Schreibe die Nummern mit den Buchstaben ins Heft."
+      },
+      {
+       "id": "u4-a-story-lesen",
+       "art": "lesen",
+       "buch": {
+        "seite": 70,
+        "bis": 71
+       },
+       "text": "Lies die Story „It’s a deal!“."
+      },
+      {
+       "id": "u4-a-story-buch2",
+       "art": "uebung",
+       "buch": {
+        "seite": 71,
+        "uebung": "2"
+       },
+       "text": "On Saturday morning: Bringe die Verben in die richtige Reihenfolge und schreibe die sechs ganzen Sätze ins Heft."
+      },
+      {
+       "id": "u4-a-story-buch3",
+       "art": "uebung",
+       "buch": {
+        "seite": 71,
+        "uebung": "3"
+       },
+       "text": "On Saturday afternoon: Schreibe die richtigen Sätze ganz ins Heft."
+      },
+      {
+       "id": "u4-a-story-ue",
+       "art": "uebung",
+       "baustein": "ue-u4-story-a"
+      },
+      {
+       "id": "u4-a-story-ue2",
+       "art": "uebung",
+       "baustein": "ue-u4-story-b",
+       "niveau": [
+        2,
+        3
+       ]
+      },
+      {
+       "id": "u4-a-story-vok",
+       "art": "vokabeln",
+       "text": "Schreibe diese Wörter mit der deutschen Bedeutung in dein Vokabelheft (Buch hinten, Vocabulary Unit 4): It’s a deal!, part, I’m going to help …, out of …, newspaper, (to) take, charity shop, charity, second-hand shop, those CDs, nobody, everybody, wall, (to) pay, (to) open, door, comfortable, dress, the 90s."
+      },
+      {
+       "id": "u4-a-story-u4-story",
+       "art": "app",
+       "station": "u4-story"
+      },
+      {
+       "id": "u4-a-story-u4-story-past",
+       "art": "app",
+       "station": "u4-story-past"
+      }
+     ]
+    },
+    {
+     "id": "u4-a-comparison",
+     "titel": "Focus on language: Days out 4 teens",
+     "kurz": "Grammatik · Vergleiche mit -er than",
+     "ico": "🎡",
+     "buch": {
+      "von": 72,
+      "bis": 73
+     },
+     "niveaus": true,
+     "schritte": [
+      {
+       "id": "u4-a-comparison-he",
+       "art": "hefteintrag",
+       "baustein": "he-u4-comparison"
+      },
+      {
+       "id": "u4-a-comparison-lesen",
+       "art": "lesen",
+       "buch": {
+        "seite": 72
+       },
+       "text": "Lies die Website „Days out 4 teens“."
+      },
+      {
+       "id": "u4-a-comparison-buch",
+       "art": "uebung",
+       "buch": {
+        "seite": 72,
+        "uebung": "1a"
+       },
+       "text": "Beantworte die Fragen in ganzen Sätzen im Heft (Dartmoor Zoo isn’t in Plymouth.)."
+      },
+      {
+       "id": "u4-a-comparison-buch2",
+       "art": "uebung",
+       "buch": {
+        "seite": 72,
+        "uebung": "1b"
+       },
+       "text": "Schreibe die Sätze ab und ergänze sie."
+      },
+      {
+       "id": "u4-a-comparison-buch3",
+       "art": "uebung",
+       "buch": {
+        "seite": 72,
+        "uebung": "1c"
+       },
+       "text": "Now write what you think: Schreibe die Sätze mit deiner Meinung ins Heft.",
+       "niveau": [
+        2,
+        3
+       ]
+      },
+      {
+       "id": "u4-a-comparison-buch4",
+       "art": "uebung",
+       "buch": {
+        "seite": 73,
+        "uebung": "3"
+       },
+       "text": "Cyril and Sandy: Schreibe die Sätze ins Heft."
+      },
+      {
+       "id": "u4-a-comparison-ue",
+       "art": "uebung",
+       "baustein": "ue-u4-comp-a"
+      },
+      {
+       "id": "u4-a-comparison-ue2",
+       "art": "uebung",
+       "baustein": "ue-u4-comp-b"
+      },
+      {
+       "id": "u4-a-comparison-buch5",
+       "art": "uebung",
+       "buch": {
+        "seite": 73,
+        "uebung": "4"
+       },
+       "text": "Britain and the US: Schreibe die richtigen Sätze ins Heft.",
+       "niveau": [
+        2,
+        3
+       ]
+      },
+      {
+       "id": "u4-a-comparison-vok",
+       "art": "vokabeln",
+       "text": "Schreibe diese Wörter mit der deutschen Bedeutung in dein Vokabelheft (Buch hinten, Vocabulary Unit 4): day out (pl days out), adult, mile, kilometre (km), theatre, winter, American."
+      },
+      {
+       "id": "u4-a-comparison-u4-komparativ",
+       "art": "app",
+       "station": "u4-komparativ"
+      }
+     ]
+    },
+    {
+     "id": "u4-a-superlative",
+     "titel": "Focus on language: It’s the greatest!",
+     "kurz": "Grammatik · Superlativ",
+     "ico": "🏆",
+     "buch": {
+      "von": 73,
+      "bis": 73
+     },
+     "niveaus": true,
+     "schritte": [
+      {
+       "id": "u4-a-superlative-he",
+       "art": "hefteintrag",
+       "baustein": "he-u4-superlative"
+      },
+      {
+       "id": "u4-a-superlative-buch",
+       "art": "uebung",
+       "buch": {
+        "seite": 73,
+        "uebung": "5a"
+       },
+       "text": "Welche Werbung passt? Schreibe die ganzen Sätze ins Heft (Advert D is for Plymouth.)."
+      },
+      {
+       "id": "u4-a-superlative-ue",
+       "art": "uebung",
+       "baustein": "ue-u4-sup-a"
+      },
+      {
+       "id": "u4-a-superlative-ue2",
+       "art": "uebung",
+       "baustein": "ue-u4-sup-b"
+      },
+      {
+       "id": "u4-a-superlative-buch2",
+       "art": "uebung",
+       "buch": {
+        "seite": 73,
+        "uebung": "6a"
+       },
+       "text": "The neighbourhood near your school: Schreibe die fünf Sätze ganz ins Heft.",
+       "niveau": [
+        2,
+        3
+       ]
+      },
+      {
+       "id": "u4-a-superlative-partner",
+       "art": "partner",
+       "buch": {
+        "seite": 73,
+        "uebung": "6b"
+       },
+       "text": "Vergleicht eure Sätze aus 6a. Do you agree?"
+      },
+      {
+       "id": "u4-a-superlative-vok",
+       "art": "vokabeln",
+       "text": "Schreibe diese Wörter mit der deutschen Bedeutung in dein Vokabelheft (Buch hinten, Vocabulary Unit 4): circus, worse, worst."
+      },
+      {
+       "id": "u4-a-superlative-u4-superlativ",
+       "art": "app",
+       "station": "u4-superlativ"
+      },
+      {
+       "id": "u4-a-superlative-u4-good-better-best",
+       "art": "app",
+       "station": "u4-good-better-best"
+      },
+      {
+       "id": "u4-a-superlative-u4-anwenden",
+       "art": "app",
+       "station": "u4-anwenden"
+      }
+     ]
+    },
+    {
+     "id": "u4-a-have-to",
+     "titel": "Focus on language: Plans and chores",
+     "kurz": "Grammatik · have to / I’d like to",
+     "ico": "🧹",
+     "buch": {
+      "von": 74,
+      "bis": 75
+     },
+     "niveaus": true,
+     "schritte": [
+      {
+       "id": "u4-a-have-to-he",
+       "art": "hefteintrag",
+       "baustein": "he-u4-have-to"
+      },
+      {
+       "id": "u4-a-have-to-buch",
+       "art": "uebung",
+       "buch": {
+        "seite": 74,
+        "uebung": "7a"
+       },
+       "text": "Luca’s garage: Schreibe die Nummern mit den Wörtern ins Heft (1 – garage)."
+      },
+      {
+       "id": "u4-a-have-to-buch2",
+       "art": "uebung",
+       "buch": {
+        "seite": 74,
+        "uebung": "7b"
+       },
+       "text": "Schreibe Lucas Nachricht an Berry mit den Verben aus dem Kasten ab."
+      },
+      {
+       "id": "u4-a-have-to-buch3",
+       "art": "uebung",
+       "buch": {
+        "seite": 75,
+        "uebung": "9a"
+       },
+       "text": "What are Cyril’s plans? Schreibe die ganzen Sätze ins Heft."
+      },
+      {
+       "id": "u4-a-have-to-buch4",
+       "art": "uebung",
+       "buch": {
+        "seite": 75,
+        "uebung": "9b"
+       },
+       "text": "Verbessere Sandys Sätze und schreibe sie richtig ins Heft."
+      },
+      {
+       "id": "u4-a-have-to-ue",
+       "art": "uebung",
+       "baustein": "ue-u4-have-a"
+      },
+      {
+       "id": "u4-a-have-to-ue2",
+       "art": "uebung",
+       "baustein": "ue-u4-have-b",
+       "niveau": [
+        2,
+        3
+       ]
+      },
+      {
+       "id": "u4-a-have-to-buch5",
+       "art": "uebung",
+       "buch": {
+        "seite": 75,
+        "uebung": "9c"
+       },
+       "text": "Schreibe mindestens zwei Sätze über dein Wochenende (I’d like to …, but first I have to …).",
+       "niveau": [
+        2,
+        3
+       ]
+      },
+      {
+       "id": "u4-a-have-to-buch6",
+       "art": "uebung",
+       "buch": {
+        "seite": 75,
+        "uebung": "10a"
+       },
+       "text": "Your chores: Schreibe eine Liste mit deinen Pflichten zu Hause (1 I have to …)."
+      },
+      {
+       "id": "u4-a-have-to-vok",
+       "art": "vokabeln",
+       "text": "Schreibe diese Wörter mit der deutschen Bedeutung in dein Vokabelheft (Buch hinten, Vocabulary Unit 4): mouse (pl mice), (to) go skating, stuff, (to) wash."
+      },
+      {
+       "id": "u4-a-have-to-u4-have-to",
+       "art": "app",
+       "station": "u4-have-to"
+      },
+      {
+       "id": "u4-a-have-to-u4-focus",
+       "art": "app",
+       "station": "u4-focus"
+      }
+     ]
+    },
+    {
+     "id": "u4-a-talk",
+     "titel": "Skills: Giving a short talk",
+     "kurz": "Sprechen · Kurzvortrag vorbereiten",
+     "ico": "🎤",
+     "buch": {
+      "von": 76,
+      "bis": 77
+     },
+     "niveaus": true,
+     "schritte": [
+      {
+       "id": "u4-a-talk-buch",
+       "art": "uebung",
+       "buch": {
+        "seite": 76,
+        "uebung": "2b"
+       },
+       "text": "Mia’s talk: Bringe die Sätze A–E in die richtige Reihenfolge und schreibe sie ins Heft."
+      },
+      {
+       "id": "u4-a-talk-ue",
+       "art": "uebung",
+       "baustein": "ue-u4-talk-a"
+      },
+      {
+       "id": "u4-a-talk-buch2",
+       "art": "uebung",
+       "buch": {
+        "seite": 77,
+        "uebung": "1a"
+       },
+       "text": "A short talk about your hobby: Zeichne das Wordweb „My hobby is …“ ins Heft und ergänze es für dich."
+      },
+      {
+       "id": "u4-a-talk-buch3",
+       "art": "uebung",
+       "buch": {
+        "seite": 77,
+        "uebung": "1b"
+       },
+       "text": "Plane deinen Vortrag: Schreibe Notizen auf Karteikarten wie im Beispiel (My hobby is swimming)."
+      },
+      {
+       "id": "u4-a-talk-buch4",
+       "art": "uebung",
+       "buch": {
+        "seite": 77,
+        "uebung": "1c"
+       },
+       "text": "Such Bilder für deinen Vortrag aus (Poster, Fotos, Gegenstände …).",
+       "niveau": [
+        2,
+        3
+       ]
+      },
+      {
+       "id": "u4-a-talk-partner",
+       "art": "partner",
+       "buch": {
+        "seite": 77,
+        "uebung": "1d"
+       },
+       "text": "Übe deinen Vortrag vor einem Partner – und zu Hause vor dem Spiegel. Dein Partner sagt: You spoke clearly. / I liked the pictures."
+      },
+      {
+       "id": "u4-a-talk-vok",
+       "art": "vokabeln",
+       "text": "Schreibe diese Wörter mit der deutschen Bedeutung in dein Vokabelheft (Buch hinten, Vocabulary Unit 4): talk, (to) speak, (to) give a talk, interest."
+      },
+      {
+       "id": "u4-a-talk-u4-skills",
+       "art": "app",
+       "station": "u4-skills"
+      }
+     ]
+    },
+    {
+     "id": "u4-a-tv",
+     "titel": "Skills: Reading – TV programmes",
+     "kurz": "Lesen · Scanning",
+     "ico": "📺",
+     "buch": {
+      "von": 78,
+      "bis": 78
+     },
+     "niveaus": true,
+     "schritte": [
+      {
+       "id": "u4-a-tv-buch",
+       "art": "uebung",
+       "buch": {
+        "seite": 78,
+        "uebung": "1a"
+       },
+       "text": "Schreibe zu jeder Art Sendung ein deutsches Beispiel ins Heft (crime series: Tatort, …)."
+      },
+      {
+       "id": "u4-a-tv-ue",
+       "art": "uebung",
+       "baustein": "ue-u4-tv-a"
+      },
+      {
+       "id": "u4-a-tv-partner",
+       "art": "partner",
+       "buch": {
+        "seite": 78,
+        "uebung": "1b"
+       },
+       "text": "Which programmes do you like best? Erzählt euch eure Lieblingssendungen: I like … best. – Me too. / Really? I don’t like …"
+      },
+      {
+       "id": "u4-a-tv-buch2",
+       "art": "uebung",
+       "buch": {
+        "seite": 78,
+        "uebung": "2a"
+       },
+       "text": "Scanne das Fernsehprogramm und schreibe die fünf Sendungen ins Heft (1 a talk show: …)."
+      },
+      {
+       "id": "u4-a-tv-buch3",
+       "art": "uebung",
+       "buch": {
+        "seite": 78,
+        "uebung": "2b"
+       },
+       "text": "Plan for the evening: Lege die Tabelle (Who? What? Time? BBC 1 or ITV 1?) im Heft an und fülle sie aus.",
+       "niveau": [
+        2,
+        3
+       ]
+      },
+      {
+       "id": "u4-a-tv-vok",
+       "art": "vokabeln",
+       "text": "Schreibe diese Wörter mit der deutschen Bedeutung in dein Vokabelheft (Buch hinten, Vocabulary Unit 4): crime series, comedy, cartoon, soap, reality, (to) be interested in."
+      }
+     ]
+    },
+    {
+     "id": "u4-a-finale",
+     "titel": "Finale: Test and check · Revision 2",
+     "kurz": "Wiederholung vor der Probe",
+     "ico": "🎯",
+     "buch": {
+      "von": 80,
+      "bis": 83
+     },
+     "niveaus": true,
+     "schluss": true,
+     "schritte": [
+      {
+       "id": "u4-a-finale-buch",
+       "art": "uebung",
+       "buch": {
+        "seite": 80,
+        "uebung": "1–4"
+       },
+       "text": "Test and check: Löse die Aufgaben im Heft. Kontrolliere mit den Lösungen auf S. 219 und verbessere mit Grün."
+      },
+      {
+       "id": "u4-a-finale-buch2",
+       "art": "uebung",
+       "buch": {
+        "seite": 82,
+        "uebung": "1a und 1b"
+       },
+       "text": "Revision 2 – Three dialogues: Schreibe die drei Dialoge mit den Wörtern aus dem Kasten ins Heft und gib jedem eine Überschrift."
+      },
+      {
+       "id": "u4-a-finale-partner",
+       "art": "partner",
+       "buch": {
+        "seite": 82,
+        "uebung": "2"
+       },
+       "text": "The categories game: Spielt mit einem Partner – die Lehrkraft sagt den Buchstaben."
+      },
+      {
+       "id": "u4-a-finale-buch3",
+       "art": "uebung",
+       "buch": {
+        "seite": 83,
+        "uebung": "3a"
+       },
+       "text": "All about your town: Wo solltest du …? Schreibe die ganzen Sätze ins Heft."
+      },
+      {
+       "id": "u4-a-finale-buch4",
+       "art": "uebung",
+       "buch": {
+        "seite": 83,
+        "uebung": "3b"
+       },
+       "text": "Schreibe eine Bewertung von Läden und Restaurants in deinem Ort (mindestens 5 Sätze, mit -er than).",
+       "niveau": [
+        3
+       ]
+      },
+      {
+       "id": "u4-a-finale-partner2",
+       "art": "partner",
+       "buch": {
+        "seite": 83,
+        "uebung": "4"
+       },
+       "text": "Find nine differences! (Partner B: S. 107)"
+      },
+      {
+       "id": "u4-a-finale-vok",
+       "art": "vokabeln",
+       "text": "Kontrolliere dein Vokabelheft: Stehen alle Wörter aus Unit 4 drin? Verbessere mit Grün."
+      },
+      {
+       "id": "u4-a-finale-u4-finale",
+       "art": "app",
+       "station": "u4-finale"
+      }
+     ]
+    }
+   ],
+   "kann": [
+    {
+     "baustein": "kann-u4-1",
+     "abschnitt": "u4-a-lead-in"
+    },
+    {
+     "baustein": "kann-u4-2",
+     "abschnitt": "u4-a-theme1"
+    },
+    {
+     "baustein": "kann-u4-3",
+     "abschnitt": "u4-a-theme2"
+    },
+    {
+     "baustein": "kann-u4-4",
+     "abschnitt": "u4-a-story"
+    },
+    {
+     "baustein": "kann-u4-5",
+     "abschnitt": "u4-a-comparison"
+    },
+    {
+     "baustein": "kann-u4-6",
+     "abschnitt": "u4-a-superlative"
+    },
+    {
+     "baustein": "kann-u4-7",
+     "abschnitt": "u4-a-have-to"
+    },
+    {
+     "baustein": "kann-u4-8",
+     "abschnitt": "u4-a-talk"
+    },
+    {
+     "baustein": "kann-u4-9",
+     "abschnitt": "u4-a-tv"
+    },
+    {
+     "baustein": "kann-u4-10",
+     "abschnitt": "u4-a-finale"
+    }
    ]
   },
   {
@@ -3190,6 +4061,769 @@
       "u5-skills",
       "u5-anwenden"
      ]
+    }
+   ],
+   "abschnitte": [
+    {
+     "id": "u5-a-lead-in",
+     "titel": "Lead-in: Visit Dartmoor",
+     "kurz": "Einstieg · Nationalpark",
+     "ico": "🐴",
+     "buch": {
+      "von": 84,
+      "bis": 85
+     },
+     "niveaus": true,
+     "schritte": [
+      {
+       "id": "u5-a-lead-in-lesen",
+       "art": "lesen",
+       "buch": {
+        "seite": 84,
+        "bis": 85
+       },
+       "text": "Lies die Broschüre „Visit Dartmoor with Ranger Ralph“."
+      },
+      {
+       "id": "u5-a-lead-in-buch",
+       "art": "uebung",
+       "buch": {
+        "seite": 85,
+        "uebung": "1"
+       },
+       "text": "A Dartmoor brochure: Schreibe die Sätze 1–6 ab und ergänze sie."
+      },
+      {
+       "id": "u5-a-lead-in-ue",
+       "art": "uebung",
+       "baustein": "ue-u5-lead-in-a"
+      },
+      {
+       "id": "u5-a-lead-in-vok",
+       "art": "vokabeln",
+       "text": "Schreibe diese Wörter mit der deutschen Bedeutung in dein Vokabelheft (Buch hinten, Vocabulary Unit 5): national park, south-west, river, hang-gliding, mud, hiking, (to) drive, careful, windy, foggy, hairy, (to) enjoy."
+      },
+      {
+       "id": "u5-a-lead-in-u5-grundwortschatz",
+       "art": "app",
+       "station": "u5-grundwortschatz"
+      }
+     ]
+    },
+    {
+     "id": "u5-a-theme1",
+     "titel": "Theme 1: Planning a trip",
+     "kurz": "Wörter · Wetter · Packen",
+     "ico": "🎒",
+     "buch": {
+      "von": 86,
+      "bis": 87
+     },
+     "niveaus": true,
+     "schritte": [
+      {
+       "id": "u5-a-theme1-lesen",
+       "art": "lesen",
+       "buch": {
+        "seite": 86
+       },
+       "text": "Lies den Dialog „The adventure club at Eggy“."
+      },
+      {
+       "id": "u5-a-theme1-buch",
+       "art": "uebung",
+       "buch": {
+        "seite": 86,
+        "uebung": "1a"
+       },
+       "text": "What will the students do on Dartmoor? Schreibe die Antworten in ganzen Sätzen ins Heft."
+      },
+      {
+       "id": "u5-a-theme1-buch2",
+       "art": "uebung",
+       "buch": {
+        "seite": 86,
+        "uebung": "1b"
+       },
+       "text": "Wer spricht über die Dinge auf den Bildern A–E? Schreibe: A – Mia: I hope it won’t rain."
+      },
+      {
+       "id": "u5-a-theme1-buch3",
+       "art": "uebung",
+       "buch": {
+        "seite": 86,
+        "uebung": "2"
+       },
+       "text": "The weather: Zeichne das Wordweb „What’s the weather like? It’s …“ ins Heft und ergänze es."
+      },
+      {
+       "id": "u5-a-theme1-ue",
+       "art": "uebung",
+       "baustein": "ue-u5-theme1-a"
+      },
+      {
+       "id": "u5-a-theme1-buch4",
+       "art": "uebung",
+       "buch": {
+        "seite": 87,
+        "uebung": "3a"
+       },
+       "text": "Packing for the trip: Was würdest du einpacken? Schreibe eine Liste ins Heft."
+      },
+      {
+       "id": "u5-a-theme1-ue2",
+       "art": "uebung",
+       "baustein": "ue-u5-theme1-b"
+      },
+      {
+       "id": "u5-a-theme1-partner",
+       "art": "partner",
+       "buch": {
+        "seite": 87,
+        "uebung": "4"
+       },
+       "text": "Packing for a sleepover: Einigt euch auf fünf Dinge (Partner B: S. 107). You: I’d like to take … – Partner: No, we won’t need …"
+      },
+      {
+       "id": "u5-a-theme1-vok",
+       "art": "vokabeln",
+       "text": "Schreibe diese Wörter mit der deutschen Bedeutung in dein Vokabelheft (Buch hinten, Vocabulary Unit 5): it won’t (= will not) rain, (to) rain, boot, (to) pack, first-aid kit, sleeping bag, rucksack, hairdryer."
+      },
+      {
+       "id": "u5-a-theme1-u5-theme1",
+       "art": "app",
+       "station": "u5-theme1"
+      }
+     ]
+    },
+    {
+     "id": "u5-a-theme2",
+     "titel": "Theme 2: At the adventure centre",
+     "kurz": "Wegbeschreibung · Regeln mit should",
+     "ico": "🧭",
+     "buch": {
+      "von": 88,
+      "bis": 89
+     },
+     "niveaus": true,
+     "schritte": [
+      {
+       "id": "u5-a-theme2-he",
+       "art": "hefteintrag",
+       "baustein": "he-u3-should",
+       "wiederholen": true
+      },
+      {
+       "id": "u5-a-theme2-partner",
+       "art": "partner",
+       "buch": {
+        "seite": 88,
+        "uebung": "1a"
+       },
+       "text": "MEDIATION: Lies die Spielregeln von „maze“ und erkläre sie deinem Partner auf Deutsch."
+      },
+      {
+       "id": "u5-a-theme2-buch",
+       "art": "uebung",
+       "buch": {
+        "seite": 88,
+        "uebung": "1d"
+       },
+       "text": "Welcher Satz passt zu welchem Bild? Schreibe die Sätze mit dem Buchstaben ins Heft."
+      },
+      {
+       "id": "u5-a-theme2-ue",
+       "art": "uebung",
+       "baustein": "ue-u5-theme2-a"
+      },
+      {
+       "id": "u5-a-theme2-partner2",
+       "art": "partner",
+       "buch": {
+        "seite": 88,
+        "uebung": "2"
+       },
+       "text": "AND YOU? Baut ein Labyrinth im Klassenzimmer und lotst euch mit verbundenen Augen hindurch."
+      },
+      {
+       "id": "u5-a-theme2-buch2",
+       "art": "uebung",
+       "buch": {
+        "seite": 89,
+        "uebung": "3a"
+       },
+       "text": "Rules to be safe on Dartmoor: Schreibe drei oder vier wichtige Regeln ins Heft (You should … / You shouldn’t …)."
+      },
+      {
+       "id": "u5-a-theme2-ue2",
+       "art": "uebung",
+       "baustein": "ue-u5-theme2-b"
+      },
+      {
+       "id": "u5-a-theme2-partner3",
+       "art": "partner",
+       "buch": {
+        "seite": 89,
+        "uebung": "3a"
+       },
+       "text": "PAIR: Vergleicht eure Regeln und einigt euch auf die vier wichtigsten."
+      },
+      {
+       "id": "u5-a-theme2-vok",
+       "art": "vokabeln",
+       "text": "Schreibe diese Wörter mit der deutschen Bedeutung in dein Vokabelheft (Buch hinten, Vocabulary Unit 5): (to) check, careful, (to) listen carefully, Go straight on., slow, Turn right/left., safe, (to) leave."
+      },
+      {
+       "id": "u5-a-theme2-u5-theme2",
+       "art": "app",
+       "station": "u5-theme2"
+      },
+      {
+       "id": "u5-a-theme2-u5-should",
+       "art": "app",
+       "station": "u5-should"
+      }
+     ]
+    },
+    {
+     "id": "u5-a-story",
+     "titel": "Story: Dartmoor adventure",
+     "kurz": "Story · Lesen · Jigsaw",
+     "ico": "🗺️",
+     "buch": {
+      "von": 90,
+      "bis": 91
+     },
+     "niveaus": true,
+     "schritte": [
+      {
+       "id": "u5-a-story-lesen",
+       "art": "lesen",
+       "buch": {
+        "seite": 90,
+        "bis": 91
+       },
+       "text": "Lies die Geschichte des blauen Teams."
+      },
+      {
+       "id": "u5-a-story-lesen2",
+       "art": "lesen",
+       "buch": {
+        "seite": 108,
+        "bis": 109
+       },
+       "text": "Lies die Geschichte des roten Teams (Partner B, S. 108–109)."
+      },
+      {
+       "id": "u5-a-story-buch",
+       "art": "uebung",
+       "buch": {
+        "seite": 91,
+        "uebung": "2a"
+       },
+       "text": "Questions for the blue team: Beantworte die Fragen 1–5 in ganzen Sätzen im Heft."
+      },
+      {
+       "id": "u5-a-story-buch2",
+       "art": "uebung",
+       "buch": {
+        "seite": 109,
+        "uebung": "2a"
+       },
+       "text": "Questions for the red team: Beantworte die Fragen 1–4 in ganzen Sätzen im Heft.",
+       "niveau": [
+        2,
+        3
+       ]
+      },
+      {
+       "id": "u5-a-story-partner",
+       "art": "partner",
+       "buch": {
+        "seite": 91,
+        "uebung": "2b"
+       },
+       "text": "JIGSAW: Setzt euch mit Kindern aus dem anderen Team zusammen und fragt euch gegenseitig. Macht Notizen."
+      },
+      {
+       "id": "u5-a-story-ue",
+       "art": "uebung",
+       "baustein": "ue-u5-story-a"
+      },
+      {
+       "id": "u5-a-story-ue2",
+       "art": "uebung",
+       "baustein": "ue-u5-story-b",
+       "niveau": [
+        2,
+        3
+       ]
+      },
+      {
+       "id": "u5-a-story-vok",
+       "art": "vokabeln",
+       "text": "Schreibe diese Wörter mit der deutschen Bedeutung in dein Vokabelheft (Buch hinten, Vocabulary Unit 5): track, plastic bag, whistle, bridge, cottage, stone, cross, (to) take a photo, Bavarian, at the top (of), inside, (to) scream, cloudy, not (…) anything, (to) hear, side, ground, she could, she couldn’t, joke, her leg was sore, (to) climb."
+      },
+      {
+       "id": "u5-a-story-u5-story",
+       "art": "app",
+       "station": "u5-story"
+      }
+     ]
+    },
+    {
+     "id": "u5-a-will",
+     "titel": "Focus on language: What will happen?",
+     "kurz": "Grammatik · will-future · Wetter",
+     "ico": "🔮",
+     "buch": {
+      "von": 92,
+      "bis": 94
+     },
+     "niveaus": true,
+     "schritte": [
+      {
+       "id": "u5-a-will-he",
+       "art": "hefteintrag",
+       "baustein": "he-u5-will"
+      },
+      {
+       "id": "u5-a-will-buch",
+       "art": "uebung",
+       "buch": {
+        "seite": 92,
+        "uebung": "1"
+       },
+       "text": "What do you think will happen next? Schreibe zu jedem Bild den Satz mit A, B oder C ganz ins Heft."
+      },
+      {
+       "id": "u5-a-will-buch2",
+       "art": "uebung",
+       "buch": {
+        "seite": 92,
+        "uebung": "2a"
+       },
+       "text": "Lege die Tabelle (? / Yes / No) im Heft an und sammle mindestens vier Sätze für jede Spalte."
+      },
+      {
+       "id": "u5-a-will-buch3",
+       "art": "uebung",
+       "buch": {
+        "seite": 93,
+        "uebung": "3"
+       },
+       "text": "The weather forecast: Schreibe die Sätze mit der richtigen Form ab."
+      },
+      {
+       "id": "u5-a-will-ue",
+       "art": "uebung",
+       "baustein": "ue-u5-will-a"
+      },
+      {
+       "id": "u5-a-will-ue2",
+       "art": "uebung",
+       "baustein": "ue-u5-will-b"
+      },
+      {
+       "id": "u5-a-will-buch4",
+       "art": "uebung",
+       "buch": {
+        "seite": 93,
+        "uebung": "4a"
+       },
+       "text": "AND YOU? Your future: Schreibe so viele Sätze wie möglich ins Heft.",
+       "niveau": [
+        2,
+        3
+       ]
+      },
+      {
+       "id": "u5-a-will-ue3",
+       "art": "uebung",
+       "baustein": "ue-u5-will-c",
+       "niveau": [
+        3
+       ]
+      },
+      {
+       "id": "u5-a-will-buch5",
+       "art": "uebung",
+       "buch": {
+        "seite": 94,
+        "uebung": "7a"
+       },
+       "text": "Schreibe den Wetterbericht für morgen mit den richtigen Wörtern ab."
+      },
+      {
+       "id": "u5-a-will-ue4",
+       "art": "uebung",
+       "baustein": "ue-u5-will-d"
+      },
+      {
+       "id": "u5-a-will-buch6",
+       "art": "uebung",
+       "buch": {
+        "seite": 94,
+        "uebung": "7b"
+       },
+       "text": "Your weather map: Zeichne eine Wetterkarte von Deutschland für morgen und schreibe Sätze dazu.",
+       "niveau": [
+        3
+       ]
+      },
+      {
+       "id": "u5-a-will-buch7",
+       "art": "uebung",
+       "buch": {
+        "seite": 93,
+        "uebung": "5"
+       },
+       "text": "MEDIATION: Schreibe ins Heft, was Ranger Sally sagt – auf Deutsch (Sie glaubt, dass es …).",
+       "niveau": [
+        3
+       ]
+      },
+      {
+       "id": "u5-a-will-vok",
+       "art": "vokabeln",
+       "text": "Schreibe diese Wörter mit der deutschen Bedeutung in dein Vokabelheft (Buch hinten, Vocabulary Unit 5): (to) happen, rubbish, rubbish bin, forecast, (to) put sth. on, future, girlfriend / boyfriend, this morning / afternoon / evening."
+      },
+      {
+       "id": "u5-a-will-u5-will",
+       "art": "app",
+       "station": "u5-will"
+      },
+      {
+       "id": "u5-a-will-u5-will-meinung",
+       "art": "app",
+       "station": "u5-will-meinung"
+      }
+     ]
+    },
+    {
+     "id": "u5-a-wortstellung",
+     "titel": "Focus on language: Writing about what happened",
+     "kurz": "Grammatik · Wortstellung S-P-O",
+     "ico": "🧩",
+     "buch": {
+      "von": 95,
+      "bis": 95
+     },
+     "niveaus": true,
+     "schritte": [
+      {
+       "id": "u5-a-wortstellung-he",
+       "art": "hefteintrag",
+       "baustein": "he-u5-wortstellung"
+      },
+      {
+       "id": "u5-a-wortstellung-buch",
+       "art": "uebung",
+       "buch": {
+        "seite": 95,
+        "uebung": "8"
+       },
+       "text": "Sind die blauen Wörter in der richtigen Reihenfolge? Schreibe alle sechs Sätze richtig ins Heft."
+      },
+      {
+       "id": "u5-a-wortstellung-ue",
+       "art": "uebung",
+       "baustein": "ue-u5-wort-a"
+      },
+      {
+       "id": "u5-a-wortstellung-u5-wortstellung",
+       "art": "app",
+       "station": "u5-wortstellung"
+      }
+     ]
+    },
+    {
+     "id": "u5-a-postkarte",
+     "titel": "Skills: A postcard",
+     "kurz": "Schreiben · Postkarte",
+     "ico": "💌",
+     "buch": {
+      "von": 95,
+      "bis": 95
+     },
+     "niveaus": true,
+     "schritte": [
+      {
+       "id": "u5-a-postkarte-he",
+       "art": "hefteintrag",
+       "baustein": "he-u5-postkarte"
+      },
+      {
+       "id": "u5-a-postkarte-lesen",
+       "art": "lesen",
+       "buch": {
+        "seite": 95
+       },
+       "text": "Lies Alex’ Postkarte an Luca."
+      },
+      {
+       "id": "u5-a-postkarte-buch",
+       "art": "uebung",
+       "buch": {
+        "seite": 95,
+        "uebung": "9b"
+       },
+       "text": "Schreibe Alex’ Postkarte neu ab und verbessere seine Fehler."
+      },
+      {
+       "id": "u5-a-postkarte-ue",
+       "art": "uebung",
+       "baustein": "ue-u5-karte-a"
+      },
+      {
+       "id": "u5-a-postkarte-buch2",
+       "art": "uebung",
+       "buch": {
+        "seite": 95,
+        "uebung": "9c"
+       },
+       "text": "Imagine you’re on holiday: Schreibe eine Postkarte an Amy (wo, Wetter, 2 Dinge von gestern, 2 Pläne für morgen).",
+       "niveau": [
+        2,
+        3
+       ]
+      },
+      {
+       "id": "u5-a-postkarte-vok",
+       "art": "vokabeln",
+       "text": "Schreibe diese Wörter mit der deutschen Bedeutung in dein Vokabelheft (Buch hinten, Vocabulary Unit 5): postcard, Denmark, Sweden."
+      },
+      {
+       "id": "u5-a-postkarte-u5-weitere",
+       "art": "app",
+       "station": "u5-weitere"
+      }
+     ]
+    },
+    {
+     "id": "u5-a-speaking",
+     "titel": "Skills: Asking about places",
+     "kurz": "Sprechen · Have you ever been …?",
+     "ico": "🌍",
+     "buch": {
+      "von": 96,
+      "bis": 96
+     },
+     "niveaus": true,
+     "schritte": [
+      {
+       "id": "u5-a-speaking-lesen",
+       "art": "lesen",
+       "buch": {
+        "seite": 96
+       },
+       "text": "Lies den Dialog von Ellie und Nico."
+      },
+      {
+       "id": "u5-a-speaking-buch",
+       "art": "uebung",
+       "buch": {
+        "seite": 96,
+        "uebung": "1"
+       },
+       "text": "Wer ist nächste Woche in der Schule, wer hat Ferien? Schreibe zwei ganze Sätze ins Heft."
+      },
+      {
+       "id": "u5-a-speaking-ue",
+       "art": "uebung",
+       "baustein": "ue-u5-ever-a"
+      },
+      {
+       "id": "u5-a-speaking-partner",
+       "art": "partner",
+       "buch": {
+        "seite": 96,
+        "uebung": "2"
+       },
+       "text": "AND YOU? Fragt euch: Have you ever been to …? – Yes, it’s cool. / No, maybe one day!"
+      },
+      {
+       "id": "u5-a-speaking-partner2",
+       "art": "partner",
+       "buch": {
+        "seite": 96,
+        "uebung": "3"
+       },
+       "text": "Holiday plans: Lest den Dialog mit verteilten Rollen, dann tauscht."
+      },
+      {
+       "id": "u5-a-speaking-vok",
+       "art": "vokabeln",
+       "text": "Schreibe diese Wörter mit der deutschen Bedeutung in dein Vokabelheft (Buch hinten, Vocabulary Unit 5): (to) ask sb. about sth., Have you ever been …?, ever, Italy, a week’s / six weeks’ holiday."
+      },
+      {
+       "id": "u5-a-speaking-u5-skills",
+       "art": "app",
+       "station": "u5-skills"
+      }
+     ]
+    },
+    {
+     "id": "u5-a-writing",
+     "titel": "Skills: Checking and correcting texts",
+     "kurz": "Schreiben · Fehler finden",
+     "ico": "✍️",
+     "buch": {
+      "von": 98,
+      "bis": 98
+     },
+     "niveaus": true,
+     "schritte": [
+      {
+       "id": "u5-a-writing-buch",
+       "art": "uebung",
+       "buch": {
+        "seite": 98,
+        "uebung": "1"
+       },
+       "text": "An online message from Bavaria: Finde die Fehler und schreibe Nicos Nachricht richtig ins Heft."
+      },
+      {
+       "id": "u5-a-writing-ue",
+       "art": "uebung",
+       "baustein": "ue-u5-check-a"
+      },
+      {
+       "id": "u5-a-writing-buch2",
+       "art": "uebung",
+       "buch": {
+        "seite": 98,
+        "uebung": "2a"
+       },
+       "text": "AND YOU? Schreibe eine erste Fassung einer Nachricht an einen englischen Freund (Wetter, letzte Woche, nächste Woche).",
+       "niveau": [
+        2,
+        3
+       ]
+      },
+      {
+       "id": "u5-a-writing-buch3",
+       "art": "uebung",
+       "buch": {
+        "seite": 98,
+        "uebung": "2c"
+       },
+       "text": "Prüfe deine Fassung mit den vier Fehlerarten und schreibe sie ohne Fehler neu ab.",
+       "niveau": [
+        2,
+        3
+       ]
+      },
+      {
+       "id": "u5-a-writing-vok",
+       "art": "vokabeln",
+       "text": "Schreibe diese Wörter mit der deutschen Bedeutung in dein Vokabelheft (Buch hinten, Vocabulary Unit 5): (to) correct, lake, over here."
+      }
+     ]
+    },
+    {
+     "id": "u5-a-finale",
+     "titel": "Finale: Test and check · Revision",
+     "kurz": "Wiederholung Unit 4 und 5",
+     "ico": "🎯",
+     "buch": {
+      "von": 100,
+      "bis": 100
+     },
+     "niveaus": true,
+     "schluss": true,
+     "schritte": [
+      {
+       "id": "u5-a-finale-buch",
+       "art": "uebung",
+       "buch": {
+        "seite": 100,
+        "uebung": "2–4"
+       },
+       "text": "Test and check: Löse die Aufgaben 2–4 im Heft. Kontrolliere mit den Lösungen auf S. 220 und verbessere mit Grün."
+      },
+      {
+       "id": "u5-a-finale-ue",
+       "art": "uebung",
+       "baustein": "ue-u5-rev-a"
+      },
+      {
+       "id": "u5-a-finale-ue2",
+       "art": "uebung",
+       "baustein": "ue-u5-rev-b"
+      },
+      {
+       "id": "u5-a-finale-ue3",
+       "art": "uebung",
+       "baustein": "ue-u5-rev-c"
+      },
+      {
+       "id": "u5-a-finale-ue4",
+       "art": "uebung",
+       "baustein": "ue-u5-rev-d",
+       "niveau": [
+        2,
+        3
+       ]
+      },
+      {
+       "id": "u5-a-finale-vok",
+       "art": "vokabeln",
+       "text": "Kontrolliere dein Vokabelheft: Stehen alle Wörter aus Unit 5 drin? Verbessere mit Grün."
+      },
+      {
+       "id": "u5-a-finale-u5-anwenden",
+       "art": "app",
+       "station": "u5-anwenden"
+      },
+      {
+       "id": "u5-a-finale-u5-finale",
+       "art": "app",
+       "station": "u5-finale"
+      }
+     ]
+    }
+   ],
+   "kann": [
+    {
+     "baustein": "kann-u5-1",
+     "abschnitt": "u5-a-lead-in"
+    },
+    {
+     "baustein": "kann-u5-2",
+     "abschnitt": "u5-a-theme1"
+    },
+    {
+     "baustein": "kann-u5-3",
+     "abschnitt": "u5-a-theme2"
+    },
+    {
+     "baustein": "kann-u5-4",
+     "abschnitt": "u5-a-story"
+    },
+    {
+     "baustein": "kann-u5-5",
+     "abschnitt": "u5-a-will"
+    },
+    {
+     "baustein": "kann-u5-6",
+     "abschnitt": "u5-a-wortstellung"
+    },
+    {
+     "baustein": "kann-u5-7",
+     "abschnitt": "u5-a-postkarte"
+    },
+    {
+     "baustein": "kann-u5-8",
+     "abschnitt": "u5-a-speaking"
+    },
+    {
+     "baustein": "kann-u5-9",
+     "abschnitt": "u5-a-writing"
+    },
+    {
+     "baustein": "kann-u5-10",
+     "abschnitt": "u5-a-finale"
     }
    ]
   }
