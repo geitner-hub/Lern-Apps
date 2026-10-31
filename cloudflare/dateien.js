@@ -406,6 +406,7 @@ function dateienPruefeJourney(neu, alt, bausteine, katalogIds) {
         if (s.niveau !== undefined && !(Array.isArray(s.niveau) && s.niveau.length && s.niveau.every(n => [1, 2, 3].includes(n)))) p.push(ws + ': niveau ungültig');
         if (s.buch !== undefined && !buchOk(s.buch)) p.push(ws + ': Buchverweis ungültig');
         if (s.text !== undefined && !dateienZeile(s.text, 600)) p.push(ws + ': Text ungültig');
+        if (s.he !== undefined && !(s.he === false && ['uebung', 'app'].includes(s.art))) p.push(ws + ': he nur als false bei Übung und App');
         if (s.art === 'hefteintrag' || (s.art === 'uebung' && s.baustein !== undefined)) {
           const b = B.get(s.baustein);
           if (!b || b.art !== s.art) p.push(ws + ': Baustein ' + s.baustein + ' fehlt oder passt nicht');

@@ -843,6 +843,7 @@ for jw_p in sorted(ROOT.glob('daten/journey*.json')):
                     if art == 'hefteintrag': he_ids.add(b_)
                 elif b_ is not None: FA(f'Schritt {sid}: baustein nur bei Hefteintrag und Übung')
                 if art == 'hefteintrag' and b_ is None: FA(f'Schritt {sid}: Hefteintrag ohne baustein')
+                if 'he' in s and (s['he'] is not False or art not in ('uebung', 'app')): FA(f'Schritt {sid}: he gibt es nur als false bei Übung und App (kein Bezug zum Hefteintrag)')
                 if art == 'hefteintrag' and a.get('wahl'): FA(f'Schritt {sid}: Hefteinträge nur in Pflicht-Abschnitten – {aid} ist eine Wahlstation (das Finale wartet auf jeden Hefteintrag)')
                 if art == 'uebung' and b_ is None and bu is None: FA(f'Schritt {sid}: Übung braucht baustein (eigene Aufgabe) oder buch (Buchaufgabe)')
                 if art == 'app':
