@@ -734,13 +734,16 @@
     "wege": {
       "journey6": {
         "bis": {
-          "g:123676bc75aa3e264f709ce34e6e213e": "u1-a-finale",
-          "g:8dee44b8c52b30c944370c3911111187": "u1-a-finale"
+          "g:123676bc75aa3e264f709ce34e6e213e": "u2-a-finale",
+          "g:8dee44b8c52b30c944370c3911111187": "u2-a-finale"
         },
         "he": {
           "he-u1-simple-past": 1,
           "he-u1-objektpronomen": 2,
-          "he-u1-linking-words": 3
+          "he-u1-linking-words": 3,
+          "he-u2-did-fragen": 4,
+          "he-u2-plural": 5,
+          "he-u2-weg": 6
         }
       }
     }
