@@ -93,6 +93,7 @@ OHNE_NAVBAR = {
 # Lern-Apps, die bewusst nicht auf der Startseite stehen (kein Hinweis „steht nicht in config.json“) – mit Grund
 NUR_UEBER_LINK = {
     'apps/englisch/journey-anwenden.html',          # Anwenden-Stationen: nur über den English Journey (Direktstart ?stufe=)
+    'apps/anatomie/anatomie-testat.html',           # Anatomie-Testat-Trainer fürs Medizinstudium: nur per Link/QR, kein Fach, keine Wertung
 }
 
 fehler, hinweise, infos = [], [], []
