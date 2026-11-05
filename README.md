@@ -796,6 +796,11 @@ in pruefen.py unter `NUR_UEBER_LINK`), kein Fach, kein Katalog-Thema.
 - **Keine Wertung:** ruft nie `LernApps.saveResult` auf → zählt nicht für XP, Pass, Spielsperre, Dorf, „Meine Themen“.
   `<body data-pass="aus">` lädt pass.js gar nicht (kein Safari-Hinweis); navbar.js bringt nur den Home-Knopf.
 - **Speicher:** `lernwelt-anatomie` (localStorage, nicht in der Sicherungskarte): Lernstand je Kapitel und Hell/Dunkel.
+- **Kapitel (v117):** je Abschnitt eine Datei `data/anatomie-<kapitel>-inhalte.js`, die sich mit `start` (erste Buchseite) in
+  `window.KAPITEL_LISTE` einträgt: entwicklung (S. 2–21), koerper (S. 22–39), knochen-gelenke (S. 40–49), faszien-gefaesse (S. 66–77),
+  rumpf (S. 108–151). Auswahl im Kopf, Adresse `?kapitel=<id>`, gemerkt in `lernwelt-anatomie`. Fehlen Sortieren/Tabellen, verschwinden
+  die Reiter; ohne Tafeln zeigt der Reiter „Tafeln folgen“. Neues Kapitel: Datei anlegen und als `<script>` vor `anatomie-rumpf-inhalte.js`
+  in `anatomie-testat.html` eintragen.
 - **Dateien:** `data/anatomie-rumpf-inhalte.js` (Strukturen mit Prometheus-Seitenverweis, Karten, Fragen, Sortieren, Tabellen),
   `data/anatomie-rumpf-tafeln.js` (je Tafel Bild, Pixelmaße, Masken `[x, y, b, h, farbe?]` über der Originalbeschriftung,
   Pins `[strukturId, x, y]` in Bildpixeln), `data/anatomie-bildnachweise.js`, `js/anatomie-app.js`, `bilder/grayNN.png`.

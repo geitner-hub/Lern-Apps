@@ -7,7 +7,9 @@
    ═══════════════════════════════════════════════════════ */
 (function () {
   'use strict';
-  const KAP = (window.KAPITEL_LISTE || [])[0];
+  /* Kapitel: alle Datendateien legen sich in KAPITEL_LISTE ab; Auswahl per ?kapitel=<id> oder gespeichert */
+  const LISTE = (window.KAPITEL_LISTE || []).slice().sort((a, b) => (a.start || 0) - (b.start || 0));
+  let KAP = null;   // wird nach dem Laden des Speichers gesetzt
   const NACHWEIS = window.ANATOMIE_BILDNACHWEISE || {};
   const $ = (s, r = document) => r.querySelector(s);
   const el = (tag, attrs = {}, html = '') => { const e = document.createElement(tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (html) e.innerHTML = html; return e; };
@@ -24,6 +26,11 @@
   let alles = { kap: {} };
   try { const raw = localStorage.getItem(SPEICHER_KEY); if (raw) alles = Object.assign(alles, JSON.parse(raw)); } catch (e) { /* ohne Speicher weiter */ }
   if (!alles.kap || typeof alles.kap !== 'object') alles.kap = {};
+  const wunsch = new URLSearchParams(location.search).get('kapitel') || alles.kapitel || 'rumpf-knochen';
+  KAP = LISTE.find(k => k.id === wunsch) || LISTE[0];
+  alles.kapitel = KAP.id;
+  ['tafeln', 'karten', 'fragen', 'tabellen'].forEach(f => { if (!Array.isArray(KAP[f])) KAP[f] = []; });
+  if (!KAP.sortieren || !Array.isArray(KAP.sortieren.items)) KAP.sortieren = null;
   let store = Object.assign({ str: {}, box: {}, quiz: {}, sort: {}, ui: {} }, alles.kap[KAP.id] || {});
   alles.kap[KAP.id] = store;
   const save = () => { try { localStorage.setItem(SPEICHER_KEY, JSON.stringify(alles)); } catch (e) { } };
@@ -43,11 +50,20 @@
   /* ---------- Kopf ---------- */
   $('#crumbs').innerHTML = `<span>Prometheus</span><span>${esc(KAP.band)}</span><span>${esc(KAP.teil)}</span>`;
   $('#kapTitel').innerHTML = `${esc(KAP.titel)}<small>${esc(KAP.seiten)}</small>`;
+  const kwahl = $('#kapitelWahl');
+  kwahl.innerHTML = LISTE.map(k => `<option value="${esc(k.id)}" ${k === KAP ? 'selected' : ''}>${esc(k.seiten)} · ${esc(k.titel)}</option>`).join('');
+  kwahl.onchange = () => {
+    alles.kapitel = kwahl.value; save();
+    const u = new URL(location.href); u.searchParams.set('kapitel', kwahl.value); u.hash = 'start'; location.href = u.href;
+  };
+  // Reiter ohne Inhalt in diesem Kapitel ausblenden
+  const hat = { sortieren: !!KAP.sortieren, tabellen: KAP.tabellen.length > 0 };
+  document.querySelectorAll('#tabs a').forEach(a => { const n = a.getAttribute('href').slice(1); if (n in hat && !hat[n]) a.hidden = true; });
   const app = $('#app');
-  const views = { start: vStart, tafeln: vTafeln, karten: vKarten, fragen: vFragen, sortieren: vSortieren, tabellen: vTabellen, bilder: vBilder };
+  const views = { start: vStart, tafeln: vTafeln, karten: vKarten, fragen: vFragen, sortieren: vSortieren, tabellen: vTabellen, bilder: vBilder, begriffe: vBegriffe };
   function route() {
     const name = (location.hash || '#start').slice(1);
-    const v = views[name] ? name : 'start';
+    const v = views[name] && !(name === 'sortieren' && !KAP.sortieren) && !(name === 'tabellen' && !KAP.tabellen.length) ? name : 'start';
     document.querySelectorAll('#tabs a').forEach(a => a.setAttribute('aria-current', a.getAttribute('href') === '#' + v ? 'page' : 'false'));
     zoomAus();
     app.innerHTML = ''; views[v]();
@@ -60,27 +76,31 @@
     const strOk = [...strIds].filter(id => strState(id) === 'ok').length;
     const kartOk = KAP.karten.filter(k => (store.box[k.id] || 0) >= 3).length;
     const fragOk = KAP.fragen.filter(f => store.quiz[f.id] === 1).length;
-    const sortOk = KAP.sortieren.items.filter(i => store.sort[i.id] === 1).length;
-    const pct = (a, b) => Math.round(100 * a / b);
+    const sortN = KAP.sortieren ? KAP.sortieren.items.length : 0;
+    const sortOk = KAP.sortieren ? KAP.sortieren.items.filter(i => store.sort[i.id] === 1).length : 0;
+    const pct = (a, b) => b ? Math.round(100 * a / b) : 0;
+    const zeilen = [['Strukturen sicher (Tafeln)', strOk, strIds.size], ['Karten ab Fach 3', kartOk, KAP.karten.length], ['Testatfragen richtig', fragOk, KAP.fragen.length], ['Merkmale sortiert', sortOk, sortN]].filter(z => z[2] > 0);
+    const intro = KAP.intro || 'Lerntrainer zu diesem Kapitel.';
     app.innerHTML = `
       <section class="intro">
         <div>
-          <p>Lerntrainer für das Testat zum Rumpfskelett: Wirbelsäule, Bandscheibe, Bänder, Kopfgelenke, Thorax, Becken und Iliosakralgelenk. Die Tafeln sind echte anatomische Abbildungen (Gray’s Anatomy, 1918) mit abgedeckter Beschriftung. Jede Struktur, Tafel und Frage verweist auf Seite und Abbildung im Prometheus.</p>
-          <p class="hint">Tipp: Erst eine Tafel im Modus „Erkunden“ ansehen, dann „Zuordnen“ und „Benennen“. Karteikarten täglich kurz wiederholen.</p>
+          <p>${esc(intro)} Jede Struktur, Karte und Frage verweist auf Seite und Abbildung im Prometheus.</p>
+          <p class="hint">${KAP.tafeln.length ? 'Tipp: Erst eine Tafel im Modus „Erkunden“ ansehen, dann „Zuordnen“ und „Benennen“. Karteikarten täglich kurz wiederholen.' : 'Tipp: Erst die Begriffe durchlesen, dann Karteikarten und Testatfragen. Die Tafeln für dieses Kapitel folgen.'}</p>
         </div>
         <div class="panel">
           <h2>Dein Stand</h2>
           <div class="ref" style="margin-bottom:8px">gespeichert in diesem Browser</div>
-          ${[['Strukturen sicher', strOk, strIds.size], ['Karten ab Fach 3', kartOk, KAP.karten.length], ['Testatfragen richtig', fragOk, KAP.fragen.length], ['Merkmale sortiert', sortOk, KAP.sortieren.items.length]]
+          ${zeilen
             .map(([t, a, b]) => `<div style="margin:8px 0"><div class="row" style="justify-content:space-between"><span>${t}</span><span class="ref">${a} / ${b}</span></div><div class="meter"><i style="width:${pct(a, b)}%"></i></div></div>`).join('')}
         </div>
       </section>
       <section class="modes">
-        <a class="mode" href="#tafeln"><h3>Tafeln beschriften</h3><p>${KAP.tafeln.length} Tafeln: erkunden, Begriffe an die Struktur ziehen, Strukturen finden und benennen.</p></a>
+        <a class="mode" href="#tafeln"><h3>Tafeln beschriften</h3><p>${KAP.tafeln.length ? KAP.tafeln.length + ' Tafeln: erkunden, Begriffe an die Struktur ziehen, Strukturen finden und benennen.' : 'Für dieses Kapitel folgen die Tafeln noch.'}</p></a>
+        <a class="mode" href="#begriffe"><h3>Begriffe</h3><p>${Object.keys(KAP.strukturen).length} Strukturen und Fachbegriffe mit Erklärung und Seitenverweis, durchsuchbar.</p></a>
         <a class="mode" href="#karten"><h3>Karteikarten</h3><p>${KAP.karten.length} Karten mit Wiederholung in fünf Fächern.</p></a>
         <a class="mode" href="#fragen"><h3>Testatfragen</h3><p>${KAP.fragen.length} Fragen mit Erklärung, nach Lerneinheit filterbar.</p></a>
-        <a class="mode" href="#sortieren"><h3>Merkmale sortieren</h3><p>Ordne ${KAP.sortieren.items.length} Merkmale Hals-, Brust-, Lendenwirbel oder Kreuzbein zu.</p></a>
-        <a class="mode" href="#tabellen"><h3>Lückentabellen</h3><p>Bewegungsausmaß, Beckenmaße und Rippen-Wirbel-Verbindungen.</p></a>
+        ${KAP.sortieren ? `<a class="mode" href="#sortieren"><h3>Merkmale sortieren</h3><p>${esc(KAP.sortieren.titel)}: ${sortN} Merkmale, ${KAP.sortieren.kategorien.length} Gruppen.</p></a>` : ''}
+        ${KAP.tabellen.length ? `<a class="mode" href="#tabellen"><h3>Lückentabellen</h3><p>${KAP.tabellen.map(t => esc(t.titel.replace(/\s*\(.*\)$/, ''))).join(', ')}.</p></a>` : ''}
       </section>
       <h2>Lerneinheiten im Buch</h2>
       <ul class="units">${KAP.einheiten.map(u => `<li><span class="nr">${u.nr}</span><span>${esc(u.titel)}</span><span class="pg">S. ${u.seite}</span></li>`).join('')}</ul>`;
@@ -92,6 +112,10 @@
      data/anatomie-bildnachweise.js. */
   let tState = { idx: Math.min(store.ui.tafel || 0, KAP.tafeln.length - 1), mode: store.ui.tmode || 'erkunden' };
   function vTafeln() {
+    if (!KAP.tafeln.length) {
+      app.innerHTML = `<div class="panel" style="max-width:640px"><h2>Tafeln folgen</h2><p>Für „${esc(KAP.titel)}“ werden die Tafeln mit freien Abbildungen noch ergänzt. Bis dahin: <a href="#begriffe">Begriffe</a>, <a href="#karten">Karteikarten</a> und <a href="#fragen">Testatfragen</a>.</p></div>`;
+      return;
+    }
     const lay = el('div', { class: 'tafel-layout' });
     lay.innerHTML = `<div class="tafel-list" id="tlist"></div>
       <div><div class="toolbar">
@@ -538,7 +562,7 @@
     const placed = S.kategorien.map(() => []);
     app.innerHTML = `<div class="toolbar"><h2 style="margin:0">${esc(S.titel)}</h2>${refHtml(S.ref)}</div>
       <div class="sort-stage"><div class="sort-card" id="scard"></div><div id="sfb" class="hint">Wähle den passenden Abschnitt.</div></div>
-      <div class="sort-cols" id="scols">${S.kategorien.map((k, i) => `<div class="sort-col"><button data-k="${i}">${esc(k)}</button><ul id="sc${i}"></ul></div>`).join('')}</div>`;
+      <div class="sort-cols" id="scols" style="--sp:${Math.min(4, S.kategorien.length)}">${S.kategorien.map((k, i) => `<div class="sort-col"><button data-k="${i}">${esc(k)}</button><ul id="sc${i}"></ul></div>`).join('')}</div>`;
     let cur = null;
     const next = () => {
       cur = queue.shift();
@@ -590,6 +614,22 @@
     $('#tnew').onclick = vTabellenRefresh;
   }
   function vTabellenRefresh() { app.innerHTML = ''; vTabellen(); }
+
+  /* ---------- Begriffe (alle Strukturen des Kapitels) ---------- */
+  function vBegriffe() {
+    const alle = Object.entries(KAP.strukturen);
+    app.innerHTML = `<div class="toolbar"><input id="bsuche" type="search" placeholder="Suchen (lateinisch oder deutsch) …" aria-label="Begriffe durchsuchen" autocomplete="off"
+      style="flex:1 1 260px;min-width:0;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:8px 12px;font-size:16px"><span class="ref" id="bzahl"></span></div>
+      <ul class="begriffe" id="bliste"></ul>`;
+    const zeig = q => {
+      q = q.trim().toLowerCase();
+      const treffer = alle.filter(([, s]) => !q || (s.lat + ' ' + s.de + ' ' + s.info).toLowerCase().includes(q));
+      $('#bzahl').textContent = `${treffer.length} von ${alle.length}`;
+      $('#bliste').innerHTML = treffer.map(([, s]) => `<li class="panel"><span class="lat">${esc(s.lat)}</span> <span class="de">${esc(s.de)}</span><p>${esc(s.info)}</p>${refHtml(s.ref)}</li>`).join('');
+    };
+    $('#bsuche').oninput = e => zeig(e.target.value);
+    zeig('');
+  }
 
   /* ---------- Bildnachweise ---------- */
   function vBilder() {
