@@ -18,6 +18,9 @@
 //                             // der Katalog ordnet beides demselben Thema zu.
 //    });
 //
+//  Seiten, die nicht zum Pass gehören (Erwachsene, kein Ergebnis): <body data-pass="aus">
+//  → pass.js wird nicht geladen (kein Safari-Hinweis, keine XP), Home-Button bleibt.
+//
 //  Das war's. Home-Button, Ergebnisanzeige und Lernwelt-Pass
 //  (XP-Meldung) erscheinen automatisch. pass.js, dorf-kern.js
 //  („Mein Dorf“: Aufträge zählen mit) und die Sicherung werden von hier
@@ -61,6 +64,7 @@
   }
   function loadPass() {
     if (window.LernPass || document.getElementById('lw-pass-script')) return;
+    if (document.body && document.body.dataset.pass === 'aus') return;   // <body data-pass="aus">: Seite ohne Pass (z. B. Anatomie-Trainer fürs Studium)
     lade(SOFORT[0], 'lw-pass-script').catch(() => {});
   }
   loadPass();
