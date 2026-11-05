@@ -23,6 +23,7 @@ const CAT_STYLES = {
   "Allgemein":  { icon: "✨", color: "#84cc16", color2: "#a3e635" },
   "Natur und Technik": { icon: "🔬", color: "#14b8a6", color2: "#2dd4bf" },
   "DaZ":        { icon: "💬", color: "#ec4899", color2: "#f472b6" },
+  "Anatomie":   { icon: "🦴", color: "#a8a29e", color2: "#d6d3d1" },   // Anatomie-Testat-Trainer (Studium, nicht für die Kinder; ohne Katalog-Thema)
 };
 // Neues Fach? Nur hier eintragen – Admin (Auswahl, Filter) und Startseite übernehmen es automatisch.
 // Fächer mit Lerninhalten stehen zusätzlich in daten/katalog.json (gleicher Name, pruefen.py vergleicht).
