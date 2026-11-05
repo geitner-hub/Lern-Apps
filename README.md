@@ -804,6 +804,9 @@ in pruefen.py unter `NUR_UEBER_LINK`), kein Fach, kein Katalog-Thema.
   Bildpixeln setzen und am gerenderten Bild prüfen (Pin-Namen einblenden: Modus „Erkunden“ → „Beschriftung zeigen“).
 - **Zoom:** Knöpfe ＋/−/⛶, Doppeltipp, zwei Finger, Strg+Mausrad; Pins behalten ihre Bildschirmgröße.
 - Nicht in sw.js `NACHLADEN` (die Kinder-iPads sollen sie nicht vorladen); der Service Worker speichert sie beim ersten Öffnen.
+- **Im Admin ein-/ausblenden (v114):** darf als App in `config.json` stehen (Fach „Anatomie“ in shared.js), ohne Katalog-Thema –
+  Ausnahme `OHNE_THEMA` in `werkzeuge/pruefen.py` und `gemeinsam/admin/pruefung.js`. Damit die Kinder sie nicht auf der Startseite
+  sehen: im Admin auf „versteckt“ (`hidden: true`) lassen – der direkte Link/QR funktioniert trotzdem.
 
 ## Archiv (archiv/)
 

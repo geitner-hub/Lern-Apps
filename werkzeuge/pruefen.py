@@ -96,6 +96,12 @@ NUR_UEBER_LINK = {
     'apps/anatomie/anatomie-testat.html',           # Anatomie-Testat-Trainer fürs Medizinstudium: nur per Link/QR, kein Fach, keine Wertung
 }
 
+# Lern-Apps in config.json ohne Thema im Inhalts-Katalog (keine Lerninhalte für die Kinder) – mit Grund.
+#   Gleiche Liste in gemeinsam/admin/pruefung.js (OHNE_THEMA) pflegen.
+OHNE_THEMA = {
+    'apps/anatomie/anatomie-testat.html',           # Anatomie-Testat-Trainer fürs Medizinstudium: meldet kein Ergebnis, kein Kinder-Thema
+}
+
 fehler, hinweise, infos = [], [], []
 def F(msg): fehler.append(msg)
 def H(msg): hinweise.append(msg)
@@ -477,7 +483,7 @@ if katalog is not None:
                         if inh in inhalte: F(f'Katalog: Inhalt-ID {inh} doppelt ({inhalte[inh]} und {sid})')
                         inhalte[inh] = sid
     for d in sorted(config_dateien):
-        if d.startswith('apps/') and d not in app_themen:
+        if d.startswith('apps/') and d not in app_themen and d not in OHNE_THEMA:
             F(f'Katalog: {d} steht in config.json, hat aber kein Thema in daten/katalog.json')
     # Etappe 3: Lehrplanbezug, Dauer, Einsatzidee (gelb, wenn ein Thema mit App keinen Lehrplanbezug hat)
     for f in katalog.get('faecher', []):
