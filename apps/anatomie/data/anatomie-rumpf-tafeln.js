@@ -64,5 +64,24 @@
       ['proc-transversus', 15, 182], ['proc-articularis-inferior', 55, 232], ['foramen-vertebrale', 140, 210], ['lamina', 98, 235], ['proc-spinosus', 110, 310]]
   });
 
+  /* ---------- Axis von lateral (Gray Fig. 88) ---------- */
+  T.push({
+    id: 'axis-lateral', title: 'Axis', view: 'Axis (C II) von links-lateral (ventral rechts)', unit: '1.5 / 1.12', ref: 'S. 116 B, S. 117 C',
+    bild: B + 'gray88.png', w: 500, h: 280, nachweis: 'gray88',
+    masken: [[276, 15, 97, 19], [82, 58, 181, 21], [45, 95, 216, 21], [370, 72, 129, 31], [276, 138, 67, 30, G], [186, 180, 49, 17, G],
+      [370, 200, 31, 19], [3, 213, 95, 21], [251, 248, 109, 19], [158, 258, 143, 22]],
+    pins: [['dens-axis', 320, 55], ['facies-articularis-superior', 325, 174], ['corpus-vertebrae', 345, 215], ['foramen-transversarium', 292, 198],
+      ['proc-transversus', 295, 228], ['proc-articularis-inferior', 228, 245], ['lamina', 170, 180], ['proc-spinosus', 115, 222]]
+  });
+
+  /* ---------- 7. Halswirbel von kranial (Gray Fig. 89) ---------- */
+  T.push({
+    id: 'vertebra-prominens', title: 'Vertebra prominens', view: '7. Halswirbel (C VII) von kranial (ventral oben)', unit: '1.5', ref: 'S. 109 C, S. 116 A',
+    bild: B + 'gray89.png', w: 350, h: 367, nachweis: 'gray89',
+    masken: [[172, 10, 34, 15], [4, 60, 62, 22], [261, 68, 53, 16], [288, 153, 58, 16], [50, 200, 53, 37], [126, 352, 95, 15]],
+    pins: [['corpus-vertebrae', 170, 85], ['foramen-transversarium', 78, 110], ['proc-transversus', 18, 113], ['facies-articularis-superior', 78, 165],
+      ['foramen-vertebrale', 170, 145], ['pediculus', 228, 135], ['lamina', 208, 188], ['proc-spinosus', 172, 285]]
+  });
+
   window.TAFELN_RUMPF = T;
 })();
