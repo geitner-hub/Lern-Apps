@@ -208,7 +208,7 @@ h2{font:400 21px/1.2 var(--f-display);margin:0 0 12px}
 /* Sortieren */
 .sort-stage{display:flex;flex-direction:column;align-items:center;gap:14px;margin:6px 0 20px}
 .sort-card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px 22px;font:600 20px/1.3 var(--f-body);text-align:center;max-width:520px;width:100%}
-.sort-cols{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.sort-cols{display:grid;grid-template-columns:repeat(var(--sp,4),minmax(0,1fr));gap:10px}
 .sort-col{border:1px solid var(--line);border-radius:10px;background:var(--surface2);display:flex;flex-direction:column;min-height:180px}
 .sort-col button{border:0;border-bottom:1px solid var(--line);background:var(--surface);border-radius:10px 10px 0 0;padding:12px 8px;font:400 16px var(--f-display);color:var(--accent-ink)}
 .sort-col button:hover{background:var(--accent-soft)}
@@ -233,6 +233,13 @@ td .given{font-family:var(--f-mono)}
 .nachweise img{width:72px;height:72px;object-fit:contain;background:#fff;border-radius:6px}
 .nachweise a{color:var(--indigo);word-break:break-word}
 
+/* Begriffe */
+.begriffe{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
+.begriffe li{padding:12px 14px}
+.begriffe .lat{font-size:18px}
+.begriffe .de{font-weight:700;color:var(--muted);font-size:14px}
+.begriffe p{margin:4px 0 8px;font-size:15px}
+#kapitelWahl{margin:0 0 8px;max-width:100%;font-size:14px}
 footer{max-width:1180px;margin:40px auto 0;font-size:13px;color:var(--muted);border-top:1px solid var(--line);padding-top:14px}
 footer a{color:var(--indigo)}
 
@@ -244,7 +251,7 @@ footer a{color:var(--indigo)}
 @media (max-width:760px){
   .intro,.cards-wrap{grid-template-columns:minmax(0,1fr)}
   .tafel-layout{grid-template-columns:minmax(0,1fr)}
-  .sort-cols{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .sort-cols{grid-template-columns:repeat(min(2,var(--sp,4)),minmax(0,1fr))}
   .plate{padding:8px 8px 6px}
   .fig svg{max-height:62vh}
   #tmode{display:grid;grid-template-columns:repeat(4,1fr);width:100%;border-radius:12px}
@@ -257,12 +264,14 @@ footer a{color:var(--indigo)}
 <body data-tastatur="aus" data-pass="aus">
 <header class="top">
   <div class="kopfzeile">
-    <div><div class="crumbs" id="crumbs"></div><h1 id="kapTitel">Anatomie-Testat-Trainer</h1></div>
+    <div><div class="crumbs" id="crumbs"></div><h1 id="kapTitel">Anatomie-Testat-Trainer</h1>
+      <select id="kapitelWahl" aria-label="Kapitel wählen"></select></div>
     <button id="themaKnopf" type="button" aria-label="Hell/Dunkel umschalten" title="Hell/Dunkel">☀</button>
   </div>
   <nav class="tabs" id="tabs">
     <a href="#start">Übersicht</a>
     <a href="#tafeln">Tafeln</a>
+    <a href="#begriffe">Begriffe</a>
     <a href="#karten">Karteikarten</a>
     <a href="#fragen">Testatfragen</a>
     <a href="#sortieren">Sortieren</a>
@@ -280,6 +289,10 @@ footer a{color:var(--indigo)}
 
 <script src="data/anatomie-bildnachweise.js"></script>
 <script src="data/anatomie-rumpf-tafeln.js"></script>
+<script src="data/anatomie-entwicklung-inhalte.js"></script>
+<script src="data/anatomie-koerper-inhalte.js"></script>
+<script src="data/anatomie-knochen-gelenke-inhalte.js"></script>
+<script src="data/anatomie-faszien-gefaesse-inhalte.js"></script>
 <script src="data/anatomie-rumpf-inhalte.js"></script>
 <script src="js/anatomie-app.js"></script>
 <script src="../../gemeinsam/navbar.js"></script>

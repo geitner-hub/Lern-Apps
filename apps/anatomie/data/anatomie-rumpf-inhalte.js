@@ -314,7 +314,8 @@
   ];
 
   (window.KAPITEL_LISTE = window.KAPITEL_LISTE || []).push({
-    id: 'rumpf-knochen',
+    id: 'rumpf-knochen', start: 108,
+    intro: 'Lerntrainer für das Testat zum Rumpfskelett: Wirbelsäule, Bandscheibe, Bänder, Kopfgelenke, Thorax, Becken und Iliosakralgelenk. Die Tafeln sind echte anatomische Abbildungen (Gray’s Anatomy, 1918) mit abgedeckter Beschriftung.',
     band: 'Allgemeine Anatomie und Bewegungssystem',
     teil: 'Rumpfwand',
     titel: 'Knochen, Bänder und Gelenke',
