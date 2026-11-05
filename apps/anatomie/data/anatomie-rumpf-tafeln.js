@@ -277,5 +277,46 @@
     pins: [['incisura-clavicularis', 170, 30], ['manubrium', 135, 80], ['angulus-sterni', 92, 125], ['corpus-sterni', 88, 250], ['proc-xiphoideus', 80, 440]]
   });
 
+  /* ---------- Wirbelsäule von links-lateral (Gray Fig. 111, eingefärbte Fassung von Commons) ---------- */
+  T.unshift({   // als erste Tafel
+    id: 'wirbelsaeule', title: 'Wirbelsäule', view: 'Ansicht von links-lateral (ventral links); Farben: HWS rot, BWS blau, LWS gelb, Kreuzbein grün', unit: '1.2', ref: 'S. 110 A, S. 111 B',
+    bild: B + 'gray111c.png', w: 233, h: 800, nachweis: 'gray111c',
+    masken: [[0, 15, 68, 26], [0, 40, 66, 22], [44, 68, 30, 20], [44, 91, 30, 20], [44, 120, 30, 20], [44, 143, 30, 20], [44, 163, 30, 20], [58, 183, 32, 21],
+      [64, 205, 32, 21], [78, 228, 34, 22], [82, 253, 32, 21], [88, 278, 32, 21], [92, 306, 32, 21], [94, 331, 32, 21], [90, 358, 32, 21], [86, 385, 32, 21],
+      [72, 416, 40, 21], [66, 445, 40, 21], [54, 478, 46, 23], [54, 510, 28, 22], [44, 538, 28, 22], [36, 573, 28, 22], [36, 613, 28, 22], [40, 653, 30, 22],
+      [16, 708, 82, 22], [56, 778, 56, 22]],
+    pins: [['atlas', 85, 25], ['axis', 92, 55], ['hws', 92, 110], ['zervikallordose', 72, 95], ['vertebra-prominens', 160, 166],
+      ['bws', 145, 330], ['thorakalkyphose', 125, 290], ['foramen-intervertebrale', 128, 555], ['lws', 105, 590], ['lumballordose', 74, 560],
+      ['discus-intervertebralis', 92, 643], ['promontorium', 95, 678], ['os-sacrum', 150, 720], ['sakralkyphose', 175, 740], ['os-coccygis', 150, 790]]
+  });
+
+  /* ---------- Hintere Kopfgelenk-Bänder (Gray Fig. 305) ---------- */
+  T.push({
+    id: 'kopfgelenke-hinten', title: 'Hintere Bänder der Kopfgelenke', view: 'Hinterhaupt, Atlas und Axis von dorsal', unit: '1.12', ref: 'S. 130 A, S. 131 C',
+    bild: B + 'gray305.png', w: 575, h: 504, nachweis: 'gray305',
+    masken: [[188, 138, 94, 20, '#fbf3c4'], [155, 228, 162, 26, '#e2decb'], [155, 267, 147, 24, '#d8cfa8'], [140, 298, 37, 48, '#dcdcd6'], [183, 310, 94, 28, '#d2d2cb'],
+      [168, 348, 124, 40, '#d8d6b8'], [253, 395, 40, 25, '#e8eaaf'], [253, 455, 35, 25, '#efe8c0'], [440, 212, 135, 66]],
+    pins: [['os-occipitale', 230, 100], ['membrana-atlantooccipitalis-posterior', 230, 215], ['arcus-posterior', 180, 275], ['tuberculum-posterius-atlantis', 232, 262],
+      ['sulcus-a-vertebralis', 335, 262], ['lamina', 205, 365], ['proc-spinosus-bifidus', 240, 410], ['lig-flavum', 268, 468]]
+  });
+
+  /* ---------- Thorax von rechts (Gray Fig. 114, nach Spalteholz) ---------- */
+  T.push({
+    id: 'thorax-lateral', title: 'Knöcherner Brustkorb', view: 'Ansicht von rechts-lateral (ventral rechts); dunkel = Rippenknorpel', unit: '1.17 / 1.18', ref: 'S. 140 A, S. 142 A',
+    bild: B + 'gray114.png', w: 459, h: 600, nachweis: 'gray114',
+    masken: [[100, 10, 86, 22], [383, 110, 50, 20], [8, 448, 94, 22], [30, 498, 76, 22]],
+    pins: [['costa-prima', 290, 85], ['sternum', 380, 140], ['costae-verae', 300, 210], ['cartilago-costalis', 388, 290], ['costae-spuriae', 330, 470],
+      ['arcus-costalis', 400, 500], ['costae-fluctuantes', 300, 555], ['proc-spinosus', 95, 375]]
+  });
+
+  /* ---------- Mittlere Rippe von kaudal (Gray Fig. 122) ---------- */
+  T.push({
+    id: 'rippe', title: 'Rippe', view: 'Mittlere Rippe der linken Seite, Ansicht von kaudal; rote Linien = Muskelansätze', unit: '1.18', ref: 'S. 143 D',
+    bild: B + 'gray122.png', w: 464, h: 800, nachweis: 'gray122',
+    masken: [[294, 2, 146, 17], [328, 19, 128, 17], [174, 20, 34, 17], [372, 80, 30, 18, '#d6d6d6'], [394, 104, 22, 28, '#c8c8c8'], [110, 188, 66, 18], [86, 432, 30, 16]],
+    pins: [['caput-costae', 410, 115], ['collum-costae', 380, 92], ['tuberculum-costae', 345, 55], ['angulus-costae', 186, 62], ['sulcus-costae', 95, 200],
+      ['corpus-costae', 42, 440]]
+  });
+
   window.TAFELN_RUMPF = T;
 })();

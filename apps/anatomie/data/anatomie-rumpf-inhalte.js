@@ -103,6 +103,8 @@
     'lineae-transversae': S('Lineae transversae', 'Querleisten', 'Quer verlaufende Leisten auf der Facies pelvica; Reste der Verschmelzung der fünf Sakralwirbelkörper.', 'S. 122 A'),
     'ala-ossis-sacri': S('Ala ossis sacri', 'Kreuzbeinflügel', 'Seitlicher Teil der Basis ossis sacri neben dem Promontorium; Teil der Pars lateralis.', 'S. 122 A'),
     'facies-auricularis': S('Facies auricularis', 'Ohrfläche', 'Ohrmuschelförmige Gelenkfläche an der Pars lateralis; bildet mit dem Os ilium das Iliosakralgelenk.', 'S. 122 B, 151 C'),
+    'membrana-atlantooccipitalis-posterior': S('Membrana atlantooccipitalis posterior', 'hintere Atlas-Hinterhaupt-Membran', 'Spannt sich zwischen hinterem Atlasbogen und Hinterrand des Foramen magnum; wird seitlich von A. vertebralis und N. suboccipitalis durchbohrt.', 'S. 130 A, 131 C'),
+    'sulcus-costae': S('Sulcus costae', 'Rippenfurche', 'Rinne am Unterrand der Rippeninnenseite; hier verlaufen die Interkostalgefäße und der N. intercostalis.', 'S. 143 D'),
     'apex-ossis-sacri': S('Apex ossis sacri', 'Kreuzbeinspitze', 'Kaudales schmales Ende des Kreuzbeins; Verbindung zum Steißbein.', 'S. 122 A–B'),
 
     /* Thorax */
