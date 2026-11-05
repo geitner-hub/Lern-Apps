@@ -18,6 +18,15 @@
     aenderung: 'Originalbeschriftung in der App abgedeckt, Pins ergänzt'
   });
   window.ANATOMIE_BILDNACHWEISE = {
+    gray111c: {
+      bild: 'bilder/gray111c.png',
+      titel: 'Gray’s Anatomy (1918), Fig. 111: Vertebral column, eingefärbte Fassung',
+      seite: 'https://commons.wikimedia.org/wiki/File:Gray_111_-_Vertebral_column-coloured.png',
+      autor: 'Henry Gray, Anatomy of the Human Body (1918), Zeichnung Henry Vandyke Carter; eingefärbt auf Wikimedia Commons',
+      lizenz: 'gemeinfrei (Public Domain)',
+      lizenzUrl: 'https://commons.wikimedia.org/wiki/Commons:Licensing',
+      aenderung: 'Beschriftung in der App abgedeckt, Pins ergänzt'
+    },
     gray84: g(84, "A cervical vertebra."),
     gray85: g(85, "Side view of a typical cervical vertebra."),
     gray86: g(86, "First cervical vertebra, or atlas."),

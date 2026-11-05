@@ -230,5 +230,93 @@
       ['lig-sacrospinale', 360, 420], ['symphysis', 465, 610]]
   });
 
+  /* ---------- Kreuzbeinbasis von kranial (Gray Fig. 98) ---------- */
+  T.push({
+    id: 'kreuzbein-basis', title: 'Basis ossis sacri', view: 'Kreuzbein von kranial (dorsal oben)', unit: '1.8', ref: 'S. 122 A–B',
+    bild: B + 'gray98.png', w: 500, h: 333, nachweis: 'gray98',
+    masken: [[312, 30, 84, 19], [366, 52, 111, 19], [74, 175, 20, 40, '#cccfd2'], [355, 100, 92, 82, '#aeb1b3'], [222, 200, 46, 23, '#e4e7e9'], [380, 195, 72, 42, '#b9bcbf']],
+    pins: [['canalis-vertebralis', 245, 125], ['proc-articularis-superior-sacri', 372, 100], ['ala-ossis-sacri', 70, 230], ['pars-lateralis', 440, 250],
+      ['promontorium', 245, 282]]
+  });
+
+  /* ---------- Lig. longitudinale posterius (Gray Fig. 302) ---------- */
+  T.push({
+    id: 'lig-long-post', title: 'Hinteres Längsband', view: 'Brustwirbelsäule von dorsal, Wirbelbögen entfernt (Pediculi durchtrennt)', unit: '1.10', ref: 'S. 126 A–C',
+    bild: B + 'gray302.png', w: 244, h: 300, nachweis: 'gray302',
+    masken: [[158, 35, 72, 19], [158, 92, 82, 31], [76, 50, 14, 225, '#b5b8b5']],
+    pins: [['lig-longitudinale-posterius', 95, 140], ['pediculus', 120, 45], ['discus-intervertebralis', 130, 100]]
+  });
+
+  /* ---------- Art. costotransversaria von kranial (Gray Fig. 313) ---------- */
+  T.push({
+    id: 'costotransversal', title: 'Rippen-Querfortsatz-Gelenk', view: 'Brustwirbel mit Rippenpaar, Ansicht von kranial (ventral oben)', unit: '1.18 / 1.19', ref: 'S. 143 D, S. 145 C a',
+    bild: B + 'gray313.png', w: 566, h: 401, nachweis: 'gray313',
+    masken: [[228, 65, 150, 45, '#eeeeec'], [28, 115, 152, 30], [3, 153, 127, 19], [3, 180, 100, 31], [100, 190, 75, 40, '#f6ebae'], [130, 210, 115, 48, '#f6ebae'],
+      [255, 235, 100, 22, '#f6ebae'], [280, 300, 40, 45, '#f6ebae'], [360, 205, 105, 70, '#f6ebae'], [400, 175, 60, 45, '#f6ebae'], [468, 182, 98, 19], [470, 238, 50, 30, '#f6ebae'], [32, 306, 110, 19]],
+    pins: [['discus-intervertebralis', 300, 60], ['foramen-vertebrale', 300, 180], ['art-capitis-costae', 380, 165], ['collum-costae', 440, 200],
+      ['proc-transversus', 410, 240], ['art-costotransversaria', 452, 248], ['tuberculum-costae', 472, 262], ['lig-costotransversarium-laterale', 95, 262],
+      ['lamina', 300, 250], ['proc-spinosus', 305, 350]]
+  });
+
+  /* ---------- Bänder des Beckens von dorsal (Gray Fig. 320) ---------- */
+  T.push({
+    id: 'beckenbaender-dorsal', title: 'Bänder des Beckens', view: 'Rechte Beckenhälfte mit Kreuzbein, Ansicht von dorsal', unit: '1.21 / 1.22', ref: 'S. 148 A b, S. 151 C',
+    bild: B + 'gray320.png', w: 559, h: 700, nachweis: 'gray320',
+    masken: [[20, 27, 112, 18], [50, 40, 127, 18], [140, 15, 105, 18], [435, 322, 124, 18], [362, 527, 117, 18], [7, 617, 127, 35], [160, 682, 120, 18]],
+    pins: [['lig-supraspinale', 40, 150], ['ligg-sacroiliaca-posteriora', 110, 140], ['lig-iliolumbale', 185, 60], ['crista-iliaca', 330, 30],
+      ['foramen-ischiadicum-majus', 215, 340], ['lig-sacrospinale', 215, 462], ['lig-sacrotuberale', 200, 505], ['foramen-ischiadicum-minus', 155, 545],
+      ['tuber-ischiadicum', 230, 640]]
+  });
+
+  /* ---------- Sternum von lateral (Gray Fig. 117) ---------- */
+  T.push({
+    id: 'sternum-lateral', title: 'Sternum', view: 'Brustbein von links-lateral (ventral rechts)', unit: '1.17', ref: 'S. 140 A, S. 141 C',
+    bild: B + 'gray117.png', w: 337, h: 500, nachweis: 'gray117',
+    masken: [[192, 15, 110, 33], [192, 55, 132, 36], [152, 90, 80, 21], [16, 108, 50, 33], [140, 130, 160, 33], [120, 200, 180, 23], [104, 233, 36, 19],
+      [104, 270, 177, 23], [104, 327, 177, 23], [104, 362, 177, 23], [104, 385, 177, 23], [90, 410, 102, 23]],
+    pins: [['incisura-clavicularis', 170, 30], ['manubrium', 135, 80], ['angulus-sterni', 92, 125], ['corpus-sterni', 88, 250], ['proc-xiphoideus', 80, 440]]
+  });
+
+  /* ---------- Wirbelsäule von links-lateral (Gray Fig. 111, eingefärbte Fassung von Commons) ---------- */
+  T.unshift({   // als erste Tafel
+    id: 'wirbelsaeule', title: 'Wirbelsäule', view: 'Ansicht von links-lateral (ventral links); Farben: HWS rot, BWS blau, LWS gelb, Kreuzbein grün', unit: '1.2', ref: 'S. 110 A, S. 111 B',
+    bild: B + 'gray111c.png', w: 233, h: 800, nachweis: 'gray111c',
+    masken: [[0, 15, 68, 26], [0, 40, 66, 22], [44, 68, 30, 20], [44, 91, 30, 20], [44, 120, 30, 20], [44, 143, 30, 20], [44, 163, 30, 20], [58, 183, 32, 21],
+      [64, 205, 32, 21], [78, 228, 34, 22], [82, 253, 32, 21], [88, 278, 32, 21], [92, 306, 32, 21], [94, 331, 32, 21], [90, 358, 32, 21], [86, 385, 32, 21],
+      [72, 416, 40, 21], [66, 445, 40, 21], [54, 478, 46, 23], [54, 510, 28, 22], [44, 538, 28, 22], [36, 573, 28, 22], [36, 613, 28, 22], [40, 653, 30, 22],
+      [16, 708, 82, 22], [56, 778, 56, 22]],
+    pins: [['atlas', 85, 25], ['axis', 92, 55], ['hws', 92, 110], ['zervikallordose', 72, 95], ['vertebra-prominens', 160, 166],
+      ['bws', 145, 330], ['thorakalkyphose', 125, 290], ['foramen-intervertebrale', 128, 555], ['lws', 105, 590], ['lumballordose', 74, 560],
+      ['discus-intervertebralis', 92, 643], ['promontorium', 95, 678], ['os-sacrum', 150, 720], ['sakralkyphose', 175, 740], ['os-coccygis', 150, 790]]
+  });
+
+  /* ---------- Hintere Kopfgelenk-Bänder (Gray Fig. 305) ---------- */
+  T.push({
+    id: 'kopfgelenke-hinten', title: 'Hintere Bänder der Kopfgelenke', view: 'Hinterhaupt, Atlas und Axis von dorsal', unit: '1.12', ref: 'S. 130 A, S. 131 C',
+    bild: B + 'gray305.png', w: 575, h: 504, nachweis: 'gray305',
+    masken: [[188, 138, 94, 20, '#fbf3c4'], [155, 228, 162, 26, '#e2decb'], [155, 267, 147, 24, '#d8cfa8'], [140, 298, 37, 48, '#dcdcd6'], [183, 310, 94, 28, '#d2d2cb'],
+      [168, 348, 124, 40, '#d8d6b8'], [253, 395, 40, 25, '#e8eaaf'], [253, 455, 35, 25, '#efe8c0'], [440, 212, 135, 66]],
+    pins: [['os-occipitale', 230, 100], ['membrana-atlantooccipitalis-posterior', 230, 215], ['arcus-posterior', 180, 275], ['tuberculum-posterius-atlantis', 232, 262],
+      ['sulcus-a-vertebralis', 335, 262], ['lamina', 205, 365], ['proc-spinosus-bifidus', 240, 410], ['lig-flavum', 268, 468]]
+  });
+
+  /* ---------- Thorax von rechts (Gray Fig. 114, nach Spalteholz) ---------- */
+  T.push({
+    id: 'thorax-lateral', title: 'Knöcherner Brustkorb', view: 'Ansicht von rechts-lateral (ventral rechts); dunkel = Rippenknorpel', unit: '1.17 / 1.18', ref: 'S. 140 A, S. 142 A',
+    bild: B + 'gray114.png', w: 459, h: 600, nachweis: 'gray114',
+    masken: [[100, 10, 86, 22], [383, 110, 50, 20], [8, 448, 94, 22], [30, 498, 76, 22]],
+    pins: [['costa-prima', 290, 85], ['sternum', 380, 140], ['costae-verae', 300, 210], ['cartilago-costalis', 388, 290], ['costae-spuriae', 330, 470],
+      ['arcus-costalis', 400, 500], ['costae-fluctuantes', 300, 555], ['proc-spinosus', 95, 375]]
+  });
+
+  /* ---------- Mittlere Rippe von kaudal (Gray Fig. 122) ---------- */
+  T.push({
+    id: 'rippe', title: 'Rippe', view: 'Mittlere Rippe der linken Seite, Ansicht von kaudal; rote Linien = Muskelansätze', unit: '1.18', ref: 'S. 143 D',
+    bild: B + 'gray122.png', w: 464, h: 800, nachweis: 'gray122',
+    masken: [[294, 2, 146, 17], [328, 19, 128, 17], [174, 20, 34, 17], [372, 80, 30, 18, '#d6d6d6'], [394, 104, 22, 28, '#c8c8c8'], [110, 188, 66, 18], [86, 432, 30, 16]],
+    pins: [['caput-costae', 410, 115], ['collum-costae', 380, 92], ['tuberculum-costae', 345, 55], ['angulus-costae', 186, 62], ['sulcus-costae', 95, 200],
+      ['corpus-costae', 42, 440]]
+  });
+
   window.TAFELN_RUMPF = T;
 })();
