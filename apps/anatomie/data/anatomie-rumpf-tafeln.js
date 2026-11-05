@@ -123,5 +123,112 @@
       ['pars-lateralis', 430, 320], ['apex-ossis-sacri', 250, 535]]
   });
 
+  /* ---------- Kreuzbein von dorsal (Gray Fig. 96) – Muskelnamen bleiben stehen ---------- */
+  T.push({
+    id: 'kreuzbein-dorsal', title: 'Kreuzbein', view: 'Os sacrum, Facies dorsalis; rote Linien und Großbuchstaben = Muskelursprünge', unit: '1.8', ref: 'S. 122 B',
+    bild: B + 'gray96.png', w: 567, h: 500, nachweis: 'gray96',
+    masken: [[350, 20, 63, 53, G], [248, 66, 93, 17, G], [215, 80, 86, 29, G], [130, 95, 86, 36, G], [330, 85, 31, 26, G], [355, 95, 62, 46, G],
+      [415, 73, 32, 78, G], [370, 120, 42, 56, G], [45, 160, 76, 21, G], [120, 155, 82, 61, G], [100, 233, 56, 23, G], [372, 205, 52, 19, G],
+      [370, 310, 42, 17, G], [370, 395, 26, 31, G], [305, 410, 26, 41, G], [385, 458, 142, 33]],
+    pins: [['proc-articularis-superior-sacri', 385, 50], ['tuberositas-ossis-sacri', 150, 120], ['facies-auricularis', 75, 200],
+      ['crista-sacralis-mediana', 282, 330], ['crista-sacralis-medialis', 358, 280], ['crista-sacralis-lateralis', 430, 290],
+      ['foramina-sacralia-posteriora', 388, 228], ['cornua-sacralia', 318, 430], ['hiatus-sacralis', 262, 470]]
+  });
+
+  /* ---------- Bewegungssegment mit Bändern, Medianschnitt (Gray Fig. 301) ---------- */
+  T.push({
+    id: 'baender-ws', title: 'Bänder der Wirbelsäule', view: 'Zwei Lendenwirbel, Median-Sagittalschnitt (ventral links)', unit: '1.9 / 1.10', ref: 'S. 125 D, S. 126 A–C, S. 127 D',
+    bild: B + 'gray301.png', w: 492, h: 409, nachweis: 'gray301',
+    masken: [[8, 95, 16, 235, '#f3f3ef'], [72, 78, 48, 20, '#eaecd1'], [55, 228, 50, 22, '#fdf7d1'], [100, 225, 70, 55, '#fdfbe9'], [28, 162, 108, 32, '#e6e8d3'],
+      [178, 100, 16, 225, '#eaece7'], [200, 65, 16, 50, '#d8d4b8'], [200, 205, 16, 60, '#d8d4b8'], [226, 92, 52, 18, '#efedd8'], [222, 232, 56, 18, '#efedd8'],
+      [248, 15, 72, 30, '#eaecdb'], [240, 160, 60, 30, '#e4e4de'], [300, 95, 130, 25, '#eae5c1'], [312, 245, 128, 30, '#fdf7d1'], [325, 182, 75, 30, '#b4b6b4'],
+      [458, 90, 18, 175, '#f3f3ef'], [265, 318, 62, 30, '#a4a49b']],
+    pins: [['lig-longitudinale-anterius', 16, 250], ['corpus-vertebrae', 100, 120], ['discus-intervertebralis', 60, 180], ['nucleus-pulposus', 92, 335], ['lig-longitudinale-posterius', 185, 220],
+      ['pediculus', 207, 85], ['foramen-intervertebrale', 217, 160], ['lamina', 245, 250], ['lig-flavum', 265, 175], ['proc-articularis-superior', 275, 30],
+      ['proc-spinosus', 360, 130], ['lig-interspinale', 360, 195], ['lig-supraspinale', 466, 200]]
+  });
+
+  /* ---------- Ligamenta flava (Gray Fig. 303) ---------- */
+  T.push({
+    id: 'ligg-flava', title: 'Ligamenta flava', view: 'Wirbelbögen dreier Brustwirbel von ventral (Pediculi durchtrennt)', unit: '1.10', ref: 'S. 126 A–C',
+    bild: B + 'gray303.png', w: 349, h: 350, nachweis: 'gray303',
+    masken: [[200, 28, 58, 22, '#beb999'], [113, 82, 60, 26, '#bdbcae'], [113, 163, 60, 26, '#cacbb8'], [265, 160, 82, 21], [217, 248, 51, 19]],
+    pins: [['lig-flavum', 140, 150], ['pediculus', 180, 120], ['lamina', 155, 222], ['proc-transversus', 255, 40], ['proc-spinosus', 145, 320]]
+  });
+
+  /* ---------- Bänder der Kopfgelenke von dorsal (Gray Fig. 307) ---------- */
+  T.push({
+    id: 'kopfgelenke-dorsal', title: 'Bänder der Kopfgelenke', view: 'Ansicht von dorsal, Wirbelkanal eröffnet, Membrana tectoria nach oben umgeschlagen', unit: '1.12', ref: 'S. 130 A c–d, S. 131 C',
+    bild: B + 'gray307.png', w: 600, h: 416, nachweis: 'gray307',
+    masken: [[3, 40, 18, 240], [150, 108, 182, 36, '#f6f0c8'], [170, 150, 68, 24, '#dcdbd2'], [250, 148, 62, 24, '#c8c8c2'], [185, 183, 112, 18, '#e4e4de'],
+      [232, 160, 16, 100, '#dad9d1'], [195, 255, 102, 22, '#f6f0c8'], [462, 125, 112, 33], [440, 165, 157, 42], [420, 265, 162, 42], [210, 360, 60, 40, '#c6c7bf']],
+    pins: [['membrana-tectoria', 240, 60], ['os-occipitale', 100, 55], ['lig-cruciforme', 240, 140], ['ligg-alaria', 285, 165],
+      ['lig-transversum-atlantis', 205, 192], ['fasciculi-longitudinales', 240, 228], ['axis', 220, 268], ['lig-longitudinale-posterius', 240, 385]]
+  });
+
+  /* ---------- Kopfgelenke im Medianschnitt (Gray Fig. 308) ---------- */
+  T.push({
+    id: 'kopfgelenke-median', title: 'Kopfgelenke im Medianschnitt', view: 'Hinterhaupt bis C III, Median-Sagittalschnitt (ventral links)', unit: '1.12', ref: 'S. 130 A, S. 131 B',
+    bild: B + 'gray308.png', w: 500, h: 485, nachweis: 'gray308',
+    masken: [[20, 65, 106, 26], [27, 98, 99, 16], [25, 110, 103, 29], [32, 140, 91, 17], [33, 160, 91, 17], [37, 180, 89, 27], [55, 203, 86, 17],
+      [20, 222, 106, 17], [37, 240, 83, 27], [55, 370, 73, 29], [18, 420, 109, 29], [280, 30, 196, 19], [340, 72, 96, 19], [413, 118, 40, 22, '#d5cfb4'],
+      [390, 155, 101, 29], [413, 195, 76, 29], [400, 223, 91, 17], [305, 238, 80, 48, '#d8d6cc'], [290, 290, 45, 40, '#979485'], [170, 290, 45, 15, '#e1e0be'],
+      [163, 400, 70, 50, '#e6e2d0'], [138, 22, 55, 80, '#e8dfb4'], [312, 180, 30, 25, '#c1b9b4'], [181, 469, 162, 16]],
+    pins: [['lig-apicis-dentis', 206, 147], ['fasciculi-longitudinales', 213, 128], ['membrana-tectoria', 245, 280], ['arcus-anterior', 172, 190],
+      ['art-atlantoaxialis-mediana', 180, 205], ['dens-axis', 210, 192], ['lig-transversum-atlantis', 240, 212], ['axis', 190, 320],
+      ['discus-intervertebralis', 190, 378], ['lig-longitudinale-anterius', 160, 430], ['lig-longitudinale-posterius', 256, 450],
+      ['os-occipitale', 445, 135], ['arcus-posterior', 393, 207]]
+  });
+
+  /* ---------- Knöcherner Thorax von ventral (Gray Fig. 112, nach Spalteholz) ---------- */
+  T.push({
+    id: 'thorax', title: 'Knöcherner Brustkorb', view: 'Ansicht von ventral; dunkel = Rippenknorpel', unit: '1.17 / 1.18', ref: 'S. 140 A, S. 141 C, S. 142 A',
+    bild: B + 'gray112.png', w: 436, h: 600, nachweis: 'gray112',
+    masken: [[296, 6, 84, 18], [254, 476, 32, 28]],
+    pins: [['apertura-superior', 180, 48], ['costa-prima', 302, 62], ['incisura-jugularis', 218, 75], ['incisura-clavicularis', 183, 84],
+      ['manubrium', 220, 110], ['angulus-sterni', 220, 152], ['corpus-sterni', 220, 220], ['proc-xiphoideus', 218, 345],
+      ['cartilago-costalis', 290, 198], ['costae-verae', 405, 262], ['arcus-costalis', 330, 420], ['costae-fluctuantes', 378, 548]]
+  });
+
+  /* ---------- Sternum und Rippenknorpel von ventral (Gray Fig. 115) – Muskelnamen bleiben stehen ---------- */
+  T.push({
+    id: 'sternum', title: 'Sternum und Rippenknorpel', view: 'Ansicht von ventral; rote Linien und Großbuchstaben = Muskelursprünge, Ziffern = Rippen', unit: '1.17', ref: 'S. 140 A, S. 141 C',
+    bild: B + 'gray115.png', w: 526, h: 650, nachweis: 'gray115',
+    masken: [[282, 15, 46, 23], [335, 25, 52, 26], [272, 40, 80, 48, '#f6f6f4'], [292, 148, 46, 112, '#f6f6f4'], [282, 355, 42, 31, '#f6f6f4'],
+      [8, 250, 42, 118], [40, 140, 42, 122], [75, 34, 68, 112], [400, 80, 36, 185], [444, 280, 24, 160], [12, 440, 52, 205]],
+    pins: [['incisura-jugularis', 300, 40], ['incisura-clavicularis', 335, 50], ['manubrium', 290, 80], ['angulus-sterni', 300, 132],
+      ['corpus-sterni', 300, 220], ['proc-xiphoideus', 300, 395], ['costa-prima', 205, 58], ['cartilago-costalis', 370, 190],
+      ['arcus-costalis', 430, 470], ['costae-fluctuantes', 110, 600]]
+  });
+
+  /* ---------- Rippen-Wirbel-Gelenke von ventral (Gray Fig. 312) ---------- */
+  T.push({
+    id: 'rippen-wirbel-gelenke', title: 'Rippen-Wirbel-Gelenke', view: 'Brustwirbelsäule mit Rippenansätzen von ventral-lateral; unten Rippenkopf angeschnitten', unit: '1.18 / 1.19', ref: 'S. 143 D, S. 145 C',
+    bild: B + 'gray312.png', w: 500, h: 527, nachweis: 'gray312',
+    masken: [[225, 45, 90, 35, '#d9d6c4'], [2, 205, 88, 42], [240, 193, 66, 15, '#c9c8c0'], [330, 235, 25, 76, '#c2c0b4'], [225, 265, 76, 21, '#beb58d'],
+      [445, 70, 22, 345, '#d4d4d0'], [123, 505, 140, 21], [327, 505, 160, 21]],
+    pins: [['proc-transversus', 235, 62], ['collum-costae', 260, 275], ['lig-capitis-costae-radiatum', 345, 272], ['caput-costae', 300, 397],
+      ['art-capitis-costae', 332, 385], ['discus-intervertebralis', 380, 382], ['corpus-vertebrae', 395, 320], ['lig-longitudinale-anterius', 456, 230]]
+  });
+
+  /* ---------- Männliches Becken von ventral (Gray Fig. 241) ---------- */
+  T.push({
+    id: 'becken', title: 'Knöchernes Becken', view: 'Männliches Becken, Ansicht von ventral', unit: '1.20', ref: 'S. 146 A a, S. 146 B',
+    bild: B + 'gray241.png', w: 1000, h: 808, nachweis: 'gray241',
+    masken: [[195, 72, 86, 40, G], [486, 258, 26, 124, G], [325, 330, 32, 200, G], [484, 478, 28, 84, G], [316, 543, 76, 30, G], [248, 668, 84, 94, G], [453, 688, 114, 64, G]],
+    pins: [['crista-iliaca', 140, 40], ['fossa-iliaca', 200, 180], ['sias', 18, 168], ['siai', 130, 450], ['os-ilium', 150, 300], ['promontorium', 500, 182],
+      ['os-sacrum', 490, 300], ['art-sacroiliaca', 335, 330], ['linea-terminalis', 340, 430], ['os-pubis', 380, 570], ['tuberculum-pubicum', 455, 585],
+      ['symphysis', 500, 620], ['foramen-obturatum', 370, 650], ['os-ischii', 270, 700], ['tuber-ischiadicum', 290, 760], ['angulus-subpubicus', 500, 722]]
+  });
+
+  /* ---------- Bänder des Beckens von ventral (Gray Fig. 319) ---------- */
+  T.push({
+    id: 'beckenbaender-ventral', title: 'Bänder des Beckens', view: 'Rechte Beckenhälfte mit Kreuzbein, Ansicht von ventral', unit: '1.21 / 1.22', ref: 'S. 148 A, S. 151 C',
+    bild: B + 'gray319.png', w: 526, h: 677, nachweis: 'gray319',
+    masken: [[205, 8, 116, 19], [243, 20, 102, 17], [350, 20, 112, 17], [375, 32, 130, 17], [27, 437, 93, 17], [47, 527, 117, 17], [107, 615, 120, 17], [423, 644, 102, 17]],
+    pins: [['crista-iliaca', 48, 72], ['fossa-iliaca', 150, 250], ['sias', 30, 255], ['lig-iliolumbale', 285, 70], ['lig-longitudinale-anterius', 445, 120],
+      ['lig-sacrospinale', 360, 420], ['symphysis', 465, 610]]
+  });
+
   window.TAFELN_RUMPF = T;
 })();

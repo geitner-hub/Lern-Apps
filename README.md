@@ -787,6 +787,24 @@ Kurzes Klassen-Quiz für 2–10 Minuten (Einstieg, Zwischensicherung, Exit-Ticke
 - `vokabeltrainer5/6.html` sind **Weiterleitungen** (`LW-WEITERLEITUNG`) auf `?klasse=5/6`; beim ersten Öffnen übernimmt
   `LernUeben.uebernehme` Ergebnisse, Sterne und offene Dorf-Aufträge. Auf der Startseite steht je Klasse ein Trainer.
 
+## Anatomie-Testat-Trainer (apps/anatomie/, v113)
+
+Lerntrainer für eine **erwachsene Person im Medizinstudium** (Vorklinik, Testat „Knochen, Bänder, Gelenke“ der Rumpfwand),
+**nicht für die Kinder**. Adresse: `apps/anatomie/anatomie-testat.html` – nur per Link/QR (kein Eintrag in `config.json`,
+in pruefen.py unter `NUR_UEBER_LINK`), kein Fach, kein Katalog-Thema.
+
+- **Keine Wertung:** ruft nie `LernApps.saveResult` auf → zählt nicht für XP, Pass, Spielsperre, Dorf, „Meine Themen“.
+  `<body data-pass="aus">` lädt pass.js gar nicht (kein Safari-Hinweis); navbar.js bringt nur den Home-Knopf.
+- **Speicher:** `lernwelt-anatomie` (localStorage, nicht in der Sicherungskarte): Lernstand je Kapitel und Hell/Dunkel.
+- **Dateien:** `data/anatomie-rumpf-inhalte.js` (Strukturen mit Prometheus-Seitenverweis, Karten, Fragen, Sortieren, Tabellen),
+  `data/anatomie-rumpf-tafeln.js` (je Tafel Bild, Pixelmaße, Masken `[x, y, b, h, farbe?]` über der Originalbeschriftung,
+  Pins `[strukturId, x, y]` in Bildpixeln), `data/anatomie-bildnachweise.js`, `js/anatomie-app.js`, `bilder/grayNN.png`.
+- **Bilder:** nur gemeinfreie Tafeln aus Gray's Anatomy (1918) von Wikimedia Commons – keine Prometheus-Abbildungen
+  (Verweise auf Buchseiten ja, Bilder nein). Neue Tafel: Bild nach `bilder/`, Nachweis eintragen, Masken und Pins in
+  Bildpixeln setzen und am gerenderten Bild prüfen (Pin-Namen einblenden: Modus „Erkunden“ → „Beschriftung zeigen“).
+- **Zoom:** Knöpfe ＋/−/⛶, Doppeltipp, zwei Finger, Strg+Mausrad; Pins behalten ihre Bildschirmgröße.
+- Nicht in sw.js `NACHLADEN` (die Kinder-iPads sollen sie nicht vorladen); der Service Worker speichert sie beim ersten Öffnen.
+
 ## Archiv (archiv/)
 
 Abgelegte Apps (Etappe 3/4b): English Dialogue (Vorlagen), Rechteck-Werkstatt, Sachaufgaben Längen,
