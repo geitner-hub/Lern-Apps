@@ -98,6 +98,11 @@
     'cornua-sacralia': S('Cornua sacralia', 'Kreuzbeinhörner', 'Rudimentäre Gelenkfortsätze des 5. Sakralwirbels beiderseits des Hiatus sacralis.', 'S. 122 B'),
     'pars-lateralis': S('Pars lateralis', 'Seitenteil des Kreuzbeins', 'Aus Querfortsätzen und Rippenrudimenten; trägt seitlich die Facies auricularis.', 'S. 114 C d, 122 B'),
     'tuberositas-ossis-sacri': S('Tuberositas ossis sacri', 'Kreuzbeinrauigkeit', 'Ansatz der kräftigen Ligg. sacroiliaca interossea.', 'S. 123 C, 151 C'),
+    /* ergänzt für die Tafeln mit echten Abbildungen (eigene Formulierungen) */
+    'foramina-sacralia-anteriora': S('Foramina sacralia anteriora', 'vordere Kreuzbeinlöcher', 'Vier Lochpaare auf der Facies pelvica; Austritt der Rami anteriores der Sakralnerven.', 'S. 122 A'),
+    'lineae-transversae': S('Lineae transversae', 'Querleisten', 'Quer verlaufende Leisten auf der Facies pelvica; Reste der Verschmelzung der fünf Sakralwirbelkörper.', 'S. 122 A'),
+    'ala-ossis-sacri': S('Ala ossis sacri', 'Kreuzbeinflügel', 'Seitlicher Teil der Basis ossis sacri neben dem Promontorium; Teil der Pars lateralis.', 'S. 122 A'),
+    'apex-ossis-sacri': S('Apex ossis sacri', 'Kreuzbeinspitze', 'Kaudales schmales Ende des Kreuzbeins; Verbindung zum Steißbein.', 'S. 122 A–B'),
 
     /* Thorax */
     'incisura-jugularis': S('Incisura jugularis', 'Drosselgrubeneinschnitt', 'Oberrand des Manubrium; untere Begrenzung der tastbaren Drosselgrube.', 'S. 142 A'),

@@ -83,5 +83,45 @@
       ['foramen-vertebrale', 170, 145], ['pediculus', 228, 135], ['lamina', 208, 188], ['proc-spinosus', 172, 285]]
   });
 
+  /* ---------- Brustwirbel von lateral (Gray Fig. 90) ---------- */
+  T.push({
+    id: 'brustwirbel-lateral', title: 'Brustwirbel', view: 'Mittlerer Brustwirbel von rechts-lateral (ventral rechts)', unit: '1.6', ref: 'S. 118 B, S. 119 C',
+    bild: B + 'gray90.png', w: 450, h: 344, nachweis: 'gray90',
+    masken: [[66, 18, 148, 19], [298, 22, 145, 22], [2, 97, 134, 31], [215, 88, 45, 30, G], [250, 70, 42, 42, G], [362, 100, 40, 20, G],
+      [274, 182, 148, 22], [168, 182, 40, 36, G], [221, 222, 143, 19]],
+    pins: [['corpus-vertebrae', 380, 135], ['fovea-costalis-superior', 325, 82], ['fovea-costalis-inferior', 315, 155], ['pediculus', 275, 100],
+      ['incisura-vertebralis-inferior', 288, 132], ['proc-articularis-superior', 260, 40], ['proc-transversus', 235, 118],
+      ['fovea-costalis-proc-transversi', 190, 110], ['proc-articularis-inferior', 254, 178], ['proc-spinosus', 150, 260]]
+  });
+
+  /* ---------- Besondere Brustwirbel (Gray Fig. 91) ---------- */
+  T.push({
+    id: 'brustwirbel-besondere', title: 'Besondere Brustwirbel', view: 'Th I, Th IX–XII von rechts-lateral (Nummern im Bild stehen lassen)', unit: '1.6 / 1.19', ref: 'S. 118 A, S. 145 C',
+    bild: B + 'gray91.png', w: 429, h: 600, nachweis: 'gray91',
+    masken: [[292, 58, 132, 32], [292, 228, 100, 15], [292, 334, 84, 16], [298, 400, 124, 42], [308, 464, 116, 64]],
+    pins: [['fovea-costalis-inferior', 222, 104], ['fovea-costalis-superior', 183, 218], ['fovea-costalis-proc-transversi', 104, 212],
+      ['proc-articularis-superior', 150, 180], ['proc-transversus', 40, 150]]
+  });
+
+  /* ---------- Lendenwirbel von dorsokranial (Gray Fig. 93) ---------- */
+  T.push({
+    id: 'lendenwirbel-dorsal', title: 'Lendenwirbel', view: 'Ansicht von kranial und dorsal (schräg)', unit: '1.4 / 1.7', ref: 'S. 120 A, S. 121 C',
+    bild: B + 'gray93.png', w: 500, h: 357, nachweis: 'gray93',
+    masken: [[12, 64, 99, 16], [385, 40, 96, 26], [374, 143, 97, 16], [394, 163, 93, 16], [53, 214, 96, 28]],
+    pins: [['proc-costalis', 124, 120], ['proc-articularis-superior', 160, 140], ['facies-articularis-superior', 190, 160], ['lamina', 235, 125],
+      ['proc-spinosus', 290, 40], ['proc-articularis-inferior', 365, 100], ['proc-mammillaris', 330, 175], ['proc-accessorius', 362, 180],
+      ['foramen-vertebrale', 240, 200], ['corpus-vertebrae', 260, 300]]
+  });
+
+  /* ---------- Kreuzbein von ventral (Gray Fig. 95) ---------- */
+  T.push({
+    id: 'kreuzbein-ventral', title: 'Kreuzbein', view: 'Os sacrum, Facies pelvica (Ansicht von ventral); rote Linien = Muskelursprünge', unit: '1.8', ref: 'S. 122 A',
+    bild: B + 'gray95.png', w: 525, h: 550, nachweis: 'gray95',
+    masken: [[228, 15, 77, 17], [185, 51, 162, 16, G], [240, 91, 102, 35, G], [400, 81, 32, 24, G], [348, 128, 92, 36, G], [443, 183, 28, 124, G],
+      [488, 132, 32, 164, G], [208, 526, 84, 16, G], [18, 94, 32, 66, G], [138, 262, 42, 176, G], [156, 486, 26, 32, G]],
+    pins: [['promontorium', 235, 60], ['ala-ossis-sacri', 390, 100], ['foramina-sacralia-anteriora', 175, 165], ['lineae-transversae', 285, 182],
+      ['pars-lateralis', 430, 320], ['apex-ossis-sacri', 250, 535]]
+  });
+
   window.TAFELN_RUMPF = T;
 })();
