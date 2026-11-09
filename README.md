@@ -787,32 +787,6 @@ Kurzes Klassen-Quiz für 2–10 Minuten (Einstieg, Zwischensicherung, Exit-Ticke
 - `vokabeltrainer5/6.html` sind **Weiterleitungen** (`LW-WEITERLEITUNG`) auf `?klasse=5/6`; beim ersten Öffnen übernimmt
   `LernUeben.uebernehme` Ergebnisse, Sterne und offene Dorf-Aufträge. Auf der Startseite steht je Klasse ein Trainer.
 
-## Anatomie-Testat-Trainer (apps/anatomie/, v113)
-
-Lerntrainer für eine **erwachsene Person im Medizinstudium** (Vorklinik, Testat „Knochen, Bänder, Gelenke“ der Rumpfwand),
-**nicht für die Kinder**. Adresse: `apps/anatomie/anatomie-testat.html` – nur per Link/QR (kein Eintrag in `config.json`,
-in pruefen.py unter `NUR_UEBER_LINK`), kein Fach, kein Katalog-Thema.
-
-- **Keine Wertung:** ruft nie `LernApps.saveResult` auf → zählt nicht für XP, Pass, Spielsperre, Dorf, „Meine Themen“.
-  `<body data-pass="aus">` lädt pass.js gar nicht (kein Safari-Hinweis); navbar.js bringt nur den Home-Knopf.
-- **Speicher:** `lernwelt-anatomie` (localStorage, nicht in der Sicherungskarte): Lernstand je Kapitel und Hell/Dunkel.
-- **Kapitel (v117):** je Abschnitt eine Datei `data/anatomie-<kapitel>-inhalte.js`, die sich mit `start` (erste Buchseite) in
-  `window.KAPITEL_LISTE` einträgt: entwicklung (S. 2–21), koerper (S. 22–39), knochen-gelenke (S. 40–49), faszien-gefaesse (S. 66–77),
-  rumpf (S. 108–151). Auswahl im Kopf, Adresse `?kapitel=<id>`, gemerkt in `lernwelt-anatomie`. Fehlen Sortieren/Tabellen, verschwinden
-  die Reiter; ohne Tafeln zeigt der Reiter „Tafeln folgen“. Neues Kapitel: Datei anlegen und als `<script>` vor `anatomie-rumpf-inhalte.js`
-  in `anatomie-testat.html` eintragen.
-- **Dateien:** `data/anatomie-rumpf-inhalte.js` (Strukturen mit Prometheus-Seitenverweis, Karten, Fragen, Sortieren, Tabellen),
-  `data/anatomie-rumpf-tafeln.js` (je Tafel Bild, Pixelmaße, Masken `[x, y, b, h, farbe?]` über der Originalbeschriftung,
-  Pins `[strukturId, x, y]` in Bildpixeln), `data/anatomie-bildnachweise.js`, `js/anatomie-app.js`, `bilder/grayNN.png`.
-- **Bilder:** nur gemeinfreie Tafeln aus Gray's Anatomy (1918) von Wikimedia Commons – keine Prometheus-Abbildungen
-  (Verweise auf Buchseiten ja, Bilder nein). Neue Tafel: Bild nach `bilder/`, Nachweis eintragen, Masken und Pins in
-  Bildpixeln setzen und am gerenderten Bild prüfen (Pin-Namen einblenden: Modus „Erkunden“ → „Beschriftung zeigen“).
-- **Zoom:** Knöpfe ＋/−/⛶, Doppeltipp, zwei Finger, Strg+Mausrad; Pins behalten ihre Bildschirmgröße.
-- Nicht in sw.js `NACHLADEN` (die Kinder-iPads sollen sie nicht vorladen); der Service Worker speichert sie beim ersten Öffnen.
-- **Im Admin ein-/ausblenden (v114):** darf als App in `config.json` stehen (Fach „Anatomie“ in shared.js), ohne Katalog-Thema –
-  Ausnahme `OHNE_THEMA` in `werkzeuge/pruefen.py` und `gemeinsam/admin/pruefung.js`. Damit die Kinder sie nicht auf der Startseite
-  sehen: im Admin auf „versteckt“ (`hidden: true`) lassen – der direkte Link/QR funktioniert trotzdem.
-
 ## Archiv (archiv/)
 
 Abgelegte Apps (Etappe 3/4b): English Dialogue (Vorlagen), Rechteck-Werkstatt, Sachaufgaben Längen,

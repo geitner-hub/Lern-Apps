@@ -93,14 +93,11 @@ OHNE_NAVBAR = {
 # Lern-Apps, die bewusst nicht auf der Startseite stehen (kein Hinweis „steht nicht in config.json“) – mit Grund
 NUR_UEBER_LINK = {
     'apps/englisch/journey-anwenden.html',          # Anwenden-Stationen: nur über den English Journey (Direktstart ?stufe=)
-    'apps/anatomie/anatomie-testat.html',           # Anatomie-Testat-Trainer fürs Medizinstudium: nur per Link/QR, kein Fach, keine Wertung
 }
 
 # Lern-Apps in config.json ohne Thema im Inhalts-Katalog (keine Lerninhalte für die Kinder) – mit Grund.
 #   Gleiche Liste in gemeinsam/admin/pruefung.js (OHNE_THEMA) pflegen.
-OHNE_THEMA = {
-    'apps/anatomie/anatomie-testat.html',           # Anatomie-Testat-Trainer fürs Medizinstudium: meldet kein Ergebnis, kein Kinder-Thema
-}
+OHNE_THEMA = set()
 
 fehler, hinweise, infos = [], [], []
 def F(msg): fehler.append(msg)

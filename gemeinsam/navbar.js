@@ -64,7 +64,6 @@
   }
   function loadPass() {
     if (window.LernPass || document.getElementById('lw-pass-script')) return;
-    if (document.body && document.body.dataset.pass === 'aus') return;   // <body data-pass="aus">: Seite ohne Pass (z. B. Anatomie-Trainer fürs Studium)
     lade(SOFORT[0], 'lw-pass-script').catch(() => {});
   }
   loadPass();

@@ -573,17 +573,6 @@
       "klassen": [],
       "customTags": [],
       "aod": false
-    },
-    {
-      "name": "Prometheus",
-      "datei": "apps/anatomie/anatomie-testat.html",
-      "fach": "Anatomie",
-      "emoji": "❤️‍🔥",
-      "beschreibung": "",
-      "hidden": false,
-      "klassen": [],
-      "customTags": [],
-      "aod": false
     }
   ],
   "customTags": [
