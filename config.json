@@ -758,6 +758,9 @@
           "he-u5-will": 17,
           "he-u5-wortstellung": 18,
           "he-u5-postkarte": 19
+        },
+        "sperren": {
+          "g:123676bc75aa3e264f709ce34e6e213e": true
         }
       }
     }
