@@ -879,7 +879,7 @@ for jw_p in sorted(ROOT.glob('daten/journey*.json')):
     if abschnitte: I(f'{jw_r}: {len(abschnitte)} Abschnitte, {sum(1 for v in ids.values() if v == "Schritt")} Schritte')
 
 # config.json → journey (vom Admin gepflegt): { schuljahr, wege: { journey6: { bis: { wer: Abschnitt }, he: { Hefteintrag: Nr },
-#   niveau: { wer: 1–3 } (Mindestniveau), reihenfolge: { wer: frei|schritt|streng } (Abschnitt-Kette), sperren: { wer: true } } } } – Freigabe „bis Abschnitt“ je Gruppe, HE-Nummern fortlaufend durchs Schuljahr, Sperr-Schalter vorbereitet
+#   niveau: { wer: 1–3 } (Mindestniveau), reihenfolge: { wer: frei|schritt|streng } (Abschnitt-Kette), sperren: { wer: true } } } } – Freigabe „bis Abschnitt“ je Gruppe, HE-Nummern fortlaufend durchs Schuljahr, Schranke am Unit-Ende (v119)
 jc = config.get('journey')
 if isinstance(jc, dict):
     for wname, w in (jc.get('wege') or {}).items():

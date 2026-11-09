@@ -246,6 +246,7 @@
         innen = x.grund === 'heft' ? `<p>🔒 Erst müssen alle Hefteinträge der Unit in deinem Heft stehen:</p><div class="jw-chips">${(x.heft || []).map(h => heChip(h)).join('')}</div>`
           : x.grund === 'vorgaenger' ? `<p>🔒 Die App öffnet sich, wenn du davor ⭐ geholt hast – Hefteintrag und Übungen kannst du schon machen:</p>
             <div class="jw-chips">${(x.fehlt || []).map(f => `<button type="button" class="jw-chip" data-jw-station="${esc(f)}">🎮 ${esc(titelVon(f))}</button>`).join('')}</div>`
+          : x.grund === 'schranke' ? '<p>🚧 Hier geht es bald gemeinsam weiter – deine Lehrkraft öffnet diese Unit, wenn alle so weit sind.</p>'
           : x.grund === 'lehrer' ? '<p>🔒 Deine Lehrkraft gibt diese App bald frei. Hefteintrag und Übungen kannst du schon machen.</p>'
           : `<p>${x.zustand === 'gemeistert' ? '⭐ Gemeistert! Du kannst jederzeit wieder üben.' : x.zustand === 'zu' ? '🔒 Diese Station ist noch zu.' : x.zustand === 'bau' ? '🚧 Wird gebaut.' : 'Übe in der Lernwelt: 2 Runden mit mindestens 70 % – dann ist die Station gemeistert.'}</p>`;
         if (!heHier && heBezug(s) && heIn(a).length && !an) innen += `<div class="jw-chips">${heIn(a).map(h => heChip(h, 'Lies vorher noch einmal ')).join('')}</div>`;
