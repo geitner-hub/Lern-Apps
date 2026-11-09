@@ -21,6 +21,10 @@
 //    naechste(J, z)          → { st, unit } – das nächste Ziel in Buch-Reihenfolge oder null
 //    freiBis(J, cfg, admin)  → Index des letzten freigegebenen Laufzettel-Abschnitts (alle Units in Weg-Reihenfolge), -1 = nichts,
 //                              Infinity = alles (Admin). cfg = config.journey.wege.journey6; Gruppe vor Klasse vor „alle“
+//    schranke(J, cfg, admin) → Index der letzten erlaubten Unit (Infinity = keine Schranke). Schranke (v119): config.journey.wege.
+//                              journey6.sperren[wer] = true → der Weg endet mit der Unit des freigegebenen Abschnitts (bis) – für
+//                              denselben wer wie bis (Gruppe vor Klasse vor „alle“). Stationen danach: zustand 'zu', grund 'schranke';
+//                              die Brücke dorthin bleibt zu, auch wenn das Finale gemeistert ist. Gemeistertes bleibt gemeistert.
 //    heftFehlt(J, unit, o)   → Baustein-IDs der freigegebenen Hefteinträge der Unit, die noch nicht „steht in meinem Heft“ sind
 //
 //  Heft vor dem Finale (Lernweg im Journey, Etappe 5): Hat die Lehrkraft für das Gerät Laufzettel-Abschnitte freigegeben, öffnet sich
@@ -74,6 +78,15 @@
     const w = wer.find(x => typeof bis[x] === 'string');
     return w ? J.units.flatMap(u => u.abschnitte || []).map(a => a.id).indexOf(bis[w]) : -1;
   }
+  function schranke(J, cfg, admin) {
+    if (admin) return Infinity;
+    const bis = cfg && cfg.bis && typeof cfg.bis === 'object' ? cfg.bis : {}, sp = cfg && cfg.sperren && typeof cfg.sperren === 'object' ? cfg.sperren : {};
+    const wer = (window.LernFreigabe && LernFreigabe.wer && LernFreigabe.wer()) || ['alle'];
+    const w = wer.find(x => typeof bis[x] === 'string');
+    if (!w || sp[w] !== true) return Infinity;
+    const i = J.units.findIndex(u => (u.abschnitte || []).some(a => a.id === bis[w]));
+    return i < 0 ? Infinity : i;
+  }
   function heftFehlt(J, unit, o = {}) {
     if (o.admin || !Array.isArray(unit.abschnitte)) return [];
     const bis = freiBis(J, cfgVon(o), false), liste = J.units.flatMap(u => u.abschnitte || []), L = (window.LernPass && LernPass.lernstand) || {};
@@ -84,8 +97,9 @@
 
   function berechne(J, o = {}) {
     const alle = {}, z = {}, admin = !!o.admin, f = faellig(), offenU = {}, heft = {};
+    const grenze = schranke(J, cfgVon(o), admin), hinter = u => J.units.indexOf(u) > grenze;
     J.units.forEach(u => { heft[u.id] = heftFehlt(J, u, o); });
-    J.units.forEach(u => { if (geoeffnet(u)) offenU[u.id] = true; });
+    J.units.forEach(u => { if (geoeffnet(u) && !hinter(u)) offenU[u.id] = true; });
     J.units.forEach(u => u.stationen.forEach(st => { alle[st.id] = { st, unit: u, gem: gemeistert(st.thema), bau: !hatApp(st) }; }));
     Object.values(alle).forEach(x => {
       const { st, unit } = x;
@@ -96,6 +110,7 @@
         return;
       }
       if (x.bau) { z[st.id] = { zustand: 'bau' }; return; }
+      if (hinter(unit)) { z[st.id] = { zustand: 'zu', grund: 'schranke' }; return; }
       const l = lehrer(unit, st, admin);
       if (!l.frei) { z[st.id] = { zustand: 'zu', grund: 'lehrer', ab: l.ab }; return; }
       const fehlt = (st.braucht || []).filter(b => alle[b] && !alle[b].gem && !alle[b].bau      // Stationen ohne App halten niemanden auf
@@ -105,7 +120,7 @@
       z[st.id] = { zustand: 'offen' };
     });
     J.units.forEach(u => { const n = u.stationen.find(st => z[st.id].zustand === 'offen'); if (n) z[n.id].naechste = true; });
-    return { alle, z, geoeffnet: offenU, heft };
+    return { alle, z, geoeffnet: offenU, heft, schranke: grenze };
   }
 
   function naechste(J, z) {
@@ -113,5 +128,5 @@
     return null;
   }
 
-  window.LernJourney = { laden, berechne, naechste, hatApp, freiBis, heftFehlt };
+  window.LernJourney = { laden, berechne, naechste, hatApp, freiBis, schranke, heftFehlt };
 })();

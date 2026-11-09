@@ -715,7 +715,7 @@ Niveau (★ alle · ★★ Standard und Profi · ★★★ Profi), Hören macht 
 - **config.json → `journey`** (vom Admin gepflegt über Gruppen → 📒 Laufzettel, im Worker geprüft):
   `{ schuljahr: "2026/27", wege: { journey6: { bis: { <wer>: <Abschnitt-ID> }, he: { <Hefteintrag-ID>: Nr }, niveau: { <wer>: 1–3 }, reihenfolge: { <wer>: 'frei'|'schritt'|'streng' }, sperren: { <wer>: true } } } }`.
   `bis` = Freigabe bis einschließlich dieses Abschnitts je Gruppe/Klasse, `he` = HE-Nummern (fortlaufend durchs Schuljahr, bei der Freigabe
-  vergeben, nie doppelt), `sperren` = Sperr-Schalter je Gruppe (vorbereitet, noch ohne Wirkung). Ein Schuljahreswechsel setzt nur
+  vergeben, nie doppelt), `sperren` = 🚧 Schranke je Gruppe/Klasse (v119): der Weg endet mit der Unit des Abschnitts aus `bis` (für denselben wer) – Stationen danach `zu` (grund `schranke`), die Brücke bleibt zu, Gemeistertes bleibt (`LernJourney.schranke`). Ein Schuljahreswechsel setzt nur
   diesen Block neu. In den Heften stehen schon HE 1 `he-u1-simple-past`, HE 2 `he-u1-objektpronomen`, HE 3 `he-u1-linking-words`,
   HE 4 `he-u2-some-any`, HE 5 `he-u2-did-fragen`, HE 6 `he-u2-plural`, HE 7 `he-u2-can-mustnt`, HE 8 `he-u2-weg`; für Unit 3 vorgesehen
   HE 9 `he-u3-should`, HE 10 `he-u3-present-progressive`, HE 11 `he-u3-much-many`, HE 12 `he-u3-bild`.

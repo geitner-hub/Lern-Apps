@@ -4,7 +4,10 @@
 //  Abschnitte bis einschließlich diesem (Hefteinträge danach bleiben unsichtbar). Beim Freigeben bekommen die neu sichtbaren
 //  Hefteinträge ihre HE-Nummer, fortlaufend durchs Schuljahr in Weg-Reihenfolge; vergebene Nummern bleiben fest.
 //  Mindestniveau je Gruppe/Klasse: die Kinder wählen ★/★★/★★★ selbst, aber nicht unter diesem (Abschnitte mit Niveaus).
-//  Stand: config.journey = { schuljahr, wege: { journey6: { bis: { wer: Abschnitt-ID }, he: { Hefteintrag-ID: Nr }, niveau: { wer: 1–3 } } } }
+//  Schranke (v119): „🚧 Weg endet mit dieser Unit“ je Zeile → sperren[wer] = true. Die Stationen der Units nach der Unit des
+//  freigegebenen Abschnitts sind dann zu und die Brücke dorthin bleibt zu (journey-kern.js schranke) – damit alle auf demselben Stand
+//  bleiben. Weiter geht es, indem man „frei bis“ auf einen Abschnitt der nächsten Unit stellt (Schranke wandert mit) oder den Haken entfernt.
+//  Stand: config.journey = { schuljahr, wege: { journey6: { bis: { wer: Abschnitt-ID }, he: { Hefteintrag-ID: Nr }, niveau: { wer: 1–3 }, sperren: { wer: true } } } }
 //  (Worker validateConfig, pruefen.py Regel 23). Löst den Reiter „🗺️ Lernwege“ ab. Unit-Übersicht, Editoren, Klassenstand
 //  und Schuljahreswechsel kommen mit dem Modul „🧭 English Journey“ (Etappe 6).
 // ═══════════════════════════════════════════════════════
@@ -23,7 +26,7 @@ LWAdmin.laufzettelFreigeben = function (store, J, wer, aid, text) {
     const w = wege[WEG] && typeof wege[WEG] === 'object' ? wege[WEG] : (wege[WEG] = {});
     const bis = w.bis && typeof w.bis === 'object' ? w.bis : (w.bis = {});
     if (aid) bis[wer] = aid;
-    else { delete bis[wer]; ['niveau', 'reihenfolge'].forEach(k => { if (w[k]) { delete w[k][wer]; if (!Object.keys(w[k]).length) delete w[k]; } }); }
+    else { delete bis[wer]; ['niveau', 'reihenfolge', 'sperren'].forEach(k => { if (w[k]) { delete w[k][wer]; if (!Object.keys(w[k]).length) delete w[k]; } }); }
     const ids = liste.map(a => a.id), max = Math.max(-1, ...Object.values(bis).map(x => ids.indexOf(x)));
     const he = w.he && typeof w.he === 'object' ? w.he : (w.he = {});
     let nr = Math.max(0, ...Object.values(he).map(Number).filter(Number.isFinite));
@@ -40,7 +43,7 @@ LWAdmin.laufzettelFreigeben = function (store, J, wer, aid, text) {
 
 LWAdmin.modul({
   id: 'laufzettel', bereich: 'gruppen', titel: 'Laufzettel', symbol: '📒', reihenfolge: 3,
-  suchbegriffe: ['Laufzettel', 'Lernweg', 'English Journey', 'Hefteintrag', 'HE-Nummer', 'Abschnitt', 'freigeben', 'Stationen'],
+  suchbegriffe: ['Schranke', 'gleicher Stand', 'Laufzettel', 'Lernweg', 'English Journey', 'Hefteintrag', 'HE-Nummer', 'Abschnitt', 'freigeben', 'Stationen'],
   zeigen(host, { store }) {
     const e = s => escHtml(String(s == null ? '' : s));
     const ROOT = new URL('./', location.href).href, WEG = 'journey6';
@@ -73,6 +76,22 @@ LWAdmin.modul({
     const reihenfolgeAuswahl = (wer, r) => `<select data-lz-reihe="${e(wer)}" aria-label="Reihenfolge für ${e(werName(wer))}" title="In welcher Reihenfolge öffnen sich die Abschnitte?">
       ${[['schritt', 'Schritt für Schritt'], ['streng', 'streng (auch Apps)'], ['frei', 'frei (alles offen)']].map(([v, t]) => `<option value="${v}"${(r || 'schritt') === v ? ' selected' : ''}>${t}</option>`).join('')}</select>`;
 
+    /** Schranke an/aus: der Weg endet mit der Unit des freigegebenen Abschnitts */
+    function schrankeSetzen(wer, an) {
+      const aid = (weg(store.daten() || {}).bis || {})[wer], u = J && J.units.find(x => (x.abschnitte || []).some(a => a.id === aid));
+      store.aendern(`📒 Laufzettel ${werName(wer).replace(/^\S+ /, '')}: ${an ? '🚧 Schranke nach Unit ' + (u ? u.nr : '?') : 'Schranke aus'}`, c => {
+        const w = c.journey && c.journey.wege && c.journey.wege[WEG];
+        if (!w) return;
+        const m = w.sperren && typeof w.sperren === 'object' ? w.sperren : (w.sperren = {});
+        if (an) m[wer] = true; else delete m[wer];
+        if (!Object.keys(m).length) delete w.sperren;
+      });
+    }
+    const unitVon = aid => J.units.find(u => (u.abschnitte || []).some(a => a.id === aid));
+    const schrankeAuswahl = (wer, an, aid) => { const u = unitVon(aid);
+      return `<label class="lw-klein" style="display:inline-flex;gap:.3rem;align-items:center;white-space:nowrap" title="Stationen und Brücke nach dieser Unit bleiben zu – alle bleiben auf demselben Stand">
+        <input type="checkbox" data-lz-schranke="${e(wer)}"${an ? ' checked' : ''}> 🚧 Schranke nach Unit ${u ? Number(u.nr) : '?'}</label>`; };
+
     function niveauSetzen(wer, n) {
       store.aendern(`📒 Laufzettel ${werName(wer).replace(/^\S+ /, '')}: Mindestniveau ${['', '★ (frei)', '★★', '★★★'][n]}`, c => {
         const w = c.journey && c.journey.wege && c.journey.wege[WEG];
@@ -97,7 +116,7 @@ LWAdmin.modul({
       const c = store.daten() || {}, w = weg(c), bis = w.bis || {}, he = w.he || {}, nv = w.niveau || {};
       const optionen = ['alle', ...klassen(c).map(k => 'k' + k), ...gruppen.map(g => 'g:' + g.id)];
       const zeilen = Object.keys(bis).map(wer => `<div class="lw-knoepfe" style="align-items:center;margin:.35rem 0">
-          <b style="min-width:11rem">${e(werName(wer))}</b>${auswahl(wer, bis[wer])}${niveauAuswahl(wer, nv[wer])}${reihenfolgeAuswahl(wer, (w.reihenfolge || {})[wer])}
+          <b style="min-width:11rem">${e(werName(wer))}</b>${auswahl(wer, bis[wer])}${schrankeAuswahl(wer, (w.sperren || {})[wer] === true, bis[wer])}${niveauAuswahl(wer, nv[wer])}${reihenfolgeAuswahl(wer, (w.reihenfolge || {})[wer])}
           <a class="lw-btn klein" href="apps/englisch/english-journey.html#u=${e((J.units.find(u => (u.abschnitte || []).some(a => a.id === bis[wer])) || J.units[0]).id)}&w=" target="_blank" rel="noopener">👀 Vorschau</a></div>`).join('');
       const frei = optionen.filter(x => !(x in bis));
       const nummern = Object.entries(he).sort((a, b) => a[1] - b[1]);
@@ -107,6 +126,8 @@ LWAdmin.modul({
           Was danach kommt, bleibt unsichtbar. Das Niveau (★ Basis · ★★ Standard · ★★★ Profi) wählen die Kinder selbst – mit einem Mindestniveau
           nicht darunter. Reihenfolge: <b>Schritt für Schritt</b> (Standard) öffnet den nächsten Abschnitt, wenn Hefteintrag und Übungen des vorigen abgehakt
           sind; <b>streng</b> verlangt auch die App; <b>frei</b> lässt alles offen (z. B. Wiederholung vor der Probe).
+          <b>🚧 Schranke</b>: Der Weg endet mit der Unit des gewählten Abschnitts – Stationen und Brücke danach bleiben zu, auch für die Schnellen
+          (Gemeistertes bleibt). Weiter geht es, indem du „frei bis“ in die nächste Unit stellst (die Schranke wandert mit) oder den Haken entfernst.
           Gilt der Reihe nach: Gruppe vor Klasse vor „Alle“. Wirkt nach dem Veröffentlichen (oben).</p>
           ${zeilen || '<p class="lw-klein">Noch nichts freigegeben – die Kinder sehen den Laufzettel-Knopf erst, wenn hier etwas eingestellt ist.</p>'}
           ${frei.length ? `<div class="lw-knoepfe" style="margin-top:.8rem"><select data-lz-neu aria-label="Für wen?"><option value="">+ Freigabe für …</option>
@@ -122,6 +143,7 @@ LWAdmin.modul({
       const t = ev.target;
       if (t.matches('[data-lz-neu]')) { neuWer = t.value; zeichnen(); return; }
       if (t.matches('[data-lz-niveau]')) { niveauSetzen(t.dataset.lzNiveau, Number(t.value)); return; }
+      if (t.matches('[data-lz-schranke]')) { schrankeSetzen(t.dataset.lzSchranke, t.checked); return; }
       if (t.matches('[data-lz-reihe]')) { reihenfolgeSetzen(t.dataset.lzReihe, t.value); return; }
       if (t.matches('[data-lz-wer]')) { const wer = t.dataset.lzWer; if (wer === neuWer) neuWer = ''; setzen(wer, t.value); }
     };
