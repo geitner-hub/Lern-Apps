@@ -30,7 +30,7 @@
   'use strict';
   if (window.LW && window.LW.UMGEBUNG) return;          // doppeltes Laden verhindern
 
-  const VERSION = 'v117';                                 // ⚙ bei jedem Upload mit sw.js zusammen erhöhen
+  const VERSION = 'v118';                                 // ⚙ bei jedem Upload mit sw.js zusammen erhöhen
 
   // ── Umgebung erkennen ────────────────────────────────
   //  GitHub Pages: erster Pfadteil = Repo-Name (Lern-Apps bzw. Lern-Apps-test)
@@ -105,7 +105,6 @@
     ['vokab-history-kl6',           'local',   'apps/englisch/vokabeltrainer.html', 'Vokabeltrainer 6: Verlauf', false],
     ['vokab-word-stats-kl6',        'local',   'apps/englisch/vokabeltrainer.html', 'Vokabeltrainer 6: Statistik je Wort', false],
     ['vokab-a11y-kl6',              'local',   'apps/englisch/vokabeltrainer.html', 'Vokabeltrainer 6: Lese-Einstellungen', false],
-    ['lernwelt-anatomie',           'local',   'apps/anatomie/js/anatomie-app.js', 'Anatomie-Testat-Trainer (Studium, nicht für die Kinder): Lernstand je Kapitel und Hell/Dunkel – bewusst nicht in der Sicherungskarte', false],
   ].map(([key, art, datei, zweck, sync]) => ({ key, art, datei, zweck, sync }));
 
   // ── Testumgebung: Speicher trennen ───────────────────

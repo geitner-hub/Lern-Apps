@@ -80,7 +80,7 @@ window.LWAdmin = window.LWAdmin || {};
     try {
       const k = await katalogLaden();
       // Ausnahmen ohne Katalog-Thema (gleiche Liste wie OHNE_THEMA in werkzeuge/pruefen.py)
-      const OHNE_THEMA = ['apps/anatomie/anatomie-testat.html'];   // Anatomie-Testat-Trainer (Studium, meldet kein Ergebnis)
+      const OHNE_THEMA = [];
       pfade.filter(p => p.startsWith('apps/') && !k.appThemen.has(p) && !OHNE_THEMA.includes(p)).forEach(p =>
         fehler.push(`${p} hat kein Thema in daten/katalog.json – erst dort eintragen (sonst wird die Prüfung in GitHub rot)`));
       Object.keys(cfg.freigaben || {}).filter(id => !k.ids.has(id)).forEach(id =>
