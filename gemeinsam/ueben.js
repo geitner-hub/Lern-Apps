@@ -21,6 +21,8 @@
 //      Der Hilfe-Knopf zeigt die nächste Stufe. Mit Tipp gelöst = richtig, aber halbe XP für diese Aufgabe (pass.js, Feld tipps);
 //      Lösung gezeigt = Aufgabe zählt als nicht gelöst, die Runde zählt nicht für die Meisterschaft (Feld loesung); hat das Kind bei
 //      mindestens der Hälfte der Aufgaben die Lösung geholt, wird die Runde gar nicht gewertet. Ohne diese Felder ist alles wie bisher.
+//    Check vor der Probe (Etappe 5): Stufe { check: true } + cfg.rundeFuer(stufe) → feste Runde; am Ende wertet
+//      gemeinsam/typen/check.js je Thema aus (a._gruppe) statt einer Punktzahl. Ohne Hilfen, ohne Lernstand, XP einmalig.
 //    Selbsteinschätzung (Etappe 4a): mit Feature-Schalter „einschaetzung“ fragt gemeinsam/einschaetzung.js vor der Runde
 //      (höchstens einmal je Thema und Tag) und zeigt danach den Abgleich mit dem Ergebnis.
 //    art 'eigen' (Etappe 9, Aufgabentypen): a.zeige(box, fertig) zeichnet die Bedienung selbst und ruft
@@ -312,19 +314,24 @@
       const st = alle.find(x => x.id === id);
       if (!frei(st) || !(ketteOffen(st) || geschafft(st))) return;
       S.stufe = st; S.aufgaben = []; S.ergebnis = []; S.nr = 0; S.start = Date.now();
-      const fragen = new Set(), anzahl = st.einzeln ? 1 : Math.max(3, Math.min(st.checkpoint ? 20 : RUNDE, Number(st.runde) || RUNDE));   // Checkpoint: große Runde
-      for (let v = 0; S.aufgaben.length < anzahl && v < anzahl * 8; v++) {
-        const a = cfg.erzeuge(st);
-        if (!a) continue;
-        const k = a.schluessel || a.frage;
-        if (fragen.has(k) && v < anzahl * 5) continue;
-        fragen.add(k); S.aufgaben.push(a);
+      // Check vor der Probe: feste Runde aus allen Themen (cfg.rundeFuer, typen.js)
+      const fest = st.check && cfg.rundeFuer ? cfg.rundeFuer(st) : null;
+      if (fest && fest.length) S.aufgaben = fest;
+      else {
+        const fragen = new Set(), anzahl = st.einzeln ? 1 : Math.max(3, Math.min(st.checkpoint ? 20 : RUNDE, Number(st.runde) || RUNDE));   // Checkpoint: große Runde
+        for (let v = 0; S.aufgaben.length < anzahl && v < anzahl * 8; v++) {
+          const a = cfg.erzeuge(st);
+          if (!a) continue;
+          const k = a.schluessel || a.frage;
+          if (fragen.has(k) && v < anzahl * 5) continue;
+          fragen.add(k); S.aufgaben.push(a);
+        }
       }
       if (!S.aufgaben.length) { zeigeStart(); return; }
       // Selbsteinschätzung (Etappe 4a): höchstens einmal je Thema und Tag, nicht bei Selbstkontrolle (ganzer Fall)
       const E = window.LernEinschaetzung;
       S.schaetz = 0;
-      if (E && !st.einzeln && !S.aufgaben[0].selbst && E.faellig(st.inhalt || st.id)) {
+      if (E && !st.einzeln && !st.check && !S.aufgaben[0].selbst && E.faellig(st.inhalt || st.id)) {
         beschaeftigt(true);
         return E.fragen(root, st.titel, w => { S.schaetz = w; S.start = Date.now(); neueAufgabe(); });
       }
@@ -382,6 +389,7 @@
           ? `<div class="opts">${a.optionen.map(o => `<button type="button" class="opt" data-wahl="${esc(o)}">${esc(o)}</button>`).join('')}</div>`
           : `<div class="ant">${feldHTML(a)}</div>${tasten(a)}`}
         <div class="zeile">${fb ? '<button type="button" class="btn p" data-weiter>Weiter ›</button>'
+          : S.stufe.check ? ''                                    // Check vor der Probe: ohne Hilfen
           : S.hilfe < hilfen(a).length ? `<button type="button" class="btn" data-tipp>💡 ${S.hilfe ? 'Noch ein Tipp' : 'Tipp'}</button>`
           : a.aufloesen && !a.selbst ? '<button type="button" class="btn" data-loesung>🔎 Lösung zeigen (zählt dann nicht)</button>' : ''}</div>`;
       if (fb) { const w = root.querySelector('[data-weiter]'); if (w) w.focus(); }
@@ -410,7 +418,7 @@
       }
       const ok = cfg.pruefe(a, eingabe);
       const eingabeText = a.art === 'rest' ? `${S.rest[0]} R ${S.rest[1]}` : a.eingabeText ? a.eingabeText(eingabe) : String(eingabe);
-      S.ergebnis.push({ ok, hilfe: S.hilfe > 0, frage: a.frage, loesung: a.text, eingabe: eingabeText, erklaerung: a.erklaerung || '', eigen: a.art === 'eigen' });
+      S.ergebnis.push({ ok, g: a._gruppe, hilfe: S.hilfe > 0, frage: a.frage, loesung: a.text, eingabe: eingabeText, erklaerung: a.erklaerung || '', eigen: a.art === 'eigen' });
       const thema = a._stufe || S.stufe.id;
       if (!ok && !S.stufe.training) Fehlerheft.merken({ thema, typ: a.typ, frage: a.frage, eingabe: eingabeText, loesung: a.text });
       if (ok && S.stufe.training) Fehlerheft.streichen(thema, a.typ);
@@ -440,7 +448,21 @@
       if (S.nr >= S.aufgaben.length) return ende();
       neueAufgabe();
     }
+    /** Check vor der Probe (Tempo Etappe 5): keine Note, Auswertung je Thema (typen/check.js); XP nur beim ersten Versuch */
+    function endeCheck() {
+      const st = S.stufe, r = S.ergebnis.filter(x => x.ok).length, n = S.aufgaben.length;
+      let aus = { html: '', erster: false };
+      try { aus = LernCheck.auswerten(st, S.ergebnis); } catch (e) {}
+      try { if (aus.erster && window.LernApps) LernApps.saveResult({ score: r, max: n, label: `Check · ${st.titel}`, thema: st.id, check: true }); } catch (e) {}
+      root.innerHTML = `<div class="top"><button type="button" class="x" data-ende aria-label="Zur Stufenwahl">✕</button><span class="nm">${esc(st.titel)}</span></div>
+        <div class="erg">${aus.html}<div class="zeile"><button type="button" class="btn p" data-nochmal>🔄 Check wiederholen</button>
+          <button type="button" class="btn" data-ende>Fertig</button></div></div>`;
+      S.stufe = null;
+      root.dataset.letzte = st.id;
+      window.scrollTo(0, 0);
+    }
     function ende() {
+      if (S.stufe.check && window.LernCheck) return endeCheck();
       const st = S.stufe, selbst = S.ergebnis.filter(x => x.selbst);
       const n = selbst.length ? selbst.reduce((s, x) => s + x.max, 0) : S.aufgaben.length;
       const r = selbst.length ? selbst.reduce((s, x) => s + x.punkte, 0) : S.ergebnis.filter(x => x.ok).length, pct = Math.round(r / n * 100);

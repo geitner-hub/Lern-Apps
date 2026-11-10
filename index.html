@@ -243,6 +243,7 @@
     .weiter-btn .wb-los{background:#1b1929;color:#f6c94a;font-weight:900;border-radius:999px;padding:.6rem 1.15rem;white-space:nowrap;}
     @media (prefers-reduced-motion:reduce){.weiter-btn{transition:none;}.weiter-btn:hover{transform:none;}}
     @media (max-width:640px){.weiter-btn b{font-size:1.3rem;}.weiter-btn .wb-ic{font-size:1.8rem;}}
+    .kann-link{float:right;font:800 .85rem 'Nunito',sans-serif;color:#e6a817;text-decoration:none;padding:.15rem 0;}
     #lernweg-section .lw-banner{min-height:0;padding:.6rem .9rem;border-radius:16px;gap:.8rem;}
     #lernweg-section .lw-ring{width:46px;height:46px;}
     #lernweg-section .lw-ring span{width:36px;height:36px;font-size:.8rem;}
@@ -990,7 +991,7 @@ function buildLernwege() {
   if (!sec) return;
   weiterQ.weg = null;
   const journey = journeyBanner(), wege = LernPass.hasProfile() && !new URLSearchParams(location.search).get('vorschau') ? wegeBanner() : '';
-  sec.innerHTML = journey || wege ? `<h2>📒 Mein Laufzettel</h2><div class="lw-banner-liste">${journey}${wege}</div>` : '';
+  sec.innerHTML = journey || wege ? `<h2>📒 Mein Laufzettel <a class="kann-link" href="apps/typen/kann-liste.html">🎯 Das kann ich ›</a></h2><div class="lw-banner-liste">${journey}${wege}</div>` : '';
   buildWeiter();
 }
 function journeyBanner() {
@@ -1418,6 +1419,7 @@ function passViewErfolge() {
   const got = list.filter(x => x.has);
   const grid = (arr, near) => `<div class="badge-grid">${arr.map(x => badgeTileHTML(x, near)).join('')}</div>`;
   return `
+    <p style="text-align:center;margin:.5rem 0 0"><a href="apps/typen/kann-liste.html" style="color:#e6a817;font-weight:900;text-decoration:none">🎯 Das kann ich – meine Kann-Liste ›</a></p>
     <div class="lw-sec" style="border-top:none;padding-top:.6rem;margin-top:.4rem">
       <div class="lw-grid">
         <div class="lw-tile"><div class="v">${wk.goodDays}/${wk.goal}</div><div class="l">Tage diese Woche</div></div>

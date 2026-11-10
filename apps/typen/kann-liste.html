@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8"/>
+  <script src="../../gemeinsam/umgebung.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>Das kann ich – Lernwelt</title>
+  <!--
+  ═══════════════════════════════════════════════
+   LERNWELT – Kann-Liste „Das kann ich“  (Aktionsplan „Lernwelt – Tempo“, Etappe 5b)
+   apps/typen/kann-liste.html[?u=<Unit-ID> | ?weg=<Weg-ID>]
+
+   Je freigegebener Unit des English Journey und je freigegebenem 2D-Lernweg die „Ich kann …“-Sätze. Jeder Satz füllt
+   sich aus dem Lernstand im Pass (noch nicht geübt · geübt · sicher); daneben steht die eigene Einschätzung.
+   Druckansicht: eine A4-Seite je Unit/Weg – fürs Lernentwicklungsgespräch oder zum Einkleben ins Heft.
+   Nur lesen, kein eigener Speicher, kein saveResult. Logik: gemeinsam/kann-liste.js (LernKann).
+   KEINE App in config.json: erreichbar über die Startseite („Mein Laufzettel“) und den Pass (Erfolge).
+  ═══════════════════════════════════════════════
+  -->
+  <link rel="stylesheet" href="../../gemeinsam/fonts.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --bg:#0f0e1a; --surface:#1b1929; --border:rgba(255,255,255,.1); --accent:#e6a817; --text:#f1f0fb; --text2:rgba(241,240,251,.7); }
+    body { font-family: 'Nunito', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding: 4.2rem 1rem calc(5rem + env(safe-area-inset-bottom)); }
+    .kopf { max-width: 760px; margin: 0 auto 1rem; text-align: center; }
+    .kopf h1 { font: 400 1.9rem 'Fredoka One', 'Nunito', sans-serif; color: var(--accent); }
+    .kopf p { color: var(--text2); font-weight: 800; margin-top: .25rem; }
+    .kn { background: var(--surface); border: 1px solid var(--border); color: var(--text); border-radius: 999px; padding: .5rem 1rem; font: 800 .95rem 'Nunito', sans-serif; min-height: 44px; margin-top: .8rem; cursor: pointer; }
+    .legende { display: flex; gap: .9rem; justify-content: center; flex-wrap: wrap; margin-top: .8rem; font-weight: 800; font-size: .85rem; color: var(--text2); }
+    .gruppe { max-width: 760px; margin: 0 auto 1rem; background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 1rem 1.1rem; }
+    .gruppe h2 { font: 400 1.25rem 'Fredoka One', 'Nunito', sans-serif; margin-bottom: .2rem; }
+    .gruppe .name { display: none; }
+    .kopfzeile, .satz { display: grid; grid-template-columns: minmax(0, 1fr) 8.5rem 5.5rem; gap: .6rem; align-items: center; }
+    .kopfzeile { font-weight: 900; font-size: .72rem; letter-spacing: .04em; text-transform: uppercase; color: var(--text2); padding: .5rem 0 .3rem; text-align: center; }
+    .kopfzeile span:first-child { text-align: left; }
+    .satz { padding: .55rem 0; border-top: 1px solid var(--border); }
+    .satz .tx { font-weight: 700; line-height: 1.35; }
+    .satz .tx small { display: block; color: var(--text2); font-weight: 800; font-size: .74rem; text-transform: uppercase; letter-spacing: .03em; }
+    .chip { justify-self: center; border-radius: 999px; padding: .25rem .7rem; font-weight: 900; font-size: .82rem; white-space: nowrap; }
+    .chip.neu { background: rgba(255,255,255,.08); color: var(--text2); }
+    .chip.geuebt { background: rgba(230,168,23,.2); color: #f6c94a; }
+    .chip.sicher { background: rgba(74,222,128,.2); color: #4ade80; }
+    .ich { justify-self: center; font-size: 1.5rem; }
+    .ich.leer { font-size: .9rem; color: var(--text2); font-weight: 800; }
+    .hinweis { max-width: 520px; margin: 3rem auto; text-align: center; background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 1.6rem 1.2rem; font-weight: 700; line-height: 1.5; }
+    .hinweis a { color: var(--accent); font-weight: 900; }
+    @media (max-width: 560px) { .kopfzeile, .satz { grid-template-columns: minmax(0, 1fr) 6.2rem 3rem; } .chip { font-size: .72rem; padding: .2rem .45rem; } }
+    @media print {
+      @page { size: A4; margin: 14mm; }
+      body { background: #fff; color: #000; padding: 0; }
+      .kn, #lern-home-btn, #lern-result-badge, #lw-test-schild, #lw-zurueck { display: none !important; }
+      .kopf h1 { color: #000; font-size: 1.5rem; } .kopf p, .legende, .kopfzeile, .satz .tx small { color: #333; }
+      .gruppe { background: #fff; border: 1px solid #777; break-inside: avoid; page-break-inside: avoid; }
+      .gruppe + .gruppe { break-before: page; page-break-before: always; }
+      .gruppe .name { display: block; font-weight: 800; margin: .2rem 0 .4rem; }
+      .satz { border-top: 1px solid #bbb; }
+      .chip { border: 1px solid #555; background: #fff !important; color: #000 !important; }
+      .ich.leer { color: #000; }
+    }
+  </style>
+</head>
+<body>
+<header class="kopf">
+  <h1>🎯 Das kann ich</h1>
+  <p id="sub">Deine Kann-Liste füllt sich beim Üben von selbst.</p>
+  <div class="legende"><span>⬜ noch nicht geübt</span><span>🟡 geübt</span><span>🟢 sicher</span><span>😀 🙂 🤔 so schätzt du dich ein</span></div>
+  <button type="button" class="kn" id="b-druck" hidden>🖨 Drucken</button>
+</header>
+<main id="liste"></main>
+
+<script src="../../gemeinsam/shared.js"></script>
+<script src="../../gemeinsam/freigabe.js"></script>
+<script src="../../gemeinsam/kann-liste.js"></script>
+<script>
+'use strict';
+const STAND = { neu: '⬜ noch nicht geübt', geuebt: '🟡 geübt', sicher: '🟢 sicher' };
+const ICH = { 3: '😀', 2: '🙂', 1: '🤔' };
+function passBereit() {
+  return new Promise(res => {
+    if (window.LernPass) return res();
+    window.addEventListener('lernpass:ready', () => res(), { once: true });
+    setTimeout(res, 5000);
+  });
+}
+(async function start() {
+  const p = new URLSearchParams(location.search), host = document.getElementById('liste');
+  await passBereit();
+  let gruppen = [];
+  try { gruppen = await LernKann.gruppen({ u: p.get('u') || '', weg: p.get('weg') || '' }); } catch (e) { console.warn('[Kann-Liste]', e); }
+  if (!gruppen.length) {
+    host.innerHTML = `<div class="hinweis">Hier steht deine Kann-Liste, sobald deine Lehrkraft einen Lernweg für dich freigibt.<br><br><a href="${escHtml(LW.ROOT)}">Zur Startseite ›</a></div>`;
+    return;
+  }
+  const name = window.LernPass && LernPass.hasProfile() ? LernPass.profile().name : '';
+  host.innerHTML = gruppen.map(g => `<section class="gruppe"><h2>${escHtml(g.titel)}</h2>
+      <div class="name">Name: ${name ? escHtml(name) : '______________________'} · Datum: ${new Date().toLocaleDateString('de-DE')}</div>
+      <div class="kopfzeile"><span>Ich kann …</span><span>Lernwelt</span><span>Ich selbst</span></div>
+      ${g.saetze.map(s => `<div class="satz"><span class="tx">${s.teil ? `<small>${escHtml(s.teil)}</small>` : ''}Ich kann ${escHtml(s.text)}</span>
+        <span class="chip ${s.imUnterricht && s.stand === 'neu' ? 'neu' : s.stand}">${s.imUnterricht && s.stand === 'neu' ? 'im Unterricht' : STAND[s.stand]}</span>
+        <span class="ich${s.schaetz ? '' : ' leer'}">${s.schaetz ? ICH[s.schaetz] : '–'}</span></div>`).join('')}</section>`).join('');
+  const sicher = gruppen.reduce((n, g) => n + g.saetze.filter(s => s.stand === 'sicher').length, 0), alle = gruppen.reduce((n, g) => n + g.saetze.length, 0);
+  document.getElementById('sub').textContent = `${sicher} von ${alle} Sätzen schon sicher – die Liste füllt sich beim Üben von selbst.`;
+  const d = document.getElementById('b-druck');
+  d.hidden = false; d.addEventListener('click', () => window.print());
+})();
+</script>
+<script src="../../gemeinsam/navbar.js"></script>
+</body>
+</html>

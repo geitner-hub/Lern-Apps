@@ -25,7 +25,7 @@
 //  und teilen sich den Offline-Speicher. Deshalb hat jede Umgebung ihr
 //  eigenes Präfix und räumt nur ihre eigenen Speicher auf.
 // ═══════════════════════════════════════════════════════
-const VERSION = 'v123';  // v123: Hilfe-Stufen (Tipp → Tipp 2 → Lösung) und Selbsteinschätzung im Übungsrahmen
+const VERSION = 'v124';  // v124: Check vor der Probe und Kann-Liste; Mathe-Engine aus dem Kern ins Nachladen
 const PRAEFIX = /\/[^/]*-test\/$/i.test(new URL(self.registration.scope).pathname) ? 'lwtest-v' : 'lernwelt-v';
 const CACHE   = PRAEFIX + VERSION.replace(/^v/, '');        // z. B. 'lernwelt-v24' (Format wie bisher)
 const ALT     = CACHE + '-alt';                             // Dateien der Vorversion, noch nicht aufgefrischt
@@ -36,7 +36,7 @@ const ALT     = CACHE + '-alt';                             // Dateien der Vorve
 const START = ['./', 'index.html', 'config.json', 'manifest.webmanifest',
                'gemeinsam/umgebung.js', 'gemeinsam/shared.js', 'gemeinsam/config-api.js', 'gemeinsam/navbar.js',
                'gemeinsam/pass.js', 'gemeinsam/pass-extras.js', 'gemeinsam/sync-code.js', 'gemeinsam/sync.js',
-               'gemeinsam/katalog.js', 'gemeinsam/freigabe.js', 'gemeinsam/wiederholung.js', 'gemeinsam/dorf-kern.js', 'gemeinsam/generatoren-mathe.js', 'daten/kopfrechnen.json', 'gemeinsam/fonts.css', 'vendor/fflate.min.js',
+               'gemeinsam/katalog.js', 'gemeinsam/freigabe.js', 'gemeinsam/wiederholung.js', 'gemeinsam/dorf-kern.js', 'gemeinsam/fonts.css', 'vendor/fflate.min.js',
                'daten/lernwelt-inhalte.json', 'daten/katalog.json', 'daten/dorf-inhalte.json',
                'fonts/nunito-latin-wght-normal.woff2', 'fonts/nunito-latin-ext-wght-normal.woff2',
                'fonts/fredoka-one-latin-400-normal.woff2'];
@@ -47,7 +47,8 @@ const START = ['./', 'index.html', 'config.json', 'manifest.webmanifest',
 // ohne dass alle iPads beim Update gleichzeitig alles ziehen.
 const NACHLADEN = ['spiele/runner.html', 'spiele/burg-verteidigung.html', 'spiele/dorf.html', 'spiele/tauziehen.html',
                    'spiele/wort-des-tages.html', 'spiele/zauberwort.html', 'spiele/kitchen-chaos.html', 'spiele/expedition.html', 'spiele/room-detective.html',
-                   'gemeinsam/aufgaben.js', 'daten/aufgaben-pools.json', 'gemeinsam/einstellungen.js', 'daten/apps/liste.json', 'daten/apps/burg-verteidigung.json', 'daten/apps/runner.json', 'daten/apps/dorf.json', 'gemeinsam/spiel-hilfen.js', 'gemeinsam/ueben.js', 'apps/mathe/kopfrechnen.html', 'apps/mathe/mathe-trainer.html', 'apps/englisch/vokabeltrainer.html', 'gemeinsam/karten-ansicht.js',
+                   'gemeinsam/aufgaben.js', 'daten/aufgaben-pools.json', 'gemeinsam/einstellungen.js', 'daten/apps/liste.json', 'daten/apps/burg-verteidigung.json', 'daten/apps/runner.json', 'daten/apps/dorf.json', 'gemeinsam/spiel-hilfen.js', 'gemeinsam/ueben.js', 'gemeinsam/generatoren-mathe.js', 'daten/kopfrechnen.json', 'apps/mathe/kopfrechnen.html',   // Mathe-Engine: seit v124 nicht mehr im Kern (die Startseite braucht sie nicht)
+                    'apps/mathe/mathe-trainer.html', 'apps/englisch/vokabeltrainer.html', 'gemeinsam/karten-ansicht.js',
                    'gemeinsam/avatar3d.js', 'gemeinsam/chest3d.js', 'gemeinsam/dorf-szene.js', 'gemeinsam/qrcode.js',
                    'vendor/three.min.js', 'vendor/jsQR.min.js',
                    'daten/vokabeln5.json', 'daten/vokabeln6.json', 'daten/woerter-en.json', 'daten/kitchen-chaos.json', 'daten/room-detective.json',
@@ -89,6 +90,7 @@ const NACHLADEN = ['spiele/runner.html', 'spiele/burg-verteidigung.html', 'spiel
                    'apps/englisch/english-journey.html', 'gemeinsam/journey-welt.js', 'gemeinsam/journey-lernweg.js',  // English Journey Year 6: 3D-Weg (three.js lädt avatar3d.js), Laufzettel
                    'gemeinsam/lernweg-zurueck.js',  // Knopf „Zurück zum Weg“ (English Journey)
                    'apps/typen/weg.html', 'gemeinsam/weg-kern.js', 'daten/wege/liste.json', 'daten/wege/test.json', 'daten/wege/bausteine-test.json',  // Lernweg-Engine in 2D (Tempo Etappe 2): neuen Weg hier ergänzen
+                   'gemeinsam/typen/check.js', 'daten/inhalte/en/en.6.probe-check.json', 'apps/typen/kann-liste.html', 'gemeinsam/kann-liste.js',  // Check vor der Probe und Kann-Liste (Tempo Etappe 5)
                    'gemeinsam/einschaetzung.js', 'daten/features.json',  // Selbsteinschätzung (Tempo Etappe 4; lädt nur mit Feature-Schalter)
                    'apps/typen/live.html', 'gemeinsam/live-fragen.js'];  // Live-Abfrage (Seite der Kinder; antworten geht nur online)
 const NACHLADEN_PAUSE_MS = 400;   // Pause zwischen zwei Dateien

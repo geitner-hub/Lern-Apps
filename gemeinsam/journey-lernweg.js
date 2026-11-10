@@ -103,7 +103,10 @@
   }
   const passt = (s, nv) => !nv || !Array.isArray(s.niveau) || s.niveau.includes(nv);
   const schritte = a => a.schritte.filter(s => passt(s, niveau(a)));
+  // Check vor der Probe (Tempo Etappe 5): Themen-IDs mit „.probe-check.“ – erledigt, sobald einmal bearbeitet (LernPass.checks)
+  const istCheck = s => /\.probe-check\./.test(String(s.thema || ''));
   function themaGeschafft(s) {
+    if (istCheck(s)) return !!(P() && P().checks && P().checks[s.thema]);
     const e = P() && P().lernstand && P().lernstand[s.thema], z = s.ziel || {};
     return !!e && Array.isArray(e.p) && e.p.filter(p => p >= (z.prozent || 70)).length >= Math.min(3, z.runden || 1);
   }
@@ -254,8 +257,8 @@
           + (x.zustand === 'offen' || x.zustand === 'gemeistert' ? `<button type="button" class="jw-los" data-jw-station="${esc(s.station)}">${an ? '🔁 Nochmal' : '▶ Los geht\'s'}</button>` : '');
       } else {
         const t = window.LernKatalog && LernKatalog.thema(s.thema), z = s.ziel || {};
-        kopf = `🎮 ${esc(t ? t.titel : s.thema)}`;
-        innen = `<p>${esc(s.text || '')}</p><p class="jw-klein">Ziel: ${z.runden || 1} ${z.runden > 1 ? 'Runden' : 'Runde'} mit mindestens ${z.prozent || 70} %.</p>`;
+        kopf = `${istCheck(s) ? '🎯' : '🎮'} ${esc(t ? t.titel : s.thema)}`;
+        innen = `<p>${esc(s.text || '')}</p><p class="jw-klein">${istCheck(s) ? 'Keine Note, keine Hilfen – du kannst den Check wiederholen.' : `Ziel: ${z.runden || 1} ${z.runden > 1 ? 'Runden' : 'Runde'} mit mindestens ${z.prozent || 70} %.`}</p>`;
         fuss = `<div class="jw-auto${an ? ' an' : ''}"><i>${an ? '✓' : ''}</i>${an ? 'Geschafft' : 'Hakt sich selbst ab'}</div>`
           + (t ? `<button type="button" class="jw-los" data-jw-thema="${esc(s.thema)}">${an ? '🔁 Nochmal' : '▶ Los geht\'s'}</button>` : '');
       }

@@ -224,6 +224,45 @@ und 9 von 10 geschafft. Du kannst mehr, als du denkst.“
 - **Einschalten:** Admin → System → Feature-Schalter → „Selbsteinschätzung vor dem Üben“ – für alle oder nur für einzelne
   Gruppen/Klassen. Ohne Schalter ist sie aus und `einschaetzung.js` wird gar nicht geladen.
 
+## Check vor der Probe und Kann-Liste (Aktionsplan „Lernwelt – Tempo“, Etappe 5, v124)
+
+**Check vor der Probe.** Ein kurzer Selbsttest über alle Grammatik-Themen einer Unit – ohne Note. Technisch eine Check-Stufe
+im Baukasten (`apps/typen/uebung.html?inhalt=en.6.probe-check`, Inhaltsdatei `daten/inhalte/en/en.6.probe-check.json`):
+
+```json
+{ "id": "en.6.probe-check.u1", "titel": "Check Unit 1: Together again", "check": true, "mix": true, "je": 2,
+  "aus": ["<alle Quell-Stufen>"],
+  "themen": [ { "titel": "Was / were + Kurzantworten", "aus": ["en.6.was-were.formen", "…"], "ziel": "en.6.was-were.mix" } ] }
+```
+
+- Die Runde hat je Thema `je` zufällige Aufgaben aus dessen Quellen (nur freigegebene Stufen) – `typen.js` `rundeFuer`.
+- **Keine Note:** keine Hilfen, kein Lernstand, keine Sterne. XP gibt es nur beim ersten Versuch und nur fürs Bearbeiten.
+- **Auswertung** (`gemeinsam/typen/check.js`, `LernCheck`): je Thema eine Zeile – „Das kannst du“ (mindestens zwei Drittel
+  richtig) oder „Hier nochmal üben“ mit einem Knopf zur Übung (`ziel`). Beim Wiederholen steht der erste Versuch daneben
+  (`LernPass.checkMerken`: erster und letzter Versuch je Check im Pass, reist mit der Sicherung).
+- **English Journey:** jede Unit hat im Finale-Abschnitt den Schritt `uN-a-finale-check` (art `app`, thema `en.6.probe-check.uN`).
+  Er hakt sich ab, sobald der Check einmal bearbeitet ist. Themen-IDs von Checks enthalten immer `.probe-check.` – daran
+  erkennen `journey-lernweg.js` und `weg-kern.js` sie. In den 2D-Lernwegen: Schritt `art: "check"` mit `thema`.
+- Neuer Check: Stufe in einer Inhaltsdatei wie oben (ID mit `.probe-check.`), Stufe im Katalog eintragen; `pruefen.py` prüft
+  `themen`, `aus`, `ziel` und `je`. Die Checks der fünf Units decken die Grammatik-Stationen ab; Vokabeln prüft der Vokabeltrainer.
+
+**Kann-Liste „Das kann ich“** (`apps/typen/kann-liste.html`, Logik `gemeinsam/kann-liste.js`, `LernKann`). Je freigegebener
+Unit des English Journey und je freigegebenem 2D-Lernweg die „Ich kann …“-Sätze aus dem Feld `kann`.
+
+- Jeder Satz füllt sich aus dem Lernstand: ⬜ noch nicht geübt · 🟡 geübt · 🟢 sicher (jedes Thema gemeistert oder Bestwert ab 80 %).
+  Die Themen eines Satzes sind im English Journey die App-Schritte seines Abschnitts, im 2D-Lernweg das Feld `themen`.
+  Sätze ohne Übung in der Lernwelt stehen als „im Unterricht“.
+- Daneben die eigene Einschätzung: im English Journey der Smiley aus „Fit für die Probe?“, sonst die letzte
+  Selbsteinschätzung vor dem Üben (Etappe 4).
+- Druck: eine A4-Seite je Unit/Weg mit Name und Datum – fürs Lernentwicklungsgespräch oder zum Einkleben. `?u=<Unit-ID>` bzw.
+  `?weg=<Weg-ID>` zeigt nur eine Liste.
+- Erreichbar über die Startseite („📒 Mein Laufzettel → 🎯 Das kann ich“), den Pass (Erfolge) und die Listenansicht eines 2D-Wegs.
+  Nur lesen – kein eigener Speicher.
+
+**Kern entlastet (v124):** `generatoren-mathe.js` und `daten/kopfrechnen.json` stehen nicht mehr in `START`, sondern in
+`NACHLADEN` (die Startseite braucht sie nicht). Kopfrechnen ist damit offline da, sobald das iPad es einmal geöffnet oder im
+Hintergrund geladen hat – wie die anderen Lern-Apps.
+
 ## Ladekette (Infrastruktur Etappe 2)
 
 Grundsatz: **Kern sofort, Rest bei Bedarf.** Die Budgets prüft `werkzeuge/pruefen.py`, gemessen **komprimiert** (gzip, so liefert GitHub Pages aus –

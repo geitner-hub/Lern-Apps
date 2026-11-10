@@ -1530,6 +1530,25 @@
        ]
       },
       {
+       "id": "en.6.probe-check",
+       "titel": "Check vor der Probe (Highlight 6)",
+       "klasse": 6,
+       "quelle": {
+        "app": "apps/typen/uebung.html",
+        "parameter": "inhalt=en.6.probe-check"
+       },
+       "lehrplan": "E6 Highlight 6: Grammatik einer Unit im Überblick (Selbsttest ohne Note)",
+       "dauer": 8,
+       "einsatz": "Vor der Probe am Ende jeder Unit: je Thema zwei Aufgaben, danach „Das kannst du“ oder „Hier nochmal üben“; im English Journey im Finale-Abschnitt",
+       "stufen": [
+        { "id": "en.6.probe-check.u1", "titel": "Check Unit 1" },
+        { "id": "en.6.probe-check.u2", "titel": "Check Unit 2" },
+        { "id": "en.6.probe-check.u3", "titel": "Check Unit 3" },
+        { "id": "en.6.probe-check.u4", "titel": "Check Unit 4" },
+        { "id": "en.6.probe-check.u5", "titel": "Check Unit 5" }
+       ]
+      },
+      {
        "id": "en.6.revision",
        "titel": "Finale Unit 3–5 (English Journey)",
        "klasse": 6,

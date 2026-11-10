@@ -167,6 +167,7 @@
         // Hilfe-Stufen (ueben.js): tipps = mit Tipp gelöste Aufgaben (halbe XP), loesung = Lösung gezeigt (keine Meisterschaft)
         if (result && result.tipps > 0) entry.tipps = Number(result.tipps);
         if (result && result.loesung) entry.loesung = true;
+        if (result && result.check) entry.check = entry.loesung = true;   // Check vor der Probe: XP nur fürs Bearbeiten, kein Lernstand, keine Sterne
         // „Meine Themen“: alte Inhalt-IDs, wenn die App welche schickt, sonst die Themen-IDs
         const lern = inhalt.length ? inhalt : thema;
         if (window.LernPass) {

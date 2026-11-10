@@ -616,6 +616,17 @@ for p in sorted(ROOT.glob('daten/inhalte/*/*.json')):
         for x in st.get('aufgaben') or []:
             if isinstance(x, dict) and x.get('nach') is not None and (x['nach'] not in stufen_ids or x['nach'] == sid):
                 FI(f'{wo}: „nach“ muss eine andere Stufe dieser Datei nennen (nicht „{x["nach"]}“)')
+        if st.get('check'):                                      # Tempo Etappe 5: Check vor der Probe
+            if not st.get('mix'): FI(f'{wo}: check braucht mix: true und aus')
+            th = st.get('themen')
+            if not isinstance(th, list) or not th: FI(f'{wo}: check braucht themen: [{{ titel, aus, ziel }}]')
+            for t_ in th if isinstance(th, list) else []:
+                if not isinstance(t_, dict) or not t_.get('titel') or not isinstance(t_.get('aus'), list) or not t_.get('aus'): FI(f'{wo}: jedes Thema braucht titel und aus'); continue
+                for a_ in t_['aus']:
+                    if a_ not in (st.get('aus') or []): FI(f'{wo}: Thema „{t_["titel"]}“: {a_} fehlt in aus der Stufe')
+                if katalog is not None and t_.get('ziel') not in ids: FI(f'{wo}: Thema „{t_["titel"]}“: ziel {t_.get("ziel")} steht nicht im Katalog')
+            if st.get('je') is not None and not (isinstance(st['je'], int) and 1 <= st['je'] <= 5): FI(f'{wo}: je = 1 bis 5 Aufgaben je Thema')
+            if '.probe-check.' not in str(sid): H(f'{r}: {wo}: Check-Stufen heißen „<fach>.<klasse>.probe-check.<…>“ – daran erkennen die Lernwege sie')
         if st.get('mix'):                                        # Neue Lern-Apps Etappe 6: Mix-Stufe
             for a_ in st.get('aus') or []:
                 if a_ in fall_stufen: H(f'{r}: {wo}: aus nennt den ganzen Fall {a_} – Fälle kommen nie in einen Mix')

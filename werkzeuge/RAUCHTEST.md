@@ -28,6 +28,9 @@ Live am iPad über das Symbol auf dem Home-Bildschirm, Test in Safari.
 | 21 | Im Test-Weg den App-Schritt „Los ›“ antippen | Kopfrechnen öffnet, oben rechts „🧭 Zurück zum Weg“ führt zurück |
 | 22 | Kopfrechnen: in einer Aufgabe „💡 Tipp“, „Noch ein Tipp“, dann richtig lösen; in einer anderen bis „🔎 Lösung zeigen“ | Tipps erscheinen nacheinander; Ergebnis nennt Tipp bzw. Lösung, die XP-Meldung zeigt „mit Tipp: halbe XP“ |
 | 23 | Admin → System → Feature-Schalter: „Selbsteinschätzung“ für eine Testgruppe an; dort Kopfrechnen starten | vor der Runde drei Knöpfe, nach der Runde der Abgleich; am selben Tag beim selben Thema keine zweite Frage |
+| 24 | English Journey → Finale-Abschnitt einer freigegebenen Unit → „Check vor der Probe“ starten und durchspielen | je Thema zwei Aufgaben ohne Hilfe-Knopf; am Ende je Thema „Das kannst du“ oder „Hier nochmal üben“ mit Knopf „Üben ›“; der Schritt ist danach abgehakt |
+| 25 | Check wiederholen | neben jeder Zeile steht „beim ersten Mal x von 2“ |
+| 26 | Startseite → Mein Laufzettel → „🎯 Das kann ich“, dann Drucken (Vorschau) | Liste je freigegebener Unit mit ⬜/🟡/🟢 und Einschätzung; Druck hell, eine Seite je Unit |
 
 **Nur in der Testumgebung zusätzlich:** Oben steht „🧪 TEST · vXX“. Im Admin eine Kleinigkeit ändern und
 speichern → Meldung „Testumgebung: Speichern und Sicherung sind hier abgeschaltet“. Danach live den Pass

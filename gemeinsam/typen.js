@@ -287,6 +287,8 @@
     const typen = new Set(typenIn(D));
     Object.values(andere).forEach(x => typenIn(x).forEach(t => typen.add(t)));
     const typDatei = t => 'gemeinsam/typen/' + t + '.js';
+    // Check vor der Probe (Tempo Etappe 5): Auswertung je Thema – Modul nur für Dateien mit Check-Stufen
+    if (D.stufen.some(st => st && st.check) && window.LW && LW.laden) LW.laden('gemeinsam/typen/check.js').catch(() => {});
     try { await Promise.all([...typen].map(t => window.LW && LW.laden ? LW.laden(typDatei(t)) : Promise.reject(new Error('LW')))); }
     catch (e) { return fehler(host, 'Der Aufgabentyp konnte nicht geladen werden.'); }
     // (NAMEN oben = Dateien in gemeinsam/typen/, pruefen.py prüft das)
@@ -350,6 +352,21 @@
       }
       return nummern;
     }
+    /** Check-Stufe { check: true, mix: true, aus, themen: [{ titel, aus: [Stufen-IDs], ziel }], je: 2 }: feste Runde – je Thema
+     *  „je“ zufällige Aufgaben aus seinen (freigegebenen) Quellen; a._gruppe = Nummer des Themas für die Auswertung */
+    function rundeFuer(st) {
+      if (!st.check || !Array.isArray(st.themen)) return null;
+      const erlaubt = new Set(kandidaten(st)), je = Math.max(1, Math.min(5, Number(st.je) || 2)), runde = [];
+      st.themen.forEach((t, g) => {
+        const ids = new Set();
+        (t.aus || []).forEach(a => { if (quellen[a]) ids.add(a); else Object.keys(quellen).forEach(k => { if (k.startsWith(a + '.')) ids.add(k); }); });
+        const nummern = [];
+        let basis = 0;
+        (mixe[st.id] || []).forEach(q => { if (ids.has(q.st.id)) for (let k = 0; k < q.n; k++) if (erlaubt.has(basis + k)) nummern.push(basis + k); basis += q.n; });
+        mischen(nummern).slice(0, je).forEach(nr => { const a = aufgabe(st, nr); if (a) { a._gruppe = g; runde.push(a); } });
+      });
+      return runde;
+    }
     // Jede Stufe zieht ihre Aufgaben aus einem gemischten Stapel – keine Wiederholung, bis alle dran waren
     const stapel = {};
     function ziehe(st) {
@@ -383,7 +400,7 @@
       stufen, runde: Number(D.runde) || 8, meisterschaft: D.meisterschaft, vorlesen: !!D.vorlesen, pfad: !!D.pfad,
       hilfe: D.hilfe ? { html: hilfeHTML(D.hilfe) } : null,
       nachweise: hatNachweise ? nachweiseHTML : null,
-      erzeuge: st => { const nr = ziehe(st); return nr == null ? null : aufgabe(st, nr); },
+      erzeuge: st => { const nr = ziehe(st); return nr == null ? null : aufgabe(st, nr); }, rundeFuer,
       erzeugeTyp: (st, typ) => { const nr = Number(String(typ || '').slice(1)); return /^a\d+$/.test(typ) && nr < anzahl(st) ? aufgabe(st, nr) : null; },
       pruefe: (a, e) => { const T = TYPEN[a._typ]; return !!T && T.pruefe(a, e); },
     });

@@ -1,0 +1,314 @@
+{
+ "typ": "gemischt",
+ "thema": "en.6.probe-check",
+ "titel": "Check vor der Probe (Highlight 6)",
+ "emoji": "🎯",
+ "klasse": 6,
+ "sprache": "en-GB",
+ "runde": 10,
+ "untertitel": "Ohne Note: Was kannst du schon – und was übst du noch?",
+ "stufen": [
+  {
+   "id": "en.6.probe-check.u1",
+   "titel": "Check Unit 1: Together again",
+   "kurz": "Grammatik der Unit · ohne Note",
+   "check": true,
+   "mix": true,
+   "je": 2,
+   "aus": [
+    "en.5.simple-past.regelmaessig",
+    "en.5.simple-past.unregelmaessig",
+    "en.5.simple-past.saetze",
+    "en.5.simple-past.verneinung",
+    "en.5.simple-past.fragen",
+    "en.5.simple-past.fehler",
+    "en.6.simple-past.didnt",
+    "en.6.was-were.formen",
+    "en.6.was-were.verneinung",
+    "en.6.was-were.kurzantworten",
+    "en.6.was-were.fehler",
+    "en.6.objektpronomen.wahl",
+    "en.6.objektpronomen.ersetzen",
+    "en.6.objektpronomen.fehler",
+    "en.6.linking-words.verbinden",
+    "en.6.linking-words.reihenfolge",
+    "en.6.linking-words.saetze",
+    "en.6.linking-words.fehler"
+   ],
+   "themen": [
+    {
+     "titel": "Simple past (Wiederholung)",
+     "aus": [
+      "en.5.simple-past.regelmaessig",
+      "en.5.simple-past.unregelmaessig",
+      "en.5.simple-past.saetze",
+      "en.5.simple-past.verneinung",
+      "en.5.simple-past.fragen",
+      "en.5.simple-past.fehler"
+     ],
+     "ziel": "en.5.simple-past.mix"
+    },
+    {
+     "titel": "Didn't",
+     "aus": [
+      "en.6.simple-past.didnt"
+     ],
+     "ziel": "en.6.simple-past.didnt"
+    },
+    {
+     "titel": "Was / were + Kurzantworten",
+     "aus": [
+      "en.6.was-were.formen",
+      "en.6.was-were.verneinung",
+      "en.6.was-were.kurzantworten",
+      "en.6.was-were.fehler"
+     ],
+     "ziel": "en.6.was-were.mix"
+    },
+    {
+     "titel": "Objektpronomen",
+     "aus": [
+      "en.6.objektpronomen.wahl",
+      "en.6.objektpronomen.ersetzen",
+      "en.6.objektpronomen.fehler"
+     ],
+     "ziel": "en.6.objektpronomen.mix"
+    },
+    {
+     "titel": "Linking words (and, but, so, because)",
+     "aus": [
+      "en.6.linking-words.verbinden",
+      "en.6.linking-words.reihenfolge",
+      "en.6.linking-words.saetze",
+      "en.6.linking-words.fehler"
+     ],
+     "ziel": "en.6.linking-words.mix"
+    }
+   ]
+  },
+  {
+   "id": "en.6.probe-check.u2",
+   "titel": "Check Unit 2: Neighbours",
+   "kurz": "Grammatik der Unit · ohne Note",
+   "check": true,
+   "mix": true,
+   "je": 2,
+   "aus": [
+    "en.6.there-is.formen",
+    "en.6.there-is.some-any",
+    "en.6.there-is.saetze",
+    "en.6.there-is.fehler",
+    "en.6.simple-past.fragewort",
+    "en.6.simple-past.kurzantworten",
+    "en.6.plural.formen",
+    "en.6.plural.saetze",
+    "en.6.plural.fehler",
+    "en.6.can-mustnt.can",
+    "en.6.can-mustnt.mustnt",
+    "en.6.can-mustnt.saetze"
+   ],
+   "themen": [
+    {
+     "titel": "There is / are + some / any",
+     "aus": [
+      "en.6.there-is.formen",
+      "en.6.there-is.some-any",
+      "en.6.there-is.saetze",
+      "en.6.there-is.fehler"
+     ],
+     "ziel": "en.6.there-is.mix"
+    },
+    {
+     "titel": "Fragen mit did + Fragewort",
+     "aus": [
+      "en.6.simple-past.fragewort"
+     ],
+     "ziel": "en.6.simple-past.fragewort"
+    },
+    {
+     "titel": "Did …? + Kurzantworten",
+     "aus": [
+      "en.6.simple-past.kurzantworten"
+     ],
+     "ziel": "en.6.simple-past.kurzantworten"
+    },
+    {
+     "titel": "Plural",
+     "aus": [
+      "en.6.plural.formen",
+      "en.6.plural.saetze",
+      "en.6.plural.fehler"
+     ],
+     "ziel": "en.6.plural.mix"
+    },
+    {
+     "titel": "Can / mustn't",
+     "aus": [
+      "en.6.can-mustnt.can",
+      "en.6.can-mustnt.mustnt",
+      "en.6.can-mustnt.saetze"
+     ],
+     "ziel": "en.6.can-mustnt.mix"
+    }
+   ]
+  },
+  {
+   "id": "en.6.probe-check.u3",
+   "titel": "Check Unit 3: I'm feeling great!",
+   "kurz": "Grammatik der Unit · ohne Note",
+   "check": true,
+   "mix": true,
+   "je": 2,
+   "aus": [
+    "en.5.present-progressive.ing",
+    "en.5.present-progressive.saetze",
+    "en.5.present-progressive.fragen",
+    "en.5.present-progressive.signalwoerter",
+    "en.6.should.rat",
+    "en.6.much-many.formen",
+    "en.6.praepositionen.wo",
+    "en.6.praepositionen.saetze",
+    "en.6.praepositionen.fehler"
+   ],
+   "themen": [
+    {
+     "titel": "Present progressive (Wiederholung)",
+     "aus": [
+      "en.5.present-progressive.ing",
+      "en.5.present-progressive.saetze",
+      "en.5.present-progressive.fragen",
+      "en.5.present-progressive.signalwoerter"
+     ],
+     "ziel": "en.5.present-progressive.mix"
+    },
+    {
+     "titel": "Should / shouldn't",
+     "aus": [
+      "en.6.should.rat"
+     ],
+     "ziel": "en.6.should.rat"
+    },
+    {
+     "titel": "Much / many / lots of",
+     "aus": [
+      "en.6.much-many.formen"
+     ],
+     "ziel": "en.6.much-many.formen"
+    },
+    {
+     "titel": "Präpositionen (Ort)",
+     "aus": [
+      "en.6.praepositionen.wo",
+      "en.6.praepositionen.saetze",
+      "en.6.praepositionen.fehler"
+     ],
+     "ziel": "en.6.praepositionen.mix"
+    }
+   ]
+  },
+  {
+   "id": "en.6.probe-check.u4",
+   "titel": "Check Unit 4: Teenage life",
+   "kurz": "Grammatik der Unit · ohne Note",
+   "check": true,
+   "mix": true,
+   "je": 2,
+   "aus": [
+    "en.6.steigerung.vergleiche",
+    "en.6.good-better-best.formen",
+    "en.6.superlativ.formen",
+    "en.6.have-to.formen",
+    "en.6.zeitangaben.formen",
+    "en.6.simple-past-story.erzaehlen"
+   ],
+   "themen": [
+    {
+     "titel": "Komparativ + than",
+     "aus": [
+      "en.6.steigerung.vergleiche"
+     ],
+     "ziel": "en.6.steigerung.vergleiche"
+    },
+    {
+     "titel": "Good / better / best",
+     "aus": [
+      "en.6.good-better-best.formen"
+     ],
+     "ziel": "en.6.good-better-best.formen"
+    },
+    {
+     "titel": "Superlativ",
+     "aus": [
+      "en.6.superlativ.formen"
+     ],
+     "ziel": "en.6.superlativ.formen"
+    },
+    {
+     "titel": "Have to / I'd like to",
+     "aus": [
+      "en.6.have-to.formen"
+     ],
+     "ziel": "en.6.have-to.formen"
+    },
+    {
+     "titel": "On / in / at (Zeit)",
+     "aus": [
+      "en.6.zeitangaben.formen"
+     ],
+     "ziel": "en.6.zeitangaben.formen"
+    },
+    {
+     "titel": "Simple past (Story)",
+     "aus": [
+      "en.6.simple-past-story.erzaehlen"
+     ],
+     "ziel": "en.6.simple-past-story.erzaehlen"
+    }
+   ]
+  },
+  {
+   "id": "en.6.probe-check.u5",
+   "titel": "Check Unit 5: Dartmoor adventures",
+   "kurz": "Grammatik der Unit · ohne Note",
+   "check": true,
+   "mix": true,
+   "je": 2,
+   "aus": [
+    "en.6.future.will",
+    "en.6.will-meinung.formen",
+    "en.6.should.regeln",
+    "en.6.wortstellung.saetze"
+   ],
+   "themen": [
+    {
+     "titel": "Will-future",
+     "aus": [
+      "en.6.future.will"
+     ],
+     "ziel": "en.6.future.will"
+    },
+    {
+     "titel": "I think / I'm sure / maybe + will",
+     "aus": [
+      "en.6.will-meinung.formen"
+     ],
+     "ziel": "en.6.will-meinung.formen"
+    },
+    {
+     "titel": "Should (Regeln)",
+     "aus": [
+      "en.6.should.regeln"
+     ],
+     "ziel": "en.6.should.regeln"
+    },
+    {
+     "titel": "Wortstellung S-P-O",
+     "aus": [
+      "en.6.wortstellung.saetze"
+     ],
+     "ziel": "en.6.wortstellung.saetze"
+    }
+   ]
+  }
+ ]
+}

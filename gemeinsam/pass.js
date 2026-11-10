@@ -624,8 +624,9 @@
     const size = Math.min(1, max / RULES.fullSizeItems);
     // Hilfe-Stufen (ueben.js): mit Tipp gelöste Aufgaben (r.tipps) zählen für die Leistungs-XP nur halb
     const pctXp = r.tipps > 0 ? Math.max(0, Math.round((score - r.tipps / 2) / max * 100)) : pct;
-    const perf = Math.round(RULES.perfXpMax * Math.max(0, Math.min(1, (pctXp - RULES.perfFromPct) / (100 - RULES.perfFromPct))) * size);
-    const record = hadPlayed && pct > prevBest && pct >= RULES.recordMinPct && size >= 0.5 ? RULES.recordXp : 0;
+    // Check vor der Probe (r.check): XP nur fürs Bearbeiten, nicht für richtige Antworten
+    const perf = r.check ? 0 : Math.round(RULES.perfXpMax * Math.max(0, Math.min(1, (pctXp - RULES.perfFromPct) / (100 - RULES.perfFromPct))) * size);
+    const record = !r.check && hadPlayed && pct > prevBest && pct >= RULES.recordMinPct && size >= 0.5 ? RULES.recordXp : 0;
 
     let xp = (base + perf + record) * capFactor * classFactor;
     lines.push(`Runde geschafft +${base}`);
@@ -673,7 +674,7 @@
     } else if (S.weeks[wk] === undefined) {
       S.weeks[wk] = 0;                                 // aktiv, aber noch kein guter Tag
     }
-    recordMastery(key, pct, day);
+    if (!r.check) recordMastery(key, pct, day);          // Check vor der Probe: keine Sterne
     pruneWeeks();
     save();
 
@@ -854,6 +855,17 @@
     save();
     return true;
   }
+  /** Check vor der Probe (typen/check.js): je Check-ID erster (e) und letzter (l) Versuch als [[richtig, anzahl] je Thema], n = Versuche.
+   *  → der erste Versuch von früher oder null (dann war es dieser). Zählt für nichts, reist mit der Sicherung. */
+  function checkMerken(id, werte) {
+    if (!INHALT_ID.test(String(id)) || !Array.isArray(werte)) return null;
+    ensureProfile();
+    const C = S.checks && typeof S.checks === 'object' ? S.checks : (S.checks = {}), alt = C[id];
+    const neu = werte.slice(0, 30).map(x => [Number(x && x[0]) || 0, Number(x && x[1]) || 0]);
+    C[id] = { e: alt && Array.isArray(alt.e) ? alt.e : neu, l: neu, n: ((alt && alt.n) || 0) + 1, d: dayKey() };
+    save();
+    return alt && Array.isArray(alt.e) ? alt.e : null;
+  }
   /** Inhalt-IDs, die mit den aktuellen Einstellungen freigeschaltet sind */
   function freigeschaltet() {
     const sp = readSettings().spiele;
@@ -980,7 +992,7 @@
     get state()   { return S; },
     get settings(){ return readSettings(); },
     get lernstand() { return S.lernstand; },
-    get einschaetzung() { return S.einsch || {}; }, einschaetzungMerken,
+    get einschaetzung() { return S.einsch || {}; }, einschaetzungMerken, get checks() { return S.checks || {}; }, checkMerken,
     setSettings, setSpiele, lernstandMelden, wegMerken, freigeschaltet, themaStand, activeEvents, seasonsOn, seasonId, levelXp, pastSeasons,
     openChest, equip, equippedItem, owns, ownedCount, checkBadges, badgeProgress, setLook, look,
     avatarHTML, cardBackground, itemPreviewHTML, itemSourceText,

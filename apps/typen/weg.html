@@ -232,7 +232,8 @@ function zeichnen() {
   // Liste (auch Druckansicht)
   $('liste').innerHTML = (liste || window.matchMedia('print').matches ? st.abschnitte : []).map(a => `<section class="ab"><h2><span>${a.zustand === 'gesperrt' ? '🔒' : escHtml(a.a.ico || '📍')}</span>
       ${escHtml(a.a.titel)}<small>${a.zustand === 'gesperrt' ? '' : a.fertig + '/' + a.soll}</small></h2>${abschnittHTML(a)}</section>`).join('');
-  $('kann').innerHTML = liste && Array.isArray(W.kann) && W.kann.length ? `<div class="kann"><h2>Das kann ich am Ende</h2><ul>${W.kann.map(k => `<li>Ich kann ${escHtml(k.text)}</li>`).join('')}</ul></div>` : '';
+  $('kann').innerHTML = liste && Array.isArray(W.kann) && W.kann.length ? `<div class="kann"><h2>Das kann ich am Ende</h2><ul>${W.kann.map(k => `<li>Ich kann ${escHtml(k.text)}</li>`).join('')}</ul>
+      <p class="akt"><a class="btn" href="kann-liste.html?weg=${encodeURIComponent(W.id)}">🎯 Meine Kann-Liste ›</a></p></div>` : '';
   // Karte
   const k = $('karte'), a = offen && st.abschnitte.find(q => q.a.id === offen);
   if (a && !liste) {

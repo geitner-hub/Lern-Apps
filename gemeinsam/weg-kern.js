@@ -59,7 +59,10 @@
   function erledigt(s) {
     const L = (P() && P().lernstand) || {};
     if (s.art === 'app') { const e = L[s.thema]; return !!e && Array.isArray(e.p) && e.p.some(p => p >= 70); }
-    if (s.art === 'check' && s.thema) { const e = L[s.thema]; return !!e && Array.isArray(e.p) && e.p.length > 0; }
+    if (s.art === 'check' && s.thema) {                  // Check vor der Probe (Etappe 5): bearbeitet = im Pass vermerkt
+      const e = L[s.thema], C = (P() && P().checks) || {};
+      return !!C[s.thema] || (!!e && Array.isArray(e.p) && e.p.length > 0);
+    }
     return !!(lies(s.id) || {}).e;
   }
   /** Schritt abhaken oder Haken entfernen (nicht für App-Schritte – die liest der Weg aus dem Pass) */

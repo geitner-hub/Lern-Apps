@@ -113,6 +113,10 @@ und gelbe Hinweise. Manuelle Checkliste nach Uploads: `werkzeuge/RAUCHTEST.md`.
 - **Hilfe-Stufen und Selbsteinschätzung** (v123, Tempo Etappe 4) im Übungsrahmen `ueben.js`: Aufgabe mit `tipp` → `tipp2` → `aufloesen`
   (Tipp = halbe XP für die Aufgabe, Lösung = zählt nicht, Runde nicht im Lernstand; Felder `tipps`/`loesung` in `saveResult`).
   Selbsteinschätzung `gemeinsam/einschaetzung.js` nur mit Feature-Schalter `einschaetzung`; Paare im Pass (`einschaetzungMerken`). README → Hilfe-Stufen.
+- **Check vor der Probe und Kann-Liste** (v124, Tempo Etappe 5): Check-Stufe im Baukasten `{ check: true, mix: true, aus, themen: [{ titel, aus, ziel }], je }`
+  (IDs mit `.probe-check.`, Inhalt `daten/inhalte/en/en.6.probe-check.json`), Auswertung je Thema in `gemeinsam/typen/check.js`, Versuche in
+  `LernPass.checkMerken` – keine Note, kein Lernstand, XP einmalig. Kann-Liste `apps/typen/kann-liste.html` + `gemeinsam/kann-liste.js` liest nur
+  (`kann` der Units/Wege + Lernstand). README → Check vor der Probe.
 - **Live-Abfrage** (Unterrichtsmodus → 📊, Kinder-Seite `apps/typen/live.html?raum=CODE`, keine App in config.json, ohne Navbar):
   Worker-Teil `cloudflare/live.js` (Räume, Antworten, Quizze, Rückblicke in `SYNC_DB`; Räume nach dem Beenden gelöscht),
   Fragetypen `gemeinsam/live-fragen.js` (`LernLive`), Beamer `gemeinsam/admin/live.js`, Quiz-Editor Inhalte → Live-Quizze.
