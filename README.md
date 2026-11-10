@@ -159,11 +159,34 @@ das ist die Menge, die übers Schul-WLAN geht; komprimiert ≈ ein Drittel der D
 | Jede Lern-App | umgebung.js, navbar.js, pass.js (`SOFORT` in navbar.js) | pass-extras.js (erste Meldung), Dorf-Kern (nach der ersten Runde, nur mit Dorf), Sicherung (nur mit Karte) | < 35 KB |
 | Offline-Speicher (sw.js) | `START` = Kern | `NACHLADEN` = Spiele, 3D, große Daten: gestaffelt im Hintergrund | < 300 KB |
 
-- **Änderungen wirken sofort (seit v62):** Der Service Worker holt jede Datei mit `cache: 'no-cache'` – das iPad fragt bei
-  GitHub nach, ob es eine neue Fassung gibt (meist nur ein winziges „unverändert“), statt bis zu 10 Minuten die Browser-Kopie
-  zu nehmen (GitHub Pages schickt `max-age=600`). Auch der Kern beim Update (`START`) wird frisch geholt. Ausnahme: `vendor/`,
-  `fonts/`, `icons/` kommen weiter direkt aus dem Speicher. Offline bzw. bei langsamem WLAN (> 4 s) gilt die gespeicherte Kopie.
-  Nach einem Merge dauert es nur noch, bis GitHub Pages fertig veröffentlicht hat (meist 1–2 Minuten).
+- **Speicher zuerst (seit v121, Aktionsplan „Lernwelt – Tempo“, Etappe 1):** Der Service Worker liefert jede Datei sofort aus
+  dem Speicher des iPads, ohne bei GitHub nachzufragen – die Startseite steht auch bei schwachem WLAN in unter einer Sekunde.
+  Aktuell bleibt die Lernwelt über die **VERSION**: Der Browser prüft `sw.js` bei jedem Seitenaufruf (eine Anfrage statt 10–15).
+  Steht dort eine neue VERSION, holt der neue Service Worker den Kern (`START`) frisch, und die Seite **lädt einmal von selbst neu**.
+
+  | Datei | Woher |
+  |---|---|
+  | Skripte, Stile, Seiten, Bilder | Speicher; fehlt die Datei, aus dem Netz |
+  | `config.json` | Netz zuerst (höchstens 1,5 s warten), dann Speicher – Admin-Änderungen wirken beim nächsten Öffnen |
+  | `daten/…json` | Speicher, dabei im Hintergrund auffrischen (je Datei höchstens alle 5 Minuten) – was der Admin direkt ins Repo schreibt (Katalog, Vokabeln, Journey …), ist beim **übernächsten** Öffnen da, ohne neue VERSION |
+  | `vendor/`, `fonts/`, `icons/` | Speicher (ändern sich nie) |
+
+  **Wichtig:** Eine geänderte Datei kommt nur mit **neuer VERSION** bei den Kindern an (Ausnahme: `config.json` und `daten/…json`).
+  Nach einem Update liegen die Dateien der Vorversion im Speicher „…-alt“ (offline weiter nutzbar) und werden gestaffelt frisch
+  geholt; braucht ein Kind eine davon vorher, holt der Service Worker genau diese Datei einmal aus dem Netz (1,5 s, danach die
+  alte Kopie). Lokal (`python3 -m http.server`) gilt weiter „Internet zuerst“.
+- **Einmal neu laden (umgebung.js):** Übernimmt ein neuer Service Worker (`controllerchange`), lädt die Seite einmal neu – ohne
+  Rückfrage, höchstens einmal je Version und Tab (`lernwelt-neu-geladen` im sessionStorage). **Nie mitten in einer Runde:** Apps
+  melden `LW.beschaeftigt(true)` beim Start einer Runde und `LW.beschaeftigt(false)`, wenn wieder die Auswahl zu sehen ist
+  (`ueben.js` tut das für Kopfrechnen, Mathe-Trainer und den Baukasten). Seiten ohne Meldung laden nicht neu, sie bekommen die
+  neue Version beim nächsten Seitenwechsel; nur die Startseite lädt auch ohne Meldung neu (nicht bei offenem Fenster). Kommt
+  die Seite aus dem Hintergrund zurück, wird nach einer neuen Version gesehen (höchstens alle 10 Minuten).
+- **Startseite sofort (config-api.js):** `ConfigAPI.loadSofort()` gibt die gespeicherte `config.json`; die Startseite baut sich
+  damit auf, holt danach die frische und zeichnet nur neu, wenn sich etwas geändert hat (`geaendert`). Fokus, Freigaben und
+  Spielsperre werden mit der frischen Fassung neu angewendet.
+- **„Weiter lernen“ (index.html, `buildWeiter`):** großer Knopf ganz oben zur nächsten offenen Station – freigegebener
+  Laufzettel, sonst nächste Station im English Journey, sonst fällige Wiederholung, sonst die zuletzt geübte Lern-App.
+  „Mein Laufzettel“ und „Heute für dich“ stehen kleiner darunter. Ohne Pass steht dort die Karte „Pass starten“.
 
 - **pass.js** rechnet und speichert nur noch. Anzeige (XP-Meldung, Lob, Konfetti), Safari-Hinweis,
   Speicher-Wartung und Diagnose stehen in **gemeinsam/pass-extras.js**. Neue Funktionen, die nicht jede App

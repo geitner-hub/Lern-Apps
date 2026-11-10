@@ -270,7 +270,9 @@
       }).join('')}</div>`;
     }
     const nachweisKnopf = () => cfg.nachweise ? '<p style="text-align:center"><button type="button" class="mehr" data-nachweise>📷 Bildnachweise</button></p>' : '';
+    const beschaeftigt = an => { try { if (window.LW && LW.beschaeftigt) LW.beschaeftigt(an); } catch (e) {} };   // neue Version: nicht mitten in der Runde neu laden
     function zeigeStart() {
+      beschaeftigt(false);
       S.stufe = null;
       const f = cfg.foerder || [], nf = meineFehler().length;
       if (cfg.pfad) {
@@ -330,6 +332,7 @@
       neueAufgabe();
     }
     function neueAufgabe() {
+      beschaeftigt(true);
       S.eingabe = ''; S.rest = ['', '']; S.feld = 0; S.gesperrt = false; S.tipp = false;
       zeigeAufgabe();
       const a = S.aufgaben[S.nr];

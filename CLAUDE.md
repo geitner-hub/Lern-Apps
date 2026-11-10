@@ -74,7 +74,10 @@ und gelbe Hinweise. Manuelle Checkliste nach Uploads: `werkzeuge/RAUCHTEST.md`.
   Schlüssel = **Dateiname** ohne Ordner + URL-Parameter) → Ereignis `lernapps:result` → pass.js wertet aus und
   feuert `lernpass:gewertet` → dorf-kern.js zählt Aufträge. Dateinamen müssen daher repo-weit eindeutig sein.
 - **Ladekette:** „Kern sofort, Rest bei Bedarf“. `sw.js` (muss im Hauptordner liegen) cached `START` sofort und
-  holt `NACHLADEN` gestaffelt im Hintergrund. Schweres (three.js, 3D-Avatar, Truhe, QR, Dorf-Szene) wird lazy geladen.
+  holt `NACHLADEN` gestaffelt im Hintergrund. Seit v121 „Speicher zuerst“: Dateien kommen ohne Nachfrage aus dem Speicher, nur
+  `config.json` netz-zuerst und `daten/…json` mit Auffrischen im Hintergrund – **ohne neue VERSION kommt eine Änderung nicht an**.
+  Neue Version → Seite lädt einmal neu (umgebung.js); Apps mit Runden melden `LW.beschaeftigt(true/false)`, damit das nie
+  mitten in einer Runde passiert. README → Ladekette. Schweres (three.js, 3D-Avatar, Truhe, QR, Dorf-Szene) wird lazy geladen.
 - **Daten:** reine JSON-Dateien in `daten/` (keine Kommentare). Katalog-IDs, Item-IDs, Gebäude-IDs usw. **nie
   umbenennen oder löschen** – sie stehen in Spielständen der Kinder. Alte IDs (z. B. `ma.5.kopf.…` im Trainer)
   bleiben aus historischen Gründen.

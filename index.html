@@ -231,7 +231,26 @@
     #start-raster{max-width:980px;margin:1.3rem auto 0;padding:0 1.4rem;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:.9rem;align-items:stretch;}
     #start-raster > .sk{max-width:none;margin:0;padding:0;min-width:0;display:flex;flex-direction:column;}
     #start-raster > .sk:empty{display:none;}
-    #start-raster #lernweg-section,#start-raster #live-section,#start-raster #aod-section{grid-column:1/-1;}
+    #start-raster #lernweg-section,#start-raster #live-section,#start-raster #aod-section,#start-raster #weiter-section{grid-column:1/-1;}
+    /* „Weiter lernen“ (Tempo Etappe 1d): ein großer Knopf ganz oben; Laufzettel und „Heute für dich“ darunter, kleiner */
+    .weiter-btn{display:flex;align-items:center;gap:1rem;width:100%;min-height:88px;padding:.9rem 1.2rem;border:0;border-radius:22px;cursor:pointer;text-align:left;text-decoration:none;
+      font-family:inherit;color:#1b1300;background:linear-gradient(135deg,#e6a817,#f6c94a);box-shadow:0 8px 22px rgba(230,168,23,.28);transition:transform .15s;}
+    .weiter-btn:hover{transform:translateY(-2px);}
+    .weiter-btn .wb-ic{font-size:2.3rem;flex-shrink:0;}
+    .weiter-btn .wb-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:.1rem;}
+    .weiter-btn b{font:400 1.6rem 'Fredoka One','Nunito',sans-serif;line-height:1.15;}
+    .weiter-btn small{font-weight:800;font-size:.92rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .weiter-btn .wb-los{background:#1b1929;color:#f6c94a;font-weight:900;border-radius:999px;padding:.6rem 1.15rem;white-space:nowrap;}
+    @media (prefers-reduced-motion:reduce){.weiter-btn{transition:none;}.weiter-btn:hover{transform:none;}}
+    @media (max-width:640px){.weiter-btn b{font-size:1.3rem;}.weiter-btn .wb-ic{font-size:1.8rem;}}
+    #lernweg-section .lw-banner{min-height:0;padding:.6rem .9rem;border-radius:16px;gap:.8rem;}
+    #lernweg-section .lw-ring{width:46px;height:46px;}
+    #lernweg-section .lw-ring span{width:36px;height:36px;font-size:.8rem;}
+    #lernweg-section .lw-txt b{font-size:1.02rem;}
+    #lernweg-section .lw-txt small{font-size:.8rem;}
+    #lernweg-section .lw-los{padding:.35rem .85rem;font-size:.9rem;}
+    #start-raster .heute-karte{padding:.6rem .8rem;}
+    #start-raster .heute-karte .hk-ic{font-size:1.35rem;}
     #start-raster.ohne-heute #pass-section{grid-column:1/-1;}
     #start-raster #heute-section h2,#start-raster #lernweg-section h2{margin:0 0 .45rem;}
     #start-raster .heute-grid{grid-template-columns:1fr;gap:.55rem;flex:1;align-content:start;}
@@ -510,9 +529,10 @@
 <!-- Start-Kacheln: Pass, Lernweg, Heute, Dorf, App des Tages nebeneinander statt untereinander -->
 <div id="start-raster">
   <div id="live-section" class="sk" aria-label="Live-Abfrage"></div>
-  <div id="lernweg-section" class="sk" aria-label="Mein Laufzettel"></div>
+  <div id="weiter-section" class="sk"></div>
   <div id="pass-section" class="sk"></div>
   <div id="heute-section" class="sk" aria-label="Heute für dich"></div>
+  <div id="lernweg-section" class="sk" aria-label="Mein Laufzettel"></div>
   <div id="aod-section" class="sk"></div>
 </div>
 
@@ -613,14 +633,31 @@ function syncStatus(s, m) {
 }
 
 // ── Laden ────────────────────────────────────────────
+//  Tempo Etappe 1c: Die Seite steht sofort mit der gespeicherten config.json; die frische kommt danach und
+//  zeichnet nur neu, wenn sich etwas geändert hat. Fokus, Freigaben und Spielsperre gelten dann sofort neu.
+let ersterAufbau = true;
+function zeigeConfig(cfg) {
+  CONFIG = cfg;
+  LernPass.setSettings(CONFIG.pass);
+  if (window.LernFreigabe) LernFreigabe.neu(CONFIG, true);   // Fokus und Freigaben aus dieser config.json
+  loadResults();
+  const erst = ersterAufbau, fresh = erst && LernPass.hasProfile() ? LernPass.checkBadges() : [];
+  ersterAufbau = false;
+  buildPage();
+  if (!erst) return;
+  if (fresh.length) LernPass.toast({ notice: true, newBadges: fresh });
+  if (LernPass.needsClassCheck() && !/^#pass=/.test(location.hash)) openPass('klasse');   // neues Schuljahr
+  else if (!fresh.length) greetOnce();
+}
 async function load() {
-  syncStatus('syncing', 'Wird geladen …');
-  const { config, fromCache, empty } = await ConfigAPI.loadPublic();
-  CONFIG = config;
   // Schülervorschau aus dem Admin (Etappe 6): index.html?vorschau=5 zeigt den Admin-Stand für Klasse 5
   const vorschau = new URLSearchParams(location.search).get('vorschau');
+  const sofort = vorschau ? null : ConfigAPI.loadSofort();
+  if (sofort) zeigeConfig(sofort); else syncStatus('syncing', 'Wird geladen …');
+  const { config, fromCache, empty, geaendert } = await ConfigAPI.loadPublic();
+  let cfg = config;
   if (vorschau) {
-    try { const v = JSON.parse(localStorage.getItem('lernwelt-admin-vorschau') || 'null'); if (v && Array.isArray(v.apps)) CONFIG = ConfigAPI.migrate(v); } catch (e) {}
+    try { const v = JSON.parse(localStorage.getItem('lernwelt-admin-vorschau') || 'null'); if (v && Array.isArray(v.apps)) cfg = ConfigAPI.migrate(v); } catch (e) {}
     fKl = /^\d+$/.test(vorschau) ? vorschau : 'all';
     klVorgabe = true;
     if (!document.getElementById('vorschau-hinweis')) document.body.insertAdjacentHTML('afterbegin',
@@ -629,18 +666,11 @@ async function load() {
   if (fromCache) {
     syncStatus(empty ? 'error' : 'cached', empty ? '⚠ Apps konnten nicht geladen werden – bitte neu laden' : '📦 Offline-Modus (gespeicherte Daten)');
     if (!empty) setTimeout(() => syncStatus('', ''), 4000);
-  } else {
+  } else if (!sofort) {
     syncStatus('ok', '✓ Geladen');
     setTimeout(() => syncStatus('', ''), 2500);
   }
-  LernPass.setSettings(CONFIG.pass);
-  if (window.LernFreigabe) LernFreigabe.neu(CONFIG, true);   // Fokus und Freigaben aus der frischen config.json
-  loadResults();
-  const fresh = LernPass.hasProfile() ? LernPass.checkBadges() : [];
-  buildPage();
-  if (fresh.length) LernPass.toast({ notice: true, newBadges: fresh });
-  if (LernPass.needsClassCheck() && !/^#pass=/.test(location.hash)) openPass('klasse');   // neues Schuljahr
-  else if (!fresh.length) greetOnce();
+  if (!sofort || (!fromCache && geaendert)) zeigeConfig(cfg);
 }
 
 // Begrüßung durch die eigene Figur – einmal pro Tag
@@ -666,11 +696,13 @@ function visibleApps() {
 // ── „Heute für dich“ (Etappe 8): Auftrag der Lehrkraft · fällige Wiederholung · nächstes Pass-Ziel ──
 //  Abschaltbar im Admin (config.heute = false). Katalog und wiederholung.js laden erst bei Bedarf.
 let heuteLaden = null, journeyLaden = null, journeyDaten = null;
+const weiterQ = { weg: null, station: null, wdh: null };   // Quellen für „Weiter lernen“
 function heuteIso() { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
 function buildHeute() {
   const sec = document.getElementById('heute-section');
   if (!sec) return;
-  if (CONFIG.heute === false || !LernPass.hasProfile() || new URLSearchParams(location.search).get('vorschau')) { sec.innerHTML = ''; return; }
+  weiterQ.station = weiterQ.wdh = null;
+  if (!LernPass.hasProfile() || new URLSearchParams(location.search).get('vorschau')) { sec.innerHTML = ''; buildWeiter(); return; }
   if (!window.LernWiederholung && !heuteLaden) {
     heuteLaden = LW.laden('gemeinsam/katalog.js').then(() => LW.laden('gemeinsam/wiederholung.js'))
       .then(() => window.LernKatalog && LernKatalog.bereit).then(buildHeute).catch(() => {});
@@ -692,6 +724,7 @@ function buildHeute() {
   const w = window.LernWiederholung ? LernWiederholung.faellig().find(x => x.link && sichtbar.some(a => ohneParam(a.datei) === ohneParam(x.link))) : null;
   if (w) karten.push(`<a class="heute-karte" href="${escHtml(w.link)}"><span class="hk-ic">🔁</span>
       <span><b>Wiederholen: ${escHtml(w.titel)}</b><small>${w.tage > 0 ? 'Seit ' + w.tage + (w.tage === 1 ? ' Tag' : ' Tagen') + ' fällig' : 'Heute fällig'} – damit es nicht verblasst</small></span></a>`);
+  if (w) weiterQ.wdh = { href: w.link, ic: '🔁', text: 'Wiederholen: ' + w.titel };
   // 3. English Journey (Etappe 6): nächste Station – nur, wenn der Weg auf der Startseite steht und zur Klasse passt
   const ja = sichtbar.find(a => ohneParam(a.datei) === 'apps/englisch/english-journey.html'
     && (!(a.klassen || []).length || !passKlasse() || a.klassen.some(k => Number(k) <= passKlasse())));
@@ -702,6 +735,7 @@ function buildHeute() {
   if (ja && journeyDaten && window.LernJourney && window.LernKatalog) {
     try {
       const n = LernJourney.naechste(journeyDaten, LernJourney.berechne(journeyDaten).z);
+      if (n) weiterQ.station = { href: `${ohneParam(ja.datei)}#u=${encodeURIComponent(n.unit.id)}&s=${encodeURIComponent(n.st.id)}`, ic: '🧭', text: `English Journey · Unit ${n.unit.nr}: ${n.st.titel}` };
       if (n) karten.push(`<a class="heute-karte" href="${escHtml(ohneParam(ja.datei))}#u=${encodeURIComponent(n.unit.id)}&s=${encodeURIComponent(n.st.id)}"><span class="hk-ic">🧭</span>
         <span><b>Nächste Station: ${escHtml(n.st.titel)}</b><small>English Journey · Unit ${n.unit.nr} · ${escHtml(n.st.ort || '')}</small></span></a>`);
     } catch (e) {}
@@ -713,7 +747,27 @@ function buildHeute() {
     : { ic: '⭐', t: `Noch ${li.need - li.into} XP bis Level ${li.level + 1}`, k: 'Wochenziel geschafft! 🎉' };
   karten.push(`<button type="button" class="heute-karte" data-heute-pass><span class="hk-ic">${ziel.ic}</span>
       <span><b>${escHtml(ziel.t)}</b><small>${escHtml(ziel.k)}</small></span></button>`);
-  sec.innerHTML = `<h2>Heute für dich</h2><div class="heute-grid">${karten.slice(0, 3).join('')}</div>`;
+  sec.innerHTML = CONFIG.heute === false ? '' : `<h2>Heute für dich</h2><div class="heute-grid">${karten.slice(0, 3).join('')}</div>`;
+  buildWeiter();
+}
+
+// ── „Weiter lernen“ (Aktionsplan Tempo, Etappe 1d): ein Knopf zur nächsten offenen Station ──
+//  Quelle der Reihe nach: freigegebener Laufzettel · nächste Station im English Journey · fällige Wiederholung ·
+//  zuletzt geübte Lern-App. Die ersten drei tragen buildLernwege() und buildHeute() in weiterQ ein.
+function buildWeiter() {
+  const sec = document.getElementById('weiter-section');
+  if (!sec) return;
+  if (new URLSearchParams(location.search).get('vorschau')) { sec.innerHTML = ''; return; }
+    if (!LernPass.hasProfile()) { sec.innerHTML = ''; return; }   // ohne Pass steht an dieser Stelle die Karte „Pass starten“
+  let z = weiterQ.weg || weiterQ.station || weiterQ.wdh;
+  if (!z) {
+    let t = 0;
+    for (const a of visibleApps()) {
+      const r = RESULTS[resultKey(a.datei)];
+      if (r && r.timestamp > t && !/^spiele\//.test(a.datei)) { t = r.timestamp; z = { href: a.datei, ic: a.emoji || '📱', text: 'Zuletzt geübt: ' + a.name }; }
+    }
+  }
+  sec.innerHTML = z ? `<a class="weiter-btn" href="${escHtml(z.href)}"><span class="wb-ic">${escHtml(z.ic)}</span><span class="wb-t"><b>Weiter lernen</b><small>${escHtml(z.text)}</small></span><span class="wb-los">Los ›</span></a>` : '';
 }
 document.addEventListener('click', e => { if (e.target.closest('[data-heute-pass]')) openPass(''); });
 // Gesperrtes Spiel angetippt: nicht öffnen, sondern sagen, was noch fehlt (QR-Knopf geht weiter)
@@ -914,10 +968,11 @@ function appKarte(app, fach) {
 //  Klasse vor „alle“). Der Fortschritt kommt aus gemeinsam/journey-lernweg.js – erst dann nachgeladen.
 let laufzettelLaden = null, laufzettelJ = null;
 function buildLernwege() {
+  weiterQ.weg = null;
   const sec = document.getElementById('lernweg-section');
   if (!sec) return;
   const F = window.LernFreigabe, cfg = F && F.journey ? F.journey('journey6') : null, bis = (cfg && cfg.bis) || {};
-  if (!F || !F.wer || !F.wer().some(w => typeof bis[w] === 'string')) { sec.innerHTML = ''; return; }
+  if (!F || !F.wer || !F.wer().some(w => typeof bis[w] === 'string')) { sec.innerHTML = ''; buildWeiter(); return; }
   if (!laufzettelJ) {
     if (!laufzettelLaden) laufzettelLaden = LW.laden('gemeinsam/katalog.js').then(() => LernKatalog.bereit)
       .then(() => LW.laden('gemeinsam/journey-kern.js')).then(() => LW.laden('gemeinsam/journey-lernweg.js')).then(() => LernJourney.laden())
@@ -926,12 +981,15 @@ function buildLernwege() {
   }
   let st = null;
   try { st = LernJourneyWeg.stand({ J: laufzettelJ, z: LernJourney.berechne(laufzettelJ).z, cfg }); } catch (e) {}
-  if (!st) { sec.innerHTML = ''; return; }
+  if (!st) { sec.innerHTML = ''; buildWeiter(); return; }
   const pct = Math.round(100 * st.fertig / Math.max(1, st.soll)), u = st.naechsteUnit || st.unit;
+  const ziel = `apps/englisch/english-journey.html#u=${encodeURIComponent(u.id)}&w=${encodeURIComponent(st.naechste ? st.naechste.id : '')}`;
   const weiter = st.naechste ? `Weiter mit: ${st.naechste.titel}` : '🎉 Alles geschafft – jetzt: Fit für die Probe?';
-  sec.innerHTML = `<h2>📒 Mein Laufzettel</h2><div class="lw-banner-liste"><a class="lw-banner" href="apps/englisch/english-journey.html#u=${encodeURIComponent(u.id)}&w=${encodeURIComponent(st.naechste ? st.naechste.id : '')}">
+  sec.innerHTML = `<h2>📒 Mein Laufzettel</h2><div class="lw-banner-liste"><a class="lw-banner" href="${ziel}">
       <span class="lw-ring" style="--p:${pct}"><span>${st.fertig}/${st.soll}</span></span>
       <span class="lw-txt"><b>English Journey · Unit ${escHtml(st.unit.nr)}: ${escHtml(st.unit.titel)}</b><small>${escHtml(weiter)}</small></span><span class="lw-los">Los ›</span></a></div>`;
+  weiterQ.weg = { href: ziel, ic: '📒', text: `English Journey · Unit ${st.unit.nr}: ${st.naechste ? st.naechste.titel : 'Fit für die Probe?'}` };
+  buildWeiter();
 }
 
 // ── Live-Abfrage: Kachel, solange der Raum offen ist, in dem dieses iPad (dieser Tab) war (apps/typen/live.html) ──

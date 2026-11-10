@@ -5,7 +5,8 @@
 //  Abhängigkeiten: shared.js muss vorher geladen sein.
 //
 //  Startseite (öffentlich, schnell, ohne Worker):
-//    const { config, fromCache } = await ConfigAPI.loadPublic();
+//    const { config, fromCache, geaendert } = await ConfigAPI.loadPublic();
+//    const config = ConfigAPI.loadSofort();   // gespeicherte Kopie oder null – Seite sofort aufbauen (Tempo Etappe 1c)
 //
 //  Admin (über den Worker, mit sha für konfliktfreies Speichern):
 //    const res = await ConfigAPI.login(passwort);      // { ok, status, error }
@@ -118,14 +119,20 @@ const ConfigAPI = (() => {
       const r = await fetch(STATIC_URL + '?t=' + Date.now(), { cache: 'no-store' });
       if (!r.ok) throw new Error('HTTP ' + r.status);
       const cfg = migrate(await r.json());
+      let alt = null;
+      try { alt = localStorage.getItem(CACHE_KEY); } catch (e) {}
       writeCache(cfg);
-      return { config: cfg, fromCache: false };
+      // geaendert: Unterschied zur gespeicherten Kopie – nur dann muss die Startseite neu zeichnen
+      return { config: cfg, fromCache: false, geaendert: alt !== JSON.stringify(cfg) };
     } catch (e) {
       console.warn('[ConfigAPI] config.json nicht erreichbar, nutze Cache:', e.message);
       const cached = readCache();
       return { config: migrate(cached || {}), fromCache: true, empty: !cached };
     }
   }
+
+  /** Gespeicherte Kopie sofort, ohne Netz (oder null beim allerersten Besuch) */
+  function loadSofort() { const c = readCache(); return c ? migrate(c) : null; }
 
   // ── Admin: Login prüfen (serverseitig im Worker) ───────
   async function login(pw) {
@@ -242,7 +249,7 @@ const ConfigAPI = (() => {
   }
 
   return {
-    loadPublic, loadAdmin, login, logout, logoutAll, checkSession, hasSession, sessionExpiry, save, getCacheAge, migrate,
+    loadPublic, loadSofort, loadAdmin, login, logout, logoutAll, checkSession, hasSession, sessionExpiry, save, getCacheAge, migrate,
     load: loadPublic,           // Abwärtskompatibel
     WORKER_URL,
     _b64: { b64ToUtf8, utf8ToB64 },   // für Tests

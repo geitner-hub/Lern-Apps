@@ -20,6 +20,10 @@ Live am iPad über das Symbol auf dem Home-Bildschirm, Test in Safari.
 | 13 | GPG: Quellen-Detektiv öffnen (ohne Admin-Anmeldung) | Pfad mit Stationen, nur Station 1 offen; Station 1 mit ≥ 70 % → „Station geschafft“, „Nächste Station ›“ öffnet Station 2; nur Fotos, kein ⓘ am Bild; „📷 Bildnachweise“ unten listet nur Bilder freier Stationen |
 | 14 | Quellen-Detektiv: die vier Kritik-Stufen | 🔒 bis zur Freigabe im Admin; danach „Ganzer Fall mit Quellenkritik“ mit lila Karte 4, im Detektiv-Ritual tauchen Kritik-Aufgaben auf |
 | 15 | Admin 🎓 Unterricht → 🔓 Freischalten: eine Ägypten-Stufe des Quellen-Detektivs für eine Testgruppe „Jetzt frei“; Kinder-iPad der Gruppe mit offener Stufenwahl liegen lassen | nach höchstens 3 Minuten ohne Neuladen frei, der Ägypten-Fall dazu erscheint im „Ganzer Fall: Ägypten“; danach unter Inhalte → Freigaben wieder sperren |
+| 16 | Startseite ein zweites Mal öffnen (auch mit schlechtem WLAN) | steht sofort; ganz oben der Knopf „Weiter lernen“ (mit Pass), darunter Pass und „Heute für dich“ |
+| 17 | Nach einem Upload mit neuer Version: Startseite öffnen und kurz warten | lädt genau einmal von selbst neu, danach steht unter Pass → Sicherung die neue Version |
+| 18 | Nach einem Upload: Kopfrechnen öffnen, sofort eine Runde starten und zu Ende spielen | kein Neuladen in der Runde; erst zurück in der Stufenwahl lädt die Seite einmal neu |
+| 19 | Im Admin eine Freigabe oder das Banner ändern und veröffentlichen, nach ca. 1 Min. die Startseite öffnen | Änderung ist da, ohne neue Version |
 
 **Nur in der Testumgebung zusätzlich:** Oben steht „🧪 TEST · vXX“. Im Admin eine Kleinigkeit ändern und
 speichern → Meldung „Testumgebung: Speichern und Sicherung sind hier abgeschaltet“. Danach live den Pass
