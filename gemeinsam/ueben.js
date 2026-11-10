@@ -15,8 +15,14 @@
 //      pruefe(aufgabe, eingabe) → true/false,
 //      runde: 10, meisterschaft: { prozent: 70, runden: 2 },
 //    });
-//  Aufgabe: { frage, art: 'zahl'|'bruch'|'rest'|'wahl'|'eigen', text, optionen?, negativ?, tipp?, erklaerung?, hinweis?,
+//  Aufgabe: { frage, art: 'zahl'|'bruch'|'rest'|'wahl'|'eigen', text, optionen?, negativ?, tipp?, tipp2?, aufloesen?, erklaerung?, hinweis?,
 //             schluessel?, sprache?, ton? }
+//    Hilfe-Stufen (Aktionsplan Tempo, Etappe 4): tipp (Denkanstoß) → tipp2 (Teilschritt/Beispiel) → aufloesen (true oder Erklärtext: Lösung zeigen).
+//      Der Hilfe-Knopf zeigt die nächste Stufe. Mit Tipp gelöst = richtig, aber halbe XP für diese Aufgabe (pass.js, Feld tipps);
+//      Lösung gezeigt = Aufgabe zählt als nicht gelöst, die Runde zählt nicht für die Meisterschaft (Feld loesung); hat das Kind bei
+//      mindestens der Hälfte der Aufgaben die Lösung geholt, wird die Runde gar nicht gewertet. Ohne diese Felder ist alles wie bisher.
+//    Selbsteinschätzung (Etappe 4a): mit Feature-Schalter „einschaetzung“ fragt gemeinsam/einschaetzung.js vor der Runde
+//      (höchstens einmal je Thema und Tag) und zeigt danach den Abgleich mit dem Ergebnis.
 //    art 'eigen' (Etappe 9, Aufgabentypen): a.zeige(box, fertig) zeichnet die Bedienung selbst und ruft
 //      fertig(eingabe) auf; geprüft wird wie immer mit cfg.pruefe(a, eingabe). a.eingabeText(eingabe) → Anzeige.
 //    schluessel: gleiche Aufgabe in einer Runde nicht doppelt (sonst zählt die Frage)
@@ -218,7 +224,10 @@
     const VORLESEN = !!cfg.vorlesen || URLP.get('vorlesen') === '1';
     const alle = [...(cfg.stufen || []), ...(cfg.foerder || [])];
     const frei = st => !!st && Freigabe.erlaubt(st.id, !!st.gesperrt) && (typeof st.frei !== 'function' || st.frei());
-    const S = { stufe: null, aufgaben: [], nr: 0, ergebnis: [], eingabe: '', rest: ['', ''], feld: 0, gesperrt: false, tipp: false, start: 0, foerderOffen: false };
+    const S = { stufe: null, aufgaben: [], nr: 0, ergebnis: [], eingabe: '', rest: ['', ''], feld: 0, gesperrt: false, hilfe: 0, schaetz: 0, start: 0, foerderOffen: false };
+    const hilfen = a => [a.tipp || a.tipp1, a.tipp2].filter(Boolean);
+    // Selbsteinschätzung: Modul nur laden, wenn die Lehrkraft sie eingeschaltet hat (Feature-Schalter, auch je Gruppe)
+    try { if (window.LernFreigabe && LernFreigabe.feature && LernFreigabe.feature('einschaetzung') && window.LW && LW.laden) LW.laden('gemeinsam/einschaetzung.js').catch(() => {}); } catch (e) {}
 
     // Meisterschaft aus dem Pass (Lernstand je Thema): beste Runden ≥ Prozent
     function stand(st) {
@@ -312,6 +321,13 @@
         fragen.add(k); S.aufgaben.push(a);
       }
       if (!S.aufgaben.length) { zeigeStart(); return; }
+      // Selbsteinschätzung (Etappe 4a): höchstens einmal je Thema und Tag, nicht bei Selbstkontrolle (ganzer Fall)
+      const E = window.LernEinschaetzung;
+      S.schaetz = 0;
+      if (E && !st.einzeln && !S.aufgaben[0].selbst && E.faellig(st.inhalt || st.id)) {
+        beschaeftigt(true);
+        return E.fragen(root, st.titel, w => { S.schaetz = w; S.start = Date.now(); neueAufgabe(); });
+      }
       neueAufgabe();
     }
     function starteFehlerTraining() {
@@ -333,7 +349,7 @@
     }
     function neueAufgabe() {
       beschaeftigt(true);
-      S.eingabe = ''; S.rest = ['', '']; S.feld = 0; S.gesperrt = false; S.tipp = false;
+      S.eingabe = ''; S.rest = ['', '']; S.feld = 0; S.gesperrt = false; S.hilfe = 0;
       zeigeAufgabe();
       const a = S.aufgaben[S.nr];
       if (VORLESEN) sprich(a.frage, a.sprache);
@@ -360,13 +376,14 @@
           <span class="nm">${esc(S.stufe.titel)}</span><span class="dots">${punkte()}</span></div>
         <div class="frage"><div class="q${String(a.frage).length > 28 ? ' lang' : ''}">${esc(a.frage)}</div>${a.hinweis ? `<div class="h">${esc(a.hinweis)}</div>` : ''}
           ${VORLESEN || a.ton ? '<button type="button" class="btn vor" data-vor aria-label="Vorlesen">🔊</button>' : ''}</div>
-        ${S.tipp && a.tipp && !fb ? `<div class="tipp">💡 ${esc(a.tipp)}</div>` : ''}
+        ${fb ? '' : hilfen(a).slice(0, S.hilfe).map(t => `<div class="tipp">💡 ${esc(t)}</div>`).join('')}
         ${fb || ''}
         ${fb ? '' : a.art === 'eigen' ? '<div class="eigen"></div>' : a.art === 'wahl'
           ? `<div class="opts">${a.optionen.map(o => `<button type="button" class="opt" data-wahl="${esc(o)}">${esc(o)}</button>`).join('')}</div>`
           : `<div class="ant">${feldHTML(a)}</div>${tasten(a)}`}
         <div class="zeile">${fb ? '<button type="button" class="btn p" data-weiter>Weiter ›</button>'
-          : a.tipp && !S.tipp ? '<button type="button" class="btn" data-tipp>💡 Tipp</button>' : ''}</div>`;
+          : S.hilfe < hilfen(a).length ? `<button type="button" class="btn" data-tipp>💡 ${S.hilfe ? 'Noch ein Tipp' : 'Tipp'}</button>`
+          : a.aufloesen && !a.selbst ? '<button type="button" class="btn" data-loesung>🔎 Lösung zeigen (zählt dann nicht)</button>' : ''}</div>`;
       if (fb) { const w = root.querySelector('[data-weiter]'); if (w) w.focus(); }
       else if (a.art === 'eigen') a.zeige(root.querySelector('.eigen'), e => { if (!S.gesperrt) pruefen(e); });
     }
@@ -393,7 +410,7 @@
       }
       const ok = cfg.pruefe(a, eingabe);
       const eingabeText = a.art === 'rest' ? `${S.rest[0]} R ${S.rest[1]}` : a.eingabeText ? a.eingabeText(eingabe) : String(eingabe);
-      S.ergebnis.push({ ok, frage: a.frage, loesung: a.text, eingabe: eingabeText, erklaerung: a.erklaerung || '', eigen: a.art === 'eigen' });
+      S.ergebnis.push({ ok, hilfe: S.hilfe > 0, frage: a.frage, loesung: a.text, eingabe: eingabeText, erklaerung: a.erklaerung || '', eigen: a.art === 'eigen' });
       const thema = a._stufe || S.stufe.id;
       if (!ok && !S.stufe.training) Fehlerheft.merken({ thema, typ: a.typ, frage: a.frage, eingabe: eingabeText, loesung: a.text });
       if (ok && S.stufe.training) Fehlerheft.streichen(thema, a.typ);
@@ -407,6 +424,16 @@
         if (a.loesungZeige) try { const lb = root.querySelector('.loesbild'); lb.parentNode.classList.add('mit-bild'); a.loesungZeige(lb, eingabe); } catch (e) {}
       }
     }
+    /** Hilfe-Stufe 3: Lösung mit Erklärung zeigen – die Aufgabe zählt dann als nicht gelöst */
+    function loesungZeigen() {
+      const a = S.aufgaben[S.nr];
+      if (S.gesperrt || !a) return;
+      S.gesperrt = true;
+      S.ergebnis.push({ ok: false, gezeigt: true, frage: a.frage, loesung: a.text, eingabe: 'Lösung angesehen', erklaerung: a.erklaerung || '', eigen: a.art === 'eigen' });
+      if (!S.stufe.training) Fehlerheft.merken({ thema: a._stufe || S.stufe.id, typ: a.typ, frage: a.frage, eingabe: '–', loesung: a.text });
+      zeigeAufgabe(`<div class="fb no"><div class="gr">Lösung: ${esc(a.text)}</div>
+        <div class="er">${esc(typeof a.aufloesen === 'string' ? a.aufloesen : a.erklaerung || '')}</div></div>`);
+    }
     function weiter() {
       if (!S.stufe) return;
       S.nr++;
@@ -418,14 +445,25 @@
       const n = selbst.length ? selbst.reduce((s, x) => s + x.max, 0) : S.aufgaben.length;
       const r = selbst.length ? selbst.reduce((s, x) => s + x.punkte, 0) : S.ergebnis.filter(x => x.ok).length, pct = Math.round(r / n * 100);
       const zusatz = selbst.length && selbst[0].zusatz ? ' ' + selbst[0].zusatz : '';
+      // Hilfe-Stufen: mit Tipp gelöst → halbe XP für diese Aufgaben; Lösung gezeigt → Runde zählt nicht für die Meisterschaft;
+      // bei der Hälfte der Aufgaben (oder mehr) die Lösung geholt → gar keine Wertung (Durchklicken lohnt nicht)
+      const tipps = S.ergebnis.filter(x => x.ok && x.hilfe).length, gezeigt = S.ergebnis.filter(x => x.gezeigt).length;
+      const ohneWertung = gezeigt > 0 && gezeigt * 2 >= S.aufgaben.length;
+      const hilfeInfo = ohneWertung ? '🔎 Du hast oft die Lösung angesehen – diese Runde zählt nicht. Probier es mit den Tipps und löse dann selbst!'
+        : gezeigt ? `🔎 ${gezeigt === 1 ? 'Einmal' : gezeigt + '-mal'} die Lösung angesehen – für ⭐ brauchst du eine Runde ohne Lösung.`
+        : tipps ? `💡 ${tipps === 1 ? 'Eine Aufgabe' : tipps + ' Aufgaben'} mit Tipp gelöst – zählt als richtig, bringt aber halbe XP.` : '';
       try {
         // Fehler-Training: XP ja, aber ohne Thema – es zählt nicht für die Meisterschaft einer Stufe
         // Selbstkontrolle (selbst): zählt für Pass und Wiederholung, nicht für die Spielsperre (pass.js)
-        if (window.LernApps) LernApps.saveResult(st.training ? { score: r, max: n, label: `${r} / ${n} · Fehler-Training` }
+        const hilfeFelder = { ...(tipps ? { tipps } : {}), ...(gezeigt ? { loesung: gezeigt } : {}) };
+        if (window.LernApps && !ohneWertung) LernApps.saveResult(st.training ? { score: r, max: n, label: `${r} / ${n} · Fehler-Training`, ...hilfeFelder }
           : { score: r, max: n, label: `${r} / ${n}${selbst.length ? ' ✓' : ''} · ${st.titel}${zusatz}`, thema: st.id, ...(st.inhalt ? { inhalt: st.inhalt } : {}),
-              ...(selbst.length ? { selbst: true } : {}) });
+              ...(selbst.length ? { selbst: true } : {}), ...hilfeFelder });
       } catch (e) {}
       const falsch = S.ergebnis.filter(x => !x.ok);
+      let abgleich = '';
+      try { if (S.schaetz && window.LernEinschaetzung && !ohneWertung) abgleich = LernEinschaetzung.auswerten(st.inhalt || st.id, S.schaetz, r, n); } catch (e) {}
+      S.schaetz = 0;
       const lob = selbst.length ? (pct === 100 ? 'Alles abgehakt – starke Detektivarbeit! 🔍' : pct >= MEIST.prozent ? 'Gut gemacht! Schau dir die offenen Punkte noch einmal an. 👍'
           : 'Vergleiche dein Heft noch einmal mit der Musterantwort. Beim nächsten Fall klappt es besser! 🙂')
         : pct === 100 ? 'Alles richtig! 💯' : pct >= 80 ? 'Stark gerechnet! 💪' : pct >= MEIST.prozent ? 'Gut gemacht! 👍' : pct >= 40 ? 'Dranbleiben – das wird! 🙂' : 'Probier es gleich nochmal – oder eine leichtere Stufe.';
@@ -441,6 +479,7 @@
       }
       root.innerHTML = `<div class="top"><button type="button" class="x" data-ende aria-label="Zur Stufenwahl">✕</button><span class="nm">${esc(st.titel)}</span></div>
         <div class="erg"><div class="gr">${r} / ${n}${selbst.length ? ' ✓' : ''}</div>${selbst.length ? '<div style="color:var(--mut);font-weight:800">Punkte auf deiner Checkliste</div>' : ''}<div style="font-weight:900;font-size:1.15rem">${lob}</div>${pfad}
+          ${abgleich}${hilfeInfo ? `<div class="pfadmeldung">${hilfeInfo}</div>` : ''}
           ${falsch.length ? `<div class="liste">${falsch.map(x => `<div><b>${esc(x.frage)}${x.eigen ? ' → ' : ' = '}${esc(x.loesung)}</b> <small>Du hattest: ${esc(x.eingabe)}${x.erklaerung ? ' · ' + esc(x.erklaerung) : ''}</small></div>`).join('')}</div>` : ''}
           <div class="zeile">${weiterZu ? `<button type="button" class="btn p" data-stufe="${esc(weiterZu.id)}">Nächste Station ›</button>` : ''}
             <button type="button" class="btn${weiterZu ? '' : ' p'}" data-nochmal>${selbst.length ? '🔍 Nächster Fall' : '🔄 Nochmal'}</button>
@@ -471,7 +510,8 @@
       }
       if (t.hasAttribute('data-nochmal')) return root.dataset.letzte === '#fehler' ? starteFehlerTraining() : starteRunde(root.dataset.letzte);
       if (t.hasAttribute('data-weiter')) return weiter();
-      if (t.hasAttribute('data-tipp')) { S.tipp = true; return zeigeAufgabe(); }
+      if (t.hasAttribute('data-tipp')) { S.hilfe++; return zeigeAufgabe(); }
+      if (t.hasAttribute('data-loesung')) return loesungZeigen();
       if (t.hasAttribute('data-vor')) { const a = S.aufgaben[S.nr]; return sprich(a.ton || a.frage, a.sprache); }
       if (t.dataset.wahl !== undefined) { if (!S.gesperrt) pruefen(t.dataset.wahl); return; }
       if (t.dataset.feld !== undefined) { S.feld = Number(t.dataset.feld); const a = S.aufgaben[S.nr]; root.querySelector('.ant').innerHTML = feldHTML(a); return; }

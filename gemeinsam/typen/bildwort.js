@@ -22,7 +22,7 @@
       const auswahl = T.mischen([w, ...andere]);
       const bildWahl = richtung !== 'bild-wort';
       return {
-        art: 'eigen', wort: w.wort, text: w.wort + (w.de ? ' (' + w.de + ')' : ''), erklaerung: w.erklaerung, tipp: w.tipp,
+        art: 'eigen', wort: w.wort, text: w.wort + (w.de ? ' (' + w.de + ')' : ''), erklaerung: w.erklaerung, tipp: w.tipp, tipp2: w.tipp2, aufloesen: w.aufloesen,
         frage: richtung === 'hoeren' ? '🔊 Hör genau hin!' : richtung === 'wort-bild' ? w.wort : st.frage || 'Was ist das?',
         hinweis: st.anweisung || D.anweisung || (bildWahl ? 'Tippe das passende Bild an.' : 'Tippe das passende Wort an.'),
         ton: bildWahl ? w.wort : '',                        // bei „Bild → Wort“ würde der Ton die Lösung verraten

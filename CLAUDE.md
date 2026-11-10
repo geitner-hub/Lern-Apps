@@ -110,6 +110,9 @@ und gelbe Hinweise. Manuelle Checkliste nach Uploads: `werkzeuge/RAUCHTEST.md`.
   `wahlMin`), Bausteine in `daten/wege/bausteine-<Weg-ID>.json`. Seite `apps/typen/weg.html?weg=<ID>`, Logik `gemeinsam/weg-kern.js` (`LernWeg`),
   Freigabe `config.journey.wege.<ID>.bis` (Admin: Gruppen → 📒 Laufzettel → Weitere Lernwege), pruefen.py Regel 24. Jede ID beginnt mit
   `<Weg-ID>-` und wird nie umbenannt (Lernstand `jw:<ID>`). Der English Journey bleibt eigenständig. README → Lernweg-Engine.
+- **Hilfe-Stufen und Selbsteinschätzung** (v123, Tempo Etappe 4) im Übungsrahmen `ueben.js`: Aufgabe mit `tipp` → `tipp2` → `aufloesen`
+  (Tipp = halbe XP für die Aufgabe, Lösung = zählt nicht, Runde nicht im Lernstand; Felder `tipps`/`loesung` in `saveResult`).
+  Selbsteinschätzung `gemeinsam/einschaetzung.js` nur mit Feature-Schalter `einschaetzung`; Paare im Pass (`einschaetzungMerken`). README → Hilfe-Stufen.
 - **Live-Abfrage** (Unterrichtsmodus → 📊, Kinder-Seite `apps/typen/live.html?raum=CODE`, keine App in config.json, ohne Navbar):
   Worker-Teil `cloudflare/live.js` (Räume, Antworten, Quizze, Rückblicke in `SYNC_DB`; Räume nach dem Beenden gelöscht),
   Fragetypen `gemeinsam/live-fragen.js` (`LernLive`), Beamer `gemeinsam/admin/live.js`, Quiz-Editor Inhalte → Live-Quizze.

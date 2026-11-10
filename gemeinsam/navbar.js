@@ -164,12 +164,15 @@
         if (inhalt.length) entry.inhalt = inhalt;
         if (thema.length) entry.thema = thema;
         if (result && result.selbst) entry.selbst = true;  // Selbstkontrolle (Typ „fall“): nicht für die Spielsperre
+        // Hilfe-Stufen (ueben.js): tipps = mit Tipp gelöste Aufgaben (halbe XP), loesung = Lösung gezeigt (keine Meisterschaft)
+        if (result && result.tipps > 0) entry.tipps = Number(result.tipps);
+        if (result && result.loesung) entry.loesung = true;
         // „Meine Themen“: alte Inhalt-IDs, wenn die App welche schickt, sonst die Themen-IDs
         const lern = inhalt.length ? inhalt : thema;
         if (window.LernPass) {
           const P = window.LernPass, res = P.award(entry);
           P.toast(res);
-          if (lern.length && P.lernstandMelden) P.lernstandMelden(lern, pct, max, res.blocked);
+          if (lern.length && P.lernstandMelden && !entry.loesung) P.lernstandMelden(lern, pct, max, res.blocked);
         }
         else { (window.__lernPassQueue = window.__lernPassQueue || []).push(entry); loadPass(); }
       }

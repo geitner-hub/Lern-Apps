@@ -23,7 +23,7 @@
       const antworten = Array.isArray(x.antwort) ? x.antwort : [x.antwort];
       if (!x.frage || !antworten.length || antworten[0] === undefined) return null;
       const einheit = x.einheit ? ' ' + x.einheit : '';
-      const a = { frage: x.frage, tipp: x.tipp, erklaerung: x.erklaerung, hinweis: st.anweisung || D.anweisung || '' };
+      const a = { frage: x.frage, tipp: x.tipp, tipp2: x.tipp2, aufloesen: x.aufloesen, erklaerung: x.erklaerung, hinweis: st.anweisung || D.anweisung || '' };
       const w = zahl(antworten[0]);
       if (antworten.length === 1 && Number.isFinite(w)) {
         return Object.assign(a, { art: 'zahl', wert: w, negativ: w < 0, text: String(w).replace('.', ',') + einheit,

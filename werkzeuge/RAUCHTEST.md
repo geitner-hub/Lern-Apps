@@ -26,6 +26,8 @@ Live am iPad über das Symbol auf dem Home-Bildschirm, Test in Safari.
 | 19 | Im Admin eine Freigabe oder das Banner ändern und veröffentlichen, nach ca. 1 Min. die Startseite öffnen | Änderung ist da, ohne neue Version |
 | 20 | Mit Admin-Anmeldung: `apps/typen/weg.html?weg=test` öffnen, ersten Knoten antippen, Hefteintrag zeigen und abhaken, „☰ Liste“ | Pfad mit drei Knoten, Karte mit Pflicht/Wahl/Stern, Haken bleibt nach dem Neuladen; Liste zeigt alle Abschnitte |
 | 21 | Im Test-Weg den App-Schritt „Los ›“ antippen | Kopfrechnen öffnet, oben rechts „🧭 Zurück zum Weg“ führt zurück |
+| 22 | Kopfrechnen: in einer Aufgabe „💡 Tipp“, „Noch ein Tipp“, dann richtig lösen; in einer anderen bis „🔎 Lösung zeigen“ | Tipps erscheinen nacheinander; Ergebnis nennt Tipp bzw. Lösung, die XP-Meldung zeigt „mit Tipp: halbe XP“ |
+| 23 | Admin → System → Feature-Schalter: „Selbsteinschätzung“ für eine Testgruppe an; dort Kopfrechnen starten | vor der Runde drei Knöpfe, nach der Runde der Abgleich; am selben Tag beim selben Thema keine zweite Frage |
 
 **Nur in der Testumgebung zusätzlich:** Oben steht „🧪 TEST · vXX“. Im Admin eine Kleinigkeit ändern und
 speichern → Meldung „Testumgebung: Speichern und Sicherung sind hier abgeschaltet“. Danach live den Pass

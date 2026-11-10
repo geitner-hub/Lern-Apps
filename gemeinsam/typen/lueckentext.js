@@ -23,7 +23,7 @@
       const anweisung = st.anweisung || D.anweisung || 'Fülle die Lücke.';
       const a = {
         antworten, frage: x.text.replace(LUECKE, '_____'), hinweis: anweisung,
-        text: x.text.replace(LUECKE, antworten[0]), tipp: x.tipp, erklaerung: x.erklaerung,
+        text: x.text.replace(LUECKE, antworten[0]), tipp: x.tipp, tipp2: x.tipp2, aufloesen: x.aufloesen, erklaerung: x.erklaerung,
       };
       if (Array.isArray(x.optionen) && x.optionen.length >= 2) return Object.assign(a, { art: 'wahl', optionen: T.mischen(x.optionen.map(String)) });
       return Object.assign(a, { art: 'eigen', zeige: (box, fertig) => T.textfeld(box, fertig, 'Wort für die Lücke') });

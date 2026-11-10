@@ -50,6 +50,9 @@ Regeln:
   - gemischt: `"typ": "gemischt"` im Kopf, dann `"typ"` je Stufe; einzelne Aufgaben dürfen einen eigenen `"typ"` haben
     (lueckentext, sortieren, eingabe, markieren). Mix-Stufe: `{ "id", "titel", "mix": true }`
 - Jede Aufgabe gern mit `"tipp"` (kurzer Hinweis) und `"erklaerung"` (warum es so richtig ist, ein Satz).
+- Hilfe-Stufen (das Kind holt sie sich nacheinander über den Hilfe-Knopf): `"tipp"` = Denkanstoß, `"tipp2"` = Teilschritt oder
+  Beispiel (verrät die Lösung noch nicht), `"aufloesen": true` oder `"aufloesen": "Erklärung in einem Satz"` = Lösung zeigen.
+  Mit Tipp gelöst zählt als richtig (halbe XP), mit gezeigter Lösung zählt die Aufgabe nicht. Bei schweren Aufgaben alle drei angeben.
 - Sprache kindgerecht für die Mittelschule, kurze Sätze, keine Fachwörter ohne Erklärung.
   Mathe-Aufgaben müssen im Kopf lösbar sein.
 - Bilder nur als Emoji oder als selbst gezeichnete SVG – keine Bilder aus dem Internet.

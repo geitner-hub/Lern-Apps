@@ -1,4 +1,10 @@
 {
  "hinweis": "Funktionen hinter einem Feature-Schalter (Admin → System → Feature-Schalter). Im Code: if (LernFreigabe.feature('<id>')) … – ohne Eintrag in config.featureSchalter ist die Funktion aus. IDs: klein, Ziffern, '-' (höchstens 40 Zeichen).",
- "features": []
+ "features": [
+  {
+   "id": "einschaetzung",
+   "titel": "Selbsteinschätzung vor dem Üben",
+   "text": "Vor einer Runde (Kopfrechnen, Mathe-Trainer, Baukasten-Übungen) schätzt sich das Kind ein: „Kann ich sicher“, „Geht so“ oder „Brauche ich noch Übung“. Danach sieht es, wie gut die Einschätzung zum Ergebnis passte. Höchstens einmal je Thema und Tag, keine XP – nur ein Abzeichen für passende Einschätzungen."
+  }
+ ]
 }

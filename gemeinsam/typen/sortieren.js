@@ -23,7 +23,7 @@
       return {
         art: 'eigen', teile, trenner,
         frage: x.frage || anweisung, hinweis: x.frage ? anweisung : '',
-        text: x.loesung || teile.join(trenner), tipp: x.tipp, erklaerung: x.erklaerung,
+        text: x.loesung || teile.join(trenner), tipp: x.tipp, tipp2: x.tipp2, aufloesen: x.aufloesen, erklaerung: x.erklaerung,
         eingabeText: e => (e || []).join(trenner),
         zeige(box, fertig) {
           let rest = T.mischen(teile.map((t, i) => i));

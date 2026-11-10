@@ -189,6 +189,41 @@ Schritt jeder Art) – er ist für keine Klasse freigegeben und mit Admin-Anmeld
 - **Noch nicht enthalten:** Abschnitt-Kette, Niveaus und HE-Nummern gibt es nur im English Journey; der Lernweg-Editor im
   Admin kommt mit Etappe 6, der Check vor der Probe und die Kann-Liste mit Etappe 5.
 
+## Hilfe-Stufen und Selbsteinschätzung (Aktionsplan „Lernwelt – Tempo“, Etappe 4, v123)
+
+Gilt im Übungsrahmen `gemeinsam/ueben.js` – also in Kopfrechnen, Mathe-Trainer und allen Baukasten-Übungen (`apps/typen/uebung.html`).
+
+**Hilfe-Stufen.** Jede Aufgabe kann bis zu drei Hilfen tragen; der Hilfe-Knopf zeigt immer die nächste:
+
+| Stufe | Feld | Wirkung |
+|---|---|---|
+| 1 „💡 Tipp“ | `tipp` | Denkanstoß. Richtig gelöst zählt als richtig, bringt aber **halbe XP** für diese Aufgabe. |
+| 2 „💡 Noch ein Tipp“ | `tipp2` | Teilschritt oder Beispiel, verrät die Lösung nicht. Wertung wie Stufe 1. |
+| 3 „🔎 Lösung zeigen“ | `aufloesen` (`true` oder Erklärtext) | Lösung mit Erklärung. Die Aufgabe zählt **nicht** (kommt ins Fehlerheft). |
+
+- Aufgaben ohne diese Felder verhalten sich wie bisher. **Neu für bestehende Inhalte:** der schon vorhandene `tipp` kostet jetzt
+  die halben XP der Aufgabe.
+- **Meisterschaft:** Eine Runde, in der die Lösung gezeigt wurde, wird nicht in den Lernstand eingetragen – ein Thema ist erst
+  gemeistert (⭐, Station geschafft), wenn eine Runde ohne Lösungs-Hilfe gelingt. XP für die Runde gibt es trotzdem.
+- **Durchklicken lohnt nicht:** Holt das Kind bei mindestens der Hälfte der Aufgaben die Lösung, wird die Runde gar nicht gewertet.
+- **Mathe:** `generatoren-mathe.js` erzeugt die Hilfen mit – `tipp` wie bisher, `tipp2` als Zwischenschritt bei „a + b“, „a − b“,
+  „a × b“, „a ÷ b“ (`schrittFuer`), `aufloesen` immer. In Inhaltsdateien schreibt man sie an die Aufgabe (`werkzeuge/INHALT-PROMPT.md`);
+  `pruefen.py` prüft das Format.
+- Technik: `ueben.js` meldet `tipps` (mit Tipp gelöste Aufgaben) und `loesung` mit `saveResult`; `navbar.js` reicht beides weiter,
+  `pass.js` rechnet die Leistungs-XP mit halben Tipp-Aufgaben und lässt den Lernstand bei `loesung` aus.
+- Das Feld heißt `aufloesen`, weil `loesung` in Inhaltsdateien schon den Lösungssatz beim Sortieren meint.
+
+**Selbsteinschätzung** (`gemeinsam/einschaetzung.js`, `LernEinschaetzung`). Vor einer Runde fragt die Lernwelt: „Kann ich sicher“,
+„Geht so“ oder „Brauche ich noch Übung“. Nach der Runde steht der Abgleich im Ergebnis, zum Beispiel: „Du hast ‚Geht so‘ gewählt
+und 9 von 10 geschafft. Du kannst mehr, als du denkst.“
+
+- Passend ist: sicher ↔ ab 80 %, geht so ↔ 50–79 %, noch Übung ↔ unter 50 %. Eine passende Einschätzung zählt für die Abzeichen
+  „Selbstkenner“ (5) und „Kennt sich aus“ (20) – **keine XP**, damit niemand taktisch tippt.
+- Höchstens einmal je Thema und Tag; nicht im Fehler-Training und nicht bei ganzen Fällen (Selbstkontrolle).
+- Gespeichert nur im Pass (`LernPass.einschaetzungMerken`: je Themen-ID die letzten fünf Paare; reist mit der Sicherung).
+- **Einschalten:** Admin → System → Feature-Schalter → „Selbsteinschätzung vor dem Üben“ – für alle oder nur für einzelne
+  Gruppen/Klassen. Ohne Schalter ist sie aus und `einschaetzung.js` wird gar nicht geladen.
+
 ## Ladekette (Infrastruktur Etappe 2)
 
 Grundsatz: **Kern sofort, Rest bei Bedarf.** Die Budgets prüft `werkzeuge/pruefen.py`, gemessen **komprimiert** (gzip, so liefert GitHub Pages aus –

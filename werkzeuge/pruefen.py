@@ -25,7 +25,8 @@
 #   10. Kopfrechnen (Etappe 4): Stufen in daten/kopfrechnen.json stehen im Katalog und nutzen
 #       nur Generatoren, die es in gemeinsam/generatoren-mathe.js gibt.
 #
-#   12. Inhaltsdateien (Etappe 9): daten/inhalte/<fach>/<Themen-ID>.json passen zu ihrem Typ und zum Katalog;
+#   12. Inhaltsdateien (Etappe 9): daten/inhalte/<fach>/<Themen-ID>.json passen zu ihrem Typ und zum Katalog
+#       (Hilfe-Stufen: tipp/tipp2 Text, aufloesen true oder Text);
 #       Einträge in config.json für apps/typen/uebung.html?inhalt=… haben eine Inhaltsdatei.
 #       Quellen je Aufgabe (Quellen-Detektiv): Bild existiert, Fotos (png/jpg/webp) haben einen „nachweis“,
 #       quellenart ist sach/bild/schrift, Methodenkarten in „hilfe“ haben nr und Farbe #rrggbb.
@@ -564,6 +565,19 @@ def pruefe_aufgaben(FI, wo, typ, auf):
             if not isinstance(x, dict) or len(re.findall(r'\[[^\]]+\]', str(x.get('satz', '')))) != 1:
                 FI(f'{wo}: jede Aufgabe braucht einen satz mit genau einer [Markierung]'); break
 inhalt_ids = set()
+# Hilfe-Stufen (Aktionsplan Tempo, Etappe 4): tipp/tipp2 = Text, aufloesen = true oder Erklärtext – überall in den Inhaltsdateien
+def hilfe_felder(x, wo):
+    if isinstance(x, dict):
+        for k in ('tipp', 'tipp2'):
+            if k in x and not (isinstance(x[k], str) and x[k].strip()): F(f'{wo}: „{k}“ muss ein Text sein')
+        if 'aufloesen' in x and not (x['aufloesen'] is True or (isinstance(x['aufloesen'], str) and x['aufloesen'].strip())): F(f'{wo}: „aufloesen“ ist true oder ein Erklärtext (weglassen = keine Lösungs-Hilfe)')
+        if 'tipp2' in x and 'tipp' not in x: H(f'{wo}: „tipp2“ ohne „tipp“ – der zweite Tipp baut auf dem ersten auf')
+        for v in x.values(): hilfe_felder(v, wo)
+    elif isinstance(x, list):
+        for v in x: hilfe_felder(v, wo)
+for p in sorted(ROOT.glob('daten/inhalte/*/*.json')):
+    try: hilfe_felder(json.loads(p.read_text(encoding='utf-8')), rel(p))
+    except Exception: pass                          # Lesefehler meldet die Schleife darunter
 for p in sorted(ROOT.glob('daten/inhalte/*/*.json')):
     r = rel(p)
     try: d = json.loads(p.read_text(encoding='utf-8'))
