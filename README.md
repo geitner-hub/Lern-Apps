@@ -148,6 +148,47 @@ für Spiele und besondere Mechaniken (Karte antippen, Zeichnen, Bewegung …):
   Zwischenstand einzeln geprüft und ist oft rot.
 - Upload nachmittags oder abends, nie kurz vor dem Unterricht.
 
+## Lernweg-Engine in 2D (Aktionsplan „Lernwelt – Tempo“, Etappe 2, v122)
+
+Ein Lernweg für **jedes Fach** als reine Datendatei – ohne neuen Code, ohne three.js. **Der nächste neue Lernweg nutzt diese
+Struktur**; der English Journey (3D) bleibt, wie er ist. Im Repo liegt bisher nur der Test-Weg (`daten/wege/test.json`, je ein
+Schritt jeder Art) – er ist für keine Klasse freigegeben und mit Admin-Anmeldung sichtbar: `apps/typen/weg.html?weg=test`.
+
+| Datei | Inhalt |
+|---|---|
+| `daten/wege/liste.json` | Verzeichnis: `{ id, titel, fach, klasse, ico }` je Weg (`test: true` = nur zum Testen) |
+| `daten/wege/<Weg-ID>.json` | Kopf (`id`, `titel`, `fach`, `klasse`, `ico`, optional `buch`, `kann`) und `abschnitte` → `schritte` |
+| `daten/wege/bausteine-<Weg-ID>.json` | Hefteinträge (`zeilen` wie im English Journey: Zeilen aus `[Text, Markierung]`, `g` = grün) und eigene Übungen (`items`, `loesung`) |
+| `apps/typen/weg.html?weg=<Weg-ID>` | Seite: geschwungener Pfad, je Abschnitt ein Knoten mit Fortschrittsring; „☰ Liste“ = Druckansicht des Laufzettels |
+| `gemeinsam/weg-kern.js` (`LernWeg`) | Zustände, nächster Schritt, Abschluss, Freigabe; auch für die Startseite |
+
+**Schritt** `{ id, art, stufe?, … }`:
+
+| art | Felder | Erledigt, wenn |
+|---|---|---|
+| `hefteintrag` | `baustein` | selbst abgehakt |
+| `uebung` | `text` und/oder `baustein`, optional `buch: { seite, uebung }` | selbst abgehakt |
+| `app` | `thema` (Katalog-ID – die ID, die die App meldet, z. B. eine Stufe), optional `text` | eine Runde mit ≥ 70 % im Lernstand des Themas |
+| `medium` | `titel`, `link` (Datei im Repo, Pfad ab Hauptordner), optional `text` | geöffnet und abgehakt |
+| `check` | `text`, optional `thema` | mit `thema`: einmal bearbeitet · sonst abgehakt (wird in Etappe 5 gefüllt) |
+
+- **Pflicht, Wahl, Stern** (`stufe`): `pflicht` (Standard, auch ohne Angabe) zählt für den Abschluss; aus den `wahl`-Schritten
+  eines Abschnitts müssen `wahlMin` erledigt sein (am Abschnitt, Standard 1); `stern` ist Zusatz für Schnelle und zählt nie.
+- **IDs:** Weg-ID klein mit Ziffern und `-`; jede Abschnitt-, Schritt-, Baustein- und Kann-ID beginnt mit `<Weg-ID>-` und ist in
+  allen Wegen eindeutig. **Nie umbenennen oder löschen** – Haken stehen als Lernstand `jw:<Schritt-ID>` im Pass
+  (`LernPass.wegMerken`, zählt für nichts, reist mit der Sicherung). Der Weg hat keinen eigenen Punktestand.
+- **Freigabe** wie im English Journey: `config.journey.wege.<Weg-ID>.bis = { wer: Abschnitt-ID }` (Gruppe vor Klasse vor „alle“),
+  im Admin unter **Gruppen → 📒 Laufzettel → 🗺️ Weitere Lernwege**. Die Kinder sehen den ganzen Weg; offen sind die Abschnitte
+  bis einschließlich dem gewählten, dahinter steht die 🚧 Schranke. Ohne Eintrag ist der Weg nicht freigegeben.
+  Der Worker muss dafür Weg-IDs außer `journey…` erlauben (`cloudflare/worker.js`, v122 – **neu bei Cloudflare einfügen**).
+- **Startseite:** Ein freigegebener Weg erscheint unter „Mein Laufzettel“ und speist „Weiter lernen“ (`weg-kern.js` lädt nur dann).
+- **Rückweg:** Vor dem Start einer App merkt sich `weg.html` seine Adresse (`lernwelt-lernweg-zurueck`); in der App erscheint
+  „🧭 Zurück zum Weg“ (`lernweg-zurueck.js`).
+- **Neuer Weg:** Eintrag in `liste.json`, Weg-Datei (und Bausteine) anlegen, beide in `sw.js` `NACHLADEN` eintragen,
+  `pruefen.py` (Regel 24) prüft Format, IDs, Katalog-Themen und Bausteine. Farbe des Wegs = Fach (`CAT_STYLES`).
+- **Noch nicht enthalten:** Abschnitt-Kette, Niveaus und HE-Nummern gibt es nur im English Journey; der Lernweg-Editor im
+  Admin kommt mit Etappe 6, der Check vor der Probe und die Kann-Liste mit Etappe 5.
+
 ## Ladekette (Infrastruktur Etappe 2)
 
 Grundsatz: **Kern sofort, Rest bei Bedarf.** Die Budgets prüft `werkzeuge/pruefen.py`, gemessen **komprimiert** (gzip, so liefert GitHub Pages aus –

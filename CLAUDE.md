@@ -105,6 +105,11 @@ und gelbe Hinweise. Manuelle Checkliste nach Uploads: `werkzeuge/RAUCHTEST.md`.
   (`module/inhalte-journey.js`: Übersicht, Editoren, Klassen-Übersicht über `jw:`-Meldungen, Schuljahr, Druck über `journey-druck.js`);
   Hefteinträge nur in Pflicht-Abschnitten (Finale wartet auf jeden). Abschnitt-Kette (v109): Pflicht-Abschnitte öffnen sich der Reihe nach (`config.journey…reihenfolge` je wer: frei/schritt/streng, Standard schritt; `LernJourneyWeg.sperre`). Schranke (v119): `config.journey…sperren[wer] = true` → Weg endet mit der Unit von `bis` (`LernJourney.schranke`, grund `schranke`, Brücke zu); Schalter im Laufzettel-Modul. „🌉 Units bis hier offen“ (v120) schreibt `freigaben[Unit-Thema][wer] = 'offen'` → Unit ohne Finale davor (geoeffnet). Die alten Lernwege (`apps/typen/lernweg.html`) sind seit
   v103 entfernt; `lernwelt-lernweg` wird nur noch einmal übernommen.
+- **Lernweg-Engine in 2D** (v122, Aktionsplan „Lernwelt – Tempo“ Etappe 2): neue Lernwege für jedes Fach nur als Daten –
+  `daten/wege/liste.json`, `daten/wege/<Weg-ID>.json` (Abschnitte → Schritte: hefteintrag, uebung, app, medium, check; `stufe` pflicht/wahl/stern,
+  `wahlMin`), Bausteine in `daten/wege/bausteine-<Weg-ID>.json`. Seite `apps/typen/weg.html?weg=<ID>`, Logik `gemeinsam/weg-kern.js` (`LernWeg`),
+  Freigabe `config.journey.wege.<ID>.bis` (Admin: Gruppen → 📒 Laufzettel → Weitere Lernwege), pruefen.py Regel 24. Jede ID beginnt mit
+  `<Weg-ID>-` und wird nie umbenannt (Lernstand `jw:<ID>`). Der English Journey bleibt eigenständig. README → Lernweg-Engine.
 - **Live-Abfrage** (Unterrichtsmodus → 📊, Kinder-Seite `apps/typen/live.html?raum=CODE`, keine App in config.json, ohne Navbar):
   Worker-Teil `cloudflare/live.js` (Räume, Antworten, Quizze, Rückblicke in `SYNC_DB`; Räume nach dem Beenden gelöscht),
   Fragetypen `gemeinsam/live-fragen.js` (`LernLive`), Beamer `gemeinsam/admin/live.js`, Quiz-Editor Inhalte → Live-Quizze.

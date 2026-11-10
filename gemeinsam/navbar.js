@@ -349,7 +349,7 @@
 
   // Aus einem Lernweg geöffnet? → Knopf „Zurück zum Lernweg“ (Modul nur dann nachladen)
   try {
-    if (sessionStorage.getItem('lernwelt-lernweg-zurueck') && !/english-journey\.html$/.test(location.pathname) && window.LW && LW.laden) LW.laden('gemeinsam/lernweg-zurueck.js');
+    if (sessionStorage.getItem('lernwelt-lernweg-zurueck') && !/(english-journey|typen\/weg)\.html$/.test(location.pathname) && window.LW && LW.laden) LW.laden('gemeinsam/lernweg-zurueck.js');
   } catch (e) {}
 
 })();

@@ -14,6 +14,8 @@
 //  Stand: config.journey = { schuljahr, wege: { journey6: { bis: { wer: Abschnitt-ID }, he: { Hefteintrag-ID: Nr }, niveau: { wer: 1–3 }, sperren: { wer: true } } } }
 //  (Worker validateConfig, pruefen.py Regel 23). Löst den Reiter „🗺️ Lernwege“ ab. Unit-Übersicht, Editoren, Klassenstand
 //  und Schuljahreswechsel kommen mit dem Modul „🧭 English Journey“ (Etappe 6).
+//  Weitere Lernwege (Aktionsplan „Lernwelt – Tempo“, Etappe 2): Karte „🗺️ Weitere Lernwege“ – je Weg aus daten/wege/liste.json
+//  die Freigabe „frei bis Abschnitt“ je Gruppe/Klasse (config.journey.wege.<Weg-ID>.bis). Dahinter steht für die Kinder die Schranke.
 // ═══════════════════════════════════════════════════════
 'use strict';
 
@@ -47,11 +49,12 @@ LWAdmin.laufzettelFreigeben = function (store, J, wer, aid, text) {
 
 LWAdmin.modul({
   id: 'laufzettel', bereich: 'gruppen', titel: 'Laufzettel', symbol: '📒', reihenfolge: 3,
-  suchbegriffe: ['Schranke', 'gleicher Stand', 'Unit öffnen', 'weitermachen', 'nachholen', 'Laufzettel', 'Lernweg', 'English Journey', 'Hefteintrag', 'HE-Nummer', 'Abschnitt', 'freigeben', 'Stationen'],
+  suchbegriffe: ['Weitere Lernwege', 'Weg freigeben', '2D', 'Schranke', 'gleicher Stand', 'Unit öffnen', 'weitermachen', 'nachholen', 'Laufzettel', 'Lernweg', 'English Journey', 'Hefteintrag', 'HE-Nummer', 'Abschnitt', 'freigeben', 'Stationen'],
   zeigen(host, { store }) {
     const e = s => escHtml(String(s == null ? '' : s));
     const ROOT = new URL('./', location.href).href, WEG = 'journey6';
     let aktiv = true, J = null, fehler = '', gruppen = [], neuWer = '';
+    let wege = [], wegNeu = {};                          // 2D-Lernwege: [{ eintrag, W }], je Weg das gerade gewählte „für wen“
 
     // Alle Abschnitte in Weg-Reihenfolge
     const abschnitte = () => (J ? J.units.flatMap(u => (u.abschnitte || []).map(a => ({ a, u }))) : []);
@@ -141,6 +144,39 @@ LWAdmin.modul({
       return `<select data-lz-wer="${e(wer)}" aria-label="Frei bis Abschnitt für ${e(werName(wer))}"><option value="">— nichts frei —</option>${gruppenweise}</select>`;
     }
 
+    // ── Weitere Lernwege (2D): frei bis Abschnitt ──
+    function wegSetzen(id, wer, aid) {
+      const x = wege.find(q => q.W.id === id);
+      if (!x) return;
+      const titel = aid ? (x.W.abschnitte.find(a => a.id === aid) || { titel: aid }).titel : '';
+      store.aendern(`🗺️ ${x.W.titel} ${werName(wer).replace(/^\S+ /, '')}: ${aid ? 'frei bis „' + titel + '“' : 'nicht frei'}`, c => {
+        const jy = c.journey && typeof c.journey === 'object' ? c.journey : (c.journey = {});
+        const alle = jy.wege && typeof jy.wege === 'object' ? jy.wege : (jy.wege = {});
+        const w = alle[id] && typeof alle[id] === 'object' ? alle[id] : (alle[id] = {});
+        const bis = w.bis && typeof w.bis === 'object' ? w.bis : (w.bis = {});
+        if (aid) bis[wer] = aid; else delete bis[wer];
+        if (!Object.keys(bis).length) delete w.bis;
+        if (!Object.keys(w).length) delete alle[id];
+      });
+    }
+    function wegeHTML(c, optionen) {
+      if (!wege.length) return '';
+      const wahl = (id, W, wer, aktuell) => `<select data-wg="${e(id)}" data-wg-wer="${e(wer)}" aria-label="Frei bis Abschnitt für ${e(werName(wer))}"><option value="">— nicht frei —</option>
+        ${W.abschnitte.map(a => `<option value="${e(a.id)}"${a.id === aktuell ? ' selected' : ''}>${e(a.titel)}</option>`).join('')}</select>`;
+      return `<div class="lw-karte"><h2>🗺️ Weitere Lernwege</h2>
+        <p>Lernwege ohne 3D (für jedes Fach, <code>daten/wege/</code>). Die Kinder sehen den ganzen Weg; offen sind die Abschnitte bis einschließlich dem gewählten,
+        dahinter steht die 🚧 Schranke. Ein freigegebener Weg erscheint auf der Startseite unter „Weiter lernen“ und „Mein Laufzettel“.</p>
+        ${wege.map(({ eintrag, W }) => {
+          const bis = (((c.journey || {}).wege || {})[W.id] || {}).bis || {}, frei = optionen.filter(x => !(x in bis)), nw = wegNeu[W.id] || '';
+          return `<h3 style="margin:.9rem 0 .2rem">${e((W.ico ? W.ico + ' ' : '') + W.titel)} <span class="lw-klein">· ${e(W.fach)} · Klasse ${e(W.klasse)}${eintrag.test ? ' · nur zum Testen' : ''}</span></h3>
+            ${Object.keys(bis).map(wer => `<div class="lw-knoepfe" style="align-items:center;margin:.35rem 0"><b style="min-width:11rem">${e(werName(wer))}</b>${wahl(W.id, W, wer, bis[wer])}</div>`).join('')
+              || '<p class="lw-klein">Noch für niemanden freigegeben.</p>'}
+            <div class="lw-knoepfe" style="margin-top:.4rem">${frei.length ? `<select data-wg-neu="${e(W.id)}" aria-label="Für wen?"><option value="">+ Freigabe für …</option>
+              ${frei.map(x => `<option value="${e(x)}"${x === nw ? ' selected' : ''}>${e(werName(x))}</option>`).join('')}</select>${nw ? wahl(W.id, W, nw, '') : ''}` : ''}
+              <a class="lw-btn klein" href="apps/typen/weg.html?weg=${e(W.id)}" target="_blank" rel="noopener">👀 Vorschau</a></div>`;
+        }).join('')}</div>`;
+    }
+
     function zeichnen() {
       if (!aktiv) return;
       if (!J) { host.innerHTML = `<div class="lw-karte">${fehler ? '⚠ ' + e(fehler) : 'lädt …'}</div>`; return; }
@@ -169,12 +205,14 @@ LWAdmin.modul({
         <div class="lw-karte"><h2>Hefteintrag-Nummern${c.journey && c.journey.schuljahr ? ' · Schuljahr ' + e(c.journey.schuljahr) : ''}</h2>
           <p class="lw-klein">Werden beim Freigeben vergeben, fortlaufend in der Reihenfolge des Wegs, und bleiben danach fest – so wie im echten Heft.</p>
           ${nummern.length ? `<ol style="margin:.4rem 0 0 1.2rem;line-height:1.7">${nummern.map(([id, n]) => `<li value="${Number(n)}"><b>HE ${Number(n)}</b> · ${e(titel(id))} <code>${e(id)}</code></li>`).join('')}</ol>`
-            : '<p class="lw-klein">Noch keine.</p>'}</div>`;
+            : '<p class="lw-klein">Noch keine.</p>'}</div>${wegeHTML(c, optionen)}`;
     }
 
     const aenderung = ev => {
       const t = ev.target;
       if (t.matches('[data-lz-neu]')) { neuWer = t.value; zeichnen(); return; }
+      if (t.matches('[data-wg-neu]')) { wegNeu[t.dataset.wgNeu] = t.value; zeichnen(); return; }
+      if (t.matches('[data-wg]')) { const id = t.dataset.wg, wer = t.dataset.wgWer; if (wegNeu[id] === wer) wegNeu[id] = ''; wegSetzen(id, wer, t.value); return; }
       if (t.matches('[data-lz-niveau]')) { niveauSetzen(t.dataset.lzNiveau, Number(t.value)); return; }
       if (t.matches('[data-lz-offen]')) { offenSetzen(t.dataset.lzOffen, t.checked); return; }
       if (t.matches('[data-lz-schranke]')) { schrankeSetzen(t.dataset.lzSchranke, t.checked); return; }
@@ -187,6 +225,9 @@ LWAdmin.modul({
     fetch(ROOT + 'daten/journey6.json', { cache: 'no-store' }).then(r => r.ok ? r.json() : Promise.reject(new Error('HTTP ' + r.status)))
       .then(d => { J = d; }).catch(x => { fehler = 'daten/journey6.json nicht geladen: ' + (x.message || x); }).then(zeichnen);
     LWAdmin.quellen.gruppen().then(g => { gruppen = g; }).catch(() => {}).then(zeichnen);
+    const holeJson = p => fetch(ROOT + p, { cache: 'no-store' }).then(r => r.ok ? r.json() : Promise.reject(new Error('HTTP ' + r.status)));
+    holeJson('daten/wege/liste.json').then(l => Promise.all((l.wege || []).map(eintrag => holeJson('daten/wege/' + eintrag.id + '.json').then(W => ({ eintrag, W })).catch(() => null))))
+      .then(l => { wege = l.filter(x => x && Array.isArray(x.W.abschnitte)); }).catch(() => {}).then(zeichnen);
     return () => { aktiv = false; ab(); host.removeEventListener('change', aenderung); };
   },
 });

@@ -11,6 +11,7 @@
 //  (gesperrte Themen werden nie fällig).
 //
 //  API (window.LernWiederholung):
+//    link(id)          → Adresse ab Hauptordner zu einer Themen-/Stufen-ID oder null
 //    faellig({ max })  → [{ thema, titel, inhalte: [alte Inhalt-IDs], tage, stufe, link }]
 //                        nach Dringlichkeit sortiert; tage = so viele Tage schon fällig (0 = heute)
 //                        link = Adresse ab Hauptordner oder null (z. B. nur in Spielen)
@@ -68,5 +69,8 @@
 
   const inhalte = () => faellig().flatMap(x => x.inhalte);
 
-  window.LernWiederholung = { faellig, inhalte };
+  /** Adresse ab Hauptordner zu einer Themen- oder Stufen-ID (oder null) – auch für die Lernwege (weg-kern.js) */
+  function link(id) { const K = window.LernKatalog, t = K && K.thema && K.thema(id); return t ? linkFuer(t, K) : null; }
+
+  window.LernWiederholung = { faellig, inhalte, link };
 })();

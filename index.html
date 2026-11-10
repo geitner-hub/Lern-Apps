@@ -966,30 +966,52 @@ function appKarte(app, fach) {
 // ── Laufzettel im English Journey (Aktionsplan „Lernweg im English Journey“, Etappe 3; löst die Lernwege ab) ──
 //  Banner nur, wenn die Lehrkraft für dieses Gerät Abschnitte freigegeben hat (config.journey.wege.journey6.bis, Gruppe vor
 //  Klasse vor „alle“). Der Fortschritt kommt aus gemeinsam/journey-lernweg.js – erst dann nachgeladen.
-let laufzettelLaden = null, laufzettelJ = null;
+let laufzettelLaden = null, laufzettelJ = null, wegeLaden = null, wegeStand = null;
+//  Weitere Lernwege (2D, apps/typen/weg.html – Tempo Etappe 2): weg-kern.js lädt nur, wenn config.journey.wege für dieses
+//  Gerät einen anderen Weg als den English Journey freigibt.
+function wegeBanner() {
+  const F = window.LernFreigabe, wege = (CONFIG.journey || {}).wege || {}, wer = F && F.wer ? F.wer() : [];
+  if (!Object.keys(wege).some(id => id !== 'journey6' && wege[id] && wege[id].bis && wer.some(w => typeof wege[id].bis[w] === 'string'))) return '';
+  if (!wegeStand) {
+    if (!wegeLaden) wegeLaden = LW.laden('gemeinsam/weg-kern.js').then(() => LernWeg.freigegebene())
+      .then(l => { wegeStand = l; buildLernwege(); }).catch(() => { wegeLaden = null; });
+    return '';
+  }
+  return wegeStand.map(x => {
+    const st = LernWeg.stand(x.W, true), pct = Math.round(100 * st.fertig / Math.max(1, st.soll));
+    const href = LernWeg.seite(x.W.id) + (st.dran ? '#a=' + encodeURIComponent(st.dran.a.id) : '');
+    if (!weiterQ.weg && st.dran) weiterQ.weg = { href, ic: x.W.ico || '🗺️', text: `${x.W.titel}: ${st.dran.a.titel}` };
+    return `<a class="lw-banner" href="${escHtml(href)}"><span class="lw-ring" style="--p:${pct}"><span>${st.fertig}/${st.soll}</span></span>
+      <span class="lw-txt"><b>${escHtml((x.W.ico ? x.W.ico + ' ' : '') + x.W.titel)}</b><small>${escHtml(st.dran ? 'Weiter mit: ' + st.dran.a.titel : '🎉 Alles geschafft')}</small></span><span class="lw-los">Los ›</span></a>`;
+  }).join('');
+}
 function buildLernwege() {
-  weiterQ.weg = null;
   const sec = document.getElementById('lernweg-section');
   if (!sec) return;
+  weiterQ.weg = null;
+  const journey = journeyBanner(), wege = LernPass.hasProfile() && !new URLSearchParams(location.search).get('vorschau') ? wegeBanner() : '';
+  sec.innerHTML = journey || wege ? `<h2>📒 Mein Laufzettel</h2><div class="lw-banner-liste">${journey}${wege}</div>` : '';
+  buildWeiter();
+}
+function journeyBanner() {
   const F = window.LernFreigabe, cfg = F && F.journey ? F.journey('journey6') : null, bis = (cfg && cfg.bis) || {};
-  if (!F || !F.wer || !F.wer().some(w => typeof bis[w] === 'string')) { sec.innerHTML = ''; buildWeiter(); return; }
+  if (!F || !F.wer || !F.wer().some(w => typeof bis[w] === 'string')) return '';
   if (!laufzettelJ) {
     if (!laufzettelLaden) laufzettelLaden = LW.laden('gemeinsam/katalog.js').then(() => LernKatalog.bereit)
       .then(() => LW.laden('gemeinsam/journey-kern.js')).then(() => LW.laden('gemeinsam/journey-lernweg.js')).then(() => LernJourney.laden())
       .then(J => { laufzettelJ = J; buildLernwege(); }).catch(() => { laufzettelLaden = null; });
-    return;
+    return '';
   }
   let st = null;
   try { st = LernJourneyWeg.stand({ J: laufzettelJ, z: LernJourney.berechne(laufzettelJ).z, cfg }); } catch (e) {}
-  if (!st) { sec.innerHTML = ''; buildWeiter(); return; }
+  if (!st) return '';
   const pct = Math.round(100 * st.fertig / Math.max(1, st.soll)), u = st.naechsteUnit || st.unit;
   const ziel = `apps/englisch/english-journey.html#u=${encodeURIComponent(u.id)}&w=${encodeURIComponent(st.naechste ? st.naechste.id : '')}`;
   const weiter = st.naechste ? `Weiter mit: ${st.naechste.titel}` : '🎉 Alles geschafft – jetzt: Fit für die Probe?';
-  sec.innerHTML = `<h2>📒 Mein Laufzettel</h2><div class="lw-banner-liste"><a class="lw-banner" href="${ziel}">
-      <span class="lw-ring" style="--p:${pct}"><span>${st.fertig}/${st.soll}</span></span>
-      <span class="lw-txt"><b>English Journey · Unit ${escHtml(st.unit.nr)}: ${escHtml(st.unit.titel)}</b><small>${escHtml(weiter)}</small></span><span class="lw-los">Los ›</span></a></div>`;
   weiterQ.weg = { href: ziel, ic: '📒', text: `English Journey · Unit ${st.unit.nr}: ${st.naechste ? st.naechste.titel : 'Fit für die Probe?'}` };
-  buildWeiter();
+  return `<a class="lw-banner" href="${ziel}">
+      <span class="lw-ring" style="--p:${pct}"><span>${st.fertig}/${st.soll}</span></span>
+      <span class="lw-txt"><b>English Journey · Unit ${escHtml(st.unit.nr)}: ${escHtml(st.unit.titel)}</b><small>${escHtml(weiter)}</small></span><span class="lw-los">Los ›</span></a>`;
 }
 
 // ── Live-Abfrage: Kachel, solange der Raum offen ist, in dem dieses iPad (dieser Tab) war (apps/typen/live.html) ──

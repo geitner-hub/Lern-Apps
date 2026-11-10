@@ -462,7 +462,7 @@ function validateConfig(cfg) {
       && Object.keys(w).every(k => ['bis', 'he', 'niveau', 'reihenfolge', 'sperren'].includes(k));
     if (!jy || typeof jy !== 'object' || Array.isArray(jy)
         || (jy.schuljahr !== undefined && !(typeof jy.schuljahr === 'string' && /^\d{4}\/\d{2}$/.test(jy.schuljahr)))
-        || !mapOk(jy.wege, 10, k => /^journey[0-9a-z-]{0,20}$/.test(k), wegOk)
+        || !mapOk(jy.wege, 10, k => /^[a-z][0-9a-z-]{1,29}$/.test(k), wegOk)   // journey6 und die 2D-Lernwege aus daten/wege/ (Tempo Etappe 2)
         || Object.keys(jy).some(k => !['schuljahr', 'wege'].includes(k))) p.push('journey ungültig');
   }
   // Nur bekannte Felder (neues Feld → hier und oben in der Kopfzeile eintragen)

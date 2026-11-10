@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8"/>
+  <script src="../../gemeinsam/umgebung.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>Lernweg – Lernwelt</title>
+  <!--
+  ═══════════════════════════════════════════════
+   LERNWELT – Lernweg in 2D  (Aktionsplan „Lernwelt – Tempo“, Etappe 2)
+   apps/typen/weg.html?weg=<Weg-ID>[#a=<Abschnitt-ID>]
+
+   Zeigt einen Lernweg aus daten/wege/<Weg-ID>.json: ein geschwungener Pfad von oben nach unten, je Abschnitt ein
+   Knoten mit Symbol und Fortschrittsring. Antippen öffnet die Schritte (Pflicht · Wahl · Stern) als Karte.
+   Zweite Darstellung „☰ Liste“ – zugleich die Druckansicht für den Laufzettel.
+   Regeln, Lernstand und Freigabe: gemeinsam/weg-kern.js (LernWeg). Kein eigener Spielstand, kein saveResult:
+   Haken über LernPass.wegMerken, App-Schritte liest der Weg aus dem Pass. Kein 3D – lädt auch auf alten iPads sofort.
+   KEINE App in config.json (NUR_UEBER_LINK in pruefen.py): erreichbar über die Startseite („Weiter lernen“,
+   „Mein Laufzettel“), sobald die Lehrkraft den Weg im Admin freigibt (Gruppen → 📒 Laufzettel).
+   Rückweg aus einer App: lernwelt-lernweg-zurueck (gemeinsam/lernweg-zurueck.js).
+  ═══════════════════════════════════════════════
+  -->
+  <link rel="stylesheet" href="../../gemeinsam/fonts.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --bg:#0f0e1a; --surface:#1b1929; --card:#221f35; --border:rgba(255,255,255,.1); --accent:#e6a817; --indigo:#6366f1;
+            --text:#f1f0fb; --text2:rgba(241,240,251,.7); --fach:#6366f1; --fach2:#818cf8; --ok:#4ade80; }
+    html { -webkit-text-size-adjust: 100%; }
+    body { font-family: 'Nunito', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh;
+           padding: 4.2rem 1rem calc(2rem + env(safe-area-inset-bottom)); -webkit-tap-highlight-color: transparent; }
+    button { font-family: inherit; color: inherit; cursor: pointer; }
+    .kopf { max-width: 720px; margin: 0 auto 1rem; text-align: center; }
+    .kopf h1 { font: 400 1.9rem 'Fredoka One', 'Nunito', sans-serif; line-height: 1.15; }
+    .kopf .sub { color: var(--text2); font-weight: 800; margin-top: .25rem; }
+    .balken { height: 12px; border-radius: 999px; background: rgba(255,255,255,.12); overflow: hidden; margin: .8rem auto .2rem; max-width: 420px; }
+    .balken i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--fach), var(--fach2)); border-radius: 999px; transition: width .4s; }
+    .knoepfe { display: flex; gap: .5rem; justify-content: center; margin-top: .8rem; flex-wrap: wrap; }
+    .kn { background: var(--surface); border: 1px solid var(--border); border-radius: 999px; padding: .5rem 1rem; font-weight: 800; font-size: .95rem; min-height: 44px; }
+    .kn.an { border-color: var(--fach2); color: var(--fach2); }
+    .hinweis { max-width: 520px; margin: 3rem auto; text-align: center; background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 1.6rem 1.2rem; font-weight: 700; line-height: 1.5; }
+    .hinweis .gr { font-size: 2.6rem; display: block; margin-bottom: .5rem; }
+    .hinweis a { color: var(--accent); font-weight: 900; }
+
+    /* ── Pfad ── */
+    #pfad { position: relative; max-width: 520px; margin: 0 auto; }
+    #pfad svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+    #pfad path { fill: none; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+    #pfad .p-alle { stroke: rgba(255,255,255,.14); stroke-width: 14; stroke-dasharray: 2 22; }
+    #pfad .p-fertig { stroke: var(--fach); stroke-width: 14; }
+    .knoten { position: absolute; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; gap: .3rem; background: none; border: 0; width: 150px; }
+    .knoten .ring { --p: 0; width: 92px; height: 92px; border-radius: 50%; display: grid; place-items: center; background: conic-gradient(var(--ok) calc(var(--p) * 1%), rgba(255,255,255,.2) 0); box-shadow: 0 8px 20px rgba(0,0,0,.4); }
+    .knoten .ring span { width: 76px; height: 76px; border-radius: 50%; display: grid; place-items: center; font-size: 2.3rem; background: linear-gradient(135deg, var(--fach), var(--fach2)); }
+    .knoten b { font: 400 1.02rem 'Fredoka One', 'Nunito', sans-serif; line-height: 1.15; text-align: center; background: rgba(15,14,26,.85); border-radius: 8px; padding: .1rem .4rem; }
+    .knoten small { font-weight: 800; font-size: .78rem; color: var(--text2); background: rgba(15,14,26,.85); border-radius: 8px; padding: 0 .35rem; }
+    .knoten.fertig .ring span::after { content: '✓'; position: absolute; transform: translate(34px, -30px); width: 28px; height: 28px; border-radius: 50%; background: var(--ok); color: #06280f; font: 900 1rem/28px 'Nunito', sans-serif; text-align: center; }
+    .knoten.dran .ring { animation: puls 1.6s ease-in-out infinite; }
+    .knoten.gesperrt .ring { background: rgba(255,255,255,.12); box-shadow: none; }
+    .knoten.gesperrt .ring span { background: #2a2740; filter: grayscale(1); opacity: .65; }
+    .knoten.gesperrt b { color: var(--text2); }
+    @keyframes puls { 50% { box-shadow: 0 0 0 12px rgba(230,168,23,.28), 0 8px 20px rgba(0,0,0,.4); } }
+    .figur { position: absolute; transform: translate(-50%, -50%); pointer-events: none; width: 58px; height: 58px; }
+    .figur .pass-avatar { width: 58px; height: 58px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.9rem;
+      background: radial-gradient(circle at 35% 30%, #3b3470, #1b1929); border: 3px solid var(--accent); overflow: hidden; box-shadow: 0 6px 16px rgba(0,0,0,.5); }
+    .figur img { width: 100%; height: 100%; object-fit: cover; }
+    .figur .pass-lvl { display: none; }
+    .schranke { position: absolute; left: 50%; transform: translate(-50%, -50%); background: #3b2a00; color: #fde68a; border: 2px dashed var(--accent); border-radius: 12px; padding: .3rem .8rem; font-weight: 900; font-size: .85rem; white-space: nowrap; }
+
+    /* ── Karte (Abschnitt) und Liste ── */
+    #karte { position: fixed; inset: 0; z-index: 9000; background: rgba(8,7,16,.72); display: none; align-items: flex-end; justify-content: center; }
+    #karte.open { display: flex; }
+    .blatt { background: var(--surface); border: 1px solid var(--border); border-radius: 22px 22px 0 0; width: min(640px, 100%); max-height: 88vh; overflow-y: auto; -webkit-overflow-scrolling: touch;
+             padding: 1.1rem 1.1rem calc(1.4rem + env(safe-area-inset-bottom)); }
+    @media (min-width: 700px) { #karte { align-items: center; } .blatt { border-radius: 22px; } }
+    .blatt-kopf { display: flex; align-items: center; gap: .7rem; margin-bottom: .7rem; }
+    .blatt-kopf .ic { font-size: 2rem; }
+    .blatt-kopf h2 { flex: 1; font: 400 1.4rem 'Fredoka One', 'Nunito', sans-serif; line-height: 1.15; }
+    .zu { background: rgba(255,255,255,.1); border: 0; border-radius: 50%; width: 44px; height: 44px; font-size: 1.1rem; font-weight: 900; flex-shrink: 0; }
+    .gruppe { font-weight: 900; font-size: .82rem; letter-spacing: .04em; text-transform: uppercase; color: var(--text2); margin: 1rem 0 .4rem; }
+    .gruppe.stern { color: var(--accent); }
+    .schritt { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: .8rem .9rem; margin-bottom: .55rem; }
+    .schritt.fertig { border-color: rgba(74,222,128,.55); }
+    .schritt .zeile { display: flex; gap: .7rem; align-items: flex-start; }
+    .schritt .sy { font-size: 1.5rem; flex-shrink: 0; line-height: 1.2; }
+    .schritt .tx { flex: 1; min-width: 0; }
+    .schritt .tx b { display: block; font-size: 1rem; line-height: 1.3; }
+    .schritt .tx small { display: block; color: var(--text2); font-weight: 700; font-size: .86rem; margin-top: .15rem; line-height: 1.35; }
+    .schritt .ok { color: var(--ok); font-weight: 900; font-size: 1.2rem; }
+    .akt { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: .65rem; }
+    .btn { border: 0; border-radius: 999px; padding: .55rem 1.05rem; font-weight: 900; font-size: .95rem; min-height: 44px; text-decoration: none; display: inline-flex; align-items: center;
+           background: rgba(255,255,255,.1); color: var(--text); }
+    .btn.p { background: var(--accent); color: #1b1300; }
+    .btn.haken.an { background: rgba(74,222,128,.2); color: var(--ok); }
+    .papier { background: #fbfaf3; color: #1f2430; border-radius: 12px; padding: .8rem .95rem; margin-top: .65rem; font: 600 1rem/1.75 'Nunito', sans-serif; white-space: pre-wrap;
+              background-image: linear-gradient(transparent 1.68em, rgba(60,90,160,.18) 1.68em); background-size: 100% 1.75em; }
+    .papier .ue { font-weight: 900; text-decoration: underline; }
+    .papier .g { color: #2f8f2f; font-weight: 800; } .papier .b { font-weight: 800; }
+    .papier .merke { color: #e03131; font-weight: 800; } .papier .mu { text-decoration: underline; text-decoration-color: #e03131; }
+    .items { margin: .55rem 0 0 1.2rem; font-weight: 700; line-height: 1.7; }
+    .loesung { margin-top: .5rem; background: rgba(74,222,128,.12); border-radius: 10px; padding: .5rem .8rem; font-weight: 700; line-height: 1.6; }
+    .sperre { text-align: center; padding: 1.4rem .6rem; font-weight: 800; line-height: 1.5; color: var(--text2); }
+    #liste { max-width: 720px; margin: 0 auto; display: none; }
+    body.liste #liste { display: block; } body.liste #pfad { display: none; }
+    #liste .ab { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 1rem; margin-bottom: .9rem; }
+    #liste .ab > h2 { font: 400 1.25rem 'Fredoka One', 'Nunito', sans-serif; display: flex; gap: .5rem; align-items: center; }
+    #liste .ab > h2 small { margin-left: auto; font: 800 .85rem 'Nunito', sans-serif; color: var(--text2); }
+    .kann { max-width: 720px; margin: 1.2rem auto 0; background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 1rem 1.1rem; }
+    .kann h2 { font: 400 1.15rem 'Fredoka One', 'Nunito', sans-serif; margin-bottom: .4rem; }
+    .kann li { margin-left: 1.2rem; font-weight: 700; line-height: 1.6; }
+    .druck-nur { display: none; }
+    @media (prefers-reduced-motion: reduce) { .knoten.dran .ring { animation: none; box-shadow: 0 0 0 8px rgba(230,168,23,.3); } .balken i { transition: none; } }
+    @media print {
+      body { background: #fff; color: #000; padding: 0; }
+      #pfad, .knoepfe, .akt, #karte, .balken, #lw-zurueck, #lern-home-btn, #lern-result-badge, #lw-test-schild, .schritt .ok { display: none !important; }
+      #liste { display: block !important; }
+      #liste .ab, .schritt, .kann { background: #fff; border: 1px solid #999; color: #000; break-inside: avoid; }
+      .schritt .tx small, .kopf .sub, .gruppe, .gruppe.stern, .sperre, #liste .ab > h2 small { color: #333; }
+      .schritt .sy { display: none; } .druck-nur { display: inline-block; width: 1.1em; height: 1.1em; border: 2px solid #000; border-radius: 3px; margin-right: .5rem; vertical-align: -.15em; text-align: center; font: 900 .8em/1 sans-serif; }
+      .papier { border: 1px solid #999; }
+    }
+  </style>
+</head>
+<body>
+<header class="kopf">
+  <h1 id="titel">Lernweg</h1>
+  <div class="sub" id="sub"></div>
+  <div class="balken" id="balken" hidden><i></i></div>
+  <div class="knoepfe" id="knoepfe" hidden>
+    <button type="button" class="kn" id="b-ansicht" aria-pressed="false">☰ Liste</button>
+    <button type="button" class="kn" id="b-druck">🖨 Laufzettel drucken</button>
+  </div>
+</header>
+<main>
+  <div id="pfad" aria-label="Lernweg"></div>
+  <div id="liste"></div>
+  <div id="kann"></div>
+</main>
+<div id="karte" role="dialog" aria-modal="true" aria-labelledby="karte-titel"></div>
+
+<script src="../../gemeinsam/shared.js"></script>
+<script src="../../gemeinsam/freigabe.js"></script>
+<script src="../../gemeinsam/katalog.js"></script>
+<script src="../../gemeinsam/wiederholung.js"></script>
+<script src="../../gemeinsam/weg-kern.js"></script>
+<script>
+'use strict';
+const ZURUECK_KEY = 'lernwelt-lernweg-zurueck';
+const WEG_ID = new URLSearchParams(location.search).get('weg') || '';
+const SYM = { hefteintrag: '📒', uebung: '✏️', app: '🎮', medium: '🖼️', check: '🎯' };
+const ZEILEN_H = 170, XS = [50, 76, 50, 24];          // Pfad: Höhe je Knoten, Lage links/rechts in Prozent
+const $ = id => document.getElementById(id);
+let W = null, B = {}, offen = null, geoeffnet = new Set(), loesungen = new Set();
+try { sessionStorage.removeItem(ZURUECK_KEY); } catch (e) {}       // zurück auf dem Weg: Knopf „Zurück zum Weg“ nicht mehr nötig
+
+function passBereit() {
+  return new Promise(res => {
+    if (window.LernPass) return res();
+    window.addEventListener('lernpass:ready', () => res(), { once: true });
+    setTimeout(res, 5000);
+  });
+}
+const warte = ms => new Promise(r => setTimeout(r, ms));
+function meldung(symbol, html) {
+  $('pfad').innerHTML = `<div class="hinweis"><span class="gr">${symbol}</span>${html}<br><br><a href="${escHtml(LW.ROOT)}">Zur Startseite ›</a></div>`;
+}
+
+// ── Schritte ─────────────────────────────────────────
+function themaTitel(id) { const t = window.LernKatalog && LernKatalog.thema && LernKatalog.thema(id); return t ? t.titel : ''; }
+function papier(b) {
+  const zeile = z => (Array.isArray(z) ? z : []).map(([t, s]) => s ? `<span class="${s === 'g' ? 'g' : 'b'}">${escHtml(t)}</span>` : escHtml(t)).join('');
+  return `<div class="papier"><span class="ue">${escHtml(b.titel || 'Hefteintrag')}</span>\n${(b.zeilen || []).map(zeile).join('\n')}${b.merke ? `\n<span class="merke">Merke:</span> <span class="mu">${escHtml(b.merke)}</span>` : ''}</div>`;
+}
+function schrittHTML(s) {
+  const fertig = LernWeg.erledigt(s), b = s.baustein ? B[s.baustein] : null, id = escHtml(s.id);
+  const haken = (an, aus) => `<button type="button" class="btn haken${fertig ? ' an' : ''}" data-haken="${id}" aria-pressed="${fertig}">${fertig ? '✓ ' + an : aus}</button>`;
+  let titel = '', klein = '', mehr = '', akt = '';
+  if (s.art === 'hefteintrag') {
+    titel = 'Hefteintrag: ' + ((b && b.titel) || 'Eintrag'); klein = 'Übernimm den Eintrag sauber in dein Heft.';
+    if (b && (geoeffnet.has(s.id) || document.body.classList.contains('liste'))) mehr = papier(b);
+    akt = (b && !document.body.classList.contains('liste') ? `<button type="button" class="btn${geoeffnet.has(s.id) ? '' : ' p'}" data-auf="${id}">${geoeffnet.has(s.id) ? 'Zuklappen' : '📒 Eintrag zeigen'}</button>` : '')
+      + haken('Steht in meinem Heft', 'Steht in meinem Heft');
+  } else if (s.art === 'uebung') {
+    titel = s.text || (b && b.titel) || 'Übung';
+    klein = s.buch ? `📖 Buch S. ${escHtml(s.buch.seite)}${s.buch.uebung ? ' Nr. ' + escHtml(s.buch.uebung) : ''}` : 'Arbeite im Heft.';
+    if (b && Array.isArray(b.items)) mehr = `<ol class="items">${b.items.map(x => `<li>${escHtml(x)}</li>`).join('')}</ol>`
+      + (loesungen.has(s.id) && Array.isArray(b.loesung) ? `<div class="loesung">Lösung: ${b.loesung.map(escHtml).join(' · ')}<br>Verbessere mit Grün.</div>` : '');
+    akt = (b && Array.isArray(b.loesung) ? `<button type="button" class="btn" data-loesung="${id}">${loesungen.has(s.id) ? 'Lösung zuklappen' : '🔎 Lösung vergleichen'}</button>` : '') + haken('Erledigt', 'Erledigt');
+  } else if (s.art === 'app' || (s.art === 'check' && s.thema)) {
+    const l = LernWeg.link(s);
+    titel = s.art === 'check' ? (s.text || 'Selbsttest') : (themaTitel(s.thema) || s.text || 'Lern-App');
+    klein = s.art === 'check' ? (fertig ? 'Bearbeitet' : 'Teste dich selbst – ohne Note.') : (fertig ? 'Geschafft – mindestens 70 %' : (s.text || 'Schaffe eine Runde mit mindestens 70 %.'));
+    akt = l ? `<a class="btn${fertig ? '' : ' p'}" href="${escHtml(LW.ROOT + l)}" data-los>${fertig ? 'Nochmal üben' : 'Los ›'}</a>` : '<span class="btn">Die App ist gerade nicht erreichbar.</span>';
+  } else if (s.art === 'medium') {
+    const l = LernWeg.link(s);
+    titel = s.titel || 'Ansehen'; klein = s.text || 'Sieh es dir genau an.';
+    akt = (l ? `<a class="btn${fertig ? '' : ' p'}" href="${escHtml(LW.ROOT + l)}" target="_blank" rel="noopener">Ansehen ›</a>` : '') + haken('Angesehen', 'Angesehen');
+  } else {
+    titel = s.text || 'Selbsttest'; klein = 'Der Check vor der Probe.';
+    akt = haken('Bearbeitet', 'Bearbeitet');
+  }
+  return `<div class="schritt${fertig ? ' fertig' : ''}"><div class="zeile"><span class="druck-nur">${fertig ? '✓' : ''}</span><span class="sy">${SYM[s.art] || '•'}</span>
+      <span class="tx"><b>${escHtml(titel)}</b><small>${klein}</small></span>${fertig ? '<span class="ok" aria-label="erledigt">✓</span>' : ''}</div>${mehr}<div class="akt">${akt}</div></div>`;
+}
+function abschnittHTML(x) {
+  if (x.zustand === 'gesperrt') return '<div class="sperre">🚧 Diesen Abschnitt gibt deine Lehrkraft noch frei.</div>';
+  const gruppe = (st, kopf, cls) => { const l = x.a.schritte.filter(s => LernWeg.stufe(s) === st); return l.length ? `<div class="gruppe${cls || ''}">${kopf}</div>${l.map(schrittHTML).join('')}` : ''; };
+  return gruppe('pflicht', 'Pflicht – das machen alle')
+    + gruppe('wahl', `Wahl – such dir ${x.wahlMin === 1 ? 'eine Aufgabe' : x.wahlMin + ' Aufgaben'} aus (${Math.min(x.wahlFertig, x.wahlMin)}/${x.wahlMin})`)
+    + gruppe('stern', '⭐ Stern – für Schnelle', ' stern');
+}
+
+// ── Zeichnen ─────────────────────────────────────────
+function zeichnen() {
+  if (!W) return;
+  const st = LernWeg.stand(W), liste = document.body.classList.contains('liste');
+  if (!st.frei) { $('knoepfe').hidden = $('balken').hidden = true; meldung('🚧', 'Diesen Lernweg gibt deine Lehrkraft noch frei.'); return; }
+  $('knoepfe').hidden = $('balken').hidden = false;
+  $('balken').firstElementChild.style.width = Math.round(100 * st.fertig / Math.max(1, st.soll)) + '%';
+  $('sub').textContent = st.alles ? (st.schranke ? '🎉 Alles geschafft – bald geht es weiter!' : '🎉 Alles geschafft!') : `${st.fertig} von ${st.soll} Schritten geschafft` + (LernWeg.admin() ? ' · 👀 Vorschau (Admin): alles offen' : '');
+  // Pfad
+  const n = st.abschnitte.length, h = n * ZEILEN_H, y = i => i * ZEILEN_H + ZEILEN_H / 2 - 12, x = i => XS[i % XS.length];
+  const kurve = bis => { let d = `M ${x(0)} ${y(0)}`; for (let i = 1; i <= bis; i++) d += ` C ${x(i - 1)} ${y(i - 1) + ZEILEN_H / 2}, ${x(i)} ${y(i) - ZEILEN_H / 2}, ${x(i)} ${y(i)}`; return d; };
+  const weit = st.dran ? st.dran.i : st.abschnitte.filter(a => a.zustand === 'fertig').length - 1;
+  const schrankeBei = st.abschnitte.findIndex(a => a.zustand === 'gesperrt');
+  $('pfad').style.height = h + 'px';
+  $('pfad').innerHTML = `<svg viewBox="0 0 100 ${h}" preserveAspectRatio="none" aria-hidden="true"><path class="p-alle" d="${kurve(n - 1)}"/>${weit > 0 ? `<path class="p-fertig" d="${kurve(weit)}"/>` : ''}</svg>`
+    + st.abschnitte.map(a => `<button type="button" class="knoten ${a.zustand}" style="left:${x(a.i)}%;top:${y(a.i)}px" data-abschnitt="${escHtml(a.a.id)}"
+        aria-label="${escHtml(a.a.titel)}: ${a.zustand === 'gesperrt' ? 'noch gesperrt' : a.fertig + ' von ' + a.soll + ' geschafft'}">
+        <span class="ring" style="--p:${a.zustand === 'gesperrt' ? 0 : Math.round(100 * a.fertig / Math.max(1, a.soll))}"><span>${a.zustand === 'gesperrt' ? '🔒' : escHtml(a.a.ico || '📍')}</span></span>
+        <b>${escHtml(a.a.titel)}</b><small>${a.zustand === 'gesperrt' ? 'noch zu' : a.fertig + '/' + a.soll + (a.sterne ? ' · ' + '⭐'.repeat(a.sterne) : '')}</small></button>`).join('')
+    + (st.dran && window.LernPass ? `<div class="figur" style="left:calc(${x(st.dran.i)}% + ${x(st.dran.i) > 50 ? -74 : 74}px);top:${y(st.dran.i) - 18}px">${LernPass.avatarHTML({})}</div>` : '')
+    + (schrankeBei > 0 ? `<div class="schranke" style="top:${schrankeBei * ZEILEN_H - 12}px">🚧 Hier geht es bald weiter</div>` : '');
+  // Liste (auch Druckansicht)
+  $('liste').innerHTML = (liste || window.matchMedia('print').matches ? st.abschnitte : []).map(a => `<section class="ab"><h2><span>${a.zustand === 'gesperrt' ? '🔒' : escHtml(a.a.ico || '📍')}</span>
+      ${escHtml(a.a.titel)}<small>${a.zustand === 'gesperrt' ? '' : a.fertig + '/' + a.soll}</small></h2>${abschnittHTML(a)}</section>`).join('');
+  $('kann').innerHTML = liste && Array.isArray(W.kann) && W.kann.length ? `<div class="kann"><h2>Das kann ich am Ende</h2><ul>${W.kann.map(k => `<li>Ich kann ${escHtml(k.text)}</li>`).join('')}</ul></div>` : '';
+  // Karte
+  const k = $('karte'), a = offen && st.abschnitte.find(q => q.a.id === offen);
+  if (a && !liste) {
+    const oben = k.firstElementChild ? k.firstElementChild.scrollTop : 0;
+    k.innerHTML = `<div class="blatt"><div class="blatt-kopf"><span class="ic">${a.zustand === 'gesperrt' ? '🔒' : escHtml(a.a.ico || '📍')}</span>
+      <h2 id="karte-titel">${escHtml(a.a.titel)}</h2><button type="button" class="zu" data-zu aria-label="Schließen">✕</button></div>${abschnittHTML(a)}</div>`;
+    k.classList.add('open'); k.firstElementChild.scrollTop = oben;
+  } else { k.classList.remove('open'); k.innerHTML = ''; }
+}
+
+function schritt(id) { for (const a of W.abschnitte) for (const s of a.schritte) if (s.id === id) return s; return null; }
+document.addEventListener('click', e => {
+  if (!W) return;
+  const t = e.target.closest('[data-abschnitt],[data-zu],[data-haken],[data-auf],[data-loesung],[data-los]');
+  if (e.target === $('karte') || (t && t.hasAttribute('data-zu'))) { offen = null; return zeichnen(); }
+  if (!t) return;
+  if (t.dataset.abschnitt) { offen = t.dataset.abschnitt; return zeichnen(); }
+  if (t.dataset.auf) { geoeffnet.has(t.dataset.auf) ? geoeffnet.delete(t.dataset.auf) : geoeffnet.add(t.dataset.auf); return zeichnen(); }
+  if (t.dataset.loesung) { loesungen.has(t.dataset.loesung) ? loesungen.delete(t.dataset.loesung) : loesungen.add(t.dataset.loesung); return zeichnen(); }
+  if (t.dataset.haken) {
+    const s = schritt(t.dataset.haken);
+    if (!s) return;
+    if (!window.LernPass || !LernPass.hasProfile()) { alert('Richte zuerst auf der Startseite deinen Lernwelt-Pass ein – dann merkt sich der Weg deine Haken.'); return; }
+    LernWeg.merken(s, !LernWeg.erledigt(s));
+    return zeichnen();
+  }
+  if (t.hasAttribute('data-los')) {                       // Rückweg merken: Knopf „Zurück zum Weg“ in der App
+    try { sessionStorage.setItem(ZURUECK_KEY, location.href.split('#')[0] + (offen ? '#a=' + encodeURIComponent(offen) : '')); } catch (err) {}
+  }
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && offen) { offen = null; zeichnen(); } });
+$('b-ansicht').addEventListener('click', () => {
+  const an = document.body.classList.toggle('liste');
+  $('b-ansicht').classList.toggle('an', an); $('b-ansicht').setAttribute('aria-pressed', an); $('b-ansicht').textContent = an ? '🗺️ Weg' : '☰ Liste';
+  offen = null; zeichnen(); window.scrollTo(0, 0);
+});
+$('b-druck').addEventListener('click', () => { if (!document.body.classList.contains('liste')) $('b-ansicht').click(); window.print(); });
+// Zurück aus einer App: Lernstand neu lesen (Safari hält die Seite sonst im alten Stand)
+window.addEventListener('pageshow', e => { if (e.persisted) location.reload(); });
+
+(async function start() {
+  if (!WEG_ID) return meldung('🧭', 'Kein Lernweg gewählt.');
+  try {
+    const [d] = await Promise.all([LernWeg.laden(WEG_ID), passBereit(), window.LernKatalog ? Promise.race([LernKatalog.bereit, warte(4000)]) : null]);
+    W = d.W; B = d.B;
+  } catch (err) { console.warn('[Lernweg]', err); return meldung('⚠️', 'Der Lernweg konnte nicht geladen werden. Prüfe das WLAN und versuche es noch einmal.'); }
+  const kat = (typeof CAT_STYLES === 'object' && CAT_STYLES[W.fach]) || null;
+  if (kat) { document.documentElement.style.setProperty('--fach', kat.color); document.documentElement.style.setProperty('--fach2', kat.color2); }
+  document.title = W.titel + ' – Lernwelt';
+  $('titel').textContent = (W.ico ? W.ico + ' ' : '') + W.titel;
+  const a = new URLSearchParams(location.hash.slice(1)).get('a');
+  if (a && W.abschnitte.some(q => q.id === a)) offen = a;
+  zeichnen();
+  const dran = document.querySelector('.knoten.dran');
+  if (dran && !offen && dran.getBoundingClientRect().top > window.innerHeight * .7) try { dran.scrollIntoView({ block: 'center' }); } catch (e) {}
+  if (window.LernPass && LernPass.onChange) LernPass.onChange(() => { if (!document.hidden) zeichnen(); });
+})();
+</script>
+<script src="../../gemeinsam/navbar.js"></script>
+</body>
+</html>
