@@ -271,6 +271,8 @@ $('b-ansicht').addEventListener('click', () => {
   offen = null; zeichnen(); window.scrollTo(0, 0);
 });
 $('b-druck').addEventListener('click', () => { if (!document.body.classList.contains('liste')) $('b-ansicht').click(); window.print(); });
+// Klassenübersicht (Etappe 6a): Stand melden, wenn die Seite verlassen wird – sync.js lädt nur mit Sicherungskarte (navbar.js)
+document.addEventListener('visibilitychange', () => { if (document.hidden && W && window.LernSync && LernSync.wegMelden) try { LernSync.wegMelden(W.id, LernWeg.meldung(W)); } catch (e) {} });
 // Zurück aus einer App: Lernstand neu lesen (Safari hält die Seite sonst im alten Stand)
 window.addEventListener('pageshow', e => { if (e.persisted) location.reload(); });
 

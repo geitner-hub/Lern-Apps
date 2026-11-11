@@ -22,6 +22,7 @@
 //          zustand: 'fertig' | 'dran' (als Nächstes) | 'offen' | 'gesperrt'
 //    LernWeg.abschnittStand(a) · LernWeg.erledigt(s) · LernWeg.merken(s, an) · LernWeg.stufe(s)
 //    LernWeg.link(s)                → Adresse ab Hauptordner für App-/Check-/Medium-Schritte oder null
+//    LernWeg.meldung(W)             → { e: [Schritt-IDs erledigt], f: [Abschnitt-IDs fertig] } für die Klassenübersicht (Etappe 6a)
 //    LernWeg.freigegebene()         → Promise<[{ eintrag, W, st, href }]> – für Startseite („Weiter lernen“, „Mein Laufzettel“)
 // ═══════════════════════════════════════════════════════
 'use strict';
@@ -101,6 +102,17 @@
       alles: bi >= 0 && !dran, schranke: bi >= 0 && bi < W.abschnitte.length - 1 };
   }
 
+  /** Für die Klassenübersicht (LernSync.wegMelden): erledigte Schritte und fertige Abschnitte der freigegebenen Abschnitte */
+  function meldung(W) {
+    const e = [], f = [];
+    stand(W, true).abschnitte.forEach(x => {
+      if (x.zustand === 'gesperrt') return;
+      if (x.komplett) f.push(x.a.id);
+      x.a.schritte.forEach(s => { if (erledigt(s)) e.push(s.id); });
+    });
+    return { e, f };
+  }
+
   /** Wohin führt der Schritt? App/Check: über den Katalog (wiederholung.js) · Medium: geprüfter Link · sonst null */
   function link(s) {
     if ((s.art === 'app' || s.art === 'check') && s.thema) return window.LernWiederholung && LernWiederholung.link ? LernWiederholung.link(s.thema) : null;
@@ -124,5 +136,5 @@
     return out;
   }
 
-  window.LernWeg = { liste, laden, stand, abschnittStand, erledigt, merken, stufe, link, freigegebene, seite, admin };
+  window.LernWeg = { liste, laden, stand, abschnittStand, erledigt, merken, stufe, link, freigegebene, seite, admin, meldung };
 })();

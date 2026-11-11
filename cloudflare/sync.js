@@ -6,6 +6,10 @@
 //  eine Kennung (id), ein Anmelde-Token (auth) und einen Schlüssel ab.
 //  Hier kommen nur id, auth und der bereits VERSCHLÜSSELTE Stand an.
 //  Der Worker kann die Stände nicht lesen und kennt keine Namen.
+//  AUSNAHME seit v125 (Klassenübersicht je Lernweg, Aktionsplan „Lernwelt – Tempo“, Etappe 6a): Karten, die zu einer Gruppe
+//  gehören, melden zusätzlich LESBAR, welche Schritte und Abschnitte eines Lernwegs erledigt sind (/sync/weg) – nur
+//  Schritt- und Abschnitt-IDs, keine Namen, keine Punkte, keine Antworten. Gespeichert je Karte (Tabelle sync_weg),
+//  lesbar nur mit dem Hauptzugang. Die Zuordnung Kartennummer → Kind kennt nur die Lehrkraft.
 //
 //  Benötigt (Worker → Settings → Bindings):
 //    SYNC_DB  – D1-Datenbank (z. B. „lernwelt-sync“)
@@ -25,7 +29,10 @@
 //        → { ok }   Die Zahlen werden auf die GRUPPE der Karte aufaddiert; welche Karte sie
 //                   geschickt hat, wird nicht gespeichert. was = Themen-ID oder Datei der App,
 //                   woche = Montag 'JJJJ-MM-TT'. Höchstens alle SYNC_STAT_ABSTAND_MS je Karte.
+//    /sync/weg        { id, auth, weg, e:[Schritt-IDs erledigt], f:[Abschnitt-IDs fertig] }   (Klassenübersicht je Lernweg)
+//        → { ok }   Ersetzt den letzten Stand dieser Karte für diesen Weg; „geaendert“ wandert nur, wenn sich etwas tat.
 //   Admin (Header Authorization: Bearer <Anmelde-Schlüssel>)
+//    /sync/admin/weg                { gruppeId, weg }           → { ok, karten:[{ nr, e, f, geaendert, gesehen }] } (nur Hauptzugang)
 //    /sync/admin/gruppen            {}                          → { ok, gruppen:[{ id, name, erstellt, codes:[…] }] }
 //    /sync/admin/gruppe-anlegen     { name, eintraege:[{ nr, id, authHash }], gruppeId? }
 //                                   (mit gruppeId: Codes zu bestehender Gruppe hinzufügen)
@@ -52,6 +59,12 @@ const SYNC_STAT_TAGE         = 200;       // Gruppenauswertung: Wochen so lange 
 const SYNC_STAT_ABSTAND_MS   = 60_000;    // höchstens 1 Meldung pro Karte und Minute (je Worker-Instanz)
 const SYNC_STAT_MAX          = 30;        // Einträge pro Meldung
 
+const SYNC_WEG_ABSTAND_MS   = 30_000;    // Lernweg-Stand: höchstens 1 Meldung pro Karte und Weg alle 30 s (je Worker-Instanz)
+const SYNC_WEG_MAX_IDS      = 800;       // Schritte bzw. Abschnitte je Meldung
+const SYNC_WEG_TAGE         = 400;       // Lernweg-Stände so lange aufheben (gut ein Schuljahr)
+const SYNC_WEG_ID  = /^[a-z][a-z0-9-]{1,29}$/;
+const SYNC_WEG_SID = /^[a-z0-9-]{1,80}$/;
+
 const SYNC_HEX32 = /^[0-9a-f]{32}$/;
 const SYNC_HEX64 = /^[0-9a-f]{64}$/;
 const SYNC_B64URL = /^[A-Za-z0-9_-]+$/;
@@ -73,6 +86,7 @@ export async function handleSync(request, env, cors, url, deps) {
   if (p === '/sync/holen')     return syncHolen(body, env, cors);
   if (p === '/sync/speichern') return syncSpeichern(body, env, cors);
   if (p === '/sync/statistik') return syncStatistik(body, env, cors);
+  if (p === '/sync/weg')       return syncWeg(body, env, cors);
 
   if (p.startsWith('/sync/admin/')) {
     const auth = await deps.checkToken(request, env);
@@ -83,6 +97,7 @@ export async function handleSync(request, env, cors, url, deps) {
     if (p === '/sync/admin/gruppe-loeschen')   return syncAdminGruppeLoeschen(body, env, cors);
     if (p === '/sync/admin/code-loeschen')     return syncAdminCodeLoeschen(body, env, cors);
     if (p === '/sync/admin/statistik')         return syncAdminStatistik(body, env, cors);
+    if (p === '/sync/admin/weg')               return syncAdminWeg(body, env, cors);
   }
   return syncJson({ error: 'Nicht gefunden' }, 404, cors);
 }
@@ -106,6 +121,10 @@ async function syncSchema(env) {
       gruppe_id TEXT NOT NULL, was TEXT NOT NULL, woche TEXT NOT NULL,
       runden INTEGER NOT NULL DEFAULT 0, aufgaben INTEGER NOT NULL DEFAULT 0, richtig INTEGER NOT NULL DEFAULT 0,
       PRIMARY KEY (gruppe_id, was, woche))`),
+    // Klassenübersicht je Lernweg (v125): je Karte und Weg die erledigten Schritt- und fertigen Abschnitt-IDs (lesbar, ohne Namen)
+    env.SYNC_DB.prepare(`CREATE TABLE IF NOT EXISTS sync_weg (
+      id TEXT NOT NULL, weg TEXT NOT NULL, daten TEXT NOT NULL,
+      geaendert INTEGER NOT NULL, gesehen INTEGER NOT NULL, PRIMARY KEY (id, weg))`),
   ]);
   syncSchemaOk = true;
 }
@@ -258,6 +277,41 @@ async function syncAdminStatistik(body, env, cors) {
   return syncJson({ ok: true, zeilen }, 200, syncNoStore(cors));
 }
 
+// ── Gerät: Lernweg-Stand melden (Klassenübersicht je Lernweg) ──
+const syncWegTakt = new Map();
+async function syncWeg(body, env, cors) {
+  const row = await syncPruefen(body, env);
+  if (!row) return syncJson({ error: 'Code ungültig' }, 403, cors);
+  const weg = String(body.weg || '');
+  const liste = v => Array.isArray(v) && v.length <= SYNC_WEG_MAX_IDS && v.every(x => typeof x === 'string' && SYNC_WEG_SID.test(x));
+  if (!SYNC_WEG_ID.test(weg) || !liste(body.e) || !liste(body.f)) return syncJson({ error: 'Angaben ungültig' }, 400, cors);
+  const jetzt = Date.now(), takt = row.id + '|' + weg, letzte = syncWegTakt.get(takt) || 0;
+  if (jetzt - letzte < SYNC_WEG_ABSTAND_MS) return syncJson({ error: 'Zu schnell', warteMs: SYNC_WEG_ABSTAND_MS - (jetzt - letzte) }, 429, cors);
+  syncWegTakt.set(takt, jetzt);
+  if (syncWegTakt.size > 5000) syncWegTakt.clear();
+  const daten = JSON.stringify({ e: [...new Set(body.e)].sort(), f: [...new Set(body.f)].sort() });
+  // geaendert wandert nur, wenn sich der Stand wirklich geändert hat – daran erkennt der Admin „hängt seit …“
+  await env.SYNC_DB.prepare(`INSERT INTO sync_weg (id, weg, daten, geaendert, gesehen) VALUES (?, ?, ?, ?, ?)
+      ON CONFLICT (id, weg) DO UPDATE SET gesehen = excluded.gesehen,
+        geaendert = CASE WHEN sync_weg.daten = excluded.daten THEN sync_weg.geaendert ELSE excluded.geaendert END, daten = excluded.daten`)
+    .bind(row.id, weg, daten, jetzt, jetzt).run();
+  return syncJson({ ok: true }, 200, cors);
+}
+
+// ── Admin: Lernweg-Stände einer Gruppe lesen (nur Hauptzugang, siehe worker.js) ──
+async function syncAdminWeg(body, env, cors) {
+  const g = String(body.gruppeId || ''), weg = String(body.weg || '');
+  if (!SYNC_HEX32.test(g) || !SYNC_WEG_ID.test(weg)) return syncJson({ error: 'Angaben ungültig' }, 400, cors);
+  const r = await env.SYNC_DB.prepare(`SELECT p.nr AS nr, w.daten AS daten, w.geaendert AS geaendert, w.gesehen AS gesehen
+      FROM sync_paesse p LEFT JOIN sync_weg w ON w.id = p.id AND w.weg = ? WHERE p.gruppe_id = ? ORDER BY p.nr`).bind(weg, g).all();
+  const karten = (r.results || []).map(x => {
+    let d = {};
+    try { d = x.daten ? JSON.parse(x.daten) : {}; } catch { d = {}; }
+    return { nr: x.nr, e: Array.isArray(d.e) ? d.e : [], f: Array.isArray(d.f) ? d.f : [], geaendert: x.geaendert || null, gesehen: x.gesehen || null };
+  });
+  return syncJson({ ok: true, karten }, 200, syncNoStore(cors));   // bewusst ohne Karten-Kennung: nur die Nummer in der Gruppe
+}
+
 // ── Admin: Gruppe umbenennen ───────────────────────────
 async function syncAdminUmbenennen(body, env, cors) {
   const name = syncName(body.name);
@@ -272,6 +326,7 @@ async function syncAdminGruppeLoeschen(body, env, cors) {
   const id = String(body.gruppeId || '');
   if (!SYNC_HEX32.test(id)) return syncJson({ error: 'Gruppe ungültig' }, 400, cors);
   await env.SYNC_DB.batch([
+    env.SYNC_DB.prepare('DELETE FROM sync_weg WHERE id IN (SELECT id FROM sync_paesse WHERE gruppe_id = ?)').bind(id),
     env.SYNC_DB.prepare('DELETE FROM sync_paesse WHERE gruppe_id = ?').bind(id),
     env.SYNC_DB.prepare('DELETE FROM sync_statistik WHERE gruppe_id = ?').bind(id),
     env.SYNC_DB.prepare('DELETE FROM sync_gruppen WHERE id = ?').bind(id),
@@ -283,7 +338,10 @@ async function syncAdminGruppeLoeschen(body, env, cors) {
 async function syncAdminCodeLoeschen(body, env, cors) {
   const id = String(body.id || '');
   if (!SYNC_HEX32.test(id)) return syncJson({ error: 'Code ungültig' }, 400, cors);
-  await env.SYNC_DB.prepare('DELETE FROM sync_paesse WHERE id = ?').bind(id).run();
+  await env.SYNC_DB.batch([
+    env.SYNC_DB.prepare('DELETE FROM sync_weg WHERE id = ?').bind(id),
+    env.SYNC_DB.prepare('DELETE FROM sync_paesse WHERE id = ?').bind(id),
+  ]);
   return syncJson({ ok: true }, 200, cors);
 }
 
@@ -302,6 +360,9 @@ export async function syncAufraeumen(env) {
     // alte Wochen der Gruppenauswertung und Zahlen gelöschter Gruppen
     env.SYNC_DB.prepare('DELETE FROM sync_statistik WHERE woche < ?').bind(new Date(Date.now() - SYNC_STAT_TAGE * 864e5).toISOString().slice(0, 10)),
     env.SYNC_DB.prepare('DELETE FROM sync_statistik WHERE gruppe_id NOT IN (SELECT id FROM sync_gruppen)'),
+    // Lernweg-Stände: lange nicht gemeldet oder Karte gibt es nicht mehr
+    env.SYNC_DB.prepare('DELETE FROM sync_weg WHERE gesehen < ?').bind(Date.now() - SYNC_WEG_TAGE * 864e5),
+    env.SYNC_DB.prepare('DELETE FROM sync_weg WHERE id NOT IN (SELECT id FROM sync_paesse)'),
   ]);
 }
 

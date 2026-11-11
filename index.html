@@ -968,6 +968,18 @@ function appKarte(app, fach) {
 //  Banner nur, wenn die Lehrkraft für dieses Gerät Abschnitte freigegeben hat (config.journey.wege.journey6.bis, Gruppe vor
 //  Klasse vor „alle“). Der Fortschritt kommt aus gemeinsam/journey-lernweg.js – erst dann nachgeladen.
 let laufzettelLaden = null, laufzettelJ = null, wegeLaden = null, wegeStand = null;
+//  Klassenübersicht je Lernweg (Tempo Etappe 6a): Stand an die Gruppe der Sicherungskarte melden – einmal je Seitenaufruf,
+//  sobald sync.js da ist (lädt erst nach dem Aufbau); sync.js sendet nur mit Karte in einer Gruppe und nur bei Änderung.
+const wegGemeldet = {};
+function meldeWeg(id, fn) {
+  if (wegGemeldet[id]) return;
+  wegGemeldet[id] = true;
+  let n = 0;
+  (function versuch() {
+    if (window.LernSync && LernSync.wegMelden) { try { LernSync.wegMelden(id, fn()); } catch (e) {} }
+    else if (n++ < 12) setTimeout(versuch, 1500);
+  })();
+}
 //  Weitere Lernwege (2D, apps/typen/weg.html – Tempo Etappe 2): weg-kern.js lädt nur, wenn config.journey.wege für dieses
 //  Gerät einen anderen Weg als den English Journey freigibt.
 function wegeBanner() {
@@ -980,6 +992,7 @@ function wegeBanner() {
   }
   return wegeStand.map(x => {
     const st = LernWeg.stand(x.W, true), pct = Math.round(100 * st.fertig / Math.max(1, st.soll));
+    meldeWeg(x.W.id, () => LernWeg.meldung(x.W));
     const href = LernWeg.seite(x.W.id) + (st.dran ? '#a=' + encodeURIComponent(st.dran.a.id) : '');
     if (!weiterQ.weg && st.dran) weiterQ.weg = { href, ic: x.W.ico || '🗺️', text: `${x.W.titel}: ${st.dran.a.titel}` };
     return `<a class="lw-banner" href="${escHtml(href)}"><span class="lw-ring" style="--p:${pct}"><span>${st.fertig}/${st.soll}</span></span>
@@ -1006,6 +1019,7 @@ function journeyBanner() {
   let st = null;
   try { st = LernJourneyWeg.stand({ J: laufzettelJ, z: LernJourney.berechne(laufzettelJ).z, cfg }); } catch (e) {}
   if (!st) return '';
+  meldeWeg('journey6', () => LernJourneyWeg.meldung({ J: laufzettelJ, z: LernJourney.berechne(laufzettelJ).z, cfg }));
   const pct = Math.round(100 * st.fertig / Math.max(1, st.soll)), u = st.naechsteUnit || st.unit;
   const ziel = `apps/englisch/english-journey.html#u=${encodeURIComponent(u.id)}&w=${encodeURIComponent(st.naechste ? st.naechste.id : '')}`;
   const weiter = st.naechste ? `Weiter mit: ${st.naechste.titel}` : '🎉 Alles geschafft – jetzt: Fit für die Probe?';
