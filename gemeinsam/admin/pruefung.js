@@ -114,10 +114,11 @@ window.LWAdmin = window.LWAdmin || {};
       const doppelt = [...new Set(nr.filter((n, i) => nr.indexOf(n) !== i))];
       if (doppelt.length) fehler.push(`English Journey (${name}): HE-Nummer doppelt vergeben: ${doppelt.join(', ')}`);
       try {
-        const jd = await fetch(ROOT + 'daten/' + name + '.json', { cache: 'no-store' }).then(r => r.json());
-        const ab = new Set((jd.units || []).flatMap(u => (u.abschnitte || []).map(a => a.id)));
+        // English Journey: daten/<name>.json mit Units · 2D-Lernwege: daten/wege/<name>.json mit Abschnitten
+        const jd = await fetch(ROOT + 'daten/' + (/^journey/.test(name) ? '' : 'wege/') + name + '.json', { cache: 'no-store' }).then(r => r.json());
+        const ab = new Set((jd.units || [{ abschnitte: jd.abschnitte }]).flatMap(u => (u.abschnitte || []).map(a => a.id)));
         [...new Set(Object.values((w && w.bis) || {}))].filter(a => !ab.has(a)).forEach(a =>
-          warnungen.push(`English Journey (${name}): Freigabe bis zum unbekannten Abschnitt ${a} (wirkt nicht)`));
+          warnungen.push(`Lernweg (${name}): Freigabe bis zum unbekannten Abschnitt ${a} (wirkt nicht)`));
       } catch (e) { /* offline: nicht prüfbar */ }
     }
 

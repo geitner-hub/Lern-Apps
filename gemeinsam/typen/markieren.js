@@ -44,7 +44,7 @@
         frage: x.frage || anweisung, hinweis: x.frage ? anweisung : '',
         text: weg ? `${T.textOhneSatzzeichen(b.teile[b.ziel])} → weglassen: ${loesung}`
           : x.richtig ? `${T.textOhneSatzzeichen(b.teile[b.ziel])} → ${x.richtig}: ${loesung}` : T.textOhneSatzzeichen(b.teile[b.ziel]),
-        tipp: x.tipp, erklaerung: x.erklaerung,
+        tipp: x.tipp, tipp2: x.tipp2, aufloesen: x.aufloesen, erklaerung: x.erklaerung,
         eingabeText: i => (Number.isInteger(i) && b.teile[i] != null ? T.textOhneSatzzeichen(b.teile[i]) : ''),
         zeige(box, fertig) {
           box.innerHTML = `<div class="lt-chips lt-markieren">${b.teile.map((t, i) =>

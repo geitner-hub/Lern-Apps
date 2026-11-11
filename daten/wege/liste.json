@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "hinweis": "Verzeichnis aller 2D-Lernwege (apps/typen/weg.html?weg=<id>). Je Weg daten/wege/<id>.json, Bausteine in daten/wege/bausteine-<id>.json. IDs nie umbenennen (Lernstand jw:<ID>, Freigaben in config.journey.wege). README → Lernweg-Engine.",
+  "wege": [
+    {
+      "id": "test",
+      "titel": "Test-Weg",
+      "fach": "Allgemein",
+      "klasse": 5,
+      "ico": "🧪",
+      "test": true
+    }
+  ]
+}

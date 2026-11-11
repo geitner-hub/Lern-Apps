@@ -812,6 +812,12 @@
        "alt": "8.3"
       },
       {
+       "id": "u1-a-finale-check",
+       "art": "app",
+       "thema": "en.6.probe-check.u1",
+       "text": "Check vor der Probe: Teste dich selbst – ohne Note. Danach siehst du, was du schon kannst und was du noch üben solltest."
+      },
+      {
        "id": "u1-a-finale-u1-anwenden",
        "art": "app",
        "station": "u1-anwenden"
@@ -1964,6 +1970,12 @@
        "alt": "10.v"
       },
       {
+       "id": "u2-a-finale-check",
+       "art": "app",
+       "thema": "en.6.probe-check.u2",
+       "text": "Check vor der Probe: Teste dich selbst – ohne Note. Danach siehst du, was du schon kannst und was du noch üben solltest."
+      },
+      {
        "id": "u2-a-finale-u2-finale",
        "art": "app",
        "station": "u2-finale"
@@ -2827,6 +2839,12 @@
        "id": "u3-a-finale-vok2",
        "art": "vokabeln",
        "text": "Kontrolliere dein Vokabelheft: Stehen alle Wörter aus Unit 3 drin? Verbessere mit Grün."
+      },
+      {
+       "id": "u3-a-finale-check",
+       "art": "app",
+       "thema": "en.6.probe-check.u3",
+       "text": "Check vor der Probe: Teste dich selbst – ohne Note. Danach siehst du, was du schon kannst und was du noch üben solltest."
       },
       {
        "id": "u3-a-finale-u3-finale",
@@ -3862,6 +3880,12 @@
        "text": "Kontrolliere dein Vokabelheft: Stehen alle Wörter aus Unit 4 drin? Verbessere mit Grün."
       },
       {
+       "id": "u4-a-finale-check",
+       "art": "app",
+       "thema": "en.6.probe-check.u4",
+       "text": "Check vor der Probe: Teste dich selbst – ohne Note. Danach siehst du, was du schon kannst und was du noch üben solltest."
+      },
+      {
        "id": "u4-a-finale-u4-finale",
        "art": "app",
        "station": "u4-finale"
@@ -4778,6 +4802,12 @@
        "id": "u5-a-finale-vok",
        "art": "vokabeln",
        "text": "Kontrolliere dein Vokabelheft: Stehen alle Wörter aus Unit 5 drin? Verbessere mit Grün."
+      },
+      {
+       "id": "u5-a-finale-check",
+       "art": "app",
+       "thema": "en.6.probe-check.u5",
+       "text": "Check vor der Probe: Teste dich selbst – ohne Note. Danach siehst du, was du schon kannst und was du noch üben solltest."
       },
       {
        "id": "u5-a-finale-u5-anwenden",

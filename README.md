@@ -148,6 +148,155 @@ für Spiele und besondere Mechaniken (Karte antippen, Zeichnen, Bewegung …):
   Zwischenstand einzeln geprüft und ist oft rot.
 - Upload nachmittags oder abends, nie kurz vor dem Unterricht.
 
+## Lernweg-Engine in 2D (Aktionsplan „Lernwelt – Tempo“, Etappe 2, v122)
+
+Ein Lernweg für **jedes Fach** als reine Datendatei – ohne neuen Code, ohne three.js. **Der nächste neue Lernweg nutzt diese
+Struktur**; der English Journey (3D) bleibt, wie er ist. Im Repo liegt bisher nur der Test-Weg (`daten/wege/test.json`, je ein
+Schritt jeder Art) – er ist für keine Klasse freigegeben und mit Admin-Anmeldung sichtbar: `apps/typen/weg.html?weg=test`.
+
+| Datei | Inhalt |
+|---|---|
+| `daten/wege/liste.json` | Verzeichnis: `{ id, titel, fach, klasse, ico }` je Weg (`test: true` = nur zum Testen) |
+| `daten/wege/<Weg-ID>.json` | Kopf (`id`, `titel`, `fach`, `klasse`, `ico`, optional `buch`, `kann`) und `abschnitte` → `schritte` |
+| `daten/wege/bausteine-<Weg-ID>.json` | Hefteinträge (`zeilen` wie im English Journey: Zeilen aus `[Text, Markierung]`, `g` = grün) und eigene Übungen (`items`, `loesung`) |
+| `apps/typen/weg.html?weg=<Weg-ID>` | Seite: geschwungener Pfad, je Abschnitt ein Knoten mit Fortschrittsring; „☰ Liste“ = Druckansicht des Laufzettels |
+| `gemeinsam/weg-kern.js` (`LernWeg`) | Zustände, nächster Schritt, Abschluss, Freigabe; auch für die Startseite |
+
+**Schritt** `{ id, art, stufe?, … }`:
+
+| art | Felder | Erledigt, wenn |
+|---|---|---|
+| `hefteintrag` | `baustein` | selbst abgehakt |
+| `uebung` | `text` und/oder `baustein`, optional `buch: { seite, uebung }` | selbst abgehakt |
+| `app` | `thema` (Katalog-ID – die ID, die die App meldet, z. B. eine Stufe), optional `text` | eine Runde mit ≥ 70 % im Lernstand des Themas |
+| `medium` | `titel`, `link` (Datei im Repo, Pfad ab Hauptordner), optional `text` | geöffnet und abgehakt |
+| `check` | `text`, optional `thema` | mit `thema`: einmal bearbeitet · sonst abgehakt (wird in Etappe 5 gefüllt) |
+
+- **Pflicht, Wahl, Stern** (`stufe`): `pflicht` (Standard, auch ohne Angabe) zählt für den Abschluss; aus den `wahl`-Schritten
+  eines Abschnitts müssen `wahlMin` erledigt sein (am Abschnitt, Standard 1); `stern` ist Zusatz für Schnelle und zählt nie.
+- **IDs:** Weg-ID klein mit Ziffern und `-`; jede Abschnitt-, Schritt-, Baustein- und Kann-ID beginnt mit `<Weg-ID>-` und ist in
+  allen Wegen eindeutig. **Nie umbenennen oder löschen** – Haken stehen als Lernstand `jw:<Schritt-ID>` im Pass
+  (`LernPass.wegMerken`, zählt für nichts, reist mit der Sicherung). Der Weg hat keinen eigenen Punktestand.
+- **Freigabe** wie im English Journey: `config.journey.wege.<Weg-ID>.bis = { wer: Abschnitt-ID }` (Gruppe vor Klasse vor „alle“),
+  im Admin unter **Gruppen → 📒 Laufzettel → 🗺️ Weitere Lernwege**. Die Kinder sehen den ganzen Weg; offen sind die Abschnitte
+  bis einschließlich dem gewählten, dahinter steht die 🚧 Schranke. Ohne Eintrag ist der Weg nicht freigegeben.
+  Der Worker muss dafür Weg-IDs außer `journey…` erlauben (`cloudflare/worker.js`, v122 – **neu bei Cloudflare einfügen**).
+- **Startseite:** Ein freigegebener Weg erscheint unter „Mein Laufzettel“ und speist „Weiter lernen“ (`weg-kern.js` lädt nur dann).
+- **Rückweg:** Vor dem Start einer App merkt sich `weg.html` seine Adresse (`lernwelt-lernweg-zurueck`); in der App erscheint
+  „🧭 Zurück zum Weg“ (`lernweg-zurueck.js`).
+- **Neuer Weg:** Eintrag in `liste.json`, Weg-Datei (und Bausteine) anlegen, beide in `sw.js` `NACHLADEN` eintragen,
+  `pruefen.py` (Regel 24) prüft Format, IDs, Katalog-Themen und Bausteine. Farbe des Wegs = Fach (`CAT_STYLES`).
+- **Noch nicht enthalten:** Abschnitt-Kette, Niveaus und HE-Nummern gibt es nur im English Journey; der Lernweg-Editor im
+  Admin kommt mit Etappe 6, der Check vor der Probe und die Kann-Liste mit Etappe 5.
+
+## Hilfe-Stufen und Selbsteinschätzung (Aktionsplan „Lernwelt – Tempo“, Etappe 4, v123)
+
+Gilt im Übungsrahmen `gemeinsam/ueben.js` – also in Kopfrechnen, Mathe-Trainer und allen Baukasten-Übungen (`apps/typen/uebung.html`).
+
+**Hilfe-Stufen.** Jede Aufgabe kann bis zu drei Hilfen tragen; der Hilfe-Knopf zeigt immer die nächste:
+
+| Stufe | Feld | Wirkung |
+|---|---|---|
+| 1 „💡 Tipp“ | `tipp` | Denkanstoß. Richtig gelöst zählt als richtig, bringt aber **halbe XP** für diese Aufgabe. |
+| 2 „💡 Noch ein Tipp“ | `tipp2` | Teilschritt oder Beispiel, verrät die Lösung nicht. Wertung wie Stufe 1. |
+| 3 „🔎 Lösung zeigen“ | `aufloesen` (`true` oder Erklärtext) | Lösung mit Erklärung. Die Aufgabe zählt **nicht** (kommt ins Fehlerheft). |
+
+- Aufgaben ohne diese Felder verhalten sich wie bisher. **Neu für bestehende Inhalte:** der schon vorhandene `tipp` kostet jetzt
+  die halben XP der Aufgabe.
+- **Meisterschaft:** Eine Runde, in der die Lösung gezeigt wurde, wird nicht in den Lernstand eingetragen – ein Thema ist erst
+  gemeistert (⭐, Station geschafft), wenn eine Runde ohne Lösungs-Hilfe gelingt. XP für die Runde gibt es trotzdem.
+- **Durchklicken lohnt nicht:** Holt das Kind bei mindestens der Hälfte der Aufgaben die Lösung, wird die Runde gar nicht gewertet.
+- **Mathe:** `generatoren-mathe.js` erzeugt die Hilfen mit – `tipp` wie bisher, `tipp2` als Zwischenschritt bei „a + b“, „a − b“,
+  „a × b“, „a ÷ b“ (`schrittFuer`), `aufloesen` immer. In Inhaltsdateien schreibt man sie an die Aufgabe (`werkzeuge/INHALT-PROMPT.md`);
+  `pruefen.py` prüft das Format.
+- Technik: `ueben.js` meldet `tipps` (mit Tipp gelöste Aufgaben) und `loesung` mit `saveResult`; `navbar.js` reicht beides weiter,
+  `pass.js` rechnet die Leistungs-XP mit halben Tipp-Aufgaben und lässt den Lernstand bei `loesung` aus.
+- Das Feld heißt `aufloesen`, weil `loesung` in Inhaltsdateien schon den Lösungssatz beim Sortieren meint.
+
+**Selbsteinschätzung** (`gemeinsam/einschaetzung.js`, `LernEinschaetzung`). Vor einer Runde fragt die Lernwelt: „Kann ich sicher“,
+„Geht so“ oder „Brauche ich noch Übung“. Nach der Runde steht der Abgleich im Ergebnis, zum Beispiel: „Du hast ‚Geht so‘ gewählt
+und 9 von 10 geschafft. Du kannst mehr, als du denkst.“
+
+- Passend ist: sicher ↔ ab 80 %, geht so ↔ 50–79 %, noch Übung ↔ unter 50 %. Eine passende Einschätzung zählt für die Abzeichen
+  „Selbstkenner“ (5) und „Kennt sich aus“ (20) – **keine XP**, damit niemand taktisch tippt.
+- Höchstens einmal je Thema und Tag; nicht im Fehler-Training und nicht bei ganzen Fällen (Selbstkontrolle).
+- Gespeichert nur im Pass (`LernPass.einschaetzungMerken`: je Themen-ID die letzten fünf Paare; reist mit der Sicherung).
+- **Einschalten:** Admin → System → Feature-Schalter → „Selbsteinschätzung vor dem Üben“ – für alle oder nur für einzelne
+  Gruppen/Klassen. Ohne Schalter ist sie aus und `einschaetzung.js` wird gar nicht geladen.
+
+## Check vor der Probe und Kann-Liste (Aktionsplan „Lernwelt – Tempo“, Etappe 5, v124)
+
+**Check vor der Probe.** Ein kurzer Selbsttest über alle Grammatik-Themen einer Unit – ohne Note. Technisch eine Check-Stufe
+im Baukasten (`apps/typen/uebung.html?inhalt=en.6.probe-check`, Inhaltsdatei `daten/inhalte/en/en.6.probe-check.json`):
+
+```json
+{ "id": "en.6.probe-check.u1", "titel": "Check Unit 1: Together again", "check": true, "mix": true, "je": 2,
+  "aus": ["<alle Quell-Stufen>"],
+  "themen": [ { "titel": "Was / were + Kurzantworten", "aus": ["en.6.was-were.formen", "…"], "ziel": "en.6.was-were.mix" } ] }
+```
+
+- Die Runde hat je Thema `je` zufällige Aufgaben aus dessen Quellen (nur freigegebene Stufen) – `typen.js` `rundeFuer`.
+- **Keine Note:** keine Hilfen, kein Lernstand, keine Sterne. XP gibt es nur beim ersten Versuch und nur fürs Bearbeiten.
+- **Auswertung** (`gemeinsam/typen/check.js`, `LernCheck`): je Thema eine Zeile – „Das kannst du“ (mindestens zwei Drittel
+  richtig) oder „Hier nochmal üben“ mit einem Knopf zur Übung (`ziel`). Beim Wiederholen steht der erste Versuch daneben
+  (`LernPass.checkMerken`: erster und letzter Versuch je Check im Pass, reist mit der Sicherung).
+- **English Journey:** jede Unit hat im Finale-Abschnitt den Schritt `uN-a-finale-check` (art `app`, thema `en.6.probe-check.uN`).
+  Er hakt sich ab, sobald der Check einmal bearbeitet ist. Themen-IDs von Checks enthalten immer `.probe-check.` – daran
+  erkennen `journey-lernweg.js` und `weg-kern.js` sie. In den 2D-Lernwegen: Schritt `art: "check"` mit `thema`.
+- Neuer Check: Stufe in einer Inhaltsdatei wie oben (ID mit `.probe-check.`), Stufe im Katalog eintragen; `pruefen.py` prüft
+  `themen`, `aus`, `ziel` und `je`. Die Checks der fünf Units decken die Grammatik-Stationen ab; Vokabeln prüft der Vokabeltrainer.
+
+**Kann-Liste „Das kann ich“** (`apps/typen/kann-liste.html`, Logik `gemeinsam/kann-liste.js`, `LernKann`). Je freigegebener
+Unit des English Journey und je freigegebenem 2D-Lernweg die „Ich kann …“-Sätze aus dem Feld `kann`.
+
+- Jeder Satz füllt sich aus dem Lernstand: ⬜ noch nicht geübt · 🟡 geübt · 🟢 sicher (jedes Thema gemeistert oder Bestwert ab 80 %).
+  Die Themen eines Satzes sind im English Journey die App-Schritte seines Abschnitts, im 2D-Lernweg das Feld `themen`.
+  Sätze ohne Übung in der Lernwelt stehen als „im Unterricht“.
+- Daneben die eigene Einschätzung: im English Journey der Smiley aus „Fit für die Probe?“, sonst die letzte
+  Selbsteinschätzung vor dem Üben (Etappe 4).
+- Druck: eine A4-Seite je Unit/Weg mit Name und Datum – fürs Lernentwicklungsgespräch oder zum Einkleben. `?u=<Unit-ID>` bzw.
+  `?weg=<Weg-ID>` zeigt nur eine Liste.
+- Erreichbar über die Startseite („📒 Mein Laufzettel → 🎯 Das kann ich“), den Pass (Erfolge) und die Listenansicht eines 2D-Wegs.
+  Nur lesen – kein eigener Speicher.
+
+**Kern entlastet (v124):** `generatoren-mathe.js` und `daten/kopfrechnen.json` stehen nicht mehr in `START`, sondern in
+`NACHLADEN` (die Startseite braucht sie nicht). Kopfrechnen ist damit offline da, sobald das iPad es einmal geöffnet oder im
+Hintergrund geladen hat – wie die anderen Lern-Apps.
+
+## Klassenübersicht und Lernweg-Editor (Aktionsplan „Lernwelt – Tempo“, Etappe 6, v125)
+
+**Klassenübersicht je Lernweg** (Admin → Gruppen → 🚦 Klassenübersicht, `module/gruppen-wege.js`). Ein Raster je Gruppe und
+Lernweg: Zeile je Sicherungskarte (nur die Nummer in der Gruppe), Spalte je Abschnitt – 🟩 fertig, 🟨 begonnen, ⬜ offen,
+blass = noch nicht freigegeben. Filter: „hängt seit über einer Woche“, „Pflicht erledigt“, „⭐ Stern genutzt“ (2D-Wege),
+„noch nie gemeldet“. Unten je Abschnitt der Anteil der Gruppe und die häufigste Stolperstelle (der Schritt, der bei
+begonnenen Abschnitten am öftesten fehlt). Wege: English Journey und alle 2D-Lernwege.
+
+- **Datenfluss (neu, bewusst entschieden):** Die gesicherten Pässe liegen verschlüsselt im Worker – daraus lässt sich nichts
+  lesen. Darum melden iPads **mit Karte in einer Gruppe** je Lernweg zusätzlich lesbar `{ e: [erledigte Schritt-IDs],
+  f: [fertige Abschnitt-IDs] }` (`LernSync.wegMelden` → `/sync/weg`, Tabelle `sync_weg`). Keine Namen, keine Punkte, keine
+  Antworten; der Admin bekommt nur die Kartennummer (`/sync/admin/weg`, nur Hauptzugang). „Zuletzt weiter“ setzt der Worker
+  selbst, wenn sich der Stand ändert. Gelöscht mit der Karte/Gruppe bzw. nach 400 Tagen ohne Meldung.
+- Gemeldet wird beim Öffnen der Startseite (einmal je Seitenaufruf, nur bei Änderung) und beim Verlassen eines 2D-Wegs;
+  `LernWeg.meldung(W)` bzw. `LernJourneyWeg.meldung({ J, z, cfg })` liefern die IDs der freigegebenen Abschnitte.
+- Ohne Sicherungskarte, ohne Gruppe und in der Testumgebung wird nichts gesendet. Die anonyme Klassen-Übersicht im Modul
+  🧭 English Journey bleibt daneben bestehen.
+- **Der Worker muss neu eingefügt werden** (`cloudflare/sync.js`, `dateien.js`, `worker.js`) – vorher zeigt das Raster einen Fehler.
+
+**Lernweg-Editor** (Admin → Inhalte → 🗺️ Lernwege, `module/inhalte-wege.js`). 2D-Lernwege ohne JSON: Weg anlegen,
+Abschnitte und Schritte per Formular, ▲▼ verschieben, Pflicht/Wahl/⭐ Stern, Hefteintrag im Textfeld (`*grün*`, `**fett**`
+wie im Journey-Editor), eigene Aufgaben mit Lösung, Kann-Sätze.
+
+- Gespeichert wird direkt ins Repo (ein Commit) über `/dateien/speichern`; `cloudflare/dateien.js` prüft dieselben Regeln wie
+  `pruefen.py` Regel 24 und darf Weg- und Baustein-Dateien neu anlegen (`sha: ''`). `daten/wege/*.json` sind damit **admin-gepflegt**.
+- **IDs** vergibt der Editor (fortlaufend, z. B. `<Weg>-a3`, `<Abschnitt>-s2`, `<Weg>-b4`) und ändert sie nie. **Löschen gibt
+  es nicht:** „Ausblenden“ setzt `"aus": true` am Schritt oder Abschnitt – `weg-kern.js` lässt Ausgeblendetes weg, kein
+  Lernstand verwaist.
+- **„Fürs neue Schuljahr kopieren“** legt den Weg unter neuer Kennung an (alle IDs neu → frischer Lernstand, Ausgeblendetes
+  entfällt); der alte Weg bleibt.
+- Der Entwurf lebt nur in der offenen Seite (Warnung beim Verlassen). Ein neuer Weg steht nicht in `sw.js` `NACHLADEN`:
+  Er lädt beim ersten Öffnen aus dem Netz und ist danach offline da (`pruefen.py` meldet das als gelben Hinweis).
+- Freigabe wie bisher unter Gruppen → 📒 Laufzettel → Weitere Lernwege.
+
 ## Ladekette (Infrastruktur Etappe 2)
 
 Grundsatz: **Kern sofort, Rest bei Bedarf.** Die Budgets prüft `werkzeuge/pruefen.py`, gemessen **komprimiert** (gzip, so liefert GitHub Pages aus –
@@ -159,11 +308,34 @@ das ist die Menge, die übers Schul-WLAN geht; komprimiert ≈ ein Drittel der D
 | Jede Lern-App | umgebung.js, navbar.js, pass.js (`SOFORT` in navbar.js) | pass-extras.js (erste Meldung), Dorf-Kern (nach der ersten Runde, nur mit Dorf), Sicherung (nur mit Karte) | < 35 KB |
 | Offline-Speicher (sw.js) | `START` = Kern | `NACHLADEN` = Spiele, 3D, große Daten: gestaffelt im Hintergrund | < 300 KB |
 
-- **Änderungen wirken sofort (seit v62):** Der Service Worker holt jede Datei mit `cache: 'no-cache'` – das iPad fragt bei
-  GitHub nach, ob es eine neue Fassung gibt (meist nur ein winziges „unverändert“), statt bis zu 10 Minuten die Browser-Kopie
-  zu nehmen (GitHub Pages schickt `max-age=600`). Auch der Kern beim Update (`START`) wird frisch geholt. Ausnahme: `vendor/`,
-  `fonts/`, `icons/` kommen weiter direkt aus dem Speicher. Offline bzw. bei langsamem WLAN (> 4 s) gilt die gespeicherte Kopie.
-  Nach einem Merge dauert es nur noch, bis GitHub Pages fertig veröffentlicht hat (meist 1–2 Minuten).
+- **Speicher zuerst (seit v121, Aktionsplan „Lernwelt – Tempo“, Etappe 1):** Der Service Worker liefert jede Datei sofort aus
+  dem Speicher des iPads, ohne bei GitHub nachzufragen – die Startseite steht auch bei schwachem WLAN in unter einer Sekunde.
+  Aktuell bleibt die Lernwelt über die **VERSION**: Der Browser prüft `sw.js` bei jedem Seitenaufruf (eine Anfrage statt 10–15).
+  Steht dort eine neue VERSION, holt der neue Service Worker den Kern (`START`) frisch, und die Seite **lädt einmal von selbst neu**.
+
+  | Datei | Woher |
+  |---|---|
+  | Skripte, Stile, Seiten, Bilder | Speicher; fehlt die Datei, aus dem Netz |
+  | `config.json` | Netz zuerst (höchstens 1,5 s warten), dann Speicher – Admin-Änderungen wirken beim nächsten Öffnen |
+  | `daten/…json` | Speicher, dabei im Hintergrund auffrischen (je Datei höchstens alle 5 Minuten) – was der Admin direkt ins Repo schreibt (Katalog, Vokabeln, Journey …), ist beim **übernächsten** Öffnen da, ohne neue VERSION |
+  | `vendor/`, `fonts/`, `icons/` | Speicher (ändern sich nie) |
+
+  **Wichtig:** Eine geänderte Datei kommt nur mit **neuer VERSION** bei den Kindern an (Ausnahme: `config.json` und `daten/…json`).
+  Nach einem Update liegen die Dateien der Vorversion im Speicher „…-alt“ (offline weiter nutzbar) und werden gestaffelt frisch
+  geholt; braucht ein Kind eine davon vorher, holt der Service Worker genau diese Datei einmal aus dem Netz (1,5 s, danach die
+  alte Kopie). Lokal (`python3 -m http.server`) gilt weiter „Internet zuerst“.
+- **Einmal neu laden (umgebung.js):** Übernimmt ein neuer Service Worker (`controllerchange`), lädt die Seite einmal neu – ohne
+  Rückfrage, höchstens einmal je Version und Tab (`lernwelt-neu-geladen` im sessionStorage). **Nie mitten in einer Runde:** Apps
+  melden `LW.beschaeftigt(true)` beim Start einer Runde und `LW.beschaeftigt(false)`, wenn wieder die Auswahl zu sehen ist
+  (`ueben.js` tut das für Kopfrechnen, Mathe-Trainer und den Baukasten). Seiten ohne Meldung laden nicht neu, sie bekommen die
+  neue Version beim nächsten Seitenwechsel; nur die Startseite lädt auch ohne Meldung neu (nicht bei offenem Fenster). Kommt
+  die Seite aus dem Hintergrund zurück, wird nach einer neuen Version gesehen (höchstens alle 10 Minuten).
+- **Startseite sofort (config-api.js):** `ConfigAPI.loadSofort()` gibt die gespeicherte `config.json`; die Startseite baut sich
+  damit auf, holt danach die frische und zeichnet nur neu, wenn sich etwas geändert hat (`geaendert`). Fokus, Freigaben und
+  Spielsperre werden mit der frischen Fassung neu angewendet.
+- **„Weiter lernen“ (index.html, `buildWeiter`):** großer Knopf ganz oben zur nächsten offenen Station – freigegebener
+  Laufzettel, sonst nächste Station im English Journey, sonst fällige Wiederholung, sonst die zuletzt geübte Lern-App.
+  „Mein Laufzettel“ und „Heute für dich“ stehen kleiner darunter. Ohne Pass steht dort die Karte „Pass starten“.
 
 - **pass.js** rechnet und speichert nur noch. Anzeige (XP-Meldung, Lob, Konfetti), Safari-Hinweis,
   Speicher-Wartung und Diagnose stehen in **gemeinsam/pass-extras.js**. Neue Funktionen, die nicht jede App

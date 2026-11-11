@@ -17,6 +17,8 @@
 //                         → Promise; jedes Skript wird nur einmal geladen (Etappe 2)
 //    LW.fehler     Fehlerprotokoll: liste(), leeren(), merken(text, wo)   (Etappe 2)
 //    LW.speicher   fehlgeschlagen(e) aus catch-Blöcken, voll()   (Etappe 2)
+//    LW.beschaeftigt(true|false)  läuft gerade eine Runde/ein Spiel? Solange true, lädt die Seite bei einer
+//                         neuen Version NICHT neu (Tempo Etappe 1b, siehe unten)
 //  Fehlerprotokoll: nur auf dem Gerät (Pass → Sicherung → 5× Versionszeile).
 //  Hintergrund-Laden: nach jedem Seitenaufruf bittet diese Datei sw.js, fehlende
 //  Spiele/Daten nachzuladen (zufällig verzögert, nicht alle iPads gleichzeitig).
@@ -30,7 +32,7 @@
   'use strict';
   if (window.LW && window.LW.UMGEBUNG) return;          // doppeltes Laden verhindern
 
-  const VERSION = 'v120';                                 // ⚙ bei jedem Upload mit sw.js zusammen erhöhen
+  const VERSION = 'v125';                                 // ⚙ bei jedem Upload mit sw.js zusammen erhöhen
 
   // ── Umgebung erkennen ────────────────────────────────
   //  GitHub Pages: erster Pfadteil = Repo-Name (Lern-Apps bzw. Lern-Apps-test)
@@ -59,6 +61,7 @@
     ['lernwelt-sync-hinweis',       'session', 'gemeinsam/sync.js',        'Meldung „Pass wurde aktualisiert“ nach dem Neuladen', false],
     // Technik (Etappe 2)
     ['lernwelt-fehler',             'local',   'gemeinsam/umgebung.js',    'Fehlerprotokoll (letzte Abstürze, nur auf diesem Gerät)', false],
+    ['lernwelt-neu-geladen',        'session', 'gemeinsam/umgebung.js',    'Neue Version: von welcher Version dieser Tab schon einmal neu geladen hat (Schutz vor Schleife)', false],
     ['lernwelt-wartung',            'local',   'gemeinsam/pass-extras.js', 'Speicher-Wartung: letzter Lauf und Belegung', false],
     ['lernwelt-admin-entwurf',      'local',   'gemeinsam/admin/store.js', 'Admin: unveröffentlichter Entwurf der config.json', false],
     ['lernwelt-admin-dateien-entwurf', 'local', 'gemeinsam/admin/dateien.js', 'Admin: ungespeicherte Änderungen an Katalog und Vokabeln (Etappe 8)', false],
@@ -247,6 +250,43 @@
     }, 5000 + Math.random() * 20000);                      // zufällig 5–25 s: nicht alle iPads gleichzeitig
   });
 
+  // ── Neue Version: einmal neu laden (Aktionsplan Tempo, Etappe 1b) ──
+  //  sw.js liefert alles aus dem Speicher. Der Browser prüft sw.js bei jedem Seitenaufruf; ist ein neuer
+  //  Service Worker aktiv (controllerchange), zeigt diese Seite noch die alte Version → einmal neu laden.
+  //  Nie mitten in einer Runde: Apps melden LW.beschaeftigt(true/false). Ohne Meldung lädt nur die
+  //  Startseite neu (nicht bei offenem Fenster); jede andere Seite bekommt die neue Version beim nächsten Seitenwechsel.
+  const NEU_KEY = 'lernwelt-neu-geladen';
+  let beschaeftigtStand = null, neuWartet = false, updateZeit = Date.now();
+  const istStart = () => { const p = location.href.split(/[?#]/)[0]; return p === ROOT || p === ROOT + 'index.html'; };
+  function neuLaden() {
+    if (!neuWartet || beschaeftigtStand === true || (beschaeftigtStand === null && !istStart())) return;
+    if (document.querySelector('[role="dialog"].open')) { setTimeout(neuLaden, 5000); return; }
+    neuWartet = false;
+    try {
+      if (sessionStorage.getItem(NEU_KEY) === VERSION) return;        // von dieser Version aus schon einmal neu geladen
+      sessionStorage.setItem(NEU_KEY, VERSION);
+    } catch (e) { return; }
+    location.reload();
+  }
+  function beschaeftigt(an) { beschaeftigtStand = !!an; if (!an) setTimeout(neuLaden, 0); }
+  if ('serviceWorker' in navigator) {
+    try {
+      let hatte = !!navigator.serviceWorker.controller;      // allererster Besuch: Seite ist schon frisch
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (!hatte) { hatte = true; return; }
+        neuWartet = true; neuLaden();
+      });
+      // iPads lassen die Seite oft tagelang offen: beim Zurückkommen nach einer neuen Version sehen
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) return;
+        neuLaden();
+        if (Date.now() - updateZeit < 10 * 60 * 1000) return;
+        updateZeit = Date.now();
+        navigator.serviceWorker.getRegistration().then(r => r && r.update()).catch(() => {});
+      });
+    } catch (e) {}
+  }
+
   // ── Zeitplan (Admin-Umbau Etappe 6): gilt etwas heute? ──
   //  true/false wie bisher; { ab, bis } mit JJJJ-MM-TT (einmalig) oder MM-TT (jedes Jahr), jeweils einschließlich;
   //  jährlich darf über den Jahreswechsel gehen (ab 12-20, bis 01-06). Fehlt ab oder bis, ist diese Seite offen.
@@ -263,7 +303,7 @@
   }
 
   window.LW = Object.freeze({
-    zeitplanAktiv,
+    zeitplanAktiv, beschaeftigt,
     UMGEBUNG, TEST, VERSION, ROOT, laden,
     fehler: Object.freeze({ liste: fehlerListe, merken: fehlerMerken, leeren: () => { try { localStorage.removeItem(FEHLER_KEY); } catch (e) {} } }),
     speicher: Object.freeze({ fehlgeschlagen, voll: () => speicherFehler }),

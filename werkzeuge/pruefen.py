@@ -25,7 +25,8 @@
 #   10. Kopfrechnen (Etappe 4): Stufen in daten/kopfrechnen.json stehen im Katalog und nutzen
 #       nur Generatoren, die es in gemeinsam/generatoren-mathe.js gibt.
 #
-#   12. Inhaltsdateien (Etappe 9): daten/inhalte/<fach>/<Themen-ID>.json passen zu ihrem Typ und zum Katalog;
+#   12. Inhaltsdateien (Etappe 9): daten/inhalte/<fach>/<Themen-ID>.json passen zu ihrem Typ und zum Katalog
+#       (Hilfe-Stufen: tipp/tipp2 Text, aufloesen true oder Text);
 #       Einträge in config.json für apps/typen/uebung.html?inhalt=… haben eine Inhaltsdatei.
 #       Quellen je Aufgabe (Quellen-Detektiv): Bild existiert, Fotos (png/jpg/webp) haben einen „nachweis“,
 #       quellenart ist sach/bild/schrift, Methodenkarten in „hilfe“ haben nr und Farbe #rrggbb.
@@ -59,6 +60,9 @@
 #   22. English Journey (daten/journey*.json): Units und Stationen mit eindeutiger id und gültiger art, jedes thema/start/mit
 #       steht im Katalog (start ist thema selbst oder eine Stufe darunter; Stufen eines Baukasten-Themas stehen in seiner
 #       Inhaltsdatei), jeder Vorgänger in braucht existiert, keine Schleife; das Finale braucht alle Stationen seiner Unit.
+#   24. Lernweg-Engine in 2D (Aktionsplan „Lernwelt – Tempo“, Etappe 2): daten/wege/liste.json nennt jeden Weg; je Weg
+#       daten/wege/<id>.json mit Abschnitten und Schritten (art, stufe pflicht/wahl/stern, wahlMin), jedes thema im Katalog,
+#       jeder Baustein vorhanden, jede ID beginnt mit „<Weg-ID>-“ und ist in allen Wegen eindeutig.
 #   23. English Journey – Abschnitte (Aktionsplan „Lernweg im English Journey“): units[].abschnitte[].schritte und
 #       daten/journey/bausteine-*.json passen zusammen (Bausteine vorhanden und von der richtigen Art, Stationen der Unit
 #       höchstens in einem Abschnitt, Themen im Katalog, Buchverweise {seite, bis?, uebung?}, Abschnitt-, Schritt- und
@@ -561,6 +565,19 @@ def pruefe_aufgaben(FI, wo, typ, auf):
             if not isinstance(x, dict) or len(re.findall(r'\[[^\]]+\]', str(x.get('satz', '')))) != 1:
                 FI(f'{wo}: jede Aufgabe braucht einen satz mit genau einer [Markierung]'); break
 inhalt_ids = set()
+# Hilfe-Stufen (Aktionsplan Tempo, Etappe 4): tipp/tipp2 = Text, aufloesen = true oder Erklärtext – überall in den Inhaltsdateien
+def hilfe_felder(x, wo):
+    if isinstance(x, dict):
+        for k in ('tipp', 'tipp2'):
+            if k in x and not (isinstance(x[k], str) and x[k].strip()): F(f'{wo}: „{k}“ muss ein Text sein')
+        if 'aufloesen' in x and not (x['aufloesen'] is True or (isinstance(x['aufloesen'], str) and x['aufloesen'].strip())): F(f'{wo}: „aufloesen“ ist true oder ein Erklärtext (weglassen = keine Lösungs-Hilfe)')
+        if 'tipp2' in x and 'tipp' not in x: H(f'{wo}: „tipp2“ ohne „tipp“ – der zweite Tipp baut auf dem ersten auf')
+        for v in x.values(): hilfe_felder(v, wo)
+    elif isinstance(x, list):
+        for v in x: hilfe_felder(v, wo)
+for p in sorted(ROOT.glob('daten/inhalte/*/*.json')):
+    try: hilfe_felder(json.loads(p.read_text(encoding='utf-8')), rel(p))
+    except Exception: pass                          # Lesefehler meldet die Schleife darunter
 for p in sorted(ROOT.glob('daten/inhalte/*/*.json')):
     r = rel(p)
     try: d = json.loads(p.read_text(encoding='utf-8'))
@@ -599,6 +616,17 @@ for p in sorted(ROOT.glob('daten/inhalte/*/*.json')):
         for x in st.get('aufgaben') or []:
             if isinstance(x, dict) and x.get('nach') is not None and (x['nach'] not in stufen_ids or x['nach'] == sid):
                 FI(f'{wo}: „nach“ muss eine andere Stufe dieser Datei nennen (nicht „{x["nach"]}“)')
+        if st.get('check'):                                      # Tempo Etappe 5: Check vor der Probe
+            if not st.get('mix'): FI(f'{wo}: check braucht mix: true und aus')
+            th = st.get('themen')
+            if not isinstance(th, list) or not th: FI(f'{wo}: check braucht themen: [{{ titel, aus, ziel }}]')
+            for t_ in th if isinstance(th, list) else []:
+                if not isinstance(t_, dict) or not t_.get('titel') or not isinstance(t_.get('aus'), list) or not t_.get('aus'): FI(f'{wo}: jedes Thema braucht titel und aus'); continue
+                for a_ in t_['aus']:
+                    if a_ not in (st.get('aus') or []): FI(f'{wo}: Thema „{t_["titel"]}“: {a_} fehlt in aus der Stufe')
+                if katalog is not None and t_.get('ziel') not in ids: FI(f'{wo}: Thema „{t_["titel"]}“: ziel {t_.get("ziel")} steht nicht im Katalog')
+            if st.get('je') is not None and not (isinstance(st['je'], int) and 1 <= st['je'] <= 5): FI(f'{wo}: je = 1 bis 5 Aufgaben je Thema')
+            if '.probe-check.' not in str(sid): H(f'{r}: {wo}: Check-Stufen heißen „<fach>.<klasse>.probe-check.<…>“ – daran erkennen die Lernwege sie')
         if st.get('mix'):                                        # Neue Lern-Apps Etappe 6: Mix-Stufe
             for a_ in st.get('aus') or []:
                 if a_ in fall_stufen: H(f'{r}: {wo}: aus nennt den ganzen Fall {a_} – Fälle kommen nie in einen Mix')
@@ -758,6 +786,7 @@ if katalog is not None:
 JW_SCHRITTE = ('hefteintrag', 'uebung', 'app', 'lesen', 'vokabeln', 'partner', 'hoeren', 'extra')
 JW_UEBUNGEN = ('wahl', 'zuordnen', 'luecken', 'saetze', 'sortieren', 'schreiben', 'mediation', 'frei')
 JW_ID = re.compile(r'[a-z0-9]+(?:-[a-z0-9]+)*')
+jw_alle_ids = set()                              # alle Abschnitt-, Schritt- und Baustein-IDs der Journey-Wege (Regel 24: keine doppelt)
 jw_wege = {}                                     # journey-Datei → { abschnitte: {id: unit}, he: Baustein-IDs der Hefteinträge }
 jw_bausteine = {}                                # journey-Datei → { Baustein-ID: Baustein }
 for jw_p in sorted(ROOT.glob('daten/journey/bausteine-*.json')):
@@ -876,15 +905,125 @@ for jw_p in sorted(ROOT.glob('daten/journey*.json')):
     ungenutzt = [b for b in alle if b not in genutzt]
     if ungenutzt: H(f'{jw_r}: Bausteine, die kein Schritt nutzt: {", ".join(ungenutzt[:5])}{" …" if len(ungenutzt) > 5 else ""}')
     jw_wege[jw_r] = {'abschnitte': abschnitte, 'he': he_ids}
+    jw_alle_ids.update(ids); jw_alle_ids.update(alle)
     if abschnitte: I(f'{jw_r}: {len(abschnitte)} Abschnitte, {sum(1 for v in ids.values() if v == "Schritt")} Schritte')
+
+# ── 24. Lernweg-Engine in 2D (Aktionsplan „Lernwelt – Tempo“, Etappe 2) ──
+#  daten/wege/liste.json nennt jeden Weg; je Weg daten/wege/<id>.json (Abschnitte → Schritte) und, wenn ein Schritt einen
+#  Baustein nutzt, daten/wege/bausteine-<id>.json. Erledigtes steht als Lernstand jw:<Schritt-ID> im Pass, Freigaben unter
+#  config.journey.wege.<id> – darum: IDs nie umbenennen, jede ID beginnt mit „<Weg-ID>-“ und ist in allen Wegen eindeutig.
+WEG_ARTEN = {'hefteintrag', 'uebung', 'app', 'medium', 'check'}
+WEG_ID_RE = re.compile(r'^[a-z][a-z0-9-]{1,29}$')
+WEG_SID_RE = re.compile(r'^[a-z0-9-]{1,80}$')
+wege_dir = ROOT / 'daten' / 'wege'
+if wege_dir.is_dir():
+    wl_p = wege_dir / 'liste.json'
+    try: wl = json.loads(wl_p.read_text(encoding='utf-8')).get('wege')
+    except Exception as e: wl = None; F(f'daten/wege/liste.json: nicht lesbar ({e})')
+    if not isinstance(wl, list): wl = []; F('daten/wege/liste.json: „wege“ muss eine Liste sein')
+    weg_ids_gesehen = set(jw_alle_ids)
+    genannt = set()
+    for we in wl:
+        wid = we.get('id') if isinstance(we, dict) else None
+        if not isinstance(wid, str) or not WEG_ID_RE.match(wid) or wid.startswith('journey') or re.match(r'^(u\d+|he|ue|kann)$', wid):
+            F(f'daten/wege/liste.json: Weg-ID {wid!r} ungültig (klein, Ziffern, „-“; nicht journey…, uN, he, ue, kann)'); continue
+        if wid in genannt: F(f'daten/wege/liste.json: Weg {wid} steht doppelt'); continue
+        genannt.add(wid)
+        wr = f'daten/wege/{wid}.json'
+        FW = lambda m, wr=wr: F(f'{wr}: {m}')
+        try: Wd = json.loads((ROOT / wr).read_text(encoding='utf-8'))
+        except Exception as e: FW(f'fehlt oder nicht lesbar ({e})'); continue
+        if Wd.get('id') != wid: FW(f'id muss {wid} sein')
+        for k in ('titel', 'fach', 'klasse', 'ico'):
+            if Wd.get(k) != we.get(k): FW(f'{k} stimmt nicht mit daten/wege/liste.json überein')
+        if not isinstance(Wd.get('titel'), str) or not Wd.get('titel'): FW('titel fehlt')
+        if Wd.get('fach') not in faecher_shared: FW(f'fach „{Wd.get("fach")}“ steht nicht in gemeinsam/shared.js (CAT_STYLES)')
+        if not isinstance(Wd.get('klasse'), int): FW('klasse muss eine Zahl sein')
+        # Bausteine
+        bausteine = {}
+        b_p = wege_dir / f'bausteine-{wid}.json'
+        if b_p.is_file():
+            try:
+                for b in json.loads(b_p.read_text(encoding='utf-8')).get('bausteine') or []:
+                    bid = b.get('id')
+                    if not isinstance(bid, str) or not WEG_SID_RE.match(bid) or not bid.startswith(wid + '-'): F(f'{rel(b_p)}: Baustein-ID {bid!r} muss mit „{wid}-“ beginnen'); continue
+                    if bid in weg_ids_gesehen: F(f'{rel(b_p)}: ID doppelt: {bid}')
+                    weg_ids_gesehen.add(bid); bausteine[bid] = b
+                    if b.get('art') not in ('hefteintrag', 'uebung'): F(f'{rel(b_p)}: Baustein {bid}: art muss hefteintrag oder uebung sein')
+                    if not isinstance(b.get('titel'), str) or not b.get('titel'): F(f'{rel(b_p)}: Baustein {bid}: titel fehlt')
+                    if b.get('art') == 'hefteintrag' and not all(isinstance(z, list) and all(isinstance(t, list) and len(t) == 2 for t in z) for z in b.get('zeilen') or []):
+                        F(f'{rel(b_p)}: Baustein {bid}: zeilen = Liste von Zeilen aus [Text, Markierung]')
+            except Exception as e: F(f'{rel(b_p)}: nicht lesbar ({e})')
+        genutzt = set()
+        abschnitte = {}
+        schritte_n = 0
+        def weg_id(i, was):
+            if not isinstance(i, str) or not WEG_SID_RE.match(i) or not i.startswith(wid + '-'): FW(f'{was}-ID {i!r} muss mit „{wid}-“ beginnen (klein, Ziffern, „-“)'); return False
+            if i in weg_ids_gesehen: FW(f'ID doppelt: {i}'); return False
+            weg_ids_gesehen.add(i); return True
+        if not isinstance(Wd.get('abschnitte'), list) or not Wd.get('abschnitte'): FW('abschnitte fehlen'); continue
+        for ab in Wd['abschnitte']:
+            aid = ab.get('id') if isinstance(ab, dict) else None
+            if not weg_id(aid, 'Abschnitt'): continue
+            abschnitte[aid] = wid
+            if not isinstance(ab.get('titel'), str) or not ab.get('titel'): FW(f'Abschnitt {aid}: titel fehlt')
+            sl_ = ab.get('schritte') if isinstance(ab.get('schritte'), list) else []
+            zaehlt = wahl = 0
+            for sc in sl_:
+                sid = sc.get('id') if isinstance(sc, dict) else None
+                if not weg_id(sid, 'Schritt'): continue
+                schritte_n += 1
+                art, stufe_ = sc.get('art'), sc.get('stufe', 'pflicht')
+                if art not in WEG_ARTEN: FW(f'Schritt {sid}: art {art!r} – erlaubt: {", ".join(sorted(WEG_ARTEN))}'); continue
+                if stufe_ not in ('pflicht', 'wahl', 'stern'): FW(f'Schritt {sid}: stufe {stufe_!r} – erlaubt: pflicht, wahl, stern')
+                versteckt = sc.get('aus') is True or ab.get('aus') is True      # Lernweg-Editor: ausgeblendet statt gelöscht
+                if sc.get('aus') not in (None, True, False): FW(f'Schritt {sid}: aus ist true oder false')
+                if stufe_ != 'stern' and not versteckt: zaehlt += 1
+                if stufe_ == 'wahl' and not versteckt: wahl += 1
+                bst = sc.get('baustein')
+                if bst is not None:
+                    if bst not in bausteine: FW(f'Schritt {sid}: Baustein {bst} fehlt in daten/wege/bausteine-{wid}.json')
+                    else:
+                        genutzt.add(bst)
+                        if art not in ('hefteintrag', 'uebung') or bausteine[bst].get('art') != art: FW(f'Schritt {sid}: Baustein {bst} hat nicht die Art {art}')
+                if art == 'hefteintrag' and bst is None: FW(f'Schritt {sid}: Hefteintrag braucht einen baustein')
+                if art == 'uebung' and bst is None and not sc.get('text'): FW(f'Schritt {sid}: Übung braucht text oder baustein')
+                if art == 'app' or (art == 'check' and sc.get('thema') is not None):
+                    if sc.get('thema') not in katalog_ids: FW(f'Schritt {sid}: thema {sc.get("thema")!r} fehlt im Katalog')
+                if art == 'check' and sc.get('thema') is None and not sc.get('text'): FW(f'Schritt {sid}: Check braucht text oder thema')
+                if art == 'medium':
+                    ln = sc.get('link')
+                    if not sc.get('titel'): FW(f'Schritt {sid}: Medium braucht einen titel')
+                    if not isinstance(ln, str) or not re.match(r'^[A-Za-z0-9][A-Za-z0-9_\-./]*$', ln) or '..' in ln or not (ROOT / ln).is_file():
+                        FW(f'Schritt {sid}: link {ln!r} – Datei im Repo (Pfad ab Hauptordner), keine fremden Adressen')
+                bu = sc.get('buch')
+                if bu is not None and not (isinstance(bu, dict) and isinstance(bu.get('seite'), int)): FW(f'Schritt {sid}: buch = {{ "seite": Zahl, "uebung": "…" }}')
+            if not zaehlt and ab.get('aus') is not True: FW(f'Abschnitt {aid}: braucht mindestens einen sichtbaren Pflicht- oder Wahl-Schritt')
+            wm = ab.get('wahlMin')
+            if wm is not None and not (isinstance(wm, int) and 1 <= wm <= max(1, wahl)): FW(f'Abschnitt {aid}: wahlMin {wm!r} – 1 bis {max(1, wahl)} (Zahl der Wahl-Schritte)')
+        kn = Wd.get('kann')
+        if kn is not None:
+            for k in kn if isinstance(kn, list) else [None]:
+                if not isinstance(k, dict) or not weg_id(k.get('id'), 'Kann-Satz'): continue
+                if not k.get('text'): FW(f'Kann-Satz {k.get("id")}: text fehlt')
+                for t in k.get('themen') or []:
+                    if t not in katalog_ids: FW(f'Kann-Satz {k.get("id")}: thema {t} fehlt im Katalog')
+        ungenutzt = [b for b in bausteine if b not in genutzt]
+        if ungenutzt: H(f'{rel(b_p)}: Bausteine, die kein Schritt nutzt: {", ".join(ungenutzt[:5])}')
+        nachladen_fehlt = [d for d in [wr] + ([rel(b_p)] if bausteine else []) if d not in sw]
+        if nachladen_fehlt: H(f'{wr}: fehlt in sw.js NACHLADEN (offline nicht da): {", ".join(nachladen_fehlt)}')
+        jw_wege[wr] = {'abschnitte': abschnitte, 'he': set()}
+        I(f'{wr}: {len(abschnitte)} Abschnitte, {schritte_n} Schritte')
+    for wp in sorted(wege_dir.glob('*.json')):
+        if wp.name != 'liste.json' and not wp.name.startswith('bausteine-') and wp.stem not in genannt: F(f'{rel(wp)}: steht nicht in daten/wege/liste.json')
 
 # config.json → journey (vom Admin gepflegt): { schuljahr, wege: { journey6: { bis: { wer: Abschnitt }, he: { Hefteintrag: Nr },
 #   niveau: { wer: 1–3 } (Mindestniveau), reihenfolge: { wer: frei|schritt|streng } (Abschnitt-Kette), sperren: { wer: true } } } } – Freigabe „bis Abschnitt“ je Gruppe, HE-Nummern fortlaufend durchs Schuljahr, Schranke am Unit-Ende (v119)
 jc = config.get('journey')
 if isinstance(jc, dict):
     for wname, w in (jc.get('wege') or {}).items():
-        jw = jw_wege.get(f'daten/{wname}.json')
-        if jw is None: H(f'config.json: journey.wege.{wname} – daten/{wname}.json hat keine Abschnitte (wirkt nicht)'); continue
+        jw = jw_wege.get(f'daten/{wname}.json') or jw_wege.get(f'daten/wege/{wname}.json')
+        if jw is None: H(f'config.json: journey.wege.{wname} – weder daten/{wname}.json noch daten/wege/{wname}.json hat Abschnitte (wirkt nicht)'); continue
         for a in set((w.get('bis') or {}).values()):
             if a not in jw['abschnitte']: H(f'config.json: journey.wege.{wname}.bis nennt den unbekannten Abschnitt {a} (wirkt nicht)')
         he = w.get('he') or {}

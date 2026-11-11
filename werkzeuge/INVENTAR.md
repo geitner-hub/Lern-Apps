@@ -1,6 +1,6 @@
 # Inventar der Lern-Apps und Spiele
 
-Automatisch erzeugt am 31.10.2026 mit `python3 werkzeuge/inventar.py` (Angaben aus dem Code). Nur die Spalten **Entscheidung** und **Notiz** von Hand pflegen – sie bleiben beim Neu-Erzeugen erhalten.
+Automatisch erzeugt am 11.11.2026 mit `python3 werkzeuge/inventar.py` (Angaben aus dem Code). Nur die Spalten **Entscheidung** und **Notiz** von Hand pflegen – sie bleiben beim Neu-Erzeugen erhalten.
 
 Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv**
 
@@ -33,8 +33,10 @@ Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv
 | `apps/mathe/rechen-arena.html` | Rechen-Arena | `ma.5.rechen-arena` | Lern-App | Allgemein · 5, 6 | sichtbar | ja | ja | – | – | ja | Kern | Beliebt, vier Modi. Mängel: Startseite scrollt (iPad quer), kein `thema`/`inhalt`, Ballon-Pop hat keine Rückmeldung zum Fehler (bewusst schnell) |
 | `apps/mathe/stellenwerttafel.html` | Große Zahlen können | `ma.5.stellenwert` (5 Stufen) | Lern-App | Mathematik · 5 | sichtbar | – | – | – | – | ja |  |  |
 | `apps/mathe/zahlenstrahl.html` | Der Zahlenstrahl | `ma.5.zahlenstrahl` (5 Stufen) | Lern-App | Mathematik · 5 | sichtbar | – | – | – | – | ja |  |  |
+| `apps/typen/kann-liste.html` | – | – | Lern-App | – | nicht in config | – | – | – | – | – (nicht in config) |  |  |
 | `apps/typen/live.html` | – | `allg.5.live-abfrage` | Lern-App | – | nicht in config | ja | ja | – | – | – (nicht in config) |  |  |
-| `apps/typen/uebung.html` | Geometrie-Training | `ma.5.geometrie` (8 Stufen), `en.5.to-be` (6 Stufen), `en.5.simple-present` (8 Stufen), `en.5.simple-past` (7 Stufen), `en.5.have-got` (5 Stufen), `en.5.can` (5 Stufen), `en.5.present-progressive` (5 Stufen), `en.5.nomen` (4 Stufen), `en.5.pronomen` (5 Stufen), `en.5.there-is` (5 Stufen), `en.5.fragen` (3 Stufen), `en.5.praepositionen` (4 Stufen), `en.6.future` (6 Stufen), `en.6.steigerung` (4 Stufen), `en.6.some-any` (4 Stufen), `en.6.simple-past` (4 Stufen), `en.6.was-were` (5 Stufen), `en.6.objektpronomen` (4 Stufen), `en.6.there-is` (5 Stufen), `en.6.plural` (4 Stufen), `en.6.can-mustnt` (4 Stufen), `en.6.should` (2 Stufen), `en.6.much-many` (1 Stufen), `en.6.good-better-best` (1 Stufen), `en.6.superlativ` (1 Stufen), `en.6.have-to` (1 Stufen), `en.6.zeitangaben` (1 Stufen), `en.6.simple-past-story` (1 Stufen), `en.6.will-meinung` (1 Stufen), `en.6.wortstellung` (1 Stufen), `en.6.linking-words` (5 Stufen), `en.6.praepositionen` (4 Stufen), `en.6.unit-check` (2 Stufen), `en.6.revision` (3 Stufen), `gpg.5.quellen` (23 Stufen) | Lern-App | Mathematik · 5, 6 | sichtbar | – | – | – | – | ja |  |  |
+| `apps/typen/uebung.html` | Geometrie-Training | `ma.5.geometrie` (8 Stufen), `en.5.to-be` (6 Stufen), `en.5.simple-present` (8 Stufen), `en.5.simple-past` (7 Stufen), `en.5.have-got` (5 Stufen), `en.5.can` (5 Stufen), `en.5.present-progressive` (5 Stufen), `en.5.nomen` (4 Stufen), `en.5.pronomen` (5 Stufen), `en.5.there-is` (5 Stufen), `en.5.fragen` (3 Stufen), `en.5.praepositionen` (4 Stufen), `en.6.future` (6 Stufen), `en.6.steigerung` (4 Stufen), `en.6.some-any` (4 Stufen), `en.6.simple-past` (4 Stufen), `en.6.was-were` (5 Stufen), `en.6.objektpronomen` (4 Stufen), `en.6.there-is` (5 Stufen), `en.6.plural` (4 Stufen), `en.6.can-mustnt` (4 Stufen), `en.6.should` (2 Stufen), `en.6.much-many` (1 Stufen), `en.6.good-better-best` (1 Stufen), `en.6.superlativ` (1 Stufen), `en.6.have-to` (1 Stufen), `en.6.zeitangaben` (1 Stufen), `en.6.simple-past-story` (1 Stufen), `en.6.will-meinung` (1 Stufen), `en.6.wortstellung` (1 Stufen), `en.6.linking-words` (5 Stufen), `en.6.praepositionen` (4 Stufen), `en.6.unit-check` (2 Stufen), `en.6.probe-check` (5 Stufen), `en.6.revision` (3 Stufen), `gpg.5.quellen` (23 Stufen) | Lern-App | Mathematik · 5, 6 | sichtbar | – | – | – | – | ja |  |  |
+| `apps/typen/weg.html` | – | – | Lern-App | – | nicht in config | – | – | – | – | – (nicht in config) |  |  |
 | `spiele/burg-verteidigung.html` | Tower Defense | – | Spiel | Allgemein · alle | sichtbar | ja | ja | – | ja | – (Spiel) |  |  |
 | `spiele/dorf.html` | Mein Dorf | – | Spiel | Allgemein · alle | sichtbar | – | – | – | – | Dorf selbst |  |  |
 | `spiele/expedition.html` | Entdecker-Expedition | – | Spiel | GPG · 6 | versteckt | über spiel-hilfen.js | ja | – | – | – (Spiel) |  |  |
@@ -50,7 +52,7 @@ Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv
 
 | Datei | KB | Skripte | Speicherschlüssel |
 |---|---|---|---|
-| apps/englisch/english-journey.html | 43 | freigabe.js, katalog.js, wiederholung.js, journey-kern.js, navbar.js, journey-lernweg.js (nachgeladen), avatar3d.js (nachgeladen), journey-welt.js (nachgeladen), journey-welt.js (nachgeladen) | lernwelt-lernweg, lernwelt-lernweg-zurueck, + über navbar.js |
+| apps/englisch/english-journey.html | 44 | freigabe.js, katalog.js, wiederholung.js, journey-kern.js, navbar.js, journey-lernweg.js (nachgeladen), avatar3d.js (nachgeladen), journey-welt.js (nachgeladen), journey-welt.js (nachgeladen) | lernwelt-lernweg, lernwelt-lernweg-zurueck, + über navbar.js |
 | apps/englisch/journey-anwenden.html | 40 | freigabe.js, ueben.js, navbar.js | + über navbar.js |
 | apps/englisch/knowing-english.html | 9 | katalog.js, freigabe.js, navbar.js | lernwelt-pass, + über navbar.js |
 | apps/englisch/practice_simple_present.html | 1 | – | – |
@@ -75,8 +77,10 @@ Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv
 | apps/mathe/rechen-arena.html | 52 | navbar.js | rechenArena_ballonHighscore, + über navbar.js |
 | apps/mathe/stellenwerttafel.html | 15 | freigabe.js, ueben.js, ziffernblock.js, navbar.js | + über navbar.js |
 | apps/mathe/zahlenstrahl.html | 17 | freigabe.js, ueben.js, ziffernblock.js, navbar.js | + über navbar.js |
+| apps/typen/kann-liste.html | 8 | shared.js, freigabe.js, kann-liste.js, navbar.js | + über navbar.js |
 | apps/typen/live.html | 22 | shared.js, live-fragen.js, ziffernblock.js (nachgeladen), ziffernblock.js (nachgeladen), navbar.js (nachgeladen) | lernwelt-live, + über navbar.js |
 | apps/typen/uebung.html | 2 | freigabe.js, ueben.js, typen.js, navbar.js | + über navbar.js |
+| apps/typen/weg.html | 25 | shared.js, freigabe.js, katalog.js, wiederholung.js, weg-kern.js, navbar.js | lernwelt-lernweg, lernwelt-lernweg-zurueck, + über navbar.js |
 | spiele/burg-verteidigung.html | 143 | navbar.js, aufgaben.js, einstellungen.js, avatar3d.js | lern-apps-results, lern-burg-wahl, lern-burg-rekorde, lernwelt-td-kampagne, + über navbar.js |
 | spiele/dorf.html | 88 | shared.js, config-api.js, dorf-kern.js, avatar3d.js, dorf-szene.js, navbar.js | lernwelt-dorf, lernwelt-dorf-besuch, + über navbar.js |
 | spiele/expedition.html | 33 | navbar.js, spiel-hilfen.js, karten-ansicht.js | lernwelt-expedition, + über navbar.js |

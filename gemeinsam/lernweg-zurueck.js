@@ -15,7 +15,7 @@
   try { ziel = sessionStorage.getItem('lernwelt-lernweg-zurueck') || ''; } catch (e) { return; }
   let url;
   try { url = new URL(ziel, location.href); } catch (e) { return; }
-  if (url.origin !== location.origin || !/\/apps\/englisch\/english-journey\.html$/.test(url.pathname)) return;
+  if (url.origin !== location.origin || !/\/apps\/(englisch\/english-journey|typen\/weg)\.html$/.test(url.pathname)) return;   // English Journey oder 2D-Lernweg (weg.html)
   if (document.getElementById('lw-zurueck')) return;
   const st = document.createElement('style');
   st.textContent = `#lw-zurueck{position:fixed;top:max(.6rem,env(safe-area-inset-top));right:.7rem;z-index:9998;display:flex;align-items:center;gap:.4rem;

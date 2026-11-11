@@ -10,7 +10,7 @@
 //
 //  API (window.LernGeneratoren):
 //    TYPEN                      Liste der Generator-Namen (pruefen.py liest sie)
-//    erzeuge(spec)              → Aufgabe { frage, wert, text, art, falsch[], tipp, erklaerung, hinweis?, optionen? }
+//    erzeuge(spec)              → Aufgabe { frage, wert, text, art, falsch[], tipp, tipp2?, aufloesen, erklaerung, hinweis?, optionen? }
 //         art: 'zahl' (auch Dezimal/negativ) · 'bruch' (wert {n,d}) · 'rest' (wert {q,r}) · 'wahl' (optionen[])
 //         gekuerzt: true → nur die vollständig gekürzte Form gilt
 //    ausStufe(stufe)            → Aufgabe aus einer Stufe { generatoren: [spec, …] } (gewichtet)
@@ -83,6 +83,26 @@
     if (op === '−') return `Was musst du zu ${zahl(b)} dazuzählen, um ${zahl(a)} zu bekommen?`;
     if (op === '×') return `Denk an die Einmaleins-Reihe von ${zahl(Math.min(a, b))}.`;
     return `Frag dich: ${zahl(b)} × ? = ${zahl(a)}`;
+  }
+
+  /** Zweiter Tipp zu „a op b“ mit natürlichen Zahlen: der erste Teilschritt, ohne das Ergebnis zu verraten ('' = keiner) */
+  function schrittFuer(frage) {
+    const m = /^(\d[\d\s ]*)\s([+−×÷])\s(\d[\d\s ]*)$/.exec(String(frage).trim());
+    if (!m) return '';
+    const a = Number(m[1].replace(/[\s ]/g, '')), op = m[2], b = Number(m[3].replace(/[\s ]/g, ''));
+    if (!Number.isInteger(a) || !Number.isInteger(b) || a <= 0 || b <= 0) return '';
+    if (op === '+' || op === '−') {
+      const plus = op === '+', z = Math.floor(b / 10) * 10, e = b % 10, r = x => plus ? a + x : a - x;
+      if (z > 0 && e > 0 && r(b) >= 0) return `Erst ${zahl(a)} ${op} ${zahl(z)} = ${zahl(r(z))}, dann noch ${op} ${e}.`;
+      const bis = plus ? (10 - a % 10) % 10 : a % 10;                       // bis zum Zehner
+      if (b < 10 && bis > 0 && b > bis) return `Erst ${zahl(a)} ${op} ${bis} = ${zahl(r(bis))}, dann noch ${op} ${b - bis}.`;
+      return '';
+    }
+    if (op === '×') {
+      const g = Math.max(a, b), k = Math.min(a, b), z = Math.floor(g / 10) * 10, e = g % 10;
+      return g > 10 && g < 100 && e > 0 && k < 10 ? `Zerlege: ${z} × ${k} = ${zahl(z * k)} und ${e} × ${k} = ${e * k} – zähle beides zusammen.` : '';
+    }
+    return a % b === 0 && b < 10 && a / b > 10 && a / b < 20 ? `${b} × 10 = ${b * 10}. Wie oft passt ${b} noch in den Rest ${a - b * 10}?` : '';
   }
 
   // ═══════════════════════════════════════════════════════
@@ -584,7 +604,14 @@
     if (!f) return null;
     for (let v = 0; v < 60; v++) {
       const a = f(spec || {});
-      if (a) { a.typ = spec.typ; if (!a.tipp) a.tipp = tippFuer(a.frage); return a; }
+      if (a) {
+        a.typ = spec.typ;
+        if (!a.tipp) a.tipp = tippFuer(a.frage);
+        // Hilfe-Stufen (ueben.js): Stufe 2 = Zwischenschritt, Stufe 3 = Lösung mit Erklärung (zählt dann nicht)
+        if (!a.tipp2) { const t2 = schrittFuer(a.frage); if (t2) a.tipp2 = t2; }
+        if (a.aufloesen === undefined) a.aufloesen = a.erklaerung || true;
+        return a;
+      }
     }
     return null;
   }

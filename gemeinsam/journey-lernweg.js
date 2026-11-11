@@ -103,7 +103,10 @@
   }
   const passt = (s, nv) => !nv || !Array.isArray(s.niveau) || s.niveau.includes(nv);
   const schritte = a => a.schritte.filter(s => passt(s, niveau(a)));
+  // Check vor der Probe (Tempo Etappe 5): Themen-IDs mit „.probe-check.“ – erledigt, sobald einmal bearbeitet (LernPass.checks)
+  const istCheck = s => /\.probe-check\./.test(String(s.thema || ''));
   function themaGeschafft(s) {
+    if (istCheck(s)) return !!(P() && P().checks && P().checks[s.thema]);
     const e = P() && P().lernstand && P().lernstand[s.thema], z = s.ziel || {};
     return !!e && Array.isArray(e.p) && e.p.filter(p => p >= (z.prozent || 70)).length >= Math.min(3, z.runden || 1);
   }
@@ -254,8 +257,8 @@
           + (x.zustand === 'offen' || x.zustand === 'gemeistert' ? `<button type="button" class="jw-los" data-jw-station="${esc(s.station)}">${an ? '🔁 Nochmal' : '▶ Los geht\'s'}</button>` : '');
       } else {
         const t = window.LernKatalog && LernKatalog.thema(s.thema), z = s.ziel || {};
-        kopf = `🎮 ${esc(t ? t.titel : s.thema)}`;
-        innen = `<p>${esc(s.text || '')}</p><p class="jw-klein">Ziel: ${z.runden || 1} ${z.runden > 1 ? 'Runden' : 'Runde'} mit mindestens ${z.prozent || 70} %.</p>`;
+        kopf = `${istCheck(s) ? '🎯' : '🎮'} ${esc(t ? t.titel : s.thema)}`;
+        innen = `<p>${esc(s.text || '')}</p><p class="jw-klein">${istCheck(s) ? 'Keine Note, keine Hilfen – du kannst den Check wiederholen.' : `Ziel: ${z.runden || 1} ${z.runden > 1 ? 'Runden' : 'Runde'} mit mindestens ${z.prozent || 70} %.`}</p>`;
         fuss = `<div class="jw-auto${an ? ' an' : ''}"><i>${an ? '✓' : ''}</i>${an ? 'Geschafft' : 'Hakt sich selbst ab'}</div>`
           + (t ? `<button type="button" class="jw-los" data-jw-thema="${esc(s.thema)}">${an ? '🔁 Nochmal' : '▶ Los geht\'s'}</button>` : '');
       }
@@ -555,6 +558,23 @@ ul.jw-hilfe { list-style: none; display: grid; gap: .3rem; margin: .4rem 0 .7rem
     } finally { O = vorher; }
   }
 
+  /** Für die Klassenübersicht je Karte (LernSync.wegMelden, Tempo Etappe 6a): erledigte Schritte und fertige Abschnitte
+   *  aller freigegebenen Abschnitte. o = { J, z, cfg } wie bei stand(). */
+  function meldung(o) {
+    const vorher = O; O = Object.assign({ admin: false }, o);
+    try {
+      const e = [], f = [];
+      O.J.units.forEach(u => {
+        O.unit = u;
+        (u.abschnitte || []).filter(sichtbar).forEach(a => {
+          if (fortschritt(a).fertig) f.push(a.id);
+          schritte(a).forEach(s => { if (erledigt(s)) e.push(s.id); });
+        });
+      });
+      return { e, f };
+    } finally { O = vorher; }
+  }
+
   // ── Wozu gehört eine Station oder ein Abschnitt? (Hilfe-Knopf und Rückverweis auf App-Seiten, Karte im Weg) ──
   function bezug(o) {
     const vorher = O; O = Object.assign({ admin: false, z: {} }, o);
@@ -613,7 +633,7 @@ ul.jw-hilfe { list-style: none; display: grid; gap: .3rem; margin: .4rem 0 .7rem
 
   window.LernJourneyWeg = {
     sperre,
-    uebernehmen, stand, bezug, heZeigen, buchKurz, seitenA, plaetze,
+    uebernehmen, stand, meldung, bezug, heZeigen, buchKurz, seitenA, plaetze,
     /** Hefteintrag im Heft-Schema als HTML (Vorschau im Admin-Editor); lädt die Stile mit */
     papierHTML(b, nr) { stile(); return papier(b, false, nr || null); },
     /** Abschnitt-ID zu einer Station (oder null) – für das Antippen im 3D-Ort */

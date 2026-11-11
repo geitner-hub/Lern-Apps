@@ -74,7 +74,10 @@ und gelbe Hinweise. Manuelle Checkliste nach Uploads: `werkzeuge/RAUCHTEST.md`.
   Schlüssel = **Dateiname** ohne Ordner + URL-Parameter) → Ereignis `lernapps:result` → pass.js wertet aus und
   feuert `lernpass:gewertet` → dorf-kern.js zählt Aufträge. Dateinamen müssen daher repo-weit eindeutig sein.
 - **Ladekette:** „Kern sofort, Rest bei Bedarf“. `sw.js` (muss im Hauptordner liegen) cached `START` sofort und
-  holt `NACHLADEN` gestaffelt im Hintergrund. Schweres (three.js, 3D-Avatar, Truhe, QR, Dorf-Szene) wird lazy geladen.
+  holt `NACHLADEN` gestaffelt im Hintergrund. Seit v121 „Speicher zuerst“: Dateien kommen ohne Nachfrage aus dem Speicher, nur
+  `config.json` netz-zuerst und `daten/…json` mit Auffrischen im Hintergrund – **ohne neue VERSION kommt eine Änderung nicht an**.
+  Neue Version → Seite lädt einmal neu (umgebung.js); Apps mit Runden melden `LW.beschaeftigt(true/false)`, damit das nie
+  mitten in einer Runde passiert. README → Ladekette. Schweres (three.js, 3D-Avatar, Truhe, QR, Dorf-Szene) wird lazy geladen.
 - **Daten:** reine JSON-Dateien in `daten/` (keine Kommentare). Katalog-IDs, Item-IDs, Gebäude-IDs usw. **nie
   umbenennen oder löschen** – sie stehen in Spielständen der Kinder. Alte IDs (z. B. `ma.5.kopf.…` im Trainer)
   bleiben aus historischen Gründen.
@@ -102,6 +105,23 @@ und gelbe Hinweise. Manuelle Checkliste nach Uploads: `werkzeuge/RAUCHTEST.md`.
   (`module/inhalte-journey.js`: Übersicht, Editoren, Klassen-Übersicht über `jw:`-Meldungen, Schuljahr, Druck über `journey-druck.js`);
   Hefteinträge nur in Pflicht-Abschnitten (Finale wartet auf jeden). Abschnitt-Kette (v109): Pflicht-Abschnitte öffnen sich der Reihe nach (`config.journey…reihenfolge` je wer: frei/schritt/streng, Standard schritt; `LernJourneyWeg.sperre`). Schranke (v119): `config.journey…sperren[wer] = true` → Weg endet mit der Unit von `bis` (`LernJourney.schranke`, grund `schranke`, Brücke zu); Schalter im Laufzettel-Modul. „🌉 Units bis hier offen“ (v120) schreibt `freigaben[Unit-Thema][wer] = 'offen'` → Unit ohne Finale davor (geoeffnet). Die alten Lernwege (`apps/typen/lernweg.html`) sind seit
   v103 entfernt; `lernwelt-lernweg` wird nur noch einmal übernommen.
+- **Lernweg-Engine in 2D** (v122, Aktionsplan „Lernwelt – Tempo“ Etappe 2): neue Lernwege für jedes Fach nur als Daten –
+  `daten/wege/liste.json`, `daten/wege/<Weg-ID>.json` (Abschnitte → Schritte: hefteintrag, uebung, app, medium, check; `stufe` pflicht/wahl/stern,
+  `wahlMin`), Bausteine in `daten/wege/bausteine-<Weg-ID>.json`. Seite `apps/typen/weg.html?weg=<ID>`, Logik `gemeinsam/weg-kern.js` (`LernWeg`),
+  Freigabe `config.journey.wege.<ID>.bis` (Admin: Gruppen → 📒 Laufzettel → Weitere Lernwege), pruefen.py Regel 24. Jede ID beginnt mit
+  `<Weg-ID>-` und wird nie umbenannt (Lernstand `jw:<ID>`). Der English Journey bleibt eigenständig. README → Lernweg-Engine.
+- **Hilfe-Stufen und Selbsteinschätzung** (v123, Tempo Etappe 4) im Übungsrahmen `ueben.js`: Aufgabe mit `tipp` → `tipp2` → `aufloesen`
+  (Tipp = halbe XP für die Aufgabe, Lösung = zählt nicht, Runde nicht im Lernstand; Felder `tipps`/`loesung` in `saveResult`).
+  Selbsteinschätzung `gemeinsam/einschaetzung.js` nur mit Feature-Schalter `einschaetzung`; Paare im Pass (`einschaetzungMerken`). README → Hilfe-Stufen.
+- **Check vor der Probe und Kann-Liste** (v124, Tempo Etappe 5): Check-Stufe im Baukasten `{ check: true, mix: true, aus, themen: [{ titel, aus, ziel }], je }`
+  (IDs mit `.probe-check.`, Inhalt `daten/inhalte/en/en.6.probe-check.json`), Auswertung je Thema in `gemeinsam/typen/check.js`, Versuche in
+  `LernPass.checkMerken` – keine Note, kein Lernstand, XP einmalig. Kann-Liste `apps/typen/kann-liste.html` + `gemeinsam/kann-liste.js` liest nur
+  (`kann` der Units/Wege + Lernstand). README → Check vor der Probe.
+- **Klassenübersicht und Lernweg-Editor** (v125, Tempo Etappe 6): Karten in einer Gruppe melden je Lernweg lesbar ihre erledigten
+  Schritt-/Abschnitt-IDs (`LernSync.wegMelden` → Worker `/sync/weg`, Tabelle `sync_weg`; ohne Namen/Punkte) – Raster im Admin unter
+  Gruppen → 🚦 Klassenübersicht (`module/gruppen-wege.js`, `/sync/admin/weg`, nur Hauptzugang). Editor Inhalte → 🗺️ Lernwege
+  (`module/inhalte-wege.js`) schreibt `daten/wege/*.json` über `cloudflare/dateien.js` (admin-gepflegt, Dateien neu anlegen erlaubt);
+  nie löschen, nur `"aus": true`. README → Klassenübersicht und Lernweg-Editor.
 - **Live-Abfrage** (Unterrichtsmodus → 📊, Kinder-Seite `apps/typen/live.html?raum=CODE`, keine App in config.json, ohne Navbar):
   Worker-Teil `cloudflare/live.js` (Räume, Antworten, Quizze, Rückblicke in `SYNC_DB`; Räume nach dem Beenden gelöscht),
   Fragetypen `gemeinsam/live-fragen.js` (`LernLive`), Beamer `gemeinsam/admin/live.js`, Quiz-Editor Inhalte → Live-Quizze.

@@ -32,7 +32,7 @@
         art: 'eigen', paare,
         frage: frage || anweisung, hinweis: frage ? anweisung : '',
         text: paare.map(p => p[0] + ' → ' + p[1]).join(' · '),
-        tipp: st.tipp, erklaerung: st.erklaerung,
+        tipp: st.tipp, tipp2: st.tipp2, aufloesen: st.aufloesen, erklaerung: st.erklaerung,
         eingabeText: e => (e || []).map(p => p[0] + ' → ' + p[1]).join(' · '),
         zeige(box, fertig) {
           const links = T.mischen(paare.map(p => p[0])), wahl = {};

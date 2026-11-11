@@ -20,7 +20,7 @@
       const optionen = T.mischen([m.wort, ...T.mischen(woerter.filter(w => w !== m.wort)).slice(0, 3)]);
       return {
         art: 'eigen', wort: m.wort, frage: st.anweisung || D.anweisung || 'Wie heißt der markierte Teil?',
-        text: m.wort, erklaerung: m.erklaerung || '', tipp: m.tipp,
+        text: m.wort, erklaerung: m.erklaerung || '', tipp: m.tipp, tipp2: m.tipp2, aufloesen: m.aufloesen,
         zeige(box, fertig) {
           box.innerHTML = `<div class="lt-bild">${T.bildHTML(st.bild, D, st.titel)}
             ${st.marken.map((x, i) => `<span class="lt-marke${i === nr ? '' : ' leise'}" style="left:${Number(x.x)}%;top:${Number(x.y)}%">${i === nr ? '?' : ''}</span>`).join('')}</div>`;

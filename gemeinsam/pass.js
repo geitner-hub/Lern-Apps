@@ -416,6 +416,7 @@
       case 'serie':    return { cur: weekInfo().streak, n: b.n };
       case 'xp':       return { cur: S.xp, n: b.n };
       case 'comeback': return { cur: S.flags.comeback ? 1 : 0, n: 1 };
+      case 'treffer':  return { cur: S.flags.treffer || 0, n: b.n };     // passende Selbsteinschätzungen
       case 'event': {
         const days = Object.entries(S.eventDays).filter(([k]) => k.split('|')[0] === b.event).reduce((m, [, v]) => Math.max(m, v.length), 0);
         return { cur: days, n: b.n };
@@ -621,12 +622,15 @@
     const lines = [];
     const base = pct < RULES.lowPct ? RULES.baseXpLow : RULES.baseXp;
     const size = Math.min(1, max / RULES.fullSizeItems);
-    const perf = Math.round(RULES.perfXpMax * Math.max(0, Math.min(1, (pct - RULES.perfFromPct) / (100 - RULES.perfFromPct))) * size);
-    const record = hadPlayed && pct > prevBest && pct >= RULES.recordMinPct && size >= 0.5 ? RULES.recordXp : 0;
+    // Hilfe-Stufen (ueben.js): mit Tipp gelöste Aufgaben (r.tipps) zählen für die Leistungs-XP nur halb
+    const pctXp = r.tipps > 0 ? Math.max(0, Math.round((score - r.tipps / 2) / max * 100)) : pct;
+    // Check vor der Probe (r.check): XP nur fürs Bearbeiten, nicht für richtige Antworten
+    const perf = r.check ? 0 : Math.round(RULES.perfXpMax * Math.max(0, Math.min(1, (pctXp - RULES.perfFromPct) / (100 - RULES.perfFromPct))) * size);
+    const record = !r.check && hadPlayed && pct > prevBest && pct >= RULES.recordMinPct && size >= 0.5 ? RULES.recordXp : 0;
 
     let xp = (base + perf + record) * capFactor * classFactor;
     lines.push(`Runde geschafft +${base}`);
-    if (perf)   lines.push(`${pct} % richtig +${perf}`);
+    if (perf)   lines.push(`${pct} % richtig${pctXp < pct ? ' (mit Tipp: halbe XP)' : ''} +${perf}`);
     if (record) lines.push(`Neuer Rekord +${record}`);
 
     const good = pct >= RULES.goodPct;
@@ -670,7 +674,7 @@
     } else if (S.weeks[wk] === undefined) {
       S.weeks[wk] = 0;                                 // aktiv, aber noch kein guter Tag
     }
-    recordMastery(key, pct, day);
+    if (!r.check) recordMastery(key, pct, day);          // Check vor der Probe: keine Sterne
     pruneWeeks();
     save();
 
@@ -840,6 +844,28 @@
     save();
     return true;
   }
+  /** Selbsteinschätzung (einschaetzung.js): je Themen-ID die letzten 5 Paare [Einschätzung 1–3, Prozent, Tag]; passt → zählt
+   *  fürs Abzeichen (flags.treffer). Keine XP. Steht im Pass und reist mit der Sicherung. */
+  function einschaetzungMerken(id, s, pct, passt) {
+    if (!INHALT_ID.test(String(id)) || ![1, 2, 3].includes(s)) return false;
+    ensureProfile();
+    const E = S.einsch && typeof S.einsch === 'object' ? S.einsch : (S.einsch = {});
+    E[id] = (Array.isArray(E[id]) ? E[id] : []).concat([[s, Math.round(pct), dayKey()]]).slice(-5);
+    if (passt) S.flags.treffer = (S.flags.treffer || 0) + 1;
+    save();
+    return true;
+  }
+  /** Check vor der Probe (typen/check.js): je Check-ID erster (e) und letzter (l) Versuch als [[richtig, anzahl] je Thema], n = Versuche.
+   *  → der erste Versuch von früher oder null (dann war es dieser). Zählt für nichts, reist mit der Sicherung. */
+  function checkMerken(id, werte) {
+    if (!INHALT_ID.test(String(id)) || !Array.isArray(werte)) return null;
+    ensureProfile();
+    const C = S.checks && typeof S.checks === 'object' ? S.checks : (S.checks = {}), alt = C[id];
+    const neu = werte.slice(0, 30).map(x => [Number(x && x[0]) || 0, Number(x && x[1]) || 0]);
+    C[id] = { e: alt && Array.isArray(alt.e) ? alt.e : neu, l: neu, n: ((alt && alt.n) || 0) + 1, d: dayKey() };
+    save();
+    return alt && Array.isArray(alt.e) ? alt.e : null;
+  }
   /** Inhalt-IDs, die mit den aktuellen Einstellungen freigeschaltet sind */
   function freigeschaltet() {
     const sp = readSettings().spiele;
@@ -966,6 +992,7 @@
     get state()   { return S; },
     get settings(){ return readSettings(); },
     get lernstand() { return S.lernstand; },
+    get einschaetzung() { return S.einsch || {}; }, einschaetzungMerken, get checks() { return S.checks || {}; }, checkMerken,
     setSettings, setSpiele, lernstandMelden, wegMerken, freigeschaltet, themaStand, activeEvents, seasonsOn, seasonId, levelXp, pastSeasons,
     openChest, equip, equippedItem, owns, ownedCount, checkBadges, badgeProgress, setLook, look,
     avatarHTML, cardBackground, itemPreviewHTML, itemSourceText,
@@ -996,7 +1023,7 @@
       const res = award(r);
       toast(res);
       const lern = (Array.isArray(r.inhalt) && r.inhalt.length) ? r.inhalt : r.thema;
-      if (lern) lernstandMelden(lern, r.max > 0 ? (r.score / r.max) * 100 : 0, r.max, res.blocked);
+      if (lern && !r.loesung) lernstandMelden(lern, r.max > 0 ? (r.score / r.max) * 100 : 0, r.max, res.blocked);
     });
   }
   try { window.dispatchEvent(new CustomEvent('lernpass:ready')); } catch (e) {}

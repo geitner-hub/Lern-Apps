@@ -164,12 +164,16 @@
         if (inhalt.length) entry.inhalt = inhalt;
         if (thema.length) entry.thema = thema;
         if (result && result.selbst) entry.selbst = true;  // Selbstkontrolle (Typ „fall“): nicht für die Spielsperre
+        // Hilfe-Stufen (ueben.js): tipps = mit Tipp gelöste Aufgaben (halbe XP), loesung = Lösung gezeigt (keine Meisterschaft)
+        if (result && result.tipps > 0) entry.tipps = Number(result.tipps);
+        if (result && result.loesung) entry.loesung = true;
+        if (result && result.check) entry.check = entry.loesung = true;   // Check vor der Probe: XP nur fürs Bearbeiten, kein Lernstand, keine Sterne
         // „Meine Themen“: alte Inhalt-IDs, wenn die App welche schickt, sonst die Themen-IDs
         const lern = inhalt.length ? inhalt : thema;
         if (window.LernPass) {
           const P = window.LernPass, res = P.award(entry);
           P.toast(res);
-          if (lern.length && P.lernstandMelden) P.lernstandMelden(lern, pct, max, res.blocked);
+          if (lern.length && P.lernstandMelden && !entry.loesung) P.lernstandMelden(lern, pct, max, res.blocked);
         }
         else { (window.__lernPassQueue = window.__lernPassQueue || []).push(entry); loadPass(); }
       }
@@ -349,7 +353,7 @@
 
   // Aus einem Lernweg geöffnet? → Knopf „Zurück zum Lernweg“ (Modul nur dann nachladen)
   try {
-    if (sessionStorage.getItem('lernwelt-lernweg-zurueck') && !/english-journey\.html$/.test(location.pathname) && window.LW && LW.laden) LW.laden('gemeinsam/lernweg-zurueck.js');
+    if (sessionStorage.getItem('lernwelt-lernweg-zurueck') && !/(english-journey|typen\/weg)\.html$/.test(location.pathname) && window.LW && LW.laden) LW.laden('gemeinsam/lernweg-zurueck.js');
   } catch (e) {}
 
 })();

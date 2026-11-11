@@ -517,6 +517,28 @@
     planeStat(5000);
     return true;
   }
+  // ── Klassenübersicht je Lernweg (Aktionsplan Tempo, Etappe 6a) ──
+  //  Nur Karten in einer Gruppe: melden je Lernweg, welche Schritte erledigt und welche Abschnitte fertig sind – LESBAR für
+  //  die Lehrkraft (Admin → Gruppen → Klassenübersicht), ohne Namen, Punkte oder Antworten. Gesendet wird nur, wenn sich seit
+  //  der letzten Meldung etwas geändert hat (Merker ST.wm). daten = { e: [Schritt-IDs], f: [Abschnitt-IDs] }
+  const WEG_ID = /^[a-z][a-z0-9-]{1,29}$/, WEG_SID = /^[a-z0-9-]{1,80}$/;
+  const wegLaeuft = {};
+  async function wegMelden(weg, daten) {
+    if (TEST || !ST || ST.ungueltig || !ST.gruppe || !WEG_ID.test(String(weg)) || !daten || wegLaeuft[weg]) return false;
+    const sauber = l => [...new Set((Array.isArray(l) ? l : []).filter(x => typeof x === 'string' && WEG_SID.test(x)))].sort().slice(0, 800);
+    const e = sauber(daten.e), f = sauber(daten.f), text = e.join(',') + '|' + f.join(',');
+    let h = 5381;
+    for (let i = 0; i < text.length; i++) h = ((h << 5) + h + text.charCodeAt(i)) | 0;
+    const merk = h + ':' + text.length;
+    if (((ST.wm || {})[weg]) === merk) return false;              // nichts Neues
+    wegLaeuft[weg] = true;
+    try {
+      const s = await ableiten(ST.code), res = await post('/sync/weg', { id: s.id, auth: s.auth, weg, e, f });
+      if (res.status === 200 && ST) { ST.wm = Object.assign({}, ST.wm, { [weg]: merk }); schreiben(ST); return true; }
+    } catch (err) {} finally { delete wegLaeuft[weg]; }
+    return false;
+  }
+
   function planeStat(ms) {
     clearTimeout(statTimer);
     statTimer = setTimeout(() => statSenden(false), Math.max(ms, statLetzte + STAT_ABSTAND - Date.now()));
@@ -579,7 +601,7 @@
   }
 
   window.LernSync = {
-    status, verbinden, trennen, lernwegMelden,
+    status, verbinden, trennen, lernwegMelden, wegMelden,
     jetztSichern: () => senden(false),
     holen: () => holen(true),
     _intern: { standLesen, standHash, fortschritt, verschluesseln, entschluesseln },   // für Tests

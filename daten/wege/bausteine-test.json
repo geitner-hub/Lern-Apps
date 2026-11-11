@@ -1,0 +1,77 @@
+{
+  "version": 1,
+  "weg": "daten/wege/test.json",
+  "bausteine": [
+    {
+      "id": "test-he-regeln",
+      "art": "hefteintrag",
+      "titel": "So arbeitest du auf dem Lernweg",
+      "zeilen": [
+        [
+          [
+            "Jeder Abschnitt hat ",
+            ""
+          ],
+          [
+            "Pflicht",
+            "g"
+          ],
+          [
+            ", ",
+            ""
+          ],
+          [
+            "Wahl",
+            "g"
+          ],
+          [
+            " und ",
+            ""
+          ],
+          [
+            "Stern",
+            "g"
+          ],
+          [
+            ".",
+            ""
+          ]
+        ],
+        [
+          [
+            "  • Pflicht: Das machen alle.",
+            ""
+          ]
+        ],
+        [
+          [
+            "  • Wahl: Such dir etwas aus.",
+            ""
+          ]
+        ],
+        [
+          [
+            "  • Stern: Extra für Schnelle.",
+            ""
+          ]
+        ]
+      ],
+      "merke": "Erst abhaken, wenn es wirklich im Heft steht."
+    },
+    {
+      "id": "test-ue-rechnen",
+      "art": "uebung",
+      "titel": "Rechne im Heft.",
+      "items": [
+        "30 + 40 = ___",
+        "7 · 8 = ___",
+        "90 − 25 = ___"
+      ],
+      "loesung": [
+        "70",
+        "56",
+        "65"
+      ]
+    }
+  ]
+}

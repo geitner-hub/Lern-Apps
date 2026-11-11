@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "id": "test",
+  "titel": "Test-Weg",
+  "fach": "Allgemein",
+  "klasse": 5,
+  "ico": "🧪",
+  "hinweis": "Muster und Prüfstein für die Lernweg-Engine: je ein Schritt jeder Art. Wird für keine Klasse freigegeben; mit Admin-Anmeldung sichtbar.",
+  "kann": [
+    {
+      "id": "test-kann-1",
+      "text": "einen Lernweg Schritt für Schritt bearbeiten.",
+      "themen": [
+        "ma.5.kopf.leicht"
+      ]
+    }
+  ],
+  "abschnitte": [
+    {
+      "id": "test-a-start",
+      "titel": "Los geht's",
+      "ico": "🚀",
+      "schritte": [
+        {
+          "id": "test-a-start-he",
+          "art": "hefteintrag",
+          "baustein": "test-he-regeln"
+        },
+        {
+          "id": "test-a-start-buch",
+          "art": "uebung",
+          "buch": {
+            "seite": 12,
+            "uebung": "3"
+          },
+          "text": "Löse die Aufgabe im Heft und vergleiche mit deinem Nachbarn."
+        }
+      ]
+    },
+    {
+      "id": "test-a-ueben",
+      "titel": "Üben",
+      "ico": "💪",
+      "wahlMin": 1,
+      "schritte": [
+        {
+          "id": "test-a-ueben-app",
+          "art": "app",
+          "thema": "ma.5.kopf.leicht",
+          "text": "Schaffe eine Runde mit mindestens 70 %."
+        },
+        {
+          "id": "test-a-ueben-wahl1",
+          "art": "uebung",
+          "stufe": "wahl",
+          "baustein": "test-ue-rechnen"
+        },
+        {
+          "id": "test-a-ueben-wahl2",
+          "art": "medium",
+          "stufe": "wahl",
+          "titel": "Bild ansehen: das Lernwelt-Symbol",
+          "link": "icons/icon-192.png"
+        },
+        {
+          "id": "test-a-ueben-stern",
+          "art": "uebung",
+          "stufe": "stern",
+          "text": "Für Schnelle: Erfinde drei eigene Aufgaben und lass sie jemanden lösen."
+        }
+      ]
+    },
+    {
+      "id": "test-a-ziel",
+      "titel": "Am Ziel",
+      "ico": "🏁",
+      "schritte": [
+        {
+          "id": "test-a-ziel-check",
+          "art": "check",
+          "text": "Selbsttest: Kannst du es? (Der Check vor der Probe kommt mit Etappe 5.)"
+        }
+      ]
+    }
+  ]
+}

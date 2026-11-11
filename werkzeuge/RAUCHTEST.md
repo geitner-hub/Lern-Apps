@@ -20,6 +20,17 @@ Live am iPad über das Symbol auf dem Home-Bildschirm, Test in Safari.
 | 13 | GPG: Quellen-Detektiv öffnen (ohne Admin-Anmeldung) | Pfad mit Stationen, nur Station 1 offen; Station 1 mit ≥ 70 % → „Station geschafft“, „Nächste Station ›“ öffnet Station 2; nur Fotos, kein ⓘ am Bild; „📷 Bildnachweise“ unten listet nur Bilder freier Stationen |
 | 14 | Quellen-Detektiv: die vier Kritik-Stufen | 🔒 bis zur Freigabe im Admin; danach „Ganzer Fall mit Quellenkritik“ mit lila Karte 4, im Detektiv-Ritual tauchen Kritik-Aufgaben auf |
 | 15 | Admin 🎓 Unterricht → 🔓 Freischalten: eine Ägypten-Stufe des Quellen-Detektivs für eine Testgruppe „Jetzt frei“; Kinder-iPad der Gruppe mit offener Stufenwahl liegen lassen | nach höchstens 3 Minuten ohne Neuladen frei, der Ägypten-Fall dazu erscheint im „Ganzer Fall: Ägypten“; danach unter Inhalte → Freigaben wieder sperren |
+| 16 | Startseite ein zweites Mal öffnen (auch mit schlechtem WLAN) | steht sofort; ganz oben der Knopf „Weiter lernen“ (mit Pass), darunter Pass und „Heute für dich“ |
+| 17 | Nach einem Upload mit neuer Version: Startseite öffnen und kurz warten | lädt genau einmal von selbst neu, danach steht unter Pass → Sicherung die neue Version |
+| 18 | Nach einem Upload: Kopfrechnen öffnen, sofort eine Runde starten und zu Ende spielen | kein Neuladen in der Runde; erst zurück in der Stufenwahl lädt die Seite einmal neu |
+| 19 | Im Admin eine Freigabe oder das Banner ändern und veröffentlichen, nach ca. 1 Min. die Startseite öffnen | Änderung ist da, ohne neue Version |
+| 20 | Mit Admin-Anmeldung: `apps/typen/weg.html?weg=test` öffnen, ersten Knoten antippen, Hefteintrag zeigen und abhaken, „☰ Liste“ | Pfad mit drei Knoten, Karte mit Pflicht/Wahl/Stern, Haken bleibt nach dem Neuladen; Liste zeigt alle Abschnitte |
+| 21 | Im Test-Weg den App-Schritt „Los ›“ antippen | Kopfrechnen öffnet, oben rechts „🧭 Zurück zum Weg“ führt zurück |
+| 22 | Kopfrechnen: in einer Aufgabe „💡 Tipp“, „Noch ein Tipp“, dann richtig lösen; in einer anderen bis „🔎 Lösung zeigen“ | Tipps erscheinen nacheinander; Ergebnis nennt Tipp bzw. Lösung, die XP-Meldung zeigt „mit Tipp: halbe XP“ |
+| 23 | Admin → System → Feature-Schalter: „Selbsteinschätzung“ für eine Testgruppe an; dort Kopfrechnen starten | vor der Runde drei Knöpfe, nach der Runde der Abgleich; am selben Tag beim selben Thema keine zweite Frage |
+| 24 | English Journey → Finale-Abschnitt einer freigegebenen Unit → „Check vor der Probe“ starten und durchspielen | je Thema zwei Aufgaben ohne Hilfe-Knopf; am Ende je Thema „Das kannst du“ oder „Hier nochmal üben“ mit Knopf „Üben ›“; der Schritt ist danach abgehakt |
+| 25 | Check wiederholen | neben jeder Zeile steht „beim ersten Mal x von 2“ |
+| 26 | Startseite → Mein Laufzettel → „🎯 Das kann ich“, dann Drucken (Vorschau) | Liste je freigegebener Unit mit ⬜/🟡/🟢 und Einschätzung; Druck hell, eine Seite je Unit |
 
 **Nur in der Testumgebung zusätzlich:** Oben steht „🧪 TEST · vXX“. Im Admin eine Kleinigkeit ändern und
 speichern → Meldung „Testumgebung: Speichern und Sicherung sind hier abgeschaltet“. Danach live den Pass
@@ -58,6 +69,9 @@ Erst in der Testumgebung, dort wird nichts gespeichert. Den Admin nicht in zwei 
 | A25 | Motivation → Pass: ein Event auf „Zeitraum“ ab morgen stellen, veröffentlichen; Motivation → Kalender | Event steht unter „Kommt“, Dashboard meldet „beginnt morgen“; heute ist es auf der Startseite noch aus |
 | A26 | Am nächsten Tag: Startseite eines Kinder-iPads | Event ist ohne Eingriff an; am Tag nach „bis“ wieder aus (braucht den neuen Worker) |
 | A27 | Inhalte → App-Einstellungen: Tower Defense „Herzen der Burg“ auf 5, veröffentlichen; Tower Defense am iPad starten | Burg hat 5 Herzen; ↺ setzt auf 10 zurück |
+| A28 | Gruppen → 🚦 Klassenübersicht: Gruppe und „English Journey“ wählen (neuer Worker nötig) | Raster mit einer Zeile je Karte; Karten, deren iPad die Startseite seit v125 geöffnet hat, zeigen Farben und „zuletzt weiter“ |
+| A29 | Inhalte → 🗺️ Lernwege: Test-Weg öffnen, einen Schritt ausblenden, „Änderungen verwerfen“ | Schritt wird blass, „● ungespeichert“ erscheint, nach dem Verwerfen alter Stand |
+| A30 | Lernwege: „＋ Neuer Weg“ mit Titel anlegen, Hefteintrag mit `*grün*` schreiben, Speichern (nur live) | „Gespeichert“, nach 1–2 Min. öffnet die Vorschau den Weg; unter Gruppen → 📒 Laufzettel steht er zur Freigabe |
 | A29 | Inhalte → 🌳 Katalog: Englisch → Wortschatz aufklappen, Schalter einer Unit aus, veröffentlichen | Unit im Vokabeltrainer mit 🔒; Schalter wieder an → offen |
 | A30 | Live: Inhalte → 📖 Vokabeln → Klasse 6: neue Unit „Unit 6: …“ anlegen, 3 Zeilen aus einer Tabelle importieren, 💾 Speichern | „Gespeichert“; nach 1–2 Min. im Vokabeltrainer Kl. 6 als neue Unit, im Katalog als Stufe, in RUN! über „selbst wählen“ (braucht `dateien.js` bei Cloudflare) |
 | A31 | Vokabeln: ein Wort leeren, 💾 Speichern | Speichern gestoppt mit „leeres Feld“; ohne neuen Worker steht oben „Nur lesen“ |
