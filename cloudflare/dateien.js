@@ -13,6 +13,11 @@
 //    daten/journey/bausteine-en6.json – Hefteinträge, eigene Übungen, Kann-Sätze; bestehende IDs und Arten bleiben
 //                               (Lernweg im English Journey, Etappe 6 – gleiche Regeln wie pruefen.py Regel 23)
 //
+//    daten/wege/liste.json, daten/wege/<Weg-ID>.json, daten/wege/bausteine-<Weg-ID>.json – 2D-Lernwege (Lernweg-Editor,
+//                               Aktionsplan „Lernwelt – Tempo“, Etappe 6b): gleiche Regeln wie pruefen.py Regel 24; bestehende
+//                               Wege, Abschnitte, Schritte und Bausteine behalten ihre ID (ausblenden mit "aus": true statt
+//                               löschen). Weg- und Baustein-Dateien dürfen NEU angelegt werden (sha: '').
+//
 //  Endpunkte (Header: Authorization: Bearer <schlüssel>):
 //    POST /dateien/lesen      Body { pfade: [..] }  → { dateien: { pfad: { daten, sha } } }
 //    POST /dateien/speichern  Body { dateien: [{ pfad, daten, sha }], text }
@@ -36,6 +41,9 @@ const DATEIEN_ERLAUBT = [
   { muster: /^daten\/lernwelt-inhalte\.json$/,     art: 'inhalte' },
   { muster: /^daten\/journey6\.json$/,              art: 'journey' },
   { muster: /^daten\/journey\/bausteine-en6\.json$/, art: 'bausteine' },
+  { muster: /^daten\/wege\/liste\.json$/,           art: 'wegliste' },
+  { muster: /^daten\/wege\/bausteine-[a-z][a-z0-9-]{1,29}\.json$/, art: 'wegbausteine' },
+  { muster: /^daten\/wege\/(?!liste\.json$|bausteine-)[a-z][a-z0-9-]{1,29}\.json$/, art: 'weg' },
 ];
 const dateienArt = pfad => (DATEIEN_ERLAUBT.find(e => e.muster.test(String(pfad))) || {}).art || null;
 
@@ -80,7 +88,8 @@ async function dateienSpeichern(env, cors, body, h) {
   const pfade = liste.map(d => d && d.pfad);
   if (!liste.length || liste.length > 3 || pfade.some(p => !dateienArt(p)) || new Set(pfade).size !== pfade.length)
     return h.json({ error: 'Pfad nicht erlaubt' }, 400, cors);
-  if (liste.some(d => typeof d.sha !== 'string' || !/^[0-9a-f]{40}$/.test(d.sha) || !d.daten || typeof d.daten !== 'object'))
+  const darfNeu = d => d.sha === '' && ['weg', 'wegbausteine'].includes(dateienArt(d.pfad));     // Lernweg-Editor: Datei neu anlegen
+  if (liste.some(d => typeof d.sha !== 'string' || !(/^[0-9a-f]{40}$/.test(d.sha) || darfNeu(d)) || !d.daten || typeof d.daten !== 'object'))
     return h.json({ error: 'daten und sha nötig' }, 400, cors);
 
   // Fester Ausgangspunkt: der aktuelle Commit von main – alles wird gegen genau diesen Stand geprüft
@@ -90,9 +99,9 @@ async function dateienSpeichern(env, cors, body, h) {
   const alt = {};
   for (const d of liste) {
     const a = await dateienHolen(env, h, d.pfad, basis);
-    if (!a) return h.json({ error: 'Datei fehlt: ' + d.pfad }, 404, cors);
-    if (a.sha !== d.sha) return h.json({ error: 'CONFLICT' }, 409, cors);      // inzwischen woanders geändert
-    alt[d.pfad] = a.daten;
+    if (!a && !darfNeu(d)) return h.json({ error: 'Datei fehlt: ' + d.pfad }, 404, cors);
+    if ((a ? a.sha : '') !== d.sha) return h.json({ error: 'CONFLICT' }, 409, cors);      // inzwischen woanders geändert (oder gibt es schon)
+    alt[d.pfad] = a ? a.daten : null;
   }
 
   // Formatprüfung: Katalog zuerst (die Vokabeln verweisen auf seine IDs)
@@ -117,12 +126,39 @@ async function dateienSpeichern(env, cors, body, h) {
     if (bs) probleme.push(...dateienPruefeBausteine(bs.daten, alt[bs.pfad]).map(x => bs.pfad + ': ' + x));
     probleme.push(...dateienPruefeJourney(wegDaten, jw ? alt[jw.pfad] : wegDaten, bausteine, dateienKatalogIds(katalog)).map(x => 'daten/journey6.json: ' + x));
   }
+  // 2D-Lernwege: Verzeichnis, Weg und Bausteine gehören zusammen – was in der Anfrage fehlt, gilt im Stand von main
+  const wl = liste.find(d => dateienArt(d.pfad) === 'wegliste'), wegD = liste.filter(d => dateienArt(d.pfad) === 'weg'), wegB = liste.filter(d => dateienArt(d.pfad) === 'wegbausteine');
+  if (wl || wegD.length || wegB.length) {
+    if (!katalog) { const k = await dateienHolen(env, h, 'daten/katalog.json', basis); katalog = k ? k.daten : null; }
+    const kIds = dateienKatalogIds(katalog);
+    const verzeichnis = wl ? wl.daten : (await dateienHolen(env, h, 'daten/wege/liste.json', basis) || {}).daten;
+    if (wl) probleme.push(...dateienPruefeWegListe(wl.daten, alt[wl.pfad]).map(x => wl.pfad + ': ' + x));
+    const eintraege = new Map(((verzeichnis && Array.isArray(verzeichnis.wege)) ? verzeichnis.wege : []).filter(dateienObj).map(x => [x.id, x]));
+    const wid = pfad => pfad.replace(/^daten\/wege\/(bausteine-)?/, '').replace(/\.json$/, '');
+    const holeOder = async (pfad, ersatz) => { const x = liste.find(d => d.pfad === pfad); if (x) return x.daten; const y = await dateienHolen(env, h, pfad, basis); return y ? y.daten : ersatz; };
+    for (const id of new Set([...wegD, ...wegB].map(d => wid(d.pfad)))) {
+      const pw = `daten/wege/${id}.json`, pb = `daten/wege/bausteine-${id}.json`;
+      if (!eintraege.has(id)) { probleme.push(`${pw}: Weg ${id} steht nicht in daten/wege/liste.json`); continue; }
+      const W = await holeOder(pw, null), B = await holeOder(pb, { bausteine: [] });
+      if (!W) { probleme.push(`${pw}: Weg-Datei fehlt`); continue; }
+      const b = liste.find(d => d.pfad === pb);
+      if (b) probleme.push(...dateienPruefeWegBausteine(b.daten, alt[pb], id).map(x => pb + ': ' + x));
+      probleme.push(...dateienPruefeWeg(W, liste.some(d => d.pfad === pw) ? alt[pw] : W, B, kIds, id, eintraege.get(id)).map(x => pw + ': ' + x));
+    }
+    if (wl) for (const [id, eintrag] of eintraege) {              // jeder Eintrag braucht seine Weg-Datei, Kopfdaten gleich
+      if (wegD.some(d => wid(d.pfad) === id)) continue;
+      const W = (await dateienHolen(env, h, `daten/wege/${id}.json`, basis) || {}).daten;
+      if (!W) probleme.push(`${wl.pfad}: zu Weg ${id} fehlt daten/wege/${id}.json`);
+      else if (['titel', 'fach', 'klasse', 'ico'].some(k => W[k] !== eintrag[k])) probleme.push(`${wl.pfad}: Kopfdaten von ${id} weichen von der Weg-Datei ab`);
+    }
+  }
   if (probleme.length) return h.json({ error: 'Ungültig: ' + probleme.slice(0, 6).join('; ') }, 422, cors);
 
   const baum = liste.map(d => {
     const art = dateienArt(d.pfad);
     const text = art === 'vokabeln' ? dateienFormatVokabeln(d.daten) : art === 'katalog' ? JSON.stringify(d.daten, null, 1) + '\n'
       : art === 'aufgaben' ? dateienFormatPools(d.daten) : art === 'journey' || art === 'bausteine' ? JSON.stringify(d.daten, null, 1) + '\n'
+      : ['wegliste', 'weg', 'wegbausteine'].includes(art) ? JSON.stringify(d.daten, null, 2) + '\n'
       : dateienFormatZeilen(d.daten);
     return { path: d.pfad, mode: '100644', type: 'blob', content: text };
   });
@@ -464,3 +500,117 @@ function dateienFormatVokabeln(d) {
   };
   return aus(d, 0) + '\n';
 }
+
+// ═══════════════════════════════════════════════════════
+//  2D-Lernwege (Lernweg-Editor, Aktionsplan „Lernwelt – Tempo“, Etappe 6b) – gleiche Regeln wie pruefen.py Regel 24
+// ═══════════════════════════════════════════════════════
+const DATEIEN_WEG_ID = /^[a-z][a-z0-9-]{1,29}$/;
+const DATEIEN_WEG_SID = /^[a-z0-9-]{1,80}$/;
+const DATEIEN_WEG_ARTEN = ['hefteintrag', 'uebung', 'app', 'medium', 'check'];
+const dateienWegIdOk = id => typeof id === 'string' && DATEIEN_WEG_ID.test(id) && !id.startsWith('journey') && !/^(u\d+|he|ue|kann)$/.test(id);
+const dateienNurKeys = (o, erlaubt) => Object.keys(o).every(k => erlaubt.includes(k));
+
+function dateienPruefeWegListe(neu, alt) {
+  if (!dateienObj(neu) || !Array.isArray(neu.wege) || neu.wege.length > 40 || !dateienNurKeys(neu, ['version', 'hinweis', 'wege'])) return ['Aufbau ungültig (wege)'];
+  const p = [], ids = new Set();
+  neu.wege.forEach((w, i) => {
+    const wo = 'Weg ' + (w && w.id || i + 1);
+    if (!dateienObj(w) || !dateienWegIdOk(w.id) || ids.has(w.id)) return p.push(wo + ': ID fehlt, ungültig oder doppelt');
+    ids.add(w.id);
+    if (!dateienNurKeys(w, ['id', 'titel', 'fach', 'klasse', 'ico', 'test'])) p.push(wo + ': unbekanntes Feld');
+    if (!dateienText(w.titel, 60) || !dateienText(w.fach, 40) || !Number.isInteger(w.klasse) || w.klasse < 1 || w.klasse > 10) p.push(wo + ': titel, fach oder klasse ungültig');
+    if (w.ico !== undefined && !dateienZeile(w.ico, 8)) p.push(wo + ': Symbol ungültig');
+    if (w.test !== undefined && typeof w.test !== 'boolean') p.push(wo + ': test ist true oder false');
+  });
+  ((alt && alt.wege) || []).forEach(a => { if (a && !ids.has(a.id)) p.push(`Weg ${a.id} darf nicht gelöscht werden (Lernstände und Freigaben hängen daran)`); });
+  return p;
+}
+
+function dateienPruefeWegBausteine(neu, alt, wid) {
+  if (!dateienObj(neu) || neu.weg !== `daten/wege/${wid}.json` || !Array.isArray(neu.bausteine) || neu.bausteine.length > 300 || !dateienNurKeys(neu, ['version', 'weg', 'bausteine'])) return ['Aufbau ungültig (weg, bausteine)'];
+  const p = [], ids = new Set(), altBy = new Map(((alt && alt.bausteine) || []).map(b => [b.id, b]));
+  const texte = (l, max) => Array.isArray(l) && l.length <= 40 && l.every(x => dateienZeile(x, max));
+  neu.bausteine.forEach((b, i) => {
+    const wo = 'Baustein ' + (b && b.id || i + 1);
+    if (!dateienObj(b) || typeof b.id !== 'string' || !DATEIEN_WEG_SID.test(b.id) || !b.id.startsWith(wid + '-') || ids.has(b.id)) return p.push(wo + `: ID muss mit „${wid}-“ beginnen und eindeutig sein`);
+    ids.add(b.id);
+    const a = altBy.get(b.id);
+    if (a && a.art !== b.art) return p.push(wo + ': die Art darf sich nicht ändern');
+    if (!dateienText(b.titel, 120)) p.push(wo + ': Titel fehlt');
+    if (b.art === 'hefteintrag') {
+      if (!dateienNurKeys(b, ['id', 'art', 'titel', 'zeilen', 'merke'])) p.push(wo + ': unbekanntes Feld');
+      if (!Array.isArray(b.zeilen) || b.zeilen.length > 30 || !b.zeilen.every(z => Array.isArray(z) && z.length <= 12
+          && z.every(t => Array.isArray(t) && t.length === 2 && dateienZeile(t[0], 200) && ['', 'g', 'b'].includes(t[1])))) p.push(wo + ': Zeilen ungültig');
+      if (b.merke !== undefined && !dateienZeile(b.merke, 200)) p.push(wo + ': Merksatz ungültig');
+    } else if (b.art === 'uebung') {
+      if (!dateienNurKeys(b, ['id', 'art', 'titel', 'items', 'loesung'])) p.push(wo + ': unbekanntes Feld');
+      if ((b.items !== undefined && !texte(b.items, 200)) || (b.loesung !== undefined && !texte(b.loesung, 200))) p.push(wo + ': Aufgaben oder Lösung ungültig');
+    } else p.push(wo + ': art muss hefteintrag oder uebung sein');
+  });
+  altBy.forEach((a, id) => { if (!ids.has(id)) p.push(`Baustein ${id} darf nicht gelöscht werden`); });
+  return p;
+}
+
+/** W = neuer Weg, alt = Stand von main (null bei neuer Datei), B = Bausteine-Datei, ids = Katalog-IDs, eintrag = Zeile aus liste.json */
+function dateienPruefeWeg(W, alt, B, ids, wid, eintrag) {
+  if (!dateienObj(W) || W.id !== wid || !Array.isArray(W.abschnitte) || !W.abschnitte.length || W.abschnitte.length > 60
+      || !dateienNurKeys(W, ['version', 'id', 'titel', 'fach', 'klasse', 'ico', 'hinweis', 'buch', 'kann', 'abschnitte'])) return ['Aufbau ungültig (id, abschnitte)'];
+  const p = [], gesehen = new Set(), bausteine = new Map(((B && B.bausteine) || []).filter(dateienObj).map(b => [b.id, b]));
+  if (['titel', 'fach', 'klasse', 'ico'].some(k => W[k] !== (eintrag || {})[k])) p.push('titel, fach, klasse und ico müssen wie in daten/wege/liste.json sein');
+  if (W.hinweis !== undefined && !dateienZeile(W.hinweis, 400)) p.push('hinweis ungültig');
+  if (W.buch !== undefined && !dateienZeile(W.buch, 80)) p.push('buch ungültig');
+  const id = (i, was) => {
+    if (typeof i !== 'string' || !DATEIEN_WEG_SID.test(i) || !i.startsWith(wid + '-') || gesehen.has(i)) { p.push(`${was}: ID muss mit „${wid}-“ beginnen und eindeutig sein`); return false; }
+    gesehen.add(i); return true;
+  };
+  const altArt = new Map();
+  ((alt && alt.abschnitte) || []).forEach(a => { altArt.set(a.id, 'abschnitt'); (a.schritte || []).forEach(s => altArt.set(s.id, s.art)); });
+  ((alt && alt.kann) || []).forEach(k => altArt.set(k.id, 'kann'));
+  W.abschnitte.forEach((a, n) => {
+    const wo = 'Abschnitt ' + (a && a.id || n + 1);
+    if (!dateienObj(a) || !id(a.id, wo)) return;
+    if (!dateienNurKeys(a, ['id', 'titel', 'ico', 'wahlMin', 'aus', 'schritte'])) p.push(wo + ': unbekanntes Feld');
+    if (!dateienText(a.titel, 80) || (a.ico !== undefined && !dateienZeile(a.ico, 8)) || (a.aus !== undefined && typeof a.aus !== 'boolean')) p.push(wo + ': titel, ico oder aus ungültig');
+    if (!Array.isArray(a.schritte) || a.schritte.length > 40) return p.push(wo + ': schritte fehlen');
+    let zaehlt = 0, wahl = 0;
+    a.schritte.forEach((s, m) => {
+      const ws = 'Schritt ' + (s && s.id || `${a.id} #${m + 1}`);
+      if (!dateienObj(s) || !id(s.id, ws)) return;
+      if (!DATEIEN_WEG_ARTEN.includes(s.art)) return p.push(ws + ': art ungültig');
+      if (altArt.has(s.id) && altArt.get(s.id) !== s.art) return p.push(ws + ': die Art darf sich nicht ändern');
+      if (!dateienNurKeys(s, ['id', 'art', 'stufe', 'aus', 'text', 'titel', 'baustein', 'thema', 'link', 'buch'])) p.push(ws + ': unbekanntes Feld');
+      const stufe = s.stufe === undefined ? 'pflicht' : s.stufe;
+      if (!['pflicht', 'wahl', 'stern'].includes(stufe) || (s.aus !== undefined && typeof s.aus !== 'boolean')) p.push(ws + ': stufe oder aus ungültig');
+      if (!s.aus && !a.aus) { if (stufe !== 'stern') zaehlt++; if (stufe === 'wahl') wahl++; }
+      if ((s.text !== undefined && !dateienZeile(s.text, 300)) || (s.titel !== undefined && !dateienZeile(s.titel, 120))) p.push(ws + ': Text ungültig');
+      if (s.baustein !== undefined) {
+        const b = bausteine.get(s.baustein);
+        if (!b || b.art !== s.art || !['hefteintrag', 'uebung'].includes(s.art)) p.push(ws + ': Baustein fehlt oder hat die falsche Art');
+      }
+      if (s.art === 'hefteintrag' && s.baustein === undefined) p.push(ws + ': Hefteintrag braucht einen Baustein');
+      if (s.art === 'uebung' && s.baustein === undefined && !dateienText(s.text, 300)) p.push(ws + ': Übung braucht Text oder eigene Aufgaben');
+      if (s.art === 'app' || (s.art === 'check' && s.thema !== undefined)) { if (!ids.has(s.thema)) p.push(ws + `: Thema ${s.thema} steht nicht im Katalog`); }
+      else if (s.thema !== undefined) p.push(ws + ': thema nur bei App und Check');
+      if (s.art === 'check' && s.thema === undefined && !dateienText(s.text, 300)) p.push(ws + ': Check braucht Text oder Thema');
+      if (s.art === 'medium' && (!dateienText(s.titel, 120) || typeof s.link !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9_\-./]{0,200}$/.test(s.link) || s.link.includes('..'))) p.push(ws + ': Medium braucht Titel und einen Pfad im Repo');
+      if (s.art !== 'medium' && s.link !== undefined) p.push(ws + ': link nur bei Medium');
+      if (s.buch !== undefined && !(dateienObj(s.buch) && Number.isInteger(s.buch.seite) && s.buch.seite > 0 && s.buch.seite < 1000
+          && (s.buch.uebung === undefined || dateienZeile(s.buch.uebung, 20)) && dateienNurKeys(s.buch, ['seite', 'uebung']))) p.push(ws + ': Buchverweis ungültig');
+    });
+    if (!a.aus && !zaehlt) p.push(wo + ': braucht mindestens einen sichtbaren Pflicht- oder Wahl-Schritt');
+    if (a.wahlMin !== undefined && !(Number.isInteger(a.wahlMin) && a.wahlMin >= 1 && a.wahlMin <= Math.max(1, wahl))) p.push(wo + ': wahlMin passt nicht zur Zahl der Wahl-Schritte');
+  });
+  if (!W.abschnitte.some(a => dateienObj(a) && !a.aus)) p.push('mindestens ein Abschnitt muss sichtbar sein');
+  if (W.kann !== undefined) {
+    if (!Array.isArray(W.kann) || W.kann.length > 40) p.push('kann ungültig');
+    else W.kann.forEach((k, n) => {
+      const wo = 'Kann-Satz ' + (k && k.id || n + 1);
+      if (!dateienObj(k) || !id(k.id, wo)) return;
+      if (!dateienText(k.text, 200) || !dateienNurKeys(k, ['id', 'text', 'themen'])) p.push(wo + ': Text fehlt oder unbekanntes Feld');
+      if (k.themen !== undefined && !(Array.isArray(k.themen) && k.themen.length <= 12 && k.themen.every(t => ids.has(t)))) p.push(wo + ': Themen stehen nicht im Katalog');
+    });
+  }
+  altArt.forEach((art, i) => { if (!gesehen.has(i)) p.push(`${i} darf nicht gelöscht werden – mit "aus": true ausblenden`); });
+  return p;
+}
+

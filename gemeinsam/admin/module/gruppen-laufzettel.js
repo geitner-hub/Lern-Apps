@@ -162,7 +162,7 @@ LWAdmin.modul({
     function wegeHTML(c, optionen) {
       if (!wege.length) return '';
       const wahl = (id, W, wer, aktuell) => `<select data-wg="${e(id)}" data-wg-wer="${e(wer)}" aria-label="Frei bis Abschnitt für ${e(werName(wer))}"><option value="">— nicht frei —</option>
-        ${W.abschnitte.map(a => `<option value="${e(a.id)}"${a.id === aktuell ? ' selected' : ''}>${e(a.titel)}</option>`).join('')}</select>`;
+        ${W.abschnitte.filter(a => !a.aus).map(a => `<option value="${e(a.id)}"${a.id === aktuell ? ' selected' : ''}>${e(a.titel)}</option>`).join('')}</select>`;
       return `<div class="lw-karte"><h2>🗺️ Weitere Lernwege</h2>
         <p>Lernwege ohne 3D (für jedes Fach, <code>daten/wege/</code>). Die Kinder sehen den ganzen Weg; offen sind die Abschnitte bis einschließlich dem gewählten,
         dahinter steht die 🚧 Schranke. Ein freigegebener Weg erscheint auf der Startseite unter „Weiter lernen“ und „Mein Laufzettel“.</p>

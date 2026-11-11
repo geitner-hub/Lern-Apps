@@ -44,6 +44,8 @@
     if (!ID.test(String(id))) return Promise.reject(new Error('Unbekannter Weg'));
     if (!wegP[id]) wegP[id] = hole('daten/wege/' + id + '.json').then(W => {
       if (!W || W.id !== id || !Array.isArray(W.abschnitte)) throw new Error('Weg-Datei ungültig');
+      // Ausgeblendetes ("aus": true, Lernweg-Editor: ausblenden statt löschen) gibt es für die Kinder nicht
+      W.abschnitte = W.abschnitte.filter(a => a && !a.aus).map(a => Object.assign({}, a, { schritte: (a.schritte || []).filter(s => s && !s.aus) }));
       const braucht = W.abschnitte.some(a => (a.schritte || []).some(s => s.baustein));
       return (braucht ? hole('daten/wege/bausteine-' + id + '.json') : Promise.resolve({})).then(b => {
         const B = {};

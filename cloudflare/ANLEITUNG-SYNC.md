@@ -3,7 +3,9 @@
 Die automatische Pass-Sicherung läuft im bestehenden Worker `lern-apps-config`.
 Der Code steht in `cloudflare/sync.js`, der Einstieg in `cloudflare/worker.js`.
 Die Stände liegen **verschlüsselt** in einer D1-Datenbank. Der Worker kann sie nicht
-lesen; Namen werden nie gespeichert.
+lesen; Namen werden nie gespeichert. Ausnahme seit v125: der Lernweg-Fortschritt je Karte (Tabelle `sync_weg`, nur
+erledigte Schritt- und Abschnitt-Kennungen) liegt lesbar vor – für die Klassenübersicht im Admin. Die Tabelle legt der
+Worker beim ersten Aufruf selbst an; nach dem Einfügen des neuen Codes ist nichts weiter einzurichten.
 
 ## Einrichtung (einmalig, ca. 10 Minuten)
 

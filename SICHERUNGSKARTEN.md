@@ -6,6 +6,9 @@ es zurückgesetzt, scannt das Kind seine Karte und alles ist wieder da.
 
 - Keine Accounts, keine E-Mail, keine Namen auf dem Server.
 - Der Server speichert nur verschlüsselte Stände. Lesen kann sie nur, wer die Karte hat.
+- **Ausnahme seit v125 (Klassenübersicht je Lernweg):** Karten in einer Gruppe melden zusätzlich lesbar, welche Schritte
+  und Abschnitte eines Lernwegs erledigt sind – nur Kennungen von Schritten, keine Namen, keine Punkte, keine Antworten.
+  Im Admin steht das als Zeile je Kartennummer (Gruppen → 🚦 Klassenübersicht).
 - Wer welche Karte hat, steht **nur auf deiner Liste**.
 
 ## 1. Karten erzeugen (Admin)
@@ -58,5 +61,8 @@ Nach **2 Jahren** ohne Sicherung werden Stände automatisch gelöscht.
 
 ## Datenschutz in einem Satz
 
-Auf dem Server liegen nur verschlüsselte Daten ohne Namen oder Klasse, die nur mit der gedruckten
+Auf dem Server liegen verschlüsselte Stände ohne Namen oder Klasse, die nur mit der gedruckten
 Karte lesbar sind; die Zuordnung zu den Kindern gibt es nur auf Papier bei der Lehrkraft.
+Dazu kommt seit v125 je Karte der Lernweg-Fortschritt in lesbarer Form (welche Schritte erledigt sind, wann sich zuletzt
+etwas geändert hat) – pseudonym über die Kartennummer, ohne Namen, Punkte oder Antworten; lesbar nur mit dem Hauptzugang
+des Admins, gelöscht mit der Karte bzw. nach 400 Tagen ohne Meldung.

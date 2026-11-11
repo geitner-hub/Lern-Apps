@@ -976,8 +976,10 @@ if wege_dir.is_dir():
                 art, stufe_ = sc.get('art'), sc.get('stufe', 'pflicht')
                 if art not in WEG_ARTEN: FW(f'Schritt {sid}: art {art!r} – erlaubt: {", ".join(sorted(WEG_ARTEN))}'); continue
                 if stufe_ not in ('pflicht', 'wahl', 'stern'): FW(f'Schritt {sid}: stufe {stufe_!r} – erlaubt: pflicht, wahl, stern')
-                if stufe_ != 'stern': zaehlt += 1
-                if stufe_ == 'wahl': wahl += 1
+                versteckt = sc.get('aus') is True or ab.get('aus') is True      # Lernweg-Editor: ausgeblendet statt gelöscht
+                if sc.get('aus') not in (None, True, False): FW(f'Schritt {sid}: aus ist true oder false')
+                if stufe_ != 'stern' and not versteckt: zaehlt += 1
+                if stufe_ == 'wahl' and not versteckt: wahl += 1
                 bst = sc.get('baustein')
                 if bst is not None:
                     if bst not in bausteine: FW(f'Schritt {sid}: Baustein {bst} fehlt in daten/wege/bausteine-{wid}.json')
@@ -996,7 +998,7 @@ if wege_dir.is_dir():
                         FW(f'Schritt {sid}: link {ln!r} – Datei im Repo (Pfad ab Hauptordner), keine fremden Adressen')
                 bu = sc.get('buch')
                 if bu is not None and not (isinstance(bu, dict) and isinstance(bu.get('seite'), int)): FW(f'Schritt {sid}: buch = {{ "seite": Zahl, "uebung": "…" }}')
-            if not zaehlt: FW(f'Abschnitt {aid}: braucht mindestens einen Pflicht- oder Wahl-Schritt')
+            if not zaehlt and ab.get('aus') is not True: FW(f'Abschnitt {aid}: braucht mindestens einen sichtbaren Pflicht- oder Wahl-Schritt')
             wm = ab.get('wahlMin')
             if wm is not None and not (isinstance(wm, int) and 1 <= wm <= max(1, wahl)): FW(f'Abschnitt {aid}: wahlMin {wm!r} – 1 bis {max(1, wahl)} (Zahl der Wahl-Schritte)')
         kn = Wd.get('kann')

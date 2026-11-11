@@ -26,7 +26,7 @@ LWAdmin.modul({
         schritte: a.schritte.map(s => ({ id: s.id, text: schrittText(s, B), zaehlt: s.art !== 'extra' })) }))) };
     }
     function ausWeg(W, B) {
-      return { id: W.id, titel: (W.ico ? W.ico + ' ' : '🗺️ ') + W.titel, abschnitte: W.abschnitte.map(a => ({
+      return { id: W.id, titel: (W.ico ? W.ico + ' ' : '🗺️ ') + W.titel, abschnitte: W.abschnitte.filter(a => !a.aus).map(a => Object.assign({}, a, { schritte: a.schritte.filter(s => !s.aus) })).map(a => ({
         id: a.id, titel: a.titel, gruppe: '', wahl: false, stern: a.schritte.filter(s => s.stufe === 'stern').map(s => s.id),
         schritte: a.schritte.map(s => ({ id: s.id, text: schrittText(s, B), zaehlt: s.stufe !== 'stern' && s.stufe !== 'wahl' })) })) };
     }
@@ -85,7 +85,7 @@ LWAdmin.modul({
         return { pct, n, stolper: top && top[1] >= 2 && sch ? `${top[1]}× offen: ${String(sch.text).slice(0, 70)}` : '' };
       });
       const stolper = gruppenZeile.map((g, i) => g.stolper && i <= bis ? `<li><b>${e(ab[i].titel)}</b> – ${e(g.stolper)}</li>` : '').join('');
-      const knopf = (id, text, n) => `<button type="button" class="lw-btn klein${filter === id ? ' an' : ''}" data-ku-filter="${id}" aria-pressed="${filter === id}"${filter === id ? ' style="outline:2px solid #e6a817"' : ''}>${text} (${n})</button>`;
+      const knopf = (id, text, n) => `<button type="button" class="lw-btn klein${filter === id ? ' gold' : ''}" data-ku-filter="${id}" aria-pressed="${filter === id}">${text} (${n})</button>`;
       let gruppeVorher = null;
       const gruppenKopf = ab.map(a => a.gruppe).some(Boolean) ? `<tr><th></th><th></th>${ab.map(a => { const neu = a.gruppe !== gruppeVorher; gruppeVorher = a.gruppe; return neu ? `<th colspan="${ab.filter(x => x.gruppe === a.gruppe).length}" style="font-size:.72rem;text-align:left;padding:2px 4px;border-left:2px solid rgba(255,255,255,.25)">${e(a.gruppe)}</th>` : ''; }).join('')}</tr>` : '';
       host.innerHTML = kopf + `<div class="lw-karte">

@@ -117,6 +117,11 @@ und gelbe Hinweise. Manuelle Checkliste nach Uploads: `werkzeuge/RAUCHTEST.md`.
   (IDs mit `.probe-check.`, Inhalt `daten/inhalte/en/en.6.probe-check.json`), Auswertung je Thema in `gemeinsam/typen/check.js`, Versuche in
   `LernPass.checkMerken` – keine Note, kein Lernstand, XP einmalig. Kann-Liste `apps/typen/kann-liste.html` + `gemeinsam/kann-liste.js` liest nur
   (`kann` der Units/Wege + Lernstand). README → Check vor der Probe.
+- **Klassenübersicht und Lernweg-Editor** (v125, Tempo Etappe 6): Karten in einer Gruppe melden je Lernweg lesbar ihre erledigten
+  Schritt-/Abschnitt-IDs (`LernSync.wegMelden` → Worker `/sync/weg`, Tabelle `sync_weg`; ohne Namen/Punkte) – Raster im Admin unter
+  Gruppen → 🚦 Klassenübersicht (`module/gruppen-wege.js`, `/sync/admin/weg`, nur Hauptzugang). Editor Inhalte → 🗺️ Lernwege
+  (`module/inhalte-wege.js`) schreibt `daten/wege/*.json` über `cloudflare/dateien.js` (admin-gepflegt, Dateien neu anlegen erlaubt);
+  nie löschen, nur `"aus": true`. README → Klassenübersicht und Lernweg-Editor.
 - **Live-Abfrage** (Unterrichtsmodus → 📊, Kinder-Seite `apps/typen/live.html?raum=CODE`, keine App in config.json, ohne Navbar):
   Worker-Teil `cloudflare/live.js` (Räume, Antworten, Quizze, Rückblicke in `SYNC_DB`; Räume nach dem Beenden gelöscht),
   Fragetypen `gemeinsam/live-fragen.js` (`LernLive`), Beamer `gemeinsam/admin/live.js`, Quiz-Editor Inhalte → Live-Quizze.

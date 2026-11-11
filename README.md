@@ -263,6 +263,40 @@ Unit des English Journey und je freigegebenem 2D-Lernweg die „Ich kann …“-
 `NACHLADEN` (die Startseite braucht sie nicht). Kopfrechnen ist damit offline da, sobald das iPad es einmal geöffnet oder im
 Hintergrund geladen hat – wie die anderen Lern-Apps.
 
+## Klassenübersicht und Lernweg-Editor (Aktionsplan „Lernwelt – Tempo“, Etappe 6, v125)
+
+**Klassenübersicht je Lernweg** (Admin → Gruppen → 🚦 Klassenübersicht, `module/gruppen-wege.js`). Ein Raster je Gruppe und
+Lernweg: Zeile je Sicherungskarte (nur die Nummer in der Gruppe), Spalte je Abschnitt – 🟩 fertig, 🟨 begonnen, ⬜ offen,
+blass = noch nicht freigegeben. Filter: „hängt seit über einer Woche“, „Pflicht erledigt“, „⭐ Stern genutzt“ (2D-Wege),
+„noch nie gemeldet“. Unten je Abschnitt der Anteil der Gruppe und die häufigste Stolperstelle (der Schritt, der bei
+begonnenen Abschnitten am öftesten fehlt). Wege: English Journey und alle 2D-Lernwege.
+
+- **Datenfluss (neu, bewusst entschieden):** Die gesicherten Pässe liegen verschlüsselt im Worker – daraus lässt sich nichts
+  lesen. Darum melden iPads **mit Karte in einer Gruppe** je Lernweg zusätzlich lesbar `{ e: [erledigte Schritt-IDs],
+  f: [fertige Abschnitt-IDs] }` (`LernSync.wegMelden` → `/sync/weg`, Tabelle `sync_weg`). Keine Namen, keine Punkte, keine
+  Antworten; der Admin bekommt nur die Kartennummer (`/sync/admin/weg`, nur Hauptzugang). „Zuletzt weiter“ setzt der Worker
+  selbst, wenn sich der Stand ändert. Gelöscht mit der Karte/Gruppe bzw. nach 400 Tagen ohne Meldung.
+- Gemeldet wird beim Öffnen der Startseite (einmal je Seitenaufruf, nur bei Änderung) und beim Verlassen eines 2D-Wegs;
+  `LernWeg.meldung(W)` bzw. `LernJourneyWeg.meldung({ J, z, cfg })` liefern die IDs der freigegebenen Abschnitte.
+- Ohne Sicherungskarte, ohne Gruppe und in der Testumgebung wird nichts gesendet. Die anonyme Klassen-Übersicht im Modul
+  🧭 English Journey bleibt daneben bestehen.
+- **Der Worker muss neu eingefügt werden** (`cloudflare/sync.js`, `dateien.js`, `worker.js`) – vorher zeigt das Raster einen Fehler.
+
+**Lernweg-Editor** (Admin → Inhalte → 🗺️ Lernwege, `module/inhalte-wege.js`). 2D-Lernwege ohne JSON: Weg anlegen,
+Abschnitte und Schritte per Formular, ▲▼ verschieben, Pflicht/Wahl/⭐ Stern, Hefteintrag im Textfeld (`*grün*`, `**fett**`
+wie im Journey-Editor), eigene Aufgaben mit Lösung, Kann-Sätze.
+
+- Gespeichert wird direkt ins Repo (ein Commit) über `/dateien/speichern`; `cloudflare/dateien.js` prüft dieselben Regeln wie
+  `pruefen.py` Regel 24 und darf Weg- und Baustein-Dateien neu anlegen (`sha: ''`). `daten/wege/*.json` sind damit **admin-gepflegt**.
+- **IDs** vergibt der Editor (fortlaufend, z. B. `<Weg>-a3`, `<Abschnitt>-s2`, `<Weg>-b4`) und ändert sie nie. **Löschen gibt
+  es nicht:** „Ausblenden“ setzt `"aus": true` am Schritt oder Abschnitt – `weg-kern.js` lässt Ausgeblendetes weg, kein
+  Lernstand verwaist.
+- **„Fürs neue Schuljahr kopieren“** legt den Weg unter neuer Kennung an (alle IDs neu → frischer Lernstand, Ausgeblendetes
+  entfällt); der alte Weg bleibt.
+- Der Entwurf lebt nur in der offenen Seite (Warnung beim Verlassen). Ein neuer Weg steht nicht in `sw.js` `NACHLADEN`:
+  Er lädt beim ersten Öffnen aus dem Netz und ist danach offline da (`pruefen.py` meldet das als gelben Hinweis).
+- Freigabe wie bisher unter Gruppen → 📒 Laufzettel → Weitere Lernwege.
+
 ## Ladekette (Infrastruktur Etappe 2)
 
 Grundsatz: **Kern sofort, Rest bei Bedarf.** Die Budgets prüft `werkzeuge/pruefen.py`, gemessen **komprimiert** (gzip, so liefert GitHub Pages aus –
