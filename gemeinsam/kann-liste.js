@@ -21,7 +21,11 @@
   const P = () => window.LernPass, F = () => window.LernFreigabe;
   const hole = p => fetch(LW.ROOT + p).then(r => r.ok ? r.json() : Promise.reject(new Error(p + ': HTTP ' + r.status)));
   // Eine Mix-Stufe („….mix“) steht für ihr ganzes Thema: dann zählen alle Stufen der Datei
-  const passend = (L, id) => { const basis = String(id).replace(/\.mix$/, ''); return Object.keys(L).filter(k => k === basis || k.startsWith(basis + '.')); };
+  // … und mit der alten Inhalt-ID des Themas (ganze Unit im Vokabeltrainer: 'vok6:unit1' samt 'vok6:unit1/<theme>')
+  const passend = (L, id) => {
+    const basis = String(id).replace(/\.mix$/, ''), K = window.LernKatalog, alt = K && K.inhaltFuer ? K.inhaltFuer(basis) : null;
+    return Object.keys(L).filter(k => k === basis || k.startsWith(basis + '.') || (alt && (k === alt || k.startsWith(alt + '/'))));
+  };
 
   function stand(themen) {
     const L = (P() && P().lernstand) || {}, l = (themen || []).filter(Boolean);

@@ -70,6 +70,7 @@
 
 <script src="../../gemeinsam/shared.js"></script>
 <script src="../../gemeinsam/freigabe.js"></script>
+<script src="../../gemeinsam/katalog.js"></script>
 <script src="../../gemeinsam/kann-liste.js"></script>
 <script>
 'use strict';
@@ -85,6 +86,7 @@ function passBereit() {
 (async function start() {
   const p = new URLSearchParams(location.search), host = document.getElementById('liste');
   await passBereit();
+  if (window.LernKatalog) await Promise.race([LernKatalog.bereit, new Promise(r => setTimeout(r, 4000))]);   // alte Inhalt-IDs der Themen (Vokabel-Units)
   let gruppen = [];
   try { gruppen = await LernKann.gruppen({ u: p.get('u') || '', weg: p.get('weg') || '' }); } catch (e) { console.warn('[Kann-Liste]', e); }
   if (!gruppen.length) {

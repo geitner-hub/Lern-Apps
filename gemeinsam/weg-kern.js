@@ -61,7 +61,10 @@
   const lies = id => { const L = P() && P().lernstand; return (L && L['jw:' + id]) || null; };
   function erledigt(s) {
     const L = (P() && P().lernstand) || {};
-    if (s.art === 'app') { const e = L[s.thema]; return !!e && Array.isArray(e.p) && e.p.some(p => p >= 70); }
+    if (s.art === 'app') {                               // auch unter der alten Inhalt-ID des Themas (ganze Unit im Vokabeltrainer: 'vok6:unit1')
+      const K = window.LernKatalog, alt = K && K.inhaltFuer ? K.inhaltFuer(s.thema) : null;
+      return [L[s.thema], alt ? L[alt] : null].some(e => !!e && Array.isArray(e.p) && e.p.some(p => p >= 70));
+    }
     if (s.art === 'check' && s.thema) {                  // Check vor der Probe (Etappe 5): bearbeitet = im Pass vermerkt
       const e = L[s.thema], C = (P() && P().checks) || {};
       return !!C[s.thema] || (!!e && Array.isArray(e.p) && e.p.length > 0);
