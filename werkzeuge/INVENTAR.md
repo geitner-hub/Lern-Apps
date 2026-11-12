@@ -1,6 +1,6 @@
 # Inventar der Lern-Apps und Spiele
 
-Automatisch erzeugt am 11.11.2026 mit `python3 werkzeuge/inventar.py` (Angaben aus dem Code). Nur die Spalten **Entscheidung** und **Notiz** von Hand pflegen – sie bleiben beim Neu-Erzeugen erhalten.
+Automatisch erzeugt am 12.11.2026 mit `python3 werkzeuge/inventar.py` (Angaben aus dem Code). Nur die Spalten **Entscheidung** und **Notiz** von Hand pflegen – sie bleiben beim Neu-Erzeugen erhalten.
 
 Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv**
 
@@ -77,7 +77,7 @@ Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv
 | apps/mathe/rechen-arena.html | 52 | navbar.js | rechenArena_ballonHighscore, + über navbar.js |
 | apps/mathe/stellenwerttafel.html | 15 | freigabe.js, ueben.js, ziffernblock.js, navbar.js | + über navbar.js |
 | apps/mathe/zahlenstrahl.html | 17 | freigabe.js, ueben.js, ziffernblock.js, navbar.js | + über navbar.js |
-| apps/typen/kann-liste.html | 8 | shared.js, freigabe.js, kann-liste.js, navbar.js | + über navbar.js |
+| apps/typen/kann-liste.html | 8 | shared.js, freigabe.js, katalog.js, kann-liste.js, navbar.js | + über navbar.js |
 | apps/typen/live.html | 22 | shared.js, live-fragen.js, ziffernblock.js (nachgeladen), ziffernblock.js (nachgeladen), navbar.js (nachgeladen) | lernwelt-live, + über navbar.js |
 | apps/typen/uebung.html | 2 | freigabe.js, ueben.js, typen.js, navbar.js | + über navbar.js |
 | apps/typen/weg.html | 25 | shared.js, freigabe.js, katalog.js, wiederholung.js, weg-kern.js, navbar.js | lernwelt-lernweg, lernwelt-lernweg-zurueck, + über navbar.js |

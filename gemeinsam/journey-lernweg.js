@@ -107,8 +107,11 @@
   const istCheck = s => /\.probe-check\./.test(String(s.thema || ''));
   function themaGeschafft(s) {
     if (istCheck(s)) return !!(P() && P().checks && P().checks[s.thema]);
-    const e = P() && P().lernstand && P().lernstand[s.thema], z = s.ziel || {};
-    return !!e && Array.isArray(e.p) && e.p.filter(p => p >= (z.prozent || 70)).length >= Math.min(3, z.runden || 1);
+    // Lernstand unter der Themen-ID – und unter der alten Inhalt-ID des Themas (v126): Der Vokabeltrainer trägt eine Runde über die
+    // ganze Unit nur als 'vok6:unit1' ein, der Schritt nennt 'en.6.vok.u1' – sonst hakt er sich nie ab.
+    const L = (P() && P().lernstand) || {}, K = window.LernKatalog, alt = K && K.inhaltFuer ? K.inhaltFuer(s.thema) : null, z = s.ziel || {};
+    const runden = [L[s.thema], alt ? L[alt] : null].reduce((l, e) => l.concat(e && Array.isArray(e.p) ? e.p : []), []);
+    return runden.filter(p => p >= (z.prozent || 70)).length >= Math.min(3, z.runden || 1);
   }
   function erledigt(s) {
     if (s.art === 'app') return s.station ? !!(O.z[s.station] && O.z[s.station].zustand === 'gemeistert') : themaGeschafft(s);
