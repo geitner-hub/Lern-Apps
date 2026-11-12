@@ -297,6 +297,25 @@ wie im Journey-Editor), eigene Aufgaben mit Lösung, Kann-Sätze.
   Er lädt beim ersten Öffnen aus dem Netz und ist danach offline da (`pruefen.py` meldet das als gelben Hinweis).
 - Freigabe wie bisher unter Gruppen → 📒 Laufzettel → Weitere Lernwege.
 
+## Abhaken im English Journey – was zählt (v126/v127)
+
+Ein App-Schritt im Laufzettel bzw. eine Station hakt sich ab, wenn im Lernstand des Passes genug gute Runden stehen
+(Station: zwei Runden ab der Schwelle aus `config.spiele`; Schritt mit `ziel`: dessen Runden und Prozent, sonst eine Runde ab 70 %).
+
+| Übung | Zählt | Hinweis |
+|---|---|---|
+| Baukasten (`uebung.html`: Lückentext, Sortieren, Zuordnen, Eingabe, Markieren, Beschriften, Bild-Wort, Mix) | ja | Runde ≥ 5 Aufgaben, nicht zu schnell durchgeklickt |
+| Anwenden-Stationen (`journey-anwenden.html`) | ja | |
+| Vokabeltrainer: 🧠 Quiz, ✏️ Fill in, 🔀 Scramble | ja | in der Modus-Wahl mit „⭐ zählt“ markiert |
+| Vokabeltrainer: Karteikarten, 🎴 Memory, ⚡ Speed | **nein** | zum Üben – Memory endet immer mit 100 %; Ergebnis-Seite sagt, was zählt |
+| Check vor der Probe | eigener Haken | erledigt, sobald einmal bearbeitet |
+
+- Der Lernstand wird unter der Themen-ID gelesen, unter der alten Inhalt-ID des Themas (`vok6:unit1` – ganze Unit im
+  Vokabeltrainer, v126) und, wenn der Schritt ein ganzes Thema nennt (z. B. `en.5.praepositionen`), unter jeder seiner Stufen (v127).
+- **Mehrere Stationen im selben Abschnitt** (13 Abschnitte): Im 3D-Ort zeigt nur die erste Station des Wegs den ganzen Abschnitt;
+  jede weitere zeigt ihre App und den Verweis „Hefteintrag und Übungen stehen bei der Station …“ mit „Alles zeigen“
+  (`journey-lernweg.js` `abschnittHTML`, Option `station` an `zeige`). In der Liste (Laufzettel) bleibt der Abschnitt ganz.
+
 ## Ladekette (Infrastruktur Etappe 2)
 
 Grundsatz: **Kern sofort, Rest bei Bedarf.** Die Budgets prüft `werkzeuge/pruefen.py`, gemessen **komprimiert** (gzip, so liefert GitHub Pages aus –

@@ -382,12 +382,12 @@ function wegDaten() {
     wechsleUnit: (u, weg) => waehleUnit(u).then(() => oeffneAbschnitt(weg)) };
 }
 // Einen Abschnitt öffnen: am 3D-Ort als Seitenleiste, sonst in der Liste (Laufzettel)
-async function oeffneAbschnitt(id) {
+async function oeffneAbschnitt(id, station) {
   if (!wegDa(A.unit) || !(await ladeLaufzettel())) return;
   schliesseKarte();
   if (A.welt && !A.liste && id) {
     A.seite = id; $('seite').hidden = false; $('seite').scrollTop = 0;
-    LernJourneyWeg.zeige($('seite'), Object.assign(wegDaten(), { abschnitt: id, panel: true, schliessen: schliesseSeite }));
+    LernJourneyWeg.zeige($('seite'), Object.assign(wegDaten(), { abschnitt: id, panel: true, schliessen: schliesseSeite, station: station || null }));   // station: zweite Station eines Abschnitts zeigt nur ihre App
     return;
   }
   if (A.welt && !A.liste) zeigeListe(true);
@@ -437,8 +437,8 @@ function getippt(id) {
   schliesseKarte();
   const ab = wegDa(A.unit) && window.LernJourneyWeg && LernJourneyWeg.bezug({ J: A.J, cfg: wegCfg(), station: id, admin: A.admin, z: A.z });
   if (ab && z !== 'zu') {                                  // alles in der Station: Buch, Hefteintrag, Übungen, App
-    if (A.welt && !A.liste) { schliesseSeite(); A.welt.laufeZu(id).then(() => oeffneAbschnitt(ab.abschnitt.id)); }
-    else oeffneAbschnitt(ab.abschnitt.id);
+    if (A.welt && !A.liste) { schliesseSeite(); A.welt.laufeZu(id).then(() => oeffneAbschnitt(ab.abschnitt.id, id)); }
+    else oeffneAbschnitt(ab.abschnitt.id, id);
     return;
   }
   if (ab && z === 'zu' && A.z[id].grund !== 'heft') {     // zu: trotzdem schon Hefteintrag und Übungen

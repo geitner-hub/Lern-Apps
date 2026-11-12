@@ -59,7 +59,7 @@ Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv
 | apps/englisch/satzglieder-erkennen.html | 35 | navbar.js | + über navbar.js |
 | apps/englisch/simple-past.html | 1 | – | – |
 | apps/englisch/time-dates-numbers.html | 24 | freigabe.js, ueben.js, navbar.js | + über navbar.js |
-| apps/englisch/vokabeltrainer.html | 66 | freigabe.js, ueben.js, navbar.js, katalog.js (nachgeladen) | vokab-history-kl5, vokab-word-stats-kl5, vokab-a11y-kl5, vokab-history-kl6, vokab-word-stats-kl6, vokab-a11y-kl6, + über navbar.js |
+| apps/englisch/vokabeltrainer.html | 67 | freigabe.js, ueben.js, navbar.js, katalog.js (nachgeladen) | vokab-history-kl5, vokab-word-stats-kl5, vokab-a11y-kl5, vokab-history-kl6, vokab-word-stats-kl6, vokab-a11y-kl6, + über navbar.js |
 | apps/englisch/vokabeltrainer5.html | 1 | – | – |
 | apps/englisch/vokabeltrainer6.html | 1 | – | – |
 | apps/gpg/bayern.html | 32 | navbar.js, karten-ansicht.js, freigabe.js, ueben.js | lernwelt-bayern-best, + über navbar.js |

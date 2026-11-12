@@ -31,6 +31,8 @@ Live am iPad über das Symbol auf dem Home-Bildschirm, Test in Safari.
 | 24 | English Journey → Finale-Abschnitt einer freigegebenen Unit → „Check vor der Probe“ starten und durchspielen | je Thema zwei Aufgaben ohne Hilfe-Knopf; am Ende je Thema „Das kannst du“ oder „Hier nochmal üben“ mit Knopf „Üben ›“; der Schritt ist danach abgehakt |
 | 25 | Check wiederholen | neben jeder Zeile steht „beim ersten Mal x von 2“ |
 | 26 | Startseite → Mein Laufzettel → „🎯 Das kann ich“, dann Drucken (Vorschau) | Liste je freigegebener Unit mit ⬜/🟡/🟢 und Einschätzung; Druck hell, eine Seite je Unit |
+| 27 | English Journey Unit 2: Station 1 (Grundwortschatz) und Station 3 (there is/are) antippen | Station 1 zeigt den ganzen Abschnitt, Station 3 nur ihre App mit „Alles zeigen“ |
+| 28 | Vokabeltrainer aus einer Station: Modus-Wahl ansehen, eine Runde Memory, dann zwei Runden Quiz | Quiz, Fill in, Scramble tragen „⭐ zählt“; nach Memory steht der Hinweis, nach zwei guten Quiz-Runden ist die Station gemeistert |
 
 **Nur in der Testumgebung zusätzlich:** Oben steht „🧪 TEST · vXX“. Im Admin eine Kleinigkeit ändern und
 speichern → Meldung „Testumgebung: Speichern und Sicherung sind hier abgeschaltet“. Danach live den Pass

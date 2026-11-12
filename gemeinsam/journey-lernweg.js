@@ -45,7 +45,7 @@
   const NIVEAU = { 1: ['★', 'Basis'], 2: ['★★', 'Standard'], 3: ['★★★', 'Profi'] };
   const SMILEY = ['😟', '😐', '😀'];
   const SYM = { hefteintrag: '📒', uebung: '✏️', app: '🎮', lesen: '📖', vokabeln: '📘', partner: '👥', hoeren: '🎧', extra: '⭐' };
-  let O = null, host = null, offen = null, ansicht = 'zettel', geschrieben = new Set();
+  let O = null, host = null, offen = null, ansicht = 'zettel', geschrieben = new Set(), nurStation = null;
 
   // ── Speicher (Pass) ──────────────────────────────────
   const P = () => window.LernPass;
@@ -109,8 +109,10 @@
     if (istCheck(s)) return !!(P() && P().checks && P().checks[s.thema]);
     // Lernstand unter der Themen-ID – und unter der alten Inhalt-ID des Themas (v126): Der Vokabeltrainer trägt eine Runde über die
     // ganze Unit nur als 'vok6:unit1' ein, der Schritt nennt 'en.6.vok.u1' – sonst hakt er sich nie ab.
+    // Nennt der Schritt ein ganzes Thema (z. B. en.5.praepositionen), zählt jede seiner Stufen (v127) – die App meldet immer eine Stufe.
     const L = (P() && P().lernstand) || {}, K = window.LernKatalog, alt = K && K.inhaltFuer ? K.inhaltFuer(s.thema) : null, z = s.ziel || {};
-    const runden = [L[s.thema], alt ? L[alt] : null].reduce((l, e) => l.concat(e && Array.isArray(e.p) ? e.p : []), []);
+    const stufen = K && K.thema && K.thema(s.thema) ? (K.thema(s.thema).stufen || []) : [];
+    const runden = [L[s.thema], alt ? L[alt] : null].concat(stufen.map(id => L[id])).reduce((l, e) => l.concat(e && Array.isArray(e.p) ? e.p : []), []);
     return runden.filter(p => p >= (z.prozent || 70)).length >= Math.min(3, z.runden || 1);
   }
   function erledigt(s) {
@@ -255,6 +257,7 @@
           : x.grund === 'schranke' ? '<p>🚧 Hier geht es bald gemeinsam weiter – deine Lehrkraft öffnet diese Unit, wenn alle so weit sind.</p>'
           : x.grund === 'lehrer' ? '<p>🔒 Deine Lehrkraft gibt diese App bald frei. Hefteintrag und Übungen kannst du schon machen.</p>'
           : `<p>${x.zustand === 'gemeistert' ? '⭐ Gemeistert! Du kannst jederzeit wieder üben.' : x.zustand === 'zu' ? '🔒 Diese Station ist noch zu.' : x.zustand === 'bau' ? '🚧 Wird gebaut.' : 'Übe in der Lernwelt: 2 Runden mit mindestens 70 % – dann ist die Station gemeistert.'}</p>`;
+        if (st.art === 'woerter' && !an && (x.zustand === 'offen')) innen += '<p class="jw-klein">Im Vokabeltrainer zählen 🧠 Quiz, ✏️ Fill in und 🔀 Scramble. Karteikarten, Memory und Speed sind zum Üben – sie haken nichts ab.</p>';
         if (!heHier && heBezug(s) && heIn(a).length && !an) innen += `<div class="jw-chips">${heIn(a).map(h => heChip(h, 'Lies vorher noch einmal ')).join('')}</div>`;
         fuss = `<div class="jw-auto${an ? ' an' : ''}"><i>${an ? '✓' : ''}</i>${an ? 'Gemeistert' : 'Hakt sich selbst ab'}</div>`
           + (x.zustand === 'offen' || x.zustand === 'gemeistert' ? `<button type="button" class="jw-los" data-jw-station="${esc(s.station)}">${an ? '🔁 Nochmal' : '▶ Los geht\'s'}</button>` : '');
@@ -353,6 +356,19 @@
     const zu = gesperrtDurch(a);
     if (zu) return gesperrtHTML(a, zu);
     const u = O.unit, f = fortschritt(a), nv = niveau(a);
+    // Mehrere Stationen im selben Abschnitt (v127): Die erste Station des Wegs zeigt alles; jede weitere nur ihre App und einen
+    // Verweis – sonst sähen zwei Stationen mit denselben Hefteinträgen und Übungen gleich aus. „Alles zeigen“ klappt den Abschnitt auf.
+    const platzNr = id => u.stationen.findIndex(y => y.id === id);
+    const stat = schritte(a).filter(s => s.station), erste = stat.slice().sort((x, y) => platzNr(x.station) - platzNr(y.station))[0];
+    const eigene = O.panel && nurStation && erste && erste.station !== nurStation ? stat.find(s => s.station === nurStation) : null;
+    if (eigene) {
+      const st1 = u.stationen.find(y => y.id === erste.station) || {};
+      return `<button type="button" class="jw-zurueck" data-jw-zu>✕ Schließen</button>
+        <div class="jw-kopf"><h2>${esc(a.ico || '')} ${esc(a.titel)}</h2><p class="jw-klein">${esc(a.kurz || a.kompetenz || '')} · ${f.n} von ${f.von} erledigt</p></div>
+        ${schrittHTML(eigene, a)}
+        <div class="jw-auch"><b>📒 Hefteintrag und Übungen</b> dieses Abschnitts stehen bei der Station „${esc(st1.titel || erste.station)}“.
+          <button type="button" class="jw-chip" data-jw-alles>Alles zeigen</button></div>`;
+    }
     const platz = platzVon(u, a), auch = O.panel && platz ? (u.abschnitte || []).filter(x => x !== a && sichtbar(x) && platzVon(u, x) === platz) : [];
     return `${O.panel ? '<button type="button" class="jw-zurueck" data-jw-zu>✕ Schließen</button>' : '<button type="button" class="jw-zurueck" data-jw-zettel>‹ Laufzettel</button>'}
       <div class="jw-kopf"><h2>${esc(a.ico || '')} ${esc(a.titel)}</h2>
@@ -400,7 +416,9 @@
   function klick(e) {
     const b = e.target.closest('button'); if (!b || !host.contains(b)) return;
     const d = b.dataset, findeSchritt = id => (O.unit.abschnitte || []).flatMap(a => a.schritte).find(s => s.id === id);
+    if (d.jwAlles !== undefined) { nurStation = null; zeichne(); host.scrollTop = 0; return; }
     if (d.jwAbschnitt) {
+      nurStation = null;
       const x = O.J.units.find(u => (u.abschnitte || []).some(a => a.id === d.jwAbschnitt));
       if (x && x !== O.unit && O.wechsleUnit) return O.wechsleUnit(x, d.jwAbschnitt);
       offen = d.jwAbschnitt; ansicht = 'abschnitt'; zeichne(); host.scrollTop = 0;
@@ -648,6 +666,7 @@ ul.jw-hilfe { list-style: none; display: grid; gap: .3rem; margin: .4rem 0 .7rem
       if (host !== h) { if (host) host.removeEventListener('click', klick); host = h; host.addEventListener('click', klick); }
       if (O && O.unit !== o.unit) { offen = null; ansicht = 'zettel'; }
       O = o;
+      nurStation = o.panel && o.station ? o.station : null;     // Seitenleiste über eine Station geöffnet (siehe abschnittHTML)
       if (o.abschnitt !== undefined) { offen = o.abschnitt; ansicht = o.abschnitt ? 'abschnitt' : 'zettel'; }
       zeichne();
     },
