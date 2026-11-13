@@ -25,7 +25,7 @@
 //  und teilen sich den Offline-Speicher. Deshalb hat jede Umgebung ihr
 //  eigenes Präfix und räumt nur ihre eigenen Speicher auf.
 // ═══════════════════════════════════════════════════════
-const VERSION = 'v128';  // v128: „Weiter lernen“ und der Journey springen zur aktuellen Unit der Klasse; Memory/Speed als „nur zum Üben“ markiert
+const VERSION = 'v129';  // v129: Wochenziel, Stolpersteine, Klassenziel, Urkunde (Tempo Etappe 7)
 const PRAEFIX = /\/[^/]*-test\/$/i.test(new URL(self.registration.scope).pathname) ? 'lwtest-v' : 'lernwelt-v';
 const CACHE   = PRAEFIX + VERSION.replace(/^v/, '');        // z. B. 'lernwelt-v24' (Format wie bisher)
 const ALT     = CACHE + '-alt';                             // Dateien der Vorversion, noch nicht aufgefrischt
@@ -91,6 +91,7 @@ const NACHLADEN = ['spiele/runner.html', 'spiele/burg-verteidigung.html', 'spiel
                    'gemeinsam/lernweg-zurueck.js',  // Knopf „Zurück zum Weg“ (English Journey)
                    'apps/typen/weg.html', 'gemeinsam/weg-kern.js', 'daten/wege/liste.json', 'daten/wege/test.json', 'daten/wege/bausteine-test.json',  // Lernweg-Engine in 2D (Tempo Etappe 2): neuen Weg hier ergänzen
                    'gemeinsam/typen/check.js', 'daten/inhalte/en/en.6.probe-check.json', 'apps/typen/kann-liste.html', 'gemeinsam/kann-liste.js',  // Check vor der Probe und Kann-Liste (Tempo Etappe 5)
+                   'gemeinsam/wochenziel.js', 'apps/typen/urkunde.html',  // Wochenziel (Startseite) und Urkunde (Tempo Etappe 7)
                    'gemeinsam/einschaetzung.js', 'daten/features.json',  // Selbsteinschätzung (Tempo Etappe 4; lädt nur mit Feature-Schalter)
                    'apps/typen/live.html', 'gemeinsam/live-fragen.js'];  // Live-Abfrage (Seite der Kinder; antworten geht nur online)
 const NACHLADEN_PAUSE_MS = 400;   // Pause zwischen zwei Dateien

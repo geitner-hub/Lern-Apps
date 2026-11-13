@@ -32,7 +32,7 @@
   'use strict';
   if (window.LW && window.LW.UMGEBUNG) return;          // doppeltes Laden verhindern
 
-  const VERSION = 'v128';                                 // ⚙ bei jedem Upload mit sw.js zusammen erhöhen
+  const VERSION = 'v129';                                 // ⚙ bei jedem Upload mit sw.js zusammen erhöhen
 
   // ── Umgebung erkennen ────────────────────────────────
   //  GitHub Pages: erster Pfadteil = Repo-Name (Lern-Apps bzw. Lern-Apps-test)
@@ -62,6 +62,7 @@
     // Technik (Etappe 2)
     ['lernwelt-fehler',             'local',   'gemeinsam/umgebung.js',    'Fehlerprotokoll (letzte Abstürze, nur auf diesem Gerät)', false],
     ['lernwelt-neu-geladen',        'session', 'gemeinsam/umgebung.js',    'Neue Version: von welcher Version dieser Tab schon einmal neu geladen hat (Schutz vor Schleife)', false],
+    ['lernwelt-wochenziel',         'local',   'gemeinsam/wochenziel.js',  'Selbst gewähltes Wochenziel: Art, Startwert, Rückblick der letzten Wochen (nur auf diesem Gerät)', false],
     ['lernwelt-wartung',            'local',   'gemeinsam/pass-extras.js', 'Speicher-Wartung: letzter Lauf und Belegung', false],
     ['lernwelt-admin-entwurf',      'local',   'gemeinsam/admin/store.js', 'Admin: unveröffentlichter Entwurf der config.json', false],
     ['lernwelt-admin-dateien-entwurf', 'local', 'gemeinsam/admin/dateien.js', 'Admin: ungespeicherte Änderungen an Katalog und Vokabeln (Etappe 8)', false],

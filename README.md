@@ -319,6 +319,27 @@ Ein App-Schritt im Laufzettel bzw. eine Station hakt sich ab, wenn im Lernstand 
   jede weitere zeigt ihre App und den Verweis „Hefteintrag und Übungen stehen bei der Station …“ mit „Alles zeigen“
   (`journey-lernweg.js` `abschnittHTML`, Option `station` an `zeige`). In der Liste (Laufzettel) bleibt der Abschnitt ganz.
 
+## Wochenziel, Stolpersteine, Klassenziel, Urkunde (Aktionsplan „Lernwelt – Tempo“, Etappe 7, v129)
+
+Alle vier belohnen Geleistetes (Stationen, Runden, Meisterschaft), nie verbrachte Zeit.
+
+- **Wochenziel** (`gemeinsam/wochenziel.js`, `LernWochenziel`; Startseite unter „Heute für dich“): Das Kind wählt am Wochenanfang eines
+  von drei Zielen – an 3 Tagen üben, 6 gute Runden, 4 Schritte auf dem Laufzettel (ohne Laufzettel: 2 neue Themen meistern). Die
+  Startseite zeigt den Stand; ab Freitag fragt ein Rückblick mit vier Sätzen zum Antippen, woran es lag. Freiwillig, keine Strafe.
+  Gespeichert nur auf dem Gerät (`lernwelt-wochenziel`, samt der letzten acht Wochen). Abschaltbar mit `config.heute = false`.
+- **Meine Stolpersteine** (Startseite, Karte unter „Heute für dich“): Falsch gelöste Aufgaben aus dem Fehlerheft, die mindestens
+  zwei Tage liegen, erscheinen als Karte der App mit den meisten solchen Aufgaben; `…?fehler=1` startet dort gleich das
+  Fehler-Training (`ueben.js`). Jede richtige Antwort streicht einen Eintrag.
+- **Klassenziel** (Admin → Gruppen → 🤝 Klassenziel, `module/gruppen-klassenziel.js`): Eine Gruppe sammelt zusammen fertige
+  Abschnitte ihrer Lernwege. Stand in `config.klassenziel['g:<Gruppe>'] = { id, ziel, basis, text? }` (`basis` = Summe beim Setzen;
+  Worker validiert). Die iPads holen nur die Summe der Gruppe (`LernSync.klassenziel` → `/sync/klassenziel`, höchstens alle
+  5 Minuten) – keine Rangliste, kein Vergleich einzelner Kinder. Erreicht → jedes Kind bekommt einmal eine Geschenk-Truhe
+  (`LernPass.geschenkTruhe(id)`). Grundlage sind die Lernweg-Meldungen der Karten aus Etappe 6a.
+- **Urkunde** (`apps/typen/urkunde.html?u=<Unit>` bzw. `?weg=<Weg>`): druckbar, sobald das Finale einer Unit gemeistert bzw. jeder
+  Abschnitt eines 2D-Wegs fertig ist; Knopf „🏅 Urkunde“ in der Kann-Liste. Abzeichen „Erste Urkunde“ und „Urkunden-Sammler“
+  (Typ `flag`, Zähler über `LernPass.flagSetzen('urkunden', n)`).
+- **Der Worker muss für das Klassenziel neu eingefügt werden** (`worker.js`, `sync.js`).
+
 ## Ladekette (Infrastruktur Etappe 2)
 
 Grundsatz: **Kern sofort, Rest bei Bedarf.** Die Budgets prüft `werkzeuge/pruefen.py`, gemessen **komprimiert** (gzip, so liefert GitHub Pages aus –

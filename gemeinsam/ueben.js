@@ -563,6 +563,11 @@
       try { const u = new URL(location.href); u.searchParams.delete('stufe'); history.replaceState(history.state, '', u.pathname + u.search + u.hash); } catch (e) {}
       if (alle.some(x => x.id === direkt)) starteRunde(direkt);
     }
+    // „Meine Stolpersteine“ (Tempo Etappe 7, Karte auf der Startseite): ?fehler=1 startet gleich das Fehler-Training
+    if (URLP.get('fehler') === '1') {
+      try { const u = new URL(location.href); u.searchParams.delete('fehler'); history.replaceState(history.state, '', u.pathname + u.search + u.hash); } catch (e) {}
+      if (!direkt && meineFehler().length) starteFehlerTraining();
+    }
     return { neu: zeigeStart };
   }
 

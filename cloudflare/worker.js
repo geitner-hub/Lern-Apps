@@ -447,6 +447,15 @@ function validateConfig(cfg) {
   // English Journey (Aktionsplan „Lernweg im English Journey“): Schuljahr, je Weg Freigabe „bis Abschnitt“ je Gruppe,
   // HE-Nummern (fortlaufend, nicht doppelt), Mindestniveau (1–3) und Sperr-Schalter (vorbereitet, noch ohne Wirkung). Ob Abschnitte und
   // Hefteinträge existieren, prüfen pruefen.py und der Admin – hier nur Form und Größe.
+  // Klassenziel (Tempo Etappe 7): je Gruppe ein gemeinsames Ziel in fertigen Abschnitten – { 'g:<Gruppe>': { id, ziel, basis, text? } }
+  if (cfg.klassenziel !== undefined) {
+    const kz = cfg.klassenziel;
+    const ok = kz && typeof kz === 'object' && !Array.isArray(kz) && Object.keys(kz).length <= 60 && Object.entries(kz).every(([k, v]) =>
+      /^g:[0-9a-f]{32}$/.test(k) && v && typeof v === 'object' && !Array.isArray(v) && /^[a-z0-9-]{2,30}$/.test(String(v.id || ''))
+      && Number.isInteger(v.ziel) && v.ziel >= 1 && v.ziel <= 5000 && Number.isInteger(v.basis) && v.basis >= 0 && v.basis <= 1e6
+      && (v.text === undefined || isStr(v.text, 80)) && Object.keys(v).every(x => ['id', 'ziel', 'basis', 'text'].includes(x)));
+    if (!ok) p.push('klassenziel ungültig');
+  }
   const jy = cfg.journey;
   if (jy !== undefined) {
     const JID = /^[a-z0-9]+(-[a-z0-9]+)*$/;
@@ -467,7 +476,7 @@ function validateConfig(cfg) {
   }
   // Nur bekannte Felder (neues Feld → hier und oben in der Kopfzeile eintragen)
   const FELDER = ['version', 'apps', 'customTags', 'hiddenCats', 'catOrder', 'announcement', 'pass', 'spiele', 'dorf',
-    'gruppen', 'freigaben', 'fokus', 'spielsperre', 'heute', 'featureSchalter', 'appEinstellungen', 'journey'];
+    'gruppen', 'freigaben', 'fokus', 'spielsperre', 'heute', 'featureSchalter', 'appEinstellungen', 'journey', 'klassenziel'];
   const fremd = Object.keys(cfg).filter(k => !FELDER.includes(k));
   if (fremd.length) p.push('unbekanntes Feld: ' + fremd.slice(0, 3).join(', '));
   return p;

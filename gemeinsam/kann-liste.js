@@ -12,6 +12,7 @@
 //
 //    LernKann.gruppen({ u?, weg? }) → Promise<[{ id, titel, saetze: [{ text, teil, stand, schaetz, imUnterricht }] }]>
 //        alle für dieses iPad freigegebenen Units und Wege (mit Admin-Anmeldung alle); u / weg = nur diese eine
+//        je Gruppe auch art ('u' | 'weg'), kurz, weg und fertig (Finale gemeistert bzw. alle Abschnitte fertig → Urkunde, Etappe 7)
 //    LernKann.stand(themen) · LernKann.schaetzung(themen)
 // ═══════════════════════════════════════════════════════
 'use strict';
@@ -52,7 +53,9 @@
     (b.bausteine || []).forEach(x => { B[x.id] = x; });
     const letzte = admin() ? J.units.length - 1 : J.units.findIndex(u => (u.abschnitte || []).some(a => a.id === bis));
     return J.units.slice(0, letzte + 1).filter(u => (!nur || u.id === nur) && Array.isArray(u.kann) && u.kann.length).map(u => ({
-      id: u.id, titel: `English Journey · Unit ${u.nr}: ${u.titel}`,
+      id: u.id, titel: `English Journey · Unit ${u.nr}: ${u.titel}`, art: 'u', kurz: `Unit ${u.nr}: ${u.titel}`, weg: J.titel || 'English Journey',
+      // fertig = Finale der Unit gemeistert → Urkunde (Etappe 7)
+      fertig: (u.stationen || []).filter(s => s.art === 'finale').some(s => { try { const t = P().themaStand(s.thema); return !!(t && t.frei); } catch (e) { return false; } }),
       saetze: u.kann.map(k => {
         const bst = B[k.baustein] || {}, a = (u.abschnitte || []).find(x => x.id === k.abschnitt);
         const themen = a ? a.schritte.filter(s => s.art === 'app' && !/\.probe-check\./.test(s.thema || ''))
@@ -68,8 +71,10 @@
       if ((nur && e.id !== nur) || (!bisFuer(e.id) && !admin()) || (e.test && !admin())) continue;
       try {
         const W = await hole('daten/wege/' + e.id + '.json');
-        if (Array.isArray(W.kann) && W.kann.length) out.push({ id: W.id, titel: (W.ico ? W.ico + ' ' : '') + W.titel,
-          saetze: W.kann.map(k => ({ text: k.text || '', teil: '', stand: stand(k.themen), schaetz: schaetzung(k.themen), imUnterricht: !(k.themen || []).length })) });
+        let fertig = false;
+        try { await LW.laden('gemeinsam/weg-kern.js'); const x = await LernWeg.laden(e.id); fertig = x.W.abschnitte.every(a => LernWeg.abschnittStand(a).komplett); } catch (err) {}
+        if ((Array.isArray(W.kann) && W.kann.length) || fertig) out.push({ id: W.id, titel: (W.ico ? W.ico + ' ' : '') + W.titel, art: 'weg', kurz: W.titel, weg: W.fach, fertig,
+          saetze: (W.kann || []).map(k => ({ text: k.text || '', teil: '', stand: stand(k.themen), schaetz: schaetzung(k.themen), imUnterricht: !(k.themen || []).length })) });
       } catch (err) { console.warn('[Kann-Liste]', e.id, err); }
     }
     return out;

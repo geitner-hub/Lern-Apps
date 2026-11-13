@@ -417,6 +417,7 @@
       case 'xp':       return { cur: S.xp, n: b.n };
       case 'comeback': return { cur: S.flags.comeback ? 1 : 0, n: 1 };
       case 'treffer':  return { cur: S.flags.treffer || 0, n: b.n };     // passende Selbsteinschätzungen
+      case 'flag':     return { cur: Number(S.flags[b.flag]) || 0, n: b.n };   // Zähler von außen (flagSetzen), z. B. Urkunden
       case 'event': {
         const days = Object.entries(S.eventDays).filter(([k]) => k.split('|')[0] === b.event).reduce((m, [, v]) => Math.max(m, v.length), 0);
         return { cur: days, n: b.n };
@@ -855,6 +856,20 @@
     save();
     return true;
   }
+  /** Zähler für Abzeichen vom Typ 'flag' (z. B. Urkunden): nur nach oben, keine XP. */
+  function flagSetzen(name, wert) {
+    const n = Math.floor(Number(wert)) || 0;
+    if (!/^[a-z]{3,20}$/.test(String(name)) || n <= (Number(S.flags[name]) || 0)) return false;
+    ensureProfile(); S.flags[name] = Math.min(n, 9999); save();
+    return true;
+  }
+  /** Eine Geschenk-Truhe je Kennung, genau einmal (Klassenziel erreicht) → true, wenn es sie jetzt gab */
+  function geschenkTruhe(id) {
+    const k = 'kz|' + id;
+    if (!/^[a-z0-9-]{2,30}$/.test(String(id)) || S.eventGifts[k]) return false;
+    ensureProfile(); S.eventGifts[k] = true; S.bonusChests = (S.bonusChests || 0) + 1; save();
+    return true;
+  }
   /** Check vor der Probe (typen/check.js): je Check-ID erster (e) und letzter (l) Versuch als [[richtig, anzahl] je Thema], n = Versuche.
    *  → der erste Versuch von früher oder null (dann war es dieser). Zählt für nichts, reist mit der Sicherung. */
   function checkMerken(id, werte) {
@@ -992,7 +1007,7 @@
     get state()   { return S; },
     get settings(){ return readSettings(); },
     get lernstand() { return S.lernstand; },
-    get einschaetzung() { return S.einsch || {}; }, einschaetzungMerken, get checks() { return S.checks || {}; }, checkMerken,
+    get einschaetzung() { return S.einsch || {}; }, einschaetzungMerken, get checks() { return S.checks || {}; }, checkMerken, flagSetzen, geschenkTruhe,
     setSettings, setSpiele, lernstandMelden, wegMerken, freigeschaltet, themaStand, activeEvents, seasonsOn, seasonId, levelXp, pastSeasons,
     openChest, equip, equippedItem, owns, ownedCount, checkBadges, badgeProgress, setLook, look,
     avatarHTML, cardBackground, itemPreviewHTML, itemSourceText,

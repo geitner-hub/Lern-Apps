@@ -31,7 +31,10 @@
 //                   woche = Montag 'JJJJ-MM-TT'. Höchstens alle SYNC_STAT_ABSTAND_MS je Karte.
 //    /sync/weg        { id, auth, weg, e:[Schritt-IDs erledigt], f:[Abschnitt-IDs fertig] }   (Klassenübersicht je Lernweg)
 //        → { ok }   Ersetzt den letzten Stand dieser Karte für diesen Weg; „geaendert“ wandert nur, wenn sich etwas tat.
+//    /sync/klassenziel { id, auth }  → { ok, abschnitte }   Summe der fertigen Abschnitte aller Karten der Gruppe (Klassenziel,
+//        Etappe 7) – nur die Summe, nie einzelne Karten.
 //   Admin (Header Authorization: Bearer <Anmelde-Schlüssel>)
+//    /sync/admin/klassenziel        { gruppeId }                → { ok, abschnitte }  (dieselbe Summe, für den Startwert eines Ziels)
 //    /sync/admin/weg                { gruppeId, weg }           → { ok, karten:[{ nr, e, f, geaendert, gesehen }] } (nur Hauptzugang)
 //    /sync/admin/gruppen            {}                          → { ok, gruppen:[{ id, name, erstellt, codes:[…] }] }
 //    /sync/admin/gruppe-anlegen     { name, eintraege:[{ nr, id, authHash }], gruppeId? }
@@ -87,6 +90,11 @@ export async function handleSync(request, env, cors, url, deps) {
   if (p === '/sync/speichern') return syncSpeichern(body, env, cors);
   if (p === '/sync/statistik') return syncStatistik(body, env, cors);
   if (p === '/sync/weg')       return syncWeg(body, env, cors);
+  if (p === '/sync/klassenziel') {
+    const row = await syncPruefen(body, env);
+    if (!row) return syncJson({ error: 'Code ungültig' }, 403, cors);
+    return syncJson({ ok: true, abschnitte: await syncAbschnitteSumme(env, row.gruppe_id) }, 200, syncNoStore(cors));
+  }
 
   if (p.startsWith('/sync/admin/')) {
     const auth = await deps.checkToken(request, env);
@@ -98,6 +106,10 @@ export async function handleSync(request, env, cors, url, deps) {
     if (p === '/sync/admin/code-loeschen')     return syncAdminCodeLoeschen(body, env, cors);
     if (p === '/sync/admin/statistik')         return syncAdminStatistik(body, env, cors);
     if (p === '/sync/admin/weg')               return syncAdminWeg(body, env, cors);
+    if (p === '/sync/admin/klassenziel') {
+      if (!SYNC_HEX32.test(String(body.gruppeId || ''))) return syncJson({ error: 'Gruppe ungültig' }, 400, cors);
+      return syncJson({ ok: true, abschnitte: await syncAbschnitteSumme(env, body.gruppeId) }, 200, syncNoStore(cors));
+    }
   }
   return syncJson({ error: 'Nicht gefunden' }, 404, cors);
 }
@@ -296,6 +308,14 @@ async function syncWeg(body, env, cors) {
         geaendert = CASE WHEN sync_weg.daten = excluded.daten THEN sync_weg.geaendert ELSE excluded.geaendert END, daten = excluded.daten`)
     .bind(row.id, weg, daten, jetzt, jetzt).run();
   return syncJson({ ok: true }, 200, cors);
+}
+
+// ── Klassenziel (Etappe 7): fertige Abschnitte der ganzen Gruppe, über alle Lernwege – nur eine Zahl ──
+async function syncAbschnitteSumme(env, gruppeId) {
+  const r = await env.SYNC_DB.prepare('SELECT w.daten AS daten FROM sync_weg w JOIN sync_paesse p ON p.id = w.id WHERE p.gruppe_id = ?').bind(gruppeId).all();
+  let n = 0;
+  (r.results || []).forEach(x => { try { const d = JSON.parse(x.daten); if (Array.isArray(d.f)) n += d.f.length; } catch { /* kaputte Zeile zählt nicht */ } });
+  return n;
 }
 
 // ── Admin: Lernweg-Stände einer Gruppe lesen (nur Hauptzugang, siehe worker.js) ──

@@ -539,6 +539,18 @@
     return false;
   }
 
+  /** Klassenziel (Etappe 7): Summe der fertigen Abschnitte der eigenen Gruppe vom Worker – höchstens alle 5 Minuten (Merker ST.kz).
+   *  → Zahl oder null (keine Karte, keine Gruppe, offline, alter Worker) */
+  async function klassenziel() {
+    if (TEST || !ST || ST.ungueltig || !ST.gruppe) return null;
+    if (ST.kz && Date.now() - ST.kz.t < 5 * 60000) return ST.kz.n;
+    try {
+      const s = await ableiten(ST.code), res = await post('/sync/klassenziel', { id: s.id, auth: s.auth });
+      if (res.status === 200 && Number.isFinite(res.d.abschnitte) && ST) { ST.kz = { t: Date.now(), n: res.d.abschnitte }; schreiben(ST); return ST.kz.n; }
+    } catch (e) {}
+    return ST && ST.kz ? ST.kz.n : null;
+  }
+
   function planeStat(ms) {
     clearTimeout(statTimer);
     statTimer = setTimeout(() => statSenden(false), Math.max(ms, statLetzte + STAT_ABSTAND - Date.now()));
@@ -601,7 +613,7 @@
   }
 
   window.LernSync = {
-    status, verbinden, trennen, lernwegMelden, wegMelden,
+    status, verbinden, trennen, lernwegMelden, wegMelden, klassenziel,
     jetztSichern: () => senden(false),
     holen: () => holen(true),
     _intern: { standLesen, standHash, fortschritt, verschluesseln, entschluesseln },   // für Tests

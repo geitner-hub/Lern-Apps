@@ -251,6 +251,15 @@
     #lernweg-section .lw-txt small{font-size:.8rem;}
     #lernweg-section .lw-los{padding:.35rem .85rem;font-size:.9rem;}
     #start-raster .heute-karte{padding:.6rem .8rem;}
+    /* Wochenziel und Klassenziel (Tempo Etappe 7) */
+    .wz{background:var(--card);border:1px solid rgba(129,140,248,.4);border-radius:16px;padding:.65rem .85rem;margin-top:.55rem;}
+    .wz b{display:block;font-size:.95rem;line-height:1.25;}
+    .wz small{display:block;color:var(--muted,rgba(241,240,251,.6));font-weight:700;font-size:.78rem;margin-top:.2rem;}
+    .wz-balken{height:8px;border-radius:999px;background:rgba(255,255,255,.12);overflow:hidden;margin-top:.4rem;}
+    .wz-balken i{display:block;height:100%;background:linear-gradient(90deg,#6366f1,#e6a817);border-radius:999px;}
+    .wz-wahl{display:grid;gap:.4rem;margin-top:.5rem;}
+    .wz-wahl button{background:rgba(255,255,255,.07);border:1px solid var(--border);border-radius:12px;color:var(--text);font:800 .88rem 'Nunito',sans-serif;padding:.55rem .7rem;min-height:44px;text-align:left;cursor:pointer;}
+    .wz-wahl button:hover{border-color:#818cf8;}
     #start-raster .heute-karte .hk-ic{font-size:1.35rem;}
     #start-raster.ohne-heute #pass-section{grid-column:1/-1;}
     #start-raster #heute-section h2,#start-raster #lernweg-section h2{margin:0 0 .45rem;}
@@ -696,7 +705,24 @@ function visibleApps() {
 
 // ── „Heute für dich“ (Etappe 8): Auftrag der Lehrkraft · fällige Wiederholung · nächstes Pass-Ziel ──
 //  Abschaltbar im Admin (config.heute = false). Katalog und wiederholung.js laden erst bei Bedarf.
-let heuteLaden = null, journeyLaden = null, journeyDaten = null;
+let heuteLaden = null, journeyLaden = null, journeyDaten = null, wzLaden = null;
+// Klassenziel (Tempo Etappe 7): die Gruppe sammelt fertige Abschnitte – config.klassenziel['g:<Gruppe>'] = { id, ziel, basis, text },
+// die Summe kommt vom Worker (LernSync.klassenziel, nur eine Zahl). Erreicht → einmal eine Geschenk-Truhe für jedes Kind der Gruppe.
+let kzStand = null, kzLaden = false;
+function klassenzielHTML() {
+  const g = window.LernFreigabe && LernFreigabe.wer ? LernFreigabe.wer().find(w => w.startsWith('g:')) : null, kz = g && CONFIG.klassenziel && CONFIG.klassenziel[g];
+  if (!kz || !(kz.ziel > 0)) return '';
+  if (kzStand === null) {
+    if (!kzLaden && window.LernSync && LernSync.klassenziel) { kzLaden = true; LernSync.klassenziel().then(n => { if (n !== null) { kzStand = n; buildHeute(); } }).catch(() => {}); }
+    else if (!kzLaden) setTimeout(() => { if (kzStand === null && !kzLaden) buildHeute(); }, 3000);     // sync.js lädt erst nach dem Aufbau
+    return '';
+  }
+  const ist = Math.max(0, Math.min(kz.ziel, kzStand - (kz.basis || 0))), fertig = ist >= kz.ziel;
+  if (fertig && LernPass.geschenkTruhe && LernPass.geschenkTruhe(kz.id)) setTimeout(() => { LernPass.showAvatar({ text: 'Klassenziel geschafft! Eine Geschenk-Truhe für dich 🎁', aktion: 'winken', dauer: 5000 }); buildKopf(); }, 800);
+  return `<div class="wz"><b>🤝 ${fertig ? 'Klassenziel geschafft! 🎉' : 'Klassenziel: ' + ist + ' von ' + Number(kz.ziel) + ' Abschnitten'}</b>
+    ${kz.text ? `<small>${escHtml(kz.text)}</small>` : ''}<div class="wz-balken"><i style="width:${Math.round(100 * ist / kz.ziel)}%"></i></div>
+    <small>${fertig ? 'Das habt ihr zusammen geschafft – jede und jeder hat mitgeholfen.' : 'Jeder fertige Abschnitt auf dem Laufzettel zählt für alle.'}</small></div>`;
+}
 const weiterQ = { weg: null, station: null, wdh: null };   // Quellen für „Weiter lernen“
 function heuteIso() { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
 function buildHeute() {
@@ -726,6 +752,22 @@ function buildHeute() {
   if (w) karten.push(`<a class="heute-karte" href="${escHtml(w.link)}"><span class="hk-ic">🔁</span>
       <span><b>Wiederholen: ${escHtml(w.titel)}</b><small>${w.tage > 0 ? 'Seit ' + w.tage + (w.tage === 1 ? ' Tag' : ' Tagen') + ' fällig' : 'Heute fällig'} – damit es nicht verblasst</small></span></a>`);
   if (w) weiterQ.wdh = { href: w.link, ic: '🔁', text: 'Wiederholen: ' + w.titel };
+  // 2b. Meine Stolpersteine (Tempo Etappe 7): falsch gelöste Aufgaben, die mindestens zwei Tage liegen – als kurze Runde in ihrer App
+  if (window.LernWiederholung && LernWiederholung.link) {
+    let fehler = [];
+    try { fehler = JSON.parse(localStorage.getItem('lernwelt-fehlerheft') || '[]') || []; } catch (e) {}
+    const je = {};
+    fehler.filter(x => x && x.thema && Date.now() - x.t > 2 * 864e5).forEach(x => {
+      const l = LernWiederholung.link(x.thema), app = l && sichtbar.find(a => ohneParam(a.datei) === ohneParam(l));
+      if (!app) return;
+      const k = l.split('&stufe=')[0].split('?stufe=')[0];
+      const oben = window.LernKatalog && LernKatalog.oben ? LernKatalog.oben(x.thema) : null;
+      (je[k] = je[k] || { n: 0, name: (oben && oben.titel) || app.name }).n++;
+    });
+    const top = Object.entries(je).sort((a, b) => b[1].n - a[1].n)[0];
+    if (top) karten.push(`<a class="heute-karte" href="${escHtml(top[0] + (top[0].includes('?') ? '&' : '?') + 'fehler=1')}"><span class="hk-ic">🪨</span>
+      <span><b>Meine Stolpersteine: ${escHtml(top[1].name)}</b><small>${top[1].n} ${top[1].n === 1 ? 'Aufgabe' : 'Aufgaben'} von neulich – jetzt klappt es bestimmt</small></span></a>`);
+  }
   // 3. English Journey (Etappe 6): nächste Station – nur, wenn der Weg auf der Startseite steht und zur Klasse passt
   const ja = sichtbar.find(a => ohneParam(a.datei) === 'apps/englisch/english-journey.html'
     && (!(a.klassen || []).length || !passKlasse() || a.klassen.some(k => Number(k) <= passKlasse())));
@@ -746,9 +788,14 @@ function buildHeute() {
   const ziel = !wk.done
     ? { ic: '📅', t: `Wochenziel: noch ${wk.goal - wk.goodDays} ${wk.goal - wk.goodDays === 1 ? 'Tag' : 'Tage'} üben`, k: `${wk.goodDays} von ${wk.goal} Tagen geschafft` }
     : { ic: '⭐', t: `Noch ${li.need - li.into} XP bis Level ${li.level + 1}`, k: 'Wochenziel geschafft! 🎉' };
-  karten.push(`<button type="button" class="heute-karte" data-heute-pass><span class="hk-ic">${ziel.ic}</span>
+  // Selbst gewähltes Wochenziel (Tempo Etappe 7) steht eigens unter den Karten; bis wochenziel.js da ist, die bisherige Karte
+  if (!window.LernWochenziel) {
+    karten.push(`<button type="button" class="heute-karte" data-heute-pass><span class="hk-ic">${ziel.ic}</span>
       <span><b>${escHtml(ziel.t)}</b><small>${escHtml(ziel.k)}</small></span></button>`);
-  sec.innerHTML = CONFIG.heute === false ? '' : `<h2>Heute für dich</h2><div class="heute-grid">${karten.slice(0, 3).join('')}</div>`;
+    if (!wzLaden) wzLaden = LW.laden('gemeinsam/wochenziel.js').then(buildHeute).catch(() => {});
+  } else if (wk.done && karten.length < 3) karten.push(`<button type="button" class="heute-karte" data-heute-pass><span class="hk-ic">⭐</span>
+      <span><b>${escHtml(`Noch ${li.need - li.into} XP bis Level ${li.level + 1}`)}</b><small>Öffne deinen Pass</small></span></button>`);
+  sec.innerHTML = CONFIG.heute === false ? '' : `<h2>Heute für dich</h2><div class="heute-grid">${karten.slice(0, 3).join('')}</div>${window.LernWochenziel ? LernWochenziel.html() : ''}${klassenzielHTML()}`;
   buildWeiter();
 }
 
@@ -771,6 +818,12 @@ function buildWeiter() {
   sec.innerHTML = z ? `<a class="weiter-btn" href="${escHtml(z.href)}"><span class="wb-ic">${escHtml(z.ic)}</span><span class="wb-t"><b>Weiter lernen</b><small>${escHtml(z.text)}</small></span><span class="wb-los">Los ›</span></a>` : '';
 }
 document.addEventListener('click', e => { if (e.target.closest('[data-heute-pass]')) openPass(''); });
+document.addEventListener('click', e => {                  // Wochenziel wählen bzw. Rückblick antippen
+  const t = e.target.closest('[data-wz-art],[data-wz-r]');
+  if (!t || !window.LernWochenziel) return;
+  if (t.dataset.wzArt) LernWochenziel.waehlen(t.dataset.wzArt); else LernWochenziel.rueckblick(Number(t.dataset.wzR));
+  buildHeute();
+});
 // Gesperrtes Spiel angetippt: nicht öffnen, sondern sagen, was noch fehlt (QR-Knopf geht weiter)
 document.addEventListener('click', e => {
   const k = e.target.closest('a.app-card[data-gesperrt]');

@@ -122,6 +122,9 @@ und gelbe Hinweise. Manuelle Checkliste nach Uploads: `werkzeuge/RAUCHTEST.md`.
   Gruppen → 🚦 Klassenübersicht (`module/gruppen-wege.js`, `/sync/admin/weg`, nur Hauptzugang). Editor Inhalte → 🗺️ Lernwege
   (`module/inhalte-wege.js`) schreibt `daten/wege/*.json` über `cloudflare/dateien.js` (admin-gepflegt, Dateien neu anlegen erlaubt);
   nie löschen, nur `"aus": true`. README → Klassenübersicht und Lernweg-Editor.
+- **Wochenziel, Stolpersteine, Klassenziel, Urkunde** (v129, Tempo Etappe 7): `gemeinsam/wochenziel.js` (nur Gerät, `lernwelt-wochenziel`),
+  Stolpersteine = Fehlerheft-Karte mit `?fehler=1`, Klassenziel `config.klassenziel['g:…']` + Worker `/sync/klassenziel` (nur Summe der Gruppe),
+  Urkunde `apps/typen/urkunde.html`. README → Wochenziel, Stolpersteine, Klassenziel, Urkunde.
 - **Live-Abfrage** (Unterrichtsmodus → 📊, Kinder-Seite `apps/typen/live.html?raum=CODE`, keine App in config.json, ohne Navbar):
   Worker-Teil `cloudflare/live.js` (Räume, Antworten, Quizze, Rückblicke in `SYNC_DB`; Räume nach dem Beenden gelöscht),
   Fragetypen `gemeinsam/live-fragen.js` (`LernLive`), Beamer `gemeinsam/admin/live.js`, Quiz-Editor Inhalte → Live-Quizze.
