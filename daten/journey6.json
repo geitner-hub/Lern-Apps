@@ -826,6 +826,12 @@
        "id": "u1-a-finale-u1-finale",
        "art": "app",
        "station": "u1-finale"
+      },
+      {
+       "id": "u1-a-finale-extra",
+       "art": "extra",
+       "thema": "en.5.knowing-english.mixed-6",
+       "text": "Extra: Knowing English – Mixed: alle Themen durcheinander, wie in der Probe."
       }
      ]
     }
@@ -1979,6 +1985,12 @@
        "id": "u2-a-finale-u2-finale",
        "art": "app",
        "station": "u2-finale"
+      },
+      {
+       "id": "u2-a-finale-extra",
+       "art": "extra",
+       "thema": "en.5.knowing-english.mixed-6",
+       "text": "Extra: Knowing English – Mixed: alle Themen durcheinander, wie in der Probe."
       }
      ]
     }
@@ -2391,6 +2403,12 @@
        "id": "u3-a-theme2-u3-should",
        "art": "app",
        "station": "u3-should"
+      },
+      {
+       "id": "u3-a-theme2-extra",
+       "art": "extra",
+       "thema": "en.6.can-mustnt",
+       "text": "Extra: Regeln mit can und mustn’t wiederholen – passt gut zu should."
       }
      ]
     },
@@ -2654,6 +2672,12 @@
        "id": "u3-a-much-many-u3-much-many",
        "art": "app",
        "station": "u3-much-many"
+      },
+      {
+       "id": "u3-a-much-many-extra",
+       "art": "extra",
+       "thema": "en.6.some-any",
+       "text": "Extra: Mengen mit some und any wiederholen."
       }
      ]
     },
@@ -2793,6 +2817,12 @@
        "id": "u3-a-bild-u3-anwenden",
        "art": "app",
        "station": "u3-anwenden"
+      },
+      {
+       "id": "u3-a-bild-extra",
+       "art": "extra",
+       "thema": "en.5.there-is",
+       "text": "Extra: There is / there are – praktisch für jede Bildbeschreibung."
       }
      ]
     },
@@ -2841,6 +2871,16 @@
        "text": "Kontrolliere dein Vokabelheft: Stehen alle Wörter aus Unit 3 drin? Verbessere mit Grün."
       },
       {
+       "id": "u3-a-finale-app",
+       "art": "app",
+       "thema": "en.6.vok.u3",
+       "ziel": {
+        "runden": 1,
+        "prozent": 80
+       },
+       "text": "Übe im Vokabeltrainer Klasse 6 → Unit 3 (alle Wörter): 1 Runde mit mindestens 80 %."
+      },
+      {
        "id": "u3-a-finale-check",
        "art": "app",
        "thema": "en.6.probe-check.u3",
@@ -2850,6 +2890,12 @@
        "id": "u3-a-finale-u3-finale",
        "art": "app",
        "station": "u3-finale"
+      },
+      {
+       "id": "u3-a-finale-extra",
+       "art": "extra",
+       "thema": "en.5.knowing-english.mixed-6",
+       "text": "Extra: Knowing English – Mixed: alle Themen durcheinander, wie in der Probe."
       }
      ]
     }
@@ -3297,6 +3343,12 @@
        "id": "u4-a-theme2-u4-weitere",
        "art": "app",
        "station": "u4-weitere"
+      },
+      {
+       "id": "u4-a-theme2-extra",
+       "art": "extra",
+       "thema": "en.5.praepositionen.zeit",
+       "text": "Extra: Noch mehr on, in, at mit Zeitangaben."
       }
      ]
     },
@@ -3375,6 +3427,12 @@
        "id": "u4-a-story-u4-story-past",
        "art": "app",
        "station": "u4-story-past"
+      },
+      {
+       "id": "u4-a-story-extra",
+       "art": "extra",
+       "thema": "en.6.simple-past",
+       "text": "Extra: didn’t und Fragen mit did wiederholen – das brauchst du beim Erzählen."
       }
      ]
     },
@@ -3475,6 +3533,12 @@
        "id": "u4-a-comparison-u4-komparativ",
        "art": "app",
        "station": "u4-komparativ"
+      },
+      {
+       "id": "u4-a-comparison-extra",
+       "art": "extra",
+       "thema": "en.6.steigerung",
+       "text": "Extra: Steigerung – alle Stufen (Formen bilden, Fehler finden)."
       }
      ]
     },
@@ -3880,6 +3944,16 @@
        "text": "Kontrolliere dein Vokabelheft: Stehen alle Wörter aus Unit 4 drin? Verbessere mit Grün."
       },
       {
+       "id": "u4-a-finale-app",
+       "art": "app",
+       "thema": "en.6.vok.u4",
+       "ziel": {
+        "runden": 1,
+        "prozent": 80
+       },
+       "text": "Übe im Vokabeltrainer Klasse 6 → Unit 4 (alle Wörter): 1 Runde mit mindestens 80 %."
+      },
+      {
        "id": "u4-a-finale-check",
        "art": "app",
        "thema": "en.6.probe-check.u4",
@@ -3889,6 +3963,12 @@
        "id": "u4-a-finale-u4-finale",
        "art": "app",
        "station": "u4-finale"
+      },
+      {
+       "id": "u4-a-finale-extra",
+       "art": "extra",
+       "thema": "en.5.knowing-english.mixed-6",
+       "text": "Extra: Knowing English – Mixed: alle Themen durcheinander, wie in der Probe."
       }
      ]
     }
@@ -4313,6 +4393,12 @@
        "id": "u5-a-theme2-u5-should",
        "art": "app",
        "station": "u5-should"
+      },
+      {
+       "id": "u5-a-theme2-extra",
+       "art": "extra",
+       "thema": "en.6.should",
+       "text": "Extra: should und shouldn’t – auch die Ratschläge aus Unit 3."
       }
      ]
     },
@@ -4528,6 +4614,12 @@
        "id": "u5-a-will-u5-will-meinung",
        "art": "app",
        "station": "u5-will-meinung"
+      },
+      {
+       "id": "u5-a-will-extra",
+       "art": "extra",
+       "thema": "en.6.future",
+       "text": "Extra: will-future – alle Stufen (auch verneinen und ganze Sätze)."
       }
      ]
     },
@@ -4565,6 +4657,12 @@
        "id": "u5-a-wortstellung-u5-wortstellung",
        "art": "app",
        "station": "u5-wortstellung"
+      },
+      {
+       "id": "u5-a-wortstellung-extra",
+       "art": "extra",
+       "thema": "en.5.fragen",
+       "text": "Extra: Wortstellung in Fragen wiederholen."
       }
      ]
     },
@@ -4804,6 +4902,16 @@
        "text": "Kontrolliere dein Vokabelheft: Stehen alle Wörter aus Unit 5 drin? Verbessere mit Grün."
       },
       {
+       "id": "u5-a-finale-app",
+       "art": "app",
+       "thema": "en.6.vok.u5",
+       "ziel": {
+        "runden": 1,
+        "prozent": 80
+       },
+       "text": "Übe im Vokabeltrainer Klasse 6 → Unit 5 (alle Wörter): 1 Runde mit mindestens 80 %."
+      },
+      {
        "id": "u5-a-finale-check",
        "art": "app",
        "thema": "en.6.probe-check.u5",
@@ -4818,6 +4926,12 @@
        "id": "u5-a-finale-u5-finale",
        "art": "app",
        "station": "u5-finale"
+      },
+      {
+       "id": "u5-a-finale-extra",
+       "art": "extra",
+       "thema": "en.5.knowing-english.mixed-6",
+       "text": "Extra: Knowing English – Mixed: alle Themen durcheinander, wie in der Probe."
       }
      ]
     }

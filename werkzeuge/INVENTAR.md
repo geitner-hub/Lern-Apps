@@ -55,7 +55,7 @@ Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv
 |---|---|---|---|
 | apps/englisch/english-journey.html | 44 | freigabe.js, katalog.js, wiederholung.js, journey-kern.js, navbar.js, journey-lernweg.js (nachgeladen), avatar3d.js (nachgeladen), journey-welt.js (nachgeladen), journey-welt.js (nachgeladen) | lernwelt-lernweg, lernwelt-lernweg-zurueck, + über navbar.js |
 | apps/englisch/journey-anwenden.html | 40 | freigabe.js, ueben.js, navbar.js | + über navbar.js |
-| apps/englisch/knowing-english.html | 9 | katalog.js, freigabe.js, navbar.js | lernwelt-pass, + über navbar.js |
+| apps/englisch/knowing-english.html | 10 | katalog.js, freigabe.js, navbar.js | lernwelt-pass, + über navbar.js |
 | apps/englisch/practice_simple_present.html | 1 | – | – |
 | apps/englisch/satzglieder-erkennen.html | 35 | navbar.js | + über navbar.js |
 | apps/englisch/simple-past.html | 1 | – | – |

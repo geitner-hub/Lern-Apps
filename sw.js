@@ -25,7 +25,7 @@
 //  und teilen sich den Offline-Speicher. Deshalb hat jede Umgebung ihr
 //  eigenes Präfix und räumt nur ihre eigenen Speicher auf.
 // ═══════════════════════════════════════════════════════
-const VERSION = 'v130';  // v130: Lesehilfe (besser lesbar, helles Schema), Vorlesen, Bilder (Tempo Etappe 8)
+const VERSION = 'v131';  // v131: Knowing English mit allen Klasse-6-Themen; Vokabel-Schritt und ⭐ Extras in Unit 3–5
 const PRAEFIX = /\/[^/]*-test\/$/i.test(new URL(self.registration.scope).pathname) ? 'lwtest-v' : 'lernwelt-v';
 const CACHE   = PRAEFIX + VERSION.replace(/^v/, '');        // z. B. 'lernwelt-v24' (Format wie bisher)
 const ALT     = CACHE + '-alt';                             // Dateien der Vorversion, noch nicht aufgefrischt

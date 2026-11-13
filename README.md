@@ -315,6 +315,9 @@ Ein App-Schritt im Laufzettel bzw. eine Station hakt sich ab, wenn im Lernstand 
 - **Aktuelle Unit (v128):** „Weiter lernen“, „Mein Laufzettel“, „Heute für dich“ und der English Journey ohne Angabe in der Adresse
   führen in die Unit des Abschnitts, bis zu dem die Lehrkraft freigegeben hat (`LernJourney.aktuelleUnit`) – nicht mehr in die erste
   Unit, in der noch etwas offen ist. Erst wenn in der aktuellen Unit alles fertig ist, geht es mit Offenem von früher weiter.
+- **Knowing English (v131):** führt alle 20 Grammatik-Themen von Klasse 6 in Buch-Reihenfolge; „Mixed“ und „Meine Themen“ ziehen aus
+  allen freigegebenen davon. Jede Unit hat im Finale den Schritt „Vokabeltrainer → ganze Unit“ und die freiwillige ⭐ Extra-Aufgabe
+  „Knowing English – Mixed“; in Unit 3–5 stehen neun weitere ⭐ Extras an passenden Abschnitten (`art: "extra"`, zählen nie für den Abschluss).
 - **Mehrere Stationen im selben Abschnitt** (13 Abschnitte): Im 3D-Ort zeigt nur die erste Station des Wegs den ganzen Abschnitt;
   jede weitere zeigt ihre App und den Verweis „Hefteintrag und Übungen stehen bei der Station …“ mit „Alles zeigen“
   (`journey-lernweg.js` `abschnittHTML`, Option `station` an `zeige`). In der Liste (Laufzettel) bleibt der Abschnitt ganz.
