@@ -25,7 +25,7 @@
 //  und teilen sich den Offline-Speicher. Deshalb hat jede Umgebung ihr
 //  eigenes Präfix und räumt nur ihre eigenen Speicher auf.
 // ═══════════════════════════════════════════════════════
-const VERSION = 'v129';  // v129: Wochenziel, Stolpersteine, Klassenziel, Urkunde (Tempo Etappe 7)
+const VERSION = 'v130';  // v130: Lesehilfe (besser lesbar, helles Schema), Vorlesen, Bilder (Tempo Etappe 8)
 const PRAEFIX = /\/[^/]*-test\/$/i.test(new URL(self.registration.scope).pathname) ? 'lwtest-v' : 'lernwelt-v';
 const CACHE   = PRAEFIX + VERSION.replace(/^v/, '');        // z. B. 'lernwelt-v24' (Format wie bisher)
 const ALT     = CACHE + '-alt';                             // Dateien der Vorversion, noch nicht aufgefrischt
@@ -36,7 +36,7 @@ const ALT     = CACHE + '-alt';                             // Dateien der Vorve
 const START = ['./', 'index.html', 'config.json', 'manifest.webmanifest',
                'gemeinsam/umgebung.js', 'gemeinsam/shared.js', 'gemeinsam/config-api.js', 'gemeinsam/navbar.js',
                'gemeinsam/pass.js', 'gemeinsam/pass-extras.js', 'gemeinsam/sync-code.js', 'gemeinsam/sync.js',
-               'gemeinsam/katalog.js', 'gemeinsam/freigabe.js', 'gemeinsam/wiederholung.js', 'gemeinsam/dorf-kern.js', 'gemeinsam/fonts.css', 'vendor/fflate.min.js',
+               'gemeinsam/katalog.js', 'gemeinsam/freigabe.js', 'gemeinsam/wiederholung.js', 'gemeinsam/dorf-kern.js', 'gemeinsam/fonts.css', 'gemeinsam/lesehilfe.css', 'vendor/fflate.min.js',
                'daten/lernwelt-inhalte.json', 'daten/katalog.json', 'daten/dorf-inhalte.json',
                'fonts/nunito-latin-wght-normal.woff2', 'fonts/nunito-latin-ext-wght-normal.woff2',
                'fonts/fredoka-one-latin-400-normal.woff2'];
@@ -91,6 +91,7 @@ const NACHLADEN = ['spiele/runner.html', 'spiele/burg-verteidigung.html', 'spiel
                    'gemeinsam/lernweg-zurueck.js',  // Knopf „Zurück zum Weg“ (English Journey)
                    'apps/typen/weg.html', 'gemeinsam/weg-kern.js', 'daten/wege/liste.json', 'daten/wege/test.json', 'daten/wege/bausteine-test.json',  // Lernweg-Engine in 2D (Tempo Etappe 2): neuen Weg hier ergänzen
                    'gemeinsam/typen/check.js', 'daten/inhalte/en/en.6.probe-check.json', 'apps/typen/kann-liste.html', 'gemeinsam/kann-liste.js',  // Check vor der Probe und Kann-Liste (Tempo Etappe 5)
+                   'fonts/atkinson-hyperlegible-latin-400-normal.woff2', 'fonts/atkinson-hyperlegible-latin-700-normal.woff2',  // Leseschrift der Lesehilfe (Etappe 8)
                    'gemeinsam/wochenziel.js', 'apps/typen/urkunde.html',  // Wochenziel (Startseite) und Urkunde (Tempo Etappe 7)
                    'gemeinsam/einschaetzung.js', 'daten/features.json',  // Selbsteinschätzung (Tempo Etappe 4; lädt nur mit Feature-Schalter)
                    'apps/typen/live.html', 'gemeinsam/live-fragen.js'];  // Live-Abfrage (Seite der Kinder; antworten geht nur online)

@@ -17,6 +17,7 @@
 //                         → Promise; jedes Skript wird nur einmal geladen (Etappe 2)
 //    LW.fehler     Fehlerprotokoll: liste(), leeren(), merken(text, wo)   (Etappe 2)
 //    LW.speicher   fehlgeschlagen(e) aus catch-Blöcken, voll()   (Etappe 2)
+//    LW.lesehilfe({ g, h })   Lesehilfe: g = besser lesbar, h = helles Schema (ohne Angabe: Stand) – Etappe 8
 //    LW.beschaeftigt(true|false)  läuft gerade eine Runde/ein Spiel? Solange true, lädt die Seite bei einer
 //                         neuen Version NICHT neu (Tempo Etappe 1b, siehe unten)
 //  Fehlerprotokoll: nur auf dem Gerät (Pass → Sicherung → 5× Versionszeile).
@@ -32,7 +33,7 @@
   'use strict';
   if (window.LW && window.LW.UMGEBUNG) return;          // doppeltes Laden verhindern
 
-  const VERSION = 'v129';                                 // ⚙ bei jedem Upload mit sw.js zusammen erhöhen
+  const VERSION = 'v130';                                 // ⚙ bei jedem Upload mit sw.js zusammen erhöhen
 
   // ── Umgebung erkennen ────────────────────────────────
   //  GitHub Pages: erster Pfadteil = Repo-Name (Lern-Apps bzw. Lern-Apps-test)
@@ -63,6 +64,7 @@
     ['lernwelt-fehler',             'local',   'gemeinsam/umgebung.js',    'Fehlerprotokoll (letzte Abstürze, nur auf diesem Gerät)', false],
     ['lernwelt-neu-geladen',        'session', 'gemeinsam/umgebung.js',    'Neue Version: von welcher Version dieser Tab schon einmal neu geladen hat (Schutz vor Schleife)', false],
     ['lernwelt-wochenziel',         'local',   'gemeinsam/wochenziel.js',  'Selbst gewähltes Wochenziel: Art, Startwert, Rückblick der letzten Wochen (nur auf diesem Gerät)', false],
+    ['lernwelt-lesehilfe',          'local',   'gemeinsam/umgebung.js',    'Lesehilfe: besser lesbar (g) und helles Schema (h) – zwei Schalter im Pass', false],
     ['lernwelt-wartung',            'local',   'gemeinsam/pass-extras.js', 'Speicher-Wartung: letzter Lauf und Belegung', false],
     ['lernwelt-admin-entwurf',      'local',   'gemeinsam/admin/store.js', 'Admin: unveröffentlichter Entwurf der config.json', false],
     ['lernwelt-admin-dateien-entwurf', 'local', 'gemeinsam/admin/dateien.js', 'Admin: ungespeicherte Änderungen an Katalog und Vokabeln (Etappe 8)', false],
@@ -196,6 +198,32 @@
     return geladen[url];
   }
 
+  // ── Lesehilfe (Aktionsplan Tempo, Etappe 8): zwei Schalter im Pass, wirken auf jeder Seite ──
+  //  g = besser lesbar (größer, Leseschrift), h = helles Schema. Die Klassen stehen sofort am <html>, die Stile kommen aus
+  //  gemeinsam/lesehilfe.css – nur eingebunden, wenn ein Schalter an ist. Spiele bleiben im hellen Schema, wie sie sind.
+  const LESE_KEY = 'lernwelt-lesehilfe';
+  function lesehilfeLesen() { try { const d = JSON.parse(localStorage.getItem(LESE_KEY) || 'null') || {}; return { g: !!d.g, h: !!d.h }; } catch (e) { return { g: false, h: false }; } }
+  function lesehilfeAnwenden() {
+    const d = lesehilfeLesen(), el = document.documentElement, spiel = /\/spiele\/|english-journey\.html/.test(location.pathname);
+    el.classList.toggle('lw-gross', d.g);
+    el.classList.toggle('lw-hell', d.h && !spiel);
+    if ((d.g || d.h) && !document.getElementById('lw-lesehilfe')) {
+      const l = document.createElement('link');
+      l.id = 'lw-lesehilfe'; l.rel = 'stylesheet'; l.href = ROOT + 'gemeinsam/lesehilfe.css';
+      (document.head || el).appendChild(l);
+    }
+    return d;
+  }
+  /** Ohne Angabe: Stand { g, h }. Mit { g } und/oder { h }: setzen, speichern, anwenden. */
+  function lesehilfe(neu) {
+    if (neu && typeof neu === 'object') {
+      const d = Object.assign(lesehilfeLesen(), 'g' in neu ? { g: !!neu.g } : {}, 'h' in neu ? { h: !!neu.h } : {});
+      try { if (d.g || d.h) localStorage.setItem(LESE_KEY, JSON.stringify(d)); else localStorage.removeItem(LESE_KEY); } catch (e) {}
+    }
+    return lesehilfeAnwenden();
+  }
+  try { lesehilfeAnwenden(); } catch (e) {}
+
   // ── Fehlerprotokoll (Etappe 2) ───────────────────────
   const FEHLER_KEY = 'lernwelt-fehler';
   const FEHLER_MAX = 30;
@@ -304,7 +332,7 @@
   }
 
   window.LW = Object.freeze({
-    zeitplanAktiv, beschaeftigt,
+    zeitplanAktiv, beschaeftigt, lesehilfe,
     UMGEBUNG, TEST, VERSION, ROOT, laden,
     fehler: Object.freeze({ liste: fehlerListe, merken: fehlerMerken, leeren: () => { try { localStorage.removeItem(FEHLER_KEY); } catch (e) {} } }),
     speicher: Object.freeze({ fehlgeschlagen, voll: () => speicherFehler }),

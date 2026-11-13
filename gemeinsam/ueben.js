@@ -52,7 +52,7 @@
 //      Übt gezielt die falsch gelösten Aufgabentypen; jede richtige Antwort streicht einen Eintrag.
 //      Optional cfg.erzeugeTyp(stufe, typ) → Aufgabe genau dieses Typs (Mathe: aus generatoren-mathe.js).
 //    Direktstart: ?stufe=<Themen-ID> beginnt gleich eine Runde (Etappe 8, „Heute für dich“)
-//    Vorlesen (🔊) und große Schrift: standardmäßig aus; an mit ?vorlesen=1 bzw. ?gross=1
+//    Vorlesen: der Knopf 🔊 steht seit v130 an jeder Aufgabe (nur auf Antippen). Automatisch vorlesen und große Schrift: ?vorlesen=1 bzw. ?gross=1
 //    oder vorlesen/gross: true in der App (für DaZ und Förderung).
 //
 //  Mathe-Apps (Kopfrechnen, Mathe-Trainer) brauchen nur:
@@ -224,6 +224,8 @@
     const RUNDE = Math.max(3, Number(cfg.runde) || 10);
     const MEIST = Object.assign({ prozent: 70, runden: 2 }, cfg.meisterschaft || {});
     const VORLESEN = !!cfg.vorlesen || URLP.get('vorlesen') === '1';
+    // Lautsprecher-Knopf an jeder Aufgabe, in allen Fächern (Tempo Etappe 8) – gesprochen wird nur auf Antippen, über die Sprachausgabe des iPads
+    const KANN_SPRECHEN = !!window.speechSynthesis;
     const alle = [...(cfg.stufen || []), ...(cfg.foerder || [])];
     const frei = st => !!st && Freigabe.erlaubt(st.id, !!st.gesperrt) && (typeof st.frei !== 'function' || st.frei());
     const S = { stufe: null, aufgaben: [], nr: 0, ergebnis: [], eingabe: '', rest: ['', ''], feld: 0, gesperrt: false, hilfe: 0, schaetz: 0, start: 0, foerderOffen: false };
@@ -382,7 +384,7 @@
       root.innerHTML = `<div class="top"><button type="button" class="x" data-ende aria-label="Zur Stufenwahl">✕</button>
           <span class="nm">${esc(S.stufe.titel)}</span><span class="dots">${punkte()}</span></div>
         <div class="frage"><div class="q${String(a.frage).length > 28 ? ' lang' : ''}">${esc(a.frage)}</div>${a.hinweis ? `<div class="h">${esc(a.hinweis)}</div>` : ''}
-          ${VORLESEN || a.ton ? '<button type="button" class="btn vor" data-vor aria-label="Vorlesen">🔊</button>' : ''}</div>
+          ${VORLESEN || a.ton || KANN_SPRECHEN ? '<button type="button" class="btn vor" data-vor aria-label="Vorlesen">🔊</button>' : ''}</div>
         ${fb ? '' : hilfen(a).slice(0, S.hilfe).map(t => `<div class="tipp">💡 ${esc(t)}</div>`).join('')}
         ${fb || ''}
         ${fb ? '' : a.art === 'eigen' ? '<div class="eigen"></div>' : a.art === 'wahl'
@@ -534,7 +536,10 @@
       if (t.hasAttribute('data-weiter')) return weiter();
       if (t.hasAttribute('data-tipp')) { S.hilfe++; return zeigeAufgabe(); }
       if (t.hasAttribute('data-loesung')) return loesungZeigen();
-      if (t.hasAttribute('data-vor')) { const a = S.aufgaben[S.nr]; return sprich(a.ton || a.frage, a.sprache); }
+      if (t.hasAttribute('data-vor')) {                    // deutscher Arbeitsauftrag (hinweis) zuerst, dann die Aufgabe
+        const a = S.aufgaben[S.nr], deutsch = !a.sprache || /^de/i.test(a.sprache);
+        return sprich(a.ton || (deutsch && a.hinweis ? a.hinweis + '. ' : '') + a.frage, a.sprache);
+      }
       if (t.dataset.wahl !== undefined) { if (!S.gesperrt) pruefen(t.dataset.wahl); return; }
       if (t.dataset.feld !== undefined) { S.feld = Number(t.dataset.feld); const a = S.aufgaben[S.nr]; root.querySelector('.ant').innerHTML = feldHTML(a); return; }
       if (t.dataset.k) taste(t.dataset.k);

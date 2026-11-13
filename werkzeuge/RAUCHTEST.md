@@ -35,6 +35,9 @@ Live am iPad über das Symbol auf dem Home-Bildschirm, Test in Safari.
 | 28 | Vokabeltrainer aus einer Station: Modus-Wahl ansehen, eine Runde Memory, dann zwei Runden Quiz | Quiz, Fill in, Scramble tragen „⭐ zählt“; nach Memory steht der Hinweis, nach zwei guten Quiz-Runden ist die Station gemeistert |
 | 29 | Startseite mit Pass: unter „Heute für dich“ ein Wochenziel wählen | drei Vorschläge; nach dem Antippen steht „Wochenziel: 0 von …“ mit Balken, auch nach dem Neuladen |
 | 30 | Kann-Liste einer Unit mit gemeistertem Finale: „🏅 Urkunde“ | Urkunde mit Name, Unit und Datum; Drucken zeigt nur das Blatt |
+| 31 | Pass öffnen: „🔎 Besser lesbar“ und „☀️ Helles Schema“ einschalten, dann Kopfrechnen und eine Englisch-Übung öffnen | Schrift größer und in der Leseschrift, Seiten hell und gut lesbar; im Spiel bleibt das Aussehen wie gewohnt; ausschalten stellt alles zurück |
+| 32 | In einer Aufgabe (Kopfrechnen oder GPG Quellen-Detektiv) 🔊 antippen | das iPad liest Auftrag und Aufgabe vor |
+| 33 | GPG Quellen-Detektiv: eine Station mit Foto öffnen | Fotos erscheinen (WebP), antippen zeigt sie groß |
 
 **Nur in der Testumgebung zusätzlich:** Oben steht „🧪 TEST · vXX“. Im Admin eine Kleinigkeit ändern und
 speichern → Meldung „Testumgebung: Speichern und Sicherung sind hier abgeschaltet“. Danach live den Pass

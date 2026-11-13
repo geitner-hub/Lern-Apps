@@ -340,6 +340,27 @@ Alle vier belohnen Geleistetes (Stationen, Runden, Meisterschaft), nie verbracht
   (Typ `flag`, Zähler über `LernPass.flagSetzen('urkunden', n)`).
 - **Der Worker muss für das Klassenziel neu eingefügt werden** (`worker.js`, `sync.js`).
 
+## Lesehilfe, Vorlesen, Bilder, Klicktest (Aktionsplan „Lernwelt – Tempo“, Etappe 8, v130)
+
+- **Lesehilfe – genau zwei Schalter im Pass** (oben im Pass-Fenster): „🔎 Besser lesbar“ (größer, Leseschrift Atkinson
+  Hyperlegible, mehr Abstand) und „☀️ Helles Schema“. Beide gelten sofort und auf allen Seiten: `umgebung.js` setzt die Klassen
+  `lw-gross` / `lw-hell` am `<html>` und bindet `gemeinsam/lesehilfe.css` nur ein, wenn ein Schalter an ist
+  (`LW.lesehilfe({ g, h })`, Speicher `lernwelt-lesehilfe`, nur auf dem Gerät). Zentral gelöst: Die Seiten rechnen in rem und
+  teilen sich die Farb-Variablen. Spiele und der 3D-Weg behalten im hellen Schema ihr Aussehen (dort wirkt nur „besser lesbar“).
+  Neue Seite sieht im hellen Schema falsch aus → Regel in `lesehilfe.css` ergänzen, nicht in der Seite.
+- **Vorlesen:** Im Übungsrahmen (`ueben.js`: Kopfrechnen, Mathe-Trainer, alle Baukasten-Übungen, auch GPG) steht an jeder Aufgabe
+  der Knopf 🔊. Gesprochen wird nur auf Antippen, über die Sprachausgabe des iPads – erst der deutsche Arbeitsauftrag, dann die
+  Aufgabe (englische Aufgaben in ihrer Sprache). Automatisch vorlesen weiterhin nur mit `?vorlesen=1`.
+- **Bilder:** Die 23 GPG-Fotos liegen als WebP mit höchstens 700 px Breite vor (zusammen 1,2 statt 2,1 MB) und laden mit
+  `loading="lazy"`. Die alten JPG-Dateien bleiben im Repo, weil gespeicherte Live-Quizze noch auf sie zeigen können; die
+  Inhaltsdatei nutzt die WebP-Fassungen. Neue Fotos gleich als WebP ablegen.
+- **Klicktest** (`werkzeuge/klicktest.js`, CI `.github/workflows/klicktest.yml`): echter Browser öffnet Startseite, Kopfrechnen
+  (löst eine Aufgabe), ein Spiel, eine Baukasten-Übung und den Test-Lernweg; jeder Skriptfehler lässt ihn scheitern.
+  Lokal: `python3 -m http.server 8123 &` und `node werkzeuge/klicktest.js` (braucht das npm-Paket `playwright` – nur für den Test).
+- **Nicht umgesetzt (bewusst):** „Kopfrechnen bündeln“ (würde Kacheln in `config.json` und die Ergebnis-Schlüssel je Klasse
+  ändern – Sterne und Dorf-Aufträge hängen daran), „Startseite verschlanken“ (Budget steht bei 37 von 65 KB, der Umbau der
+  Pass-Ansichten wäre riskanter als nötig) und der Fehlerzähler (braucht die Zustimmung der Schulleitung).
+
 ## Ladekette (Infrastruktur Etappe 2)
 
 Grundsatz: **Kern sofort, Rest bei Bedarf.** Die Budgets prüft `werkzeuge/pruefen.py`, gemessen **komprimiert** (gzip, so liefert GitHub Pages aus –
