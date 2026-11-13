@@ -1,0 +1,32 @@
+# Lernwelt – Klicktest im echten Browser (Aktionsplan „Lernwelt – Tempo“, Etappe 8)
+# Öffnet Startseite, Kopfrechnen, ein Spiel, eine Baukasten-Übung und den Test-Lernweg und löst eine Aufgabe.
+# Eigene Prüfung neben „Lernwelt prüfen“: schlägt sie fehl, steht ein zweites rotes Kreuz am Commit (Details unter „Actions“).
+name: Klicktest
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  klicktest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Browser einrichten (nur für den Test, nichts davon wird ausgeliefert)
+        run: |
+          npm install --no-save --no-package-lock playwright@1.63.0
+          npx playwright install --with-deps chromium
+      - name: Klicktest
+        run: |
+          python3 -m http.server 8123 >/dev/null 2>&1 &
+          sleep 2
+          node werkzeuge/klicktest.js http://localhost:8123/

@@ -123,10 +123,21 @@
     return { alle, z, geoeffnet: offenU, heft, schranke: grenze };
   }
 
-  function naechste(J, z) {
-    for (const unit of J.units) for (const st of unit.stationen) if (z[st.id] && z[st.id].naechste) return { st, unit };
+  /** Die Unit, in der die Klasse gerade ist: die Unit des Abschnitts, bis zu dem die Lehrkraft den Laufzettel freigegeben hat
+   *  (config.journey…bis für dieses Gerät). Ohne Freigabe oder mit Admin-Anmeldung: null. */
+  function aktuelleUnit(J, o) {
+    const i = freiBis(J, cfgVon(o), false);
+    if (!(i >= 0)) return null;
+    const a = J.units.flatMap(u => u.abschnitte || [])[i];
+    return J.units.find(u => (u.abschnitte || []).includes(a)) || null;
+  }
+  /** Nächste offene Station – zuerst in der aktuellen Unit der Klasse (v128), sonst die erste offene überhaupt.
+   *  So landet niemand in Unit 1, nur weil dort noch etwas offen ist. */
+  function naechste(J, z, o) {
+    const jetzt = aktuelleUnit(J, o), reihe = jetzt ? [jetzt].concat(J.units.filter(u => u !== jetzt)) : J.units;
+    for (const unit of reihe) for (const st of unit.stationen) if (z[st.id] && z[st.id].naechste) return { st, unit };
     return null;
   }
 
-  window.LernJourney = { laden, berechne, naechste, hatApp, freiBis, schranke, heftFehlt };
+  window.LernJourney = { laden, berechne, naechste, aktuelleUnit, hatApp, freiBis, schranke, heftFehlt };
 })();

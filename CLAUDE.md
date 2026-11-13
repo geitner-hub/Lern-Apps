@@ -37,6 +37,7 @@ den passenden Abschnitt dort lesen.
 python3 werkzeuge/pruefen.py     # die einzige automatische Prüfung (läuft auch in CI: .github/workflows/pruefen.yml)
 python3 werkzeuge/inventar.py    # erzeugt werkzeuge/INVENTAR.md neu (Handspalten bleiben erhalten)
 python3 -m http.server 8000      # lokal ansehen; umgebung.js erkennt localhost als UMGEBUNG 'lokal'
+node werkzeuge/klicktest.js      # Klicktest im Browser (vorher http.server auf 8123 starten; braucht npm-Paket playwright)
 ```
 
 Es gibt keine Unit-Tests, keinen Linter und keinen Bundler. `pruefen.py` meldet rote Fehler (Exit-Code ≠ 0)
@@ -122,6 +123,12 @@ und gelbe Hinweise. Manuelle Checkliste nach Uploads: `werkzeuge/RAUCHTEST.md`.
   Gruppen → 🚦 Klassenübersicht (`module/gruppen-wege.js`, `/sync/admin/weg`, nur Hauptzugang). Editor Inhalte → 🗺️ Lernwege
   (`module/inhalte-wege.js`) schreibt `daten/wege/*.json` über `cloudflare/dateien.js` (admin-gepflegt, Dateien neu anlegen erlaubt);
   nie löschen, nur `"aus": true`. README → Klassenübersicht und Lernweg-Editor.
+- **Wochenziel, Stolpersteine, Klassenziel, Urkunde** (v129, Tempo Etappe 7): `gemeinsam/wochenziel.js` (nur Gerät, `lernwelt-wochenziel`),
+  Stolpersteine = Fehlerheft-Karte mit `?fehler=1`, Klassenziel `config.klassenziel['g:…']` + Worker `/sync/klassenziel` (nur Summe der Gruppe),
+  Urkunde `apps/typen/urkunde.html`. README → Wochenziel, Stolpersteine, Klassenziel, Urkunde.
+- **Lesehilfe** (v130, Tempo Etappe 8): zwei Schalter im Pass → `LW.lesehilfe({ g, h })` setzt `html.lw-gross` / `html.lw-hell`, Stile zentral in
+  `gemeinsam/lesehilfe.css` (nicht in den Seiten ergänzen). Vorlese-Knopf 🔊 an jeder Aufgabe in `ueben.js`. Klicktest: `werkzeuge/klicktest.js`
+  (CI `klicktest.yml`). README → Lesehilfe, Vorlesen, Bilder, Klicktest.
 - **Live-Abfrage** (Unterrichtsmodus → 📊, Kinder-Seite `apps/typen/live.html?raum=CODE`, keine App in config.json, ohne Navbar):
   Worker-Teil `cloudflare/live.js` (Räume, Antworten, Quizze, Rückblicke in `SYNC_DB`; Räume nach dem Beenden gelöscht),
   Fragetypen `gemeinsam/live-fragen.js` (`LernLive`), Beamer `gemeinsam/admin/live.js`, Quiz-Editor Inhalte → Live-Quizze.

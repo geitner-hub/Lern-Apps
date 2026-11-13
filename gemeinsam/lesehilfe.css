@@ -1,0 +1,56 @@
+/* ═══════════════════════════════════════════════════════
+   Lernwelt – lesehilfe.css   (Lesehilfe, Aktionsplan „Lernwelt – Tempo“, Etappe 8)
+   Zwei Schalter im Pass, mehr nicht:  html.lw-gross = besser lesbar  ·  html.lw-hell = helles Schema.
+   umgebung.js setzt die Klassen sofort (vor dem ersten Zeichnen) und bindet diese Datei nur ein, wenn ein Schalter an ist
+   (LW.lesehilfe). Zentral für alle Seiten: die meisten rechnen in rem und nutzen dieselben Farb-Variablen.
+   Spiele (spiele/…) und der 3D-Weg behalten ihr Aussehen im hellen Schema – dort wirkt nur „besser lesbar“.
+   ═══════════════════════════════════════════════════════ */
+
+/* ── Besser lesbar: größer, Leseschrift Atkinson Hyperlegible, mehr Luft ── */
+html.lw-gross { font-size: 118%; }
+html.lw-gross body { line-height: 1.6; }
+html.lw-gross body, html.lw-gross p, html.lw-gross li, html.lw-gross small, html.lw-gross span, html.lw-gross b, html.lw-gross a,
+html.lw-gross button, html.lw-gross input, html.lw-gross select, html.lw-gross textarea, html.lw-gross label, html.lw-gross td, html.lw-gross th, html.lw-gross div {
+  font-family: 'Atkinson Hyperlegible', 'Nunito', system-ui, sans-serif !important; letter-spacing: .02em; word-spacing: .06em; }
+html.lw-gross h1, html.lw-gross h2, html.lw-gross h3, html.lw-gross .logo, html.lw-gross .logo * { font-family: 'Fredoka One', 'Nunito', sans-serif !important; letter-spacing: .01em; }
+html.lw-gross small { font-size: .9em; }
+
+/* ── Helles Schema: dieselben Variablen, helle Werte ── */
+html.lw-hell { color-scheme: light;
+  --bg: #f4f3fa; --bg2: #eceaf6; --bg3: #e2e0ee; --hbg: rgba(244,243,250,.94);
+  --surface: #ffffff; --surface2: #efeef8; --surface3: #e4e2f0; --card: #ffffff; --panel: rgba(255,255,255,.94); --panel2: #efeef8;
+  --text: #1b1929; --text2: rgba(27,25,41,.78); --muted: rgba(27,25,41,.62);
+  --border: rgba(27,25,41,.16); --border2: rgba(27,25,41,.26); --line: rgba(27,25,41,.16);
+  --accent: #b07a00; --accent2: #8a5f00; --indigo2: #4f46e5; }
+html.lw-hell body { background: #f4f3fa !important; color: #1b1929; }
+/* Übungsrahmen (ueben.js) und Baukasten */
+html.lw-hell .lu { --bg: #f4f3fa; --card: #ffffff; --card2: #eceaf6; --line: rgba(27,25,41,.16); --txt: #1b1929; --mut: rgba(27,25,41,.65); --gold: #b07a00; --ind2: #4f46e5; }
+html.lw-hell .lu .tile, html.lw-hell .lu .station { box-shadow: 0 2px 8px rgba(27,25,41,.08); }
+html.lw-hell .lu .pad button { background: #ffffff; color: #1b1929; border: 1px solid rgba(27,25,41,.18); }
+html.lw-hell .lu .pad button.ok { background: #16a34a; color: #fff; } html.lw-hell .lu .pad button.weg { background: #eceaf6; }
+html.lw-hell .lu .feld { background: #fff; color: #1b1929; border-color: rgba(27,25,41,.3); }
+html.lw-hell .lu .opt, html.lw-hell .lu .btn { background: #fff; color: #1b1929; border: 1px solid rgba(27,25,41,.2); }
+html.lw-hell .lu .btn.p { background: #e6a817; color: #1b1300; border-color: #e6a817; }
+html.lw-hell .lu .x { background: #eceaf6; color: #1b1929; }
+/* Startseite */
+html.lw-hell header.kopf { background: rgba(244,243,250,.94); color: #1b1929; }
+html.lw-hell .wordmark, html.lw-hell .wordmark span { color: #1b1929; } html.lw-hell .wordmark em { color: #b07a00; }
+html.lw-hell .heute-karte, html.lw-hell .wz, html.lw-hell .pass-card:not(.has-bg), html.lw-hell .lw-box, html.lw-hell .kopf-btn, html.lw-hell .kopf-profil { background: #fff; color: #1b1929; border-color: rgba(27,25,41,.16); }
+html.lw-hell .heute-karte small, html.lw-hell .wz small, html.lw-hell .pass-sub, html.lw-hell .pass-stat, html.lw-hell .lw-p { color: rgba(27,25,41,.68); }
+html.lw-hell .lw-banner { background: #fff; color: #1b1929; border: 1px solid rgba(27,25,41,.16); }
+html.lw-hell .lw-txt small { color: rgba(27,25,41,.72); }
+html.lw-hell .lw-ring span { background: #fff; color: #1b1929; }
+html.lw-hell .faecher-titel, html.lw-hell #lernweg-section h2 { color: #4f46e5; }
+html.lw-hell .lw-modal { background: rgba(27,25,41,.45); }
+html.lw-hell .lw-tabs button, html.lw-hell .lw-h { color: #1b1929; }
+html.lw-hell .lw-btn { background: #eceaf6; color: #1b1929; border-color: rgba(27,25,41,.2); }
+html.lw-hell .lw-btn.primary { background: #e6a817; color: #1b1300; }
+/* Lernweg, Kann-Liste, Laufzettel */
+html.lw-hell .knoten b, html.lw-hell .knoten small { background: rgba(244,243,250,.9); color: #1b1929; }
+html.lw-hell #pfad .p-alle { stroke: rgba(27,25,41,.2); }
+html.lw-hell .balken, html.lw-hell .wz-balken { background: rgba(27,25,41,.12); }
+html.lw-hell .kn, html.lw-hell .btn { color: #1b1929; }
+html.lw-hell .jw { --bg: #f4f3fa; color: #1b1929; }
+html.lw-hell .chip.neu { background: rgba(27,25,41,.08); color: rgba(27,25,41,.7); }
+html.lw-hell .chip.geuebt { background: #fdf0c8; color: #7a5200; } html.lw-hell .chip.sicher { background: #d7f5df; color: #14692d; }
+/* Knopf „Alle Apps“ (navbar.js) bleibt dunkel – gut sichtbar auf hellem Grund */

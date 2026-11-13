@@ -147,7 +147,7 @@
   /** Bild aus der Inhaltsdatei: Emoji/Text bleibt Text, Dateiname → <img> neben der Inhaltsdatei */
   function bildHTML(bild, D, alt) {
     const b = String(bild || '');
-    if (/^[a-z0-9_-]+\.(svg|png|jpg|webp)$/i.test(b)) return `<img src="${esc(new URL(b, D.basis).href)}" alt="${esc(alt || '')}">`;
+    if (/^[a-z0-9_-]+\.(svg|png|jpg|webp)$/i.test(b)) return `<img src="${esc(new URL(b, D.basis).href)}" alt="${esc(alt || '')}" loading="lazy" decoding="async">`;
     return esc(b);
   }
 

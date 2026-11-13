@@ -38,7 +38,7 @@ gesperrt ist.
 
 ## Hinweise
 
-- Wenn Fotos echter Funde im Repo liegen (z. B. `daten/inhalte/gpg/foto-faustkeil.jpg` mit Bildnachweis in der Inhaltsdatei),
+- Wenn Fotos echter Funde im Repo liegen (z. B. `daten/inhalte/gpg/foto-faustkeil.webp` mit Bildnachweis in der Inhaltsdatei),
   einfach im Feld Bild den Pfad austauschen. Gute Gegenüberstellung: Foto eines echten Funds neben einem Foto der
   Nachbildung im Museum (Höhle von Lascaux: die Besucherhöhle „Lascaux II“ ist eine Nachbildung, also eine Darstellung).
 - Mögliche Profi-Frage für die zweite Runde: „Woran erkennst du, dass es heute gemacht wurde?“ (Ein-Wort-Antwort → Wortwolke).

@@ -69,6 +69,8 @@ header .logo p { font-size: 11px; color: rgba(255,255,255,0.75); }
 .mode-card .icon { font-size: 40px; }
 .mode-card h3 { font-weight: 800; color: #1f2937; margin-top: 8px; }
 .mode-card p { font-size: 12px; color: #9ca3af; margin-top: 4px; }
+.mode-card .zaehlt { display: inline-block; margin-top: 6px; background: #fef3c7; color: #92400e; border-radius: 999px; padding: 2px 9px; font-size: 11px; font-weight: 800; }
+.mode-card .zaehlt.ueben { background: #f3f4f6; color: #6b7280; }
 
 /* PANEL */
 .panel { background: #fff; border-radius: 24px; padding: 24px; box-shadow: 0 8px 40px rgba(0,0,0,0.08); display: flex; flex-direction: column; align-items: center; gap: 20px; }
@@ -247,11 +249,11 @@ body.a11y-dyslexic, body.a11y-dyslexic * { font-family: 'Atkinson Hyperlegible',
     <div class="word-info" id="word-info"></div>
     <div class="section-title">Spielmodus wählen</div>
     <div class="mode-grid">
-      <div class="mode-card" onclick="startMode('quiz')"><div class="icon">🧠</div><h3>Quiz</h3><p>Multiple choice</p></div>
-      <div class="mode-card" onclick="startMode('memory')"><div class="icon">🎴</div><h3>Memory</h3><p>Paare finden</p></div>
-      <div class="mode-card" onclick="startMode('fill')"><div class="icon">✏️</div><h3>Fill in</h3><p>Wort eingeben</p></div>
-      <div class="mode-card" onclick="startMode('scramble')"><div class="icon">🔀</div><h3>Scramble</h3><p>Buchstaben sortieren</p></div>
-      <div class="mode-card" onclick="startMode('speed')"><div class="icon">⚡</div><h3>Speed</h3><p>60 Sekunden</p></div>
+      <div class="mode-card" onclick="startMode('quiz')"><div class="icon">🧠</div><h3>Quiz</h3><p>Multiple choice</p><span class="zaehlt">⭐ zählt</span></div>
+      <div class="mode-card" onclick="startMode('memory')"><div class="icon">🎴</div><h3>Memory</h3><p>Paare finden</p><span class="zaehlt ueben">nur zum Üben</span></div>
+      <div class="mode-card" onclick="startMode('fill')"><div class="icon">✏️</div><h3>Fill in</h3><p>Wort eingeben</p><span class="zaehlt">⭐ zählt</span></div>
+      <div class="mode-card" onclick="startMode('scramble')"><div class="icon">🔀</div><h3>Scramble</h3><p>Buchstaben sortieren</p><span class="zaehlt">⭐ zählt</span></div>
+      <div class="mode-card" onclick="startMode('speed')"><div class="icon">⚡</div><h3>Speed</h3><p>60 Sekunden</p><span class="zaehlt ueben">nur zum Üben</span></div>
     </div>
   </div>
 
@@ -353,6 +355,7 @@ body.a11y-dyslexic, body.a11y-dyslexic * { font-family: 'Atkinson Hyperlegible',
       <div class="r-pct" id="res-pct"></div>
       <div class="r-sub" id="res-sub"></div>
       <div class="r-sub hidden" id="res-karten" style="margin-top:6px;font-size:13px">🃏 Flashcards sind zum Lernen – sie zählen nicht für Sterne. Für Sterne: Quiz, Fill in oder Scramble.</div>
+      <div class="r-sub hidden" id="res-zaehlt" style="margin-top:6px;font-size:13px">Gut geübt! Für deine Station und den Haken im Laufzettel zählen 🧠 Quiz, ✏️ Fill in und 🔀 Scramble.</div>
       <div id="res-wrong-box" class="wrong-box hidden"></div>
       <div class="result-btns">
         <button class="btn-primary" onclick="retryMode()">Nochmal 🔄</button>
@@ -922,6 +925,7 @@ function showResult(right, wrong, total, label) {
 
   renderWrongList();
   document.getElementById('res-karten').classList.toggle('hidden', currentMode !== 'flashcard');
+  document.getElementById('res-zaehlt').classList.toggle('hidden', !['memory', 'speed'].includes(currentMode));   // zählt nicht für Stationen (v127)
   document.getElementById('res-anders').textContent = karten ? 'Andere Wörter' : 'Anderen Modus';
 
   // Flashcards: Selbsteinschätzung – kein Ergebnis an Pass, Sterne, Meisterschaft oder Spielsperre

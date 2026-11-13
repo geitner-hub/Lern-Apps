@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8"/>
+  <script src="../../gemeinsam/umgebung.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>Urkunde – Lernwelt</title>
+  <!--
+  ═══════════════════════════════════════════════
+   LERNWELT – Urkunde  (Aktionsplan „Lernwelt – Tempo“, Etappe 7)
+   apps/typen/urkunde.html?u=<Unit-ID> | ?weg=<Weg-ID>
+
+   Druckbare Urkunde für eine abgeschlossene Unit des English Journey (Finale gemeistert) oder einen abgeschlossenen
+   2D-Lernweg (alle Abschnitte fertig). Name aus dem Pass (bleibt auf dem Gerät), Datum von heute.
+   Nur lesen: gemeinsam/kann-liste.js (LernKann.gruppen → fertig). Erreichbar über die Kann-Liste („🏅 Urkunde“).
+   KEINE App in config.json.
+  ═══════════════════════════════════════════════
+  -->
+  <link rel="stylesheet" href="../../gemeinsam/fonts.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Nunito', system-ui, sans-serif; background: #0f0e1a; color: #f1f0fb; min-height: 100vh; padding: 4.2rem 1rem 5rem; }
+    .blatt { max-width: 720px; margin: 0 auto; background: #fffdf5; color: #1f2430; border-radius: 18px; padding: 2.6rem 2rem; text-align: center;
+             border: 10px double #e6a817; box-shadow: 0 16px 40px rgba(0,0,0,.45); }
+    .blatt .gr { font-size: 3.6rem; }
+    .blatt h1 { font: 400 2.6rem 'Fredoka One', 'Nunito', sans-serif; color: #b07a00; margin: .3rem 0 1.2rem; letter-spacing: .02em; }
+    .blatt .name { font: 400 2.1rem 'Fredoka One', 'Nunito', sans-serif; border-bottom: 3px solid #e6a817; display: inline-block; padding: 0 1.2rem .2rem; margin: .5rem 0 1rem; min-width: 60%; }
+    .blatt p { font-weight: 700; font-size: 1.1rem; line-height: 1.6; }
+    .blatt .was { font: 400 1.5rem 'Fredoka One', 'Nunito', sans-serif; color: #4338ca; margin: .4rem 0 .2rem; }
+    .blatt .fuss { display: flex; justify-content: space-between; gap: 1rem; margin-top: 2.4rem; font-size: .9rem; font-weight: 700; color: #555; }
+    .blatt .fuss span { border-top: 2px solid #999; padding-top: .3rem; min-width: 38%; }
+    .knoepfe { text-align: center; margin-top: 1.2rem; }
+    .kn { background: #e6a817; color: #1b1300; border: 0; border-radius: 999px; padding: .65rem 1.3rem; font: 900 1rem 'Nunito', sans-serif; min-height: 44px; cursor: pointer; }
+    .hinweis { max-width: 520px; margin: 3rem auto; text-align: center; background: #1b1929; border: 1px solid rgba(255,255,255,.1); border-radius: 20px; padding: 1.6rem 1.2rem; font-weight: 700; line-height: 1.5; }
+    .hinweis a { color: #e6a817; font-weight: 900; }
+    @media print {
+      @page { size: A4; margin: 16mm; }
+      body { background: #fff; padding: 0; }
+      .blatt { box-shadow: none; border-radius: 0; margin-top: 18mm; }
+      .knoepfe, #lern-home-btn, #lern-result-badge, #lw-test-schild, #lw-zurueck { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+<main id="seite"><div class="hinweis">lädt …</div></main>
+<script src="../../gemeinsam/shared.js"></script>
+<script src="../../gemeinsam/freigabe.js"></script>
+<script src="../../gemeinsam/katalog.js"></script>
+<script src="../../gemeinsam/kann-liste.js"></script>
+<script>
+'use strict';
+function passBereit() {
+  return new Promise(res => {
+    if (window.LernPass) return res();
+    window.addEventListener('lernpass:ready', () => res(), { once: true });
+    setTimeout(res, 5000);
+  });
+}
+(async function start() {
+  const p = new URLSearchParams(location.search), host = document.getElementById('seite');
+  await passBereit();
+  if (window.LernKatalog) await Promise.race([LernKatalog.bereit, new Promise(r => setTimeout(r, 4000))]);
+  let g = null;
+  try { g = (await LernKann.gruppen({ u: p.get('u') || '', weg: p.get('weg') || '' }))[0] || null; } catch (e) { console.warn('[Urkunde]', e); }
+  if (!g || !g.fertig || (!p.get('u') && !p.get('weg'))) {
+    host.innerHTML = `<div class="hinweis">Die Urkunde gibt es, sobald du ${g && g.art === 'u' ? 'das Finale der Unit gemeistert' : 'alle Abschnitte geschafft'} hast.<br><br><a href="kann-liste.html">Zur Kann-Liste ›</a></div>`;
+    return;
+  }
+  const name = window.LernPass && LernPass.hasProfile() ? LernPass.profile().name : '';
+  host.innerHTML = `<div class="blatt"><div class="gr">🏅</div><h1>Urkunde</h1>
+      <div class="name">${name ? escHtml(name) : '&nbsp;'}</div>
+      <p>hat erfolgreich abgeschlossen:</p>
+      <div class="was">${escHtml(g.kurz)}</div><p>${escHtml(g.weg || '')}</p>
+      <div class="fuss"><span>${new Date().toLocaleDateString('de-DE', { day: 'numeric', month: 'long', year: 'numeric' })}</span><span>Unterschrift</span></div></div>
+    <div class="knoepfe"><button type="button" class="kn" id="b-druck">🖨 Drucken</button></div>`;
+  document.title = 'Urkunde ' + g.kurz + ' – Lernwelt';
+  document.getElementById('b-druck').addEventListener('click', () => window.print());
+})();
+</script>
+<script src="../../gemeinsam/navbar.js"></script>
+</body>
+</html>

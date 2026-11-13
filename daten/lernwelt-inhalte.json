@@ -7,6 +7,8 @@
 {"id":"fleissig","icon":"💪","name":"Fleißig","typ":"runden","n":25,"text":"Schaffe 25 gute Runden."},
 {"id":"selbstkenner","icon":"🎯","name":"Selbstkenner","typ":"treffer","n":5,"text":"Schätze dich 5-mal passend ein, bevor du übst."},
 {"id":"selbstprofi","icon":"🔮","name":"Kennt sich aus","typ":"treffer","n":20,"text":"Schätze dich 20-mal passend ein."},
+{"id":"urkunde1","icon":"🏅","name":"Erste Urkunde","typ":"flag","flag":"urkunden","n":1,"text":"Schließe eine Unit oder einen Lernweg ganz ab."},
+{"id":"urkunde3","icon":"🎓","name":"Urkunden-Sammler","typ":"flag","flag":"urkunden","n":3,"text":"Schließe drei Units oder Lernwege ganz ab."},
 {"id":"unermuedlich","icon":"🐝","name":"Unermüdlich","typ":"runden","n":100,"text":"Schaffe 100 gute Runden."},
 {"id":"wochenziel","icon":"📅","name":"Wochenziel","typ":"wochen","n":1,"text":"Erreiche einmal dein Wochenziel."},
 {"id":"serienheld","icon":"🔥","name":"Serienheld","typ":"serie","n":3,"text":"Erreiche 3 Wochen in Folge dein Wochenziel."},

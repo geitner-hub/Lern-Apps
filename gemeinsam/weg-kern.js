@@ -63,7 +63,8 @@
     const L = (P() && P().lernstand) || {};
     if (s.art === 'app') {                               // auch unter der alten Inhalt-ID des Themas (ganze Unit im Vokabeltrainer: 'vok6:unit1')
       const K = window.LernKatalog, alt = K && K.inhaltFuer ? K.inhaltFuer(s.thema) : null;
-      return [L[s.thema], alt ? L[alt] : null].some(e => !!e && Array.isArray(e.p) && e.p.some(p => p >= 70));
+      const stufen = K && K.thema && K.thema(s.thema) ? (K.thema(s.thema).stufen || []) : [];     // ganzes Thema: jede Stufe zählt
+      return [L[s.thema], alt ? L[alt] : null].concat(stufen.map(id => L[id])).some(e => !!e && Array.isArray(e.p) && e.p.some(p => p >= 70));
     }
     if (s.art === 'check' && s.thema) {                  // Check vor der Probe (Etappe 5): bearbeitet = im Pass vermerkt
       const e = L[s.thema], C = (P() && P().checks) || {};

@@ -297,6 +297,70 @@ wie im Journey-Editor), eigene Aufgaben mit Lösung, Kann-Sätze.
   Er lädt beim ersten Öffnen aus dem Netz und ist danach offline da (`pruefen.py` meldet das als gelben Hinweis).
 - Freigabe wie bisher unter Gruppen → 📒 Laufzettel → Weitere Lernwege.
 
+## Abhaken im English Journey – was zählt (v126/v127)
+
+Ein App-Schritt im Laufzettel bzw. eine Station hakt sich ab, wenn im Lernstand des Passes genug gute Runden stehen
+(Station: zwei Runden ab der Schwelle aus `config.spiele`; Schritt mit `ziel`: dessen Runden und Prozent, sonst eine Runde ab 70 %).
+
+| Übung | Zählt | Hinweis |
+|---|---|---|
+| Baukasten (`uebung.html`: Lückentext, Sortieren, Zuordnen, Eingabe, Markieren, Beschriften, Bild-Wort, Mix) | ja | Runde ≥ 5 Aufgaben, nicht zu schnell durchgeklickt |
+| Anwenden-Stationen (`journey-anwenden.html`) | ja | |
+| Vokabeltrainer: 🧠 Quiz, ✏️ Fill in, 🔀 Scramble | ja | in der Modus-Wahl mit „⭐ zählt“ markiert |
+| Vokabeltrainer: Karteikarten, 🎴 Memory, ⚡ Speed | **nein** | in der Modus-Wahl „nur zum Üben“ – Memory endet immer mit 100 %; Ergebnis-Seite sagt, was zählt |
+| Check vor der Probe | eigener Haken | erledigt, sobald einmal bearbeitet |
+
+- Der Lernstand wird unter der Themen-ID gelesen, unter der alten Inhalt-ID des Themas (`vok6:unit1` – ganze Unit im
+  Vokabeltrainer, v126) und, wenn der Schritt ein ganzes Thema nennt (z. B. `en.5.praepositionen`), unter jeder seiner Stufen (v127).
+- **Aktuelle Unit (v128):** „Weiter lernen“, „Mein Laufzettel“, „Heute für dich“ und der English Journey ohne Angabe in der Adresse
+  führen in die Unit des Abschnitts, bis zu dem die Lehrkraft freigegeben hat (`LernJourney.aktuelleUnit`) – nicht mehr in die erste
+  Unit, in der noch etwas offen ist. Erst wenn in der aktuellen Unit alles fertig ist, geht es mit Offenem von früher weiter.
+- **Mehrere Stationen im selben Abschnitt** (13 Abschnitte): Im 3D-Ort zeigt nur die erste Station des Wegs den ganzen Abschnitt;
+  jede weitere zeigt ihre App und den Verweis „Hefteintrag und Übungen stehen bei der Station …“ mit „Alles zeigen“
+  (`journey-lernweg.js` `abschnittHTML`, Option `station` an `zeige`). In der Liste (Laufzettel) bleibt der Abschnitt ganz.
+
+## Wochenziel, Stolpersteine, Klassenziel, Urkunde (Aktionsplan „Lernwelt – Tempo“, Etappe 7, v129)
+
+Alle vier belohnen Geleistetes (Stationen, Runden, Meisterschaft), nie verbrachte Zeit.
+
+- **Wochenziel** (`gemeinsam/wochenziel.js`, `LernWochenziel`; Startseite unter „Heute für dich“): Das Kind wählt am Wochenanfang eines
+  von drei Zielen – an 3 Tagen üben, 6 gute Runden, 4 Schritte auf dem Laufzettel (ohne Laufzettel: 2 neue Themen meistern). Die
+  Startseite zeigt den Stand; ab Freitag fragt ein Rückblick mit vier Sätzen zum Antippen, woran es lag. Freiwillig, keine Strafe.
+  Gespeichert nur auf dem Gerät (`lernwelt-wochenziel`, samt der letzten acht Wochen). Abschaltbar mit `config.heute = false`.
+- **Meine Stolpersteine** (Startseite, Karte unter „Heute für dich“): Falsch gelöste Aufgaben aus dem Fehlerheft, die mindestens
+  zwei Tage liegen, erscheinen als Karte der App mit den meisten solchen Aufgaben; `…?fehler=1` startet dort gleich das
+  Fehler-Training (`ueben.js`). Jede richtige Antwort streicht einen Eintrag.
+- **Klassenziel** (Admin → Gruppen → 🤝 Klassenziel, `module/gruppen-klassenziel.js`): Eine Gruppe sammelt zusammen fertige
+  Abschnitte ihrer Lernwege. Stand in `config.klassenziel['g:<Gruppe>'] = { id, ziel, basis, text? }` (`basis` = Summe beim Setzen;
+  Worker validiert). Die iPads holen nur die Summe der Gruppe (`LernSync.klassenziel` → `/sync/klassenziel`, höchstens alle
+  5 Minuten) – keine Rangliste, kein Vergleich einzelner Kinder. Erreicht → jedes Kind bekommt einmal eine Geschenk-Truhe
+  (`LernPass.geschenkTruhe(id)`). Grundlage sind die Lernweg-Meldungen der Karten aus Etappe 6a.
+- **Urkunde** (`apps/typen/urkunde.html?u=<Unit>` bzw. `?weg=<Weg>`): druckbar, sobald das Finale einer Unit gemeistert bzw. jeder
+  Abschnitt eines 2D-Wegs fertig ist; Knopf „🏅 Urkunde“ in der Kann-Liste. Abzeichen „Erste Urkunde“ und „Urkunden-Sammler“
+  (Typ `flag`, Zähler über `LernPass.flagSetzen('urkunden', n)`).
+- **Der Worker muss für das Klassenziel neu eingefügt werden** (`worker.js`, `sync.js`).
+
+## Lesehilfe, Vorlesen, Bilder, Klicktest (Aktionsplan „Lernwelt – Tempo“, Etappe 8, v130)
+
+- **Lesehilfe – genau zwei Schalter im Pass** (oben im Pass-Fenster): „🔎 Besser lesbar“ (größer, Leseschrift Atkinson
+  Hyperlegible, mehr Abstand) und „☀️ Helles Schema“. Beide gelten sofort und auf allen Seiten: `umgebung.js` setzt die Klassen
+  `lw-gross` / `lw-hell` am `<html>` und bindet `gemeinsam/lesehilfe.css` nur ein, wenn ein Schalter an ist
+  (`LW.lesehilfe({ g, h })`, Speicher `lernwelt-lesehilfe`, nur auf dem Gerät). Zentral gelöst: Die Seiten rechnen in rem und
+  teilen sich die Farb-Variablen. Spiele und der 3D-Weg behalten im hellen Schema ihr Aussehen (dort wirkt nur „besser lesbar“).
+  Neue Seite sieht im hellen Schema falsch aus → Regel in `lesehilfe.css` ergänzen, nicht in der Seite.
+- **Vorlesen:** Im Übungsrahmen (`ueben.js`: Kopfrechnen, Mathe-Trainer, alle Baukasten-Übungen, auch GPG) steht an jeder Aufgabe
+  der Knopf 🔊. Gesprochen wird nur auf Antippen, über die Sprachausgabe des iPads – erst der deutsche Arbeitsauftrag, dann die
+  Aufgabe (englische Aufgaben in ihrer Sprache). Automatisch vorlesen weiterhin nur mit `?vorlesen=1`.
+- **Bilder:** Die 23 GPG-Fotos liegen als WebP mit höchstens 700 px Breite vor (zusammen 1,2 statt 2,1 MB) und laden mit
+  `loading="lazy"`. Die alten JPG-Dateien bleiben im Repo, weil gespeicherte Live-Quizze noch auf sie zeigen können; die
+  Inhaltsdatei nutzt die WebP-Fassungen. Neue Fotos gleich als WebP ablegen.
+- **Klicktest** (`werkzeuge/klicktest.js`, CI `.github/workflows/klicktest.yml`): echter Browser öffnet Startseite, Kopfrechnen
+  (löst eine Aufgabe), ein Spiel, eine Baukasten-Übung und den Test-Lernweg; jeder Skriptfehler lässt ihn scheitern.
+  Lokal: `python3 -m http.server 8123 &` und `node werkzeuge/klicktest.js` (braucht das npm-Paket `playwright` – nur für den Test).
+- **Nicht umgesetzt (bewusst):** „Kopfrechnen bündeln“ (würde Kacheln in `config.json` und die Ergebnis-Schlüssel je Klasse
+  ändern – Sterne und Dorf-Aufträge hängen daran), „Startseite verschlanken“ (Budget steht bei 37 von 65 KB, der Umbau der
+  Pass-Ansichten wäre riskanter als nötig) und der Fehlerzähler (braucht die Zustimmung der Schulleitung).
+
 ## Ladekette (Infrastruktur Etappe 2)
 
 Grundsatz: **Kern sofort, Rest bei Bedarf.** Die Budgets prüft `werkzeuge/pruefen.py`, gemessen **komprimiert** (gzip, so liefert GitHub Pages aus –
