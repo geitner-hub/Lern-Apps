@@ -533,7 +533,11 @@ window.addEventListener('pageshow', e => { if (e.persisted) aktualisieren(); });
     A.gl = webglOk() ? null : false;
     berechne();
     const vonS = HASH.get('s') && A.alle[HASH.get('s')] ? HASH.get('s') : null;
+    // Ohne Angabe in der Adresse: die aktuelle Unit der Klasse (Unit des freigegebenen Abschnitts), wenn dort schon eine Station
+    // offen ist – sonst die erste Unit mit einer offenen Station (v128; vorher immer die erste, also oft Unit 1)
+    const jetzt = LernJourney.aktuelleUnit ? LernJourney.aktuelleUnit(J) : null;
     const unit = (vonS && A.alle[vonS].unit) || J.units.find(u => u.id === HASH.get('u'))
+      || (jetzt && jetzt.stationen.some(st => A.z[st.id].zustand !== 'zu') ? jetzt : null)
       || J.units.find(u => u.stationen.some(st => A.z[st.id].naechste)) || J.units[0];
     const aktuell = vonS || standort(unit);
     await altUebernehmen();

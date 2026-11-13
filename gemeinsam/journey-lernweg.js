@@ -574,7 +574,8 @@ ul.jw-hilfe { list-style: none; display: grid; gap: .3rem; margin: .4rem 0 .7rem
       const eigene = (unit.abschnitte || []).filter(sichtbar), pf = eigene.filter(a => !a.wahl), wa = eigene.filter(a => a.wahl);
       const wSoll = Math.min(wahlSoll(unit), wa.length);
       const fertig = pf.filter(a => fortschritt(a).fertig).length + Math.min(wSoll, wa.filter(a => fortschritt(a).fertig).length);
-      const naechste = ab.find(a => !a.wahl && !fortschritt(a).fertig) || null;
+      // Weiter geht es in der aktuellen Unit (der des freigegebenen Abschnitts); erst wenn dort alles fertig ist, mit Offenem von früher (v128)
+      const naechste = pf.find(a => !fortschritt(a).fertig) || ab.find(a => !a.wahl && !fortschritt(a).fertig) || null;
       return { unit, fertig, soll: pf.length + wSoll, naechste, naechsteUnit: naechste && O.J.units.find(u => (u.abschnitte || []).includes(naechste)) };
     } finally { O = vorher; }
   }

@@ -25,7 +25,7 @@
 //  und teilen sich den Offline-Speicher. Deshalb hat jede Umgebung ihr
 //  eigenes Präfix und räumt nur ihre eigenen Speicher auf.
 // ═══════════════════════════════════════════════════════
-const VERSION = 'v127';  // v127: Journey – zweite Station eines Abschnitts zeigt nur ihre App; Schritte mit ganzem Thema haken sich ab; Vokabeltrainer zeigt, was zählt
+const VERSION = 'v128';  // v128: „Weiter lernen“ und der Journey springen zur aktuellen Unit der Klasse; Memory/Speed als „nur zum Üben“ markiert
 const PRAEFIX = /\/[^/]*-test\/$/i.test(new URL(self.registration.scope).pathname) ? 'lwtest-v' : 'lernwelt-v';
 const CACHE   = PRAEFIX + VERSION.replace(/^v/, '');        // z. B. 'lernwelt-v24' (Format wie bisher)
 const ALT     = CACHE + '-alt';                             // Dateien der Vorversion, noch nicht aufgefrischt

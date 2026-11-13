@@ -307,11 +307,14 @@ Ein App-Schritt im Laufzettel bzw. eine Station hakt sich ab, wenn im Lernstand 
 | Baukasten (`uebung.html`: Lückentext, Sortieren, Zuordnen, Eingabe, Markieren, Beschriften, Bild-Wort, Mix) | ja | Runde ≥ 5 Aufgaben, nicht zu schnell durchgeklickt |
 | Anwenden-Stationen (`journey-anwenden.html`) | ja | |
 | Vokabeltrainer: 🧠 Quiz, ✏️ Fill in, 🔀 Scramble | ja | in der Modus-Wahl mit „⭐ zählt“ markiert |
-| Vokabeltrainer: Karteikarten, 🎴 Memory, ⚡ Speed | **nein** | zum Üben – Memory endet immer mit 100 %; Ergebnis-Seite sagt, was zählt |
+| Vokabeltrainer: Karteikarten, 🎴 Memory, ⚡ Speed | **nein** | in der Modus-Wahl „nur zum Üben“ – Memory endet immer mit 100 %; Ergebnis-Seite sagt, was zählt |
 | Check vor der Probe | eigener Haken | erledigt, sobald einmal bearbeitet |
 
 - Der Lernstand wird unter der Themen-ID gelesen, unter der alten Inhalt-ID des Themas (`vok6:unit1` – ganze Unit im
   Vokabeltrainer, v126) und, wenn der Schritt ein ganzes Thema nennt (z. B. `en.5.praepositionen`), unter jeder seiner Stufen (v127).
+- **Aktuelle Unit (v128):** „Weiter lernen“, „Mein Laufzettel“, „Heute für dich“ und der English Journey ohne Angabe in der Adresse
+  führen in die Unit des Abschnitts, bis zu dem die Lehrkraft freigegeben hat (`LernJourney.aktuelleUnit`) – nicht mehr in die erste
+  Unit, in der noch etwas offen ist. Erst wenn in der aktuellen Unit alles fertig ist, geht es mit Offenem von früher weiter.
 - **Mehrere Stationen im selben Abschnitt** (13 Abschnitte): Im 3D-Ort zeigt nur die erste Station des Wegs den ganzen Abschnitt;
   jede weitere zeigt ihre App und den Verweis „Hefteintrag und Übungen stehen bei der Station …“ mit „Alles zeigen“
   (`journey-lernweg.js` `abschnittHTML`, Option `station` an `zeige`). In der Liste (Laufzettel) bleibt der Abschnitt ganz.
