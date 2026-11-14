@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8"/>
+  <script src="../../gemeinsam/umgebung.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>Generalprobe – Lernwelt</title>
+  <!--
+  ═══════════════════════════════════════════════
+   LERNWELT – Generalprobe  (v132)
+   apps/englisch/generalprobe.html?stufe=en.6.generalprobe.u3
+
+   Eine Probe im Umfang einer echten Probe: 40 Minuten, 50 Punkte, alles wird getippt (die Rechtschreibung zählt),
+   keine Tipps, keine Lösung, Rückmeldung erst nach dem Abgeben. Kein Abhaken: Der Schritt im Laufzettel gilt erst als
+   erledigt, wenn die Generalprobe mit dem Ziel aus journey6.json (Standard 60 %) bestanden ist.
+   Inhalte: daten/proben/en.6.generalprobe.json – je Unit Teile (vokabeln · luecke · satz · lesen). Wiederholbar mit leicht
+   anderen Aufgaben: jeder Teil zieht „n“ aus einem kleinen Pool (zuerst, was beim letzten Mal nicht dran war), die Vokabeln
+   kommen zufällig aus der Unit, die zwei Lesetexte wechseln sich ab.
+   Keine Note. Ergebnis: Punkte je Teil, Urteil (bereit · fast · noch nicht), Übungs-Links, Korrektur jeder Aufgabe.
+   Speicher: laufende Probe und letzte Auswahl in lernwelt-generalprobe (nur Gerät) – ein Neuladen kostet keine Antworten,
+   die Uhr läuft weiter. Versuche im Pass (LernPass.checkMerken: erster, letzter, bester). XP wie eine normale Runde.
+   Offen erst, wenn die Pflicht-Abschnitte der Unit im Laufzettel fertig sind (mit Admin-Anmeldung immer).
+  ═══════════════════════════════════════════════
+  -->
+  <link rel="stylesheet" href="../../gemeinsam/fonts.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --bg:#0f0e1a; --surface:#1b1929; --surface2:#252238; --border:rgba(255,255,255,.12); --accent:#e6a817; --indigo:#818cf8; --text:#f1f0fb; --text2:rgba(241,240,251,.72); --ok:#4ade80; --no:#f87171; }
+    body { font-family: 'Nunito', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding: 4.2rem 1rem calc(6rem + env(safe-area-inset-bottom)); line-height: 1.45; }
+    main { max-width: 780px; margin: 0 auto; }
+    h1 { font: 400 1.9rem 'Fredoka One', 'Nunito', sans-serif; color: var(--accent); text-align: center; }
+    .sub { color: var(--text2); font-weight: 800; text-align: center; margin: .2rem 0 1rem; }
+    .karte { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 1.1rem 1.2rem; margin-bottom: 1rem; }
+    .karte h2 { font: 400 1.25rem 'Fredoka One', 'Nunito', sans-serif; color: var(--indigo); margin-bottom: .2rem; display: flex; justify-content: space-between; gap: .6rem; align-items: baseline; }
+    .karte h2 small { font: 800 .85rem 'Nunito', sans-serif; color: var(--text2); white-space: nowrap; }
+    .anw { color: var(--text2); font-weight: 800; margin-bottom: .7rem; }
+    ul.regeln { list-style: none; display: grid; gap: .45rem; margin: .6rem 0; }
+    ul.regeln li { background: var(--surface2); border-radius: 12px; padding: .55rem .8rem; font-weight: 700; }
+    .kn { background: var(--surface2); border: 1px solid var(--border); color: var(--text); border-radius: 999px; padding: .65rem 1.2rem; font: 800 1rem 'Nunito', sans-serif; min-height: 48px; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; }
+    .kn.gold { background: var(--accent); color: #1b1300; border-color: transparent; }
+    .kn:disabled { opacity: .45; cursor: default; }
+    .zeile { display: flex; gap: .6rem; flex-wrap: wrap; justify-content: center; margin-top: .9rem; }
+    .auf { display: flex; gap: .6rem; align-items: baseline; padding: .55rem 0; border-top: 1px solid var(--border); flex-wrap: wrap; }
+    .auf:first-of-type { border-top: 0; }
+    .auf .nr { color: var(--text2); font-weight: 900; min-width: 1.6rem; }
+    .auf .tx { flex: 1; min-width: 220px; font-weight: 700; font-size: 1.05rem; }
+    input.ein { font: 800 1.05rem 'Nunito', sans-serif; background: #12111f; color: var(--text); border: 2px solid var(--border); border-radius: 10px; padding: .4rem .6rem; min-height: 44px; width: 11rem; max-width: 100%; }
+    input.ein.lang { width: 100%; margin-top: .35rem; }
+    input.ein:focus { outline: none; border-color: var(--accent); }
+    .lesetext { background: #fbf6e9; color: #24201a; border-radius: 14px; padding: 1rem 1.1rem; margin-bottom: .9rem; font-size: 1.08rem; line-height: 1.6; }
+    .lesetext h3 { font: 400 1.2rem 'Fredoka One', 'Nunito', sans-serif; margin-bottom: .4rem; }
+    .lesetext p + p { margin-top: .6rem; }
+    .rf { display: inline-flex; gap: .4rem; }
+    .rf button { font: 800 .95rem 'Nunito', sans-serif; min-height: 44px; padding: .3rem .9rem; border-radius: 999px; background: #12111f; color: var(--text); border: 2px solid var(--border); cursor: pointer; }
+    .rf button[aria-pressed="true"] { background: var(--indigo); border-color: var(--indigo); color: #0f0e1a; }
+    .leiste { position: fixed; left: 0; right: 0; bottom: 0; z-index: 50; background: rgba(15,14,26,.96); border-top: 1px solid var(--border); padding: .55rem 1rem calc(.55rem + env(safe-area-inset-bottom)); display: flex; gap: .8rem; align-items: center; justify-content: center; flex-wrap: wrap; }
+    .uhr { font: 400 1.5rem 'Fredoka One', 'Nunito', sans-serif; color: var(--accent); min-width: 5.2rem; text-align: center; }
+    .uhr.knapp { color: var(--no); }
+    .stand { font-weight: 800; color: var(--text2); }
+    .punkte { font: 400 3rem 'Fredoka One', 'Nunito', sans-serif; color: var(--accent); text-align: center; }
+    .urteil { text-align: center; font: 400 1.4rem 'Fredoka One', 'Nunito', sans-serif; margin: .2rem 0 .3rem; }
+    .teilz { display: flex; align-items: center; gap: .7rem; padding: .5rem 0; border-top: 1px solid var(--border); }
+    .teilz b { flex: 1; min-width: 0; } .teilz small { display: block; color: var(--text2); font-weight: 700; }
+    .balken { width: 90px; height: 10px; border-radius: 999px; background: rgba(255,255,255,.12); overflow: hidden; flex-shrink: 0; }
+    .balken i { display: block; height: 100%; background: var(--ok); } .balken.mittel i { background: var(--accent); } .balken.wenig i { background: var(--no); }
+    .teilz a { flex-shrink: 0; background: var(--accent); color: #1b1300; font-weight: 900; border-radius: 999px; padding: .4rem .8rem; text-decoration: none; min-height: 40px; display: inline-flex; align-items: center; }
+    .kor { padding: .5rem 0; border-top: 1px solid var(--border); font-weight: 700; }
+    .kor .du { color: var(--text2); } .kor .ri { color: var(--ok); } .kor.f .du b { color: var(--no); } .kor.h .du b { color: var(--accent); }
+    details summary { cursor: pointer; font-weight: 900; padding: .4rem 0; min-height: 44px; display: flex; align-items: center; }
+    .dunkel { position: fixed; inset: 0; background: rgba(0,0,0,.7); z-index: 80; display: flex; align-items: center; justify-content: center; padding: 1rem; }
+    .dunkel .karte { max-width: 440px; text-align: center; margin: 0; }
+    @media print { .leiste, .zeile, #lernapps-nav { display: none !important; } body { background: #fff; color: #000; padding: 0; } .karte { border-color: #999; background: #fff; } }
+  </style>
+</head>
+<body data-tastatur="aus">
+<main id="haupt"><h1>🎓 Generalprobe</h1><p class="sub">lädt …</p></main>
+
+<script src="../../gemeinsam/shared.js"></script>
+<script src="../../gemeinsam/freigabe.js"></script>
+<script src="../../gemeinsam/katalog.js"></script>
+<script>
+'use strict';
+const KEY = 'lernwelt-generalprobe';
+const Q = new URLSearchParams(location.search);
+const STUFE = /^en\.6\.generalprobe\.u[1-9]$/.test(Q.get('stufe') || '') ? Q.get('stufe') : 'en.6.generalprobe.' + (/^u[1-9]$/.test(Q.get('unit') || '') ? Q.get('unit') : 'u1');
+const UID = STUFE.split('.').pop();
+const $ = id => document.getElementById(id), host = $('haupt'), e = s => escHtml(String(s == null ? '' : s));
+const lies = () => { try { return JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (x) { return {}; } };
+const schreib = d => { try { localStorage.setItem(KEY, JSON.stringify(d)); } catch (x) { if (window.LW && LW.speicher) LW.speicher.fehlgeschlagen(x); } };
+const misch = l => { const a = l.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const WEG = LW.ROOT + 'apps/englisch/english-journey.html#u=' + UID;
+let D = null, U = null, VOK = null, lauf = null, uhr = null;
+
+// ── Vergleichen: Groß/Klein, Apostroph-Sorten und doppelte Leerzeichen zählen nicht – jeder Buchstabe schon ──
+const norm = s => String(s == null ? '' : s).toLowerCase().replace(/[’‘`´]/g, "'").replace(/[“”„"]/g, '').replace(/\s+/g, ' ').trim();
+const normSatz = s => norm(s).replace(/\s+([,.!?])/g, '$1').replace(/[.!?]+$/, '').trim();
+const normWort = s => ' ' + norm(s).replace(/[^a-z0-9' ]/g, ' ').replace(/\s+/g, ' ').trim() + ' ';
+const normDe = s => norm(s).replace(/\(.*?\)/g, ' ').replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss')
+  .replace(/[^a-z0-9 -]/g, ' ').replace(/\s+/g, ' ').trim().replace(/^(der|die|das|ein|eine|einen|sich|etwas|etw|jdn|jdm) /, '');
+function abstand(a, b) {                                       // Levenshtein – für „fast richtig“ bei ganzen Sätzen
+  const m = a.length, n = b.length; if (Math.abs(m - n) > 2) return 9;
+  let v = Array.from({ length: n + 1 }, (_, i) => i);
+  for (let i = 1; i <= m; i++) { const w = [i]; for (let j = 1; j <= n; j++) w[j] = Math.min(v[j] + 1, w[j - 1] + 1, v[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)); v = w; }
+  return v[n];
+}
+/** Punkte für eine Aufgabe → 0 … a.p */
+function werte(a, antwort) {
+  if (a.art === 'rf') return antwort === (a.rf ? 't' : 'f') ? 1 : 0;
+  if (!norm(antwort)) return 0;
+  if (a.art === 'kurz') { const w = normWort(antwort); return a.l.some(k => w.includes(normWort(k))) ? 1 : 0; }
+  if (a.art === 'de') { const w = normDe(antwort); return a.l.some(k => normDe(k) === w) ? 1 : 0; }
+  if (a.art === 'satz') {
+    const w = normSatz(antwort);
+    if (a.l.some(k => normSatz(k) === w)) return a.p;
+    return a.p > 1 && a.l.some(k => abstand(normSatz(k), w) <= 2) ? 1 : 0;   // kleiner Schreibfehler: halbe Punkte
+  }
+  return a.l.some(k => norm(k) === norm(antwort)) ? 1 : 0;
+}
+
+// ── Vokabeln der Unit: nur Einträge, die sich eindeutig tippen lassen ──
+function vokabelPool(unit) {
+  const out = [], ths = (VOK && VOK.units && VOK.units[unit] && VOK.units[unit].themes) || {};
+  Object.values(ths).forEach(t => (t.words || []).forEach(w => {
+    const verb = /^\(to\)\s+/.test(w.en), en = String(w.en).replace(/^\(to\)\s+/, '').trim(), de = String(w.de || '').trim();
+    if (!/^[A-Za-z][A-Za-z' -]{1,21}$/.test(en) || !de || de.length > 44 || /[=:!?]/.test(de)) return;
+    const deL = de.split(/[,;]/).flatMap(x => [x].concat(x.split('/').filter(y => normDe(y).length >= 3))).map(x => x.trim()).filter(x => normDe(x).length >= 2);
+    if (!deL.length || out.some(x => x.en === en) || en.split(' ').length > 2 || deL.some(x => normDe(x) === norm(en))) return;   // keine ganzen Sätze, keine gleichen Wörter (uncool)
+    out.push({ en, verb, de, enL: verb ? [en, 'to ' + en] : [en], deL: deL.concat([de]) });
+  }));
+  return out;
+}
+
+/** Neue Probe zusammenstellen: je Teil n aus dem Pool – zuerst, was beim letzten Mal nicht dran war */
+function stelle() {
+  const S = lies(), letzte = (S.letzte && S.letzte[UID]) || {}, versuche = ((window.LernPass && LernPass.checks && LernPass.checks[STUFE]) || {}).n || 0;
+  const auswahl = {}, zieh = (id, anzahl, n) => {
+    const alt = new Set(letzte[id] || []), idx = Array.from({ length: anzahl }, (_, i) => i);
+    const l = misch(idx.filter(i => !alt.has(i))).concat(misch(idx.filter(i => alt.has(i)))).slice(0, n);
+    auswahl[id] = l; return l;
+  };
+  const teile = U.teile.map(t => {
+    let aufgaben = [];
+    if (t.art === 'vokabeln') {
+      const pool = vokabelPool(t.unit), namen = pool.map(x => x.en);
+      const alt = new Set(letzte.vok || []), neu = misch(pool.filter(x => !alt.has(x.en))).concat(misch(pool.filter(x => alt.has(x.en)))).slice(0, t.deEn + t.enDe);
+      auswahl.vok = neu.map(x => x.en).filter(x => namen.includes(x));
+      aufgaben = neu.map((x, i) => i < t.deEn ? { art: 'en', s: x.de + (x.verb ? ' (Verb)' : ''), nach: 'Englisch', l: x.enL, p: 1 } : { art: 'de', s: x.en, nach: 'Deutsch', l: x.deL, p: 1 });
+    } else if (t.art === 'lesen') {
+      const ti = versuche % t.texte.length, tx = t.texte[ti];
+      auswahl.lesen = [ti];
+      aufgaben = tx.fragen.map(f => f.rf !== undefined ? { art: 'rf', s: f.f, rf: f.rf, p: 1 } : { art: 'kurz', s: f.f, l: f.l, p: 1 });
+      return { id: t.id, titel: t.titel, art: t.art, anweisung: t.anweisung, ziel: t.ziel || '', text: { titel: tx.titel, text: tx.text }, aufgaben };
+    } else {
+      aufgaben = zieh(t.id, t.pool.length, t.n).map(i => ({ art: t.art === 'satz' ? 'satz' : 'luecke', s: t.pool[i].s, l: t.pool[i].l, p: t.art === 'satz' ? (t.je || 1) : 1 }));
+    }
+    return { id: t.id, titel: t.titel, art: t.art, anweisung: t.anweisung, ziel: t.ziel || '', aufgaben };
+  });
+  return { id: STUFE, start: Date.now(), teile, auswahl, antw: {} };
+}
+
+// ── Sperre: erst die Pflicht-Abschnitte der Unit im Laufzettel ──
+async function sperre() {
+  const F = window.LernFreigabe;
+  if (F && F.admin && F.admin()) return null;
+  if (F && !F.erlaubt(STUFE)) return { text: 'Deine Lehrkraft hat diese Generalprobe noch nicht freigegeben.' };
+  const cfg = F && F.journey ? F.journey('journey6') : null, bis = (cfg && cfg.bis) || {};
+  if (!F || !F.wer().some(w => typeof bis[w] === 'string')) return null;          // ohne Laufzettel: offen
+  try {
+    await LW.laden('gemeinsam/journey-kern.js'); await LW.laden('gemeinsam/journey-lernweg.js');
+    const J = await LernJourney.laden(), unit = J.units.find(u => u.id === UID);
+    if (!unit) return null;
+    const alle = J.units.flatMap(u => u.abschnitte || []), grenze = LernJourney.freiBis(J, cfg, false);
+    const finale = (unit.abschnitte || []).find(a => a.schluss);
+    if (finale && alle.indexOf(finale) > grenze) return { text: 'Die Generalprobe öffnet sich, wenn deine Lehrkraft das Finale dieser Unit freigibt.' };
+    const m = LernJourneyWeg.meldung({ J, z: LernJourney.berechne(J).z, cfg });
+    const offen = (unit.abschnitte || []).filter(a => !a.wahl && !a.schluss && alle.indexOf(a) <= grenze && !m.f.includes(a.id));
+    return offen.length ? { text: 'Die Generalprobe öffnet sich, wenn du diese Abschnitte im Laufzettel fertig hast:', offen } : null;
+  } catch (x) { return null; }
+}
+
+function zeigeStart(sp) {
+  const C = (window.LernPass && LernPass.checks && LernPass.checks[STUFE]) || null;
+  const sum = l => (l || []).reduce((s, x) => s + (x[0] || 0), 0);
+  const bisher = C ? `<div class="karte"><h2>Deine Versuche <small>${C.n}×</small></h2>
+      <p class="anw">Erster Versuch: ${sum(C.e)} von ${D.punkte} Punkten · letzter Versuch: ${sum(C.l)} · bester: ${Math.round((C.b || 0) * D.punkte / 100)}</p></div>` : '';
+  host.innerHTML = `<h1>🎓 Generalprobe</h1><p class="sub">${e(U.titel)}</p>
+    <div class="karte"><h2>So läuft es</h2>
+      <ul class="regeln"><li>⏱ ${D.zeit} Minuten · ${D.punkte} Punkte – wie eine echte Probe.</li>
+        <li>✏️ Du tippst alles selbst. Die Rechtschreibung zählt.</li>
+        <li>🤫 Keine Tipps, keine Lösungen. Was richtig war, siehst du erst nach dem Abgeben.</li>
+        <li>📊 Keine Note – du siehst, ob du bereit bist und was du noch üben solltest.</li>
+        <li>🔁 Du kannst die Generalprobe wiederholen. Dann kommen andere Aufgaben.</li></ul>
+      ${sp ? `<p class="anw">🔒 ${e(sp.text)}</p>${(sp.offen || []).map(a => `<p style="font-weight:800">${e(a.ico || '📒')} ${e(a.titel)}</p>`).join('')}` : '<p class="anw">Leg Stift und Heft weg, such dir einen ruhigen Platz – und los.</p>'}
+      <div class="zeile">${sp ? '' : '<button type="button" class="kn gold" id="b-start">▶ Generalprobe starten</button>'}<a class="kn" href="${e(WEG)}">🧭 Zum Lernweg</a></div></div>${bisher}`;
+  const b = $('b-start'); if (b) b.onclick = () => { lauf = stelle(); merke(); zeigeProbe(); };
+}
+
+// ── Die Probe ──
+const merke = () => { const S = lies(); S.lauf = lauf; schreib(S); };
+window.addEventListener('pagehide', () => { if (lauf) merke(); });   // letzte Eingaben nicht verlieren
+const alleAufgaben = () => lauf.teile.flatMap((t, ti) => t.aufgaben.map((a, ai) => ({ t, a, k: ti + ':' + ai })));
+function zeigeProbe() {
+  LW.beschaeftigt(true);
+  const feld = (k, lang, ph) => `<input class="ein${lang ? ' lang' : ''}" data-k="${k}" value="${e(lauf.antw[k] || '')}" placeholder="${e(ph || '')}" aria-label="Antwort" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" inputmode="text">`;
+  let nr = 0;
+  const teilHTML = (t, ti) => {
+    const max = t.aufgaben.reduce((s, a) => s + a.p, 0);
+    const zeilen = t.aufgaben.map((a, ai) => {
+      const k = ti + ':' + ai; nr++;
+      let innen;
+      if (a.art === 'luecke' && a.s.includes('___')) innen = `<span class="tx">${a.s.split('___').map(e).join(feld(k))}</span>`;
+      else if (a.art === 'rf') innen = `<span class="tx">${e(a.s)}</span><span class="rf" data-rf="${k}"><button type="button" data-w="t" aria-pressed="${lauf.antw[k] === 't'}">true</button><button type="button" data-w="f" aria-pressed="${lauf.antw[k] === 'f'}">false</button></span>`;
+      else if (a.art === 'en' || a.art === 'de') innen = `<span class="tx">${e(a.s)} <small style="color:var(--text2)">→ ${a.nach}</small></span>${feld(k)}`;
+      else innen = `<span class="tx">${e(a.s)}${a.p > 1 ? ` <small style="color:var(--text2)">(${a.p} P.)</small>` : ''}${feld(k, a.art === 'satz')}</span>`;
+      return `<div class="auf"><span class="nr">${nr}</span>${innen}</div>`;
+    }).join('');
+    const text = t.text ? `<div class="lesetext"><h3>${e(t.text.titel)}</h3>${t.text.text.map(p => `<p>${e(p)}</p>`).join('')}</div>` : '';
+    return `<section class="karte"><h2>${'ABCDEFGH'[ti]} · ${e(t.titel)} <small>${max} Punkte</small></h2><p class="anw">${e(t.anweisung || '')}</p>${text}${zeilen}</section>`;
+  };
+  host.innerHTML = `<h1>🎓 Generalprobe</h1><p class="sub">${e(U.titel)}</p>${lauf.teile.map(teilHTML).join('')}
+    <div class="leiste"><span class="uhr" id="uhr" role="timer"></span><span class="stand" id="stand"></span><button type="button" class="kn gold" id="b-ab">Abgeben</button></div>`;
+  let warte = null;
+  host.oninput = ev => { const k = ev.target.dataset && ev.target.dataset.k; if (!k) return; lauf.antw[k] = ev.target.value; clearTimeout(warte); warte = setTimeout(merke, 400); zeigeStand(); };
+  host.onclick = ev => {
+    const b = ev.target.closest('.rf button');
+    if (b) { const k = b.parentNode.dataset.rf; lauf.antw[k] = b.dataset.w; b.parentNode.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b))); merke(); zeigeStand(); }
+  };
+  $('b-ab').onclick = fragAbgeben;
+  zeigeStand(); tick(); clearInterval(uhr); uhr = setInterval(tick, 1000);
+}
+const offenZahl = () => alleAufgaben().filter(x => !norm(lauf.antw[x.k])).length;
+function zeigeStand() { const n = alleAufgaben().length; if ($('stand')) $('stand').textContent = `${n - offenZahl()} von ${n} beantwortet`; }
+function tick() {
+  if (!lauf) return clearInterval(uhr);
+  const rest = Math.round(D.zeit * 60 - (Date.now() - lauf.start) / 1000), el = $('uhr');
+  if (rest <= 0) return abgeben(true);
+  if (el) { el.textContent = '⏱ ' + Math.floor(rest / 60) + ':' + String(rest % 60).padStart(2, '0'); el.classList.toggle('knapp', rest <= 300); }
+}
+function fragAbgeben() {
+  const n = offenZahl(), d = document.createElement('div');
+  d.className = 'dunkel';
+  d.innerHTML = `<div class="karte" role="dialog" aria-modal="true"><h2 style="justify-content:center">Wirklich abgeben?</h2>
+    <p class="anw">${n ? `Du hast ${n} ${n === 1 ? 'Aufgabe' : 'Aufgaben'} noch nicht beantwortet.` : 'Du hast alles beantwortet. Hast du noch einmal alles durchgelesen?'} Nach dem Abgeben kannst du nichts mehr ändern.</p>
+    <div class="zeile"><button type="button" class="kn" data-nein>Weiter arbeiten</button><button type="button" class="kn gold" data-ja>Abgeben</button></div></div>`;
+  document.body.appendChild(d);
+  d.onclick = ev => { if (ev.target.closest('[data-ja]')) { d.remove(); abgeben(false); } else if (ev.target === d || ev.target.closest('[data-nein]')) d.remove(); };
+}
+
+// ── Auswertung ──
+function abgeben(zeitUm) {
+  clearInterval(uhr);
+  document.querySelectorAll('.dunkel').forEach(x => x.remove());
+  const teile = lauf.teile.map((t, ti) => {
+    const zeilen = t.aufgaben.map((a, ai) => { const antwort = lauf.antw[ti + ':' + ai] || ''; return { a, antwort, p: werte(a, antwort) }; });
+    return { t, zeilen, p: zeilen.reduce((s, z) => s + z.p, 0), max: t.aufgaben.reduce((s, a) => s + a.p, 0) };
+  });
+  const p = teile.reduce((s, t) => s + t.p, 0), max = teile.reduce((s, t) => s + t.max, 0), pct = Math.round(100 * p / max);
+  let erster = null;
+  try { if (window.LernPass && LernPass.checkMerken) erster = LernPass.checkMerken(STUFE, teile.map(t => [t.p, t.max])); } catch (x) {}
+  const S = lies(); S.letzte = Object.assign({}, S.letzte, { [UID]: lauf.auswahl }); delete S.lauf; schreib(S);
+  lauf = null;
+  LW.beschaeftigt(false);
+  try { LernApps.saveResult({ score: p, max, label: p + ' / ' + max + ' Punkte' }); } catch (x) {}
+  zeigeErgebnis(teile, p, max, pct, erster, zeitUm);
+}
+function zeigeErgebnis(teile, p, max, pct, erster, zeitUm) {
+  const urteil = pct >= D.bereit ? ['✅ Bereit für die Probe!', 'Stark! Wiederhole bis zur Probe nur noch kurz, was unten gelb ist.', 'var(--ok)']
+    : pct >= D.fast ? ['🟡 Fast bereit', 'Das meiste sitzt. Übe gezielt die Teile mit dem Üben-Knopf – dann noch eine Generalprobe.', 'var(--accent)']
+    : ['🔁 Noch nicht bereit', 'Kein Problem – dafür ist die Generalprobe da. Übe die Teile unten und versuche es dann noch einmal.', 'var(--no)'];
+  const link = id => { try { const l = id && window.LernWiederholung && LernWiederholung.link && LernFreigabe.erlaubt(id) ? LernWiederholung.link(id) : null; return l ? LW.ROOT + l : ''; } catch (x) { return ''; } };
+  const alt = Array.isArray(erster) ? erster.reduce((s, x) => s + (x[0] || 0), 0) : null;
+  const zeigL = a => a.art === 'rf' ? (a.rf ? 'true' : 'false') : a.art === 'kurz' ? a.l[0] : a.l.slice(0, 2).join(' / ');
+  const zeigA = z => z.a.art === 'rf' ? ({ t: 'true', f: 'false' }[z.antwort] || '—') : (z.antwort.trim() || '—');
+  host.innerHTML = `<h1>🎓 Generalprobe</h1><p class="sub">${e(U.titel)}</p>
+    <div class="karte">${zeitUm ? '<p class="anw" style="text-align:center">⏱ Die Zeit ist um – deine Probe wurde abgegeben.</p>' : ''}
+      <div class="punkte">${p} <small style="font-size:1.2rem;color:var(--text2)">von ${max} Punkten</small></div>
+      <div class="urteil" style="color:${urteil[2]}">${urteil[0]}</div><p class="anw" style="text-align:center">${urteil[1]}${alt !== null ? ` Beim ersten Versuch hattest du ${alt} Punkte${p > alt ? ' ⬆' : ''}.` : ''}</p>
+      ${teile.map(t => { const q = t.max ? t.p / t.max : 0, l = q < 0.66 ? link(t.t.ziel) : '';
+        return `<div class="teilz"><b>${e(t.t.titel)}<small>${t.p} von ${t.max} Punkten${q >= 0.8 ? ' · das kannst du' : q >= 0.66 ? ' · fast sicher' : ' · hier nochmal üben'}</small></b>
+          <span class="balken ${q >= 0.8 ? '' : q >= 0.66 ? 'mittel' : 'wenig'}"><i style="width:${Math.round(q * 100)}%"></i></span>${l ? `<a href="${e(l)}">Üben ›</a>` : ''}</div>`; }).join('')}
+      <div class="zeile"><button type="button" class="kn gold" id="b-neu">🔁 Neue Generalprobe</button><a class="kn" href="${e(WEG)}">🧭 Zum Lernweg</a><button type="button" class="kn" onclick="print()">🖨 Drucken</button></div></div>
+    <div class="karte"><h2>Korrektur</h2><p class="anw">✓ richtig · ½ kleiner Schreibfehler · ✗ falsch – schau dir an, was noch nicht stimmt.</p>
+      ${teile.map((t, i) => `<details${t.p < t.max ? ' open' : ''}><summary>${e(t.t.titel)} · ${t.p}/${t.max}</summary>
+        ${t.zeilen.map(z => { const voll = z.p >= z.a.p; return `<div class="kor ${voll ? 'r' : z.p ? 'h' : 'f'}">${voll ? '✓' : z.p ? '½' : '✗'} ${e(z.a.s)}
+          <div class="du">Deine Antwort: <b>${e(zeigA(z))}</b></div>${voll ? '' : `<div class="ri">Richtig: ${e(zeigL(z.a))}</div>`}</div>`; }).join('')}</details>`).join('')}</div>`;
+  $('b-neu').onclick = () => { scrollTo(0, 0); start(); };
+  scrollTo(0, 0);
+}
+
+function passBereit() { return new Promise(res => { if (window.LernPass) return res(); window.addEventListener('lernpass:ready', () => res(), { once: true }); setTimeout(res, 5000); }); }
+async function start() {
+  try {
+    if (!D) {
+      D = await fetch(LW.ROOT + 'daten/proben/en.6.generalprobe.json', { cache: 'no-cache' }).then(r => r.json());
+      VOK = await fetch(LW.ROOT + D.vokabeln, { cache: 'no-cache' }).then(r => r.json());
+    }
+    U = D.units[UID];
+    if (!U) throw new Error('Unit fehlt');
+    await passBereit();
+    if (window.LernKatalog) await Promise.race([LernKatalog.bereit, new Promise(r => setTimeout(r, 4000))]);
+    LW.laden('gemeinsam/wiederholung.js').catch(() => {});
+    const S = lies();
+    if (S.lauf && S.lauf.id === STUFE && Array.isArray(S.lauf.teile)) { lauf = S.lauf; return zeigeProbe(); }   // weiter, wo du warst (die Uhr lief weiter)
+    zeigeStart(await sperre());
+  } catch (x) {
+    host.innerHTML = `<h1>🎓 Generalprobe</h1><div class="karte"><p class="anw">Die Generalprobe konnte nicht geladen werden. Prüfe das WLAN und versuche es noch einmal.</p><div class="zeile"><a class="kn" href="${e(LW.ROOT)}">Zur Startseite</a></div></div>`;
+  }
+}
+start();
+</script>
+<script src="../../gemeinsam/navbar.js"></script>
+</body>
+</html>

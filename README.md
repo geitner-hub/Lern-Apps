@@ -1007,6 +1007,45 @@ Kurzes Klassen-Quiz für 2–10 Minuten (Einstieg, Zwischensicherung, Exit-Ticke
   Testseite: `cloudflare/live-test.html`. Katalog-Thema `allg.5.live-abfrage`. In der Testumgebung sind Räume und Antworten
   erlaubt, Quizze speichern nicht.
 
+## Generalprobe und Belohnungen (v132)
+
+**Generalprobe** – `apps/englisch/generalprobe.html?stufe=en.6.generalprobe.u1 … u5`, im English Journey als Schritt
+`uN-a-finale-probe` im Finale-Abschnitt (nach dem Check vor der Probe).
+
+- Umfang einer echten Probe: **40 Minuten, 50 Punkte**. Vocabulary 14 (10 Deutsch → Englisch, 4 Englisch → Deutsch),
+  Grammatik 20 (Lücken zum Tippen), ganze Sätze 6, Reading 10 (4 × true/false, 6 kurze Antworten).
+- Alles wird getippt, die Rechtschreibung zählt (Groß/Klein und Apostroph-Sorte nicht). Bei ganzen Sätzen mit 2 Punkten gibt ein
+  kleiner Tippfehler (höchstens 2 Zeichen) noch 1 Punkt. Keine Tipps, keine Lösung, Rückmeldung erst nach dem Abgeben; bei 0:00 wird
+  automatisch abgegeben. Autokorrektur der Tastatur ist in den Feldern abgeschaltet.
+- Ergebnis ohne Note: Punkte je Teil, Urteil **bereit** (ab 80 %) · **fast bereit** (ab 60 %) · **noch nicht**, Üben-Knopf je schwachem
+  Teil, Korrektur jeder Aufgabe, Vergleich mit dem ersten Versuch. Der Schritt im Laufzettel gilt erst ab `ziel.prozent` (60) als erledigt –
+  Abhaken geht nicht.
+- Wiederholbar mit leicht anderen Aufgaben, ohne große Pools: jeder Teil zieht `n` aus einem Pool (rund das 1,5-Fache; zuerst, was beim
+  letzten Mal nicht dran war), die Vokabeln kommen zufällig aus der Unit, zwei Lesetexte je Unit wechseln sich ab.
+- Offen erst, wenn die Pflicht-Abschnitte der Unit im Laufzettel fertig sind und das Finale freigegeben ist (ohne Laufzettel und mit
+  Admin-Anmeldung immer). Ein Neuladen kostet keine Antworten (`lernwelt-generalprobe`), die Uhr läuft weiter.
+- Inhalte: `daten/proben/en.6.generalprobe.json` – `units.<uN>.teile[]` mit `art` `vokabeln` (`unit`, `deEn`, `enDe`), `luecke`
+  (`pool: [{ s: "… ___ …", l: [Lösungen] }]`, `n`), `satz` (wie luecke, `je` Punkte je Satz), `lesen` (`texte: [{ titel, text: [Absätze],
+  fragen: [{ f, rf: true|false } | { f, l: [Schlüsselwörter] }] }]`); `ziel` = Themen-ID für den Üben-Knopf. Die Lesetexte sind selbst
+  geschrieben (kein Schulbuch) und nutzen den Wortschatz der Unit. Summe je Unit immer 50.
+- Klassenübersicht: Spalte 🎓 zeigt je Karte den besten Versuch der gewählten Unit in Prozent (Kennung `gp-<Unit>-<Prozent>` in der Meldung).
+
+**Probe geschrieben** – Admin → Gruppen → 🚦 Klassenübersicht → English Journey: Unit wählen, Haken ✍️ je Karte (oder „Alle Karten ✓“).
+Der Worker merkt sich das je Karte (`/sync/admin/probe`, Tabelle `sync_probe`); das iPad holt es beim Öffnen der Startseite
+(`LernSync.probe`, höchstens alle 3 Minuten). Braucht Sicherungskarte in einer Gruppe und den Worker ab v132. Auf dem iPad:
+
+- **Sammelstück** der Unit: Abzeichen `probe-u1 … u5` mit je einem Teil, das es nur dafür gibt (Hafen-Cap Plymouth,
+  Nachbarschafts-Rucksack, Trikot vom Sportplatz, City-Hoodie, Dartmoor-Hund).
+- **Spiele frei**, solange die Klasse noch in dieser Unit ist: Die Spielsperre entfällt, bis die Lehrkraft im Laufzettel einen Abschnitt
+  der nächsten Unit freigibt (`LernFreigabe.probeFrei`). Der Fokus-Modus gilt weiter.
+- **Rekord-Jagd**: Banner auf der Startseite → Vokabeltrainer der Unit; ⚡ Speed merkt sich den eigenen Rekord je Wortauswahl
+  (`lernwelt-rekord`, nur Gerät, kein Vergleich mit anderen).
+
+**Truhen im Weg** – an jeder dritten Station einer Unit (ohne Finale) steht im 3D-Weg eine Truhe: Holz mit Schloss, solange die
+Station offen ist; golden, sobald sie gemeistert ist; offen nach dem Einsammeln. Einsammeln über die Stationskarte oder im Laufzettel
+(„🎁 Truhe einsammeln“) – gibt einmal je Station eine Geschenk-Truhe im Pass (`LernJourney.truhen`, `LernPass.geschenkTruhe('jt-<Station>')`).
+Wer Stationen schon gemeistert hat, kann die Truhen nachträglich einsammeln.
+
 ## Vokabel-Engine (Infrastruktur Etappe 5)
 
 - **apps/englisch/vokabeltrainer.html** – ein Trainer für alle Wortlisten, alle Modi wie bisher

@@ -15,14 +15,14 @@ LWAdmin.modul({
   zeigen(host, { store }) {
     const e = s => escHtml(String(s == null ? '' : s));
     const ROOT = new URL('./', location.href).href, WOCHE = 7 * 864e5;
-    let aktiv = true, gruppen = [], wege = [], gruppe = '', weg = '', karten = null, fehler = '', laedt = false, filter = '';
+    let aktiv = true, gruppen = [], wege = [], gruppe = '', weg = '', karten = null, fehler = '', laedt = false, filter = '', probeUnit = '';
 
     const holeJson = p => fetch(ROOT + p, { cache: 'no-store' }).then(r => r.ok ? r.json() : Promise.reject(new Error('HTTP ' + r.status)));
     /** Weg → einheitlich { id, titel, abschnitte: [{ id, titel, gruppe, wahl, schritte: [{ id, text, zaehlt }] }] } */
     const schrittText = (s, B) => s.text || (B[s.baustein] && B[s.baustein].titel) || s.titel || s.station || s.thema || s.art;
     function ausJourney(J, B) {
       return { id: 'journey6', titel: '🧭 English Journey Year 6', abschnitte: J.units.flatMap(u => (u.abschnitte || []).map(a => ({
-        id: a.id, titel: a.titel, gruppe: 'Unit ' + u.nr, wahl: !!a.wahl,
+        id: a.id, titel: a.titel, gruppe: 'Unit ' + u.nr, unit: u.id, wahl: !!a.wahl,
         schritte: a.schritte.map(s => ({ id: s.id, text: schrittText(s, B), zaehlt: s.art !== 'extra' })) }))) };
     }
     function ausWeg(W, B) {
@@ -62,6 +62,11 @@ LWAdmin.modul({
 
       const bis = freiBis(), ab = w.abschnitte, jetzt = Date.now();
       const frei = ab.filter((a, i) => i <= bis), pflicht = frei.filter(a => !a.wahl);
+      // „Probe geschrieben“ und Generalprobe (v132) – nur Wege mit Units (English Journey)
+      const units = [...new Set(ab.map(a => a.unit).filter(Boolean))];
+      if (units.length && !units.includes(probeUnit)) probeUnit = (ab[Math.max(0, bis)] || {}).unit || units[0];
+      const uName = id => (ab.find(a => a.unit === id) || {}).gruppe || id;
+      const gpVon = k => { let b = null; k.e.forEach(x => { const m = /^gp-(.+)-(\d{1,3})$/.exec(x); if (m && m[1] === probeUnit) b = Number(m[2]); }); return b; };
       const zeilen = karten.map(k => {
         const E = new Set(k.e), F = new Set(k.f);
         const zellen = ab.map(a => F.has(a.id) ? 'fertig' : a.schritte.some(s => E.has(s.id)) ? 'dran' : 'offen');
@@ -87,20 +92,27 @@ LWAdmin.modul({
       const stolper = gruppenZeile.map((g, i) => g.stolper && i <= bis ? `<li><b>${e(ab[i].titel)}</b> – ${e(g.stolper)}</li>` : '').join('');
       const knopf = (id, text, n) => `<button type="button" class="lw-btn klein${filter === id ? ' gold' : ''}" data-ku-filter="${id}" aria-pressed="${filter === id}">${text} (${n})</button>`;
       let gruppeVorher = null;
-      const gruppenKopf = ab.map(a => a.gruppe).some(Boolean) ? `<tr><th></th><th></th>${ab.map(a => { const neu = a.gruppe !== gruppeVorher; gruppeVorher = a.gruppe; return neu ? `<th colspan="${ab.filter(x => x.gruppe === a.gruppe).length}" style="font-size:.72rem;text-align:left;padding:2px 4px;border-left:2px solid rgba(255,255,255,.25)">${e(a.gruppe)}</th>` : ''; }).join('')}</tr>` : '';
+      const gruppenKopf = ab.map(a => a.gruppe).some(Boolean) ? `<tr><th></th><th></th>${units.length ? '<th></th><th></th>' : ''}${ab.map(a => { const neu = a.gruppe !== gruppeVorher; gruppeVorher = a.gruppe; return neu ? `<th colspan="${ab.filter(x => x.gruppe === a.gruppe).length}" style="font-size:.72rem;text-align:left;padding:2px 4px;border-left:2px solid rgba(255,255,255,.25)">${e(a.gruppe)}</th>` : ''; }).join('')}</tr>` : '';
       host.innerHTML = kopf + `<div class="lw-karte">
           <div class="lw-knoepfe" style="margin-bottom:.6rem">${knopf('', 'Alle', zeilen.length)}${knopf('haengt', '⏳ hängt seit über einer Woche', zeilen.filter(z => z.haengt).length)}
             ${knopf('pflicht', '✅ Pflicht erledigt', zeilen.filter(z => z.allesPflicht).length)}${hatStern ? knopf('stern', '⭐ Stern genutzt', zeilen.filter(z => z.stern).length) : ''}
             ${knopf('nie', '∅ noch nie gemeldet', zeilen.filter(z => z.nie).length)}</div>
+          ${units.length ? `<div class="lw-knoepfe" style="align-items:center;margin-bottom:.6rem"><b>✍️ Probe geschrieben:</b>
+            <select data-ku-unit aria-label="Unit">${units.map(u => `<option value="${e(u)}"${u === probeUnit ? ' selected' : ''}>${e(uName(u))}</option>`).join('')}</select>
+            <button type="button" class="lw-btn klein" data-ku-probe="alle" data-an="1">Alle Karten ✓</button>
+            <span class="lw-klein">Haken je Karte in der Spalte ✍️. Belohnung auf dem iPad: Sammelstück der Unit, Spiele frei bis zur nächsten Unit, Rekord-Jagd.</span></div>` : ''}
           ${bis < 0 ? '<p class="lw-klein">Für diese Gruppe ist auf diesem Weg noch nichts freigegeben (Gruppen → 📒 Laufzettel).</p>' : ''}
           <div style="overflow-x:auto"><table style="border-collapse:collapse;width:100%;font-size:.85rem">
-            <thead>${gruppenKopf}<tr><th style="text-align:left;padding:2px 6px;white-space:nowrap">Karte</th><th style="text-align:left;padding:2px 6px;white-space:nowrap">zuletzt weiter</th>
+            <thead>${gruppenKopf}<tr><th style="text-align:left;padding:2px 6px;white-space:nowrap">Karte</th><th style="text-align:left;padding:2px 6px;white-space:nowrap">zuletzt weiter</th>${units.length ? '<th title="Generalprobe: bester Versuch" style="padding:2px 6px">🎓</th><th title="Probe geschrieben" style="padding:2px 6px">✍️</th>' : ''}
               ${ab.map((a, i) => `<th title="${e(a.titel)}" style="padding:2px;font-weight:800;font-size:.7rem;${i > bis ? 'opacity:.4' : ''}">${i + 1}</th>`).join('')}</tr></thead>
             <tbody>${sichtbar.map(z => `<tr><td style="padding:2px 6px;white-space:nowrap"><b>Nr. ${Number(z.k.nr)}</b></td>
                 <td style="padding:2px 6px;white-space:nowrap;${z.haengt ? 'color:#f87171;font-weight:800' : ''}">${z.nie ? '<span class="lw-klein">noch nie</span>' : e(tage(z.k.geaendert)) + (z.haengt ? ' ⏳' : '')}</td>
+                ${units.length ? (() => { const g = gpVon(z.k), an = (z.k.probe || []).includes(probeUnit);
+                  return `<td title="Generalprobe ${e(uName(probeUnit))}: bester Versuch" style="padding:2px 6px;white-space:nowrap;font-weight:800;color:${g === null ? 'inherit' : g >= 80 ? '#22c55e' : g >= 60 ? '#eab308' : '#f87171'}">${g === null ? '–' : g + ' %'}</td>
+                    <td style="padding:2px 6px"><button type="button" class="lw-btn klein${an ? ' gold' : ''}" data-ku-probe="${Number(z.k.nr)}" data-an="${an ? '' : '1'}" aria-pressed="${an}" title="Probe ${e(uName(probeUnit))} geschrieben">${an ? '✓' : '○'}</button></td>`; })() : ''}
                 ${z.zellen.map((st, i) => zelle(st, i, `Nr. ${z.k.nr} · ${ab[i].titel}: ${{ fertig: 'fertig', dran: 'begonnen', offen: 'noch nicht begonnen' }[st]}`)).join('')}</tr>`).join('')
-              || `<tr><td colspan="${ab.length + 2}" class="lw-klein" style="padding:.6rem">Keine Karte passt zu diesem Filter.</td></tr>`}
-              <tr><td colspan="2" style="padding:6px 6px 2px;white-space:nowrap"><b>Gruppe</b> <span class="lw-klein">fertig in %</span></td>
+               || `<tr><td colspan="${ab.length + 4}" class="lw-klein" style="padding:.6rem">Keine Karte passt zu diesem Filter.</td></tr>`}
+              <tr><td colspan="${units.length ? 4 : 2}" style="padding:6px 6px 2px;white-space:nowrap"><b>Gruppe</b> <span class="lw-klein">fertig in %</span></td>
                 ${gruppenZeile.map((g, i) => `<td title="${e(ab[i].titel)}: ${g.n} von ${mit.length} fertig" style="padding:6px 1px 2px;text-align:center;font-size:.68rem;font-weight:800;${i > bis ? 'opacity:.4' : ''}">${g.pct}</td>`).join('')}</tr>
             </tbody></table></div>
           <p class="lw-klein" style="margin-top:.6rem">🟩 fertig · 🟨 begonnen · ⬜ noch nicht begonnen · blass = noch nicht freigegeben. Die Zahl über einer Spalte ist der Abschnitt in Weg-Reihenfolge (Titel beim Darüberfahren bzw. unten).
@@ -115,10 +127,18 @@ LWAdmin.modul({
       const t = ev.target;
       if (t.matches('[data-ku-gruppe]')) { gruppe = t.value; karten = null; filter = ''; laden(); zeichnen(); }
       if (t.matches('[data-ku-weg]')) { weg = t.value; karten = null; filter = ''; laden(); zeichnen(); }
+      if (t.matches('[data-ku-unit]')) { probeUnit = t.value; zeichnen(); }
     };
     const klick = ev => {
-      const t = ev.target.closest('[data-ku-filter],[data-ku-neu]');
+      const t = ev.target.closest('[data-ku-filter],[data-ku-neu],[data-ku-probe]');
       if (!t) return;
+      if (t.hasAttribute('data-ku-probe')) {                     // Haken „Probe geschrieben“ je Karte oder für alle (Worker /sync/admin/probe)
+        const alle = t.dataset.kuProbe === 'alle';
+        if (alle && !confirm('Für ALLE Karten dieser Gruppe eintragen: Probe geschrieben? Die Kinder bekommen das Sammelstück und freie Spiele bis zur nächsten Unit.')) return;
+        t.disabled = true;
+        return store.worker('/sync/admin/probe', { gruppeId: gruppe, weg, nr: alle ? 'alle' : Number(t.dataset.kuProbe), unit: probeUnit, an: !!t.dataset.an })
+          .then(laden).catch(x => { fehler = 'Nicht gespeichert: ' + (x.message || x) + ' – ist der neue Worker (v132) schon bei Cloudflare eingefügt?'; zeichnen(); });
+      }
       if (t.hasAttribute('data-ku-neu')) return laden();
       filter = t.dataset.kuFilter; zeichnen();
     };

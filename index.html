@@ -1069,8 +1069,35 @@ function buildLernwege() {
   if (!sec) return;
   weiterQ.weg = null;
   const journey = journeyBanner(), wege = LernPass.hasProfile() && !new URLSearchParams(location.search).get('vorschau') ? wegeBanner() : '';
-  sec.innerHTML = journey || wege ? `<h2>📒 Mein Laufzettel <a class="kann-link" href="apps/typen/kann-liste.html">🎯 Das kann ich ›</a></h2><div class="lw-banner-liste">${journey}${wege}</div>` : '';
+  const probe = probeBanner();
+  sec.innerHTML = journey || wege ? `<h2>📒 Mein Laufzettel <a class="kann-link" href="apps/typen/kann-liste.html">🎯 Das kann ich ›</a></h2><div class="lw-banner-liste">${probe}${journey}${wege}</div>` : '';
   buildWeiter();
+  if (LernPass.hasProfile()) probeHolen();
+}
+// ── „Probe geschrieben“ (v132): Die Lehrkraft setzt den Haken je Karte in der Klassenübersicht; das iPad holt ihn über die
+//  Sicherungskarte (LernSync.probe). Belohnung: Sammelstück der Unit (Abzeichen „probe-uN“ über LernPass.flagSetzen), Spiele frei,
+//  bis die Klasse die nächste Unit beginnt (LernFreigabe.probeFrei), und die Rekord-Jagd im Vokabeltrainer.
+const PROBE_FLAG = { u1: 'probeeins', u2: 'probezwei', u3: 'probedrei', u4: 'probevier', u5: 'probefuenf' };
+let probeLaeuft = false;
+function probeHolen() {
+  if (probeLaeuft) return;
+  probeLaeuft = true;
+  let n = 0;
+  (function versuch() {
+    if (window.LernSync && LernSync.probe) LernSync.probe().then(l => {
+      let neu = false;
+      ((l && l.journey6) || []).forEach(u => { if (PROBE_FLAG[u] && LernPass.flagSetzen(PROBE_FLAG[u], 1)) neu = true; });
+      if (neu) { const fresh = LernPass.checkBadges(); if (fresh.length) LernPass.toast({ notice: true, newBadges: fresh }); }
+      if (neu || (window.LernFreigabe && LernFreigabe.probeFrei && LernFreigabe.probeFrei())) buildPage();
+    }).catch(() => {});
+    else if (n++ < 12) setTimeout(versuch, 1500);
+  })();
+}
+function probeBanner() {
+  const u = window.LernFreigabe && LernFreigabe.probeFrei ? LernFreigabe.probeFrei() : null, nr = u && /^u(\d)$/.exec(u);
+  if (!nr) return '';
+  return `<a class="lw-banner" href="apps/englisch/vokabeltrainer.html?klasse=6&stufe=en.6.vok.${escHtml(u)}"><span class="lw-ring" style="--p:100"><span>🎉</span></span>
+      <span class="lw-txt"><b>Probe Unit ${nr[1]} geschrieben – stark!</b><small>Deine Spiele sind frei, bis die nächste Unit beginnt. Lust auf die 🏁 Rekord-Jagd? Speed mit den Wörtern der Unit.</small></span><span class="lw-los">Rekord ›</span></a>`;
 }
 function journeyBanner() {
   const F = window.LernFreigabe, cfg = F && F.journey ? F.journey('journey6') : null, bis = (cfg && cfg.bis) || {};

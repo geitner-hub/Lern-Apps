@@ -25,6 +25,7 @@
 //                              journey6.sperren[wer] = true → der Weg endet mit der Unit des freigegebenen Abschnitts (bis) – für
 //                              denselben wer wie bis (Gruppe vor Klasse vor „alle“). Stationen danach: zustand 'zu', grund 'schranke';
 //                              die Brücke dorthin bleibt zu, auch wenn das Finale gemeistert ist. Gemeistertes bleibt gemeistert.
+//    truhen(J, z)            → { Stations-ID: 'zu' | 'bereit' | 'leer' } – Truhen im Weg (v132); truheNehmen(id) sammelt eine ein
 //    heftFehlt(J, unit, o)   → Baustein-IDs der freigegebenen Hefteinträge der Unit, die noch nicht „steht in meinem Heft“ sind
 //
 //  Heft vor dem Finale (Lernweg im Journey, Etappe 5): Hat die Lehrkraft für das Gerät Laufzettel-Abschnitte freigegeben, öffnet sich
@@ -139,5 +140,18 @@
     return null;
   }
 
-  window.LernJourney = { laden, berechne, naechste, aktuelleUnit, hatApp, freiBis, schranke, heftFehlt };
+  /** Truhen im Weg (v132): an jeder dritten Station einer Unit (ohne Finale) steht eine Truhe – sichtbar von Anfang an, zum
+   *  Einsammeln, sobald die Station gemeistert ist. Einmal je Station (LernPass.geschenkTruhe('jt-<Stations-ID>')).
+   *  → { Stations-ID: 'zu' | 'bereit' | 'leer' } */
+  function truhen(J, z) {
+    const out = {}, G = (window.LernPass && LernPass.state && LernPass.state.eventGifts) || {};
+    J.units.forEach(u => u.stationen.filter(st => st.art !== 'finale').forEach((st, i) => {
+      if (i % 3 !== 2) return;
+      out[st.id] = G['kz|jt-' + st.id] ? 'leer' : z[st.id] && z[st.id].zustand === 'gemeistert' ? 'bereit' : 'zu';
+    }));
+    return out;
+  }
+  const truheNehmen = id => !!(window.LernPass && LernPass.geschenkTruhe && LernPass.geschenkTruhe('jt-' + id));
+
+  window.LernJourney = { laden, berechne, naechste, aktuelleUnit, hatApp, freiBis, schranke, heftFehlt, truhen, truheNehmen };
 })();

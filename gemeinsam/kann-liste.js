@@ -58,7 +58,7 @@
       fertig: (u.stationen || []).filter(s => s.art === 'finale').some(s => { try { const t = P().themaStand(s.thema); return !!(t && t.frei); } catch (e) { return false; } }),
       saetze: u.kann.map(k => {
         const bst = B[k.baustein] || {}, a = (u.abschnitte || []).find(x => x.id === k.abschnitt);
-        const themen = a ? a.schritte.filter(s => s.art === 'app' && !/\.probe-check\./.test(s.thema || ''))
+        const themen = a ? a.schritte.filter(s => s.art === 'app' && !/\.(probe-check|generalprobe)\./.test(s.thema || ''))
           .map(s => s.thema || ((u.stationen || []).find(y => y.id === s.station) || {}).thema).filter(Boolean) : [];
         const smiley = (L['jw:' + k.baustein] || {}).s || 0;
         return { text: bst.text || '', teil: bst.teil || '', stand: stand(themen), schaetz: smiley || schaetzung(themen), imUnterricht: !!k.imUnterricht || !themen.length };

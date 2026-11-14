@@ -818,6 +818,16 @@
        "text": "Check vor der Probe: Teste dich selbst – ohne Note. Danach siehst du, was du schon kannst und was du noch üben solltest."
       },
       {
+       "id": "u1-a-finale-probe",
+       "art": "app",
+       "thema": "en.6.generalprobe.u1",
+       "ziel": {
+        "runden": 1,
+        "prozent": 60
+       },
+       "text": "Generalprobe: 40 Minuten, 50 Punkte, alles getippt – wie in der echten Probe. Erledigt ab 30 Punkten; ab 40 bist du bereit."
+      },
+      {
        "id": "u1-a-finale-u1-anwenden",
        "art": "app",
        "station": "u1-anwenden"
@@ -1982,6 +1992,16 @@
        "text": "Check vor der Probe: Teste dich selbst – ohne Note. Danach siehst du, was du schon kannst und was du noch üben solltest."
       },
       {
+       "id": "u2-a-finale-probe",
+       "art": "app",
+       "thema": "en.6.generalprobe.u2",
+       "ziel": {
+        "runden": 1,
+        "prozent": 60
+       },
+       "text": "Generalprobe: 40 Minuten, 50 Punkte, alles getippt – wie in der echten Probe. Erledigt ab 30 Punkten; ab 40 bist du bereit."
+      },
+      {
        "id": "u2-a-finale-u2-finale",
        "art": "app",
        "station": "u2-finale"
@@ -2885,6 +2905,16 @@
        "art": "app",
        "thema": "en.6.probe-check.u3",
        "text": "Check vor der Probe: Teste dich selbst – ohne Note. Danach siehst du, was du schon kannst und was du noch üben solltest."
+      },
+      {
+       "id": "u3-a-finale-probe",
+       "art": "app",
+       "thema": "en.6.generalprobe.u3",
+       "ziel": {
+        "runden": 1,
+        "prozent": 60
+       },
+       "text": "Generalprobe: 40 Minuten, 50 Punkte, alles getippt – wie in der echten Probe. Erledigt ab 30 Punkten; ab 40 bist du bereit."
       },
       {
        "id": "u3-a-finale-u3-finale",
@@ -3960,6 +3990,16 @@
        "text": "Check vor der Probe: Teste dich selbst – ohne Note. Danach siehst du, was du schon kannst und was du noch üben solltest."
       },
       {
+       "id": "u4-a-finale-probe",
+       "art": "app",
+       "thema": "en.6.generalprobe.u4",
+       "ziel": {
+        "runden": 1,
+        "prozent": 60
+       },
+       "text": "Generalprobe: 40 Minuten, 50 Punkte, alles getippt – wie in der echten Probe. Erledigt ab 30 Punkten; ab 40 bist du bereit."
+      },
+      {
        "id": "u4-a-finale-u4-finale",
        "art": "app",
        "station": "u4-finale"
@@ -4916,6 +4956,16 @@
        "art": "app",
        "thema": "en.6.probe-check.u5",
        "text": "Check vor der Probe: Teste dich selbst – ohne Note. Danach siehst du, was du schon kannst und was du noch üben solltest."
+      },
+      {
+       "id": "u5-a-finale-probe",
+       "art": "app",
+       "thema": "en.6.generalprobe.u5",
+       "ziel": {
+        "runden": 1,
+        "prozent": 60
+       },
+       "text": "Generalprobe: 40 Minuten, 50 Punkte, alles getippt – wie in der echten Probe. Erledigt ab 30 Punkten; ab 40 bist du bereit."
       },
       {
        "id": "u5-a-finale-u5-anwenden",

@@ -1549,6 +1549,24 @@
        ]
       },
       {
+       "id": "en.6.generalprobe",
+       "titel": "Generalprobe (Highlight 6)",
+       "klasse": 6,
+       "quelle": {
+        "app": "apps/englisch/generalprobe.html"
+       },
+       "lehrplan": "E6 Highlight 6: Wortschatz, Grammatik und Leseverstehen einer Unit im Umfang einer Probe (40 Minuten, 50 Punkte, ohne Note)",
+       "dauer": 40,
+       "einsatz": "Vor der Probe, wenn die Pflicht-Abschnitte der Unit fertig sind: alles wird getippt, Rückmeldung erst am Ende; wiederholbar mit anderen Aufgaben; im English Journey im Finale-Abschnitt",
+       "stufen": [
+        { "id": "en.6.generalprobe.u1", "titel": "Generalprobe Unit 1" },
+        { "id": "en.6.generalprobe.u2", "titel": "Generalprobe Unit 2" },
+        { "id": "en.6.generalprobe.u3", "titel": "Generalprobe Unit 3" },
+        { "id": "en.6.generalprobe.u4", "titel": "Generalprobe Unit 4" },
+        { "id": "en.6.generalprobe.u5", "titel": "Generalprobe Unit 5" }
+       ]
+      },
+      {
        "id": "en.6.revision",
        "titel": "Finale Unit 3–5 (English Journey)",
        "klasse": 6,

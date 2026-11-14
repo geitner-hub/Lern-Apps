@@ -162,9 +162,18 @@
     }
     return null;
   }
+  /** „Probe geschrieben“ (v132): Die Lehrkraft hat bei dieser Karte den Haken für eine Unit des English Journey gesetzt (kommt über
+   *  die Sicherungskarte, sync.js probe → lernwelt-sync.pr). Solange die Klasse noch in dieser Unit ist (Laufzettel „bis Abschnitt“
+   *  liegt in der Unit), sind die Spiele frei – bis die Lehrkraft die nächste Unit beginnt. → Unit-ID oder null */
+  function probeFrei() {
+    const s = lies(SYNC_KEY), l = s && !s.ungueltig && s.pr && s.pr.l && Array.isArray(s.pr.l.journey6) ? s.pr.l.journey6 : [];
+    if (!l.length) return null;
+    const j = journey('journey6'), bis = j && j.bis && typeof j.bis === 'object' ? j.bis : {}, w = wer().find(x => typeof bis[x] === 'string');
+    return (w && l.find(u => bis[w].indexOf(u + '-') === 0)) || null;
+  }
   function spielSperre() {
     const S = CFG && CFG.spielsperre;
-    if (!S || typeof S !== 'object') return null;
+    if (!S || typeof S !== 'object' || probeFrei()) return null;
     const R = S.runden && typeof S.runden === 'object' ? S.runden : {};
     const aus = spielAusnahme(S);
     const liste = aus ? null : wer().map(w => R[w]).find(l => Array.isArray(l) && l.length === 7);
@@ -224,5 +233,5 @@
 
   function journey(weg) { const w = CFG && CFG.journey && CFG.journey.wege; return (w && typeof w === 'object' && w[weg] && typeof w[weg] === 'object') ? w[weg] : null; }
 
-  window.LernFreigabe = { erlaubt, zugeteilt, status, wer, fokus, imFokus, spielSperre, spielGesperrt, neu, feature, journey, admin: adminHier };
+  window.LernFreigabe = { erlaubt, zugeteilt, status, wer, fokus, imFokus, spielSperre, spielGesperrt, probeFrei, neu, feature, journey, admin: adminHier };
 })();

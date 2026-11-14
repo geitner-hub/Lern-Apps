@@ -105,7 +105,10 @@
   const schritte = a => a.schritte.filter(s => passt(s, niveau(a)));
   // Check vor der Probe (Tempo Etappe 5): Themen-IDs mit „.probe-check.“ – erledigt, sobald einmal bearbeitet (LernPass.checks)
   const istCheck = s => /\.probe-check\./.test(String(s.thema || ''));
+  // Generalprobe (v132): Themen-IDs mit „.generalprobe.“ – erledigt erst mit dem Ziel in Prozent (Standard 60), nie durch Abhaken
+  const istProbe = s => /\.generalprobe\./.test(String(s.thema || ''));
   function themaGeschafft(s) {
+    if (istProbe(s)) return ((P() && P().checks && P().checks[s.thema] || {}).b || 0) >= ((s.ziel || {}).prozent || 60);
     if (istCheck(s)) return !!(P() && P().checks && P().checks[s.thema]);
     // Lernstand unter der Themen-ID – und unter der alten Inhalt-ID des Themas (v126): Der Vokabeltrainer trägt eine Runde über die
     // ganze Unit nur als 'vok6:unit1' ein, der Schritt nennt 'en.6.vok.u1' – sonst hakt er sich nie ab.
@@ -248,6 +251,8 @@
       if (s.station) {
         const x = O.z[s.station] || {}, st = O.unit.stationen.find(y => y.id === s.station) || {};
         kopf = `🎮 ${esc(st.titel || s.station)}`;
+        const tr = window.LernJourney && LernJourney.truhen ? LernJourney.truhen(O.J, O.z)[s.station] : null;   // Truhe im Weg (v132)
+        if (tr === 'zu') kopf += ' <span title="Hier wartet eine Truhe">🎁</span>';
         const offenHE = heBezug(s) ? heIn(a).filter(h => !heErledigt(h)) : [], heHier = heStation(a) === s.station;
         if (heHier && offenHE.length && !an) kopf += ` <span class="jw-schild">📒 ${esc(heName(offenHE[0]))} zuerst</span>`;
         const titelVon = id => { for (const u of O.J.units) for (const y of u.stationen) if (y.id === id) return y.titel; return id; };
@@ -259,6 +264,7 @@
           : `<p>${x.zustand === 'gemeistert' ? '⭐ Gemeistert! Du kannst jederzeit wieder üben.' : x.zustand === 'zu' ? '🔒 Diese Station ist noch zu.' : x.zustand === 'bau' ? '🚧 Wird gebaut.' : 'Übe in der Lernwelt: 2 Runden mit mindestens 70 % – dann ist die Station gemeistert.'}</p>`;
         if (st.art === 'woerter' && !an && (x.zustand === 'offen')) innen += '<p class="jw-klein">Im Vokabeltrainer zählen 🧠 Quiz, ✏️ Fill in und 🔀 Scramble. Karteikarten, Memory und Speed sind zum Üben – sie haken nichts ab.</p>';
         if (!heHier && heBezug(s) && heIn(a).length && !an) innen += `<div class="jw-chips">${heIn(a).map(h => heChip(h, 'Lies vorher noch einmal ')).join('')}</div>`;
+        if (tr === 'bereit') innen += `<button type="button" class="jw-los" data-jw-truhe="${esc(s.station)}">🎁 Truhe einsammeln</button>`;
         fuss = `<div class="jw-auto${an ? ' an' : ''}"><i>${an ? '✓' : ''}</i>${an ? 'Gemeistert' : 'Hakt sich selbst ab'}</div>`
           + (x.zustand === 'offen' || x.zustand === 'gemeistert' ? `<button type="button" class="jw-los" data-jw-station="${esc(s.station)}">${an ? '🔁 Nochmal' : '▶ Los geht\'s'}</button>` : '');
       } else {
@@ -438,6 +444,11 @@
       return zeichne();
     }
     if (d.jwKann) { const w = Object.assign({}, lies(d.jwKann) || {}); w[d.feld] = Number(d.wert); delete w.d; merke(d.jwKann, w); return zeichne(); }
+    if (d.jwTruhe) {
+      if (LernJourney.truheNehmen(d.jwTruhe)) { try { P().showAvatar({ text: 'Eine Truhe für dich! 🎁 Öffne sie auf der Startseite in deinem Pass.', aktion: 'winken', dauer: 5000 }); } catch (e) {} }
+      if (O.nachTruhe) O.nachTruhe();
+      return zeichne();
+    }
     if (d.jwGross) return grossZeigen(d.jwGross);
     if (d.jwStation && O.starte) return O.starte({ station: d.jwStation }, offen);
     if (d.jwThema && O.starte) return O.starte({ thema: d.jwThema }, offen);
@@ -592,6 +603,9 @@ ul.jw-hilfe { list-style: none; display: grid; gap: .3rem; margin: .4rem 0 .7rem
           if (fortschritt(a).fertig) f.push(a.id);
           schritte(a).forEach(s => { if (erledigt(s)) e.push(s.id); });
         });
+        // Generalprobe (v132): bester Versuch in Prozent als Kennung 'gp-<Unit>-<Prozent>' – für die Klassenübersicht
+        const gp = P() && P().checks && P().checks['en.6.generalprobe.' + u.id];
+        if (gp && gp.n) e.push('gp-' + u.id + '-' + Math.max(0, Math.min(100, Math.round(gp.b || 0))));
       });
       return { e, f };
     } finally { O = vorher; }
