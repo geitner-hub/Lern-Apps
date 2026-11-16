@@ -12,6 +12,8 @@ es zurückgesetzt, scannt das Kind seine Karte und alles ist wieder da.
 - **Seit v132 zusätzlich je Karte:** der beste Versuch der Generalprobe einer Unit in Prozent (ohne Antworten) und der Haken
   „Probe geschrieben“, den die Lehrkraft in der Klassenübersicht setzt. Beides hängt nur an der Kartennummer.
 - Wer welche Karte hat, steht **nur auf deiner Liste**.
+- **Fehlerzähler (v133, mit Zustimmung der Schulleitung):** Die iPads melden Skriptfehler – nur Version, Seite und Fehlermeldung,
+  ohne Karte, Gerät oder Gruppe. Der Server zählt nur Summen je Tag und löscht sie nach 60 Tagen.
 
 ## 1. Karten erzeugen (Admin)
 

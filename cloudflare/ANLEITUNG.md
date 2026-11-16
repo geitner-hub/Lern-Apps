@@ -19,6 +19,8 @@ GitHub Pages. Fällt der Worker aus, funktioniert nur das Speichern im Admin nic
 | `POST /logout-all` | mit Schlüssel | meldet alle Geräte ab (braucht `LOGIN_KV`) |
 | `PUT /` | mit Schlüssel | speichert `config.json`, nach Prüfung jedes Feldes (Kollegen-Schlüssel: nur Fokus und Spielsperre-Ausnahmen ihrer Gruppen) |
 | `POST /kollegen/…` | Hauptzugang | Kollegen-Zugänge anlegen, ändern, sperren, neuer Code, löschen (`kollegen.js`) |
+| `POST /fehler` | öffentlich (iPads) | Skriptfehler zählen – nur Summen je Tag, Version, Seite, Meldung (`fehler.js`) |
+| `POST /fehler/admin/liste`, `/fehler/admin/loeschen` | Hauptzugang | Fehlerzähler ansehen und leeren |
 | `POST /dateien/lesen`, `/dateien/speichern` | mit Schlüssel | Katalog und Vokabeln aus dem Admin (`dateien.js`, nur feste Pfade, ein Commit) |
 
 Nur Anfragen von `https://geitner-hub.github.io` werden angenommen. Nach 5 falschen
@@ -73,6 +75,13 @@ Passwörtern ist das Gerät 15 Minuten gesperrt.
   Ohne den neuen Worker zeigt der Unterrichtsmodus „Die Live-Abfrage braucht den neuen Worker“.
   Kosten: 25 Kinder × alle 2 s × 10 Minuten ≈ 7.500 Lesezugriffe je Abfrage – weit unter den kostenlosen D1-Grenzen
   (bei Gelegenheit unter D1 → Metrics nachsehen).
+
+- **Fehlerzähler (Nov. 2026, v133): neue Datei `fehler.js`.** Mit Zustimmung der Schulleitung melden die iPads Skriptfehler.
+  *Edit code* → neue Datei **`fehler.js`** anlegen → Inhalt von `cloudflare/fehler.js` einfügen; dann **`worker.js`** komplett
+  ersetzen → *Deploy*. Kein neues Secret; die Tabelle `fehler_zaehler` legt sich in `SYNC_DB` selbst an. Gespeichert werden nur
+  Summen je Tag, Version, Seite und Meldung (keine Gerätekennung, keine Karte, keine IP-Adresse); der Cron löscht nach 60 Tagen.
+  Jedes iPad meldet denselben Fehler höchstens einmal am Tag. Ansehen: Admin → System → 🐞 Fehlerzähler.
+  Ohne den neuen Worker gehen die Meldungen ins Leere – sonst passiert nichts.
 
 ## Anmeldung im Admin
 
