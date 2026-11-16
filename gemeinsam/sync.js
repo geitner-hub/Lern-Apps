@@ -551,6 +551,23 @@
     return ST && ST.kz ? ST.kz.n : null;
   }
 
+  /** „Probe geschrieben“ (v132): Für welche Units hat die Lehrkraft bei dieser Karte den Haken gesetzt? Vom Worker, höchstens alle
+   *  3 Minuten; der letzte Stand steht in ST.pr = { t, l: { Weg-ID: [Unit-IDs] } } – freigabe.js liest ihn für die Spielsperre.
+   *  → { Weg-ID: [Unit-IDs] } oder null (keine Karte, keine Gruppe) */
+  async function probe() {
+    if (TEST || !ST || ST.ungueltig || !ST.gruppe) return null;
+    if (ST.pr && Date.now() - ST.pr.t < 3 * 60000) return ST.pr.l;
+    try {
+      const s = await ableiten(ST.code), res = await post('/sync/probe', { id: s.id, auth: s.auth });
+      if (res.status === 200 && res.d && res.d.probe && typeof res.d.probe === 'object' && ST) {
+        const l = {};
+        Object.keys(res.d.probe).slice(0, 10).forEach(w => { if (WEG_ID.test(w) && Array.isArray(res.d.probe[w])) l[w] = res.d.probe[w].filter(u => typeof u === 'string' && /^[a-z][a-z0-9-]{0,29}$/.test(u)).slice(0, 40); });
+        ST.pr = { t: Date.now(), l }; schreiben(ST);
+      }
+    } catch (e) {}
+    return ST && ST.pr ? ST.pr.l : null;
+  }
+
   function planeStat(ms) {
     clearTimeout(statTimer);
     statTimer = setTimeout(() => statSenden(false), Math.max(ms, statLetzte + STAT_ABSTAND - Date.now()));
@@ -613,7 +630,7 @@
   }
 
   window.LernSync = {
-    status, verbinden, trennen, lernwegMelden, wegMelden, klassenziel,
+    status, verbinden, trennen, lernwegMelden, wegMelden, klassenziel, probe,
     jetztSichern: () => senden(false),
     holen: () => holen(true),
     _intern: { standLesen, standHash, fortschritt, verschluesseln, entschluesseln },   // für Tests

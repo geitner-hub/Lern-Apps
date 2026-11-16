@@ -25,7 +25,7 @@
 //  und teilen sich den Offline-Speicher. Deshalb hat jede Umgebung ihr
 //  eigenes Präfix und räumt nur ihre eigenen Speicher auf.
 // ═══════════════════════════════════════════════════════
-const VERSION = 'v130';  // v130: Lesehilfe (besser lesbar, helles Schema), Vorlesen, Bilder (Tempo Etappe 8)
+const VERSION = 'v132';  // v132: Generalprobe (40 min, 50 Punkte), „Probe geschrieben“ mit Sammelstück und freien Spielen, Truhen im Weg, Rekord-Jagd
 const PRAEFIX = /\/[^/]*-test\/$/i.test(new URL(self.registration.scope).pathname) ? 'lwtest-v' : 'lernwelt-v';
 const CACHE   = PRAEFIX + VERSION.replace(/^v/, '');        // z. B. 'lernwelt-v24' (Format wie bisher)
 const ALT     = CACHE + '-alt';                             // Dateien der Vorversion, noch nicht aufgefrischt
@@ -90,7 +90,8 @@ const NACHLADEN = ['spiele/runner.html', 'spiele/burg-verteidigung.html', 'spiel
                    'apps/englisch/english-journey.html', 'gemeinsam/journey-welt.js', 'gemeinsam/journey-lernweg.js',  // English Journey Year 6: 3D-Weg (three.js lädt avatar3d.js), Laufzettel
                    'gemeinsam/lernweg-zurueck.js',  // Knopf „Zurück zum Weg“ (English Journey)
                    'apps/typen/weg.html', 'gemeinsam/weg-kern.js', 'daten/wege/liste.json', 'daten/wege/test.json', 'daten/wege/bausteine-test.json',  // Lernweg-Engine in 2D (Tempo Etappe 2): neuen Weg hier ergänzen
-                   'gemeinsam/typen/check.js', 'daten/inhalte/en/en.6.probe-check.json', 'apps/typen/kann-liste.html', 'gemeinsam/kann-liste.js',  // Check vor der Probe und Kann-Liste (Tempo Etappe 5)
+                   'gemeinsam/typen/check.js', 'daten/inhalte/en/en.6.probe-check.json', 'apps/typen/kann-liste.html', 'gemeinsam/kann-liste.js',
+                   'apps/englisch/generalprobe.html', 'daten/proben/en.6.generalprobe.json',  // Generalprobe (v132)  // Check vor der Probe und Kann-Liste (Tempo Etappe 5)
                    'fonts/atkinson-hyperlegible-latin-400-normal.woff2', 'fonts/atkinson-hyperlegible-latin-700-normal.woff2',  // Leseschrift der Lesehilfe (Etappe 8)
                    'gemeinsam/wochenziel.js', 'apps/typen/urkunde.html',  // Wochenziel (Startseite) und Urkunde (Tempo Etappe 7)
                    'gemeinsam/einschaetzung.js', 'daten/features.json',  // Selbsteinschätzung (Tempo Etappe 4; lädt nur mit Feature-Schalter)

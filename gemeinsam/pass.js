@@ -877,7 +877,8 @@
     ensureProfile();
     const C = S.checks && typeof S.checks === 'object' ? S.checks : (S.checks = {}), alt = C[id];
     const neu = werte.slice(0, 30).map(x => [Number(x && x[0]) || 0, Number(x && x[1]) || 0]);
-    C[id] = { e: alt && Array.isArray(alt.e) ? alt.e : neu, l: neu, n: ((alt && alt.n) || 0) + 1, d: dayKey() };
+    const sum = neu.reduce((s, x) => s + x[1], 0), pct = sum ? Math.round(100 * neu.reduce((s, x) => s + x[0], 0) / sum) : 0;
+    C[id] = { e: alt && Array.isArray(alt.e) ? alt.e : neu, l: neu, n: ((alt && alt.n) || 0) + 1, d: dayKey(), b: Math.max((alt && alt.b) || 0, pct) };   // b = bester Versuch in % (Generalprobe)
     save();
     return alt && Array.isArray(alt.e) ? alt.e : null;
   }

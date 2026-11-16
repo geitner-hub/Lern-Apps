@@ -1,0 +1,2179 @@
+{
+ "thema": "en.6.generalprobe",
+ "titel": "Generalprobe (Highlight 6)",
+ "hinweis": "Je Unit eine Probe im Umfang einer echten Probe: 40 Minuten, 50 Punkte. Texte selbst geschrieben (kein Schulbuch).",
+ "zeit": 40,
+ "punkte": 50,
+ "bereit": 80,
+ "fast": 60,
+ "vokabeln": "daten/vokabeln6.json",
+ "units": {
+  "u1": {
+   "titel": "Unit 1: Together again",
+   "teile": [
+    {
+     "id": "vok",
+     "titel": "Vocabulary",
+     "art": "vokabeln",
+     "unit": "unit1",
+     "deEn": 10,
+     "enDe": 4,
+     "ziel": "en.6.vok.u1",
+     "anweisung": "Übersetze. Die Rechtschreibung zählt."
+    },
+    {
+     "id": "past",
+     "titel": "Simple past",
+     "art": "luecke",
+     "anweisung": "Setze das Verb ins simple past.",
+     "n": 5,
+     "ziel": "en.5.simple-past.mix",
+     "pool": [
+      {
+       "s": "Last week we ___ (go) to the seaside.",
+       "l": [
+        "went"
+       ]
+      },
+      {
+       "s": "My aunt ___ (visit) us in the holidays.",
+       "l": [
+        "visited"
+       ]
+      },
+      {
+       "s": "I ___ (meet) my friends at the stadium yesterday.",
+       "l": [
+        "met"
+       ]
+      },
+      {
+       "s": "Tom ___ (read) a book about Spain last night.",
+       "l": [
+        "read"
+       ]
+      },
+      {
+       "s": "We ___ (play) table tennis in the sports hall.",
+       "l": [
+        "played"
+       ]
+      },
+      {
+       "s": "Lisa ___ (see) a fantastic film last weekend.",
+       "l": [
+        "saw"
+       ]
+      },
+      {
+       "s": "They ___ (have) lunch at a diner.",
+       "l": [
+        "had"
+       ]
+      },
+      {
+       "s": "The new girl ___ (sit) alone at lunchtime.",
+       "l": [
+        "sat"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "waswere",
+     "titel": "was / were · didn't",
+     "art": "luecke",
+     "anweisung": "Ergänze: was, were, wasn't, weren't – oder didn't + Verb.",
+     "n": 5,
+     "ziel": "en.6.was-were.mix",
+     "pool": [
+      {
+       "s": "The weather ___ sunny yesterday. It was a great day.",
+       "l": [
+        "was"
+       ]
+      },
+      {
+       "s": "My friends ___ in Turkey last summer. They loved it.",
+       "l": [
+        "were"
+       ]
+      },
+      {
+       "s": "I ___ at school last Monday. I was ill.",
+       "l": [
+        "wasn't",
+        "was not"
+       ]
+      },
+      {
+       "s": "We ___ (not / go) to Munich. We stayed at home.",
+       "l": [
+        "didn't go",
+        "did not go"
+       ]
+      },
+      {
+       "s": "She ___ (not / like) the film. It was boring.",
+       "l": [
+        "didn't like",
+        "did not like"
+       ]
+      },
+      {
+       "s": "___ you at the seaside last week? – Yes, I was.",
+       "l": [
+        "Were"
+       ]
+      },
+      {
+       "s": "The mountains ___ far away. We walked there in ten minutes.",
+       "l": [
+        "weren't",
+        "were not"
+       ]
+      },
+      {
+       "s": "He ___ (not / understand) the question.",
+       "l": [
+        "didn't understand",
+        "did not understand"
+       ]
+      },
+      {
+       "s": "Was the teacher strict? – No, she ___.",
+       "l": [
+        "wasn't",
+        "was not"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "objekt",
+     "titel": "Object pronouns",
+     "art": "luecke",
+     "anweisung": "Ergänze: me, you, him, her, it, us oder them.",
+     "n": 5,
+     "ziel": "en.6.objektpronomen.mix",
+     "pool": [
+      {
+       "s": "This is my aunt. I like ___ very much.",
+       "l": [
+        "her"
+       ]
+      },
+      {
+       "s": "Where are my shoes? I can't find ___.",
+       "l": [
+        "them"
+       ]
+      },
+      {
+       "s": "Mr Brown is our teacher. We like ___.",
+       "l": [
+        "him"
+       ]
+      },
+      {
+       "s": "We are in the classroom. Can you see ___?",
+       "l": [
+        "us"
+       ]
+      },
+      {
+       "s": "I don't understand this. Can you help ___, please?",
+       "l": [
+        "me"
+       ]
+      },
+      {
+       "s": "That's a good book. I read ___ last week.",
+       "l": [
+        "it"
+       ]
+      },
+      {
+       "s": "Tom and Lisa are nice. I often play with ___.",
+       "l": [
+        "them"
+       ]
+      },
+      {
+       "s": "My brother is sad. I feel sorry for ___.",
+       "l": [
+        "him"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "linking",
+     "titel": "Linking words",
+     "art": "luecke",
+     "anweisung": "Ergänze: but, so oder because.",
+     "n": 5,
+     "ziel": "en.6.linking-words.mix",
+     "pool": [
+      {
+       "s": "I like football, ___ I don't like tennis.",
+       "l": [
+        "but"
+       ]
+      },
+      {
+       "s": "She was ill, ___ she stayed at home.",
+       "l": [
+        "so"
+       ]
+      },
+      {
+       "s": "We didn't go out ___ it was rainy.",
+       "l": [
+        "because"
+       ]
+      },
+      {
+       "s": "He cried ___ his dog died.",
+       "l": [
+        "because"
+       ]
+      },
+      {
+       "s": "It was sunny, ___ we went to the seaside.",
+       "l": [
+        "so"
+       ]
+      },
+      {
+       "s": "I'd like to join the drama club, ___ I haven't got time.",
+       "l": [
+        "but"
+       ]
+      },
+      {
+       "s": "Emma was lonely ___ she was new at school.",
+       "l": [
+        "because"
+       ]
+      },
+      {
+       "s": "I was tired, ___ I went to bed early.",
+       "l": [
+        "so"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "satz",
+     "titel": "Sentences",
+     "art": "satz",
+     "anweisung": "Schreibe den ganzen Satz. Achte auf Rechtschreibung und Satzzeichen.",
+     "n": 3,
+     "je": 2,
+     "ziel": "en.6.simple-past.didnt",
+     "pool": [
+      {
+       "s": "Verneine den Satz: We went to the stadium.",
+       "l": [
+        "We didn't go to the stadium.",
+        "We did not go to the stadium."
+       ]
+      },
+      {
+       "s": "Verneine den Satz: The film was interesting.",
+       "l": [
+        "The film wasn't interesting.",
+        "The film was not interesting."
+       ]
+      },
+      {
+       "s": "Verneine den Satz: She waited for her friend.",
+       "l": [
+        "She didn't wait for her friend.",
+        "She did not wait for her friend."
+       ]
+      },
+      {
+       "s": "Setze ins simple past: I feel lonely.",
+       "l": [
+        "I felt lonely."
+       ]
+      },
+      {
+       "s": "Setze ins simple past: They are at the seaside.",
+       "l": [
+        "They were at the seaside."
+       ]
+      }
+     ]
+    },
+    {
+     "id": "lesen",
+     "titel": "Reading",
+     "art": "lesen",
+     "anweisung": "Lies den Text genau. Beantworte dann die Fragen.",
+     "texte": [
+      {
+       "titel": "Emma's first day",
+       "text": [
+        "Last September Emma came to a new school in Plymouth. On the first day she didn't know anybody. At lunchtime she sat alone and felt lonely. The other kids were not unfriendly, but they talked about their holidays and Emma was too shy to say hello.",
+        "In the afternoon her class had PE in the sports hall. They played table tennis. Emma was very good at it, and she won three games. After the lesson a girl called Mia smiled at her and said, “Wow, you are fantastic! We have a table tennis club on Tuesdays. Would you like to join us?”",
+        "Emma was surprised and very happy. The next day she sat with Mia and her friends at lunchtime. Now she wasn't alone any more."
+       ],
+       "fragen": [
+        {
+         "f": "Emma knew many children on her first day.",
+         "rf": false
+        },
+        {
+         "f": "The class played table tennis in PE.",
+         "rf": true
+        },
+        {
+         "f": "Emma lost three games.",
+         "rf": false
+        },
+        {
+         "f": "The table tennis club is on Tuesdays.",
+         "rf": true
+        },
+        {
+         "f": "In which town is Emma's new school?",
+         "l": [
+          "plymouth"
+         ]
+        },
+        {
+         "f": "How did Emma feel at lunchtime on the first day? (one word)",
+         "l": [
+          "lonely",
+          "alone",
+          "sad"
+         ]
+        },
+        {
+         "f": "Where did the class have PE?",
+         "l": [
+          "sports hall"
+         ]
+        },
+        {
+         "f": "What is the name of the girl who smiled at Emma?",
+         "l": [
+          "mia"
+         ]
+        },
+        {
+         "f": "How many games did Emma win?",
+         "l": [
+          "three",
+          "3"
+         ]
+        },
+        {
+         "f": "How did Emma feel after the lesson? (one word)",
+         "l": [
+          "surprised",
+          "happy"
+         ]
+        }
+       ]
+      },
+      {
+       "titel": "Holidays in Spain",
+       "text": [
+        "In the summer holidays Ben and his family went to Spain. They stayed in a small hotel at the seaside. The weather was fantastic – it was sunny every day. In the mornings Ben swam in the sea, and in the afternoons he played football with some Spanish boys on the beach. He didn't speak Spanish, but that was no problem.",
+        "One day the family visited a big stadium in the city. Ben took lots of photos there. His sister Lily wasn't interested in football, so she read a book in a café.",
+        "On the last evening they ate fish in a restaurant. Ben was sad because he didn't want to go home. “Next year we must come back,” he said."
+       ],
+       "fragen": [
+        {
+         "f": "Ben's family stayed in a big hotel.",
+         "rf": false
+        },
+        {
+         "f": "It was sunny every day.",
+         "rf": true
+        },
+        {
+         "f": "Ben spoke Spanish very well.",
+         "rf": false
+        },
+        {
+         "f": "Lily read a book in a café.",
+         "rf": true
+        },
+        {
+         "f": "Which country did the family go to?",
+         "l": [
+          "spain"
+         ]
+        },
+        {
+         "f": "What did Ben do in the mornings?",
+         "l": [
+          "swam",
+          "swim",
+          "swimming"
+         ]
+        },
+        {
+         "f": "What did Ben play in the afternoons?",
+         "l": [
+          "football"
+         ]
+        },
+        {
+         "f": "What did the family visit in the city?",
+         "l": [
+          "stadium"
+         ]
+        },
+        {
+         "f": "What did they eat on the last evening?",
+         "l": [
+          "fish"
+         ]
+        },
+        {
+         "f": "How did Ben feel on the last evening? (one word)",
+         "l": [
+          "sad"
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  "u2": {
+   "titel": "Unit 2: Neighbours",
+   "teile": [
+    {
+     "id": "vok",
+     "titel": "Vocabulary",
+     "art": "vokabeln",
+     "unit": "unit2",
+     "deEn": 10,
+     "enDe": 4,
+     "ziel": "en.6.vok.u2",
+     "anweisung": "Übersetze. Die Rechtschreibung zählt."
+    },
+    {
+     "id": "thereis",
+     "titel": "There is / are · some / any",
+     "art": "luecke",
+     "anweisung": "Ergänze: There is, There are, Is there, some oder any.",
+     "n": 5,
+     "ziel": "en.6.there-is.mix",
+     "pool": [
+      {
+       "s": "___ a supermarket near my house. I go there every day.",
+       "l": [
+        "There is",
+        "There's"
+       ]
+      },
+      {
+       "s": "___ two bus stops in our street.",
+       "l": [
+        "There are"
+       ]
+      },
+      {
+       "s": "There are ___ shops in my neighbourhood.",
+       "l": [
+        "some"
+       ]
+      },
+      {
+       "s": "There aren't ___ traffic lights in our street.",
+       "l": [
+        "any"
+       ]
+      },
+      {
+       "s": "Is there ___ bread in the kitchen?",
+       "l": [
+        "any"
+       ]
+      },
+      {
+       "s": "There is ___ mineral water in the bottle.",
+       "l": [
+        "some"
+       ]
+      },
+      {
+       "s": "___ a hairdresser in your street? – Yes, there is.",
+       "l": [
+        "Is there"
+       ]
+      },
+      {
+       "s": "Are there ___ dogs in the dogs' home? – Yes, lots.",
+       "l": [
+        "any"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "did",
+     "titel": "Fragen mit did · Kurzantworten",
+     "art": "luecke",
+     "anweisung": "Ergänze das fehlende Wort.",
+     "n": 5,
+     "ziel": "en.6.simple-past.kurzantworten",
+     "pool": [
+      {
+       "s": "___ you see the fireworks last night? – Yes, I did.",
+       "l": [
+        "Did"
+       ]
+      },
+      {
+       "s": "Did Lucy find her dog? – No, she ___.",
+       "l": [
+        "didn't",
+        "did not"
+       ]
+      },
+      {
+       "s": "Where ___ you go yesterday? – To the festival.",
+       "l": [
+        "did"
+       ]
+      },
+      {
+       "s": "Did they collect money? – Yes, they ___.",
+       "l": [
+        "did"
+       ]
+      },
+      {
+       "s": "What did you ___ (eat) at the bonfire? – Potatoes.",
+       "l": [
+        "eat"
+       ]
+      },
+      {
+       "s": "When did the festival ___ (finish)? – At ten o'clock.",
+       "l": [
+        "finish"
+       ]
+      },
+      {
+       "s": "Did your neighbour help you? – Yes, he ___.",
+       "l": [
+        "did"
+       ]
+      },
+      {
+       "s": "Why ___ she cry? – Because her dog was missing.",
+       "l": [
+        "did"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "plural",
+     "titel": "Plural",
+     "art": "luecke",
+     "anweisung": "Schreibe die Mehrzahl.",
+     "n": 5,
+     "ziel": "en.6.plural.mix",
+     "pool": [
+      {
+       "s": "one potato – two ___",
+       "l": [
+        "potatoes"
+       ]
+      },
+      {
+       "s": "one penny – fifty ___",
+       "l": [
+        "pence"
+       ]
+      },
+      {
+       "s": "one child – two ___",
+       "l": [
+        "children"
+       ]
+      },
+      {
+       "s": "one bus – two ___",
+       "l": [
+        "buses"
+       ]
+      },
+      {
+       "s": "one biscuit – lots of ___",
+       "l": [
+        "biscuits"
+       ]
+      },
+      {
+       "s": "one man – three ___",
+       "l": [
+        "men"
+       ]
+      },
+      {
+       "s": "one toy – many ___",
+       "l": [
+        "toys"
+       ]
+      },
+      {
+       "s": "one box – four ___",
+       "l": [
+        "boxes"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "can",
+     "titel": "can / mustn't",
+     "art": "luecke",
+     "anweisung": "Ergänze: can oder mustn't.",
+     "n": 5,
+     "ziel": "en.6.can-mustnt.mix",
+     "pool": [
+      {
+       "s": "You ___ cross the street when the traffic lights are red.",
+       "l": [
+        "mustn't",
+        "must not"
+       ]
+      },
+      {
+       "s": "You ___ skateboard in the park. It's OK there.",
+       "l": [
+        "can"
+       ]
+      },
+      {
+       "s": "Look at the sign: NO CARS! You ___ park here.",
+       "l": [
+        "mustn't",
+        "must not"
+       ]
+      },
+      {
+       "s": "The shop is open. You ___ go in.",
+       "l": [
+        "can"
+       ]
+      },
+      {
+       "s": "Shh! You ___ run around in the classroom.",
+       "l": [
+        "mustn't",
+        "must not"
+       ]
+      },
+      {
+       "s": "It's warm today. We ___ drink lemonade in the garden.",
+       "l": [
+        "can"
+       ]
+      },
+      {
+       "s": "You ___ touch the fireworks. They are hot!",
+       "l": [
+        "mustn't",
+        "must not"
+       ]
+      },
+      {
+       "s": "In the dogs' home you ___ visit the dogs on Saturdays.",
+       "l": [
+        "can"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "satz",
+     "titel": "Sentences",
+     "art": "satz",
+     "anweisung": "Schreibe den ganzen Satz. Achte auf Rechtschreibung und Satzzeichen.",
+     "n": 3,
+     "je": 2,
+     "ziel": "en.6.simple-past.fragewort",
+     "pool": [
+      {
+       "s": "Bilde eine Frage mit did: She visited her neighbour.",
+       "l": [
+        "Did she visit her neighbour?"
+       ]
+      },
+      {
+       "s": "Bilde eine Frage mit did: They celebrated in the street.",
+       "l": [
+        "Did they celebrate in the street?"
+       ]
+      },
+      {
+       "s": "Verneine den Satz: There are some nuts in the bag.",
+       "l": [
+        "There aren't any nuts in the bag.",
+        "There are not any nuts in the bag."
+       ]
+      },
+      {
+       "s": "Bilde eine Frage mit did: He lost his dog.",
+       "l": [
+        "Did he lose his dog?"
+       ]
+      },
+      {
+       "s": "Verneine den Satz: There is some lemonade in the bottle.",
+       "l": [
+        "There isn't any lemonade in the bottle.",
+        "There is not any lemonade in the bottle."
+       ]
+      }
+     ]
+    },
+    {
+     "id": "lesen",
+     "titel": "Reading",
+     "art": "lesen",
+     "anweisung": "Lies den Text genau. Beantworte dann die Fragen.",
+     "texte": [
+      {
+       "titel": "Where is Max?",
+       "text": [
+        "Mrs Trent lives in Park Street. She is old and she can't walk well. Her best friend is her dog Max. He is small and brown, with long ears and a short tail.",
+        "On Saturday evening there was a festival in the neighbourhood. There were fireworks, and Max was very scared. He ran out of the garden and didn't come back. Poor Mrs Trent was very sad.",
+        "Her young neighbours, Ali and Kate, wanted to help. They made posters with a photo of Max and put them up at the bus stop and at the supermarket. On Sunday morning the hairdresser called Mrs Trent. “Max is here in my shop!” she said. Ali and Kate got the dog and took him home. Mrs Trent was so happy! She gave them hot chocolate and biscuits."
+       ],
+       "fragen": [
+        {
+         "f": "Mrs Trent can walk very well.",
+         "rf": false
+        },
+        {
+         "f": "Max has got long ears.",
+         "rf": true
+        },
+        {
+         "f": "Max ran away because he was scared of the fireworks.",
+         "rf": true
+        },
+        {
+         "f": "Somebody from the supermarket called Mrs Trent.",
+         "rf": false
+        },
+        {
+         "f": "In which street does Mrs Trent live?",
+         "l": [
+          "park"
+         ]
+        },
+        {
+         "f": "What colour is Max?",
+         "l": [
+          "brown"
+         ]
+        },
+        {
+         "f": "On which day was the festival?",
+         "l": [
+          "saturday"
+         ]
+        },
+        {
+         "f": "Who are Mrs Trent's young neighbours? (one name is enough)",
+         "l": [
+          "ali",
+          "kate"
+         ]
+        },
+        {
+         "f": "Where did the children put the posters? (one place is enough)",
+         "l": [
+          "bus stop",
+          "supermarket"
+         ]
+        },
+        {
+         "f": "What did Mrs Trent give the children? (one thing is enough)",
+         "l": [
+          "hot chocolate",
+          "chocolate",
+          "biscuits",
+          "biscuit"
+         ]
+        }
+       ]
+      },
+      {
+       "titel": "Bonfire Night",
+       "text": [
+        "Every year on 5th November people in Great Britain celebrate Bonfire Night. Last year Tom's street had a big party. In the afternoon the children collected wood for the bonfire. Tom's dad made potatoes in the fire, and Mrs Green from number 12 made hot chocolate for everybody.",
+        "There were some biscuits and nuts too, but there wasn't any lemonade – it was too cold for that! At seven o'clock the fireworks started. They were fantastic. Tom's little sister Amy was scared at first, so she watched from the window. Then she came out with her lantern.",
+        "The party finished at nine o'clock. “That was the best party of the year,” said Tom. “Our neighbours are great!”"
+       ],
+       "fragen": [
+        {
+         "f": "Bonfire Night is in December.",
+         "rf": false
+        },
+        {
+         "f": "The children collected wood for the bonfire.",
+         "rf": true
+        },
+        {
+         "f": "There was lots of lemonade at the party.",
+         "rf": false
+        },
+        {
+         "f": "Amy was scared at first.",
+         "rf": true
+        },
+        {
+         "f": "Who made the potatoes?",
+         "l": [
+          "dad",
+          "father"
+         ]
+        },
+        {
+         "f": "What did Mrs Green make?",
+         "l": [
+          "hot chocolate",
+          "chocolate"
+         ]
+        },
+        {
+         "f": "What time did the fireworks start?",
+         "l": [
+          "seven",
+          "7"
+         ]
+        },
+        {
+         "f": "Where did Amy watch the fireworks from at first?",
+         "l": [
+          "window"
+         ]
+        },
+        {
+         "f": "What did Amy have in her hand when she came out?",
+         "l": [
+          "lantern"
+         ]
+        },
+        {
+         "f": "What time did the party finish?",
+         "l": [
+          "nine",
+          "9"
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  "u3": {
+   "titel": "Unit 3: I'm feeling great!",
+   "teile": [
+    {
+     "id": "vok",
+     "titel": "Vocabulary",
+     "art": "vokabeln",
+     "unit": "unit3",
+     "deEn": 10,
+     "enDe": 4,
+     "ziel": "en.6.vok.u3",
+     "anweisung": "Übersetze. Die Rechtschreibung zählt."
+    },
+    {
+     "id": "progressive",
+     "titel": "Present progressive",
+     "art": "luecke",
+     "anweisung": "Setze das Verb ins present progressive (am / is / are + -ing).",
+     "n": 5,
+     "ziel": "en.5.present-progressive.mix",
+     "pool": [
+      {
+       "s": "Look! Adam ___ (play) cricket.",
+       "l": [
+        "is playing",
+        "'s playing"
+       ]
+      },
+      {
+       "s": "The girls ___ (swim) in the pool at the moment.",
+       "l": [
+        "are swimming",
+        "'re swimming"
+       ]
+      },
+      {
+       "s": "I ___ (eat) a carrot right now.",
+       "l": [
+        "am eating",
+        "'m eating"
+       ]
+      },
+      {
+       "s": "Listen! The phone ___ (ring).",
+       "l": [
+        "is ringing",
+        "'s ringing"
+       ]
+      },
+      {
+       "s": "We ___ (not / watch) TV. We are doing our homework.",
+       "l": [
+        "aren't watching",
+        "are not watching",
+        "'re not watching"
+       ]
+      },
+      {
+       "s": "What are you ___ (do)? – I'm chatting with Ellie.",
+       "l": [
+        "doing"
+       ]
+      },
+      {
+       "s": "Mum ___ (make) a healthy lunch in the kitchen.",
+       "l": [
+        "is making",
+        "'s making"
+       ]
+      },
+      {
+       "s": "They ___ (run) in the park now.",
+       "l": [
+        "are running",
+        "'re running"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "should",
+     "titel": "should / shouldn't",
+     "art": "luecke",
+     "anweisung": "Ergänze: should oder shouldn't.",
+     "n": 5,
+     "ziel": "en.6.should.rat",
+     "pool": [
+      {
+       "s": "You have a headache. You ___ drink some water.",
+       "l": [
+        "should"
+       ]
+      },
+      {
+       "s": "You ___ eat so much junk food. It's unhealthy.",
+       "l": [
+        "shouldn't",
+        "should not"
+       ]
+      },
+      {
+       "s": "Ellie is ill. She ___ go to the doctor.",
+       "l": [
+        "should"
+       ]
+      },
+      {
+       "s": "It's very late. You ___ watch TV now.",
+       "l": [
+        "shouldn't",
+        "should not"
+       ]
+      },
+      {
+       "s": "I have a sore throat. – You ___ drink hot tea.",
+       "l": [
+        "should"
+       ]
+      },
+      {
+       "s": "You ___ skive. School is important.",
+       "l": [
+        "shouldn't",
+        "should not"
+       ]
+      },
+      {
+       "s": "He wants to be sporty. He ___ do more sport.",
+       "l": [
+        "should"
+       ]
+      },
+      {
+       "s": "You have a temperature. You ___ go to school today.",
+       "l": [
+        "shouldn't",
+        "should not"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "muchmany",
+     "titel": "much / many",
+     "art": "luecke",
+     "anweisung": "Ergänze: much oder many.",
+     "n": 5,
+     "ziel": "en.6.much-many.formen",
+     "pool": [
+      {
+       "s": "How ___ carrots do we need?",
+       "l": [
+        "many"
+       ]
+      },
+      {
+       "s": "How ___ butter is in the fridge?",
+       "l": [
+        "much"
+       ]
+      },
+      {
+       "s": "I haven't got ___ time today.",
+       "l": [
+        "much"
+       ]
+      },
+      {
+       "s": "There aren't ___ kids in the park.",
+       "l": [
+        "many"
+       ]
+      },
+      {
+       "s": "How ___ hours do you sleep?",
+       "l": [
+        "many"
+       ]
+      },
+      {
+       "s": "We don't eat ___ meat.",
+       "l": [
+        "much"
+       ]
+      },
+      {
+       "s": "How ___ sugar is in a lemonade?",
+       "l": [
+        "much"
+       ]
+      },
+      {
+       "s": "How ___ yogurts did you buy?",
+       "l": [
+        "many"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "ort",
+     "titel": "Prepositions",
+     "art": "luecke",
+     "anweisung": "Ergänze: in, on, under, between, next oder in front of.",
+     "n": 5,
+     "ziel": "en.6.praepositionen.mix",
+     "pool": [
+      {
+       "s": "The doctor's house is number 5. It is ___ number 4 and number 6.",
+       "l": [
+        "between"
+       ]
+      },
+      {
+       "s": "The cat is hiding ___ the bed. I can only see its tail on the floor.",
+       "l": [
+        "under"
+       ]
+      },
+      {
+       "s": "The milk is ___ the fridge.",
+       "l": [
+        "in"
+       ]
+      },
+      {
+       "s": "Your glasses are ___ the table.",
+       "l": [
+        "on"
+       ]
+      },
+      {
+       "s": "In the photo Tom stands ___ me, so you can't see me.",
+       "l": [
+        "in front of"
+       ]
+      },
+      {
+       "s": "The picture is ___ the wall.",
+       "l": [
+        "on"
+       ]
+      },
+      {
+       "s": "The pepper is ___ to the butter.",
+       "l": [
+        "next"
+       ]
+      },
+      {
+       "s": "The spoon is ___ the cup. Take it out, please.",
+       "l": [
+        "in"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "satz",
+     "titel": "Sentences",
+     "art": "satz",
+     "anweisung": "Schreibe den ganzen Satz. Achte auf Rechtschreibung und Satzzeichen.",
+     "n": 3,
+     "je": 2,
+     "ziel": "en.5.present-progressive.mix",
+     "pool": [
+      {
+       "s": "Schreibe im present progressive: She / eat / a pasty.",
+       "l": [
+        "She is eating a pasty.",
+        "She's eating a pasty."
+       ]
+      },
+      {
+       "s": "Verneine den Satz: You should eat junk food every day.",
+       "l": [
+        "You shouldn't eat junk food every day.",
+        "You should not eat junk food every day."
+       ]
+      },
+      {
+       "s": "Schreibe im present progressive: They / play / cricket.",
+       "l": [
+        "They are playing cricket.",
+        "They're playing cricket."
+       ]
+      },
+      {
+       "s": "Gib einen Rat mit „You should …“: go to bed early",
+       "l": [
+        "You should go to bed early."
+       ]
+      },
+      {
+       "s": "Bilde eine Frage: He is doing judo.",
+       "l": [
+        "Is he doing judo?"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "lesen",
+     "titel": "Reading",
+     "art": "lesen",
+     "anweisung": "Lies den Text genau. Beantworte dann die Fragen.",
+     "texte": [
+      {
+       "titel": "Sports day",
+       "text": [
+        "Today is sports day at Hill School. All the pupils are outside on the sports ground. Adam's group is playing cricket. Adam is tall and sporty, and he is very good at it. His friend Jay doesn't like cricket, so he is doing judo in the sports hall.",
+        "Ellie isn't doing any sport today. She has a headache and a sore throat. Her teacher says, “You should go home and drink lots of tea.”",
+        "At lunchtime the pupils are hungry. There are healthy snacks: carrots, yogurt and fruit. There isn't any junk food. “Yum!” says Adam and takes three carrots. In the afternoon there is a climbing wall. Jay thinks it's scary, but he tries it. At the end of the day everybody is tired but happy."
+       ],
+       "fragen": [
+        {
+         "f": "Adam is good at cricket.",
+         "rf": true
+        },
+        {
+         "f": "Jay is playing cricket too.",
+         "rf": false
+        },
+        {
+         "f": "There is lots of junk food at lunchtime.",
+         "rf": false
+        },
+        {
+         "f": "Jay tries the climbing wall.",
+         "rf": true
+        },
+        {
+         "f": "Where is Jay doing judo?",
+         "l": [
+          "sports hall"
+         ]
+        },
+        {
+         "f": "What's wrong with Ellie? (one thing is enough)",
+         "l": [
+          "headache",
+          "sore throat",
+          "throat"
+         ]
+        },
+        {
+         "f": "What should Ellie drink?",
+         "l": [
+          "tea"
+         ]
+        },
+        {
+         "f": "How many carrots does Adam take?",
+         "l": [
+          "three",
+          "3"
+         ]
+        },
+        {
+         "f": "What is there in the afternoon?",
+         "l": [
+          "climbing"
+         ]
+        },
+        {
+         "f": "What does Jay think about the climbing wall? It's …",
+         "l": [
+          "scary"
+         ]
+        }
+       ]
+      },
+      {
+       "titel": "A healthy week",
+       "text": [
+        "Lucy wants to change her lifestyle. She often feels tired, and she thinks she eats too much junk food. Her doctor says, “You should eat more fruit and vegetables, and you shouldn't drink so many sugary drinks.”",
+        "So Lucy makes a plan. On Monday she writes a shopping list: carrots, yogurt, bread and butter – but no sweets! On Tuesday she goes swimming with her friend Sam. On Wednesday she doesn't feel like it, but Sam rings her and says, “Come on, we're going to aerobics!” The class is difficult and very loud, but it is fun.",
+        "On Friday Lucy isn't tired any more. “I'm glad I did it,” she says. “Next week I want to try gymnastics.”"
+       ],
+       "fragen": [
+        {
+         "f": "Lucy often feels tired.",
+         "rf": true
+        },
+        {
+         "f": "The doctor says Lucy should drink more sugary drinks.",
+         "rf": false
+        },
+        {
+         "f": "There are sweets on Lucy's shopping list.",
+         "rf": false
+        },
+        {
+         "f": "The aerobics class is loud.",
+         "rf": true
+        },
+        {
+         "f": "Who says Lucy should eat more fruit?",
+         "l": [
+          "doctor"
+         ]
+        },
+        {
+         "f": "On which day does Lucy write the shopping list?",
+         "l": [
+          "monday"
+         ]
+        },
+        {
+         "f": "What does Lucy do on Tuesday?",
+         "l": [
+          "swimming",
+          "swim",
+          "swims"
+         ]
+        },
+        {
+         "f": "Who rings Lucy on Wednesday?",
+         "l": [
+          "sam"
+         ]
+        },
+        {
+         "f": "Which sport do Lucy and Sam do on Wednesday?",
+         "l": [
+          "aerobics"
+         ]
+        },
+        {
+         "f": "What does Lucy want to try next week?",
+         "l": [
+          "gymnastics"
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  "u4": {
+   "titel": "Unit 4: Teenage life",
+   "teile": [
+    {
+     "id": "vok",
+     "titel": "Vocabulary",
+     "art": "vokabeln",
+     "unit": "unit4",
+     "deEn": 10,
+     "enDe": 4,
+     "ziel": "en.6.vok.u4",
+     "anweisung": "Übersetze. Die Rechtschreibung zählt."
+    },
+    {
+     "id": "vergleich",
+     "titel": "Comparison",
+     "art": "luecke",
+     "anweisung": "Setze das Adjektiv in die richtige Form (z. B. older, more interesting, the best).",
+     "n": 7,
+     "ziel": "en.6.steigerung.vergleiche",
+     "pool": [
+      {
+       "s": "My brother is ___ (old) than me.",
+       "l": [
+        "older"
+       ]
+      },
+      {
+       "s": "Ice skating is ___ (cheap) than the cinema.",
+       "l": [
+        "cheaper"
+       ]
+      },
+      {
+       "s": "This is the ___ (good) weekend of the year!",
+       "l": [
+        "best"
+       ]
+      },
+      {
+       "s": "My parents are the ___ (mean) parents in the world!",
+       "l": [
+        "meanest"
+       ]
+      },
+      {
+       "s": "The red dress is ___ (comfortable) than the blue dress.",
+       "l": [
+        "more comfortable"
+       ]
+      },
+      {
+       "s": "Maths is bad, but chores are ___ (bad).",
+       "l": [
+        "worse"
+       ]
+      },
+      {
+       "s": "Sam is the ___ (tall) boy in our class.",
+       "l": [
+        "tallest"
+       ]
+      },
+      {
+       "s": "The theatre is ___ (interesting) than the circus.",
+       "l": [
+        "more interesting"
+       ]
+      },
+      {
+       "s": "Your pocket money is ___ (good) than my pocket money.",
+       "l": [
+        "better"
+       ]
+      },
+      {
+       "s": "That was the ___ (bad) day of my life.",
+       "l": [
+        "worst"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "haveto",
+     "titel": "have to · I'd like to",
+     "art": "luecke",
+     "anweisung": "Ergänze: have to, has to, 'd like to oder Would.",
+     "n": 4,
+     "ziel": "en.6.have-to.formen",
+     "pool": [
+      {
+       "s": "I ___ tidy my room every Saturday. My mum says so.",
+       "l": [
+        "have to"
+       ]
+      },
+      {
+       "s": "My sister ___ empty the dishwasher every day.",
+       "l": [
+        "has to"
+       ]
+      },
+      {
+       "s": "I ___ go ice skating at the weekend. It's my dream!",
+       "l": [
+        "'d like to",
+        "would like to"
+       ]
+      },
+      {
+       "s": "We ___ do our homework before we can go out.",
+       "l": [
+        "have to"
+       ]
+      },
+      {
+       "s": "Tom ___ hoover the living room once a week.",
+       "l": [
+        "has to"
+       ]
+      },
+      {
+       "s": "___ you like to come to the cinema with me?",
+       "l": [
+        "Would"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "zeit",
+     "titel": "on / in / at",
+     "art": "luecke",
+     "anweisung": "Ergänze: on, in oder at.",
+     "n": 4,
+     "ziel": "en.6.zeitangaben.formen",
+     "pool": [
+      {
+       "s": "I do my paper round ___ Saturdays.",
+       "l": [
+        "on"
+       ]
+      },
+      {
+       "s": "The film starts ___ seven o'clock.",
+       "l": [
+        "at"
+       ]
+      },
+      {
+       "s": "We go skiing ___ winter.",
+       "l": [
+        "in"
+       ]
+      },
+      {
+       "s": "My birthday is ___ May.",
+       "l": [
+        "in"
+       ]
+      },
+      {
+       "s": "Let's meet ___ the weekend.",
+       "l": [
+        "at"
+       ]
+      },
+      {
+       "s": "I get my pocket money ___ Friday.",
+       "l": [
+        "on"
+       ]
+      },
+      {
+       "s": "The charity shop opens ___ half past nine.",
+       "l": [
+        "at"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "past",
+     "titel": "Simple past",
+     "art": "luecke",
+     "anweisung": "Setze das Verb ins simple past.",
+     "n": 5,
+     "ziel": "en.6.simple-past-story.erzaehlen",
+     "pool": [
+      {
+       "s": "Yesterday I ___ (tidy) my room.",
+       "l": [
+        "tidied"
+       ]
+      },
+      {
+       "s": "Last week Jo ___ (take) old CDs to the charity shop.",
+       "l": [
+        "took"
+       ]
+      },
+      {
+       "s": "We ___ (pay) five pounds for the gloves.",
+       "l": [
+        "paid"
+       ]
+      },
+      {
+       "s": "Dad ___ (wash) the car on Sunday.",
+       "l": [
+        "washed"
+       ]
+      },
+      {
+       "s": "She ___ (buy) a second-hand dress.",
+       "l": [
+        "bought"
+       ]
+      },
+      {
+       "s": "They ___ (go) ice skating all day.",
+       "l": [
+        "went"
+       ]
+      },
+      {
+       "s": "I ___ (not / have) enough money.",
+       "l": [
+        "didn't have",
+        "did not have"
+       ]
+      },
+      {
+       "s": "He ___ (give) a talk about his hobby.",
+       "l": [
+        "gave"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "satz",
+     "titel": "Sentences",
+     "art": "satz",
+     "anweisung": "Schreibe den ganzen Satz. Achte auf Rechtschreibung und Satzzeichen.",
+     "n": 3,
+     "je": 2,
+     "ziel": "en.6.steigerung.vergleiche",
+     "pool": [
+      {
+       "s": "Vergleiche: a mouse / small / a cat",
+       "l": [
+        "A mouse is smaller than a cat."
+       ]
+      },
+      {
+       "s": "Vergleiche: the cinema / expensive / ice skating",
+       "l": [
+        "The cinema is more expensive than ice skating."
+       ]
+      },
+      {
+       "s": "Verneine den Satz: I have to do chores.",
+       "l": [
+        "I don't have to do chores.",
+        "I do not have to do chores."
+       ]
+      },
+      {
+       "s": "Vergleiche: Tom / old / Ben",
+       "l": [
+        "Tom is older than Ben."
+       ]
+      },
+      {
+       "s": "Setze ins simple past: We go to the theatre.",
+       "l": [
+        "We went to the theatre."
+       ]
+      }
+     ]
+    },
+    {
+     "id": "lesen",
+     "titel": "Reading",
+     "art": "lesen",
+     "anweisung": "Lies den Text genau. Beantworte dann die Fragen.",
+     "texte": [
+      {
+       "titel": "Pocket money",
+       "text": [
+        "Mia is thirteen. She gets five pounds pocket money a week. Her friend Zoe gets eight pounds, so Mia thinks her parents are the meanest parents in the world. But Zoe has to do more chores than Mia: she has to empty the dishwasher every day and hoover her room twice a week. Mia only has to tidy her room once a week.",
+        "Last month Mia wanted to buy a new dress for a party. It was thirty pounds – too expensive! So she made a deal with her dad: she washed his car every Saturday, and he paid her five pounds each time.",
+        "After four weeks she had enough money. But then she saw a nicer dress in a second-hand shop. It was cheaper – only ten pounds! Mia bought it and still had money for the cinema."
+       ],
+       "fragen": [
+        {
+         "f": "Zoe gets more pocket money than Mia.",
+         "rf": true
+        },
+        {
+         "f": "Mia has to hoover her room twice a week.",
+         "rf": false
+        },
+        {
+         "f": "Mia washed her dad's car on Saturdays.",
+         "rf": true
+        },
+        {
+         "f": "The second-hand dress was more expensive than the new dress.",
+         "rf": false
+        },
+        {
+         "f": "How old is Mia?",
+         "l": [
+          "thirteen",
+          "13"
+         ]
+        },
+        {
+         "f": "How many pounds does Zoe get a week?",
+         "l": [
+          "eight",
+          "8"
+         ]
+        },
+        {
+         "f": "How often does Mia have to tidy her room?",
+         "l": [
+          "once"
+         ]
+        },
+        {
+         "f": "How many pounds was the new dress for the party?",
+         "l": [
+          "thirty",
+          "30"
+         ]
+        },
+        {
+         "f": "In which shop did Mia see a nicer dress?",
+         "l": [
+          "second-hand",
+          "second hand",
+          "secondhand"
+         ]
+        },
+        {
+         "f": "How many pounds was the second-hand dress?",
+         "l": [
+          "ten",
+          "10"
+         ]
+        }
+       ]
+      },
+      {
+       "titel": "A perfect day out",
+       "text": [
+        "Last Saturday Ravi and his friends planned a day out. “Let's go to the circus,” said Ravi. “No, the theatre is better,” said Anna. “But ice skating is the best!” said Tom. “And it's cheaper than the theatre.” So they went ice skating.",
+        "They took the bus at ten o'clock in the morning. It was only three miles. Anna was the best skater. Tom was worse than Anna, and Ravi was the worst – he sat on the ice all the time! But he laughed a lot. Ravi didn't have gloves, so his hands were very cold.",
+        "After two hours they were hungry. They bought chips and hot chocolate. In the evening Ravi messaged his friends: “That was the funniest day of the year. Next time I'm going to bring gloves!”"
+       ],
+       "fragen": [
+        {
+         "f": "The friends went to the theatre.",
+         "rf": false
+        },
+        {
+         "f": "Ice skating is cheaper than the theatre.",
+         "rf": true
+        },
+        {
+         "f": "Anna was the best skater.",
+         "rf": true
+        },
+        {
+         "f": "Ravi had warm gloves.",
+         "rf": false
+        },
+        {
+         "f": "On which day was the day out?",
+         "l": [
+          "saturday"
+         ]
+        },
+        {
+         "f": "What time did they take the bus?",
+         "l": [
+          "ten",
+          "10"
+         ]
+        },
+        {
+         "f": "How many miles was it?",
+         "l": [
+          "three",
+          "3"
+         ]
+        },
+        {
+         "f": "Who was the worst skater?",
+         "l": [
+          "ravi"
+         ]
+        },
+        {
+         "f": "What did they buy? (one thing is enough)",
+         "l": [
+          "chips",
+          "hot chocolate",
+          "chocolate"
+         ]
+        },
+        {
+         "f": "What is Ravi going to bring next time?",
+         "l": [
+          "gloves",
+          "glove"
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  "u5": {
+   "titel": "Unit 5: Dartmoor adventures",
+   "teile": [
+    {
+     "id": "vok",
+     "titel": "Vocabulary",
+     "art": "vokabeln",
+     "unit": "unit5",
+     "deEn": 10,
+     "enDe": 4,
+     "ziel": "en.6.vok.u5",
+     "anweisung": "Übersetze. Die Rechtschreibung zählt."
+    },
+    {
+     "id": "will",
+     "titel": "will-future",
+     "art": "luecke",
+     "anweisung": "Ergänze die will-Form (will / won't + Verb).",
+     "n": 7,
+     "ziel": "en.6.future.will",
+     "pool": [
+      {
+       "s": "Tomorrow it ___ (rain) all day.",
+       "l": [
+        "will rain",
+        "'ll rain"
+       ]
+      },
+      {
+       "s": "Don't worry, we ___ (find) the way.",
+       "l": [
+        "will find",
+        "'ll find"
+       ]
+      },
+      {
+       "s": "It ___ (not / be) foggy tomorrow.",
+       "l": [
+        "won't be",
+        "will not be"
+       ]
+      },
+      {
+       "s": "I think we ___ (see) ponies on Dartmoor.",
+       "l": [
+        "will see",
+        "'ll see"
+       ]
+      },
+      {
+       "s": "Maybe Tim ___ (take) lots of photos.",
+       "l": [
+        "will take",
+        "'ll take"
+       ]
+      },
+      {
+       "s": "I'm sure you ___ (enjoy) the hike.",
+       "l": [
+        "will enjoy",
+        "'ll enjoy"
+       ]
+      },
+      {
+       "s": "The train ___ (not / leave) on time.",
+       "l": [
+        "won't leave",
+        "will not leave"
+       ]
+      },
+      {
+       "s": "___ it be windy tomorrow? – Yes, it will.",
+       "l": [
+        "Will"
+       ]
+      },
+      {
+       "s": "Will they climb to the top? – No, they ___.",
+       "l": [
+        "won't",
+        "will not"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "should",
+     "titel": "should (Regeln)",
+     "art": "luecke",
+     "anweisung": "Ergänze: should oder shouldn't.",
+     "n": 4,
+     "ziel": "en.6.should.regeln",
+     "pool": [
+      {
+       "s": "You ___ leave rubbish in the national park.",
+       "l": [
+        "shouldn't",
+        "should not"
+       ]
+      },
+      {
+       "s": "You ___ pack a first-aid kit for a hike.",
+       "l": [
+        "should"
+       ]
+      },
+      {
+       "s": "You ___ listen carefully to the weather forecast.",
+       "l": [
+        "should"
+       ]
+      },
+      {
+       "s": "You ___ scream or be loud near the ponies.",
+       "l": [
+        "shouldn't",
+        "should not"
+       ]
+      },
+      {
+       "s": "It will be cold. You ___ put on warm boots.",
+       "l": [
+        "should"
+       ]
+      },
+      {
+       "s": "You ___ walk alone in the fog. It isn't safe.",
+       "l": [
+        "shouldn't",
+        "should not"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "woerter",
+     "titel": "Words in context",
+     "art": "luecke",
+     "anweisung": "Ergänze das passende Wort: careful, foggy, left, safe, straight, windy.",
+     "n": 4,
+     "ziel": "en.6.vok.u5",
+     "pool": [
+      {
+       "s": "Go ___ on, then turn right.",
+       "l": [
+        "straight"
+       ]
+      },
+      {
+       "s": "I can't see anything. It's very ___ today.",
+       "l": [
+        "foggy"
+       ]
+      },
+      {
+       "s": "Be ___! The stones are wet.",
+       "l": [
+        "careful"
+       ]
+      },
+      {
+       "s": "My hat is flying away! It's so ___.",
+       "l": [
+        "windy"
+       ]
+      },
+      {
+       "s": "Don't turn right. Turn ___ at the bridge.",
+       "l": [
+        "left"
+       ]
+      },
+      {
+       "s": "Stay on the track. Then you will be ___.",
+       "l": [
+        "safe"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "ordnung",
+     "titel": "Word order",
+     "art": "satz",
+     "anweisung": "Bringe die Wörter in die richtige Reihenfolge und schreibe den ganzen Satz.",
+     "n": 5,
+     "je": 1,
+     "ziel": "en.6.wortstellung.saetze",
+     "pool": [
+      {
+       "s": "packs / Jenny / her rucksack",
+       "l": [
+        "Jenny packs her rucksack."
+       ]
+      },
+      {
+       "s": "a photo / takes / Tim / at the top",
+       "l": [
+        "Tim takes a photo at the top.",
+        "At the top Tim takes a photo."
+       ]
+      },
+      {
+       "s": "we / the bridge / crossed / yesterday",
+       "l": [
+        "We crossed the bridge yesterday.",
+        "Yesterday we crossed the bridge."
+       ]
+      },
+      {
+       "s": "will buy / a postcard / I / tomorrow",
+       "l": [
+        "I will buy a postcard tomorrow.",
+        "Tomorrow I will buy a postcard."
+       ]
+      },
+      {
+       "s": "heard / a whistle / the children",
+       "l": [
+        "The children heard a whistle."
+       ]
+      },
+      {
+       "s": "her sleeping bag / forgot / Anna",
+       "l": [
+        "Anna forgot her sleeping bag."
+       ]
+      },
+      {
+       "s": "the weather forecast / checks / Dad / every morning",
+       "l": [
+        "Dad checks the weather forecast every morning.",
+        "Every morning Dad checks the weather forecast."
+       ]
+      }
+     ]
+    },
+    {
+     "id": "satz",
+     "titel": "Sentences",
+     "art": "satz",
+     "anweisung": "Schreibe den ganzen Satz. Achte auf Rechtschreibung und Satzzeichen.",
+     "n": 3,
+     "je": 2,
+     "ziel": "en.6.will-meinung.formen",
+     "pool": [
+      {
+       "s": "Schreibe einen Satz mit will: I think / it / rain / tomorrow",
+       "l": [
+        "I think it will rain tomorrow.",
+        "I think it'll rain tomorrow."
+       ]
+      },
+      {
+       "s": "Verneine den Satz: It will be sunny.",
+       "l": [
+        "It won't be sunny.",
+        "It will not be sunny."
+       ]
+      },
+      {
+       "s": "Bilde eine Frage: They will climb the hill.",
+       "l": [
+        "Will they climb the hill?"
+       ]
+      },
+      {
+       "s": "Schreibe einen Satz mit will: Maybe / we / see / a pony",
+       "l": [
+        "Maybe we will see a pony.",
+        "Maybe we'll see a pony."
+       ]
+      },
+      {
+       "s": "Schreibe einen Satz mit will: I'm sure / you / enjoy / the trip",
+       "l": [
+        "I'm sure you will enjoy the trip.",
+        "I'm sure you'll enjoy the trip."
+       ]
+      }
+     ]
+    },
+    {
+     "id": "lesen",
+     "titel": "Reading",
+     "art": "lesen",
+     "anweisung": "Lies den Text genau. Beantworte dann die Fragen.",
+     "texte": [
+      {
+       "titel": "A hike on Dartmoor",
+       "text": [
+        "Tomorrow class 6b will go on a hike in Dartmoor National Park in the south-west of England. Their teacher, Mr Hill, is checking the weather forecast. “It won't rain,” he says, “but it will be windy and cold. You should pack warm clothes and good boots.”",
+        "Leo is excited. “I'm sure we'll see wild ponies!” he says. His friend Nina isn't so sure. “Maybe it will be foggy and we won't see anything,” she says.",
+        "Mr Hill gives everybody a whistle. “Dartmoor can be dangerous in the fog,” he says. “You should always stay on the track. And you shouldn't leave any rubbish – take a plastic bag with you.” The bus will leave at eight o'clock. In the afternoon they will climb to the top of a hill and take a class photo there."
+       ],
+       "fragen": [
+        {
+         "f": "It will rain tomorrow.",
+         "rf": false
+        },
+        {
+         "f": "Leo thinks they will see ponies.",
+         "rf": true
+        },
+        {
+         "f": "Mr Hill gives everybody a whistle.",
+         "rf": true
+        },
+        {
+         "f": "The bus will leave at nine o'clock.",
+         "rf": false
+        },
+        {
+         "f": "Dartmoor is in the … of England.",
+         "l": [
+          "south-west",
+          "south west",
+          "southwest"
+         ]
+        },
+        {
+         "f": "What is the teacher's name?",
+         "l": [
+          "hill"
+         ]
+        },
+        {
+         "f": "What should the pupils pack? (one thing is enough)",
+         "l": [
+          "clothes",
+          "boots"
+         ]
+        },
+        {
+         "f": "Who thinks that it will maybe be foggy?",
+         "l": [
+          "nina"
+         ]
+        },
+        {
+         "f": "What should they take with them for the rubbish?",
+         "l": [
+          "bag"
+         ]
+        },
+        {
+         "f": "What will they take at the top of the hill?",
+         "l": [
+          "photo"
+         ]
+        }
+       ]
+      },
+      {
+       "titel": "Lost in the fog",
+       "text": [
+        "Last Saturday Kim and her brother Dan went hiking on Dartmoor. In the morning it was sunny, so they didn't check the weather forecast. They walked along a river and crossed an old stone bridge. At one o'clock they had lunch at the top of a hill.",
+        "Then the weather changed. It got cloudy and very foggy. “I can't see the track,” said Dan. Kim's leg was sore, and she couldn't walk fast. They were scared.",
+        "Then Kim found the whistle in her rucksack. She used it three times. A man in a cottage heard the whistle and came out with his dog. He showed them the way to the bus stop. “Next time we will check the forecast first,” said Kim. “And we'll take a map!” said Dan."
+       ],
+       "fragen": [
+        {
+         "f": "Kim and Dan checked the weather forecast in the morning.",
+         "rf": false
+        },
+        {
+         "f": "They had lunch at the top of a hill.",
+         "rf": true
+        },
+        {
+         "f": "Dan's leg was sore.",
+         "rf": false
+        },
+        {
+         "f": "A man with a dog helped them.",
+         "rf": true
+        },
+        {
+         "f": "Dan is Kim's …",
+         "l": [
+          "brother"
+         ]
+        },
+        {
+         "f": "What did they cross?",
+         "l": [
+          "bridge"
+         ]
+        },
+        {
+         "f": "What time did they have lunch?",
+         "l": [
+          "one",
+          "1"
+         ]
+        },
+        {
+         "f": "Where did Kim find the whistle?",
+         "l": [
+          "rucksack"
+         ]
+        },
+        {
+         "f": "How many times did she use the whistle?",
+         "l": [
+          "three",
+          "3"
+         ]
+        },
+        {
+         "f": "Where was the man who heard the whistle? In a …",
+         "l": [
+          "cottage"
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ }
+}

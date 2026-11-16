@@ -33,7 +33,10 @@
 //        → { ok }   Ersetzt den letzten Stand dieser Karte für diesen Weg; „geaendert“ wandert nur, wenn sich etwas tat.
 //    /sync/klassenziel { id, auth }  → { ok, abschnitte }   Summe der fertigen Abschnitte aller Karten der Gruppe (Klassenziel,
 //        Etappe 7) – nur die Summe, nie einzelne Karten.
+//    /sync/probe      { id, auth }  → { ok, probe: { Weg-ID: [Unit-IDs] } }   „Probe geschrieben“ (v132): Für welche Units hat die
+//        Lehrkraft bei dieser Karte den Haken gesetzt? Das iPad gibt dafür Belohnungen frei (Spiele, Sammelstück, Rekord-Jagd).
 //   Admin (Header Authorization: Bearer <Anmelde-Schlüssel>)
+//    /sync/admin/probe              { gruppeId, weg, nr | 'alle', unit, an }  → { ok, karten: Anzahl }  Haken setzen/entfernen (nur Hauptzugang)
 //    /sync/admin/klassenziel        { gruppeId }                → { ok, abschnitte }  (dieselbe Summe, für den Startwert eines Ziels)
 //    /sync/admin/weg                { gruppeId, weg }           → { ok, karten:[{ nr, e, f, geaendert, gesehen }] } (nur Hauptzugang)
 //    /sync/admin/gruppen            {}                          → { ok, gruppen:[{ id, name, erstellt, codes:[…] }] }
@@ -90,6 +93,7 @@ export async function handleSync(request, env, cors, url, deps) {
   if (p === '/sync/speichern') return syncSpeichern(body, env, cors);
   if (p === '/sync/statistik') return syncStatistik(body, env, cors);
   if (p === '/sync/weg')       return syncWeg(body, env, cors);
+  if (p === '/sync/probe')     return syncProbe(body, env, cors);
   if (p === '/sync/klassenziel') {
     const row = await syncPruefen(body, env);
     if (!row) return syncJson({ error: 'Code ungültig' }, 403, cors);
@@ -106,6 +110,7 @@ export async function handleSync(request, env, cors, url, deps) {
     if (p === '/sync/admin/code-loeschen')     return syncAdminCodeLoeschen(body, env, cors);
     if (p === '/sync/admin/statistik')         return syncAdminStatistik(body, env, cors);
     if (p === '/sync/admin/weg')               return syncAdminWeg(body, env, cors);
+    if (p === '/sync/admin/probe')             return syncAdminProbe(body, env, cors);
     if (p === '/sync/admin/klassenziel') {
       if (!SYNC_HEX32.test(String(body.gruppeId || ''))) return syncJson({ error: 'Gruppe ungültig' }, 400, cors);
       return syncJson({ ok: true, abschnitte: await syncAbschnitteSumme(env, body.gruppeId) }, 200, syncNoStore(cors));
@@ -137,6 +142,9 @@ async function syncSchema(env) {
     env.SYNC_DB.prepare(`CREATE TABLE IF NOT EXISTS sync_weg (
       id TEXT NOT NULL, weg TEXT NOT NULL, daten TEXT NOT NULL,
       geaendert INTEGER NOT NULL, gesehen INTEGER NOT NULL, PRIMARY KEY (id, weg))`),
+    // „Probe geschrieben“ (v132): je Karte und Weg die Unit-IDs, für die die Lehrkraft den Haken gesetzt hat
+    env.SYNC_DB.prepare(`CREATE TABLE IF NOT EXISTS sync_probe (
+      id TEXT NOT NULL, weg TEXT NOT NULL, units TEXT NOT NULL, geaendert INTEGER NOT NULL, PRIMARY KEY (id, weg))`),
   ]);
   syncSchemaOk = true;
 }
@@ -322,14 +330,46 @@ async function syncAbschnitteSumme(env, gruppeId) {
 async function syncAdminWeg(body, env, cors) {
   const g = String(body.gruppeId || ''), weg = String(body.weg || '');
   if (!SYNC_HEX32.test(g) || !SYNC_WEG_ID.test(weg)) return syncJson({ error: 'Angaben ungültig' }, 400, cors);
-  const r = await env.SYNC_DB.prepare(`SELECT p.nr AS nr, w.daten AS daten, w.geaendert AS geaendert, w.gesehen AS gesehen
-      FROM sync_paesse p LEFT JOIN sync_weg w ON w.id = p.id AND w.weg = ? WHERE p.gruppe_id = ? ORDER BY p.nr`).bind(weg, g).all();
+  const r = await env.SYNC_DB.prepare(`SELECT p.nr AS nr, w.daten AS daten, w.geaendert AS geaendert, w.gesehen AS gesehen, q.units AS probe
+      FROM sync_paesse p LEFT JOIN sync_weg w ON w.id = p.id AND w.weg = ?
+        LEFT JOIN sync_probe q ON q.id = p.id AND q.weg = ? WHERE p.gruppe_id = ? ORDER BY p.nr`).bind(weg, weg, g).all();
   const karten = (r.results || []).map(x => {
     let d = {};
     try { d = x.daten ? JSON.parse(x.daten) : {}; } catch { d = {}; }
-    return { nr: x.nr, e: Array.isArray(d.e) ? d.e : [], f: Array.isArray(d.f) ? d.f : [], geaendert: x.geaendert || null, gesehen: x.gesehen || null };
+    return { nr: x.nr, e: Array.isArray(d.e) ? d.e : [], f: Array.isArray(d.f) ? d.f : [], geaendert: x.geaendert || null, gesehen: x.gesehen || null, probe: syncProbeListe(x.probe) };
   });
   return syncJson({ ok: true, karten }, 200, syncNoStore(cors));   // bewusst ohne Karten-Kennung: nur die Nummer in der Gruppe
+}
+
+// ── „Probe geschrieben“ (v132): Haken der Lehrkraft je Karte, Weg und Unit ──
+const SYNC_UNIT_ID = /^[a-z][a-z0-9-]{0,29}$/;
+function syncProbeListe(text) {
+  try { const l = JSON.parse(text || '[]'); return Array.isArray(l) ? l.filter(x => typeof x === 'string' && SYNC_UNIT_ID.test(x)).slice(0, 40) : []; } catch { return []; }
+}
+async function syncProbe(body, env, cors) {
+  const row = await syncPruefen(body, env);
+  if (!row) return syncJson({ error: 'Code ungültig' }, 403, cors);
+  const r = await env.SYNC_DB.prepare('SELECT weg, units FROM sync_probe WHERE id = ?').bind(row.id).all();
+  const probe = {};
+  (r.results || []).forEach(x => { const l = syncProbeListe(x.units); if (l.length && SYNC_WEG_ID.test(x.weg)) probe[x.weg] = l; });
+  return syncJson({ ok: true, probe }, 200, syncNoStore(cors));
+}
+async function syncAdminProbe(body, env, cors) {
+  const g = String(body.gruppeId || ''), weg = String(body.weg || ''), unit = String(body.unit || ''), an = body.an === true;
+  const alle = body.nr === 'alle', nr = Number(body.nr);
+  if (!SYNC_HEX32.test(g) || !SYNC_WEG_ID.test(weg) || !SYNC_UNIT_ID.test(unit) || typeof body.an !== 'boolean' || (!alle && !(Number.isInteger(nr) && nr >= 1 && nr <= 999)))
+    return syncJson({ error: 'Angaben ungültig' }, 400, cors);
+  const r = await (alle
+    ? env.SYNC_DB.prepare('SELECT p.id AS id, q.units AS units FROM sync_paesse p LEFT JOIN sync_probe q ON q.id = p.id AND q.weg = ? WHERE p.gruppe_id = ?').bind(weg, g)
+    : env.SYNC_DB.prepare('SELECT p.id AS id, q.units AS units FROM sync_paesse p LEFT JOIN sync_probe q ON q.id = p.id AND q.weg = ? WHERE p.gruppe_id = ? AND p.nr = ?').bind(weg, g, nr)).all();
+  const karten = r.results || [], jetzt = Date.now();
+  if (!karten.length) return syncJson({ error: 'Karte nicht gefunden' }, 404, cors);
+  await env.SYNC_DB.batch(karten.map(k => {
+    const l = syncProbeListe(k.units).filter(x => x !== unit); if (an) l.push(unit);
+    return env.SYNC_DB.prepare(`INSERT INTO sync_probe (id, weg, units, geaendert) VALUES (?, ?, ?, ?)
+        ON CONFLICT (id, weg) DO UPDATE SET units = excluded.units, geaendert = excluded.geaendert`).bind(k.id, weg, JSON.stringify(l.sort()), jetzt);
+  }));
+  return syncJson({ ok: true, karten: karten.length }, 200, cors);
 }
 
 // ── Admin: Gruppe umbenennen ───────────────────────────
@@ -347,6 +387,7 @@ async function syncAdminGruppeLoeschen(body, env, cors) {
   if (!SYNC_HEX32.test(id)) return syncJson({ error: 'Gruppe ungültig' }, 400, cors);
   await env.SYNC_DB.batch([
     env.SYNC_DB.prepare('DELETE FROM sync_weg WHERE id IN (SELECT id FROM sync_paesse WHERE gruppe_id = ?)').bind(id),
+    env.SYNC_DB.prepare('DELETE FROM sync_probe WHERE id IN (SELECT id FROM sync_paesse WHERE gruppe_id = ?)').bind(id),
     env.SYNC_DB.prepare('DELETE FROM sync_paesse WHERE gruppe_id = ?').bind(id),
     env.SYNC_DB.prepare('DELETE FROM sync_statistik WHERE gruppe_id = ?').bind(id),
     env.SYNC_DB.prepare('DELETE FROM sync_gruppen WHERE id = ?').bind(id),
@@ -360,6 +401,7 @@ async function syncAdminCodeLoeschen(body, env, cors) {
   if (!SYNC_HEX32.test(id)) return syncJson({ error: 'Code ungültig' }, 400, cors);
   await env.SYNC_DB.batch([
     env.SYNC_DB.prepare('DELETE FROM sync_weg WHERE id = ?').bind(id),
+    env.SYNC_DB.prepare('DELETE FROM sync_probe WHERE id = ?').bind(id),
     env.SYNC_DB.prepare('DELETE FROM sync_paesse WHERE id = ?').bind(id),
   ]);
   return syncJson({ ok: true }, 200, cors);
@@ -383,6 +425,7 @@ export async function syncAufraeumen(env) {
     // Lernweg-Stände: lange nicht gemeldet oder Karte gibt es nicht mehr
     env.SYNC_DB.prepare('DELETE FROM sync_weg WHERE gesehen < ?').bind(Date.now() - SYNC_WEG_TAGE * 864e5),
     env.SYNC_DB.prepare('DELETE FROM sync_weg WHERE id NOT IN (SELECT id FROM sync_paesse)'),
+    env.SYNC_DB.prepare('DELETE FROM sync_probe WHERE id NOT IN (SELECT id FROM sync_paesse)'),
   ]);
 }
 

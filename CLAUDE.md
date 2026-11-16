@@ -129,6 +129,12 @@ und gelbe Hinweise. Manuelle Checkliste nach Uploads: `werkzeuge/RAUCHTEST.md`.
 - **Lesehilfe** (v130, Tempo Etappe 8): zwei Schalter im Pass → `LW.lesehilfe({ g, h })` setzt `html.lw-gross` / `html.lw-hell`, Stile zentral in
   `gemeinsam/lesehilfe.css` (nicht in den Seiten ergänzen). Vorlese-Knopf 🔊 an jeder Aufgabe in `ueben.js`. Klicktest: `werkzeuge/klicktest.js`
   (CI `klicktest.yml`). README → Lesehilfe, Vorlesen, Bilder, Klicktest.
+- **Generalprobe und Belohnungen** (v132): `apps/englisch/generalprobe.html?stufe=en.6.generalprobe.uN` + `daten/proben/en.6.generalprobe.json`
+  (je Unit Teile vokabeln/luecke/satz/lesen, 40 min, 50 Punkte, alles getippt, Rückmeldung erst am Ende; Texte selbst geschrieben). Versuche in
+  `LernPass.checkMerken` (b = bester in %), Journey-Schritt `uN-a-finale-probe` erledigt erst ab `ziel.prozent` (IDs mit `.generalprobe.`).
+  „Probe geschrieben“: Haken je Karte in der Klassenübersicht → Worker `/sync/admin/probe`, Tabelle `sync_probe`; iPad holt ihn mit `LernSync.probe()`
+  → Abzeichen `probe-uN` mit Sammelstück (flag), Spiele frei bis zur nächsten Unit (`LernFreigabe.probeFrei`), Banner mit Rekord-Jagd (Speed-Rekord,
+  `lernwelt-rekord`). Truhen im Weg: `LernJourney.truhen` (jede dritte Station, `geschenkTruhe('jt-<Station>')`). README → Generalprobe und Belohnungen.
 - **Live-Abfrage** (Unterrichtsmodus → 📊, Kinder-Seite `apps/typen/live.html?raum=CODE`, keine App in config.json, ohne Navbar):
   Worker-Teil `cloudflare/live.js` (Räume, Antworten, Quizze, Rückblicke in `SYNC_DB`; Räume nach dem Beenden gelöscht),
   Fragetypen `gemeinsam/live-fragen.js` (`LernLive`), Beamer `gemeinsam/admin/live.js`, Quiz-Editor Inhalte → Live-Quizze.

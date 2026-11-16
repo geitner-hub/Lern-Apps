@@ -212,7 +212,8 @@ function woerterFuer(st) {
 }
 const stationen = u => {
   const pl = wegDa(u) && window.LernJourneyWeg ? LernJourneyWeg.plaetze({ J: A.J, cfg: wegCfg(), z: A.z, admin: A.admin }) : {};
-  return u.stationen.map((st, i) => Object.assign({ id: st.id, nr: i + 1, titel: st.titel, ort: st.ort, art: st.art,
+  const T = LernJourney.truhen(A.J, A.z);
+  return u.stationen.map((st, i) => Object.assign({ id: st.id, nr: i + 1, titel: st.titel, ort: st.ort, art: st.art, truhe: T[st.id] || null,
     woerter: st.art === 'woerter' && A.z[st.id].zustand === 'gemeistert' ? woerterFuer(st) : null,
     heft: pl[st.id] ? { tafel: pl[st.id].tafel, werkbank: pl[st.id].werkbank } : null }, A.z[st.id]));
 };
@@ -298,6 +299,9 @@ function zeigeKarte(id) {
     text = 'Erst musst du hier ⭐ holen:';
     knoepfe = z.fehlt.map(b => `<button type="button" class="neben" data-station="${esc(b)}">${ART[A.alle[b].st.art][0]} ${esc(A.alle[b].st.titel)}</button>`).join('');
   }
+  const tr = LernJourney.truhen(A.J, A.z)[id];                 // Truhe im Weg (v132)
+  if (tr === 'bereit') knoepfe = `<button type="button" class="los" data-truhe="${esc(id)}">🎁 Truhe einsammeln</button>` + knoepfe.replace('class="los"', 'class="neben"');
+  else if (tr === 'zu' && z.zustand !== 'bau') text += ' 🎁 Hier wartet eine Truhe – sie gehört dir, sobald du die Station gemeistert hast.';
   const fort = z.zustand === 'gemeistert' ? sp.runden : Math.min(gute, sp.runden);
   $('karte').innerHTML = `<button type="button" class="x" data-zu aria-label="Schließen">✕</button>
     <div class="marke2" aria-hidden="true">${z.nebel ? '🌫️' : z.zustand === 'gemeistert' ? '⭐' : z.grund === 'schranke' ? '🚧' : z.zustand === 'zu' ? '🔒' : z.zustand === 'bau' ? '🚧' : ART[st.art][0]}</div>
@@ -373,7 +377,7 @@ async function ladeLaufzettel() {
   } catch (e) { console.warn('[Journey] Laufzettel', e); return false; }
 }
 function wegDaten() {
-  return { J: A.J, unit: A.unit, bausteine: A.bausteine, admin: A.admin, z: A.z, cfg: wegCfg(), fuss: () => fussHTML(A.unit),
+  return { J: A.J, unit: A.unit, bausteine: A.bausteine, admin: A.admin, z: A.z, cfg: wegCfg(), fuss: () => fussHTML(A.unit), nachTruhe: () => { if (A.welt) A.welt.zustand(stationen(A.unit)); },
     starte: (ziel, weg) => {
       if (ziel.thema) return starteThema(ziel.thema, weg);
       const z = A.z[ziel.station] && A.z[ziel.station].zustand;
@@ -509,6 +513,12 @@ document.addEventListener('click', e => {
   if (b.dataset.weiterUnit) { const n = A.J.units.find(x => x.id === b.dataset.weiterUnit); if (n) waehleUnit(n, (n.stationen.find(st => A.z[st.id].naechste) || n.stationen[0]).id); return; }
   if (b.dataset.station) { const id = b.dataset.station, x = A.alle[id]; if (x && x.unit !== A.unit) return waehleUnit(x.unit, id).then(() => getippt(id)); return A.welt ? getippt(id) : zeigeKarte(id); }
   if (b.hasAttribute('data-zu')) return schliesseKarte();
+  if (b.dataset.truhe) {                                       // Truhe einsammeln: Geschenk-Truhe im Pass, einmal je Station
+    const id = b.dataset.truhe;
+    if (LernJourney.truheNehmen(id)) { try { LernPass.showAvatar({ text: 'Eine Truhe für dich! 🎁 Öffne sie auf der Startseite in deinem Pass.', aktion: 'winken', dauer: 5000 }); } catch (e) {} }
+    if (A.welt) A.welt.zustand(stationen(A.unit));
+    return zeigeKarte(id);
+  }
   if (b.hasAttribute('data-pk-zu')) { $('pk').hidden = true; return; }
   if (b.id === 'pk-knopf') return zeigePostkarte(A.unit);
   if (b.dataset.wegAbschnitt) return oeffneAbschnitt(b.dataset.wegAbschnitt);

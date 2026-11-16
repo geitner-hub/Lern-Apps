@@ -670,16 +670,24 @@
     // Tafel und Werkbank (Lernweg im Journey): ein zusammengeführtes Mesh für alle Stationen, neu gebaut nur bei Änderungen
     let heftMesh = null, heftSig = '';
     function setzeHeft() {
-      const sig = ST.map(s => s.st.heft ? (s.st.heft.tafel || '-') + (s.st.heft.werkbank || '-') : '').join('|');
+      const sig = ST.map(s => (s.st.heft ? (s.st.heft.tafel || '-') + (s.st.heft.werkbank || '-') : '') + (s.st.truhe || '')).join('|');
       if (sig === heftSig) return;
       heftSig = sig;
       if (heftMesh) { scene.remove(heftMesh); heftMesh.geometry.dispose(); heftMesh = null; }
       const HB = Bau();
       ST.forEach(s => {
-        const h = s.st.heft; if (!h || (!h.tafel && !h.werkbank)) return;
+        const h = s.st.heft || {}; if (!h.tafel && !h.werkbank && !s.st.truhe) return;
         const ry = Math.atan2(s.tg.x, s.tg.z) - Math.PI / 2, cs = Math.cos(ry), sn = Math.sin(ry);   // lokales x = entlang des Wegs
         const nord = new T.Vector3(-s.tg.z, 0, s.tg.x); if (nord.z > 0) nord.negate();
         const at = (lx, lz) => [s.sp.x + lx * cs + lz * sn, s.sp.z - lx * sn + lz * cs];
+        if (s.st.truhe) {          // Truhe im Weg (v132): zu = Holz mit Schloss · bereit = golden · leer = offen
+          const q = at(-2.4, 0), x = q[0] - nord.x * 6.9, z = q[1] - nord.z * 6.9, t = s.st.truhe;   // vor dem Weg (Kameraseite), neben der Figur
+          HB.box(x, 0, z, 2, 1, 1.3, t === 'bereit' ? 0xf2c94c : C.holz, ry);
+          HB.box(x, 0.4, z, 2.08, 0.18, 1.38, t === 'bereit' ? C.weiss : C.gold, ry);
+          if (t === 'leer') HB.box(x, 1, z, 1.7, 0.05, 1, 0x2a1c12, ry);
+          else { HB.box(x, 1, z, 2, 0.5, 1.3, t === 'bereit' ? C.gold : C.holz2, ry); HB.box(x, 0.7, z, 0.4, 0.55, 1.42, t === 'bereit' ? C.weiss : C.gold, ry); }
+          if (t === 'bereit') [[-0.7, 2], [0.6, 2.4], [0, 2.9]].forEach(([d, y]) => HB.box(x + d * cs, y, z - d * sn, 0.2, 0.2, 0.2, C.gelb, ry));   // Funkeln
+        }
         const seite = (lx) => { const q = at(lx, 0); return [q[0] - nord.x * 1.4, q[1] - nord.z * 1.4]; };   // etwas näher am Weg
         const L = (x, z, lx) => [x + lx * cs, z - lx * sn];                          // entlang des Wegs verschieben
         if (h.tafel) {             // Tafel auf zwei Beinen: dunkelgrün mit Kreidezeilen, erledigt mit goldenem Stempel

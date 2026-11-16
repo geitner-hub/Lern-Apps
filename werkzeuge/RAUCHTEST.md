@@ -38,6 +38,10 @@ Live am iPad über das Symbol auf dem Home-Bildschirm, Test in Safari.
 | 31 | Pass öffnen: „🔎 Besser lesbar“ und „☀️ Helles Schema“ einschalten, dann Kopfrechnen und eine Englisch-Übung öffnen | Schrift größer und in der Leseschrift, Seiten hell und gut lesbar; im Spiel bleibt das Aussehen wie gewohnt; ausschalten stellt alles zurück |
 | 32 | In einer Aufgabe (Kopfrechnen oder GPG Quellen-Detektiv) 🔊 antippen | das iPad liest Auftrag und Aufgabe vor |
 | 33 | GPG Quellen-Detektiv: eine Station mit Foto öffnen | Fotos erscheinen (WebP), antippen zeigt sie groß |
+| 34 | English Journey → Finale-Abschnitt einer Unit → „Generalprobe“ → starten, ein paar Antworten tippen, Seite neu laden | Antworten sind noch da, die Uhr läuft weiter; nach „Abgeben“ Punkte von 50, Urteil, Korrektur je Aufgabe; der Schritt hakt sich erst ab 60 % ab |
+| 35 | English Journey (3D): Station mit Truhe meistern, Station antippen → „🎁 Truhe einsammeln“ | Truhe im Weg erst Holz, dann golden, danach offen; im Pass wartet eine Truhe mehr |
+| 36 | Admin → Gruppen → 🚦 Klassenübersicht → English Journey: bei einer Karte ✍️ antippen; iPad dieser Karte: Startseite öffnen (bis 3 Minuten) | Abzeichen „Probe Unit N geschrieben“ mit Sammelstück, Banner „Spiele frei“, Spielsperre weg; nach Freigabe eines Abschnitts der nächsten Unit gilt die Sperre wieder |
+| 37 | Vokabeltrainer → Unit → ⚡ Speed zweimal spielen | Ergebnis nennt den eigenen Rekord, die Speed-Kachel zeigt ihn |
 
 **Nur in der Testumgebung zusätzlich:** Oben steht „🧪 TEST · vXX“. Im Admin eine Kleinigkeit ändern und
 speichern → Meldung „Testumgebung: Speichern und Sicherung sind hier abgeschaltet“. Danach live den Pass

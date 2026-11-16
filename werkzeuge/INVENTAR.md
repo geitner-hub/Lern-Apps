@@ -1,6 +1,6 @@
 # Inventar der Lern-Apps und Spiele
 
-Automatisch erzeugt am 13.11.2026 mit `python3 werkzeuge/inventar.py` (Angaben aus dem Code). Nur die Spalten **Entscheidung** und **Notiz** von Hand pflegen – sie bleiben beim Neu-Erzeugen erhalten.
+Automatisch erzeugt am 14.11.2026 mit `python3 werkzeuge/inventar.py` (Angaben aus dem Code). Nur die Spalten **Entscheidung** und **Notiz** von Hand pflegen – sie bleiben beim Neu-Erzeugen erhalten.
 
 Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv**
 
@@ -9,6 +9,7 @@ Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv
 | Datei | Name | Themen-ID | Art | Fach · Klassen | Sichtbar | Ergebnis | Pass-XP | liefert „Meine Themen“ | nutzt „Meine Themen“ | Dorf-Aufträge | Entscheidung | Notiz |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | `apps/englisch/english-journey.html` | English Journey Year 6 | `en.6.journey` | Lern-App | Englisch · 6 | sichtbar | – | – | – | – | ja |  |  |
+| `apps/englisch/generalprobe.html` | – | `en.6.generalprobe` (5 Stufen) | Lern-App | – | nicht in config | ja | ja | – | – | – (nicht in config) |  |  |
 | `apps/englisch/journey-anwenden.html` | – | `en.6.anwenden` (5 Stufen) | Lern-App | – | nicht in config | – | – | – | – | – (nicht in config) |  |  |
 | `apps/englisch/knowing-english.html` | Knowing English | `en.5.knowing-english` (5 Stufen) | Lern-App | Englisch · 5, 6 | sichtbar | – | – | – | – | ja |  |  |
 | `apps/englisch/practice_simple_present.html` | – | – | Lern-App | – | nicht in config | – | – | – | – | – (nicht in config) | Kern | Gut: nur Antippen, Tipp-Knopf. Mängel: meldet kein `thema`; Satzstellung später Typ Sortieren (Etappe 9) |
@@ -53,14 +54,15 @@ Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv
 
 | Datei | KB | Skripte | Speicherschlüssel |
 |---|---|---|---|
-| apps/englisch/english-journey.html | 44 | freigabe.js, katalog.js, wiederholung.js, journey-kern.js, navbar.js, journey-lernweg.js (nachgeladen), avatar3d.js (nachgeladen), journey-welt.js (nachgeladen), journey-welt.js (nachgeladen) | lernwelt-lernweg, lernwelt-lernweg-zurueck, + über navbar.js |
+| apps/englisch/english-journey.html | 45 | freigabe.js, katalog.js, wiederholung.js, journey-kern.js, navbar.js, journey-lernweg.js (nachgeladen), avatar3d.js (nachgeladen), journey-welt.js (nachgeladen), journey-welt.js (nachgeladen) | lernwelt-lernweg, lernwelt-lernweg-zurueck, + über navbar.js |
+| apps/englisch/generalprobe.html | 26 | shared.js, freigabe.js, katalog.js, navbar.js, journey-kern.js (nachgeladen), journey-lernweg.js (nachgeladen), wiederholung.js (nachgeladen) | lernwelt-generalprobe, + über navbar.js |
 | apps/englisch/journey-anwenden.html | 40 | freigabe.js, ueben.js, navbar.js | + über navbar.js |
-| apps/englisch/knowing-english.html | 9 | katalog.js, freigabe.js, navbar.js | lernwelt-pass, + über navbar.js |
+| apps/englisch/knowing-english.html | 10 | katalog.js, freigabe.js, navbar.js | lernwelt-pass, + über navbar.js |
 | apps/englisch/practice_simple_present.html | 1 | – | – |
 | apps/englisch/satzglieder-erkennen.html | 35 | navbar.js | + über navbar.js |
 | apps/englisch/simple-past.html | 1 | – | – |
 | apps/englisch/time-dates-numbers.html | 24 | freigabe.js, ueben.js, navbar.js | + über navbar.js |
-| apps/englisch/vokabeltrainer.html | 67 | freigabe.js, ueben.js, navbar.js, katalog.js (nachgeladen) | vokab-history-kl5, vokab-word-stats-kl5, vokab-a11y-kl5, vokab-history-kl6, vokab-word-stats-kl6, vokab-a11y-kl6, + über navbar.js |
+| apps/englisch/vokabeltrainer.html | 68 | freigabe.js, ueben.js, navbar.js, katalog.js (nachgeladen) | lernwelt-rekord, vokab-history-kl5, vokab-word-stats-kl5, vokab-a11y-kl5, vokab-history-kl6, vokab-word-stats-kl6, vokab-a11y-kl6, + über navbar.js |
 | apps/englisch/vokabeltrainer5.html | 1 | – | – |
 | apps/englisch/vokabeltrainer6.html | 1 | – | – |
 | apps/gpg/bayern.html | 32 | navbar.js, karten-ansicht.js, freigabe.js, ueben.js | lernwelt-bayern-best, + über navbar.js |

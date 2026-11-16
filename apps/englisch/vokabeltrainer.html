@@ -253,7 +253,7 @@ body.a11y-dyslexic, body.a11y-dyslexic * { font-family: 'Atkinson Hyperlegible',
       <div class="mode-card" onclick="startMode('memory')"><div class="icon">🎴</div><h3>Memory</h3><p>Paare finden</p><span class="zaehlt ueben">nur zum Üben</span></div>
       <div class="mode-card" onclick="startMode('fill')"><div class="icon">✏️</div><h3>Fill in</h3><p>Wort eingeben</p><span class="zaehlt">⭐ zählt</span></div>
       <div class="mode-card" onclick="startMode('scramble')"><div class="icon">🔀</div><h3>Scramble</h3><p>Buchstaben sortieren</p><span class="zaehlt">⭐ zählt</span></div>
-      <div class="mode-card" onclick="startMode('speed')"><div class="icon">⚡</div><h3>Speed</h3><p>60 Sekunden</p><span class="zaehlt ueben">nur zum Üben</span></div>
+      <div class="mode-card" onclick="startMode('speed')"><div class="icon">⚡</div><h3>Speed</h3><p id="speed-p">60 Sekunden</p><span class="zaehlt ueben">nur zum Üben</span></div>
     </div>
   </div>
 
@@ -840,6 +840,7 @@ function showModeSelection() {
     h.textContent = '⭐ Für die Meisterschaft zählen Quiz, Fill in und Scramble.';
     document.getElementById('word-info').appendChild(h);
   }
+  zeigeRekord();
   showOnly('mode');
   setHeaderBtns(true, true);
 }
@@ -915,8 +916,19 @@ function lernInhalt() {
   return null;
 }
 
+// ── Rekord-Jagd (v132): bester Speed-Wert je Wortauswahl – nur gegen sich selbst, nur auf diesem Gerät ──
+const REKORD_KEY = 'lernwelt-rekord';
+const rekordName = () => (LISTE || 'kl' + KL) + '|' + (currentUnit || '-') + '|' + (currentTheme || '-');
+function rekorde() { try { return JSON.parse(localStorage.getItem(REKORD_KEY) || '{}') || {}; } catch (e) { return {}; } }
+function zeigeRekord() { const r = rekorde()[rekordName()], el = document.getElementById('speed-p'); if (el) el.textContent = r ? `60 Sekunden · 🏁 Rekord: ${r}` : '60 Sekunden · 🏁 Rekord-Jagd'; }
+function rekordMerken(n) {
+  const R = rekorde(), k = rekordName(), alt = Number(R[k]) || 0;
+  if (n > alt) { const keys = Object.keys(R); if (keys.length >= 80 && !R[k]) delete R[keys[0]]; R[k] = n; try { localStorage.setItem(REKORD_KEY, JSON.stringify(R)); } catch (e) {} }
+  return alt;
+}
 function showResult(right, wrong, total, label) {
   if (spInterval) clearInterval(spInterval);
+  if (currentMode === 'speed' && label) { const alt = rekordMerken(right); label = right > alt && right > 0 ? `🏁 Neuer Rekord: ${right} Punkte!${alt ? ' (vorher ' + alt + ')' : ''}` : `${right} Punkte – dein Rekord: ${alt} 🏁`; }
   showOnly('result');
   const pct = Math.round(right / total * 100);
   document.getElementById('res-emoji').textContent = pct >= 80 ? '🏆' : pct >= 60 ? '👍' : '💪';
