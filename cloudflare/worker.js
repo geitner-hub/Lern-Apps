@@ -70,6 +70,9 @@
 //    /medien/admin/…   → Hochladen, Ordner, Sammlungen, Ein/Aus, Löschen (mit Anmelde-Schlüssel)
 //    Braucht zusätzlich das R2-Binding MEDIEN; die Tabelle liegt in SYNC_DB.
 //
+//  Fehlerzähler (v133, cloudflare/fehler.js): /fehler – iPads melden Skriptfehler (nur Summen je Tag, Version, Seite,
+//    Meldung; keine Gerätekennung); /fehler/admin/liste und /fehler/admin/loeschen nur mit Hauptzugang. Tabelle in SYNC_DB.
+//
 //  Wartung & Fehlersuche: cloudflare/ANLEITUNG.md
 // ═══════════════════════════════════════════════════════
 
@@ -97,6 +100,7 @@ import { handleMedienOeffentlich, handleMedienAdmin, medienAufraeumen } from './
 import { handleDateien } from './dateien.js';
 import { handleKollegen, kollegeCodeNorm, kollegeFuerCode, kollegeHolen } from './kollegen.js';
 import { handleLive, liveAufraeumen } from './live.js';
+import { handleFehler, fehlerAufraeumen } from './fehler.js';
 
 // ── Einstieg ───────────────────────────────────────────
 export default {
@@ -135,6 +139,7 @@ export default {
           return json(d, r.status, cors);
         }
       }
+      if (url.pathname === '/fehler' || url.pathname.startsWith('/fehler/')) return await handleFehler(request, env, cors, url, { checkHaupt, json });
       if (url.pathname.startsWith('/live/'))                      return await handleLive(request, env, cors, url, { checkToken, checkHaupt, json });
       if (url.pathname.startsWith('/medien/'))                    return await handleMedienAdmin(request, env, cors, url, pruefer);
       if (url.pathname.startsWith('/sync/'))                      return await handleSync(request, env, cors, url, pruefer);
@@ -160,6 +165,7 @@ export default {
     ctx.waitUntil(syncAufraeumen(env));
     ctx.waitUntil(medienAufraeumen(env).catch(e => console.error(e)));
     ctx.waitUntil(liveAufraeumen(env).catch(e => console.error(e)));
+    ctx.waitUntil(fehlerAufraeumen(env).catch(e => console.error(e)));
   },
 };
 

@@ -1209,6 +1209,7 @@ def budget(name, dateien, text):
 idx = lies('index.html')
 start_js = [s for s in SCRIPT_SRC.findall(idx) if not s.startswith('http')]
 budget('startseite_skript', start_js, 'Startseite, Skript beim Öffnen')
+I(f'Startseite, index.html selbst: {kb(gz(ROOT / "index.html")):.0f} KB komprimiert, {kb(groesse(ROOT / "index.html")):.0f} KB Dateigröße (Pass-Fenster und Scanner seit v133 in gemeinsam/pass-ansicht.js)')
 
 nav = lies('gemeinsam/navbar.js')
 m = re.search(r'const SOFORT\s*=\s*\[(.*?)\];', nav, re.S)

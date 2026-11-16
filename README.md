@@ -361,8 +361,14 @@ Alle vier belohnen Geleistetes (Stationen, Runden, Meisterschaft), nie verbracht
   (löst eine Aufgabe), ein Spiel, eine Baukasten-Übung und den Test-Lernweg; jeder Skriptfehler lässt ihn scheitern.
   Lokal: `python3 -m http.server 8123 &` und `node werkzeuge/klicktest.js` (braucht das npm-Paket `playwright` – nur für den Test).
 - **Nicht umgesetzt (bewusst):** „Kopfrechnen bündeln“ (würde Kacheln in `config.json` und die Ergebnis-Schlüssel je Klasse
-  ändern – Sterne und Dorf-Aufträge hängen daran), „Startseite verschlanken“ (Budget steht bei 37 von 65 KB, der Umbau der
-  Pass-Ansichten wäre riskanter als nötig) und der Fehlerzähler (braucht die Zustimmung der Schulleitung).
+  ändern – Sterne und Dorf-Aufträge hängen daran).
+- **Startseite verschlankt (v133):** Pass-Fenster (Profil, Garderobe, Truhen, Erfolge, Sicherung) und QR-Scanner stehen nicht mehr
+  in `index.html`, sondern in `gemeinsam/pass-ansicht.js` (`LernPassAnsicht`) und laden erst beim ersten Antippen von Pass oder
+  Scanner (`passAnsicht()` in index.html; die Datei liegt in `sw.js` START, damit der Pass offline aufgeht). `index.html` schrumpft
+  von 39 auf 28 KB komprimiert (143 → 101 KB). Die Datei ist ein normales Skript und nutzt die Namen der Startseite (CONFIG,
+  buildPage, buildPassCard, ladeSync …) – darum nur auf der Startseite laden. Pass-Karte, Kopfleiste und Sicherung laden
+  (`ladeSync`) bleiben in index.html.
+- **Fehlerzähler (v133):** siehe Ladekette → Fehlerprotokoll und Diagnose.
 
 ## Ladekette (Infrastruktur Etappe 2)
 
@@ -416,8 +422,11 @@ das ist die Menge, die übers Schul-WLAN geht; komprimiert ≈ ein Drittel der D
   warnt der Pass unter „Sicherung“.
 - **Fehlerprotokoll und Diagnose:** Abstürze werden nur auf dem iPad gemerkt (höchstens 30). Ansehen:
   Pass → Sicherung → **fünfmal auf die Versionszeile tippen** (Version, Speicher, Offline-Speicher, Fehler).
-  Weitergabe an den Worker ist vorbereitet (`FEHLER_SENDEN` in umgebung.js), aber aus, bis die
-  Schulleitung zustimmt.
+  **Fehlerzähler (v133, mit Zustimmung der Schulleitung):** Im Live-Betrieb meldet jedes iPad einen Fehler zusätzlich an den
+  Worker (`navigator.sendBeacon` an `/fehler`, `cloudflare/fehler.js`) – je Fehler, Seite und Version höchstens einmal am Tag,
+  nur `{ Version, Seite, Meldung }`, ohne Gerät, Karte oder Gruppe. Der Worker säubert die Meldung (Adressen ohne Parameter,
+  lange Zahlen und E-Mail-Adressen ersetzt), zählt nur Summen je Tag und löscht nach 60 Tagen. Ansehen: Admin → System →
+  🐞 Fehlerzähler (Zeitraum, Filter nach Version, alles löschen). Test- und lokale Umgebung melden nichts.
 
 ## Übungs-Rahmen und Kopfrechnen mit Stufen (Infrastruktur Etappe 4)
 

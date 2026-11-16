@@ -25,7 +25,7 @@
 //  und teilen sich den Offline-Speicher. Deshalb hat jede Umgebung ihr
 //  eigenes Präfix und räumt nur ihre eigenen Speicher auf.
 // ═══════════════════════════════════════════════════════
-const VERSION = 'v132';  // v132: Generalprobe (40 min, 50 Punkte), „Probe geschrieben“ mit Sammelstück und freien Spielen, Truhen im Weg, Rekord-Jagd
+const VERSION = 'v133';  // v133: Pass-Fenster und Scanner als eigenes Modul (Startseite schlanker), Fehlerzähler
 const PRAEFIX = /\/[^/]*-test\/$/i.test(new URL(self.registration.scope).pathname) ? 'lwtest-v' : 'lernwelt-v';
 const CACHE   = PRAEFIX + VERSION.replace(/^v/, '');        // z. B. 'lernwelt-v24' (Format wie bisher)
 const ALT     = CACHE + '-alt';                             // Dateien der Vorversion, noch nicht aufgefrischt
@@ -35,7 +35,7 @@ const ALT     = CACHE + '-alt';                             // Dateien der Vorve
 // (pruefen.py: Budget „Offline-Vorladen“ gilt für diese Liste.)
 const START = ['./', 'index.html', 'config.json', 'manifest.webmanifest',
                'gemeinsam/umgebung.js', 'gemeinsam/shared.js', 'gemeinsam/config-api.js', 'gemeinsam/navbar.js',
-               'gemeinsam/pass.js', 'gemeinsam/pass-extras.js', 'gemeinsam/sync-code.js', 'gemeinsam/sync.js',
+               'gemeinsam/pass.js', 'gemeinsam/pass-extras.js', 'gemeinsam/pass-ansicht.js', 'gemeinsam/sync-code.js', 'gemeinsam/sync.js',
                'gemeinsam/katalog.js', 'gemeinsam/freigabe.js', 'gemeinsam/wiederholung.js', 'gemeinsam/dorf-kern.js', 'gemeinsam/fonts.css', 'gemeinsam/lesehilfe.css', 'vendor/fflate.min.js',
                'daten/lernwelt-inhalte.json', 'daten/katalog.json', 'daten/dorf-inhalte.json',
                'fonts/nunito-latin-wght-normal.woff2', 'fonts/nunito-latin-ext-wght-normal.woff2',

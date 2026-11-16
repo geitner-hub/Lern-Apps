@@ -135,6 +135,10 @@ und gelbe Hinweise. Manuelle Checkliste nach Uploads: `werkzeuge/RAUCHTEST.md`.
   „Probe geschrieben“: Haken je Karte in der Klassenübersicht → Worker `/sync/admin/probe`, Tabelle `sync_probe`; iPad holt ihn mit `LernSync.probe()`
   → Abzeichen `probe-uN` mit Sammelstück (flag), Spiele frei bis zur nächsten Unit (`LernFreigabe.probeFrei`), Banner mit Rekord-Jagd (Speed-Rekord,
   `lernwelt-rekord`). Truhen im Weg: `LernJourney.truhen` (jede dritte Station, `geschenkTruhe('jt-<Station>')`). README → Generalprobe und Belohnungen.
+- **Startseite schlank, Fehlerzähler** (v133): Pass-Fenster und QR-Scanner in `gemeinsam/pass-ansicht.js` (`LernPassAnsicht`, lädt beim ersten
+  Antippen über `passAnsicht()` in index.html, nutzt die globalen Namen der Startseite – nur dort laden; in sw.js START). Fehlerzähler:
+  umgebung.js meldet im Live-Betrieb je Fehler/Seite/Version einmal am Tag an Worker `/fehler` (`cloudflare/fehler.js`, Tabelle `fehler_zaehler`,
+  nur Summen, 60 Tage); Admin System → 🐞 Fehlerzähler (`module/system-fehlerzaehler.js`).
 - **Live-Abfrage** (Unterrichtsmodus → 📊, Kinder-Seite `apps/typen/live.html?raum=CODE`, keine App in config.json, ohne Navbar):
   Worker-Teil `cloudflare/live.js` (Räume, Antworten, Quizze, Rückblicke in `SYNC_DB`; Räume nach dem Beenden gelöscht),
   Fragetypen `gemeinsam/live-fragen.js` (`LernLive`), Beamer `gemeinsam/admin/live.js`, Quiz-Editor Inhalte → Live-Quizze.

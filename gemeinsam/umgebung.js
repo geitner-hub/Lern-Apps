@@ -33,7 +33,7 @@
   'use strict';
   if (window.LW && window.LW.UMGEBUNG) return;          // doppeltes Laden verhindern
 
-  const VERSION = 'v132';                                 // ⚙ bei jedem Upload mit sw.js zusammen erhöhen
+  const VERSION = 'v133';                                 // ⚙ bei jedem Upload mit sw.js zusammen erhöhen
 
   // ── Umgebung erkennen ────────────────────────────────
   //  GitHub Pages: erster Pfadteil = Repo-Name (Lern-Apps bzw. Lern-Apps-test)
@@ -229,7 +229,9 @@
   // ── Fehlerprotokoll (Etappe 2) ───────────────────────
   const FEHLER_KEY = 'lernwelt-fehler';
   const FEHLER_MAX = 30;
-  const FEHLER_SENDEN = false;   // ⚙ erst nach Zustimmung der Schulleitung auf true (Worker-Route /fehler fehlt noch)
+  // Fehlerzähler (v133, mit Zustimmung der Schulleitung): nur im Live-Betrieb, je Fehler und Seite höchstens einmal am Tag,
+  //  ohne Gerätekennung – der Worker zählt nur Summen (cloudflare/fehler.js, Admin → System → 🐞 Fehlerzähler).
+  const FEHLER_SENDEN = UMGEBUNG === 'live';
   const FEHLER_URL = 'https://lern-apps-config.bennigeitner.workers.dev/fehler';
   function fehlerListe() {
     try { const l = JSON.parse(localStorage.getItem(FEHLER_KEY) || '[]'); return Array.isArray(l) ? l : []; } catch (e) { return []; }
@@ -240,12 +242,14 @@
       const seite = location.pathname.split('/').slice(-2).join('/');
       const l = fehlerListe();
       const gleich = l.find(f => f.m === m && f.s === seite);
-      if (gleich) { gleich.n = (gleich.n || 1) + 1; gleich.t = Date.now(); gleich.v = VERSION; }
-      else l.push({ t: Date.now(), m, w: String(wo || '').slice(0, 100), s: seite, v: VERSION });
+      const tag = new Date().toISOString().slice(0, 10);
+      let senden = true;
+      if (gleich) { senden = gleich.g !== tag || gleich.v !== VERSION; gleich.n = (gleich.n || 1) + 1; gleich.t = Date.now(); gleich.v = VERSION; gleich.g = tag; }
+      else l.push({ t: Date.now(), m, w: String(wo || '').slice(0, 100), s: seite, v: VERSION, g: tag });
       l.sort((a, b) => a.t - b.t);
       while (l.length > FEHLER_MAX) l.shift();
       localStorage.setItem(FEHLER_KEY, JSON.stringify(l));
-      if (FEHLER_SENDEN && !TEST && navigator.sendBeacon) navigator.sendBeacon(FEHLER_URL, JSON.stringify({ v: VERSION, s: seite, m }));
+      if (senden && FEHLER_SENDEN && navigator.sendBeacon && navigator.onLine !== false) navigator.sendBeacon(FEHLER_URL, JSON.stringify({ v: VERSION, s: seite, m }));
     } catch (e) {}
   }
   window.addEventListener('error', e => {

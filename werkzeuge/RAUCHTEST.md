@@ -42,6 +42,8 @@ Live am iPad über das Symbol auf dem Home-Bildschirm, Test in Safari.
 | 35 | English Journey (3D): Station mit Truhe meistern, Station antippen → „🎁 Truhe einsammeln“ | Truhe im Weg erst Holz, dann golden, danach offen; im Pass wartet eine Truhe mehr |
 | 36 | Admin → Gruppen → 🚦 Klassenübersicht → English Journey: bei einer Karte ✍️ antippen; iPad dieser Karte: Startseite öffnen (bis 3 Minuten) | Abzeichen „Probe Unit N geschrieben“ mit Sammelstück, Banner „Spiele frei“, Spielsperre weg; nach Freigabe eines Abschnitts der nächsten Unit gilt die Sperre wieder |
 | 37 | Vokabeltrainer → Unit → ⚡ Speed zweimal spielen | Ergebnis nennt den eigenen Rekord, die Speed-Kachel zeigt ihn |
+| 38 | Startseite: Pass antippen (alle vier Reiter), Truhe öffnen, 📷 Scannen, Kopfleiste → Profil | alles wie bisher; beim ersten Antippen kurz „⏳ Einen Moment …“, danach sofort |
+| 39 | Admin → System → 🐞 Fehlerzähler (nach dem Einfügen von `fehler.js` und `worker.js`) | Liste lädt („Keine Fehler gemeldet“ oder Zeilen mit Anzahl, Version, Seite, Meldung) |
 
 **Nur in der Testumgebung zusätzlich:** Oben steht „🧪 TEST · vXX“. Im Admin eine Kleinigkeit ändern und
 speichern → Meldung „Testumgebung: Speichern und Sicherung sind hier abgeschaltet“. Danach live den Pass
