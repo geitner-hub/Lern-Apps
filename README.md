@@ -925,6 +925,14 @@ Niveau (★ alle · ★★ Standard und Profi · ★★★ Profi), Hören macht 
   Gruppen → 📒 Laufzettel wählbar (`reihenfolge: { wer: 'frei'|'schritt'|'streng' }`, gleicher Vorrang): **Schritt für Schritt** (Standard,
   ohne Eintrag) = alle Schritte außer Apps und Extras abgehakt, **streng** = auch die Apps, **frei** = keine Kette. Wahl-Abschnitte sind nie
   gesperrt, mit Admin-Anmeldung keine Sperre.
+- **Vorschau statt Schloss (v134):** Ein noch gesperrter Abschnitt zeigt trotzdem alle Aufgaben (im Laufzettel 👀 „Schon ansehen · abhaken
+  nach …“). Lesen und offene Apps gehen; nur die Haken warten („🔒 Abhaken, sobald … fertig ist“). Oben steht, welche Haken im Abschnitt
+  davor noch fehlen, mit Sprung dorthin. Die Stationskarte im 3D-Ort startet eine offene App immer und nennt nur die fehlenden Haken.
+- **Eine Reihenfolge für Weg und Laufzettel (v134):** Die Stationen jeder Unit stehen in `journey6.json` (und damit im 3D-Ort, `LAYOUT.reihe`
+  in `journey-welt.js`) in der Reihenfolge der Laufzettel-Abschnitte. „braucht“ folgt daraus: eine Station braucht die Stationen des
+  vorigen Pflicht-Abschnitts mit Stationen (Wahl-Abschnitte zählen nicht), die Stationen des ersten Abschnitts die Brücke aus der Unit davor,
+  das Finale alle Stationen. IDs blieben gleich – gemeisterte Stationen bleiben gemeistert; Stationen können jetzt später aufgehen als vorher.
+  Neue Station im Journey-Editor: an der Stelle ihres Abschnitts einsortieren.
 - **Ein Hefteintrag, mehrere Stationen (v111):** Hat ein Abschnitt mehrere App-Stationen, gehört der Hefteintrag zur ersten
   (Schild „📒 HE 9 zuerst“ in Karte und Laufzettel). Weitere Stationen zeigen nur „📒 Lies vorher noch einmal HE 9“ (`bezug().heHier === false`).
 - **Bezug zum Hefteintrag (v112):** Übungen und App-Schritte ohne Bezug zum Hefteintrag des Abschnitts (reine Wortschatz-Übungen,

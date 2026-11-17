@@ -290,15 +290,15 @@
     },
   });
   // ── Stationen je Ort nach ID (v100: mehr Wörter-Stationen, linking words, Präpositionen) ──
-  //  reihe: Stations-IDs in Weg-Reihenfolge (wie daten/journey6.json) · alt: Reihenfolge der Wahrzeichen-Liste oben (bis v99)
+  //  reihe: Stations-IDs in Weg-Reihenfolge (wie daten/journey6.json; seit v134 = Reihenfolge der Laufzettel-Abschnitte) · alt: Reihenfolge der Wahrzeichen-Liste oben (bis v99)
   //  z/seite: je Station in reihe · neu: Wahrzeichen der neuen Stationen. Plätze im Abstand von 12, mittig um x = 0.
   //  Station nicht in reihe (z. B. neue Station in journey6.json ohne Platz): gleichmäßig verteilt, ohne Wahrzeichen.
   const ABSTAND = 12;
   const LAYOUT = {
     hafen: {
-      reihe: ['u1-grundwortschatz', 'u1-simple-past', 'u1-theme1', 'u1-didnt', 'u1-was-were', 'u1-theme2', 'u1-objektpronomen', 'u1-story', 'u1-weitere', 'u1-linking-words', 'u1-anwenden', 'u1-finale'],
-      z: [12, 2, 11, 4, 12, -6, -2, 4, 10, 3, 10, 2],
-      seite: [[0, -1], [0, -1], [0, -1], [0, -1], [0, 1], [0, -1], [0, -1], [0, -1], [0, -1], [0, -1], [0, 1], [1, -1]],
+      reihe: ['u1-grundwortschatz', 'u1-simple-past', 'u1-didnt', 'u1-theme1', 'u1-theme2', 'u1-story', 'u1-was-were', 'u1-objektpronomen', 'u1-weitere', 'u1-linking-words', 'u1-anwenden', 'u1-finale'],
+      z: [12, 2, 4, 11, -6, 4, 12, -2, 10, 3, 10, 2],
+      seite: [[0, -1], [0, -1], [0, -1], [0, -1], [0, -1], [0, -1], [0, 1], [0, -1], [0, -1], [0, -1], [0, 1], [1, -1]],
       alt: ['u1-grundwortschatz', 'u1-simple-past', 'u1-theme1', 'u1-didnt', 'u1-was-were', 'u1-theme2', 'u1-objektpronomen', 'u1-anwenden', 'u1-finale'],
       neu: {
         'u1-story': (B, x, z) => {   // Aquarium: blaues Haus mit Fisch
@@ -317,7 +317,7 @@
       },
     },
     strasse: {
-      reihe: ['u2-grundwortschatz', 'u2-theme1', 'u2-there-is', 'u2-theme2', 'u2-did-fragewort', 'u2-did-kurz', 'u2-plural', 'u2-can-mustnt', 'u2-story', 'u2-weitere', 'u2-anwenden', 'u2-finale'],
+      reihe: ['u2-grundwortschatz', 'u2-there-is', 'u2-theme1', 'u2-theme2', 'u2-story', 'u2-did-fragewort', 'u2-did-kurz', 'u2-plural', 'u2-can-mustnt', 'u2-weitere', 'u2-anwenden', 'u2-finale'],
       alt: ['u2-grundwortschatz', 'u2-there-is', 'u2-theme2', 'u2-did-fragewort', 'u2-did-kurz', 'u2-plural', 'u2-can-mustnt', 'u2-anwenden', 'u2-finale'], zEnde: 5,
       neu: {
         'u2-theme1': (B, x, z) => { laden(B, x, z - 5, 7, 0xe8c9a0, 0x8a5a33); [-2, 0, 2].forEach((d, i) => B.box(x + d, 0.7, z - 2.3, 1.3, 0.6, 0.3, [0xc89b5a, 0xd9a066, 0xb07a3a][i])); B.box(x, 5.6, z - 2.4, 4, 0.9, 0.15, 0x8a5a33); },
@@ -328,7 +328,7 @@
       },
     },
     sport: {
-      reihe: ['u3-theme1', 'u3-present-progressive', 'u3-gegensaetze', 'u3-theme2', 'u3-should', 'u3-much-many', 'u3-story', 'u3-skills', 'u3-praepositionen', 'u3-anwenden', 'u3-finale'],
+      reihe: ['u3-theme1', 'u3-gegensaetze', 'u3-theme2', 'u3-should', 'u3-story', 'u3-present-progressive', 'u3-much-many', 'u3-skills', 'u3-praepositionen', 'u3-anwenden', 'u3-finale'],
       alt: ['u3-theme1', 'u3-present-progressive', 'u3-theme2', 'u3-should', 'u3-much-many', 'u3-anwenden', 'u3-finale'], zEnde: 5,
       neu: {
         'u3-gegensaetze': (B, x, z) => { haus(B, x, z - 6, 9, 5, 5, 0xb9b2a8, 0x7a6a5a, 0, false); B.box(x, 0, z - 3.45, 2.4, 2.6, 0.12, C.blau); B.box(x, 3.4, z - 3.4, 5, 0.8, 0.12, C.weiss); for (let i = 0; i < 4; i++) B.box(x - 3.4 + i * 2.3, 1.6, z - 3.42, 1.2, 0.8, 0.06, 0xbfe1f0); },
@@ -342,7 +342,7 @@
       },
     },
     stadt: {
-      reihe: ['u4-theme1', 'u4-komparativ', 'u4-good-better-best', 'u4-superlativ', 'u4-weitere', 'u4-story', 'u4-have-to', 'u4-zeitangaben', 'u4-story-past', 'u4-focus', 'u4-skills', 'u4-anwenden', 'u4-finale'],
+      reihe: ['u4-theme1', 'u4-weitere', 'u4-zeitangaben', 'u4-story', 'u4-story-past', 'u4-komparativ', 'u4-good-better-best', 'u4-superlativ', 'u4-anwenden', 'u4-have-to', 'u4-focus', 'u4-skills', 'u4-finale'],
       alt: ['u4-theme1', 'u4-komparativ', 'u4-good-better-best', 'u4-superlativ', 'u4-story', 'u4-have-to', 'u4-zeitangaben', 'u4-story-past', 'u4-anwenden', 'u4-finale'], zEnde: 3,
       neu: {
         'u4-weitere': (B, x, z) => { laden(B, x, z - 5, 7, 0x3b3f4a, C.gelb); B.box(x - 1, 0.8, z - 2.3, 0.9, 1.2, 0.2, 0xc8873a); B.box(x - 1, 2, z - 2.3, 0.3, 1.4, 0.2, 0x5a3b26); [1, 2].forEach(d => B.box(x + d, 0.8, z - 2.3, 0.7, 0.7, 0.2, d % 2 ? C.rot : C.weiss)); },
@@ -352,7 +352,7 @@
       },
     },
     moor: {
-      reihe: ['u5-grundwortschatz', 'u5-theme1', 'u5-will', 'u5-will-meinung', 'u5-theme2', 'u5-should', 'u5-wortstellung', 'u5-story', 'u5-weitere', 'u5-skills', 'u5-anwenden', 'u5-finale'],
+      reihe: ['u5-grundwortschatz', 'u5-theme1', 'u5-theme2', 'u5-should', 'u5-story', 'u5-will', 'u5-will-meinung', 'u5-wortstellung', 'u5-weitere', 'u5-skills', 'u5-anwenden', 'u5-finale'],
       alt: ['u5-grundwortschatz', 'u5-will', 'u5-will-meinung', 'u5-theme2', 'u5-should', 'u5-wortstellung', 'u5-anwenden', 'u5-finale'], zEnde: 2, zFest: { 'u5-theme2': 3 },
       neu: {
         'u5-theme1': (B, x, z) => [[-2.2, C.orange], [1.6, C.gruen]].forEach(([d, f]) => { for (let i = 0; i < 4; i++) B.box(x + d, i * 0.5, z - 3, 2.6 - i * 0.65, 0.5, 2.8, f); B.box(x + d, 0, z - 1.58, 0.6, 0.9, 0.06, 0x3b3f4a); }),
