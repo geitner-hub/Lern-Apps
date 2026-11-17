@@ -31,10 +31,16 @@
      "thema": "en.5.simple-past",
      "titel": "simple past (Wiederholung)",
      "ort": "Fischmarkt",
-     "braucht": [
-      "u1-grundwortschatz"
-     ],
+     "braucht": [],
      "start": "en.5.simple-past.mix"
+    },
+    {
+     "id": "u1-didnt",
+     "art": "grammatik",
+     "thema": "en.6.simple-past.didnt",
+     "titel": "didn't",
+     "ort": "Hafenkran",
+     "braucht": []
     },
     {
      "id": "u1-theme1",
@@ -43,27 +49,9 @@
      "titel": "Theme 1",
      "ort": "Hafencafé",
      "braucht": [
-      "u1-grundwortschatz"
-     ]
-    },
-    {
-     "id": "u1-didnt",
-     "art": "grammatik",
-     "thema": "en.6.simple-past.didnt",
-     "titel": "didn't",
-     "ort": "Hafenkran",
-     "braucht": [
-      "u1-theme1"
-     ]
-    },
-    {
-     "id": "u1-was-were",
-     "art": "grammatik",
-     "thema": "en.6.was-were.mix",
-     "titel": "was / were + Kurzantworten",
-     "ort": "Bootssteg",
-     "braucht": [
-      "u1-theme1"
+      "u1-grundwortschatz",
+      "u1-simple-past",
+      "u1-didnt"
      ]
     },
     {
@@ -74,16 +62,6 @@
      "ort": "Schule",
      "braucht": [
       "u1-theme1"
-     ]
-    },
-    {
-     "id": "u1-objektpronomen",
-     "art": "grammatik",
-     "thema": "en.6.objektpronomen.mix",
-     "titel": "Objektpronomen",
-     "ort": "Schulhof",
-     "braucht": [
-      "u1-theme2"
      ]
     },
     {
@@ -100,13 +78,33 @@
      ]
     },
     {
+     "id": "u1-was-were",
+     "art": "grammatik",
+     "thema": "en.6.was-were.mix",
+     "titel": "was / were + Kurzantworten",
+     "ort": "Bootssteg",
+     "braucht": [
+      "u1-story"
+     ]
+    },
+    {
+     "id": "u1-objektpronomen",
+     "art": "grammatik",
+     "thema": "en.6.objektpronomen.mix",
+     "titel": "Objektpronomen",
+     "ort": "Schulhof",
+     "braucht": [
+      "u1-was-were"
+     ]
+    },
+    {
      "id": "u1-weitere",
      "art": "woerter",
      "thema": "en.6.vok.u1.weitere2",
      "titel": "Weitere Wörter",
      "ort": "Eisdiele",
      "braucht": [
-      "u1-story"
+      "u1-objektpronomen"
      ]
     },
     {
@@ -117,7 +115,7 @@
      "titel": "linking words (and, but, so, because)",
      "ort": "Postamt",
      "braucht": [
-      "u1-story"
+      "u1-weitere"
      ]
     },
     {
@@ -127,7 +125,7 @@
      "titel": "Berry's holiday blog",
      "ort": "Bank am Wasser",
      "braucht": [
-      "u1-objektpronomen"
+      "u1-linking-words"
      ]
     },
     {
@@ -139,12 +137,12 @@
      "braucht": [
       "u1-grundwortschatz",
       "u1-simple-past",
-      "u1-theme1",
       "u1-didnt",
-      "u1-was-were",
+      "u1-theme1",
       "u1-theme2",
-      "u1-objektpronomen",
       "u1-story",
+      "u1-was-were",
+      "u1-objektpronomen",
       "u1-weitere",
       "u1-linking-words",
       "u1-anwenden"
@@ -909,6 +907,16 @@
      ]
     },
     {
+     "id": "u2-there-is",
+     "art": "grammatik",
+     "thema": "en.6.there-is.mix",
+     "titel": "there is / are + some / any",
+     "ort": "Supermarkt",
+     "braucht": [
+      "u1-finale"
+     ]
+    },
+    {
      "id": "u2-theme1",
      "art": "woerter",
      "thema": "en.6.vok.u2.theme1",
@@ -918,17 +926,8 @@
      "titel": "Theme 1 + Weitere Wörter",
      "ort": "Bäckerei",
      "braucht": [
-      "u2-grundwortschatz"
-     ]
-    },
-    {
-     "id": "u2-there-is",
-     "art": "grammatik",
-     "thema": "en.6.there-is.mix",
-     "titel": "there is / are + some / any",
-     "ort": "Supermarkt",
-     "braucht": [
-      "u2-grundwortschatz"
+      "u2-grundwortschatz",
+      "u2-there-is"
      ]
     },
     {
@@ -938,47 +937,7 @@
      "titel": "Theme 2",
      "ort": "Hundeheim",
      "braucht": [
-      "u2-grundwortschatz"
-     ]
-    },
-    {
-     "id": "u2-did-fragewort",
-     "art": "grammatik",
-     "thema": "en.6.simple-past.fragewort",
-     "titel": "Fragen mit did + Fragewort",
-     "ort": "Ampel",
-     "braucht": [
-      "u2-theme2"
-     ]
-    },
-    {
-     "id": "u2-did-kurz",
-     "art": "grammatik",
-     "thema": "en.6.simple-past.kurzantworten",
-     "titel": "Did …? + Kurzantworten",
-     "ort": "Frisör",
-     "braucht": [
-      "u2-theme2"
-     ]
-    },
-    {
-     "id": "u2-plural",
-     "art": "grammatik",
-     "thema": "en.6.plural.mix",
-     "titel": "Plural",
-     "ort": "Gemüseladen",
-     "braucht": [
-      "u2-theme2"
-     ]
-    },
-    {
-     "id": "u2-can-mustnt",
-     "art": "grammatik",
-     "thema": "en.6.can-mustnt.mix",
-     "titel": "can / mustn't",
-     "ort": "Park",
-     "braucht": [
-      "u2-theme2"
+      "u2-theme1"
      ]
     },
     {
@@ -992,13 +951,53 @@
      ]
     },
     {
+     "id": "u2-did-fragewort",
+     "art": "grammatik",
+     "thema": "en.6.simple-past.fragewort",
+     "titel": "Fragen mit did + Fragewort",
+     "ort": "Ampel",
+     "braucht": [
+      "u2-story"
+     ]
+    },
+    {
+     "id": "u2-did-kurz",
+     "art": "grammatik",
+     "thema": "en.6.simple-past.kurzantworten",
+     "titel": "Did …? + Kurzantworten",
+     "ort": "Frisör",
+     "braucht": [
+      "u2-did-fragewort"
+     ]
+    },
+    {
+     "id": "u2-plural",
+     "art": "grammatik",
+     "thema": "en.6.plural.mix",
+     "titel": "Plural",
+     "ort": "Gemüseladen",
+     "braucht": [
+      "u2-did-kurz"
+     ]
+    },
+    {
+     "id": "u2-can-mustnt",
+     "art": "grammatik",
+     "thema": "en.6.can-mustnt.mix",
+     "titel": "can / mustn't",
+     "ort": "Park",
+     "braucht": [
+      "u2-plural"
+     ]
+    },
+    {
      "id": "u2-weitere",
      "art": "woerter",
      "thema": "en.6.vok.u2.weitere3",
      "titel": "Weitere Wörter 2",
      "ort": "Spielplatz",
      "braucht": [
-      "u2-story"
+      "u2-can-mustnt"
      ]
     },
     {
@@ -1019,14 +1018,14 @@
      "ort": "Straßenfest",
      "braucht": [
       "u2-grundwortschatz",
-      "u2-theme1",
       "u2-there-is",
+      "u2-theme1",
       "u2-theme2",
+      "u2-story",
       "u2-did-fragewort",
       "u2-did-kurz",
       "u2-plural",
       "u2-can-mustnt",
-      "u2-story",
       "u2-weitere",
       "u2-anwenden"
      ]
@@ -2085,24 +2084,13 @@
      ]
     },
     {
-     "id": "u3-present-progressive",
-     "art": "grammatik",
-     "thema": "en.5.present-progressive",
-     "titel": "present progressive (Wiederholung)",
-     "ort": "Sportplatz",
-     "braucht": [
-      "u3-theme1"
-     ],
-     "start": "en.5.present-progressive.mix"
-    },
-    {
      "id": "u3-gegensaetze",
      "art": "woerter",
      "thema": "en.6.vok.u3.gegensaetzemitun",
      "titel": "Gegensätze mit „un-“",
      "ort": "Turnhalle",
      "braucht": [
-      "u3-theme1"
+      "u2-finale"
      ]
     },
     {
@@ -2112,7 +2100,8 @@
      "titel": "Theme 2",
      "ort": "Arztpraxis",
      "braucht": [
-      "u3-theme1"
+      "u3-theme1",
+      "u3-gegensaetze"
      ]
     },
     {
@@ -2122,17 +2111,8 @@
      "titel": "should / shouldn't",
      "ort": "Apotheke",
      "braucht": [
-      "u3-theme2"
-     ]
-    },
-    {
-     "id": "u3-much-many",
-     "art": "grammatik",
-     "thema": "en.6.much-many.formen",
-     "titel": "much / many / lots of",
-     "ort": "Marktstand",
-     "braucht": [
-      "u3-theme2"
+      "u3-theme1",
+      "u3-gegensaetze"
      ]
     },
     {
@@ -2145,7 +2125,29 @@
      "titel": "Story + Focus on language",
      "ort": "Schwimmbad",
      "braucht": [
-      "u3-theme2"
+      "u3-theme2",
+      "u3-should"
+     ]
+    },
+    {
+     "id": "u3-present-progressive",
+     "art": "grammatik",
+     "thema": "en.5.present-progressive",
+     "titel": "present progressive (Wiederholung)",
+     "ort": "Sportplatz",
+     "braucht": [
+      "u3-story"
+     ],
+     "start": "en.5.present-progressive.mix"
+    },
+    {
+     "id": "u3-much-many",
+     "art": "grammatik",
+     "thema": "en.6.much-many.formen",
+     "titel": "much / many / lots of",
+     "ort": "Marktstand",
+     "braucht": [
+      "u3-present-progressive"
      ]
     },
     {
@@ -2155,7 +2157,7 @@
      "titel": "Skills training",
      "ort": "Kletterwand",
      "braucht": [
-      "u3-story"
+      "u3-much-many"
      ]
     },
     {
@@ -2166,7 +2168,7 @@
      "titel": "Präpositionen (Ort)",
      "ort": "Spielplatz",
      "braucht": [
-      "u3-story"
+      "u3-skills"
      ]
     },
     {
@@ -2176,7 +2178,7 @@
      "titel": "Was passiert im Park?",
      "ort": "Park",
      "braucht": [
-      "u3-much-many"
+      "u3-skills"
      ]
     },
     {
@@ -2187,12 +2189,12 @@
      "ort": "Tribüne",
      "braucht": [
       "u3-theme1",
-      "u3-present-progressive",
       "u3-gegensaetze",
       "u3-theme2",
       "u3-should",
-      "u3-much-many",
       "u3-story",
+      "u3-present-progressive",
+      "u3-much-many",
       "u3-skills",
       "u3-praepositionen",
       "u3-anwenden"
@@ -2996,36 +2998,6 @@
      ]
     },
     {
-     "id": "u4-komparativ",
-     "art": "grammatik",
-     "thema": "en.6.steigerung.vergleiche",
-     "titel": "Komparativ + than",
-     "ort": "Schaufenster",
-     "braucht": [
-      "u4-theme1"
-     ]
-    },
-    {
-     "id": "u4-good-better-best",
-     "art": "grammatik",
-     "thema": "en.6.good-better-best.formen",
-     "titel": "good / better / best",
-     "ort": "Kino",
-     "braucht": [
-      "u4-theme1"
-     ]
-    },
-    {
-     "id": "u4-superlativ",
-     "art": "grammatik",
-     "thema": "en.6.superlativ.formen",
-     "titel": "Superlativ",
-     "ort": "Kaufhaus",
-     "braucht": [
-      "u4-theme1"
-     ]
-    },
-    {
      "id": "u4-weitere",
      "art": "woerter",
      "thema": "en.6.vok.u4.weitere2",
@@ -3039,33 +3011,24 @@
      ]
     },
     {
-     "id": "u4-story",
-     "art": "woerter",
-     "thema": "en.6.vok.u4.story",
-     "titel": "Story",
-     "ort": "Charity Shop",
-     "braucht": [
-      "u4-theme1"
-     ]
-    },
-    {
-     "id": "u4-have-to",
-     "art": "grammatik",
-     "thema": "en.6.have-to.formen",
-     "titel": "have to / I'd like to",
-     "ort": "Wohnhaus",
-     "braucht": [
-      "u4-story"
-     ]
-    },
-    {
      "id": "u4-zeitangaben",
      "art": "grammatik",
      "thema": "en.6.zeitangaben.formen",
      "titel": "on / in / at (Zeit)",
      "ort": "Rathausuhr",
      "braucht": [
-      "u4-story"
+      "u4-theme1"
+     ]
+    },
+    {
+     "id": "u4-story",
+     "art": "woerter",
+     "thema": "en.6.vok.u4.story",
+     "titel": "Story",
+     "ort": "Charity Shop",
+     "braucht": [
+      "u4-weitere",
+      "u4-zeitangaben"
      ]
     },
     {
@@ -3075,27 +3038,39 @@
      "titel": "simple past (Story)",
      "ort": "Café",
      "braucht": [
-      "u4-story"
+      "u4-weitere",
+      "u4-zeitangaben"
      ]
     },
     {
-     "id": "u4-focus",
-     "art": "woerter",
-     "thema": "en.6.vok.u4.focusonlanguage",
-     "titel": "Focus on language",
-     "ort": "Bücherei",
+     "id": "u4-komparativ",
+     "art": "grammatik",
+     "thema": "en.6.steigerung.vergleiche",
+     "titel": "Komparativ + than",
+     "ort": "Schaufenster",
      "braucht": [
-      "u4-story"
+      "u4-story",
+      "u4-story-past"
      ]
     },
     {
-     "id": "u4-skills",
-     "art": "woerter",
-     "thema": "en.6.vok.u4.skillstraining",
-     "titel": "Skills training",
-     "ort": "Jugendzentrum",
+     "id": "u4-good-better-best",
+     "art": "grammatik",
+     "thema": "en.6.good-better-best.formen",
+     "titel": "good / better / best",
+     "ort": "Kino",
      "braucht": [
-      "u4-focus"
+      "u4-komparativ"
+     ]
+    },
+    {
+     "id": "u4-superlativ",
+     "art": "grammatik",
+     "thema": "en.6.superlativ.formen",
+     "titel": "Superlativ",
+     "ort": "Kaufhaus",
+     "braucht": [
+      "u4-komparativ"
      ]
     },
     {
@@ -3105,7 +3080,42 @@
      "titel": "Shops vergleichen",
      "ort": "Einkaufsstraße",
      "braucht": [
-      "u4-story-past"
+      "u4-komparativ"
+     ]
+    },
+    {
+     "id": "u4-have-to",
+     "art": "grammatik",
+     "thema": "en.6.have-to.formen",
+     "titel": "have to / I'd like to",
+     "ort": "Wohnhaus",
+     "braucht": [
+      "u4-good-better-best",
+      "u4-superlativ",
+      "u4-anwenden"
+     ]
+    },
+    {
+     "id": "u4-focus",
+     "art": "woerter",
+     "thema": "en.6.vok.u4.focusonlanguage",
+     "titel": "Focus on language",
+     "ort": "Bücherei",
+     "braucht": [
+      "u4-good-better-best",
+      "u4-superlativ",
+      "u4-anwenden"
+     ]
+    },
+    {
+     "id": "u4-skills",
+     "art": "woerter",
+     "thema": "en.6.vok.u4.skillstraining",
+     "titel": "Skills training",
+     "ort": "Jugendzentrum",
+     "braucht": [
+      "u4-have-to",
+      "u4-focus"
      ]
     },
     {
@@ -3116,17 +3126,17 @@
      "ort": "Stadtplatz",
      "braucht": [
       "u4-theme1",
+      "u4-weitere",
+      "u4-zeitangaben",
+      "u4-story",
+      "u4-story-past",
       "u4-komparativ",
       "u4-good-better-best",
       "u4-superlativ",
-      "u4-weitere",
-      "u4-story",
+      "u4-anwenden",
       "u4-have-to",
-      "u4-zeitangaben",
-      "u4-story-past",
       "u4-focus",
-      "u4-skills",
-      "u4-anwenden"
+      "u4-skills"
      ]
     }
    ],
@@ -4095,33 +4105,13 @@
      ]
     },
     {
-     "id": "u5-will",
-     "art": "grammatik",
-     "thema": "en.6.future.will",
-     "titel": "will-future",
-     "ort": "Wetterstation",
-     "braucht": [
-      "u5-grundwortschatz"
-     ]
-    },
-    {
-     "id": "u5-will-meinung",
-     "art": "grammatik",
-     "thema": "en.6.will-meinung.formen",
-     "titel": "I think / I'm sure / maybe + will",
-     "ort": "Wegweiser",
-     "braucht": [
-      "u5-grundwortschatz"
-     ]
-    },
-    {
      "id": "u5-theme2",
      "art": "woerter",
      "thema": "en.6.vok.u5.theme2",
      "titel": "Theme 2",
      "ort": "Holzbrücke",
      "braucht": [
-      "u5-grundwortschatz"
+      "u5-theme1"
      ]
     },
     {
@@ -4131,17 +4121,7 @@
      "titel": "should (Regeln)",
      "ort": "Infotafel",
      "braucht": [
-      "u5-theme2"
-     ]
-    },
-    {
-     "id": "u5-wortstellung",
-     "art": "grammatik",
-     "thema": "en.6.wortstellung.saetze",
-     "titel": "Wortstellung S-P-O",
-     "ort": "Steinkreuz",
-     "braucht": [
-      "u5-theme2"
+      "u5-theme1"
      ]
     },
     {
@@ -4151,7 +4131,39 @@
      "titel": "Story",
      "ort": "Jugendherberge",
      "braucht": [
-      "u5-theme2"
+      "u5-theme2",
+      "u5-should"
+     ]
+    },
+    {
+     "id": "u5-will",
+     "art": "grammatik",
+     "thema": "en.6.future.will",
+     "titel": "will-future",
+     "ort": "Wetterstation",
+     "braucht": [
+      "u5-story"
+     ]
+    },
+    {
+     "id": "u5-will-meinung",
+     "art": "grammatik",
+     "thema": "en.6.will-meinung.formen",
+     "titel": "I think / I'm sure / maybe + will",
+     "ort": "Wegweiser",
+     "braucht": [
+      "u5-story"
+     ]
+    },
+    {
+     "id": "u5-wortstellung",
+     "art": "grammatik",
+     "thema": "en.6.wortstellung.saetze",
+     "titel": "Wortstellung S-P-O",
+     "ort": "Steinkreuz",
+     "braucht": [
+      "u5-will",
+      "u5-will-meinung"
      ]
     },
     {
@@ -4164,7 +4176,7 @@
      "titel": "Weitere Wörter + Focus on language",
      "ort": "Schafweide",
      "braucht": [
-      "u5-story"
+      "u5-wortstellung"
      ]
     },
     {
@@ -4187,7 +4199,7 @@
      "titel": "Klassenfahrt planen",
      "ort": "Bahnhof",
      "braucht": [
-      "u5-wortstellung"
+      "u5-skills"
      ]
     },
     {
@@ -4199,12 +4211,12 @@
      "braucht": [
       "u5-grundwortschatz",
       "u5-theme1",
-      "u5-will",
-      "u5-will-meinung",
       "u5-theme2",
       "u5-should",
-      "u5-wortstellung",
       "u5-story",
+      "u5-will",
+      "u5-will-meinung",
+      "u5-wortstellung",
       "u5-weitere",
       "u5-skills",
       "u5-anwenden"

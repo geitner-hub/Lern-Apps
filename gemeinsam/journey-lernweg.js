@@ -28,7 +28,9 @@
 //        Station des Abschnitts davor (sonst danach) – „Auch an diesem Platz“.
 //
 //  Abschnitt-Kette (v109): Pflicht-Abschnitte öffnen sich nacheinander innerhalb einer Unit – config.journey…reihenfolge je Gruppe/Klasse
-//  'schritt' (Standard: alles außer Apps abgehakt) | 'streng' (auch Apps) | 'frei'. Gesperrte stehen mit 🔒 im Laufzettel.
+//  'schritt' (Standard: alles außer Apps abgehakt) | 'streng' (auch Apps) | 'frei'. Seit v134 „Vorschau statt Schloss“: ein noch
+//  gesperrter Abschnitt zeigt alle Aufgaben (👀 im Laufzettel), Apps lassen sich spielen, nur das Abhaken wartet; oben steht, welche
+//  Haken im Abschnitt davor noch fehlen (fehltIn).
 //    LernJourneyWeg.sperre({ J, cfg, z, admin, station }) → { abschnitt, durch } oder null (Karte und Start im Weg)
 //
 //  Etappe 5 (alles in die Stationen): zeige(host, { …, panel: true, schliessen }) zeigt einen Abschnitt als Seitenleiste am 3D-Ort
@@ -45,7 +47,7 @@
   const NIVEAU = { 1: ['★', 'Basis'], 2: ['★★', 'Standard'], 3: ['★★★', 'Profi'] };
   const SMILEY = ['😟', '😐', '😀'];
   const SYM = { hefteintrag: '📒', uebung: '✏️', app: '🎮', lesen: '📖', vokabeln: '📘', partner: '👥', hoeren: '🎧', extra: '⭐' };
-  let O = null, host = null, offen = null, ansicht = 'zettel', geschrieben = new Set(), nurStation = null;
+  let O = null, host = null, offen = null, ansicht = 'zettel', geschrieben = new Set(), nurStation = null, vorschau = null;   // vorschau: Abschnitt, der aufhält (v134)
 
   // ── Speicher (Pass) ──────────────────────────────────
   const P = () => window.LernPass;
@@ -280,6 +282,8 @@
       if (s.art === 'extra' && s.thema && window.LernKatalog && LernKatalog.thema(s.thema)) innen += `<button type="button" class="jw-neben" data-jw-thema="${esc(s.thema)}">🎮 In der Lernwelt üben</button>`;
       fuss = haken(s, s.art === 'lesen' ? 'Gelesen' : s.art === 'extra' ? 'Gemacht (freiwillig)' : 'Gemacht');
     }
+    // Vorschau (v134): Der Abschnitt davor ist noch nicht fertig – lesen und Apps spielen ja, abhaken noch nicht
+    if (vorschau && !an && s.art !== 'app' && s.art !== 'extra') fuss = `<div class="jw-auto jw-wartet"><i>🔒</i>Abhaken, sobald „${esc(vorschau.titel)}“ fertig ist</div>`;
     return `<article class="jw-schritt jw-${s.art}${an ? ' fertig' : ''}" id="jw-${esc(s.id)}"><h4>${kopf}${nv}</h4>${innen}<div class="jw-fuss">${fuss}</div></article>`;
   }
 
@@ -328,8 +332,8 @@
   function zeileHTML(a) {
     const f = fortschritt(a), l = schritte(a).filter(s => s.art !== 'extra'), zu = gesperrtDurch(a);
     return `<button type="button" class="jw-zeile${f.fertig ? ' fertig' : zu ? ' zu' : f.n ? ' arbeit' : ''}" data-jw-abschnitt="${esc(a.id)}">
-      <span class="jw-ico">${f.fertig ? '✅' : zu ? '🔒' : esc(a.ico || '📍')}</span>
-      <span class="jw-txt"><b>${esc(a.titel)}</b><small>${zu ? `Erst „${esc(zu.titel)}“ fertig machen` : esc([seitenA(a) && '📖 ' + seitenA(a), a.kurz].filter(Boolean).join(' · '))}</small>
+      <span class="jw-ico">${f.fertig ? '✅' : zu ? '👀' : esc(a.ico || '📍')}</span>
+      <span class="jw-txt"><b>${esc(a.titel)}</b><small>${zu ? `Schon ansehen · abhaken nach „${esc(zu.titel)}“` : esc([seitenA(a) && '📖 ' + seitenA(a), a.kurz].filter(Boolean).join(' · '))}</small>
         <span class="jw-punkte" aria-hidden="true">${l.map(s => `<i class="${erledigt(s) ? 'an' : ''}" title="${esc(s.art)}">${SYM[s.art]}</i>`).join('')}</span></span>
       <span class="jw-zahl">${f.n}/${f.von}</span></button>`;
   }
@@ -352,21 +356,35 @@
       ${schluss.length ? `<h3 class="jw-gruppe">🎯 Zum Schluss</h3>${schluss.map(zeileHTML).join('')}` : ''}
       ${O.fuss ? O.fuss() : ''}`;
   }
-  function gesperrtHTML(a, zu) {
-    return `${O.panel ? '<button type="button" class="jw-zurueck" data-jw-zu>✕ Schließen</button>' : '<button type="button" class="jw-zurueck" data-jw-zettel>‹ Laufzettel</button>'}
-      <div class="jw-kopf"><h2>🔒 ${esc(a.titel)}</h2><p class="jw-klein">${esc(seitenA(a) ? '📖 ' + seitenA(a) : '')}</p></div>
-      <div class="jw-hinweis">Dieser Abschnitt öffnet sich, wenn du „${esc(zu.titel)}“ fertig hast: ${reihenfolge() === 'streng' ? 'Hefteintrag, Übungen und die App' : 'Hefteintrag und Übungen'} abhaken.
-        <div class="jw-chips"><button type="button" class="jw-chip" data-jw-abschnitt="${esc(zu.id)}">→ ${esc(zu.ico || '')} ${esc(zu.titel)}</button></div></div>`;
+  /** Was im aufhaltenden Abschnitt noch fehlt – kurze Namen für den Hinweis in der Vorschau (v134) */
+  function fehltIn(x) {
+    const vorher = O.unit; O.unit = (O.J.units || []).find(u => (u.abschnitte || []).includes(x)) || O.unit;
+    try {
+      const streng = reihenfolge() === 'streng';
+      return schritte(x).filter(s => s.art !== 'extra' && (streng || s.art !== 'app') && !erledigt(s)).map(s => {
+        if (s.art === 'hefteintrag') return '📒 ' + heName(s.baustein);
+        if (s.art === 'app') { const st = O.unit.stationen.find(y => y.id === s.station); return '🎮 ' + (st ? st.titel : s.thema || ''); }
+        if (s.buch) return (SYM[s.art] || '✏️') + ' Buch S. ' + s.buch.seite + (s.buch.uebung ? ' Ü ' + s.buch.uebung : '');
+        if (s.baustein) return '✏️ ' + ((O.bausteine[s.baustein] || {}).titel || 'Übung');
+        return (SYM[s.art] || '•') + ' ' + ({ lesen: 'Lesen', vokabeln: 'Vokabelheft', partner: 'Mit Partner', hoeren: 'Hören' }[s.art] || s.art);
+      });
+    } finally { O.unit = vorher; }
+  }
+  function vorschauHTML(zu) {
+    const l = fehltIn(zu);
+    return `<div class="jw-hinweis">👀 <b>Schau dich schon um!</b> Lesen und die App spielen geht schon. Abhaken kannst du hier, sobald „${esc(zu.titel)}“ fertig ist.
+      ${l.length ? `<p class="jw-klein" style="margin:.4rem 0 .2rem">Dort fehlt noch der Haken bei:</p><ul class="jw-fehlt">${l.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}
+      <div class="jw-chips"><button type="button" class="jw-chip" data-jw-abschnitt="${esc(zu.id)}">→ ${esc(zu.ico || '')} ${esc(zu.titel)}</button></div></div>`;
   }
   function abschnittHTML(a) {
     const zu = gesperrtDurch(a);
-    if (zu) return gesperrtHTML(a, zu);
+    vorschau = zu;                                            // Vorschau statt Schloss (v134): alles zeigen, abhaken wartet
     const u = O.unit, f = fortschritt(a), nv = niveau(a);
     // Mehrere Stationen im selben Abschnitt (v127): Die erste Station des Wegs zeigt alles; jede weitere nur ihre App und einen
     // Verweis – sonst sähen zwei Stationen mit denselben Hefteinträgen und Übungen gleich aus. „Alles zeigen“ klappt den Abschnitt auf.
     const platzNr = id => u.stationen.findIndex(y => y.id === id);
     const stat = schritte(a).filter(s => s.station), erste = stat.slice().sort((x, y) => platzNr(x.station) - platzNr(y.station))[0];
-    const eigene = O.panel && nurStation && erste && erste.station !== nurStation ? stat.find(s => s.station === nurStation) : null;
+    const eigene = !zu && O.panel && nurStation && erste && erste.station !== nurStation ? stat.find(s => s.station === nurStation) : null;
     if (eigene) {
       const st1 = u.stationen.find(y => y.id === erste.station) || {};
       return `<button type="button" class="jw-zurueck" data-jw-zu>✕ Schließen</button>
@@ -379,6 +397,7 @@
     return `${O.panel ? '<button type="button" class="jw-zurueck" data-jw-zu>✕ Schließen</button>' : '<button type="button" class="jw-zurueck" data-jw-zettel>‹ Laufzettel</button>'}
       <div class="jw-kopf"><h2>${esc(a.ico || '')} ${esc(a.titel)}</h2>
         <p class="jw-klein">${esc(a.kurz || a.kompetenz || '')} · ${f.n} von ${f.von} erledigt</p>${material(a)}</div>
+      ${zu ? vorschauHTML(zu) : ''}
       ${a.niveaus ? `<div class="jw-niveaus"><b>Mein Niveau:</b>${mindest() > 1 ? `<span class="jw-klein"> Deine Lehrkraft: mindestens ${NIVEAU[mindest()][0]}</span>` : ''}
         <div>${[1, 2, 3].map(n => `<button type="button" class="${nv === n ? 'an' : ''}" data-jw-niveau="${n}"${n < mindest() ? ' disabled' : ''}>
         ${NIVEAU[n][0]}<small>${NIVEAU[n][1]}</small></button>`).join('')}</div></div>` : ''}
@@ -405,7 +424,7 @@
   function zeichne() {
     if (!host || !O) return;
     const a = offen && (O.unit.abschnitte || []).find(x => x.id === offen && sichtbar(x));
-    host.innerHTML = `<div class="jw">${ansicht === 'spiegel' ? spiegel() : a ? abschnittHTML(a) : zettel()}</div>`;
+    try { host.innerHTML = `<div class="jw">${ansicht === 'spiegel' ? spiegel() : a ? abschnittHTML(a) : zettel()}</div>`; } finally { vorschau = null; }
     try { meldeStand(); } catch (e) { console.warn('[Laufzettel] Meldung', e); }
   }
   function grossZeigen(bid) { const b = O.bausteine[bid]; if (b) heZeigen(b, heNr(bid)); }
@@ -435,9 +454,11 @@
     if (d.jwZettel !== undefined) { offen = null; ansicht = 'zettel'; zeichne(); host.scrollTop = 0; return; }
     if (d.jwSpiegel !== undefined) { ansicht = 'spiegel'; zeichne(); host.scrollTop = 0; return; }
     if (d.jwNiveau) { merke(offen, Object.assign(merker(offen), { nv: Number(d.jwNiveau) })); return zeichne(); }
-    if (d.jwGeschrieben) { geschrieben.add(d.jwGeschrieben); return zeichne(); }
+    const wartet = id => { const a = (O.unit.abschnitte || []).find(x => x.schritte.some(y => y.id === id)); return !!(a && gesperrtDurch(a)); };
+    if (d.jwGeschrieben) { if (wartet(d.jwGeschrieben)) return; geschrieben.add(d.jwGeschrieben); return zeichne(); }
     if (d.jwHaken) {
       const s = findeSchritt(d.jwHaken); if (!s) return;
+      if (!erledigt(s) && wartet(s.id)) return;                // Vorschau: erst den Abschnitt davor fertig machen
       const k = schluessel(s);
       merke(k, erledigt(s) ? merker(k) : Object.assign(merker(k), { e: 1 }));
       geschrieben.delete(s.id);
@@ -534,6 +555,8 @@ ul.jw-hilfe { list-style: none; display: grid; gap: .3rem; margin: .4rem 0 .7rem
 .jw-kann-zeile small { display: block; color: var(--accent); font-size: .8rem; text-transform: uppercase; letter-spacing: .04em; }
 .jw-smileys { display: flex; gap: .4rem; } .jw-smileys button { font-size: 1.6rem; width: 3rem; height: 3rem; border-radius: 14px; background: var(--surface2); border: 2px solid transparent; filter: grayscale(.6); opacity: .65; }
 .jw-smileys button.an { border-color: var(--accent); filter: none; opacity: 1; background: rgba(230,168,23,.18); }
+.jw-fehlt { margin: 0 0 .5rem 1.2rem; font-weight: 700; line-height: 1.5; }
+.jw-wartet { opacity: .75; }
 .jw-hinweis { background: rgba(230,168,23,.14); border: 1px solid rgba(230,168,23,.45); border-radius: 14px; padding: .7rem .9rem; margin: .6rem 0 1rem; font-weight: 800; }
 .jw-auch { display: flex; flex-wrap: wrap; gap: .4rem; align-items: center; margin: 1rem 0; padding-top: .8rem; border-top: 1px dashed var(--line); }
 .jw-geschafft { text-align: center; font-weight: 900; color: var(--gruen); font-size: 1.1rem; margin: 1rem 0; }
