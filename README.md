@@ -370,6 +370,11 @@ Alle vier belohnen Geleistetes (Stationen, Runden, Meisterschaft), nie verbracht
   (`ladeSync`) bleiben in index.html.
 - **Fehlerzähler (v133):** siehe Ladekette → Fehlerprotokoll und Diagnose.
 
+- **Ergebnis in Prozent (v135):** Am Ende einer Runde steht die Prozentzahl groß, darunter „6 von 8 richtig“ – im Übungsrahmen
+  (`ueben.js`: Kopfrechnen, Mathe-Trainer, alle Baukasten-Übungen), in den GPG-Karten (Bayern, Länder-Finder), in der 1×1-Tafel, der
+  Rechen-Arena und bei „Satzglieder erkennen“. Das Ergebnis-Abzeichen unten rechts (`navbar.js`) zeigt „80 % · …“ statt „8 / 10 · …“.
+  Neue Apps: Prozent groß zeigen, den Bruch klein darunter.
+
 ## Ladekette (Infrastruktur Etappe 2)
 
 Grundsatz: **Kern sofort, Rest bei Bedarf.** Die Budgets prüft `werkzeuge/pruefen.py`, gemessen **komprimiert** (gzip, so liefert GitHub Pages aus –
