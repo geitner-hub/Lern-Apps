@@ -287,6 +287,7 @@
     <div id="screen-result" class="screen hidden">
       <div class="big-sigma" id="result-emoji">🏆</div>
       <div class="start-title" id="result-title">ERGEBNIS</div>
+      <div id="result-prozent" hidden style="font-family:'Fredoka One','Nunito',sans-serif;font-size:2.4rem;color:#e6a817;margin:.2rem 0 .4rem"></div>
       <div class="start-desc" id="result-text"></div>
       <div class="result-btn-row">
         <button class="btn start-btn" onclick="retryLastMode()">🔄 NOCHMAL</button>
@@ -464,6 +465,10 @@ function showResult({ emoji, title, text, saveLabel, saveScore, saveMax }) {
   document.getElementById('result-emoji').textContent = emoji;
   document.getElementById('result-title').textContent = title;
   document.getElementById('result-text').textContent = text;
+  // Prozent groß über dem Text – viele Kinder wollen sofort sehen, wie viel richtig war
+  const proz = document.getElementById('result-prozent'), ok = saveMax > 0 && saveScore >= 0 && saveScore <= saveMax;
+  proz.textContent = ok ? Math.round(saveScore / saveMax * 100) + ' % richtig' : '';
+  proz.hidden = !ok;
   showScreen('result');
   if (window.LernApps) {
     LernApps.saveResult({ score: saveScore, max: saveMax, label: saveLabel, inhalt: '1x1-' + settings.range });

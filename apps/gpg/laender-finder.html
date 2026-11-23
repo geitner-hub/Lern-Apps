@@ -601,7 +601,7 @@ function finish() {
 
   const box = $('result');
   box.innerHTML = `
-    <div class="res-score">${score}<small> / ${max}</small></div>
+    <div class="res-score">${Math.round(score / max * 100)}<small> %</small></div>
     <div class="res-msg"></div>
     <div class="res-sub"></div>
     ${liste.length ? `<div class="res-missed"><h3>${G.m.wiederholen ? 'Das hat erst beim zweiten Mal geklappt:' : 'Diese Länder übst du am besten noch einmal:'}</h3><ul></ul></div>` : ''}

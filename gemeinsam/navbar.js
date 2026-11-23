@@ -341,7 +341,9 @@
   function updateBadge(result) {
     if (!result) return;
     const pct = result.percent || 0;
-    badge.querySelector('.rb-label').textContent = result.label;
+    // Prozent zuerst (v135): „8 / 10 · Klasse 1“ → „80 % · Klasse 1“; Bezeichnungen ohne Bruch bleiben, wie sie sind
+    const lb = String(result.label || ''), bruch = /^\s*\d+\s*\/\s*\d+\s*/;
+    badge.querySelector('.rb-label').textContent = result.max > 0 && bruch.test(lb) ? lb.replace(bruch, pct + ' % ') : lb;
     const fill = badge.querySelector('.rb-fill');
     fill.style.width = pct + '%';
     fill.className   = 'rb-fill' + (pct >= 70 ? '' : pct >= 40 ? ' mid' : ' low');

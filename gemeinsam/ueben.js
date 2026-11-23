@@ -159,6 +159,7 @@
   .lu .fb .er{margin-top:.35rem;color:var(--txt);font-size:1rem;line-height:1.4}
   .lu .erg{background:var(--card);border-radius:22px;padding:1.3rem;text-align:center}
   .lu .erg .gr{font-family:'Fredoka One','Nunito',sans-serif;font-size:3rem;color:var(--gold)}
+  .lu .erg .gr-sub{color:var(--mut);font-weight:800;margin:-.2rem 0 .5rem}
   .lu .liste{text-align:left;max-width:560px;margin:1rem auto 0;font-size:.92rem}
   .lu .liste div{padding:.45rem 0;border-top:1px solid var(--line)}
   .lu .liste small{display:block;color:var(--mut);font-weight:700}
@@ -502,7 +503,7 @@
         } else pfad = `<div class="pfadmeldung">Für ${st.checkpoint ? 'den Checkpoint' : 'diese Station'} brauchst du ${schwelle(st)} %. Versuch es gleich noch einmal!</div>`;
       }
       root.innerHTML = `<div class="top"><button type="button" class="x" data-ende aria-label="Zur Stufenwahl">✕</button><span class="nm">${esc(st.titel)}</span></div>
-        <div class="erg"><div class="gr">${r} / ${n}${selbst.length ? ' ✓' : ''}</div>${selbst.length ? '<div style="color:var(--mut);font-weight:800">Punkte auf deiner Checkliste</div>' : ''}<div style="font-weight:900;font-size:1.15rem">${lob}</div>${pfad}
+        <div class="erg"><div class="gr">${pct} %</div><div class="gr-sub">${r} von ${n} ${selbst.length ? 'Punkten auf deiner Checkliste ✓' : 'richtig'}</div><div style="font-weight:900;font-size:1.15rem">${lob}</div>${pfad}
           ${abgleich}${hilfeInfo ? `<div class="pfadmeldung">${hilfeInfo}</div>` : ''}
           ${falsch.length ? `<div class="liste">${falsch.map(x => `<div><b>${esc(x.frage)}${x.eigen ? ' → ' : ' = '}${esc(x.loesung)}</b> <small>Du hattest: ${esc(x.eingabe)}${x.erklaerung ? ' · ' + esc(x.erklaerung) : ''}</small></div>`).join('')}</div>` : ''}
           <div class="zeile">${weiterZu ? `<button type="button" class="btn p" data-stufe="${esc(weiterZu.id)}">Nächste Station ›</button>` : ''}

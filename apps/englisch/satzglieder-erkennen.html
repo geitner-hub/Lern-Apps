@@ -1092,7 +1092,7 @@ function showCelebration() {
   else { emoji = '💪'; title = 'Keep going!'; msg = `You got ${correctCount} out of ${TOTAL}. Practice makes perfect!`; }
 
   document.getElementById('cel-emoji').textContent = emoji;
-  document.getElementById('cel-title').textContent = title;
+  document.getElementById('cel-title').textContent = Math.round(pct) + ' % · ' + title;   // Prozent sofort sichtbar
   document.getElementById('cel-msg').textContent = msg;
   document.getElementById('progress-fill').style.width = '100%';
 
