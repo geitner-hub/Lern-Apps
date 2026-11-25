@@ -375,6 +375,11 @@ Alle vier belohnen Geleistetes (Stationen, Runden, Meisterschaft), nie verbracht
   Rechen-Arena und bei „Satzglieder erkennen“. Das Ergebnis-Abzeichen unten rechts (`navbar.js`) zeigt „80 % · …“ statt „8 / 10 · …“.
   Neue Apps: Prozent groß zeigen, den Bruch klein darunter.
 
+- **Kein Zoomen (v136):** Doppeltippen zoomte auf dem iPad heran, und auf manchen Seiten kam man nicht mehr zurück. Jetzt überall gleich:
+  jede Seite hat `<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no[, viewport-fit=cover]">`
+  (pruefen.py meldet Seiten ohne), dazu setzt `umgebung.js` `touch-action: manipulation` (kein Doppeltipp-Zoom, Tippen ohne Verzögerung)
+  und fängt `gesturestart` ab (Safari im normalen Tab). Ausnahme: `admin.html`. Größere Schrift: Lesehilfe im Pass.
+
 ## Ladekette (Infrastruktur Etappe 2)
 
 Grundsatz: **Kern sofort, Rest bei Bedarf.** Die Budgets prüft `werkzeuge/pruefen.py`, gemessen **komprimiert** (gzip, so liefert GitHub Pages aus –

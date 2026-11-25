@@ -390,6 +390,11 @@ for p in sorted(ROOT.rglob('*.html')):
         # direkt per <script src> oder nachgeladen ('…/gemeinsam/navbar.js' im Code)
         if not re.search(r'["\'][^"\']*gemeinsam/navbar\.js["\']', t):
             F(f'{r}: bindet navbar.js nicht ein (Pass, Dorf, Ergebnisse fehlen)')
+    # Kein Zoomen (v136): jede Seite außer Admin und Weiterleitungen sperrt den Zoom im viewport (sonst zoomt Doppeltippen heran)
+    if r != 'admin.html' and not r.startswith('cloudflare/') and 'LW-WEITERLEITUNG' not in t:
+        vp = re.search(r'<meta\s+name="viewport"\s+content="([^"]*)"', t, re.I)
+        if not vp or 'user-scalable=no' not in vp.group(1) or 'maximum-scale=1' not in vp.group(1):
+            H(f'{r}: viewport ohne „maximum-scale=1, user-scalable=no“ – Doppeltippen zoomt auf dem iPad heran (Vorlage: apps/vorlage/app-template.html)')
 
 # ── 5. Version ──────────────────────────────────────────
 umg = lies('gemeinsam/umgebung.js')

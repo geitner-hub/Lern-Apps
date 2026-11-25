@@ -33,7 +33,7 @@
   'use strict';
   if (window.LW && window.LW.UMGEBUNG) return;          // doppeltes Laden verhindern
 
-  const VERSION = 'v135';                                 // ⚙ bei jedem Upload mit sw.js zusammen erhöhen
+  const VERSION = 'v136';                                 // ⚙ bei jedem Upload mit sw.js zusammen erhöhen
 
   // ── Umgebung erkennen ────────────────────────────────
   //  GitHub Pages: erster Pfadteil = Repo-Name (Lern-Apps bzw. Lern-Apps-test)
@@ -225,6 +225,21 @@
     return lesehilfeAnwenden();
   }
   try { lesehilfeAnwenden(); } catch (e) {}
+
+  // ── Kein Zoomen (v136) ───────────────────────────────
+  //  Doppeltippen zoomte auf dem iPad heran, und auf Seiten mit gesperrtem Zoom kam man nicht mehr zurück. Darum überall gleich:
+  //  kein Doppeltipp-Zoom (touch-action: manipulation – Tippen reagiert dabei sogar schneller) und kein Zwei-Finger-Zoom
+  //  (viewport user-scalable=no in jeder Seite; Safari im normalen Tab beachtet das nicht, darum zusätzlich gesturestart abfangen).
+  //  Größere Schrift gibt es über die Lesehilfe im Pass. Nicht im Admin (dort darf die Lehrkraft zoomen).
+  //  Eigene Zwei-Finger-Gesten (Karten, Globus) laufen über Touch-Ereignisse weiter.
+  if (!/\/admin\.html$/.test(location.pathname)) {
+    try {
+      const st = document.createElement('style');
+      st.textContent = 'html{touch-action:manipulation;-webkit-text-size-adjust:100%;text-size-adjust:100%}';
+      (document.head || document.documentElement).appendChild(st);
+      ['gesturestart', 'gesturechange'].forEach(t => document.addEventListener(t, e => e.preventDefault(), { passive: false }));
+    } catch (e) {}
+  }
 
   // ── Fehlerprotokoll (Etappe 2) ───────────────────────
   const FEHLER_KEY = 'lernwelt-fehler';

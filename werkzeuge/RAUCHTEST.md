@@ -44,6 +44,7 @@ Live am iPad über das Symbol auf dem Home-Bildschirm, Test in Safari.
 | 37 | Vokabeltrainer → Unit → ⚡ Speed zweimal spielen | Ergebnis nennt den eigenen Rekord, die Speed-Kachel zeigt ihn |
 | 38 | Startseite: Pass antippen (alle vier Reiter), Truhe öffnen, 📷 Scannen, Kopfleiste → Profil | alles wie bisher; beim ersten Antippen kurz „⏳ Einen Moment …“, danach sofort |
 | 39 | Admin → System → 🐞 Fehlerzähler (nach dem Einfügen von `fehler.js` und `worker.js`) | Liste lädt („Keine Fehler gemeldet“ oder Zeilen mit Anzahl, Version, Seite, Meldung) |
+| 40 | Startseite, eine App und ein Spiel: zweimal schnell auf eine freie Stelle tippen, dann mit zwei Fingern auseinanderziehen | Die Seite zoomt nicht; Knöpfe reagieren beim ersten Tippen |
 
 **Nur in der Testumgebung zusätzlich:** Oben steht „🧪 TEST · vXX“. Im Admin eine Kleinigkeit ändern und
 speichern → Meldung „Testumgebung: Speichern und Sicherung sind hier abgeschaltet“. Danach live den Pass
