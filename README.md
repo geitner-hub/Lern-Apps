@@ -387,7 +387,9 @@ Alle vier belohnen Geleistetes (Stationen, Runden, Meisterschaft), nie verbracht
   (50° oder 130°?) · Geodreieck ablesen (10er/5er) · Genau ablesen (±1°) · Schätzen (±10°) · Alles gemischt · **Weitere Winkelarten**
   (gestreckt, überstumpf, Vollwinkel – `gesperrt: true`, erst nach Freigabe im Admin). Tipp 1: spitz oder stumpf? Tipp 2 hebt die richtige
   Zahlenreihe hervor. Falsche Antwort: Vergleichslinie 90° bzw. gestrichelt der Schenkel, der zur getippten Zahl gehört.
-  Geplant als 2. Schritt: „Winkel zeichnen“ (Schenkel am Geodreieck auf eine Gradzahl ziehen).
+  **Winkel zeichnen (v138):** Stufen `zeichnen` (Zehner/Fünfer, ±2° zählt) und `zeichnen-genau` (±1°). Der erste Schenkel liegt am Geodreieck,
+  das Kind zieht den zweiten (roter Punkt) auf die Gradzahl und kann mit −1°/+1° nachjustieren; während des Ziehens steht keine Zahl da –
+  ablesen muss das Kind selbst. Falsch: richtiger Schenkel durchgezogen, der eigene gestrichelt. Auch in „Alles gemischt“.
 
 ## Ladekette (Infrastruktur Etappe 2)
 

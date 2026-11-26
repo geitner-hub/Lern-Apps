@@ -45,6 +45,7 @@ Live am iPad über das Symbol auf dem Home-Bildschirm, Test in Safari.
 | 38 | Startseite: Pass antippen (alle vier Reiter), Truhe öffnen, 📷 Scannen, Kopfleiste → Profil | alles wie bisher; beim ersten Antippen kurz „⏳ Einen Moment …“, danach sofort |
 | 39 | Admin → System → 🐞 Fehlerzähler (nach dem Einfügen von `fehler.js` und `worker.js`) | Liste lädt („Keine Fehler gemeldet“ oder Zeilen mit Anzahl, Version, Seite, Meldung) |
 | 40 | Startseite, eine App und ein Spiel: zweimal schnell auf eine freie Stelle tippen, dann mit zwei Fingern auseinanderziehen | Die Seite zoomt nicht; Knöpfe reagieren beim ersten Tippen |
+| 41 | Winkel-Werkstatt → „Winkel zeichnen“: roten Punkt mit dem Finger ziehen, −1°/+1° tippen, Fertig | Schenkel folgt dem Finger ohne Ruckeln, die Seite scrollt dabei nicht; richtig/falsch passt zum Geodreieck |
 
 **Nur in der Testumgebung zusätzlich:** Oben steht „🧪 TEST · vXX“. Im Admin eine Kleinigkeit ändern und
 speichern → Meldung „Testumgebung: Speichern und Sicherung sind hier abgeschaltet“. Danach live den Pass
