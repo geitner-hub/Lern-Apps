@@ -380,6 +380,15 @@ Alle vier belohnen Geleistetes (Stationen, Runden, Meisterschaft), nie verbracht
   (pruefen.py meldet Seiten ohne), dazu setzt `umgebung.js` `touch-action: manipulation` (kein Doppeltipp-Zoom, Tippen ohne Verzögerung)
   und fängt `gesturestart` ab (Safari im normalen Tab). Ausnahme: `admin.html`. Größere Schrift: Lesehilfe im Pass.
 
+- **Winkel-Werkstatt (v137, `apps/mathe/winkel.html`, Katalog `ma.5.winkel`):** Winkelarten auf den ersten Blick erkennen und am Geodreieck
+  ablesen. Läuft auf `ueben.js` (XP, Meisterschaft, Hilfe-Stufen, Fehlerheft, Prozent am Ende); alle Bilder zeichnet die App selbst als SVG –
+  Winkel beliebig gedreht mit unterschiedlich langen Schenkeln, Geodreieck mit zwei Zahlenreihen (außen ab dem rechten, innen ab dem linken
+  Ende der langen Seite). Stufen: Spitz, recht oder stumpf? · Genau hinschauen (knapp um 90°) · Blitzblick (1,5 s) · Die Geodreieck-Falle
+  (50° oder 130°?) · Geodreieck ablesen (10er/5er) · Genau ablesen (±1°) · Schätzen (±10°) · Alles gemischt · **Weitere Winkelarten**
+  (gestreckt, überstumpf, Vollwinkel – `gesperrt: true`, erst nach Freigabe im Admin). Tipp 1: spitz oder stumpf? Tipp 2 hebt die richtige
+  Zahlenreihe hervor. Falsche Antwort: Vergleichslinie 90° bzw. gestrichelt der Schenkel, der zur getippten Zahl gehört.
+  Geplant als 2. Schritt: „Winkel zeichnen“ (Schenkel am Geodreieck auf eine Gradzahl ziehen).
+
 ## Ladekette (Infrastruktur Etappe 2)
 
 Grundsatz: **Kern sofort, Rest bei Bedarf.** Die Budgets prüft `werkzeuge/pruefen.py`, gemessen **komprimiert** (gzip, so liefert GitHub Pages aus –

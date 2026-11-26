@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<script src="../../gemeinsam/umgebung.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+<title>Winkel-Werkstatt – Lernwelt</title>
+<!--
+  ═══════════════════════════════════════════════
+   LERNWELT – Winkel-Werkstatt (Mathe 5, v137)
+   Winkelarten auf den ersten Blick erkennen und Winkel am Geodreieck ablesen – mit beiden Skalen (Halbkreisen).
+   Läuft auf dem Übungs-Rahmen (ueben.js); Eingaben über gemeinsam/ziffernblock.js. Alle Bilder zeichnet die App
+   selbst als SVG (Winkel, Geodreieck mit zwei Skalen) – jede Aufgabe neu: Größe, Drehung, Schenkellänge, Lage.
+
+   Stufen (Katalog ma.5.winkel.*):
+     arten     Spitz, recht oder stumpf?            beliebig gedreht, unterschiedlich lange Schenkel
+     genau     Genau hinschauen                     auch knappe Fälle (80°–100°)
+     blitz     Blitzblick                           der Winkel ist nur kurz zu sehen
+     falle     Die Geodreieck-Falle                 50° oder 130°? – welche Skala stimmt?
+     ablesen   Geodreieck ablesen                   Zehner- und Fünferschritte eintippen
+     exakt     Genau ablesen                        auf 1° genau (±1° zählt)
+     schaetzen Schätzen                             ohne Geodreieck, ±10° zählt
+     mix       Alles gemischt
+     weitere   Weitere Winkelarten                  gestreckt, überstumpf, Vollwinkel – gesperrt, bis die Lehrkraft freigibt
+   Geplant (2. Schritt): Winkel zeichnen – einen Schenkel am Geodreieck auf eine Gradzahl ziehen.
+
+   Geodreieck: lange Seite auf dem ersten Schenkel, Nullpunkt im Scheitel. Äußere Zahlenreihe zählt gegen den
+   Uhrzeigersinn ab dem rechten Ende der langen Seite, innere Reihe ab dem linken Ende. Liegt der erste Schenkel
+   rechts, gilt die äußere Reihe, sonst die innere (Aufgabe „seite“). Tipp 2 hebt die richtige Reihe hervor.
+  ═══════════════════════════════════════════════
+-->
+<link rel="stylesheet" href="../../gemeinsam/fonts.css">
+<style>
+  html, body { margin: 0; background: #0f0e1a; }
+  #app { padding-top: env(safe-area-inset-top, 0px); }
+  .lu .eigen { max-width: 760px; }
+  .lu .fb.mit-bild { max-width: 760px; }
+  .wk-blatt { background: #fbfaf5; border-radius: 18px; padding: .4rem; margin: .2rem auto .6rem; max-width: 560px; position: relative; }
+  .wk-bild { display: block; width: 100%; height: auto; max-height: 52vh; -webkit-user-select: none; user-select: none; }
+  .wk-weg { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; border-radius: 18px;
+    background: #fbfaf5; color: #475569; font: 900 1.4rem 'Nunito', sans-serif; }
+  .wk-knoepfe { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: .6rem; max-width: 640px; margin: 0 auto; }
+  .wk-knopf { min-height: 64px; border-radius: 16px; border: 2px solid rgba(255,255,255,.14); background: #252238; color: #f1f0fb;
+    font: 900 1.2rem 'Nunito', sans-serif; cursor: pointer; padding: .5rem .6rem; }
+  .wk-knopf small { display: block; font-weight: 700; font-size: .8rem; color: rgba(241,240,251,.65); margin-top: .1rem; }
+  .wk-knopf:active { transform: scale(.98); }
+  .wk-feld { min-width: 6ch; min-height: 3.4rem; margin: .3rem auto .2rem; display: flex; align-items: center; justify-content: center;
+    background: #0b0a14; border: 3px solid #6366f1; border-radius: 16px; color: #f1f0fb; font: 900 2rem 'Nunito', sans-serif; padding: .2rem 1rem; width: fit-content; }
+  .wk-feld::after { content: '°'; margin-left: .1em; color: rgba(241,240,251,.7); }
+  .wk-feld.zb-leer::before { content: '?'; color: rgba(255,255,255,.3); }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script src="../../gemeinsam/freigabe.js"></script>
+<script src="../../gemeinsam/ueben.js"></script>
+<script src="../../gemeinsam/ziffernblock.js"></script>
+<script>
+'use strict';
+const NS = 'http://www.w3.org/2000/svg';
+const zufall = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+const wahl = l => l[Math.floor(Math.random() * l.length)];
+const RAD = Math.PI / 180;
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+/* ═══════════════════════════════════════════════════════
+   WINKELARTEN
+   ═══════════════════════════════════════════════════════ */
+const ARTEN = {
+  spitz:      { name: 'spitzer Winkel',     knopf: 'Spitz',      klein: 'kleiner als 90°' },
+  recht:      { name: 'rechter Winkel',     knopf: 'Recht',      klein: 'genau 90°' },
+  stumpf:     { name: 'stumpfer Winkel',    knopf: 'Stumpf',     klein: 'zwischen 90° und 180°' },
+  gestreckt:  { name: 'gestreckter Winkel', knopf: 'Gestreckt',  klein: 'genau 180°' },
+  ueberstumpf:{ name: 'überstumpfer Winkel',knopf: 'Überstumpf', klein: 'zwischen 180° und 360°' },
+  voll:       { name: 'Vollwinkel',         knopf: 'Vollwinkel', klein: 'genau 360°' },
+};
+const artVon = a => a < 90 ? 'spitz' : a === 90 ? 'recht' : a < 180 ? 'stumpf' : a === 180 ? 'gestreckt' : a < 360 ? 'ueberstumpf' : 'voll';
+const ERKL = {
+  spitz: 'Ein spitzer Winkel ist kleiner als ein rechter Winkel (unter 90°). Er passt in die Ecke eines Blatts.',
+  recht: 'Ein rechter Winkel hat genau 90° – wie die Ecke eines Blatts.',
+  stumpf: 'Ein stumpfer Winkel ist größer als ein rechter Winkel, aber kleiner als 180°. Die Ecke eines Blatts passt hinein.',
+  gestreckt: 'Ein gestreckter Winkel hat genau 180° – die Schenkel bilden eine gerade Linie.',
+  ueberstumpf: 'Ein überstumpfer Winkel ist größer als 180°, aber kleiner als 360°.',
+  voll: 'Ein Vollwinkel hat 360° – einmal ganz herum, die Schenkel liegen aufeinander.',
+};
+
+/* ═══════════════════════════════════════════════════════
+   ZEICHNEN – alles in Grad, mathematisch (gegen den Uhrzeigersinn); SVG hat y nach unten
+   ═══════════════════════════════════════════════════════ */
+function el(name, attr, text) { const e = document.createElementNS(NS, name); Object.entries(attr).forEach(([k, v]) => e.setAttribute(k, v)); if (text != null) e.textContent = text; return e; }
+const P = (r, phi) => [r * Math.cos(phi * RAD), -r * Math.sin(phi * RAD)];
+const ZAHL_FARBE = '#1e293b', HERVOR = '#c2410c', R_TICK = 214, R_AUSSEN = 190, R_INNEN = 160, GEO = 300, SCHENKEL_GEO = 262;
+
+/** Bogen als Winkelmarkierung: von phi gegen den Uhrzeigersinn um a Grad */
+function bogen(g, phi, a, r, farbe) {
+  if (a >= 360) { g.appendChild(el('circle', { cx: 0, cy: 0, r, fill: 'rgba(230,168,23,.2)', stroke: farbe, 'stroke-width': 3 })); return; }
+  const [x1, y1] = P(r, phi), [x2, y2] = P(r, phi + a);
+  g.appendChild(el('path', { d: `M0 0 L${x1} ${y1} A${r} ${r} 0 ${a > 180 ? 1 : 0} 0 ${x2} ${y2} Z`, fill: 'rgba(230,168,23,.2)', stroke: 'none' }));
+  g.appendChild(el('path', { d: `M${x1} ${y1} A${r} ${r} 0 ${a > 180 ? 1 : 0} 0 ${x2} ${y2}`, fill: 'none', stroke: farbe, 'stroke-width': 3 }));
+}
+
+/**
+ * Bild einer Aufgabe. w = { alpha, start (Richtung des Schenkels, von dem aus der Winkel gegen den Uhrzeigersinn aufgeht),
+ *   l1, l2, geo: { rot, seite: 'rechts'|'links' } | null }, o = { hervor: true (richtige Skala), ref90: true, wert: Zahl (Schenkel des Kindes) }
+ */
+function bild(w, o = {}) {
+  const svg = el('svg', { class: 'wk-bild', role: 'img', 'aria-label': 'Winkel' + (w.geo ? ' mit Geodreieck' : '') });
+  const g = el('g', {}), punkte = [[0, 0]];
+  svg.appendChild(g);
+  const merke = (r, phi) => { punkte.push(P(r, phi)); return P(r, phi); };
+  // Schenkel
+  const schenkel = (phi, l, farbe, breite, strich) => { const [x, y] = merke(l, phi);
+    g.appendChild(el('line', Object.assign({ x1: 0, y1: 0, x2: x, y2: y, stroke: farbe, 'stroke-width': breite, 'stroke-linecap': 'round' }, strich ? { 'stroke-dasharray': strich } : {}))); };
+  // Geodreieck zuerst halb durchsichtig – die Schenkel liegen sichtbar darunter, Zahlen obenauf
+  if (w.geo) {
+    const rot = w.geo.rot, ecke = [merke(GEO, rot), merke(GEO, rot + 90), merke(GEO, rot + 180)];
+    g.appendChild(el('path', { d: `M${ecke[0]} L${ecke[1]} L${ecke[2]} Z`, fill: 'rgba(125,211,252,.28)', stroke: '#0284c7', 'stroke-width': 2, 'stroke-linejoin': 'round' }));
+    // Halbkreis und Striche (1° kurz, 5° mittel, 10° lang)
+    const [ax, ay] = P(R_TICK, rot), [bx, by] = P(R_TICK, rot + 180);
+    g.appendChild(el('path', { d: `M${ax} ${ay} A${R_TICK} ${R_TICK} 0 0 0 ${bx} ${by}`, fill: 'none', stroke: '#0f172a', 'stroke-width': 1.2 }));
+    for (let t = 0; t <= 180; t++) {
+      const len = t % 10 === 0 ? 17 : t % 5 === 0 ? 11 : 6, [x1, y1] = P(R_TICK, rot + t), [x2, y2] = P(R_TICK - len, rot + t);
+      g.appendChild(el('line', { x1, y1, x2, y2, stroke: '#0f172a', 'stroke-width': t % 10 === 0 ? 1.6 : 1 }));
+    }
+    // zwei Zahlenreihen: außen ab dem rechten Ende, innen ab dem linken Ende der langen Seite
+    const richtig = w.geo.seite === 'rechts' ? 'aussen' : 'innen';
+    for (let t = 0; t <= 180; t += 10) {
+      [['aussen', R_AUSSEN, t], ['innen', R_INNEN, 180 - t]].forEach(([reihe, r, wert]) => {
+        const [x, y] = P(r, rot + t), an = o.hervor && reihe === richtig;
+        g.appendChild(el('text', { x, y, 'text-anchor': 'middle', 'dominant-baseline': 'central', fill: an ? HERVOR : ZAHL_FARBE,
+          'font-family': 'Nunito, sans-serif', 'font-weight': an ? 900 : 700, 'font-size': an && wert === 0 ? 19 : 14 }, String(wert)));
+      });
+    }
+    // Nullpunkt und Mittellinie, Millimeter an der langen Seite
+    const [mx, my] = P(28, rot + 90);
+    g.appendChild(el('line', { x1: 0, y1: 0, x2: mx, y2: my, stroke: '#0f172a', 'stroke-width': 1.4 }));
+    for (let i = -27; i <= 27; i++) {
+      if (i === 0) continue;
+      const [x1, y1] = P(Math.abs(i) * 10, rot + (i > 0 ? 0 : 180)), [nx, ny] = P(i % 5 === 0 ? 10 : 5, rot + 90);
+      g.appendChild(el('line', { x1, y1, x2: x1 + nx, y2: y1 + ny, stroke: '#0f172a', 'stroke-width': 1 }));
+    }
+  }
+  const l1 = w.geo ? SCHENKEL_GEO : w.l1, l2 = w.geo ? SCHENKEL_GEO : w.l2;
+  bogen(g, w.start, w.alpha, w.geo ? 34 : 38, '#d97706');
+  if (o.ref90 && w.alpha !== 90 && w.alpha < 180) {         // Vergleich mit dem rechten Winkel (bei falscher Antwort)
+    const [x, y] = merke(Math.max(l1, l2) * .8, w.start + 90);
+    g.appendChild(el('line', { x1: 0, y1: 0, x2: x, y2: y, stroke: '#16a34a', 'stroke-width': 3, 'stroke-dasharray': '10 7' }));
+    const [qx, qy] = P(22, w.start), [rx, ry] = P(22, w.start + 90), [sx, sy] = P(22 * Math.SQRT2, w.start + 45);
+    g.appendChild(el('path', { d: `M${qx} ${qy} L${sx} ${sy} L${rx} ${ry}`, fill: 'none', stroke: '#16a34a', 'stroke-width': 2.5 }));
+    const [tx, ty] = P(Math.max(l1, l2) * .8 + 26, w.start + 90);
+    g.appendChild(el('text', { x: tx, y: ty, 'text-anchor': 'middle', 'dominant-baseline': 'central', fill: '#16a34a', 'font-family': 'Nunito, sans-serif', 'font-weight': 900, 'font-size': 20 }, '90°'));
+  }
+  schenkel(w.start, l1, '#1e3a8a', 4);
+  schenkel(w.start + w.alpha, l2, '#1e3a8a', 4);
+  if (o.wert != null && o.wert !== w.alpha && w.geo) {      // falsch abgelesen: wo hätte der Schenkel dann gelegen?
+    const phi = w.geo.seite === 'rechts' ? w.geo.rot + o.wert : w.geo.rot + 180 - o.wert;
+    if (o.wert > 0 && o.wert < 180) schenkel(phi, SCHENKEL_GEO, '#dc2626', 3, '8 6');
+  }
+  g.appendChild(el('circle', { cx: 0, cy: 0, r: 5, fill: '#1e3a8a' }));
+  // Ausschnitt: alles, was gezeichnet ist, mit Rand
+  const xs = punkte.map(p => p[0]), ys = punkte.map(p => p[1]), rand = 34;
+  let x0 = Math.min(...xs) - rand, x1 = Math.max(...xs) + rand, y0 = Math.min(...ys) - rand, y1 = Math.max(...ys) + rand;
+  const b = Math.max(x1 - x0, 320), h = Math.max(y1 - y0, 260);
+  x0 -= (b - (x1 - x0)) / 2; y0 -= (h - (y1 - y0)) / 2;
+  svg.setAttribute('viewBox', `${x0.toFixed(1)} ${y0.toFixed(1)} ${b.toFixed(1)} ${h.toFixed(1)}`);
+  return svg;
+}
+function blatt(box, svg) { const d = document.createElement('div'); d.className = 'wk-blatt'; d.appendChild(svg); box.appendChild(d); return d; }
+/** Wie viele Tipps stehen gerade über der Aufgabe? (ueben.js zeichnet die Aufgabe nach jedem Tipp neu) */
+const tippsSichtbar = box => { const r = box.closest('.lu') || document; return r.querySelectorAll('.tipp').length; };
+
+/* ═══════════════════════════════════════════════════════
+   EINGABEN
+   ═══════════════════════════════════════════════════════ */
+function knoepfe(box, liste, fertig) {
+  const d = document.createElement('div'); d.className = 'wk-knoepfe';
+  liste.forEach(k => {
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'wk-knopf';
+    b.innerHTML = `${esc(k.text)}${k.klein ? `<small>${esc(k.klein)}</small>` : ''}`;
+    b.addEventListener('click', () => fertig(k.wert));
+    d.appendChild(b);
+  });
+  box.appendChild(d);
+}
+function gradEingabe(box, fertig) {
+  const feld = document.createElement('div'); feld.className = 'wk-feld';
+  box.appendChild(feld);
+  LernZiffernblock.erstelle({ box, felder: [feld], einstellig: false, max: 3, fertig: w => { if (w[0] !== '' && w[0] != null) fertig(Number(w[0])); } });
+}
+
+/* ═══════════════════════════════════════════════════════
+   AUFGABEN
+   ═══════════════════════════════════════════════════════ */
+/** Winkel ohne Geodreieck: beliebig gedreht, Schenkel unterschiedlich lang (lange Schenkel ≠ großer Winkel) */
+function freierWinkel(alpha) {
+  const l1 = zufall(110, 230), l2 = Math.random() < .5 ? zufall(110, 230) : (l1 > 170 ? zufall(100, 140) : zufall(190, 230));
+  return { alpha, start: zufall(0, 359), l1, l2, geo: null };
+}
+function alphaFuer(art, knapp) {
+  if (art === 'recht') return 90;
+  if (art === 'spitz') return knapp && Math.random() < .5 ? zufall(78, 86) : zufall(18, 72);
+  if (art === 'stumpf') return knapp && Math.random() < .5 ? zufall(94, 102) : zufall(108, 165);
+  if (art === 'gestreckt') return 180;
+  if (art === 'voll') return 360;
+  return zufall(200, 340);
+}
+function erkennen(o = {}) {
+  const arten = o.weitere ? ['spitz', 'recht', 'stumpf', 'gestreckt', 'ueberstumpf', 'voll'] : ['spitz', 'recht', 'stumpf'];
+  const art = wahl(arten), alpha = alphaFuer(art, o.knapp), w = freierWinkel(alpha);
+  const a = {
+    typ: o.weitere ? 'weitere' : o.blitz ? 'blitz' : 'erkennen', art: 'eigen', schluessel: art + alpha + Math.random(),
+    frage: o.blitz ? 'Schau genau – gleich ist der Winkel weg!' : 'Was für ein Winkel ist das?',
+    hinweis: o.blitz ? 'Merk dir den Winkel und tippe dann die Winkelart.' : 'Schau auf die Öffnung – nicht auf die Länge der Schenkel.',
+    text: ARTEN[art].name, erklaerung: ERKL[art] + (alpha !== 90 && alpha < 180 ? ` Dieser Winkel hat ${alpha}°.` : ''),
+    tipp: 'Vergleiche mit der Ecke eines Blatts: Das ist ein rechter Winkel (90°).',
+    tipp2: o.weitere ? 'Ist die Öffnung größer als eine gerade Linie (180°)? Dann ist er überstumpf.' : 'Passt der Winkel in die Blatt-Ecke, ist er spitz. Passt die Ecke in den Winkel, ist er stumpf.',
+    zeige: (box, fertig) => {
+      const b = blatt(box, bild(w));
+      if (o.blitz && !a.gesehen) {
+        a.gesehen = true;
+        a.uhr = setTimeout(() => { if (b.isConnected) b.insertAdjacentHTML('beforeend', '<div class="wk-weg">👀 Weg! Was war das für ein Winkel?</div>'); a.weg = true; }, o.zeit || 1500);
+      } else if (o.blitz && a.weg) b.insertAdjacentHTML('beforeend', '<div class="wk-weg">👀 Weg! Was war das für ein Winkel?</div>');
+      knoepfe(box, arten.map(k => ({ wert: k, text: ARTEN[k].knopf, klein: o.blitz ? '' : ARTEN[k].klein })), fertig);
+    },
+    pruef: e => e === art, eingabeText: e => (ARTEN[e] || {}).name || String(e),
+    loesungZeige: box => blatt(box, bild(w, { ref90: true })),
+  };
+  return a;
+}
+/** Winkel mit angelegtem Geodreieck; schritt = 10, 5 oder 1 */
+function geoWinkel(schritt) {
+  let alpha;
+  do { alpha = schritt * zufall(Math.ceil(12 / schritt), Math.floor(168 / schritt)); } while (alpha === 90 && Math.random() < .7);
+  const seite = Math.random() < .5 ? 'rechts' : 'links', rot = zufall(-32, 32);
+  // „start“ = Schenkel, von dem aus der Winkel gegen den Uhrzeigersinn aufgeht
+  const start = seite === 'rechts' ? rot : rot + 180 - alpha;
+  return { alpha, start, geo: { rot, seite } };
+}
+const SKALA_TIPP2 = w => `Lies auf der Zahlenreihe, die beim ersten Schenkel bei 0 anfängt – die ${w.geo.seite === 'rechts' ? 'äußere' : 'innere'} (jetzt hervorgehoben).`;
+function falle() {
+  let w; do { w = geoWinkel(10); } while (w.alpha === 90);          // bei 90° wären beide Zahlen gleich
+  const andere = 180 - w.alpha, art = artVon(w.alpha), opts = Math.random() < .5 ? [w.alpha, andere] : [andere, w.alpha];
+  const a = {
+    typ: 'falle', art: 'eigen', schluessel: 'f' + w.alpha + w.geo.seite + Math.random(),
+    frage: `${opts[0]}° oder ${opts[1]}°?`, hinweis: 'Das Geodreieck hat zwei Zahlenreihen. Welche Zahl stimmt?',
+    text: w.alpha + '°', erklaerung: `Der Winkel ist ${art === 'spitz' ? 'spitz – also kleiner als 90°' : 'stumpf – also größer als 90°'}. Darum ${w.alpha}° und nicht ${andere}°.`,
+    tipp: 'Schau zuerst: Ist der Winkel spitz oder stumpf? Spitz heißt kleiner als 90°, stumpf größer als 90°.',
+    tipp2: SKALA_TIPP2(w),
+    zeige: (box, fertig) => { blatt(box, bild(w, { hervor: tippsSichtbar(box) >= 2 })); knoepfe(box, opts.map(v => ({ wert: v, text: v + '°' })), fertig); },
+    pruef: e => e === w.alpha, eingabeText: e => e + '°',
+    loesungZeige: (box, e) => blatt(box, bild(w, { hervor: true, wert: e })),
+  };
+  return a;
+}
+function ablesen(genau) {
+  const w = geoWinkel(genau ? 1 : wahl([10, 5, 5])), art = artVon(w.alpha);
+  return {
+    typ: genau ? 'exakt' : 'ablesen', art: 'eigen', schluessel: 'a' + w.alpha + Math.random(),
+    frage: 'Wie groß ist der Winkel?', hinweis: genau ? 'Lies auf 1° genau ab und tippe die Zahl.' : 'Lies am Geodreieck ab und tippe die Zahl.',
+    text: w.alpha + '°' + (genau ? ' (±1°)' : ''),
+    erklaerung: (art === 'recht' ? 'Ein rechter Winkel hat 90°.' : `Der Winkel ist ${art} – die Zahl muss ${art === 'spitz' ? 'kleiner' : 'größer'} als 90 sein.`) + ' ' + SKALA_TIPP2(w).replace(' (jetzt hervorgehoben)', ''),
+    tipp: 'Spitz oder stumpf? Spitz heißt: die Zahl ist kleiner als 90. Stumpf: größer als 90.',
+    tipp2: SKALA_TIPP2(w),
+    zeige: (box, fertig) => { blatt(box, bild(w, { hervor: tippsSichtbar(box) >= 2 })); gradEingabe(box, fertig); },
+    pruef: e => genau ? Math.abs(e - w.alpha) <= 1 : e === w.alpha, eingabeText: e => e + '°',
+    loesungZeige: (box, e) => blatt(box, bild(w, { hervor: true, wert: e })),
+  };
+}
+function schaetzen() {
+  const alpha = wahl([zufall(15, 80), zufall(100, 170), zufall(25, 155)]), w = freierWinkel(alpha);
+  return {
+    typ: 'schaetzen', art: 'eigen', schluessel: 's' + alpha + Math.random(),
+    frage: 'Wie groß ist der Winkel ungefähr?', hinweis: 'Schätze ohne Geodreieck. Bis 10° daneben zählt als richtig.',
+    text: `${alpha}° (richtig war alles von ${Math.max(0, alpha - 10)}° bis ${alpha + 10}°)`,
+    erklaerung: `Denk an Stützwinkel: 90° ist die Blatt-Ecke, 45° die Hälfte davon, 180° eine gerade Linie. Dieser Winkel ist ${ARTEN[artVon(alpha)].name}.`,
+    tipp: 'Vergleiche mit 90° (Blatt-Ecke): größer oder kleiner?',
+    tipp2: 'Halbiere im Kopf: 45° ist die Hälfte eines rechten Winkels, 135° liegt genau zwischen 90° und 180°.',
+    zeige: (box, fertig) => { blatt(box, bild(w)); gradEingabe(box, fertig); },
+    pruef: e => Math.abs(e - alpha) <= 10, eingabeText: e => e + '°',
+    loesungZeige: box => blatt(box, bild(w, { ref90: true })),
+  };
+}
+
+/* ═══════════════════════════════════════════════════════
+   STUFEN – IDs stehen im Katalog (daten/katalog.json, ma.5.winkel) und nie umbenennen
+   ═══════════════════════════════════════════════════════ */
+const STUFEN = [
+  { id: 'ma.5.winkel.arten', titel: 'Spitz, recht oder stumpf?', kurz: 'Winkelarten erkennen', erzeuge: () => erkennen() },
+  { id: 'ma.5.winkel.genau', titel: 'Genau hinschauen', kurz: 'Auch knappe Fälle um 90°', erzeuge: () => erkennen({ knapp: true }) },
+  { id: 'ma.5.winkel.blitz', titel: 'Blitzblick', kurz: 'Der Winkel ist nur kurz zu sehen', erzeuge: () => erkennen({ blitz: true, knapp: Math.random() < .3 }) },
+  { id: 'ma.5.winkel.falle', titel: 'Die Geodreieck-Falle', kurz: '50° oder 130°? Welche Skala stimmt?', erzeuge: falle },
+  { id: 'ma.5.winkel.ablesen', titel: 'Geodreieck ablesen', kurz: 'In Zehner- und Fünferschritten', erzeuge: () => ablesen(false) },
+  { id: 'ma.5.winkel.exakt', titel: 'Genau ablesen', kurz: 'Auf 1° genau', erzeuge: () => ablesen(true) },
+  { id: 'ma.5.winkel.schaetzen', titel: 'Schätzen', kurz: 'Ohne Geodreieck, ±10° zählt', erzeuge: schaetzen },
+  { id: 'ma.5.winkel.mix', titel: 'Alles gemischt', kurz: 'Erkennen, ablesen, schätzen', erzeuge: () => wahl([erkennen, erkennen, falle, () => ablesen(false), schaetzen])() },
+  { id: 'ma.5.winkel.weitere', titel: 'Weitere Winkelarten', kurz: 'Gestreckt, überstumpf, Vollwinkel', gesperrt: true, erzeuge: () => erkennen({ weitere: true }) },
+];
+const HILFE = `<section><h2>Winkelarten</h2>
+  <p><b>Spitz:</b> kleiner als 90°. <b>Recht:</b> genau 90° – wie die Ecke eines Blatts. <b>Stumpf:</b> größer als 90°, kleiner als 180°.</p>
+  <p>Trick: Halte im Kopf eine Blatt-Ecke an den Winkel. Passt der Winkel hinein, ist er spitz. Passt die Ecke in den Winkel, ist er stumpf.
+  Die Länge der Schenkel ist egal – es zählt nur, wie weit der Winkel offen ist.</p></section>
+  <section><h2>Am Geodreieck ablesen</h2>
+  <p>1. Nullpunkt der langen Seite genau auf den Scheitel, die lange Seite auf den ersten Schenkel.
+  2. Erst schätzen: spitz oder stumpf? 3. Die Zahlenreihe wählen, die beim ersten Schenkel bei <b>0</b> anfängt – das Geodreieck hat zwei.
+  4. Am zweiten Schenkel ablesen und prüfen: Passt die Zahl zur Schätzung?</p>
+  <p>Beispiel: Der Winkel ist spitz, du liest 130° – dann hast du die falsche Reihe erwischt. Richtig ist 50°.</p></section>`;
+
+LernUeben.start({
+  host: document.getElementById('app'), titel: '📐 Winkel-Werkstatt', untertitel: 'Winkelarten erkennen und am Geodreieck ablesen',
+  stufen: STUFEN.map(s => ({ id: s.id, titel: s.titel, kurz: s.kurz, gesperrt: s.gesperrt })), runde: 10, hilfe: { html: HILFE },
+  erzeuge: st => { const s = STUFEN.find(x => x.id === st.id); return s ? s.erzeuge() : null; },
+  pruefe: (a, e) => { try { if (a.uhr) clearTimeout(a.uhr); return !!a.pruef(e); } catch (err) { return false; } },
+});
+</script>
+<script src="../../gemeinsam/navbar.js"></script>
+</body>
+</html>
