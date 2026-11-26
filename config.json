@@ -364,6 +364,18 @@
       "gruppe": "g-geometrie"
     },
     {
+      "name": "Winkel lernen",
+      "datei": "apps/mathe/winkel.html",
+      "fach": "Mathematik",
+      "emoji": "📐",
+      "beschreibung": "Winkelarten erkennen und mit dem Geodreieck messen",
+      "hidden": false,
+      "klassen": [],
+      "customTags": [],
+      "aod": false,
+      "gruppe": "g-geometrie"
+    },
+    {
       "name": "English Journey Year 6",
       "datei": "apps/englisch/english-journey.html",
       "fach": "Englisch",
@@ -569,17 +581,6 @@
       "fach": "GPG",
       "emoji": "🔍",
       "beschreibung": "Beschreiben, erklären, deuten – werde zum Quellen-Detektiv!",
-      "hidden": false,
-      "klassen": [],
-      "customTags": [],
-      "aod": false
-    },
-    {
-      "name": "Winkel lernen",
-      "datei": "apps/mathe/winkel.html",
-      "fach": "Mathematik",
-      "emoji": "📐",
-      "beschreibung": "Winkelarten erkennen und mit dem Geodreieck messen",
       "hidden": false,
       "klassen": [],
       "customTags": [],
