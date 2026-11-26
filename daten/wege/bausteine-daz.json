@@ -1,0 +1,876 @@
+{
+ "version": 1,
+ "weg": "daten/wege/daz.json",
+ "bausteine": [
+  {
+   "id": "daz-he-k1",
+   "art": "hefteintrag",
+   "titel": "sein & heißen – to be & to be called",
+   "zeilen": [
+    [
+     [
+      "In German the verb changes with the person:",
+      ""
+     ]
+    ],
+    [
+     [
+      "ich ",
+      ""
+     ],
+     [
+      "bin",
+      "g"
+     ],
+     [
+      "  –  I am",
+      ""
+     ]
+    ],
+    [
+     [
+      "du ",
+      ""
+     ],
+     [
+      "bist",
+      "g"
+     ],
+     [
+      "  –  you are",
+      ""
+     ]
+    ],
+    [
+     [
+      "er / sie ",
+      ""
+     ],
+     [
+      "ist",
+      "g"
+     ],
+     [
+      "  –  he / she is",
+      ""
+     ]
+    ],
+    [
+     [
+      "ich ",
+      ""
+     ],
+     [
+      "heiße",
+      "g"
+     ],
+     [
+      " Lily  –  my name is Lily",
+      ""
+     ]
+    ],
+    [
+     [
+      "du ",
+      ""
+     ],
+     [
+      "heißt",
+      "g"
+     ],
+     [
+      "  –  your name is …",
+      ""
+     ]
+    ],
+    [
+     [
+      "Wie heißt du?",
+      "b"
+     ],
+     [
+      "  –  What is your name?",
+      ""
+     ]
+    ]
+   ],
+   "merke": "ich bin · du bist · er/sie ist"
+  },
+  {
+   "id": "daz-ue-k1",
+   "art": "uebung",
+   "titel": "Write about you in German. · Schreib in dein Heft.",
+   "items": [
+    "Ich heiße ___.",
+    "Ich bin ___ Jahre alt.",
+    "Ich komme aus ___.",
+    "Mein Freund / Meine Freundin heißt ___."
+   ],
+   "loesung": [
+    "Ich heiße (your name).",
+    "Ich bin (12) Jahre alt.",
+    "Ich komme aus (England).",
+    "Mein Freund heißt (Jonas)."
+   ]
+  },
+  {
+   "id": "daz-he-k2",
+   "art": "hefteintrag",
+   "titel": "der, die, das – the",
+   "zeilen": [
+    [
+     [
+      "Every German noun has an article – and a ",
+      ""
+     ],
+     [
+      "capital letter",
+      "g"
+     ],
+     [
+      ".",
+      ""
+     ]
+    ],
+    [
+     [
+      "der",
+      "b"
+     ],
+     [
+      "  Papa, Bruder, Hund  (masculine)",
+      ""
+     ]
+    ],
+    [
+     [
+      "die",
+      "b"
+     ],
+     [
+      "  Mama, Schwester, Katze  (feminine)",
+      ""
+     ]
+    ],
+    [
+     [
+      "das",
+      "b"
+     ],
+     [
+      "  Kind, Foto  (neuter)",
+      ""
+     ]
+    ],
+    [
+     [
+      "mein",
+      "g"
+     ],
+     [
+      " Papa · ",
+      ""
+     ],
+     [
+      "meine",
+      "g"
+     ],
+     [
+      " Mama  –  my",
+      ""
+     ]
+    ],
+    [
+     [
+      "ich habe · du hast · er/sie hat",
+      "g"
+     ],
+     [
+      "  –  I have …",
+      ""
+     ]
+    ]
+   ],
+   "merke": "Learn every noun WITH its article: der Hund, die Katze, das Kind."
+  },
+  {
+   "id": "daz-ue-k2",
+   "art": "uebung",
+   "titel": "Draw your family and write. · Schreib in dein Heft.",
+   "items": [
+    "Das ist mein ___.",
+    "Das ist meine ___.",
+    "Er heißt ___.",
+    "Sie ist ___ Jahre alt."
+   ],
+   "loesung": [
+    "Das ist mein Papa / Bruder / Opa.",
+    "Das ist meine Mama / Schwester / Oma.",
+    "Er heißt (name).",
+    "Sie ist (number) Jahre alt."
+   ]
+  },
+  {
+   "id": "daz-he-k3",
+   "art": "hefteintrag",
+   "titel": "ein / eine – a · kein / keine – no",
+   "zeilen": [
+    [
+     [
+      "der Stift → ",
+      ""
+     ],
+     [
+      "ein",
+      "g"
+     ],
+     [
+      " Stift → ",
+      ""
+     ],
+     [
+      "kein",
+      "g"
+     ],
+     [
+      " Stift",
+      ""
+     ]
+    ],
+    [
+     [
+      "die Tasche → ",
+      ""
+     ],
+     [
+      "eine",
+      "g"
+     ],
+     [
+      " Tasche → ",
+      ""
+     ],
+     [
+      "keine",
+      "g"
+     ],
+     [
+      " Tasche",
+      ""
+     ]
+    ],
+    [
+     [
+      "das Heft → ",
+      ""
+     ],
+     [
+      "ein",
+      "g"
+     ],
+     [
+      " Heft → ",
+      ""
+     ],
+     [
+      "kein",
+      "g"
+     ],
+     [
+      " Heft",
+      ""
+     ]
+    ],
+    [
+     [
+      "After \"ich habe\": der → ",
+      ""
+     ],
+     [
+      "einen",
+      "g"
+     ],
+     [
+      ": Ich habe einen Stift.",
+      ""
+     ]
+    ],
+    [
+     [
+      "Plural: always ",
+      ""
+     ],
+     [
+      "die",
+      "b"
+     ],
+     [
+      ": die Stifte, die Hefte, die Bücher",
+      ""
+     ]
+    ],
+    [
+     [
+      "Langsam, bitte. · Noch einmal, bitte. · Ich verstehe das nicht.",
+      "b"
+     ]
+    ]
+   ],
+   "merke": "kein = no / not a: Ich habe kein Heft."
+  },
+  {
+   "id": "daz-ue-k3",
+   "art": "uebung",
+   "titel": "What is in your school bag? Write. · Schreib in dein Heft.",
+   "items": [
+    "In meiner Tasche ist ein ___.",
+    "Ich habe eine ___.",
+    "Ich habe kein ___.",
+    "Ich habe zwei ___."
+   ],
+   "loesung": [
+    "In meiner Tasche ist ein Heft / Buch / Lineal.",
+    "Ich habe eine Tasche / Schere.",
+    "Ich habe kein Lineal.",
+    "Ich habe zwei Stifte."
+   ]
+  },
+  {
+   "id": "daz-he-k4",
+   "art": "hefteintrag",
+   "titel": "Verbs · the verb is in position 2",
+   "zeilen": [
+    [
+     [
+      "spielen:  ich spiel",
+      ""
+     ],
+     [
+      "e",
+      "g"
+     ],
+     [
+      "  ·  du spiel",
+      ""
+     ],
+     [
+      "st",
+      "g"
+     ],
+     [
+      "  ·  er/sie spiel",
+      ""
+     ],
+     [
+      "t",
+      "g"
+     ],
+     [
+      "  ·  wir spiel",
+      ""
+     ],
+     [
+      "en",
+      "g"
+     ]
+    ],
+    [
+     [
+      "The verb is always in ",
+      ""
+     ],
+     [
+      "position 2",
+      "g"
+     ],
+     [
+      ":",
+      ""
+     ]
+    ],
+    [
+     [
+      "Ich ",
+      ""
+     ],
+     [
+      "spiele",
+      "b"
+     ],
+     [
+      " am Nachmittag Fußball.",
+      ""
+     ]
+    ],
+    [
+     [
+      "Am Nachmittag ",
+      ""
+     ],
+     [
+      "spiele",
+      "b"
+     ],
+     [
+      " ich Fußball.   (not: Am Nachmittag ich spiele …)",
+      ""
+     ]
+    ],
+    [
+     [
+      "um 7 Uhr = at 7 o’clock  ·  ",
+      ""
+     ],
+     [
+      "halb acht",
+      "g"
+     ],
+     [
+      " = 7:30 (half TO eight!)",
+      ""
+     ]
+    ]
+   ],
+   "merke": "Position 2 = verb: Am Abend mache ich Hausaufgaben."
+  },
+  {
+   "id": "daz-ue-k4",
+   "art": "uebung",
+   "titel": "Write your day. · Schreib in dein Heft.",
+   "items": [
+    "Ich stehe um ___ Uhr auf.",
+    "Die Schule beginnt um ___ Uhr.",
+    "Am Nachmittag ___ ich ___.",
+    "Am Abend ___ ich ___."
+   ],
+   "loesung": [
+    "Ich stehe um sieben Uhr auf.",
+    "Die Schule beginnt um acht Uhr.",
+    "Am Nachmittag spiele ich Fußball.",
+    "Am Abend mache ich Hausaufgaben."
+   ]
+  },
+  {
+   "id": "daz-he-k5",
+   "art": "hefteintrag",
+   "titel": "ich möchte – I would like",
+   "zeilen": [
+    [
+     [
+      "ich ",
+      ""
+     ],
+     [
+      "möchte",
+      "g"
+     ],
+     [
+      "  ·  du ",
+      ""
+     ],
+     [
+      "möchtest",
+      "g"
+     ],
+     [
+      "  –  polite way to ask for something",
+      ""
+     ]
+    ],
+    [
+     [
+      "der Apfelsaft → Ich möchte ",
+      ""
+     ],
+     [
+      "einen",
+      "g"
+     ],
+     [
+      " Apfelsaft.",
+      ""
+     ]
+    ],
+    [
+     [
+      "die Brezel → Ich möchte ",
+      ""
+     ],
+     [
+      "eine",
+      "g"
+     ],
+     [
+      " Brezel.",
+      ""
+     ]
+    ],
+    [
+     [
+      "das Brötchen → Ich möchte ",
+      ""
+     ],
+     [
+      "ein",
+      "g"
+     ],
+     [
+      " Brötchen.",
+      ""
+     ]
+    ],
+    [
+     [
+      "1 eins · 2 zwei · 3 drei · 4 vier · 5 fünf · 6 sechs · 7 sieben · 8 acht · 9 neun · 10 zehn",
+      ""
+     ]
+    ],
+    [
+     [
+      "4,50 € = vier Euro fünfzig",
+      "b"
+     ]
+    ]
+   ],
+   "merke": "Ich möchte … , bitte. – Danke!"
+  },
+  {
+   "id": "daz-ue-k5",
+   "art": "uebung",
+   "titel": "Write a shopping dialogue. · Schreib in dein Heft.",
+   "items": [
+    "Guten Tag! Was möchtest du?",
+    "Ich möchte ___, bitte.",
+    "Noch etwas?",
+    "Ja, ___ / Nein, danke."
+   ],
+   "loesung": [
+    "Guten Tag! Was möchtest du?",
+    "Ich möchte eine Brezel, bitte.",
+    "Noch etwas?",
+    "Ja, einen Apfelsaft. / Nein, danke."
+   ]
+  },
+  {
+   "id": "daz-he-k6",
+   "art": "hefteintrag",
+   "titel": "Questions · gern",
+   "zeilen": [
+    [
+     [
+      "W-questions: ",
+      ""
+     ],
+     [
+      "Was?",
+      "g"
+     ],
+     [
+      " what  ",
+      ""
+     ],
+     [
+      "Wo?",
+      "g"
+     ],
+     [
+      " where  ",
+      ""
+     ],
+     [
+      "Wer?",
+      "g"
+     ],
+     [
+      " who  ",
+      ""
+     ],
+     [
+      "Wann?",
+      "g"
+     ],
+     [
+      " when  ",
+      ""
+     ],
+     [
+      "Wie?",
+      "g"
+     ],
+     [
+      " how",
+      ""
+     ]
+    ],
+    [
+     [
+      "Wo ",
+      ""
+     ],
+     [
+      "wohnst",
+      "b"
+     ],
+     [
+      " du?   –  verb in position 2",
+      ""
+     ]
+    ],
+    [
+     [
+      "Yes/no questions: verb ",
+      ""
+     ],
+     [
+      "first",
+      "g"
+     ],
+     [
+      ": ",
+      ""
+     ],
+     [
+      "Spielst",
+      "b"
+     ],
+     [
+      " du Fußball? – Ja. / Nein.",
+      ""
+     ]
+    ],
+    [
+     [
+      "gern",
+      "g"
+     ],
+     [
+      " = like doing:  Ich lese gern. – I like reading.",
+      ""
+     ]
+    ],
+    [
+     [
+      "Ich lese ",
+      ""
+     ],
+     [
+      "nicht",
+      "g"
+     ],
+     [
+      " gern. – I don’t like reading.",
+      ""
+     ]
+    ]
+   ],
+   "merke": "Spielst du gern Fußball? – Ja, gern!"
+  },
+  {
+   "id": "daz-ue-k6",
+   "art": "uebung",
+   "titel": "Write about your hobbies. · Schreib in dein Heft.",
+   "items": [
+    "Ich ___ gern.",
+    "Ich ___ nicht gern.",
+    "Was machst du gern?",
+    "Mein Freund / Meine Freundin ___ gern."
+   ],
+   "loesung": [
+    "Ich tanze / lese / singe gern.",
+    "Ich koche nicht gern.",
+    "Was machst du gern?",
+    "Meine Freundin spielt gern Fußball."
+   ]
+  },
+  {
+   "id": "daz-he-k7",
+   "art": "hefteintrag",
+   "titel": "Asking the way · Where is …?",
+   "zeilen": [
+    [
+     [
+      "Entschuldigung, wo ist …?",
+      "b"
+     ],
+     [
+      "  –  Excuse me, where is …?",
+      ""
+     ]
+    ],
+    [
+     [
+      "links ⬅  ·  rechts ➡  ·  geradeaus ⬆",
+      "g"
+     ]
+    ],
+    [
+     [
+      "der Park → ",
+      ""
+     ],
+     [
+      "im",
+      "g"
+     ],
+     [
+      " Park · neben ",
+      ""
+     ],
+     [
+      "dem",
+      "g"
+     ],
+     [
+      " Park",
+      ""
+     ]
+    ],
+    [
+     [
+      "die Schule → ",
+      ""
+     ],
+     [
+      "in der",
+      "g"
+     ],
+     [
+      " Schule · neben ",
+      ""
+     ],
+     [
+      "der",
+      "g"
+     ],
+     [
+      " Schule",
+      ""
+     ]
+    ],
+    [
+     [
+      "das Kino → ",
+      ""
+     ],
+     [
+      "im",
+      "g"
+     ],
+     [
+      " Kino · neben ",
+      ""
+     ],
+     [
+      "dem",
+      "g"
+     ],
+     [
+      " Kino   (im = in dem)",
+      ""
+     ]
+    ]
+   ],
+   "merke": "Wo ist der Bahnhof? – Geradeaus und dann links."
+  },
+  {
+   "id": "daz-ue-k7",
+   "art": "uebung",
+   "titel": "Draw a little map and write. · Schreib in dein Heft.",
+   "items": [
+    "Die Schule ist neben ___.",
+    "Der Park ist ___.",
+    "Wo ist ___?",
+    "Geh ___ und dann ___."
+   ],
+   "loesung": [
+    "Die Schule ist neben dem Park.",
+    "Der Park ist neben dem Kino.",
+    "Wo ist der Bahnhof?",
+    "Geh geradeaus und dann rechts."
+   ]
+  },
+  {
+   "id": "daz-he-k8",
+   "art": "hefteintrag",
+   "titel": "How are you? · Feelings & health",
+   "zeilen": [
+    [
+     [
+      "Wie geht es dir?",
+      "b"
+     ],
+     [
+      "  –  How are you?",
+      ""
+     ]
+    ],
+    [
+     [
+      "Mir geht es gut. / nicht so gut.",
+      "g"
+     ],
+     [
+      "  –  I am fine. / not so good.",
+      ""
+     ]
+    ],
+    [
+     [
+      "Ich ",
+      ""
+     ],
+     [
+      "bin",
+      "g"
+     ],
+     [
+      " müde · krank · froh · traurig  (feelings)",
+      ""
+     ]
+    ],
+    [
+     [
+      "Ich ",
+      ""
+     ],
+     [
+      "habe",
+      "g"
+     ],
+     [
+      " Kopfschmerzen · Bauchschmerzen  (pain)",
+      ""
+     ]
+    ],
+    [
+     [
+      "Ich brauche Hilfe.",
+      "b"
+     ],
+     [
+      "  –  I need help.",
+      ""
+     ]
+    ]
+   ],
+   "merke": "feelings with \"bin\", pain with \"habe\""
+  },
+  {
+   "id": "daz-ue-k8",
+   "art": "uebung",
+   "titel": "How are you today? Write. · Schreib in dein Heft.",
+   "items": [
+    "Heute geht es mir ___.",
+    "Ich bin ___.",
+    "Ich habe ___.",
+    "Ich brauche ___."
+   ],
+   "loesung": [
+    "Heute geht es mir gut / nicht so gut.",
+    "Ich bin müde / froh.",
+    "Ich habe Kopfschmerzen.",
+    "Ich brauche eine Pause / Hilfe."
+   ]
+  }
+ ]
+}

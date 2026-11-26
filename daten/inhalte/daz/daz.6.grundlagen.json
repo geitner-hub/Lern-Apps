@@ -1,0 +1,1808 @@
+{
+ "typ": "gemischt",
+ "thema": "daz.6.grundlagen",
+ "titel": "Deutsch lernen – Grundlagen",
+ "emoji": "💬",
+ "klasse": 6,
+ "sprache": "de-DE",
+ "untertitel": "German for English speakers · Wörter und Sätze",
+ "anweisung": "Ordne richtig zu.",
+ "runde": 8,
+ "hilfe": [
+  {
+   "titel": "der · die · das",
+   "text": "Every noun has an article. Learn it together with the noun.",
+   "beispiele": [
+    [
+     "the dog",
+     "der Hund"
+    ],
+    [
+     "the cat",
+     "die Katze"
+    ],
+    [
+     "the child",
+     "das Kind"
+    ]
+   ]
+  },
+  {
+   "titel": "Verb in position 2",
+   "text": "In German the verb is always the second part of the sentence.",
+   "beispiele": [
+    [
+     "I play football.",
+     "Ich spiele Fußball."
+    ],
+    [
+     "In the evening I play.",
+     "Am Abend spiele ich."
+    ]
+   ]
+  }
+ ],
+ "stufen": [
+  {
+   "id": "daz.6.grundlagen.k1-woerter",
+   "titel": "1 · Wörter: Hello, I am Lily!",
+   "kurz": "Hallo, ich bin Lily!",
+   "typ": "zuordnen",
+   "anweisung": "Match English and German. · Ordne zu.",
+   "runde": 5,
+   "aufgaben": [
+    {
+     "frage": "English → Deutsch",
+     "paare": [
+      [
+       "good morning",
+       "Guten Morgen"
+      ],
+      [
+       "hello",
+       "Hallo"
+      ],
+      [
+       "my name is",
+       "ich heiße"
+      ],
+      [
+       "I am",
+       "ich bin"
+      ]
+     ]
+    },
+    {
+     "frage": "English → Deutsch",
+     "paare": [
+      [
+       "I am",
+       "ich bin"
+      ],
+      [
+       "you are",
+       "du bist"
+      ],
+      [
+       "where from?",
+       "woher?"
+      ],
+      [
+       "I come from",
+       "ich komme aus"
+      ]
+     ]
+    },
+    {
+     "frage": "English → Deutsch",
+     "paare": [
+      [
+       "I come from",
+       "ich komme aus"
+      ],
+      [
+       "how old?",
+       "wie alt?"
+      ],
+      [
+       "twelve",
+       "zwölf"
+      ],
+      [
+       "too / also",
+       "auch"
+      ]
+     ]
+    },
+    {
+     "frage": "English → Deutsch",
+     "paare": [
+      [
+       "too / also",
+       "auch"
+      ],
+      [
+       "next to",
+       "neben"
+      ],
+      [
+       "thank you",
+       "danke"
+      ],
+      [
+       "please",
+       "bitte"
+      ]
+     ]
+    },
+    {
+     "frage": "English → Deutsch",
+     "paare": [
+      [
+       "please",
+       "bitte"
+      ],
+      [
+       "bye",
+       "Tschüss"
+      ],
+      [
+       "yes",
+       "ja"
+      ],
+      [
+       "no",
+       "nein"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "daz.6.grundlagen.k1-saetze",
+   "titel": "1 · Sätze: Hello, I am Lily!",
+   "kurz": "Sich vorstellen · Introducing yourself",
+   "typ": "lueckentext",
+   "anweisung": "Choose the right word. · Wähle das richtige Wort.",
+   "runde": 9,
+   "aufgaben": [
+    {
+     "text": "Ich ___ Lily.",
+     "antwort": "heiße",
+     "optionen": [
+      "heiße",
+      "heißt",
+      "heißen"
+     ],
+     "tipp": "ich → heiße"
+    },
+    {
+     "text": "Du ___ zwölf.",
+     "antwort": "bist",
+     "optionen": [
+      "bist",
+      "bin",
+      "ist"
+     ],
+     "tipp": "du → bist"
+    },
+    {
+     "text": "Er ___ Jonas.",
+     "antwort": "heißt",
+     "optionen": [
+      "heißt",
+      "heiße",
+      "heißen"
+     ],
+     "tipp": "er → heißt"
+    },
+    {
+     "text": "Ich ___ aus England.",
+     "antwort": "komme",
+     "optionen": [
+      "komme",
+      "kommst",
+      "kommt"
+     ],
+     "tipp": "ich → komme"
+    },
+    {
+     "text": "Woher ___ du?",
+     "antwort": "kommst",
+     "optionen": [
+      "kommst",
+      "komme",
+      "kommt"
+     ],
+     "tipp": "du → kommst"
+    },
+    {
+     "text": "Sie ___ zwölf Jahre alt.",
+     "antwort": "ist",
+     "optionen": [
+      "ist",
+      "bist",
+      "bin"
+     ],
+     "tipp": "sie (she) → ist"
+    },
+    {
+     "typ": "sortieren",
+     "teile": [
+      "Ich",
+      "bin",
+      "zwölf",
+      "Jahre",
+      "alt."
+     ],
+     "loesung": "Ich bin zwölf Jahre alt.",
+     "frage": "I am twelve years old.",
+     "tipp": "The verb is in position 2."
+    },
+    {
+     "typ": "sortieren",
+     "teile": [
+      "Wie",
+      "heißt",
+      "du?"
+     ],
+     "loesung": "Wie heißt du?",
+     "frage": "What is your name?",
+     "tipp": "The verb is in position 2."
+    },
+    {
+     "typ": "sortieren",
+     "teile": [
+      "Ich",
+      "komme",
+      "aus",
+      "England."
+     ],
+     "loesung": "Ich komme aus England.",
+     "frage": "I come from England.",
+     "tipp": "The verb is in position 2."
+    }
+   ]
+  },
+  {
+   "id": "daz.6.grundlagen.k2-woerter",
+   "titel": "2 · Wörter: My family",
+   "kurz": "Meine Familie",
+   "typ": "zuordnen",
+   "anweisung": "Match English and German. · Ordne zu.",
+   "runde": 5,
+   "aufgaben": [
+    {
+     "frage": "English → Deutsch",
+     "paare": [
+      [
+       "mum",
+       "die Mama"
+      ],
+      [
+       "dad",
+       "der Papa"
+      ],
+      [
+       "brother",
+       "der Bruder"
+      ],
+      [
+       "sister",
+       "die Schwester"
+      ]
+     ]
+    },
+    {
+     "frage": "English → Deutsch",
+     "paare": [
+      [
+       "sister",
+       "die Schwester"
+      ],
+      [
+       "family",
+       "die Familie"
+      ],
+      [
+       "dog",
+       "der Hund"
+      ],
+      [
+       "cat",
+       "die Katze"
+      ]
+     ]
+    },
+    {
+     "frage": "English → Deutsch",
+     "paare": [
+      [
+       "cat",
+       "die Katze"
+      ],
+      [
+       "child",
+       "das Kind"
+      ],
+      [
+       "photo",
+       "das Foto"
+      ],
+      [
+       "grandma",
+       "die Oma"
+      ]
+     ]
+    },
+    {
+     "frage": "English → Deutsch",
+     "paare": [
+      [
+       "grandma",
+       "die Oma"
+      ],
+      [
+       "grandpa",
+       "der Opa"
+      ],
+      [
+       "cute / sweet",
+       "süß"
+      ],
+      [
+       "who?",
+       "wer?"
+      ]
+     ]
+    },
+    {
+     "frage": "English → Deutsch",
+     "paare": [
+      [
+       "who?",
+       "wer?"
+      ],
+      [
+       "I have",
+       "ich habe"
+      ],
+      [
+       "mum",
+       "die Mama"
+      ],
+      [
+       "dad",
+       "der Papa"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "daz.6.grundlagen.k2-saetze",
+   "titel": "2 · Sätze: My family",
+   "kurz": "Familie · der, die, das",
+   "typ": "lueckentext",
+   "anweisung": "Choose the right word. · Wähle das richtige Wort.",
+   "runde": 10,
+   "aufgaben": [
+    {
+     "text": "___ Hund heißt Biscuit.",
+     "antwort": "Der",
+     "optionen": [
+      "Der",
+      "Die",
+      "Das"
+     ],
+     "tipp": "der Hund"
+    },
+    {
+     "text": "___ Schwester ist sechzehn.",
+     "antwort": "Die",
+     "optionen": [
+      "Die",
+      "Der",
+      "Das"
+     ],
+     "tipp": "die Schwester"
+    },
+    {
+     "text": "___ Kind ist acht.",
+     "antwort": "Das",
+     "optionen": [
+      "Das",
+      "Der",
+      "Die"
+     ],
+     "tipp": "das Kind"
+    },
+    {
+     "text": "Das ist ___ Mama.",
+     "antwort": "meine",
+     "optionen": [
+      "meine",
+      "mein"
+     ],
+     "tipp": "die Mama → meine"
+    },
+    {
+     "text": "Das ist ___ Papa.",
+     "antwort": "mein",
+     "optionen": [
+      "mein",
+      "meine"
+     ],
+     "tipp": "der Papa → mein"
+    },
+    {
+     "text": "Ich ___ einen Bruder.",
+     "antwort": "habe",
+     "optionen": [
+      "habe",
+      "hast",
+      "hat"
+     ],
+     "tipp": "ich → habe"
+    },
+    {
+     "text": "Du ___ eine Schwester.",
+     "antwort": "hast",
+     "optionen": [
+      "hast",
+      "habe",
+      "hat"
+     ],
+     "tipp": "du → hast"
+    },
+    {
+     "typ": "sortieren",
+     "teile": [
+      "Das",
+      "ist",
+      "meine",
+      "Mama."
+     ],
+     "loesung": "Das ist meine Mama.",
+     "frage": "This is my mum.",
+     "tipp": "The verb is in position 2."
+    },
+    {
+     "typ": "sortieren",
+     "teile": [
+      "Ich",
+      "habe",
+      "einen",
+      "Bruder."
+     ],
+     "loesung": "Ich habe einen Bruder.",
+     "frage": "I have a brother.",
+     "tipp": "The verb is in position 2."
+    },
+    {
+     "typ": "sortieren",
+     "teile": [
+      "Wer",
+      "ist",
+      "das?"
+     ],
+     "loesung": "Wer ist das?",
+     "frage": "Who is that?",
+     "tipp": "The verb is in position 2."
+    }
+   ]
+  },
+  {
+   "id": "daz.6.grundlagen.k3-woerter",
+   "titel": "3 · Wörter: At school",
+   "kurz": "In der Schule",
+   "typ": "zuordnen",
+   "anweisung": "Match English and German. · Ordne zu.",
+   "runde": 5,
+   "aufgaben": [
+    {
+     "frage": "English → Deutsch",
+     "paare": [
+      [
+       "exercise book",
+       "das Heft"
+      ],
+      [
+       "pen",
+       "der Stift"
+      ],
+      [
+       "ruler",
+       "das Lineal"
+      ],
+      [
+       "eraser",
+       "der Radiergummi"
+      ]
+     ]
+    },
+    {
+     "frage": "English → Deutsch",
+     "paare": [
+      [
+       "eraser",
+       "der Radiergummi"
+      ],
+      [
+       "bag",
+       "die Tasche"
+      ],
+      [
+       "book",
+       "das Buch"
+      ],
+      [
+       "school",
+       "die Schule"
+      ]
+     ]
+    },
+    {
+     "frage": "English → Deutsch",
+     "paare": [
+      [
+       "school",
+       "die Schule"
+      ],
+      [
+       "teacher (woman)",
+       "die Lehrerin"
+      ],
+      [
+       "table / desk",
+       "der Tisch"
+      ],
+      [
+       "chair",
+       "der Stuhl"
+      ]
+     ]
+    },
+    {
+     "frage": "English → Deutsch",
+     "paare": [
+      [
+       "chair",
+       "der Stuhl"
+      ],
+      [
+       "board",
+       "die Tafel"
+      ],
+      [
+       "slowly",
+       "langsam"
+      ],
+      [
+       "again",
+       "noch einmal"
+      ]
+     ]
+    },
+    {
+     "frage": "English → Deutsch",
+     "paare": [
+      [
+       "again",
+       "noch einmal"
+      ],
+      [
+       "I don't understand.",
+       "Ich verstehe das nicht."
+      ],
+      [
+       "exercise book",
+       "das Heft"
+      ],
+      [
+       "pen",
+       "der Stift"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "daz.6.grundlagen.k3-saetze",
+   "titel": "3 · Sätze: At school",
+   "kurz": "Schulsachen · ein/eine, kein/keine",
+   "typ": "lueckentext",
+   "anweisung": "Choose the right word. · Wähle das richtige Wort.",
+   "runde": 9,
+   "aufgaben": [
+    {
+     "text": "Ich habe ___ Heft.",
+     "antwort": "kein",
+     "optionen": [
+      "kein",
+      "keine"
+     ],
+     "tipp": "das Heft → kein Heft"
+    },
+    {
+     "text": "Hast du ___ Tasche?",
+     "antwort": "eine",
+     "optionen": [
+      "eine",
+      "ein"
+     ],
+     "tipp": "die Tasche → eine Tasche"
+    },
+    {
+     "text": "Das ist ___ Lineal.",
+     "antwort": "ein",
+     "optionen": [
+      "ein",
+      "eine"
+     ],
+     "tipp": "das Lineal → ein Lineal"
+    },
+    {
+     "text": "Ich habe ___ Stift.",
+     "antwort": "einen",
+     "optionen": [
+      "einen",
+      "ein",
+      "eine"
+     ],
+     "tipp": "der Stift → ich habe einen Stift"
+    },
+    {
+     "text": "Ich habe ___ Tasche.",
+     "antwort": "keine",
+     "optionen": [
+      "keine",
+      "kein"
+     ],
+     "tipp": "die Tasche → keine Tasche"
+    },
+    {
+     "text": "Das ist ___ Buch.",
+     "antwort": "ein",
+     "optionen": [
+      "ein",
+      "eine"
+     ],
+     "tipp": "das Buch → ein Buch"
+    },
+    {
+     "typ": "sortieren",
+     "teile": [
+      "Ich",
+      "habe",
+      "kein",
+      "Heft."
+     ],
+     "loesung": "Ich habe kein Heft.",
+     "frage": "I don't have an exercise book.",
+     "tipp": "The verb is in position 2."
+    },
+    {
+     "typ": "sortieren",
+     "teile": [
+      "Was",
+      "ist",
+      "das?"
+     ],
+     "loesung": "Was ist das?",
+     "frage": "What is that?",
+     "tipp": "The verb is in position 2."
+    },
+    {
+     "typ": "sortieren",
+     "teile": [
+      "Noch",
+      "einmal,",
+      "bitte."
+     ],
+     "loesung": "Noch einmal, bitte.",
+     "frage": "Again, please.",
+     "tipp": "The verb is in position 2."
+    }
+   ]
+  },
+  {
+   "id": "daz.6.grundlagen.k4-woerter",
+   "titel": "4 · Wörter: My day",
+   "kurz": "Mein Tag",
+   "typ": "zuordnen",
+   "anweisung": "Match English and German. · Ordne zu.",
+   "runde": 5,
+   "aufgaben": [
+    {
+     "frage": "English → Deutsch",
+     "paare": [
+      [
+       "to play",
+       "spielen"
+      ],
+      [
+       "to get up",
+       "aufstehen"
+      ],
+      [
+       "to go",
+       "gehen"
+      ],
+      [
+       "to do / make",
+       "machen"
+      ]
+     ]
+    },
+    {
+     "frage": "English → Deutsch",
+     "paare": [
+      [
+       "to do / make",
+       "machen"
+      ],
+      [
+       "to learn",
+       "lernen"
+      ],
+      [
+       "to have breakfast",
+       "frühstücken"
+      ],
+      [
+       "homework",
+       "die Hausaufgaben"
+      ]
+     ]
+    },
+    {
+     "frage": "English → Deutsch",
+     "paare": [
+      [
+       "homework",
+       "die Hausaufgaben"
+      ],
+      [
+       "bed",
+       "das Bett"
+      ],
+      [
+       "morning",
+       "der Morgen"
+      ],
+      [
+       "afternoon",
+       "der Nachmittag"
+      ]
+     ]
+    },
+    {
+     "frage": "English → Deutsch",
+     "paare": [
+      [
+       "afternoon",
+       "der Nachmittag"
+      ],
+      [
+       "evening",
+       "der Abend"
+      ],
+      [
+       "together",
+       "zusammen"
+      ],
+      [
+       "at seven o’clock",
+       "um sieben Uhr"
+      ]
+     ]
+    },
+    {
+     "frage": "English → Deutsch",
+     "paare": [
+      [
+       "at seven o’clock",
+       "um sieben Uhr"
+      ],
+      [
+       "half past seven (7:30)",
+       "halb acht"
+      ],
+      [
+       "to play",
+       "spielen"
+      ],
+      [
+       "to get up",
+       "aufstehen"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "daz.6.grundlagen.k4-saetze",
+   "titel": "4 · Sätze: My day",
+   "kurz": "Tagesablauf · Verb auf Platz 2",
+   "typ": "lueckentext",
+   "anweisung": "Choose the right word. · Wähle das richtige Wort.",
+   "runde": 9,
+   "aufgaben": [
+    {
+     "text": "Ich ___ Fußball.",
+     "antwort": "spiele",
+     "optionen": [
+      "spiele",
+      "spielst",
+      "spielt"
+     ],
+     "tipp": "ich → -e"
+    },
+    {
+     "text": "Du ___ Hausaufgaben.",
+     "antwort": "machst",
+     "optionen": [
+      "machst",
+      "mache",
+      "macht"
+     ],
+     "tipp": "du → -st"
+    },
+    {
+     "text": "Er ___ ins Bett.",
+     "antwort": "geht",
+     "optionen": [
+      "geht",
+      "gehe",
+      "gehst"
+     ],
+     "tipp": "er → -t"
+    },
+    {
+     "text": "Wir ___ zusammen.",
+     "antwort": "spielen",
+     "optionen": [
+      "spielen",
+      "spielt",
+      "spiele"
+     ],
+     "tipp": "wir → -en"
+    },
+    {
+     "text": "Am Abend ___ ich Hausaufgaben.",
+     "antwort": "mache",
+     "optionen": [
+      "mache",
+      "machst"
+     ],
+     "tipp": "verb in position 2, then ich"
+    },
+    {
+     "text": "Um acht Uhr ___ die Schule.",
+     "antwort": "beginnt",
+     "optionen": [
+      "beginnt",
+      "beginne"
+     ],
+     "tipp": "die Schule (it) → -t"
+    },
+    {
+     "typ": "sortieren",
+     "teile": [
+      "Am",
+      "Abend",
+      "mache",
+      "ich",
+      "Hausaufgaben."
+     ],
+     "loesung": "Am Abend mache ich Hausaufgaben.",
+     "frage": "In the evening I do homework.",
+     "tipp": "The verb is in position 2."
+    },
+    {
+     "typ": "sortieren",
+     "teile": [
+      "Ich",
+      "spiele",
+      "am",
+      "Nachmittag",
+      "Fußball."
+     ],
+     "loesung": "Ich spiele am Nachmittag Fußball.",
+     "frage": "I play football in the afternoon.",
+     "tipp": "The verb is in position 2."
+    },
+    {
+     "typ": "sortieren",
+     "teile": [
+      "Um",
+      "acht",
+      "Uhr",
+      "beginnt",
+      "die",
+      "Schule."
+     ],
+     "loesung": "Um acht Uhr beginnt die Schule.",
+     "frage": "School starts at eight.",
+     "tipp": "The verb is in position 2."
+    }
+   ]
+  },
+  {
+   "id": "daz.6.grundlagen.k5-woerter",
+   "titel": "5 · Wörter: At the bakery",
+   "kurz": "In der Bäckerei",
+   "typ": "zuordnen",
+   "anweisung": "Match English and German. · Ordne zu.",
+   "runde": 5,
+   "aufgaben": [
+    {
+     "frage": "English → Deutsch",
+     "paare": [
+      [
+       "pretzel",
+       "die Brezel"
+      ],
+      [
+       "bread roll",
+       "das Brötchen"
+      ],
+      [
+       "cheese",
+       "der Käse"
+      ],
+      [
+       "apple juice",
+       "der Apfelsaft"
+      ]
+     ]
+    },
+    {
+     "frage": "English → Deutsch",
+     "paare": [
+      [
+       "apple juice",
+       "der Apfelsaft"
+      ],
+      [
+       "water",
+       "das Wasser"
+      ],
+      [
+       "milk",
+       "die Milch"
+      ],
+      [
+       "apple",
+       "der Apfel"
+      ]
+     ]
+    },
+    {
+     "frage": "English → Deutsch",
+     "paare": [
+      [
+       "apple",
+       "der Apfel"
+      ],
+      [
+       "bakery",
+       "die Bäckerei"
+      ],
+      [
+       "tasty",
+       "lecker"
+      ],
+      [
+       "I would like",
+       "ich möchte"
+      ]
+     ]
+    },
+    {
+     "frage": "English → Deutsch",
+     "paare": [
+      [
+       "I would like",
+       "ich möchte"
+      ],
+      [
+       "Anything else?",
+       "Noch etwas?"
+      ],
+      [
+       "four",
+       "vier"
+      ],
+      [
+       "five",
+       "fünf"
+      ]
+     ]
+    },
+    {
+     "frage": "English → Deutsch",
+     "paare": [
+      [
+       "five",
+       "fünf"
+      ],
+      [
+       "ten",
+       "zehn"
+      ],
+      [
+       "pretzel",
+       "die Brezel"
+      ],
+      [
+       "bread roll",
+       "das Brötchen"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "daz.6.grundlagen.k5-saetze",
+   "titel": "5 · Sätze: At the bakery",
+   "kurz": "Einkaufen · ich möchte, einen/eine/ein",
+   "typ": "lueckentext",
+   "anweisung": "Choose the right word. · Wähle das richtige Wort.",
+   "runde": 9,
+   "aufgaben": [
+    {
+     "text": "Ich möchte ___ Apfelsaft.",
+     "antwort": "einen",
+     "optionen": [
+      "einen",
+      "eine",
+      "ein"
+     ],
+     "tipp": "der Apfelsaft → einen"
+    },
+    {
+     "text": "Ich möchte ___ Brezel.",
+     "antwort": "eine",
+     "optionen": [
+      "eine",
+      "einen",
+      "ein"
+     ],
+     "tipp": "die Brezel → eine"
+    },
+    {
+     "text": "Ich möchte ___ Brötchen.",
+     "antwort": "ein",
+     "optionen": [
+      "ein",
+      "eine",
+      "einen"
+     ],
+     "tipp": "das Brötchen → ein"
+    },
+    {
+     "text": "___ möchtest du?",
+     "antwort": "Was",
+     "optionen": [
+      "Was",
+      "Wer",
+      "Wo"
+     ],
+     "tipp": "what = was"
+    },
+    {
+     "text": "Du ___ ein Wasser.",
+     "antwort": "möchtest",
+     "optionen": [
+      "möchtest",
+      "möchte"
+     ],
+     "tipp": "du → möchtest"
+    },
+    {
+     "text": "Das ___ vier Euro.",
+     "antwort": "macht",
+     "optionen": [
+      "macht",
+      "mache"
+     ],
+     "tipp": "that makes = das macht"
+    },
+    {
+     "typ": "sortieren",
+     "teile": [
+      "Ich",
+      "möchte",
+      "eine",
+      "Brezel."
+     ],
+     "loesung": "Ich möchte eine Brezel.",
+     "frage": "I would like a pretzel.",
+     "tipp": "The verb is in position 2."
+    },
+    {
+     "typ": "sortieren",
+     "teile": [
+      "Was",
+      "möchtest",
+      "du?"
+     ],
+     "loesung": "Was möchtest du?",
+     "frage": "What would you like?",
+     "tipp": "The verb is in position 2."
+    },
+    {
+     "typ": "sortieren",
+     "teile": [
+      "Das",
+      "macht",
+      "vier",
+      "Euro."
+     ],
+     "loesung": "Das macht vier Euro.",
+     "frage": "That is four euros.",
+     "tipp": "The verb is in position 2."
+    }
+   ]
+  },
+  {
+   "id": "daz.6.grundlagen.k6-woerter",
+   "titel": "6 · Wörter: New friends",
+   "kurz": "Neue Freunde",
+   "typ": "zuordnen",
+   "anweisung": "Match English and German. · Ordne zu.",
+   "runde": 5,
+   "aufgaben": [
+    {
+     "frage": "English → Deutsch",
+     "paare": [
+      [
+       "to dance",
+       "tanzen"
+      ],
+      [
+       "to read",
+       "lesen"
+      ],
+      [
+       "to sing",
+       "singen"
+      ],
+      [
+       "to live",
+       "wohnen"
+      ]
+     ]
+    },
+    {
+     "frage": "English → Deutsch",
+     "paare": [
+      [
+       "to live",
+       "wohnen"
+      ],
+      [
+       "to listen / hear",
+       "hören"
+      ],
+      [
+       "music",
+       "die Musik"
+      ],
+      [
+       "time",
+       "die Zeit"
+      ]
+     ]
+    },
+    {
+     "frage": "English → Deutsch",
+     "paare": [
+      [
+       "time",
+       "die Zeit"
+      ],
+      [
+       "friend (girl)",
+       "die Freundin"
+      ],
+      [
+       "friend (boy)",
+       "der Freund"
+      ],
+      [
+       "Friday",
+       "der Freitag"
+      ]
+     ]
+    },
+    {
+     "frage": "English → Deutsch",
+     "paare": [
+      [
+       "Friday",
+       "der Freitag"
+      ],
+      [
+       "Saturday",
+       "der Samstag"
+      ],
+      [
+       "where?",
+       "wo?"
+      ],
+      [
+       "what?",
+       "was?"
+      ]
+     ]
+    },
+    {
+     "frage": "English → Deutsch",
+     "paare": [
+      [
+       "what?",
+       "was?"
+      ],
+      [
+       "when?",
+       "wann?"
+      ],
+      [
+       "like doing / gladly",
+       "gern"
+      ],
+      [
+       "to dance",
+       "tanzen"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "daz.6.grundlagen.k6-saetze",
+   "titel": "6 · Sätze: New friends",
+   "kurz": "Hobbys · Fragen stellen",
+   "typ": "lueckentext",
+   "anweisung": "Choose the right word. · Wähle das richtige Wort.",
+   "runde": 9,
+   "aufgaben": [
+    {
+     "text": "___ wohnst du?",
+     "antwort": "Wo",
+     "optionen": [
+      "Wo",
+      "Wer",
+      "Was"
+     ],
+     "tipp": "where = wo"
+    },
+    {
+     "text": "___ heißt du?",
+     "antwort": "Wie",
+     "optionen": [
+      "Wie",
+      "Wo",
+      "Was"
+     ],
+     "tipp": "Wie heißt du? = What is your name?"
+    },
+    {
+     "text": "___ du Gitarre?",
+     "antwort": "Spielst",
+     "optionen": [
+      "Spielst",
+      "Spiele",
+      "Spielt"
+     ],
+     "tipp": "yes/no question: verb first"
+    },
+    {
+     "text": "Ich lese ___.",
+     "antwort": "gern",
+     "optionen": [
+      "gern",
+      "wo",
+      "was"
+     ],
+     "tipp": "gern = like doing"
+    },
+    {
+     "text": "___ machst du gern?",
+     "antwort": "Was",
+     "optionen": [
+      "Was",
+      "Wo",
+      "Wer"
+     ],
+     "tipp": "what = was"
+    },
+    {
+     "text": "Wir ___ zusammen Musik.",
+     "antwort": "hören",
+     "optionen": [
+      "hören",
+      "hört",
+      "höre"
+     ],
+     "tipp": "wir → -en"
+    },
+    {
+     "typ": "sortieren",
+     "teile": [
+      "Was",
+      "machst",
+      "du",
+      "gern?"
+     ],
+     "loesung": "Was machst du gern?",
+     "frage": "What do you like doing?",
+     "tipp": "The verb is in position 2."
+    },
+    {
+     "typ": "sortieren",
+     "teile": [
+      "Spielst",
+      "du",
+      "Fußball?"
+     ],
+     "loesung": "Spielst du Fußball?",
+     "frage": "Do you play football?",
+     "tipp": "The verb is in position 2."
+    },
+    {
+     "typ": "sortieren",
+     "teile": [
+      "Ich",
+      "wohne",
+      "in",
+      "der",
+      "Bahnhofstraße."
+     ],
+     "loesung": "Ich wohne in der Bahnhofstraße.",
+     "frage": "I live on Bahnhofstraße.",
+     "tipp": "The verb is in position 2."
+    }
+   ]
+  },
+  {
+   "id": "daz.6.grundlagen.k7-woerter",
+   "titel": "7 · Wörter: In town",
+   "kurz": "In der Stadt",
+   "typ": "zuordnen",
+   "anweisung": "Match English and German. · Ordne zu.",
+   "runde": 5,
+   "aufgaben": [
+    {
+     "frage": "English → Deutsch",
+     "paare": [
+      [
+       "train station",
+       "der Bahnhof"
+      ],
+      [
+       "pharmacy",
+       "die Apotheke"
+      ],
+      [
+       "supermarket",
+       "der Supermarkt"
+      ],
+      [
+       "cinema",
+       "das Kino"
+      ]
+     ]
+    },
+    {
+     "frage": "English → Deutsch",
+     "paare": [
+      [
+       "cinema",
+       "das Kino"
+      ],
+      [
+       "park",
+       "der Park"
+      ],
+      [
+       "town / city",
+       "die Stadt"
+      ],
+      [
+       "street",
+       "die Straße"
+      ]
+     ]
+    },
+    {
+     "frage": "English → Deutsch",
+     "paare": [
+      [
+       "street",
+       "die Straße"
+      ],
+      [
+       "left",
+       "links"
+      ],
+      [
+       "right",
+       "rechts"
+      ],
+      [
+       "straight on",
+       "geradeaus"
+      ]
+     ]
+    },
+    {
+     "frage": "English → Deutsch",
+     "paare": [
+      [
+       "straight on",
+       "geradeaus"
+      ],
+      [
+       "next to",
+       "neben"
+      ],
+      [
+       "Excuse me! / Sorry!",
+       "Entschuldigung!"
+      ],
+      [
+       "Where is …?",
+       "Wo ist …?"
+      ]
+     ]
+    },
+    {
+     "frage": "English → Deutsch",
+     "paare": [
+      [
+       "Where is …?",
+       "Wo ist …?"
+      ],
+      [
+       "train station",
+       "der Bahnhof"
+      ],
+      [
+       "pharmacy",
+       "die Apotheke"
+      ],
+      [
+       "supermarket",
+       "der Supermarkt"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "daz.6.grundlagen.k7-saetze",
+   "titel": "7 · Sätze: In town",
+   "kurz": "Orte · den Weg fragen",
+   "typ": "lueckentext",
+   "anweisung": "Choose the right word. · Wähle das richtige Wort.",
+   "runde": 9,
+   "aufgaben": [
+    {
+     "text": "Das Kino ist ___ Park.",
+     "antwort": "neben dem",
+     "optionen": [
+      "neben dem",
+      "neben der"
+     ],
+     "tipp": "der Park → neben dem Park"
+    },
+    {
+     "text": "Ich bin ___ Schule.",
+     "antwort": "in der",
+     "optionen": [
+      "in der",
+      "im"
+     ],
+     "tipp": "die Schule → in der Schule"
+    },
+    {
+     "text": "Wir sind ___ Kino.",
+     "antwort": "im",
+     "optionen": [
+      "im",
+      "in der"
+     ],
+     "tipp": "das Kino → im Kino (im = in dem)"
+    },
+    {
+     "text": "___ ist der Bahnhof?",
+     "antwort": "Wo",
+     "optionen": [
+      "Wo",
+      "Wer",
+      "Wie"
+     ],
+     "tipp": "where = wo"
+    },
+    {
+     "text": "Geh ___ und dann links.",
+     "antwort": "geradeaus",
+     "optionen": [
+      "geradeaus",
+      "neben",
+      "im"
+     ],
+     "tipp": "straight on = geradeaus"
+    },
+    {
+     "text": "Die Apotheke ist neben ___ Supermarkt.",
+     "antwort": "dem",
+     "optionen": [
+      "dem",
+      "der",
+      "das"
+     ],
+     "tipp": "der Supermarkt → neben dem"
+    },
+    {
+     "typ": "sortieren",
+     "teile": [
+      "Wo",
+      "ist",
+      "der",
+      "Bahnhof?"
+     ],
+     "loesung": "Wo ist der Bahnhof?",
+     "frage": "Where is the station?",
+     "tipp": "The verb is in position 2."
+    },
+    {
+     "typ": "sortieren",
+     "teile": [
+      "Das",
+      "Kino",
+      "ist",
+      "neben",
+      "dem",
+      "Park."
+     ],
+     "loesung": "Das Kino ist neben dem Park.",
+     "frage": "The cinema is next to the park.",
+     "tipp": "The verb is in position 2."
+    },
+    {
+     "typ": "sortieren",
+     "teile": [
+      "Geh",
+      "geradeaus",
+      "und",
+      "dann",
+      "links."
+     ],
+     "loesung": "Geh geradeaus und dann links.",
+     "frage": "Go straight on and then left.",
+     "tipp": "The verb is in position 2."
+    }
+   ]
+  },
+  {
+   "id": "daz.6.grundlagen.k8-woerter",
+   "titel": "8 · Wörter: How are you?",
+   "kurz": "Wie geht’s?",
+   "typ": "zuordnen",
+   "anweisung": "Match English and German. · Ordne zu.",
+   "runde": 5,
+   "aufgaben": [
+    {
+     "frage": "English → Deutsch",
+     "paare": [
+      [
+       "tired",
+       "müde"
+      ],
+      [
+       "ill / sick",
+       "krank"
+      ],
+      [
+       "happy",
+       "froh"
+      ],
+      [
+       "sad",
+       "traurig"
+      ]
+     ]
+    },
+    {
+     "frage": "English → Deutsch",
+     "paare": [
+      [
+       "sad",
+       "traurig"
+      ],
+      [
+       "headache",
+       "die Kopfschmerzen"
+      ],
+      [
+       "stomach ache",
+       "die Bauchschmerzen"
+      ],
+      [
+       "head",
+       "der Kopf"
+      ]
+     ]
+    },
+    {
+     "frage": "English → Deutsch",
+     "paare": [
+      [
+       "head",
+       "der Kopf"
+      ],
+      [
+       "belly",
+       "der Bauch"
+      ],
+      [
+       "to drink",
+       "trinken"
+      ],
+      [
+       "break",
+       "die Pause"
+      ]
+     ]
+    },
+    {
+     "frage": "English → Deutsch",
+     "paare": [
+      [
+       "break",
+       "die Pause"
+      ],
+      [
+       "help",
+       "die Hilfe"
+      ],
+      [
+       "I need",
+       "ich brauche"
+      ],
+      [
+       "How are you?",
+       "Wie geht es dir?"
+      ]
+     ]
+    },
+    {
+     "frage": "English → Deutsch",
+     "paare": [
+      [
+       "How are you?",
+       "Wie geht es dir?"
+      ],
+      [
+       "I am fine.",
+       "Mir geht es gut."
+      ],
+      [
+       "tired",
+       "müde"
+      ],
+      [
+       "ill / sick",
+       "krank"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "daz.6.grundlagen.k8-saetze",
+   "titel": "8 · Sätze: How are you?",
+   "kurz": "Gefühle · Gesundheit · Hilfe holen",
+   "typ": "lueckentext",
+   "anweisung": "Choose the right word. · Wähle das richtige Wort.",
+   "runde": 9,
+   "aufgaben": [
+    {
+     "text": "Ich ___ müde.",
+     "antwort": "bin",
+     "optionen": [
+      "bin",
+      "habe"
+     ],
+     "tipp": "feelings: ich bin + adjective"
+    },
+    {
+     "text": "Ich ___ Kopfschmerzen.",
+     "antwort": "habe",
+     "optionen": [
+      "habe",
+      "bin"
+     ],
+     "tipp": "pain: ich habe … schmerzen"
+    },
+    {
+     "text": "Wie geht es ___?",
+     "antwort": "dir",
+     "optionen": [
+      "dir",
+      "mir"
+     ],
+     "tipp": "How are YOU? → dir"
+    },
+    {
+     "text": "___ geht es gut.",
+     "antwort": "Mir",
+     "optionen": [
+      "Mir",
+      "Dir"
+     ],
+     "tipp": "I am fine → Mir geht es gut."
+    },
+    {
+     "text": "Ich ___ eine Pause.",
+     "antwort": "brauche",
+     "optionen": [
+      "brauche",
+      "brauchst"
+     ],
+     "tipp": "ich → brauche"
+    },
+    {
+     "text": "Bist du ___?",
+     "antwort": "krank",
+     "optionen": [
+      "krank",
+      "Kopf"
+     ],
+     "tipp": "ill = krank"
+    },
+    {
+     "typ": "sortieren",
+     "teile": [
+      "Wie",
+      "geht",
+      "es",
+      "dir?"
+     ],
+     "loesung": "Wie geht es dir?",
+     "frage": "How are you?",
+     "tipp": "The verb is in position 2."
+    },
+    {
+     "typ": "sortieren",
+     "teile": [
+      "Ich",
+      "habe",
+      "Bauchschmerzen."
+     ],
+     "loesung": "Ich habe Bauchschmerzen.",
+     "frage": "I have a stomach ache.",
+     "tipp": "The verb is in position 2."
+    },
+    {
+     "typ": "sortieren",
+     "teile": [
+      "Mir",
+      "geht",
+      "es",
+      "nicht",
+      "gut."
+     ],
+     "loesung": "Mir geht es nicht gut.",
+     "frage": "I am not feeling well.",
+     "tipp": "The verb is in position 2."
+    }
+   ]
+  }
+ ]
+}

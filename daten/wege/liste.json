@@ -9,6 +9,13 @@
       "klasse": 5,
       "ico": "🧪",
       "test": true
+    },
+    {
+      "id": "daz",
+      "titel": "Deutsch lernen – Start",
+      "fach": "DaZ",
+      "klasse": 6,
+      "ico": "💬"
     }
   ]
 }

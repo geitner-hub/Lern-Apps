@@ -1,0 +1,1500 @@
+{
+ "version": 1,
+ "titel": "Story-Zeit",
+ "hinweis": "Geschichten für DaZ (Deutsch aus dem Englischen, A0–A1). Eigene Texte. IDs = Katalog-Stufen daz.6.geschichten.gN, nie umbenennen.",
+ "personen": {
+  "Lily": "👧",
+  "Jonas": "👦",
+  "Mara": "👧🏽",
+  "Frau Berger": "👩‍🏫",
+  "Mama": "👩",
+  "Verkäuferin": "👩‍🍳",
+  "Mann": "👨"
+ },
+ "geschichten": [
+  {
+   "id": "daz.6.geschichten.g1",
+   "nr": 1,
+   "titel": "Hallo, ich bin Lily!",
+   "en": "Hello, I am Lily!",
+   "ico": "👋",
+   "thema": "Sich vorstellen · Introducing yourself",
+   "saetze": [
+    {
+     "wer": "Frau Berger",
+     "de": "Guten Morgen! Das ist Lily.",
+     "en": "Good morning! This is Lily."
+    },
+    {
+     "wer": "Lily",
+     "de": "Hallo! Ich heiße Lily.",
+     "en": "Hello! My name is Lily."
+    },
+    {
+     "wer": "Jonas",
+     "de": "Hallo, Lily! Ich bin Jonas.",
+     "en": "Hello, Lily! I am Jonas."
+    },
+    {
+     "wer": "Jonas",
+     "de": "Woher kommst du?",
+     "en": "Where are you from?"
+    },
+    {
+     "wer": "Lily",
+     "de": "Ich komme aus England.",
+     "en": "I come from England."
+    },
+    {
+     "wer": "Jonas",
+     "de": "Cool! Wie alt bist du?",
+     "en": "Cool! How old are you?"
+    },
+    {
+     "wer": "Lily",
+     "de": "Ich bin zwölf Jahre alt. Und du?",
+     "en": "I am twelve years old. And you?"
+    },
+    {
+     "wer": "Jonas",
+     "de": "Ich bin auch zwölf.",
+     "en": "I am twelve, too."
+    },
+    {
+     "wer": "Frau Berger",
+     "de": "Lily, du sitzt neben Jonas.",
+     "en": "Lily, you sit next to Jonas."
+    },
+    {
+     "wer": "Lily",
+     "de": "Danke!",
+     "en": "Thank you!"
+    },
+    {
+     "wer": "Jonas",
+     "de": "Willkommen in Neustadt, Lily!",
+     "en": "Welcome to Neustadt, Lily!"
+    }
+   ],
+   "woerter": [
+    {
+     "de": "Guten Morgen",
+     "en": "good morning"
+    },
+    {
+     "de": "Hallo",
+     "en": "hello"
+    },
+    {
+     "de": "ich heiße",
+     "en": "my name is"
+    },
+    {
+     "de": "ich bin",
+     "en": "I am"
+    },
+    {
+     "de": "du bist",
+     "en": "you are"
+    },
+    {
+     "de": "woher?",
+     "en": "where from?"
+    },
+    {
+     "de": "ich komme aus",
+     "en": "I come from"
+    },
+    {
+     "de": "wie alt?",
+     "en": "how old?"
+    },
+    {
+     "de": "zwölf",
+     "en": "twelve"
+    },
+    {
+     "de": "auch",
+     "en": "too / also"
+    },
+    {
+     "de": "neben",
+     "en": "next to"
+    },
+    {
+     "de": "danke",
+     "en": "thank you"
+    },
+    {
+     "de": "bitte",
+     "en": "please"
+    },
+    {
+     "de": "Tschüss",
+     "en": "bye"
+    },
+    {
+     "de": "ja",
+     "en": "yes"
+    },
+    {
+     "de": "nein",
+     "en": "no"
+    }
+   ],
+   "fragen": [
+    {
+     "f": "What is the new girl's name?",
+     "o": [
+      "Lily",
+      "Jonas",
+      "Frau Berger"
+     ]
+    },
+    {
+     "f": "Where does Lily come from?",
+     "o": [
+      "aus England",
+      "aus Spanien",
+      "aus Neustadt"
+     ]
+    },
+    {
+     "f": "How old is Jonas?",
+     "o": [
+      "zwölf",
+      "zehn",
+      "dreizehn"
+     ]
+    },
+    {
+     "f": "Where does Lily sit?",
+     "o": [
+      "neben Jonas",
+      "neben Frau Berger",
+      "allein"
+     ]
+    }
+   ],
+   "sagen": [
+    {
+     "en": "My name is Lily.",
+     "de": "Ich heiße Lily.",
+     "extra": [
+      "bin"
+     ]
+    },
+    {
+     "en": "I come from England.",
+     "de": "Ich komme aus England.",
+     "extra": [
+      "kommst"
+     ]
+    },
+    {
+     "en": "How old are you?",
+     "de": "Wie alt bist du?",
+     "extra": [
+      "bin"
+     ]
+    },
+    {
+     "en": "I am twelve years old.",
+     "de": "Ich bin zwölf Jahre alt.",
+     "extra": [
+      "heiße"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "daz.6.geschichten.g2",
+   "nr": 2,
+   "titel": "Meine Familie",
+   "en": "My family",
+   "ico": "👨‍👩‍👦",
+   "thema": "Familie · der, die, das",
+   "saetze": [
+    {
+     "wer": "Jonas",
+     "de": "Wer ist das?",
+     "en": "Who is that?"
+    },
+    {
+     "wer": "Lily",
+     "de": "Das ist meine Mama. Sie heißt Anna.",
+     "en": "That is my mum. Her name is Anna."
+    },
+    {
+     "wer": "Jonas",
+     "de": "Und wer ist das?",
+     "en": "And who is that?"
+    },
+    {
+     "wer": "Lily",
+     "de": "Das ist mein Papa. Er heißt Tom.",
+     "en": "That is my dad. His name is Tom."
+    },
+    {
+     "wer": "Jonas",
+     "de": "Hast du Geschwister?",
+     "en": "Do you have brothers or sisters?"
+    },
+    {
+     "wer": "Lily",
+     "de": "Ja, ich habe einen Bruder. Er heißt Max.",
+     "en": "Yes, I have a brother. His name is Max."
+    },
+    {
+     "wer": "Lily",
+     "de": "Er ist acht.",
+     "en": "He is eight."
+    },
+    {
+     "wer": "Jonas",
+     "de": "Ich habe eine Schwester. Sie ist sechzehn.",
+     "en": "I have a sister. She is sixteen."
+    },
+    {
+     "wer": "Lily",
+     "de": "Und das ist unser Hund.",
+     "en": "And that is our dog."
+    },
+    {
+     "wer": "Jonas",
+     "de": "Oh, wie süß! Wie heißt der Hund?",
+     "en": "Oh, how cute! What is the dog's name?"
+    },
+    {
+     "wer": "Lily",
+     "de": "Der Hund heißt Biscuit!",
+     "en": "The dog is called Biscuit!"
+    }
+   ],
+   "woerter": [
+    {
+     "de": "die Mama",
+     "en": "mum"
+    },
+    {
+     "de": "der Papa",
+     "en": "dad"
+    },
+    {
+     "de": "der Bruder",
+     "en": "brother"
+    },
+    {
+     "de": "die Schwester",
+     "en": "sister"
+    },
+    {
+     "de": "die Familie",
+     "en": "family"
+    },
+    {
+     "de": "der Hund",
+     "en": "dog"
+    },
+    {
+     "de": "die Katze",
+     "en": "cat"
+    },
+    {
+     "de": "das Kind",
+     "en": "child"
+    },
+    {
+     "de": "das Foto",
+     "en": "photo"
+    },
+    {
+     "de": "die Oma",
+     "en": "grandma"
+    },
+    {
+     "de": "der Opa",
+     "en": "grandpa"
+    },
+    {
+     "de": "süß",
+     "en": "cute / sweet"
+    },
+    {
+     "de": "wer?",
+     "en": "who?"
+    },
+    {
+     "de": "ich habe",
+     "en": "I have"
+    }
+   ],
+   "fragen": [
+    {
+     "f": "Who is Anna?",
+     "o": [
+      "Lilys Mama",
+      "Lilys Schwester",
+      "Jonas’ Mama"
+     ]
+    },
+    {
+     "f": "How old is Max?",
+     "o": [
+      "acht",
+      "zwölf",
+      "sechzehn"
+     ]
+    },
+    {
+     "f": "What does Jonas have?",
+     "o": [
+      "eine Schwester",
+      "einen Bruder",
+      "einen Hund"
+     ]
+    },
+    {
+     "f": "What is the dog's name?",
+     "o": [
+      "Biscuit",
+      "Max",
+      "Tom"
+     ]
+    }
+   ],
+   "sagen": [
+    {
+     "en": "This is my mum.",
+     "de": "Das ist meine Mama.",
+     "extra": [
+      "mein"
+     ]
+    },
+    {
+     "en": "I have a brother.",
+     "de": "Ich habe einen Bruder.",
+     "extra": [
+      "eine"
+     ]
+    },
+    {
+     "en": "He is eight.",
+     "de": "Er ist acht.",
+     "extra": [
+      "Sie"
+     ]
+    },
+    {
+     "en": "Who is that?",
+     "de": "Wer ist das?",
+     "extra": [
+      "Wie"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "daz.6.geschichten.g3",
+   "nr": 3,
+   "titel": "In der Schule",
+   "en": "At school",
+   "ico": "🏫",
+   "thema": "Schulsachen · ein/eine, kein/keine",
+   "saetze": [
+    {
+     "wer": "Frau Berger",
+     "de": "Bitte nehmt eure Hefte.",
+     "en": "Please take your exercise books."
+    },
+    {
+     "wer": "Lily",
+     "de": "Oh nein! Ich habe kein Heft.",
+     "en": "Oh no! I don't have an exercise book."
+    },
+    {
+     "wer": "Jonas",
+     "de": "Kein Problem. Hier ist ein Heft für dich.",
+     "en": "No problem. Here is an exercise book for you."
+    },
+    {
+     "wer": "Lily",
+     "de": "Danke! Hast du auch einen Stift?",
+     "en": "Thanks! Do you also have a pen?"
+    },
+    {
+     "wer": "Jonas",
+     "de": "Ja, ich habe zwei Stifte.",
+     "en": "Yes, I have two pens."
+    },
+    {
+     "wer": "Lily",
+     "de": "Was ist das?",
+     "en": "What is that?"
+    },
+    {
+     "wer": "Jonas",
+     "de": "Das ist ein Lineal. Und das ist ein Radiergummi.",
+     "en": "That is a ruler. And that is an eraser."
+    },
+    {
+     "wer": "Frau Berger",
+     "de": "Lily, kannst du das lesen?",
+     "en": "Lily, can you read this?"
+    },
+    {
+     "wer": "Lily",
+     "de": "Ein bisschen. Langsam, bitte.",
+     "en": "A little. Slowly, please."
+    },
+    {
+     "wer": "Frau Berger",
+     "de": "Sehr gut, Lily!",
+     "en": "Very good, Lily!"
+    }
+   ],
+   "woerter": [
+    {
+     "de": "das Heft",
+     "en": "exercise book"
+    },
+    {
+     "de": "der Stift",
+     "en": "pen"
+    },
+    {
+     "de": "das Lineal",
+     "en": "ruler"
+    },
+    {
+     "de": "der Radiergummi",
+     "en": "eraser"
+    },
+    {
+     "de": "die Tasche",
+     "en": "bag"
+    },
+    {
+     "de": "das Buch",
+     "en": "book"
+    },
+    {
+     "de": "die Schule",
+     "en": "school"
+    },
+    {
+     "de": "die Lehrerin",
+     "en": "teacher (woman)"
+    },
+    {
+     "de": "der Tisch",
+     "en": "table / desk"
+    },
+    {
+     "de": "der Stuhl",
+     "en": "chair"
+    },
+    {
+     "de": "die Tafel",
+     "en": "board"
+    },
+    {
+     "de": "langsam",
+     "en": "slowly"
+    },
+    {
+     "de": "noch einmal",
+     "en": "again"
+    },
+    {
+     "de": "Ich verstehe das nicht.",
+     "en": "I don't understand."
+    }
+   ],
+   "fragen": [
+    {
+     "f": "What does Lily not have?",
+     "o": [
+      "ein Heft",
+      "eine Tasche",
+      "ein Buch"
+     ]
+    },
+    {
+     "f": "How many pens does Jonas have?",
+     "o": [
+      "zwei",
+      "einen",
+      "drei"
+     ]
+    },
+    {
+     "f": "What does Jonas give Lily?",
+     "o": [
+      "ein Heft",
+      "eine Tasche",
+      "ein Buch"
+     ]
+    },
+    {
+     "f": "What does Lily say at the end?",
+     "o": [
+      "Langsam, bitte.",
+      "Schnell, bitte.",
+      "Tschüss!"
+     ]
+    }
+   ],
+   "sagen": [
+    {
+     "en": "I don't have a book.",
+     "de": "Ich habe kein Buch.",
+     "extra": [
+      "keine"
+     ]
+    },
+    {
+     "en": "What is that?",
+     "de": "Was ist das?",
+     "extra": [
+      "Wer"
+     ]
+    },
+    {
+     "en": "Slowly, please.",
+     "de": "Langsam, bitte.",
+     "extra": [
+      "Danke"
+     ]
+    },
+    {
+     "en": "Here is a pen for you.",
+     "de": "Hier ist ein Stift für dich.",
+     "extra": [
+      "eine"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "daz.6.geschichten.g4",
+   "nr": 4,
+   "titel": "Mein Tag",
+   "en": "My day",
+   "ico": "⏰",
+   "thema": "Tagesablauf · Verb auf Platz 2",
+   "saetze": [
+    {
+     "wer": "Lily",
+     "de": "Jonas, wann stehst du auf?",
+     "en": "Jonas, when do you get up?"
+    },
+    {
+     "wer": "Jonas",
+     "de": "Ich stehe um sieben Uhr auf.",
+     "en": "I get up at seven o’clock."
+    },
+    {
+     "wer": "Lily",
+     "de": "Ich auch! Um halb acht frühstücke ich.",
+     "en": "Me too! At half past seven I have breakfast."
+    },
+    {
+     "wer": "Jonas",
+     "de": "Die Schule beginnt um acht Uhr.",
+     "en": "School starts at eight o’clock."
+    },
+    {
+     "wer": "Lily",
+     "de": "Am Nachmittag spiele ich Fußball.",
+     "en": "In the afternoon I play football."
+    },
+    {
+     "wer": "Jonas",
+     "de": "Wirklich? Ich spiele auch Fußball!",
+     "en": "Really? I play football, too!"
+    },
+    {
+     "wer": "Lily",
+     "de": "Am Abend mache ich Hausaufgaben.",
+     "en": "In the evening I do my homework."
+    },
+    {
+     "wer": "Jonas",
+     "de": "Und um neun Uhr gehe ich ins Bett.",
+     "en": "And at nine o’clock I go to bed."
+    },
+    {
+     "wer": "Lily",
+     "de": "Spielen wir am Samstag zusammen Fußball?",
+     "en": "Shall we play football together on Saturday?"
+    },
+    {
+     "wer": "Jonas",
+     "de": "Ja, gern!",
+     "en": "Yes, I'd love to!"
+    }
+   ],
+   "woerter": [
+    {
+     "de": "spielen",
+     "en": "to play"
+    },
+    {
+     "de": "aufstehen",
+     "en": "to get up"
+    },
+    {
+     "de": "gehen",
+     "en": "to go"
+    },
+    {
+     "de": "machen",
+     "en": "to do / make"
+    },
+    {
+     "de": "lernen",
+     "en": "to learn"
+    },
+    {
+     "de": "frühstücken",
+     "en": "to have breakfast"
+    },
+    {
+     "de": "die Hausaufgaben",
+     "en": "homework"
+    },
+    {
+     "de": "das Bett",
+     "en": "bed"
+    },
+    {
+     "de": "der Morgen",
+     "en": "morning"
+    },
+    {
+     "de": "der Nachmittag",
+     "en": "afternoon"
+    },
+    {
+     "de": "der Abend",
+     "en": "evening"
+    },
+    {
+     "de": "zusammen",
+     "en": "together"
+    },
+    {
+     "de": "um sieben Uhr",
+     "en": "at seven o’clock"
+    },
+    {
+     "de": "halb acht",
+     "en": "half past seven (7:30)"
+    }
+   ],
+   "fragen": [
+    {
+     "f": "When does Jonas get up?",
+     "o": [
+      "um sieben Uhr",
+      "um acht Uhr",
+      "um neun Uhr"
+     ]
+    },
+    {
+     "f": "What time is \"halb acht\"?",
+     "o": [
+      "7:30",
+      "8:30",
+      "8:00"
+     ]
+    },
+    {
+     "f": "What does Lily do in the afternoon?",
+     "o": [
+      "Sie spielt Fußball.",
+      "Sie macht Hausaufgaben.",
+      "Sie geht ins Bett."
+     ]
+    },
+    {
+     "f": "When does school start?",
+     "o": [
+      "um acht Uhr",
+      "um halb acht",
+      "um sieben Uhr"
+     ]
+    }
+   ],
+   "sagen": [
+    {
+     "en": "I play football.",
+     "de": "Ich spiele Fußball.",
+     "extra": [
+      "spielst"
+     ]
+    },
+    {
+     "en": "In the evening I do homework.",
+     "de": "Am Abend mache ich Hausaufgaben.",
+     "extra": [
+      "macht"
+     ]
+    },
+    {
+     "en": "School starts at eight o’clock.",
+     "de": "Die Schule beginnt um acht Uhr.",
+     "extra": [
+      "halb"
+     ]
+    },
+    {
+     "en": "I go to bed at nine o’clock.",
+     "de": "Ich gehe um neun Uhr ins Bett.",
+     "extra": [
+      "gehst"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "daz.6.geschichten.g5",
+   "nr": 5,
+   "titel": "In der Bäckerei",
+   "en": "At the bakery",
+   "ico": "🥨",
+   "thema": "Einkaufen · ich möchte, einen/eine/ein",
+   "saetze": [
+    {
+     "wer": "Verkäuferin",
+     "de": "Guten Tag! Was möchtest du?",
+     "en": "Hello! What would you like?"
+    },
+    {
+     "wer": "Lily",
+     "de": "Ich möchte eine Brezel, bitte.",
+     "en": "I would like a pretzel, please."
+    },
+    {
+     "wer": "Verkäuferin",
+     "de": "Gern. Noch etwas?",
+     "en": "Sure. Anything else?"
+    },
+    {
+     "wer": "Lily",
+     "de": "Ja, einen Apfelsaft, bitte.",
+     "en": "Yes, an apple juice, please."
+    },
+    {
+     "wer": "Jonas",
+     "de": "Und ich möchte ein Brötchen mit Käse.",
+     "en": "And I would like a bread roll with cheese."
+    },
+    {
+     "wer": "Verkäuferin",
+     "de": "Das macht vier Euro fünfzig.",
+     "en": "That is four euros fifty."
+    },
+    {
+     "wer": "Lily",
+     "de": "Hier, bitte.",
+     "en": "Here you are."
+    },
+    {
+     "wer": "Verkäuferin",
+     "de": "Danke schön! Einen schönen Tag!",
+     "en": "Thank you! Have a nice day!"
+    },
+    {
+     "wer": "Lily",
+     "de": "Danke, tschüss!",
+     "en": "Thanks, bye!"
+    },
+    {
+     "wer": "Jonas",
+     "de": "Mmh, die Brezel ist lecker, oder?",
+     "en": "Mmm, the pretzel is tasty, isn’t it?"
+    },
+    {
+     "wer": "Lily",
+     "de": "Ja, sehr lecker!",
+     "en": "Yes, very tasty!"
+    }
+   ],
+   "woerter": [
+    {
+     "de": "die Brezel",
+     "en": "pretzel"
+    },
+    {
+     "de": "das Brötchen",
+     "en": "bread roll"
+    },
+    {
+     "de": "der Käse",
+     "en": "cheese"
+    },
+    {
+     "de": "der Apfelsaft",
+     "en": "apple juice"
+    },
+    {
+     "de": "das Wasser",
+     "en": "water"
+    },
+    {
+     "de": "die Milch",
+     "en": "milk"
+    },
+    {
+     "de": "der Apfel",
+     "en": "apple"
+    },
+    {
+     "de": "die Bäckerei",
+     "en": "bakery"
+    },
+    {
+     "de": "lecker",
+     "en": "tasty"
+    },
+    {
+     "de": "ich möchte",
+     "en": "I would like"
+    },
+    {
+     "de": "Noch etwas?",
+     "en": "Anything else?"
+    },
+    {
+     "de": "vier",
+     "en": "four"
+    },
+    {
+     "de": "fünf",
+     "en": "five"
+    },
+    {
+     "de": "zehn",
+     "en": "ten"
+    }
+   ],
+   "fragen": [
+    {
+     "f": "What does Lily want first?",
+     "o": [
+      "eine Brezel",
+      "ein Brötchen",
+      "einen Apfelsaft"
+     ]
+    },
+    {
+     "f": "What does Jonas want?",
+     "o": [
+      "ein Brötchen mit Käse",
+      "eine Brezel",
+      "Wasser"
+     ]
+    },
+    {
+     "f": "How much is it?",
+     "o": [
+      "4,50 €",
+      "5,40 €",
+      "4,15 €"
+     ]
+    },
+    {
+     "f": "Is the pretzel tasty?",
+     "o": [
+      "Ja, sehr lecker!",
+      "Nein.",
+      "Ein bisschen."
+     ]
+    }
+   ],
+   "sagen": [
+    {
+     "en": "I would like a pretzel, please.",
+     "de": "Ich möchte eine Brezel, bitte.",
+     "extra": [
+      "einen"
+     ]
+    },
+    {
+     "en": "I would like an apple juice.",
+     "de": "Ich möchte einen Apfelsaft.",
+     "extra": [
+      "ein"
+     ]
+    },
+    {
+     "en": "What would you like?",
+     "de": "Was möchtest du?",
+     "extra": [
+      "möchte"
+     ]
+    },
+    {
+     "en": "That is four euros.",
+     "de": "Das macht vier Euro.",
+     "extra": [
+      "ist"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "daz.6.geschichten.g6",
+   "nr": 6,
+   "titel": "Neue Freunde",
+   "en": "New friends",
+   "ico": "🎵",
+   "thema": "Hobbys · Fragen stellen",
+   "saetze": [
+    {
+     "wer": "Lily",
+     "de": "Was machst du gern?",
+     "en": "What do you like doing?"
+    },
+    {
+     "wer": "Mara",
+     "de": "Ich tanze gern. Und du?",
+     "en": "I like dancing. And you?"
+    },
+    {
+     "wer": "Lily",
+     "de": "Ich lese gern und ich spiele gern Fußball.",
+     "en": "I like reading and I like playing football."
+    },
+    {
+     "wer": "Mara",
+     "de": "Spielst du auch Gitarre?",
+     "en": "Do you also play the guitar?"
+    },
+    {
+     "wer": "Lily",
+     "de": "Nein, aber ich singe gern.",
+     "en": "No, but I like singing."
+    },
+    {
+     "wer": "Mara",
+     "de": "Wo wohnst du?",
+     "en": "Where do you live?"
+    },
+    {
+     "wer": "Lily",
+     "de": "Ich wohne in der Bahnhofstraße.",
+     "en": "I live on Bahnhofstraße (Station Street)."
+    },
+    {
+     "wer": "Mara",
+     "de": "Echt? Ich wohne auch dort!",
+     "en": "Really? I live there, too!"
+    },
+    {
+     "wer": "Lily",
+     "de": "Hast du am Freitag Zeit?",
+     "en": "Are you free on Friday?"
+    },
+    {
+     "wer": "Mara",
+     "de": "Ja! Wir können zusammen Musik hören.",
+     "en": "Yes! We can listen to music together."
+    },
+    {
+     "wer": "Lily",
+     "de": "Super! Bis Freitag!",
+     "en": "Great! See you on Friday!"
+    }
+   ],
+   "woerter": [
+    {
+     "de": "tanzen",
+     "en": "to dance"
+    },
+    {
+     "de": "lesen",
+     "en": "to read"
+    },
+    {
+     "de": "singen",
+     "en": "to sing"
+    },
+    {
+     "de": "wohnen",
+     "en": "to live"
+    },
+    {
+     "de": "hören",
+     "en": "to listen / hear"
+    },
+    {
+     "de": "die Musik",
+     "en": "music"
+    },
+    {
+     "de": "die Zeit",
+     "en": "time"
+    },
+    {
+     "de": "die Freundin",
+     "en": "friend (girl)"
+    },
+    {
+     "de": "der Freund",
+     "en": "friend (boy)"
+    },
+    {
+     "de": "der Freitag",
+     "en": "Friday"
+    },
+    {
+     "de": "der Samstag",
+     "en": "Saturday"
+    },
+    {
+     "de": "wo?",
+     "en": "where?"
+    },
+    {
+     "de": "was?",
+     "en": "what?"
+    },
+    {
+     "de": "wann?",
+     "en": "when?"
+    },
+    {
+     "de": "gern",
+     "en": "like doing / gladly"
+    }
+   ],
+   "fragen": [
+    {
+     "f": "What does Mara like doing?",
+     "o": [
+      "tanzen",
+      "lesen",
+      "Fußball spielen"
+     ]
+    },
+    {
+     "f": "Does Lily play the guitar?",
+     "o": [
+      "Nein, aber sie singt gern.",
+      "Ja.",
+      "Ja, sehr gut."
+     ]
+    },
+    {
+     "f": "Where does Lily live?",
+     "o": [
+      "in der Bahnhofstraße",
+      "in England",
+      "in der Schule"
+     ]
+    },
+    {
+     "f": "When do they meet?",
+     "o": [
+      "am Freitag",
+      "am Samstag",
+      "heute"
+     ]
+    }
+   ],
+   "sagen": [
+    {
+     "en": "I like dancing.",
+     "de": "Ich tanze gern.",
+     "extra": [
+      "tanzt"
+     ]
+    },
+    {
+     "en": "Where do you live?",
+     "de": "Wo wohnst du?",
+     "extra": [
+      "Was"
+     ]
+    },
+    {
+     "en": "Do you play football?",
+     "de": "Spielst du Fußball?",
+     "extra": [
+      "Spiele"
+     ]
+    },
+    {
+     "en": "I like reading.",
+     "de": "Ich lese gern.",
+     "extra": [
+      "liest"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "daz.6.geschichten.g7",
+   "nr": 7,
+   "titel": "In der Stadt",
+   "en": "In town",
+   "ico": "🏙️",
+   "thema": "Orte · den Weg fragen",
+   "saetze": [
+    {
+     "wer": "Lily",
+     "de": "Entschuldigung! Wo ist der Bahnhof?",
+     "en": "Excuse me! Where is the train station?"
+    },
+    {
+     "wer": "Mann",
+     "de": "Geh geradeaus und dann links.",
+     "en": "Go straight on and then left."
+    },
+    {
+     "wer": "Lily",
+     "de": "Geradeaus und dann links. Danke!",
+     "en": "Straight on and then left. Thank you!"
+    },
+    {
+     "wer": "Mama",
+     "de": "Da bist du ja!",
+     "en": "There you are!"
+    },
+    {
+     "wer": "Lily",
+     "de": "Mama, wo ist die Apotheke?",
+     "en": "Mum, where is the pharmacy?"
+    },
+    {
+     "wer": "Mama",
+     "de": "Die Apotheke ist neben dem Supermarkt.",
+     "en": "The pharmacy is next to the supermarket."
+    },
+    {
+     "wer": "Lily",
+     "de": "Und wo ist das Kino?",
+     "en": "And where is the cinema?"
+    },
+    {
+     "wer": "Mama",
+     "de": "Das Kino ist im Zentrum, neben dem Park.",
+     "en": "The cinema is in the centre, next to the park."
+    },
+    {
+     "wer": "Lily",
+     "de": "Gehen wir am Sonntag ins Kino?",
+     "en": "Shall we go to the cinema on Sunday?"
+    },
+    {
+     "wer": "Mama",
+     "de": "Gute Idee!",
+     "en": "Good idea!"
+    }
+   ],
+   "woerter": [
+    {
+     "de": "der Bahnhof",
+     "en": "train station"
+    },
+    {
+     "de": "die Apotheke",
+     "en": "pharmacy"
+    },
+    {
+     "de": "der Supermarkt",
+     "en": "supermarket"
+    },
+    {
+     "de": "das Kino",
+     "en": "cinema"
+    },
+    {
+     "de": "der Park",
+     "en": "park"
+    },
+    {
+     "de": "die Stadt",
+     "en": "town / city"
+    },
+    {
+     "de": "die Straße",
+     "en": "street"
+    },
+    {
+     "de": "links",
+     "en": "left"
+    },
+    {
+     "de": "rechts",
+     "en": "right"
+    },
+    {
+     "de": "geradeaus",
+     "en": "straight on"
+    },
+    {
+     "de": "neben",
+     "en": "next to"
+    },
+    {
+     "de": "Entschuldigung!",
+     "en": "Excuse me! / Sorry!"
+    },
+    {
+     "de": "Wo ist …?",
+     "en": "Where is …?"
+    }
+   ],
+   "fragen": [
+    {
+     "f": "How does Lily get to the station?",
+     "o": [
+      "geradeaus und dann links",
+      "rechts",
+      "neben dem Park"
+     ]
+    },
+    {
+     "f": "Where is the pharmacy?",
+     "o": [
+      "neben dem Supermarkt",
+      "im Kino",
+      "am Bahnhof"
+     ]
+    },
+    {
+     "f": "Where is the cinema?",
+     "o": [
+      "im Zentrum",
+      "am Bahnhof",
+      "in der Schule"
+     ]
+    },
+    {
+     "f": "When do they go to the cinema?",
+     "o": [
+      "am Sonntag",
+      "am Freitag",
+      "heute"
+     ]
+    }
+   ],
+   "sagen": [
+    {
+     "en": "Excuse me, where is the station?",
+     "de": "Entschuldigung, wo ist der Bahnhof?",
+     "extra": [
+      "die"
+     ]
+    },
+    {
+     "en": "Go straight on.",
+     "de": "Geh geradeaus.",
+     "extra": [
+      "links"
+     ]
+    },
+    {
+     "en": "The cinema is next to the park.",
+     "de": "Das Kino ist neben dem Park.",
+     "extra": [
+      "der"
+     ]
+    },
+    {
+     "en": "Where is the pharmacy?",
+     "de": "Wo ist die Apotheke?",
+     "extra": [
+      "der"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "daz.6.geschichten.g8",
+   "nr": 8,
+   "titel": "Wie geht’s?",
+   "en": "How are you?",
+   "ico": "🤒",
+   "thema": "Gefühle · Gesundheit · Hilfe holen",
+   "saetze": [
+    {
+     "wer": "Jonas",
+     "de": "Hallo Lily! Wie geht’s?",
+     "en": "Hi Lily! How are you?"
+    },
+    {
+     "wer": "Lily",
+     "de": "Nicht so gut. Ich bin müde.",
+     "en": "Not so good. I’m tired."
+    },
+    {
+     "wer": "Jonas",
+     "de": "Oh nein. Bist du krank?",
+     "en": "Oh no. Are you ill?"
+    },
+    {
+     "wer": "Lily",
+     "de": "Ich habe Kopfschmerzen.",
+     "en": "I have a headache."
+    },
+    {
+     "wer": "Jonas",
+     "de": "Trink Wasser! Das hilft.",
+     "en": "Drink some water! That helps."
+    },
+    {
+     "wer": "Lily",
+     "de": "Frau Berger, mir geht es nicht gut.",
+     "en": "Mrs Berger, I’m not feeling well."
+    },
+    {
+     "wer": "Frau Berger",
+     "de": "Oh, Lily. Möchtest du nach Hause gehen?",
+     "en": "Oh, Lily. Would you like to go home?"
+    },
+    {
+     "wer": "Lily",
+     "de": "Nein, danke. Ich brauche nur eine Pause.",
+     "en": "No, thanks. I just need a break."
+    },
+    {
+     "wer": "Jonas",
+     "de": "Und jetzt? Wie geht es dir?",
+     "en": "And now? How are you?"
+    },
+    {
+     "wer": "Lily",
+     "de": "Jetzt geht es mir gut. Ich bin froh!",
+     "en": "Now I’m fine. I’m happy!"
+    }
+   ],
+   "woerter": [
+    {
+     "de": "müde",
+     "en": "tired"
+    },
+    {
+     "de": "krank",
+     "en": "ill / sick"
+    },
+    {
+     "de": "froh",
+     "en": "happy"
+    },
+    {
+     "de": "traurig",
+     "en": "sad"
+    },
+    {
+     "de": "die Kopfschmerzen",
+     "en": "headache"
+    },
+    {
+     "de": "die Bauchschmerzen",
+     "en": "stomach ache"
+    },
+    {
+     "de": "der Kopf",
+     "en": "head"
+    },
+    {
+     "de": "der Bauch",
+     "en": "belly"
+    },
+    {
+     "de": "trinken",
+     "en": "to drink"
+    },
+    {
+     "de": "die Pause",
+     "en": "break"
+    },
+    {
+     "de": "die Hilfe",
+     "en": "help"
+    },
+    {
+     "de": "ich brauche",
+     "en": "I need"
+    },
+    {
+     "de": "Wie geht es dir?",
+     "en": "How are you?"
+    },
+    {
+     "de": "Mir geht es gut.",
+     "en": "I am fine."
+    }
+   ],
+   "fragen": [
+    {
+     "f": "How is Lily at first?",
+     "o": [
+      "nicht so gut",
+      "sehr gut",
+      "super"
+     ]
+    },
+    {
+     "f": "What hurts?",
+     "o": [
+      "der Kopf",
+      "der Bauch",
+      "der Fuß"
+     ]
+    },
+    {
+     "f": "What does Jonas say?",
+     "o": [
+      "Trink Wasser!",
+      "Geh nach Hause!",
+      "Iss eine Brezel!"
+     ]
+    },
+    {
+     "f": "How is Lily at the end?",
+     "o": [
+      "Sie ist froh.",
+      "Sie ist krank.",
+      "Sie ist müde."
+     ]
+    }
+   ],
+   "sagen": [
+    {
+     "en": "How are you?",
+     "de": "Wie geht es dir?",
+     "extra": [
+      "mir"
+     ]
+    },
+    {
+     "en": "I am tired.",
+     "de": "Ich bin müde.",
+     "extra": [
+      "habe"
+     ]
+    },
+    {
+     "en": "I have a headache.",
+     "de": "Ich habe Kopfschmerzen.",
+     "extra": [
+      "bin"
+     ]
+    },
+    {
+     "en": "I need a break.",
+     "de": "Ich brauche eine Pause.",
+     "extra": [
+      "einen"
+     ]
+    }
+   ]
+  }
+ ]
+}

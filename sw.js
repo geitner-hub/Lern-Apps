@@ -25,7 +25,7 @@
 //  und teilen sich den Offline-Speicher. Deshalb hat jede Umgebung ihr
 //  eigenes Präfix und räumt nur ihre eigenen Speicher auf.
 // ═══════════════════════════════════════════════════════
-const VERSION = 'v140';  // v140: Gegenstand in der linken Hand (nicht mehr vom Begleiter verdeckt)
+const VERSION = 'v142';  // v142: DaZ-Lernweg und Story-Zeit (v141: Pferde mit geschwungenem Hals)
 const PRAEFIX = /\/[^/]*-test\/$/i.test(new URL(self.registration.scope).pathname) ? 'lwtest-v' : 'lernwelt-v';
 const CACHE   = PRAEFIX + VERSION.replace(/^v/, '');        // z. B. 'lernwelt-v24' (Format wie bisher)
 const ALT     = CACHE + '-alt';                             // Dateien der Vorversion, noch nicht aufgefrischt
@@ -89,7 +89,7 @@ const NACHLADEN = ['fonts/nunito-latin-ext-wght-normal.woff2', 'spiele/runner.ht
                    'apps/englisch/journey-anwenden.html', 'gemeinsam/journey-kern.js',  // English Journey Year 6: Anwenden-Stationen, Regeln
                    'apps/englisch/english-journey.html', 'gemeinsam/journey-welt.js', 'gemeinsam/journey-lernweg.js',  // English Journey Year 6: 3D-Weg (three.js lädt avatar3d.js), Laufzettel
                    'gemeinsam/lernweg-zurueck.js',  // Knopf „Zurück zum Weg“ (English Journey)
-                   'apps/typen/weg.html', 'gemeinsam/weg-kern.js', 'daten/wege/liste.json', 'daten/wege/test.json', 'daten/wege/bausteine-test.json',  // Lernweg-Engine in 2D (Tempo Etappe 2): neuen Weg hier ergänzen
+                   'apps/typen/weg.html', 'gemeinsam/weg-kern.js', 'daten/wege/liste.json', 'daten/wege/test.json', 'daten/wege/bausteine-test.json', 'daten/wege/daz.json', 'daten/wege/bausteine-daz.json', 'apps/daz/daz-geschichten.html', 'daten/daz/geschichten.json', 'daten/inhalte/daz/daz.6.grundlagen.json',  // Lernweg-Engine in 2D (Tempo Etappe 2): neuen Weg hier ergänzen
                    'gemeinsam/typen/check.js', 'daten/inhalte/en/en.6.probe-check.json', 'apps/typen/kann-liste.html', 'gemeinsam/kann-liste.js',
                    'apps/englisch/generalprobe.html', 'daten/proben/en.6.generalprobe.json',  // Generalprobe (v132)  // Check vor der Probe und Kann-Liste (Tempo Etappe 5)
                    'fonts/atkinson-hyperlegible-latin-400-normal.woff2', 'fonts/atkinson-hyperlegible-latin-700-normal.woff2',  // Leseschrift der Lesehilfe (Etappe 8)

@@ -189,6 +189,24 @@ Schritt jeder Art) – er ist für keine Klasse freigegeben und mit Admin-Anmeld
 - **Noch nicht enthalten:** Abschnitt-Kette, Niveaus und HE-Nummern gibt es nur im English Journey; der Lernweg-Editor im
   Admin kommt mit Etappe 6, der Check vor der Probe und die Kann-Liste mit Etappe 5.
 
+## DaZ: Deutsch lernen aus dem Englischen (v142)
+
+Für Kinder mit sehr wenig Deutsch, die gut Englisch können (A0–A1, Ziel: im Alltag verständigen). Alles wird
+aus dem Englischen erklärt; Grammatik (sein/haben, Artikel, Verb an Position 2, Fragen, Akkusativ/Dativ einfach) steht im Vordergrund.
+
+- **Lernweg** `daten/wege/daz.json` (Engine in 2D, `apps/typen/weg.html?weg=daz`): 8 Kapitel `daz-a-k1` … `daz-a-k8`
+  (Hallo, Familie, Schule, Mein Tag, Bäckerei, Freunde, In der Stadt, Beim Arzt). Je Kapitel: Hefteintrag (Grammatik auf Englisch),
+  📖 Story, 🧩 Wörter, ✏️ Sätze, Heftübung, ⭐ Stern-Extra. Bausteine `daten/wege/bausteine-daz.json`. Freigabe wie jeder Lernweg:
+  Admin → Gruppen → 📒 Laufzettel → Weitere Lernwege (am besten eine eigene Gruppe für das Kind).
+- **Story-Zeit** `apps/daz/daz-geschichten.html[?stufe=daz.6.geschichten.gN]`, Inhalte `daten/daz/geschichten.json` (eigene Texte):
+  Bibliothek mit Sternen; je Geschichte ① Lesen & Hören (Chat-Blasen, 🔊 Sprachausgabe de-DE, Blase antippen = Englisch, 🐢 langsam,
+  Wortkarten in Artikel-Farben der/die/das = blau/rot/grün), ② Verstehen (Frage Englisch, Antwort Deutsch; in `fragen[].o` ist die erste richtig),
+  ③ „Sag es!“ (englischer Satz → deutschen Satz aus Wortkarten bauen, `extra` = Ablenker). Ergebnis mit `thema` = Stufen-ID → XP, Lernweg-Haken ab 70 %.
+  Keine Aufnahme, keine Spracherkennung (Datenschutz).
+- **Wörter und Sätze** im Baukasten: `daten/inhalte/daz/daz.6.grundlagen.json` (Stufen `daz.6.grundlagen.kN-woerter` / `-saetze`).
+- Katalog: Fach DaZ, Themen `daz.6.geschichten` und `daz.6.grundlagen`. Erzeugt wurden die Dateien aus einer Kapitel-Liste; Änderungen
+  jetzt direkt in den JSON-Dateien (IDs nie umbenennen).
+
 ## Hilfe-Stufen und Selbsteinschätzung (Aktionsplan „Lernwelt – Tempo“, Etappe 4, v123)
 
 Gilt im Übungsrahmen `gemeinsam/ueben.js` – also in Kopfrechnen, Mathe-Trainer und allen Baukasten-Übungen (`apps/typen/uebung.html`).

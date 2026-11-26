@@ -1850,7 +1850,67 @@
   {
    "id": "daz",
    "name": "DaZ",
-   "bereiche": []
+   "bereiche": [
+    {
+     "id": "daz.lesen",
+     "titel": "Lesen und Hören",
+     "themen": [
+      {
+       "id": "daz.6.geschichten",
+       "titel": "Story-Zeit: Deutsch mit Geschichten",
+       "klasse": 6,
+       "quelle": {"app": "apps/daz/daz-geschichten.html"},
+       "ergebnis": ["daz-geschichten.html"],
+       "lehrplan": "DaZ A0–A1: kurze Alltagsdialoge lesen und hören, verstehen, einfache Sätze bilden (Brücke Englisch)",
+       "dauer": 10,
+       "einsatz": "DaZ-Lernweg, je Kapitel eine Geschichte: lesen und hören, Verstehen, „Sag es auf Deutsch“",
+       "stufen": [
+         { "id": "daz.6.geschichten.g1", "titel": "1 · Hallo, ich bin Lily!" },
+         { "id": "daz.6.geschichten.g2", "titel": "2 · Meine Familie" },
+         { "id": "daz.6.geschichten.g3", "titel": "3 · In der Schule" },
+         { "id": "daz.6.geschichten.g4", "titel": "4 · Mein Tag" },
+         { "id": "daz.6.geschichten.g5", "titel": "5 · In der Bäckerei" },
+         { "id": "daz.6.geschichten.g6", "titel": "6 · Neue Freunde" },
+         { "id": "daz.6.geschichten.g7", "titel": "7 · In der Stadt" },
+         { "id": "daz.6.geschichten.g8", "titel": "8 · Wie geht’s?" }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "daz.grundlagen",
+     "titel": "Grundlagen",
+     "themen": [
+      {
+       "id": "daz.6.grundlagen",
+       "titel": "Deutsch lernen – Grundlagen",
+       "klasse": 6,
+       "quelle": {"app": "apps/typen/uebung.html", "parameter": "inhalt=daz.6.grundlagen"},
+       "lehrplan": "DaZ A0–A1: Grundwortschatz und Grundgrammatik (sein, haben, Artikel, Verbstellung, Fragen, Akkusativ/Dativ einfach)",
+       "dauer": 6,
+       "einsatz": "DaZ-Lernweg, je Kapitel Wörter und Sätze",
+       "stufen": [
+         { "id": "daz.6.grundlagen.k1-woerter", "titel": "1 · Wörter: Hello, I am Lily!" },
+         { "id": "daz.6.grundlagen.k1-saetze", "titel": "1 · Sätze: Hello, I am Lily!" },
+         { "id": "daz.6.grundlagen.k2-woerter", "titel": "2 · Wörter: My family" },
+         { "id": "daz.6.grundlagen.k2-saetze", "titel": "2 · Sätze: My family" },
+         { "id": "daz.6.grundlagen.k3-woerter", "titel": "3 · Wörter: At school" },
+         { "id": "daz.6.grundlagen.k3-saetze", "titel": "3 · Sätze: At school" },
+         { "id": "daz.6.grundlagen.k4-woerter", "titel": "4 · Wörter: My day" },
+         { "id": "daz.6.grundlagen.k4-saetze", "titel": "4 · Sätze: My day" },
+         { "id": "daz.6.grundlagen.k5-woerter", "titel": "5 · Wörter: At the bakery" },
+         { "id": "daz.6.grundlagen.k5-saetze", "titel": "5 · Sätze: At the bakery" },
+         { "id": "daz.6.grundlagen.k6-woerter", "titel": "6 · Wörter: New friends" },
+         { "id": "daz.6.grundlagen.k6-saetze", "titel": "6 · Sätze: New friends" },
+         { "id": "daz.6.grundlagen.k7-woerter", "titel": "7 · Wörter: In town" },
+         { "id": "daz.6.grundlagen.k7-saetze", "titel": "7 · Sätze: In town" },
+         { "id": "daz.6.grundlagen.k8-woerter", "titel": "8 · Wörter: How are you?" },
+         { "id": "daz.6.grundlagen.k8-saetze", "titel": "8 · Sätze: How are you?" }
+       ]
+      }
+     ]
+    }
+   ]
   },
   {
    "id": "allg",

@@ -1,0 +1,413 @@
+{
+ "version": 1,
+ "id": "daz",
+ "titel": "Deutsch lernen – Start",
+ "fach": "DaZ",
+ "klasse": 6,
+ "ico": "💬",
+ "hinweis": "DaZ-Lernweg für Kinder, die aus dem Englischen Deutsch lernen (A0–A1, Ziel: Alltag). Je Kapitel Hefteintrag (Grammatik auf Englisch erklärt), Geschichte (apps/daz/daz-geschichten.html), Wörter, Sätze, Heftübung, Stern-Extra.",
+ "kann": [
+  {
+   "id": "daz-kann-k1",
+   "text": "introduce myself in German (name, age, where I come from).",
+   "themen": [
+    "daz.6.geschichten.g1",
+    "daz.6.grundlagen.k1-saetze"
+   ]
+  },
+  {
+   "id": "daz-kann-k2",
+   "text": "talk about my family and use der, die, das.",
+   "themen": [
+    "daz.6.geschichten.g2",
+    "daz.6.grundlagen.k2-saetze"
+   ]
+  },
+  {
+   "id": "daz-kann-k3",
+   "text": "name my school things and ask for help in class.",
+   "themen": [
+    "daz.6.geschichten.g3",
+    "daz.6.grundlagen.k3-saetze"
+   ]
+  },
+  {
+   "id": "daz-kann-k4",
+   "text": "tell the time and talk about my day.",
+   "themen": [
+    "daz.6.geschichten.g4",
+    "daz.6.grundlagen.k4-saetze"
+   ]
+  },
+  {
+   "id": "daz-kann-k5",
+   "text": "buy something to eat and drink.",
+   "themen": [
+    "daz.6.geschichten.g5",
+    "daz.6.grundlagen.k5-saetze"
+   ]
+  },
+  {
+   "id": "daz-kann-k6",
+   "text": "talk about hobbies and ask questions.",
+   "themen": [
+    "daz.6.geschichten.g6",
+    "daz.6.grundlagen.k6-saetze"
+   ]
+  },
+  {
+   "id": "daz-kann-k7",
+   "text": "ask the way and say where places are.",
+   "themen": [
+    "daz.6.geschichten.g7",
+    "daz.6.grundlagen.k7-saetze"
+   ]
+  },
+  {
+   "id": "daz-kann-k8",
+   "text": "say how I feel and ask for help.",
+   "themen": [
+    "daz.6.geschichten.g8",
+    "daz.6.grundlagen.k8-saetze"
+   ]
+  }
+ ],
+ "abschnitte": [
+  {
+   "id": "daz-a-k1",
+   "titel": "1 · Hallo, ich bin Lily!",
+   "ico": "👋",
+   "kurz": "Hello, I am Lily! · Sich vorstellen · Introducing yourself",
+   "schritte": [
+    {
+     "id": "daz-k1-he",
+     "art": "hefteintrag",
+     "baustein": "daz-he-k1"
+    },
+    {
+     "id": "daz-k1-story",
+     "art": "app",
+     "thema": "daz.6.geschichten.g1",
+     "text": "📖 Story: „Hallo, ich bin Lily!“ – read and listen. Tap a sentence for English. · Lies und hör die Geschichte."
+    },
+    {
+     "id": "daz-k1-woerter",
+     "art": "app",
+     "thema": "daz.6.grundlagen.k1-woerter",
+     "text": "🧩 Words: match English and German. · Wörter zuordnen."
+    },
+    {
+     "id": "daz-k1-saetze",
+     "art": "app",
+     "thema": "daz.6.grundlagen.k1-saetze",
+     "text": "✏️ Sentences: choose the right word and build sentences. · Sätze üben."
+    },
+    {
+     "id": "daz-k1-heft",
+     "art": "uebung",
+     "baustein": "daz-ue-k1"
+    },
+    {
+     "id": "daz-k1-stern",
+     "art": "uebung",
+     "stufe": "stern",
+     "text": "⭐ Read the story aloud to a friend or your teacher. · Lies die Geschichte laut vor."
+    }
+   ]
+  },
+  {
+   "id": "daz-a-k2",
+   "titel": "2 · Meine Familie",
+   "ico": "👨‍👩‍👦",
+   "kurz": "My family · Familie · der, die, das",
+   "schritte": [
+    {
+     "id": "daz-k2-he",
+     "art": "hefteintrag",
+     "baustein": "daz-he-k2"
+    },
+    {
+     "id": "daz-k2-story",
+     "art": "app",
+     "thema": "daz.6.geschichten.g2",
+     "text": "📖 Story: „Meine Familie“ – read and listen. Tap a sentence for English. · Lies und hör die Geschichte."
+    },
+    {
+     "id": "daz-k2-woerter",
+     "art": "app",
+     "thema": "daz.6.grundlagen.k2-woerter",
+     "text": "🧩 Words: match English and German. · Wörter zuordnen."
+    },
+    {
+     "id": "daz-k2-saetze",
+     "art": "app",
+     "thema": "daz.6.grundlagen.k2-saetze",
+     "text": "✏️ Sentences: choose the right word and build sentences. · Sätze üben."
+    },
+    {
+     "id": "daz-k2-heft",
+     "art": "uebung",
+     "baustein": "daz-ue-k2"
+    },
+    {
+     "id": "daz-k2-stern",
+     "art": "uebung",
+     "stufe": "stern",
+     "text": "⭐ Read the story aloud to a friend or your teacher. · Lies die Geschichte laut vor."
+    }
+   ]
+  },
+  {
+   "id": "daz-a-k3",
+   "titel": "3 · In der Schule",
+   "ico": "🏫",
+   "kurz": "At school · Schulsachen · ein/eine, kein/keine",
+   "schritte": [
+    {
+     "id": "daz-k3-he",
+     "art": "hefteintrag",
+     "baustein": "daz-he-k3"
+    },
+    {
+     "id": "daz-k3-story",
+     "art": "app",
+     "thema": "daz.6.geschichten.g3",
+     "text": "📖 Story: „In der Schule“ – read and listen. Tap a sentence for English. · Lies und hör die Geschichte."
+    },
+    {
+     "id": "daz-k3-woerter",
+     "art": "app",
+     "thema": "daz.6.grundlagen.k3-woerter",
+     "text": "🧩 Words: match English and German. · Wörter zuordnen."
+    },
+    {
+     "id": "daz-k3-saetze",
+     "art": "app",
+     "thema": "daz.6.grundlagen.k3-saetze",
+     "text": "✏️ Sentences: choose the right word and build sentences. · Sätze üben."
+    },
+    {
+     "id": "daz-k3-heft",
+     "art": "uebung",
+     "baustein": "daz-ue-k3"
+    },
+    {
+     "id": "daz-k3-stern",
+     "art": "uebung",
+     "stufe": "stern",
+     "text": "⭐ Read the story aloud to a friend or your teacher. · Lies die Geschichte laut vor."
+    }
+   ]
+  },
+  {
+   "id": "daz-a-k4",
+   "titel": "4 · Mein Tag",
+   "ico": "⏰",
+   "kurz": "My day · Tagesablauf · Verb auf Platz 2",
+   "schritte": [
+    {
+     "id": "daz-k4-he",
+     "art": "hefteintrag",
+     "baustein": "daz-he-k4"
+    },
+    {
+     "id": "daz-k4-story",
+     "art": "app",
+     "thema": "daz.6.geschichten.g4",
+     "text": "📖 Story: „Mein Tag“ – read and listen. Tap a sentence for English. · Lies und hör die Geschichte."
+    },
+    {
+     "id": "daz-k4-woerter",
+     "art": "app",
+     "thema": "daz.6.grundlagen.k4-woerter",
+     "text": "🧩 Words: match English and German. · Wörter zuordnen."
+    },
+    {
+     "id": "daz-k4-saetze",
+     "art": "app",
+     "thema": "daz.6.grundlagen.k4-saetze",
+     "text": "✏️ Sentences: choose the right word and build sentences. · Sätze üben."
+    },
+    {
+     "id": "daz-k4-heft",
+     "art": "uebung",
+     "baustein": "daz-ue-k4"
+    },
+    {
+     "id": "daz-k4-stern",
+     "art": "uebung",
+     "stufe": "stern",
+     "text": "⭐ Read the story aloud to a friend or your teacher. · Lies die Geschichte laut vor."
+    }
+   ]
+  },
+  {
+   "id": "daz-a-k5",
+   "titel": "5 · In der Bäckerei",
+   "ico": "🥨",
+   "kurz": "At the bakery · Einkaufen · ich möchte, einen/eine/ein",
+   "schritte": [
+    {
+     "id": "daz-k5-he",
+     "art": "hefteintrag",
+     "baustein": "daz-he-k5"
+    },
+    {
+     "id": "daz-k5-story",
+     "art": "app",
+     "thema": "daz.6.geschichten.g5",
+     "text": "📖 Story: „In der Bäckerei“ – read and listen. Tap a sentence for English. · Lies und hör die Geschichte."
+    },
+    {
+     "id": "daz-k5-woerter",
+     "art": "app",
+     "thema": "daz.6.grundlagen.k5-woerter",
+     "text": "🧩 Words: match English and German. · Wörter zuordnen."
+    },
+    {
+     "id": "daz-k5-saetze",
+     "art": "app",
+     "thema": "daz.6.grundlagen.k5-saetze",
+     "text": "✏️ Sentences: choose the right word and build sentences. · Sätze üben."
+    },
+    {
+     "id": "daz-k5-heft",
+     "art": "uebung",
+     "baustein": "daz-ue-k5"
+    },
+    {
+     "id": "daz-k5-stern",
+     "art": "uebung",
+     "stufe": "stern",
+     "text": "⭐ Read the story aloud to a friend or your teacher. · Lies die Geschichte laut vor."
+    }
+   ]
+  },
+  {
+   "id": "daz-a-k6",
+   "titel": "6 · Neue Freunde",
+   "ico": "🎵",
+   "kurz": "New friends · Hobbys · Fragen stellen",
+   "schritte": [
+    {
+     "id": "daz-k6-he",
+     "art": "hefteintrag",
+     "baustein": "daz-he-k6"
+    },
+    {
+     "id": "daz-k6-story",
+     "art": "app",
+     "thema": "daz.6.geschichten.g6",
+     "text": "📖 Story: „Neue Freunde“ – read and listen. Tap a sentence for English. · Lies und hör die Geschichte."
+    },
+    {
+     "id": "daz-k6-woerter",
+     "art": "app",
+     "thema": "daz.6.grundlagen.k6-woerter",
+     "text": "🧩 Words: match English and German. · Wörter zuordnen."
+    },
+    {
+     "id": "daz-k6-saetze",
+     "art": "app",
+     "thema": "daz.6.grundlagen.k6-saetze",
+     "text": "✏️ Sentences: choose the right word and build sentences. · Sätze üben."
+    },
+    {
+     "id": "daz-k6-heft",
+     "art": "uebung",
+     "baustein": "daz-ue-k6"
+    },
+    {
+     "id": "daz-k6-stern",
+     "art": "uebung",
+     "stufe": "stern",
+     "text": "⭐ Read the story aloud to a friend or your teacher. · Lies die Geschichte laut vor."
+    }
+   ]
+  },
+  {
+   "id": "daz-a-k7",
+   "titel": "7 · In der Stadt",
+   "ico": "🏙️",
+   "kurz": "In town · Orte · den Weg fragen",
+   "schritte": [
+    {
+     "id": "daz-k7-he",
+     "art": "hefteintrag",
+     "baustein": "daz-he-k7"
+    },
+    {
+     "id": "daz-k7-story",
+     "art": "app",
+     "thema": "daz.6.geschichten.g7",
+     "text": "📖 Story: „In der Stadt“ – read and listen. Tap a sentence for English. · Lies und hör die Geschichte."
+    },
+    {
+     "id": "daz-k7-woerter",
+     "art": "app",
+     "thema": "daz.6.grundlagen.k7-woerter",
+     "text": "🧩 Words: match English and German. · Wörter zuordnen."
+    },
+    {
+     "id": "daz-k7-saetze",
+     "art": "app",
+     "thema": "daz.6.grundlagen.k7-saetze",
+     "text": "✏️ Sentences: choose the right word and build sentences. · Sätze üben."
+    },
+    {
+     "id": "daz-k7-heft",
+     "art": "uebung",
+     "baustein": "daz-ue-k7"
+    },
+    {
+     "id": "daz-k7-stern",
+     "art": "uebung",
+     "stufe": "stern",
+     "text": "⭐ Read the story aloud to a friend or your teacher. · Lies die Geschichte laut vor."
+    }
+   ]
+  },
+  {
+   "id": "daz-a-k8",
+   "titel": "8 · Wie geht’s?",
+   "ico": "🤒",
+   "kurz": "How are you? · Gefühle · Gesundheit · Hilfe holen",
+   "schritte": [
+    {
+     "id": "daz-k8-he",
+     "art": "hefteintrag",
+     "baustein": "daz-he-k8"
+    },
+    {
+     "id": "daz-k8-story",
+     "art": "app",
+     "thema": "daz.6.geschichten.g8",
+     "text": "📖 Story: „Wie geht’s?“ – read and listen. Tap a sentence for English. · Lies und hör die Geschichte."
+    },
+    {
+     "id": "daz-k8-woerter",
+     "art": "app",
+     "thema": "daz.6.grundlagen.k8-woerter",
+     "text": "🧩 Words: match English and German. · Wörter zuordnen."
+    },
+    {
+     "id": "daz-k8-saetze",
+     "art": "app",
+     "thema": "daz.6.grundlagen.k8-saetze",
+     "text": "✏️ Sentences: choose the right word and build sentences. · Sätze üben."
+    },
+    {
+     "id": "daz-k8-heft",
+     "art": "uebung",
+     "baustein": "daz-ue-k8"
+    },
+    {
+     "id": "daz-k8-stern",
+     "art": "uebung",
+     "stufe": "stern",
+     "text": "⭐ Read the story aloud to a friend or your teacher. · Lies die Geschichte laut vor."
+    }
+   ]
+  }
+ ]
+}
