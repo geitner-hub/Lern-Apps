@@ -5,39 +5,230 @@
  "emoji": "💬",
  "klasse": 6,
  "sprache": "de-DE",
- "untertitel": "German for English speakers · Wörter und Sätze",
+ "untertitel": "German for English speakers · 3 Level je Kapitel",
  "anweisung": "Ordne richtig zu.",
  "runde": 8,
  "hilfe": [
   {
-   "titel": "der · die · das",
-   "text": "Every noun has an article. Learn it together with the noun.",
-   "beispiele": [
+   "titel": "1 · sein & heißen – to be & to be called",
+   "text": [
+    "ich bin · du bist · er/sie ist"
+   ],
+   "tabelle": [
     [
-     "the dog",
-     "der Hund"
+     "Grammar · Grammatik"
     ],
     [
-     "the cat",
-     "die Katze"
+     "In German the verb changes with the person:"
     ],
     [
-     "the child",
-     "das Kind"
+     "ich bin  –  I am"
+    ],
+    [
+     "du bist  –  you are"
+    ],
+    [
+     "er / sie ist  –  he / she is"
+    ],
+    [
+     "ich heiße Lily  –  my name is Lily"
+    ],
+    [
+     "du heißt  –  your name is …"
+    ],
+    [
+     "Wie heißt du?  –  What is your name?"
     ]
    ]
   },
   {
-   "titel": "Verb in position 2",
-   "text": "In German the verb is always the second part of the sentence.",
-   "beispiele": [
+   "titel": "2 · der, die, das – the",
+   "text": [
+    "Learn every noun WITH its article: der Hund, die Katze, das Kind."
+   ],
+   "tabelle": [
     [
-     "I play football.",
-     "Ich spiele Fußball."
+     "Grammar · Grammatik"
     ],
     [
-     "In the evening I play.",
-     "Am Abend spiele ich."
+     "Every German noun has an article – and a capital letter."
+    ],
+    [
+     "der  Papa, Bruder, Hund  (masculine)"
+    ],
+    [
+     "die  Mama, Schwester, Katze  (feminine)"
+    ],
+    [
+     "das  Kind, Foto  (neuter)"
+    ],
+    [
+     "mein Papa · meine Mama  –  my"
+    ],
+    [
+     "ich habe · du hast · er/sie hat  –  I have …"
+    ]
+   ]
+  },
+  {
+   "titel": "3 · ein / eine – a · kein / keine – no",
+   "text": [
+    "kein = no / not a: Ich habe kein Heft."
+   ],
+   "tabelle": [
+    [
+     "Grammar · Grammatik"
+    ],
+    [
+     "der Stift → ein Stift → kein Stift"
+    ],
+    [
+     "die Tasche → eine Tasche → keine Tasche"
+    ],
+    [
+     "das Heft → ein Heft → kein Heft"
+    ],
+    [
+     "After \"ich habe\": der → einen: Ich habe einen Stift."
+    ],
+    [
+     "Plural: always die: die Stifte, die Hefte, die Bücher"
+    ],
+    [
+     "Langsam, bitte. · Noch einmal, bitte. · Ich verstehe das nicht."
+    ]
+   ]
+  },
+  {
+   "titel": "4 · Verbs · the verb is in position 2",
+   "text": [
+    "Position 2 = verb: Am Abend mache ich Hausaufgaben."
+   ],
+   "tabelle": [
+    [
+     "Grammar · Grammatik"
+    ],
+    [
+     "spielen:  ich spiele  ·  du spielst  ·  er/sie spielt  ·  wir spielen"
+    ],
+    [
+     "The verb is always in position 2:"
+    ],
+    [
+     "Ich spiele am Nachmittag Fußball."
+    ],
+    [
+     "Am Nachmittag spiele ich Fußball.   (not: Am Nachmittag ich spiele …)"
+    ],
+    [
+     "um 7 Uhr = at 7 o’clock  ·  halb acht = 7:30 (half TO eight!)"
+    ]
+   ]
+  },
+  {
+   "titel": "5 · ich möchte – I would like",
+   "text": [
+    "Ich möchte … , bitte. – Danke!"
+   ],
+   "tabelle": [
+    [
+     "Grammar · Grammatik"
+    ],
+    [
+     "ich möchte  ·  du möchtest  –  polite way to ask for something"
+    ],
+    [
+     "der Apfelsaft → Ich möchte einen Apfelsaft."
+    ],
+    [
+     "die Brezel → Ich möchte eine Brezel."
+    ],
+    [
+     "das Brötchen → Ich möchte ein Brötchen."
+    ],
+    [
+     "1 eins · 2 zwei · 3 drei · 4 vier · 5 fünf · 6 sechs · 7 sieben · 8 acht · 9 neun · 10 zehn"
+    ],
+    [
+     "4,50 € = vier Euro fünfzig"
+    ]
+   ]
+  },
+  {
+   "titel": "6 · Questions · gern",
+   "text": [
+    "Spielst du gern Fußball? – Ja, gern!"
+   ],
+   "tabelle": [
+    [
+     "Grammar · Grammatik"
+    ],
+    [
+     "W-questions: Was? what  Wo? where  Wer? who  Wann? when  Wie? how"
+    ],
+    [
+     "Wo wohnst du?   –  verb in position 2"
+    ],
+    [
+     "Yes/no questions: verb first: Spielst du Fußball? – Ja. / Nein."
+    ],
+    [
+     "gern = like doing:  Ich lese gern. – I like reading."
+    ],
+    [
+     "Ich lese nicht gern. – I don’t like reading."
+    ]
+   ]
+  },
+  {
+   "titel": "7 · Asking the way · Where is …?",
+   "text": [
+    "Wo ist der Bahnhof? – Geradeaus und dann links."
+   ],
+   "tabelle": [
+    [
+     "Grammar · Grammatik"
+    ],
+    [
+     "Entschuldigung, wo ist …?  –  Excuse me, where is …?"
+    ],
+    [
+     "links ⬅  ·  rechts ➡  ·  geradeaus ⬆"
+    ],
+    [
+     "der Park → im Park · neben dem Park"
+    ],
+    [
+     "die Schule → in der Schule · neben der Schule"
+    ],
+    [
+     "das Kino → im Kino · neben dem Kino   (im = in dem)"
+    ]
+   ]
+  },
+  {
+   "titel": "8 · How are you? · Feelings & health",
+   "text": [
+    "feelings with \"bin\", pain with \"habe\""
+   ],
+   "tabelle": [
+    [
+     "Grammar · Grammatik"
+    ],
+    [
+     "Wie geht es dir?  –  How are you?"
+    ],
+    [
+     "Mir geht es gut. / nicht so gut.  –  I am fine. / not so good."
+    ],
+    [
+     "Ich bin müde · krank · froh · traurig  (feelings)"
+    ],
+    [
+     "Ich habe Kopfschmerzen · Bauchschmerzen  (pain)"
+    ],
+    [
+     "Ich brauche Hilfe.  –  I need help."
     ]
    ]
   }
@@ -45,8 +236,8 @@
  "stufen": [
   {
    "id": "daz.6.grundlagen.k1-woerter",
-   "titel": "1 · Wörter: Hello, I am Lily!",
-   "kurz": "Hallo, ich bin Lily!",
+   "titel": "1 · ⭐ Wörter: Hello, I am Lily!",
+   "kurz": "Level 1 · Hallo, ich bin Lily!",
    "typ": "zuordnen",
    "anweisung": "Match English and German. · Ordne zu.",
    "runde": 5,
@@ -160,8 +351,8 @@
   },
   {
    "id": "daz.6.grundlagen.k1-saetze",
-   "titel": "1 · Sätze: Hello, I am Lily!",
-   "kurz": "Sich vorstellen · Introducing yourself",
+   "titel": "1 · ⭐ Sätze: Hello, I am Lily!",
+   "kurz": "Level 1 · Sich vorstellen · Introducing yourself",
    "typ": "lueckentext",
    "anweisung": "Choose the right word. · Wähle das richtige Wort.",
    "runde": 9,
@@ -265,9 +456,186 @@
    ]
   },
   {
+   "id": "daz.6.grundlagen.k1-mittel",
+   "titel": "1 · ⭐⭐ Level 2: Hello, I am Lily!",
+   "kurz": "Level 2 · Wörter und Formen tippen",
+   "typ": "lueckentext",
+   "anweisung": "Type the missing word. · Tippe das Wort.",
+   "runde": 8,
+   "aufgaben": [
+    {
+     "text": "Ich ___ Lily. (heißen)",
+     "antwort": [
+      "heiße",
+      "heisse"
+     ],
+     "tipp": "ich → -e",
+     "tipp2": "The word starts with „h“."
+    },
+    {
+     "text": "Wie ___ du? (heißen)",
+     "antwort": [
+      "heißt",
+      "heisst"
+     ],
+     "tipp": "du → -t (heißt)",
+     "tipp2": "The word starts with „h“."
+    },
+    {
+     "text": "Ich ___ zwölf. (sein)",
+     "antwort": "bin",
+     "tipp": "ich bin",
+     "tipp2": "The word starts with „b“."
+    },
+    {
+     "text": "Er ___ neu. (sein)",
+     "antwort": "ist",
+     "tipp": "er ist",
+     "tipp2": "The word starts with „i“."
+    },
+    {
+     "text": "Du ___ aus England. (kommen)",
+     "antwort": "kommst",
+     "tipp": "du → -st",
+     "tipp2": "The word starts with „k“."
+    },
+    {
+     "text": "Wir ___ in Neustadt. (sein)",
+     "antwort": "sind",
+     "tipp": "wir sind",
+     "tipp2": "The word starts with „s“."
+    },
+    {
+     "text": "Du ___ zwölf.",
+     "antwort": "bist",
+     "tipp": "du → bist",
+     "tipp2": "The word starts with „b“."
+    },
+    {
+     "text": "Er ___ Jonas.",
+     "antwort": "heißt",
+     "tipp": "er → heißt",
+     "tipp2": "The word starts with „h“."
+    },
+    {
+     "text": "Ich ___ aus England.",
+     "antwort": "komme",
+     "tipp": "ich → komme",
+     "tipp2": "The word starts with „k“."
+    }
+   ]
+  },
+  {
+   "id": "daz.6.grundlagen.k1-schwer",
+   "titel": "1 · ⭐⭐⭐ Level 3: Hello, I am Lily!",
+   "kurz": "Level 3 · Sätze selbst schreiben",
+   "typ": "eingabe",
+   "anweisung": "Write the sentence in German. · Schreib den Satz auf Deutsch.",
+   "runde": 6,
+   "aufgaben": [
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „My name is Jonas.“",
+     "antwort": [
+      "Ich heiße Jonas",
+      "Ich heisse Jonas",
+      "Ich bin Jonas"
+     ],
+     "tipp": "Start: Ich heiße …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „Where do you come from?“",
+     "antwort": [
+      "Woher kommst du"
+     ],
+     "tipp": "Start: Woher …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „I come from England.“",
+     "antwort": [
+      "Ich komme aus England"
+     ],
+     "tipp": "Start: Ich komme …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „How old are you?“",
+     "antwort": [
+      "Wie alt bist du"
+     ],
+     "tipp": "Start: Wie alt …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „She is twelve years old.“",
+     "antwort": [
+      "Sie ist zwölf Jahre alt",
+      "Sie ist zwoelf Jahre alt",
+      "Sie ist zwölf",
+      "Sie ist zwoelf"
+     ],
+     "tipp": "Start: Sie ist …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „Welcome to Neustadt!“",
+     "antwort": [
+      "Willkommen in Neustadt"
+     ],
+     "tipp": "Start: Willkommen …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „My name is Lily.“",
+     "antwort": [
+      "Ich heiße Lily",
+      "Ich heisse Lily"
+     ],
+     "tipp": "Start: Ich heiße …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „I am twelve years old.“",
+     "antwort": [
+      "Ich bin zwölf Jahre alt",
+      "Ich bin zwoelf Jahre alt"
+     ],
+     "tipp": "Start: Ich bin …"
+    },
+    {
+     "typ": "sortieren",
+     "teile": [
+      "Ich",
+      "bin",
+      "neu",
+      "in",
+      "der",
+      "Schule."
+     ],
+     "loesung": "Ich bin neu in der Schule.",
+     "frage": "I am new at school.",
+     "tipp": "The verb is in position 2."
+    },
+    {
+     "typ": "sortieren",
+     "teile": [
+      "Woher",
+      "kommst",
+      "du",
+      "denn?"
+     ],
+     "loesung": "Woher kommst du denn?",
+     "frage": "Where do you come from, then?",
+     "tipp": "Question: verb first or after the question word."
+    }
+   ]
+  },
+  {
    "id": "daz.6.grundlagen.k2-woerter",
-   "titel": "2 · Wörter: My family",
-   "kurz": "Meine Familie",
+   "titel": "2 · ⭐ Wörter: My family",
+   "kurz": "Level 1 · Meine Familie",
    "typ": "zuordnen",
    "anweisung": "Match English and German. · Ordne zu.",
    "runde": 5,
@@ -381,8 +749,8 @@
   },
   {
    "id": "daz.6.grundlagen.k2-saetze",
-   "titel": "2 · Sätze: My family",
-   "kurz": "Familie · der, die, das",
+   "titel": "2 · ⭐ Sätze: My family",
+   "kurz": "Level 1 · Familie · der, die, das",
    "typ": "lueckentext",
    "anweisung": "Choose the right word. · Wähle das richtige Wort.",
    "runde": 10,
@@ -493,9 +861,247 @@
    ]
   },
   {
+   "id": "daz.6.grundlagen.k2-mittel",
+   "titel": "2 · ⭐⭐ Level 2: My family",
+   "kurz": "Level 2 · Wörter und Formen tippen",
+   "typ": "lueckentext",
+   "anweisung": "Type the missing word. · Tippe das Wort.",
+   "runde": 8,
+   "aufgaben": [
+    {
+     "text": "___ Hund heißt Biscuit. (the)",
+     "antwort": "Der",
+     "tipp": "der Hund",
+     "tipp2": "The word starts with „D“."
+    },
+    {
+     "text": "___ Katze ist süß. (the)",
+     "antwort": "Die",
+     "tipp": "die Katze",
+     "tipp2": "The word starts with „D“."
+    },
+    {
+     "text": "___ Foto ist schön. (the)",
+     "antwort": "Das",
+     "tipp": "das Foto",
+     "tipp2": "The word starts with „D“."
+    },
+    {
+     "text": "Ich ___ einen Bruder. (haben)",
+     "antwort": "habe",
+     "tipp": "ich habe",
+     "tipp2": "The word starts with „h“."
+    },
+    {
+     "text": "Er ___ eine Schwester. (haben)",
+     "antwort": "hat",
+     "tipp": "er hat",
+     "tipp2": "The word starts with „h“."
+    },
+    {
+     "text": "Das ist ___ Oma. (my)",
+     "antwort": "meine",
+     "tipp": "die Oma → meine",
+     "tipp2": "The word starts with „m“."
+    },
+    {
+     "text": "Das ist ___ Opa. (my)",
+     "antwort": "mein",
+     "tipp": "der Opa → mein",
+     "tipp2": "The word starts with „m“."
+    },
+    {
+     "text": "___ Schwester ist sechzehn.",
+     "antwort": "Die",
+     "tipp": "die Schwester",
+     "tipp2": "The word starts with „D“."
+    },
+    {
+     "text": "___ Kind ist acht.",
+     "antwort": "Das",
+     "tipp": "das Kind",
+     "tipp2": "The word starts with „D“."
+    },
+    {
+     "text": "Das ist ___ Mama.",
+     "antwort": "meine",
+     "tipp": "die Mama → meine",
+     "tipp2": "The word starts with „m“."
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 mum → auf Deutsch (mit der / die / das)",
+     "antwort": [
+      "die Mama"
+     ],
+     "tipp": "It starts with „die“.",
+     "tipp2": "die Ma…"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 dad → auf Deutsch (mit der / die / das)",
+     "antwort": [
+      "der Papa"
+     ],
+     "tipp": "It starts with „der“.",
+     "tipp2": "der Pa…"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 brother → auf Deutsch (mit der / die / das)",
+     "antwort": [
+      "der Bruder"
+     ],
+     "tipp": "It starts with „der“.",
+     "tipp2": "der Br…"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 sister → auf Deutsch (mit der / die / das)",
+     "antwort": [
+      "die Schwester"
+     ],
+     "tipp": "It starts with „die“.",
+     "tipp2": "die Sc…"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 family → auf Deutsch (mit der / die / das)",
+     "antwort": [
+      "die Familie"
+     ],
+     "tipp": "It starts with „die“.",
+     "tipp2": "die Fa…"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 dog → auf Deutsch (mit der / die / das)",
+     "antwort": [
+      "der Hund"
+     ],
+     "tipp": "It starts with „der“.",
+     "tipp2": "der Hu…"
+    }
+   ]
+  },
+  {
+   "id": "daz.6.grundlagen.k2-schwer",
+   "titel": "2 · ⭐⭐⭐ Level 3: My family",
+   "kurz": "Level 3 · Sätze selbst schreiben",
+   "typ": "eingabe",
+   "anweisung": "Write the sentence in German. · Schreib den Satz auf Deutsch.",
+   "runde": 6,
+   "aufgaben": [
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „This is my dad.“",
+     "antwort": [
+      "Das ist mein Papa",
+      "Das ist mein Vater"
+     ],
+     "tipp": "Start: Das ist mein …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „I have a sister.“",
+     "antwort": [
+      "Ich habe eine Schwester"
+     ],
+     "tipp": "Start: Ich habe eine …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „Do you have brothers or sisters?“",
+     "antwort": [
+      "Hast du Geschwister"
+     ],
+     "tipp": "Start: Hast du …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „The dog is called Biscuit.“",
+     "antwort": [
+      "Der Hund heißt Biscuit",
+      "Der Hund heisst Biscuit"
+     ],
+     "tipp": "Start: Der Hund …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „My mum is called Anna.“",
+     "antwort": [
+      "Meine Mama heißt Anna",
+      "Meine Mama heisst Anna",
+      "Meine Mutter heißt Anna",
+      "Meine Mutter heisst Anna"
+     ],
+     "tipp": "Start: Meine …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „This is my mum.“",
+     "antwort": [
+      "Das ist meine Mama"
+     ],
+     "tipp": "Start: Das ist …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „I have a brother.“",
+     "antwort": [
+      "Ich habe einen Bruder"
+     ],
+     "tipp": "Start: Ich habe …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „He is eight.“",
+     "antwort": [
+      "Er ist acht"
+     ],
+     "tipp": "Start: Er ist …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „Who is that?“",
+     "antwort": [
+      "Wer ist das"
+     ],
+     "tipp": "Start: Wer ist …"
+    },
+    {
+     "typ": "sortieren",
+     "teile": [
+      "Ich",
+      "habe",
+      "einen",
+      "Bruder",
+      "und",
+      "eine",
+      "Schwester."
+     ],
+     "loesung": "Ich habe einen Bruder und eine Schwester.",
+     "frage": "I have a brother and a sister.",
+     "tipp": "The verb is in position 2."
+    },
+    {
+     "typ": "sortieren",
+     "teile": [
+      "Wie",
+      "heißt",
+      "deine",
+      "Mama?"
+     ],
+     "loesung": "Wie heißt deine Mama?",
+     "frage": "What is your mum’s name?",
+     "tipp": "Question: verb first or after the question word."
+    }
+   ]
+  },
+  {
    "id": "daz.6.grundlagen.k3-woerter",
-   "titel": "3 · Wörter: At school",
-   "kurz": "In der Schule",
+   "titel": "3 · ⭐ Wörter: At school",
+   "kurz": "Level 1 · In der Schule",
    "typ": "zuordnen",
    "anweisung": "Match English and German. · Ordne zu.",
    "runde": 5,
@@ -609,8 +1215,8 @@
   },
   {
    "id": "daz.6.grundlagen.k3-saetze",
-   "titel": "3 · Sätze: At school",
-   "kurz": "Schulsachen · ein/eine, kein/keine",
+   "titel": "3 · ⭐ Sätze: At school",
+   "kurz": "Level 1 · Schulsachen · ein/eine, kein/keine",
    "typ": "lueckentext",
    "anweisung": "Choose the right word. · Wähle das richtige Wort.",
    "runde": 9,
@@ -707,9 +1313,241 @@
    ]
   },
   {
+   "id": "daz.6.grundlagen.k3-mittel",
+   "titel": "3 · ⭐⭐ Level 2: At school",
+   "kurz": "Level 2 · Wörter und Formen tippen",
+   "typ": "lueckentext",
+   "anweisung": "Type the missing word. · Tippe das Wort.",
+   "runde": 8,
+   "aufgaben": [
+    {
+     "text": "Ich habe ___ Heft. (no)",
+     "antwort": "kein",
+     "tipp": "das Heft → kein",
+     "tipp2": "The word starts with „k“."
+    },
+    {
+     "text": "Ich habe ___ Tasche. (no)",
+     "antwort": "keine",
+     "tipp": "die Tasche → keine",
+     "tipp2": "The word starts with „k“."
+    },
+    {
+     "text": "Hast du ___ Stift? (a)",
+     "antwort": "einen",
+     "tipp": "der Stift, after haben → einen",
+     "tipp2": "The word starts with „e“."
+    },
+    {
+     "text": "Das ist ___ Buch. (a)",
+     "antwort": "ein",
+     "tipp": "das Buch → ein",
+     "tipp2": "The word starts with „e“."
+    },
+    {
+     "text": "Das ist ___ Tafel. (a)",
+     "antwort": "eine",
+     "tipp": "die Tafel → eine",
+     "tipp2": "The word starts with „e“."
+    },
+    {
+     "text": "Ich habe zwei ___. (Stift, plural)",
+     "antwort": "Stifte",
+     "tipp": "der Stift → die Stifte",
+     "tipp2": "The word starts with „S“."
+    },
+    {
+     "text": "Hast du ___ Tasche?",
+     "antwort": "eine",
+     "tipp": "die Tasche → eine Tasche",
+     "tipp2": "The word starts with „e“."
+    },
+    {
+     "text": "Das ist ___ Lineal.",
+     "antwort": "ein",
+     "tipp": "das Lineal → ein Lineal",
+     "tipp2": "The word starts with „e“."
+    },
+    {
+     "text": "Ich habe ___ Stift.",
+     "antwort": "einen",
+     "tipp": "der Stift → ich habe einen Stift",
+     "tipp2": "The word starts with „e“."
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 exercise book → auf Deutsch (mit der / die / das)",
+     "antwort": [
+      "das Heft"
+     ],
+     "tipp": "It starts with „das“.",
+     "tipp2": "das He…"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 pen → auf Deutsch (mit der / die / das)",
+     "antwort": [
+      "der Stift"
+     ],
+     "tipp": "It starts with „der“.",
+     "tipp2": "der St…"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 ruler → auf Deutsch (mit der / die / das)",
+     "antwort": [
+      "das Lineal"
+     ],
+     "tipp": "It starts with „das“.",
+     "tipp2": "das Li…"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 eraser → auf Deutsch (mit der / die / das)",
+     "antwort": [
+      "der Radiergummi"
+     ],
+     "tipp": "It starts with „der“.",
+     "tipp2": "der Ra…"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 bag → auf Deutsch (mit der / die / das)",
+     "antwort": [
+      "die Tasche"
+     ],
+     "tipp": "It starts with „die“.",
+     "tipp2": "die Ta…"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 book → auf Deutsch (mit der / die / das)",
+     "antwort": [
+      "das Buch"
+     ],
+     "tipp": "It starts with „das“.",
+     "tipp2": "das Bu…"
+    }
+   ]
+  },
+  {
+   "id": "daz.6.grundlagen.k3-schwer",
+   "titel": "3 · ⭐⭐⭐ Level 3: At school",
+   "kurz": "Level 3 · Sätze selbst schreiben",
+   "typ": "eingabe",
+   "anweisung": "Write the sentence in German. · Schreib den Satz auf Deutsch.",
+   "runde": 6,
+   "aufgaben": [
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „I don’t have a pen.“",
+     "antwort": [
+      "Ich habe keinen Stift"
+     ],
+     "tipp": "Start: Ich habe keinen …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „Do you have a ruler?“",
+     "antwort": [
+      "Hast du ein Lineal"
+     ],
+     "tipp": "Start: Hast du …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „I don’t understand that.“",
+     "antwort": [
+      "Ich verstehe das nicht"
+     ],
+     "tipp": "Start: Ich verstehe …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „Again, please.“",
+     "antwort": [
+      "Noch einmal bitte",
+      "Noch einmal, bitte"
+     ],
+     "tipp": "Start: Noch …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „That is a book.“",
+     "antwort": [
+      "Das ist ein Buch"
+     ],
+     "tipp": "Start: Das ist …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „I don't have a book.“",
+     "antwort": [
+      "Ich habe kein Buch"
+     ],
+     "tipp": "Start: Ich habe …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „What is that?“",
+     "antwort": [
+      "Was ist das"
+     ],
+     "tipp": "Start: Was ist …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „Slowly, please.“",
+     "antwort": [
+      "Langsam, bitte",
+      "Langsam bitte"
+     ],
+     "tipp": "Start: Langsam, bitte. …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „Here is a pen for you.“",
+     "antwort": [
+      "Hier ist ein Stift für dich",
+      "Hier ist ein Stift fuer dich"
+     ],
+     "tipp": "Start: Hier ist …"
+    },
+    {
+     "typ": "sortieren",
+     "teile": [
+      "Kannst",
+      "du",
+      "das",
+      "bitte",
+      "langsam",
+      "sagen?"
+     ],
+     "loesung": "Kannst du das bitte langsam sagen?",
+     "frage": "Can you say that slowly, please?",
+     "tipp": "Question: verb first or after the question word."
+    },
+    {
+     "typ": "sortieren",
+     "teile": [
+      "Ich",
+      "habe",
+      "kein",
+      "Heft",
+      "und",
+      "keinen",
+      "Stift."
+     ],
+     "loesung": "Ich habe kein Heft und keinen Stift.",
+     "frage": "I have no exercise book and no pen.",
+     "tipp": "The verb is in position 2."
+    }
+   ]
+  },
+  {
    "id": "daz.6.grundlagen.k4-woerter",
-   "titel": "4 · Wörter: My day",
-   "kurz": "Mein Tag",
+   "titel": "4 · ⭐ Wörter: My day",
+   "kurz": "Level 1 · Mein Tag",
    "typ": "zuordnen",
    "anweisung": "Match English and German. · Ordne zu.",
    "runde": 5,
@@ -823,8 +1661,8 @@
   },
   {
    "id": "daz.6.grundlagen.k4-saetze",
-   "titel": "4 · Sätze: My day",
-   "kurz": "Tagesablauf · Verb auf Platz 2",
+   "titel": "4 · ⭐ Sätze: My day",
+   "kurz": "Level 1 · Tagesablauf · Verb auf Platz 2",
    "typ": "lueckentext",
    "anweisung": "Choose the right word. · Wähle das richtige Wort.",
    "runde": 9,
@@ -930,9 +1768,219 @@
    ]
   },
   {
+   "id": "daz.6.grundlagen.k4-mittel",
+   "titel": "4 · ⭐⭐ Level 2: My day",
+   "kurz": "Level 2 · Wörter und Formen tippen",
+   "typ": "lueckentext",
+   "anweisung": "Type the missing word. · Tippe das Wort.",
+   "runde": 8,
+   "aufgaben": [
+    {
+     "text": "Ich ___ Fußball. (spielen)",
+     "antwort": "spiele",
+     "tipp": "ich → -e",
+     "tipp2": "The word starts with „s“."
+    },
+    {
+     "text": "Du ___ Hausaufgaben. (machen)",
+     "antwort": "machst",
+     "tipp": "du → -st",
+     "tipp2": "The word starts with „m“."
+    },
+    {
+     "text": "Sie ___ um sieben Uhr auf. (stehen)",
+     "antwort": "steht",
+     "tipp": "sie (she) → -t",
+     "tipp2": "The word starts with „s“."
+    },
+    {
+     "text": "Wir ___ zusammen. (lernen)",
+     "antwort": "lernen",
+     "tipp": "wir → -en",
+     "tipp2": "The word starts with „l“."
+    },
+    {
+     "text": "Am Abend ___ ich ins Bett. (gehen)",
+     "antwort": "gehe",
+     "tipp": "verb in position 2",
+     "tipp2": "The word starts with „g“."
+    },
+    {
+     "text": "Um acht Uhr ___ die Schule. (beginnen)",
+     "antwort": "beginnt",
+     "tipp": "die Schule → -t",
+     "tipp2": "The word starts with „b“."
+    },
+    {
+     "text": "Er ___ ins Bett.",
+     "antwort": "geht",
+     "tipp": "er → -t",
+     "tipp2": "The word starts with „g“."
+    },
+    {
+     "text": "Am Abend ___ ich Hausaufgaben.",
+     "antwort": "mache",
+     "tipp": "verb in position 2, then ich",
+     "tipp2": "The word starts with „m“."
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 homework → auf Deutsch (mit der / die / das)",
+     "antwort": [
+      "die Hausaufgaben"
+     ],
+     "tipp": "It starts with „die“.",
+     "tipp2": "die Ha…"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 bed → auf Deutsch (mit der / die / das)",
+     "antwort": [
+      "das Bett"
+     ],
+     "tipp": "It starts with „das“.",
+     "tipp2": "das Be…"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 morning → auf Deutsch (mit der / die / das)",
+     "antwort": [
+      "der Morgen"
+     ],
+     "tipp": "It starts with „der“.",
+     "tipp2": "der Mo…"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 afternoon → auf Deutsch (mit der / die / das)",
+     "antwort": [
+      "der Nachmittag"
+     ],
+     "tipp": "It starts with „der“.",
+     "tipp2": "der Na…"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 evening → auf Deutsch (mit der / die / das)",
+     "antwort": [
+      "der Abend"
+     ],
+     "tipp": "It starts with „der“.",
+     "tipp2": "der Ab…"
+    }
+   ]
+  },
+  {
+   "id": "daz.6.grundlagen.k4-schwer",
+   "titel": "4 · ⭐⭐⭐ Level 3: My day",
+   "kurz": "Level 3 · Sätze selbst schreiben",
+   "typ": "eingabe",
+   "anweisung": "Write the sentence in German. · Schreib den Satz auf Deutsch.",
+   "runde": 6,
+   "aufgaben": [
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „I get up at seven o’clock.“",
+     "antwort": [
+      "Ich stehe um sieben Uhr auf",
+      "Ich stehe um sieben auf"
+     ],
+     "tipp": "Start: Ich stehe … auf"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „In the afternoon I play football.“",
+     "antwort": [
+      "Am Nachmittag spiele ich Fußball",
+      "Am Nachmittag spiele ich Fussball"
+     ],
+     "tipp": "Start: Am Nachmittag spiele …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „In the evening I do homework.“",
+     "antwort": [
+      "Am Abend mache ich Hausaufgaben",
+      "Am Abend mache ich die Hausaufgaben"
+     ],
+     "tipp": "Start: Am Abend …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „When do you get up?“",
+     "antwort": [
+      "Wann stehst du auf"
+     ],
+     "tipp": "Start: Wann …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „We play together.“",
+     "antwort": [
+      "Wir spielen zusammen"
+     ],
+     "tipp": "Start: Wir …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „I play football.“",
+     "antwort": [
+      "Ich spiele Fußball",
+      "Ich spiele Fussball"
+     ],
+     "tipp": "Start: Ich spiele …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „School starts at eight o’clock.“",
+     "antwort": [
+      "Die Schule beginnt um acht Uhr"
+     ],
+     "tipp": "Start: Die Schule …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „I go to bed at nine o’clock.“",
+     "antwort": [
+      "Ich gehe um neun Uhr ins Bett"
+     ],
+     "tipp": "Start: Ich gehe …"
+    },
+    {
+     "typ": "sortieren",
+     "teile": [
+      "Am",
+      "Samstag",
+      "spielen",
+      "wir",
+      "zusammen",
+      "Fußball."
+     ],
+     "loesung": "Am Samstag spielen wir zusammen Fußball.",
+     "frage": "On Saturday we play football together.",
+     "tipp": "The verb is in position 2."
+    },
+    {
+     "typ": "sortieren",
+     "teile": [
+      "Um",
+      "neun",
+      "Uhr",
+      "gehe",
+      "ich",
+      "ins",
+      "Bett."
+     ],
+     "loesung": "Um neun Uhr gehe ich ins Bett.",
+     "frage": "At nine o’clock I go to bed.",
+     "tipp": "The verb is in position 2."
+    }
+   ]
+  },
+  {
    "id": "daz.6.grundlagen.k5-woerter",
-   "titel": "5 · Wörter: At the bakery",
-   "kurz": "In der Bäckerei",
+   "titel": "5 · ⭐ Wörter: At the bakery",
+   "kurz": "Level 1 · In der Bäckerei",
    "typ": "zuordnen",
    "anweisung": "Match English and German. · Ordne zu.",
    "runde": 5,
@@ -1046,8 +2094,8 @@
   },
   {
    "id": "daz.6.grundlagen.k5-saetze",
-   "titel": "5 · Sätze: At the bakery",
-   "kurz": "Einkaufen · ich möchte, einen/eine/ein",
+   "titel": "5 · ⭐ Sätze: At the bakery",
+   "kurz": "Level 1 · Einkaufen · ich möchte, einen/eine/ein",
    "typ": "lueckentext",
    "anweisung": "Choose the right word. · Wähle das richtige Wort.",
    "runde": 9,
@@ -1148,9 +2196,249 @@
    ]
   },
   {
+   "id": "daz.6.grundlagen.k5-mittel",
+   "titel": "5 · ⭐⭐ Level 2: At the bakery",
+   "kurz": "Level 2 · Wörter und Formen tippen",
+   "typ": "lueckentext",
+   "anweisung": "Type the missing word. · Tippe das Wort.",
+   "runde": 8,
+   "aufgaben": [
+    {
+     "text": "Ich möchte ___ Apfel. (a)",
+     "antwort": "einen",
+     "tipp": "der Apfel → einen",
+     "tipp2": "The word starts with „e“."
+    },
+    {
+     "text": "Ich möchte ___ Milch. (a)",
+     "antwort": "eine",
+     "tipp": "die Milch → eine",
+     "tipp2": "The word starts with „e“."
+    },
+    {
+     "text": "Ich möchte ___ Wasser. (a)",
+     "antwort": "ein",
+     "tipp": "das Wasser → ein",
+     "tipp2": "The word starts with „e“."
+    },
+    {
+     "text": "Was ___ du? (möchten)",
+     "antwort": [
+      "möchtest",
+      "moechtest"
+     ],
+     "tipp": "du möchtest",
+     "tipp2": "The word starts with „m“."
+    },
+    {
+     "text": "Er ___ eine Brezel. (möchten)",
+     "antwort": [
+      "möchte",
+      "moechte"
+     ],
+     "tipp": "er möchte (no -t!)",
+     "tipp2": "The word starts with „m“."
+    },
+    {
+     "text": "Die Brezel ist ___. (tasty)",
+     "antwort": "lecker",
+     "tipp": "tasty = lecker",
+     "tipp2": "The word starts with „l“."
+    },
+    {
+     "text": "Ich möchte ___ Apfelsaft.",
+     "antwort": "einen",
+     "tipp": "der Apfelsaft → einen",
+     "tipp2": "The word starts with „e“."
+    },
+    {
+     "text": "Ich möchte ___ Brezel.",
+     "antwort": "eine",
+     "tipp": "die Brezel → eine",
+     "tipp2": "The word starts with „e“."
+    },
+    {
+     "text": "Ich möchte ___ Brötchen.",
+     "antwort": "ein",
+     "tipp": "das Brötchen → ein",
+     "tipp2": "The word starts with „e“."
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 pretzel → auf Deutsch (mit der / die / das)",
+     "antwort": [
+      "die Brezel"
+     ],
+     "tipp": "It starts with „die“.",
+     "tipp2": "die Br…"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 bread roll → auf Deutsch (mit der / die / das)",
+     "antwort": [
+      "das Brötchen",
+      "das Broetchen"
+     ],
+     "tipp": "It starts with „das“.",
+     "tipp2": "das Br…"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 cheese → auf Deutsch (mit der / die / das)",
+     "antwort": [
+      "der Käse",
+      "der Kaese"
+     ],
+     "tipp": "It starts with „der“.",
+     "tipp2": "der Kä…"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 apple juice → auf Deutsch (mit der / die / das)",
+     "antwort": [
+      "der Apfelsaft"
+     ],
+     "tipp": "It starts with „der“.",
+     "tipp2": "der Ap…"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 water → auf Deutsch (mit der / die / das)",
+     "antwort": [
+      "das Wasser"
+     ],
+     "tipp": "It starts with „das“.",
+     "tipp2": "das Wa…"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 milk → auf Deutsch (mit der / die / das)",
+     "antwort": [
+      "die Milch"
+     ],
+     "tipp": "It starts with „die“.",
+     "tipp2": "die Mi…"
+    }
+   ]
+  },
+  {
+   "id": "daz.6.grundlagen.k5-schwer",
+   "titel": "5 · ⭐⭐⭐ Level 3: At the bakery",
+   "kurz": "Level 3 · Sätze selbst schreiben",
+   "typ": "eingabe",
+   "anweisung": "Write the sentence in German. · Schreib den Satz auf Deutsch.",
+   "runde": 6,
+   "aufgaben": [
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „I would like a bread roll, please.“",
+     "antwort": [
+      "Ich möchte ein Brötchen bitte",
+      "Ich moechte ein Broetchen bitte",
+      "Ich möchte bitte ein Brötchen",
+      "Ich moechte bitte ein Broetchen",
+      "Ich möchte ein Brötchen, bitte",
+      "Ich moechte ein Broetchen, bitte"
+     ],
+     "tipp": "Start: Ich möchte …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „What would you like?“",
+     "antwort": [
+      "Was möchtest du",
+      "Was moechtest du"
+     ],
+     "tipp": "Start: Was …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „Anything else?“",
+     "antwort": [
+      "Noch etwas"
+     ],
+     "tipp": "Start: Noch …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „That is five euros.“",
+     "antwort": [
+      "Das macht fünf Euro",
+      "Das macht fuenf Euro",
+      "Das kostet fünf Euro",
+      "Das kostet fuenf Euro"
+     ],
+     "tipp": "Start: Das macht …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „The pretzel is very tasty.“",
+     "antwort": [
+      "Die Brezel ist sehr lecker"
+     ],
+     "tipp": "Start: Die Brezel …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „I would like a pretzel, please.“",
+     "antwort": [
+      "Ich möchte eine Brezel, bitte",
+      "Ich moechte eine Brezel, bitte",
+      "Ich möchte eine Brezel bitte",
+      "Ich moechte eine Brezel bitte"
+     ],
+     "tipp": "Start: Ich möchte …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „I would like an apple juice.“",
+     "antwort": [
+      "Ich möchte einen Apfelsaft",
+      "Ich moechte einen Apfelsaft"
+     ],
+     "tipp": "Start: Ich möchte …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „That is four euros.“",
+     "antwort": [
+      "Das macht vier Euro"
+     ],
+     "tipp": "Start: Das macht …"
+    },
+    {
+     "typ": "sortieren",
+     "teile": [
+      "Ich",
+      "möchte",
+      "einen",
+      "Apfelsaft",
+      "und",
+      "eine",
+      "Brezel."
+     ],
+     "loesung": "Ich möchte einen Apfelsaft und eine Brezel.",
+     "frage": "I would like an apple juice and a pretzel.",
+     "tipp": "The verb is in position 2."
+    },
+    {
+     "typ": "sortieren",
+     "teile": [
+      "Was",
+      "möchtest",
+      "du",
+      "trinken?"
+     ],
+     "loesung": "Was möchtest du trinken?",
+     "frage": "What would you like to drink?",
+     "tipp": "Question: verb first or after the question word."
+    }
+   ]
+  },
+  {
    "id": "daz.6.grundlagen.k6-woerter",
-   "titel": "6 · Wörter: New friends",
-   "kurz": "Neue Freunde",
+   "titel": "6 · ⭐ Wörter: New friends",
+   "kurz": "Level 1 · Neue Freunde",
    "typ": "zuordnen",
    "anweisung": "Match English and German. · Ordne zu.",
    "runde": 5,
@@ -1264,8 +2552,8 @@
   },
   {
    "id": "daz.6.grundlagen.k6-saetze",
-   "titel": "6 · Sätze: New friends",
-   "kurz": "Hobbys · Fragen stellen",
+   "titel": "6 · ⭐ Sätze: New friends",
+   "kurz": "Level 1 · Hobbys · Fragen stellen",
    "typ": "lueckentext",
    "anweisung": "Choose the right word. · Wähle das richtige Wort.",
    "runde": 9,
@@ -1369,9 +2657,229 @@
    ]
   },
   {
+   "id": "daz.6.grundlagen.k6-mittel",
+   "titel": "6 · ⭐⭐ Level 2: New friends",
+   "kurz": "Level 2 · Wörter und Formen tippen",
+   "typ": "lueckentext",
+   "anweisung": "Type the missing word. · Tippe das Wort.",
+   "runde": 8,
+   "aufgaben": [
+    {
+     "text": "___ wohnst du? (where)",
+     "antwort": "Wo",
+     "tipp": "where = wo",
+     "tipp2": "The word starts with „W“."
+    },
+    {
+     "text": "___ machst du gern? (what)",
+     "antwort": "Was",
+     "tipp": "what = was",
+     "tipp2": "The word starts with „W“."
+    },
+    {
+     "text": "___ hast du Zeit? (when)",
+     "antwort": "Wann",
+     "tipp": "when = wann",
+     "tipp2": "The word starts with „W“."
+    },
+    {
+     "text": "___ du gern? (tanzen)",
+     "antwort": "Tanzt",
+     "tipp": "yes/no question: verb first, du → -st (tanzt)",
+     "tipp2": "The word starts with „T“."
+    },
+    {
+     "text": "Sie ___ gern. (lesen)",
+     "antwort": "liest",
+     "tipp": "lesen: du liest, er/sie liest",
+     "tipp2": "The word starts with „l“."
+    },
+    {
+     "text": "Ich ___ in der Bahnhofstraße. (wohnen)",
+     "antwort": "wohne",
+     "tipp": "ich → -e",
+     "tipp2": "The word starts with „w“."
+    },
+    {
+     "text": "___ heißt du?",
+     "antwort": "Wie",
+     "tipp": "Wie heißt du? = What is your name?",
+     "tipp2": "The word starts with „W“."
+    },
+    {
+     "text": "___ du Gitarre?",
+     "antwort": "Spielst",
+     "tipp": "yes/no question: verb first",
+     "tipp2": "The word starts with „S“."
+    },
+    {
+     "text": "Ich lese ___.",
+     "antwort": "gern",
+     "tipp": "gern = like doing",
+     "tipp2": "The word starts with „g“."
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 music → auf Deutsch (mit der / die / das)",
+     "antwort": [
+      "die Musik"
+     ],
+     "tipp": "It starts with „die“.",
+     "tipp2": "die Mu…"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 time → auf Deutsch (mit der / die / das)",
+     "antwort": [
+      "die Zeit"
+     ],
+     "tipp": "It starts with „die“.",
+     "tipp2": "die Ze…"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 friend (girl) → auf Deutsch (mit der / die / das)",
+     "antwort": [
+      "die Freundin"
+     ],
+     "tipp": "It starts with „die“.",
+     "tipp2": "die Fr…"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 friend (boy) → auf Deutsch (mit der / die / das)",
+     "antwort": [
+      "der Freund"
+     ],
+     "tipp": "It starts with „der“.",
+     "tipp2": "der Fr…"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 Friday → auf Deutsch (mit der / die / das)",
+     "antwort": [
+      "der Freitag"
+     ],
+     "tipp": "It starts with „der“.",
+     "tipp2": "der Fr…"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 Saturday → auf Deutsch (mit der / die / das)",
+     "antwort": [
+      "der Samstag"
+     ],
+     "tipp": "It starts with „der“.",
+     "tipp2": "der Sa…"
+    }
+   ]
+  },
+  {
+   "id": "daz.6.grundlagen.k6-schwer",
+   "titel": "6 · ⭐⭐⭐ Level 3: New friends",
+   "kurz": "Level 3 · Sätze selbst schreiben",
+   "typ": "eingabe",
+   "anweisung": "Write the sentence in German. · Schreib den Satz auf Deutsch.",
+   "runde": 6,
+   "aufgaben": [
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „What do you like doing?“",
+     "antwort": [
+      "Was machst du gern"
+     ],
+     "tipp": "Start: Was machst …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „I like singing.“",
+     "antwort": [
+      "Ich singe gern"
+     ],
+     "tipp": "Start: Ich singe …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „Do you play the guitar?“",
+     "antwort": [
+      "Spielst du Gitarre"
+     ],
+     "tipp": "Start: Spielst …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „Where do you live?“",
+     "antwort": [
+      "Wo wohnst du"
+     ],
+     "tipp": "Start: Wo …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „Are you free on Friday?“",
+     "antwort": [
+      "Hast du am Freitag Zeit"
+     ],
+     "tipp": "Start: Hast du …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „I like dancing.“",
+     "antwort": [
+      "Ich tanze gern"
+     ],
+     "tipp": "Start: Ich tanze …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „Do you play football?“",
+     "antwort": [
+      "Spielst du Fußball",
+      "Spielst du Fussball"
+     ],
+     "tipp": "Start: Spielst du …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „I like reading.“",
+     "antwort": [
+      "Ich lese gern"
+     ],
+     "tipp": "Start: Ich lese …"
+    },
+    {
+     "typ": "sortieren",
+     "teile": [
+      "Wir",
+      "können",
+      "am",
+      "Freitag",
+      "zusammen",
+      "Musik",
+      "hören."
+     ],
+     "loesung": "Wir können am Freitag zusammen Musik hören.",
+     "frage": "We can listen to music together on Friday.",
+     "tipp": "The verb is in position 2."
+    },
+    {
+     "typ": "sortieren",
+     "teile": [
+      "Liest",
+      "du",
+      "gern",
+      "Bücher?"
+     ],
+     "loesung": "Liest du gern Bücher?",
+     "frage": "Do you like reading books?",
+     "tipp": "Question: verb first or after the question word."
+    }
+   ]
+  },
+  {
    "id": "daz.6.grundlagen.k7-woerter",
-   "titel": "7 · Wörter: In town",
-   "kurz": "In der Stadt",
+   "titel": "7 · ⭐ Wörter: In town",
+   "kurz": "Level 1 · In der Stadt",
    "typ": "zuordnen",
    "anweisung": "Match English and German. · Ordne zu.",
    "runde": 5,
@@ -1485,8 +2993,8 @@
   },
   {
    "id": "daz.6.grundlagen.k7-saetze",
-   "titel": "7 · Sätze: In town",
-   "kurz": "Orte · den Weg fragen",
+   "titel": "7 · ⭐ Sätze: In town",
+   "kurz": "Level 1 · Orte · den Weg fragen",
    "typ": "lueckentext",
    "anweisung": "Choose the right word. · Wähle das richtige Wort.",
    "runde": 9,
@@ -1590,9 +3098,239 @@
    ]
   },
   {
+   "id": "daz.6.grundlagen.k7-mittel",
+   "titel": "7 · ⭐⭐ Level 2: In town",
+   "kurz": "Level 2 · Wörter und Formen tippen",
+   "typ": "lueckentext",
+   "anweisung": "Type the missing word. · Tippe das Wort.",
+   "runde": 8,
+   "aufgaben": [
+    {
+     "text": "Das Kino ist neben ___ Park. (the)",
+     "antwort": "dem",
+     "tipp": "der Park → neben dem",
+     "tipp2": "The word starts with „d“."
+    },
+    {
+     "text": "Die Apotheke ist neben ___ Bäckerei. (the)",
+     "antwort": "der",
+     "tipp": "die Bäckerei → neben der",
+     "tipp2": "The word starts with „d“."
+    },
+    {
+     "text": "Wir sind ___ Kino. (in the)",
+     "antwort": "im",
+     "tipp": "das Kino → im",
+     "tipp2": "The word starts with „i“."
+    },
+    {
+     "text": "Ich bin ___ Schule. (in the)",
+     "antwort": "in der",
+     "tipp": "die Schule → in der",
+     "tipp2": "The word starts with „i“."
+    },
+    {
+     "text": "Geh ___! (straight on)",
+     "antwort": "geradeaus",
+     "tipp": "straight on = geradeaus",
+     "tipp2": "The word starts with „g“."
+    },
+    {
+     "text": "Und dann ___. (right)",
+     "antwort": "rechts",
+     "tipp": "right = rechts, left = links",
+     "tipp2": "The word starts with „r“."
+    },
+    {
+     "text": "Das Kino ist ___ Park.",
+     "antwort": "neben dem",
+     "tipp": "der Park → neben dem Park",
+     "tipp2": "The word starts with „n“."
+    },
+    {
+     "text": "___ ist der Bahnhof?",
+     "antwort": "Wo",
+     "tipp": "where = wo",
+     "tipp2": "The word starts with „W“."
+    },
+    {
+     "text": "Geh ___ und dann links.",
+     "antwort": "geradeaus",
+     "tipp": "straight on = geradeaus",
+     "tipp2": "The word starts with „g“."
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 train station → auf Deutsch (mit der / die / das)",
+     "antwort": [
+      "der Bahnhof"
+     ],
+     "tipp": "It starts with „der“.",
+     "tipp2": "der Ba…"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 pharmacy → auf Deutsch (mit der / die / das)",
+     "antwort": [
+      "die Apotheke"
+     ],
+     "tipp": "It starts with „die“.",
+     "tipp2": "die Ap…"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 supermarket → auf Deutsch (mit der / die / das)",
+     "antwort": [
+      "der Supermarkt"
+     ],
+     "tipp": "It starts with „der“.",
+     "tipp2": "der Su…"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 cinema → auf Deutsch (mit der / die / das)",
+     "antwort": [
+      "das Kino"
+     ],
+     "tipp": "It starts with „das“.",
+     "tipp2": "das Ki…"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 park → auf Deutsch (mit der / die / das)",
+     "antwort": [
+      "der Park"
+     ],
+     "tipp": "It starts with „der“.",
+     "tipp2": "der Pa…"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 town / city → auf Deutsch (mit der / die / das)",
+     "antwort": [
+      "die Stadt"
+     ],
+     "tipp": "It starts with „die“.",
+     "tipp2": "die St…"
+    }
+   ]
+  },
+  {
+   "id": "daz.6.grundlagen.k7-schwer",
+   "titel": "7 · ⭐⭐⭐ Level 3: In town",
+   "kurz": "Level 3 · Sätze selbst schreiben",
+   "typ": "eingabe",
+   "anweisung": "Write the sentence in German. · Schreib den Satz auf Deutsch.",
+   "runde": 6,
+   "aufgaben": [
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „Excuse me, where is the cinema?“",
+     "antwort": [
+      "Entschuldigung wo ist das Kino",
+      "Entschuldigung, wo ist das Kino"
+     ],
+     "tipp": "Start: Entschuldigung, wo …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „Go straight on and then right.“",
+     "antwort": [
+      "Geh geradeaus und dann rechts"
+     ],
+     "tipp": "Start: Geh …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „The pharmacy is next to the supermarket.“",
+     "antwort": [
+      "Die Apotheke ist neben dem Supermarkt"
+     ],
+     "tipp": "Start: Die Apotheke ist neben dem …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „Where is the station?“",
+     "antwort": [
+      "Wo ist der Bahnhof"
+     ],
+     "tipp": "Start: Wo ist …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „We are at the cinema.“",
+     "antwort": [
+      "Wir sind im Kino"
+     ],
+     "tipp": "Start: Wir sind …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „Excuse me, where is the station?“",
+     "antwort": [
+      "Entschuldigung, wo ist der Bahnhof",
+      "Entschuldigung wo ist der Bahnhof"
+     ],
+     "tipp": "Start: Entschuldigung, wo …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „Go straight on.“",
+     "antwort": [
+      "Geh geradeaus"
+     ],
+     "tipp": "Start: Geh geradeaus. …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „The cinema is next to the park.“",
+     "antwort": [
+      "Das Kino ist neben dem Park"
+     ],
+     "tipp": "Start: Das Kino …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „Where is the pharmacy?“",
+     "antwort": [
+      "Wo ist die Apotheke"
+     ],
+     "tipp": "Start: Wo ist …"
+    },
+    {
+     "typ": "sortieren",
+     "teile": [
+      "Der",
+      "Supermarkt",
+      "ist",
+      "neben",
+      "der",
+      "Apotheke."
+     ],
+     "loesung": "Der Supermarkt ist neben der Apotheke.",
+     "frage": "The supermarket is next to the pharmacy.",
+     "tipp": "The verb is in position 2."
+    },
+    {
+     "typ": "sortieren",
+     "teile": [
+      "Gehen",
+      "wir",
+      "am",
+      "Sonntag",
+      "ins",
+      "Kino?"
+     ],
+     "loesung": "Gehen wir am Sonntag ins Kino?",
+     "frage": "Shall we go to the cinema on Sunday?",
+     "tipp": "Question: verb first or after the question word."
+    }
+   ]
+  },
+  {
    "id": "daz.6.grundlagen.k8-woerter",
-   "titel": "8 · Wörter: How are you?",
-   "kurz": "Wie geht’s?",
+   "titel": "8 · ⭐ Wörter: How are you?",
+   "kurz": "Level 1 · Wie geht’s?",
    "typ": "zuordnen",
    "anweisung": "Match English and German. · Ordne zu.",
    "runde": 5,
@@ -1706,8 +3444,8 @@
   },
   {
    "id": "daz.6.grundlagen.k8-saetze",
-   "titel": "8 · Sätze: How are you?",
-   "kurz": "Gefühle · Gesundheit · Hilfe holen",
+   "titel": "8 · ⭐ Sätze: How are you?",
+   "kurz": "Level 1 · Gefühle · Gesundheit · Hilfe holen",
    "typ": "lueckentext",
    "anweisung": "Choose the right word. · Wähle das richtige Wort.",
    "runde": 9,
@@ -1800,6 +3538,228 @@
      ],
      "loesung": "Mir geht es nicht gut.",
      "frage": "I am not feeling well.",
+     "tipp": "The verb is in position 2."
+    }
+   ]
+  },
+  {
+   "id": "daz.6.grundlagen.k8-mittel",
+   "titel": "8 · ⭐⭐ Level 2: How are you?",
+   "kurz": "Level 2 · Wörter und Formen tippen",
+   "typ": "lueckentext",
+   "anweisung": "Type the missing word. · Tippe das Wort.",
+   "runde": 8,
+   "aufgaben": [
+    {
+     "text": "Ich ___ müde. (sein)",
+     "antwort": "bin",
+     "tipp": "feelings → ich bin",
+     "tipp2": "The word starts with „b“."
+    },
+    {
+     "text": "Ich ___ Bauchschmerzen. (haben)",
+     "antwort": "habe",
+     "tipp": "pain → ich habe",
+     "tipp2": "The word starts with „h“."
+    },
+    {
+     "text": "Wie geht es ___? (you)",
+     "antwort": "dir",
+     "tipp": "How are you? → dir",
+     "tipp2": "The word starts with „d“."
+    },
+    {
+     "text": "___ geht es gut. (I)",
+     "antwort": "Mir",
+     "tipp": "I am fine → Mir geht es gut.",
+     "tipp2": "The word starts with „M“."
+    },
+    {
+     "text": "Du ___ eine Pause. (brauchen)",
+     "antwort": "brauchst",
+     "tipp": "du → -st",
+     "tipp2": "The word starts with „b“."
+    },
+    {
+     "text": "Sie ist ___. (sad)",
+     "antwort": "traurig",
+     "tipp": "sad = traurig",
+     "tipp2": "The word starts with „t“."
+    },
+    {
+     "text": "Ich ___ Kopfschmerzen.",
+     "antwort": "habe",
+     "tipp": "pain: ich habe … schmerzen",
+     "tipp2": "The word starts with „h“."
+    },
+    {
+     "text": "Ich ___ eine Pause.",
+     "antwort": "brauche",
+     "tipp": "ich → brauche",
+     "tipp2": "The word starts with „b“."
+    },
+    {
+     "text": "Bist du ___?",
+     "antwort": "krank",
+     "tipp": "ill = krank",
+     "tipp2": "The word starts with „k“."
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 headache → auf Deutsch (mit der / die / das)",
+     "antwort": [
+      "die Kopfschmerzen"
+     ],
+     "tipp": "It starts with „die“.",
+     "tipp2": "die Ko…"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 stomach ache → auf Deutsch (mit der / die / das)",
+     "antwort": [
+      "die Bauchschmerzen"
+     ],
+     "tipp": "It starts with „die“.",
+     "tipp2": "die Ba…"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 head → auf Deutsch (mit der / die / das)",
+     "antwort": [
+      "der Kopf"
+     ],
+     "tipp": "It starts with „der“.",
+     "tipp2": "der Ko…"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 belly → auf Deutsch (mit der / die / das)",
+     "antwort": [
+      "der Bauch"
+     ],
+     "tipp": "It starts with „der“.",
+     "tipp2": "der Ba…"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 break → auf Deutsch (mit der / die / das)",
+     "antwort": [
+      "die Pause"
+     ],
+     "tipp": "It starts with „die“.",
+     "tipp2": "die Pa…"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 help → auf Deutsch (mit der / die / das)",
+     "antwort": [
+      "die Hilfe"
+     ],
+     "tipp": "It starts with „die“.",
+     "tipp2": "die Hi…"
+    }
+   ]
+  },
+  {
+   "id": "daz.6.grundlagen.k8-schwer",
+   "titel": "8 · ⭐⭐⭐ Level 3: How are you?",
+   "kurz": "Level 3 · Sätze selbst schreiben",
+   "typ": "eingabe",
+   "anweisung": "Write the sentence in German. · Schreib den Satz auf Deutsch.",
+   "runde": 6,
+   "aufgaben": [
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „How are you?“",
+     "antwort": [
+      "Wie geht es dir",
+      "Wie gehts dir",
+      "Wie geht’s dir"
+     ],
+     "tipp": "Start: Wie geht …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „I am not feeling well.“",
+     "antwort": [
+      "Mir geht es nicht gut"
+     ],
+     "tipp": "Start: Mir geht …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „I have a stomach ache.“",
+     "antwort": [
+      "Ich habe Bauchschmerzen"
+     ],
+     "tipp": "Start: Ich habe …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „I need help.“",
+     "antwort": [
+      "Ich brauche Hilfe"
+     ],
+     "tipp": "Start: Ich brauche …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „Are you ill?“",
+     "antwort": [
+      "Bist du krank"
+     ],
+     "tipp": "Start: Bist …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „I am tired.“",
+     "antwort": [
+      "Ich bin müde",
+      "Ich bin muede"
+     ],
+     "tipp": "Start: Ich bin …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „I have a headache.“",
+     "antwort": [
+      "Ich habe Kopfschmerzen"
+     ],
+     "tipp": "Start: Ich habe …"
+    },
+    {
+     "typ": "eingabe",
+     "frage": "🇬🇧 „I need a break.“",
+     "antwort": [
+      "Ich brauche eine Pause"
+     ],
+     "tipp": "Start: Ich brauche …"
+    },
+    {
+     "typ": "sortieren",
+     "teile": [
+      "Heute",
+      "bin",
+      "ich",
+      "sehr",
+      "müde."
+     ],
+     "loesung": "Heute bin ich sehr müde.",
+     "frage": "Today I am very tired.",
+     "tipp": "The verb is in position 2."
+    },
+    {
+     "typ": "sortieren",
+     "teile": [
+      "Ich",
+      "brauche",
+      "nur",
+      "eine",
+      "kurze",
+      "Pause."
+     ],
+     "loesung": "Ich brauche nur eine kurze Pause.",
+     "frage": "I just need a short break.",
      "tipp": "The verb is in position 2."
     }
    ]

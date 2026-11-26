@@ -60,7 +60,7 @@
 //    spiele        – auswahl, schwelle 50–100, runden 1–3, starter { klasse: [IDs] }, wortBis { klasse: unit } („Meine Themen“)
 //    featureSchalter – { name: true | false | { wer: ['admin' | 'alle' | 'k5' | 'g:<32 hex>', …] } } (Etappe 10: nur für dich oder Testgruppen)
 //    appEinstellungen – { appId: { schluessel: wert } } (Etappe 7, Schema in daten/apps/<id>.json)
-//    journey       – { schuljahr: 'JJJJ/JJ', wege: { journey6: { bis: { wer: Abschnitt-ID }, he: { Hefteintrag-ID: 1–999 },
+//    journey       – { schuljahr: 'JJJJ/JJ', wege: { journey6: { bis: { wer (auch g:<Gruppe>:<Kartennr>, v143): Abschnitt-ID }, he: { Hefteintrag-ID: 1–999 },
 //                      niveau: { wer: 1–3 }, reihenfolge: { wer: 'frei'|'schritt'|'streng' }, sperren: { wer: true } } } }
 //                      English Journey: Freigabe bis Abschnitt, HE-Nummern, Mindestniveau, Abschnitt-Kette, Sperre (vorbereitet)
 //    Andere Felder oben in config.json werden abgelehnt.
@@ -467,8 +467,9 @@ function validateConfig(cfg) {
     const JID = /^[a-z0-9]+(-[a-z0-9]+)*$/;
     const mapOk = (m, max, kOk, vOk) => m === undefined || (m && typeof m === 'object' && !Array.isArray(m)
       && Object.keys(m).length <= max && Object.entries(m).every(([k, v]) => kOk(k) && vOk(v)));
+    const WER_KARTE = /^g:[0-9a-f]{32}:[1-9]\d{0,2}$/;            // eine einzelne Karte einer Gruppe (v143, Lernweg je Karte)
     const wegOk = w => w && typeof w === 'object' && !Array.isArray(w)
-      && mapOk(w.bis, 60, k => WER.test(k), v => isStr(v, 60) && JID.test(v))
+      && mapOk(w.bis, 60, k => WER.test(k) || WER_KARTE.test(k), v => isStr(v, 60) && JID.test(v))
       && mapOk(w.he, 300, k => k.length <= 60 && JID.test(k), v => Number.isInteger(v) && v >= 1 && v <= 999)
       && (w.he === undefined || new Set(Object.values(w.he)).size === Object.keys(w.he).length)
       && mapOk(w.niveau, 60, k => WER.test(k), v => [1, 2, 3].includes(v))

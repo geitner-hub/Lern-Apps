@@ -1,7 +1,7 @@
 {
- "version": 1,
+ "version": 2,
  "titel": "Story-Zeit",
- "hinweis": "Geschichten für DaZ (Deutsch aus dem Englischen, A0–A1). Eigene Texte. IDs = Katalog-Stufen daz.6.geschichten.gN, nie umbenennen.",
+ "hinweis": "Lesegeschichten für DaZ (Deutsch aus dem Englischen, A0–A1). Eigene Texte. vor/nach = Erzähltext, saetze = Gespräch, sticker = Sammelbild fürs Album. IDs = Katalog-Stufen daz.6.geschichten.gN, nie umbenennen.",
  "personen": {
   "Lily": "👧",
   "Jonas": "👦",
@@ -19,6 +19,24 @@
    "en": "Hello, I am Lily!",
    "ico": "👋",
    "thema": "Sich vorstellen · Introducing yourself",
+   "sticker": {
+    "ico": "🎒",
+    "name": "Der erste Schultag"
+   },
+   "vor": [
+    {
+     "de": "Es ist Montag.",
+     "en": "It is Monday."
+    },
+    {
+     "de": "Lily ist neu in Neustadt.",
+     "en": "Lily is new in Neustadt."
+    },
+    {
+     "de": "Heute ist ihr erster Tag in der Schule. Sie ist ein bisschen nervös.",
+     "en": "Today is her first day at school. She is a little nervous."
+    }
+   ],
    "saetze": [
     {
      "wer": "Frau Berger",
@@ -74,6 +92,12 @@
      "wer": "Jonas",
      "de": "Willkommen in Neustadt, Lily!",
      "en": "Welcome to Neustadt, Lily!"
+    }
+   ],
+   "nach": [
+    {
+     "de": "Lily lacht. Der erste Tag ist gut!",
+     "en": "Lily laughs. The first day is good!"
     }
    ],
    "woerter": [
@@ -214,6 +238,20 @@
    "en": "My family",
    "ico": "👨‍👩‍👦",
    "thema": "Familie · der, die, das",
+   "sticker": {
+    "ico": "🐶",
+    "name": "Biscuit, der Hund"
+   },
+   "vor": [
+    {
+     "de": "Am Nachmittag ist Jonas bei Lily.",
+     "en": "In the afternoon Jonas is at Lily’s house."
+    },
+    {
+     "de": "Auf dem Tisch liegt ein Foto. Das Foto ist schön.",
+     "en": "There is a photo on the table. The photo is nice."
+    }
+   ],
    "saetze": [
     {
      "wer": "Jonas",
@@ -269,6 +307,12 @@
      "wer": "Lily",
      "de": "Der Hund heißt Biscuit!",
      "en": "The dog is called Biscuit!"
+    }
+   ],
+   "nach": [
+    {
+     "de": "Biscuit bellt: „Wuff!“ Jonas lacht.",
+     "en": "Biscuit barks: “Woof!” Jonas laughs."
     }
    ],
    "woerter": [
@@ -401,6 +445,20 @@
    "en": "At school",
    "ico": "🏫",
    "thema": "Schulsachen · ein/eine, kein/keine",
+   "sticker": {
+    "ico": "✏️",
+    "name": "Das Heft von Jonas"
+   },
+   "vor": [
+    {
+     "de": "Es ist Dienstag. Die Klasse 6b hat Deutsch.",
+     "en": "It is Tuesday. Class 6b has German."
+    },
+    {
+     "de": "Lily öffnet ihre Tasche. Oh nein!",
+     "en": "Lily opens her bag. Oh no!"
+    }
+   ],
    "saetze": [
     {
      "wer": "Frau Berger",
@@ -451,6 +509,12 @@
      "wer": "Frau Berger",
      "de": "Sehr gut, Lily!",
      "en": "Very good, Lily!"
+    }
+   ],
+   "nach": [
+    {
+     "de": "Nach der Stunde sagt Lily: „Danke, Jonas. Du bist nett!“",
+     "en": "After the lesson Lily says: “Thanks, Jonas. You are nice!”"
     }
    ],
    "woerter": [
@@ -583,6 +647,20 @@
    "en": "My day",
    "ico": "⏰",
    "thema": "Tagesablauf · Verb auf Platz 2",
+   "sticker": {
+    "ico": "⚽",
+    "name": "Fußball am Samstag"
+   },
+   "vor": [
+    {
+     "de": "Lily und Jonas sitzen in der Pause auf einer Bank.",
+     "en": "Lily and Jonas are sitting on a bench at break time."
+    },
+    {
+     "de": "Lily isst einen Apfel. Jonas hat Hunger.",
+     "en": "Lily is eating an apple. Jonas is hungry."
+    }
+   ],
    "saetze": [
     {
      "wer": "Lily",
@@ -633,6 +711,12 @@
      "wer": "Jonas",
      "de": "Ja, gern!",
      "en": "Yes, I'd love to!"
+    }
+   ],
+   "nach": [
+    {
+     "de": "Am Samstag scheint die Sonne. Lily und Jonas spielen Fußball. Lily schießt ein Tor!",
+     "en": "On Saturday the sun is shining. Lily and Jonas play football. Lily scores a goal!"
     }
    ],
    "woerter": [
@@ -765,6 +849,20 @@
    "en": "At the bakery",
    "ico": "🥨",
    "thema": "Einkaufen · ich möchte, einen/eine/ein",
+   "sticker": {
+    "ico": "🥨",
+    "name": "Die erste Brezel"
+   },
+   "vor": [
+    {
+     "de": "Nach der Schule haben Lily und Jonas Hunger.",
+     "en": "After school Lily and Jonas are hungry."
+    },
+    {
+     "de": "Neben der Schule ist eine Bäckerei. Es riecht sehr gut!",
+     "en": "Next to the school there is a bakery. It smells very good!"
+    }
+   ],
    "saetze": [
     {
      "wer": "Verkäuferin",
@@ -820,6 +918,12 @@
      "wer": "Lily",
      "de": "Ja, sehr lecker!",
      "en": "Yes, very tasty!"
+    }
+   ],
+   "nach": [
+    {
+     "de": "Lily isst ihre erste Brezel. Jetzt ist Brezel ihr Lieblingsessen!",
+     "en": "Lily eats her first pretzel. Now pretzels are her favourite food!"
     }
    ],
    "woerter": [
@@ -952,6 +1056,20 @@
    "en": "New friends",
    "ico": "🎵",
    "thema": "Hobbys · Fragen stellen",
+   "sticker": {
+    "ico": "🎵",
+    "name": "Musik mit Mara"
+   },
+   "vor": [
+    {
+     "de": "In der Pause steht ein Mädchen allein. Sie heißt Mara.",
+     "en": "At break time a girl is standing alone. Her name is Mara."
+    },
+    {
+     "de": "Lily geht zu ihr und sagt: „Hallo!“",
+     "en": "Lily goes to her and says: “Hello!”"
+    }
+   ],
    "saetze": [
     {
      "wer": "Lily",
@@ -1007,6 +1125,12 @@
      "wer": "Lily",
      "de": "Super! Bis Freitag!",
      "en": "Great! See you on Friday!"
+    }
+   ],
+   "nach": [
+    {
+     "de": "Am Freitag hören Lily und Mara Musik und tanzen. Jetzt hat Lily zwei Freunde in Neustadt.",
+     "en": "On Friday Lily and Mara listen to music and dance. Now Lily has two friends in Neustadt."
     }
    ],
    "woerter": [
@@ -1143,6 +1267,20 @@
    "en": "In town",
    "ico": "🏙️",
    "thema": "Orte · den Weg fragen",
+   "sticker": {
+    "ico": "🎬",
+    "name": "Im Kino"
+   },
+   "vor": [
+    {
+     "de": "Am Samstag ist Lily mit Mama in der Stadt.",
+     "en": "On Saturday Lily is in town with her mum."
+    },
+    {
+     "de": "Die Stadt ist groß. Lily sucht den Bahnhof. Wo ist Mama?",
+     "en": "The town is big. Lily is looking for the station. Where is Mum?"
+    }
+   ],
    "saetze": [
     {
      "wer": "Lily",
@@ -1193,6 +1331,12 @@
      "wer": "Mama",
      "de": "Gute Idee!",
      "en": "Good idea!"
+    }
+   ],
+   "nach": [
+    {
+     "de": "Am Sonntag sind Lily und Mama im Kino. Der Film ist lustig.",
+     "en": "On Sunday Lily and Mum are at the cinema. The film is funny."
     }
    ],
    "woerter": [
@@ -1321,6 +1465,20 @@
    "en": "How are you?",
    "ico": "🤒",
    "thema": "Gefühle · Gesundheit · Hilfe holen",
+   "sticker": {
+    "ico": "💚",
+    "name": "Gute Freunde helfen"
+   },
+   "vor": [
+    {
+     "de": "Es ist Mittwoch. Lily ist heute sehr müde.",
+     "en": "It is Wednesday. Lily is very tired today."
+    },
+    {
+     "de": "Ihr Kopf tut weh. In der ersten Stunde ist sie still.",
+     "en": "Her head hurts. In the first lesson she is quiet."
+    }
+   ],
    "saetze": [
     {
      "wer": "Jonas",
@@ -1371,6 +1529,12 @@
      "wer": "Lily",
      "de": "Jetzt geht es mir gut. Ich bin froh!",
      "en": "Now I’m fine. I’m happy!"
+    }
+   ],
+   "nach": [
+    {
+     "de": "Nach der Pause lacht Lily wieder. Gute Freunde helfen!",
+     "en": "After the break Lily laughs again. Good friends help!"
     }
    ],
    "woerter": [

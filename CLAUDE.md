@@ -141,8 +141,10 @@ und gelbe Hinweise. Manuelle Checkliste nach Uploads: `werkzeuge/RAUCHTEST.md`.
   nur Summen, 60 Tage); Admin System → 🐞 Fehlerzähler (`module/system-fehlerzaehler.js`).
 - **Kein Zoomen** (v136): jede Seite (außer admin.html) mit viewport `maximum-scale=1, user-scalable=no`; umgebung.js setzt `touch-action: manipulation` und fängt `gesturestart` ab. pruefen.py weist auf Seiten ohne hin.
 - **Reit-Begleiter** (v139): Begleiter mit `reiten: { sitz, beine }` → Ritt beim Jubeln auf der Bühne (`avatar3d.js` `ritt`); Farbvarianten erben `reiten`. Neue Abzeichen-Zähler über `flagSetzen`: `auftraege`, `stationen`, `truhen`, `generalprobe`. README → Avatar-Teile.
-- **DaZ** (v142): Lernweg `daten/wege/daz.json` (8 Kapitel, Deutsch aus dem Englischen, A0–A1) + Story-App `apps/daz/daz-geschichten.html`
-  (`daten/daz/geschichten.json`, Lesen/Hören mit Sprachausgabe, Verstehen, Satzbau; Stufen `daz.6.geschichten.gN`) + Baukasten `daz.6.grundlagen`. README → DaZ.
+- **DaZ** (v142/v143): Lernweg `daten/wege/daz.json` (8 Kapitel, Deutsch aus dem Englischen, A0–A1, Truhe je Kapitel) + Story-App
+  `apps/daz/daz-geschichten.html` (`daten/daz/geschichten.json`, Lesegeschichten ohne Sprachausgabe, Verstehen, Satzbau, Sticker-Album, Wort-Blitz;
+  Stufen `daz.6.geschichten.gN`) + Baukasten `daz.6.grundlagen` (je Kapitel Level 1 woerter/saetze, Level 2 mittel, Level 3 schwer). README → DaZ.
+  Lernweg-Freigabe je Karte (v143): `config.journey.wege.<Weg>.bis['g:<Gruppe>:<Kartennr>']`, Kartennummer vom Worker (`/sync/holen` → `nr`).
 - **Live-Abfrage** (Unterrichtsmodus → 📊, Kinder-Seite `apps/typen/live.html?raum=CODE`, keine App in config.json, ohne Navbar):
   Worker-Teil `cloudflare/live.js` (Räume, Antworten, Quizze, Rückblicke in `SYNC_DB`; Räume nach dem Beenden gelöscht),
   Fragetypen `gemeinsam/live-fragen.js` (`LernLive`), Beamer `gemeinsam/admin/live.js`, Quiz-Editor Inhalte → Live-Quizze.

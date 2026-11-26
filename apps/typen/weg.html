@@ -97,6 +97,12 @@
     .papier .merke { color: #e03131; font-weight: 800; } .papier .mu { text-decoration: underline; text-decoration-color: #e03131; }
     .items { margin: .55rem 0 0 1.2rem; font-weight: 700; line-height: 1.7; }
     .loesung { margin-top: .5rem; background: rgba(74,222,128,.12); border-radius: 10px; padding: .5rem .8rem; font-weight: 700; line-height: 1.6; }
+    .truhe { display: flex; gap: .8rem; align-items: center; border-radius: 16px; padding: .75rem .9rem; margin-bottom: .6rem; font-weight: 800; line-height: 1.35;
+             background: linear-gradient(135deg, rgba(230,168,23,.22), rgba(99,102,241,.18)); border: 2px solid rgba(230,168,23,.55); }
+    .truhe .gr { font-size: 2.2rem; } .truhe.t-zu { opacity: .8; border-style: dashed; } .truhe.t-leer { opacity: .6; border-color: var(--border); }
+    .knoten .geschenk { position: absolute; transform: translate(-40px, -34px); font-size: 1.6rem; filter: drop-shadow(0 2px 4px rgba(0,0,0,.6)); }
+    .knoten .geschenk.bereit { animation: hopp 1.2s ease-in-out infinite; }
+    @keyframes hopp { 50% { transform: translate(-40px, -42px) rotate(-8deg); } }
     .sperre { text-align: center; padding: 1.4rem .6rem; font-weight: 800; line-height: 1.5; color: var(--text2); }
     #liste { max-width: 720px; margin: 0 auto; display: none; }
     body.liste #liste { display: block; } body.liste #pfad { display: none; }
@@ -107,7 +113,7 @@
     .kann h2 { font: 400 1.15rem 'Fredoka One', 'Nunito', sans-serif; margin-bottom: .4rem; }
     .kann li { margin-left: 1.2rem; font-weight: 700; line-height: 1.6; }
     .druck-nur { display: none; }
-    @media (prefers-reduced-motion: reduce) { .knoten.dran .ring { animation: none; box-shadow: 0 0 0 8px rgba(230,168,23,.3); } .balken i { transition: none; } }
+    @media (prefers-reduced-motion: reduce) { .knoten .geschenk.bereit { animation: none; } .knoten.dran .ring { animation: none; box-shadow: 0 0 0 8px rgba(230,168,23,.3); } .balken i { transition: none; } }
     @media print {
       body { background: #fff; color: #000; padding: 0; }
       #pfad, .knoepfe, .akt, #karte, .balken, #lw-zurueck, #lern-home-btn, #lern-result-badge, #lw-test-schild, .schritt .ok { display: none !important; }
@@ -200,10 +206,18 @@ function schrittHTML(s) {
   return `<div class="schritt${fertig ? ' fertig' : ''}"><div class="zeile"><span class="druck-nur">${fertig ? '✓' : ''}</span><span class="sy">${SYM[s.art] || '•'}</span>
       <span class="tx"><b>${escHtml(titel)}</b><small>${klein}</small></span>${fertig ? '<span class="ok" aria-label="erledigt">✓</span>' : ''}</div>${mehr}<div class="akt">${akt}</div></div>`;
 }
+function truheHTML(x) {                                    // Truhe am Abschnitt (v143)
+  const t = LernWeg.truhe(x);
+  if (!t) return '';
+  if (t === 'bereit') return `<div class="truhe"><span class="gr">🎁</span><span style="flex:1">Geschafft! Hier wartet eine Truhe auf dich.</span>
+    <button type="button" class="btn p" data-truhe="${escHtml(x.a.id)}">Einsammeln</button></div>`;
+  if (t === 'leer') return '<div class="truhe t-leer"><span class="gr">🎁</span><span>Truhe eingesammelt – öffne sie auf der Startseite in deinem Pass.</span></div>';
+  return '<div class="truhe t-zu"><span class="gr">🎁</span><span>Schaffe alle Pflicht-Schritte – dann gehört diese Truhe dir!</span></div>';
+}
 function abschnittHTML(x) {
-  if (x.zustand === 'gesperrt') return '<div class="sperre">🚧 Diesen Abschnitt gibt deine Lehrkraft noch frei.</div>';
+  if (x.zustand === 'gesperrt') return (x.a.truhe ? '<div class="truhe t-zu"><span class="gr">🎁</span><span>Auch hier wartet eine Truhe.</span></div>' : '') + '<div class="sperre">🚧 Diesen Abschnitt gibt deine Lehrkraft noch frei.</div>';
   const gruppe = (st, kopf, cls) => { const l = x.a.schritte.filter(s => LernWeg.stufe(s) === st); return l.length ? `<div class="gruppe${cls || ''}">${kopf}</div>${l.map(schrittHTML).join('')}` : ''; };
-  return gruppe('pflicht', 'Pflicht – das machen alle')
+  return truheHTML(x) + gruppe('pflicht', 'Pflicht – das machen alle')
     + gruppe('wahl', `Wahl – such dir ${x.wahlMin === 1 ? 'eine Aufgabe' : x.wahlMin + ' Aufgaben'} aus (${Math.min(x.wahlFertig, x.wahlMin)}/${x.wahlMin})`)
     + gruppe('stern', '⭐ Stern – für Schnelle', ' stern');
 }
@@ -225,7 +239,7 @@ function zeichnen() {
   $('pfad').innerHTML = `<svg viewBox="0 0 100 ${h}" preserveAspectRatio="none" aria-hidden="true"><path class="p-alle" d="${kurve(n - 1)}"/>${weit > 0 ? `<path class="p-fertig" d="${kurve(weit)}"/>` : ''}</svg>`
     + st.abschnitte.map(a => `<button type="button" class="knoten ${a.zustand}" style="left:${x(a.i)}%;top:${y(a.i)}px" data-abschnitt="${escHtml(a.a.id)}"
         aria-label="${escHtml(a.a.titel)}: ${a.zustand === 'gesperrt' ? 'noch gesperrt' : a.fertig + ' von ' + a.soll + ' geschafft'}">
-        <span class="ring" style="--p:${a.zustand === 'gesperrt' ? 0 : Math.round(100 * a.fertig / Math.max(1, a.soll))}"><span>${a.zustand === 'gesperrt' ? '🔒' : escHtml(a.a.ico || '📍')}</span></span>
+        ${a.a.truhe && LernWeg.truhe(a) !== 'leer' ? `<span class="geschenk${LernWeg.truhe(a) === 'bereit' ? ' bereit' : ''}" aria-hidden="true">🎁</span>` : ''}<span class="ring" style="--p:${a.zustand === 'gesperrt' ? 0 : Math.round(100 * a.fertig / Math.max(1, a.soll))}"><span>${a.zustand === 'gesperrt' ? '🔒' : escHtml(a.a.ico || '📍')}</span></span>
         <b>${escHtml(a.a.titel)}</b><small>${a.zustand === 'gesperrt' ? 'noch zu' : a.fertig + '/' + a.soll + (a.sterne ? ' · ' + '⭐'.repeat(a.sterne) : '')}</small></button>`).join('')
     + (st.dran && window.LernPass ? `<div class="figur" style="left:calc(${x(st.dran.i)}% + ${x(st.dran.i) > 50 ? -74 : 74}px);top:${y(st.dran.i) - 18}px">${LernPass.avatarHTML({})}</div>` : '')
     + (schrankeBei > 0 ? `<div class="schranke" style="top:${schrankeBei * ZEILEN_H - 12}px">🚧 Hier geht es bald weiter</div>` : '');
@@ -247,10 +261,15 @@ function zeichnen() {
 function schritt(id) { for (const a of W.abschnitte) for (const s of a.schritte) if (s.id === id) return s; return null; }
 document.addEventListener('click', e => {
   if (!W) return;
-  const t = e.target.closest('[data-abschnitt],[data-zu],[data-haken],[data-auf],[data-loesung],[data-los]');
+  const t = e.target.closest('[data-abschnitt],[data-zu],[data-haken],[data-auf],[data-loesung],[data-los],[data-truhe]');
   if (e.target === $('karte') || (t && t.hasAttribute('data-zu'))) { offen = null; return zeichnen(); }
   if (!t) return;
   if (t.dataset.abschnitt) { offen = t.dataset.abschnitt; return zeichnen(); }
+  if (t.dataset.truhe) {                                   // Truhe einsammeln (v143): Geschenk-Truhe im Pass, einmal je Abschnitt
+    const a = W.abschnitte.find(q => q.id === t.dataset.truhe);
+    if (a && LernWeg.truheNehmen(a)) { try { LernPass.showAvatar({ text: 'Eine Truhe für dich! 🎁 Öffne sie auf der Startseite in deinem Pass.', aktion: 'winken', dauer: 5000 }); } catch (err) {} }
+    return zeichnen();
+  }
   if (t.dataset.auf) { geoeffnet.has(t.dataset.auf) ? geoeffnet.delete(t.dataset.auf) : geoeffnet.add(t.dataset.auf); return zeichnen(); }
   if (t.dataset.loesung) { loesungen.has(t.dataset.loesung) ? loesungen.delete(t.dataset.loesung) : loesungen.add(t.dataset.loesung); return zeichnen(); }
   if (t.dataset.haken) {

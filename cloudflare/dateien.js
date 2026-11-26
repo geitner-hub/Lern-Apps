@@ -569,7 +569,8 @@ function dateienPruefeWeg(W, alt, B, ids, wid, eintrag) {
   W.abschnitte.forEach((a, n) => {
     const wo = 'Abschnitt ' + (a && a.id || n + 1);
     if (!dateienObj(a) || !id(a.id, wo)) return;
-    if (!dateienNurKeys(a, ['id', 'titel', 'ico', 'wahlMin', 'aus', 'schritte'])) p.push(wo + ': unbekanntes Feld');
+    if (!dateienNurKeys(a, ['id', 'titel', 'ico', 'wahlMin', 'aus', 'truhe', 'kurz', 'schritte'])) p.push(wo + ': unbekanntes Feld');
+    if (a.truhe !== undefined && typeof a.truhe !== 'boolean') p.push(wo + ': truhe ist true oder false');
     if (!dateienText(a.titel, 80) || (a.ico !== undefined && !dateienZeile(a.ico, 8)) || (a.aus !== undefined && typeof a.aus !== 'boolean')) p.push(wo + ': titel, ico oder aus ungültig');
     if (!Array.isArray(a.schritte) || a.schritte.length > 40) return p.push(wo + ': schritte fehlen');
     let zaehlt = 0, wahl = 0;
