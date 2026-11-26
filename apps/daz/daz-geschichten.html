@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<script src="../../gemeinsam/umgebung.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+<title>Story-Zeit – Lernwelt</title>
+<!--
+  ═══════════════════════════════════════════════
+   LERNWELT – Story-Zeit: Deutsch mit Geschichten (DaZ, v142)
+   apps/daz/daz-geschichten.html[?stufe=daz.6.geschichten.gN]
+
+   Für Kinder, die aus dem Englischen Deutsch lernen (A0–A1). Je Geschichte drei Schritte:
+     1 📖 Lesen & Hören   Chat-Blasen, jede wird auf Antippen vorgelesen (🔊, Sprachausgabe des iPads, de-DE);
+                          Blase antippen = englische Übersetzung; „▶ Alles hören“ liest die ganze Geschichte (auch 🐢 langsam);
+                          neue Wörter als Karten in Artikel-Farben (der blau, die rot, das grün).
+     2 🧩 Verstehen       Fragen auf Englisch, Antworten auf Deutsch (aus dem Text).
+     3 💬 Sag es!         Englischer Satz → deutschen Satz aus Wortkarten bauen (mit Ablenkern); danach vorgelesen.
+   Ergebnis: Punkte aus 2 und 3 → saveResult({ thema: Stufen-ID }) → XP, Sterne (Bibliothek), Lernweg-Haken (ab 70 %).
+   Inhalte: daten/daz/geschichten.json (eigene Texte). Keine Aufnahme, keine Spracherkennung (Datenschutz).
+   Teil des DaZ-Lernwegs (daten/wege/daz.json); Katalog daz.6.geschichten.
+  ═══════════════════════════════════════════════
+-->
+<link rel="stylesheet" href="../../gemeinsam/fonts.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  :root { --bg:#0f0e1a; --karte:#1b1929; --karte2:#252238; --rand:rgba(255,255,255,.12); --text:#f1f0fb; --mut:rgba(241,240,251,.68);
+          --pink:#ec4899; --gold:#e6a817; --ok:#4ade80; --no:#f87171; --der:#60a5fa; --die:#f87171; --das:#4ade80; }
+  html, body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Nunito', system-ui, sans-serif; }
+  body { padding: calc(4rem + env(safe-area-inset-top, 0px)) 1rem calc(6rem + env(safe-area-inset-bottom, 0px)); }
+  main { max-width: 760px; margin: 0 auto; }
+  h1 { font: 400 1.9rem 'Fredoka One', 'Nunito', sans-serif; color: var(--gold); text-align: center; margin: 0; }
+  .sub { color: var(--mut); font-weight: 800; text-align: center; margin: .2rem 0 1rem; }
+  .en { color: #93c5fd; font-weight: 700; }
+  .knopf { border: 0; border-radius: 999px; padding: .6rem 1.1rem; font: 900 1rem 'Nunito', sans-serif; min-height: 48px; cursor: pointer;
+           background: var(--karte2); color: var(--text); border: 1px solid var(--rand); }
+  .knopf.gold { background: var(--gold); color: #1b1300; border-color: transparent; }
+  .knopf.an { background: var(--pink); border-color: transparent; }
+  .knopf:disabled { opacity: .45; }
+  .zeile { display: flex; gap: .5rem; flex-wrap: wrap; justify-content: center; margin: .8rem 0; }
+  /* Bibliothek */
+  .regal { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: .8rem; }
+  .buch { background: linear-gradient(160deg, #3b1d4a, #1b1929 70%); border: 2px solid rgba(236,72,153,.35); border-radius: 18px; padding: .9rem .8rem;
+          color: var(--text); text-align: left; cursor: pointer; font-family: inherit; min-height: 150px; display: flex; flex-direction: column; gap: .25rem; }
+  .buch .ico { font-size: 2.4rem; }
+  .buch b { font-size: 1.05rem; line-height: 1.2; } .buch small { color: #93c5fd; font-weight: 700; }
+  .buch .sterne { margin-top: auto; letter-spacing: .1em; }
+  .buch.zu { opacity: .45; cursor: default; }
+  .gesamt { text-align: center; font-weight: 900; color: var(--gold); margin: -.4rem 0 1rem; }
+  /* Kopf einer Geschichte */
+  .kopf { display: flex; align-items: center; gap: .6rem; margin-bottom: .6rem; }
+  .kopf .zurueck { flex-shrink: 0; }
+  .kopf h2 { font: 400 1.35rem 'Fredoka One', 'Nunito', sans-serif; margin: 0; color: var(--gold); line-height: 1.15; }
+  .schritte { display: flex; gap: .35rem; margin: .2rem 0 .8rem; }
+  .schritte span { flex: 1; text-align: center; padding: .4rem .2rem; border-radius: 12px; background: var(--karte); font-weight: 800; font-size: .85rem; color: var(--mut); }
+  .schritte span.an { background: var(--pink); color: #fff; } .schritte span.fertig { color: var(--ok); }
+  /* Chat */
+  .chat { display: flex; flex-direction: column; gap: .55rem; }
+  .blase { display: flex; gap: .5rem; align-items: flex-end; max-width: 92%; }
+  .blase.rechts { align-self: flex-end; flex-direction: row-reverse; }
+  .blase .ava { font-size: 1.9rem; flex-shrink: 0; width: 2.4rem; text-align: center; }
+  .blase .inhalt { background: var(--karte2); border: 2px solid var(--rand); border-radius: 18px; padding: .55rem .8rem; cursor: pointer; }
+  .blase.rechts .inhalt { background: #3b1d4a; border-color: rgba(236,72,153,.4); }
+  .blase.spricht .inhalt { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(230,168,23,.25); }
+  .blase .wer { font-size: .75rem; font-weight: 900; color: var(--mut); }
+  .blase .de { font-size: 1.22rem; font-weight: 800; line-height: 1.35; }
+  .blase .ue { font-size: .95rem; margin-top: .2rem; display: none; } .blase.offen .ue, .chat.alle-en .blase .ue { display: block; }
+  .laut { background: none; border: 0; font-size: 1.35rem; cursor: pointer; padding: .2rem; min-width: 44px; min-height: 44px; }
+  .woerter { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .4rem; }
+  .wort { border-radius: 12px; padding: .45rem .7rem; font: 800 1rem 'Nunito', sans-serif; cursor: pointer; border: 2px solid; background: var(--karte); color: var(--text); min-height: 44px; }
+  .wort.der { border-color: var(--der); } .wort.die { border-color: var(--die); } .wort.das { border-color: var(--das); } .wort.ohne { border-color: var(--rand); }
+  .wort small { display: block; font-weight: 700; color: #93c5fd; font-size: .78rem; }
+  .karte { background: var(--karte); border: 1px solid var(--rand); border-radius: 20px; padding: 1rem 1.1rem; margin: .8rem 0; }
+  .karte h3 { margin: 0 0 .4rem; font-size: 1.05rem; }
+  .legende { font-size: .8rem; color: var(--mut); font-weight: 700; }
+  .legende b.der { color: var(--der); } .legende b.die { color: var(--die); } .legende b.das { color: var(--das); }
+  /* Fragen und Satzbau */
+  .frage { font-size: 1.25rem; font-weight: 900; text-align: center; margin: .3rem 0 .9rem; }
+  .optionen { display: grid; gap: .55rem; }
+  .option { text-align: left; padding: .8rem 1rem; border-radius: 16px; border: 2px solid var(--rand); background: var(--karte2); color: var(--text);
+            font: 800 1.12rem 'Nunito', sans-serif; cursor: pointer; min-height: 56px; }
+  .option.richtig { border-color: var(--ok); background: rgba(74,222,128,.15); } .option.falsch { border-color: var(--no); background: rgba(248,113,113,.15); }
+  .bau { min-height: 64px; border: 2px dashed rgba(255,255,255,.25); border-radius: 16px; padding: .5rem; display: flex; flex-wrap: wrap; gap: .4rem; align-items: center; margin: .5rem 0; }
+  .bau.richtig { border-color: var(--ok); border-style: solid; } .bau.falsch { border-color: var(--no); border-style: solid; }
+  .kacheln { display: flex; flex-wrap: wrap; gap: .45rem; justify-content: center; min-height: 52px; }
+  .kachel { border: 0; border-radius: 12px; padding: .55rem .85rem; font: 900 1.12rem 'Nunito', sans-serif; background: #e0e7ff; color: #1e1b4b; cursor: pointer; min-height: 48px; }
+  .bau .kachel { background: var(--gold); color: #1b1300; }
+  .rueck { text-align: center; font-weight: 900; margin: .5rem 0; min-height: 1.5em; }
+  .rueck.ok { color: var(--ok); } .rueck.no { color: var(--no); }
+  .loesung { text-align: center; font-size: 1.15rem; font-weight: 800; }
+  .ende { text-align: center; }
+  .ende .gross { font-size: 3.2rem; letter-spacing: .1em; }
+  .fortschritt { height: 8px; border-radius: 999px; background: rgba(255,255,255,.1); overflow: hidden; margin: .2rem 0 .8rem; }
+  .fortschritt i { display: block; height: 100%; background: var(--pink); }
+  @media (prefers-reduced-motion: no-preference) { .blase, .option, .kachel { transition: transform .12s; } .kachel:active, .option:active { transform: scale(.97); } }
+</style>
+</head>
+<body>
+<main id="app"><h1>📚 Story-Zeit</h1><p class="sub">lädt …</p></main>
+
+<script src="../../gemeinsam/freigabe.js"></script>
+<script>
+'use strict';
+const $app = document.getElementById('app');
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const misch = l => { const a = l.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const RECHTS = ['Lily'];                                       // Lily spricht von rechts (Ich-Perspektive)
+let D = null, G = null, schritt = 'liste', S = {};
+
+/* ── Vorlesen (Sprachausgabe des iPads, Deutsch) ─────────────────────── */
+let stimme = null, langsam = false, laeuft = 0;
+function stimmeWaehlen() {
+  try {
+    const v = speechSynthesis.getVoices();
+    stimme = v.find(x => /^de[-_]DE/i.test(x.lang) && /anna|helena|petra|siri|google/i.test(x.name)) || v.find(x => /^de/i.test(x.lang)) || null;
+  } catch (e) { stimme = null; }
+}
+if (window.speechSynthesis) { stimmeWaehlen(); speechSynthesis.onvoiceschanged = stimmeWaehlen; }
+/** Text vorlesen → Promise, wenn fertig (oder sofort ohne Sprachausgabe) */
+function sprich(text) {
+  return new Promise(fertig => {
+    if (!window.speechSynthesis) return fertig();
+    const u = new SpeechSynthesisUtterance(String(text).replace(/[„“"]/g, ''));
+    u.lang = 'de-DE'; if (stimme) u.voice = stimme;
+    u.rate = langsam ? .72 : .92;
+    u.onend = u.onerror = () => fertig();
+    speechSynthesis.speak(u);
+    setTimeout(fertig, 12000);                                 // falls onend ausbleibt (älteres Safari)
+  });
+}
+function stopp() { laeuft++; try { speechSynthesis.cancel(); } catch (e) {} document.querySelectorAll('.blase.spricht').forEach(b => b.classList.remove('spricht')); }
+
+/* ── Bibliothek ─────────────────────────────────────────────────────── */
+const sterneVon = id => {
+  const e = window.LernPass && LernPass.lernstand && LernPass.lernstand[id];
+  const b = e ? Number(e.best) || 0 : 0;
+  return !e ? 0 : b >= 90 ? 3 : b >= 70 ? 2 : 1;
+};
+const sternHTML = n => '⭐'.repeat(n) + '☆'.repeat(3 - n);
+const frei = id => !window.LernFreigabe || LernFreigabe.erlaubt(id);
+function zeigeListe() {
+  stopp(); schritt = 'liste'; G = null;
+  if (window.LW && LW.beschaeftigt) LW.beschaeftigt(false);
+  const gesamt = D.geschichten.reduce((s, g) => s + sterneVon(g.id), 0);
+  $app.innerHTML = `<h1>📚 Story-Zeit</h1><p class="sub">Deutsch mit Geschichten · <span class="en">Read, listen and speak German</span></p>
+    <p class="gesamt">⭐ ${gesamt} / ${D.geschichten.length * 3}</p>
+    <div class="regal">${D.geschichten.map(g => { const z = !frei(g.id);
+      return `<button type="button" class="buch${z ? ' zu' : ''}" data-g="${esc(g.id)}"${z ? ' disabled' : ''}><span class="ico">${z ? '🔒' : esc(g.ico)}</span>
+        <b>${g.nr} · ${esc(g.titel)}</b><small>${esc(g.en)}</small><span class="sterne">${sternHTML(sterneVon(g.id))}</span></button>`; }).join('')}</div>`;
+}
+
+/* ── Eine Geschichte ────────────────────────────────────────────────── */
+function oeffne(id) {
+  G = D.geschichten.find(g => g.id === id);
+  if (!G || !frei(G.id)) return zeigeListe();
+  S = { punkte: 0, max: G.fragen.length + G.sagen.length, nr: 0, gehoert: new Set() };
+  if (window.LW && LW.beschaeftigt) LW.beschaeftigt(true);
+  zeigeLesen();
+}
+function kopf(aktiv) {
+  const st = [['lesen', '📖 Lesen'], ['verstehen', '🧩 Verstehen'], ['sagen', '💬 Sag es!']], i = st.findIndex(x => x[0] === aktiv);
+  return `<div class="kopf"><button type="button" class="knopf zurueck" data-liste aria-label="Zur Bibliothek">‹ 📚</button>
+      <div><h2>${esc(G.ico)} ${esc(G.titel)}</h2><div class="en">${esc(G.en)}</div></div></div>
+    <div class="schritte">${st.map((x, k) => `<span class="${k === i ? 'an' : k < i ? 'fertig' : ''}">${k < i ? '✓ ' : ''}${x[1]}</span>`).join('')}</div>`;
+}
+const artikel = w => (/^(der|die|das) /.exec(w) || [])[1] || 'ohne';
+function zeigeLesen() {
+  schritt = 'lesen';
+  $app.innerHTML = kopf('lesen') + `
+    <div class="zeile"><button type="button" class="knopf gold" data-alles>▶ Alles hören · Listen</button>
+      <button type="button" class="knopf${langsam ? ' an' : ''}" data-langsam aria-pressed="${langsam}">🐢 Langsam</button>
+      <button type="button" class="knopf" data-en>🇬🇧 English</button></div>
+    <p class="legende" style="text-align:center">Tap a bubble for English · Tippe auf eine Blase für Englisch</p>
+    <div class="chat">${G.saetze.map((s, i) => `<div class="blase${RECHTS.includes(s.wer) ? ' rechts' : ''}" data-i="${i}">
+        <span class="ava" aria-hidden="true">${esc(D.personen[s.wer] || '🙂')}</span>
+        <div class="inhalt" data-zeigen="${i}"><div class="wer">${esc(s.wer)}</div><div class="de">${esc(s.de)}</div><div class="ue en">${esc(s.en)}</div></div>
+        <button type="button" class="laut" data-satz="${i}" aria-label="Vorlesen">🔊</button></div>`).join('')}</div>
+    <div class="karte"><h3>📒 Neue Wörter · <span class="en">New words</span></h3>
+      <p class="legende"><b class="der">der</b> · <b class="die">die</b> · <b class="das">das</b> – learn every noun with its article!</p>
+      <div class="woerter">${G.woerter.map((w, i) => `<button type="button" class="wort ${artikel(w.de)}" data-wort="${i}">${esc(w.de)}<small>${esc(w.en)}</small></button>`).join('')}</div></div>
+    <div class="zeile"><button type="button" class="knopf gold" data-weiter="verstehen">Weiter: Verstehen ›</button></div>`;
+}
+async function allesHoeren() {
+  const meins = ++laeuft;
+  try { speechSynthesis.cancel(); } catch (e) {}
+  for (let i = 0; i < G.saetze.length; i++) {
+    if (meins !== laeuft || schritt !== 'lesen') return;
+    const b = document.querySelector(`.blase[data-i="${i}"]`);
+    document.querySelectorAll('.blase.spricht').forEach(x => x.classList.remove('spricht'));
+    if (b) { b.classList.add('spricht'); b.scrollIntoView({ block: 'center', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }); }
+    await sprich(G.saetze[i].de);
+    S.gehoert.add(i);
+  }
+  document.querySelectorAll('.blase.spricht').forEach(x => x.classList.remove('spricht'));
+}
+
+function zeigeVerstehen() {
+  stopp(); schritt = 'verstehen';
+  const f = G.fragen[S.nr];
+  if (!f) { S.nr = 0; return zeigeSagen(); }
+  const opts = misch(f.o.map((o, i) => ({ o, richtig: i === 0 })));
+  S.opts = opts;
+  $app.innerHTML = kopf('verstehen') + `<div class="fortschritt"><i style="width:${Math.round(100 * S.nr / G.fragen.length)}%"></i></div>
+    <div class="karte"><p class="frage">🇬🇧 ${esc(f.f)}</p>
+      <div class="optionen">${opts.map((x, i) => `<button type="button" class="option" data-wahl="${i}">${esc(x.o)}</button>`).join('')}</div>
+      <p class="rueck" id="rueck"></p>
+      <div class="zeile" id="weiter" hidden><button type="button" class="knopf gold" data-naechste>Weiter ›</button>
+        <button type="button" class="knopf" data-liste-lesen>📖 Story</button></div></div>`;
+}
+function waehle(i) {
+  if (S.beantwortet) return;
+  S.beantwortet = true;
+  const x = S.opts[i], el = document.querySelectorAll('.option');
+  el.forEach((b, k) => { b.disabled = true; if (S.opts[k].richtig) b.classList.add('richtig'); });
+  if (x.richtig) { S.punkte++; rueck('✓ Richtig! · Right!', true); } else { el[i].classList.add('falsch'); rueck('Nicht ganz – the green answer is right.', false); }
+  sprich(S.opts.find(o => o.richtig).o);
+  document.getElementById('weiter').hidden = false;
+}
+function rueck(t, ok) { const r = document.getElementById('rueck'); r.textContent = t; r.className = 'rueck ' + (ok ? 'ok' : 'no'); }
+
+const nurWort = w => w.replace(/[.,!?;:]/g, '');
+function zeigeSagen() {
+  stopp(); schritt = 'sagen';
+  const a = G.sagen[S.nr];
+  if (!a) return zeigeEnde();
+  const teile = a.de.split(' ').map(nurWort).concat(a.extra || []);
+  S.pool = misch(teile.map((t, i) => ({ t, i }))); S.gebaut = []; S.beantwortet = false;
+  $app.innerHTML = kopf('sagen') + `<div class="fortschritt"><i style="width:${Math.round(100 * S.nr / G.sagen.length)}%"></i></div>
+    <div class="karte"><p class="frage">🇬🇧 „${esc(a.en)}“<br><small class="sub" style="font-size:.9rem">Sag es auf Deutsch · Build the German sentence</small></p>
+      <div class="bau" id="bau" aria-label="Dein Satz"></div>
+      <div class="kacheln" id="pool"></div>
+      <p class="rueck" id="rueck"></p><p class="loesung" id="loesung"></p>
+      <div class="zeile"><button type="button" class="knopf gold" data-pruefen>✓ Prüfen · Check</button></div>
+      <div class="zeile" id="weiter" hidden><button type="button" class="knopf gold" data-naechste>Weiter ›</button></div></div>`;
+  baueZeichnen();
+}
+function baueZeichnen() {
+  const bau = document.getElementById('bau'), pool = document.getElementById('pool');
+  bau.innerHTML = S.gebaut.map((x, k) => `<button type="button" class="kachel" data-raus="${k}">${esc(x.t)}</button>`).join('') || '<span class="legende">Tap the words · Tippe die Wörter an</span>';
+  pool.innerHTML = S.pool.map((x, k) => x.weg ? '' : `<button type="button" class="kachel" data-rein="${k}">${esc(x.t)}</button>`).join('');
+}
+function pruefeSatz() {
+  if (S.beantwortet || !S.gebaut.length) return;
+  S.beantwortet = true;
+  const a = G.sagen[S.nr], soll = a.de.split(' ').map(nurWort).join(' '), ist = S.gebaut.map(x => x.t).join(' ');
+  const ok = ist === soll, bau = document.getElementById('bau');
+  bau.classList.add(ok ? 'richtig' : 'falsch');
+  if (ok) { S.punkte++; rueck('✓ Super! · Great!', true); } else rueck('Fast! · Almost! Listen:', false);
+  document.getElementById('loesung').textContent = a.de;
+  document.querySelector('[data-pruefen]').disabled = true;
+  document.getElementById('weiter').hidden = false;
+  sprich(a.de);
+}
+
+function zeigeEnde() {
+  stopp(); schritt = 'ende';
+  const pct = Math.round(100 * S.punkte / S.max), n = pct >= 90 ? 3 : pct >= 70 ? 2 : 1;
+  try { if (window.LernApps) LernApps.saveResult({ score: S.punkte, max: S.max, label: `${S.punkte} / ${S.max} · ${G.titel}`, thema: G.id }); } catch (e) {}
+  if (window.LW && LW.beschaeftigt) LW.beschaeftigt(false);
+  const lob = n === 3 ? 'Wunderbar! · Wonderful!' : n === 2 ? 'Gut gemacht! · Well done!' : 'Weiter üben! · Keep practising!';
+  $app.innerHTML = kopf('sagen').replace(/class="an"/, 'class="fertig"') + `<div class="karte ende">
+      <div class="gross" aria-label="${n} Sterne">${sternHTML(n)}</div>
+      <h2 style="font:400 1.6rem 'Fredoka One','Nunito',sans-serif;color:var(--gold);margin:.3rem 0">${pct} %</h2>
+      <p style="font-weight:900;font-size:1.15rem;margin:.2rem 0">${esc(lob)}</p>
+      <p class="sub">${S.punkte} von ${S.max} richtig · ${G.woerter.length} neue Wörter in dieser Geschichte</p>
+      ${n < 2 ? '<p class="legende">Tip: Listen to the story again (🐢 slowly) and then try once more.</p>' : ''}
+      <div class="zeile"><button type="button" class="knopf gold" data-nochmal>🔁 Nochmal · Again</button>
+        <button type="button" class="knopf" data-liste>📚 Bibliothek</button></div></div>`;
+}
+
+/* ── Bedienung ──────────────────────────────────────────────────────── */
+$app.addEventListener('click', e => {
+  const t = e.target.closest('button, [data-zeigen]');
+  if (!t) return;
+  const d = t.dataset;
+  if (d.g) return oeffne(d.g);
+  if (t.hasAttribute('data-liste')) return zeigeListe();
+  if (d.satz !== undefined) { stopp(); return sprich(G.saetze[+d.satz].de); }
+  if (d.zeigen !== undefined) return t.closest('.blase').classList.toggle('offen');
+  if (t.hasAttribute('data-alles')) return allesHoeren();
+  if (t.hasAttribute('data-langsam')) { langsam = !langsam; t.classList.toggle('an', langsam); t.setAttribute('aria-pressed', langsam); return; }
+  if (t.hasAttribute('data-en')) { document.querySelector('.chat').classList.toggle('alle-en'); return; }
+  if (d.wort !== undefined) { stopp(); return sprich(G.woerter[+d.wort].de); }
+  if (d.weiter === 'verstehen') { S.nr = 0; S.beantwortet = false; return zeigeVerstehen(); }
+  if (d.wahl !== undefined) return waehle(+d.wahl);
+  if (t.hasAttribute('data-liste-lesen')) return zeigeLesen();
+  if (t.hasAttribute('data-naechste')) { S.nr++; S.beantwortet = false; return schritt === 'verstehen' ? zeigeVerstehen() : zeigeSagen(); }
+  if (d.rein !== undefined) { if (S.beantwortet) return; const x = S.pool[+d.rein]; x.weg = true; S.gebaut.push(x); sprich(x.t); return baueZeichnen(); }
+  if (d.raus !== undefined) { if (S.beantwortet) return; const x = S.gebaut.splice(+d.raus, 1)[0]; x.weg = false; return baueZeichnen(); }
+  if (t.hasAttribute('data-pruefen')) return pruefeSatz();
+  if (t.hasAttribute('data-nochmal')) return oeffne(G.id);
+});
+document.addEventListener('visibilitychange', () => { if (document.hidden) stopp(); });
+
+/* ── Start ─────────────────────────────────────────────────────────── */
+function passBereit() { return new Promise(r => { if (window.LernPass) return r(); window.addEventListener('lernpass:ready', () => r(), { once: true }); setTimeout(r, 4000); }); }
+(async function start() {
+  try {
+    D = await fetch(LW.ROOT + 'daten/daz/geschichten.json', { cache: 'no-cache' }).then(r => r.json());
+  } catch (e) {
+    $app.innerHTML = '<h1>📚 Story-Zeit</h1><p class="sub">Die Geschichten konnten nicht geladen werden. Prüfe das WLAN. · Please check the Wi-Fi.</p>';
+    return;
+  }
+  await passBereit();
+  const st = new URLSearchParams(location.search).get('stufe');
+  if (st && D.geschichten.some(g => g.id === st)) oeffne(st); else zeigeListe();
+})();
+</script>
+<script src="../../gemeinsam/navbar.js"></script>
+</body>
+</html>
