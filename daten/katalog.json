@@ -576,6 +576,8 @@
         { "id": "ma.5.winkel.falle", "titel": "Die Geodreieck-Falle" },
         { "id": "ma.5.winkel.ablesen", "titel": "Geodreieck ablesen" },
         { "id": "ma.5.winkel.exakt", "titel": "Genau ablesen" },
+        { "id": "ma.5.winkel.zeichnen", "titel": "Winkel zeichnen" },
+        { "id": "ma.5.winkel.zeichnen-genau", "titel": "Genau zeichnen" },
         { "id": "ma.5.winkel.schaetzen", "titel": "Schätzen" },
         { "id": "ma.5.winkel.mix", "titel": "Alles gemischt" },
         { "id": "ma.5.winkel.weitere", "titel": "Weitere Winkelarten" }

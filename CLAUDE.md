@@ -140,6 +140,7 @@ und gelbe Hinweise. Manuelle Checkliste nach Uploads: `werkzeuge/RAUCHTEST.md`.
   umgebung.js meldet im Live-Betrieb je Fehler/Seite/Version einmal am Tag an Worker `/fehler` (`cloudflare/fehler.js`, Tabelle `fehler_zaehler`,
   nur Summen, 60 Tage); Admin System → 🐞 Fehlerzähler (`module/system-fehlerzaehler.js`).
 - **Kein Zoomen** (v136): jede Seite (außer admin.html) mit viewport `maximum-scale=1, user-scalable=no`; umgebung.js setzt `touch-action: manipulation` und fängt `gesturestart` ab. pruefen.py weist auf Seiten ohne hin.
+- **Reit-Begleiter** (v139): Begleiter mit `reiten: { sitz, beine }` → Ritt beim Jubeln auf der Bühne (`avatar3d.js` `ritt`); Farbvarianten erben `reiten`. Neue Abzeichen-Zähler über `flagSetzen`: `auftraege`, `stationen`, `truhen`, `generalprobe`. README → Avatar-Teile.
 - **Live-Abfrage** (Unterrichtsmodus → 📊, Kinder-Seite `apps/typen/live.html?raum=CODE`, keine App in config.json, ohne Navbar):
   Worker-Teil `cloudflare/live.js` (Räume, Antworten, Quizze, Rückblicke in `SYNC_DB`; Räume nach dem Beenden gelöscht),
   Fragetypen `gemeinsam/live-fragen.js` (`LernLive`), Beamer `gemeinsam/admin/live.js`, Quiz-Editor Inhalte → Live-Quizze.

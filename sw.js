@@ -25,7 +25,7 @@
 //  und teilen sich den Offline-Speicher. Deshalb hat jede Umgebung ihr
 //  eigenes Präfix und räumt nur ihre eigenen Speicher auf.
 // ═══════════════════════════════════════════════════════
-const VERSION = 'v137';  // v137: Winkel-Werkstatt (Mathe 5): Winkelarten und Geodreieck
+const VERSION = 'v139';  // v139: neue Truhen- und Abzeichen-Teile, Reit-Begleiter, neuer Schildkrötenpanzer
 const PRAEFIX = /\/[^/]*-test\/$/i.test(new URL(self.registration.scope).pathname) ? 'lwtest-v' : 'lernwelt-v';
 const CACHE   = PRAEFIX + VERSION.replace(/^v/, '');        // z. B. 'lernwelt-v24' (Format wie bisher)
 const ALT     = CACHE + '-alt';                             // Dateien der Vorversion, noch nicht aufgefrischt
@@ -38,14 +38,14 @@ const START = ['./', 'index.html', 'config.json', 'manifest.webmanifest',
                'gemeinsam/pass.js', 'gemeinsam/pass-extras.js', 'gemeinsam/pass-ansicht.js', 'gemeinsam/sync-code.js', 'gemeinsam/sync.js',
                'gemeinsam/katalog.js', 'gemeinsam/freigabe.js', 'gemeinsam/wiederholung.js', 'gemeinsam/dorf-kern.js', 'gemeinsam/fonts.css', 'gemeinsam/lesehilfe.css', 'vendor/fflate.min.js',
                'daten/lernwelt-inhalte.json', 'daten/katalog.json', 'daten/dorf-inhalte.json',
-               'fonts/nunito-latin-wght-normal.woff2', 'fonts/nunito-latin-ext-wght-normal.woff2',
+               'fonts/nunito-latin-wght-normal.woff2',   // latin-ext (nur für seltene Sonderzeichen) seit v139 in NACHLADEN
                'fonts/fredoka-one-latin-400-normal.woff2'];
 
 // NACHLADEN: Spiele, 3D und große Daten. Das iPad holt sie gestaffelt im Hintergrund,
 // eine Datei nach der anderen, wenn eine Seite darum bittet (umgebung.js, zufällig
 // 5–25 s nach dem Laden). So sind die Spiele nach einem Schultag auch offline da,
 // ohne dass alle iPads beim Update gleichzeitig alles ziehen.
-const NACHLADEN = ['spiele/runner.html', 'spiele/burg-verteidigung.html', 'spiele/dorf.html', 'spiele/tauziehen.html',
+const NACHLADEN = ['fonts/nunito-latin-ext-wght-normal.woff2', 'spiele/runner.html', 'spiele/burg-verteidigung.html', 'spiele/dorf.html', 'spiele/tauziehen.html',
                    'spiele/wort-des-tages.html', 'spiele/zauberwort.html', 'spiele/kitchen-chaos.html', 'spiele/expedition.html', 'spiele/room-detective.html',
                    'gemeinsam/aufgaben.js', 'daten/aufgaben-pools.json', 'gemeinsam/einstellungen.js', 'daten/apps/liste.json', 'daten/apps/burg-verteidigung.json', 'daten/apps/runner.json', 'daten/apps/dorf.json', 'gemeinsam/spiel-hilfen.js', 'gemeinsam/ueben.js', 'gemeinsam/generatoren-mathe.js', 'daten/kopfrechnen.json', 'apps/mathe/kopfrechnen.html',   // Mathe-Engine: seit v124 nicht mehr im Kern (die Startseite braucht sie nicht)
                     'apps/mathe/mathe-trainer.html', 'apps/englisch/vokabeltrainer.html', 'gemeinsam/karten-ansicht.js',

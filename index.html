@@ -1437,6 +1437,13 @@ function whenPassReady(fn) {
   else window.addEventListener('lernpass:ready', fn, { once: true });
 }
 whenPassReady(() => {
+  // Zähler für Abzeichen (v139) rückwirkend: geöffnete Truhen, Generalprobe mit „bereit“ (≥ 80 %)
+  try {
+    if (LernPass.hasProfile()) {
+      LernPass.flagSetzen('truhen', LernPass.state.chestsOpened || 0);
+      if (Object.entries(LernPass.checks || {}).some(([id, c]) => /\.generalprobe\./.test(id) && (c.b || 0) >= 80)) LernPass.flagSetzen('generalprobe', 1);
+    }
+  } catch (e) {}
   LernPass.onChange(() => { if (document.visibilityState === 'visible') { buildPassCard(); buildKopf(); } });
   buildPassCard();
   buildKopf();

@@ -19,10 +19,12 @@
      falle     Die Geodreieck-Falle                 50° oder 130°? – welche Skala stimmt?
      ablesen   Geodreieck ablesen                   Zehner- und Fünferschritte eintippen
      exakt     Genau ablesen                        auf 1° genau (±1° zählt)
+     zeichnen  Winkel zeichnen                      zweiten Schenkel ziehen, ±2°; zeichnen-genau: ±1°
      schaetzen Schätzen                             ohne Geodreieck, ±10° zählt
      mix       Alles gemischt
      weitere   Weitere Winkelarten                  gestreckt, überstumpf, Vollwinkel – gesperrt, bis die Lehrkraft freigibt
-   Geplant (2. Schritt): Winkel zeichnen – einen Schenkel am Geodreieck auf eine Gradzahl ziehen.
+   Zeichnen (v138): zeichnen ±2° (10er/5er), zeichnen-genau ±1° – der erste Schenkel liegt am Geodreieck, das Kind zieht den zweiten
+   (roter Punkt) auf die Gradzahl; −1°/+1° zum Feinjustieren; während des Ziehens steht keine Zahl da. Falsch: gestrichelt, was gezeichnet war.
 
    Geodreieck: lange Seite auf dem ersten Schenkel, Nullpunkt im Scheitel. Äußere Zahlenreihe zählt gegen den
    Uhrzeigersinn ab dem rechten Ende der langen Seite, innere Reihe ab dem linken Ende. Liegt der erste Schenkel
@@ -142,8 +144,11 @@ function bild(w, o = {}) {
     }
   }
   const l1 = w.geo ? SCHENKEL_GEO : w.l1, l2 = w.geo ? SCHENKEL_GEO : w.l2;
-  bogen(g, w.start, w.alpha, w.geo ? 34 : 38, '#d97706');
-  if (o.ref90 && w.alpha !== 90 && w.alpha < 180) {         // Vergleich mit dem rechten Winkel (bei falscher Antwort)
+  if (o.nurErster) {                                         // Zeichnen: nur der erste Schenkel liegt schon da
+    schenkel(w.geo.seite === 'rechts' ? w.geo.rot : w.geo.rot + 180, SCHENKEL_GEO, '#1e3a8a', 4);
+    g.appendChild(el('circle', { cx: 0, cy: 0, r: 5, fill: '#1e3a8a' }));
+  } else bogen(g, w.start, w.alpha, w.geo ? 34 : 38, '#d97706');
+  if (!o.nurErster && o.ref90 && w.alpha !== 90 && w.alpha < 180) {         // Vergleich mit dem rechten Winkel (bei falscher Antwort)
     const [x, y] = merke(Math.max(l1, l2) * .8, w.start + 90);
     g.appendChild(el('line', { x1: 0, y1: 0, x2: x, y2: y, stroke: '#16a34a', 'stroke-width': 3, 'stroke-dasharray': '10 7' }));
     const [qx, qy] = P(22, w.start), [rx, ry] = P(22, w.start + 90), [sx, sy] = P(22 * Math.SQRT2, w.start + 45);
@@ -151,13 +156,13 @@ function bild(w, o = {}) {
     const [tx, ty] = P(Math.max(l1, l2) * .8 + 26, w.start + 90);
     g.appendChild(el('text', { x: tx, y: ty, 'text-anchor': 'middle', 'dominant-baseline': 'central', fill: '#16a34a', 'font-family': 'Nunito, sans-serif', 'font-weight': 900, 'font-size': 20 }, '90°'));
   }
-  schenkel(w.start, l1, '#1e3a8a', 4);
-  schenkel(w.start + w.alpha, l2, '#1e3a8a', 4);
+  if (!o.nurErster) { schenkel(w.start, l1, '#1e3a8a', 4); schenkel(w.start + w.alpha, l2, '#1e3a8a', 4); }
   if (o.wert != null && o.wert !== w.alpha && w.geo) {      // falsch abgelesen: wo hätte der Schenkel dann gelegen?
     const phi = w.geo.seite === 'rechts' ? w.geo.rot + o.wert : w.geo.rot + 180 - o.wert;
     if (o.wert > 0 && o.wert < 180) schenkel(phi, SCHENKEL_GEO, '#dc2626', 3, '8 6');
   }
   g.appendChild(el('circle', { cx: 0, cy: 0, r: 5, fill: '#1e3a8a' }));
+  if (o.nurErster) for (let t = 0; t <= 180; t += 15) merke(SCHENKEL_GEO + 22, w.geo.rot + t);   // Platz für den Griff
   // Ausschnitt: alles, was gezeichnet ist, mit Rand
   const xs = punkte.map(p => p[0]), ys = punkte.map(p => p[1]), rand = 34;
   let x0 = Math.min(...xs) - rand, x1 = Math.max(...xs) + rand, y0 = Math.min(...ys) - rand, y1 = Math.max(...ys) + rand;
@@ -282,6 +287,60 @@ function schaetzen() {
   };
 }
 
+/** Winkel zeichnen (2. Schritt): Der erste Schenkel liegt am Geodreieck, das Kind zieht den zweiten auf die Gradzahl.
+ *  Kein Zahlenwert während des Ziehens – ablesen muss das Kind selbst. Feinschritte mit −1°/+1°. */
+function zeichnen(genau) {
+  const w = geoWinkel(genau ? 1 : wahl([10, 5])), tol = genau ? 1 : 2, rechts = w.geo.seite === 'rechts';
+  const a = {
+    typ: genau ? 'zeichnen-genau' : 'zeichnen', art: 'eigen', schluessel: 'z' + w.alpha + Math.random(),
+    frage: `Zeichne einen Winkel von ${w.alpha}°.`, hinweis: 'Zieh den roten Punkt auf die richtige Zahl. Der erste Schenkel liegt schon am Geodreieck.',
+    text: w.alpha + '°' + (genau ? ' (±1°)' : ' (±2° zählt)'),
+    erklaerung: `${w.alpha}° ist ein ${ARTEN[artVon(w.alpha)].name}. ` + SKALA_TIPP2(w).replace(' (jetzt hervorgehoben)', ''),
+    tipp: `Wird der Winkel spitz oder stumpf? ${w.alpha < 90 ? 'Spitz: Der zweite Schenkel liegt näher am ersten als die 90°-Linie in der Mitte.' : w.alpha > 90 ? 'Stumpf: Der zweite Schenkel liegt weiter weg als die 90°-Linie in der Mitte.' : '90° ist genau die Mittellinie.'}`,
+    tipp2: SKALA_TIPP2(w), t: 90,
+    zeige: (box, fertig) => {
+      const svg = bild(w, { nurErster: true, hervor: tippsSichtbar(box) >= 2 }), g = svg.firstChild, lg = el('g', {});
+      svg.style.touchAction = 'none'; svg.style.cursor = 'grab';
+      g.appendChild(lg);
+      const gross = () => rechts ? a.t : 180 - a.t;                 // gezeichneter Winkel in Grad
+      const male = () => {
+        lg.textContent = '';
+        const phi = w.geo.rot + a.t, [x, y] = P(SCHENKEL_GEO, phi);
+        bogen(lg, rechts ? w.geo.rot : phi, gross(), 34, '#d97706');
+        lg.appendChild(el('line', { x1: 0, y1: 0, x2: x, y2: y, stroke: '#dc2626', 'stroke-width': 4, 'stroke-linecap': 'round' }));
+        lg.appendChild(el('circle', { cx: x, cy: y, r: 17, fill: '#dc2626', stroke: '#fff', 'stroke-width': 3 }));
+      };
+      const setze = e => {
+        const pt = svg.createSVGPoint(); pt.x = e.clientX; pt.y = e.clientY;
+        const q = pt.matrixTransform(g.getScreenCTM().inverse());
+        let t = Math.atan2(-q.y, q.x) / RAD - w.geo.rot;
+        t = ((t % 360) + 540) % 360 - 180;                            // −180 … 180
+        if (t < -90) t = 180; else if (t < 0) t = 0;                  // unter der langen Seite: an den Rand
+        a.t = Math.max(0, Math.min(180, Math.round(t))); male();
+      };
+      let zieht = false;
+      svg.addEventListener('pointerdown', e => { zieht = true; try { svg.setPointerCapture(e.pointerId); } catch (x) {} setze(e); e.preventDefault(); });
+      svg.addEventListener('pointermove', e => { if (zieht) setze(e); });
+      ['pointerup', 'pointercancel'].forEach(t => svg.addEventListener(t, () => { zieht = false; }));
+      male();
+      blatt(box, svg);
+      const z = document.createElement('div'); z.className = 'wk-knoepfe'; z.style.gridTemplateColumns = '1fr 1fr 1.4fr';
+      z.innerHTML = '<button type="button" class="wk-knopf" data-d="-1">− 1°</button><button type="button" class="wk-knopf" data-d="1">+ 1°</button>'
+        + '<button type="button" class="wk-knopf" data-fertig style="background:#e6a817;color:#1b1300;border-color:transparent">✓ Fertig</button>';
+      z.addEventListener('click', e => {
+        const b = e.target.closest('button'); if (!b) return;
+        if (b.hasAttribute('data-fertig')) return fertig(gross());
+        const d = Number(b.dataset.d) * (rechts ? 1 : -1);           // −1°/+1° am Winkel, nicht an der Drehrichtung
+        a.t = Math.max(0, Math.min(180, a.t + d)); male();
+      });
+      box.appendChild(z);
+    },
+    pruef: e => Math.abs(e - w.alpha) <= tol, eingabeText: e => e + '° gezeichnet',
+    loesungZeige: (box, e) => blatt(box, bild(w, { hervor: true, wert: e })),
+  };
+  return a;
+}
+
 /* ═══════════════════════════════════════════════════════
    STUFEN – IDs stehen im Katalog (daten/katalog.json, ma.5.winkel) und nie umbenennen
    ═══════════════════════════════════════════════════════ */
@@ -292,8 +351,10 @@ const STUFEN = [
   { id: 'ma.5.winkel.falle', titel: 'Die Geodreieck-Falle', kurz: '50° oder 130°? Welche Skala stimmt?', erzeuge: falle },
   { id: 'ma.5.winkel.ablesen', titel: 'Geodreieck ablesen', kurz: 'In Zehner- und Fünferschritten', erzeuge: () => ablesen(false) },
   { id: 'ma.5.winkel.exakt', titel: 'Genau ablesen', kurz: 'Auf 1° genau', erzeuge: () => ablesen(true) },
+  { id: 'ma.5.winkel.zeichnen', titel: 'Winkel zeichnen', kurz: 'Schenkel am Geodreieck ziehen (±2°)', erzeuge: () => zeichnen(false) },
+  { id: 'ma.5.winkel.zeichnen-genau', titel: 'Genau zeichnen', kurz: 'Auf 1° genau', erzeuge: () => zeichnen(true) },
   { id: 'ma.5.winkel.schaetzen', titel: 'Schätzen', kurz: 'Ohne Geodreieck, ±10° zählt', erzeuge: schaetzen },
-  { id: 'ma.5.winkel.mix', titel: 'Alles gemischt', kurz: 'Erkennen, ablesen, schätzen', erzeuge: () => wahl([erkennen, erkennen, falle, () => ablesen(false), schaetzen])() },
+  { id: 'ma.5.winkel.mix', titel: 'Alles gemischt', kurz: 'Erkennen, ablesen, zeichnen, schätzen', erzeuge: () => wahl([erkennen, erkennen, falle, () => ablesen(false), () => zeichnen(false), schaetzen])() },
   { id: 'ma.5.winkel.weitere', titel: 'Weitere Winkelarten', kurz: 'Gestreckt, überstumpf, Vollwinkel', gesperrt: true, erzeuge: () => erkennen({ weitere: true }) },
 ];
 const HILFE = `<section><h2>Winkelarten</h2>
@@ -304,7 +365,10 @@ const HILFE = `<section><h2>Winkelarten</h2>
   <p>1. Nullpunkt der langen Seite genau auf den Scheitel, die lange Seite auf den ersten Schenkel.
   2. Erst schätzen: spitz oder stumpf? 3. Die Zahlenreihe wählen, die beim ersten Schenkel bei <b>0</b> anfängt – das Geodreieck hat zwei.
   4. Am zweiten Schenkel ablesen und prüfen: Passt die Zahl zur Schätzung?</p>
-  <p>Beispiel: Der Winkel ist spitz, du liest 130° – dann hast du die falsche Reihe erwischt. Richtig ist 50°.</p></section>`;
+  <p>Beispiel: Der Winkel ist spitz, du liest 130° – dann hast du die falsche Reihe erwischt. Richtig ist 50°.</p></section>
+  <section><h2>Winkel zeichnen</h2>
+  <p>1. Erst überlegen: Wird der Winkel spitz oder stumpf? 2. Am Geodreieck die Zahlenreihe suchen, die beim ersten Schenkel bei <b>0</b> anfängt.
+  3. Die Gradzahl auf dieser Reihe suchen und den zweiten Schenkel genau dorthin ziehen. 4. Prüfen: Sieht der Winkel so aus, wie du gedacht hast?</p></section>`;
 
 LernUeben.start({
   host: document.getElementById('app'), titel: '📐 Winkel-Werkstatt', untertitel: 'Winkelarten erkennen und am Geodreieck ablesen',

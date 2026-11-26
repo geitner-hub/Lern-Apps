@@ -237,7 +237,12 @@
     melden();
   }
   /** Spielstand speichern – nur, wenn das Dorf schon begonnen wurde. */
-  function speichern() { if (gestartet()) schreiben(); }
+  function speichern() {
+    if (!gestartet()) return;
+    schreiben();
+    // Zähler fürs Abzeichen „Baumeister“ (v139): erledigte Aufträge gesamt – zählt rückwirkend, nur nach oben
+    try { if (window.LernPass && LernPass.flagSetzen && D && D.e) LernPass.flagSetzen('auftraege', D.e); } catch (x) {}
+  }
 
   /** Dorf beginnen (erster Besuch in spiele/dorf.html). Füllt das Auftragsbrett, sobald die Inhalte da sind. */
   function starten() {

@@ -405,6 +405,7 @@ function chestOpen() {
   const P = LernPass;
   const res = P.openChest(chest.kind);
   if (!res || !res.ok) { renderPass('chests'); return; }
+  try { P.flagSetzen('truhen', P.state.chestsOpened); } catch (x) {}   // Abzeichen „Truhenjäger“ (v139)
   chest.opening = true;
   buildPassCard();
   chestUpdateDot();
