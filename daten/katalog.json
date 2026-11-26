@@ -557,6 +557,29 @@
        "dauer": 12,
        "einsatz": "Entdeckende Erarbeitung von Umfang und Flächeninhalt; Stationenarbeit",
        "archiv": true
+      },
+      {
+       "id": "ma.5.winkel",
+       "titel": "Winkel-Werkstatt",
+       "klasse": 5,
+       "quelle": {
+        "app": "apps/mathe/winkel.html"
+       },
+       "ergebnis": ["winkel.html"],
+       "lehrplan": "M5 Geometrie: Winkelarten (spitz, recht, stumpf) unterscheiden, Winkel mit dem Geodreieck messen (zwei Skalen), Winkelgrößen schätzen",
+       "dauer": 8,
+       "einsatz": "Nach der Einführung der Winkelarten: erst erkennen und Blitzblick, dann die Geodreieck-Falle und Ablesen; „Weitere Winkelarten“ erst freigeben, wenn gestreckt, überstumpf und Vollwinkel dran waren",
+       "stufen": [
+        { "id": "ma.5.winkel.arten", "titel": "Spitz, recht oder stumpf?" },
+        { "id": "ma.5.winkel.genau", "titel": "Genau hinschauen" },
+        { "id": "ma.5.winkel.blitz", "titel": "Blitzblick" },
+        { "id": "ma.5.winkel.falle", "titel": "Die Geodreieck-Falle" },
+        { "id": "ma.5.winkel.ablesen", "titel": "Geodreieck ablesen" },
+        { "id": "ma.5.winkel.exakt", "titel": "Genau ablesen" },
+        { "id": "ma.5.winkel.schaetzen", "titel": "Schätzen" },
+        { "id": "ma.5.winkel.mix", "titel": "Alles gemischt" },
+        { "id": "ma.5.winkel.weitere", "titel": "Weitere Winkelarten" }
+       ]
       }
      ]
     }

@@ -1,6 +1,6 @@
 # Inventar der Lern-Apps und Spiele
 
-Automatisch erzeugt am 25.11.2026 mit `python3 werkzeuge/inventar.py` (Angaben aus dem Code). Nur die Spalten **Entscheidung** und **Notiz** von Hand pflegen – sie bleiben beim Neu-Erzeugen erhalten.
+Automatisch erzeugt am 26.11.2026 mit `python3 werkzeuge/inventar.py` (Angaben aus dem Code). Nur die Spalten **Entscheidung** und **Notiz** von Hand pflegen – sie bleiben beim Neu-Erzeugen erhalten.
 
 Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv**
 
@@ -33,6 +33,7 @@ Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv
 | `apps/mathe/mathe-trainer.html` | Mathe-Trainer Klasse 5 | – | Lern-App | Mathematik · 5 | sichtbar | – | – | – | – | ja | Kern (Übungs-Rahmen) | Etappe 4b: Stoff der Jahrgangsstufe 5/6 in Stufen (?klasse=5/6); neue Themen = neue Stufen in daten/kopfrechnen.json |
 | `apps/mathe/rechen-arena.html` | Rechen-Arena | `ma.5.rechen-arena` | Lern-App | Allgemein · 5, 6 | sichtbar | ja | ja | – | – | ja | Kern | Beliebt, vier Modi. Mängel: Startseite scrollt (iPad quer), kein `thema`/`inhalt`, Ballon-Pop hat keine Rückmeldung zum Fehler (bewusst schnell) |
 | `apps/mathe/stellenwerttafel.html` | Große Zahlen können | `ma.5.stellenwert` (5 Stufen) | Lern-App | Mathematik · 5 | sichtbar | – | – | – | – | ja |  |  |
+| `apps/mathe/winkel.html` | – | `ma.5.winkel` (9 Stufen) | Lern-App | – | nicht in config | – | – | – | – | – (nicht in config) |  |  |
 | `apps/mathe/zahlenstrahl.html` | Der Zahlenstrahl | `ma.5.zahlenstrahl` (5 Stufen) | Lern-App | Mathematik · 5 | sichtbar | – | – | – | – | ja |  |  |
 | `apps/typen/kann-liste.html` | – | – | Lern-App | – | nicht in config | – | – | – | – | – (nicht in config) |  |  |
 | `apps/typen/live.html` | – | `allg.5.live-abfrage` | Lern-App | – | nicht in config | ja | ja | – | – | – (nicht in config) |  |  |
@@ -79,6 +80,7 @@ Entscheidung (Etappe 3): **Kern** · **Überarbeiten** · **Engine** · **Archiv
 | apps/mathe/mathe-trainer.html | 2 | generatoren-mathe.js, freigabe.js, ueben.js, navbar.js | + über navbar.js |
 | apps/mathe/rechen-arena.html | 53 | navbar.js | rechenArena_ballonHighscore, + über navbar.js |
 | apps/mathe/stellenwerttafel.html | 15 | freigabe.js, ueben.js, ziffernblock.js, navbar.js | + über navbar.js |
+| apps/mathe/winkel.html | 23 | freigabe.js, ueben.js, ziffernblock.js, navbar.js | + über navbar.js |
 | apps/mathe/zahlenstrahl.html | 17 | freigabe.js, ueben.js, ziffernblock.js, navbar.js | + über navbar.js |
 | apps/typen/kann-liste.html | 8 | shared.js, freigabe.js, katalog.js, kann-liste.js, navbar.js | + über navbar.js |
 | apps/typen/live.html | 22 | shared.js, live-fragen.js, ziffernblock.js (nachgeladen), ziffernblock.js (nachgeladen), navbar.js (nachgeladen) | lernwelt-live, + über navbar.js |
