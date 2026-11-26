@@ -1269,7 +1269,7 @@ Jedes Teil in `ITEMS` beschreibt seine Form als Liste von Blöcken in `modell`. 
 | `p` | Position `[x, y, z]` relativ zum Anker (x rechts, y oben, z nach vorne) |
 | `r` | Drehung `[x, y, z]` im Bogenmaß (0.785 ≈ 45°) |
 | `f` | Farbe `"#rrggbb"`, Farbwort (`haar`, `haar2`, `haut`), `"muster:ID"` oder je Seite `{"vorne":…, "sonst":…}` |
-| `an` | Anker: `kopf`, `koerper`, `beine`, `armL`, `armR`, `hand`, `begleiter`, `boden` (Standard je Platz) |
+| `an` | Anker: `kopf`, `koerper`, `beine`, `armL`, `armR`, `hand`, `begleiter`, `boden` (Standard je Platz). `hand` sitzt seit v140 an der **linken** Hand und ist gespiegelt – Teile weiter so bauen, als lägen sie in der rechten Hand |
 | `paar` | `true` = Block wird gespiegelt ein zweites Mal gebaut (Schuhe, Flügel, Ohren …) |
 | `teile` | Unterblöcke, die sich mit diesem Block mitbewegen (Gruppe) |
 | `anim` | `drehen`, `pulsieren`, `blinken`, `leuchten`, `flattern`, `schlagen`, `wehen`, `flackern`, `schweben`, `wedeln`, `wackeln`, `pendeln` |

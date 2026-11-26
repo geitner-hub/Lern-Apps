@@ -299,7 +299,9 @@
     };
     P.armL = arm(-1); P.armR = arm(1);
     A.armL = P.armL; A.armR = P.armR;
-    A.hand = grp(P.armR, 0, -9.4, 1.4);
+    // Gegenstand in der LINKEN Hand (v140): rechts steht der Begleiter und verdeckte ihn oft. Gespiegelt, damit die
+    // für die rechte Hand gebauten Teile (Ballon nach außen geneigt, Buch …) richtig herum aussehen.
+    A.hand = grp(P.armL, 0, -9.4, 1.4); A.hand.scale.x = -1;
 
     // Kopf
     const hut = item('kopf');
@@ -321,10 +323,13 @@
     if (!o.noPet) {
       const pet = item('begleiter');
       if (pet) {
-        const po = grp(P.root, 13, 0, 3.5); po.rotation.y = -.5; A.begleiter = po; P.pet = po;
-        if (pet.reiten && Array.isArray(pet.reiten.sitz)) P.reiten = pet.reiten;
+        // Große Reittiere (v140) stehen weiter hinten rechts, damit sie die Figur nicht verdecken
+        const reit = pet.reiten && Array.isArray(pet.reiten.sitz) ? pet.reiten : null;
+        P.heim = reit ? [16, -7] : [13, 3.5];
+        const po = grp(P.root, P.heim[0], 0, P.heim[1]); po.rotation.y = -.5; A.begleiter = po; P.pet = po;
+        if (reit) P.reiten = reit;
         addItem(pet, 'begleiter');
-        const ps = new T3.Mesh(SHADOW_GEO, shadowMat()); ps.rotation.x = -Math.PI / 2; ps.scale.set(.6, .6, .6); ps.position.set(13, .06, 3.5); P.root.add(ps);
+        const ps = new T3.Mesh(SHADOW_GEO, shadowMat()); ps.rotation.x = -Math.PI / 2; ps.scale.set(.6, .6, .6); ps.position.set(P.heim[0], .06, P.heim[1]); P.root.add(ps);
       }
     }
     if (!o.noShadow) { const s = new T3.Mesh(SHADOW_GEO, shadowMat()); s.rotation.x = -Math.PI / 2; s.position.y = .05; P.root.add(s); }
@@ -357,7 +362,7 @@
     hose:      { t: [0, 5, 0], d: 30 },
     schuhe:    { t: [0, 1.8, 0], d: 19, dir: [.5, .55, 1] },
     ruecken:   { t: [0, 13, 0], d: 58, yaw: Math.PI * .8 },
-    hand:      { t: [8, 14, 3], d: 52, dir: [.9, .3, 1] },
+    hand:      { t: [-8, 14, 3], d: 52, dir: [-.9, .3, 1] },
     begleiter: { t: [0, 6, 0], d: 32 },
     reittier:  { t: [0, 14, 1], d: 84, dir: [.75, .25, 1] },
     frisur:    { t: [0, 25, -1.5], d: 44, dir: [1.1, .15, .9] },
@@ -550,12 +555,12 @@
     L.renderer.render(L.scene, L.camera);
   }
   // ── Reiten (v139): aufspringen – eine Runde reiten – absteigen ──
-  const RITT = 3.6, RUHE_RY = -.5, RITT_RY = -1.25, HEIM_X = 13, HEIM_Z = 3.5;   // Platz des Begleiters (build)
+  const RITT = 3.6, RUHE_RY = -.5, RITT_RY = -1.25;
   function rittEnde(L, P) {
     L.rideT = -1; setFace('open');
     P.fig.position.set(0, 0, 0); P.fig.rotation.y = 0;
     const b = P.anchors.beine; b.scale.y = 1; b.position.y = 0;
-    if (P.pet) { P.pet.position.set(HEIM_X, 0, HEIM_Z); P.pet.rotation.x = 0; P.pet.rotation.y = RUHE_RY; }
+    if (P.pet) { P.pet.position.set(P.heim[0], 0, P.heim[1]); P.pet.rotation.x = 0; P.pet.rotation.y = RUHE_RY; }
   }
   /** Ein Bild des Ritts; → Jubel-Stärke der Arme (0–1) */
   function ritt(L, P, dt) {
@@ -570,7 +575,7 @@
     else if (p > .82) { s = 1 - glatt((p - .82) / .18); hoch = Math.sin(s * Math.PI) * 8; }
     else s = 1;
     const ry = RUHE_RY + (RITT_RY - RUHE_RY) * s; pet.rotation.y = ry;   // Tier dreht sich zur Seite …
-    pet.position.x = HEIM_X * (1 - s); pet.position.z = HEIM_Z * (1 - s);  // … und kommt in die Mitte der Bühne
+    pet.position.x = P.heim[0] * (1 - s); pet.position.z = P.heim[1] * (1 - s);  // … und kommt in die Mitte der Bühne
     // Sattel in Figur-Koordinaten (Drehung des Begleiters um y)
     const zx = pet.position.x + sx * Math.cos(ry) + sz * Math.sin(ry), zz = pet.position.z - sx * Math.sin(ry) + sz * Math.cos(ry), zy = sy - huefte;
     const galopp = p > .2 && p < .82 ? Math.abs(Math.sin(L.rideT * 9)) * 1.3 : 0;
