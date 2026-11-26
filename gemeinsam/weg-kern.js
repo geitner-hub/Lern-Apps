@@ -3,7 +3,7 @@
 //
 //  Ein Lernweg für jedes Fach als reine Datendatei, ohne neuen Code und ohne three.js:
 //    daten/wege/liste.json            Verzeichnis: [{ id, titel, fach, klasse, ico }]
-//    daten/wege/<Weg-ID>.json         { id, titel, fach, klasse, ico, buch?, kann?, abschnitte: [{ id, titel, ico, wahlMin?, schritte }] }
+//    daten/wege/<Weg-ID>.json         { id, titel, fach, klasse, ico, buch?, kann?, abschnitte: [{ id, titel, ico, wahlMin?, truhe?, schritte }] }
 //    daten/wege/bausteine-<Weg-ID>.json  Hefteinträge und eigene Übungen ({ bausteine: [{ id, art, titel, … }] })
 //  Seite: apps/typen/weg.html?weg=<Weg-ID>. Format und Regeln: README → Lernweg-Engine, pruefen.py Regel 24.
 //
@@ -21,6 +21,8 @@
 //    LernWeg.stand(W, ohneAdmin)    → { frei, abschnitte: [{ a, zustand, fertig, soll, … }], dran, schritt, fertig, soll, alles }
 //          zustand: 'fertig' | 'dran' (als Nächstes) | 'offen' | 'gesperrt'
 //    LernWeg.abschnittStand(a) · LernWeg.erledigt(s) · LernWeg.merken(s, an) · LernWeg.stufe(s)
+//    LernWeg.truhe(x)               → null | 'zu' | 'bereit' | 'leer' – Abschnitt mit "truhe": true (v143): eine Geschenk-Truhe, sobald
+//                                     der Abschnitt geschafft ist · LernWeg.truheNehmen(a) → true, wenn es sie jetzt gab (einmal je Abschnitt)
 //    LernWeg.link(s)                → Adresse ab Hauptordner für App-/Check-/Medium-Schritte oder null
 //    LernWeg.meldung(W)             → { e: [Schritt-IDs erledigt], f: [Abschnitt-IDs fertig] } für die Klassenübersicht (Etappe 6a)
 //    LernWeg.freigegebene()         → Promise<[{ eintrag, W, st, href }]> – für Startseite („Weiter lernen“, „Mein Laufzettel“)
@@ -127,6 +129,15 @@
   }
   const seite = id => 'apps/typen/weg.html?weg=' + encodeURIComponent(id);
 
+  // ── Truhen (v143): Abschnitt { "truhe": true } → Geschenk-Truhe im Pass (LernPass.geschenkTruhe('wt-<Abschnitt-ID>'), einmal) ──
+  const truheId = a => 'wt-' + a.id;
+  function truhe(x) {
+    if (!x || !x.a || x.a.truhe !== true || !/^[a-z0-9-]{2,30}$/.test(truheId(x.a))) return null;
+    const G = (P() && P().state && P().state.eventGifts) || {};
+    return G['kz|' + truheId(x.a)] ? 'leer' : x.komplett && x.zustand !== 'gesperrt' ? 'bereit' : 'zu';
+  }
+  const truheNehmen = a => !!(a && a.truhe === true && P() && P().geschenkTruhe && P().geschenkTruhe(truheId(a)));
+
   /** Alle für dieses iPad freigegebenen Wege mit Stand (Startseite). Lädt nur Wege, für die config.journey etwas einträgt. */
   async function freigegebene() {
     if (!F() || !F().journey) return [];
@@ -142,5 +153,5 @@
     return out;
   }
 
-  window.LernWeg = { liste, laden, stand, abschnittStand, erledigt, merken, stufe, link, freigegebene, seite, admin, meldung };
+  window.LernWeg = { liste, laden, stand, abschnittStand, erledigt, merken, stufe, link, freigegebene, seite, admin, meldung, truhe, truheNehmen };
 })();

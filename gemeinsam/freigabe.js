@@ -38,7 +38,7 @@
 //    erlaubt(themaId, standardZu?) → true/false (standardZu: ohne Eintrag gesperrt)
 //    zugeteilt(themaId) → true/false – für Lernwege: OHNE Eintrag ZU (nur ausdrücklich zugeteilt ist offen)
 //    status(themaId, standardZu?) → { frei, ab? }  (ab = Datum, ab dem es frei wird)
-//    wer()              → ['g:…', 'k5', 'alle'] (was für dieses iPad gilt)
+//    wer()              → ['g:…:7', 'g:…', 'k5', 'alle'] (was für dieses iPad gilt; 'g:<Gruppe>:<Kartennr>' gibt es nur in Lernweg-Freigaben)
 //    fokus()            → { id, apps, bis } oder null
 //    imFokus(datei)     → true, wenn kein Fokus aktiv ist oder die App dazugehört
 //    spielSperre()      → null (heute keine Sperre) oder { noetig, geschafft, frei }
@@ -75,7 +75,10 @@
   function wer() {
     const liste = [];
     const s = lies(SYNC_KEY);
-    if (s && s.gruppe && !s.ungueltig && /^[0-9a-f]{32}$/.test(s.gruppe)) liste.push('g:' + s.gruppe);
+    if (s && s.gruppe && !s.ungueltig && /^[0-9a-f]{32}$/.test(s.gruppe)) {
+      if (Number.isInteger(s.nr) && s.nr >= 1 && s.nr <= 999) liste.push('g:' + s.gruppe + ':' + s.nr);   // diese eine Karte (v143, nur Lernwege)
+      liste.push('g:' + s.gruppe);
+    }
     const p = lies(PASS_KEY);
     const k = p && p.profile && Number(p.profile.klasse);
     if (k) liste.push('k' + k);

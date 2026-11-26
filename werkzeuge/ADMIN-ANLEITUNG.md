@@ -34,6 +34,13 @@ Kurzanleitung für den Admin (`admin.html`, Stand Admin-Umbau Etappe 10). Techni
 **Was nie geht** (damit Kinder nichts verlieren): Units, Abschnitte, Pools, Avatar-Teile oder Katalog-IDs löschen oder
 umbenennen. Neues hinzufügen und Texte ändern geht immer.
 
+## Weitere Lernwege, auch für ein einzelnes Kind (v143)
+
+Gruppen → 📒 Laufzettel → Karte **🗺️ Weitere Lernwege** (ganz unten): „+ Freigabe für …“ → Gruppe, Klasse oder **🃏 Gruppe · Karte NN**
+(nur dieses Kind, es bleibt in seiner Gruppe), dann „frei bis“ wählen und veröffentlichen. Die Kartennummer steht auf der Sicherungskarte.
+Einmalig nötig: den Worker neu bei Cloudflare einfügen (`cloudflare/worker.js` mit `sync.js` und `dateien.js`) und das iPad des Kindes einmal
+auf der Startseite öffnen (dann kennt es seine Kartennummer).
+
 ## English Journey: Laufzettel (Inhalte → 🧭 English Journey, Gruppen → 📒 Laufzettel)
 
 Der Laufzettel führt die Kinder durch Highlight 6: je Abschnitt Buchseiten → 📒 Hefteintrag → ✏️ Übungen → 🎮 App. Die Kinder

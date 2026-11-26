@@ -48,9 +48,11 @@ Live am iPad über das Symbol auf dem Home-Bildschirm, Test in Safari.
 | 41 | Winkel-Werkstatt → „Winkel zeichnen“: roten Punkt mit dem Finger ziehen, −1°/+1° tippen, Fertig | Schenkel folgt dem Finger ohne Ruckeln, die Seite scrollt dabei nicht; richtig/falsch passt zum Geodreieck |
 | 42 | Pass → Garderobe: Pferd als Begleiter anziehen, „🎉 Jubeln“ tippen | Pferd läuft in die Mitte, Figur springt auf, reitet und springt ab; danach steht alles wie vorher |
 | 43 | Garderobe: Luftballon oder Handy in die Hand, dazu Pferd oder Pudel als Begleiter | Gegenstand in der linken Hand, nicht verdeckt; großes Reittier steht hinten rechts |
-| 44 | `apps/daz/daz-geschichten.html` auf dem iPad: Geschichte öffnen, 🔊 an einer Blase, „▶ Alles hören“, 🐢 Langsam, Blase antippen | deutsche Stimme liest vor, Blase leuchtet mit; Antippen zeigt Englisch |
-| 45 | Story zu Ende spielen (Verstehen, Sag es!) | Sterne und % am Ende, in der Bibliothek erscheinen die Sterne; „Weiter“ erst nach „Prüfen“ |
-| 46 | Admin: Gruppen → 📒 Laufzettel → Weitere Lernwege → „Deutsch lernen – Start“ für die DaZ-Gruppe freigeben; `apps/typen/weg.html?weg=daz` | Kapitel 1 offen, Story-Schritt führt in die Story-Zeit, nach ≥ 70 % Haken |
+| 44 | `apps/daz/daz-geschichten.html` auf dem iPad: Geschichte öffnen, Satz antippen, unterstrichenes Wort antippen, Wortkarte antippen | Satz zeigt Englisch, Wort zeigt unten „der Hund = dog“, Karte dreht sich um |
+| 45 | Story zu Ende spielen (Verstehen, Satz bauen) mit ≥ 70 % | Sterne und %, „Neuer Sticker“; in der Bibliothek Sticker im Album, Wortschatz-Zähler, ⚡ Wort-Blitz ist offen |
+| 46 | ⚡ Wort-Blitz eine Runde (60 s) | Zeit läuft ab, 🔥-Combo, Ergebnis mit Rekord; zweite Runde zeigt den Rekord |
+| 47 | Nach dem Worker-Update: Admin → Gruppen → 📒 Laufzettel → Weitere Lernwege → „+ Freigabe für …“ → „🃏 Gruppe · Karte NN“ des Kindes, veröffentlichen | nur dieses iPad zeigt „Mein Laufzettel“ mit dem DaZ-Weg (nach 2–3 Min. bzw. Neuladen), andere iPads der Gruppe nicht |
+| 48 | DaZ-Weg: Kapitel 1 ganz schaffen (Story, Level 1 Wörter + Sätze, Level 2) | 🎁 am Knoten hüpft, in der Karte „Einsammeln“ → Truhe im Pass auf der Startseite |
 
 **Nur in der Testumgebung zusätzlich:** Oben steht „🧪 TEST · vXX“. Im Admin eine Kleinigkeit ändern und
 speichern → Meldung „Testumgebung: Speichern und Sicherung sind hier abgeschaltet“. Danach live den Pass

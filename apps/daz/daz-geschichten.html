@@ -7,18 +7,21 @@
 <title>Story-Zeit – Lernwelt</title>
 <!--
   ═══════════════════════════════════════════════
-   LERNWELT – Story-Zeit: Deutsch mit Geschichten (DaZ, v142)
+   LERNWELT – Story-Zeit: Lesegeschichten für DaZ (v142, v143 überarbeitet)
    apps/daz/daz-geschichten.html[?stufe=daz.6.geschichten.gN]
 
    Für Kinder, die aus dem Englischen Deutsch lernen (A0–A1). Je Geschichte drei Schritte:
-     1 📖 Lesen & Hören   Chat-Blasen, jede wird auf Antippen vorgelesen (🔊, Sprachausgabe des iPads, de-DE);
-                          Blase antippen = englische Übersetzung; „▶ Alles hören“ liest die ganze Geschichte (auch 🐢 langsam);
-                          neue Wörter als Karten in Artikel-Farben (der blau, die rot, das grün).
-     2 🧩 Verstehen       Fragen auf Englisch, Antworten auf Deutsch (aus dem Text).
-     3 💬 Sag es!         Englischer Satz → deutschen Satz aus Wortkarten bauen (mit Ablenkern); danach vorgelesen.
-   Ergebnis: Punkte aus 2 und 3 → saveResult({ thema: Stufen-ID }) → XP, Sterne (Bibliothek), Lernweg-Haken (ab 70 %).
-   Inhalte: daten/daz/geschichten.json (eigene Texte). Keine Aufnahme, keine Spracherkennung (Datenschutz).
-   Teil des DaZ-Lernwegs (daten/wege/daz.json); Katalog daz.6.geschichten.
+     1 📖 Lesen        Buchseite: Erzähltext (vor/nach) und Gespräch. Satz antippen = englische Übersetzung,
+                       markierte Wörter antippen = Bedeutung; Wortkarten in Artikel-Farben (der blau, die rot, das grün) zum Umdrehen.
+     2 🧩 Verstehen    Fragen auf Englisch, Antworten auf Deutsch (aus dem Text).
+     3 🧱 Satz bauen   Englischer Satz → deutschen Satz aus Wortkarten bauen (mit Ablenkern).
+   Keine Sprachausgabe (v143: die iPad-Stimmen klingen zu schlecht), keine Aufnahme, keine Spracherkennung.
+   Ergebnis: Punkte aus 2 und 3 → saveResult({ thema: Stufen-ID }) → XP, Sterne, Lernweg-Haken (ab 70 %).
+   Motivation (v143): 🔥 Serie in einer Geschichte · 🃏 Sticker-Album (ein Sammelbild je geschaffter Geschichte) ·
+     📖 Wortschatz-Zähler · ⚡ Wort-Blitz (60 s, Wörter aus geschafften Geschichten, Rekord in lernwelt-daz-blitz) ·
+     Abzeichen über LernPass.flagSetzen('dazstories' | 'wortblitz') mit Sammelstücken (daten/lernwelt-inhalte.json).
+   Album, Sterne und Wortschatz kommen aus dem Lernstand (kein eigener Spielstand).
+   Inhalte: daten/daz/geschichten.json (eigene Texte). Teil des DaZ-Lernwegs (daten/wege/daz.json); Katalog daz.6.geschichten.
   ═══════════════════════════════════════════════
 -->
 <link rel="stylesheet" href="../../gemeinsam/fonts.css">
@@ -26,28 +29,40 @@
   *, *::before, *::after { box-sizing: border-box; }
   [hidden] { display: none !important; }
   :root { --bg:#0f0e1a; --karte:#1b1929; --karte2:#252238; --rand:rgba(255,255,255,.12); --text:#f1f0fb; --mut:rgba(241,240,251,.68);
-          --pink:#ec4899; --gold:#e6a817; --ok:#4ade80; --no:#f87171; --der:#60a5fa; --die:#f87171; --das:#4ade80; }
+          --pink:#ec4899; --gold:#e6a817; --indigo:#818cf8; --ok:#4ade80; --no:#f87171; --der:#60a5fa; --die:#f87171; --das:#4ade80; }
   html, body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Nunito', system-ui, sans-serif; }
-  body { padding: calc(4rem + env(safe-area-inset-top, 0px)) 1rem calc(6rem + env(safe-area-inset-bottom, 0px)); }
+  body { padding: calc(4rem + env(safe-area-inset-top, 0px)) 1rem calc(6rem + env(safe-area-inset-bottom, 0px)); -webkit-tap-highlight-color: transparent; }
   main { max-width: 760px; margin: 0 auto; }
   h1 { font: 400 1.9rem 'Fredoka One', 'Nunito', sans-serif; color: var(--gold); text-align: center; margin: 0; }
+  h2.titel { font: 400 1.35rem 'Fredoka One', 'Nunito', sans-serif; color: var(--gold); margin: 1.2rem 0 .5rem; }
   .sub { color: var(--mut); font-weight: 800; text-align: center; margin: .2rem 0 1rem; }
   .en { color: #93c5fd; font-weight: 700; }
-  .knopf { border: 0; border-radius: 999px; padding: .6rem 1.1rem; font: 900 1rem 'Nunito', sans-serif; min-height: 48px; cursor: pointer;
+  .knopf { border-radius: 999px; padding: .6rem 1.1rem; font: 900 1rem 'Nunito', sans-serif; min-height: 48px; cursor: pointer;
            background: var(--karte2); color: var(--text); border: 1px solid var(--rand); }
   .knopf.gold { background: var(--gold); color: #1b1300; border-color: transparent; }
-  .knopf.an { background: var(--pink); border-color: transparent; }
+  .knopf.an { background: var(--indigo); color: #0f0e1a; border-color: transparent; }
   .knopf:disabled { opacity: .45; }
   .zeile { display: flex; gap: .5rem; flex-wrap: wrap; justify-content: center; margin: .8rem 0; }
   /* Bibliothek */
+  .zahlen { display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem; margin: 0 0 1rem; }
+  .zahlen div { background: var(--karte); border: 1px solid var(--rand); border-radius: 16px; padding: .6rem .4rem; text-align: center; font-weight: 800; color: var(--mut); font-size: .85rem; }
+  .zahlen b { display: block; font: 400 1.5rem 'Fredoka One', 'Nunito', sans-serif; color: var(--gold); }
+  .blitz { display: flex; align-items: center; gap: .9rem; width: 100%; text-align: left; border: 2px solid rgba(230,168,23,.6); border-radius: 20px; padding: .9rem 1rem; cursor: pointer;
+           background: linear-gradient(135deg, #3b2a00, #312e81); color: var(--text); font-family: inherit; margin-bottom: 1rem; }
+  .blitz .gr { font-size: 2.4rem; } .blitz b { font: 400 1.3rem 'Fredoka One', 'Nunito', sans-serif; color: var(--gold); display: block; }
+  .blitz small { font-weight: 800; color: var(--mut); } .blitz:disabled { opacity: .5; cursor: default; }
   .regal { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: .8rem; }
   .buch { background: linear-gradient(160deg, #3b1d4a, #1b1929 70%); border: 2px solid rgba(236,72,153,.35); border-radius: 18px; padding: .9rem .8rem;
           color: var(--text); text-align: left; cursor: pointer; font-family: inherit; min-height: 150px; display: flex; flex-direction: column; gap: .25rem; }
-  .buch .ico { font-size: 2.4rem; }
-  .buch b { font-size: 1.05rem; line-height: 1.2; } .buch small { color: #93c5fd; font-weight: 700; }
-  .buch .sterne { margin-top: auto; letter-spacing: .1em; }
-  .buch.zu { opacity: .45; cursor: default; }
-  .gesamt { text-align: center; font-weight: 900; color: var(--gold); margin: -.4rem 0 1rem; }
+  .buch .ico { font-size: 2.4rem; } .buch b { font-size: 1.05rem; line-height: 1.2; } .buch small { color: #93c5fd; font-weight: 700; }
+  .buch .sterne { margin-top: auto; letter-spacing: .1em; } .buch.zu { opacity: .45; cursor: default; }
+  .album { display: grid; grid-template-columns: repeat(4, 1fr); gap: .6rem; }
+  @media (max-width: 520px) { .album { grid-template-columns: repeat(2, 1fr); } }
+  .sticker { aspect-ratio: 3 / 4; border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .3rem; padding: .4rem; text-align: center;
+             font-weight: 900; font-size: .8rem; line-height: 1.2; border: 2px dashed rgba(255,255,255,.2); color: var(--mut); background: rgba(255,255,255,.03); }
+  .sticker .gr { font-size: 2.6rem; filter: grayscale(1) brightness(.4); }
+  .sticker.da { border: 3px solid #fff; color: #1f1300; background: linear-gradient(160deg, #fde68a, #f9a8d4); box-shadow: 0 6px 16px rgba(0,0,0,.35); transform: rotate(-2deg); }
+  .sticker.da:nth-child(even) { transform: rotate(2deg); } .sticker.da .gr { filter: none; }
   /* Kopf einer Geschichte */
   .kopf { display: flex; align-items: center; gap: .6rem; margin-bottom: .6rem; }
   .kopf .zurueck { flex-shrink: 0; }
@@ -55,27 +70,30 @@
   .schritte { display: flex; gap: .35rem; margin: .2rem 0 .8rem; }
   .schritte span { flex: 1; text-align: center; padding: .4rem .2rem; border-radius: 12px; background: var(--karte); font-weight: 800; font-size: .85rem; color: var(--mut); }
   .schritte span.an { background: var(--pink); color: #fff; } .schritte span.fertig { color: var(--ok); }
-  /* Chat */
-  .chat { display: flex; flex-direction: column; gap: .55rem; }
-  .blase { display: flex; gap: .5rem; align-items: flex-end; max-width: 92%; }
-  .blase.rechts { align-self: flex-end; flex-direction: row-reverse; }
-  .blase .ava { font-size: 1.9rem; flex-shrink: 0; width: 2.4rem; text-align: center; }
-  .blase .inhalt { background: var(--karte2); border: 2px solid var(--rand); border-radius: 18px; padding: .55rem .8rem; cursor: pointer; }
-  .blase.rechts .inhalt { background: #3b1d4a; border-color: rgba(236,72,153,.4); }
-  .blase.spricht .inhalt { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(230,168,23,.25); }
-  .blase .wer { font-size: .75rem; font-weight: 900; color: var(--mut); }
-  .blase .de { font-size: 1.22rem; font-weight: 800; line-height: 1.35; }
-  .blase .ue { font-size: .95rem; margin-top: .2rem; display: none; } .blase.offen .ue, .chat.alle-en .blase .ue { display: block; }
-  .laut { background: none; border: 0; font-size: 1.35rem; cursor: pointer; padding: .2rem; min-width: 44px; min-height: 44px; }
-  .woerter { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .4rem; }
-  .wort { border-radius: 12px; padding: .45rem .7rem; font: 800 1rem 'Nunito', sans-serif; cursor: pointer; border: 2px solid; background: var(--karte); color: var(--text); min-height: 44px; }
-  .wort.der { border-color: var(--der); } .wort.die { border-color: var(--die); } .wort.das { border-color: var(--das); } .wort.ohne { border-color: var(--rand); }
-  .wort small { display: block; font-weight: 700; color: #93c5fd; font-size: .78rem; }
+  /* Buchseite */
+  .seite { background: #f8f5ea; color: #1f2430; border-radius: 18px; padding: 1.1rem 1.2rem; box-shadow: 0 10px 30px rgba(0,0,0,.35); font-size: 1.2rem; line-height: 1.6; }
+  .seite .szene { text-align: center; font-size: 3rem; margin-bottom: .3rem; }
+  .satz { margin: 0 0 .55rem; cursor: pointer; border-radius: 8px; padding: .1rem .25rem; }
+  .satz.erz { font-style: italic; color: #3b3f4c; }
+  .satz .wer { font-weight: 900; font-style: normal; color: #7c3aed; }
+  .satz.offen { background: rgba(99,102,241,.1); }
+  .satz .ue { display: none; font-size: .95rem; font-style: normal; color: #2563eb; font-weight: 700; margin-top: .1rem; }
+  .satz.offen .ue, .seite.alle-en .satz .ue { display: block; }
+  .gl { border-bottom: 3px solid #a3a3a3; cursor: help; font-weight: 800; }
+  .gl.der { border-color: var(--der); } .gl.die { border-color: var(--die); } .gl.das { border-color: var(--das); }
+  .blase { position: fixed; z-index: 9500; left: 50%; transform: translateX(-50%); bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px)); background: #1e1b4b; color: #fff;
+           border: 2px solid var(--indigo); border-radius: 16px; padding: .6rem 1rem; font-weight: 900; font-size: 1.1rem; box-shadow: 0 10px 24px rgba(0,0,0,.5); max-width: 90vw; text-align: center; }
+  .woerter { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: .45rem; margin-top: .5rem; }
+  .wort { border-radius: 14px; padding: .55rem .6rem; font: 800 1.02rem 'Nunito', sans-serif; cursor: pointer; border: 2px solid var(--rand); background: var(--karte2); color: var(--text); min-height: 58px; }
+  .wort.der { border-color: var(--der); } .wort.die { border-color: var(--die); } .wort.das { border-color: var(--das); }
+  .wort small { display: block; font-weight: 700; color: var(--mut); font-size: .75rem; }
+  .wort.gedreht { background: #1e293b; } .wort.gedreht small { color: #93c5fd; font-size: .95rem; }
   .karte { background: var(--karte); border: 1px solid var(--rand); border-radius: 20px; padding: 1rem 1.1rem; margin: .8rem 0; }
   .karte h3 { margin: 0 0 .4rem; font-size: 1.05rem; }
-  .legende { font-size: .8rem; color: var(--mut); font-weight: 700; }
+  .legende { font-size: .82rem; color: var(--mut); font-weight: 700; }
   .legende b.der { color: var(--der); } .legende b.die { color: var(--die); } .legende b.das { color: var(--das); }
   /* Fragen und Satzbau */
+  .serie { text-align: right; font-weight: 900; color: var(--gold); min-height: 1.4em; }
   .frage { font-size: 1.25rem; font-weight: 900; text-align: center; margin: .3rem 0 .9rem; }
   .optionen { display: grid; gap: .55rem; }
   .option { text-align: left; padding: .8rem 1rem; border-radius: 16px; border: 2px solid var(--rand); background: var(--karte2); color: var(--text);
@@ -91,9 +109,22 @@
   .loesung { text-align: center; font-size: 1.15rem; font-weight: 800; }
   .ende { text-align: center; }
   .ende .gross { font-size: 3.2rem; letter-spacing: .1em; }
+  .neu-sticker { margin: 1rem auto; width: 180px; }
+  .neu-sticker .sticker { font-size: .95rem; }
   .fortschritt { height: 8px; border-radius: 999px; background: rgba(255,255,255,.1); overflow: hidden; margin: .2rem 0 .8rem; }
   .fortschritt i { display: block; height: 100%; background: var(--pink); }
-  @media (prefers-reduced-motion: no-preference) { .blase, .option, .kachel { transition: transform .12s; } .kachel:active, .option:active { transform: scale(.97); } }
+  /* Wort-Blitz */
+  .uhr { display: flex; justify-content: space-between; align-items: center; font: 400 1.4rem 'Fredoka One', 'Nunito', sans-serif; margin-bottom: .4rem; }
+  .uhr .zeit { color: var(--gold); } .uhr .combo { color: #fb923c; }
+  .zeitbalken { height: 10px; border-radius: 999px; background: rgba(255,255,255,.1); overflow: hidden; margin-bottom: .8rem; }
+  .zeitbalken i { display: block; height: 100%; background: linear-gradient(90deg, #f59e0b, #ef4444); }
+  .blitzwort { text-align: center; font: 400 2rem 'Fredoka One', 'Nunito', sans-serif; color: #93c5fd; margin: .6rem 0 1rem; }
+  .blitz-opt { display: grid; grid-template-columns: 1fr 1fr; gap: .55rem; }
+  @media (prefers-reduced-motion: no-preference) {
+    .option, .kachel, .wort { transition: transform .12s; } .kachel:active, .option:active, .wort:active { transform: scale(.97); }
+    .neu-sticker .sticker { animation: plopp .7s cubic-bezier(.2, 1.6, .4, 1); }
+    @keyframes plopp { from { transform: scale(.2) rotate(-25deg); opacity: 0; } }
+  }
 </style>
 </head>
 <body>
@@ -105,129 +136,135 @@
 const $app = document.getElementById('app');
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const misch = l => { const a = l.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
-const RECHTS = ['Lily'];                                       // Lily spricht von rechts (Ich-Perspektive)
+const BLITZ_KEY = 'lernwelt-daz-blitz', SCHWELLE = 70, BLITZ_ZEIT = 60;
 let D = null, G = null, schritt = 'liste', S = {};
 
-/* ── Vorlesen (Sprachausgabe des iPads, Deutsch) ─────────────────────── */
-let stimme = null, langsam = false, laeuft = 0;
-function stimmeWaehlen() {
-  try {
-    const v = speechSynthesis.getVoices();
-    stimme = v.find(x => /^de[-_]DE/i.test(x.lang) && /anna|helena|petra|siri|google/i.test(x.name)) || v.find(x => /^de/i.test(x.lang)) || null;
-  } catch (e) { stimme = null; }
-}
-if (window.speechSynthesis) { stimmeWaehlen(); speechSynthesis.onvoiceschanged = stimmeWaehlen; }
-/** Text vorlesen → Promise, wenn fertig (oder sofort ohne Sprachausgabe) */
-function sprich(text) {
-  return new Promise(fertig => {
-    if (!window.speechSynthesis) return fertig();
-    const u = new SpeechSynthesisUtterance(String(text).replace(/[„“"]/g, ''));
-    u.lang = 'de-DE'; if (stimme) u.voice = stimme;
-    u.rate = langsam ? .72 : .92;
-    u.onend = u.onerror = () => fertig();
-    speechSynthesis.speak(u);
-    setTimeout(fertig, 12000);                                 // falls onend ausbleibt (älteres Safari)
-  });
-}
-function stopp() { laeuft++; try { speechSynthesis.cancel(); } catch (e) {} document.querySelectorAll('.blase.spricht').forEach(b => b.classList.remove('spricht')); }
-
-/* ── Bibliothek ─────────────────────────────────────────────────────── */
-const sterneVon = id => {
-  const e = window.LernPass && LernPass.lernstand && LernPass.lernstand[id];
-  const b = e ? Number(e.best) || 0 : 0;
-  return !e ? 0 : b >= 90 ? 3 : b >= 70 ? 2 : 1;
-};
+/* ── Stand aus dem Lernstand (kein eigener Spielstand) ──────────────── */
+const besteVon = id => { const e = window.LernPass && LernPass.lernstand && LernPass.lernstand[id]; return e ? Number(e.best) || 0 : -1; };
+const sterneVon = id => { const b = besteVon(id); return b < 0 ? 0 : b >= 90 ? 3 : b >= SCHWELLE ? 2 : 1; };
+const geschafft = id => besteVon(id) >= SCHWELLE;
 const sternHTML = n => '⭐'.repeat(n) + '☆'.repeat(3 - n);
 const frei = id => !window.LernFreigabe || LernFreigabe.erlaubt(id);
+const gesammelt = () => D.geschichten.filter(g => geschafft(g.id));
+const wortschatz = () => gesammelt().reduce((n, g) => n + g.woerter.length, 0);
+function rekord() { try { return Math.max(0, Number(localStorage.getItem(BLITZ_KEY)) || 0); } catch (e) { return 0; } }
+function rekordMerken(n) { try { if (n > rekord()) { localStorage.setItem(BLITZ_KEY, String(n)); return true; } } catch (e) {} return false; }
+function flaggen() {
+  try { if (window.LernPass && LernPass.flagSetzen) LernPass.flagSetzen('dazstories', gesammelt().length); } catch (e) {}
+}
+const stickerHTML = (g, da) => `<div class="sticker${da ? ' da' : ''}"><span class="gr">${da ? esc(g.sticker.ico) : '❔'}</span>${da ? esc(g.sticker.name) : 'Story ' + g.nr}</div>`;
+
+/* ── Bibliothek ─────────────────────────────────────────────────────── */
 function zeigeListe() {
-  stopp(); schritt = 'liste'; G = null;
+  schritt = 'liste'; G = null; blitzStopp();
   if (window.LW && LW.beschaeftigt) LW.beschaeftigt(false);
-  const gesamt = D.geschichten.reduce((s, g) => s + sterneVon(g.id), 0);
-  $app.innerHTML = `<h1>📚 Story-Zeit</h1><p class="sub">Deutsch mit Geschichten · <span class="en">Read, listen and speak German</span></p>
-    <p class="gesamt">⭐ ${gesamt} / ${D.geschichten.length * 3}</p>
+  const gesamt = D.geschichten.reduce((s, g) => s + sterneVon(g.id), 0), n = gesammelt().length, r = rekord();
+  $app.innerHTML = `<h1>📚 Story-Zeit</h1><p class="sub">Lesegeschichten · <span class="en">Read German stories</span></p>
+    <div class="zahlen"><div><b>⭐ ${gesamt}</b>von ${D.geschichten.length * 3} Sternen</div><div><b>📖 ${wortschatz()}</b>Wörter gesammelt</div><div><b>🃏 ${n}/${D.geschichten.length}</b>Sticker</div></div>
+    <button type="button" class="blitz" data-blitz${n ? '' : ' disabled'}><span class="gr">⚡</span><span><b>Wort-Blitz</b>
+      <small>${n ? `60 seconds – how many words do you know? · Rekord: ${r}` : 'Finish your first story – then the game opens. · Schaffe zuerst eine Geschichte.'}</small></span></button>
     <div class="regal">${D.geschichten.map(g => { const z = !frei(g.id);
       return `<button type="button" class="buch${z ? ' zu' : ''}" data-g="${esc(g.id)}"${z ? ' disabled' : ''}><span class="ico">${z ? '🔒' : esc(g.ico)}</span>
-        <b>${g.nr} · ${esc(g.titel)}</b><small>${esc(g.en)}</small><span class="sterne">${sternHTML(sterneVon(g.id))}</span></button>`; }).join('')}</div>`;
+        <b>${g.nr} · ${esc(g.titel)}</b><small>${esc(g.en)}</small><span class="sterne">${sternHTML(sterneVon(g.id))}</span></button>`; }).join('')}</div>
+    <h2 class="titel">🃏 Mein Neustadt-Album</h2>
+    <p class="legende">Finish a story with 70 % or more – you get a sticker. · Ab 70 % gibt es einen Sticker.</p>
+    <div class="album">${D.geschichten.map(g => stickerHTML(g, geschafft(g.id))).join('')}</div>`;
 }
 
 /* ── Eine Geschichte ────────────────────────────────────────────────── */
 function oeffne(id) {
   G = D.geschichten.find(g => g.id === id);
   if (!G || !frei(G.id)) return zeigeListe();
-  S = { punkte: 0, max: G.fragen.length + G.sagen.length, nr: 0, gehoert: new Set() };
+  S = { punkte: 0, max: G.fragen.length + G.sagen.length, nr: 0, serie: 0, besteSerie: 0, vorher: besteVon(G.id) };
   if (window.LW && LW.beschaeftigt) LW.beschaeftigt(true);
   zeigeLesen();
+  window.scrollTo(0, 0);
 }
 function kopf(aktiv) {
-  const st = [['lesen', '📖 Lesen'], ['verstehen', '🧩 Verstehen'], ['sagen', '💬 Sag es!']], i = st.findIndex(x => x[0] === aktiv);
+  const st = [['lesen', '📖 Lesen'], ['verstehen', '🧩 Verstehen'], ['sagen', '🧱 Satz bauen']], i = st.findIndex(x => x[0] === aktiv);
   return `<div class="kopf"><button type="button" class="knopf zurueck" data-liste aria-label="Zur Bibliothek">‹ 📚</button>
       <div><h2>${esc(G.ico)} ${esc(G.titel)}</h2><div class="en">${esc(G.en)}</div></div></div>
-    <div class="schritte">${st.map((x, k) => `<span class="${k === i ? 'an' : k < i ? 'fertig' : ''}">${k < i ? '✓ ' : ''}${x[1]}</span>`).join('')}</div>`;
+    <div class="schritte">${st.map((x, k) => `<span class="${k === i || (aktiv === 'ende' && k === 2) ? (aktiv === 'ende' ? 'fertig' : 'an') : k < i || aktiv === 'ende' ? 'fertig' : ''}">${k < i || aktiv === 'ende' ? '✓ ' : ''}${x[1]}</span>`).join('')}</div>`;
 }
 const artikel = w => (/^(der|die|das) /.exec(w) || [])[1] || 'ohne';
+// Wörter der Geschichte im Text markieren: „der Hund“ → „Hund“, „woher?“ → „woher“, Wendungen ganz
+function glossar() {
+  const L = G.woerter.map((w, i) => ({ i, k: w.de.replace(/^(der|die|das) /, '').replace(/[?!.…]+$/g, '').replace(/ …$/, '').trim() }))
+    .filter(x => x.k.length > 1).sort((a, b) => b.k.length - a.k.length);
+  const rx = new RegExp('(^|[^\\p{L}])(' + L.map(x => x.k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|') + ')(?=[^\\p{L}]|$)', 'giu');
+  return { L, rx };
+}
+function markiert(text, gl) {
+  let out = '', ab = 0;
+  for (const m of String(text).matchAll(gl.rx)) {
+    const start = m.index + m[1].length, wort = m[2], e = gl.L.find(x => x.k.toLowerCase() === wort.toLowerCase());
+    out += esc(text.slice(ab, start)) + (e ? `<span class="gl ${artikel(G.woerter[e.i].de)}" data-gl="${e.i}">${esc(wort)}</span>` : esc(wort));
+    ab = start + wort.length;
+  }
+  return out + esc(text.slice(ab));
+}
 function zeigeLesen() {
   schritt = 'lesen';
+  let gl;
+  try { gl = glossar(); } catch (e) { gl = null; }                 // ohne Unicode-RegExp (sehr altes Safari): ohne Markierung
+  const txt = t => gl ? markiert(t, gl) : esc(t);
+  const erz = l => (l || []).map((s, i) => `<p class="satz erz" data-satz><span>${txt(s.de)}</span><span class="ue">${esc(s.en)}</span></p>`).join('');
   $app.innerHTML = kopf('lesen') + `
-    <div class="zeile"><button type="button" class="knopf gold" data-alles>▶ Alles hören · Listen</button>
-      <button type="button" class="knopf${langsam ? ' an' : ''}" data-langsam aria-pressed="${langsam}">🐢 Langsam</button>
-      <button type="button" class="knopf" data-en>🇬🇧 English</button></div>
-    <p class="legende" style="text-align:center">Tap a bubble for English · Tippe auf eine Blase für Englisch</p>
-    <div class="chat">${G.saetze.map((s, i) => `<div class="blase${RECHTS.includes(s.wer) ? ' rechts' : ''}" data-i="${i}">
-        <span class="ava" aria-hidden="true">${esc(D.personen[s.wer] || '🙂')}</span>
-        <div class="inhalt" data-zeigen="${i}"><div class="wer">${esc(s.wer)}</div><div class="de">${esc(s.de)}</div><div class="ue en">${esc(s.en)}</div></div>
-        <button type="button" class="laut" data-satz="${i}" aria-label="Vorlesen">🔊</button></div>`).join('')}</div>
+    <div class="zeile"><button type="button" class="knopf" data-en aria-pressed="false">🇬🇧 English on/off</button></div>
+    <p class="legende" style="text-align:center">Tap a sentence for English · Tap a <u>marked word</u> for its meaning</p>
+    <article class="seite" id="seite"><div class="szene" aria-hidden="true">${esc(G.ico)}</div>
+      ${erz(G.vor)}
+      ${G.saetze.map(s => `<p class="satz" data-satz><span class="wer">${esc(s.wer)}:</span> <span>„${txt(s.de)}“</span><span class="ue">${esc(s.en)}</span></p>`).join('')}
+      ${erz(G.nach)}</article>
     <div class="karte"><h3>📒 Neue Wörter · <span class="en">New words</span></h3>
-      <p class="legende"><b class="der">der</b> · <b class="die">die</b> · <b class="das">das</b> – learn every noun with its article!</p>
-      <div class="woerter">${G.woerter.map((w, i) => `<button type="button" class="wort ${artikel(w.de)}" data-wort="${i}">${esc(w.de)}<small>${esc(w.en)}</small></button>`).join('')}</div></div>
+      <p class="legende">Tap a card to see the English. <b class="der">der</b> · <b class="die">die</b> · <b class="das">das</b> – learn every noun with its article!</p>
+      <div class="woerter">${G.woerter.map((w, i) => `<button type="button" class="wort ${artikel(w.de)}" data-wort="${i}">${esc(w.de)}<small>tap · antippen</small></button>`).join('')}</div></div>
     <div class="zeile"><button type="button" class="knopf gold" data-weiter="verstehen">Weiter: Verstehen ›</button></div>`;
 }
-async function allesHoeren() {
-  const meins = ++laeuft;
-  try { speechSynthesis.cancel(); } catch (e) {}
-  for (let i = 0; i < G.saetze.length; i++) {
-    if (meins !== laeuft || schritt !== 'lesen') return;
-    const b = document.querySelector(`.blase[data-i="${i}"]`);
-    document.querySelectorAll('.blase.spricht').forEach(x => x.classList.remove('spricht'));
-    if (b) { b.classList.add('spricht'); b.scrollIntoView({ block: 'center', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }); }
-    await sprich(G.saetze[i].de);
-    S.gehoert.add(i);
-  }
-  document.querySelectorAll('.blase.spricht').forEach(x => x.classList.remove('spricht'));
+let blaseZeit = 0;
+function blase(text) {
+  let b = document.getElementById('blase');
+  if (!b) { b = document.createElement('div'); b.id = 'blase'; b.className = 'blase'; b.setAttribute('role', 'status'); document.body.appendChild(b); }
+  b.textContent = text; b.hidden = false;
+  clearTimeout(blaseZeit); blaseZeit = setTimeout(() => { b.hidden = true; }, 2600);
 }
 
+function serieHTML() { return `<div class="serie">${S.serie >= 2 ? '🔥 ' + S.serie + ' in a row!' : ''}</div>`; }
+function treffer(ok) { S.serie = ok ? S.serie + 1 : 0; S.besteSerie = Math.max(S.besteSerie, S.serie); if (ok) S.punkte++; }
+
 function zeigeVerstehen() {
-  stopp(); schritt = 'verstehen';
+  schritt = 'verstehen';
   const f = G.fragen[S.nr];
   if (!f) { S.nr = 0; return zeigeSagen(); }
-  const opts = misch(f.o.map((o, i) => ({ o, richtig: i === 0 })));
-  S.opts = opts;
-  $app.innerHTML = kopf('verstehen') + `<div class="fortschritt"><i style="width:${Math.round(100 * S.nr / G.fragen.length)}%"></i></div>
+  S.opts = misch(f.o.map((o, i) => ({ o, richtig: i === 0 }))); S.beantwortet = false;
+  $app.innerHTML = kopf('verstehen') + `<div class="fortschritt"><i style="width:${Math.round(100 * S.nr / G.fragen.length)}%"></i></div>${serieHTML()}
     <div class="karte"><p class="frage">🇬🇧 ${esc(f.f)}</p>
-      <div class="optionen">${opts.map((x, i) => `<button type="button" class="option" data-wahl="${i}">${esc(x.o)}</button>`).join('')}</div>
+      <div class="optionen">${S.opts.map((x, i) => `<button type="button" class="option" data-wahl="${i}">${esc(x.o)}</button>`).join('')}</div>
       <p class="rueck" id="rueck"></p>
       <div class="zeile" id="weiter" hidden><button type="button" class="knopf gold" data-naechste>Weiter ›</button>
-        <button type="button" class="knopf" data-liste-lesen>📖 Story</button></div></div>`;
+        <button type="button" class="knopf" data-zur-story>📖 Story</button></div></div>`;
 }
 function waehle(i) {
   if (S.beantwortet) return;
   S.beantwortet = true;
   const x = S.opts[i], el = document.querySelectorAll('.option');
   el.forEach((b, k) => { b.disabled = true; if (S.opts[k].richtig) b.classList.add('richtig'); });
-  if (x.richtig) { S.punkte++; rueck('✓ Richtig! · Right!', true); } else { el[i].classList.add('falsch'); rueck('Nicht ganz – the green answer is right.', false); }
-  sprich(S.opts.find(o => o.richtig).o);
+  treffer(x.richtig);
+  if (x.richtig) rueck('✓ Richtig! · Right!', true); else { el[i].classList.add('falsch'); rueck('Nicht ganz – the green answer is right.', false); }
+  document.querySelector('.serie').outerHTML = serieHTML();
   document.getElementById('weiter').hidden = false;
 }
 function rueck(t, ok) { const r = document.getElementById('rueck'); r.textContent = t; r.className = 'rueck ' + (ok ? 'ok' : 'no'); }
 
 const nurWort = w => w.replace(/[.,!?;:]/g, '');
 function zeigeSagen() {
-  stopp(); schritt = 'sagen';
+  schritt = 'sagen';
   const a = G.sagen[S.nr];
   if (!a) return zeigeEnde();
   const teile = a.de.split(' ').map(nurWort).concat(a.extra || []);
   S.pool = misch(teile.map((t, i) => ({ t, i }))); S.gebaut = []; S.beantwortet = false;
-  $app.innerHTML = kopf('sagen') + `<div class="fortschritt"><i style="width:${Math.round(100 * S.nr / G.sagen.length)}%"></i></div>
-    <div class="karte"><p class="frage">🇬🇧 „${esc(a.en)}“<br><small class="sub" style="font-size:.9rem">Sag es auf Deutsch · Build the German sentence</small></p>
+  $app.innerHTML = kopf('sagen') + `<div class="fortschritt"><i style="width:${Math.round(100 * S.nr / G.sagen.length)}%"></i></div>${serieHTML()}
+    <div class="karte"><p class="frage">🇬🇧 „${esc(a.en)}“<br><small class="sub" style="font-size:.9rem">Build the German sentence · Bau den Satz auf Deutsch</small></p>
       <div class="bau" id="bau" aria-label="Dein Satz"></div>
       <div class="kacheln" id="pool"></div>
       <p class="rueck" id="rueck"></p><p class="loesung" id="loesung"></p>
@@ -244,54 +281,122 @@ function pruefeSatz() {
   if (S.beantwortet || !S.gebaut.length) return;
   S.beantwortet = true;
   const a = G.sagen[S.nr], soll = a.de.split(' ').map(nurWort).join(' '), ist = S.gebaut.map(x => x.t).join(' ');
-  const ok = ist === soll, bau = document.getElementById('bau');
-  bau.classList.add(ok ? 'richtig' : 'falsch');
-  if (ok) { S.punkte++; rueck('✓ Super! · Great!', true); } else rueck('Fast! · Almost! Listen:', false);
+  const ok = ist === soll;
+  document.getElementById('bau').classList.add(ok ? 'richtig' : 'falsch');
+  treffer(ok);
+  rueck(ok ? '✓ Super! · Great!' : 'Fast! · Almost! This is right:', ok);
   document.getElementById('loesung').textContent = a.de;
   document.querySelector('[data-pruefen]').disabled = true;
+  document.querySelector('.serie').outerHTML = serieHTML();
   document.getElementById('weiter').hidden = false;
-  sprich(a.de);
 }
 
 function zeigeEnde() {
-  stopp(); schritt = 'ende';
-  const pct = Math.round(100 * S.punkte / S.max), n = pct >= 90 ? 3 : pct >= 70 ? 2 : 1;
+  schritt = 'ende';
+  const pct = Math.round(100 * S.punkte / S.max), n = pct >= 90 ? 3 : pct >= SCHWELLE ? 2 : 1;
+  const neuerSticker = pct >= SCHWELLE && S.vorher < SCHWELLE;
+  if (pct >= SCHWELLE) { try { if (window.LernPass && LernPass.flagSetzen) LernPass.flagSetzen('dazstories', gesammelt().filter(g => g.id !== G.id).length + 1); } catch (e) {} }
   try { if (window.LernApps) LernApps.saveResult({ score: S.punkte, max: S.max, label: `${S.punkte} / ${S.max} · ${G.titel}`, thema: G.id }); } catch (e) {}
   if (window.LW && LW.beschaeftigt) LW.beschaeftigt(false);
   const lob = n === 3 ? 'Wunderbar! · Wonderful!' : n === 2 ? 'Gut gemacht! · Well done!' : 'Weiter üben! · Keep practising!';
-  $app.innerHTML = kopf('sagen').replace(/class="an"/, 'class="fertig"') + `<div class="karte ende">
+  $app.innerHTML = kopf('ende') + `<div class="karte ende">
       <div class="gross" aria-label="${n} Sterne">${sternHTML(n)}</div>
       <h2 style="font:400 1.6rem 'Fredoka One','Nunito',sans-serif;color:var(--gold);margin:.3rem 0">${pct} %</h2>
       <p style="font-weight:900;font-size:1.15rem;margin:.2rem 0">${esc(lob)}</p>
-      <p class="sub">${S.punkte} von ${S.max} richtig · ${G.woerter.length} neue Wörter in dieser Geschichte</p>
-      ${n < 2 ? '<p class="legende">Tip: Listen to the story again (🐢 slowly) and then try once more.</p>' : ''}
+      <p class="sub">${S.punkte} von ${S.max} richtig${S.besteSerie >= 3 ? ` · 🔥 ${S.besteSerie} in a row` : ''}</p>
+      ${neuerSticker ? `<p style="font-weight:900;color:var(--gold);margin:.6rem 0 0">🃏 Neuer Sticker für dein Album! · New sticker!</p>
+        <div class="neu-sticker">${stickerHTML(G, true)}</div><p class="legende">+${G.woerter.length} Wörter in deinem Wortschatz · words collected</p>` : ''}
+      ${pct < SCHWELLE ? `<p class="legende">Tip: Read the story again and tap the sentences you don't understand. With 70 % you get the sticker!</p>` : ''}
       <div class="zeile"><button type="button" class="knopf gold" data-nochmal>🔁 Nochmal · Again</button>
+        <button type="button" class="knopf" data-liste>📚 Bibliothek</button></div></div>`;
+}
+
+/* ── Wort-Blitz: 60 Sekunden, Wörter aus geschafften Geschichten ───── */
+let B = null;
+function blitzStopp() { if (B && B.timer) clearInterval(B.timer); if (B) B.timer = 0; }
+function blitzStart() {
+  const W = gesammelt().flatMap(g => g.woerter);
+  if (W.length < 4) return zeigeListe();
+  B = { W, punkte: 0, combo: 0, besteCombo: 0, richtig: 0, falsch: 0, ende: Date.now() + BLITZ_ZEIT * 1000, timer: 0, start: Date.now() };
+  if (window.LW && LW.beschaeftigt) LW.beschaeftigt(true);
+  schritt = 'blitz';
+  B.timer = setInterval(blitzUhr, 250);
+  blitzFrage();
+}
+function blitzUhr() {
+  const rest = Math.max(0, B.ende - Date.now());
+  const z = document.getElementById('b-zeit'), bar = document.getElementById('b-bar');
+  if (z) z.textContent = '⏱ ' + Math.ceil(rest / 1000);
+  if (bar) bar.style.width = (100 * rest / (BLITZ_ZEIT * 1000)) + '%';
+  if (!rest) blitzEnde();
+}
+function blitzFrage() {
+  const w = B.W[Math.floor(Math.random() * B.W.length)];
+  const andere = misch(B.W.filter(x => x.de !== w.de && x.en !== w.en)).slice(0, 3);
+  B.jetzt = w; B.opts = misch([w].concat(andere));
+  const mal = B.combo >= 10 ? 3 : B.combo >= 5 ? 2 : 1;
+  $app.innerHTML = `<div class="kopf"><button type="button" class="knopf zurueck" data-liste aria-label="Beenden">‹ 📚</button><div><h2>⚡ Wort-Blitz</h2><div class="en">Tap the German word!</div></div></div>
+    <div class="uhr"><span class="zeit" id="b-zeit">⏱ ${Math.ceil(Math.max(0, B.ende - Date.now()) / 1000)}</span><span>${B.punkte} Punkte</span>
+      <span class="combo">${B.combo >= 2 ? '🔥×' + mal : ''}</span></div>
+    <div class="zeitbalken"><i id="b-bar" style="width:${100 * Math.max(0, B.ende - Date.now()) / (BLITZ_ZEIT * 1000)}%"></i></div>
+    <div class="karte"><p class="blitzwort">🇬🇧 ${esc(w.en)}</p>
+      <div class="blitz-opt">${B.opts.map((x, i) => `<button type="button" class="option" data-b="${i}">${esc(x.de)}</button>`).join('')}</div>
+      <p class="rueck" id="rueck"></p></div>
+    <p class="legende" style="text-align:center">5 in a row = double points 🔥 · 10 in a row = triple points</p>`;
+}
+function blitzWahl(i) {
+  if (!B || B.warte || schritt !== 'blitz') return;
+  const ok = B.opts[i] === B.jetzt, el = document.querySelectorAll('[data-b]');
+  if (ok) { B.combo++; B.besteCombo = Math.max(B.besteCombo, B.combo); B.richtig++; B.punkte += B.combo >= 10 ? 3 : B.combo >= 5 ? 2 : 1; }
+  else { B.combo = 0; B.falsch++; }
+  el.forEach((b, k) => { if (B.opts[k] === B.jetzt) b.classList.add('richtig'); });
+  if (!ok) el[i].classList.add('falsch');
+  B.warte = true;
+  setTimeout(() => { B.warte = false; if (schritt === 'blitz' && Date.now() < B.ende) blitzFrage(); }, ok ? 280 : 900);
+}
+function blitzEnde() {
+  blitzStopp();
+  if (schritt !== 'blitz') return;
+  schritt = 'blitz-ende';
+  const neu = rekordMerken(B.punkte);
+  try { if (window.LernPass && LernPass.flagSetzen) LernPass.flagSetzen('wortblitz', B.richtig); } catch (e) {}
+  const gesamt = B.richtig + B.falsch;
+  // XP für die Runde (ohne Thema: zählt nicht für den Lernweg)
+  try { if (window.LernApps && gesamt) LernApps.saveResult({ score: B.richtig, max: gesamt, label: `⚡ Wort-Blitz: ${B.punkte} Punkte` }); } catch (e) {}
+  if (window.LW && LW.beschaeftigt) LW.beschaeftigt(false);
+  $app.innerHTML = `<h1>⚡ Wort-Blitz</h1><div class="karte ende">
+      <div class="gross">${neu ? '🏆' : '⚡'}</div>
+      <h2 style="font:400 1.8rem 'Fredoka One','Nunito',sans-serif;color:var(--gold);margin:.3rem 0">${B.punkte} Punkte</h2>
+      <p style="font-weight:900;font-size:1.15rem">${neu ? 'Neuer Rekord! · New record!' : 'Rekord: ' + rekord()}</p>
+      <p class="sub">${B.richtig} richtig · ${B.falsch} falsch${B.besteCombo >= 3 ? ' · 🔥 ' + B.besteCombo + ' in a row' : ''}</p>
+      <div class="zeile"><button type="button" class="knopf gold" data-blitz>⚡ Nochmal · Again</button>
         <button type="button" class="knopf" data-liste>📚 Bibliothek</button></div></div>`;
 }
 
 /* ── Bedienung ──────────────────────────────────────────────────────── */
 $app.addEventListener('click', e => {
-  const t = e.target.closest('button, [data-zeigen]');
+  const gl = e.target.closest('[data-gl]');
+  if (gl && G) { const w = G.woerter[+gl.dataset.gl]; if (w) blase(`${w.de} = ${w.en}`); return; }
+  const t = e.target.closest('button, [data-satz]');
   if (!t) return;
   const d = t.dataset;
+  if (t.hasAttribute('data-satz')) return t.classList.toggle('offen');
   if (d.g) return oeffne(d.g);
   if (t.hasAttribute('data-liste')) return zeigeListe();
-  if (d.satz !== undefined) { stopp(); return sprich(G.saetze[+d.satz].de); }
-  if (d.zeigen !== undefined) return t.closest('.blase').classList.toggle('offen');
-  if (t.hasAttribute('data-alles')) return allesHoeren();
-  if (t.hasAttribute('data-langsam')) { langsam = !langsam; t.classList.toggle('an', langsam); t.setAttribute('aria-pressed', langsam); return; }
-  if (t.hasAttribute('data-en')) { document.querySelector('.chat').classList.toggle('alle-en'); return; }
-  if (d.wort !== undefined) { stopp(); return sprich(G.woerter[+d.wort].de); }
-  if (d.weiter === 'verstehen') { S.nr = 0; S.beantwortet = false; return zeigeVerstehen(); }
+  if (t.hasAttribute('data-blitz')) return blitzStart();
+  if (d.b !== undefined) return blitzWahl(+d.b);
+  if (t.hasAttribute('data-en')) { const s = document.getElementById('seite'), an = s.classList.toggle('alle-en'); t.classList.toggle('an', an); t.setAttribute('aria-pressed', an); return; }
+  if (d.wort !== undefined) { const w = G.woerter[+d.wort], an = t.classList.toggle('gedreht'); t.lastElementChild.textContent = an ? w.en : 'tap · antippen'; return; }
+  if (d.weiter === 'verstehen') { S.nr = 0; zeigeVerstehen(); return window.scrollTo(0, 0); }
   if (d.wahl !== undefined) return waehle(+d.wahl);
-  if (t.hasAttribute('data-liste-lesen')) return zeigeLesen();
-  if (t.hasAttribute('data-naechste')) { S.nr++; S.beantwortet = false; return schritt === 'verstehen' ? zeigeVerstehen() : zeigeSagen(); }
-  if (d.rein !== undefined) { if (S.beantwortet) return; const x = S.pool[+d.rein]; x.weg = true; S.gebaut.push(x); sprich(x.t); return baueZeichnen(); }
+  if (t.hasAttribute('data-zur-story')) { S.nr = Math.max(0, S.nr); return zeigeLesen(); }
+  if (t.hasAttribute('data-naechste')) { S.nr++; return schritt === 'verstehen' ? zeigeVerstehen() : zeigeSagen(); }
+  if (d.rein !== undefined) { if (S.beantwortet) return; const x = S.pool[+d.rein]; x.weg = true; S.gebaut.push(x); return baueZeichnen(); }
   if (d.raus !== undefined) { if (S.beantwortet) return; const x = S.gebaut.splice(+d.raus, 1)[0]; x.weg = false; return baueZeichnen(); }
   if (t.hasAttribute('data-pruefen')) return pruefeSatz();
   if (t.hasAttribute('data-nochmal')) return oeffne(G.id);
 });
-document.addEventListener('visibilitychange', () => { if (document.hidden) stopp(); });
+document.addEventListener('visibilitychange', () => { if (document.hidden && schritt === 'blitz') blitzEnde(); });
 
 /* ── Start ─────────────────────────────────────────────────────────── */
 function passBereit() { return new Promise(r => { if (window.LernPass) return r(); window.addEventListener('lernpass:ready', () => r(), { once: true }); setTimeout(r, 4000); }); }
@@ -303,6 +408,7 @@ function passBereit() { return new Promise(r => { if (window.LernPass) return r(
     return;
   }
   await passBereit();
+  flaggen();                                                      // Abzeichen auch für Geschichten von vorher
   const st = new URLSearchParams(location.search).get('stufe');
   if (st && D.geschichten.some(g => g.id === st)) oeffne(st); else zeigeListe();
 })();

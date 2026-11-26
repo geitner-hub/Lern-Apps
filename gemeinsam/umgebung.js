@@ -33,7 +33,7 @@
   'use strict';
   if (window.LW && window.LW.UMGEBUNG) return;          // doppeltes Laden verhindern
 
-  const VERSION = 'v142';                                 // ⚙ bei jedem Upload mit sw.js zusammen erhöhen
+  const VERSION = 'v143';                                 // ⚙ bei jedem Upload mit sw.js zusammen erhöhen
 
   // ── Umgebung erkennen ────────────────────────────────
   //  GitHub Pages: erster Pfadteil = Repo-Name (Lern-Apps bzw. Lern-Apps-test)
@@ -66,6 +66,7 @@
     ['lernwelt-wochenziel',         'local',   'gemeinsam/wochenziel.js',  'Selbst gewähltes Wochenziel: Art, Startwert, Rückblick der letzten Wochen (nur auf diesem Gerät)', false],
     ['lernwelt-generalprobe',       'local',   'apps/englisch/generalprobe.html', 'Generalprobe: laufende Probe (Aufgaben, Antworten, Startzeit) und zuletzt gezogene Aufgaben (nur auf diesem Gerät)', false],
     ['lernwelt-rekord',             'local',   'apps/englisch/vokabeltrainer.html', 'Rekord-Jagd: bester Speed-Wert je Wortauswahl (nur auf diesem Gerät)', false],
+    ['lernwelt-daz-blitz',          'local',   'apps/daz/daz-geschichten.html', 'Story-Zeit (DaZ): Rekord im Spiel Wort-Blitz (nur auf diesem Gerät)', false],
     ['lernwelt-lesehilfe',          'local',   'gemeinsam/umgebung.js',    'Lesehilfe: besser lesbar (g) und helles Schema (h) – zwei Schalter im Pass', false],
     ['lernwelt-wartung',            'local',   'gemeinsam/pass-extras.js', 'Speicher-Wartung: letzter Lauf und Belegung', false],
     ['lernwelt-admin-entwurf',      'local',   'gemeinsam/admin/store.js', 'Admin: unveröffentlichter Entwurf der config.json', false],

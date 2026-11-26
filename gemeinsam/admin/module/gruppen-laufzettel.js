@@ -60,8 +60,10 @@ LWAdmin.modul({
     const abschnitte = () => (J ? J.units.flatMap(u => (u.abschnitte || []).map(a => ({ a, u }))) : []);
     const weg = c => ((c.journey || {}).wege || {})[WEG] || {};
     const klassen = c => { const k = new Set(); (c.apps || []).forEach(a => (a.klassen || []).forEach(x => k.add(x))); return [...k].sort((a, b) => a - b); };
+    const gName = id => (gruppen.find(g => g.id === id) || { name: 'Gruppe ' + id.slice(0, 6) + '…' }).name;
     const werName = w => w === 'alle' ? '👥 Alle' : /^k\d+$/.test(w) ? '🎒 Klasse ' + w.slice(1)
-      : '🪪 ' + (gruppen.find(g => 'g:' + g.id === w) || { name: 'Gruppe ' + w.slice(2, 8) + '…' }).name;
+      : /^g:[0-9a-f]{32}:\d+$/.test(w) ? '🃏 ' + gName(w.slice(2, 34)) + ' · Karte ' + String(w.slice(35)).padStart(2, '0')   // eine Karte (v143)
+      : '🪪 ' + gName(w.slice(2));
 
     /** bis setzen (aid = '' → Eintrag weg) und neu sichtbare Hefteinträge nummerieren */
     function setzen(wer, aid) {
@@ -163,9 +165,12 @@ LWAdmin.modul({
       if (!wege.length) return '';
       const wahl = (id, W, wer, aktuell) => `<select data-wg="${e(id)}" data-wg-wer="${e(wer)}" aria-label="Frei bis Abschnitt für ${e(werName(wer))}"><option value="">— nicht frei —</option>
         ${W.abschnitte.filter(a => !a.aus).map(a => `<option value="${e(a.id)}"${a.id === aktuell ? ' selected' : ''}>${e(a.titel)}</option>`).join('')}</select>`;
+      // Lernwege auch für eine einzelne Karte (v143): z. B. DaZ nur für ein Kind, das in seiner Klassengruppe bleibt
+      optionen = optionen.concat(gruppen.flatMap(g => (g.codes || []).filter(k => Number.isInteger(k.nr)).sort((a, b) => a.nr - b.nr).map(k => 'g:' + g.id + ':' + k.nr)));
       return `<div class="lw-karte"><h2>🗺️ Weitere Lernwege</h2>
         <p>Lernwege ohne 3D (für jedes Fach, <code>daten/wege/</code>). Die Kinder sehen den ganzen Weg; offen sind die Abschnitte bis einschließlich dem gewählten,
-        dahinter steht die 🚧 Schranke. Ein freigegebener Weg erscheint auf der Startseite unter „Weiter lernen“ und „Mein Laufzettel“.</p>
+        dahinter steht die 🚧 Schranke. Ein freigegebener Weg erscheint auf der Startseite unter „Weiter lernen“ und „Mein Laufzettel“.
+        Mit <b>🃏 Karte</b> gilt die Freigabe nur für ein Kind (seine Sicherungskarte) – es bleibt in seiner Gruppe. Gilt der Reihe nach: Karte vor Gruppe vor Klasse vor „Alle“.</p>
         ${wege.map(({ eintrag, W }) => {
           const bis = (((c.journey || {}).wege || {})[W.id] || {}).bis || {}, frei = optionen.filter(x => !(x in bis)), nw = wegNeu[W.id] || '';
           return `<h3 style="margin:.9rem 0 .2rem">${e((W.ico ? W.ico + ' ' : '') + W.titel)} <span class="lw-klein">· ${e(W.fach)} · Klasse ${e(W.klasse)}${eintrag.test ? ' · nur zum Testen' : ''}</span></h3>

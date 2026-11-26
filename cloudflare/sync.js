@@ -167,10 +167,11 @@ async function syncHolen(body, env, cors) {
   if (!row) return syncJson({ error: 'Code ungültig' }, 403, cors);
   const seit = Number(body.seitRev);
   if (row.rev > 0 && Number.isInteger(seit) && seit === row.rev) {
-    return syncJson({ ok: true, rev: row.rev, unveraendert: true, gruppe: row.gruppe_id }, 200, syncNoStore(cors));
+    return syncJson({ ok: true, rev: row.rev, unveraendert: true, gruppe: row.gruppe_id, nr: row.nr }, 200, syncNoStore(cors));
   }
   // gruppe: Kennung der Gruppe (zufällig, kein Name) – das iPad wertet damit Freigaben und Fokus aus (Etappe 7)
-  return syncJson({ ok: true, rev: row.rev, score: row.score, blob: row.blob || null, letzteSync: row.letzte_sync || null, gruppe: row.gruppe_id }, 200, syncNoStore(cors));
+  // nr: Kartennummer in der Gruppe (v143) – für Lernweg-Freigaben je Karte (config.journey.wege.<Weg>.bis['g:<Gruppe>:<Nr>'])
+  return syncJson({ ok: true, rev: row.rev, score: row.score, blob: row.blob || null, letzteSync: row.letzte_sync || null, gruppe: row.gruppe_id, nr: row.nr }, 200, syncNoStore(cors));
 }
 
 // ── Gerät: Stand speichern ─────────────────────────────

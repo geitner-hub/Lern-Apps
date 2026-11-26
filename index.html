@@ -715,7 +715,7 @@ let heuteLaden = null, journeyLaden = null, journeyDaten = null, wzLaden = null;
 // die Summe kommt vom Worker (LernSync.klassenziel, nur eine Zahl). Erreicht → einmal eine Geschenk-Truhe für jedes Kind der Gruppe.
 let kzStand = null, kzLaden = false;
 function klassenzielHTML() {
-  const g = window.LernFreigabe && LernFreigabe.wer ? LernFreigabe.wer().find(w => w.startsWith('g:')) : null, kz = g && CONFIG.klassenziel && CONFIG.klassenziel[g];
+  const g = window.LernFreigabe && LernFreigabe.wer ? LernFreigabe.wer().find(w => /^g:[0-9a-f]{32}$/.test(w)) : null, kz = g && CONFIG.klassenziel && CONFIG.klassenziel[g];
   if (!kz || !(kz.ziel > 0)) return '';
   if (kzStand === null) {
     if (!kzLaden && window.LernSync && LernSync.klassenziel) { kzLaden = true; LernSync.klassenziel().then(n => { if (n !== null) { kzStand = n; buildHeute(); } }).catch(() => {}); }

@@ -181,6 +181,12 @@ Schritt jeder Art) – er ist für keine Klasse freigegeben und mit Admin-Anmeld
   im Admin unter **Gruppen → 📒 Laufzettel → 🗺️ Weitere Lernwege**. Die Kinder sehen den ganzen Weg; offen sind die Abschnitte
   bis einschließlich dem gewählten, dahinter steht die 🚧 Schranke. Ohne Eintrag ist der Weg nicht freigegeben.
   Der Worker muss dafür Weg-IDs außer `journey…` erlauben (`cloudflare/worker.js`, v122 – **neu bei Cloudflare einfügen**).
+- **Freigabe je Karte** (v143): `wer` darf auch `g:<Gruppe>:<Kartennummer>` sein – der Weg gilt dann nur für dieses eine Kind, es bleibt in
+  seiner Gruppe (Reihenfolge: Karte vor Gruppe vor Klasse vor „alle“). Die Kartennummer schickt der Worker bei `/sync/holen` mit
+  (`gemeinsam/sync.js` merkt sie als `nr`, `LernFreigabe.wer()` liefert `g:…:7` zuerst). Nur in `config.journey.wege.<Weg>.bis` erlaubt.
+  Admin: in der Auswahl „+ Freigabe für …“ stehen die Karten als „🃏 Gruppe · Karte 07“. Braucht den neuen Worker (sync.js + worker.js).
+- **Truhen** (v143): Abschnitt mit `"truhe": true` → 🎁 am Knoten; ist der Abschnitt geschafft, sammelt das Kind die Truhe in der Karte ein
+  (`LernWeg.truhe/truheNehmen`, Geschenk-Truhe `wt-<Abschnitt-ID>` im Pass, einmal). Abschnitt-ID darf dafür höchstens 27 Zeichen haben.
 - **Startseite:** Ein freigegebener Weg erscheint unter „Mein Laufzettel“ und speist „Weiter lernen“ (`weg-kern.js` lädt nur dann).
 - **Rückweg:** Vor dem Start einer App merkt sich `weg.html` seine Adresse (`lernwelt-lernweg-zurueck`); in der App erscheint
   „🧭 Zurück zum Weg“ (`lernweg-zurueck.js`).
@@ -189,21 +195,28 @@ Schritt jeder Art) – er ist für keine Klasse freigegeben und mit Admin-Anmeld
 - **Noch nicht enthalten:** Abschnitt-Kette, Niveaus und HE-Nummern gibt es nur im English Journey; der Lernweg-Editor im
   Admin kommt mit Etappe 6, der Check vor der Probe und die Kann-Liste mit Etappe 5.
 
-## DaZ: Deutsch lernen aus dem Englischen (v142)
+## DaZ: Deutsch lernen aus dem Englischen (v142, überarbeitet v143)
 
 Für Kinder mit sehr wenig Deutsch, die gut Englisch können (A0–A1, Ziel: im Alltag verständigen). Alles wird
 aus dem Englischen erklärt; Grammatik (sein/haben, Artikel, Verb an Position 2, Fragen, Akkusativ/Dativ einfach) steht im Vordergrund.
 
 - **Lernweg** `daten/wege/daz.json` (Engine in 2D, `apps/typen/weg.html?weg=daz`): 8 Kapitel `daz-a-k1` … `daz-a-k8`
-  (Hallo, Familie, Schule, Mein Tag, Bäckerei, Freunde, In der Stadt, Beim Arzt). Je Kapitel: Hefteintrag (Grammatik auf Englisch),
-  📖 Story, 🧩 Wörter, ✏️ Sätze, Heftübung, ⭐ Stern-Extra. Bausteine `daten/wege/bausteine-daz.json`. Freigabe wie jeder Lernweg:
-  Admin → Gruppen → 📒 Laufzettel → Weitere Lernwege (am besten eine eigene Gruppe für das Kind).
+  (Hallo, Familie, Schule, Mein Tag, Bäckerei, Freunde, In der Stadt, Beim Arzt). Je Kapitel (v143):
+  Pflicht 📖 Lesegeschichte · ⭐ Level 1 Wörter · ⭐ Level 1 Sätze · ⭐⭐ Level 2 (tippen); Stern ⭐⭐⭐ Level 3 (Sätze schreiben) · Schreibaufgabe ins Heft;
+  🎁 Truhe, wenn das Kapitel geschafft ist. Die Hefteinträge (`daz-kN-he`) und „vorlesen“ (`daz-kN-stern`) sind seit v143 `"aus": true`
+  (Bausteine bleiben in `daten/wege/bausteine-daz.json`). Freigabe: Admin → Gruppen → 📒 Laufzettel → Weitere Lernwege – auch für eine einzelne Karte.
 - **Story-Zeit** `apps/daz/daz-geschichten.html[?stufe=daz.6.geschichten.gN]`, Inhalte `daten/daz/geschichten.json` (eigene Texte):
-  Bibliothek mit Sternen; je Geschichte ① Lesen & Hören (Chat-Blasen, 🔊 Sprachausgabe de-DE, Blase antippen = Englisch, 🐢 langsam,
-  Wortkarten in Artikel-Farben der/die/das = blau/rot/grün), ② Verstehen (Frage Englisch, Antwort Deutsch; in `fragen[].o` ist die erste richtig),
-  ③ „Sag es!“ (englischer Satz → deutschen Satz aus Wortkarten bauen, `extra` = Ablenker). Ergebnis mit `thema` = Stufen-ID → XP, Lernweg-Haken ab 70 %.
-  Keine Aufnahme, keine Spracherkennung (Datenschutz).
-- **Wörter und Sätze** im Baukasten: `daten/inhalte/daz/daz.6.grundlagen.json` (Stufen `daz.6.grundlagen.kN-woerter` / `-saetze`).
+  Lesegeschichten **ohne Sprachausgabe** (v143). ① Lesen: Buchseite mit Erzähltext (`vor`, `nach`) und Gespräch (`saetze`); Satz antippen =
+  Englisch, markierte Wörter (aus `woerter`, Unterstrich in Artikel-Farbe der/die/das = blau/rot/grün) antippen = Bedeutung; Wortkarten zum Umdrehen.
+  ② Verstehen (Frage Englisch, Antwort Deutsch; in `fragen[].o` ist die erste richtig). ③ Satz bauen (englischer Satz → deutsche Wortkarten,
+  `extra` = Ablenker). Ergebnis mit `thema` = Stufen-ID → XP, Lernweg-Haken ab 70 %.
+- **Motivation** (v143): 🔥 Serie in der Geschichte · 🃏 Neustadt-Album (je geschaffter Geschichte ein Sticker, `sticker`) · 📖 Wortschatz-Zähler ·
+  ⚡ Wort-Blitz (60 s, Wörter aus geschafften Geschichten, Combo ×2/×3, Rekord `lernwelt-daz-blitz`, XP ohne Thema) · Abzeichen über
+  `flagSetzen('dazstories')` (Leseratte 1, Bücherwurm 4 → Goldenes Geschichtenbuch, Zuhause in Neustadt 8 → Begleiter „Biscuit“) und
+  `flagSetzen('wortblitz')` (Blitzschnell: 20 Wörter in einer Runde). Album, Sterne und Wortschatz kommen aus dem Lernstand.
+- **Übungen** im Baukasten `daten/inhalte/daz/daz.6.grundlagen.json`, je Kapitel 4 Stufen: `kN-woerter` und `kN-saetze` (⭐ Level 1: zuordnen,
+  antippen, ordnen), `kN-mittel` (⭐⭐ Level 2: Formen und Nomen mit Artikel tippen), `kN-schwer` (⭐⭐⭐ Level 3: ganze Sätze aus dem Englischen
+  schreiben, längere Sätze ordnen; Antworten mit Varianten ohne Komma, ss für ß, ae/oe/ue). Grammatik aller Kapitel unter „So geht's“ (`hilfe`).
 - Katalog: Fach DaZ, Themen `daz.6.geschichten` und `daz.6.grundlagen`. Erzeugt wurden die Dateien aus einer Kapitel-Liste; Änderungen
   jetzt direkt in den JSON-Dateien (IDs nie umbenennen).
 
