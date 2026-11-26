@@ -200,7 +200,8 @@ function webglOk() { try { const c = document.createElement('canvas'); return !!
 //  Regeln in gemeinsam/journey-kern.js (LernJourney) – dieselben wie „Heute für dich“ auf der Startseite
 const stand = id => { try { return (window.LernPass && LernPass.themaStand && LernPass.themaStand(id)) || null; } catch (e) { return null; } };
 const hatApp = st => LernJourney.hatApp(st);
-function berechne() { const r = LernJourney.berechne(A.J, { admin: A.admin }); A.alle = r.alle; A.z = r.z; A.geoeffnet = r.geoeffnet || {}; A.heft = r.heft || {}; A.schranke = r.schranke === undefined ? Infinity : r.schranke; }
+function berechne() { const r = LernJourney.berechne(A.J, { admin: A.admin }); A.alle = r.alle; A.z = r.z;
+  try { if (window.LernPass && LernPass.flagSetzen) LernPass.flagSetzen('stationen', Object.values(r.z).filter(x => x.zustand === 'gemeistert').length); } catch (x) {}   // Abzeichen „Wolkenreiter“ (v139) A.geoeffnet = r.geoeffnet || {}; A.heft = r.heft || {}; A.schranke = r.schranke === undefined ? Infinity : r.schranke; }
 // Die Orte füllen sich mit Sprache: zu jeder gemeisterten Wörter-Station ein Schild mit Wörtern daraus (aus daten/vokabeln6.json)
 function woerterFuer(st) {
   const m = /^en\.6\.vok\.u(\d+)\.([a-z0-9-]+)$/.exec(st.thema || ''), V = A.vok;

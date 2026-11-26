@@ -1286,6 +1286,27 @@ Jedes Teil in `ITEMS` beschreibt seine Form als Liste von Blöcken in `modell`. 
 - **Hintergründe** haben `css` (Bühnenfarbe), `deko` (SVG) und `boden` (Farbe der Plattform).
 - **Figur-Optionen** (`AVATAR.FRISUREN`, `AUGEN`, `MUENDER`, `HAUT`, `HAARFARBEN`) funktionieren genauso.
 - Tipp: neues Teil zuerst im Admin unter Motivation → 🧭 Pass → Avatar-Teile ansehen – dort erscheint die Vorschau.
+- **Reit-Begleiter (v139):** Begleiter mit `"reiten": {"sitz": [x, y, z], "beine": "sitzen"|"stehen"}`. Beim Jubeln auf der Bühne
+  (Garderobe, Auftritt in der Ecke) läuft das Tier in die Mitte, dreht sich zur Seite, die Figur springt auf, reitet eine Runde und springt
+  wieder ab (`avatar3d.js` → `ritt`). `sitz` = Sattel in Koordinaten des Tiers (Blick +z), `sitzen` schiebt die Beine in den Tierkörper,
+  `stehen` (Fahrrad) lässt sie stehen. Große Tiere stehen in einer Gruppe mit `"s":[k,k,k]` (Figur ist ca. 31 hoch); Farbvarianten erben
+  `reiten`. Vorschau-Ansicht `reittier`. In Spielen läuft der Begleiter weiter nebenher; mit „weniger Bewegung“ kein Ritt.
+
+**Teile-Paket v139** (Wünsche der Kinder):
+- **Truhe:** Pferd, Rappe, Schimmel (episch, reitbar) · Kartoffel, Süßkartoffel, Pudel, Pudel Apricot, Hamster, Froschkönig ·
+  Fußballtrikot Blau/Rot, Ringelpulli, Jeans-Shorts, Gummistiefel Grün/Rosa, Neon-Turnschuhe, Kopfhörer (2 Farben), Bärenmütze ·
+  Handy (2 Farben), Glas O-Saft, Smoothie, Mikrofon.
+- **Weihnachts-Event:** Lebkuchendrache, Weihnachtspulli, Kakaotasse.
+- **Erspielbar (Abzeichen → Teil):** Einhorn-Freund (25 Sterne → Einhorn) · Himmelsreiter (10 Gold-Sterne → Pegasus) · Drachenreiter
+  (10 000 XP → Reitdrache) · Radprofi (50 gute Runden → Fahrrad) · Wolkenreiter (15 Journey-Stationen → Wolke) · Baumeister (20 Dorf-Aufträge →
+  Bauhelm) · Truhenjäger (25 Truhen → goldenes Handy) · Probe-Profi (Generalprobe „bereit“ → goldenes Mikrofon) · Dranbleiber (5 Wochen
+  Serie → Pudel Rosa) · Rockstar (15 Apps → Gitarre).
+- **Neue Zähler** (Abzeichen-Typ `flag`, rückwirkend, nur nach oben): `auftraege` (dorf-kern.js beim Speichern, `D.e`), `stationen`
+  (english-journey.html, gemeisterte Stationen), `truhen` (pass-ansicht.js beim Öffnen, Startseite rückwirkend), `generalprobe`
+  (generalprobe.html ab 80 %, Startseite rückwirkend).
+- **Gesicht:** Augen Zwinkern, Verschlafen, Sternaugen, Herzaugen · Münder Zahnlücke, Zahnspange, Zunge raus, Staunen (frei wählbar).
+- **Schildkrötenpanzer** neu gebaut (gestufte Kuppel mit Platten, gleiche ID). Die Schrift-Erweiterung `nunito-latin-ext` liegt seit v139 in
+  `NACHLADEN` statt `START` (für Deutsch/Englisch nicht nötig) – so passt das größere Teile-Paket ins Sofort-Budget.
 
 ## Tower Defense (spiele/burg-verteidigung.html)
 

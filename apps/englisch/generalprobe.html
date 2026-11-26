@@ -257,6 +257,7 @@ function abgeben(zeitUm) {
   const p = teile.reduce((s, t) => s + t.p, 0), max = teile.reduce((s, t) => s + t.max, 0), pct = Math.round(100 * p / max);
   let erster = null;
   try { if (window.LernPass && LernPass.checkMerken) erster = LernPass.checkMerken(STUFE, teile.map(t => [t.p, t.max])); } catch (x) {}
+  try { if (pct >= D.bereit && LernPass.flagSetzen) LernPass.flagSetzen('generalprobe', 1); } catch (x) {}   // Abzeichen „Probe-Profi“ (v139)
   const S = lies(); S.letzte = Object.assign({}, S.letzte, { [UID]: lauf.auswahl }); delete S.lauf; schreib(S);
   lauf = null;
   LW.beschaeftigt(false);

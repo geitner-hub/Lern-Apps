@@ -104,7 +104,7 @@
   const ITEMS = RAW_ITEMS.map(i => {
     const b = i.basis && RAW_BY_ID[i.basis];
     if (!b) return i;
-    let json = JSON.stringify({ modell: b.modell, kleidung: b.kleidung, muster: b.muster, versteckt: b.versteckt });
+    let json = JSON.stringify({ modell: b.modell, kleidung: b.kleidung, muster: b.muster, versteckt: b.versteckt, reiten: b.reiten });
     Object.entries(i.tausch || {}).forEach(([a, n]) => { json = json.split(a).join(n).split(a.toUpperCase()).join(n); });
     return Object.assign(JSON.parse(json), i);
   });

@@ -16,6 +16,11 @@
 //                                 { root, THREE, pose({lauf, phase, stolpern, jubel, t, arme, lehnen}), gesicht(mode) }
 //    teil(itemId)               → Promise: einzelnes Teil, normiert auf Größe 1 { root, anim[] } oder null
 //
+//  Reit-Begleiter (v139): Begleiter mit "reiten": { "sitz": [x, y, z], "beine": "sitzen"|"stehen" } – beim Jubeln auf der
+//  Bühne (Garderobe, Auftritt in der Ecke) springt die Figur auf, reitet eine Runde und springt wieder ab. sitz = Sattel in
+//  Koordinaten des Begleiters (Blickrichtung +z); "sitzen" schiebt die Beine in den Tierkörper, "stehen" (Fahrrad) lässt sie stehen.
+//  In Spielen (figur()) läuft der Begleiter wie bisher nebenher. Mit „weniger Bewegung“ gibt es keinen Ritt, nur Jubeln.
+//
 //  Automatisch befüllt werden Elemente mit
 //    data-avatar-thumb="ITEM-ID"         Vorschau eines Teils
 //    data-avatar-figur="frisur:ID" usw.  Vorschau einer Aussehen-Option
@@ -317,6 +322,7 @@
       const pet = item('begleiter');
       if (pet) {
         const po = grp(P.root, 13, 0, 3.5); po.rotation.y = -.5; A.begleiter = po; P.pet = po;
+        if (pet.reiten && Array.isArray(pet.reiten.sitz)) P.reiten = pet.reiten;
         addItem(pet, 'begleiter');
         const ps = new T3.Mesh(SHADOW_GEO, shadowMat()); ps.rotation.x = -Math.PI / 2; ps.scale.set(.6, .6, .6); ps.position.set(13, .06, 3.5); P.root.add(ps);
       }
@@ -353,6 +359,7 @@
     ruecken:   { t: [0, 13, 0], d: 58, yaw: Math.PI * .8 },
     hand:      { t: [8, 14, 3], d: 52, dir: [.9, .3, 1] },
     begleiter: { t: [0, 6, 0], d: 32 },
+    reittier:  { t: [0, 14, 1], d: 84, dir: [.75, .25, 1] },
     frisur:    { t: [0, 25, -1.5], d: 44, dir: [1.1, .15, .9] },
     augen:     { t: [0, 24.7, 0], d: 21, dir: [.15, .05, 1] },
     mund:      { t: [0, 24.7, 0], d: 21, dir: [.15, .05, 1] },
@@ -388,7 +395,7 @@
     const it = ITEM(id); if (!it) return '';
     const look = { haut: 0, frisur: '', haarfarbe: 0, augen: '', mund: '', eq: { [it.slot]: it.id } };
     return (thumbCache[id] = snapshot(look, {
-      view: it.slot, ghost: true, only: it.slot === 'begleiter' ? 'begleiter' : null,
+      view: it.reiten ? 'reittier' : it.slot, ghost: true, only: it.slot === 'begleiter' ? 'begleiter' : null,
       noPet: it.slot !== 'begleiter', noHead: ['oberteil', 'hose', 'schuhe', 'hand'].includes(it.slot),
     }));
   }
@@ -472,7 +479,7 @@
     const ring = new T3.Mesh(new T3.TorusGeometry(17.2, .35, 8, 72), colMat('#b98612', { licht: .35 }));
     ring.rotation.x = Math.PI / 2; ring.position.y = .02; scene.add(ring);
     live = { renderer, cv, scene, camera, plat, ring, P: null, waveT: -1, cheerLeft: 0, host: null, ro: null, raf: 0, clock: new T3.Clock(), t: 0,
-             ctl: { yaw: .35, v: 0, drag: false, lastX: 0, idle: 10 }, cheerT: -1, blinkT: 2.5, blinkOn: false };
+             ctl: { yaw: .35, v: 0, drag: false, lastX: 0, idle: 10 }, cheerT: -1, rideT: -1, blinkT: 2.5, blinkOn: false };
     const c = live.ctl;
     cv.addEventListener('pointerdown', e => { c.drag = true; c.lastX = e.clientX; c.v = 0; try { cv.setPointerCapture(e.pointerId); } catch (x) {} cv.style.cursor = 'grabbing'; });
     cv.addEventListener('pointermove', e => {
@@ -515,7 +522,8 @@
     if (!L.blinkOn && L.blinkT < 0 && L.cheerT < 0) { setFace('blink'); L.blinkOn = true; }
     if (L.blinkOn && L.blinkT < -.13) { setFace('open'); L.blinkOn = false; L.blinkT = 2.5 + Math.random() * 3; }
     let k = 0, w = 0, wave = 0;
-    if (L.cheerT >= 0) {
+    if (L.rideT >= 0) k = ritt(L, P, dt);
+    else if (L.cheerT >= 0) {
       L.cheerT += dt;
       const p = L.cheerT / 1.15;
       if (p >= 1) {
@@ -541,6 +549,39 @@
     P.armR.rotation.z = .1 + Math.max(2.3 * k, 2.5 * w) + wave;
     L.renderer.render(L.scene, L.camera);
   }
+  // ── Reiten (v139): aufspringen – eine Runde reiten – absteigen ──
+  const RITT = 3.6, RUHE_RY = -.5, RITT_RY = -1.25, HEIM_X = 13, HEIM_Z = 3.5;   // Platz des Begleiters (build)
+  function rittEnde(L, P) {
+    L.rideT = -1; setFace('open');
+    P.fig.position.set(0, 0, 0); P.fig.rotation.y = 0;
+    const b = P.anchors.beine; b.scale.y = 1; b.position.y = 0;
+    if (P.pet) { P.pet.position.set(HEIM_X, 0, HEIM_Z); P.pet.rotation.x = 0; P.pet.rotation.y = RUHE_RY; }
+  }
+  /** Ein Bild des Ritts; → Jubel-Stärke der Arme (0–1) */
+  function ritt(L, P, dt) {
+    L.rideT += dt;
+    const p = L.rideT / RITT;
+    if (p >= 1) { rittEnde(L, P); return 0; }
+    const R = P.reiten, pet = P.pet, [sx, sy, sz] = R.sitz;
+    const sitzen = R.beine !== 'stehen', huefte = sitzen ? 9 : 9.2;
+    const glatt = x => x * x * (3 - 2 * x);
+    let s, hoch = 0;
+    if (p < .2) { s = glatt(p / .2); hoch = Math.sin(s * Math.PI) * 8; }
+    else if (p > .82) { s = 1 - glatt((p - .82) / .18); hoch = Math.sin(s * Math.PI) * 8; }
+    else s = 1;
+    const ry = RUHE_RY + (RITT_RY - RUHE_RY) * s; pet.rotation.y = ry;   // Tier dreht sich zur Seite …
+    pet.position.x = HEIM_X * (1 - s); pet.position.z = HEIM_Z * (1 - s);  // … und kommt in die Mitte der Bühne
+    // Sattel in Figur-Koordinaten (Drehung des Begleiters um y)
+    const zx = pet.position.x + sx * Math.cos(ry) + sz * Math.sin(ry), zz = pet.position.z - sx * Math.sin(ry) + sz * Math.cos(ry), zy = sy - huefte;
+    const galopp = p > .2 && p < .82 ? Math.abs(Math.sin(L.rideT * 9)) * 1.3 : 0;
+    P.fig.position.set(zx * s, zy * s + hoch + galopp, zz * s);
+    P.fig.rotation.y = ry * s;
+    const b = P.anchors.beine;                              // Beine stecken beim Sitzen im Tierkörper
+    if (sitzen && s > .5) { b.scale.y = .5; b.position.y = 4.5; } else { b.scale.y = 1; b.position.y = 0; }
+    pet.position.y = galopp; pet.rotation.x = p > .2 && p < .82 ? Math.sin(L.rideT * 9) * .05 : 0;
+    return p < .12 ? p / .12 : p > .9 ? (1 - p) / .1 : 1;
+  }
+
   /** Zeigt die drehbare Figur in host. Nur eine Bühne gleichzeitig. */
   function mount(host, opts = {}) {
     const ctrl = { look: opts.look || null, dead: false };
@@ -548,6 +589,7 @@
       ctrl.look = look;
       if (ctrl.dead || !live || live.host !== host) return;
       if (live.P) live.scene.remove(live.P.root);
+      live.rideT = -1;
       live.P = build(look);
       live.scene.add(live.P.root);
       live.blinkOn = false; live.blinkT = 2;
@@ -555,7 +597,12 @@
     };
     ctrl.wave = () => { if (live && live.host === host && live.P) { live.cheerT = -1; live.waveT = 0; setFace('cheer'); } };
     ctrl.setBoden = c => { if (live && live.host === host) live.plat.material = colMat(c || '#262a55'); };
-    ctrl.cheer = (n = 1) => { if (live && live.host === host && live.P) { live.waveT = -1; live.cheerT = 0; live.cheerLeft = Math.max(0, n - 1); setFace('cheer'); } };
+    ctrl.cheer = (n = 1) => {
+      if (!live || live.host !== host || !live.P) return;
+      live.waveT = -1; setFace('cheer');
+      if (live.P.reiten && live.P.pet && !reduce) { if (live.rideT < 0) { live.cheerT = -1; live.rideT = 0; } return; }   // Reit-Begleiter: aufsitzen
+      live.cheerT = 0; live.cheerLeft = Math.max(0, n - 1);
+    };
     ctrl.destroy = () => {
       ctrl.dead = true;
       if (!live || live.host !== host) return;
@@ -573,7 +620,7 @@
       live.plat.visible = live.ring.visible = opts.buehne !== false;
       live.frame = opts.buehne === false ? { cy: 19.5, hh: 22, hw: 16 } : null;
       live.cv.style.pointerEvents = opts.drehbar === false ? 'none' : '';
-      live.cheerT = live.waveT = -1; live.cheerLeft = 0;
+      live.cheerT = live.waveT = live.rideT = -1; live.cheerLeft = 0;
       live.ctl.yaw = .35; live.ctl.v = 0;
       host.appendChild(live.cv);
       live.ro = new ResizeObserver(fit); live.ro.observe(host); fit();
